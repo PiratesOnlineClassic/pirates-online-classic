@@ -1,0 +1,256 @@
+# uncompyle6 version 3.1.1
+# Python bytecode 2.4 (62061)
+# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
+# Embedded file name: otp.friends.PlayerFriendsManager
+from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
+from direct.directnotify.DirectNotifyGlobal import directNotify
+from otp.otpbase import OTPGlobals
+
+class PlayerFriendsManager(DistributedObjectGlobal):
+    __module__ = __name__
+    notify = directNotify.newCategory('PlayerFriendsManager')
+
+    def __init__(self, cr):
+        DistributedObjectGlobal.__init__(self, cr)
+        self.playerFriendsList = set()
+        self.playerId2Info = {}
+        self.playerAvId2avInfo = {}
+        self.accept('gotExtraFriendHandles', self.__handleFriendHandles)
+
+    def delete(self):
+        self.ignoreAll()
+
+    def sendRequestInvite(self, playerId):
+        self.sendUpdate('requestInvite', [0, playerId, True])
+
+    def sendRequestDecline(self, playerId):
+        self.sendUpdate('requestDecline', [0, playerId])
+
+    def sendRequestRemove(self, playerId):
+        self.sendUpdate('requestRemove', [0, playerId])
+
+    def sendRequestUnlimitedSecret(self):
+        self.sendUpdate('requestUnlimitedSecret', [0])
+
+    def sendRequestLimitedSecret(self, username, password):
+        self.sendUpdate('requestLimitedSecret', [0, username, password])
+
+    def sendRequestUseUnlimitedSecret(self, secret):
+        self.sendUpdate('requestUseUnlimitedSecret', [0, secret])
+
+    def sendRequestUseLimitedSecret(self, secret, username, password):
+        self.sendUpdate('requestUseLimitedSecret', [0, secret, username, password])
+
+    def sendWhisper(self, recipientId, msgText):
+        self.sendUpdate('whisperTo', [0, recipientId, msgText])
+
+    def sendWLWhisper(self, recipientId, msgText):
+        self.sendUpdate('whisperWLTo', [0, recipientId, msgText])
+
+    def sendSCWhisper(self, recipientId, msgId):
+        self.sendUpdate('whisperSCTo', [0, recipientId, msgId])
+
+    def sendSCCustomWhisper(self, recipientId, msgId):
+        self.sendUpdate('whisperSCCustomTo', [0, recipientId, msgId])
+
+    def sendSCEmoteWhisper(self, recipientId, msgId):
+        self.sendUpdate('whisperSCEmoteTo', [0, recipientId, msgId])
+
+    def invitationFrom(self, playerId, avatarName):
+        messenger.send(OTPGlobals.PlayerFriendInvitationEvent, [playerId, avatarName])
+
+    def retractInvite(self, playerId):
+        messenger.send(OTPGlobals.PlayerFriendRetractInviteEvent, [playerId])
+
+    def rejectInvite(self, playerId, reason):
+        messenger.send(OTPGlobals.PlayerFriendRejectInviteEvent, [playerId, reason])
+
+    def rejectRemove(self, playerId, reason):
+        messenger.send(OTPGlobals.PlayerFriendRejectRemoveEvent, [playerId, reason])
+
+    def secretResponse(self, secret):
+        print 'secretResponse %s' % secret
+        messenger.send(OTPGlobals.PlayerFriendNewSecretEvent, [secret])
+
+    def rejectSecret(self, reason):
+        print 'rejectSecret %s' % reason
+        messenger.send(OTPGlobals.PlayerFriendRejectNewSecretEvent, [reason])
+
+    def rejectUseSecret(self, reason):
+        print 'rejectUseSecret %s' % reason
+        messenger.send(OTPGlobals.PlayerFriendRejectUseSecretEvent, [reason])
+
+    def updatePlayerFriend(self, id, info):
+        if info.playerName[0:5] == 'Guest':
+            info.playerName = 'Guest ' + info.playerName[5:]
+        if id not in self.playerFriendsList:
+            self.playerFriendsList.add(id)
+            self.playerId2Info[id] = info
+            messenger.send(OTPGlobals.PlayerFriendAddEvent, [id, info])
+        else:
+            if self.playerId2Info.has_key(id):
+                if not self.playerId2Info[id].onlineYesNo and info.onlineYesNo:
+                    self.playerId2Info[id] = info
+                    messenger.send('playerOnline', [id])
+                    base.chatAssistant.receiveFriendUpdate(id, info.playerName, info.onlineYesNo)
+                elif self.playerId2Info[id].onlineYesNo and not info.onlineYesNo:
+                    self.playerId2Info[id] = info
+                    messenger.send('playerOffline', [id])
+                    base.chatAssistant.receiveFriendUpdate(id, info.playerName, info.onlineYesNo)
+        if not self.askAvatarKnownHere(info.avatarId):
+            self.requestAvatarInfo(info.avatarId)
+        self.playerId2Info[id] = info
+        av = base.cr.doId2do.get(info.avatarId, None)
+        if av is not None:
+            av.considerUnderstandable()
+        messenger.send(OTPGlobals.PlayerFriendUpdateEvent, [id, info])
+        return
+
+    def removePlayerFriend(self, id):
+        if id not in self.playerFriendsList:
+            return
+        self.playerFriendsList.remove(id)
+        info = self.playerId2Info.pop(id, None)
+        if info is not None:
+            av = base.cr.doId2do.get(info.avatarId, None)
+            if av is not None:
+                av.considerUnderstandable()
+        messenger.send(OTPGlobals.PlayerFriendRemoveEvent, [id])
+        return
+
+    def whisperFrom(self, playerId, msg):
+        base.chatAssistant.receivePlayerWhisperTypedChat(msg, playerId)
+
+    def whisperWLFrom(self, playerId, msg):
+        base.chatAssistant.receivePlayerWhisperWLChat(msg, playerId)
+
+    def whisperSCFrom(self, playerId, msg):
+        base.chatAssistant.receivePlayerWhisperSpeedChat(msg, playerId)
+
+    def isFriend(self, pId):
+        return self.isPlayerFriend(pId)
+
+    def isPlayerFriend(self, pId):
+        return pId in self.playerFriendsList
+
+    def isAvatarOwnerPlayerFriend(self, avId):
+        pId = self.findPlayerIdFromAvId(avId)
+        if pId and self.isPlayerFriend(pId):
+            return True
+        else:
+            return False
+
+    def getFriendInfo(self, pId):
+        return self.playerId2Info.get(pId)
+
+    def findPlayerIdFromAvId(self, avId):
+        for playerId in self.playerId2Info:
+            if self.playerId2Info[playerId].avatarId == avId:
+                if self.playerId2Info[playerId].onlineYesNo:
+                    return playerId
+
+        return
+
+    def findAvIdFromPlayerId(self, pId):
+        pInfo = self.playerId2Info.get(pId)
+        if pInfo:
+            return pInfo.avatarId
+        else:
+            return
+        return
+
+    def findPlayerInfoFromAvId(self, avId):
+        playerId = self.findPlayerIdFromAvId(avId)
+        if playerId:
+            return self.getFriendInfo(playerId)
+        else:
+            return
+        return
+
+    def askAvatarOnline(self, avId):
+        returnValue = 0
+        if self.cr.doId2do.has_key(avId):
+            returnValue = 1
+        if self.playerAvId2avInfo.has_key(avId):
+            playerId = self.findPlayerIdFromAvId(avId)
+            if self.playerId2Info.has_key(playerId):
+                playerInfo = self.playerId2Info[playerId]
+                if playerInfo.onlineYesNo:
+                    returnValue = 1
+        return returnValue
+
+    def countTrueFriends(self):
+        count = 0
+        for id in self.playerId2Info:
+            if self.playerId2Info[id].openChatFriendshipYesNo:
+                count += 1
+
+        return count
+
+    def askTransientFriend(self, avId):
+        if self.playerAvId2avInfo.has_key(avId) and not base.cr.isAvatarFriend(avId):
+            return 1
+        else:
+            return 0
+
+    def askAvatarKnown(self, avId):
+        if self.askAvatarKnownElseWhere(avId) or self.askAvatarKnownHere(avId):
+            return 1
+        else:
+            return 0
+
+    def askAvatarKnownElseWhere(self, avId):
+        if hasattr(base, 'cr'):
+            if base.cr.askAvatarKnown(avId):
+                return 1
+        return 0
+
+    def askAvatarKnownHere(self, avId):
+        if self.playerAvId2avInfo.has_key(avId):
+            return 1
+        else:
+            return 0
+
+    def requestAvatarInfo(self, avId):
+        if hasattr(base, 'cr'):
+            base.cr.queueRequestAvatarInfo(avId)
+
+    def __handleFriendHandles(self, handleList):
+        for handle in handleList:
+            self.playerAvId2avInfo[handle.getDoId()] = handle
+
+        messenger.send('friendsListChanged')
+
+    def getAvHandleFromId(self, avId):
+        if self.playerAvId2avInfo.has_key(avId):
+            return self.playerAvId2avInfo[avId]
+        else:
+            return
+        return
+
+    def identifyFriend(self, avId):
+        handle = None
+        handle = base.cr.identifyFriend(avId)
+        if not handle:
+            handle = self.getAvHandleFromId(avId)
+        return handle
+
+    def getAllOnlinePlayerAvatars(self):
+        returnList = []
+        for avatarId in self.playerAvId2avInfo:
+            playerId = self.findPlayerIdFromAvId(avatarId)
+            if playerId:
+                if self.playerId2Info[playerId].onlineYesNo:
+                    returnList.append(avatarId)
+
+        return returnList
+
+    def identifyAvatar(self, doId):
+        if base.cr.doId2do.has_key(doId):
+            return base.cr.doId2do[doId]
+        else:
+            return self.identifyFriend(doId)
+
+    def friendsListFull(self):
+        return len(self.playerFriendsList) >= OTPGlobals.MaxPlayerFriends
+# okay decompiling .\otp\friends\PlayerFriendsManager.pyc
