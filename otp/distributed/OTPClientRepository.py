@@ -520,7 +520,6 @@ class OTPClientRepository(ClientRepositoryBase):
 
     def enterShutdown(self, errorCode=None):
         self.handler = self.handleMessageType
-        self.sendDisconnect()
         self.notify.info('Exiting cleanly')
         base.exitShow(errorCode)
 
@@ -717,7 +716,6 @@ class OTPClientRepository(ClientRepositoryBase):
 
     def enterPeriodTimeout(self):
         self.sendSetAvatarIdMsg(0)
-        self.sendDisconnect()
         msg = OTPLocalizer.PeriodForceAcknowledgeMessage
         dialogClass = OTPGlobals.getDialogClass()
         self.periodDialog = dialogClass(text=msg, command=self.__handlePeriodOk, style=OTPDialog.Acknowledge)
