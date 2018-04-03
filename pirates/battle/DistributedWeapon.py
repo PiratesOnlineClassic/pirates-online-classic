@@ -2,30 +2,31 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.DistributedWeapon
-from pandac.PandaModules import *
-from direct.showbase.DirectObject import *
-from direct.interval.IntervalGlobal import *
-from direct.distributed import ClockDelta
+import WeaponGlobals
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed import ClockDelta
+from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import *
+from pandac.PandaModules import *
 from pirates.distributed import DistributedInteractive
-from pirates.piratesbase import PiratesGlobals
+from pirates.effects.BlackSmoke import BlackSmoke
+from pirates.effects.CameraShaker import CameraShaker
+from pirates.effects.CannonExplosion import CannonExplosion
 from pirates.effects.CannonSplash import CannonSplash
 from pirates.effects.DirtClod import DirtClod
-from pirates.effects.CannonExplosion import CannonExplosion
 from pirates.effects.DustCloud import DustCloud
-from pirates.effects.SmokeCloud import SmokeCloud
+from pirates.effects.DustRing import DustRing
+from pirates.effects.ExplosionFlip import ExplosionFlip
+from pirates.effects.Fire import Fire
 from pirates.effects.RockShower import RockShower
 from pirates.effects.ShipSplintersA import ShipSplintersA
-from pirates.effects.DustRing import DustRing
-from pirates.effects.Fire import Fire
-from pirates.effects.BlackSmoke import BlackSmoke
-from pirates.effects.ExplosionFlip import ExplosionFlip
 from pirates.effects.ShockwaveRing import ShockwaveRing
-from pirates.effects.CameraShaker import CameraShaker
+from pirates.effects.SmokeCloud import SmokeCloud
+from pirates.piratesbase import PiratesGlobals
 from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-import WeaponGlobals
 from WeaponBase import WeaponBase
+
 
 class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractive):
     __module__ = __name__

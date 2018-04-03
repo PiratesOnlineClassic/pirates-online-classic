@@ -4,6 +4,7 @@
 # Embedded file name: pirates.shipparts.TextureFlattenManager
 from direct.task import Task
 
+
 class TextureFlattenManager:
     __module__ = __name__
 

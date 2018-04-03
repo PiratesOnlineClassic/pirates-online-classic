@@ -2,15 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.HullDNA
-from pandac.PandaModules import *
-from direct.directnotify.DirectNotifyGlobal import *
 import random
+
+from direct.directnotify.DirectNotifyGlobal import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from otp.avatar import AvatarDNA
 from otp.speedchat import ColorSpace
-from pirates.ship import ShipGlobals
+from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
+from pirates.ship import ShipGlobals
+
 notify = directNotify.newCategory('HullDNA')
 HullDict = {ShipGlobals.DINGHY: 'models/shipparts/dingy', ShipGlobals.WARSHIPL1: 'models/shipparts/warshipL1', ShipGlobals.WARSHIPL2: 'models/shipparts/warshipL2', ShipGlobals.WARSHIPL3: 'models/shipparts/warshipL3', ShipGlobals.WARSHIPL4: 'models/shipparts/warshipL4', ShipGlobals.MERCHANTL1: 'models/shipparts/merchantL1', ShipGlobals.MERCHANTL2: 'models/shipparts/merchantL2', ShipGlobals.MERCHANTL3: 'models/shipparts/merchantL3', ShipGlobals.MERCHANTL4: 'models/shipparts/merchantL4', ShipGlobals.INTERCEPTORL1: 'models/shipparts/interceptorL1', ShipGlobals.INTERCEPTORL2: 'models/shipparts/interceptorL2', ShipGlobals.INTERCEPTORL3: 'models/shipparts/interceptorL3', ShipGlobals.INTERCEPTORL4: 'models/shipparts/interceptorL4', ShipGlobals.BLACK_PEARL: 'models/shipparts/blackpearl', ShipGlobals.GOLIATH: 'models/shipparts/goliath', ShipGlobals.SKEL_WARSHIPL3: 'models/shipparts/skeletonWarshipL3', ShipGlobals.SKEL_INTERCEPTORL3: 'models/shipparts/skeletonInterceptorL3'}
 HullFlatDict = {ShipGlobals.DINGHY: 'models/shipparts/dingy', ShipGlobals.WARSHIPL1: 'models/shipparts/warship-geometry_Flat', ShipGlobals.WARSHIPL2: 'models/shipparts/warship-geometry_Flat', ShipGlobals.WARSHIPL3: 'models/shipparts/warship-geometry_Flat', ShipGlobals.WARSHIPL4: 'models/shipparts/warship-geometry_Flat', ShipGlobals.MERCHANTL1: 'models/shipparts/merchant-geometry_Flat', ShipGlobals.MERCHANTL2: 'models/shipparts/merchant-geometry_Flat', ShipGlobals.MERCHANTL3: 'models/shipparts/merchant-geometry_Flat', ShipGlobals.MERCHANTL4: 'models/shipparts/merchant-geometry_Flat', ShipGlobals.INTERCEPTORL1: 'models/shipparts/interceptor-geometry_Flat', ShipGlobals.INTERCEPTORL2: 'models/shipparts/interceptor-geometry_Flat', ShipGlobals.INTERCEPTORL3: 'models/shipparts/interceptor-geometry_Flat', ShipGlobals.INTERCEPTORL4: 'models/shipparts/interceptor-geometry_Flat', ShipGlobals.BLACK_PEARL: 'models/shipparts/blackpearl-geometry_Low', ShipGlobals.GOLIATH: 'models/shipparts/warship-geometry_Flat', ShipGlobals.SKEL_WARSHIPL3: 'models/shipparts/skeletonWarshipL3-geometry_Flat', ShipGlobals.SKEL_INTERCEPTORL3: 'models/shipparts/skeletonInterceptorL3-geometry_Flat'}

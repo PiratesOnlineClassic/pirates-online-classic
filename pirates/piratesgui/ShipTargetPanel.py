@@ -4,16 +4,14 @@
 # Embedded file name: pirates.piratesgui.ShipTargetPanel
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui import GuiTray
-from pirates.uberdog import UberDogGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import PiratesGuiGlobals
 from pirates.battle import EnemyGlobals
-from pirates.ship import ShipGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import PiratesTimer
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import GuiTray, PiratesGuiGlobals, PiratesTimer
 from pirates.piratesgui.GuiButton import GuiButton
 from pirates.piratesgui.ShipArmorGui import ShipArmorGui
+from pirates.ship import ShipGlobals
+from pirates.uberdog import UberDogGlobals
+
 
 class ShipTargetPanel(GuiTray.GuiTray):
     __module__ = __name__

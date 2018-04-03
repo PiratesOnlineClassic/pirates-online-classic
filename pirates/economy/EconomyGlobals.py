@@ -2,11 +2,12 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.economy.EconomyGlobals
-from pandac.PandaModules import *
 from otp.otpbase.OTPGlobals import *
+from pandac.PandaModules import *
+from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import *
 from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.ship import ShipGlobals
+
 OVERHAUL_COST_PERCENTAGE = 0.4
 CAPTAIN_LOOT_MULTIPLIER = 0.25
 

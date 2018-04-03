@@ -5,8 +5,6 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from pirates.battle.DistributedBattleNPC import DistributedBattleNPC
-from pirates.piratesbase import PLocalizer
-from pirates.pirate import AvatarTypes
 from pirates.creature.Alligator import Alligator
 from pirates.creature.Bat import Bat
 from pirates.creature.Chicken import Chicken
@@ -20,6 +18,9 @@ from pirates.creature.Scorpion import Scorpion
 from pirates.creature.Seagull import Seagull
 from pirates.creature.Stump import Stump
 from pirates.creature.Wasp import Wasp
+from pirates.pirate import AvatarTypes
+from pirates.piratesbase import PLocalizer
+
 CreatureTypes = {AvatarTypes.Crab: Crab, AvatarTypes.RockCrab: Crab, AvatarTypes.GiantCrab: Crab, AvatarTypes.Chicken: Chicken, AvatarTypes.Rooster: Rooster, AvatarTypes.Pig: Pig, AvatarTypes.Dog: Dog, AvatarTypes.Seagull: Seagull, AvatarTypes.Stump: Stump, AvatarTypes.FlyTrap: FlyTrap, AvatarTypes.Scorpion: Scorpion, AvatarTypes.DreadScorpion: Scorpion, AvatarTypes.Alligator: Alligator, AvatarTypes.BigGator: Alligator, AvatarTypes.HugeGator: Alligator, AvatarTypes.Bat: Bat, AvatarTypes.VampireBat: Bat, AvatarTypes.Wasp: Wasp, AvatarTypes.AngryWasp: Wasp, AvatarTypes.Monkey: Monkey}
 
 class DistributedCreature(DistributedBattleNPC):

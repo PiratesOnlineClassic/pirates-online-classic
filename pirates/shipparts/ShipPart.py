@@ -5,6 +5,7 @@
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 
+
 class ShipPart:
     __module__ = __name__
     woodBreakSfx = None

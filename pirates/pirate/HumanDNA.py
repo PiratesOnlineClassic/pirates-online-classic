@@ -2,14 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pirate.HumanDNA
-from pandac.PandaModules import *
-from direct.directnotify.DirectNotifyGlobal import *
 import random
+
+from direct.directnotify.DirectNotifyGlobal import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from otp.avatar import AvatarDNA
-from pirates.makeapirate import ClothingGlobals
 from otp.speedchat import ColorSpace
+from pandac.PandaModules import *
+from pirates.makeapirate import ClothingGlobals
+
 notify = directNotify.newCategory('HumanDNA')
 LAYER1_CLOTHES = 1
 LAYER2_CLOTHES = 2

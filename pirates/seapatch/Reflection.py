@@ -3,8 +3,9 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.seapatch.Reflection
 from direct.showbase.DirectObject import DirectObject
-from pandac.PandaModules import *
 from otp.otpbase import OTPRender
+from pandac.PandaModules import *
+
 
 class Reflection(DirectObject):
     __module__ = __name__

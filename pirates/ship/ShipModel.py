@@ -2,29 +2,25 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.ship.ShipModel
-from pandac.PandaModules import *
+import copy
+import time
+
 from direct.interval.IntervalGlobal import *
 from direct.interval.ProjectileInterval import *
-from pirates.shipparts import Hull, HullDNA
-from pirates.shipparts import Cabin, CabinDNA
-from pirates.shipparts import Mast, MastDNA
-from pirates.shipparts import Sail, SailDNA
-from pirates.shipparts import BowSprit, BowSpritDNA
-from pirates.shipparts import ShipDecor, DecorDNA
-from pirates.shipparts import CannonPort, Wheel
+from pandac.PandaModules import *
 from pirates.battle import Cannon
-from pirates.ship import ShipGlobals
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.effects.SpectralTrail import SpectralTrail
 from pirates.effects.DarkMaelstrom import DarkMaelstrom
 from pirates.effects.JRTeleportEffect import JRTeleportEffect
+from pirates.effects.SpectralTrail import SpectralTrail
 from pirates.effects.Wake import Wake
 from pirates.piratesbase import PiratesGlobals
-from pirates.shipparts import Lantern
-from pirates.shipparts import ShipDecor
-from pirates.shipparts import Window
-from pirates.shipparts import HullDNA
-import copy, time
+from pirates.ship import ShipGlobals
+from pirates.shipparts import (BowSprit, BowSpritDNA, Cabin, CabinDNA,
+                               CannonPort, DecorDNA, Hull, HullDNA, Lantern,
+                               Mast, MastDNA, Sail, SailDNA, ShipDecor, Wheel,
+                               Window)
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class ShipBroadside(NodePath):
     __module__ = __name__

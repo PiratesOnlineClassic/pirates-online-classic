@@ -4,6 +4,7 @@
 # Embedded file name: pirates.distributed.DistributedPopulationTracker
 from direct.distributed.DistributedObject import DistributedObject
 
+
 class DistributedPopulationTracker(DistributedObject):
     __module__ = __name__
 

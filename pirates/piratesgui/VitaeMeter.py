@@ -4,11 +4,11 @@
 # Embedded file name: pirates.piratesgui.VitaeMeter
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui.DialMeter import DialMeter
 from pirates.piratesgui.BorderFrame import BorderFrame
+from pirates.piratesgui.DialMeter import DialMeter
+
 
 class VitaeMeter(DirectFrame):
     __module__ = __name__

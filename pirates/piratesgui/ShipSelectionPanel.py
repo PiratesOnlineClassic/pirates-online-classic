@@ -3,15 +3,14 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.ShipSelectionPanel
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from pandac.PandaModules import *
 from direct.gui.DirectGui import *
-from pirates.ship import ShipGlobals
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import GuiPanel, GuiButton
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui.ShipBar import ShipTabBar
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import GuiButton, GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.BorderFrame import BorderFrame
+from pirates.piratesgui.ShipBar import ShipTabBar
+from pirates.ship import ShipGlobals
+
 
 class ShipSelectionPanel(GuiPanel.GuiPanel):
     __module__ = __name__

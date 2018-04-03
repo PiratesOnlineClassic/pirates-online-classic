@@ -4,6 +4,7 @@
 # Embedded file name: otp.web.SettingsMgrBase
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
+
 class SettingsMgrBase:
     __module__ = __name__
     notify = directNotify.newCategory('SettingsMgrBase')

@@ -3,20 +3,20 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.RadialMenu
 import math
-from pandac.PandaModules import *
-from direct.gui.DirectGui import *
-from direct.task import Task
-from pirates.battle import WeaponGlobals
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.piratesgui.SkillRing import SkillRing
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import Freebooter
-from direct.interval.IntervalGlobal import *
-from pirates.reputation import ReputationGlobals
-from pirates.piratesgui.SkillButton import SkillButton
-from pirates.piratesgui.ReputationMeter import ReputationMeter
+
 import PiratesGuiGlobals
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.task import Task
+from pandac.PandaModules import *
+from pirates.battle import WeaponGlobals
+from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
+from pirates.piratesgui.ReputationMeter import ReputationMeter
+from pirates.piratesgui.SkillButton import SkillButton
+from pirates.piratesgui.SkillRing import SkillRing
+from pirates.reputation import ReputationGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 Tolerance = 20
 FrameSize = 0.12
 Center = [

@@ -3,13 +3,14 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.speedchat.PSpeedChatQuestMenu
 from otp.speedchat.SCMenu import SCMenu
-from otp.speedchat.SCTerminal import *
 from otp.speedchat.SCStaticTextTerminal import SCStaticTextTerminal
-from pirates.quest.Quest import Quest
-from pirates.speedchat.PSpeedChatQuestTerminal import *
+from otp.speedchat.SCTerminal import *
 from pirates.pirate.LocalPirate import *
-from pirates.quest.QuestStatus import *
+from pirates.quest.Quest import Quest
 from pirates.quest.QuestDNA import *
+from pirates.quest.QuestStatus import *
+from pirates.speedchat.PSpeedChatQuestTerminal import *
+
 
 class PSpeedChatQuestMenu(SCMenu):
     __module__ = __name__

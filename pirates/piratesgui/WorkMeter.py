@@ -2,15 +2,15 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.WorkMeter
-from pandac.PandaModules import *
-from direct.gui.DirectGui import *
 from direct.directnotify import DirectNotifyGlobal
+from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
+from pandac.PandaModules import *
 from pirates.distributed import DistributedInteractive
+from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
+
 
 class WorkMeter(DirectFrame):
     __module__ = __name__

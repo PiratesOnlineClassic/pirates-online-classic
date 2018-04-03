@@ -4,9 +4,10 @@
 # Embedded file name: pirates.piratesgui.ObjectivesPanel
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui.GuiPanel import GuiPanel
 from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesgui.GuiPanel import GuiPanel
 from pirates.piratesgui.ListFrame import ListFrame
+
 
 class ObjectivesPanel(DirectFrame):
     __module__ = __name__

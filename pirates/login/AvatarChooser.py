@@ -2,38 +2,35 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.login.AvatarChooser
-import math, time, os
-from pandac.PandaModules import *
-from direct.gui.DirectGui import *
-from direct.task.Task import Task
+import math
+import os
+import time
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.showbase.DirectObject import DirectObject
-from direct.fsm.StateData import StateData
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
+from direct.fsm.StateData import StateData
 from direct.gui import DirectGuiGlobals
+from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import DirectObject
 from direct.showbase.PythonUtil import quickProfile
-from otp.otpgui import OTPDialog
+from direct.task.Task import Task
 from otp.otpbase import OTPGlobals
-from pirates.piratesgui.GameOptions import GameOptions
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import PDialog
-from pirates.piratesgui.BorderFrame import BorderFrame
-from pirates.piratesgui.ShardPanel import ShardPanel
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import TimeOfDayManager
-from pirates.piratesbase import TODGlobals
-from pirates.pirate import Pirate
-from pirates.seapatch.SeaPatch import SeaPatch
-from pirates.seapatch.Reflection import Reflection
+from otp.otpgui import OTPDialog
+from pandac.PandaModules import *
 from pirates.makeapirate import NameGUI
-from pirates.piratesgui import NonPayerPanel
-from pirates.piratesgui import TrialNonPayerPanel
-from pirates.piratesbase import UserFunnel
-from pirates.pirate import Human
-from pirates.pirate import HumanDNA
+from pirates.pirate import Human, HumanDNA, Pirate
+from pirates.piratesbase import (PiratesGlobals, PLocalizer, TimeOfDayManager,
+                                 TODGlobals, UserFunnel)
+from pirates.piratesgui import (NonPayerPanel, PDialog, PiratesGuiGlobals,
+                                TrialNonPayerPanel)
+from pirates.piratesgui.BorderFrame import BorderFrame
+from pirates.piratesgui.GameOptions import GameOptions
+from pirates.piratesgui.ShardPanel import ShardPanel
+from pirates.seapatch.Reflection import Reflection
+from pirates.seapatch.SeaPatch import SeaPatch
+
 APPROVED = 1
 DENIED = 2
 

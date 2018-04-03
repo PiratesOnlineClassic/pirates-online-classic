@@ -3,10 +3,9 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.npc.Townfolk
 from pandac.PandaModules import *
+from pirates.pirate import AvatarTypes, Biped, Human
 from pirates.piratesbase import PiratesGlobals
-from pirates.pirate import Biped
-from pirates.pirate import Human
-from pirates.pirate import AvatarTypes
+
 AnimDict = {}
 
 class Townfolk(Human.Human):

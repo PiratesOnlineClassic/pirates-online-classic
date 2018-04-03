@@ -5,6 +5,7 @@
 from pirates.pvp import PVPGlobals
 from pirates.ship import ShipBalance
 
+
 class PiratesSettingsMgrBase:
     __module__ = __name__
 

@@ -2,16 +2,18 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pvp.PVPGameBase
+import random
+
+import PVPRulesPanel
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.distributed.DistributedObject import DistributedObject
 from direct.fsm import FSM
 from pirates.piratesbase import PLocalizer
-from pirates.pvp import PVPGlobals
-from pirates.piratesgui import PiratesGuiGlobals
-import PVPRulesPanel, random
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.StatRowGui import StatRowGui
 from pirates.piratesgui.StatRowHeadingGui import StatRowHeadingGui
+from pirates.pvp import PVPGlobals
+
 
 class ScoreboardHolder:
     __module__ = __name__

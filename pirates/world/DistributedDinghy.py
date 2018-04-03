@@ -2,18 +2,18 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.world.DistributedDinghy
-from pandac.PandaModules import *
-from direct.showbase.PythonUtil import report
+from operator import itemgetter
+
 from direct.interval.IntervalGlobal import *
+from direct.showbase.PythonUtil import report
 from otp.otpgui import OTPDialog
+from pandac.PandaModules import *
 from pirates.distributed.DistributedInteractive import DistributedInteractive
-from pirates.piratesbase import PLocalizer, PiratesGlobals
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import PDialog, PiratesGuiGlobals
 from pirates.piratesgui.ShipDeployPanel import ShipDeployPanel
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
-from pirates.piratesgui import PDialog
-from operator import itemgetter
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import PiratesGuiGlobals
+
 
 class DistributedDinghy(DistributedInteractive):
     __module__ = __name__

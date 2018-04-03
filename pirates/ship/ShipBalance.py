@@ -3,6 +3,7 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.ship.ShipBalance
 from otp.web.Setting import StateVarSetting
+
 RepairRate = StateVarSetting('ship.repair.rate', 500)
 RepairPeriod = StateVarSetting('ship.repair.period', 2)
 FalloffShift = StateVarSetting('ship.falloff.shift', 500)

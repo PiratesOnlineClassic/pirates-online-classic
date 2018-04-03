@@ -2,19 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.BarSelectionMenu
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
+from direct.gui.DirectGui import *
 from otp.otpbase import OTPGlobals
-from pirates.piratesgui import GuiPanel
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.reputation import ReputationGlobals
+from pandac.PandaModules import *
 from pirates.battle import WeaponGlobals
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *
-from pirates.piratesbase import Freebooter
+from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
+from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
+from pirates.reputation import ReputationGlobals
+
 
 class BarSelectionMenu(GuiPanel.GuiPanel):
     __module__ = __name__

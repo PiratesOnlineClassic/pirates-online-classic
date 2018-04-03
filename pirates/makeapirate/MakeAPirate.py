@@ -2,35 +2,41 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.makeapirate.MakeAPirate
-from direct.showbase.DirectObject import DirectObject
+import random
+
+import BodyGUI
+import ClothesGUI
+import GenderGUI
+import HairGUI
+import HeadGUI
+import JewelryGUI
+import NameGUI
+import NPCGUI
+import PirateFemale
+import PirateMale
+import TattooGUI
+from CharGuiBase import CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
-from direct.gui import DirectGuiGlobals
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.fsm import FSM
-from direct.fsm import StateData
+from direct.distributed import PyDatagram
+from direct.fsm import FSM, StateData
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
-from direct.task import Task
+from direct.gui import DirectGuiGlobals
+from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from direct.distributed import PyDatagram
-from otp.distributed import PotentialAvatar
-from otp.otpgui import OTPDialog
-from otp.otpbase import OTPGlobals
-from pirates.piratesgui import PDialog
-from pirates.pirate import Pirate
-from pirates.pirate import LocalPirate
-from pirates.pirate import Human
-from pirates.pirate import HumanDNA
-from pirates.npc import Skeleton
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import UserFunnel
-from pirates.pirate import DynamicHuman
-from pirates.effects import DynamicLight
+from direct.showbase.DirectObject import DirectObject
+from direct.task import Task
 from MakeAPirateGlobals import *
-import random, PirateMale, PirateFemale, GenderGUI, BodyGUI, HeadGUI, ClothesGUI, HairGUI, TattooGUI, JewelryGUI, NameGUI, NPCGUI
-from CharGuiBase import CharGuiSlider
+from otp.distributed import PotentialAvatar
+from otp.otpbase import OTPGlobals
+from otp.otpgui import OTPDialog
+from pandac.PandaModules import *
+from pirates.effects import DynamicLight
+from pirates.npc import Skeleton
+from pirates.pirate import DynamicHuman, Human, HumanDNA, LocalPirate, Pirate
+from pirates.piratesbase import PiratesGlobals, PLocalizer, UserFunnel
+from pirates.piratesgui import PDialog
+
 MakeAPiratePageIcons = {'Body': 'chargui_body', 'Head': 'chargui_head', 'Mouth': 'chargui_mouth', 'Eyes': 'chargui_eyes', 'Nose': 'chargui_nose', 'Ear': 'chargui_ears', 'Hair': 'chargui_hair', 'Clothes': 'chargui_cloth', 'Name': 'chargui_name', 'Tattoos': 'chargui_name', 'Jewelry': 'chargui_head'}
 heightBiasArray = {'m': [0.2, 0, 0, 0, -1.0], 'f': [0, 0.7, 0.2, -0.5, 0.2], 'n': [0.2, 0, 0, 0, -1.0], 's': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
 CamInitPosHprs = [

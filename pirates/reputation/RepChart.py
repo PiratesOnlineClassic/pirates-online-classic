@@ -3,6 +3,7 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.reputation.RepChart
 from pirates.uberdog.UberDogGlobals import InventoryType
+
 __levelUpStats = {InventoryType.OverallRep: (25, 3), InventoryType.CutlassRep: (8, 0), InventoryType.GrenadeRep: (8, 0), InventoryType.DaggerRep: (7, 1), InventoryType.PistolRep: (7, 1), InventoryType.DollRep: (4, 6), InventoryType.WandRep: (4, 6), InventoryType.CannonRep: (5, 0), InventoryType.SailingRep: (5, 0)}
 
 def getLevelUpQuest(rep, level):

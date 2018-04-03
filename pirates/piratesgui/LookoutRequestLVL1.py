@@ -3,23 +3,22 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.LookoutRequestLVL1
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from otp.otpgui import OTPDialog
 from direct.task.Task import Task
+from otp.otpgui import OTPDialog
+from pandac.PandaModules import *
+from pirates.band import DistributedBandMember
+from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui.ListFrame import ListFrame
+from pirates.piratesgui.BorderFrame import BorderFrame
 from pirates.piratesgui.ButtonListItem import ButtonListItem
+from pirates.piratesgui.InventoryPage import InventoryPage
+from pirates.piratesgui.ListFrame import ListFrame
 from pirates.piratesgui.LookoutListItem import LookoutListItem
 from pirates.piratesgui.LookoutRequestLVL2 import LookoutRequestLVL2
-from pirates.piratesgui.BorderFrame import BorderFrame
-from pirates.piratesbase import PiratesGlobals
-from pirates.world import GameTypeGlobals
 from pirates.ship import ShipGlobals
 from pirates.uberdog import DistributedInventoryBase
-from pirates.band import DistributedBandMember
-from pirates.piratesgui.InventoryPage import InventoryPage
-from pirates.piratesgui import PiratesGuiGlobals
+from pirates.world import GameTypeGlobals
+
 
 class LookoutRequestLVL1(InventoryPage):
     __module__ = __name__

@@ -2,21 +2,23 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.makeapirate.TattooGUI
+import random
+from math import cos, pi, sin
+
+import PirateFemale
+import PirateMale
+import TattooGlobals
+from CharGuiBase import CharGuiPicker, CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
-from direct.showbase.ShowBaseGlobal import *
-from direct.showbase import DirectObject
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
+from direct.showbase import DirectObject
+from direct.showbase.ShowBaseGlobal import *
 from pandac.PandaModules import *
-from pirates.piratesbase import PLocalizer
-from CharGuiBase import CharGuiSlider, CharGuiPicker
-import random
 from pirates.pirate import HumanDNA
-from math import sin
-from math import cos
-from math import pi
-import TattooGlobals, PirateMale, PirateFemale
+from pirates.piratesbase import PLocalizer
+
 Zone1_Tab = 0
 Zone2_Tab = 1
 Zone3_Tab = 2

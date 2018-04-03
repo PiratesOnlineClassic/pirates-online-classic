@@ -2,15 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.quest.QuestIndicatorNode
-from pandac.PandaModules import *
-from pirates.world.ZoneLOD import ZoneLOD
 from direct.fsm.FSM import FSM
 from direct.interval.IntervalGlobal import Parallel
-from pirates.effects.QuestIndicatorEffect import QuestIndicatorEffect
-from pirates.piratesgui.RadarGui import RADAR_OBJ_TYPE_QUEST
 from direct.showbase.PythonUtil import report
+from pandac.PandaModules import *
+from pirates.effects.QuestIndicatorEffect import QuestIndicatorEffect
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui import RadarGui
+from pirates.piratesgui.RadarGui import RADAR_OBJ_TYPE_QUEST
+from pirates.world.ZoneLOD import ZoneLOD
+
 
 class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
     __module__ = __name__

@@ -2,29 +2,25 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.economy.BarberStoreGUI
+import random
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import GuiPanel
-from pirates.piratesgui import GuiButton, DialogButton
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import GuiButton
-from pirates.pirate import DynamicHuman
-from pirates.piratesgui.TabBar import LeftTab, TabBar
 from direct.interval.IntervalGlobal import *
-from pirates.makeapirate import BarberGlobals
-from pirates.piratesgui.BorderFrame import BorderFrame
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.pirate.HumanDNA import hairColors, availableHairColors
-from pirates.piratesgui import PiratesConfirm
+from direct.task import Task
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
-from pirates.piratesgui import PDialog
-from direct.task import Task
-import random
-from pirates.piratesbase import Freebooter
+from pandac.PandaModules import *
+from pirates.makeapirate import BarberGlobals
+from pirates.pirate import DynamicHuman
+from pirates.pirate.HumanDNA import availableHairColors, hairColors
+from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
+from pirates.piratesgui import (DialogButton, GuiButton, GuiPanel, PDialog,
+                                PiratesConfirm, PiratesGuiGlobals)
+from pirates.piratesgui.BorderFrame import BorderFrame
+from pirates.piratesgui.TabBar import LeftTab, TabBar
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 FACE_CAMERA = 0
 
 class BarberStoreTab(LeftTab):

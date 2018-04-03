@@ -4,10 +4,10 @@
 # Embedded file name: pirates.piratesgui.ShipItemList
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import InventoryItemList
-from pirates.piratesgui import ShipItemGUI
 from pirates.piratesbase import PiratesGlobals
+from pirates.piratesgui import (InventoryItemList, PiratesGuiGlobals,
+                                ShipItemGUI)
+
 
 class ShipItemList(InventoryItemList.InventoryItemList):
     __module__ = __name__

@@ -4,6 +4,7 @@
 # Embedded file name: otp.launcher.procapi
 import ctypes
 from ctypes.wintypes import *
+
 TH32CS_SNAPPROCESS = 2
 INVALID_HANDLE_VALUE = -1
 cwk = ctypes.windll.kernel32

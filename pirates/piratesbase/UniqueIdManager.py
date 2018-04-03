@@ -4,6 +4,7 @@
 # Embedded file name: pirates.piratesbase.UniqueIdManager
 from direct.task import Task
 
+
 class UniqueIdManager:
     __module__ = __name__
 

@@ -10,6 +10,7 @@ from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.BorderFrame import BorderFrame
 from pirates.piratesgui.TabBar import LeftTab, TabBar
 
+
 class ChestTab(LeftTab):
     __module__ = __name__
 

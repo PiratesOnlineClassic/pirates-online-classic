@@ -4,15 +4,12 @@
 # Embedded file name: pirates.piratesgui.CollectionPage
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import InventoryPage
-from pirates.piratesgui import InventoryItemGui
-from pirates.piratesgui import InventoryItemList
+from pirates.piratesbase import (CollectionMap, Freebooter, PiratesGlobals,
+                                 PLocalizer)
+from pirates.piratesgui import (InventoryItemGui, InventoryItemList,
+                                InventoryPage, PiratesGuiGlobals)
 from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import CollectionMap
-from pirates.piratesbase import Freebooter
+
 
 class CollectionPage(InventoryPage.InventoryPage):
     __module__ = __name__

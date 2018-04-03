@@ -5,9 +5,9 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
 from otp.distributed.DistributedDistrict import DistributedDistrict
-from pirates.world import WorldGlobals
-from pirates.world import WorldCreator
 from pirates.piratesbase import PiratesGlobals
+from pirates.world import WorldCreator, WorldGlobals
+
 
 class PiratesDistrict(DistributedDistrict):
     __module__ = __name__

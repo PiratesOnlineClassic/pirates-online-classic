@@ -6,6 +6,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObjectOV
 from pirates.ship import ShipGlobals
 
+
 class DistributedMastOV(DistributedObjectOV.DistributedObjectOV):
     __module__ = __name__
     notify = directNotify.newCategory('DistributedMastOV')

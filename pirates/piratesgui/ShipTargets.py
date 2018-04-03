@@ -4,6 +4,7 @@
 # Embedded file name: pirates.piratesgui.ShipTargets
 from direct.task import Task
 
+
 class Target:
     __module__ = __name__
 

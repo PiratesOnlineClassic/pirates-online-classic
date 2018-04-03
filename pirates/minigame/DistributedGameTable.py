@@ -3,18 +3,18 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.minigame.DistributedGameTable
 import random
-from pandac.PandaModules import *
-from direct.showbase import DirectObject
-from direct.interval.IntervalGlobal import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.npc import Townfolk
-from pirates.distributed import DistributedInteractive
-from pirates.piratesbase import PLocalizer
+
 from direct.directnotify import DirectNotifyGlobal
-from pirates.pirate import HumanDNA
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import PDialog
+from direct.interval.IntervalGlobal import *
+from direct.showbase import DirectObject
 from otp.otpgui import OTPDialog
+from pandac.PandaModules import *
+from pirates.distributed import DistributedInteractive
+from pirates.npc import Townfolk
+from pirates.pirate import HumanDNA
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import PDialog
+
 
 class DistributedGameTable(DistributedInteractive.DistributedInteractive):
     __module__ = __name__

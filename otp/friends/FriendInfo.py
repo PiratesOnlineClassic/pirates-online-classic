@@ -4,6 +4,7 @@
 # Embedded file name: otp.friends.FriendInfo
 from otp.avatar.AvatarHandle import AvatarHandle
 
+
 class FriendInfo(AvatarHandle):
     __module__ = __name__
 

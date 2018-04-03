@@ -3,17 +3,16 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.minigame.DistributedLock
 from direct.directnotify import DirectNotifyGlobal
+from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task.Task import Task
-from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.minigame import LockGUI
-from pirates.minigame import LockGlobals
-from pirates.piratesbase import PLocalizer
 from pirates.distributed import DistributedInteractive
-from pirates.interact import InteractiveBase
-from pirates.interact import InteractionManager
+from pirates.interact import InteractionManager, InteractiveBase
+from pirates.minigame import LockGlobals, LockGUI
 from pirates.pirate import HumanDNA
+from pirates.piratesbase import PLocalizer
+
 
 class DistributedLock(DistributedInteractive.DistributedInteractive):
     __module__ = __name__

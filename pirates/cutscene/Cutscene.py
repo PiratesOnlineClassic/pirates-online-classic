@@ -2,17 +2,18 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.cutscene.Cutscene
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import DelayedCall, makeList
-from direct.showbase.DirectObject import DirectObject
-from pirates.pirate import AvatarTypes
-from pirates.cutscene import CutsceneData, CutsceneActor, CutsceneIvals
-from pirates.effects.CameraShaker import CameraShaker
 from direct.gui.DirectGui import *
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import TimeOfDayManager, TODGlobals
+from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import DirectObject
+from direct.showbase.PythonUtil import DelayedCall, makeList
 from direct.task import Task
+from pandac.PandaModules import *
+from pirates.cutscene import CutsceneActor, CutsceneData, CutsceneIvals
+from pirates.effects.CameraShaker import CameraShaker
+from pirates.pirate import AvatarTypes
+from pirates.piratesbase import TimeOfDayManager, TODGlobals
+from pirates.piratesgui import PiratesGuiGlobals
+
 
 class Cutscene(NodePath, DirectObject):
     __module__ = __name__

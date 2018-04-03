@@ -2,33 +2,33 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.Cannon
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from direct.interval.ProjectileInterval import *
+import random
+
+import CannonGlobals
+from direct.actor import Actor
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.interval.ProjectileInterval import *
 from direct.showutil import Rope
-from direct.actor import Actor
 from otp.otpbase import OTPGlobals
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.piratesbase.PiratesGlobals import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.shipparts import CannonDNA
-from pirates.shipparts import ShipPart
-from pirates.effects.CannonMuzzleFire import CannonMuzzleFire
-from pirates.effects.CannonBlastSmoke import CannonBlastSmoke
-from pirates.effects.BlackSmoke import BlackSmoke
-from pirates.effects.ExplosionFlip import ExplosionFlip
-from pirates.effects.MuzzleFlame import MuzzleFlame
-from pirates.effects.CameraShaker import CameraShaker
-from pirates.effects.GrapeshotEffect import GrapeshotEffect
+from pandac.PandaModules import *
+from pirates.battle import WeaponConstants, WeaponGlobals
 from pirates.battle.CannonballProjectile import CannonballProjectile
-from pirates.battle import WeaponConstants
-from pirates.battle import WeaponGlobals
 from pirates.battle.WeaponGlobals import *
+from pirates.effects.BlackSmoke import BlackSmoke
+from pirates.effects.CameraShaker import CameraShaker
+from pirates.effects.CannonBlastSmoke import CannonBlastSmoke
+from pirates.effects.CannonMuzzleFire import CannonMuzzleFire
+from pirates.effects.ExplosionFlip import ExplosionFlip
+from pirates.effects.GrapeshotEffect import GrapeshotEffect
+from pirates.effects.MuzzleFlame import MuzzleFlame
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesbase.PiratesGlobals import *
 from pirates.ship import ShipGlobals
-import CannonGlobals, random
+from pirates.shipparts import CannonDNA, ShipPart
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 localFireSfxNames = [
  'cball_fire_1.mp3', 'cball_fire_2.mp3', 'cball_fire_3.mp3', 'cball_fire_4.mp3', 'cball_fire_5.mp3']
 distFireSfxNames = [

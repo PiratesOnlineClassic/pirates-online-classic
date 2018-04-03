@@ -2,16 +2,18 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.GrapeshotEffect
-from pandac.PandaModules import *
-from direct.showbase.DirectObject import *
-from direct.interval.IntervalGlobal import *
-from direct.actor import Actor
-from pirates.piratesbase import PiratesGlobals
-from pirates.effects import PolyTrail
-from PooledEffect import PooledEffect
-from EffectController import EffectController
-from pirates.effects.RoundshotProjectile import RoundshotProjectile
 import random
+
+from direct.actor import Actor
+from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import *
+from EffectController import EffectController
+from pandac.PandaModules import *
+from pirates.effects import PolyTrail
+from pirates.effects.RoundshotProjectile import RoundshotProjectile
+from pirates.piratesbase import PiratesGlobals
+from PooledEffect import PooledEffect
+
 
 class GrapeshotEffect(PooledEffect, EffectController):
     __module__ = __name__

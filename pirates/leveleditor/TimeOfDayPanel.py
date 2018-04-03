@@ -3,22 +3,20 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.leveleditor.TimeOfDayPanel
 import pprint
-from direct.showbase.TkGlobal import *
-from direct.tkwidgets.AppShell import *
-from direct.tkwidgets import Dial
-from direct.tkwidgets import Floater
-from direct.tkwidgets import Slider
-from direct.tkwidgets import VectorWidgets
-from direct.tkwidgets import Valuator
 import tkColorChooser
-from direct.directtools.DirectUtil import getTkColorString
-import Pmw
-from direct.gui import DirectGuiGlobals as DGG
-from pirates.piratesbase import PLocalizer as PL
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import TODGlobals
-from pandac.PandaModules import *
 from Tkinter import *
+
+import Pmw
+from direct.directtools.DirectUtil import getTkColorString
+from direct.gui import DirectGuiGlobals as DGG
+from direct.showbase.TkGlobal import *
+from direct.tkwidgets import Dial, Floater, Slider, Valuator, VectorWidgets
+from direct.tkwidgets.AppShell import *
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer as PL
+from pirates.piratesbase import TODGlobals
+
 
 class TimeOfDayPanel(AppShell):
     __module__ = __name__

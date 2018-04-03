@@ -2,18 +2,6 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.ship.DistributedShip
-Instruction context:
-   
-2340      66  LOAD_FAST             0  'self'
-             69  LOAD_ATTR             9  'localAvatarExitShip'
-             72  CALL_FUNCTION_0       0  None
-             75  POP_TOP          
-             76  JUMP_ABSOLUTE        84  'to 84'
-           79_0  COME_FROM            62  '62'
-           79_1  COME_FROM            37  '37'
-             79  POP_TOP          
-             80  JUMP_FORWARD          1  'to 84'
-->           83  POP_TOP          
 import re, random
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
@@ -22,7 +10,7 @@ from direct.gui.OnscreenText import OnscreenText
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase.PythonUtil import Functor, ScratchPad, report, lerp, quickProfile, safeRepr
 from direct.controls import ControlManager
-from direct.controls.ShipPilot import ShipPilot
+from pirates.ship.ShipPilot import ShipPilot
 from direct.task import Task
 from direct.distributed.ClockDelta import *
 from direct.showutil import Rope
@@ -1580,48 +1568,13 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def __handleOffRailing(self, entry):
         base.ambientMgr.requestFadeOut('ship-creak')
 
-    def __handleUnboardShip--- This code section failed: ---
+    def __handleUnboardShip(self, collEntry):
+        base.ambientMgr.requestFadeOut('ship-creak', 1)
+        parent = base.localAvatar.getParent()
+        if parent and parent.compareTo(self.root) == 0:
+            self.localAvatarExitShip()
 
-2327       0  LOAD_GLOBAL           0  'base'
-           3  LOAD_ATTR             1  'ambientMgr'
-           6  LOAD_ATTR             2  'requestFadeOut'
-           9  LOAD_CONST            1  'ship-creak'
-          12  LOAD_CONST            2  1
-          15  CALL_FUNCTION_2       2  None
-          18  POP_TOP          
-
-2337      19  LOAD_GLOBAL           0  'base'
-          22  LOAD_ATTR             3  'localAvatar'
-          25  LOAD_ATTR             4  'getParent'
-          28  CALL_FUNCTION_0       0  None
-          31  STORE_FAST            2  'parent'
-
-2338      34  LOAD_FAST             2  'parent'
-          37  JUMP_IF_FALSE        39  'to 79'
-          40  POP_TOP          
-          41  LOAD_FAST             2  'parent'
-          44  LOAD_ATTR             6  'compareTo'
-          47  LOAD_FAST             0  'self'
-          50  LOAD_ATTR             8  'root'
-          53  CALL_FUNCTION_1       1  None
-          56  LOAD_CONST            3  0
-          59  COMPARE_OP            2  '=='
-          62  JUMP_IF_FALSE        14  'to 79'
-          65  POP_TOP          
-
-2340      66  LOAD_FAST             0  'self'
-          69  LOAD_ATTR             9  'localAvatarExitShip'
-          72  CALL_FUNCTION_0       0  None
-          75  POP_TOP          
-          76  JUMP_ABSOLUTE        84  'to 84'
-        79_0  COME_FROM            62  '62'
-        79_1  COME_FROM            37  '37'
-          79  POP_TOP          
-          80  JUMP_FORWARD          1  'to 84'
-          83  POP_TOP          
-        84_0  COME_FROM            80  '80'
-
-Parse error at or near `POP_TOP' instruction at offset 83
+        parent.compareTo(self.root) == 0
 
     def enableFloors(self):
         self.listenForFloorEvents(1)

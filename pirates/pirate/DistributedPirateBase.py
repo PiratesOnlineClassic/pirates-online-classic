@@ -4,11 +4,11 @@
 # Embedded file name: pirates.pirate.DistributedPirateBase
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
-from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.pirate import Pirate
 from pirates.piratesbase import PiratesGlobals
-from pirates.pvp import Beacon
-from pirates.pvp import PVPGlobals
+from pirates.pvp import Beacon, PVPGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class DistributedPirateBase(DistributedObject.DistributedObject, Pirate.Pirate):
     __module__ = __name__

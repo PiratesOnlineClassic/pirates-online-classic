@@ -2,29 +2,31 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.avatar.LocalAvatar
-from pandac.PandaModules import *
-from direct.gui.DirectGui import *
-from direct.showbase.PythonUtil import *
-from direct.interval.IntervalGlobal import *
-from direct.showbase.InputStateGlobal import inputState
-from pandac.PandaModules import *
+import math
+import random
+import string
+
 import Avatar
-from direct.controls import ControlManager
 import DistributedAvatar
-from direct.task import Task
 import PositionExaminer
-from otp.otpbase import OTPGlobals
-import math, string, random
-from direct.directnotify import DirectNotifyGlobal
-from direct.distributed import DistributedSmoothNode
-from direct.gui import DirectGuiGlobals
-from otp.otpbase import OTPLocalizer
+from direct.controls import ControlManager
 from direct.controls.GhostWalker import GhostWalker
 from direct.controls.GravityWalker import GravityWalker
 from direct.controls.ObserverWalker import ObserverWalker
 from direct.controls.PhysicsWalker import PhysicsWalker
 from direct.controls.SwimWalker import SwimWalker
 from direct.controls.TwoDWalker import TwoDWalker
+from direct.directnotify import DirectNotifyGlobal
+from direct.distributed import DistributedSmoothNode
+from direct.gui import DirectGuiGlobals
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.showbase.InputStateGlobal import inputState
+from direct.showbase.PythonUtil import *
+from direct.task import Task
+from otp.otpbase import OTPGlobals, OTPLocalizer
+from pandac.PandaModules import *
+
 
 class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.DistributedSmoothNode):
     __module__ = __name__

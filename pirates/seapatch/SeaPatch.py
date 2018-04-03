@@ -2,20 +2,22 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.seapatch.SeaPatch
-import os, math
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.task import Task
-from pirates.seapatch.LerpSeaPatchInterval import LerpSeaPatchInterval
+import math
+import os
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
+from direct.gui.DirectGui import *
+from direct.motiontrail.MotionTrail import MotionTrail
 from direct.showbase.DirectObject import DirectObject
-from pirates.piratesbase import PiratesGlobals
-from direct.showbase.DirectObject import DirectObject
+from direct.task import Task
 from otp.otpbase import OTPRender
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesgui.GameOptions import *
+from pirates.seapatch.LerpSeaPatchInterval import LerpSeaPatchInterval
 from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import Water
-from direct.motiontrail.MotionTrail import MotionTrail
-from pirates.piratesgui.GameOptions import *
+
 
 class SeaPatch(Water):
     __module__ = __name__

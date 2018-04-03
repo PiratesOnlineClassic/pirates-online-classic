@@ -2,20 +2,22 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pirate.Biped
-from pandac.PandaModules import *
-from direct.task import Task
-from direct.interval.IntervalGlobal import *
+import random
+
+import AvatarTypes
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.OnscreenText import OnscreenText
+from direct.interval.IntervalGlobal import *
+from direct.task import Task
 from otp.avatar.Avatar import Avatar
-import AvatarTypes
+from otp.otpbase import OTPRender
+from pandac.PandaModules import *
 from pirates.battle import WeaponGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.pirate.BipedAnimationMixer import BipedAnimationMixer
 from pirates.effects.UsesEffectNode import UsesEffectNode
 from pirates.movement.UsesAnimationMixer import UsesAnimationMixer
-from otp.otpbase import OTPRender
-import random
+from pirates.pirate.BipedAnimationMixer import BipedAnimationMixer
+from pirates.piratesbase import PiratesGlobals
+
 NA_INDEX = -1
 STAND_INDEX = 0
 WALK_INDEX = 1

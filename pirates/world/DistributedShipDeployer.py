@@ -3,12 +3,13 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.world.DistributedShipDeployer
 import math
-from pandac.PandaModules import *
+
 from direct.distributed.DistributedNode import DistributedNode
 from direct.showbase.PythonUtil import report
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
+
 
 class DistributedShipDeployer(DistributedNode):
     __module__ = __name__

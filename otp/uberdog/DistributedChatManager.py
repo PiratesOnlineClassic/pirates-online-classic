@@ -4,8 +4,9 @@
 # Embedded file name: otp.uberdog.DistributedChatManager
 from direct.distributed.DistributedObject import DistributedObject
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
-from pandac.PandaModules import *
 from otp.otpbase import OTPGlobals
+from pandac.PandaModules import *
+
 
 class DistributedChatManager(DistributedObjectGlobal):
     __module__ = __name__

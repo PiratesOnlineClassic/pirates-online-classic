@@ -3,16 +3,16 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.minigame.DistributedBishopsHandTable
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
+from direct.showbase import PythonUtil
 from direct.task.Task import Task
 from pandac.PandaModules import *
-from direct.distributed.ClockDelta import *
-from direct.showbase import PythonUtil
+from pirates.minigame import (BishopsHandGame, BishopsHandGlobals,
+                              DistributedGameTable)
 from pirates.pirate import HumanDNA
 from pirates.piratesbase import PiratesGlobals
-from pirates.minigame import DistributedGameTable
-from pirates.minigame import BishopsHandGame
-from pirates.minigame import BishopsHandGlobals
+
 
 class ResultsFrame(DirectFrame):
     __module__ = __name__

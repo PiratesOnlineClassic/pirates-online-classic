@@ -2,15 +2,18 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.EnemyGlobals
-import random, copy
+import copy
+import random
+
 from pandac.PandaModules import *
 from pirates.battle import WeaponGlobals
 from pirates.battle.EnemySkills import *
 from pirates.pirate import AvatarTypes
 from pirates.pirate.AvatarType import *
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.reputation import ReputationGlobals
 from pirates.piratesbase import PiratesGlobals
+from pirates.reputation import ReputationGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 SpawnPositions = [
  Vec3(295, -250, 3), Vec3(299, -245, 3), Vec3(303, -250, 3), Vec3(291, -245, 3), Vec3(287, -250, 3), Vec3(307, -255, 3), Vec3(311, -260, 3)]
 CANNON_DAMAGE_MODIFIER_PER_LEVEL = 0.025

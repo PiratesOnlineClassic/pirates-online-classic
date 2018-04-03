@@ -2,12 +2,15 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.map.ArcBall
-from pandac.PandaModules import *
-from direct.showbase.PythonUtil import clampScalar
-from direct.showbase.DirectObject import DirectObject
-from direct.interval.IntervalGlobal import Sequence, Parallel, LerpFunc, Func, Wait
-from direct.task.Task import Task
 import math
+
+from direct.interval.IntervalGlobal import (Func, LerpFunc, Parallel, Sequence,
+                                            Wait)
+from direct.showbase.DirectObject import DirectObject
+from direct.showbase.PythonUtil import clampScalar
+from direct.task.Task import Task
+from pandac.PandaModules import *
+
 
 def getPerpendicularVec(vec):
     if vec[0] == 0.0:

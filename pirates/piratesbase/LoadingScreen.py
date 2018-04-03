@@ -2,17 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesbase.LoadingScreen
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
+import random
+
+from direct.distributed.ClockDelta import *
+from direct.gui.DirectGui import *
+from direct.showbase import DirectObject
+from direct.task import Task
+from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.reputation import ReputationGlobals
-from direct.showbase import DirectObject
-from direct.distributed.ClockDelta import *
-from direct.task import Task
-from direct.gui.DirectGui import *
 from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.piratesbase import Freebooter
-import random
+
 screenShots = [
  'models/gui/loadingScreen_01', 'models/gui/loadingScreen_02', 'models/gui/loadingScreen_03', 'models/gui/loadingScreen_04', 'models/gui/loadingScreen_05', 'models/gui/loadingScreen_06', 'models/gui/loadingScreen_07', 'models/gui/loadingScreen_08', 'models/gui/loadingScreen_09', 'models/gui/loadingScreen_10', 'models/gui/loadingScreen_11', 'models/gui/loadingScreen_12', 'models/gui/loadingScreen_13', 'models/gui/loadingScreen_14', 'models/gui/loadingScreen_15', 'models/gui/loadingScreen_16', 'models/gui/loadingScreen_17', 'models/gui/loadingScreen_18', 'models/gui/loadingScreen_19', 'models/gui/loadingScreen_20', 'models/gui/loadingScreen_21', 'models/gui/loadingScreen_22', 'models/gui/loadingScreen_23', 'models/gui/loadingScreen_24', 'models/gui/loadingScreen_25']
 screenShots_Jungles = [

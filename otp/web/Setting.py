@@ -4,6 +4,7 @@
 # Embedded file name: otp.web.Setting
 from direct.fsm.StatePush import StateVar
 
+
 class Setting:
     __module__ = __name__
 

@@ -2,11 +2,12 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.FireworkShowManager
-from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
+from pandac.PandaModules import *
 from pirates.effects.FireworkGlobals import *
 from pirates.effects.FireworkShow import FireworkShow
+
 PortRoyalLocation = Point3(-1350, 180, 220)
 PortRoyalLocation2 = Point3(50, 1500, 0)
 PortRoyalH = 100.0

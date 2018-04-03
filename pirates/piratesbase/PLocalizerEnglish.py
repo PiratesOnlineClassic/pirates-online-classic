@@ -2,14 +2,21 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesbase.PLocalizerEnglish
-import string, os
+import os
+import random
+import string
+
 from otp.otpbase import OTPGlobals
-from pirates.uberdog.UberDogGlobals import *
-from pirates.economy.EconomyGlobals import *
-from pirates.battle.EnemySkills import *
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.world import OceanZone
 from otp.otpbase import OTPLocalizer as OL
+from pandac.PandaModules import TextProperties, TextPropertiesManager
+from pirates.battle.EnemySkills import *
+from pirates.economy.EconomyGlobals import *
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.ship import ShipGlobals
+from pirates.uberdog import UberDogGlobals
+from pirates.uberdog.UberDogGlobals import *
+from pirates.world import OceanZone
+
 InterfaceFont = 'models/fonts/BardiT.bam'
 InterfaceOutlineFont = 'models/fonts/BardiT_outline.bam'
 PirateChippedFont = 'models/fonts/BriosoPro_chipped.bam'
@@ -1223,7 +1230,6 @@ def getFishName(genus, species):
             return name
 
 
-from pirates.ship import ShipGlobals
 DeployShip = 'Launch'
 Locked = 'Locked'
 BoardShip = 'Board'
@@ -2120,7 +2126,6 @@ DisplayTitleLand = 'Your\nNametag'
 DisplayTitleSea = 'Ship\nNametag'
 TitleOn = 'On'
 TitleOff = 'Off'
-import random
 
 def getPVPRating(score):
     return random.choice(_pvpRating.values())
@@ -2296,8 +2301,6 @@ RelationshipChooserPlFriendsMake = 'Make Player Friends'
 RelationshipChooserPlFriendsBreak = 'Break Player Friends'
 RelationshipChooserPlSecrets = 'Use Friend Codes'
 AFKFlag = '[AFK]'
-from pandac.PandaModules import TextProperties
-from pandac.PandaModules import TextPropertiesManager
 tpMgr = TextPropertiesManager.getGlobalPtr()
 gold = TextProperties()
 gold.setTextColor(*PiratesGuiGlobals.TextFG1)
@@ -2365,7 +2368,6 @@ def makeHeadingString(str, headingLevel):
 
 
 TutorialPanelDialog = {'seachestOpen': '\nClick on the \x01Ired\x01Sea Chest Icon\x02 to open it.', 'questPageOpen': '\nClick on the \x01Ired\x01Journal Icon\x02 to view your quests.', 'questPageClose': '\nThe journal shows what to do next.\nClick on the \x01Ired\x01Sea Chest Icon\x02 to close it.', 'boardShip': "\nPress \x05shiftButton\x05 to board Bo Beck's boat.", 'useCannon': '\nPress \x05shiftButton\x05 to use the cannon.', 'moveCannon': '\nHold down \x01Ired\x01Right Mouse Button\x02 then move the mouse to aim.', 'fireCannon': '\nClick \x01Ired\x01Left Mouse Button\x02 to shoot.', 'wreckInstruction': 'Hit the ship wreck 3 times. Hits so far \x01Ired\x01', 'exitCannon': '\nPress \x01Ired\x01Escape\x02 to stop using the cannon.', 'showBlacksmith': 'Walk towards the light ray.\nEnter the Old Warehouse to get a sword.', 'doCutlassTutorial': 'Would you like to learn how to use weapons?', 'drawSword': '\nClick on the \x01Ired\x01Sword Icon\x02 to draw your weapon.', 'attackSword': '\nClick with \x01Ired\x01Left Mouse Button\x02 to attack the dummy.', 'comboSword': '\nTo perform a combo, \x01Ired\x01Click\x02 to swing then \x01Ired\x01Click\x02 again at the end of your swing.  Timing is key!', 'cutlassLvl': '\nYou earned enough reputation to level up your cutlass.\nClick on the \x01Ired\x01Sea Chest Icon\x02 to open it.', 'cutlassSkillOpen': '\nClick on the \x01Ired\x01Skill Icon\x02 to view your skills.', 'cutlassSkillUnlock': '\nYou earned 1 Skill Point which can be used to unlock and improve skills. Click on the \x01Ired\x01Sweep Icon\x02 to unlock it.', 'cutlassDoneLvl': '\nSweep Skill Unlocked. \nClick on the \x01Ired\x01Sea Chest Icon\x02 to continue.', 'specialMenu': '\nClick the \x01\\Ired\x01Sweep Icon\x02.', 'sheatheSword': '\nPress \x01Ired\x01Escape\x02 to put away your weapon.', 'showSkeleton': '\nDefeat an \x01Ired\x01Undead Gravedigger\x02 before you visit Tia Dalma.', 'showJungleTia': '\nWalk through the \x01Ired\x01Tree Tunnel\x02 to visit Tia Dalma.', 'receiveCompass': 'Would you like to learn how to use the compass?', 'compassActiveQuest': 'The \x01Iyellow\x01ARROW\x02 points to your quest goal.', 'compassIconsBearing': 'You are the \x01Iwhite\x01DOT\x02 in the center. \nExits are shown as \x01Iwhite\x01RECTANGLES\x02.', 'compassIconsPeople': 'Enemies are shown in \x01Ired\x01RED\x02. Townfolk are shown in \x01Igreen\x01GREEN\x02. Other players are shown in \x01Iblue\x01BLUE\x02.', 'showNavy': "Defeat \x01Ired\x01Navy Soldiers\x02 to find the Black Pearl release orders.\nFollow the arrow towards the Governor's Mansion.", 'showGovMansion': "Enter the \x01Ired\x01Governor's Mansion\x02 to deliver release orders to Elizabeth Swann.", 'showDarby': 'Walk towards the light ray. \nFind \x01Ired\x01Darby Drydock\x02 to get a ship.', 'showDinghy': 'Use a \x01Ired\x01dinghy\x02 to launch your ship.', 'showBarbossa': "Sail to \x01Ired\x01Devil's Anvil\x02 to visit Barbossa.", 'pistolAim': '\nHold down \x01Ired\x01Right Mouse Button\x02 then move the mouse to aim at the monkey.', 'pistolTarget': '\nThe aiming circle turns red over an enemy.', 'pistolHit': '\nClick the \x01Ired\x01Left Mouse Button\x02 to shoot.', 'pistolPractice': '\nPress \x01Ired\x01Escape\x02 to put away your weapon.', 'lookoutChestOpen': '\nClick on the \x01Ired\x01Sea Chest Icon\x02 to open it.', 'lookoutOpen': '\nClick on the \x01Ired\x01Lookout Icon\x02 to look for other players\nin Pirate vs. Pirate combat.', 'lookoutClose': '\nClick on the \x01Ired\x01Sea Chest Icon\x02 to close it.', 'showTortugaJack': '\nSail to \x01Ired\x01Tortuga\x02 and find \x01Ired\x01Jack Sparrow\x02.', 'teleport_tut1': 'Now ....Press the \x05SmallMap\x05 to bring up the Map of the Islands.', 'teleport_tut2': 'Continents that are available for transport to are highighted. As you unlock additional continents for transport, they will become highlighted ont his map. Double click the left mouse button \x05leftClick\x05 \x05leftClick\x05 on the highlighted continent (Tortuga) to be transported to there.', 'teleport_tut3': 'You have safely arrived in Tortuga. Tortuga is never more than a double-click away. Click Ok to exit the tutorial.', 'chat_tut1': 'Chatting with other pirates can be helpful for teaming up on the enemy. \nClick on the \x01Ired\x01Arrow\x02 or press ENTER to start chatting.', 'chat_tut2': '\nSend a message by typing it at the prompt and pressing ENTER.', 'chat_tut3': 'You can make friends or start a crew by clicking on another pirate and choosing Friend or Crew from the menu.', 'chat_tut_alt4': 'You can make friends or start a crew by clicking on another pirate and choosing Friend or Crew from the menu.', 'chat_tut5': 'To see a list of your friends or crewmates, press F or click the mug icon in your Sea Chest.', 'chat_tut4': 'In addition to clicking on other players, there are other advanced options for forming a crew in the Crew Panel.', 'chat_tut_alt5': 'To see a list of your friends or crewmates, press F or click the mug icon in your Sea Chest.', 'chat_tut_alt1': 'Chatting with other pirates can be helpful for teaming up on the enemy.', 'chat_tut_alt2': '\nClick on the \x01Ired\x01Skull Icon\x02 in the lower left corner to bring up the SpeedChat menu.', 'chat_tut_alt3': '\nSend a SpeedChat message by clicking on a menu item.'}
-from pirates.uberdog import UberDogGlobals
 Reloading = 'Reloading'
 CannonAmmoNames = {}
 StatusTrayHp = 'Health'

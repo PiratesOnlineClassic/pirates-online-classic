@@ -2,14 +2,15 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesbase.PiratesGlobals
-from pandac.PandaModules import *
 import PLocalizer
-from otp.otpbase.OTPGlobals import *
-from direct.gui import DirectFrame
-from direct.gui import DirectButton
-from pirates.uberdog.UberDogGlobals import *
-from pirates.piratesbase import PLocalizer as PL
+from direct.gui import DirectButton, DirectFrame
 from otp.otpbase import OTPLocalizer as OL
+from otp.otpbase.OTPGlobals import *
+from pandac.PandaModules import *
+from pirates.piratesbase import PLocalizer as PL
+from pirates.piratesgui import PDialog
+from pirates.uberdog.UberDogGlobals import *
+
 searchPath = DSearchPath()
 for i in range(getModelPath().getNumDirectories()):
     searchPath.appendDirectory(getModelPath().getDirectory(i))
@@ -232,7 +233,6 @@ setSignFont(PLocalizer.SignFont)
 setPirateFont(PLocalizer.PirateChippedFont)
 setPirateOutlineFont(PLocalizer.PirateChippedOutlineFont)
 setPirateBoldOutlineFont(PLocalizer.PirateBoldOutlineFont)
-from pirates.piratesgui import PDialog
 setDialogClasses(PDialog.PDialog, PDialog.PGlobalDialog)
 PirateDialog = None
 LogoutHotkey = 'shift-f2'

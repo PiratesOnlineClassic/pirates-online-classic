@@ -5,6 +5,7 @@
 from direct.distributed.DistributedObject import DistributedObject
 from pirates.piratesbase import PiratesGlobals
 
+
 class ShipInfo(DistributedObject):
     __module__ = __name__
     notify = directNotify.newCategory('ShipCrewMember')

@@ -2,10 +2,12 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.Consumable
-import Weapon, WeaponGlobals
+import Weapon
+import WeaponGlobals
 from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
 from pirates.uberdog.UberDogGlobals import InventoryType
+
 __modelTypes = {InventoryType.Potion1: ('models/props/largejug_B', Vec4(1, 1, 1, 1)), InventoryType.Potion2: ('models/props/largejug_B', Vec4(0.6, 0.6, 1, 1)), InventoryType.Potion3: ('models/props/largejug_B', Vec4(1, 0.6, 0.6, 1)), InventoryType.Potion4: ('models/props/largejug_B', Vec4(0.6, 1.0, 0.6, 1)), InventoryType.Potion5: ('models/props/largejug_B', Vec4(1, 0.6, 1, 1)), InventoryType.ShipRepairKit: ('models/props/largejug_B', Vec4(1, 0.6, 1, 1))}
 
 def getImage(itemId):

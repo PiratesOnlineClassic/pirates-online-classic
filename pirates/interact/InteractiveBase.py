@@ -3,12 +3,14 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.interact.InteractiveBase
 import types
+
 from direct.fsm import FSM
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui import NewTutorialPanel
+
 USE_KEY_EVENT = 'shift'
 END_INTERACT_EVENT = 'escape'
 PROXIMITY = 0

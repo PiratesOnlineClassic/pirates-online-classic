@@ -2,26 +2,24 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.chat.PiratesChatManager
-import sys, string
-from direct.showbase import DirectObject
-from direct.showbase.PythonUtil import traceFunctionCall
+import string
+import sys
+
+import PChatInputSpeedChat
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from otp.otpbase import OTPLocalizer
-from otp.chat import ChatManager
-from otp.otpgui import OTPDialog
-from otp.otpbase import OTPGlobals
-from otp.chat import ChatManagerV2
+from direct.showbase import DirectObject
+from direct.showbase.PythonUtil import traceFunctionCall
+from otp.chat import ChatManager, ChatManagerV2
 from otp.chat.ChatGlobals import *
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import PDialog
-from pirates.piratesgui import GuiPanel
-from pirates.piratesgui import ChatPanel
-from PChatInputSpeedChat import PChatInputSpeedChat
+from otp.otpbase import OTPGlobals, OTPLocalizer
+from otp.otpgui import OTPDialog
+from pandac.PandaModules import *
 from PChatInputTyped import PChatInputTyped
 from PChatInputWhiteList import PChatInputWhiteList
+from pirates.piratesbase import PLocalizer
+from pirates.piratesgui import ChatPanel, GuiPanel, PDialog, PiratesGuiGlobals
+
 
 class PiratesChatManager(ChatManagerV2.ChatManagerV2):
     __module__ = __name__
@@ -47,7 +45,7 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
         else:
             self.chatEntry = PChatInputTyped()
             self.whiteListEntry = PChatInputWhiteList()
-        self.speedEntry = PChatInputSpeedChat()
+        self.speedEntry = PChatInputSpeedChat.PChatInputSpeedChat()
         self.chatPanel = ChatPanel.ChatPanel(self, self.chatEntry, self.whiteListEntry, self.speedEntry)
         if self.whiteListEnabled and not self.openChatEnabled:
             self.whiteListActive = True

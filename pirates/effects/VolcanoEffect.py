@@ -2,11 +2,14 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.VolcanoEffect
+import random
+
+from direct.interval.IntervalGlobal import (Func, Parallel, Sequence,
+                                            SoundInterval, Wait)
 from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import Sequence, Parallel, Func, Wait, SoundInterval
 from pirates.effects.VolcanoSmoke import VolcanoSmoke
 from pirates.effects.VolcanoSplats import VolcanoSplats
-import random
+
 
 class VolcanoEffect(NodePath):
     __module__ = __name__

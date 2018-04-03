@@ -2,22 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.makeapirate.PirateMale
-Instruction context:
-   
-2097    1883  LOAD_FAST             0  'self'
-           1886  LOAD_ATTR             5  'pirate'
-           1889  LOAD_ATTR            63  'generateClothesColor'
-           1892  CALL_FUNCTION_0       0  None
-           1895  POP_TOP          
-->         1896  LOAD_CONST            0  None
-from pandac.PandaModules import *
-from direct.showbase import DirectObject
+import random
+
+import TattooGlobals
 from direct.directnotify import DirectNotifyGlobal
-from pirates.pirate import HumanDNA
-from pirates.makeapirate import ClothingGlobals
-from pirates.piratesbase import Freebooter
-import random, TattooGlobals
+from direct.showbase import DirectObject
 from otp.otpbase import OTPRender
+from pandac.PandaModules import *
+from pirates.makeapirate import ClothingGlobals
+from pirates.pirate import HumanDNA
+from pirates.piratesbase import Freebooter
+
 TX = 0
 TY = 1
 TZ = 2
@@ -1172,932 +1167,144 @@ class PirateMale(DirectObject.DirectObject):
         self.currentTattooZones = [currentChest, currentLeftArm, currentRightArm, self.faces[0]]
         self.setupTattoos()
 
-    def handleClothesHidingOld--- This code section failed: ---
-
-1935       0  LOAD_FAST             0  'self'
-           3  LOAD_ATTR             1  'clothing'
-           6  LOAD_ATTR             2  'stash'
-           9  CALL_FUNCTION_0       0  None
-          12  POP_TOP          
-
-1937      13  LOAD_FAST             0  'self'
-          16  LOAD_ATTR             3  'body'
-          19  LOAD_ATTR             4  'unstash'
-          22  CALL_FUNCTION_0       0  None
-          25  POP_TOP          
-
-1950      26  LOAD_FAST             0  'self'
-          29  LOAD_ATTR             5  'pirate'
-          32  LOAD_ATTR             6  'zombie'
-          35  JUMP_IF_FALSE        13  'to 51'
-          38  POP_TOP          
-
-1951      39  LOAD_FAST             0  'self'
-          42  LOAD_ATTR             7  'dnaZomb'
-          45  STORE_FAST            9  'dna'
-          48  JUMP_FORWARD         13  'to 64'
-        51_0  COME_FROM            35  '35'
-          51  POP_TOP          
-
-1953      52  LOAD_FAST             0  'self'
-          55  LOAD_ATTR             5  'pirate'
-          58  LOAD_ATTR             9  'style'
-          61  STORE_FAST            9  'dna'
-        64_0  COME_FROM            48  '48'
-
-1955      64  LOAD_FAST             9  'dna'
-          67  LOAD_ATTR            10  'getClothesShirt'
-          70  CALL_FUNCTION_0       0  None
-          73  STORE_FAST           10  'shirtIdx'
-
-1956      76  LOAD_FAST             9  'dna'
-          79  LOAD_ATTR            12  'getClothesVest'
-          82  CALL_FUNCTION_0       0  None
-          85  STORE_FAST            7  'vestIdx'
-
-1957      88  LOAD_FAST             9  'dna'
-          91  LOAD_ATTR            14  'getClothesCoat'
-          94  CALL_FUNCTION_0       0  None
-          97  STORE_FAST           17  'coatIdx'
-
-1958     100  LOAD_FAST             9  'dna'
-         103  LOAD_ATTR            16  'getClothesPant'
-         106  CALL_FUNCTION_0       0  None
-         109  STORE_FAST           16  'pantIdx'
-
-1959     112  LOAD_FAST             9  'dna'
-         115  LOAD_ATTR            18  'getClothesBelt'
-         118  CALL_FUNCTION_0       0  None
-         121  STORE_FAST           13  'beltIdx'
-
-1960     124  LOAD_FAST             9  'dna'
-         127  LOAD_ATTR            20  'getClothesShoe'
-         130  CALL_FUNCTION_0       0  None
-         133  STORE_FAST            8  'shoeIdx'
-
-1961     136  LOAD_FAST             9  'dna'
-         139  LOAD_ATTR            22  'getClothesHat'
-         142  CALL_FUNCTION_0       0  None
-         145  STORE_FAST            5  'hatIdx'
-
-1964     148  LOAD_FAST             0  'self'
-         151  LOAD_ATTR            24  'clothingsPant'
-         154  LOAD_FAST            16  'pantIdx'
-         157  LOAD_CONST            1  0
-         160  BINARY_SUBSCR    
-         161  BINARY_SUBSCR    
-         162  STORE_FAST           15  'layerPant'
-
-1965     165  LOAD_GLOBAL          26  'NodePathCollection'
-         168  CALL_FUNCTION_0       0  None
-         171  STORE_FAST           12  'parts'
-
-1968     174  LOAD_FAST             0  'self'
-         177  LOAD_ATTR            28  'clothesTextures'
-         180  LOAD_CONST            0  None
-         183  COMPARE_OP            3  '!='
-         186  JUMP_IF_FALSE       100  'to 289'
-       189_0  THEN                     290
-         189  POP_TOP          
-
-1969     190  LOAD_FAST            16  'pantIdx'
-         193  LOAD_CONST            1  0
-         196  BINARY_SUBSCR    
-         197  LOAD_CONST            2  6
-         200  COMPARE_OP            2  '=='
-         203  JUMP_IF_FALSE        45  'to 251'
-       206_0  THEN                     286
-         206  POP_TOP          
-
-1970     207  LOAD_FAST             0  'self'
-         210  LOAD_ATTR            30  'setPartTexture'
-         213  LOAD_CONST            3  'PANT'
-         216  LOAD_FAST            16  'pantIdx'
-         219  LOAD_CONST            1  0
-         222  BINARY_SUBSCR    
-         223  LOAD_FAST            16  'pantIdx'
-         226  LOAD_CONST            4  1
-         229  BINARY_SUBSCR    
-         230  LOAD_FAST            15  'layerPant'
-         233  LOAD_CONST            1  0
-         236  BINARY_SUBSCR    
-         237  LOAD_CONST            4  1
-         240  BINARY_SUBSCR    
-         241  BUILD_LIST_1          1  None
-         244  CALL_FUNCTION_4       4  None
-         247  POP_TOP          
-         248  JUMP_ABSOLUTE       290  'to 290'
-       251_0  COME_FROM           203  '203'
-         251  POP_TOP          
-
-1972     252  LOAD_FAST             0  'self'
-         255  LOAD_ATTR            30  'setPartTexture'
-         258  LOAD_CONST            3  'PANT'
-         261  LOAD_FAST            16  'pantIdx'
-         264  LOAD_CONST            1  0
-         267  BINARY_SUBSCR    
-         268  LOAD_FAST            16  'pantIdx'
-         271  LOAD_CONST            4  1
-         274  BINARY_SUBSCR    
-         275  LOAD_FAST            15  'layerPant'
-         278  LOAD_CONST            1  0
-         281  BINARY_SUBSCR    
-         282  CALL_FUNCTION_4       4  None
-         285  POP_TOP          
-         286  JUMP_FORWARD          1  'to 290'
-       289_0  COME_FROM           186  '186'
-         289  POP_TOP          
-       290_0  COME_FROM           286  '286'
-
-1973     290  SETUP_LOOP           81  'to 374'
-         293  LOAD_GLOBAL          31  'range'
-         296  LOAD_CONST            1  0
-         299  LOAD_GLOBAL          32  'len'
-         302  LOAD_FAST            15  'layerPant'
-         305  LOAD_CONST            1  0
-         308  BINARY_SUBSCR    
-         309  CALL_FUNCTION_1       1  None
-         312  CALL_FUNCTION_2       2  None
-         315  GET_ITER         
-         316  FOR_ITER             54  'to 373'
-         319  STORE_FAST           20  'j'
-
-1974     322  LOAD_FAST             0  'self'
-         325  LOAD_ATTR            34  'clothingsLayer1'
-         328  LOAD_FAST            15  'layerPant'
-         331  LOAD_CONST            1  0
-         334  BINARY_SUBSCR    
-         335  LOAD_FAST            20  'j'
-         338  BINARY_SUBSCR    
-         339  BINARY_SUBSCR    
-         340  STORE_FAST           12  'parts'
-
-1975     343  LOAD_FAST            12  'parts'
-         346  LOAD_ATTR            35  'getNumPaths'
-         349  CALL_FUNCTION_0       0  None
-         352  JUMP_IF_FALSE        14  'to 369'
-         355  POP_TOP          
-
-1976     356  LOAD_FAST            12  'parts'
-         359  LOAD_ATTR             4  'unstash'
-         362  CALL_FUNCTION_0       0  None
-         365  POP_TOP          
-         366  JUMP_BACK           316  'to 316'
-       369_0  COME_FROM           352  '352'
-         369  POP_TOP          
-         370  JUMP_BACK           316  'to 316'
-         373  POP_BLOCK        
-       374_0  COME_FROM           290  '290'
-
-1977     374  LOAD_FAST             0  'self'
-         377  LOAD_ATTR            36  'handleLayer1Hiding'
-         380  LOAD_FAST            15  'layerPant'
-         383  CALL_FUNCTION_1       1  None
-         386  POP_TOP          
-
-1980     387  LOAD_FAST             0  'self'
-         390  LOAD_ATTR            37  'clothingsShoe'
-         393  LOAD_FAST             8  'shoeIdx'
-         396  LOAD_CONST            1  0
-         399  BINARY_SUBSCR    
-         400  BINARY_SUBSCR    
-         401  STORE_FAST           11  'layerShoe'
-
-1981     404  LOAD_GLOBAL          26  'NodePathCollection'
-         407  CALL_FUNCTION_0       0  None
-         410  STORE_FAST           12  'parts'
-
-1984     413  LOAD_FAST             0  'self'
-         416  LOAD_ATTR            28  'clothesTextures'
-         419  LOAD_CONST            0  None
-         422  COMPARE_OP            3  '!='
-         425  JUMP_IF_FALSE        38  'to 466'
-       428_0  THEN                     467
-         428  POP_TOP          
-
-1985     429  LOAD_FAST             0  'self'
-         432  LOAD_ATTR            30  'setPartTexture'
-         435  LOAD_CONST            5  'SHOE'
-         438  LOAD_FAST             8  'shoeIdx'
-         441  LOAD_CONST            1  0
-         444  BINARY_SUBSCR    
-         445  LOAD_FAST             8  'shoeIdx'
-         448  LOAD_CONST            4  1
-         451  BINARY_SUBSCR    
-         452  LOAD_FAST            11  'layerShoe'
-         455  LOAD_CONST            1  0
-         458  BINARY_SUBSCR    
-         459  CALL_FUNCTION_4       4  None
-         462  POP_TOP          
-         463  JUMP_FORWARD          1  'to 467'
-       466_0  COME_FROM           425  '425'
-         466  POP_TOP          
-       467_0  COME_FROM           463  '463'
-
-1986     467  SETUP_LOOP           81  'to 551'
-         470  LOAD_GLOBAL          31  'range'
-         473  LOAD_CONST            1  0
-         476  LOAD_GLOBAL          32  'len'
-         479  LOAD_FAST            11  'layerShoe'
-         482  LOAD_CONST            1  0
-         485  BINARY_SUBSCR    
-         486  CALL_FUNCTION_1       1  None
-         489  CALL_FUNCTION_2       2  None
-         492  GET_ITER         
-         493  FOR_ITER             54  'to 550'
-         496  STORE_FAST           20  'j'
-
-1987     499  LOAD_FAST             0  'self'
-         502  LOAD_ATTR            34  'clothingsLayer1'
-         505  LOAD_FAST            11  'layerShoe'
-         508  LOAD_CONST            1  0
-         511  BINARY_SUBSCR    
-         512  LOAD_FAST            20  'j'
-         515  BINARY_SUBSCR    
-         516  BINARY_SUBSCR    
-         517  STORE_FAST           12  'parts'
-
-1988     520  LOAD_FAST            12  'parts'
-         523  LOAD_ATTR            35  'getNumPaths'
-         526  CALL_FUNCTION_0       0  None
-         529  JUMP_IF_FALSE        14  'to 546'
-         532  POP_TOP          
-
-1989     533  LOAD_FAST            12  'parts'
-         536  LOAD_ATTR             4  'unstash'
-         539  CALL_FUNCTION_0       0  None
-         542  POP_TOP          
-         543  JUMP_BACK           493  'to 493'
-       546_0  COME_FROM           529  '529'
-         546  POP_TOP          
-         547  JUMP_BACK           493  'to 493'
-         550  POP_BLOCK        
-       551_0  COME_FROM           467  '467'
-
-1990     551  LOAD_FAST             0  'self'
-         554  LOAD_ATTR            36  'handleLayer1Hiding'
-         557  LOAD_FAST            11  'layerShoe'
-         560  CALL_FUNCTION_1       1  None
-         563  POP_TOP          
-
-1993     564  LOAD_GLOBAL          32  'len'
-         567  LOAD_FAST             0  'self'
-         570  LOAD_ATTR            39  'clothingsShirt'
-         573  CALL_FUNCTION_1       1  None
-         576  STORE_FAST            2  'numShirts'
-
-1994     579  LOAD_FAST            10  'shirtIdx'
-         582  LOAD_CONST            1  0
-         585  BINARY_SUBSCR    
-         586  STORE_FAST           19  'myShirtIdx'
-
-1996     589  LOAD_FAST            19  'myShirtIdx'
-         592  LOAD_FAST             2  'numShirts'
-         595  COMPARE_OP            5  '>='
-         598  JUMP_IF_FALSE        44  'to 645'
-       601_0  THEN                     646
-         601  POP_TOP          
-
-1997     602  LOAD_FAST             0  'self'
-         605  LOAD_ATTR            42  'notify'
-         608  LOAD_ATTR            43  'warning'
-         611  LOAD_CONST            6  'shirt (%s) out of range, capping it (%s)'
-         614  LOAD_FAST            19  'myShirtIdx'
-         617  LOAD_FAST             2  'numShirts'
-         620  LOAD_CONST            4  1
-         623  BINARY_SUBTRACT  
-         624  BUILD_TUPLE_2         2  None
-         627  BINARY_MODULO    
-         628  CALL_FUNCTION_1       1  None
-         631  POP_TOP          
-
-1999     632  LOAD_FAST             2  'numShirts'
-         635  LOAD_CONST            4  1
-         638  BINARY_SUBTRACT  
-         639  STORE_FAST           19  'myShirtIdx'
-         642  JUMP_FORWARD          1  'to 646'
-       645_0  COME_FROM           598  '598'
-         645  POP_TOP          
-       646_0  COME_FROM           642  '642'
-
-2000     646  LOAD_FAST             0  'self'
-         649  LOAD_ATTR            39  'clothingsShirt'
-         652  LOAD_FAST            19  'myShirtIdx'
-         655  BINARY_SUBSCR    
-         656  STORE_FAST           14  'layerShirt'
-
-2003     659  LOAD_GLOBAL          26  'NodePathCollection'
-         662  CALL_FUNCTION_0       0  None
-         665  STORE_FAST           12  'parts'
-
-2006     668  BUILD_LIST_0          0  None
-         671  STORE_FAST            3  'layerShirtModified'
-
-2007     674  BUILD_LIST_0          0  None
-         677  STORE_FAST            1  'layerShirt0Modified'
-
-2008     680  SETUP_LOOP           98  'to 781'
-         683  LOAD_FAST            14  'layerShirt'
-         686  LOAD_CONST            1  0
-         689  BINARY_SUBSCR    
-         690  GET_ITER         
-         691  FOR_ITER             86  'to 780'
-         694  STORE_FAST           21  'elem'
-
-2009     697  LOAD_FAST            13  'beltIdx'
-         700  LOAD_CONST            1  0
-         703  BINARY_SUBSCR    
-         704  LOAD_CONST            1  0
-         707  COMPARE_OP            3  '!='
-         710  JUMP_IF_FALSE        50  'to 763'
-       713_0  THEN                     764
-         713  POP_TOP          
-
-2010     714  LOAD_FAST            21  'elem'
-         717  LOAD_CONST            7  4
-         720  COMPARE_OP            2  '=='
-         723  JUMP_IF_FALSE        10  'to 736'
-       726_0  THEN                     760
-         726  POP_TOP          
-
-2011     727  LOAD_CONST            2  6
-         730  STORE_FAST           21  'elem'
-         733  JUMP_ABSOLUTE       764  'to 764'
-       736_0  COME_FROM           723  '723'
-         736  POP_TOP          
-
-2012     737  LOAD_FAST            21  'elem'
-         740  LOAD_CONST            8  5
-         743  COMPARE_OP            2  '=='
-         746  JUMP_IF_FALSE        10  'to 759'
-       749_0  THEN                     760
-         749  POP_TOP          
-
-2013     750  LOAD_CONST            9  7
-         753  STORE_FAST           21  'elem'
-         756  JUMP_ABSOLUTE       764  'to 764'
-       759_0  COME_FROM           746  '746'
-         759  POP_TOP          
-         760  JUMP_FORWARD          1  'to 764'
-       763_0  COME_FROM           710  '710'
-         763  POP_TOP          
-       764_0  COME_FROM           760  '760'
-
-2014     764  LOAD_FAST             1  'layerShirt0Modified'
-         767  LOAD_ATTR            48  'append'
-         770  LOAD_FAST            21  'elem'
-         773  CALL_FUNCTION_1       1  None
-         776  POP_TOP          
-         777  JUMP_BACK           691  'to 691'
-         780  POP_BLOCK        
-       781_0  COME_FROM           680  '680'
-
-2015     781  LOAD_FAST             3  'layerShirtModified'
-         784  LOAD_ATTR            48  'append'
-         787  LOAD_FAST             1  'layerShirt0Modified'
-         790  CALL_FUNCTION_1       1  None
-         793  POP_TOP          
-
-2016     794  SETUP_LOOP           31  'to 828'
-         797  LOAD_FAST            14  'layerShirt'
-         800  LOAD_CONST            4  1
-         803  SLICE+1          
-         804  GET_ITER         
-         805  FOR_ITER             19  'to 827'
-         808  STORE_FAST           21  'elem'
-
-2017     811  LOAD_FAST             3  'layerShirtModified'
-         814  LOAD_ATTR            48  'append'
-         817  LOAD_FAST            21  'elem'
-         820  CALL_FUNCTION_1       1  None
-         823  POP_TOP          
-         824  JUMP_BACK           805  'to 805'
-         827  POP_BLOCK        
-       828_0  COME_FROM           794  '794'
-
-2019     828  LOAD_FAST             0  'self'
-         831  LOAD_ATTR            28  'clothesTextures'
-         834  LOAD_CONST            0  None
-         837  COMPARE_OP            3  '!='
-         840  JUMP_IF_FALSE        38  'to 881'
-       843_0  THEN                     882
-         843  POP_TOP          
-
-2020     844  LOAD_FAST             0  'self'
-         847  LOAD_ATTR            30  'setPartTexture'
-         850  LOAD_CONST           10  'SHIRT'
-         853  LOAD_FAST            10  'shirtIdx'
-         856  LOAD_CONST            1  0
-         859  BINARY_SUBSCR    
-         860  LOAD_FAST            10  'shirtIdx'
-         863  LOAD_CONST            4  1
-         866  BINARY_SUBSCR    
-         867  LOAD_FAST             3  'layerShirtModified'
-         870  LOAD_CONST            1  0
-         873  BINARY_SUBSCR    
-         874  CALL_FUNCTION_4       4  None
-         877  POP_TOP          
-         878  JUMP_FORWARD          1  'to 882'
-       881_0  COME_FROM           840  '840'
-         881  POP_TOP          
-       882_0  COME_FROM           878  '878'
-
-2021     882  SETUP_LOOP           81  'to 966'
-         885  LOAD_GLOBAL          31  'range'
-         888  LOAD_CONST            1  0
-         891  LOAD_GLOBAL          32  'len'
-         894  LOAD_FAST             3  'layerShirtModified'
-         897  LOAD_CONST            1  0
-         900  BINARY_SUBSCR    
-         901  CALL_FUNCTION_1       1  None
-         904  CALL_FUNCTION_2       2  None
-         907  GET_ITER         
-         908  FOR_ITER             54  'to 965'
-         911  STORE_FAST           20  'j'
-
-2023     914  LOAD_FAST             0  'self'
-         917  LOAD_ATTR            34  'clothingsLayer1'
-         920  LOAD_FAST             3  'layerShirtModified'
-         923  LOAD_CONST            1  0
-         926  BINARY_SUBSCR    
-         927  LOAD_FAST            20  'j'
-         930  BINARY_SUBSCR    
-         931  BINARY_SUBSCR    
-         932  STORE_FAST           12  'parts'
-
-2024     935  LOAD_FAST            12  'parts'
-         938  LOAD_ATTR            35  'getNumPaths'
-         941  CALL_FUNCTION_0       0  None
-         944  JUMP_IF_FALSE        14  'to 961'
-         947  POP_TOP          
-
-2025     948  LOAD_FAST            12  'parts'
-         951  LOAD_ATTR             4  'unstash'
-         954  CALL_FUNCTION_0       0  None
-         957  POP_TOP          
-         958  JUMP_BACK           908  'to 908'
-       961_0  COME_FROM           944  '944'
-         961  POP_TOP          
-         962  JUMP_BACK           908  'to 908'
-         965  POP_BLOCK        
-       966_0  COME_FROM           882  '882'
-
-2026     966  LOAD_FAST            12  'parts'
-         969  LOAD_ATTR            35  'getNumPaths'
-         972  CALL_FUNCTION_0       0  None
-         975  JUMP_IF_FALSE        17  'to 995'
-       978_0  THEN                     996
-         978  POP_TOP          
-
-2027     979  LOAD_FAST             0  'self'
-         982  LOAD_ATTR            36  'handleLayer1Hiding'
-         985  LOAD_FAST             3  'layerShirtModified'
-         988  CALL_FUNCTION_1       1  None
-         991  POP_TOP          
-         992  JUMP_FORWARD          1  'to 996'
-       995_0  COME_FROM           975  '975'
-         995  POP_TOP          
-       996_0  COME_FROM           992  '992'
-
-2033     996  LOAD_FAST             0  'self'
-         999  LOAD_ATTR            49  'clothingsVest'
-        1002  LOAD_FAST             7  'vestIdx'
-        1005  LOAD_CONST            1  0
-        1008  BINARY_SUBSCR    
-        1009  BINARY_SUBSCR    
-        1010  STORE_FAST           18  'layerVest'
-
-2034    1013  LOAD_GLOBAL          26  'NodePathCollection'
-        1016  CALL_FUNCTION_0       0  None
-        1019  STORE_FAST           12  'parts'
-
-2037    1022  LOAD_FAST             0  'self'
-        1025  LOAD_ATTR            28  'clothesTextures'
-        1028  LOAD_CONST            0  None
-        1031  COMPARE_OP            3  '!='
-        1034  JUMP_IF_FALSE        38  'to 1075'
-      1037_0  THEN                     1076
-        1037  POP_TOP          
-
-2038    1038  LOAD_FAST             0  'self'
-        1041  LOAD_ATTR            30  'setPartTexture'
-        1044  LOAD_CONST           11  'VEST'
-        1047  LOAD_FAST             7  'vestIdx'
-        1050  LOAD_CONST            1  0
-        1053  BINARY_SUBSCR    
-        1054  LOAD_FAST             7  'vestIdx'
-        1057  LOAD_CONST            4  1
-        1060  BINARY_SUBSCR    
-        1061  LOAD_FAST            18  'layerVest'
-        1064  LOAD_CONST            1  0
-        1067  BINARY_SUBSCR    
-        1068  CALL_FUNCTION_4       4  None
-        1071  POP_TOP          
-        1072  JUMP_FORWARD          1  'to 1076'
-      1075_0  COME_FROM          1034  '1034'
-        1075  POP_TOP          
-      1076_0  COME_FROM          1072  '1072'
-
-2039    1076  SETUP_LOOP           81  'to 1160'
-        1079  LOAD_GLOBAL          31  'range'
-        1082  LOAD_CONST            1  0
-        1085  LOAD_GLOBAL          32  'len'
-        1088  LOAD_FAST            18  'layerVest'
-        1091  LOAD_CONST            1  0
-        1094  BINARY_SUBSCR    
-        1095  CALL_FUNCTION_1       1  None
-        1098  CALL_FUNCTION_2       2  None
-        1101  GET_ITER         
-        1102  FOR_ITER             54  'to 1159'
-        1105  STORE_FAST           20  'j'
-
-2040    1108  LOAD_FAST             0  'self'
-        1111  LOAD_ATTR            51  'clothingsLayer2'
-        1114  LOAD_FAST            18  'layerVest'
-        1117  LOAD_CONST            1  0
-        1120  BINARY_SUBSCR    
-        1121  LOAD_FAST            20  'j'
-        1124  BINARY_SUBSCR    
-        1125  BINARY_SUBSCR    
-        1126  STORE_FAST           12  'parts'
-
-2041    1129  LOAD_FAST            12  'parts'
-        1132  LOAD_ATTR            35  'getNumPaths'
-        1135  CALL_FUNCTION_0       0  None
-        1138  JUMP_IF_FALSE        14  'to 1155'
-        1141  POP_TOP          
-
-2042    1142  LOAD_FAST            12  'parts'
-        1145  LOAD_ATTR             4  'unstash'
-        1148  CALL_FUNCTION_0       0  None
-        1151  POP_TOP          
-        1152  JUMP_BACK          1102  'to 1102'
-      1155_0  COME_FROM          1138  '1138'
-        1155  POP_TOP          
-        1156  JUMP_BACK          1102  'to 1102'
-        1159  POP_BLOCK        
-      1160_0  COME_FROM          1076  '1076'
-
-2043    1160  LOAD_FAST            12  'parts'
-        1163  LOAD_ATTR            35  'getNumPaths'
-        1166  CALL_FUNCTION_0       0  None
-        1169  JUMP_IF_FALSE        85  'to 1257'
-      1172_0  THEN                     1258
-        1172  POP_TOP          
-
-2045    1173  LOAD_FAST             7  'vestIdx'
-        1176  LOAD_CONST            1  0
-        1179  BINARY_SUBSCR    
-        1180  LOAD_CONST            4  1
-        1183  COMPARE_OP            4  '>'
-        1186  JUMP_IF_FALSE        32  'to 1221'
-        1189  POP_TOP          
-
-2046    1190  LOAD_FAST             0  'self'
-        1193  LOAD_ATTR            52  'handleLayer2Hiding'
-        1196  LOAD_FAST             0  'self'
-        1199  LOAD_ATTR            34  'clothingsLayer1'
-        1202  LOAD_FAST             3  'layerShirtModified'
-        1205  LOAD_CONST           12  'base'
-        1208  LOAD_CONST           13  'front'
-        1211  LOAD_CONST           14  'collar_v_low'
-        1214  CALL_FUNCTION_5       5  None
-        1217  POP_TOP          
-        1218  JUMP_FORWARD         20  'to 1241'
-      1221_0  COME_FROM          1186  '1186'
-        1221  POP_TOP          
-
-2048    1222  LOAD_FAST             0  'self'
-        1225  LOAD_ATTR            52  'handleLayer2Hiding'
-        1228  LOAD_FAST             0  'self'
-        1231  LOAD_ATTR            34  'clothingsLayer1'
-        1234  LOAD_FAST             3  'layerShirtModified'
-        1237  CALL_FUNCTION_2       2  None
-        1240  POP_TOP          
-      1241_0  COME_FROM          1218  '1218'
-
-2049    1241  LOAD_FAST             0  'self'
-        1244  LOAD_ATTR            36  'handleLayer1Hiding'
-        1247  LOAD_FAST            18  'layerVest'
-        1250  CALL_FUNCTION_1       1  None
-        1253  POP_TOP          
-        1254  JUMP_FORWARD          1  'to 1258'
-      1257_0  COME_FROM          1169  '1169'
-        1257  POP_TOP          
-      1258_0  COME_FROM          1254  '1254'
-
-2052    1258  LOAD_FAST             0  'self'
-        1261  LOAD_ATTR            53  'handleHeadHiding'
-        1264  CALL_FUNCTION_0       0  None
-        1267  POP_TOP          
-
-2055    1268  LOAD_FAST             0  'self'
-        1271  LOAD_ATTR            54  'clothingsBelt'
-        1274  LOAD_FAST            13  'beltIdx'
-        1277  LOAD_CONST            1  0
-        1280  BINARY_SUBSCR    
-        1281  BINARY_SUBSCR    
-        1282  STORE_FAST            6  'layerBelt'
-
-2056    1285  LOAD_GLOBAL          26  'NodePathCollection'
-        1288  CALL_FUNCTION_0       0  None
-        1291  STORE_FAST           12  'parts'
-
-2059    1294  LOAD_FAST             0  'self'
-        1297  LOAD_ATTR            28  'clothesTextures'
-        1300  LOAD_CONST            0  None
-        1303  COMPARE_OP            3  '!='
-        1306  JUMP_IF_FALSE        38  'to 1347'
-      1309_0  THEN                     1348
-        1309  POP_TOP          
-
-2060    1310  LOAD_FAST             0  'self'
-        1313  LOAD_ATTR            30  'setPartTexture'
-        1316  LOAD_CONST           15  'BELT'
-        1319  LOAD_FAST            13  'beltIdx'
-        1322  LOAD_CONST            1  0
-        1325  BINARY_SUBSCR    
-        1326  LOAD_FAST            13  'beltIdx'
-        1329  LOAD_CONST            4  1
-        1332  BINARY_SUBSCR    
-        1333  LOAD_FAST             6  'layerBelt'
-        1336  LOAD_CONST            1  0
-        1339  BINARY_SUBSCR    
-        1340  CALL_FUNCTION_4       4  None
-        1343  POP_TOP          
-        1344  JUMP_FORWARD          1  'to 1348'
-      1347_0  COME_FROM          1306  '1306'
-        1347  POP_TOP          
-      1348_0  COME_FROM          1344  '1344'
-
-2064    1348  SETUP_LOOP           81  'to 1432'
-        1351  LOAD_GLOBAL          31  'range'
-        1354  LOAD_CONST            1  0
-        1357  LOAD_GLOBAL          32  'len'
-        1360  LOAD_FAST             6  'layerBelt'
-        1363  LOAD_CONST            1  0
-        1366  BINARY_SUBSCR    
-        1367  CALL_FUNCTION_1       1  None
-        1370  CALL_FUNCTION_2       2  None
-        1373  GET_ITER         
-        1374  FOR_ITER             54  'to 1431'
-        1377  STORE_FAST           20  'j'
-
-2065    1380  LOAD_FAST             0  'self'
-        1383  LOAD_ATTR            51  'clothingsLayer2'
-        1386  LOAD_FAST             6  'layerBelt'
-        1389  LOAD_CONST            1  0
-        1392  BINARY_SUBSCR    
-        1393  LOAD_FAST            20  'j'
-        1396  BINARY_SUBSCR    
-        1397  BINARY_SUBSCR    
-        1398  STORE_FAST           12  'parts'
-
-2066    1401  LOAD_FAST            12  'parts'
-        1404  LOAD_ATTR            35  'getNumPaths'
-        1407  CALL_FUNCTION_0       0  None
-        1410  JUMP_IF_FALSE        14  'to 1427'
-        1413  POP_TOP          
-
-2067    1414  LOAD_FAST            12  'parts'
-        1417  LOAD_ATTR             4  'unstash'
-        1420  CALL_FUNCTION_0       0  None
-        1423  POP_TOP          
-        1424  JUMP_BACK          1374  'to 1374'
-      1427_0  COME_FROM          1410  '1410'
-        1427  POP_TOP          
-        1428  JUMP_BACK          1374  'to 1374'
-        1431  POP_BLOCK        
-      1432_0  COME_FROM          1348  '1348'
-
-2068    1432  LOAD_FAST            12  'parts'
-        1435  LOAD_ATTR            35  'getNumPaths'
-        1438  CALL_FUNCTION_0       0  None
-        1441  JUMP_IF_TRUE         17  'to 1461'
-        1444  POP_TOP          
-        1445  LOAD_FAST             7  'vestIdx'
-        1448  LOAD_CONST            1  0
-        1451  BINARY_SUBSCR    
-        1452  LOAD_CONST           16  3
-        1455  COMPARE_OP            2  '=='
-      1458_0  COME_FROM          1441  '1441'
-        1458  JUMP_IF_FALSE        26  'to 1487'
-      1461_0  THEN                     1488
-        1461  POP_TOP          
-
-2070    1462  LOAD_FAST             0  'self'
-        1465  LOAD_ATTR            52  'handleLayer2Hiding'
-        1468  LOAD_FAST             0  'self'
-        1471  LOAD_ATTR            34  'clothingsLayer1'
-        1474  LOAD_FAST            15  'layerPant'
-        1477  LOAD_CONST           17  'belt'
-        1480  CALL_FUNCTION_3       3  None
-        1483  POP_TOP          
-        1484  JUMP_FORWARD          1  'to 1488'
-      1487_0  COME_FROM          1458  '1458'
-        1487  POP_TOP          
-      1488_0  COME_FROM          1484  '1484'
-
-2071    1488  LOAD_FAST            12  'parts'
-        1491  LOAD_ATTR            35  'getNumPaths'
-        1494  CALL_FUNCTION_0       0  None
-        1497  JUMP_IF_FALSE        43  'to 1543'
-        1500  POP_TOP          
-        1501  LOAD_FAST             7  'vestIdx'
-        1504  LOAD_CONST            1  0
-        1507  BINARY_SUBSCR    
-        1508  LOAD_CONST           16  3
-        1511  COMPARE_OP            2  '=='
-        1514  JUMP_IF_FALSE        26  'to 1543'
-        1517  POP_TOP          
-
-2072    1518  LOAD_FAST             0  'self'
-        1521  LOAD_ATTR            52  'handleLayer2Hiding'
-        1524  LOAD_FAST             0  'self'
-        1527  LOAD_ATTR            51  'clothingsLayer2'
-        1530  LOAD_FAST            18  'layerVest'
-        1533  LOAD_CONST           17  'belt'
-        1536  CALL_FUNCTION_3       3  None
-        1539  POP_TOP          
-        1540  JUMP_ABSOLUTE      1548  'to 1548'
-      1543_0  COME_FROM          1514  '1514'
-      1543_1  COME_FROM          1497  '1497'
-        1543  POP_TOP          
-        1544  JUMP_FORWARD          1  'to 1548'
-        1547  POP_TOP          
-      1548_0  COME_FROM          1544  '1544'
-
-2075    1548  LOAD_FAST             0  'self'
-        1551  LOAD_ATTR            56  'clothingsCoat'
-        1554  LOAD_FAST            17  'coatIdx'
-        1557  LOAD_CONST            1  0
-        1560  BINARY_SUBSCR    
-        1561  BINARY_SUBSCR    
-        1562  STORE_FAST            4  'layerCoat'
-
-2076    1565  LOAD_GLOBAL          26  'NodePathCollection'
-        1568  CALL_FUNCTION_0       0  None
-        1571  STORE_FAST           12  'parts'
-
-2079    1574  LOAD_FAST             0  'self'
-        1577  LOAD_ATTR            28  'clothesTextures'
-        1580  LOAD_CONST            0  None
-        1583  COMPARE_OP            3  '!='
-        1586  JUMP_IF_FALSE        62  'to 1651'
-      1589_0  THEN                     1652
-        1589  POP_TOP          
-
-2081    1590  LOAD_FAST            17  'coatIdx'
-        1593  LOAD_CONST            1  0
-        1596  BINARY_SUBSCR    
-        1597  LOAD_GLOBAL          58  'ClothingGlobals'
-        1600  LOAD_ATTR            59  'navy_coat_geoms'
-        1603  COMPARE_OP            7  'not-in'
-        1606  JUMP_IF_FALSE        38  'to 1647'
-      1609_0  THEN                     1648
-        1609  POP_TOP          
-
-2082    1610  LOAD_FAST             0  'self'
-        1613  LOAD_ATTR            30  'setPartTexture'
-        1616  LOAD_CONST           18  'COAT'
-        1619  LOAD_FAST            17  'coatIdx'
-        1622  LOAD_CONST            1  0
-        1625  BINARY_SUBSCR    
-        1626  LOAD_FAST            17  'coatIdx'
-        1629  LOAD_CONST            4  1
-        1632  BINARY_SUBSCR    
-        1633  LOAD_FAST             4  'layerCoat'
-        1636  LOAD_CONST            1  0
-        1639  BINARY_SUBSCR    
-        1640  CALL_FUNCTION_4       4  None
-        1643  POP_TOP          
-        1644  JUMP_ABSOLUTE      1652  'to 1652'
-      1647_0  COME_FROM          1606  '1606'
-        1647  POP_TOP          
-        1648  JUMP_FORWARD          1  'to 1652'
-      1651_0  COME_FROM          1586  '1586'
-        1651  POP_TOP          
-      1652_0  COME_FROM          1648  '1648'
-
-2083    1652  SETUP_LOOP           81  'to 1736'
-        1655  LOAD_GLOBAL          31  'range'
-        1658  LOAD_CONST            1  0
-        1661  LOAD_GLOBAL          32  'len'
-        1664  LOAD_FAST             4  'layerCoat'
-        1667  LOAD_CONST            1  0
-        1670  BINARY_SUBSCR    
-        1671  CALL_FUNCTION_1       1  None
-        1674  CALL_FUNCTION_2       2  None
-        1677  GET_ITER         
-        1678  FOR_ITER             54  'to 1735'
-        1681  STORE_FAST           20  'j'
-
-2084    1684  LOAD_FAST             0  'self'
-        1687  LOAD_ATTR            60  'clothingsLayer3'
-        1690  LOAD_FAST             4  'layerCoat'
-        1693  LOAD_CONST            1  0
-        1696  BINARY_SUBSCR    
-        1697  LOAD_FAST            20  'j'
-        1700  BINARY_SUBSCR    
-        1701  BINARY_SUBSCR    
-        1702  STORE_FAST           12  'parts'
-
-2085    1705  LOAD_FAST            12  'parts'
-        1708  LOAD_ATTR            35  'getNumPaths'
-        1711  CALL_FUNCTION_0       0  None
-        1714  JUMP_IF_FALSE        14  'to 1731'
-        1717  POP_TOP          
-
-2086    1718  LOAD_FAST            12  'parts'
-        1721  LOAD_ATTR             4  'unstash'
-        1724  CALL_FUNCTION_0       0  None
-        1727  POP_TOP          
-        1728  JUMP_BACK          1678  'to 1678'
-      1731_0  COME_FROM          1714  '1714'
-        1731  POP_TOP          
-        1732  JUMP_BACK          1678  'to 1678'
-        1735  POP_BLOCK        
-      1736_0  COME_FROM          1652  '1652'
-
-2087    1736  LOAD_FAST            12  'parts'
-        1739  LOAD_ATTR            35  'getNumPaths'
-        1742  CALL_FUNCTION_0       0  None
-        1745  JUMP_IF_FALSE       121  'to 1869'
-      1748_0  THEN                     1870
-        1748  POP_TOP          
-
-2088    1749  LOAD_FAST            17  'coatIdx'
-        1752  LOAD_CONST            1  0
-        1755  BINARY_SUBSCR    
-        1756  LOAD_CONST           19  2
-        1759  COMPARE_OP            2  '=='
-        1762  JUMP_IF_FALSE        46  'to 1811'
-        1765  POP_TOP          
-        1766  LOAD_FAST             7  'vestIdx'
-        1769  LOAD_CONST            1  0
-        1772  BINARY_SUBSCR    
-        1773  LOAD_CONST           16  3
-        1776  COMPARE_OP            2  '=='
-        1779  JUMP_IF_FALSE        29  'to 1811'
-        1782  POP_TOP          
-
-2089    1783  LOAD_FAST             0  'self'
-        1786  LOAD_ATTR            61  'handleLayer3Hiding'
-        1789  LOAD_FAST             0  'self'
-        1792  LOAD_ATTR            51  'clothingsLayer2'
-        1795  LOAD_FAST            18  'layerVest'
-        1798  LOAD_FAST             3  'layerShirtModified'
-        1801  LOAD_CONST           20  'legs_base'
-        1804  CALL_FUNCTION_4       4  None
-        1807  POP_TOP          
-        1808  JUMP_FORWARD         23  'to 1834'
-      1811_0  COME_FROM          1779  '1779'
-      1811_1  COME_FROM          1762  '1762'
-        1811  POP_TOP          
-
-2091    1812  LOAD_FAST             0  'self'
-        1815  LOAD_ATTR            61  'handleLayer3Hiding'
-        1818  LOAD_FAST             0  'self'
-        1821  LOAD_ATTR            51  'clothingsLayer2'
-        1824  LOAD_FAST            18  'layerVest'
-        1827  LOAD_FAST             3  'layerShirtModified'
-        1830  CALL_FUNCTION_3       3  None
-        1833  POP_TOP          
-      1834_0  COME_FROM          1808  '1808'
-
-2092    1834  LOAD_FAST             0  'self'
-        1837  LOAD_ATTR            52  'handleLayer2Hiding'
-        1840  LOAD_FAST             0  'self'
-        1843  LOAD_ATTR            51  'clothingsLayer2'
-        1846  LOAD_FAST             6  'layerBelt'
-        1849  CALL_FUNCTION_2       2  None
-        1852  POP_TOP          
-
-2093    1853  LOAD_FAST             0  'self'
-        1856  LOAD_ATTR            36  'handleLayer1Hiding'
-        1859  LOAD_FAST             4  'layerCoat'
-        1862  CALL_FUNCTION_1       1  None
-        1865  POP_TOP          
-        1866  JUMP_FORWARD          1  'to 1870'
-      1869_0  COME_FROM          1745  '1745'
-        1869  POP_TOP          
-      1870_0  COME_FROM          1866  '1866'
-
-2096    1870  LOAD_FAST             0  'self'
-        1873  LOAD_ATTR             5  'pirate'
-        1876  LOAD_ATTR            62  'generateColor'
-        1879  CALL_FUNCTION_0       0  None
-        1882  POP_TOP          
-
-2097    1883  LOAD_FAST             0  'self'
-        1886  LOAD_ATTR             5  'pirate'
-        1889  LOAD_ATTR            63  'generateClothesColor'
-        1892  CALL_FUNCTION_0       0  None
-        1895  POP_TOP          
-        1896  LOAD_CONST            0  None
-        1899  RETURN_VALUE     
-
-Parse error at or near `LOAD_CONST' instruction at offset 1896
+    def handleClothesHidingOld(self):
+        self.clothing.stash()
+        self.body.unstash()
+        if self.pirate.zombie:
+            dna = self.dnaZomb
+        else:
+            dna = self.pirate.style
+
+        shirtIdx = dna.getClothesShirt()
+        vestIdx = dna.getClothesVest()
+        coatIdx = dna.getClothesCoat()
+        pantIdx = dna.getClothesPant()
+        beltIdx = dna.getClothesBelt()
+        shoeIdx = dna.getClothesShoe()
+        hatIdx = dna.getClothesHat()
+        layerPant = self.clothingsPant[pantIdx[0]]
+        parts = NodePathCollection()
+        if self.clothesTextures != None:
+            if pantIdx[0] == 6:
+                self.setPartTexture('PANT', pantIdx[0], pantIdx[1], [
+                    layerPant[0][1]])
+            else:
+                self.setPartTexture('PANT', pantIdx[0], pantIdx[1], layerPant[0])
+
+        for j in range(0, len(layerPant[0])):
+            parts = self.clothingsLayer1[layerPant[0][j]]
+            if parts.getNumPaths():
+                parts.unstash()
+                continue
+
+        self.handleLayer1Hiding(layerPant)
+        layerShoe = self.clothingsShoe[shoeIdx[0]]
+        parts = NodePathCollection()
+        if self.clothesTextures != None:
+            self.setPartTexture('SHOE', shoeIdx[0], shoeIdx[1], layerShoe[0])
+
+        for j in range(0, len(layerShoe[0])):
+            parts = self.clothingsLayer1[layerShoe[0][j]]
+            if parts.getNumPaths():
+                parts.unstash()
+                continue
+
+        self.handleLayer1Hiding(layerShoe)
+        numShirts = len(self.clothingsShirt)
+        myShirtIdx = shirtIdx[0]
+        if myShirtIdx >= numShirts:
+            self.notify.warning('shirt (%s) out of range, capping it (%s)' % (myShirtIdx, numShirts - 1))
+            myShirtIdx = numShirts - 1
+
+        layerShirt = self.clothingsShirt[myShirtIdx]
+        parts = NodePathCollection()
+        layerShirtModified = []
+        layerShirt0Modified = []
+        for elem in layerShirt[0]:
+            if beltIdx[0] != 0:
+                if elem == 4:
+                    elem = 6
+                elif elem == 5:
+                    elem = 7
+
+            layerShirt0Modified.append(elem)
+
+        layerShirtModified.append(layerShirt0Modified)
+        for elem in layerShirt[1:]:
+            layerShirtModified.append(elem)
+
+        if self.clothesTextures != None:
+            self.setPartTexture('SHIRT', shirtIdx[0], shirtIdx[1], layerShirtModified[0])
+
+        for j in range(0, len(layerShirtModified[0])):
+            parts = self.clothingsLayer1[layerShirtModified[0][j]]
+            if parts.getNumPaths():
+                parts.unstash()
+                continue
+
+        if parts.getNumPaths():
+            self.handleLayer1Hiding(layerShirtModified)
+
+        layerVest = self.clothingsVest[vestIdx[0]]
+        parts = NodePathCollection()
+        if self.clothesTextures != None:
+            self.setPartTexture('VEST', vestIdx[0], vestIdx[1], layerVest[0])
+
+        for j in range(0, len(layerVest[0])):
+            parts = self.clothingsLayer2[layerVest[0][j]]
+            if parts.getNumPaths():
+                parts.unstash()
+                continue
+
+        if parts.getNumPaths():
+            if vestIdx[0] > 1:
+                self.handleLayer2Hiding(self.clothingsLayer1, layerShirtModified, 'base', 'front', 'collar_v_low')
+            else:
+                self.handleLayer2Hiding(self.clothingsLayer1, layerShirtModified)
+
+            self.handleLayer1Hiding(layerVest)
+
+        self.handleHeadHiding()
+        layerBelt = self.clothingsBelt[beltIdx[0]]
+        parts = NodePathCollection()
+        if self.clothesTextures != None:
+            self.setPartTexture('BELT', beltIdx[0], beltIdx[1], layerBelt[0])
+
+        for j in range(0, len(layerBelt[0])):
+            parts = self.clothingsLayer2[layerBelt[0][j]]
+            if parts.getNumPaths():
+                parts.unstash()
+                continue
+
+        if parts.getNumPaths() or vestIdx[0] == 3:
+            self.handleLayer2Hiding(self.clothingsLayer1, layerPant, 'belt')
+
+        if parts.getNumPaths() and vestIdx[0] == 3:
+            self.handleLayer2Hiding(self.clothingsLayer2, layerVest, 'belt')
+
+        vestIdx[0] == 3
+        layerCoat = self.clothingsCoat[coatIdx[0]]
+        parts = NodePathCollection()
+        if self.clothesTextures != None:
+            if coatIdx[0] not in ClothingGlobals.navy_coat_geoms:
+                self.setPartTexture('COAT', coatIdx[0], coatIdx[1], layerCoat[0])
+
+        for j in range(0, len(layerCoat[0])):
+            parts = self.clothingsLayer3[layerCoat[0][j]]
+            if parts.getNumPaths():
+                parts.unstash()
+                continue
+
+        if parts.getNumPaths():
+            if coatIdx[0] == 2 and vestIdx[0] == 3:
+                self.handleLayer3Hiding(self.clothingsLayer2, layerVest, layerShirtModified, 'legs_base')
+            else:
+                self.handleLayer3Hiding(self.clothingsLayer2, layerVest, layerShirtModified)
+            self.handleLayer2Hiding(self.clothingsLayer2, layerBelt)
+            self.handleLayer1Hiding(layerCoat)
+
+        self.pirate.generateColor()
+        self.pirate.generateClothesColor()
 
     def handleClothesGui(self, type, texIdx):
         clothing = self.currentClothing[type]
@@ -2105,6 +1312,7 @@ Parse error at or near `LOAD_CONST' instruction at offset 1896
             self.currentClothing[type][1] = 0
         if texIdx < 0:
             self.currentClothing[type][1] = len(clothes_textures[type][clothing[0]]) - 1
+
         self.pirate.setClothesByType(type, clothing[0], clothing[1])
         self.handleClothesHiding()
 

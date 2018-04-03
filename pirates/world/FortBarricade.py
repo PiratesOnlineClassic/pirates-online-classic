@@ -2,11 +2,15 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.world.FortBarricade
-from pandac.PandaModules import NodePath, Point3
-from direct.directnotify import DirectNotifyGlobal
-from pandac.PandaModules import rad2Deg, Vec3, GeomVertexFormat, GeomVertexData, GeomVertexWriter, Geom, GeomTriangles, GeomNode, CollisionNode, CollisionPolygon
 import math
+
+from direct.directnotify import DirectNotifyGlobal
+from pandac.PandaModules import (CollisionNode, CollisionPolygon, Geom,
+                                 GeomNode, GeomTriangles, GeomVertexData,
+                                 GeomVertexFormat, GeomVertexWriter, NodePath,
+                                 Point3, Vec3, rad2Deg)
 from pirates.piratesbase import PiratesGlobals
+
 
 class FortBarricade:
     __module__ = __name__

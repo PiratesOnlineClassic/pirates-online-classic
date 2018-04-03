@@ -4,6 +4,7 @@
 # Embedded file name: pirates.piratesbase.TODGlobals
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
+
 StateDict = {PiratesGlobals.TOD_DAWN: 'Dawn', PiratesGlobals.TOD_DAWN2DAY: 'Dawn2Day', PiratesGlobals.TOD_DAY: 'Day', PiratesGlobals.TOD_DAY2DUSK: 'Day2Dusk', PiratesGlobals.TOD_DUSK: 'Dusk', PiratesGlobals.TOD_DUSK2NIGHT: 'Dusk2Night', PiratesGlobals.TOD_NIGHT: 'Night', PiratesGlobals.TOD_NIGHT2STARS: 'Night2Stars', PiratesGlobals.TOD_STARS: 'Stars', PiratesGlobals.TOD_STARS2DAWN: 'Stars2Dawn', PiratesGlobals.TOD_DAY2STORM: 'Day2Storm', PiratesGlobals.TOD_HALLOWEEN: 'HalloweenNight', PiratesGlobals.TOD_FULLMOON: 'FullMoon', PiratesGlobals.TOD_HALF2FULLMOON: 'Half2FullMoon', PiratesGlobals.TOD_FULL2HALFMOON: 'Full2HalfMoon'}
 TOD_REGULAR_CYCLE = 0
 TOD_HALLOWEEN_CYCLE = 1

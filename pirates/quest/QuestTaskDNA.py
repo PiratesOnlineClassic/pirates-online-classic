@@ -2,22 +2,23 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.quest.QuestTaskDNA
+import random
+import string
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase.PythonUtil import POD, invertDict, makeTuple
-from pirates.quest import QuestEvent, QuestTaskState
-from pirates.piratesbase import PLocalizer
-from pirates.pirate import AvatarTypes
-from pirates.piratesbase import PiratesGlobals
-import string, random
 from pirates.battle import EnemyGlobals
-from pirates.ship import ShipGlobals
-from pirates.quest.QuestConstants import NPCIds, LocationIds, getLocationList
-from pirates.quest.QuestConstants import PropIds, getPropList
-from pirates.quest.QuestConstants import TreasureIds, getTreasureList
-from pirates.quest.QuestConstants import ShipIds, getShipList
-from pirates.quest import QuestReward
-from pirates.quest.QuestPath import QuestGoal
+from pirates.pirate import AvatarTypes
+from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
+from pirates.quest import QuestEvent, QuestReward, QuestTaskState
+from pirates.quest.QuestConstants import (LocationIds, NPCIds, PropIds,
+                                          ShipIds, TreasureIds,
+                                          getLocationList, getPropList,
+                                          getShipList, getTreasureList)
+from pirates.quest.QuestPath import QuestGoal
+from pirates.ship import ShipGlobals
+
 
 class QuestTaskDNA(POD):
     __module__ = __name__

@@ -4,6 +4,7 @@
 # Embedded file name: pirates.quest.QuestTaskState
 from direct.showbase.PythonUtil import ParamObj
 
+
 class QuestTaskState(ParamObj):
     __module__ = __name__
 

@@ -4,9 +4,9 @@
 # Embedded file name: pirates.battle.ClientComboDiary
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.ClockDelta import globalClockDelta
-from pirates.battle import WeaponGlobals
+from pirates.battle import ComboDiary, WeaponGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.battle import ComboDiary
+
 
 class ClientComboDiary(ComboDiary.ComboDiary):
     __module__ = __name__

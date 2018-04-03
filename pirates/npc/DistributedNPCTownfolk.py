@@ -2,40 +2,32 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.npc.DistributedNPCTownfolk
-import random, re
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
+import random
+import re
+
+import Townfolk
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.showbase.PythonUtil import report
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
-from pirates.uberdog.UberDogGlobals import *
-from pirates.piratesgui import InteractGUI, NamePanelGui
-from otp.otpbase import OTPGlobals
+from pandac.PandaModules import *
+from pirates.battle import (DistributedBattleAvatar, DistributedBattleNPC,
+                            EnemyGlobals, WeaponGlobals)
 from pirates.distributed import InteractGlobals
-from pirates.battle import DistributedBattleNPC
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import MusicManager
-from pirates.leveleditor import NPCList
-from pirates.quest import QuestParser
-from pirates.quest import QuestTaskDNA
-from pirates.pirate import HumanDNA, Biped
-from pirates.piratesgui.NewTutorialPanel import NewTutorialPanel
-from pirates.economy import DistributedShopKeeper
-from pirates.economy import EconomyGlobals
-from pirates.piratesgui import PDialog
-import Townfolk
+from pirates.economy import DistributedShopKeeper, EconomyGlobals
 from pirates.interact import InteractiveBase
-from pirates.leveleditor import CustomAnims
-from direct.showbase.PythonUtil import report
-from pirates.pirate import AvatarTypes
-from pirates.pirate import TitleGlobals
-from pirates.battle import DistributedBattleAvatar
-from pirates.battle import EnemyGlobals
-from pirates.piratesgui import PiratesGuiGlobals
+from pirates.leveleditor import CustomAnims, NPCList
+from pirates.pirate import AvatarTypes, Biped, HumanDNA, TitleGlobals
+from pirates.piratesbase import MusicManager, PiratesGlobals, PLocalizer
+from pirates.piratesgui import (InteractGUI, NamePanelGui, PDialog,
+                                PiratesGuiGlobals)
+from pirates.piratesgui.NewTutorialPanel import NewTutorialPanel
+from pirates.quest import QuestParser, QuestTaskDNA
 from pirates.quest.QuestConstants import NPCIds
-from pirates.battle import WeaponGlobals
+from pirates.uberdog.UberDogGlobals import *
+
 
 class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, DistributedShopKeeper.DistributedShopKeeper, Townfolk.Townfolk):
     __module__ = __name__

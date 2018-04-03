@@ -4,6 +4,7 @@
 # Embedded file name: pirates.kraken.GrabberGameFSM
 from pirates.pirate.BattleAvatarGameFSM import BattleAvatarGameFSM
 
+
 class GrabberGameFSM(BattleAvatarGameFSM):
     __module__ = __name__
 # okay decompiling .\pirates\kraken\GrabberGameFSM.pyc

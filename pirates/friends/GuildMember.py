@@ -2,16 +2,14 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.friends.GuildMember
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
-from otp.otpbase import OTPLocalizer
-from otp.otpbase import OTPGlobals
-from pirates.piratesgui import PDialog
-from pirates.piratesgui import GuiPanel
-from pirates.piratesgui import PiratesGuiGlobals
+from direct.gui.DirectGui import *
+from otp.otpbase import OTPGlobals, OTPLocalizer
+from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
+from pirates.piratesgui import GuiPanel, PDialog, PiratesGuiGlobals
 from pirates.piratesgui.RequestButton import RequestButton
+
 
 class GuildMemberButton(RequestButton):
     __module__ = __name__

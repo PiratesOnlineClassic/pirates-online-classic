@@ -2,16 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.ship.PlayerShip
-from pandac.PandaModules import Vec4
 import direct.interval.IntervalGlobal as IG
 from direct.fsm.StatePush import StateVar
-from pirates.ship.DistributedShip import DistributedShip
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.ship.ShipRepairSpotMgr import ShipRepairSpotMgr
-from pirates.pvp import PVPGlobals
 from otp.otpbase import OTPGlobals
+from pandac.PandaModules import Vec4
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.pvp import PVPGlobals
+from pirates.ship.DistributedShip import DistributedShip
+from pirates.ship.ShipRepairSpotMgr import ShipRepairSpotMgr
+
 
 class PlayerShip(DistributedShip):
     __module__ = __name__

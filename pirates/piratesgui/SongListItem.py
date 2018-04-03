@@ -3,19 +3,18 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.SongListItem
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
 from direct.task.Task import Task
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.battle import WeaponGlobals
+from pandac.PandaModules import *
+from pirates.battle import CannonGlobals, WeaponGlobals
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *
-from pirates.battle import CannonGlobals
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.uberdog import UberDogGlobals
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.BorderFrame import BorderFrame
 from pirates.reputation import ReputationGlobals
+from pirates.uberdog import UberDogGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class SongListItem(DirectButton):
     __module__ = __name__

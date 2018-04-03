@@ -2,15 +2,15 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.quest.DistributedQuest
-from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
-from pirates.quest import QuestDB, Quest, QuestBase, QuestTaskDNA, QuestConstants
-from pirates.cutscene import Cutscene, CutsceneData
-from pirates.piratesgui import RadarGui, NewTutorialPanel
-from pirates.piratesbase import PLocalizer, PiratesGlobals
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.cutscene import CutsceneActor
+from pandac.PandaModules import *
+from pirates.cutscene import Cutscene, CutsceneActor, CutsceneData
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import NewTutorialPanel, PiratesGuiGlobals, RadarGui
+from pirates.quest import (Quest, QuestBase, QuestConstants, QuestDB,
+                           QuestTaskDNA)
+
 QuestPopupDict = {'c2_visit_will_turner': ['showBlacksmith', 'closeShowBlacksmith'], 'c2.2defeatSkeletons': ['showSkeleton', 'closeShowSkeleton'], 'c2_visit_tia_dalma': ['showJungleTia', 'closeShowJungleTia'], 'c2.4recoverOrders': ['showNavy', 'closeShowNavy'], 'c2.5deliverOrders': ['showGovMansion', 'closeShowGovMansion'], 'c2.9visitDarby': ['showDarby', 'closeShowDarby'], 'c2.10visitDockworker': ['showDinghy', 'closeShowDinghy'], 'c2.11visitBarbossa': ['showBarbossa', 'closeShowbarbossa'], 'c3visitJack': ['showTortugaJack', 'closeShowTortugaJack']}
 QUEST_TYPE_AVATAR = 0
 QUEST_TYPE_TM = 1

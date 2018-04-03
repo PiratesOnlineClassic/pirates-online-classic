@@ -3,10 +3,11 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.creature.DistributedAnimal
 from direct.directnotify import DirectNotifyGlobal
+from otp.otpbase import OTPRender
 from pirates.creature import DistributedCreature
 from pirates.pirate import AvatarTypes
 from pirates.piratesbase import PiratesGlobals
-from otp.otpbase import OTPRender
+
 
 class DistributedAnimal(DistributedCreature.DistributedCreature):
     __module__ = __name__

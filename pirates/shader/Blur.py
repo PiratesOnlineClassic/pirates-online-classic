@@ -2,28 +2,15 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shader.Blur
-Instruction context:
-   
- 288     136  LOAD_CONST            5  1.0
-            139  LOAD_GLOBAL          14  'random'
-            142  LOAD_ATTR            14  'random'
-            145  CALL_FUNCTION_0       0  None
-            148  LOAD_FAST             3  'maximum_range'
-            151  BINARY_MULTIPLY  
-            152  LOAD_FAST             3  'maximum_range'
-            155  LOAD_CONST            6  2.0
-            158  BINARY_DIVIDE    
-            159  BINARY_SUBTRACT  
-            160  BINARY_ADD       
-            161  STORE_FAST            4  'factor'
-            164  JUMP_ABSOLUTE       232  'to 232'
-->          167  POP_TOP          
-import math, random
-from pandac.PandaModules import *
+import math
+import random
+
 from direct.gui.DirectGui import *
-from direct.task import Task
 from direct.showbase.DirectObject import DirectObject
+from direct.task import Task
 from otp.otpbase import OTPRender
+from pandac.PandaModules import *
+
 
 class DependencyArray:
     __module__ = __name__
@@ -233,138 +220,32 @@ class Glow(DirectObject):
         taskMgr.add(self.camTask, 'glowCamTask-' + str(id(self)), priority=49)
         return
 
-    def camTask--- This code section failed: ---
+    def camTask(self, task):
+        self.updateCamera(self.camera)
+        time = task.time
+        if self.first_tick:
+            elapsed_time = 0.0
+            self.first_tick = False
+        else:
+            elapsed_time = time - self.current_time
 
- 268       0  LOAD_FAST             0  'self'
-           3  LOAD_ATTR             1  'updateCamera'
-           6  LOAD_FAST             0  'self'
-           9  LOAD_ATTR             2  'camera'
-          12  CALL_FUNCTION_1       1  None
-          15  POP_TOP          
+        self.current_time = time
+        self.elapsed_time = elapsed_time
+        self.speed = 180.0
+        distance = self.current_time * self.speed
+        if self.hdr:
+            if self.glitter:
+                maximum_range = 0.14
+                factor = 1.0 + (random.random() * maximum_range - maximum_range / 2.0)
+            else:
+                angle = distance % 360.0
+                angle *= math.pi / 180.0
+                factor = 1.0 + math.sin(angle) * (maximum_range / 2.0)
+        else:
+            factor = 1.0
 
- 270      16  LOAD_FAST             1  'task'
-          19  LOAD_ATTR             4  'time'
-          22  STORE_FAST            6  'time'
-
- 271      25  LOAD_FAST             0  'self'
-          28  LOAD_ATTR             5  'first_tick'
-          31  JUMP_IF_FALSE        19  'to 53'
-          34  POP_TOP          
-
- 272      35  LOAD_CONST            1  0.0
-          38  STORE_FAST            5  'elapsed_time'
-
- 273      41  LOAD_GLOBAL           7  'False'
-          44  LOAD_FAST             0  'self'
-          47  STORE_ATTR            5  'first_tick'
-          50  JUMP_FORWARD         14  'to 67'
-        53_0  COME_FROM            31  '31'
-          53  POP_TOP          
-
- 275      54  LOAD_FAST             6  'time'
-          57  LOAD_FAST             0  'self'
-          60  LOAD_ATTR             8  'current_time'
-          63  BINARY_SUBTRACT  
-          64  STORE_FAST            5  'elapsed_time'
-        67_0  COME_FROM            50  '50'
-
- 277      67  LOAD_FAST             6  'time'
-          70  LOAD_FAST             0  'self'
-          73  STORE_ATTR            8  'current_time'
-
- 278      76  LOAD_FAST             5  'elapsed_time'
-          79  LOAD_FAST             0  'self'
-          82  STORE_ATTR            6  'elapsed_time'
-
- 280      85  LOAD_CONST            2  180.0
-          88  LOAD_FAST             0  'self'
-          91  STORE_ATTR            9  'speed'
-
- 282      94  LOAD_FAST             0  'self'
-          97  LOAD_ATTR             8  'current_time'
-         100  LOAD_FAST             0  'self'
-         103  LOAD_ATTR             9  'speed'
-         106  BINARY_MULTIPLY  
-         107  STORE_FAST            2  'distance'
-
- 284     110  LOAD_FAST             0  'self'
-         113  LOAD_ATTR            11  'hdr'
-         116  JUMP_IF_FALSE       132  'to 251'
-       119_0  THEN                     252
-         119  POP_TOP          
-
- 285     120  LOAD_FAST             0  'self'
-         123  LOAD_ATTR            12  'glitter'
-         126  JUMP_IF_FALSE        96  'to 225'
-         129  POP_TOP          
-
- 286     130  LOAD_CONST            3  0.14
-         133  STORE_FAST            3  'maximum_range'
-
- 288     136  LOAD_CONST            5  1.0
-         139  LOAD_GLOBAL          14  'random'
-         142  LOAD_ATTR            14  'random'
-         145  CALL_FUNCTION_0       0  None
-         148  LOAD_FAST             3  'maximum_range'
-         151  BINARY_MULTIPLY  
-         152  LOAD_FAST             3  'maximum_range'
-         155  LOAD_CONST            6  2.0
-         158  BINARY_DIVIDE    
-         159  BINARY_SUBTRACT  
-         160  BINARY_ADD       
-         161  STORE_FAST            4  'factor'
-         164  JUMP_ABSOLUTE       232  'to 232'
-         167  POP_TOP          
-
- 290     168  LOAD_FAST             2  'distance'
-         171  LOAD_CONST            7  360.0
-         174  BINARY_MODULO    
-         175  STORE_FAST            7  'angle'
-
- 291     178  LOAD_FAST             7  'angle'
-         181  LOAD_GLOBAL          17  'math'
-         184  LOAD_ATTR            18  'pi'
-         187  LOAD_CONST            2  180.0
-         190  BINARY_DIVIDE    
-         191  INPLACE_MULTIPLY 
-         192  STORE_FAST            7  'angle'
-
- 292     195  LOAD_CONST            5  1.0
-         198  LOAD_GLOBAL          17  'math'
-         201  LOAD_ATTR            19  'sin'
-         204  LOAD_FAST             7  'angle'
-         207  CALL_FUNCTION_1       1  None
-         210  LOAD_FAST             3  'maximum_range'
-         213  LOAD_CONST            6  2.0
-         216  BINARY_DIVIDE    
-         217  BINARY_MULTIPLY  
-         218  BINARY_ADD       
-         219  STORE_FAST            4  'factor'
-         222  JUMP_FORWARD          7  'to 232'
-       225_0  COME_FROM           126  '126'
-         225  POP_TOP          
-
- 294     226  LOAD_CONST            5  1.0
-         229  STORE_FAST            4  'factor'
-       232_0  COME_FROM           222  '222'
-
- 295     232  LOAD_FAST             0  'self'
-         235  LOAD_ATTR            11  'hdr'
-         238  LOAD_ATTR            20  'setGlowFactor'
-         241  LOAD_FAST             4  'factor'
-         244  CALL_FUNCTION_1       1  None
-         247  POP_TOP          
-         248  JUMP_FORWARD          1  'to 252'
-       251_0  COME_FROM           116  '116'
-         251  POP_TOP          
-       252_0  COME_FROM           248  '248'
-
- 299     252  LOAD_GLOBAL          21  'Task'
-         255  LOAD_ATTR            22  'cont'
-         258  RETURN_VALUE     
-          -1  RETURN_LAST      
-
-Parse error at or near `POP_TOP' instruction at offset 167
+        self.hdr.setGlowFactor(factor)
+        return task.cont
 
     def updateCamera(self, camera):
         if camera:

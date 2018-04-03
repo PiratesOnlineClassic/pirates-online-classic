@@ -2,78 +2,71 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.DistributedBattleAvatar
-import math, random
-from direct.showbase.DirectObject import *
-from direct.showbase.PythonUtil import lerp, clampScalar
-from direct.interval.IntervalGlobal import *
-from direct.distributed.ClockDelta import *
-from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.fsm import FSM
-from direct.controls import BattleWalker
-from direct.distributed import DistributedSmoothNode
-from direct.showutil import Rope
+import math
+import random
+
 from direct.actor import Actor
+from direct.controls import BattleWalker
+from direct.directnotify.DirectNotifyGlobal import directNotify
+from direct.distributed import DistributedSmoothNode
+from direct.distributed.ClockDelta import *
+from direct.fsm import FSM
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import *
+from direct.showbase.PythonUtil import clampScalar, lerp, report
+from direct.showutil import Rope
 from direct.task import Task
-from direct.showbase.PythonUtil import report
-from otp.otpbase import OTPGlobals
-from pirates.piratesbase import TeamUtils
-from pirates.reputation.DistributedReputationAvatar import DistributedReputationAvatar
-from pirates.piratesbase import PiratesGlobals
-from pirates.battle import WeaponGlobals
-from pirates.battle import Pistol
-from pirates.movement import MotionFSM
-from pirates.pirate import Human
-from pirates.pirate import AvatarTypes
-from pirates.reputation import ReputationGlobals
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.economy.EconomyGlobals import *
-from pirates.reputation import ReputationGlobals
-from pirates.economy import EconomyGlobals
-from pirates.battle import BattleRandom
+from otp.otpbase import OTPGlobals, OTPRender
+from pandac.PandaModules import *
+from pirates.battle import BattleRandom, EnemyGlobals, Pistol, WeaponGlobals
+from pirates.battle.Teamable import Teamable
 from pirates.battle.WeaponBase import WeaponBase
-from pirates.battle import EnemyGlobals
+from pirates.economy import EconomyGlobals
+from pirates.economy.EconomyGlobals import *
+from pirates.effects import PolyTrail, TextEffect
 from pirates.effects.AttuneEffect import AttuneEffect
-from pirates.effects.SpectralSmoke import SpectralSmoke
-from pirates.effects.SmokeWisps import SmokeWisps
-from pirates.effects.Flame import Flame
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import Freebooter
+from pirates.effects.AttuneSmoke import AttuneSmoke
+from pirates.effects.BlackSmoke import BlackSmoke
+from pirates.effects.CameraShaker import CameraShaker
 from pirates.effects.CannonExplosion import CannonExplosion
 from pirates.effects.CannonSplash import CannonSplash
 from pirates.effects.DirtClod import DirtClod
 from pirates.effects.DustCloud import DustCloud
-from pirates.effects.SmokeCloud import SmokeCloud
-from pirates.effects.RockShower import RockShower
-from pirates.effects.ShipSplintersA import ShipSplintersA
 from pirates.effects.DustRing import DustRing
-from pirates.effects.BlackSmoke import BlackSmoke
-from pirates.effects.ExplosionFlip import ExplosionFlip
 from pirates.effects.ExplosionCloud import ExplosionCloud
-from pirates.effects.ShockwaveRing import ShockwaveRing
-from pirates.effects.CameraShaker import CameraShaker
-from pirates.effects.FireTrail import FireTrail
+from pirates.effects.ExplosionFlip import ExplosionFlip
 from pirates.effects.Fire import Fire
-from pirates.effects.GreenBlood import GreenBlood
-from pirates.effects.HitFlashA import HitFlashA
-from pirates.effects.ShipDebris import ShipDebris
-from pirates.effects.WoodShards import WoodShards
-from pirates.effects.MuzzleFlash import MuzzleFlash
+from pirates.effects.FireTrail import FireTrail
+from pirates.effects.Flame import Flame
 from pirates.effects.GraveShackles import GraveShackles
-from pirates.effects.CameraShaker import CameraShaker
-from pirates.effects.JRSpawnEffect import JRSpawnEffect
-from pirates.effects.PoisonEffect import PoisonEffect
+from pirates.effects.GreenBlood import GreenBlood
 from pirates.effects.GroundDirt import GroundDirt
-from pirates.effects.AttuneSmoke import AttuneSmoke
-from pirates.effects.StunEffect import StunEffect
+from pirates.effects.HitFlashA import HitFlashA
+from pirates.effects.JRSpawnEffect import JRSpawnEffect
+from pirates.effects.MuzzleFlash import MuzzleFlash
+from pirates.effects.PoisonEffect import PoisonEffect
+from pirates.effects.RockShower import RockShower
+from pirates.effects.ShipDebris import ShipDebris
+from pirates.effects.ShipSplintersA import ShipSplintersA
+from pirates.effects.ShockwaveRing import ShockwaveRing
 from pirates.effects.SlowEffect import SlowEffect
+from pirates.effects.SmokeCloud import SmokeCloud
+from pirates.effects.SmokeWisps import SmokeWisps
+from pirates.effects.SpectralSmoke import SpectralSmoke
+from pirates.effects.StunEffect import StunEffect
 from pirates.effects.VoodooAura import VoodooAura
-from pirates.effects import PolyTrail
-from pirates.effects import TextEffect
-from otp.otpbase import OTPRender
-from pirates.battle.Teamable import Teamable
+from pirates.effects.WoodShards import WoodShards
+from pirates.movement import MotionFSM
+from pirates.pirate import AvatarTypes, Human
+from pirates.piratesbase import (Freebooter, PiratesGlobals, PLocalizer,
+                                 TeamUtils)
 from pirates.piratesgui.CrewBuffDisplay import CrewBuffDisplay
+from pirates.reputation import ReputationGlobals
+from pirates.reputation.DistributedReputationAvatar import \
+    DistributedReputationAvatar
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable):
     __module__ = __name__

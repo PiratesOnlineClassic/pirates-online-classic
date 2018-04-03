@@ -3,5 +3,6 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.leveleditor.worldData.bilgewater_interior_b
 from pandac.PandaModules import Point3, VBase3
+
 objectStruct = {'Objects': {'1155868448.41sdnaik0': {'Type': 'Building Interior', 'Name': 'bilgewater_interior_b', 'Objects': {}, 'Visual': {'Model': 'models/buildings/english_corner_a'}}}, 'Node Links': [], 'Layers': {}, 'ObjectIds': {'1155868448.41sdnaik0': '["Objects"]["1155868448.41sdnaik0"]'}}
 # okay decompiling .\pirates\leveleditor\worldData\bilgewater_interior_b.pyc

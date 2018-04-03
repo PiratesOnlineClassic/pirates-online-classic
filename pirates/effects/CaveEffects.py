@@ -2,15 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.CaveEffects
-from pandac.PandaModules import *
-from direct.task import Task
-from pirates.swamp.Swamp import Swamp
-from pirates.effects import EnvironmentEffects
-from pirates.piratesbase import TimeOfDayManager, TODGlobals, PiratesGlobals
-from pirates.seapatch.Reflection import Reflection
-from pirates.seapatch.Water import Water
 from direct.interval.LerpInterval import LerpScaleInterval
 from direct.interval.MetaInterval import Sequence
+from direct.task import Task
+from pandac.PandaModules import *
+from pirates.effects import EnvironmentEffects
+from pirates.piratesbase import PiratesGlobals, TimeOfDayManager, TODGlobals
+from pirates.seapatch.Reflection import Reflection
+from pirates.seapatch.Water import Water
+from pirates.swamp.Swamp import Swamp
+
 
 class CaveEffects(EnvironmentEffects.EnvironmentEffects):
     __module__ = __name__

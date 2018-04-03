@@ -4,6 +4,7 @@
 # Embedded file name: pirates.pvp.SiegeManagerBase
 from pirates.piratesbase import PLocalizer
 
+
 class SiegeManagerBase:
     __module__ = __name__
 

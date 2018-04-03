@@ -3,6 +3,7 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.chat.ChatGlobals
 import string
+
 NORMAL_CHAT = 1
 WHISPER_CHAT = 2
 GUILD_CHAT = 3

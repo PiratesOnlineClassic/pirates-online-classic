@@ -4,8 +4,9 @@
 # Embedded file name: pirates.ship.DistributedFormation
 from direct.distributed import DistributedSmoothNode
 from direct.fsm import FSM
-from pandac.PandaModules import NodePath
 from direct.showbase.ShowBaseGlobal import *
+from pandac.PandaModules import NodePath
+
 
 class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM):
     __module__ = __name__

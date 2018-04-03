@@ -2,12 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.interact.DistributedNPCToy
-import re, random, types
+import random
+import re
+import types
+
+from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
 from pirates.distributed import DistributedInteractive
 from pirates.piratesbase import PiratesGlobals
 from pirates.world import WorldGlobals
-from direct.interval.IntervalGlobal import *
+
 
 class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
     __module__ = __name__

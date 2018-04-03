@@ -4,6 +4,7 @@
 # Embedded file name: pirates.battle.CannonGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.uberdog.UberDogGlobals import InventoryType
+
 CANNON_NOT_FIRED = -1
 CANNON_TGT_OUTOFRANGE = 0
 CANNON_FIRED = 1

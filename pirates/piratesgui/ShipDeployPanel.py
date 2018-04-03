@@ -5,15 +5,14 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.ship import ShipGlobals
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.quest import QuestConstants
-from pirates.piratesgui.ShipFrameDeploy import ShipFrameDeploy
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import Freebooter
 from pirates.band.DistributedBandMember import DistributedBandMember
+from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesgui.ShipFrameDeploy import ShipFrameDeploy
 from pirates.piratesgui.ShipSelectionPanel import ShipSelectionPanel
+from pirates.quest import QuestConstants
+from pirates.ship import ShipGlobals
+
 
 class ShipDeployPanel(ShipSelectionPanel):
     __module__ = __name__

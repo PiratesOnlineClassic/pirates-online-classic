@@ -4,6 +4,7 @@
 # Embedded file name: pirates.ship.BlackPearlShip
 from pirates.ship.DistributedShip import DistributedShip
 
+
 class BlackPearlShip(DistributedShip):
     __module__ = __name__
 

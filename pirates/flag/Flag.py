@@ -4,12 +4,13 @@
 # Embedded file name: pirates.flag.Flag
 if __name__ == '__main__':
     from direct.directbase import DirectStart
-from direct.interval.IntervalGlobal import *
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.showbase.PythonUtil import *
 import FlagGlobals
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.showbase.PythonUtil import *
 from FlagDNA import FlagDNA
+from pandac.PandaModules import *
+
 
 class Flag(NodePath):
     __module__ = __name__

@@ -5,20 +5,16 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.reputation import ReputationGlobals
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import InventoryItemList
-from pirates.piratesgui import GuiPanel
-from pirates.piratesgui import GuiButton
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import GuiButton
-from pirates.piratesgui import PurchaseList
 from pirates.battle import WeaponGlobals
-from pirates.uberdog.UberDogGlobals import *
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import (GuiButton, GuiPanel, InventoryItemList,
+                                PiratesGuiGlobals, PurchaseList)
 from pirates.piratesgui.TabBar import LeftTab, TabBar
+from pirates.reputation import ReputationGlobals
+from pirates.uberdog.UberDogGlobals import *
+
 
 class StoreTab(LeftTab):
     __module__ = __name__

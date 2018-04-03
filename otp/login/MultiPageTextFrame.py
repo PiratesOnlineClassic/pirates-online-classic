@@ -2,16 +2,19 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.login.MultiPageTextFrame
-from pandac.PandaModules import *
 from direct.gui.DirectGui import *
 from otp.otpbase import OTPLocalizer
+from pandac.PandaModules import *
+
 
 class MultiPageTextFrame(DirectFrame):
     __module__ = __name__
     defWidth = 1.8
     defHeight = 0.9
 
-    def __init__(self, textList, width=defWidth, height=defHeight, wordWrap=None, hidePageNum=0, pageChangeCallback=None, parent=aspect2d, **kw):
+    def __init__(self, textList, width=defWidth, height=defHeight, wordWrap=None, hidePageNum=0, pageChangeCallback=None, parent=None, **kw):
+        if not parent:
+            parent = aspect2d
         self.textList = textList
         self.numPages = len(self.textList)
         self.pageChangeCallback = pageChangeCallback

@@ -2,15 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.ShipDebris
-from pandac.PandaModules import *
-from direct.showbase.DirectObject import *
-from direct.interval.IntervalGlobal import *
-from pirates.piratesbase import PiratesGlobals
+import random
+
 from direct.distributed import DistributedObject
+from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import *
+from pandac.PandaModules import *
 from pirates.effects.DustRing import DustRing
 from pirates.effects.SmallSplash import SmallSplash
-import random
+from pirates.piratesbase import PiratesGlobals
 from PooledEffect import PooledEffect
+
 DebrisDict = {'0': 'models/props/testBoard', '1': 'models/props/testBoard'}
 
 class ShipDebris(PooledEffect):

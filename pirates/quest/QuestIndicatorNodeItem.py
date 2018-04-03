@@ -4,6 +4,7 @@
 # Embedded file name: pirates.quest.QuestIndicatorNodeItem
 from pirates.quest.QuestIndicatorNode import QuestIndicatorNode
 
+
 class QuestIndicatorNodeItem(QuestIndicatorNode):
     __module__ = __name__
 

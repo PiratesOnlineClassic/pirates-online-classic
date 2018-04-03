@@ -4,15 +4,16 @@
 # Embedded file name: pirates.piratesgui.PVPCompletePanel
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
+from pirates.piratesbase import PLocalizer
+from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.BorderFrame import BorderFrame
 from pirates.piratesgui.GuiButton import GuiButton
-from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.ListFrame import ListFrame
 from pirates.piratesgui.SheetFrame import SheetFrame
-from pirates.treasuremap.RewardItemGui import RewardItemGui
 from pirates.piratesgui.StatRowGui import StatRowGui
 from pirates.piratesgui.StatRowHeadingGui import StatRowHeadingGui
-from pirates.piratesbase import PLocalizer
+from pirates.treasuremap.RewardItemGui import RewardItemGui
+
 
 class PVPCompletePanel(BorderFrame):
     __module__ = __name__

@@ -3,26 +3,22 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.DistributedSail
 import random
-from direct.interval.IntervalGlobal import *
-from direct.distributed.ClockDelta import *
-from direct.distributed import DistributedObject
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+
 from direct.actor import Actor
-from direct.fsm import FSM
-from direct.fsm import State
+from direct.distributed import DistributedObject
+from direct.distributed.ClockDelta import *
+from direct.fsm import FSM, State
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import quickProfile
-from pirates.piratesbase.PiratesGlobals import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.ship import ShipGlobals
-from pirates.battle import CannonGlobals
-from pirates.battle import WeaponGlobals
-from pirates.shipparts import MastDNA
-from pirates.shipparts import SailDNA
-from pirates.shipparts import Sail
-from pirates.shipparts import DistributedShippart
+from pandac.PandaModules import *
+from pirates.battle import CannonGlobals, WeaponGlobals
 from pirates.destructibles import DistributedDestructibleObject
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesbase.PiratesGlobals import *
+from pirates.ship import ShipGlobals
+from pirates.shipparts import DistributedShippart, MastDNA, Sail, SailDNA
+
 
 class DistributedSail(DistributedShippart.DistributedShippart, DistributedDestructibleObject.DistributedDestructibleObject):
     __module__ = __name__

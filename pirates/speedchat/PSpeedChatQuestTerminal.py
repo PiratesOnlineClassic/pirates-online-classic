@@ -4,6 +4,7 @@
 # Embedded file name: pirates.speedchat.PSpeedChatQuestTerminal
 from otp.speedchat.SCTerminal import *
 from pirates.quest import QuestDB
+
 PSpeedChatQuestMsgEvent = 'PSCQuestMsg'
 
 def decodeSCQuestMsg(questId, msgType, taskNum):

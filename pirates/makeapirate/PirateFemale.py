@@ -2,14 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.makeapirate.PirateFemale
-from pandac.PandaModules import *
-from direct.showbase import DirectObject
-from direct.directnotify import DirectNotifyGlobal
-from pirates.pirate import HumanDNA
-from pirates.makeapirate import ClothingGlobals
-import TattooGlobals
-from otp.otpbase import OTPRender
 import copy
+
+import TattooGlobals
+from direct.directnotify import DirectNotifyGlobal
+from direct.showbase import DirectObject
+from otp.otpbase import OTPRender
+from pandac.PandaModules import *
+from pirates.makeapirate import ClothingGlobals
+from pirates.pirate import HumanDNA
+
 TX = 0
 TY = 1
 TZ = 2

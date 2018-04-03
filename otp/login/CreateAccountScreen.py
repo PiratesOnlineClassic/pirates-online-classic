@@ -2,18 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.login.CreateAccountScreen
-from pandac.PandaModules import *
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.fsm import StateData
-from otp.otpgui import OTPDialog
-from direct.fsm import ClassicFSM
-from direct.fsm import State
+import GuiScreen
+import TTAccount
 from direct.directnotify import DirectNotifyGlobal
-from otp.otpbase import OTPLocalizer
-import TTAccount, GuiScreen
-from otp.otpbase import OTPGlobals
 from direct.distributed.MsgTypes import *
+from direct.fsm import ClassicFSM, State, StateData
+from direct.gui.DirectGui import *
+from otp.otpbase import OTPGlobals, OTPLocalizer
+from otp.otpgui import OTPDialog
+from pandac.PandaModules import *
+
 
 class CreateAccountScreen(StateData.StateData, GuiScreen.GuiScreen):
     __module__ = __name__

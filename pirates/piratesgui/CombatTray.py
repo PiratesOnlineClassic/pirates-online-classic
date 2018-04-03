@@ -2,33 +2,34 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.CombatTray
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
+import copy
+import math
+import time
+
+import PiratesGuiGlobals
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import *
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.task import Task
+from GuiButton import GuiButton
+from GuiTray import GuiTray
+from pandac.PandaModules import *
+from pirates.battle import Wand, WeaponGlobals
+from pirates.battle.EnemySkills import *
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.reputation import ReputationGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.battle import WeaponGlobals
-from pirates.battle.EnemySkills import *
-from direct.task import Task
-from pirates.piratesgui import RadialMenu
-from pirates.piratesbase import TeamUtils
-from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.effects.WispSpiral import WispSpiral
-from pirates.battle import Wand
+from pirates.piratesbase import (Freebooter, PiratesGlobals, PLocalizer,
+                                 TeamUtils)
+from pirates.piratesgui import RadialMenu
 from pirates.pvp import DistributedPVPInstance
+from pirates.reputation import ReputationGlobals
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
-from pirates.piratesbase import Freebooter
-from direct.distributed.ClockDelta import *
-import time, math, PiratesGuiGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType
 from SkillButton import SkillButton
-from GuiTray import GuiTray
-from GuiButton import GuiButton
-import copy
 from TonicsPanel import TonicsPanel
+
 STAFF_INTERVAL = 0.4
 AIM_ASSIST_DURATION = 2.0
 

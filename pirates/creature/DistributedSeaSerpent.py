@@ -5,6 +5,7 @@
 from pirates.creature.DistributedCreature import DistributedCreature
 from pirates.creature.SeaSerpent import SeaSerpent
 
+
 class DistributedSeaSerpent(DistributedCreature):
     __module__ = __name__
 

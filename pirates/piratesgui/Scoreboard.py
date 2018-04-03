@@ -4,12 +4,11 @@
 # Embedded file name: pirates.piratesgui.Scoreboard
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.ListFrame import ListFrame
 from pirates.piratesgui.ScoreboardItemGui import ScoreboardItemGui
-from pirates.piratesgui import GuiPanel
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
+
 
 class Scoreboard(DirectFrame):
     __module__ = __name__

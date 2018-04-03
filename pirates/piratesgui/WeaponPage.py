@@ -5,19 +5,16 @@
 from direct.gui.DirectGui import *
 from direct.task import Task
 from pandac.PandaModules import *
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import InventoryPage
-from pirates.piratesgui import WeaponPanel
-from pirates.piratesgui.SkillButton import SkillButton
-from pirates.piratesgui import InventoryItemGui
-from pirates.piratesgui import InventoryItemList
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui.CombatTray import WeaponButton
+from pirates.battle import WeaponGlobals
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *
-from pirates.battle import WeaponGlobals
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import (InventoryItemGui, InventoryItemList,
+                                InventoryPage, PiratesGuiGlobals, WeaponPanel)
+from pirates.piratesgui.CombatTray import WeaponButton
+from pirates.piratesgui.SkillButton import SkillButton
 from pirates.reputation import ReputationGlobals
+
 
 class WeaponPage(InventoryPage.InventoryPage):
     __module__ = __name__

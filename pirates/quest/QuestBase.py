@@ -4,6 +4,7 @@
 # Embedded file name: pirates.quest.QuestBase
 from pirates.quest import QuestReward
 
+
 class QuestBase:
     __module__ = __name__
 

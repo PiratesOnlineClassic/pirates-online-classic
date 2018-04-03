@@ -4,6 +4,7 @@
 # Embedded file name: pirates.mockup.PythonNodePath
 from pandac.PandaModules import NodePath
 
+
 class PythonNodePath(NodePath):
     __module__ = __name__
 

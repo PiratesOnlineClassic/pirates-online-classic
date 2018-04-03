@@ -2,22 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.GuildPage
-from direct.showbase.ShowBaseGlobal import *
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
 from direct.fsm import StateData
-from otp.otpbase import OTPGlobals
-from otp.otpbase import OTPLocalizer
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import SocialPage
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import Freebooter
-from pirates.piratesgui import PirateMemberList
-from pirates.piratesgui import PirateButtonChain
-from pirates.piratesgui import PiratesConfirm
-from pirates.piratesgui import PiratesInfo
-from pirates.piratesgui import PiratesOffLineRequest
+from direct.gui.DirectGui import *
+from direct.showbase.ShowBaseGlobal import *
+from otp.otpbase import OTPGlobals, OTPLocalizer
+from pandac.PandaModules import *
+from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
+from pirates.piratesgui import (PirateButtonChain, PirateMemberList,
+                                PiratesConfirm, PiratesGuiGlobals, PiratesInfo,
+                                PiratesOffLineRequest, SocialPage)
+
 
 class GuildPage(SocialPage.SocialPage):
     __module__ = __name__

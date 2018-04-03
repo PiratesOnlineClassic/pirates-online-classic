@@ -2,19 +2,20 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.avatar.DistributedAvatar
-import time, string
-from pandac.PandaModules import *
-from direct.distributed import DistributedNode
-from direct.actor.DistributedActor import DistributedActor
-from direct.task import Task
-from direct.showbase import PythonUtil
-from otp.otpbase import OTPGlobals
-from otp.otpbase import OTPLocalizer
-from otp.speedchat import SCDecoders
-from otp.chat import ChatGarbler
-from otp.chat import ChatManager
-from Avatar import Avatar
+import string
+import time
+
 import AvatarDNA
+from Avatar import Avatar
+from direct.actor.DistributedActor import DistributedActor
+from direct.distributed import DistributedNode
+from direct.showbase import PythonUtil
+from direct.task import Task
+from otp.chat import ChatGarbler, ChatManager
+from otp.otpbase import OTPGlobals, OTPLocalizer
+from otp.speedchat import SCDecoders
+from pandac.PandaModules import *
+
 
 class DistributedAvatar(DistributedActor, Avatar):
     __module__ = __name__

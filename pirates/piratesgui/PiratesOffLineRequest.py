@@ -2,19 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.PiratesOffLineRequest
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
-from otp.otpbase import OTPGlobals
-from pirates.piratesgui import PDialog
-from pirates.piratesgui import GuiPanel
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.band import BandConstance
-from pirates.piratesgui.RequestButton import RequestButton
-from pirates.piratesgui.CheckBox import CheckBox
 from direct.gui.DirectCheckBox import DirectCheckBox
+from direct.gui.DirectGui import *
+from otp.otpbase import OTPGlobals
+from pandac.PandaModules import *
+from pirates.band import BandConstance
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import GuiPanel, PDialog, PiratesGuiGlobals
+from pirates.piratesgui.CheckBox import CheckBox
+from pirates.piratesgui.RequestButton import RequestButton
+
 LAST_BUTTON_SELECTION = 1
 
 class PiratesOffLineConfirmButton(RequestButton):

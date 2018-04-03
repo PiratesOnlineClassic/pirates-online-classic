@@ -2,54 +2,56 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.CombatEffect
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from direct.directnotify import DirectNotifyGlobal
+import random
+
 from direct.actor import Actor
-from pirates.piratesbase import PiratesGlobals
+from direct.directnotify import DirectNotifyGlobal
+from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
 from pirates.battle import WeaponGlobals
+from pirates.effects.BlackSmoke import BlackSmoke
+from pirates.effects.CameraShaker import CameraShaker
 from pirates.effects.CannonExplosion import CannonExplosion
 from pirates.effects.CannonSplash import CannonSplash
+from pirates.effects.CurseHit import CurseHit
+from pirates.effects.DarkStar import DarkStar
 from pirates.effects.DirtClod import DirtClod
+from pirates.effects.DrainLife import DrainLife
 from pirates.effects.DustCloud import DustCloud
-from pirates.effects.SmokeCloud import SmokeCloud
+from pirates.effects.DustRing import DustRing
+from pirates.effects.DustRingBanish import DustRingBanish
+from pirates.effects.ExplosionCloud import ExplosionCloud
+from pirates.effects.ExplosionFlip import ExplosionFlip
+from pirates.effects.FadingSigil import FadingSigil
+from pirates.effects.Fire import Fire
+from pirates.effects.FireballHit import FireballHit
+from pirates.effects.FireTrail import FireTrail
+from pirates.effects.FlashStar import FlashStar
+from pirates.effects.GreenBlood import GreenBlood
+from pirates.effects.HealRays import HealRays
+from pirates.effects.HealSmoke import HealSmoke
+from pirates.effects.HealSparks import HealSparks
+from pirates.effects.HellFire import HellFire
+from pirates.effects.HitFlashA import HitFlashA
+from pirates.effects.HitStar import HitStar
+from pirates.effects.MuzzleFlash import MuzzleFlash
+from pirates.effects.NovaStar import NovaStar
+from pirates.effects.PoisonHit import PoisonHit
 from pirates.effects.RockShower import RockShower
 from pirates.effects.ShipSplintersA import ShipSplintersA
-from pirates.effects.DustRing import DustRing
-from pirates.effects.BlackSmoke import BlackSmoke
-from pirates.effects.ExplosionFlip import ExplosionFlip
-from pirates.effects.ShockwaveRing import ShockwaveRing
-from pirates.effects.CameraShaker import CameraShaker
-from pirates.effects.FireTrail import FireTrail
-from pirates.effects.GreenBlood import GreenBlood
-from pirates.effects.HitFlashA import HitFlashA
 from pirates.effects.ShockwaveHit import ShockwaveHit
-from pirates.effects.WaspCloud import WaspCloud
-from pirates.effects.PoisonHit import PoisonHit
-from pirates.effects.FireballHit import FireballHit
-from pirates.effects.CurseHit import CurseHit
-from pirates.effects.ExplosionCloud import ExplosionCloud
-from pirates.effects.FadingSigil import FadingSigil
-from pirates.effects.FlashStar import FlashStar
-from pirates.effects.VoodooSmoke import VoodooSmoke
-from pirates.effects.SpectralSmoke import SpectralSmoke
-from pirates.effects.DrainLife import DrainLife
-from pirates.effects.Fire import Fire
-from pirates.effects.SparkBurst import SparkBurst
-from pirates.effects.NovaStar import NovaStar
-from pirates.effects.DarkStar import DarkStar
-from pirates.effects.HitStar import HitStar
-from pirates.effects.VoodooPestilence import VoodooPestilence
+from pirates.effects.ShockwaveRing import ShockwaveRing
+from pirates.effects.SmokeCloud import SmokeCloud
 from pirates.effects.SoulSpiral import SoulSpiral
+from pirates.effects.SparkBurst import SparkBurst
+from pirates.effects.SpectralSmoke import SpectralSmoke
 from pirates.effects.VoodooExplosion import VoodooExplosion
-from pirates.effects.MuzzleFlash import MuzzleFlash
-from pirates.effects.DustRingBanish import DustRingBanish
+from pirates.effects.VoodooPestilence import VoodooPestilence
+from pirates.effects.VoodooSmoke import VoodooSmoke
+from pirates.effects.WaspCloud import WaspCloud
 from pirates.effects.WitherStar import WitherStar
-from pirates.effects.HellFire import HellFire
-from pirates.effects.HealRays import HealRays
-from pirates.effects.HealSparks import HealSparks
-from pirates.effects.HealSmoke import HealSmoke
-import random
+from pirates.piratesbase import PiratesGlobals
+
 
 class CombatEffect(NodePath):
     __module__ = __name__

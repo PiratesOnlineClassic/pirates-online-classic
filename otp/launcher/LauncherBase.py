@@ -2,14 +2,20 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.launcher.LauncherBase
-import sys, os, time, string, __builtin__
-from pandac.libpandaexpressModules import *
-from direct.showbase.MessengerGlobal import *
+import __builtin__
+import os
+import string
+import sys
+import time
+
+from direct.directnotify.DirectNotifyGlobal import *
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase.EventManagerGlobal import *
-from direct.task.TaskManagerGlobal import *
+from direct.showbase.MessengerGlobal import *
 from direct.task.Task import Task
-from direct.directnotify.DirectNotifyGlobal import *
+from direct.task.TaskManagerGlobal import *
+from panda3d.core import *
+
 
 class LogAndOutput:
     __module__ = __name__

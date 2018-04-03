@@ -4,6 +4,7 @@
 # Embedded file name: pirates.quest.QuestHolder
 from pirates.quest import QuestHolderBase
 
+
 class QuestHolder(QuestHolderBase.QuestHolderBase):
     __module__ = __name__
 

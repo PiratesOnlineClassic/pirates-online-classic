@@ -4,6 +4,7 @@
 # Embedded file name: pirates.effects.EffectController
 from pandac.PandaModules import *
 
+
 class EffectController:
     __module__ = __name__
     particleDummy = None

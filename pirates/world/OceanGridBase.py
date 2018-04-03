@@ -4,6 +4,7 @@
 # Embedded file name: pirates.world.OceanGridBase
 from pandac.PandaModules import *
 
+
 class OceanGridBase:
     __module__ = __name__
 

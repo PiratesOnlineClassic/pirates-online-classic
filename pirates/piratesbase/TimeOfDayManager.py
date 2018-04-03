@@ -2,17 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesbase.TimeOfDayManager
-from pandac.PandaModules import *
-from direct.fsm import FSM
-from direct.task import Task
+import random
+
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import globalClockDelta
+from direct.fsm import FSM
 from direct.interval.IntervalGlobal import *
-from pirates.piratesbase import AvatarShadowCaster
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import TODGlobals
-from pirates.piratesbase import SkyGroup
-import random
+from direct.task import Task
+from pandac.PandaModules import *
+from pirates.piratesbase import (AvatarShadowCaster, PiratesGlobals, SkyGroup,
+                                 TODGlobals)
+
 
 class TimeOfDayManager(FSM.FSM):
     __module__ = __name__

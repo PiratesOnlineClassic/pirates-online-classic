@@ -2,16 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.PiratesTimerHourglass
-from otp.otpbase import OTPTimer
+import time
+
+from direct.gui.DirectGui import *
 from direct.showbase.ShowBaseGlobal import *
 from direct.task import Task
-from direct.gui.DirectGui import *
+from otp.otpbase import OTPTimer
 from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import GuiButton
-import time
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import GuiButton, PiratesGuiGlobals
+
 
 class PiratesTimerHourglass(OTPTimer.OTPTimer):
     __module__ = __name__

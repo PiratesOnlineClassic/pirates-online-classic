@@ -2,24 +2,23 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.DistributedHull
-import random, copy, math
-from direct.showbase.PythonUtil import report, quickProfile
-from direct.interval.IntervalGlobal import *
-from direct.distributed.ClockDelta import *
+import copy
+import math
+import random
+
 from direct.distributed import DistributedObject
+from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.showbase.PythonUtil import quickProfile, report
 from pandac.PandaModules import *
-from pirates.piratesbase.PiratesGlobals import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.ship import ShipGlobals
-from pirates.ship import ShipBalance
-from pirates.battle import CannonGlobals
-from pirates.battle import WeaponGlobals
-from pirates.shipparts import HullDNA
-from pirates.shipparts import Hull
-from pirates.shipparts import DistributedShippart
+from pirates.battle import CannonGlobals, WeaponGlobals
 from pirates.destructibles import DistributedDestructibleArray
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesbase.PiratesGlobals import *
+from pirates.ship import ShipBalance, ShipGlobals
+from pirates.shipparts import DistributedShippart, Hull, HullDNA
+
 
 class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestructibleArray.DistributedDestructibleArray):
     __module__ = __name__

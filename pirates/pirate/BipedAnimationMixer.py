@@ -5,6 +5,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.movement.AnimationMixer import AnimationMixer
 
+
 class BipedAnimationMixer(AnimationMixer):
     __module__ = __name__
     NA_INDEX = -1

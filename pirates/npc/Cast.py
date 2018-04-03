@@ -5,6 +5,7 @@
 from otp.avatar.Avatar import Avatar
 from pirates.pirate import AvatarTypes
 
+
 class JackSparrow(Avatar):
     __module__ = __name__
 

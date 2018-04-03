@@ -4,8 +4,8 @@
 # Embedded file name: pirates.piratesgui.StatRowHeadingGui
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui import StatRowGui
-from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesgui import PiratesGuiGlobals, StatRowGui
+
 
 class StatRowHeadingGui(StatRowGui.StatRowGui):
     __module__ = __name__

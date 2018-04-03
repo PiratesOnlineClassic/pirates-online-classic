@@ -2,15 +2,14 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.DistributedSteeringWheel
+from direct.showbase.PythonUtil import quickProfile, report
 from pandac.PandaModules import *
 from pirates.distributed import DistributedInteractive
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.shipparts import DistributedShippart
-from pirates.shipparts import Wheel
-from pirates.ship import ShipGlobals
+from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
-from direct.showbase.PythonUtil import report, quickProfile
+from pirates.ship import ShipGlobals
+from pirates.shipparts import DistributedShippart, Wheel
+
 
 class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, DistributedShippart.DistributedShippart):
     __module__ = __name__

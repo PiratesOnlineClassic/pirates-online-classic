@@ -4,6 +4,7 @@
 # Embedded file name: pirates.pirate.PAvatarHandle
 from otp.avatar.AvatarHandle import AvatarHandle
 
+
 class PAvatarHandle(AvatarHandle):
     __module__ = __name__
 

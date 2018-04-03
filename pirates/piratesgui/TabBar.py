@@ -4,8 +4,9 @@
 # Embedded file name: pirates.piratesgui.TabBar
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui.BorderFrame import BorderFrame
 from pirates.piratesbase import PLocalizer
+from pirates.piratesgui.BorderFrame import BorderFrame
+
 
 class Tab(BorderFrame):
     __module__ = __name__

@@ -2,72 +2,59 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pirate.LocalPirate
-Instruction context:
--> 
-1448     117  LOAD_FAST             0  'self'
-            120  LOAD_ATTR            12  'handleTeleportToShardDone'
-            123  LOAD_FAST             1  'shardId'
-            126  LOAD_FAST             2  'zoneId'
-            129  LOAD_FAST             3  'callbackEvent'
-            132  CALL_FUNCTION_3       3  None
-            135  POP_TOP          
-import math, copy, types, random
-from direct.showbase.ShowBaseGlobal import *
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.showbase.PythonUtil import *
-from direct.directnotify import DirectNotifyGlobal
-from direct.controls import ControlManager
-from direct.interval.IntervalGlobal import *
-from direct.controls import BattleWalker
+import copy
+import math
+import random
+import types
+
+import LocalPirateGameFSM
+import Pirate
 from direct.actor import Actor
-from direct.showbase.InputStateGlobal import inputState
-from direct.distributed.ClockDelta import *
-from direct.showbase.ShadowPlacer import ShadowPlacer
-from direct.fsm.StatePush import StateVar
-from otp.avatar.LocalAvatar import LocalAvatar
-from otp.avatar import PositionExaminer
-from otp.otpbase import OTPGlobals
-from otp.speedchat import SCDecoders
-from otp.otpgui import OTPDialog
-from pirates.piratesgui import PDialog
-from pirates.battle import WeaponGlobals
-from pirates.battle import DistributedBattleAvatar
-from pirates.chat.PiratesChatManager import PiratesChatManager
-from pirates.chat.PChatAssistant import PChatAssistant
-from pirates.ship import ShipGlobals
-from pirates.piratesgui import GuiManager
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import PiratesGlobals
-from pirates.reputation import ReputationGlobals
-from pirates.battle import RangeDetector
-from pirates.battle import BattleSkillDiary
-from pirates.movement.CameraFSM import CameraFSM
-from pirates.economy.EconomyGlobals import *
-from pirates.economy import EconomyGlobals
-from pirates.piratesbase import TeamUtils
-from pirates.ship import DistributedShip
-from pirates.instance import DistributedMainWorld
-from pirates.world import DistributedGameArea
-from pirates.world import OceanZone
-from pirates.interact import InteractiveBase
-from pirates.effects.CloudScud import CloudScud
+from direct.controls import BattleWalker, ControlManager
+from direct.controls.ControlManager import ControlManager
 from direct.controls.GhostWalker import GhostWalker
-from direct.controls.PhysicsWalker import PhysicsWalker
 from direct.controls.ObserverWalker import ObserverWalker
+from direct.controls.PhysicsWalker import PhysicsWalker
+from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import *
+from direct.fsm.StatePush import StateVar
+from direct.gui import OnscreenText
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.showbase.InputStateGlobal import inputState
+from direct.showbase.PythonUtil import *
+from direct.showbase.ShadowPlacer import ShadowPlacer
+from direct.showbase.ShowBaseGlobal import *
+from DistributedPlayerPirate import DistributedPlayerPirate
+from otp.avatar import PositionExaminer
+from otp.avatar.LocalAvatar import LocalAvatar
+from otp.otpbase import OTPGlobals
+from otp.otpgui import OTPDialog
+from otp.speedchat import SCDecoders
+from pandac.PandaModules import *
+from pirates.battle import (BattleSkillDiary, DistributedBattleAvatar,
+                            RangeDetector, WeaponGlobals)
+from pirates.chat.PChatAssistant import PChatAssistant
+from pirates.chat.PiratesChatManager import PiratesChatManager
+from pirates.economy import EconomyGlobals
+from pirates.economy.EconomyGlobals import *
+from pirates.effects.CloudScud import CloudScud
+from pirates.instance import DistributedMainWorld
+from pirates.interact import InteractiveBase
+from pirates.movement.CameraFSM import CameraFSM
 from pirates.movement.PiratesGravityWalker import PiratesGravityWalker
 from pirates.movement.PiratesSwimWalker import PiratesSwimWalker
-from pirates.quest import QuestDB
-from pirates.quest import QuestStatus
+from pirates.piratesbase import PiratesGlobals, PLocalizer, TeamUtils
+from pirates.piratesgui import GuiManager, PDialog, PiratesGuiGlobals
+from pirates.quest import QuestDB, QuestStatus
 from pirates.quest.QuestConstants import LocationIds
-from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
+from pirates.reputation import ReputationGlobals
+from pirates.ship import DistributedShip, ShipGlobals
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
-import Pirate, LocalPirateGameFSM
-from DistributedPlayerPirate import DistributedPlayerPirate
-from direct.gui import OnscreenText
+from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
+from pirates.world import DistributedGameArea, OceanZone
+
 globalClock = ClockObject.getGlobalClock()
-from direct.controls.ControlManager import ControlManager
 if base.config.GetBool('want-custom-keys', 0):
     ControlManager.wantCustomKeys = 1
     ControlManager.wantWASD = 0
@@ -1000,67 +987,12 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.cnode.setCurrL(zoneId)
 
     @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
-    def teleportToShard--- This code section failed: ---
-
-1439       0  LOAD_FAST             0  'self'
-           3  LOAD_ATTR             1  'notify'
-           6  LOAD_ATTR             2  'debug'
-           9  LOAD_CONST            1  'teleportToShard %s,%s'
-          12  LOAD_FAST             1  'shardId'
-          15  LOAD_FAST             2  'zoneId'
-          18  BUILD_TUPLE_2         2  None
-          21  BINARY_MODULO    
-          22  CALL_FUNCTION_1       1  None
-          25  POP_TOP          
-
-1440      26  LOAD_FAST             0  'self'
-          29  LOAD_ATTR             5  'cr'
-          32  LOAD_ATTR             6  'loadingScreen'
-          35  LOAD_ATTR             7  'show'
-          38  CALL_FUNCTION_0       0  None
-          41  POP_TOP          
-
-1443      42  LOAD_FAST             0  'self'
-          45  LOAD_ATTR             8  'getAddInterestEventName'
-          48  CALL_FUNCTION_0       0  None
-          51  STORE_FAST            4  'addEvent'
-
-1444      54  LOAD_FAST             0  'self'
-          57  LOAD_ATTR            10  'setInterest'
-          60  LOAD_FAST             1  'shardId'
-          63  LOAD_FAST             2  'zoneId'
-          66  LOAD_CONST            3  'instanceInterest'
-          69  BUILD_LIST_1          1  None
-          72  LOAD_FAST             4  'addEvent'
-          75  CALL_FUNCTION_4       4  None
-          78  POP_TOP          
-
-1445      79  LOAD_FAST             0  'self'
-          82  LOAD_ATTR            11  'acceptOnce'
-          85  LOAD_FAST             4  'addEvent'
-          88  LOAD_FAST             0  'self'
-          91  LOAD_ATTR            12  'handleTeleportToShardDone'
-
-1446      94  LOAD_CONST            4  'extraArgs'
-          97  LOAD_FAST             1  'shardId'
-         100  LOAD_FAST             2  'zoneId'
-         103  LOAD_FAST             3  'callbackEvent'
-         106  BUILD_LIST_3          3  None
-         109  CALL_FUNCTION_258   258  None
-         112  POP_TOP          
-         113  JUMP_FORWARD         20  'to 136'
-         116  POP_TOP          
-
-1448     117  LOAD_FAST             0  'self'
-         120  LOAD_ATTR            12  'handleTeleportToShardDone'
-         123  LOAD_FAST             1  'shardId'
-         126  LOAD_FAST             2  'zoneId'
-         129  LOAD_FAST             3  'callbackEvent'
-         132  CALL_FUNCTION_3       3  None
-         135  POP_TOP          
-       136_0  COME_FROM           113  '113'
-
-Parse error at or near `LOAD_FAST' instruction at offset 117
+    def teleportToShard(self, shardId, zoneId, callbackEvent):
+        self.notify.debug('teleportToShard %s,%s' % (shardId, zoneId))
+        self.cr.loadingScreen.show()
+        addEvent = self.getAddInterestEventName()
+        self.setInterest(shardId, zoneId, ['instanceInterest'], addEvent)
+        self.acceptOnce(addEvent, self.handleTeleportToShardDone, extraArgs = [shardId, zoneId, callbackEvent])
 
     @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def handleTeleportToShardDone(self, shardId, zoneId, callbackEvent):

@@ -4,10 +4,11 @@
 # Embedded file name: pirates.piratesgui.LookoutRequestLVL3
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesbase import PLocalizer
+from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.ListFrame import ListFrame
 from pirates.piratesgui.OptionItemGui import OptionItemGui
+
 
 class LookoutRequestLVL3(DirectFrame):
     __module__ = __name__

@@ -2,45 +2,43 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.distributed.OTPClientRepository
-import sys, time, string, types, random, gc, os
-from pandac.PandaModules import *
-from pandac.PandaModules import *
-from direct.gui.DirectGui import *
-from otp.distributed.OtpDoGlobals import *
-from direct.interval.IntervalGlobal import ivalMgr
+import gc
+import os
+import random
+import string
+import sys
+import time
+import types
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.distributed.ClientRepositoryBase import ClientRepositoryBase
-from direct.fsm.ClassicFSM import ClassicFSM
-from direct.fsm.State import State
-from direct.task import Task
 from direct.distributed import DistributedSmoothNode
-from direct.showbase import PythonUtil, GarbageReport, BulletinBoardWatcher
-from direct.showbase.ContainerLeakDetector import ContainerLeakDetector
-from direct.showbase import MessengerLeakDetector
-from direct.showbase.GarbageReportScheduler import GarbageReportScheduler
-from direct.showbase import LeakDetectors
+from direct.distributed.ClientRepositoryBase import ClientRepositoryBase
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
-from otp.avatar import Avatar
+from direct.fsm.ClassicFSM import ClassicFSM
+from direct.fsm.State import State
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import ivalMgr
+from direct.showbase import (BulletinBoardWatcher, GarbageReport,
+                             LeakDetectors, MessengerLeakDetector, PythonUtil)
+from direct.showbase.ContainerLeakDetector import ContainerLeakDetector
+from direct.showbase.GarbageReportScheduler import GarbageReportScheduler
+from direct.task import Task
+from otp.avatar import Avatar, DistributedAvatar
 from otp.avatar.DistributedPlayer import DistributedPlayer
-from otp.login import TTAccount
-from otp.login import AccountServerConstants
-from otp.login.CreateAccountScreen import CreateAccountScreen
-from otp.login import LoginScreen
-from otp.otpgui import OTPDialog
-from otp.avatar import DistributedAvatar
-from otp.otpbase import OTPLocalizer
-from otp.login import LoginGSAccount
-from otp.login import LoginGoAccount
-from otp.login.LoginWebPlayTokenAccount import LoginWebPlayTokenAccount
-from otp.login.LoginDISLTokenAccount import LoginDISLTokenAccount
-from otp.login import LoginTTAccount
-from otp.login import HTTPUtil
-from otp.otpbase import OTPGlobals
-from otp.otpbase import OTPLauncherGlobals
-from otp.uberdog import OtpAvatarManager
 from otp.distributed import OtpDoGlobals
+from otp.distributed.OtpDoGlobals import *
+from otp.login import (AccountServerConstants, HTTPUtil, LoginGoAccount,
+                       LoginGSAccount, LoginScreen, LoginTTAccount, TTAccount)
+from otp.login.CreateAccountScreen import CreateAccountScreen
+from otp.login.LoginDISLTokenAccount import LoginDISLTokenAccount
+from otp.login.LoginWebPlayTokenAccount import LoginWebPlayTokenAccount
+from otp.otpbase import OTPGlobals, OTPLauncherGlobals, OTPLocalizer
+from otp.otpgui import OTPDialog
+from otp.uberdog import OtpAvatarManager
+from pandac.PandaModules import *
 from PotentialAvatar import PotentialAvatar
+
 
 class OTPClientRepository(ClientRepositoryBase):
     __module__ = __name__

@@ -5,6 +5,7 @@
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.ScoreFrame import ScoreFrame
 
+
 class SiegeBoard:
     __module__ = __name__
 

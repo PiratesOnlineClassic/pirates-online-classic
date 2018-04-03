@@ -4,6 +4,7 @@
 # Embedded file name: pirates.quest.QuestPrereq
 from direct.showbase.PythonUtil import POD, makeTuple
 
+
 class QuestPrereq(POD):
     __module__ = __name__
 

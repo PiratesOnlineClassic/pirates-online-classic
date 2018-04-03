@@ -5,6 +5,7 @@
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 
+
 class RadarUtil(DirectFrame):
     __module__ = __name__
 

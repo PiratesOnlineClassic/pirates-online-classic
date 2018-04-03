@@ -2,18 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.world.WorldCreator
-from pandac.PandaModules import *
+from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.showbase import DirectObject
-from pirates.world import WorldCreatorBase
-from pirates.leveleditor import ObjectList
-from pirates.piratesbase import PiratesGlobals
-from pirates.leveleditor import EditorGlobals
-from pirates.leveleditor import WorldDataGlobals
-from pirates.effects import DynamicLight
-from direct.actor import Actor
 from otp.otpbase import OTPRender
-from pirates.world import ClientArea
+from pandac.PandaModules import *
+from pirates.effects import DynamicLight
+from pirates.leveleditor import EditorGlobals, ObjectList, WorldDataGlobals
+from pirates.piratesbase import PiratesGlobals
+from pirates.world import ClientArea, WorldCreatorBase
+
 
 class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject):
     __module__ = __name__

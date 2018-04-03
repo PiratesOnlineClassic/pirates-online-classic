@@ -2,21 +2,19 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.minigame.PokerTableGUI
-from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
-from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
-from pirates.minigame.TableGUI import TableGUI
-from pirates.minigame import PlayingCardGlobals
-from pirates.minigame import PlayingCard
-from pirates.piratesgui import GuiTray
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui.BorderFrame import BorderFrame
-from pirates.piratesbase import PLocalizer
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.piratesgui.GuiButton import GuiButton
+from direct.interval.IntervalGlobal import *
 from otp.otpgui import OTPDialog
-from pirates.piratesgui import PDialog
+from pandac.PandaModules import *
+from pirates.minigame import PlayingCard, PlayingCardGlobals
+from pirates.minigame.TableGUI import TableGUI
+from pirates.piratesbase import PLocalizer
+from pirates.piratesgui import GuiTray, PDialog, PiratesGuiGlobals
+from pirates.piratesgui.BorderFrame import BorderFrame
+from pirates.piratesgui.GuiButton import GuiButton
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class PokerStatusPanel(DirectFrame):
     __module__ = __name__

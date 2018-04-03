@@ -2,18 +2,19 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pvp.MiniScoreItemGui
-from pandac.PandaModules import *
+import random
+
+from direct.gui.DirectFrame import DirectFrame
 from direct.gui.DirectGui import *
 from direct.gui.DirectGuiGlobals import *
 from direct.gui.DirectLabel import *
-from direct.gui import DirectFrame
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PLocalizer
 from direct.interval.IntervalGlobal import *
-from pirates.piratesbase import PiratesGlobals
-import random
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import PiratesGuiGlobals
 
-class MiniScoreItemGui(DirectFrame.DirectFrame):
+
+class MiniScoreItemGui(DirectFrame):
     __module__ = __name__
     Width = PiratesGuiGlobals.PVPPanelWidth - PiratesGuiGlobals.GridSize
     Height = 0.055
@@ -21,7 +22,7 @@ class MiniScoreItemGui(DirectFrame.DirectFrame):
     def __init__(self, scoreValue, parent=None, world=None, itemColorScale=None, blink=False, **kw):
         optiondefs = (('state', DGG.NORMAL, None), ('frameColor', (1, 1, 1, 0.05), None), ('borderWidth', PiratesGuiGlobals.BorderWidth, None), ('frameSize', (0.0, MiniScoreItemGui.Width, 0.0, MiniScoreItemGui.Height), None))
         self.defineoptions(kw, optiondefs)
-        DirectFrame.DirectFrame.__init__(self, parent)
+        DirectFrame.__init__(self, parent)
         self.initialiseoptions(MiniScoreItemGui)
         self.scoreValue = scoreValue
         self.world = world
@@ -33,7 +34,7 @@ class MiniScoreItemGui(DirectFrame.DirectFrame):
 
     def destroy(self):
         self._destroyIface()
-        DirectFrame.DirectFrame.destroy(self)
+        DirectFrame.destroy(self)
         del self.scoreValue
         self.ignoreAll()
 

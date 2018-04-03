@@ -3,13 +3,14 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.BattleManager
 import math
-from pandac.PandaModules import NodePath
+
 import BattleManagerBase
-from pirates.battle import WeaponGlobals
-from pirates.piratesbase import TeamUtils
-from pirates.battle import DistributedBattleNPC
-from pirates.uberdog.UberDogGlobals import InventoryType
 from pandac.PandaModules import *
+from pandac.PandaModules import NodePath
+from pirates.battle import DistributedBattleNPC, WeaponGlobals
+from pirates.piratesbase import TeamUtils
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class BattleManager(BattleManagerBase.BattleManagerBase):
     __module__ = __name__

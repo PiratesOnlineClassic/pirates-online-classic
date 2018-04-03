@@ -3,13 +3,15 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.ScreenshotViewer
 import os
-from pandac.PandaModules import *
+
+from direct.gui.DirectButton import DirectButton
 from direct.gui.DirectGui import *
 from direct.gui.OnscreenImage import OnscreenImage
-from direct.gui.DirectButton import DirectButton
-from pirates.piratesgui.PDialog import PDialog
-from pirates.piratesgui import PiratesGuiGlobals
 from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesgui.PDialog import PDialog
+
 
 class ScreenshotViewer:
     __module__ = __name__

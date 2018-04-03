@@ -2,14 +2,14 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.distributed.PlayGame
+import os
+
 from direct.directnotify import DirectNotifyGlobal
-from direct.fsm import StateData
-from direct.fsm import ClassicFSM
-from direct.fsm import State
+from direct.fsm import ClassicFSM, State, StateData
 from direct.task import Task
 from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog import UberDogGlobals
-import os
+
 
 class PlayGame(StateData.StateData):
     __module__ = __name__

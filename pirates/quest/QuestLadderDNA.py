@@ -2,15 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.quest.QuestLadderDNA
+import random
+
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.PythonUtil import POD
-from pirates.quest.QuestLadder import QuestLadder, QuestChoice
-from pirates.quest.QuestLadder import QuestChoiceSingle
-from pirates.quest.QuestDNA import QuestDNA
-from pirates.quest.QuestTaskDNA import VisitTaskDNA
-from pirates.quest import QuestDB
 from pirates.piratesbase import PLocalizer
-import random
+from pirates.quest import QuestDB
+from pirates.quest.QuestDNA import QuestDNA
+from pirates.quest.QuestLadder import (QuestChoice, QuestChoiceSingle,
+                                       QuestLadder)
+from pirates.quest.QuestTaskDNA import VisitTaskDNA
+
 
 class QuestContainerDNA(POD):
     __module__ = __name__

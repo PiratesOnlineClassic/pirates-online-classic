@@ -2,18 +2,19 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.speedchat.SCMenu
-from pandac.PandaModules import *
-from direct.gui.DirectGui import *
-from direct.task import Task
-from SCConstants import *
-from direct.interval.IntervalGlobal import *
-from SCObject import SCObject
-from direct.showbase.PythonUtil import makeTuple
 import types
+
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.showbase.PythonUtil import makeTuple
+from direct.task import Task
+from pandac.PandaModules import *
+from SCConstants import *
+from SCObject import SCObject
+
 
 class SCMenu(SCObject, NodePath):
     __module__ = __name__
-    config = ConfigConfigureGetConfigConfigShowbase
     SpeedChatRolloverTolerance = config.GetFloat('speedchat-rollover-tolerance', 0.08)
     WantFade = config.GetBool('want-speedchat-fade', 0)
     FadeDuration = config.GetFloat('speedchat-fade-duration', 0.2)

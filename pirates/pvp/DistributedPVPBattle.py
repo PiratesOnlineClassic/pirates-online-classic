@@ -2,13 +2,13 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pvp.DistributedPVPBattle
-from pirates.pvp.DistributedPVPInstance import DistributedPVPInstance
-from pirates.piratesbase import PiratesGlobals
-from pirates.pvp import PVPGlobals
-from pirates.piratesbase import PLocalizer
 from pirates.interact import InteractiveBase
-from pirates.ship import DistributedShip
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.pvp import PVPGlobals
+from pirates.pvp.DistributedPVPInstance import DistributedPVPInstance
 from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
+from pirates.ship import DistributedShip
+
 
 class DistributedPVPBattle(DistributedPVPInstance):
     __module__ = __name__

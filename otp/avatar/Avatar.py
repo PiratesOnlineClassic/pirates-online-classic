@@ -2,16 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.avatar.Avatar
-from pandac.PandaModules import *
-from pandac.PandaModules import *
-from otp.otpbase import OTPGlobals
-from otp.otpbase import OTPLocalizer
+import random
+
+from panda3d.core import *
 from direct.actor.Actor import Actor
 from direct.distributed import ClockDelta
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from otp.avatar.ShadowCaster import ShadowCaster
-import random
-from otp.otpbase import OTPRender
-from direct.showbase.PythonUtil import recordCreationStack
+from otp.otpbase import OTPGlobals, OTPLocalizer, OTPRender
+from otp.nametag.NametagGroup import NametagGroup
+from otp.nametag.Nametag import Nametag
+
 
 def reconsiderAllUnderstandable():
     for av in Avatar.ActiveAvatars:
@@ -25,31 +26,31 @@ class Avatar(Actor, ShadowCaster):
     ManagesNametagAmbientLightChanged = False
 
     def __init__(self, other=None):
-        self.name = ''
         try:
             self.Avatar_initialized
             return
         except:
             self.Avatar_initialized = 1
-        else:
-            Actor.__init__(self, None, None, other, flattenable=0, setFinal=1)
-            ShadowCaster.__init__(self)
-            self.__font = OTPGlobals.getInterfaceFont()
-            self.soundChatBubble = None
-            self.avatarType = ''
-            self.nametagNodePath = None
-            self.__nameVisible = 1
-            self.nametag = NametagGroup()
-            self.nametag.setAvatar(self)
-            self.nametag.setFont(OTPGlobals.getInterfaceFont())
-            self.nametag2dContents = Nametag.CName | Nametag.CSpeech
-            self.nametag2dDist = Nametag.CName | Nametag.CSpeech
-            self.nametag2dNormalContents = Nametag.CName | Nametag.CSpeech
-            self.nametag3d = self.attachNewNode('nametag3d')
-            self.nametag3d.setTag('cam', 'nametag')
-            self.nametag3d.setLightOff()
-            if not self.ManagesNametagAmbientLightChanged:
-                self.acceptNametagAmbientLightChange()
+
+        Actor.__init__(self, None, None, other, flattenable=0, setFinal=1)
+        ShadowCaster.__init__(self)
+        self.name = ''
+        self.__font = OTPGlobals.getInterfaceFont()
+        self.soundChatBubble = None
+        self.avatarType = ''
+        self.nametagNodePath = None
+        self.__nameVisible = 1
+        self.nametag = NametagGroup()
+        self.nametag.setAvatar(self)
+        self.nametag.setFont(OTPGlobals.getInterfaceFont())
+        self.nametag2dContents = Nametag.CName | Nametag.CSpeech
+        self.nametag2dDist = Nametag.CName | Nametag.CSpeech
+        self.nametag2dNormalContents = Nametag.CName | Nametag.CSpeech
+        self.nametag3d = self.attachNewNode('nametag3d')
+        self.nametag3d.setTag('cam', 'nametag')
+        self.nametag3d.setLightOff()
+        if not self.ManagesNametagAmbientLightChanged:
+            self.acceptNametagAmbientLightChange()
 
         OTPRender.renderReflection(False, self.nametag3d, 'otp_avatar_nametag', None)
         self.getGeomNode().showThrough(OTPRender.ShadowCameraBitmask)

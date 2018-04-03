@@ -3,13 +3,13 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.BattleManagerBase
 from direct.directnotify import DirectNotifyGlobal
-from pirates.battle import WeaponGlobals
-from pirates.pirate import AvatarTypes
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.battle import EnemyGlobals
+from pirates.battle import EnemyGlobals, WeaponGlobals
 from pirates.battle.EnemySkills import EnemySkills
-from pirates.reputation import ReputationGlobals
+from pirates.pirate import AvatarTypes
 from pirates.piratesbase import PiratesGlobals
+from pirates.reputation import ReputationGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class BattleManagerBase:
     __module__ = __name__

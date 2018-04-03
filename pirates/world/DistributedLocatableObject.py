@@ -6,6 +6,7 @@ from direct.distributed.DistributedObject import DistributedObject
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 
+
 class DistributedLocatableObject(DistributedObject):
     __module__ = __name__
 

@@ -4,8 +4,9 @@
 # Embedded file name: pirates.quest.QuestLadder
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import DirectObject
-from pirates.quest.QuestTaskDNA import RandomizedDefeatTaskDNA
-from pirates.quest.QuestTaskDNA import RandomizedDefeatShipTaskDNA
+from pirates.quest.QuestTaskDNA import (RandomizedDefeatShipTaskDNA,
+                                        RandomizedDefeatTaskDNA)
+
 
 class QuestContainer(DirectObject.DirectObject):
     __module__ = __name__

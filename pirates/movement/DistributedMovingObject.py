@@ -2,17 +2,19 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.movement.DistributedMovingObject
-from direct.showbase.DirectObject import *
+import random
+
 from direct.distributed import DistributedSmoothNode
-from direct.task.Task import Task
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
-import random
+from direct.showbase.DirectObject import *
+from direct.task.Task import Task
 from otp.movement import Mover
-from pirates.demo import DemoGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.distributed import DistributedTargetableObject
 from pirates.battle import EnemyGlobals
+from pirates.demo import DemoGlobals
+from pirates.distributed import DistributedTargetableObject
+from pirates.piratesbase import PiratesGlobals
+
 
 class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, DistributedTargetableObject.DistributedTargetableObject):
     __module__ = __name__

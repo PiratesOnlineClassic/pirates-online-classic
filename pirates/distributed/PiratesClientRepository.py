@@ -2,75 +2,60 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.distributed.PiratesClientRepository
-Instruction context:
--> 
-1031     118  LOAD_FAST             1  'doId'
-            121  LOAD_FAST             0  'self'
-            124  LOAD_ATTR             1  'doId2do'
-            127  COMPARE_OP            6  'in'
-            130  JUMP_IF_FALSE        15  'to 148'
-            133  POP_TOP          
-import types, random, gc
-from direct.showbase.ShowBaseGlobal import *
+import gc
+import random
+import types
+
+import PlayGame
+from direct.directnotify.DirectNotifyGlobal import directNotify
+from direct.distributed import DistributedSmoothNode, DoInterestManager
+from direct.distributed.ClientRepositoryBase import ClientRepositoryBase
 from direct.distributed.ClockDelta import *
+from direct.distributed.InterestWatcher import InterestWatcher
+from direct.distributed.PyDatagram import PyDatagram
+from direct.distributed.PyDatagramIterator import PyDatagramIterator
+from direct.fsm import ClassicFSM, State
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.EventGroup import EventGroup
 from direct.showbase.PythonUtil import report
-from pirates.piratesbase.PiratesGlobals import *
-from PiratesMsgTypes import *
-from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.fsm import ClassicFSM
-from direct.fsm import State
+from direct.showbase.ShowBaseGlobal import *
 from direct.task import Task
-from direct.distributed.PyDatagram import PyDatagram
-from direct.distributed.PyDatagramIterator import PyDatagramIterator
-from direct.distributed import DistributedSmoothNode
-from direct.distributed.InterestWatcher import InterestWatcher
-from direct.distributed import DoInterestManager
-from direct.distributed.ClientRepositoryBase import ClientRepositoryBase
+from otp.distributed import DistributedDistrict, OtpDoGlobals, PotentialShard
 from otp.distributed.OTPClientRepository import OTPClientRepository
-from otp.distributed import PotentialShard
 from otp.distributed.PotentialAvatar import PotentialAvatar
-from otp.distributed import DistributedDistrict
-from otp.distributed import OtpDoGlobals
-from otp.otpbase import OTPGlobals
 from otp.friends import FriendSecret
-from otp.uberdog.AccountDetailRecord import AccountDetailRecord, SubDetailRecord
+from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
-from pirates.login.AvatarChooser import AvatarChooser
-from pirates.makeapirate.MakeAPirate import MakeAPirate
-from pirates.pirate import HumanDNA
-from pirates.pirate import MasterHuman, Human
-from pirates.pirate import AvatarTypes
-from pirates.pirate.LocalPirate import LocalPirate
-from pirates.pirate import DistributedPlayerPirate
-from pirates.piratesbase import PLocalizer
-from pirates.world import WorldGlobals
-from pirates.battle import BattleManager
-from pirates.battle import DistributedBattleNPC
-from pirates.battle import CombatAnimations
-from pirates.ship import DistributedShip
-from pirates.band import DistributedBandMember
-from pirates.cutscene import Cutscene
-import PlayGame
-from pirates.piratesbase import PiratesGlobals
-from pirates.battle import DistributedBattleNPC
-from pirates.ship import DistributedShip
-from pirates.interact import InteractionManager
-from pirates.piratesbase import UniqueIdManager
-from pirates.piratesgui.DialMeter import DialMeter
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.reputation import ReputationGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import LoadingScreen
+from otp.uberdog.AccountDetailRecord import (AccountDetailRecord,
+                                             SubDetailRecord)
+from pandac.PandaModules import *
 from pirates.ai import NewsManager
-from pirates.makeapirate import PCPickANamePattern
+from pirates.band import DistributedBandMember
+from pirates.battle import (BattleManager, CombatAnimations,
+                            DistributedBattleNPC)
 from pirates.coderedemption.CodeRedemption import CodeRedemption
+from pirates.cutscene import Cutscene
+from pirates.interact import InteractionManager
+from pirates.login.AvatarChooser import AvatarChooser
+from pirates.makeapirate import PCPickANamePattern
+from pirates.makeapirate.MakeAPirate import MakeAPirate
+from pirates.pirate import (AvatarTypes, DistributedPlayerPirate, Human,
+                            HumanDNA, MasterHuman)
+from pirates.pirate.LocalPirate import LocalPirate
+from pirates.piratesbase import (LoadingScreen, PiratesGlobals, PLocalizer,
+                                 UniqueIdManager)
+from pirates.piratesbase.PiratesGlobals import *
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesgui.DialMeter import DialMeter
 from pirates.quest import QuestLadderDynMap
 from pirates.quest.QuestLadderDependency import QuestLadderDependency
+from pirates.reputation import ReputationGlobals
+from pirates.ship import DistributedShip
+from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.world import WorldGlobals
+from PiratesMsgTypes import *
+
 want_fifothreads = base.config.GetBool('want-fifothreads', 0)
 if want_fifothreads:
 
@@ -569,139 +554,8 @@ class PiratesClientRepository(OTPClientRepository):
         if pfm.isFriend(pId) or afm.isFriend(doId):
             return pfm.getFriendInfo(pId) or afm.getFriendInfo(doId)
 
-    def identifyAvatar--- This code section failed: ---
-
-1023       0  LOAD_FAST             0  'self'
-           3  LOAD_ATTR             1  'doId2do'
-           6  LOAD_ATTR             2  'get'
-           9  LOAD_FAST             1  'doId'
-          12  CALL_FUNCTION_1       1  None
-          15  JUMP_IF_TRUE         95  'to 113'
-          18  POP_TOP          
-          19  LOAD_FAST             0  'self'
-          22  LOAD_ATTR             4  'identifyFriend'
-          25  LOAD_FAST             1  'doId'
-          28  CALL_FUNCTION_1       1  None
-          31  JUMP_IF_TRUE         79  'to 113'
-          34  POP_TOP          
-          35  LOAD_FAST             0  'self'
-          38  LOAD_ATTR             5  'guildManager'
-          41  LOAD_ATTR             6  'getMemberInfo'
-          44  LOAD_FAST             1  'doId'
-          47  CALL_FUNCTION_1       1  None
-          50  JUMP_IF_TRUE         60  'to 113'
-          53  POP_TOP          
-          54  LOAD_GLOBAL           7  'DistributedBandMember'
-          57  LOAD_ATTR             7  'DistributedBandMember'
-          60  LOAD_ATTR             8  'areSameCrew'
-          63  LOAD_GLOBAL           9  'localAvatar'
-          66  LOAD_ATTR             3  'doId'
-          69  LOAD_FAST             1  'doId'
-          72  CALL_FUNCTION_2       2  None
-          75  JUMP_IF_FALSE        19  'to 97'
-          78  POP_TOP          
-          79  LOAD_GLOBAL           7  'DistributedBandMember'
-          82  LOAD_ATTR             7  'DistributedBandMember'
-          85  LOAD_ATTR            10  'getBandMember'
-          88  LOAD_FAST             1  'doId'
-          91  CALL_FUNCTION_1       1  None
-        94_0  COME_FROM            75  '75'
-          94  JUMP_IF_TRUE         16  'to 113'
-          97  POP_TOP          
-          98  LOAD_FAST             0  'self'
-         101  LOAD_ATTR             5  'guildManager'
-         104  LOAD_ATTR             6  'getMemberInfo'
-         107  LOAD_FAST             1  'doId'
-         110  CALL_FUNCTION_1       1  None
-       113_0  COME_FROM            94  '94'
-       113_1  COME_FROM            50  '50'
-       113_2  COME_FROM            31  '31'
-       113_3  COME_FROM            15  '15'
-         113  RETURN_VALUE     
-         114  JUMP_FORWARD        153  'to 270'
-         117  POP_TOP          
-
-1031     118  LOAD_FAST             1  'doId'
-         121  LOAD_FAST             0  'self'
-         124  LOAD_ATTR             1  'doId2do'
-         127  COMPARE_OP            6  'in'
-         130  JUMP_IF_FALSE        15  'to 148'
-         133  POP_TOP          
-
-1032     134  LOAD_FAST             0  'self'
-         137  LOAD_ATTR             1  'doId2do'
-         140  LOAD_FAST             1  'doId'
-         143  BINARY_SUBSCR    
-         144  RETURN_VALUE     
-         145  JUMP_FORWARD        122  'to 270'
-       148_0  COME_FROM           130  '130'
-         148  POP_TOP          
-
-1033     149  LOAD_FAST             0  'self'
-         152  LOAD_ATTR             4  'identifyFriend'
-         155  LOAD_FAST             1  'doId'
-         158  CALL_FUNCTION_1       1  None
-         161  JUMP_IF_FALSE        17  'to 181'
-         164  POP_TOP          
-
-1034     165  LOAD_FAST             0  'self'
-         168  LOAD_ATTR             4  'identifyFriend'
-         171  LOAD_FAST             1  'doId'
-         174  CALL_FUNCTION_1       1  None
-         177  RETURN_VALUE     
-         178  JUMP_FORWARD         89  'to 270'
-       181_0  COME_FROM           161  '161'
-         181  POP_TOP          
-
-1035     182  LOAD_GLOBAL           7  'DistributedBandMember'
-         185  LOAD_ATTR             7  'DistributedBandMember'
-         188  LOAD_ATTR             8  'areSameCrew'
-         191  LOAD_GLOBAL           9  'localAvatar'
-         194  LOAD_ATTR             3  'doId'
-         197  LOAD_FAST             1  'doId'
-         200  CALL_FUNCTION_2       2  None
-         203  JUMP_IF_FALSE        20  'to 226'
-         206  POP_TOP          
-
-1036     207  LOAD_GLOBAL           7  'DistributedBandMember'
-         210  LOAD_ATTR             7  'DistributedBandMember'
-         213  LOAD_ATTR            10  'getBandMember'
-         216  LOAD_FAST             1  'doId'
-         219  CALL_FUNCTION_1       1  None
-         222  RETURN_VALUE     
-         223  JUMP_FORWARD         44  'to 270'
-       226_0  COME_FROM           203  '203'
-         226  POP_TOP          
-
-1037     227  LOAD_FAST             0  'self'
-         230  LOAD_ATTR             5  'guildManager'
-         233  LOAD_ATTR            11  'isInGuild'
-         236  LOAD_FAST             1  'doId'
-         239  CALL_FUNCTION_1       1  None
-         242  JUMP_IF_FALSE        20  'to 265'
-         245  POP_TOP          
-
-1038     246  LOAD_FAST             0  'self'
-         249  LOAD_ATTR             5  'guildManager'
-         252  LOAD_ATTR             6  'getMemberInfo'
-         255  LOAD_FAST             1  'doId'
-         258  CALL_FUNCTION_1       1  None
-         261  RETURN_VALUE     
-         262  JUMP_FORWARD          5  'to 270'
-       265_0  COME_FROM           242  '242'
-         265  POP_TOP          
-
-1040     266  LOAD_CONST            0  None
-         269  RETURN_VALUE     
-       270_0  COME_FROM           262  '262'
-       270_1  COME_FROM           223  '223'
-       270_2  COME_FROM           178  '178'
-       270_3  COME_FROM           145  '145'
-       270_4  COME_FROM           114  '114'
-         270  LOAD_CONST            0  None
-         273  RETURN_VALUE     
-
-Parse error at or near `LOAD_FAST' instruction at offset 118
+    def identifyAvatar(self, doId):
+        return self.crewMatchManager.getHandle(doId)
 
     def identifyPlayer(self, playerId):
         return self.playerFriendsManager.getFriendInfo(playerId)

@@ -4,7 +4,10 @@
 # Embedded file name: pirates.makeapirate.PCPickANamePattern
 from direct.showbase.PythonUtil import listToItem2index
 from otp.namepanel.PickANamePattern import PickANamePatternTwoPartLastName
-from pirates.piratesbase.PiratesGlobals import maleNames, femaleNames, lastNamePrefixesCapped
+from pirates.piratesbase.PiratesGlobals import (femaleNames,
+                                                lastNamePrefixesCapped,
+                                                maleNames)
+
 
 class PCPickANamePattern(PickANamePatternTwoPartLastName):
     __module__ = __name__

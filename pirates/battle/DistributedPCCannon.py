@@ -2,47 +2,50 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.DistributedPCCannon
-import math, random, copy
-from direct.fsm import ClassicFSM
-from direct.fsm import State
-from direct.showbase.DirectObject import *
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
+import copy
+import math
+import random
+
+import Cannon
+import CannonGlobals
+import DistributedWeapon
+import WeaponGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
-from direct.task import Task
+from direct.fsm import ClassicFSM, State
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import *
 from direct.showutil import Rope
-from otp.otpbase import OTPGlobals
-from otp.otpbase import OTPRender
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.interact import InteractiveBase
+from direct.task import Task
+from otp.otpbase import OTPGlobals, OTPRender
+from pandac.PandaModules import *
 from pirates.battle import CannonGUI
-from pirates.uberdog import UberDogGlobals
-from pirates.ship import ShipGlobals
+from pirates.effects.BlackSmoke import BlackSmoke
+from pirates.effects.CameraShaker import CameraShaker
 from pirates.effects.CannonExplosion import CannonExplosion
 from pirates.effects.DirtClod import DirtClod
 from pirates.effects.DustCloud import DustCloud
-from pirates.effects.SmokeCloud import SmokeCloud
-from pirates.effects.RockShower import RockShower
-from pirates.effects.ShipSplintersA import ShipSplintersA
 from pirates.effects.DustRing import DustRing
-from pirates.effects.BlackSmoke import BlackSmoke
-from pirates.effects.ExplosionFlip import ExplosionFlip
 from pirates.effects.ExplosionCloud import ExplosionCloud
-from pirates.effects.ShockwaveRing import ShockwaveRing
-from pirates.effects.CameraShaker import CameraShaker
-from pirates.effects.FireTrail import FireTrail
+from pirates.effects.ExplosionFlip import ExplosionFlip
 from pirates.effects.Fire import Fire
+from pirates.effects.FireTrail import FireTrail
 from pirates.effects.GreenBlood import GreenBlood
 from pirates.effects.HitFlashA import HitFlashA
+from pirates.effects.RockShower import RockShower
 from pirates.effects.ShipDebris import ShipDebris
+from pirates.effects.ShipSplintersA import ShipSplintersA
+from pirates.effects.ShockwaveRing import ShockwaveRing
+from pirates.effects.SmokeCloud import SmokeCloud
 from pirates.effects.WoodShards import WoodShards
-from pirates.piratesbase import Freebooter
+from pirates.interact import InteractiveBase
+from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
+from pirates.ship import ShipGlobals
+from pirates.uberdog import UberDogGlobals
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
-import DistributedWeapon, WeaponGlobals, CannonGlobals, Cannon
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
     __module__ = __name__

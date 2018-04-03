@@ -3,21 +3,20 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.Window
 import random
-from direct.interval.IntervalGlobal import *
+
 from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
-from pirates.piratesbase.PiratesGlobals import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.battle import CannonGlobals
-from pirates.battle import WeaponGlobals
-from pirates.effects.WoodShards import WoodShards
-from pirates.effects.ShipSplintersA import ShipSplintersA
-from pirates.effects.Fire import Fire
+from pirates.battle import CannonGlobals, WeaponGlobals
 from pirates.effects.BlackSmoke import BlackSmoke
-from pirates.shipparts import DecorDNA
+from pirates.effects.Fire import Fire
+from pirates.effects.ShipSplintersA import ShipSplintersA
+from pirates.effects.WoodShards import WoodShards
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesbase.PiratesGlobals import *
+from pirates.shipparts import DecorDNA, ShipPart
 from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.shipparts import ShipPart
+
 
 class Window(NodePath, ShipPart.ShipPart):
     __module__ = __name__

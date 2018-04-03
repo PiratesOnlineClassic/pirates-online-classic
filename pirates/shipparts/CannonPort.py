@@ -2,13 +2,14 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.CannonPort
-from pirates.piratesbase.PiratesGlobals import *
-from direct.interval.IntervalGlobal import *
-from pirates.piratesbase import PiratesGlobals
-from pandac.PandaModules import *
 from direct.actor import Actor
-from pirates.ship import ShipGlobals
+from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
 from pirates.effects.Bonfire import Bonfire
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase.PiratesGlobals import *
+from pirates.ship import ShipGlobals
+
 CannonPortDict = {InventoryType.CannonL1: 'models/shipparts/cannon_port', InventoryType.CannonL2: 'models/shipparts/cannon_port', InventoryType.CannonL3: 'models/shipparts/cannon_port', InventoryType.CannonL4: 'models/shipparts/cannon_port', ShipGlobals.BPCANNON: 'models/shipparts/cannon_bp_port', ShipGlobals.SKEL_CANNON_L1: 'models/shipparts/GP_cannonPort', ShipGlobals.SKEL_CANNON_L2: 'models/shipparts/GP_cannonPort', ShipGlobals.SKEL_CANNON_L3: 'models/shipparts/GP_cannonPort'}
 DefaultAnimDict = (
  ('zero', '_zero'), ('Fire', '_fire'), ('Open', '_open'), ('Close', '_close'))

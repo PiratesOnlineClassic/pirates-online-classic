@@ -4,11 +4,12 @@
 # Embedded file name: pirates.treasuremap.DistributedTreasureMap
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
-from pirates.uberdog.DistributedInventory import DistributedInventory
-from pirates.quest.QuestHolder import QuestHolder
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui import PiratesGuiGlobals
+from pirates.quest.QuestHolder import QuestHolder
+from pirates.uberdog.DistributedInventory import DistributedInventory
 from pirates.world import GameTypeGlobals
+
 
 class DistributedTreasureMap(DistributedObject.DistributedObject, DistributedInventory, QuestHolder):
     __module__ = __name__

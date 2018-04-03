@@ -4,11 +4,11 @@
 # Embedded file name: pirates.piratesgui.ShipFrameBottle
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
+from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.ShipFrame import ShipFrame
 from pirates.piratesgui.ShipStatFrame import ShipStatFrame
+
 
 class ShipFrameBottle(ShipFrame):
     __module__ = __name__

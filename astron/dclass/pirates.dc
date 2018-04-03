@@ -1,0 +1,2189 @@
+from pirates.pirate import HumanDNA
+from pirates.shipparts import HullDNA
+from pirates.shipparts import CabinDNA
+from pirates.shipparts import MastDNA
+from pirates.shipparts import SailDNA
+from pirates.shipparts import BowSpritDNA
+from pirates.shipparts import DecorDNA
+from pirates.shipparts import CannonDNA
+from pirates.movement import DistributedMovingObject/AI
+from pirates.ship import ShipInfo/AI/UD
+from pirates.ship import DistributedShip/AI/UD
+from pirates.ship import NPCShip/AI
+from pirates.ship import PlayerShip/AI/UD/OV
+from pirates.ship import TutorialShip/AI
+from pirates.ship import BlackPearlShip/AI
+from pirates.ship import DistributedFormation/AI
+from pirates.battle import WeaponBase/AI
+from pirates.battle import DistributedWeapon/AI/UD
+from pirates.battle import DistributedPCCannon/AI/UD
+from pirates.battle import DistributedShipCannon/AI/UD
+from pirates.battle import DistributedTutorialShipCannon/AI
+from pirates.battle import DistributedIslandCannon/AI
+from pirates.battle import DistributedBattleAvatar/AI
+from pirates.battle import DistributedBattleNPC/AI
+from pirates.battle import DistributedFortCannon/AI
+from pirates.npc import DistributedNPCSkeleton/AI
+from pirates.npc import DistributedNPCPirate/AI
+from pirates.npc import DistributedNPCNavySailor/AI
+from pirates.pirate import DistributedPlayerPirate/AI/UD
+from pirates.ai import PiratesMagicWordManager/AI
+from pirates.distributed import DistributedTargetableObject/AI
+from pirates.battle import DistributedEnemySpawner/AI
+from pirates.world import DistributedOceanGrid/AI
+from pirates.world import DistributedLocationManager/AI
+from pirates.world import DistributedIsland/AI
+from pirates.world import DistributedGAConnector/AI
+from pirates.world import DistributedGATunnel/AI
+from pirates.world import DistributedGADoor/AI
+from pirates.world import DistributedGameArea/AI
+from pirates.world import DistributedGAInterior/AI
+from pirates.world import DistributedFort/AI
+from pirates.piratesbase import DistributedTimeOfDayManager/AI
+from pirates.distributed import TargetManager/AI
+from pirates.tutorial import PiratesTutorialManager/AI
+from pirates.tutorial import DistributedPiratesTutorial/AI
+from pirates.tutorial import DistributedPiratesTutorialWorld/AI
+from pirates.destructibles import DistributedDestructibleObject/AI/UD
+from pirates.destructibles import DistributedBarrel/AI
+from pirates.destructibles import DistributedDestructibleArray/AI/UD
+from pirates.shipparts import DistributedShippart/AI/UD
+from pirates.shipparts import DistributedHull/AI/UD/OV
+from pirates.shipparts import DistributedMast/AI/UD/OV
+from pirates.shipparts import DistributedSail/AI/UD
+from pirates.shipparts import DistributedCabin/AI/UD
+from pirates.shipparts import DistributedShipDecor/AI/UD
+from pirates.shipparts import DistributedBowSprit/AI/UD
+from pirates.shipparts import DistributedSteeringWheel/AI/UD
+from pirates.flag import DistributedFlag/AI/UD
+from pirates.flag import DistributedFlagShop/AI/UD
+from pirates.battle import DistributedShipBroadside/AI
+from pirates.distributed import PiratesDistrict/AI
+from pirates.distributed import DistributedInteractive/AI/UD
+from pirates.distributed import DistributedCharterableObject/AI
+from pirates.treasuremap import DistributedBuriedTreasure/AI
+from pirates.treasuremap import DistributedSurfaceTreasure/AI
+from pirates.interact import DistributedSearchableContainer/AI
+from pirates.minigame import DistributedLock/AI
+from pirates.minigame import DistributedLockDoor/AI
+from pirates.creature import DistributedCreature/AI
+from pirates.creature import DistributedAlligator/AI
+from pirates.creature import DistributedBat/AI
+from pirates.creature import DistributedCrab/AI
+from pirates.creature import DistributedFlyTrap/AI
+from pirates.creature import DistributedScorpion/AI
+from pirates.creature import DistributedStump/AI
+from pirates.creature import DistributedWasp/AI
+from pirates.creature import DistributedSeaSerpent/AI
+from pirates.creature import DistributedAnimal/AI
+from pirates.creature import DistributedChicken/AI
+from pirates.creature import DistributedPig/AI
+from pirates.creature import DistributedMonkey/AI
+from pirates.creature import DistributedRooster/AI
+from pirates.creature import DistributedSeagull/AI
+from pirates.creature import DistributedDog/AI
+from pirates.kraken import Kraken/AI
+from pirates.kraken import GrabberTentacle/AI
+from pirates.kraken import HolderTentacle/AI
+from pirates.kraken import KrakenBody/AI
+from pirates.testobject import TestObject/AI
+from pirates.npc import DistributedNPCTownfolk/AI
+from pirates.quest import DistributedQuest/AI/OV
+from pirates.quest import QuestTaskDNA
+from pirates.quest import QuestTaskState
+from pirates.quest import QuestRewardStruct
+from pirates.quest import QuestOffer
+from pirates.quest import QuestLadderOffer
+from pirates.quest import DistributedQuestGiver/AI
+from pirates.economy import DistributedShopKeeper/AI
+from pirates.world import DistributedDoorBase/AI
+from pirates.world import DistributedBuildingDoor/AI
+from pirates.world import DistributedInteriorDoor/AI
+from pirates.world import DistributedJailInterior/AI
+from pirates.world import DistributedCellDoor/AI
+from pirates.treasuremap import DistributedTreasureMap/AI/UD
+from pirates.treasuremap import DistributedTreasureMapInstance/AI
+from pirates.treasuremap import TreasureMapBlackPearl/AI
+from pirates.instance import DistributedInstanceBase/AI
+from pirates.instance import DistributedMainWorld/AI
+from pirates.instance import DistributedWelcomeWorld/AI
+from pirates.instance import DistributedInstanceWorld/AI
+from pirates.instance import DistributedTeleportZone/AI/UD
+from pirates.instance import DistributedTeleportMgr/AI
+from pirates.instance import DistributedTravelAgent/UD
+from pirates.instance import DistributedMatchMaker/AI/UD
+from pirates.instance import DistributedTeleportHandler/AI
+from pirates.uberdog import DistributedAvatarManager/AI/UD
+from pirates.uberdog import DistributedInventory/AI/UD
+from pirates.uberdog import DistributedInventoryManager/AI/UD
+from pirates.uberdog import DistributedShipLoader/AI/UD
+from pirates.uberdog import PirateInventory/AI/UD
+from pirates.uberdog import DistributedGoldReceipt/AI/UD
+from pirates.minigame import DistributedGameTable/AI
+from pirates.minigame import DistributedPokerTable/AI
+from pirates.minigame import DistributedBlackjackTable/AI
+from pirates.minigame import DistributedBishopsHandTable/AI
+from pirates.minigame import DistributedDiceGame/AI
+from pirates.minigame import DistributedLiarsDice/AI
+from pirates.minigame import DistributedHoldemTable/AI
+from pirates.minigame import Distributed7StudTable/AI
+from pirates.trades import Trade/AI
+from pirates.trades import TradeManager/AI
+from pirates.pvp import PVPManager/AI
+from pirates.pvp import SiegeManager/AI
+from pirates.pvp import Scoreboard/AI
+from pirates.pvp import DistributedPVPInstance/AI
+from pirates.pvp import DistributedPVPBattle/AI
+from pirates.pvp import DistributedPVPTeamBattle/AI
+from pirates.pvp import DistributedPVPShipBattle/AI
+from pirates.pvp import PVPGameBase/AI
+from pirates.pvp import PVPGameCTL/AI
+from pirates.pvp import PVPGamePirateer/AI
+from pirates.pvp import PVPGameTeamBattle/AI
+from pirates.pvp import PVPGameBattle/AI
+from pirates.pvp import PVPGameShipBattle/AI
+from pirates.pvp import DistributedBank/AI
+from pirates.pvp import DistributedWreck/AI
+from pirates.town import DistributedTown/AI
+from pirates.pirate import AvatarType
+from pirates.interact import DistributedNPCToy/AI
+from pirates.interact import DistributedInteractiveProp/AI
+from pirates.friends import PCAvatarFriendsManager/UD
+from pirates.friends import PCPlayerFriendsManager/UD
+from pirates.world import DistributedDinghy/AI
+from pirates.world import DistributedShipDeployer/AI
+from pirates.band import DistributedPirateBandManager/AI
+from pirates.band import DistributedBandMember/AI/OV
+from pirates.snapshot import PSnapshotRenderer/AI/UD
+from pirates.distributed import DistributedPopulationTracker/AI
+from pirates.friends import PCGuildManager/AI/UD
+from pirates.ai import NewsManager/AI
+from pirates.economy import AvatarAccessoriesManager/AI/UD
+from pirates.shipparts import DistributedShipRepairSpot/AI
+from pirates.band import DistributedCrewMatch/AI
+from pirates.battle import Teamable
+from pirates.economy import AwardMaker/UD
+from pirates.coderedemption import CodeRedemption/UD
+from pirates.web import PiratesSettingsMgr/AI/UD
+from pirates.npc import Boss/AI
+from pirates.creature import DistributedBossCreature/AI
+from pirates.npc import DistributedBossNavySailor/AI
+from pirates.npc import DistributedBossSkeleton/AI
+from pirates.pvp import SiegeAnnouncer/AI
+from pirates.holiday import DistributedHolidayBonfire/AI
+from pirates.holiday import DistributedHolidayPig/AI
+
+typedef uint32 DoId;
+
+typedef DoId DoIdList[];
+
+typedef uint16 SkillId;
+
+typedef SkillId SkillIdList[];
+
+struct Buff {
+  uint8 effectId;
+  int16 duration;
+  int16 timestamp;
+  DoId attackerId;
+};
+
+typedef Buff BuffList[];
+
+struct PosHpr {
+  int32/10 x;
+  int32/10 y;
+  int32/10 z;
+  int16/10 h;
+  int16/10 p;
+  int16/10 r;
+};
+
+struct Pos {
+  int32/10 x;
+  int32/10 y;
+  int32/10 z;
+};
+
+struct PosH {
+  int32/10 x;
+  int32/10 y;
+  int32/10 z;
+  int16/10 h;
+};
+
+struct Normal {
+  int32/10 nx;
+  int32/10 ny;
+  int32/10 nz;
+};
+
+typedef Pos PosList[];
+
+struct ClothingDNAElement {
+  uint32 id;
+  uint8 color;
+  uint8 initItem;
+};
+
+typedef int32 jewelryId;
+
+typedef jewelryId jewelryIdList[];
+
+typedef int32 tattooId;
+
+typedef tattooId tattooIdList[];
+
+dclass Teamable {
+  setTeam(int16) required broadcast ram ownrecv;
+  setPVPTeam(int8) required broadcast ram ownrecv airecv;
+  setSiegeTeam(int8) required broadcast ram ownrecv airecv;
+};
+
+dclass PiratesDistrict : DistributedDistrict {
+  setParentingRules(string, string) broadcast ram;
+  setAvatarCount(uint32) broadcast required;
+  setNewAvatarCount(uint32) broadcast required;
+  setMainWorld(string) broadcast required;
+  setShardType(uint8) broadcast required ram;
+  setStats : setAvatarCount, setNewAvatarCount;
+  setPopulationLimits(uint16, uint16);
+};
+
+dclass DistributedTimeOfDayManager : DistributedObject {
+  sync(uint8, uint8, uint32, uint32) required broadcast ram;
+};
+
+dclass TargetManager : DistributedObject {
+};
+
+dclass DistributedOceanGrid : DistributedCartesianGrid {
+  setParentingRules(string, string) required broadcast ram;
+};
+
+dclass DistributedInstanceBase : DistributedObject {
+  uint32 AutoInterest[];
+  setParentingRules(string, string) required broadcast ram;
+  setType(uint8) broadcast ram;
+  setSpawnInfo(int32/10, int32/10, int32/10, int16, uint32, uint32 []);
+  requestSpawnLoc() airecv clsend;
+  avatarDied() airecv clsend;
+  sendLocalAvatarToJail(uint32, uint32, uint32) broadcast;
+};
+
+dclass DistributedMainWorld : DistributedInstanceBase {
+};
+
+dclass DistributedWelcomeWorld : DistributedInstanceBase {
+};
+
+dclass DistributedInstanceWorld : DistributedInstanceBase {
+};
+
+dclass DistributedTeleportZone : DistributedInstanceBase {
+};
+
+dclass HumanDNA {
+  setTutorial(uint8) required broadcast db clsend airecv;
+  setGender(char) required broadcast db airecv;
+  setBodyShape(uint8) required broadcast db airecv;
+  setBodyHeight(int8/100) required broadcast db airecv;
+  setBodyColor(uint8) required broadcast db airecv;
+  setBodySkin(uint8) required broadcast db airecv;
+  setBody : setBodyShape, setBodyHeight, setBodyColor, setBodySkin;
+  setHeadSize(int8/100) required broadcast db airecv;
+  setHeadWidth(int8/100) required broadcast db airecv;
+  setHeadHeight(int8/100) required broadcast db airecv;
+  setHeadRoundness(int8/100) required broadcast db airecv;
+  setHeadTexture(uint8) required broadcast db airecv;
+  setJawWidth(int8/100) required broadcast db airecv;
+  setJawRoundness(int8/100) required broadcast db airecv;
+  setJawChinSize(int8/100) required broadcast db airecv;
+  setJawAngle(int8/100) required broadcast db airecv;
+  setJawLength(int8/100) required broadcast db airecv;
+  setMouthWidth(int8/100) required broadcast db airecv;
+  setMouthLipThickness(int8/100) required broadcast db airecv;
+  setMouthFrown(int8/100) required broadcast db airecv;
+  setCheekBoneHeight(int8/100) required broadcast db airecv;
+  setCheekBoneWidth(int8/100) required broadcast db airecv;
+  setCheekFat(int8/100) required broadcast db airecv;
+  setBrowWidth(int8/100) required broadcast db airecv;
+  setBrowProtruding(int8/100) required broadcast db airecv;
+  setBrowAngle(int8/100) required broadcast db airecv;
+  setBrowHeight(int8/100) required broadcast db airecv;
+  setEyeCorner(int8/100) required broadcast db airecv;
+  setEyeOpeningSize(int8/100) required broadcast db airecv;
+  setEyeBulge(int8/100) required broadcast db airecv;
+  setEyesColor(uint8) required broadcast db airecv;
+  setNoseBridgeWidth(int8/100) required broadcast db airecv;
+  setNoseNostrilWidth(int8/100) required broadcast db airecv;
+  setNoseLength(int8/100) required broadcast db airecv;
+  setNoseBump(int8/100) required broadcast db airecv;
+  setNoseNostrilHeight(int8/100) required broadcast db airecv;
+  setNoseNostrilAngle(int8/100) required broadcast db airecv;
+  setNoseNostrilIndent(int8/100) required broadcast db airecv;
+  setNoseBridgeBroke(int8/100) required broadcast db airecv;
+  setNoseNostrilBroke(int8/100) required broadcast db airecv;
+  setEarScale(int8/100) required broadcast db airecv;
+  setEarFlapAngle(int8/100) required broadcast db airecv;
+  setEarPosition(int8/100) required broadcast db airecv;
+  setEarLobe(int8/100) required broadcast db airecv;
+  setHead : setHeadSize, setHeadWidth, setHeadHeight, setHeadRoundness, setHeadTexture;
+  setJaw : setJawWidth, setJawRoundness, setJawChinSize, setJawAngle, setJawLength;
+  setMouth : setMouthWidth, setMouthLipThickness, setMouthFrown;
+  setCheek : setCheekBoneHeight, setCheekBoneWidth, setCheekFat;
+  setBrow : setBrowWidth, setBrowProtruding, setBrowAngle, setBrowHeight;
+  setEyes : setEyeCorner, setEyeOpeningSize, setEyeBulge, setEyesColor;
+  setNose : setNoseBridgeWidth, setNoseNostrilWidth, setNoseLength, setNoseBump, setNoseNostrilHeight, setNoseNostrilAngle, setNoseNostrilIndent, setNoseBridgeBroke, setNoseNostrilBroke;
+  setEars : setEarScale, setEarFlapAngle, setEarPosition, setEarLobe;
+  setHairHair(uint8) required broadcast db airecv;
+  setHairBeard(uint8) required broadcast db airecv;
+  setHairMustache(uint8) required broadcast db airecv;
+  setHairColor(uint8) required broadcast db airecv;
+  setHighLightColor(uint8) required broadcast db airecv;
+  setHair : setHairHair, setHairBeard, setHairMustache, setHairColor;
+  setHatIdx(uint8) required broadcast db airecv;
+  setHatTexture(uint8) required broadcast db airecv;
+  setHatColor(uint8) required broadcast db airecv;
+  setHat : setHatIdx, setHatTexture, setHatColor;
+  setClothesShirt(uint8, uint8) required broadcast db airecv;
+  setClothesPant(uint8, uint8) required broadcast db airecv;
+  setClothesShoe(uint8, uint8) required broadcast db airecv;
+  setClothesVest(uint8, uint8) required broadcast db airecv;
+  setClothesCoat(uint8, uint8) required broadcast db airecv;
+  setClothesBelt(uint8, uint8) required broadcast db airecv;
+  setClothesTopColor(uint8, uint8, uint8) required broadcast db airecv;
+  setClothesBotColor(uint8, uint8, uint8) required broadcast db airecv;
+  setClothes : setHatIdx, setHatTexture, setHatColor, setClothesShirt, setClothesVest, setClothesCoat, setClothesBelt, setClothesPant, setClothesShoe, setClothesTopColor, setClothesBotColor;
+  setTattooChest(uint16, int16/100, int16/100, uint16/100, uint16/100, uint16) required broadcast db airecv;
+  setTattooZone2(uint16, int16/100, int16/100, uint16/100, uint16/100, uint16) required broadcast db airecv;
+  setTattooZone3(uint16, int16/100, int16/100, uint16/100, uint16/100, uint16) required broadcast db airecv;
+  setTattooZone4(uint16, int16/100, int16/100, uint16/100, uint16/100, uint16) required broadcast db airecv;
+  setTattooZone5(uint16, int16/100, int16/100, uint16/100, uint16/100, uint16) required broadcast db airecv;
+  setTattooZone6(uint16, int16/100, int16/100, uint16/100, uint16/100, uint16) required broadcast db airecv;
+  setTattooZone7(uint16, int16/100, int16/100, uint16/100, uint16/100, uint16) required broadcast db airecv;
+  setTattooZone8(uint16, int16/100, int16/100, uint16/100, uint16/100, uint16) required broadcast db airecv;
+  setTattoos : setTattooChest, setTattooZone2, setTattooZone3, setTattooZone4, setTattooZone5, setTattooZone6, setTattooZone7, setTattooZone8;
+  setJewelryZone1(uint8, uint16, uint16) required broadcast db airecv;
+  setJewelryZone2(uint8, uint16, uint16) required broadcast db airecv;
+  setJewelryZone3(uint8, uint16, uint16) required broadcast db airecv;
+  setJewelryZone4(uint8, uint16, uint16) required broadcast db airecv;
+  setJewelryZone5(uint8, uint16, uint16) required broadcast db airecv;
+  setJewelryZone6(uint8, uint16, uint16) required broadcast db airecv;
+  setJewelryZone7(uint8, uint16, uint16) required broadcast db airecv;
+  setJewelryZone8(uint8, uint16, uint16) required broadcast db airecv;
+  setJewelry : setJewelryZone1, setJewelryZone2, setJewelryZone3, setJewelryZone4, setJewelryZone5, setJewelryZone6, setJewelryZone7, setJewelryZone8;
+  setCompositeDNA : setGender, setBodyShape, setBodyHeight, setBodyColor, setBodySkin, setHeadSize, setHeadWidth, setHeadHeight, setHeadRoundness, setHeadTexture, setJawWidth, setJawRoundness, setJawChinSize, setJawAngle, setJawLength, setMouthWidth, setMouthLipThickness, setMouthFrown, setCheekBoneHeight, setCheekBoneWidth, setCheekFat, setBrowWidth, setBrowProtruding, setBrowAngle, setBrowHeight, setEyeCorner, setEyeOpeningSize, setEyeBulge, setEyesColor, setNoseBridgeWidth, setNoseNostrilWidth, setNoseLength, setNoseBump, setNoseNostrilHeight, setNoseNostrilAngle, setNoseNostrilIndent, setNoseBridgeBroke, setNoseNostrilBroke, setEarScale, setEarFlapAngle, setEarPosition, setEarLobe, setHairHair, setHairBeard, setHairMustache, setHairColor, setHighLightColor, setHatIdx, setHatTexture, setHatColor, setClothesShirt, setClothesVest, setClothesCoat, setClothesBelt, setClothesPant, setClothesShoe, setClothesTopColor, setClothesBotColor, setTattooChest, setTattooZone2, setTattooZone3, setTattooZone4, setTattooZone5, setTattooZone6, setTattooZone7, setTattooZone8, setJewelryZone1, setJewelryZone2, setJewelryZone3, setJewelryZone4, setJewelryZone5, setJewelryZone6, setJewelryZone7, setJewelryZone8;
+};
+
+struct AvatarInfo {
+  string name;
+  HumanDNA dna;
+  uint8 slot;
+  uint32 doId;
+  uint32 creatorId;
+  bool isShared;
+  bool isOnline;
+  string wishName;
+  string wishState;
+  uint32 defaultShard;
+  uint32 lastLogout;
+};
+
+struct AccountInfo {
+  uint32 subId;
+  uint8 numPending;
+  uint8 maxAvatars;
+  uint8 maxSlots;
+  AvatarInfo avatarData[];
+};
+
+dclass DistributedAvatarManager : OtpAvatarManager {
+  requestCreateAvatar(uint32, uint32) airecv clsend;
+  requestPopulateAvatar(uint32, uint32, HumanDNA, bool, uint16, uint16, uint16, uint16) airecv clsend;
+  populateAvatarResponse(bool);
+  requestPatternName(uint32, uint32, uint16, uint16, uint16, uint16) airecv clsend;
+  patternNameResponse(bool);
+  requestFinalize(uint32, uint32) airecv clsend;
+  sendAvIdList(uint32 []);
+  avatarListResponse(AccountInfo [], uint16);
+  requestAwardableAvatars(uint32, uint32);
+  requestAvatarGender(uint32, uint32);
+};
+
+struct PresenceStatus {
+  uint8 onlineYesNo;
+  uint8 openChatYesNo;
+  uint32 location;
+  uint32 sublocation;
+};
+
+dclass Manager : DistributedObject {
+  online();
+};
+
+dclass DistributedGoldReceipt : DistributedObject {
+  setGoldPaid(uint16) db;
+  setExpirationDate(uint32) db;
+};
+
+dclass DistributedShipLoader : DistributedObject {
+  requestCreateShip(uint32, uint8, string, string, uint32) airecv clsend;
+  rejectCreateShip(uint32);
+  createShipResponse(uint32, uint32, uint32);
+  requestCreateShippart(uint32, uint8, uint8, uint8, uint32) airecv clsend;
+  rejectCreateShippart(uint32);
+  createShippartResponse(uint32, uint32, uint32);
+  loadShipResponse(uint32, uint32);
+  requestLoadOwnerview(uint32, uint32, uint32) airecv clsend;
+  rejectLoadOwnerview(uint32);
+  loadOwnerviewResponse(uint32, uint32);
+  requestDeleteOwnerview(uint32, uint32, uint32) airecv clsend;
+  rejectDeleteOwnerview(uint32);
+  deleteOwnerviewResponse(uint32, uint32);
+};
+
+struct InventoryCategoryLimit {
+  uint16 category;
+  uint16 limit;
+};
+
+struct InventoryTypeLimit {
+  uint16 type;
+  uint16 limit;
+};
+
+struct InventoryStackableSlot {
+  uint16 type;
+  uint16 quantity;
+};
+
+struct InventoryDoIdSlot {
+  uint16 category;
+  uint32 doId;
+};
+
+struct InventoryAccumulatorSlot {
+  uint16 type;
+  uint32 quantity;
+};
+
+struct TradeSlot {
+  uint16 typeOrCategory;
+  int64 doIdOrQuantity;
+};
+
+dclass DistributedInventory : DistributedObject {
+  uint32 AutoInterest[];
+  setParentingRules(string, string) broadcast ram;
+  setInventoryVersion(uint8) airecv db required;
+  setOwnerId(uint32) required broadcast airecv db;
+  setCategoryLimits(InventoryCategoryLimit []) airecv db required broadcast;
+  setDoIds(InventoryDoIdSlot []) airecv db required broadcast;
+  accumulator(uint16, uint32);
+  setAccumulators(InventoryAccumulatorSlot []) airecv db required;
+  stackLimit(uint16, uint16);
+  stack(uint16, uint16);
+  setStackLimits(InventoryTypeLimit []) airecv db required;
+  setStacks(InventoryStackableSlot []) airecv db required ownrecv;
+  setTemporaryInventory(bool);
+  setTemporaryStack(uint16, uint16);
+  sendMaxHp(uint16, uint32) airecv clsend;
+  sendMaxMojo(uint16, uint32) airecv clsend;
+  requestInventoryComplete();
+  approvedTradeResponse(uint32) airecv db;
+};
+
+dclass PirateInventory : DistributedInventory {
+};
+
+dclass Trade : DistributedObject {
+  setParentingRules(string, string) broadcast ram;
+  tradeCompleted();
+  tradeCanceled();
+  tradeFailed();
+  requestChangeGiving(TradeSlot []) airecv clsend;
+  rejectChangeGiving(uint32);
+  requestChangeStatus(uint8) airecv clsend;
+  rejectChangeStatus(uint32);
+  requestRemoveTrade() airecv clsend;
+  rejectRemoveTrade(uint32);
+  setFirstAvatarId(uint32) required broadcast ram;
+  setFirstAvatarStatus(uint16) required broadcast ram;
+  setFirstAvatarGiving(TradeSlot []) required broadcast ram;
+  setSecondAvatarId(uint32) required broadcast ram;
+  setSecondAvatarStatus(uint16) required broadcast ram;
+  setSecondAvatarGiving(TradeSlot []) required broadcast ram;
+};
+
+dclass TradeManager : DistributedObject {
+  setParentingRules(string, string) broadcast ram;
+  requestCreateTrade(uint32) airecv clsend;
+  rejectCreateTrade(uint32, uint32);
+  createTradeResponse(uint32, uint32);
+};
+
+dclass DistributedInventoryManager : Manager {
+  setParentingRules(string, string) broadcast ram;
+  requestInventory() airecv clsend;
+  approvedTrade(uint32, uint32, TradeSlot [], TradeSlot [], uint32);
+  rejectApprovedTrade(uint32, uint32);
+  requestDestroy(uint32, uint16, uint32, uint32);
+  rejectDestroy(uint32, uint32);
+  destroyResponse(uint32);
+  requestAward(uint32, uint32 [], uint32 [], uint32);
+  avatarOffline(uint32);
+};
+
+dclass DistributedTreasureMap : DistributedInventory {
+  setParentingRules(string, string) broadcast ram;
+  setObjectiveIds(string []) broadcast ram;
+  setMapId(uint16) required broadcast db;
+  requestIsEnabled() airecv clsend;
+  setIsEnabled(uint8) required broadcast ram;
+  requestStart(uint32) airecv clsend;
+};
+
+dclass DistributedEnemySpawner : DistributedObject {
+};
+
+dclass DistributedTargetableObject : DistributedObject {
+  requestTarget() airecv clsend;
+  removeTarget() airecv clsend;
+};
+
+dclass DistributedMovingObject : DistributedSmoothNode, DistributedTargetableObject {
+  setMaxSpeed(uint16) required broadcast ram;
+  setStartState(string) required broadcast ram;
+  setAggroRadius(uint8) required broadcast ram;
+  setAggroMode(uint8) required broadcast ram;
+};
+
+dclass DistributedLocatableObject : DistributedObject {
+  requestRegionUpdate(string) clsend airecv;
+  enterAreaSphere(string, string) clsend airecv;
+  leaveAreaSphere(string, string) clsend airecv;
+  locationChange(string);
+};
+
+dclass DistributedInteractive : DistributedNode, DistributedLocatableObject {
+  requestInteraction(uint32, uint8, bool) clsend airecv;
+  requestExit() clsend airecv;
+  demandExit() clsend airecv;
+  rejectInteraction();
+  acceptInteraction();
+  rejectExit();
+  offerOptions(uint8array, uint8array);
+  selectOption(uint8) airecv clsend;
+  setUserId(DoId) broadcast ram;
+  setUniqueId(string) required broadcast ram;
+};
+
+dclass DistributedBuriedTreasure : DistributedInteractive {
+  setStartingDepth(uint16) required broadcast ram;
+  setCurrentDepth(uint16) required broadcast ram;
+  showTreasure(uint16) broadcast;
+  startDigging();
+  stopDigging(uint16);
+};
+
+dclass DistributedSearchableContainer : DistributedInteractive {
+  setSearchTime(uint16) required broadcast ram;
+  setType(string) required broadcast ram;
+  setScale(int16/10, int16/10, int16/10) required broadcast ram;
+  setContainerColor(int16/10, int16/10, int16/10, int16/10) required broadcast ram;
+  setSphereScale(int16/10) required broadcast ram;
+  startSearching();
+  stopSearching(uint16);
+};
+
+dclass DistributedSurfaceTreasure : DistributedInteractive {
+  setWithdrawType(uint8) required broadcast ram;
+  setOpen(uint8(0-1)) broadcast ram;
+  startLooting(uint8);
+  stopLooting();
+  setBelongsToTeam(int16) broadcast ram;
+  setValue(int16) broadcast ram;
+  setEmpty(uint8(0-1)) broadcast ram;
+};
+
+dclass DistributedCharterableObject : DistributedObject {
+  setOwnerId(uint32) required broadcast ram db ownrecv;
+  setCharter(uint8) required broadcast ram ownrecv;
+  setCharterTimestamp(int16) required broadcast ram ownrecv;
+  setTimer(uint16, int16) required broadcast ram ownrecv;
+};
+
+dclass ShipInfo : DistributedObject {
+  setShipId(uint32) required broadcast ram;
+  setAvatarId(uint32) required broadcast ram;
+  setName(string) required broadcast ram;
+  setHp(int16) required broadcast ram;
+  setMaxHp(int16) required broadcast ram;
+  setSp(int16) required broadcast ram;
+  setMaxSp(int16) required broadcast ram;
+  setLocationName(uint32) required broadcast ram;
+  setActivity(uint32) required broadcast ram;
+};
+
+struct LandedGrapple {
+  uint32 shipId;
+  int8 targetId;
+};
+
+typedef LandedGrapple LandedGrappleList[];
+
+dclass DistributedShip : DistributedMovingObject, DistributedCharterableObject, Teamable {
+  setParentingRules(string, string) broadcast ram;
+  string DcObjectType db;
+  setUniqueId(string) required broadcast ram;
+  setBaseTeam(int8) required broadcast ram db ownrecv;
+  setLevel(uint16) required broadcast ram;
+  setShipClass(uint8) required broadcast ram db ownrecv;
+  setName(string) required broadcast ram db ownrecv;
+  setInventoryId(uint32) required broadcast db ownrecv;
+  setNPCship(uint8) required broadcast ram ownrecv;
+  setIsBoardable(uint8) required broadcast ram;
+  setIsExitable(uint8) required broadcast ram;
+  setShipInfoId(uint32) required ram airecv;
+  setIsFlagship(int8) required broadcast ram db ownrecv;
+  setMaxHp(int16) required broadcast ram db ownrecv;
+  setHp(int16) required broadcast ram db ownrecv;
+  setMaxSp(int16) required broadcast ram db ownrecv;
+  setSp(int16) required broadcast ram db ownrecv;
+  setHullCondition(uint8) required broadcast ram db ownrecv;
+  setMaxCargo(uint8) required broadcast ram db ownrecv;
+  setCargo(uint8array) required broadcast ram db ownrecv;
+  setMaxCrew(uint8) required broadcast ram db ownrecv;
+  setWorldKey(uint32) required broadcast ram;
+  setCrew(uint32array) required broadcast ram ownrecv;
+  setBandId(uint32, uint32) broadcast ram;
+  setGuildId(uint32) broadcast ram;
+  setGameState(string, uint32, int16) required broadcast ram ownrecv;
+  fixSail() airecv clsend;
+  dropAnchor(uint32) airecv clsend;
+  purchaseRepairAll() airecv clsend;
+  clearDockTimer() airecv clsend;
+  leave(uint32) airecv clsend;
+  requestBoard(uint32) airecv clsend;
+  requestSkillEvent(uint32, uint32) airecv clsend;
+  recordSkillEvent(uint32, uint32) broadcast;
+  setClientController(uint32) broadcast ram;
+  forceSteerShip(uint32);
+  forceBoardShip();
+  forceExitShip();
+  sendCrewToIsland(uint32, PosH);
+  notifyReceivedLoot(uint8array) broadcast;
+  damage(int16, Pos, DoId) broadcast;
+  setBadge(int8, int8) required broadcast ram;
+  setDeploy(uint8, int16) broadcast ram;
+  setMovie(uint8, uint32, uint32, bool, int16) broadcast;
+  setBoardableShipId(uint32) broadcast ram;
+  setIsInBoardingPosition(uint8) required broadcast ram;
+  setLandedGrapples(LandedGrappleList) required broadcast ram;
+  setBoardingSuccess(uint32, int16) broadcast ram;
+  setRespectDeployBarriers(bool, uint32) broadcast ram;
+  swingLocalAvatarToGrappledShip(uint32);
+  setSinkTimer(int16, int16) broadcast ram;
+  requestBoardFlagship(uint32) clsend airecv;
+  shipBoarded() clsend airecv;
+  setWishName(string) required db ownrecv;
+  setWishNameState(string) required db ownrecv;
+  setFlagDNAString(string) broadcast ram;
+  requestShipRam(DoId, Pos, uint32) clsend airecv;
+  useShipRam(Pos) broadcast;
+  setSkillEffects(BuffList) broadcast ram;
+  setRepairCount(uint8) broadcast ram;
+  setCaptainId(DoId) broadcast ram;
+  requestClientAggro() airecv clsend;
+  relayTeleportInfo() airecv;
+  sendTeleportInfo(uint32, uint32) ownrecv;
+  setRespawnLocation(uint32, uint32);
+  clientReachedRespawnLocation() airecv clsend;
+};
+
+dclass NPCShip : DistributedShip {
+};
+
+dclass PlayerShip : DistributedShip {
+  attacked() broadcast;
+  setSiegeBounty(uint16) broadcast ram;
+  setAllowCrewState(bool) airecv required broadcast ram ownsend;
+  setAllowFriendState(bool) airecv required broadcast ram ownsend;
+  setAllowGuildState(bool) airecv required broadcast ram ownsend;
+  setAllowPublicState(bool) airecv required broadcast ram ownsend;
+};
+
+dclass BlackPearlShip : DistributedShip {
+};
+
+dclass TutorialShip : DistributedShip {
+};
+
+dclass DistributedFormation : DistributedSmoothNode {
+  setState(string, int16) required broadcast ram;
+  setRadius(uint16) required broadcast ram;
+};
+
+dclass DistributedFlag : DistributedObject {
+  setDNAString(string) required broadcast ram db;
+  requestDNAString(string) airecv clsend;
+};
+
+dclass DistributedFlagShop : DistributedObject {
+};
+
+struct AvatarType {
+  int8 faction;
+  int8 track;
+  int8 id;
+  uint8 boss;
+};
+
+typedef string QuestId;
+
+typedef string QuestGiverId;
+
+struct QuestTaskState {
+  switch (uint16) {
+  case 1:
+    uint16 attempts;
+    break;
+  case 4:
+    uint16 attempts;
+    break;
+  case 10:
+    uint16 attempts;
+    break;
+  case 11:
+    uint16 attempts;
+    break;
+  case 17:
+    uint16 attempts;
+    break;
+  case 19:
+    AvatarType enemyType;
+    break;
+  case 20:
+    AvatarType faction;
+    uint8 hull;
+    break;
+  case 0:
+    break;
+  default:
+    break;
+  };
+  uint16 progress;
+  uint16 goal;
+};
+
+struct QuestRewardStruct {
+  uint16 rewardType;
+  uint16 amount;
+  QuestId questId;
+};
+
+dclass DistributedQuest : DistributedObject {
+  string DcObjectType;
+  setQuestId(QuestId) required broadcast db;
+  setGiverId(QuestGiverId) required broadcast db;
+  announceNewQuest() broadcast ram;
+  setCombineOp(uint8) required broadcast db;
+  setTaskStates(QuestTaskState []) required broadcast db;
+  startFinalizeScene(uint8, uint32, string) broadcast ram;
+  doneFinalizeScene() airecv clsend;
+  amFinalized() broadcast ram;
+  setRewardStructs(QuestRewardStruct []) required broadcast db;
+  setActive() airecv clsend;
+  updateTargetLoc(Pos, uint32, uint32) broadcast;
+};
+
+struct QuestOffer {
+  QuestId questId;
+  QuestTaskState initialTaskStates[];
+  QuestRewardStruct rewardStructs[];
+};
+
+struct QuestLadderOffer {
+  QuestId questId;
+  QuestRewardStruct rewardStructs[];
+};
+
+struct QuestStep {
+  uint32 originDoId;
+  uint32 stepDoId;
+  uint8 stepType;
+  PosH posH;
+  string islandId;
+};
+
+dclass DistributedQuestGiver {
+  setQuestOffer(QuestOffer []);
+  setQuestLadderOffer(QuestLadderOffer [], int8);
+  setOfferResponse(int8, int8) airecv clsend;
+  setQuestsCompleted(int8, QuestId [], QuestId [], QuestId [], uint32 []);
+  playDialogMovie(string);
+  dialogMovieComplete() airecv clsend;
+};
+
+dclass DistributedQuestAvatar {
+  setActiveQuest(QuestId) ownrecv required db;
+  setQuestHistory(uint16 []) ownrecv required db;
+  setQuestLadderHistory(uint16 []) ownrecv required db;
+  setCurrentQuestChoiceContainers(uint16 []) ownrecv required db;
+  setQuestStep(QuestStep) ownrecv;
+  requestActiveQuest(QuestId) airecv ownsend;
+  requestDropQuest(QuestId) airecv ownsend;
+  requestShareQuest(QuestId) airecv ownsend;
+  requestQuestStep(QuestId) airecv ownsend;
+  popupProgressBlocker(QuestId);
+};
+
+struct ItemNameHolder {
+  string typedName;
+  uint8array nameIndices;
+};
+
+struct Accessory {
+  uint32 uid;
+  uint8 colorId;
+  uint8 type;
+};
+
+struct Jewelry {
+  uint8 type;
+  int32 uid;
+};
+
+struct Tattoo {
+  uint8 type;
+  int32 uid;
+};
+
+dclass DistributedShopKeeper {
+  requestMakeSale(TradeSlot [], TradeSlot [], ItemNameHolder []) airecv clsend;
+  requestPurchaseRepair(uint32) airecv clsend;
+  requestPurchaseOverhaul(uint32) airecv clsend;
+  requestSellShip(uint32) airecv clsend;
+  requestAccessoriesList(uint32) airecv clsend;
+  requestJewelryList(uint32) airecv clsend;
+  requestTattooList(uint32) airecv clsend;
+  requestAccessories(Accessory [], Accessory []) airecv clsend;
+  requestJewelry(int32 [], int32 []) airecv clsend;
+  requestAccessoryEquip(Accessory []) airecv clsend;
+  requestJewelryEquip(Jewelry []) airecv clsend;
+  requestTattooEquip(Tattoo []) airecv clsend;
+  requestTattoo(int32 [], int32 [], int8) airecv clsend;
+  requestBarber(uint32, uint8) airecv clsend;
+  makeSaleResponse(uint32) ownrecv;
+  responseShipRepair(uint32) ownrecv;
+  makeTattooResponse(uint16, uint16, bool) ownrecv;
+  makeBarberResponse(uint32, uint8, bool) ownrecv;
+  responseClothingList(uint32, uint32array []) ownrecv;
+  responseTattooList(uint32, int32 []) ownrecv;
+  responseJewelryList(uint32, jewelryIdList) ownrecv;
+};
+
+dclass DistributedReputationAvatar : DistributedMovingObject, DistributedInteractive, DistributedAvatar, DistributedQuestGiver {
+};
+
+struct SkillEffects {
+  int16 hp;
+  int8 power;
+  int8 luck;
+  int16 mojo;
+  int8 swiftness;
+};
+
+struct ShipEffects {
+  uint8 accel;
+  uint8 maxSpeed;
+  uint8 revAccel;
+  uint8 maxRevAccel;
+  uint8 turnRate;
+  uint8 maxTurn;
+};
+
+typedef SkillEffects SkillEffectsList[];
+
+dclass WeaponBase {
+  requestTargetedSkill(SkillId, SkillId, uint8, DoId, DoIdList, uint32, Pos, uint8) clsend airecv;
+  useTargetedSkill(SkillId, SkillId, uint8, DoId, DoIdList, SkillEffects, SkillEffects, SkillEffectsList, uint32, Pos, uint8) broadcast;
+  requestShipSkill(SkillId, SkillId, uint8, DoId, uint32) clsend airecv;
+  useShipSkill(SkillId, SkillId, uint8, DoId, SkillEffects, ShipEffects, uint32) broadcast;
+  requestProjectileSkill(SkillId, SkillId, PosHpr, uint32, uint8) clsend airecv;
+  useProjectileSkill(SkillId, SkillId, PosHpr, uint32, uint8) broadcast;
+  suggestProjectileSkillResult(SkillId, SkillId, uint8, DoId, DoIdList, Pos, Normal, uint8array, uint32) clsend airecv;
+  setProjectileSkillResult(SkillId, SkillId, uint8, DoId, DoIdList, SkillEffects, SkillEffects, SkillEffectsList, Pos, Normal, uint8array, DoId, uint32) broadcast;
+};
+
+dclass DistributedBattleAvatar : WeaponBase, DistributedReputationAvatar, Teamable {
+  setAvatarType(AvatarType) required broadcast ram;
+  setGameState(string, int16) broadcast ram;
+  playMotionAnim(string, int16) broadcast ownsend;
+  setAirborneState(uint8, int16) broadcast ownsend;
+  setGroundState(uint8, int16) broadcast ownsend;
+  setCurrentTarget(uint32) broadcast ram;
+  setCurrentWeapon(uint16, uint8) required broadcast ram;
+  setCurrentAmmo(SkillId) required broadcast ram;
+  setShipId(uint32) ownrecv required ram airecv broadcast;
+  setMaxHp(int16) required broadcast ram;
+  setHp(int16, uint8) required broadcast ram ownrecv;
+  setLuck(int16) required broadcast ram ownrecv;
+  setMaxLuck(int16) required broadcast ram;
+  setMojo(int16) required broadcast ram ownrecv;
+  setMaxMojo(int16) required broadcast ram;
+  setSwiftness(int16) required broadcast ram ownrecv;
+  setMaxSwiftness(int16) required broadcast ram;
+  setPower(int16) required broadcast ram ownrecv;
+  setMaxPower(int16) required broadcast ram;
+  setLuckMod(int16) required broadcast ram ownrecv;
+  setMojoMod(int16) required broadcast ram ownrecv;
+  setSwiftnessMod(int16/10) required broadcast ram ownrecv;
+  setHasteMod(int16/10) required broadcast ram ownrecv;
+  setStunMod(int16/10) required broadcast ram ownrecv;
+  setPowerMod(int16) required broadcast ram ownrecv;
+  setCombo(uint8, uint8, int16, uint32) required broadcast ram;
+  setSkillEffects(BuffList) required broadcast ram;
+  setEnsnaredTargetId(uint32) required broadcast ram;
+  interrupted(uint8) airecv clsend;
+  setLevel(uint16) required broadcast ram;
+  battleRandomSync();
+};
+
+dclass DistributedBattleNPC : DistributedBattleAvatar {
+  setName(string) required broadcast ram;
+  setSpawnPos(int16/10, int16/10, int16/10) required broadcast ram;
+  setAmbush(uint8) broadcast ram;
+  ambushIntroDone() airecv clsend;
+  boardVehicle(uint32) broadcast ram;
+  setSpawnIn(int32) broadcast ram;
+  setChat(string, uint8) broadcast ownsend;
+  setAnimSet(string) required broadcast ram;
+  setCollisionMode(uint8) required broadcast ram;
+  setInitZ(int16/10) required broadcast ram;
+  requestClientAggro() airecv clsend;
+};
+
+dclass Boss {
+  dummyFunc();
+};
+
+dclass DistributedNPCSkeleton : DistributedBattleNPC {
+};
+
+dclass DistributedBossSkeleton : DistributedNPCSkeleton, Boss {
+};
+
+dclass DistributedCreature : DistributedBattleNPC {
+};
+
+dclass DistributedSeaSerpent : DistributedCreature {
+};
+
+dclass DistributedAnimal : DistributedCreature {
+};
+
+dclass DistributedBossCreature : DistributedCreature, Boss {
+};
+
+dclass Kraken : DistributedObject {
+  uint32 AutoInterest[];
+  setParentingRules(string, string) broadcast ram;
+  setShipId(uint32) required broadcast ram;
+};
+
+dclass KrakenPart : DistributedCreature {
+  setKrakenId(uint32) required broadcast ram;
+};
+
+dclass GrabberTentacle : KrakenPart {
+  setLocatorId(uint8) required broadcast ram;
+  emerge(uint8) broadcast;
+  setEmerged(uint8) broadcast ram;
+  grabAvatar(uint32) broadcast;
+  setGrabbedAvatar(uint32) broadcast ram;
+  grabMast(uint8) broadcast;
+  setGrabbedMast(uint8) broadcast ram;
+};
+
+dclass HolderTentacle : KrakenPart {
+  emerge(uint8) broadcast;
+};
+
+dclass KrakenBody : KrakenPart {
+};
+
+dclass DistributedNPCPirate : DistributedBattleNPC {
+  setDNAString(blob) required broadcast ram;
+};
+
+dclass DistributedNPCNavySailor : DistributedBattleNPC {
+  setDNAId(string) required broadcast ram;
+};
+
+dclass DistributedBossNavySailor : DistributedNPCNavySailor, Boss {
+};
+
+dclass DistributedNPCTownfolk : DistributedBattleNPC, DistributedShopKeeper {
+  setDNAId(string) required broadcast ram;
+  setMovie(string, uint32) broadcast ram;
+  triggerInteractShow(uint32);
+  setPageNumber(int16, int8, int16) broadcast ram clsend;
+  offerOptions(int8);
+  startTutorial(uint8);
+  swordTutorialPt1(uint32) airecv clsend;
+  pistolTutorialPt1(uint32) airecv clsend;
+  shipTutorialPt1(uint32, ItemNameHolder) airecv clsend;
+  setShopId(uint16) required broadcast ram;
+  setHelpId(uint16) required broadcast ram;
+  requestMusic(uint32) airecv clsend;
+  playMusic(uint32) broadcast;
+  levelUpCutlass(uint32) airecv clsend;
+};
+
+struct Skill {
+  uint16 id;
+  int16 quantity;
+};
+
+struct MissionData {
+  uint32 missionTime;
+  uint8 shipDamage;
+  uint16 skeletonKills;
+  uint16 navyKills;
+  uint16 creatureKills;
+  uint16 seamonsterKills;
+  uint16 pirateKills;
+  uint16 townfolkKills;
+  uint16 shipKills;
+  uint8 repairCost;
+  uint16 exp;
+  uint16 gold;
+  uint8array cargo;
+  uint8 numCrew;
+};
+
+struct resultPair {
+  string valueDesc;
+  string value;
+};
+
+struct HUDIcons {
+  uint32 avId;
+  uint8 actionIcon;
+};
+
+dclass DistributedPlayerPirate : DistributedPlayer, HumanDNA, DistributedBattleAvatar, DistributedQuestAvatar {
+  setParentingRules(string, string) broadcast ram;
+  setAvatarType(AvatarType) required broadcast ram;
+  setOnWelcomeWorld(bool) required ownrecv airecv db;
+  setFounder(uint8) broadcast ram airecv;
+  setCrewIconIndicator(uint8) ownsend required ram broadcast;
+  setBadgeIcon(int8, int8) required ram broadcast db;
+  requestBadgeIcon(int8, int8) ownsend airecv;
+  setShipBadgeIcon(int8, int8) required ram broadcast db;
+  requestShipBadgeIcon(int8, int8) ownsend airecv;
+  setStatus(uint8) ownsend required ram broadcast;
+  updateClientTutorialStatus(uint8) required ownrecv;
+  setUndead(uint8, string) required broadcast ram;
+  setInventoryId(uint32) required broadcast db;
+  setDinghyId(uint32) required broadcast ram;
+  setBandId(uint32, uint32) required broadcast ram ownrecv;
+  requestLookoutInvite(uint32, string, uint32, uint32, resultPair []);
+  setGuildId(uint32) required airecv broadcast ram;
+  setGuildName(string) required broadcast ram;
+  setMaxHp(int16) required broadcast db;
+  setHp(int16, uint8) required broadcast db ownrecv;
+  setEpicQuests(uint32) required broadcast db;
+  setStickyTargets(DoIdList) required broadcast ram;
+  requestRemoveStickyTargets(DoIdList) ownsend airecv;
+  flagFirstDeath() clsend airecv;
+  setDefaultShard(uint32) ownsend ownrecv required db;
+  setDefaultZone(uint32) ownrecv required db;
+  setLastLogout(uint32) required db;
+  setCustomMessages(uint16array) ownrecv required db;
+  setSCEmote(uint16) broadcast ownsend airecv;
+  setSpeedChatQuest(uint16, uint16, uint16) broadcast ownsend airecv;
+  setSpeedChatStyleIndex(uint8) required ownsend broadcast db;
+  setGameState(string, int16) broadcast ram ownsend airecv;
+  levelUpMsg(uint32, uint32, uint32) broadcast airecv;
+  addQuestMsg(string, uint8) broadcast airecv;
+  requestCurrentWeapon(uint16, uint8) ownsend airecv;
+  requestCurrentAmmo(SkillId) ownsend airecv;
+  requestUseSkill(SkillId, uint8) ownsend airecv;
+  requestDeployShip(uint32) airecv ownsend;
+  requestReturnShip(uint32) airecv ownsend;
+  setActiveShipId(uint32) required airecv ownrecv ownsend ram;
+  setCrewShipId(uint32) required ownrecv ram airecv;
+  initCombatTray(SkillId) ownrecv;
+  endMissionPanel(MissionData, MissionData) ownrecv;
+  startTimer(uint16, int16, uint8) ownrecv;
+  cancelTimer(uint8) ownrecv;
+  sendLootMessage(uint16) ownrecv;
+  sendCardMessage(uint16) ownrecv;
+  sendWeaponMessage(uint32) ownrecv;
+  sendJewelryMessage(uint32) ownrecv;
+  sendTattooMessage(uint32) ownrecv;
+  sendClothingMessage(uint32, uint16) ownrecv;
+  sendReputationMessage(uint32, uint16array, uint16array, uint16, uint16, uint16, uint16) ownrecv;
+  sendRenownMessage(uint32, uint16, uint16) ownrecv;
+  sendSalvageMessage(uint32, uint16) ownrecv;
+  setLuck(int16) required broadcast;
+  setMaxLuck(int16) required broadcast db;
+  setMojo(int16) required broadcast;
+  setMaxMojo(int16) required broadcast db;
+  setSwiftness(int16) required broadcast;
+  setMaxSwiftness(int16) required broadcast db;
+  setPower(int16) required broadcast;
+  setMaxPower(int16) required broadcast db;
+  setQuestRewardFlags(uint32) required ownrecv db;
+  setTeleportFlags(uint32) airecv ownsend ram;
+  teleportQuery(uint32, uint32, uint32, uint32, uint32) clsend ownrecv;
+  teleportResponse(uint32, int8, uint32, uint32, uint32) ownrecv clsend;
+  forceTeleportStart(string, uint32, uint32, uint32, uint32, uint32) broadcast ram;
+  relayTeleportLoc(uint32, uint32, uint32);
+  requestActivityAccepted();
+  lookoutMatchFound(uint16, uint32);
+  lookoutMatchFailed(bool);
+  lookoutFeedback(uint8);
+  beginningTeleport(uint8, uint8, string, int32);
+  setTutorialHandlerZone(uint32);
+  requestInvites(uint8 [], uint32, uint32, resultPair [], uint32 []) airecv clsend;
+  requestInvitesResp(uint32 [], uint8);
+  setLootCarried(uint16, uint16) broadcast ram;
+  giveDefaultQuest() airecv clsend;
+  requestReturnLocation(uint32) airecv ownsend;
+  setReturnLocation(string) required db airecv ownrecv;
+  requestCurrentIsland(uint32) airecv ownsend;
+  setCurrentIsland(string) ownrecv;
+  setJailCellIndex(uint8) required db airecv ownrecv;
+  setTeam(int16) required broadcast ram ownrecv;
+  setPvp(uint8) required broadcast ram ownrecv;
+  setZombie(uint8, uint8) required broadcast ram ownrecv;
+  setCurseStatus(uint8) ownrecv;
+  setPopulated(uint8) db ram;
+  spendSkillPoint(SkillId) airecv clsend;
+  resetSkillPoints(SkillId) airecv clsend;
+  useTonic(uint16) airecv ownsend;
+  useBestTonic() airecv ownsend;
+  spentSkillPoint(SkillId) ownrecv;
+  requestActivity(uint32, int32, resultPair [], uint32 []) airecv clsend;
+  setEmote(int32) required broadcast ram airecv ownsend;
+  playEmote(int32) broadcast;
+  setTempDoubleXPReward(uint32) required db ram broadcast;
+  setCrewHUDUpdate(uint8, HUDIcons []) ownrecv;
+  setAllowGMNameTag(bool) required ram broadcast airecv;
+  updateGMNameTag(uint8, string, string) required ram broadcast ownsend;
+};
+
+dclass PiratesMagicWordManager : MagicWordManager {
+  cameraReparent(uint32, uint32, uint32);
+  shipCreated(uint32);
+  requestServerTime() clsend airecv;
+  recvServerTime(uint32);
+};
+
+typedef uint32 shipList[];
+
+dclass DistributedTeleportMgr : DistributedObject {
+  initiateTeleport(uint8, uint8, uint32, string, uint32, string, int32, uint32, uint32) airecv clsend;
+  initiateTeleportAI(uint8, string);
+  teleportHasBegun(uint8, uint8, string, int32);
+  beginTeleportPull(uint32 [], string, uint8, string, uint32, uint8, uint32, uint32, int32, resultPair [], shipList [], uint32, uint32);
+  beginDeployThenTeleportPull(uint32, string, uint32);
+  requestTargetsLocation(uint32) airecv clsend;
+  _localTeleportToIdResponse(uint32, uint32);
+  requestTeleportToIsland(string) airecv clsend;
+  teleportToIslandResponse(uint32, uint32);
+  requestCrossShardDeploy(uint32, string, uint32) clsend airecv;
+  setWelcomeShardMin(uint16);
+};
+
+dclass DistributedTravelAgent : DistributedObject {
+  registerAsManager(uint32, uint32, uint32, uint8, uint32, uint8);
+  managerOffline(uint32, uint32, uint32);
+  requestPopLimits(uint32);
+  initiateTeleportUD(string, uint8, uint8, uint32, string, uint32, uint32 [], uint32, uint32, int32, shipList [], uint32, uint32);
+  requestInitLocUD(string, uint32) clsend;
+  setFullShardTeleportAllowed(uint8);
+  requestInstanceUpdates();
+  requestShipDeployUD(uint32, uint32, string, uint32);
+};
+
+dclass DistributedMatchMaker : DistributedObject {
+  requestActivity(uint32, uint32, int32, resultPair [], uint32 [], uint32, uint16);
+  requestJoin(uint32) airecv clsend;
+  skipJoin(uint32, bool) airecv clsend;
+  cancelRequest(uint32) airecv clsend;
+  instanceCreated(uint32, uint32, uint32);
+  instanceRemoved(uint32, uint32, uint32);
+  printStatus(uint32);
+  newDistrictOnline(uint32);
+  initiateTeleportResp(uint32, uint32);
+  avatarOffline(uint32);
+};
+
+dclass DistributedTeleportHandler : DistributedObject {
+  startTeleportProcess(uint32, uint32, uint32) airecv clsend;
+  continueTeleportToTZ() airecv clsend;
+  waitInTZ(uint32 [], uint32) broadcast ram;
+  teleportToInstanceReady(uint32) airecv clsend;
+  continueTeleportToInstance(uint32, uint32, uint32, string, uint32, uint32, uint32, string, uint32) broadcast ram;
+  readyToFinishTeleport(uint32) airecv clsend;
+  teleportToInstanceCleanup() broadcast ram;
+  teleportToInstanceFinal(uint32) airecv clsend;
+  abortTeleport() broadcast ram;
+  avatarLeft() airecv clsend;
+};
+
+dclass DistributedTreasureMapInstance : DistributedInstanceWorld {
+  setParentingRules(string, string) broadcast ram;
+  setTreasureMapDoId(uint32) broadcast ram;
+  setObjectives(uint32 []) broadcast ram;
+  setTMComplete(resultPair [], resultPair []);
+  requestLeave(uint32) airecv clsend;
+  requestLeaveApproved(uint32, uint32, uint32);
+  setState(string, int16) required broadcast ram;
+  setFortIds(uint32 []) broadcast ram;
+  requestState(string) airecv clsend;
+};
+
+dclass TreasureMapBlackPearl : DistributedTreasureMapInstance {
+  requestShipCapture() airecv clsend;
+  requestShipAmbush() airecv clsend;
+  requestEndCutscene() airecv clsend;
+  endCutscene() broadcast;
+  displayCutsceneMessage(uint32, uint8) broadcast;
+  setBlackPearlId(uint32) broadcast ram;
+  setGoliathId(uint32) broadcast ram;
+  setAllPlayersReady(uint8) broadcast ram;
+  setAttackShipIds(uint32 []) broadcast ram;
+  fireShipCannonsAtTarget(uint32, uint32) broadcast;
+  destroyBarricade(uint8) broadcast;
+  barricadeWarning(uint8) broadcast;
+  disableBarricadeCollisions(uint8) broadcast;
+  enableBarricadeCollisions(uint8) broadcast;
+  startStageFourCutscene() broadcast;
+  stopStageFourCutscene() broadcast;
+  handleAttackShipSunk() broadcast;
+  handleNPCsKilled() broadcast;
+};
+
+dclass PVPManager : DistributedObject {
+  setParentingRules(string, string) broadcast ram;
+  requestChallenge(uint32) airecv clsend;
+  acceptChallenge(uint32) airecv clsend;
+  challengeAccepted(uint32);
+  challengeFrom(uint32);
+};
+
+struct teamPair {
+  uint32 avDoId;
+  uint32 avTeam;
+};
+
+struct stat {
+  uint8 type;
+  int32 value;
+};
+
+struct playerStats {
+  uint32 playerId;
+  stat stats[];
+};
+
+struct playerInfo {
+  uint32 playerId;
+  string name;
+  uint8 team;
+};
+
+struct pvpScoreItem {
+  uint32 id;
+  string name;
+  int32 score;
+  uint8 team;
+  uint8 type;
+  stat stats[];
+};
+
+struct pvpTeamJoinableItem {
+  uint32 id;
+  bool joinable;
+};
+
+dclass SiegeManager : DistributedObject {
+  setParentingRules(string, string) broadcast ram;
+  setPvpEnabled(bool) required broadcast ram;
+  setTeamsJoinable(pvpTeamJoinableItem []) required broadcast ram;
+  setUseIslandRegen(bool) required broadcast ram;
+  setUseRepairSpots(bool) required broadcast ram;
+  setUseRepairKit(bool) required broadcast ram;
+  sendChat(string, uint8, uint32) airecv clsend;
+  sendWLChat(string, uint8, uint32) airecv clsend;
+  sendSC(uint16) airecv clsend;
+  recvChat(uint32, string, uint8, uint32, string);
+  recvWLChat(uint32, string, uint8, uint32, string);
+  recvSpeedChat(uint32, uint16, string);
+};
+
+dclass SiegeAnnouncer : DistributedObject {
+  announceSink(uint8, string, uint8, string) broadcast;
+  announceSinkWithAssist(uint8, string, uint8, string, uint8, string) broadcast;
+  announceSinkStreak(uint8, string, uint32) broadcast;
+};
+
+dclass Scoreboard : DistributedObject {
+  setStats(uint8 []) required broadcast ram;
+  setScores(pvpScoreItem []) required broadcast ram;
+  setScore(uint32, int32) broadcast;
+  setStat(uint32, uint8, int32) broadcast;
+};
+
+dclass DistributedPVPInstance : DistributedInstanceWorld {
+  setParentingRules(string, string) broadcast ram;
+  setAvatarReady() airecv clsend;
+  setMatchPlayers(playerInfo []) broadcast ram;
+  setGameStart(int16) broadcast;
+  setPlayerStat(uint32, uint8, int32) broadcast;
+  setStats(playerStats []) broadcast ram;
+  setResults(playerStats [], uint16, uint8, bool);
+  setPVPComplete() broadcast;
+  requestLeave() airecv clsend;
+  performAILeave();
+  requestLeaveApproved();
+  setPvpEvent(uint8, uint32 []) broadcast;
+};
+
+dclass DistributedPVPBattle : DistributedPVPInstance {
+  setParentingRules(string, string) broadcast ram;
+  setTimeLimit(uint32) required broadcast ram;
+};
+
+dclass DistributedPVPTeamBattle : DistributedPVPInstance {
+  setParentingRules(string, string) broadcast ram;
+  setTimeLimit(uint32) required broadcast ram;
+};
+
+dclass DistributedPVPShipBattle : DistributedPVPInstance {
+  setParentingRules(string, string) broadcast ram;
+  setTimeLimit(uint32) required broadcast ram;
+  setShipDoId(DoId);
+  setBoarded() airecv clsend;
+};
+
+dclass PVPGameBase : DistributedObject {
+  setParentingRules(string, string) broadcast ram;
+  setAvatarReady() airecv clsend;
+  allPresent(uint32 []) broadcast;
+  setPlayerStat(uint32, uint8, int32) broadcast;
+  setStats(playerStats []) broadcast ram;
+  setResults(playerStats [], int32);
+  setGameStart(int16) broadcast;
+  setGameExit() broadcast;
+  setGameAbort() broadcast;
+  setInstanceId(uint32) required broadcast ram;
+  setPvpEvent(uint8, uint32 []) broadcast;
+};
+
+dclass PVPGameCTL : PVPGameBase {
+  setParentingRules(string, string) broadcast ram;
+  treasureDeposited(uint32) airecv clsend;
+  setMaxCarry(uint16) broadcast ram;
+  setMaxTeamScore(uint16) broadcast ram;
+  shipDeposit(uint32) airecv clsend;
+  shipDeposited(uint32);
+  portEntered(string, uint32) airecv clsend;
+  portExited(string, uint32) airecv clsend;
+  requestDropTreasure() airecv clsend;
+  setShipsNearBase(uint32 [], string []) broadcast ram;
+};
+
+dclass PVPGamePirateer : PVPGameBase {
+  setParentingRules(string, string) broadcast ram;
+  coinCaptured(uint32) broadcast ram;
+  displayCoins(uint32 []) broadcast ram;
+  unDisplayCoin(uint32) broadcast;
+  lootWreck(uint32, uint32) clsend airecv;
+  unLootWreck(uint32, uint32) clsend airecv;
+  setMaxCarry(uint16) broadcast ram;
+  setMaxTeamScore(uint16) broadcast ram;
+  portEntered(string, uint32) airecv clsend;
+  portExited(string, uint32) airecv clsend;
+  setShipsNearBase(uint32 [], string []) broadcast ram;
+};
+
+dclass PVPGameTeamBattle : PVPGameBase {
+  setParentingRules(string, string) broadcast ram;
+  setTimeLimit(uint32) required broadcast ram;
+};
+
+dclass PVPGameBattle : PVPGameBase {
+  setParentingRules(string, string) broadcast ram;
+  setTimeLimit(uint32) required broadcast ram;
+};
+
+dclass PVPGameShipBattle : PVPGameBase {
+  setParentingRules(string, string) broadcast ram;
+  setShipDoId(DoId);
+  setBoarded() airecv clsend;
+};
+
+dclass DistributedShippart : DistributedNode {
+  string DcObjectType db;
+  setOwnerId(uint32) required db;
+  setShipId(uint32) required broadcast ram db ownrecv;
+  setGeomParentId(uint32) required broadcast ram db;
+};
+
+dclass DistributedHullDNA {
+  setShipClass(uint8) required broadcast ram db ownrecv;
+  setBaseTeam(int8) required broadcast ram db ownrecv;
+  setHullClass : setShipClass, setBaseTeam;
+  setHullTextureIndex(uint8array) required broadcast ram db ownrecv;
+  setStripeTextureIndex(uint8array) required broadcast ram db ownrecv;
+  setPatternTextureIndex(uint8array) required broadcast ram db ownrecv;
+  setHullColorIndex(uint8array) required broadcast ram db ownrecv;
+  setStripeColorIndex(uint8array) required broadcast ram db ownrecv;
+  setPatternColorIndex(uint8array) required broadcast ram db ownrecv;
+  setHullHilightColorIndex(uint8array) required broadcast ram db ownrecv;
+  setStripeHilightColorIndex(int8array) required broadcast ram db ownrecv;
+  setPatternHilightColorIndex(uint8array) required broadcast ram db ownrecv;
+  setHullConfig : setHullTextureIndex, setStripeTextureIndex, setPatternTextureIndex, setHullColorIndex, setStripeColorIndex, setPatternColorIndex, setHullHilightColorIndex, setStripeHilightColorIndex, setPatternHilightColorIndex;
+  setProwType(uint8) required broadcast ram db ownrecv;
+  setRamType(uint8) required broadcast ram db ownrecv;
+  setCabinType(uint8) required broadcast ram db ownrecv;
+  setAttachmentConfig : setProwType, setRamType, setCabinType;
+  setCannonConfig(uint16array) required broadcast ram db ownrecv;
+  setLeftBroadsideConfig(uint16array) required broadcast ram db ownrecv;
+  setRightBroadsideConfig(uint16array) required broadcast ram db ownrecv;
+  setBroadsideAmmo(SkillId) required broadcast ram db ownrecv;
+  setWeaponConfig : setCannonConfig, setLeftBroadsideConfig, setRightBroadsideConfig, setBroadsideAmmo;
+  setWallDecorConfig(uint8array) required broadcast ram db;
+  setFloorDecorConfig(uint8array) required broadcast ram db;
+  setDecorConfig : setWallDecorConfig, setFloorDecorConfig;
+};
+
+dclass DistributedCabinDNA {
+  setShipClass(uint8) required broadcast ram db;
+  setCabinType(uint8) required broadcast ram db;
+  setBaseTeam(int8) required broadcast ram db;
+  setCabinClass : setShipClass, setBaseTeam, setCabinType;
+  setHullTextureIndex(uint8array) required broadcast ram db;
+  setStripeTextureIndex(uint8array) required broadcast ram db;
+  setPatternTextureIndex(uint8array) required broadcast ram db;
+  setHullColorIndex(uint8array) required broadcast ram db;
+  setStripeColorIndex(uint8array) required broadcast ram db;
+  setPatternColorIndex(uint8array) required broadcast ram db;
+  setHullHilightColorIndex(uint8array) required broadcast ram db;
+  setStripeHilightColorIndex(int8array) required broadcast ram db;
+  setPatternHilightColorIndex(uint8array) required broadcast ram db;
+  setCabinConfig : setHullTextureIndex, setStripeTextureIndex, setPatternTextureIndex, setHullColorIndex, setStripeColorIndex, setPatternColorIndex, setHullHilightColorIndex, setStripeHilightColorIndex, setPatternHilightColorIndex;
+  setCannonConfig(uint16array) required broadcast ram db;
+  setWallDecorConfig(uint8array) required broadcast ram db;
+  setFloorDecorConfig(uint8array) required broadcast ram db;
+  setWindowConfig(uint8array) required broadcast ram db;
+  setDecorConfig : setWallDecorConfig, setFloorDecorConfig, setWindowConfig;
+};
+
+dclass DistributedMastDNA {
+  setShipClass(uint8) required broadcast ram db ownrecv;
+  setBaseTeam(int8) required broadcast ram db ownrecv;
+  setMastType(uint8) required broadcast ram db ownrecv;
+  setPosIndex(uint8) required broadcast ram db ownrecv;
+  setSailConfig(uint8array) required broadcast ram db ownrecv;
+  setMastConfig : setShipClass, setBaseTeam, setMastType, setPosIndex, setSailConfig;
+  setTextureIndex(uint8) required broadcast ram db;
+  setColorIndex(uint8) required broadcast ram db;
+};
+
+dclass DistributedSailDNA {
+  setBaseTeam(int8) required broadcast ram db;
+  setMastType(uint8) required broadcast ram db;
+  setMastPosIndex(uint8) required broadcast ram db;
+  setSailType(uint8) required broadcast ram db;
+  setPosIndex(uint8) required broadcast ram db;
+  setSailConfig : setBaseTeam, setMastType, setMastPosIndex, setSailType, setPosIndex;
+  setTextureIndex(uint8) required broadcast ram db;
+  setColorIndex(uint8) required broadcast ram db;
+  setLogoIndex(uint8) required broadcast ram db;
+  setColor : setTextureIndex, setColorIndex, setLogoIndex;
+};
+
+dclass DistributedBowSpritDNA {
+  setBaseTeam(int8) required broadcast ram db;
+  setProwType(uint8) required broadcast ram db;
+  setPosIndex(uint8) required broadcast ram db;
+  setColorIndex(uint8) required broadcast ram db;
+  setProwConfig : setBaseTeam, setProwType, setPosIndex, setColorIndex;
+};
+
+dclass DistributedDecorDNA {
+  setBaseTeam(int8) required broadcast ram db;
+  setDecorType(uint8) required broadcast ram db;
+  setPosIndex(uint8) required broadcast ram db;
+  setColorIndex(uint8) required broadcast ram db;
+  setDecorConfig : setBaseTeam, setDecorType, setPosIndex, setColorIndex;
+};
+
+dclass DistributedCannonDNA {
+  setBaseTeam(int8) required broadcast ram db;
+  setCannonType(uint16) required broadcast ram db;
+};
+
+dclass DistributedDestructibleObject : DistributedNode {
+  string DcObjectType db;
+};
+
+dclass DistributedBarrel : DistributedDestructibleObject {
+};
+
+dclass DistributedDestructibleArray : DistributedDestructibleObject {
+  setMaxArrayHp(int16array) required broadcast ram db;
+  setArrayHp(int16array) required broadcast ram db;
+};
+
+dclass DistributedHull : DistributedHullDNA, DistributedShippart, DistributedDestructibleArray {
+  setMaxSp(int16) required broadcast ram db;
+  setSp(int16) required broadcast ram db;
+  setMaxCargo(uint8) required broadcast ram db;
+};
+
+dclass DistributedMast : DistributedMastDNA, DistributedShippart, DistributedDestructibleArray {
+  d_setBreakAnim(uint8, uint8) airecv clsend;
+  setBreakAnim(uint8, uint8) broadcast;
+};
+
+dclass DistributedSail : DistributedSailDNA, DistributedShippart, DistributedDestructibleObject {
+  setMaxHp(int16) required broadcast ram db;
+  setHp(int16) required broadcast ram db;
+  setMaxSp(int16) required broadcast ram db;
+  setSp(int16) required broadcast ram db;
+  requestSetAnimState(string) airecv clsend;
+  setAnimState(string) required broadcast ram airecv;
+};
+
+dclass DistributedBowSprit : DistributedBowSpritDNA, DistributedShippart, DistributedDestructibleObject {
+  setMaxHp(int16) required broadcast ram db;
+  setHp(int16) required broadcast ram db;
+};
+
+dclass DistributedCabin : DistributedCabinDNA, DistributedShippart, DistributedDestructibleObject {
+  setMaxHp(int16) required broadcast ram db;
+  setHp(int16) required broadcast ram db;
+  setMaxCargo(uint8) required broadcast ram db;
+};
+
+dclass DistributedShipDecor : DistributedDecorDNA, DistributedShippart, DistributedDestructibleObject {
+  setMaxHp(int16) required broadcast ram db;
+  setHp(int16) required broadcast ram db;
+};
+
+dclass DistributedSteeringWheel : DistributedInteractive, DistributedShippart {
+};
+
+dclass DistributedShipRepairSpot : DistributedInteractive {
+  setShipId(DoId) required broadcast ram;
+  setIndex(uint8) required broadcast ram;
+};
+
+dclass DistributedWeapon : WeaponBase, DistributedInteractive {
+  setMovie(uint8, uint32) broadcast ram;
+  doAIAttack(int32/10, int32/10, int32/10, uint32, SkillId, SkillId, int16) broadcast;
+};
+
+dclass DistributedPCCannon : DistributedWeapon {
+  gainSkill(uint32) airecv clsend;
+};
+
+dclass DistributedShipCannon : DistributedCannonDNA, DistributedPCCannon, DistributedShippart {
+  setCannonIndex(uint8) required broadcast ram db;
+};
+
+dclass DistributedTutorialShipCannon : DistributedShipCannon {
+};
+
+dclass DistributedIslandCannon : DistributedPCCannon {
+  setCannonIndex(uint8) required broadcast ram;
+  setIslandId(uint32) required broadcast ram;
+  setIsDestructable(uint8) required broadcast ram;
+  setDestructState(uint8) required broadcast ram;
+  hitByProjectile() airecv clsend;
+};
+
+dclass DistributedShipBroadside : DistributedWeapon {
+  requestBroadside(uint8, uint8/100 [], PosList, uint32, uint8) airecv clsend;
+  doBroadside(uint8, uint8/100 [], PosList, uint32, uint8, int16) broadcast;
+  setShipId(uint32) required broadcast ram;
+  setGeomParentId(uint32) required broadcast ram;
+  requestCannonEnabledState(uint8, uint8, uint8) airecv clsend;
+  setCannonAnim(uint8, uint8, uint8, int16) airecv clsend broadcast;
+  setLeftBroadside(uint16array) required broadcast ram;
+  setRightBroadside(uint16array) required broadcast ram;
+  setLeftBroadsideEnabledState(uint8 []) required broadcast ram;
+  setRightBroadsideEnabledState(uint8 []) required broadcast ram;
+  setBroadside : setLeftBroadside, setRightBroadside;
+  setBaseTeam(int8) required broadcast ram;
+  setAmmoType(SkillId) required broadcast ram;
+};
+
+struct Link {
+  string node;
+  uint32 linkId;
+  string areaUid;
+  uint32 parentId;
+  uint32 zoneId;
+  string linkNode;
+  uint32 worldId;
+  uint32 worldZoneId;
+};
+
+struct triggerSphere {
+  int32/10 posX;
+  int32/10 posY;
+  int32/10 posZ;
+  int32/10 triggerRadius;
+  string spawnPtId;
+};
+
+dclass DistributedGameArea : DistributedNode {
+  setModelPath(string) required broadcast ram;
+  setLinks(Link []) required broadcast ram;
+  setUniqueId(string) required broadcast ram;
+  setName(string) required broadcast ram;
+  addSpawnTriggers(triggerSphere []) broadcast ram;
+  spawnNPC(string, uint32) airecv clsend;
+  requestNPCRemoval(uint32) airecv clsend;
+};
+
+dclass DistributedGAInterior : DistributedGameArea, DistributedCartesianGrid {
+  uint32 AutoInterest[];
+  setParentingRules(string, string) required broadcast ram;
+  setConnectorId(uint32) required broadcast ram;
+};
+
+struct PortCollisionSphere {
+  int32/10 radius;
+  Pos pos;
+};
+
+dclass DistributedIsland : DistributedGameArea, DistributedCartesianGrid, Teamable {
+  setParentingRules(string, string) required broadcast ram;
+  setIslandTransform(int32/10, int32/10, int32/10, int32/10) broadcast required ram ownsend airecv;
+  setZoneSphereSize(uint16, uint16, uint16) required broadcast ram;
+  setZoneSphereCenter(int32, int32) required broadcast ram;
+  setIslandModel(string) required broadcast ram;
+  setUndockable(bool) required broadcast;
+  setPortCollisionSpheres(PortCollisionSphere []) required broadcast ram;
+  requestEntryToIsland() airecv clsend;
+  deniedEntryToIsland();
+  setFeastFireEnabled(bool) required broadcast ram;
+};
+
+dclass DistributedGAConnector : DistributedNode {
+  setParentingRules(string, string) required broadcast ram;
+  setModelPath(string) required broadcast ram;
+  setLinks(uint8, string, Link []) broadcast ram;
+  setUniqueId(string) required broadcast ram;
+  requestPrivateArea(uint32) airecv clsend;
+  setPrivateArea(uint32, uint32, uint32, bool) airecv clsend;
+};
+
+dclass DistributedGATunnel : DistributedGAConnector {
+  sendLeaveTunnelDone() airecv clsend;
+};
+
+dclass DistributedGADoor : DistributedGAConnector {
+};
+
+dclass DistributedLocationManager : Manager {
+  requestLocation(uint8) airecv clsend;
+  locationResponse(uint8);
+};
+
+dclass DistributedDoorBase : DistributedInteractive {
+  setDoorIndex(uint8) required broadcast ram;
+  setBuildingUid(string) required broadcast ram;
+  setMovie(uint8, uint32, int16) broadcast;
+  setLocked(uint8) required broadcast ram;
+};
+
+dclass DistributedBuildingDoor : DistributedDoorBase {
+  setInteriorId(uint32, string, uint32, uint32) required broadcast ram;
+  requestPrivateInteriorInstance() airecv clsend;
+  setPrivateInteriorInstance(uint32, uint32, uint32, bool);
+};
+
+dclass DistributedInteriorDoor : DistributedDoorBase {
+  setInteriorId(uint32, uint32, uint32) required broadcast ram;
+  setExteriorId(uint32, uint32, uint32) required broadcast ram;
+  setBuildingDoorId(uint32) required broadcast ram;
+};
+
+dclass DistributedJailInterior : DistributedGAInterior {
+  avatarAlreadyInJail() airecv clsend;
+};
+
+dclass DistributedCellDoor : DistributedInteractive {
+  setCellIndex(uint8) required broadcast ram;
+  setHealth(uint16) required broadcast ram;
+  doorKicked() airecv clsend;
+};
+
+dclass PiratesTutorialManager : DistributedObject {
+  setParentingRules(string, string) broadcast ram;
+  requestTutorial() airecv clsend;
+  enterTutorial(uint32);
+  allDone() airecv clsend;
+};
+
+struct TutorialDoIdElement {
+  string identifier;
+  uint32 doId;
+};
+
+dclass DistributedPiratesTutorial : DistributedObject {
+  clientEnterAct0Tutorial() airecv clsend;
+  tutorialSeachestFinished() airecv clsend;
+  startSailingStumpy() airecv clsend;
+  boardedTutorialShip() airecv clsend;
+  targetPracticeDone() airecv clsend;
+  giveInitQuest(uint8) airecv clsend;
+  inventoryFailed() broadcast ram;
+  autoVisit(uint32) airecv clsend;
+  makeAPirateComplete() airecv clsend;
+  makeAPirateCompleteResp() broadcast ram;
+};
+
+dclass DistributedPiratesTutorialWorld : DistributedInstanceWorld {
+  setTutorialHandlerId(uint32) broadcast ram;
+};
+
+dclass TestObject {
+  string DcObjectType db;
+  setValue(string) broadcast ram db required;
+};
+
+dclass DistributedGameTable : DistributedInteractive {
+  setTableType(uint8) required broadcast;
+  setDealerName(string) required broadcast;
+  setDealerType(uint8) required broadcast;
+  setAIList(uint8 []) required broadcast;
+  receiveAISpeech(int8, string) broadcast;
+  receiveAIThoughts(int8, string);
+  requestSeat(uint8, string) airecv clsend;
+  requestExit() airecv clsend;
+  requestSeatResponse(uint8(0-5), uint8);
+  setAvatarSeat(uint32 []) broadcast ram;
+  avatarSit(uint32, uint8) broadcast;
+  avatarStand(uint32, uint8) broadcast;
+};
+
+dclass DistributedLock : DistributedInteractive {
+  setOpen(uint8(0-1)) broadcast ram;
+  requestExit() airecv clsend;
+  localAvatarSatDown(uint32, uint8);
+  localAvatarGotUp();
+  requestSeatResponse(uint8(0-2));
+  lockSolved(string) broadcast;
+  d_openLock(string, uint32) airecv clsend;
+};
+
+dclass DistributedLockDoor : DistributedLock {
+};
+
+dclass DistributedDiceGame : DistributedGameTable {
+  playerIsReady() airecv clsend;
+  yourTurn(uint8) broadcast;
+  changeDice(uint8, uint8 []) airecv clsend;
+  playerHasRolled(uint8, uint8 []) airecv clsend;
+  rollResults(uint8, uint8 []) broadcast;
+  currentTurn(uint8, uint8, string) broadcast;
+  sendChat(uint8, uint32) airecv clsend;
+};
+
+dclass DistributedLiarsDice : DistributedDiceGame {
+  tableStatus(uint8, uint8) broadcast;
+  betUpdate(uint8, uint8, uint8) airecv clsend;
+  youWin(uint32, string) broadcast;
+  newRound() broadcast;
+  cheatResult(uint8, uint8, uint8) airecv clsend;
+  incomingCheat(uint8, uint8, uint8) broadcast;
+  catchCheater(uint8) airecv clsend;
+  gotCaught(uint8, string) broadcast;
+  callBluff(uint8, uint8, uint8) airecv clsend;
+  displayChallenge(uint8, uint8, uint8, uint8, string) broadcast;
+};
+
+typedef uint8(0-255) PlayingCard;
+
+typedef PlayingCard CardHand[];
+
+typedef CardHand CardHandArray[];
+
+struct PokerAction {
+  uint8 action;
+  uint32 amount;
+};
+
+typedef PokerAction PokerActionList[];
+
+struct BlackjackAction {
+  uint8 action;
+  uint16 amount;
+};
+
+dclass DistributedPokerTable : DistributedGameTable {
+  setAnteList(uint32 []) required broadcast;
+  sendTell(uint32);
+  requestCheat(uint8, uint8) airecv clsend;
+  cheatResponse(uint8, uint8, uint8, CardHand);
+  requestAIPlayerTurn(uint8) broadcast;
+  askForClientAction(uint8) broadcast;
+  clientAction(int8, PokerAction) airecv clsend;
+  setTableState(int8, uint8, CardHand, CardHand [], int32 [], int32 []) required broadcast ram;
+  setPotSize(uint32) required broadcast ram;
+  setPlayerActions(uint16, PokerActionList, int32 []) broadcast ram;
+  setLocalAvatarHand(CardHand);
+  setLocalAvatarHandValue(uint8, CardHand);
+  setAllHandValues(uint8 [], CardHand []) broadcast;
+};
+
+dclass DistributedHoldemTable : DistributedPokerTable {
+};
+
+dclass Distributed7StudTable : DistributedPokerTable {
+};
+
+struct BishopsHandAction {
+  uint8(0-10) action;
+  uint16 data;
+};
+
+struct BishopsHandProgressReport {
+  uint8 seat;
+  uint8 percent;
+};
+
+struct BishopsHandSeat {
+  uint32 avId;
+  int8 state;
+};
+
+dclass DistributedBishopsHandTable : DistributedGameTable {
+  setParentingRules(string, string) broadcast ram;
+  setTableState(uint8, BishopsHandSeat []) broadcast ram;
+  setPendingStakes(uint32) broadcast ram;
+  setActiveStakes(uint32) broadcast ram;
+  setRunningStakes(uint32) broadcast ram;
+  setProgressReport(BishopsHandProgressReport []) broadcast;
+  setGameTimer(uint16, int32) broadcast ram;
+  askForClientAction(BishopsHandAction, uint16, int16) broadcast;
+  clientAction(BishopsHandAction) airecv clsend;
+  startRound(uint8 [], uint8, int16);
+  receiveProgress(uint8, uint8, uint8, int16/100) airecv clsend;
+  leftGame();
+};
+
+dclass DistributedBlackjackTable : DistributedGameTable {
+  setBetMultiplier(uint32) required broadcast;
+  setTableState(CardHandArray [], int32 []) required broadcast ram;
+  setEvent(uint8, BlackjackAction) broadcast;
+  requestClientAction(uint8) airecv clsend;
+  clientAction(BlackjackAction) airecv clsend;
+  requestCheat(uint8, uint8) airecv clsend;
+  cheatResponse(uint8, uint8, uint8, CardHand);
+  setHandResults(int16 []) broadcast;
+};
+
+dclass DistributedBank : DistributedInteractive {
+  setModelPath(string) required broadcast ram;
+  setBelongsToTeam(int16) broadcast ram;
+  startLooting(uint8);
+  stopLooting();
+  setValue(int16) broadcast ram;
+  setMaxValue(uint16) broadcast ram;
+  setParentObjId(uint32) required broadcast ram;
+};
+
+dclass DistributedWreck : DistributedNode {
+  setModelPath(string) required broadcast ram;
+  setStatus(int8) required broadcast ram;
+  setValue(int8) required broadcast ram;
+  sink() broadcast ram;
+};
+
+dclass DistributedTown : DistributedGameArea, DistributedCartesianGrid {
+  setParentingRules(string, string) required broadcast ram;
+  setModelPath(string) required broadcast ram;
+};
+
+dclass DistributedNPCToy : DistributedInteractive {
+  setUniqueId(string) required broadcast ram;
+  setModelPath(string) required broadcast ram;
+  setParentObjId(uint32) required broadcast ram;
+  setMovie(uint32) required broadcast ram;
+};
+
+dclass DistributedInteractiveProp : DistributedInteractive, DistributedTargetableObject {
+  setModelPath(string) required broadcast ram;
+  setParentObjId(uint32) required broadcast ram;
+  setMovie(uint32) broadcast ram;
+  setInteractAble(string) required broadcast ram;
+  setInteractType(string) required broadcast ram;
+  propSlashed() broadcast;
+};
+
+dclass PCAvatarFriendsManager : AvatarFriendsManager {
+  setShipState(uint32, uint8, uint32);
+  setBandId(uint32, uint32, uint32);
+  requestDinghyFriendsList(uint32, uint32, uint32);
+};
+
+dclass PCPlayerFriendsManager : PlayerFriendsManager {
+  setShipState(uint32, uint8, uint32);
+  setBandId(uint32, uint32, uint32);
+};
+
+dclass DistributedFort : DistributedBattleAvatar {
+  setIslandId(uint32) required broadcast ram;
+  setObjKey(string) required broadcast ram;
+  setHp(int16, uint8) required broadcast ram;
+  setLevel(uint16) required broadcast ram;
+  setDrawbridgesLerpR(uint8) broadcast;
+  hideDrawbridges() broadcast;
+  hitByProjectile(SkillId, SkillId) airecv clsend;
+};
+
+dclass DistributedFortCannon : DistributedIslandCannon {
+  setFortId(uint32) required broadcast ram;
+  hitByProjectile() airecv clsend;
+};
+
+dclass DistributedPirateBandManager : DistributedObject {
+  setParentingRules(string, string) broadcast ram;
+  requestInvite(uint32) airecv clsend;
+  requestCancel(uint32) airecv clsend;
+  requestOutCome(uint32, uint8);
+  invitationFrom(uint32, string);
+  invitationCancel(uint32);
+  invitationResponce(uint32, uint8) airecv clsend;
+  requestRemove(uint32) airecv clsend;
+  requestCrewIconUpdate(uint8) airecv clsend;
+  receiveUpdatedCrewIcon(uint8);
+};
+
+struct MastInfo {
+  uint8 mastType;
+  uint8 posIndex;
+  uint8 sailConfig[];
+};
+
+dclass DistributedBandMember : DistributedObject {
+  setAvatarId(uint32) required broadcast ram;
+  setName(string) required broadcast ram;
+  setHp(uint32) required broadcast ram;
+  setMaxHp(uint32) required broadcast ram;
+  setBandId(uint32, uint32) required broadcast ram;
+  setIsManager(uint8) required broadcast ram;
+  setShipInfo(uint32, string, uint8, MastInfo []) required broadcast ram;
+  setShipHasSpace(bool) required broadcast ram;
+  setMessage(uint32, string) broadcast;
+  setShipDeployMessage(uint32, string, string) broadcast;
+  setChat(string, uint8, uint32) broadcast ownsend;
+  setWLChat(string, uint8, uint32) broadcast ownsend;
+  setSpeedChat(uint32, uint16) broadcast ownsend;
+  setSCQuestChat(uint32, uint16, uint8, uint8) broadcast ownsend;
+  teleportQuery(uint32, uint32, uint32) clsend ownrecv;
+  teleportResponse(uint32, int8, uint32, uint32, uint32) clsend ownrecv;
+};
+
+struct BandShipInfo {
+  uint32 bandMemberId;
+  uint32 shipId;
+  uint16 hp;
+  uint16 sp;
+  uint8 cargo;
+  uint8 crew;
+  uint16 timeLeft;
+  uint8 siegeTeam;
+  string shipOwnerName;
+};
+
+struct GuildShipInfo {
+  uint32 guildMemberId;
+  uint32 shipId;
+  uint16 hp;
+  uint16 sp;
+  uint8 cargo;
+  uint8 crew;
+  uint16 timeLeft;
+  uint8 shipClass;
+  string shipName;
+  uint8 siegeTeam;
+  string shipOwnerName;
+};
+
+struct FriendShipInfo {
+  uint32 friendMemberId;
+  uint32 shipId;
+  uint16 hp;
+  uint16 sp;
+  uint8 cargo;
+  uint8 crew;
+  uint16 timeLeft;
+  uint8 shipClass;
+  string shipName;
+  uint8 siegeTeam;
+  string shipOwnerName;
+};
+
+struct PublicShipInfo {
+  uint32 captainMemberId;
+  uint32 shipId;
+  uint16 hp;
+  uint16 sp;
+  uint8 cargo;
+  uint8 crew;
+  uint16 timeLeft;
+  uint8 shipClass;
+  string shipName;
+  uint8 siegeTeam;
+  string shipOwnerName;
+};
+
+dclass DistributedDinghy : DistributedInteractive {
+  setInteractRadius(uint8) required broadcast ram;
+  setLocationId(uint8) required broadcast ram;
+  setSiegeTeam(int8) required broadcast ram;
+  offerOptions();
+  offerBandOptions(BandShipInfo []);
+  offerFriendOptions(FriendShipInfo []);
+  offerGuildOptions(GuildShipInfo []);
+  offerPublicOptions(PublicShipInfo []);
+  sendAvatarToShip(uint32);
+  denyAccess(int8);
+  selectOwnShip(uint32, int8) clsend airecv;
+  selectFriendShip(uint32) clsend airecv;
+  selectBandShip(uint32) clsend airecv;
+  selectGuildShip(uint32) clsend airecv;
+  selectPublicShip(uint32) clsend airecv;
+  responseFriendsList(uint32, uint32array);
+  responseGuildMatesList(uint32, uint32array);
+};
+
+dclass DistributedShipDeployer : DistributedNode {
+  setMinRadius(uint32/100) required broadcast ram;
+  setMaxRadius(uint32/100) required broadcast ram;
+  setSpacing(uint32/100) required broadcast ram;
+  setHeading(uint32/100) required broadcast ram;
+  shipEnteredSphere(uint32, uint8) clsend airecv;
+  shipExitedSphere(uint32, uint8) clsend airecv;
+  shipExitedBarrier(uint32) clsend airecv;
+};
+
+dclass PSnapshotRenderer : SnapshotRenderer {
+};
+
+dclass DistributedPopulationTracker : DistributedObject {
+  setShardId(uint32) required broadcast ram;
+  setPopulation(uint16) required broadcast ram;
+  setPopLimits(uint16, uint16) required broadcast ram;
+};
+
+dclass PCGuildManager : GuildManager {
+  sendSCQuest(uint16, uint8, uint16) clsend airecv;
+  recvSCQuest(uint32, uint16, uint8, uint16);
+};
+
+struct NewsItem {
+  uint32 id;
+  uint32 endTime;
+};
+
+dclass NewsManager : DistributedObject {
+  holidayNotify() broadcast;
+  setHolidayIdList(NewsItem []) broadcast ram;
+  displayMessage(uint16) broadcast;
+};
+
+dclass AvatarAccessoriesManager : DistributedObject {
+  migrateDNAElements(uint32, uint32, uint32, uint32array [], uint8);
+  requestClothingFromDB(uint32, uint32, uint32);
+  responseClothingFromDB(uint32, uint32array []);
+  requestClothingAddDB(uint32, uint32, uint32, ClothingDNAElement [], uint32, uint8);
+  responseClothingAddDB(uint32, uint8, uint32);
+  sendCurrentDNAtoAccDB(uint32, uint8);
+  requestClothingDeleteDB(uint32, uint32, uint32, ClothingDNAElement [], uint32);
+  responseClothingDeleteDB(uint32, uint8, uint32);
+  requestJewelryListDB(uint32, uint32, uint32);
+  responseJewelryList(uint32, jewelryIdList);
+  requestJewelryAddDB(uint32, uint32, uint32, uint32, uint32, uint8);
+  responseJewelryAddDB(uint32, uint8, uint32, uint32);
+  requestJewelryDeleteDB(uint32, uint32, uint32, uint32, uint32);
+  responseJewelryDeleteDB(uint32, uint8, uint32, uint32);
+  requestPaidToUnpaidRollBackDB(uint32, uint32, uint32);
+  responsePaidToUnpaidRollBack(uint32, uint32array [], uint8);
+  requestClothingDropDB(uint32, uint32, uint32, char, uint8);
+  responseClothingDropFromDB(uint32, uint32, uint8);
+  requestTattooListDB(uint32, uint32, uint32);
+  responseTattooList(uint32, tattooIdList);
+  requestTattooAddDB(uint32, uint32, uint32, uint32, uint32, uint8);
+  responseTattooAddDB(uint32, uint8, uint32, uint32);
+  requestTattooDeleteDB(uint32, uint32, uint32, uint32, uint32);
+  responseTattooDelete(uint32, uint8, uint32, uint32);
+  requestAward(uint32, uint8, uint32, uint32, uint32);
+  requestTattoosInDNA(uint32);
+  responseTattoosInDNA(uint32, uint32, uint32, uint32array);
+};
+
+dclass DistributedCrewMatch : DistributedObject {
+  requestCrewAdd(uint8, uint8, uint8) airecv clsend;
+  responseCrewAdd(int8);
+  requestCrewDelete() airecv clsend;
+  responseCrewDelete(uint8);
+  requestInitialAvatarAdd(uint8) airecv clsend;
+  responseInitialAvatarAdd(uint8, string, string, uint8);
+  requestInitialAvatarAddResponse(uint8, uint8) airecv clsend;
+  responseInitialAvatarAddResponse(uint8);
+  requestPutAvatarOnLookoutList(uint8) airecv clsend;
+  requestdeleteAvatarFromLookoutList() airecv clsend;
+  responseCrewFound(string, uint32, string);
+  requestAcceptInvite(uint32) airecv clsend;
+  requestCrewOfOneCreation() airecv clsend;
+  requestCrewOfOneDelete() airecv clsend;
+  notifySponsorNewMember(string);
+};
+
+dclass AwardMaker : DistributedObject {
+  recvAwardableAvatars(uint32, uint32 [], string []);
+  awardSuccess(uint32);
+  awardFailure(uint32);
+};
+
+dclass CodeRedemption : DistributedObject {
+  online();
+  recvAvatarGender(uint32, string, uint32);
+  sendCodeForRedemption(string, string) airecv clsend;
+  notifyClientCodeRedeemStatus(uint8);
+};
+
+dclass PiratesSettingsMgr : SettingsMgr {
+};
+
+dclass DistributedHolidayObject : DistributedInteractive {
+  setInteractRadius(uint8) required broadcast ram;
+  setInteractMode(uint8) required broadcast ram;
+};
+
+dclass DistributedHolidayBonfire : DistributedHolidayObject {
+  setFireStarted(bool) required broadcast ram;
+  finishInteraction();
+};
+
+dclass DistributedHolidayPig : DistributedHolidayObject {
+  setPigRoasting(bool) required broadcast ram;
+  makeTradeResponse(uint32) ownrecv;
+};
+

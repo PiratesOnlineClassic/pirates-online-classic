@@ -5,6 +5,7 @@
 from pandac.PandaModules import *
 from pirates.battle import WeaponGlobals
 
+
 class RangeDetector(NodePath):
     __module__ = __name__
 

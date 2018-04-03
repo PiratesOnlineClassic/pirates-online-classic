@@ -5,6 +5,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.pirate.BipedAnimationMixer import BipedAnimationMixer
 
+
 class HumanAnimationMixer(BipedAnimationMixer):
     __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('HumanAnimationMixer')

@@ -2,22 +2,24 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.treasuremap.TreasureMapBlackPearl
-from pandac.PandaModules import *
-from direct.showbase.PythonUtil import report
-from direct.interval.IntervalGlobal import *
-from pirates.treasuremap import DistributedTreasureMapInstance, TreasureMapBlackPearlGlobals
-from pirates.ship import ShipGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.cutscene import Cutscene, CutsceneData
-from pirates.world import FortBarricade
-from pirates.piratesbase import PLocalizer
-from pirates.effects.DarkWaterFog import DarkWaterFog
-from pirates.piratesbase import TimeOfDayManager, TODGlobals
-from pirates.treasuremap import TreasureMapRulesPanel
-from pirates.uberdog import DistributedInventoryBase
-from direct.task import Task
-from direct.controls import ShipPilot2
 import random
+
+from pirates.ship import ShipPilot
+from direct.interval.IntervalGlobal import *
+from direct.showbase.PythonUtil import report
+from direct.task import Task
+from pandac.PandaModules import *
+from pirates.cutscene import Cutscene, CutsceneData
+from pirates.effects.DarkWaterFog import DarkWaterFog
+from pirates.piratesbase import (PiratesGlobals, PLocalizer, TimeOfDayManager,
+                                 TODGlobals)
+from pirates.ship import ShipGlobals
+from pirates.treasuremap import (DistributedTreasureMapInstance,
+                                 TreasureMapBlackPearlGlobals,
+                                 TreasureMapRulesPanel)
+from pirates.uberdog import DistributedInventoryBase
+from pirates.world import FortBarricade
+
 
 class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMapInstance):
     __module__ = __name__
@@ -291,7 +293,7 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def enterStageOne(self):
-        ShipPilot2.ShipPilot2.MAX_STRAIGHT_SAIL_BONUS = 0
+        ShipPilot.ShipPilot.MAX_STRAIGHT_SAIL_BONUS = 0
         self.stashPortCollision()
         self.stashPearlAndGoliath()
         island = self.islands.values()[0]
@@ -718,7 +720,7 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         return ival
 
     def enterNotCompleted(self):
-        ShipPilot2.ShipPilot2.MAX_STRAIGHT_SAIL_BONUS = 4.0
+        ShipPilot.ShipPilot.MAX_STRAIGHT_SAIL_BONUS = 4.0
         base.musicMgr.requestFadeOut('final_battle')
         self.showRulesPanel(5)
 
@@ -726,7 +728,7 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         pass
 
     def enterCompleted(self):
-        ShipPilot2.ShipPilot2.MAX_STRAIGHT_SAIL_BONUS = 4.0
+        ShipPilot.ShipPilot.MAX_STRAIGHT_SAIL_BONUS = 4.0
         base.cr.loadingScreen.showTarget(localAvatar.getReturnLocation())
 
     def exitCompleted(self):

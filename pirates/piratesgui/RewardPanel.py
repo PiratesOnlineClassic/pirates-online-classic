@@ -5,13 +5,12 @@
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import GuiButton, PiratesGuiGlobals
 from pirates.piratesgui.PDialog import PDialog
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import GuiButton
-from pirates.piratesbase import PLocalizer
-from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.reputation import ReputationGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 TextDict = {PiratesGlobals.RewardBlackPearl: [PLocalizer.RewardBlackPearlComplete, PLocalizer.RewardBlackPearlReward, PLocalizer.RewardBlackPearlDescription, 'sail_recharge', False], PiratesGlobals.RewardVoodooDoll: [PLocalizer.RewardVoodooDollComplete, PLocalizer.RewardVoodooDollReward, PLocalizer.RewardVoodooDollDescription, 'doll', True], PiratesGlobals.RewardDagger: [PLocalizer.RewardDaggerComplete, PLocalizer.RewardDaggerReward, PLocalizer.RewardDaggerDescription, 'dagger', True], PiratesGlobals.RewardVoodooStaff: [PLocalizer.RewardVoodooStaffComplete, PLocalizer.RewardVoodooStaffReward, PLocalizer.RewardVoodooStaffDescription, 'staff', True], PiratesGlobals.RewardGrenade: [PLocalizer.RewardGrenadeComplete, PLocalizer.RewardGrenadeReward, PLocalizer.RewardGrenadeDescription, 'grenade', True]}
 
 class RewardPanel(PDialog):

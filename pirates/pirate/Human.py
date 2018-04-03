@@ -2,24 +2,24 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pirate.Human
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
+import random
+
 from direct.actor import Actor
-from direct.task import Task
-from direct.showbase import ShadowPlacer
+from direct.directnotify import DirectNotifyGlobal
+from direct.fsm import FSM
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
-from direct.fsm import FSM
-from direct.directnotify import DirectNotifyGlobal
+from direct.interval.IntervalGlobal import *
+from direct.showbase import ShadowPlacer
 from direct.showbase.PythonUtil import quickProfile
-from pirates.piratesbase import PiratesGlobals
+from direct.task import Task
+from pandac.PandaModules import *
 from pirates.battle import WeaponGlobals
-from pirates.pirate import Biped, HumanBase
-from pirates.pirate import HumanDNA
-from pirates.makeapirate import PirateMale
-from pirates.makeapirate import PirateFemale
+from pirates.makeapirate import PirateFemale, PirateMale
+from pirates.pirate import Biped, HumanBase, HumanDNA
 from pirates.pirate.HumanAnimationMixer import HumanAnimationMixer
-import random
+from pirates.piratesbase import PiratesGlobals
+
 TX = 0
 TY = 1
 TZ = 2

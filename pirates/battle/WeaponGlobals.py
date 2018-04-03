@@ -2,36 +2,55 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.WeaponGlobals
-import copy, math, cPickle
-from pandac.PandaModules import *
+import copy
+import cPickle
+import math
+import os
+import random
+
+import Bayonet
+import Consumable
+import Dagger
+import Doll
+import DualCutlass
+import Foil
+import Grenade
+import Melee
+import MonsterMelee
+import Pistol
+import Sword
+import Wand
+import Weapon
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import *
-from pirates.battle.EnemySkills import *
+from pandac.PandaModules import *
 from pirates.battle import CannonGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.battle.EnemySkills import *
 from pirates.economy import EconomyGlobals
+from pirates.piratesbase import PLocalizer
 from pirates.reputation import RepChart
-import random, os, copy, Pistol, Sword, Doll, Melee, Dagger, Grenade, Wand, Bayonet, MonsterMelee, Consumable, Weapon, DualCutlass, Foil
+from pirates.uberdog.UberDogGlobals import InventoryType
 from WeaponConstants import *
+
 __defensiveBuffs = [
  C_TAKECOVER, C_OPENFIRE, C_ATTUNE, C_HASTEN, C_REGEN]
 
 def getIsDefensiveBuff(effectId):
     return __defensiveBuffs.count(effectId)
 
-
 vfs = VirtualFileSystem.getGlobalPtr()
 filename = Filename('WeaponGlobals.pkl')
 searchPath = DSearchPath()
-searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$PIRATES/src/battle')))
-searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('pirates/src/battle')))
-searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('pirates/battle')))
-searchPath.appendDirectory(Filename('.'))
-searchPath.appendDirectory(Filename('etc'))
+
+if __debug__:
+    searchPath.appendDirectory(Filename.expandFrom('../resources/phase_2/etc'))
+else:
+    searchPath.appendDirectory(Filename.expandFrom('/phase_2/etc'))
+
 found = vfs.resolveFilename(filename, searchPath)
 if not found:
     print 'WeaponGlobals.pkl file not found: %s' % filename.cStr()
+
 data = vfs.readFile(filename, 1)
 __skillInfo = cPickle.loads(data)
 __attackEffectsSkillInfo = {}

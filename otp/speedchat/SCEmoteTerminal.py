@@ -3,9 +3,10 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.speedchat.SCEmoteTerminal
 from direct.gui.DirectGui import *
-from SCTerminal import SCTerminal
-from otp.otpbase.OTPLocalizer import EmoteList, EmoteWhispers
 from otp.avatar import Emote
+from otp.otpbase.OTPLocalizer import EmoteList, EmoteWhispers
+from SCTerminal import SCTerminal
+
 SCEmoteMsgEvent = 'SCEmoteMsg'
 SCEmoteNoAccessEvent = 'SCEmoteNoAccess'
 

@@ -6,6 +6,7 @@ from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from pirates.piratesgui import PiratesGuiGlobals
 
+
 class InventoryPage(DirectFrame):
     __module__ = __name__
 

@@ -4,10 +4,11 @@
 # Embedded file name: pirates.distributed.DistributedInteractive
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedNode
-from pirates.piratesgui import InteractGUI
-from pirates.interact import InteractiveBase
-from pirates.world import DistributedLocatableObject
 from direct.showbase.PythonUtil import report
+from pirates.interact import InteractiveBase
+from pirates.piratesgui import InteractGUI
+from pirates.world import DistributedLocatableObject
+
 
 class DistributedInteractive(DistributedNode.DistributedNode, InteractiveBase.InteractiveBase, DistributedLocatableObject.DistributedLocatableObject):
     __module__ = __name__

@@ -3,6 +3,9 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.otpbase.OTPLocalizerEnglish
 import string
+
+from pandac.PandaModules import TextProperties, TextPropertiesManager
+
 lTheBrrrgh = 'The Brrrgh'
 lDaisyGardens = 'Daisy Gardens'
 lDonaldsDock = "Donald's Dock"
@@ -83,8 +86,6 @@ ActivateChatTitle = 'True Friends Options'
 WhisperToFormat = 'To %s %s'
 WhisperToFormatName = 'To %s'
 WhisperFromFormatName = '%s whispers'
-from pandac.PandaModules import TextProperties
-from pandac.PandaModules import TextPropertiesManager
 shadow = TextProperties()
 shadow.setShadow(-0.025, -0.025)
 shadow.setShadowColor(0, 0, 0, 1)

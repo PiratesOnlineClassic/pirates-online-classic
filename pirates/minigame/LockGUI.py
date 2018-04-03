@@ -3,18 +3,16 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.minigame.LockGUI
 import random
+
 from direct.directnotify import DirectNotifyGlobal
-from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
+from pirates.minigame import LockGlobals, PlayingCard, PlayingCardGlobals
 from pirates.piratesbase import PLocalizer
-from pirates.minigame import PlayingCardGlobals
-from pirates.minigame import PlayingCard
-from pirates.piratesgui import GuiTray
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import PiratesTimer
+from pirates.piratesgui import GuiTray, PiratesGuiGlobals, PiratesTimer
 from pirates.reputation import DistributedReputationAvatar
-from pirates.minigame import LockGlobals
+
 
 class LockGUI(DirectFrame):
     __module__ = __name__

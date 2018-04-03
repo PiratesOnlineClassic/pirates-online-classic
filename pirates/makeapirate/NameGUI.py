@@ -2,26 +2,27 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.makeapirate.NameGUI
-import random, types, string
-from direct.fsm import StateData
-from direct.fsm import ClassicFSM
-from direct.fsm import State
+import random
+import string
+import types
+
+from direct.distributed import PyDatagram
+from direct.distributed.MsgTypes import *
+from direct.fsm import ClassicFSM, State, StateData
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 from direct.task import Task
-from pandac.PandaModules import *
-from pandac.PandaModules import TextEncoder
 from otp.namepanel import NameCheck
 from otp.otpbase import OTPLocalizer as OL
-from pirates.piratesbase import PLocalizer as PL
-from pirates.pirate import HumanDNA
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import GuiButton
-from pirates.piratesgui import PiratesGuiGlobals
+from pandac.PandaModules import *
+from pandac.PandaModules import TextEncoder
 from pirates.leveleditor import NPCList
 from pirates.makeapirate.PCPickANamePattern import PCPickANamePattern
-from direct.distributed.MsgTypes import *
-from direct.distributed import PyDatagram
+from pirates.pirate import HumanDNA
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer as PL
+from pirates.piratesgui import GuiButton, PiratesGuiGlobals
+
 MAX_NAME_WIDTH = 9
 
 class NameGUI(DirectFrame, StateData.StateData):

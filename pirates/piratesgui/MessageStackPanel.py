@@ -2,20 +2,20 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.MessageStackPanel
-from direct.gui.DirectGui import DirectFrame, DirectButton, DGG
+from direct.gui.DirectGui import DGG, DirectButton, DirectFrame
 from direct.gui.OnscreenText import OnscreenText
 from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import report, Functor
+from direct.showbase.PythonUtil import Functor, report
 from otp.otpgui import OTPDialog
 from pandac.PandaModules import *
+from pirates.minigame import PlayingCardGlobals
+from pirates.piratesbase import CollectionMap, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.BorderFrame import BorderFrame
 from pirates.piratesgui.GuiButton import GuiButton
-from pirates.piratesbase import PLocalizer
-from pirates.minigame import PlayingCardGlobals
-from pirates.piratesbase import CollectionMap
-from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.reputation import ReputationGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class StackMessage(BorderFrame):
     __module__ = __name__

@@ -3,59 +3,50 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pirate.DistributedPlayerPirate
 import string
-from pandac.PandaModules import TextProperties
-from pandac.PandaModules import TextPropertiesManager
-from direct.showbase.PythonUtil import Functor
-from direct.showbase.PythonUtil import report
-from direct.directnotify import DirectNotifyGlobal
-from direct.showbase.DirectObject import *
-from direct.distributed.ClockDelta import *
-from direct.interval.IntervalGlobal import *
-from direct.distributed.MsgTypes import *
-from direct.distributed import DistributedNode
-from direct.task import Task
-from direct.gui import DirectLabel
+
+import PlayerPirateGameFSM
 from direct.actor import Actor
-from direct.distributed import PyDatagram
+from direct.directnotify import DirectNotifyGlobal
+from direct.distributed import DistributedNode, PyDatagram
+from direct.distributed.ClockDelta import *
+from direct.distributed.MsgTypes import *
+from direct.gui import DirectLabel
 from direct.gui.OnscreenText import OnscreenText
+from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import *
+from direct.showbase.PythonUtil import Functor, report
+from direct.task import Task
 from otp.avatar.DistributedPlayer import DistributedPlayer
-from otp.otpbase import OTPLocalizer
-from otp.otpbase import OTPGlobals
 from otp.chat import ChatGlobals
-from pirates.piratesbase import UserFunnel
-from pirates.effects.LevelUpEffect import LevelUpEffect
+from otp.otpbase import OTPGlobals, OTPLocalizer
+from pandac.PandaModules import TextProperties, TextPropertiesManager
+from pirates.band import BandConstance, DistributedBandMember
+from pirates.battle import Consumable, WeaponGlobals
 from pirates.battle.DistributedBattleAvatar import DistributedBattleAvatar
-from pirates.battle import WeaponGlobals
-from pirates.pirate.DistributedPirateBase import DistributedPirateBase
-from pirates.pirate import Biped
-from pirates.pirate.PAvatarHandle import PAvatarHandle
+from pirates.coderedemption import CodeRedemption
 from pirates.demo import DemoGlobals
+from pirates.effects.LevelUpEffect import LevelUpEffect
+from pirates.effects.VoodooAura import VoodooAura
+from pirates.effects.WaterRipple import WaterRipple
+from pirates.effects.WaterRippleSplash import WaterRippleSplash
+from pirates.effects.WaterRippleWake import WaterRippleWake
+from pirates.npc import Skeleton
+from pirates.pirate import AvatarTypes, Biped, TitleGlobals
+from pirates.pirate.DistributedPirateBase import DistributedPirateBase
+from pirates.pirate.PAvatarHandle import PAvatarHandle
+from pirates.piratesbase import (Freebooter, PiratesGlobals, PLocalizer,
+                                 TeamUtils, UserFunnel)
+from pirates.piratesgui import (CrewIconSelector, NamePanelGui,
+                                PiratesGuiGlobals)
+from pirates.pvp import PVPGlobals
 from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
 from pirates.quest.QuestConstants import LocationIds
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import PiratesGuiGlobals, NamePanelGui
-from pirates.piratesbase import TeamUtils
-from pirates.npc import Skeleton
-from pirates.pirate import AvatarTypes
-from pirates.effects.VoodooAura import VoodooAura
-from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.reputation import ReputationGlobals
-import PlayerPirateGameFSM
-from pirates.band import BandConstance
-from pirates.band import DistributedBandMember
-from pirates.world.DistributedGameArea import DistributedGameArea
 from pirates.speedchat import PSCDecoders
-from pirates.battle import Consumable
-from pirates.piratesbase import Freebooter
 from pirates.uberdog.UberDogGlobals import *
-from pirates.effects.WaterRipple import WaterRipple
-from pirates.effects.WaterRippleWake import WaterRippleWake
-from pirates.effects.WaterRippleSplash import WaterRippleSplash
-from pirates.piratesgui import CrewIconSelector
-from pirates.coderedemption import CodeRedemption
-from pirates.pvp import PVPGlobals
-from pirates.pirate import TitleGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.world.DistributedGameArea import DistributedGameArea
+
 
 class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, DistributedBattleAvatar, DistributedQuestAvatar, PAvatarHandle):
     __module__ = __name__

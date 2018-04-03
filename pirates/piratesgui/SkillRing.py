@@ -5,6 +5,7 @@
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 
+
 class SkillRing(DirectFrame):
     __module__ = __name__
     card = None

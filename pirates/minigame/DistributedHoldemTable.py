@@ -3,11 +3,12 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.minigame.DistributedHoldemTable
 import random
-from pirates.minigame import PlayingCardGlobals
-from pirates.minigame import DistributedPokerTable
+
 from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import Point3, Vec3
+from pirates.minigame import DistributedPokerTable, PlayingCardGlobals
 from pirates.piratesbase import PLocalizer
+
 
 class DistributedHoldemTable(DistributedPokerTable.DistributedPokerTable):
     __module__ = __name__

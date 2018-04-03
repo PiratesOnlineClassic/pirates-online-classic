@@ -4,6 +4,7 @@
 # Embedded file name: pirates.piratesgui.ScoreFrame
 from pirates.piratesgui.SheetFrame import SheetFrame
 
+
 class ScoreFrame(SheetFrame):
     __module__ = __name__
 

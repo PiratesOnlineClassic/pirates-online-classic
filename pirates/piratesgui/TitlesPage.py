@@ -3,19 +3,17 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.TitlesPage
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.task.Task import Task
 from direct.interval.IntervalGlobal import *
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import InventoryPage
+from direct.task.Task import Task
+from pandac.PandaModules import *
 from pirates.pirate import TitleGlobals
-from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import (GuiButton, GuiTray, InventoryPage,
+                                PiratesGuiGlobals)
 from pirates.ship import ShipGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import GuiTray
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import GuiButton
+from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class TitlePanel(DirectFrame):
     __module__ = __name__

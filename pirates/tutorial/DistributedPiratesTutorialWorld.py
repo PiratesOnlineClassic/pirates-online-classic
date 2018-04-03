@@ -3,20 +3,20 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.tutorial.DistributedPiratesTutorialWorld
 import time
-from pandac.PandaModules import *
-from direct.fsm import FSM
+
 from direct.actor import Actor
-from direct.task import Task
+from direct.fsm import FSM
 from direct.showbase.PythonUtil import report
-from pirates.npc import Skeleton
-from pirates.pirate import Pirate
-from pirates.pirate import HumanDNA
-from pirates.quest import QuestParser
-from pirates.makeapirate import MakeAPirate
-from pirates.piratesbase import PiratesGlobals
-from pirates.instance import DistributedInstanceBase
+from direct.task import Task
+from pandac.PandaModules import *
 from pirates.cutscene import CutsceneData
-from pirates.piratesbase import TimeOfDayManager
+from pirates.instance import DistributedInstanceBase
+from pirates.makeapirate import MakeAPirate
+from pirates.npc import Skeleton
+from pirates.pirate import HumanDNA, Pirate
+from pirates.piratesbase import PiratesGlobals, TimeOfDayManager
+from pirates.quest import QuestParser
+
 
 class DistributedPiratesTutorialWorld(DistributedInstanceBase.DistributedInstanceBase):
     __module__ = __name__

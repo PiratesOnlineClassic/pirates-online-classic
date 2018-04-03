@@ -6,6 +6,7 @@ from direct.interval.IntervalGlobal import *
 from pirates.creature.DistributedCreature import DistributedCreature
 from pirates.creature.Stump import Stump
 
+
 class DistributedStump(DistributedCreature):
     __module__ = __name__
 

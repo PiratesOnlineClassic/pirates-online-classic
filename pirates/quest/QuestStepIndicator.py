@@ -2,15 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.quest.QuestStepIndicator
-from pirates.quest.QuestPath import QuestStep
-from pirates.quest.QuestIndicatorNodeNPC import QuestIndicatorNodeNPC
-from pirates.quest.QuestIndicatorNodeItem import QuestIndicatorNodeItem
 from pirates.quest.QuestIndicatorNodeArea import QuestIndicatorNodeArea
-from pirates.quest.QuestIndicatorNodeTunnel import QuestIndicatorNodeTunnel
 from pirates.quest.QuestIndicatorNodeExtDoor import QuestIndicatorNodeExtDoor
 from pirates.quest.QuestIndicatorNodeIntDoor import QuestIndicatorNodeIntDoor
-from pirates.quest.QuestIndicatorNodeQuestNode import QuestIndicatorNodeQuestNode
+from pirates.quest.QuestIndicatorNodeItem import QuestIndicatorNodeItem
+from pirates.quest.QuestIndicatorNodeNPC import QuestIndicatorNodeNPC
+from pirates.quest.QuestIndicatorNodeQuestNode import \
+    QuestIndicatorNodeQuestNode
 from pirates.quest.QuestIndicatorNodeShip import QuestIndicatorNodeShip
+from pirates.quest.QuestIndicatorNodeTunnel import QuestIndicatorNodeTunnel
+from pirates.quest.QuestPath import QuestStep
+
 
 class QuestStepIndicator:
     __module__ = __name__

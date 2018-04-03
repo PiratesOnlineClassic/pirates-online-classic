@@ -2,41 +2,38 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.cutscene.CutsceneActor
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
+import random
+
 from direct.actor.Actor import Actor
 from direct.directnotify.DirectNotifyGlobal import directNotify
+from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import ScratchPad
 from direct.task import Task
-from pirates.leveleditor import NPCList
-from pirates.pirate.Human import Human
-from pirates.pirate.Pirate import Pirate
-from pirates.pirate.HumanDNA import HumanDNA
-from pirates.npc.Cast import JollyRoger
-from pirates.npc.Cast import JackSparrow
-from pirates.npc.Cast import WillTurner
-from pirates.npc.Cast import ElizabethSwan
-from pirates.npc.Cast import CaptBarbossa
-from pirates.npc.Cast import TiaDalma
-from pirates.npc.Cast import JoshGibbs
-from pirates.npc.Skeleton import Skeleton
-from pirates.shipparts import HullDNA
-from pirates.ship import ShipGlobals
-from pirates.ship.ShipModel import ShipModel
-from pirates.piratesbase import PiratesGlobals
+from pandac.PandaModules import *
+from pirates.effects.Explosion import Explosion
+from pirates.effects.JollySoulDrain import JollySoulDrain
+from pirates.effects.JRSpawnEffect import JRSpawnEffect
+from pirates.effects.JRTeleportEffect import JRTeleportEffect
+from pirates.effects.ShipSinkSplashes import ShipSinkSplashes
 from pirates.effects.SpectralSmoke import SpectralSmoke
 from pirates.effects.VoodooAura import VoodooAura
-from pirates.effects.JollySoulDrain import JollySoulDrain
 from pirates.effects.VoodooFire import VoodooFire
-from pirates.effects.JRTeleportEffect import JRTeleportEffect
-from pirates.effects.JRSpawnEffect import JRSpawnEffect
-from pirates.effects.ShipSinkSplashes import ShipSinkSplashes
-from pirates.effects.Explosion import Explosion
-from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.effects.WaterMist import WaterMist
 from pirates.effects.WaterSplashes import WaterSplashes
 from pirates.effects.WaterWakes import WaterWakes
-from pirates.effects.WaterMist import WaterMist
-import random
+from pirates.leveleditor import NPCList
+from pirates.npc.Cast import (CaptBarbossa, ElizabethSwan, JackSparrow,
+                              JollyRoger, JoshGibbs, TiaDalma, WillTurner)
+from pirates.npc.Skeleton import Skeleton
+from pirates.pirate.Human import Human
+from pirates.pirate.HumanDNA import HumanDNA
+from pirates.pirate.Pirate import Pirate
+from pirates.piratesbase import PiratesGlobals
+from pirates.ship import ShipGlobals
+from pirates.ship.ShipModel import ShipModel
+from pirates.shipparts import HullDNA
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class CutsceneActor:
     __module__ = __name__

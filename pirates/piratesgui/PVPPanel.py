@@ -4,11 +4,11 @@
 # Embedded file name: pirates.piratesgui.PVPPanel
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.piratesgui import PiratesGuiGlobals, PVPRankGui
 from pirates.piratesgui.GuiPanel import GuiPanel
 from pirates.piratesgui.ListFrame import ListFrame
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import PVPRankGui
+
 
 class PVPPanel(DirectFrame):
     __module__ = __name__

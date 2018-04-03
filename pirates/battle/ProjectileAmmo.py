@@ -2,12 +2,13 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.ProjectileAmmo
-from pandac.PandaModules import *
+from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from direct.directnotify import DirectNotifyGlobal
-from pirates.piratesbase import PiratesGlobals
+from pandac.PandaModules import *
 from pirates.effects.ProjectileEffect import ProjectileEffect
+from pirates.piratesbase import PiratesGlobals
+
 
 class ProjectileAmmo(DirectObject, NodePath):
     __module__ = __name__

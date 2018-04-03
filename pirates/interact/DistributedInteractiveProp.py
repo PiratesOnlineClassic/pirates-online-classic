@@ -2,22 +2,23 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.interact.DistributedInteractiveProp
-from pandac.PandaModules import *
+import random
+import re
+
+from direct.actor import Actor
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
-from direct.actor import Actor
 from direct.interval.IntervalGlobal import ActorInterval
-import re, random
-from pirates.distributed import DistributedInteractive
-from pirates.distributed import DistributedTargetableObject
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.interact import InteractiveBase
-from pirates.pirate import BattleNPCGameFSM
-from pirates.pirate import AvatarType
-from pirates.uberdog.UberDogGlobals import InventoryType
+from pandac.PandaModules import *
 from pirates.battle import WeaponGlobals
+from pirates.distributed import (DistributedInteractive,
+                                 DistributedTargetableObject)
+from pirates.interact import InteractiveBase
 from pirates.leveleditor import CustomAnims
+from pirates.pirate import AvatarType, BattleNPCGameFSM
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, DistributedTargetableObject.DistributedTargetableObject, Actor.Actor):
     __module__ = __name__

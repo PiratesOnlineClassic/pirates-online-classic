@@ -2,13 +2,15 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.town.DistributedTown
-import re, random, types
+import random
+import re
+import types
+
 from direct.actor import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.world import WorldGlobals
-from pirates.world import DistributedGameArea
-from pirates.world import ClientArea
 from direct.distributed import DistributedCartesianGrid
+from pirates.piratesbase import PiratesGlobals
+from pirates.world import ClientArea, DistributedGameArea, WorldGlobals
+
 
 class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartesianGrid.DistributedCartesianGrid, ClientArea.ClientArea):
     __module__ = __name__

@@ -2,13 +2,15 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.namepanel.NameTumbler
-from pandac.PandaModules import *
-from direct.showbase import DirectObject
 import random
-from direct.task import Task
-from direct.gui.DirectGui import *
 import string
+
 from direct.gui import OnscreenText
+from direct.gui.DirectGui import *
+from direct.showbase import DirectObject
+from direct.task import Task
+from pandac.PandaModules import *
+
 
 class NameTumbler(DirectFrame):
     __module__ = __name__

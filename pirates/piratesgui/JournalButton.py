@@ -4,11 +4,10 @@
 # Embedded file name: pirates.piratesgui.JournalButton
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
 from pirates.battle import WeaponGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import GuiButton
-from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import GuiButton, PiratesGuiGlobals
+
 
 class JournalButton(GuiButton.GuiButton):
     __module__ = __name__

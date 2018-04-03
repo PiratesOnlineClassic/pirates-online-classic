@@ -2,21 +2,23 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.quest.QuestParser
-import sys, os, tokenize, copy
-from direct.showbase.ShowBaseGlobal import *
-from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
-from direct.gui.DirectGui import *
+import copy
+import os
+import sys
+import tokenize
+
 from direct.directnotify import DirectNotifyGlobal
-from direct.showbase import PythonUtil, DirectObject
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.showbase import DirectObject, PythonUtil
+from direct.showbase.ShowBaseGlobal import *
 from otp.speedchat import SpeedChatGlobals
-from pirates.piratesgui import NewTutorialPanel
+from pandac.PandaModules import *
 from pirates.npc import Skeleton
-from pirates.pirate import Pirate
-from pirates.pirate import HumanDNA
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import RadarGui
+from pirates.pirate import HumanDNA, Pirate
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import NewTutorialPanel, RadarGui
+
 notify = DirectNotifyGlobal.directNotify.newCategory('QuestParser')
 lineDict = {}
 globalVarDict = {}
@@ -1747,15 +1749,17 @@ class NPCMoviePlayer(DirectObject.DirectObject):
 
 
 searchPath = DSearchPath()
-searchPath.appendDirectory(Filename('etc'))
-searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$PIRATES/src/quest')))
-searchPath.appendDirectory(Filename.fromOsSpecific('pirates/src/quest'))
-searchPath.appendDirectory(Filename.fromOsSpecific('pirates/quest'))
-searchPath.appendDirectory(Filename('.'))
+
+if __debug__:
+    searchPath.appendDirectory(Filename.expandFrom('../resources/phase_3/etc'))
+else:
+    searchPath.appendDirectory(Filename.expandFrom('/phase_3/etc'))
+
 scriptFile = Filename('QuestScripts.txt')
 found = vfs.resolveFilename(scriptFile, searchPath)
 if not found:
     notify.error('Could not find QuestScripts.txt file')
+
 lastReadFile = scriptFile
 readFile(scriptFile)
 # okay decompiling .\pirates\quest\QuestParser.pyc

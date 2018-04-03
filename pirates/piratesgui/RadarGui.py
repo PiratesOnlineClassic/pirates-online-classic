@@ -2,18 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.RadarGui
-from pandac.PandaModules import *
-from direct.gui.DirectGui import *
-from direct.task import Task
 from direct.fsm.FSM import FSM
+from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import TeamUtils
-from pirates.piratesbase import PLocalizer
-from pirates.band.DistributedBandMember import DistributedBandMember
-from RadarMap import RadarMap
+from direct.task import Task
 from GuiTray import GuiTray
+from pandac.PandaModules import *
+from pirates.band.DistributedBandMember import DistributedBandMember
+from pirates.piratesbase import PiratesGlobals, PLocalizer, TeamUtils
 from pirates.world import OceanZone
+from RadarMap import RadarMap
+
 RADAR_OBJ_TYPE_DEFAULT = 0
 RADAR_OBJ_TYPE_LANDMARK = 1
 RADAR_OBJ_TYPE_QUEST = 2

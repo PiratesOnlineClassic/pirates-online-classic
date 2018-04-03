@@ -4,6 +4,7 @@
 # Embedded file name: pirates.minigame.PokerBase
 from pirates.minigame import PlayingCardGlobals
 
+
 class PokerBase:
     __module__ = __name__
     debug = False

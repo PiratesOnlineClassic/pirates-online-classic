@@ -4,6 +4,7 @@
 # Embedded file name: pirates.battle.DistributedEnemySpawner
 from direct.distributed import DistributedObject
 
+
 class DistributedEnemySpawner(DistributedObject.DistributedObject):
     __module__ = __name__
 

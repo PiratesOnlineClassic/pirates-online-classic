@@ -4,6 +4,7 @@
 # Embedded file name: otp.distributed.DistributedTestObject
 from direct.distributed import DistributedObject
 
+
 class DistributedTestObject(DistributedObject.DistributedObject):
     __module__ = __name__
 

@@ -2,33 +2,35 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.tutorial.DistributedPiratesTutorial
-import time, random
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from direct.fsm import FSM
-from direct.actor import Actor
-from direct.task import Task
-from direct.distributed import DistributedObject
-from direct.showbase.PythonUtil import DelayedCall
+import random
+import time
+
 import ShipWreck
-from pirates.npc import Skeleton
-from pirates.pirate import Pirate
-from pirates.pirate import HumanDNA
-from pirates.quest import QuestParser
+from direct.actor import Actor
+from direct.distributed import DistributedObject
+from direct.fsm import FSM
+from direct.interval.IntervalGlobal import *
+from direct.showbase.PythonUtil import DelayedCall
+from direct.task import Task
+from pandac.PandaModules import *
 from pirates.battle.Cannon import Cannon, distFireSfxNames
-from pirates.makeapirate import MakeAPirate
-from pirates.piratesbase import PiratesGlobals, PLocalizer, TimeOfDayManager, TODGlobals
 from pirates.cutscene import CutsceneData
-from pirates.tutorial import TutorialGlobals
-from pirates.leveleditor import NPCList
-from pirates.uberdog import DistributedInventoryBase
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.effects.ProjectileEffect import ProjectileEffect
 from pirates.effects.CameraShaker import CameraShaker
-from pirates.effects.DarkWaterFog import DarkWaterFog
 from pirates.effects.CeilingDebris import CeilingDebris
 from pirates.effects.CeilingDust import CeilingDust
-from pirates.piratesbase import UserFunnel
+from pirates.effects.DarkWaterFog import DarkWaterFog
+from pirates.effects.ProjectileEffect import ProjectileEffect
+from pirates.leveleditor import NPCList
+from pirates.makeapirate import MakeAPirate
+from pirates.npc import Skeleton
+from pirates.pirate import HumanDNA, Pirate
+from pirates.piratesbase import (PiratesGlobals, PLocalizer, TimeOfDayManager,
+                                 TODGlobals, UserFunnel)
+from pirates.quest import QuestParser
+from pirates.tutorial import TutorialGlobals
+from pirates.uberdog import DistributedInventoryBase
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 CannonDistance = 200
 CannonballHitEvent = 'tutorialCannonballHit'
 

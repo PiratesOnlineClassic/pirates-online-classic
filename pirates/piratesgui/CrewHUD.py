@@ -2,18 +2,15 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.CrewHUD
-from direct.showbase.ShowBaseGlobal import *
 from direct.gui.DirectGui import *
+from direct.showbase.ShowBaseGlobal import *
 from pandac.PandaModules import *
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import SocialPage
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PiratesGlobals
+from pirates.band import BandConstance, DistributedBandMember
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import (PirateButtonChain, PirateMemberList,
+                                PiratesGuiGlobals, SocialPage)
 from pirates.uberdog.UberDogGlobals import CrewStatus
-from pirates.band import BandConstance
-from pirates.band import DistributedBandMember
-from pirates.piratesgui import PirateMemberList
-from pirates.piratesgui import PirateButtonChain
+
 HUD_ICONS = {0: None, 1: 'icon_cutlass_black', 2: 'icon_pistol_single', 3: 'icon_voodoo_doll_straw', 4: 'icon_dagger_dagger', 5: 'icon_grenade', 6: 'icon_voodoo_staff_L1', 7: 'icon_cannon', 8: 'sail_come_about', 9: 'topgui_icon_ship', 10: 'treasure_w_card'}
 
 class CrewHUD(SocialPage.SocialPage):

@@ -3,18 +3,16 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.world.DistributedGAInterior
 import random
+
+from direct.distributed import DistributedCartesianGrid, DistributedObject
 from direct.interval.IntervalGlobal import *
-from direct.distributed import DistributedObject
-from direct.distributed import DistributedCartesianGrid
 from direct.showbase.PythonUtil import report
 from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
+from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals, RadarGui
-from pirates.world import DistributedIsland
-from pirates.world import DistributedGameArea
-from pirates.world import ClientArea
-from pirates.world import WorldGlobals
+from pirates.world import (ClientArea, DistributedGameArea, DistributedIsland,
+                           WorldGlobals)
+
 
 class DistributedGAInterior(DistributedGameArea.DistributedGameArea, DistributedCartesianGrid.DistributedCartesianGrid, ClientArea.ClientArea):
     __module__ = __name__

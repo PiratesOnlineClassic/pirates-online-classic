@@ -2,38 +2,39 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesbase.PiratesBase
-import sys, time, os
-from pandac.PandaModules import *
-from direct.showbase.DirectObject import *
-from direct.showbase.PythonUtil import *
-from direct.showbase.Transitions import Transitions
+import __builtin__
+import os
+import sys
+import time
+
+import PiratesGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
+from direct.showbase.DirectObject import *
+from direct.showbase.PythonUtil import *
+from direct.showbase.Transitions import Transitions
 from direct.task import Task
-from otp.otpbase import OTPGlobals
-from otp.otpbase import OTPRender
+from otp.otpbase import OTPGlobals, OTPLocalizer, OTPRender
 from otp.otpbase.OTPBase import OTPBase
-from pirates.launcher import PiratesDownloadWatcher
-from pirates.piratesbase import MusicManager
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui.GameOptions import Options
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.shipparts import TextureFlattenManager
-from pirates.piratesbase import PiratesAmbientManager
-from pirates.piratesgui import ScreenshotViewer
 from otp.otpgui import OTPDialog
-from otp.otpbase import OTPGlobals
-from otp.otpbase import OTPLocalizer
-from pirates.piratesgui import PDialog
-import PiratesGlobals, __builtin__
+from pandac.PandaModules import *
+from pirates.launcher import PiratesDownloadWatcher
+from pirates.piratesbase import (MusicManager, PiratesAmbientManager,
+                                 PLocalizer, UserFunnel)
+from pirates.piratesgui import PDialog, PiratesGuiGlobals, ScreenshotViewer
+from pirates.piratesgui.GameOptions import Options
+from pirates.shipparts import TextureFlattenManager
+from otp.nametag.ChatBalloon import ChatBalloon
+from otp.nametag import NametagGlobals
+from otp.margins.MarginManager import MarginManager
+
 try:
     import embedded
     hasEmbedded = 1
 except ImportError:
     hasEmbedded = 0
 
-from pirates.piratesbase import UserFunnel
 
 class PiratesBase(OTPBase):
     __module__ = __name__
@@ -116,121 +117,110 @@ class PiratesBase(OTPBase):
                     base.pipe = pipe
                     break
 
-            options.automaticGrapghicsApiSelection(base.pipe)
-            if use_recommended_options:
-                options.recommendedOptions(base.pipe, False)
-                options.log('Recommended Game Options')
-            overwrite_options = True
-            options.verifyOptions(base.pipe, overwrite_options)
-            string = options.optionsToPrcData()
-            loadPrcFileData('game_options', string)
-            self.options = options
-            self.shipsVisibleFromIsland = self.options.ocean_visibility
-            self.overrideShipVisibility = False
-            base.windowType = 'onscreen'
-            self.detachedWP = WindowProperties()
-            self.embeddedWP = WindowProperties()
-            if self.hasEmbedded:
-                if embedded.isMainWindowVisible():
-                    self.showEmbeddedFrame()
-                else:
-                    self.hideEmbeddedFrame()
+        options.automaticGrapghicsApiSelection(base.pipe)
+        if use_recommended_options:
+            options.recommendedOptions(base.pipe, False)
+            options.log('Recommended Game Options')
+        overwrite_options = True
+        options.verifyOptions(base.pipe, overwrite_options)
+        string = options.optionsToPrcData()
+        loadPrcFileData('game_options', string)
+        self.options = options
+        self.shipsVisibleFromIsland = self.options.ocean_visibility
+        self.overrideShipVisibility = False
+        base.windowType = 'onscreen'
+        self.detachedWP = WindowProperties()
+        self.embeddedWP = WindowProperties()
+        if self.hasEmbedded:
+            if embedded.isMainWindowVisible():
+                self.showEmbeddedFrame()
             else:
-                wp = WindowProperties()
-                wp.setSize(options.getWidth(), options.getHeight())
-                wp.setFullscreen(options.getFullscreen())
-                self.openDefaultWindow(props=wp)
-            if not self.isMainWindowOpen():
-                try:
-                    launcher.setPandaErrorCode(7)
-                except:
-                    pass
-                else:
-                    sys.exit(1)
-            options.options_to_config()
-            options.setRuntimeOptions()
-            base.cam.node().setCameraMask(OTPRender.MainCameraBitmask)
-            self.__alreadyExiting = False
-            self.exitFunc = self.userExit
-            TextureStage.getDefault().setPriority(10)
-            self.useDrive()
-            self.disableMouse()
-            if self.mouseInterface:
-                self.mouseInterface.reparentTo(self.dataUnused)
-            if base.mouse2cam:
-                self.mouse2cam.reparentTo(self.dataUnused)
-            for key in PiratesGlobals.ScreenshotHotkeyList:
-                self.accept(key, self.takeScreenShot)
+                self.hideEmbeddedFrame()
+        else:
+            wp = WindowProperties()
+            wp.setSize(options.getWidth(), options.getHeight())
+            wp.setFullscreen(options.getFullscreen())
+            self.openDefaultWindow(props=wp)
+        options.options_to_config()
+        options.setRuntimeOptions()
+        base.cam.node().setCameraMask(OTPRender.MainCameraBitmask)
+        self.__alreadyExiting = False
+        self.exitFunc = self.userExit
+        TextureStage.getDefault().setPriority(10)
+        self.useDrive()
+        self.disableMouse()
+        for key in PiratesGlobals.ScreenshotHotkeyList:
+            self.accept(key, self.takeScreenShot)
 
-            self.screenshotViewer = None
-            if base.config.GetBool('want-screenshot-viewer', 0):
-                self.accept(PiratesGlobals.ScreenshotViewerHotkey, self.showScreenshots)
-            self.wantMarketingViewer = base.config.GetBool('want-marketing-viewer', 0)
-            self.marketingViewerOn = False
-            if self.wantMarketingViewer:
-                for key in PiratesGlobals.MarketingHotkeyList:
-                    self.accept(key, self.toggleMarketingViewer)
+        self.screenshotViewer = None
+        if base.config.GetBool('want-screenshot-viewer', 0):
+            self.accept(PiratesGlobals.ScreenshotViewerHotkey, self.showScreenshots)
+        self.wantMarketingViewer = base.config.GetBool('want-marketing-viewer', 0)
+        self.marketingViewerOn = False
+        if self.wantMarketingViewer:
+            for key in PiratesGlobals.MarketingHotkeyList:
+                self.accept(key, self.toggleMarketingViewer)
 
-            self.accept('panda3d-render-error', self.panda3dRenderError)
-            camera.setPosHpr(0, 0, 0, 0, 0, 0)
-            self.camLens.setMinFov(PiratesGlobals.DefaultCameraFov)
-            self.camLens.setNearFar(PiratesGlobals.DefaultCameraNear, PiratesGlobals.DefaultCameraFar)
-            farCullNode = PlaneNode('farCull')
-            farCullNode.setPlane(Plane(Vec3(0, -1, 0), Point3(0, 0, 0)))
-            farCullNode.setClipEffect(0)
-            self.farCull = camera.attachNewNode(farCullNode)
-            self.positionFarCull()
-            globalClockMaxDt = base.config.GetFloat('pirates-max-dt', 0.2)
-            globalClock.setMaxDt(globalClockMaxDt)
-            if self.config.GetBool('want-particles', 1):
-                self.notify.debug('Enabling particles')
-                self.enableParticles()
-            self.notify.debug('Enabling new ship controls')
-            self.avatarPhysicsMgr = PhysicsManager()
-            integrator = LinearEulerIntegrator()
-            self.avatarPhysicsMgr.attachLinearIntegrator(integrator)
-            integrator = AngularEulerIntegrator()
-            self.avatarPhysicsMgr.attachAngularIntegrator(integrator)
-            self.taskMgr.add(self.doAvatarPhysics, 'physics-avatar')
-            fn = ForceNode('ship viscosity')
-            fnp = NodePath(fn)
-            fnp.reparentTo(render)
-            viscosity = LinearFrictionForce(0.0, 1.0, 0)
-            viscosity.setCoef(0.5)
-            viscosity.setAmplitude(2)
-            fn.addForce(viscosity)
-            self.avatarPhysicsMgr.addLinearForce(viscosity)
-            fn = ForceNode('avatarControls')
-            fnp = NodePath(fn)
-            fnp.reparentTo(render)
-            controlForce = LinearControlForce()
-            self.controlForce = controlForce
-            controlForce.setAmplitude(5)
-            fn.addForce(controlForce)
-            self.avatarPhysicsMgr.addLinearForce(controlForce)
-            self.accept('PandaPaused', self.disableAllAudio)
-            self.accept('PandaRestarted', self.enableAllAudio)
-            self.emoteGender = None
-            if launcher.getPhaseComplete(3):
-                self.buildShips()
-            else:
-                base.acceptOnce('phaseComplete-3', self.buildShips)
-            if launcher.getPhaseComplete(4):
-                self.buildAssets()
-            else:
-                base.acceptOnce('phaseComplete-4', self.buildAssets)
-            if launcher.getPhaseComplete(5):
-                self.buildPhase5Ships()
-            else:
-                base.acceptOnce('phaseComplete-5', self.buildPhase5Ships)
-            from pirates.creature import Dog
-            from pirates.ship import ShipGlobals
-            Dog.Dog.setupAssets()
-            CullBinManager.getGlobalPtr().addBin('ShipRigging', CullBinEnums.BTBackToFront, 100)
-            self.bamCache = BamCache()
-            if base.config.GetBool('want-dev', 0):
-                self.bamCache.setRoot(Filename('/c/cache'))
-            self.bamCache.setRoot(Filename('./cache'))
+        self.accept('panda3d-render-error', self.panda3dRenderError)
+        camera.setPosHpr(0, 0, 0, 0, 0, 0)
+        self.camLens.setMinFov(PiratesGlobals.DefaultCameraFov)
+        self.camLens.setNearFar(PiratesGlobals.DefaultCameraNear, PiratesGlobals.DefaultCameraFar)
+        farCullNode = PlaneNode('farCull')
+        farCullNode.setPlane(Plane(Vec3(0, -1, 0), Point3(0, 0, 0)))
+        farCullNode.setClipEffect(0)
+        self.farCull = camera.attachNewNode(farCullNode)
+        self.positionFarCull()
+        globalClockMaxDt = base.config.GetFloat('pirates-max-dt', 0.2)
+        globalClock.setMaxDt(globalClockMaxDt)
+        if self.config.GetBool('want-particles', 1):
+            self.notify.debug('Enabling particles')
+            self.enableParticles()
+        self.notify.debug('Enabling new ship controls')
+        self.avatarPhysicsMgr = PhysicsManager()
+        integrator = LinearEulerIntegrator()
+        self.avatarPhysicsMgr.attachLinearIntegrator(integrator)
+        integrator = AngularEulerIntegrator()
+        self.avatarPhysicsMgr.attachAngularIntegrator(integrator)
+        self.taskMgr.add(self.doAvatarPhysics, 'physics-avatar')
+        fn = ForceNode('ship viscosity')
+        fnp = NodePath(fn)
+        fnp.reparentTo(render)
+        viscosity = LinearFrictionForce(0.0, 1.0, 0)
+        viscosity.setCoef(0.5)
+        viscosity.setAmplitude(2)
+        fn.addForce(viscosity)
+        self.avatarPhysicsMgr.addLinearForce(viscosity)
+        fn = ForceNode('avatarControls')
+        fnp = NodePath(fn)
+        fnp.reparentTo(render)
+        controlForce = LinearControlForce()
+        self.controlForce = controlForce
+        controlForce.setAmplitude(5)
+        fn.addForce(controlForce)
+        self.avatarPhysicsMgr.addLinearForce(controlForce)
+        self.accept('PandaPaused', self.disableAllAudio)
+        self.accept('PandaRestarted', self.enableAllAudio)
+        self.emoteGender = None
+        if launcher.getPhaseComplete(3):
+            self.buildShips()
+        else:
+            base.acceptOnce('phaseComplete-3', self.buildShips)
+        if launcher.getPhaseComplete(4):
+            self.buildAssets()
+        else:
+            base.acceptOnce('phaseComplete-4', self.buildAssets)
+        if launcher.getPhaseComplete(5):
+            self.buildPhase5Ships()
+        else:
+            base.acceptOnce('phaseComplete-5', self.buildPhase5Ships)
+        from pirates.creature import Dog
+        from pirates.ship import ShipGlobals
+        Dog.Dog.setupAssets()
+        CullBinManager.getGlobalPtr().addBin('ShipRigging', CullBinEnums.BTBackToFront, 100)
+        self.bamCache = BamCache()
+        if base.config.GetBool('want-dev', 0):
+            self.bamCache.setRoot(Filename('/c/cache'))
+        self.bamCache.setRoot(Filename('./cache'))
         self.textureFlattenMgr = TextureFlattenManager.TextureFlattenManager()
         self.showShipFlats = False
         self.hideShipNametags = False

@@ -2,13 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.kraken.Grabber
-from pandac.PandaModules import *
+import math
+import random
+
 from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPRender
+from pandac.PandaModules import *
 from pirates.creature.Creature import Creature
 from pirates.kraken.TentacleUtils import TentacleUtils
 from pirates.pirate import AvatarTypes
-import math, random
+
 
 class Grabber(Creature, TentacleUtils):
     __module__ = __name__

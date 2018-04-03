@@ -4,11 +4,14 @@
 # Embedded file name: pirates.flag.FlagDNA
 if __name__ == '__main__':
     from direct.showbase import ShowBase
-from direct.showbase import PythonUtil
+import random
+
+import FlagGlobals
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
+from direct.showbase import PythonUtil
 from otp.avatar import AvatarDNA
-import FlagGlobals, random
+
 
 class FlagDNA(AvatarDNA.AvatarDNA):
     __module__ = __name__

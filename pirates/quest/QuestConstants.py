@@ -4,6 +4,7 @@
 # Embedded file name: pirates.quest.QuestConstants
 from pirates.battle import EnemyGlobals
 from pirates.ship.ShipGlobals import *
+
 CANCEL_QUEST = -1
 MAXIMUM_MERC_WORK = 12
 

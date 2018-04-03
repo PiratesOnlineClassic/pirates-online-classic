@@ -2,20 +2,20 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.chat.PChatAssistant
-import string, sys
-from direct.showbase import DirectObject
-from otp.otpbase import OTPLocalizer
-from pirates.piratesbase import PLocalizer
-from direct.directnotify import DirectNotifyGlobal
-from otp.otpbase import OTPGlobals
-from otp.speedchat import SCDecoders
-from pandac.PandaModules import *
-from otp.chat.ChatGlobals import *
-from otp.speedchat import SpeedChatGlobals
-from otp.chat.ChatMessage import ChatMessage
-from otp.chat.ChatAssistant import ChatAssistant
-from pirates.ai import NewsManager
+import string
+import sys
 import time
+
+from direct.directnotify import DirectNotifyGlobal
+from direct.showbase import DirectObject
+from otp.chat.ChatAssistant import ChatAssistant
+from otp.chat.ChatGlobals import *
+from otp.chat.ChatMessage import ChatMessage
+from otp.otpbase import OTPGlobals, OTPLocalizer
+from otp.speedchat import SCDecoders, SpeedChatGlobals
+from panda3d.core import *
+from pirates.piratesbase import PLocalizer
+
 
 class PChatAssistant(ChatAssistant):
     __module__ = __name__

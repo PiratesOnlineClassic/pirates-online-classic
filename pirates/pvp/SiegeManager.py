@@ -3,11 +3,12 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pvp.SiegeManager
 from direct.distributed.DistributedObject import DistributedObject
-from pirates.pvp.SiegeManagerBase import SiegeManagerBase
-from otp.speedchat import SCDecoders
-from pirates.speedchat import PSCDecoders
-from pirates.piratesbase import PLocalizer
 from direct.fsm.StatePush import FunctionCall
+from otp.speedchat import SCDecoders
+from pirates.piratesbase import PLocalizer
+from pirates.pvp.SiegeManagerBase import SiegeManagerBase
+from pirates.speedchat import PSCDecoders
+
 
 class SiegeManager(DistributedObject, SiegeManagerBase):
     __module__ = __name__

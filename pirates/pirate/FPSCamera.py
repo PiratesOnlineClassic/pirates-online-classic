@@ -2,27 +2,20 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pirate.FPSCamera
-Instruction context:
--> 
- 100     175  LOAD_FAST             0  'self'
-            178  LOAD_ATTR            18  'setHpr'
-            181  LOAD_CONST            1  0
-            184  LOAD_CONST            1  0
-            187  LOAD_CONST            1  0
-            190  CALL_FUNCTION_3       3  None
-            193  POP_TOP          
 import math
-from pandac.PandaModules import *
-from direct.showbase.InputStateGlobal import inputState
+
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import reduceAngle, fitSrcAngle2Dest
-from direct.showbase.PythonUtil import clampScalar, getSetter
-from direct.showbase.PythonUtil import ParamObj
+from direct.showbase.InputStateGlobal import inputState
+from direct.showbase.PythonUtil import (ParamObj, clampScalar,
+                                        fitSrcAngle2Dest, getSetter,
+                                        reduceAngle)
 from direct.task import Task
 from otp.otpbase import OTPGlobals
+from pandac.PandaModules import *
 from pirates.pirate import CameraMode
 from pirates.piratesbase import PiratesGlobals
+
 
 class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
     __module__ = __name__
@@ -80,185 +73,19 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
     def _getTopNodeName(self):
         return 'FPSCam'
 
-    def enterActive--- This code section failed: ---
+    def enterActive(self):
+        CameraMode.CameraMode.enterActive(self)
+        base.camNode.setLodCenter(self.subject)
+        if base.wantEnviroDR:
+            base.enviroCamNode.setLodCenter(self.subject)
 
-  85       0  LOAD_GLOBAL           0  'CameraMode'
-           3  LOAD_ATTR             0  'CameraMode'
-           6  LOAD_ATTR             1  'enterActive'
-           9  LOAD_FAST             0  'self'
-          12  CALL_FUNCTION_1       1  None
-          15  POP_TOP          
-
-  87      16  LOAD_GLOBAL           3  'base'
-          19  LOAD_ATTR             4  'camNode'
-          22  LOAD_ATTR             5  'setLodCenter'
-          25  LOAD_FAST             0  'self'
-          28  LOAD_ATTR             6  'subject'
-          31  CALL_FUNCTION_1       1  None
-          34  POP_TOP          
-
-  89      35  LOAD_FAST             0  'self'
-          38  LOAD_ATTR             7  'reparentTo'
-          41  LOAD_FAST             0  'self'
-          44  LOAD_ATTR             6  'subject'
-          47  CALL_FUNCTION_1       1  None
-          50  POP_TOP          
-
-  90      51  LOAD_FAST             0  'self'
-          54  LOAD_ATTR             8  'setPos'
-          57  LOAD_CONST            1  0
-          60  LOAD_CONST            1  0
-          63  LOAD_FAST             0  'self'
-          66  LOAD_ATTR             9  'camOffset'
-          69  LOAD_CONST            2  2
-          72  BINARY_SUBSCR    
-          73  CALL_FUNCTION_3       3  None
-          76  POP_TOP          
-
-  92      77  LOAD_GLOBAL          10  'camera'
-          80  LOAD_ATTR             7  'reparentTo'
-          83  LOAD_FAST             0  'self'
-          86  CALL_FUNCTION_1       1  None
-          89  POP_TOP          
-
-  93      90  LOAD_GLOBAL          10  'camera'
-          93  LOAD_ATTR            11  'setPosHpr'
-          96  LOAD_FAST             0  'self'
-          99  LOAD_ATTR             9  'camOffset'
-         102  LOAD_CONST            1  0
-         105  BINARY_SUBSCR    
-         106  LOAD_FAST             0  'self'
-         109  LOAD_ATTR             9  'camOffset'
-         112  LOAD_CONST            3  1
-         115  BINARY_SUBSCR    
-         116  LOAD_CONST            1  0
-
-  94     119  LOAD_CONST            1  0
-         122  LOAD_CONST            1  0
-         125  LOAD_CONST            1  0
-         128  CALL_FUNCTION_6       6  None
-         131  POP_TOP          
-
-  95     132  LOAD_FAST             0  'self'
-         135  LOAD_ATTR            12  '_initMaxDistance'
-         138  CALL_FUNCTION_0       0  None
-         141  POP_TOP          
-
-  96     142  LOAD_FAST             0  'self'
-         145  LOAD_ATTR            13  '_startCollisionCheck'
-         148  CALL_FUNCTION_0       0  None
-         151  POP_TOP          
-
-  98     152  LOAD_GLOBAL           3  'base'
-         155  LOAD_ATTR            14  'camLens'
-         158  LOAD_ATTR            15  'setMinFov'
-         161  LOAD_GLOBAL          16  'PiratesGlobals'
-         164  LOAD_ATTR            17  'BattleCameraFov'
-         167  CALL_FUNCTION_1       1  None
-         170  POP_TOP          
-         171  JUMP_FORWARD        228  'to 402'
-         174  POP_TOP          
-
- 100     175  LOAD_FAST             0  'self'
-         178  LOAD_ATTR            18  'setHpr'
-         181  LOAD_CONST            1  0
-         184  LOAD_CONST            1  0
-         187  LOAD_CONST            1  0
-         190  CALL_FUNCTION_3       3  None
-         193  POP_TOP          
-
- 101     194  LOAD_GLOBAL          10  'camera'
-         197  LOAD_ATTR            19  'wrtReparentTo'
-         200  LOAD_FAST             0  'self'
-         203  CALL_FUNCTION_1       1  None
-         206  POP_TOP          
-
- 102     207  LOAD_FAST             0  'self'
-         210  LOAD_ATTR            20  'camIval'
-         213  JUMP_IF_FALSE        17  'to 233'
-       216_0  THEN                     234
-         216  POP_TOP          
-
- 103     217  LOAD_FAST             0  'self'
-         220  LOAD_ATTR            20  'camIval'
-         223  LOAD_ATTR            21  'pause'
-         226  CALL_FUNCTION_0       0  None
-         229  POP_TOP          
-         230  JUMP_FORWARD          1  'to 234'
-       233_0  COME_FROM           213  '213'
-         233  POP_TOP          
-       234_0  COME_FROM           230  '230'
-
- 104     234  LOAD_GLOBAL          22  'Sequence'
-         237  LOAD_GLOBAL          23  'Func'
-         240  LOAD_FAST             0  'self'
-         243  LOAD_ATTR            12  '_initMaxDistance'
-         246  CALL_FUNCTION_1       1  None
-
- 105     249  LOAD_GLOBAL          23  'Func'
-         252  LOAD_FAST             0  'self'
-         255  LOAD_ATTR            13  '_startCollisionCheck'
-         258  CALL_FUNCTION_1       1  None
-
- 106     261  LOAD_GLOBAL          23  'Func'
-         264  LOAD_FAST             0  'self'
-         267  LOAD_ATTR            24  'setForceMaxDistance'
-         270  LOAD_GLOBAL          25  'False'
-         273  CALL_FUNCTION_2       2  None
-
- 107     276  LOAD_GLOBAL          10  'camera'
-         279  LOAD_ATTR            26  'posHprInterval'
-         282  LOAD_CONST            4  1.5
-
- 108     285  LOAD_CONST            5  'pos'
-         288  LOAD_GLOBAL          27  'Vec3'
-         291  LOAD_FAST             0  'self'
-         294  LOAD_ATTR             9  'camOffset'
-         297  LOAD_CONST            1  0
-         300  BINARY_SUBSCR    
-         301  LOAD_FAST             0  'self'
-         304  LOAD_ATTR             9  'camOffset'
-         307  LOAD_CONST            3  1
-         310  BINARY_SUBSCR    
-         311  LOAD_CONST            1  0
-         314  CALL_FUNCTION_3       3  None
-
- 109     317  LOAD_CONST            6  'hpr'
-         320  LOAD_GLOBAL          27  'Vec3'
-         323  LOAD_CONST            1  0
-         326  LOAD_CONST            1  0
-         329  LOAD_CONST            1  0
-         332  CALL_FUNCTION_3       3  None
-
- 110     335  LOAD_CONST            7  'blendType'
-         338  LOAD_CONST            8  'easeOut'
-         341  CALL_FUNCTION_769   769  None
-
- 112     344  LOAD_GLOBAL          23  'Func'
-         347  LOAD_GLOBAL           3  'base'
-         350  LOAD_ATTR            14  'camLens'
-         353  LOAD_ATTR            15  'setMinFov'
-         356  LOAD_GLOBAL          16  'PiratesGlobals'
-         359  LOAD_ATTR            17  'BattleCameraFov'
-         362  CALL_FUNCTION_2       2  None
-
- 113     365  LOAD_GLOBAL          23  'Func'
-         368  LOAD_FAST             0  'self'
-         371  LOAD_ATTR            24  'setForceMaxDistance'
-         374  LOAD_GLOBAL          28  'True'
-         377  CALL_FUNCTION_2       2  None
-         380  CALL_FUNCTION_6       6  None
-         383  LOAD_FAST             0  'self'
-         386  STORE_ATTR           20  'camIval'
-
- 115     389  LOAD_FAST             0  'self'
-         392  LOAD_ATTR            20  'camIval'
-         395  LOAD_ATTR            29  'start'
-         398  CALL_FUNCTION_0       0  None
-         401  POP_TOP          
-       402_0  COME_FROM           171  '171'
-
-Parse error at or near `LOAD_FAST' instruction at offset 175
+        self.reparentTo(self.subject)
+        self.setPos(0, 0, self.camOffset[2])
+        camera.reparentTo(self)
+        camera.setPosHpr(self.camOffset[0], self.camOffset[1], 0, 0, 0, 0)
+        self._initMaxDistance()
+        self._startCollisionCheck()
+        base.camLens.setMinFov(PiratesGlobals.BattleCameraFov)
 
     def _initMaxDistance(self):
         self._maxDistance = abs(self.camOffset[1])

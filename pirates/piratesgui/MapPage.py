@@ -2,12 +2,14 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.MapPage
-from pandac.PandaModules import *
 from direct.gui.DirectGui import *
-from pirates.piratesbase import PLocalizer, PiratesGlobals
-from pirates.piratesgui import InventoryPage, BorderFrame, ShardPanel, PiratesGuiGlobals, GuiButton
-from pirates.piratesgui.DownloadBlockerPanel import DownloadBlockerPanel
+from pandac.PandaModules import *
 from pirates.map.WorldMap import WorldMap
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import (BorderFrame, GuiButton, InventoryPage,
+                                PiratesGuiGlobals, ShardPanel)
+from pirates.piratesgui.DownloadBlockerPanel import DownloadBlockerPanel
+
 
 class MapPage(InventoryPage.InventoryPage):
     __module__ = __name__

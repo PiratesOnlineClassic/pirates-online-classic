@@ -3,8 +3,9 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.launcher.PiratesDummyLauncher
 from otp.launcher.DummyLauncherBase import DummyLauncherBase
-from pirates.launcher.PiratesQuickLauncher import PiratesQuickLauncher
 from pandac.PandaModules import loadPrcFileData
+from pirates.launcher.PiratesQuickLauncher import PiratesQuickLauncher
+
 loadPrcFileData('force-offscreen', 'window-type none')
 
 class PiratesDummyLauncher(DummyLauncherBase, PiratesQuickLauncher):

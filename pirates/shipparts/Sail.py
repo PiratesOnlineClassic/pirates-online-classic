@@ -3,26 +3,22 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.Sail
 import random
-from direct.interval.IntervalGlobal import *
-from direct.distributed.ClockDelta import *
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+
 from direct.actor import Actor
-from direct.fsm import FSM
-from direct.fsm import State
-from pirates.piratesbase.PiratesGlobals import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.ship import ShipGlobals
-from pirates.battle import CannonGlobals
-from pirates.battle import WeaponGlobals
-from pirates.effects.Fire import Fire
+from direct.distributed.ClockDelta import *
+from direct.fsm import FSM, State
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
+from pirates.battle import CannonGlobals, WeaponGlobals
 from pirates.effects.BlackSmoke import BlackSmoke
-from pirates.shipparts import MastDNA
-from pirates.shipparts import SailDNA
+from pirates.effects.Fire import Fire
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesbase.PiratesGlobals import *
+from pirates.ship import ShipGlobals
+from pirates.shipparts import MastDNA, SailDNA, ShipPart, SplattableObject
 from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.shipparts import ShipPart
-from pirates.shipparts import SplattableObject
+
 NavySailDict = {0: [2, 1, 1, 2], 1: [2, 1, 2, 1]}
 teamToLetter = [
  '_a_', '_b_', '_c_']

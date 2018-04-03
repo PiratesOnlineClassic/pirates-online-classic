@@ -3,13 +3,14 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.quest.DistributedQuestAvatar
 from direct.directnotify import DirectNotifyGlobal
-from pirates.quest import QuestConstants, QuestAvatarBase, QuestHolder
-from pirates.quest.QuestStepIndicator import QuestStepIndicator
-from pirates.quest.QuestPath import QuestStep
 from direct.showbase.PythonUtil import report
+from otp.otpgui import OTPDialog
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PDialog
-from otp.otpgui import OTPDialog
+from pirates.quest import QuestAvatarBase, QuestConstants, QuestHolder
+from pirates.quest.QuestPath import QuestStep
+from pirates.quest.QuestStepIndicator import QuestStepIndicator
+
 
 class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestHolder):
     __module__ = __name__

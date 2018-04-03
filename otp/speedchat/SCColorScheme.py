@@ -4,6 +4,7 @@
 # Embedded file name: otp.speedchat.SCColorScheme
 from ColorSpace import *
 
+
 class SCColorScheme:
     __module__ = __name__
 

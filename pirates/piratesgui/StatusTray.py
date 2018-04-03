@@ -2,22 +2,20 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.StatusTray
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.task import Task
-from direct.distributed.ClockDelta import *
-from direct.interval.IntervalGlobal import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import RadialMenu
-from pirates.piratesgui import GuiTray
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import StatusEffectsPanel
-from pirates.battle.EnemySkills import *
-from pirates.battle import EnemyGlobals
-from pirates.battle import WeaponGlobals
-from pirates.uberdog.UberDogGlobals import InventoryType
 import copy
+
+from direct.distributed.ClockDelta import *
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.task import Task
+from pandac.PandaModules import *
+from pirates.battle import EnemyGlobals, WeaponGlobals
+from pirates.battle.EnemySkills import *
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import (GuiTray, PiratesGuiGlobals, RadialMenu,
+                                StatusEffectsPanel)
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class StatusTray(GuiTray.GuiTray):
     __module__ = __name__

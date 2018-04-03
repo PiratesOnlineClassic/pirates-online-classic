@@ -2,15 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.world.GameTypeGlobals
-from pandac.PandaModules import *
 import types
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pandac.PandaModules import ConfigVariable
-from pirates.uberdog import DistributedInventoryBase
+
 from otp.otpbase import OTPGlobals
+from pandac.PandaModules import *
+from pandac.PandaModules import ConfigVariable
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.uberdog import DistributedInventoryBase
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 GAME_DURATION_SHORT = 0
 GAME_DURATION_MED = 1
 GAME_DURATION_LONG = 2
@@ -74,7 +75,7 @@ def gatherGameStyleInfo(gameType, gameStyle, callback):
 
 
 GameTypes = {PiratesGlobals.GAME_TYPE_CREW: {'style': {PiratesGlobals.CREW_STYLE_FIND_A_CREW: {'options': {'execute': 'find'}}, PiratesGlobals.CREW_STYLE_FIND_A_PVP_CREW: {'options': {'execute': 'findPvp'}}, PiratesGlobals.CREW_STYLE_RECRUIT_MEMBERS: {'options': {'execute': 'recruit'}}}}, PiratesGlobals.GAME_TYPE_PVP: {'style': {PiratesGlobals.GAME_STYLE_CTL: {'options': {GAME_OPTION_MIN_PLAYERS: [PiratesGuiGlobals.UIItemType_ListItem, ['2', '3', '4', '5', '6']]}}, PiratesGlobals.GAME_STYLE_PIRATEER: {'options': {GAME_OPTION_MIN_PLAYERS: [PiratesGuiGlobals.UIItemType_ListItem, ['2', '3', '4', '5', '6']]}}, PiratesGlobals.GAME_STYLE_TEAM_BATTLE: {'options': {GAME_OPTION_MIN_PLAYERS: [PiratesGuiGlobals.UIItemType_ListItem, ['4', '6']], GAME_OPTION_MAX_PLAYERS: [PiratesGuiGlobals.UIItemType_Hidden, '8']}}, PiratesGlobals.GAME_STYLE_BATTLE: {'options': {GAME_OPTION_MIN_PLAYERS: [PiratesGuiGlobals.UIItemType_ListItem, ['2', '3', '4', '5', '6']], GAME_OPTION_MAX_PLAYERS: [PiratesGuiGlobals.UIItemType_Hidden, '8']}}, PiratesGlobals.GAME_STYLE_SHIP_BATTLE: {'options': {GAME_OPTION_MAX_CREW_SIZE: [PiratesGuiGlobals.UIItemType_Hidden], GAME_OPTION_MAX_CREW_SHIP: [PiratesGuiGlobals.UIItemType_Hidden]}}}}, PiratesGlobals.GAME_TYPE_PG: {'style': {PiratesGlobals.GAME_STYLE_BLACKJACK: {'options': {GAME_OPTION_MAX_PLAYERS: [PiratesGuiGlobals.UIItemType_Hidden, '6']}}, PiratesGlobals.GAME_STYLE_POKER: {'options': {GAME_OPTION_MAX_PLAYERS: [PiratesGuiGlobals.UIItemType_Hidden, '6']}}}}, PiratesGlobals.GAME_TYPE_TM: {'style': gatherGameStyleInfo, 'hidden': True}}
-pvpMode = ConfigVariableBool('pvp-testing-level', 0).getIntWord(0)
+pvpMode = base.config.GetBool('pvp-testing-level', False)
 if pvpMode < 1:
     del GameTypes[PiratesGlobals.GAME_TYPE_PVP]['style'][PiratesGlobals.GAME_STYLE_CTL]
 if pvpMode < 2:

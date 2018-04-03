@@ -5,6 +5,7 @@
 from direct.fsm.StatePush import AttrSetter, FunctionCall, StateVar
 from pirates.pvp import PVPGlobals
 
+
 class ShipRepairSpotMgrBase:
     __module__ = __name__
 

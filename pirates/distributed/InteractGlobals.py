@@ -2,9 +2,11 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.distributed.InteractGlobals
+import random
+
 from pirates.pirate import AvatarTypes
 from pirates.piratesbase import PLocalizer
-import random
+
 CANCEL = 0
 TALK = 1
 TRADE = 2

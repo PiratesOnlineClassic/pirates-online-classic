@@ -4,8 +4,9 @@
 # Embedded file name: pirates.movement.PiratesGravityWalker
 from direct.controls.GravityWalker import GravityWalker
 from direct.showbase.InputStateGlobal import inputState
-from pandac.PandaModules import *
 from direct.task.Task import Task
+from pandac.PandaModules import *
+
 
 class PiratesGravityWalker(GravityWalker):
     __module__ = __name__

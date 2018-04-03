@@ -2,14 +2,13 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.movement.CameraFSM
-from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.FSM import FSM
-from direct.task import Task
 from direct.showbase.InputStateGlobal import inputState
-from pirates.pirate import ShipCamera
-from pirates.pirate import FPSCamera
-from pirates.pirate import CannonCamera
+from direct.task import Task
+from pandac.PandaModules import *
+from pirates.pirate import CannonCamera, FPSCamera, ShipCamera
+
 
 class CameraFSM(FSM):
     __module__ = __name__

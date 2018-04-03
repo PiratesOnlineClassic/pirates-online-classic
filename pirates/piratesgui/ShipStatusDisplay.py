@@ -3,23 +3,20 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.ShipStatusDisplay
 import copy
+
 from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
 from direct.task.Task import Task
 from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
-from pirates.piratesgui import LootPopupPanel
-from pirates.ship import ShipGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import GuiTray
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import AnchorButton
-from pirates.piratesgui import GuiButton
-from pirates.piratesgui import StatusEffectsPanel
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.ship import ShipMeter
-from pirates.piratesgui.ShipArmorGui import ShipArmorGui
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import (AnchorButton, GuiButton, GuiTray,
+                                LootPopupPanel, PiratesGuiGlobals,
+                                StatusEffectsPanel)
 from pirates.piratesgui.BoardingPermissionPanel import BoardingPermissionPanel
+from pirates.piratesgui.ShipArmorGui import ShipArmorGui
+from pirates.ship import ShipGlobals, ShipMeter
+from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
+
 
 class ShipStatusDisplay(GuiTray.GuiTray):
     __module__ = __name__

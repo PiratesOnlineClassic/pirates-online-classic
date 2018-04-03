@@ -4,6 +4,7 @@
 # Embedded file name: pirates.piratesbase.Freebooter
 from pirates.battle import WeaponGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
+
 NONE = 0
 VELVET_ROPE = 1
 FULL = 2

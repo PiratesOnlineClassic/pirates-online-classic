@@ -4,6 +4,7 @@
 # Embedded file name: pirates.world.DistributedGADoor
 import DistributedGAConnector
 
+
 class DistributedGADoor(DistributedGAConnector.DistributedGAConnector):
     __module__ = __name__
     notify = directNotify.newCategory('DistributedGADoor')

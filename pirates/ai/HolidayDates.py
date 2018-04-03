@@ -4,6 +4,7 @@
 # Embedded file name: pirates.ai.HolidayDates
 import time
 
+
 class HolidayDates:
     __module__ = __name__
     TYPE_CUSTOM = 0

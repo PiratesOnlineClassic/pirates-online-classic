@@ -2,32 +2,31 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.Mast
+import copy
 import random
-from direct.interval.IntervalGlobal import *
+
+from direct.actor import Actor
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
 from direct.showbase import DirectObject
-from direct.actor import Actor
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.ship import ShipGlobals
-from pirates.battle import CannonGlobals
-from pirates.battle import WeaponGlobals
-from pirates.piratesbase.PiratesGlobals import *
-from pirates.effects.SmokeCloud import SmokeCloud
-from pirates.effects.ShipSplintersA import ShipSplintersA
-from pirates.effects.ExplosionFlip import ExplosionFlip
-from pirates.effects.ShipDebris import ShipDebris
+from pandac.PandaModules import *
+from pirates.battle import CannonGlobals, WeaponGlobals
+from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.effects.CannonSplash import CannonSplash
 from pirates.effects.DustRing import DustRing
-from pirates.effects.ProjectileArc import ProjectileArc
+from pirates.effects.ExplosionFlip import ExplosionFlip
 from pirates.effects.Fire import Fire
-from pirates.effects.BlackSmoke import BlackSmoke
-from pirates.shipparts import MastDNA
+from pirates.effects.ProjectileArc import ProjectileArc
+from pirates.effects.ShipDebris import ShipDebris
+from pirates.effects.ShipSplintersA import ShipSplintersA
+from pirates.effects.SmokeCloud import SmokeCloud
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesbase.PiratesGlobals import *
+from pirates.ship import ShipGlobals
+from pirates.shipparts import MastDNA, ShipPart
 from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.shipparts import ShipPart
-import copy
+
 mastNetRiggingAnchor = {ShipGlobals.MAINMASTL1: 1, ShipGlobals.MAINMASTL2: 2, ShipGlobals.MAINMASTL3: 3, ShipGlobals.MAINMASTL4: 3, ShipGlobals.MAINMASTL5: 3, ShipGlobals.TRIMASTL1: 3, ShipGlobals.TRIMASTL2: 3, ShipGlobals.TRIMASTL3: 3, ShipGlobals.TRIMASTL4: 3, ShipGlobals.TRIMASTL5: 3, ShipGlobals.FOREMASTL1: 0, ShipGlobals.FOREMASTL2: 0, ShipGlobals.FOREMASTL3: 0, ShipGlobals.AFTMASTL1: 0, ShipGlobals.AFTMASTL2: 0, ShipGlobals.AFTMASTL3: 0, ShipGlobals.SKEL_MAINMASTL1_A: 0, ShipGlobals.SKEL_MAINMASTL2_A: 0, ShipGlobals.SKEL_MAINMASTL3_A: 0, ShipGlobals.SKEL_MAINMASTL4_A: 0, ShipGlobals.SKEL_MAINMASTL5_A: 0, ShipGlobals.SKEL_MAINMASTL1_B: 0, ShipGlobals.SKEL_MAINMASTL2_B: 0, ShipGlobals.SKEL_MAINMASTL3_B: 0, ShipGlobals.SKEL_MAINMASTL4_B: 0, ShipGlobals.SKEL_MAINMASTL5_B: 0, ShipGlobals.SKEL_TRIMASTL1: 0, ShipGlobals.SKEL_TRIMASTL2: 0, ShipGlobals.SKEL_TRIMASTL3: 0, ShipGlobals.SKEL_TRIMASTL4: 0, ShipGlobals.SKEL_TRIMASTL5: 0, ShipGlobals.SKEL_FOREMASTL1: 0, ShipGlobals.SKEL_FOREMASTL2: 0, ShipGlobals.SKEL_FOREMASTL3: 0, ShipGlobals.SKEL_AFTMASTL1: 0, ShipGlobals.SKEL_AFTMASTL2: 0, ShipGlobals.SKEL_AFTMASTL3: 0}
 maximumMastHeights = [
  3, 2, 1, 1]

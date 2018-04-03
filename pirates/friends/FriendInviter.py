@@ -2,22 +2,19 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.friends.FriendInviter
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.task.Task import Task
-from direct.fsm import ClassicFSM
-from direct.fsm import State
 from direct.directnotify import DirectNotifyGlobal
-from otp.otpbase import OTPLocalizer
-from otp.otpbase import OTPGlobals
+from direct.fsm import ClassicFSM, State
+from direct.gui.DirectGui import *
+from direct.task.Task import Task
+from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.uberdog.RejectCode import RejectCode
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import GuiPanel
-from pirates.piratesgui.RequestButton import RequestButton
-from pirates.piratesgui.CheckBox import CheckBox
-from pirates.piratesgui import PiratesGuiGlobals
+from pandac.PandaModules import *
 from pirates.battle.DistributedBattleNPC import DistributedBattleNPC
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
+from pirates.piratesgui.CheckBox import CheckBox
+from pirates.piratesgui.RequestButton import RequestButton
+
 
 class FriendInviterButton(RequestButton):
     __module__ = __name__

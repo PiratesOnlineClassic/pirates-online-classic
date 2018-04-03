@@ -4,13 +4,13 @@
 # Embedded file name: pirates.piratesgui.OptionItemGui
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui.ListFrame import ListFrame
-from pirates.world import GameTypeGlobals
-from pirates.piratesgui.ButtonListItem import ButtonListItem
-from pirates.piratesgui.LookoutListItem import LookoutListItem
+from pirates.piratesgui import GuiButton, PiratesGuiGlobals
 from pirates.piratesgui.BorderFrame import BorderFrame
-from pirates.piratesgui import GuiButton
+from pirates.piratesgui.ButtonListItem import ButtonListItem
+from pirates.piratesgui.ListFrame import ListFrame
+from pirates.piratesgui.LookoutListItem import LookoutListItem
+from pirates.world import GameTypeGlobals
+
 
 class OptionItemGui(DirectFrame):
     __module__ = __name__

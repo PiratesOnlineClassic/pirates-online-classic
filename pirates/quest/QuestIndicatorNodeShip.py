@@ -5,6 +5,7 @@
 from pirates.effects.QuestIndicatorEffect import QuestIndicatorEffect
 from pirates.quest.QuestIndicatorGridNode import QuestIndicatorGridNode
 
+
 class QuestIndicatorNodeShip(QuestIndicatorGridNode):
     __module__ = __name__
 

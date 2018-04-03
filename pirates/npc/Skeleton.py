@@ -2,25 +2,26 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.npc.Skeleton
-from pandac.PandaModules import *
-from direct.showbase.DirectObject import *
-from direct.showbase import ShadowPlacer
-from direct.actor import Actor
-from direct.fsm import ClassicFSM
-from direct.fsm import State
-from direct.distributed.ClockDelta import *
-from otp.otpbase import OTPGlobals
-from pirates.effects.DarkAura import DarkAura
-from pirates.effects.SkeletonGlow import SkeletonGlow
-from pirates.piratesbase import PiratesGlobals
-from pirates.pirate import Biped, AvatarTypes
-from pirates.battle import EnemyGlobals
-from direct.interval.IntervalGlobal import *
-from pirates.effects.JRDeathEffect import JRDeathEffect
-from pirates.effects.ShockwaveRing import ShockwaveRing
-from pirates.effects.JRSpiritEffect import JRSpiritEffect
-from pirates.makeapirate import NPCPirate
 import random
+
+from direct.actor import Actor
+from direct.distributed.ClockDelta import *
+from direct.fsm import ClassicFSM, State
+from direct.interval.IntervalGlobal import *
+from direct.showbase import ShadowPlacer
+from direct.showbase.DirectObject import *
+from otp.otpbase import OTPGlobals
+from pandac.PandaModules import *
+from pirates.battle import EnemyGlobals
+from pirates.effects.DarkAura import DarkAura
+from pirates.effects.JRDeathEffect import JRDeathEffect
+from pirates.effects.JRSpiritEffect import JRSpiritEffect
+from pirates.effects.ShockwaveRing import ShockwaveRing
+from pirates.effects.SkeletonGlow import SkeletonGlow
+from pirates.makeapirate import NPCPirate
+from pirates.pirate import AvatarTypes, Biped
+from pirates.piratesbase import PiratesGlobals
+
 AvType2style = {AvatarTypes.EarthUndead[0]: '1', AvatarTypes.EarthUndead[1]: '8', AvatarTypes.EarthUndead[2]: '4', AvatarTypes.EarthUndead[3]: '1', AvatarTypes.EarthUndead[4]: '2', AvatarTypes.EarthUndead[5]: '8', AvatarTypes.EarthUndead[6]: '1', AvatarTypes.EarthUndead[7]: '2', AvatarTypes.EarthUndead[8]: '8', AvatarTypes.EarthUndead[9]: '4', AvatarTypes.AirUndead[0]: '1', AvatarTypes.AirUndead[1]: '2', AvatarTypes.AirUndead[2]: '8', AvatarTypes.AirUndead[3]: '1', AvatarTypes.AirUndead[4]: '2', AvatarTypes.AirUndead[5]: '8', AvatarTypes.AirUndead[6]: '1', AvatarTypes.AirUndead[7]: '2', AvatarTypes.AirUndead[8]: '8', AvatarTypes.AirUndead[9]: '4', AvatarTypes.FireUndead[0]: '1', AvatarTypes.FireUndead[1]: '2', AvatarTypes.FireUndead[2]: '8', AvatarTypes.FireUndead[3]: '1', AvatarTypes.FireUndead[4]: '2', AvatarTypes.FireUndead[5]: '8', AvatarTypes.FireUndead[6]: '1', AvatarTypes.FireUndead[7]: '2', AvatarTypes.FireUndead[8]: '8', AvatarTypes.FireUndead[9]: '4', AvatarTypes.WaterUndead[0]: 'djcr', AvatarTypes.WaterUndead[1]: 'djjm', AvatarTypes.WaterUndead[2]: 'djko', AvatarTypes.WaterUndead[3]: 'djpa', AvatarTypes.WaterUndead[4]: 'djtw', AvatarTypes.WaterUndead[5]: 'djcr', AvatarTypes.WaterUndead[6]: 'djjm', AvatarTypes.WaterUndead[7]: 'djko', AvatarTypes.WaterUndead[8]: 'djpa', AvatarTypes.WaterUndead[9]: 'djtw', AvatarTypes.FrenchUndead[0]: 'fr1', AvatarTypes.FrenchUndead[1]: 'fr2', AvatarTypes.FrenchUndead[2]: 'fr3', AvatarTypes.FrenchUndead[3]: 'fr4', AvatarTypes.SpanishUndead[0]: 'sp1', AvatarTypes.SpanishUndead[1]: 'sp2', AvatarTypes.SpanishUndead[2]: 'sp3', AvatarTypes.SpanishUndead[3]: 'sp4'}
 AnimDict = {}
 AnimListDict = {'djcr': Biped.DefaultAnimList, 'djjm': Biped.DefaultAnimList, 'djko': Biped.DefaultAnimList, 'djpa': Biped.DefaultAnimList, 'djtw': Biped.DefaultAnimList, '1': Biped.DefaultAnimList, '2': Biped.DefaultAnimList, '4': Biped.DefaultAnimList, '8': Biped.DefaultAnimList, 'fr1': Biped.DefaultAnimList, 'fr2': Biped.DefaultAnimList, 'fr3': Biped.DefaultAnimList, 'fr4': Biped.DefaultAnimList, 'sp1': Biped.DefaultAnimList, 'sp2': Biped.DefaultAnimList, 'sp3': Biped.DefaultAnimList, 'sp4': Biped.DefaultAnimList}

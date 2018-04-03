@@ -2,33 +2,33 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.ai.PiratesMagicWordManager
-from direct.showbase.ShowBaseGlobal import *
-from direct.distributed import DistributedObject
+import string
+
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed import DistributedCartesianGrid, DistributedObject
+from direct.distributed.ClockDelta import *
+from direct.showbase import PythonUtil
+from direct.showbase.ShowBaseGlobal import *
 from direct.task import Task
+from otp.ai import MagicWordManager
 from otp.avatar import Avatar
 from otp.chat import ChatManager
-import string
-from direct.showbase import PythonUtil
 from otp.otpbase import OTPGlobals
-from direct.distributed.ClockDelta import *
-from otp.ai import MagicWordManager
-from pirates.pirate import DistributedPlayerPirate
-from direct.distributed import DistributedCartesianGrid
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui.RadarUtil import RadarUtil
 from pirates.cutscene import Cutscene, CutsceneData
-from pirates.effects.Fireflies import Fireflies
-from pirates.effects.GroundFog import GroundFog
 from pirates.effects.Bonfire import Bonfire
-from pirates.effects.CeilingDust import CeilingDust
-from pirates.effects.CeilingDebris import CeilingDebris
 from pirates.effects.CameraShaker import CameraShaker
+from pirates.effects.CeilingDebris import CeilingDebris
+from pirates.effects.CeilingDust import CeilingDust
 from pirates.effects.DarkWaterFog import DarkWaterFog
-from pirates.ship.ShipModel import ShipModel
+from pirates.effects.Fireflies import Fireflies
 from pirates.effects.FireworkGlobals import *
 from pirates.effects.FireworkShowManager import FireworkShowManager
-from pirates.piratesbase import PLocalizer
+from pirates.effects.GroundFog import GroundFog
+from pirates.pirate import DistributedPlayerPirate
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui.RadarUtil import RadarUtil
+from pirates.ship.ShipModel import ShipModel
+
 
 class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
     __module__ = __name__

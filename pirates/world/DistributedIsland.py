@@ -2,36 +2,35 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.world.DistributedIsland
-import random, re, imp
-from pandac.PandaModules import *
+import imp
+import random
+import re
+
 from direct.actor import *
 from direct.distributed import DistributedCartesianGrid
-from direct.task import Task
-from direct.showbase.PythonUtil import report
-from direct.interval.IntervalGlobal import *
+from direct.gui import DirectGuiGlobals
 from direct.gui.OnscreenText import OnscreenText
-from otp.otpbase import OTPGlobals
-from otp.otpbase import OTPRender
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.effects.LanternGlow import LanternGlow
+from direct.interval.IntervalGlobal import *
+from direct.showbase.PythonUtil import report
+from direct.task import Task
+from otp.otpbase import OTPGlobals, OTPRender
+from pandac.PandaModules import *
+from pirates.battle.Teamable import Teamable
+from pirates.distributed import DistributedInteractive
 from pirates.effects import Grass
 from pirates.effects.BlackSmoke import BlackSmoke
+from pirates.effects.LanternGlow import LanternGlow
 from pirates.effects.VolcanoEffect import VolcanoEffect
-from pirates.world import ZoneLOD
-from pirates.world import WorldGlobals
-from pirates.world import DistributedGameArea
-from pirates.world import ClientArea
-from pirates.distributed import DistributedInteractive
+from pirates.piratesbase import PiratesGlobals, PLocalizer, TODGlobals
 from pirates.piratesgui import PiratesGuiGlobals, RadarGui
+from pirates.pvp import PVPGlobals
+from pirates.quest.QuestConstants import LocationIds
+from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import IslandWaterParameters
 from pirates.swamp.Swamp import Swamp
-from pirates.seapatch.Reflection import Reflection
-from pirates.piratesbase import TODGlobals
-from pirates.quest.QuestConstants import LocationIds
-from pirates.pvp import PVPGlobals
-from direct.gui import DirectGuiGlobals
-from pirates.battle.Teamable import Teamable
+from pirates.world import (ClientArea, DistributedGameArea, WorldGlobals,
+                           ZoneLOD)
+
 
 class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCartesianGrid.DistributedCartesianGrid, ZoneLOD.ZoneLOD, ClientArea.ClientArea, Teamable):
     __module__ = __name__

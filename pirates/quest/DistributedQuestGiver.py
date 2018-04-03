@@ -2,25 +2,22 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.quest.DistributedQuestGiver
-from pandac.PandaModules import *
-from direct.showbase.ShowBaseGlobal import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import getShortestRotation
+from direct.showbase.ShowBaseGlobal import *
 from otp.avatar import Avatar
 from otp.otpgui import OTPDialog
-from pirates.quest import QuestMenuGUI, QuestConstants, QuestDB, QuestLadderDB
-from pirates.quest import QuestParser
+from pandac.PandaModules import *
 from pirates.distributed import InteractGlobals
-from pirates.quest import QuestLadderDB
 from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import PDialog
-from pirates.piratesgui import BlackPearlCrew
+from pirates.piratesgui import BlackPearlCrew, PDialog, RewardPanel
+from pirates.quest import (QuestConstants, QuestDB, QuestLadderDB,
+                           QuestMenuGUI, QuestParser, QuestTaskDNA)
 from pirates.quest.QuestDetailGUI import QuestDetailGUI
-from pirates.quest import QuestTaskDNA
-from pirates.piratesgui import RewardPanel
 from pirates.reputation.ReputationGlobals import getLevelFromTotalReputation
+
 
 class DistributedQuestGiver(Avatar.Avatar):
     __module__ = __name__

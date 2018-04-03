@@ -4,6 +4,7 @@
 # Embedded file name: pirates.piratesbase.TeamUtils
 from pirates.piratesbase import PiratesGlobals
 
+
 def teamStatus(team1, team2):
     if team1 == team2:
         return PiratesGlobals.FRIEND

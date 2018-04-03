@@ -2,15 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.BowSpritDNA
-from pandac.PandaModules import *
-from direct.directnotify.DirectNotifyGlobal import *
 import random
+
+from direct.directnotify.DirectNotifyGlobal import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from otp.avatar import AvatarDNA
 from otp.speedchat import ColorSpace
-from pirates.ship import ShipGlobals
+from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
+from pirates.ship import ShipGlobals
+
 notify = directNotify.newCategory('BowSpritDNA')
 BowSpritDict = {ShipGlobals.SKELETON: 'models/shipparts/prow_skeleton', ShipGlobals.LADY: 'models/shipparts/prow_female', ShipGlobals.RAML3: 'models/shipparts/ram_spike', ShipGlobals.SKEL_RAML3: 'models/shipparts/skel_ram_spike'}
 ProwColors = [

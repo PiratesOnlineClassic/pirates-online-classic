@@ -4,6 +4,7 @@
 # Embedded file name: pirates.snapshot.PSnapshotRenderer
 from otp.snapshot.SnapshotRenderer import SnapshotRenderer
 
+
 class PSnapshotRenderer(SnapshotRenderer):
     __module__ = __name__
 # okay decompiling .\pirates\snapshot\PSnapshotRenderer.pyc

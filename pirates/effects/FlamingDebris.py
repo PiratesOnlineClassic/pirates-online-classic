@@ -2,17 +2,19 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.FlamingDebris
-from pandac.PandaModules import *
-from direct.showbase.DirectObject import *
-from direct.interval.IntervalGlobal import *
-from pirates.piratesbase import PiratesGlobals
+import random
+
 from direct.distributed import DistributedObject
+from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import *
+from pandac.PandaModules import *
+from pirates.effects.DustCloud import DustCloud
+from pirates.effects.FlameTrail import FlameTrail
 from pirates.effects.SmallSplash import SmallSplash
 from pirates.effects.SmokeTrail import SmokeTrail
-from pirates.effects.FlameTrail import FlameTrail
-from pirates.effects.DustCloud import DustCloud
-import random
+from pirates.piratesbase import PiratesGlobals
 from PooledEffect import PooledEffect
+
 DebrisDict = {'0': 'models/props/rock_1_floor', '1': 'models/props/rock_2_floor', '2': 'models/props/rock_3_floor', '3': 'models/props/rock_4_floor'}
 
 class FlamingDebris(PooledEffect):

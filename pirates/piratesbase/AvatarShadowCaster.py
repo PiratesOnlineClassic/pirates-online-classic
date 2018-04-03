@@ -2,12 +2,13 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesbase.AvatarShadowCaster
-from pandac.PandaModules import *
-from direct.task import Task
 from direct.showbase.DirectObject import DirectObject
-from otp.otpbase import OTPRender
+from direct.task import Task
 from otp.avatar import ShadowCaster
+from otp.otpbase import OTPRender
+from pandac.PandaModules import *
 from pirates.piratesbase import TODGlobals
+
 
 class AvatarShadowCaster(DirectObject):
     __module__ = __name__

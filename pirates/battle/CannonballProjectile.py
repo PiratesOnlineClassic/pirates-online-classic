@@ -2,20 +2,21 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.CannonballProjectile
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
+import random
+
 from direct.directnotify import DirectNotifyGlobal
-from pirates.battle import WeaponGlobals
-from pirates.battle import WeaponConstants
+from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
+from pirates.battle import WeaponConstants, WeaponGlobals
+from pirates.battle.ProjectileAmmo import ProjectileAmmo
+from pirates.effects.FireTrail import FireTrail
+from pirates.effects.FlamingSkull import FlamingSkull
+from pirates.effects.FuryTrail import FuryTrail
+from pirates.effects.PolyTrail import PolyTrail
+from pirates.effects.ThunderBallGlow import ThunderBallGlow
 from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.battle.ProjectileAmmo import ProjectileAmmo
-from pirates.effects.PolyTrail import PolyTrail
-from pirates.effects.FireTrail import FireTrail
-from pirates.effects.FuryTrail import FuryTrail
-from pirates.effects.ThunderBallGlow import ThunderBallGlow
-from pirates.effects.FlamingSkull import FlamingSkull
-import random
+
 
 class CannonballProjectile(ProjectileAmmo):
     __module__ = __name__

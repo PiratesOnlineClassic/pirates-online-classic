@@ -2,26 +2,23 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.launcher.PiratesQuickLauncher
-Instruction context:
--> 
- 234     135  LOAD_FAST             0  'self'
-            138  LOAD_ATTR             3  'notify'
-            141  LOAD_ATTR             4  'info'
-            144  LOAD_CONST            4  'decompressMultifile: Multifile already decompressed: %s'
-            147  LOAD_FAST             1  'mfname'
-            150  BINARY_MODULO    
-            151  CALL_FUNCTION_1       1  None
-            154  POP_TOP          
-import sys, os, time, string, bz2, random
-from direct.showbase.MessengerGlobal import *
+import bz2
+import os
+import random
+import string
+import sys
+import time
+
+from direct.directnotify.DirectNotifyGlobal import *
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase.EventManagerGlobal import *
-from direct.task.TaskManagerGlobal import *
+from direct.showbase.MessengerGlobal import *
 from direct.task.Task import Task
-from direct.directnotify.DirectNotifyGlobal import *
-from pandac.PandaModules import *
+from direct.task.TaskManagerGlobal import *
 from otp.launcher.LauncherBase import LauncherBase
+from pandac.PandaModules import *
 from pirates.piratesbase import PLocalizer
+
 
 class PiratesQuickLauncher(LauncherBase):
     __module__ = __name__
@@ -175,83 +172,17 @@ class PiratesQuickLauncher(LauncherBase):
             return
         raise StandardError, 'Some phases not listed in LauncherPhases: %s' % self.requiredInstallFiles
 
-    def getDecompressMultifile--- This code section failed: ---
+    def getDecompressMultifile(self, mfname):
+        if not self.DecompressMultifiles:
+            self.decompressMultifileDone()
+        else:
+            self.notify.info('decompressMultifile: Decompressing multifile: ' + mfname)
+            (curVer, expectedSize,expectedMd5) = self.mfDetails[self.currentMfname]
+            localFilename = Filename(self.topDir, Filename('_%s.%s.%s' % (mfname, curVer, self.CompressionExt)))
+            self.decompressMultifile(mfname, localFilename, self.decompressMultifileDone)
 
- 223       0  LOAD_FAST             0  'self'
-           3  LOAD_ATTR             1  'DecompressMultifiles'
-           6  JUMP_IF_TRUE         14  'to 23'
-           9  POP_TOP          
-
- 224      10  LOAD_FAST             0  'self'
-          13  LOAD_ATTR             2  'decompressMultifileDone'
-          16  CALL_FUNCTION_0       0  None
-          19  POP_TOP          
-          20  JUMP_FORWARD        142  'to 165'
-        23_0  COME_FROM             6  '6'
-          23  POP_TOP          
-
- 229      24  LOAD_FAST             0  'self'
-          27  LOAD_ATTR             3  'notify'
-          30  LOAD_ATTR             4  'info'
-          33  LOAD_CONST            2  'decompressMultifile: Decompressing multifile: '
-          36  LOAD_FAST             1  'mfname'
-          39  BINARY_ADD       
-          40  CALL_FUNCTION_1       1  None
-          43  POP_TOP          
-
- 230      44  LOAD_FAST             0  'self'
-          47  LOAD_ATTR             6  'mfDetails'
-          50  LOAD_FAST             0  'self'
-          53  LOAD_ATTR             7  'currentMfname'
-          56  BINARY_SUBSCR    
-          57  UNPACK_SEQUENCE_3     3  None
-          60  STORE_FAST            5  'curVer'
-          63  STORE_FAST            2  'expectedSize'
-          66  STORE_FAST            3  'expectedMd5'
-
- 231      69  LOAD_GLOBAL          11  'Filename'
-          72  LOAD_FAST             0  'self'
-          75  LOAD_ATTR            12  'topDir'
-          78  LOAD_GLOBAL          11  'Filename'
-          81  LOAD_CONST            3  '_%s.%s.%s'
-          84  LOAD_FAST             1  'mfname'
-          87  LOAD_FAST             5  'curVer'
-          90  LOAD_FAST             0  'self'
-          93  LOAD_ATTR            13  'CompressionExt'
-          96  BUILD_TUPLE_3         3  None
-          99  BINARY_MODULO    
-         100  CALL_FUNCTION_1       1  None
-         103  CALL_FUNCTION_2       2  None
-         106  STORE_FAST            4  'localFilename'
-
- 232     109  LOAD_FAST             0  'self'
-         112  LOAD_ATTR            15  'decompressMultifile'
-         115  LOAD_FAST             1  'mfname'
-         118  LOAD_FAST             4  'localFilename'
-         121  LOAD_FAST             0  'self'
-         124  LOAD_ATTR             2  'decompressMultifileDone'
-         127  CALL_FUNCTION_3       3  None
-         130  POP_TOP          
-         131  JUMP_FORWARD         31  'to 165'
-         134  POP_TOP          
-
- 234     135  LOAD_FAST             0  'self'
-         138  LOAD_ATTR             3  'notify'
-         141  LOAD_ATTR             4  'info'
-         144  LOAD_CONST            4  'decompressMultifile: Multifile already decompressed: %s'
-         147  LOAD_FAST             1  'mfname'
-         150  BINARY_MODULO    
-         151  CALL_FUNCTION_1       1  None
-         154  POP_TOP          
-
- 235     155  LOAD_FAST             0  'self'
-         158  LOAD_ATTR             2  'decompressMultifileDone'
-         161  CALL_FUNCTION_0       0  None
-         164  POP_TOP          
-       165_0  COME_FROM           131  '131'
-       165_1  COME_FROM            20  '20'
-
-Parse error at or near `LOAD_FAST' instruction at offset 135
+        self.notify.info('decompressMultifile: Multifile already decompressed: %s' % mfname)
+        self.decompressMultifileDone()
 
     def decompressMultifile(self, mfname, localFilename, callback):
         self.notify.info('decompressMultifile: request: ' + localFilename.cStr())

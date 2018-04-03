@@ -3,11 +3,13 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.minigame.PlayingCardDropper
 import random
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.task import Task
-from pirates.piratesbase import PLocalizer
+
 import PlayingCardGlobals
+from direct.gui.DirectGui import *
+from direct.task import Task
+from pandac.PandaModules import *
+from pirates.piratesbase import PLocalizer
+
 chanceOfHigherCard = 50
 
 def dropTier0():

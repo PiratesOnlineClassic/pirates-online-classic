@@ -4,6 +4,7 @@
 # Embedded file name: pirates.effects.UsesEffectNode
 from pandac.PandaModules import *
 
+
 class UsesEffectNode(NodePath):
     __module__ = __name__
 

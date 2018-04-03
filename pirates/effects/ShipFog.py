@@ -2,19 +2,22 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.ShipFog
-from pandac.PandaModules import *
-from direct.particles import ParticleEffect
+import math
+import os
+
 from direct.actor import Actor
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
-import os, math
+from direct.particles import ParticleEffect
+from pandac.PandaModules import *
 
-class ShipFog(NodePath.NodePath):
+
+class ShipFog(NodePath):
     __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('ShipFog')
 
     def __init__(self, parent, psbskp, bin, binPriority, camera, renderParent=None, color=Vec4(1)):
-        NodePath.NodePath.__init__(self, 'ShipFog')
+        NodePath.__init__(self, 'ShipFog')
         self.assign(parent.attachNewNode('fog'))
         self.ival = None
         if renderParent:

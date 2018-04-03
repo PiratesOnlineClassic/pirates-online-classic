@@ -2,34 +2,28 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.world.DistributedGameArea
-from pandac.PandaModules import *
-from direct.distributed import DistributedNode
-from direct.distributed import DistributedObject
-from direct.showbase.PythonUtil import Functor, report
+import time
+
 from direct.actor import Actor
-from pirates.world import WorldGlobals
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.effects import EnvironmentEffects
-from pirates.effects import SwampEffects
-from pirates.effects import ForestEffects
-from pirates.effects import CaveEffects
-from pirates.piratesbase import TimeOfDayManager, TODGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import UserFunnel
-from pirates.tutorial import ChatTutorial
-from pirates.tutorial import ChatTutorialAlt
-from pirates.tutorial import CrewTutorial
-from pandac.PandaModules import CollisionSphere
-from pandac.PandaModules import CollisionNode
-from pandac.PandaModules import CollisionHandlerEvent
-from pirates.quest.QuestConstants import LocationIds
+from direct.distributed import DistributedNode, DistributedObject
+from direct.showbase.PythonUtil import Functor, report
+from pandac.PandaModules import *
+from pandac.PandaModules import (CollisionHandlerEvent, CollisionNode,
+                                 CollisionSphere)
 from pirates.chat.PiratesChatManager import PiratesChatManager
-from pirates.seapatch.SeaPatch import SeaPatch
+from pirates.effects import (CaveEffects, EnvironmentEffects, ForestEffects,
+                             SwampEffects)
+from pirates.piratesbase import (PiratesGlobals, PLocalizer, TimeOfDayManager,
+                                 TODGlobals, UserFunnel)
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.quest.QuestConstants import LocationIds
 from pirates.seapatch.Reflection import Reflection
+from pirates.seapatch.SeaPatch import SeaPatch
 from pirates.seapatch.Water import IslandWaterParameters
 from pirates.swamp.Swamp import Swamp
-import time
+from pirates.tutorial import ChatTutorial, ChatTutorialAlt, CrewTutorial
+from pirates.world import WorldGlobals
+
 
 class DistributedGameArea(DistributedNode.DistributedNode):
     __module__ = __name__

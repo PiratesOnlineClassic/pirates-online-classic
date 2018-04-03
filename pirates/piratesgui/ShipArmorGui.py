@@ -4,9 +4,10 @@
 # Embedded file name: pirates.piratesgui.ShipArmorGui
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui.GuiTray import GuiTray
 from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesgui.GuiTray import GuiTray
 from pirates.ship import ShipGlobals
+
 
 class ShipArmorGui(GuiTray):
     __module__ = __name__

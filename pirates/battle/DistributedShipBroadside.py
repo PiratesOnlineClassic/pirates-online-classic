@@ -2,35 +2,37 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.DistributedShipBroadside
-import math, random
-from direct.showbase.DirectObject import *
+import math
+import random
+
+import CannonGlobals
+import WeaponGlobals
+from CannonballProjectile import CannonballProjectile
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.showbase.PythonUtil import quickProfile
-from direct.interval.ProjectileInterval import *
 from direct.interval.IntervalGlobal import *
-from direct.directnotify.DirectNotifyGlobal import directNotify
+from direct.interval.ProjectileInterval import *
+from direct.showbase.DirectObject import *
+from direct.showbase.PythonUtil import quickProfile
 from direct.task import Task
-from pirates.piratesbase import PiratesGlobals
-from pirates.shipparts import CannonPort
-from pirates.effects.CannonMuzzleFire import CannonMuzzleFire
+from DistributedWeapon import DistributedWeapon
+from pandac.PandaModules import *
+from pirates.battle.EnemySkills import EnemySkills
+from pirates.battle.WeaponGlobals import *
 from pirates.effects.CannonBlastSmoke import CannonBlastSmoke
+from pirates.effects.CannonMuzzleFire import CannonMuzzleFire
 from pirates.effects.ExplosionFlip import ExplosionFlip
 from pirates.effects.GrapeshotEffect import GrapeshotEffect
 from pirates.effects.MuzzleFlame import MuzzleFlame
 from pirates.effects.MuzzleFlash import MuzzleFlash
-from pirates.ship import ShipGlobals
-from pirates.ship import ShipBalance
+from pirates.piratesbase import PiratesGlobals
+from pirates.ship import ShipBalance, ShipGlobals
 from pirates.ship.DistributedShip import DistributedShip
+from pirates.shipparts import CannonPort, ShipPart
 from pirates.shipparts.DistributedShippart import DistributedShippart
 from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.shipparts import ShipPart
-from pirates.battle.WeaponGlobals import *
-from pirates.battle.EnemySkills import EnemySkills
-from DistributedWeapon import DistributedWeapon
-import WeaponGlobals, CannonGlobals
-from CannonballProjectile import CannonballProjectile
+
 localFireSfxNames = [
  'cball_fire_1.mp3', 'cball_fire_2.mp3', 'cball_fire_3.mp3', 'cball_fire_4.mp3', 'cball_fire_5.mp3']
 distFireSfxNames = [

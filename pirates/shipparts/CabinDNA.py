@@ -2,15 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.CabinDNA
-from pandac.PandaModules import *
-from direct.directnotify.DirectNotifyGlobal import *
 import random
+
+from direct.directnotify.DirectNotifyGlobal import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from otp.avatar import AvatarDNA
 from otp.speedchat import ColorSpace
+from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.ship import ShipGlobals
+
 notify = directNotify.newCategory('CabinDNA')
 CabinDict = {ShipGlobals.WAR_CABINL1A: 'models/shipparts/warCabinAL1', ShipGlobals.WAR_CABINL2A: 'models/shipparts/warCabinAL2', ShipGlobals.WAR_CABINL3A: 'models/shipparts/warCabinAL3', ShipGlobals.MERCH_CABINL1A: 'models/shipparts/merchantCabinAL1', ShipGlobals.MERCH_CABINL2A: 'models/shipparts/merchantCabinAL2', ShipGlobals.MERCH_CABINL3A: 'models/shipparts/merchantCabinAL3', ShipGlobals.INT_CABINL1A: 'models/shipparts/interceptorCabinAL1', ShipGlobals.INT_CABINL2A: 'models/shipparts/interceptorCabinAL2', ShipGlobals.INT_CABINL3A: 'models/shipparts/interceptorCabinAL3', ShipGlobals.BLACK_PEARL_CABIN: 'models/shipparts/blackpearlCabin', ShipGlobals.GOLIATH_CABIN: 'models/shipparts/goliathCabinA', ShipGlobals.SKEL_WAR_CABINL3A: 'models/shipparts/skeletonWarCabinAL3'}
 

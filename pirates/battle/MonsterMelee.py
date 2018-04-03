@@ -3,11 +3,14 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.MonsterMelee
 import types
+
 from direct.interval.IntervalGlobal import *
+from panda3d.core import *
 from pirates.battle import Weapon
 from pirates.battle.WeaponGlobals import *
 from pirates.effects import PolyTrail
 from pirates.pirate import AvatarTypes
+
 _sfxDict = {}
 
 def cacheSfx(name, file):

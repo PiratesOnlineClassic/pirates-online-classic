@@ -5,11 +5,11 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.PythonUtil import POD, makeTuple
 from direct.task.Task import Task
-from pirates.piratesbase import PLocalizer
+from otp.otpbase import OTPGlobals
+from pirates.piratesbase import Freebooter, PLocalizer
 from pirates.quest import QuestDB, QuestReward, QuestTaskDNA
 from pirates.quest.QuestDNA import QuestDNA
-from otp.otpbase import OTPGlobals
-from pirates.piratesbase import Freebooter
+
 
 class Quest(POD):
     __module__ = __name__

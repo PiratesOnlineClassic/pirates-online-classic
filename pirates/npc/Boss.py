@@ -2,14 +2,15 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.npc.Boss
-from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import DirectObject
+from pandac.PandaModules import *
 from pirates.battle import EnemyGlobals
+from pirates.effects.BossAura import BossAura
+from pirates.effects.BossEffect import BossEffect
 from pirates.npc.BossBase import BossBase
 from pirates.pirate import AvatarTypes
-from pirates.effects.BossEffect import BossEffect
-from pirates.effects.BossAura import BossAura
-from direct.showbase.DirectObject import DirectObject
+
 
 class Boss(BossBase):
     __module__ = __name__

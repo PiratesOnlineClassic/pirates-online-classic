@@ -2,13 +2,13 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.world.DistributedBuildingDoor
-from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
-from pirates.world import DistributedDoorBase
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import PiratesGuiGlobals
 from direct.showbase.PythonUtil import report
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.world import DistributedDoorBase
+
 
 class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
     __module__ = __name__

@@ -3,22 +3,19 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.DistributedShipDecor
 import random
-from pirates.piratesbase.PiratesGlobals import *
-from direct.interval.IntervalGlobal import *
-from direct.distributed.ClockDelta import *
-from pirates.piratesbase import PiratesGlobals
+
 from direct.distributed import DistributedObject
-from pirates.piratesbase import PLocalizer
+from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
-from pirates.battle import CannonGlobals
-from pirates.battle import WeaponGlobals
-from pirates.shipparts import DecorDNA
-from pirates.shipparts import Lantern
-from pirates.shipparts import ShipDecor
-from pirates.shipparts import Window
-from pirates.shipparts import DistributedShippart
+from pirates.battle import CannonGlobals, WeaponGlobals
 from pirates.destructibles import DistributedDestructibleObject
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesbase.PiratesGlobals import *
+from pirates.shipparts import (DecorDNA, DistributedShippart, Lantern,
+                               ShipDecor, Window)
+
 
 class DistributedShipDecor(DistributedShippart.DistributedShippart, DistributedDestructibleObject.DistributedDestructibleObject):
     __module__ = __name__

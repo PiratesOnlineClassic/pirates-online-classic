@@ -3,19 +3,19 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.quest.QuestReward
 import random
-from direct.showbase.PythonUtil import POD, invertDict
+
 from direct.directnotify import DirectNotifyGlobal
-from pirates.quest import QuestRewardStruct
-from pirates.uberdog.UberDogGlobals import InventoryType, InventoryCategory
-from pirates.piratesbase import CollectionMap
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import PiratesGlobals
-from pirates.economy import EconomyGlobals
+from direct.showbase.PythonUtil import POD, invertDict
 from pirates.battle import EnemyGlobals
-from pirates.minigame import PlayingCardDropper
-from pirates.makeapirate import JewelryGlobals, TattooGlobals, ClothingGlobals
+from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import ItemId
-from pirates.piratesbase import Freebooter
+from pirates.makeapirate import ClothingGlobals, JewelryGlobals, TattooGlobals
+from pirates.minigame import PlayingCardDropper
+from pirates.piratesbase import (CollectionMap, Freebooter, PiratesGlobals,
+                                 PLocalizer)
+from pirates.quest import QuestRewardStruct
+from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
+
 REPFACTOR_HOLIDAY = 1
 GOLDFACTOR_HOLIDAY = 1
 REWARD_TO = 3

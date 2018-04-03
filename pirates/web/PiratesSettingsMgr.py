@@ -6,6 +6,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from otp.web.SettingsMgr import SettingsMgr
 from pirates.web.PiratesSettingsMgrBase import PiratesSettingsMgrBase
 
+
 class PiratesSettingsMgr(SettingsMgr, PiratesSettingsMgrBase):
     __module__ = __name__
     notify = directNotify.newCategory('PiratesSettingsMgr')

@@ -2,16 +2,19 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.PNameTumbler
-from pandac.PandaModules import *
-from direct.showbase.ShowBaseGlobal import *
-from direct.showbase import DirectObject
-from direct.task import Task
-from direct.gui.DirectGui import *
+import random
+import string
+
 from direct.gui import OnscreenText
+from direct.gui.DirectGui import *
+from direct.showbase import DirectObject
+from direct.showbase.ShowBaseGlobal import *
+from direct.task import Task
 from otp.namepanel import NameTumbler
-from pirates.piratesgui import PiratesGuiGlobals
+from pandac.PandaModules import *
 from pirates.piratesbase import PLocalizer
-import random, string
+from pirates.piratesgui import PiratesGuiGlobals
+
 
 class PNameTumbler(NameTumbler.NameTumbler):
     __module__ = __name__

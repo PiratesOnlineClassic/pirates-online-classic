@@ -3,9 +3,11 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pirate.AvatarTypes
 import random
+
 from pirates.pirate.AvatarType import AvatarType
 from pirates.pirate.AvatarTypeSet import AvatarTypeSet
 from pirates.piratesbase import PLocalizer as PL
+
 AnyAvatar = AvatarType()
 AnyShip = AvatarType()
 BossType = AvatarType(boss=1)

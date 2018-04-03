@@ -2,23 +2,22 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.ai.NewsManager
-from pandac.PandaModules import *
-from direct.distributed import DistributedObject
+import time
+
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed import DistributedObject
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
+from pandac.PandaModules import *
 from pirates.ai import HolidayGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.economy import StoreGUI, AccessoriesStoreGUI, TattooStoreGUI, JewelryStoreGUI, BarberStoreGUI
 from pirates.chat.PChatInputSpeedChat import PChatInputSpeedChat
+from pirates.economy import (AccessoriesStoreGUI, BarberStoreGUI,
+                             JewelryStoreGUI, StoreGUI, TattooStoreGUI)
+from pirates.makeapirate import (BarberGlobals, ClothingGlobals,
+                                 JewelryGlobals, TattooGlobals)
+from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
-from pirates.makeapirate import TattooGlobals
-from pirates.makeapirate import ClothingGlobals
-from pirates.makeapirate import JewelryGlobals
-from pirates.makeapirate import BarberGlobals
-from pirates.piratesbase import Freebooter
-import time
+
 messages = {0: PLocalizer.FullMoonWarning1, 1: PLocalizer.FullMoonWarning2, 2: PLocalizer.JollyRogerCurseComing, 3: PLocalizer.JollyRogerCurseActive, 4: PLocalizer.JollyRogerCurseIndoors, 5: PLocalizer.JollyRogerCurseOutdoors, 6: PLocalizer.JollyRogerCurseJail, 7: PLocalizer.JollyRogerCurseEnd}
 
 class NewsManager(DistributedObject.DistributedObject):

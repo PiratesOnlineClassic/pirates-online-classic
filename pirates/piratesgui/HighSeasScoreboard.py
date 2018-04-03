@@ -2,20 +2,18 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.HighSeasScoreboard
+import time
+
+from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from direct.distributed.ClockDelta import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import Freebooter
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import GuiPanel
-from pirates.piratesgui import Scoreboard
-from pirates.piratesgui import DialogButton
-from pirates.uberdog.UberDogGlobals import *
 from pirates.economy import EconomyGlobals
+from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
+from pirates.piratesgui import (DialogButton, GuiPanel, PiratesGuiGlobals,
+                                Scoreboard)
 from pirates.ship import ShipGlobals
-import time
+from pirates.uberdog.UberDogGlobals import *
+
 
 class HighSeasScoreboard(GuiPanel.GuiPanel):
     __module__ = __name__

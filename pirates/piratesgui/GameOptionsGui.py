@@ -2,20 +2,19 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.GameOptionsGui
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui.BorderFrame import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui.RadioButton import *
-from pirates.piratesgui.CheckButton import *
-from pirates.piratesgui.GuiButton import *
-from pirates.piratesgui.OptionMenu import *
-from pirates.piratesgui.DialogButton import DialogButton
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui import DirectGuiGlobals as DGG
 from otp.otpgui import OTPDialog
-from pirates.piratesgui import PDialog
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import PDialog, PiratesGuiGlobals
+from pirates.piratesgui.BorderFrame import *
+from pirates.piratesgui.CheckButton import *
+from pirates.piratesgui.DialogButton import DialogButton
+from pirates.piratesgui.GuiButton import *
+from pirates.piratesgui.OptionMenu import *
+from pirates.piratesgui.RadioButton import *
 from pirates.seapatch.Water import Water
+
 try:
     import embedded
 except:

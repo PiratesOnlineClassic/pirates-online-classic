@@ -4,11 +4,10 @@
 # Embedded file name: pirates.piratesgui.TreasureMapCompletePanel
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.ListFrame import ListFrame
 from pirates.treasuremap.RewardItemGui import RewardItemGui
+
 
 class TreasureMapCompletePanel(DirectFrame):
     __module__ = __name__

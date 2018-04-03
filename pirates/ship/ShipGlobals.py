@@ -2,13 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.ship.ShipGlobals
-from pandac.PandaModules import *
+import copy
+import math
+import random
+
+from direct.actor import Actor
 from direct.showbase.PythonUtil import Enum
+from direct.task import Task
+from pandac.PandaModules import *
 from pirates.uberdog.UberDogGlobals import *
 from pirates.uberdog.UberDogGlobals import InventoryType
-from direct.actor import Actor
-from direct.task import Task
-import random, copy, math
+
 AI_RAM_LATENCY_BUFFER = 500
 BROADSIDE_MAX_AUTOAIM_DIST = 2000
 BROADSIDE_LEFT = 0
@@ -680,12 +684,15 @@ shipGeoms = {}
 def preprocessHull(name):
     geom = loader.loadModel('models/shipparts/%s-geometry_High' % name)
     geom.flattenStrong()
-    allPanels = geom.findAllMatches('**/panel_High_*').asList()
+    allPanels = geom.findAllMatches('**/panel_High_*')
     for panel in allPanels:
-        for mn in panel.findAllMatches('**/+ModelNode').asList():
+        for mn in panel.findAllMatches('**/+ModelNode'):
             if mn.getNumChildren() < 2:
                 if mn.getNumChildren() > 0:
-                    gn = mn.find('+GeomNode').isEmpty() or mn.getChild(0)
+                    gn = mn.find('+GeomNode')
+                    if gn.isEmpty():
+                        gn = mn.getChild(0)
+
                     gn.setName(mn.getName())
                     gn.reparentTo(mn.getParent())
                     mn.detachNode()
@@ -693,10 +700,13 @@ def preprocessHull(name):
         panel.reparentTo(geom)
         panel.stash()
 
-    for mn in geom.findAllMatches('**/+ModelNode').asList():
+    for mn in geom.findAllMatches('**/+ModelNode'):
         if mn.getNumChildren() < 2:
             if mn.getNumChildren() > 0:
-                gn = mn.find('+GeomNode').isEmpty() or mn.getChild(0)
+                gn = mn.find('+GeomNode')
+                if gn.isEmpty():
+                    gn = mn.getChild(0)
+
                 gn.setName(mn.getName())
                 gn.reparentTo(mn.getParent())
                 mn.detachNode()
@@ -708,14 +718,14 @@ def preprocessHull(name):
 
     highGeom = geom.copyTo(hidden)
     highGeom.detachNode()
-    highPanels = highGeom.findAllMatches('**/panel_High_*').asList()
+    highPanels = highGeom.findAllMatches('**/panel_High_*')
     flashPanelsHigh = []
     for panel in highPanels:
         panel.reparentTo(highGeom)
 
     medGeom = geom.copyTo(hidden)
     medGeom.detachNode()
-    medPanels = medGeom.findAllMatches('**/panel_High_*').asList()
+    medPanels = medGeom.findAllMatches('**/panel_High_*')
     flashPanelsMed = []
     projections = []
     for panel in medPanels:
@@ -736,12 +746,15 @@ def preprocessHull(name):
 def preprocessHullMed(name):
     geom = loader.loadModel('models/shipparts/%s-geometry_Med' % name)
     geom.flattenStrong()
-    allPanels = geom.findAllMatches('**/panel_High_*').asList()
+    allPanels = geom.findAllMatches('**/panel_High_*')
     for panel in allPanels:
-        for mn in panel.findAllMatches('**/+ModelNode').asList():
+        for mn in panel.findAllMatches('**/+ModelNode'):
             if mn.getNumChildren() < 2:
                 if mn.getNumChildren() > 0:
-                    gn = mn.find('+GeomNode').isEmpty() or mn.getChild(0)
+                    gn = mn.find('+GeomNode')
+                    if gn.isEmpty():
+                        gn = mn.getChild(0)
+
                     gn.setName(mn.getName())
                     gn.reparentTo(mn.getParent())
                     mn.detachNode()
@@ -749,10 +762,13 @@ def preprocessHullMed(name):
         panel.reparentTo(geom)
         panel.stash()
 
-    for mn in geom.findAllMatches('**/+ModelNode').asList():
+    for mn in geom.findAllMatches('**/+ModelNode'):
         if mn.getNumChildren() < 2:
             if mn.getNumChildren() > 0:
-                gn = mn.find('+GeomNode').isEmpty() or mn.getChild(0)
+                gn = mn.find('+GeomNode')
+                if gn.isEmpty():
+                    gn = mn.getChild(0)
+
                 gn.setName(mn.getName())
                 gn.reparentTo(mn.getParent())
                 mn.detachNode()
@@ -764,7 +780,7 @@ def preprocessHullMed(name):
 
     mediumGeom = geom.copyTo(hidden)
     mediumGeom.detachNode()
-    medPanels = mediumGeom.findAllMatches('**/panel_High_*').asList()
+    medPanels = mediumGeom.findAllMatches('**/panel_High_*')
     flashPanelsMed = []
     projections = []
     for panel in medPanels:
@@ -779,10 +795,13 @@ def preprocessHullMed(name):
 def preprocessHullLow(name, inFix='', isSkelShip=False):
     geom = loader.loadModel('models/shipparts/%s-geometry_Low' % name)
     geom.flattenStrong()
-    for mn in geom.findAllMatches('**/+ModelNode').asList():
+    for mn in geom.findAllMatches('**/+ModelNode'):
         if mn.getNumChildren() < 2:
             if mn.getNumChildren() > 0:
-                gn = mn.find('+GeomNode').isEmpty() or mn.getChild(0)
+                gn = mn.find('+GeomNode')
+                if gn.isEmpty():
+                    gn = mn.getChild(0)
+
                 gn.setName(mn.getName())
                 gn.reparentTo(mn.getParent())
                 mn.detachNode()

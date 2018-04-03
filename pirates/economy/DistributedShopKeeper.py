@@ -2,29 +2,27 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.economy.DistributedShopKeeper
-from direct.showbase.ShowBaseGlobal import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from otp.uberdog.RejectCode import RejectCode
+from direct.interval.IntervalGlobal import *
+from direct.showbase.ShowBaseGlobal import *
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
-from pirates.economy.EconomyGlobals import *
+from otp.uberdog.RejectCode import RejectCode
 from pirates.distributed import InteractGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.economy import StoreGUI, AccessoriesStoreGUI, TattooStoreGUI, JewelryStoreGUI, BarberStoreGUI, MusicianGUI
-from pirates.economy import ShipStoreGUI
-from pirates.uberdog.UberDogGlobals import *
-from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
-from direct.interval.IntervalGlobal import *
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import PDialog
-from pirates.pirate import AvatarTypes
-from pirates.piratesgui.ShipShoppingPanel import ShipShoppingPanel
+from pirates.economy import (AccessoriesStoreGUI, BarberStoreGUI,
+                             EconomyGlobals, JewelryStoreGUI, MusicianGUI,
+                             ShipStoreGUI, StoreGUI, TattooStoreGUI)
 from pirates.economy.EconomyGlobals import *
-from pirates.economy import EconomyGlobals
-from pirates.ship.ShipGlobals import *
 from pirates.leveleditor import NPCList
 from pirates.makeapirate import ClothingGlobals
+from pirates.pirate import AvatarTypes
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import PDialog, PiratesGuiGlobals
+from pirates.piratesgui.ShipShoppingPanel import ShipShoppingPanel
+from pirates.ship.ShipGlobals import *
+from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
+from pirates.uberdog.UberDogGlobals import *
+
 
 class DistributedShopKeeper:
     __module__ = __name__

@@ -4,6 +4,7 @@
 # Embedded file name: pirates.creature.Animal
 from pirates.creature.Creature import Creature
 
+
 class Animal(Creature):
     __module__ = __name__
 

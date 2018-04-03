@@ -2,16 +2,16 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.Fire
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
+import random
+
 from direct.actor import Actor
-from direct.particles import ParticleEffect
-from direct.particles import Particles
-from direct.particles import ForceGroup
+from direct.interval.IntervalGlobal import *
+from direct.particles import ForceGroup, ParticleEffect, Particles
+from EffectController import EffectController
+from pandac.PandaModules import *
 from pirates.piratesgui.GameOptions import Options
 from PooledEffect import PooledEffect
-from EffectController import EffectController
-import random
+
 
 class Fire(PooledEffect, EffectController):
     __module__ = __name__

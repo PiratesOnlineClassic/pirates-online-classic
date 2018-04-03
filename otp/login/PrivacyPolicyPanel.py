@@ -2,13 +2,14 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.login.PrivacyPolicyPanel
-from pandac.PandaModules import *
-from otp.otpbase.OTPGlobals import *
+from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from MultiPageTextFrame import *
-from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPLocalizer
+from otp.otpbase.OTPGlobals import *
 from otp.otpgui import OTPDialog
+from pandac.PandaModules import *
+
 
 class PrivacyPolicyTextPanel(getGlobalDialogClass()):
     __module__ = __name__

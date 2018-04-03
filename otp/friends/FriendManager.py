@@ -2,10 +2,11 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.friends.FriendManager
-from pandac.PandaModules import *
-from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed import DistributedObject
 from otp.otpbase import OTPGlobals
+from pandac.PandaModules import *
+
 
 class FriendManager(DistributedObject.DistributedObject):
     __module__ = __name__

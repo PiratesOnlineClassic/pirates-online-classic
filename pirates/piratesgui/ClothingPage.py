@@ -4,8 +4,8 @@
 # Embedded file name: pirates.piratesgui.ClothingPage
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import InventoryPage
+from pirates.piratesgui import InventoryPage, PiratesGuiGlobals
+
 
 class ClothingPage(InventoryPage.InventoryPage):
     __module__ = __name__

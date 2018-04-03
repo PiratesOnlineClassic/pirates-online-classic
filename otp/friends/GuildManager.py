@@ -2,17 +2,18 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.friends.GuildManager
-from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
+import Queue
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from otp.distributed import OtpDoGlobals
-from otp.otpbase import OTPLocalizer
-from otp.otpbase import OTPGlobals
-from otp.avatar.AvatarHandle import AvatarHandle
+from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.ai import AIInterestHandles
+from otp.avatar.AvatarHandle import AvatarHandle
+from otp.distributed import OtpDoGlobals
+from otp.otpbase import OTPGlobals, OTPLocalizer
+
 GUILDRANK_GM = 3
 GUILDRANK_OFFICER = 2
 GUILDRANK_MEMBER = 1
-import Queue
 
 class GuildMemberInfo(AvatarHandle):
     __module__ = __name__

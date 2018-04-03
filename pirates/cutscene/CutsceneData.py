@@ -5,8 +5,9 @@
 from direct.showbase.PythonUtil import POD
 from pirates.cutscene.CutsceneActor import *
 from pirates.pirate.AvatarTypes import *
-from pirates.ship import ShipGlobals
 from pirates.piratesbase import PLocalizer
+from pirates.ship import ShipGlobals
+
 Cutscene1_1_1 = '1.1.1: Jail Break'
 Cutscene1_1_2 = '1.1.2: Jail Break (continued)'
 Cutscene1_1_5_a = '1.1.5.a: Doggerel Dan and Nell Intro'

@@ -2,21 +2,18 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.avatar.DistributedPlayer
-from pandac.PandaModules import *
-from otp.chat import ChatGarbler
 import string
+import time
+
+from direct.showbase import PythonUtil
 from direct.task import Task
+from otp.avatar import Avatar, DistributedAvatar, PlayerBase
+from otp.chat import ChatAssistant, ChatGarbler
+from otp.margins.WhisperPopup import WhisperPopup
 from otp.otpbase import OTPLocalizer
 from otp.speedchat import SCDecoders
-from direct.showbase import PythonUtil
-from otp.avatar import DistributedAvatar
-import time
-from otp.avatar import Avatar, PlayerBase
-from otp.chat import ChatAssistant
-if base.config.GetBool('want-chatfilter-hacks', 0):
-    from otp.switchboard import badwordpy
-    import os
-    badwordpy.init(os.environ.get('OTP') + '\\src\\switchboard\\', '')
+from panda3d.core import *
+
 
 class DistributedPlayer(DistributedAvatar.DistributedAvatar, PlayerBase.PlayerBase):
     __module__ = __name__

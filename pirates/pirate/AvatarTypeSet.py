@@ -4,6 +4,7 @@
 # Embedded file name: pirates.pirate.AvatarTypeSet
 from pirates.pirate.AvatarType import AvatarType
 
+
 class AvatarTypeSet(AvatarType):
     __module__ = __name__
 

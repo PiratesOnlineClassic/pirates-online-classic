@@ -2,30 +2,28 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.DistributedCabin
-from pirates.piratesbase.PiratesGlobals import *
-from direct.interval.IntervalGlobal import *
-from direct.distributed.ClockDelta import *
-from pirates.piratesbase import PiratesGlobals
+import random
+
 from direct.distributed import DistributedObject
-from pirates.piratesbase import PLocalizer
+from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from pirates.ship import ShipGlobals
-from pirates.battle import CannonGlobals
-from pirates.battle import WeaponGlobals
+from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import quickProfile
-from pirates.effects.SmokeCloud import SmokeCloud
-from pirates.effects.ShipSplintersA import ShipSplintersA
+from pandac.PandaModules import *
+from pirates.battle import CannonGlobals, WeaponGlobals
+from pirates.destructibles import DistributedDestructibleObject
+from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.effects.ExplosionFlip import ExplosionFlip
 from pirates.effects.Fire import Fire
-from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.effects.MuzzleFlash import MuzzleFlash
+from pirates.effects.ShipSplintersA import ShipSplintersA
+from pirates.effects.SmokeCloud import SmokeCloud
 from pirates.effects.WoodShards import WoodShards
-from pirates.shipparts import CabinDNA
-from pirates.shipparts import Cabin
-from pirates.shipparts import DistributedShippart
-from pirates.destructibles import DistributedDestructibleObject
-import random
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesbase.PiratesGlobals import *
+from pirates.ship import ShipGlobals
+from pirates.shipparts import Cabin, CabinDNA, DistributedShippart
+
 
 class DistributedCabin(DistributedShippart.DistributedShippart, DistributedDestructibleObject.DistributedDestructibleObject):
     __module__ = __name__

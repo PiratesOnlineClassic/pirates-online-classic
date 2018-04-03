@@ -4,10 +4,9 @@
 # Embedded file name: pirates.piratesgui.AnchorButton
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import BlinkButton
-from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import BlinkButton, PiratesGuiGlobals
+
 
 class AnchorButton(BlinkButton.BlinkButton):
     __module__ = __name__

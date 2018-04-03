@@ -2,23 +2,20 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.PirateMemberList
-from direct.showbase.ShowBaseGlobal import *
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.fsm import StateData
-from otp.otpbase import OTPGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import SocialPage
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import TeleportConfirm
-from pirates.piratesbase import PiratesGlobals
-from otp.otpbase import OTPGlobals
-from otp.friends.FriendInfo import FriendInfo
-from pirates.piratesbase import Freebooter
-from pirates.band import BandConstance
-import GuiButton
-from direct.showbase.DirectObject import *
 import copy
+
+import GuiButton
+from direct.fsm import StateData
+from direct.gui.DirectGui import *
+from direct.showbase.DirectObject import *
+from direct.showbase.ShowBaseGlobal import *
+from otp.friends.FriendInfo import FriendInfo
+from otp.otpbase import OTPGlobals
+from pandac.PandaModules import *
+from pirates.band import BandConstance
+from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
+from pirates.piratesgui import PiratesGuiGlobals, SocialPage, TeleportConfirm
+
 MODE_FRIEND_AVATAR = 0
 MODE_FRIEND_PLAYER = 1
 MODE_CREW = 2

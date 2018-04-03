@@ -3,12 +3,12 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.TextPrinter
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.showbase import DirectObject
 from direct.interval.IntervalGlobal import *
-from pirates.piratesbase import PLocalizer
+from direct.showbase import DirectObject
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PiratesGlobals
+
 
 class TextPrinter(DirectObject.DirectObject):
     __module__ = __name__

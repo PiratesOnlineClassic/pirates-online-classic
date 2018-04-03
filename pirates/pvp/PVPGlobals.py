@@ -2,13 +2,14 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pvp.PVPGlobals
-from pandac.PandaModules import Vec4
-from otp.web.Setting import StateVarSetting
 from direct.fsm.StatePush import FunctionCall
+from otp.web.Setting import StateVarSetting
+from pandac.PandaModules import Vec4
+from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.ship import ShipGlobals
-from pirates.battle import WeaponGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
+
 RulesDuration = 12.0
 ReadyTimeout = 120.0
 ReadyBarrierTimeout = RulesDuration + ReadyTimeout

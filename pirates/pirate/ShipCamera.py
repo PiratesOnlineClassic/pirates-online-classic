@@ -2,15 +2,18 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pirate.ShipCamera
-from direct.showbase import DirectObject
+import math
+
 from direct.fsm import ClassicFSM, State
 from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import reduceAngle, fitSrcAngle2Dest, clampScalar, lerp, Functor
+from direct.showbase import DirectObject
 from direct.showbase.InputStateGlobal import inputState
-from pandac.PandaModules import *
+from direct.showbase.PythonUtil import (Functor, clampScalar, fitSrcAngle2Dest,
+                                        lerp, reduceAngle)
 from otp.otpbase import OTPGlobals
+from pandac.PandaModules import *
 from pirates.pirate.OrbitCamera import OrbitCamera
-import math
+
 
 class ShipCamera(OrbitCamera):
     __module__ = __name__

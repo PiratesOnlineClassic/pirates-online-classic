@@ -4,6 +4,7 @@
 # Embedded file name: otp.uberdog.AccountDetailRecord
 from otp.otpbase import OTPGlobals
 
+
 class SubDetailRecord:
     __module__ = __name__
 

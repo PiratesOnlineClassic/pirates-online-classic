@@ -2,11 +2,12 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.launcher.PiratesDownloadWatcher
-from otp.launcher import DownloadWatcher
-from pandac.PandaModules import Point3, TextNode
+from direct.gui import DirectGuiGlobals as DGG
 from direct.gui.DirectLabel import DirectLabel
 from direct.gui.DirectWaitBar import DirectWaitBar
-from direct.gui import DirectGuiGlobals as DGG
+from otp.launcher import DownloadWatcher
+from pandac.PandaModules import Point3, TextNode
+
 
 class PiratesDownloadWatcher(DownloadWatcher.DownloadWatcher):
     __module__ = __name__

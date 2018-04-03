@@ -5,6 +5,7 @@
 from otp.friends.FriendInfo import FriendInfo
 from pirates.pirate.PAvatarHandle import PAvatarHandle
 
+
 class PCFriendInfo(FriendInfo, PAvatarHandle):
     __module__ = __name__
 

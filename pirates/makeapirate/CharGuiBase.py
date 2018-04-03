@@ -5,6 +5,7 @@
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 
+
 class CharGuiSlider(DirectSlider):
     __module__ = __name__
 

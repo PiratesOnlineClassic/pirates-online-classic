@@ -4,11 +4,11 @@
 # Embedded file name: pirates.piratesgui.ShardPanel
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
 from otp.distributed import OtpDoGlobals
-from pirates.piratesbase import PiratesGlobals
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PLocalizer
+
 POP_COLORS = (Vec4(0.4, 0.4, 1.0, 1.0), Vec4(0.4, 1.0, 0.4, 1.0), Vec4(1.0, 0.4, 0.4, 1.0))
 
 class ShardPanel(DirectFrame):

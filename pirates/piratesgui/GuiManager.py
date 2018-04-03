@@ -2,99 +2,64 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.GuiManager
-import os, webbrowser
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from direct.showbase import DirectObject
+import math
+import os
+import webbrowser
+
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import FSM
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
+from direct.showbase import DirectObject
 from otp.otpbase import OTPGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.battle import WeaponGlobals
-from pirates.reputation import ReputationGlobals
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import SkillPage
-from pirates.piratesgui import StatusTray
-from pirates.piratesgui import ClothingPage
-from pirates.piratesgui import TitlesPage
-from pirates.piratesgui.GuiButton import GuiButton
-from pirates.piratesgui import ChestTray
-from pirates.piratesgui import ChestPanel
-from pirates.piratesgui import GameGui
-from pirates.piratesgui import SocialPanel
-from pirates.piratesgui import QuestPage
-from pirates.piratesgui import ShipPage
-from pirates.piratesgui import WeaponPage
-from pirates.piratesgui import CollectionPage
-from pirates.piratesgui import CollectionMain
-from pirates.piratesgui import MapPage
-from pirates.piratesgui import TradeInviter
-from pirates.piratesgui import TradePanel
-from pirates.piratesgui import JournalButton
-from pirates.piratesgui import CombatTray
-from pirates.piratesgui import FriendsPage
-from pirates.piratesgui import CrewPage
-from pirates.piratesgui import GuildPage
-from pirates.piratesgui import CrewInviter
-from pirates.piratesgui import CrewInvitee
-from pirates.piratesgui import RadarGui
-from pirates.piratesgui import ComboMeter
-from pirates.piratesgui.Subtitler import Subtitler
-from pirates.piratesgui.TextPrinter import TextPrinter
-from pirates.friends import RelationshipChooser
-from pirates.friends import FriendInviter
-from pirates.friends import IgnoreConfirm
-from pirates.friends import GuildInviter
-from pirates.friends import FriendInvitee
-from pirates.friends import GuildInvitee
-from pirates.friends import GuildMember
-from pirates.pvp import PVPInviter
-from pirates.pvp import PVPInvitee
-from pirates.pvp import PVPGlobals
-from pirates.pvp import Beacon
-from pirates.pirate import PirateAvatarPanel
-from pirates.pirate import PlayerPanel
-from pirates.piratesgui.ObjectivesPanel import ObjectivesPanel
-from pirates.piratesgui.TreasureMapCompletePanel import TreasureMapCompletePanel
-from pirates.piratesgui.PVPCompletePanel import PVPCompletePanel
-from pirates.pvp.PVPRulesPanel import PVPRulesPanel
-from pirates.piratesgui import BarSelectionMenu
-from pirates.piratesgui.AttuneMenu import AttuneMenu
-from pirates.piratesgui import PVPPanel
-from pirates.piratesgui import SheetFrame
-from pirates.piratesgui import HighSeasScoreboard
-from pirates.piratesgui import HpMeter
-from pirates.piratesgui import PiratesTimer
-from pirates.piratesgui import PiratesTimerHourglass
-from pirates.ship import ShipGlobals
-from pirates.uberdog.UberDogGlobals import *
-from pirates.piratesgui import MessageStackPanel
-from pirates.piratesgui import TrialNonPayerPanel
-from pirates.piratesgui import StayTunedPanel
-from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.uberdog import DistributedInventoryBase
-from pirates.economy.EconomyGlobals import *
-from pirates.economy import EconomyGlobals
-from pirates.piratesgui import LookoutRequestLVL1
-from pirates.npc.Townfolk import *
-from pirates.piratesgui.BorderFrame import BorderFrame
-from pirates.reputation import ReputationGlobals
-from pirates.reputation import RepChart
-from pirates.piratesgui.GameOptions import GameOptions
-from pirates.piratesgui.DownloadBlockerPanel import DownloadBlockerPanel
-from pirates.piratesgui.TeleportBlockerPanel import TeleportBlockerPanel
-from pirates.piratesgui import WorkMeter
-from pirates.piratesbase import Freebooter
+from pandac.PandaModules import *
 from pirates.band import BandConstance
-from pirates.quest import QuestConstants
-from pirates.friends import ReportAPlayer
-from pirates.piratesgui import FeedbackPanel
+from pirates.battle import WeaponGlobals
+from pirates.economy import EconomyGlobals
+from pirates.economy.EconomyGlobals import *
+from pirates.friends import (FriendInvitee, FriendInviter, GuildInvitee,
+                             GuildInviter, GuildMember, IgnoreConfirm,
+                             RelationshipChooser, ReportAPlayer)
+from pirates.npc.Townfolk import *
+from pirates.pirate import PirateAvatarPanel, PlayerPanel
+from pirates.piratesbase import (Freebooter, PiratesGlobals, PLocalizer,
+                                 UserFunnel)
+from pirates.piratesgui import (BarSelectionMenu, ChestPanel, ChestTray,
+                                ClothingPage, CollectionMain, CollectionPage,
+                                CombatTray, ComboMeter, CrewInvitee,
+                                CrewInviter, CrewPage, FeedbackPanel,
+                                FriendsPage, GameGui, GuildPage,
+                                HighSeasScoreboard, HpMeter, JournalButton,
+                                LookoutRequestLVL1, MapPage, MessageStackPanel,
+                                PiratesGuiGlobals, PiratesTimer,
+                                PiratesTimerHourglass, PVPPanel, QuestPage,
+                                RadarGui, SheetFrame, ShipPage, SkillPage,
+                                SocialPanel, StatusTray, StayTunedPanel,
+                                TitlesPage, TradeInviter, TradePanel,
+                                TrialNonPayerPanel, WeaponPage, WorkMeter)
+from pirates.piratesgui.AttuneMenu import AttuneMenu
+from pirates.piratesgui.BorderFrame import BorderFrame
+from pirates.piratesgui.DownloadBlockerPanel import DownloadBlockerPanel
+from pirates.piratesgui.GameOptions import GameOptions
+from pirates.piratesgui.GuiButton import GuiButton
+from pirates.piratesgui.ObjectivesPanel import ObjectivesPanel
+from pirates.piratesgui.PVPCompletePanel import PVPCompletePanel
 from pirates.piratesgui.SiegeBoard import SiegeBoard
+from pirates.piratesgui.Subtitler import Subtitler
+from pirates.piratesgui.TeleportBlockerPanel import TeleportBlockerPanel
+from pirates.piratesgui.TextPrinter import TextPrinter
+from pirates.piratesgui.TreasureMapCompletePanel import \
+    TreasureMapCompletePanel
+from pirates.pvp import Beacon, PVPGlobals, PVPInvitee, PVPInviter
+from pirates.pvp.PVPRulesPanel import PVPRulesPanel
+from pirates.quest import QuestConstants
+from pirates.reputation import RepChart, ReputationGlobals
+from pirates.ship import ShipGlobals
 from pirates.speedchat.PSCDecoders import *
-from pirates.piratesbase import UserFunnel
-import math
+from pirates.uberdog import DistributedInventoryBase
+from pirates.uberdog.UberDogGlobals import *
+from pirates.uberdog.UberDogGlobals import InventoryType
+
 
 class GuiManager(FSM.FSM):
     __module__ = __name__

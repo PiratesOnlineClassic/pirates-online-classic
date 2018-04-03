@@ -2,17 +2,18 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesbase.UserFunnel
-import os, sys, socket, random, time
+import os
+import random
+import socket
+import sys
+import time
 from urllib import quote_plus
-from pandac.PandaModules import HTTPClient
-from pandac.PandaModules import HTTPCookie
-from pandac.PandaModules import URLSpec
-from pandac.PandaModules import Ramfile
-from pandac.PandaModules import Ostream
-from pandac.PandaModules import HTTPDate
-from pandac.PandaModules import DocumentSpec
-from direct.task.Task import Task
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
+from direct.task.Task import Task
+from pandac.PandaModules import (DocumentSpec, HTTPClient, HTTPCookie,
+                                 HTTPDate, Ostream, Ramfile, URLSpec)
+
 notify = directNotify.newCategory('UserFunnel')
 
 class UserFunnel:

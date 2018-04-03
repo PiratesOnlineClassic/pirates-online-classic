@@ -2,24 +2,24 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.DistributedBattleNPC
-from direct.interval.IntervalGlobal import *
+import copy
+import random
+import types
+
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
+from direct.interval.IntervalGlobal import *
 from direct.task import Task
 from otp.otpbase import OTPGlobals
-from pirates.uberdog.UberDogGlobals import *
-from pirates.reputation.DistributedReputationAvatar import DistributedReputationAvatar
-from pirates.battle import DistributedBattleAvatar
-from pirates.battle import EnemyGlobals
-from pirates.battle import WeaponGlobals
-from pirates.pirate import BattleNPCGameFSM
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.pirate import AvatarTypes
-from pirates.pirate import Biped
+from pirates.battle import (DistributedBattleAvatar, EnemyGlobals, EnemySkills,
+                            WeaponGlobals)
 from pirates.leveleditor import CustomAnims
-from pirates.battle import EnemySkills
-import random, copy, types
+from pirates.pirate import AvatarTypes, BattleNPCGameFSM, Biped
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.reputation.DistributedReputationAvatar import \
+    DistributedReputationAvatar
+from pirates.uberdog.UberDogGlobals import *
+
 
 class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
     __module__ = __name__

@@ -2,23 +2,20 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.SkillPage
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
-from pirates.piratesgui import InventoryPage
-from pirates.reputation import ReputationGlobals
-from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType, InventoryId
-from pirates.piratesbase import PLocalizer
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import RadialMenu
-from pirates.piratesgui.ReputationMeter import ReputationMeter
-from pirates.piratesgui import SkillpageGuiButton
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.battle import WeaponGlobals
-from pirates.piratesbase import Freebooter
-from pirates.piratesgui.SkillButton import SkillButton
-from pirates.piratesgui import PDialog
+from direct.gui.DirectGui import *
 from otp.otpgui import OTPDialog
+from pandac.PandaModules import *
+from pirates.battle import WeaponGlobals
+from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
+from pirates.piratesgui import (InventoryPage, PDialog, PiratesGuiGlobals,
+                                RadialMenu, SkillpageGuiButton)
+from pirates.piratesgui.ReputationMeter import ReputationMeter
+from pirates.piratesgui.SkillButton import SkillButton
+from pirates.reputation import ReputationGlobals
+from pirates.uberdog.UberDogGlobals import (InventoryCategory, InventoryId,
+                                            InventoryType)
+
 MAX_REP = 6
 
 class SkillPage(InventoryPage.InventoryPage):

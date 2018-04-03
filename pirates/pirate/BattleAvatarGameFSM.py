@@ -2,22 +2,24 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.pirate.BattleAvatarGameFSM
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
+import random
+
 from direct.fsm import FSM
-from direct.task import Task
+from direct.gui.DirectGui import *
+from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import lerp
+from direct.task import Task
+from pandac.PandaModules import *
 from pirates.battle import WeaponGlobals
+from pirates.destructibles import ShatterableSkeleton
+from pirates.effects.SmallSplash import SmallSplash
+from pirates.effects.ThrowDirt2 import ThrowDirt2
+from pirates.effects.Twister import Twister
 from pirates.piratesbase import PiratesGlobals
 from pirates.reputation import ReputationGlobals
-from pirates.destructibles import ShatterableSkeleton
 from pirates.ship import ShipGlobals
-from pirates.effects.SmallSplash import SmallSplash
-from pirates.effects.Twister import Twister
 from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.effects.ThrowDirt2 import ThrowDirt2
-import random
+
 
 class BattleAvatarGameFSM(FSM.FSM):
     __module__ = __name__

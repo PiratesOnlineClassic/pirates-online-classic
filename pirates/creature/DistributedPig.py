@@ -5,6 +5,7 @@
 from pirates.creature.DistributedAnimal import DistributedAnimal
 from pirates.creature.Pig import Pig
 
+
 class DistributedPig(DistributedAnimal):
     __module__ = __name__
 

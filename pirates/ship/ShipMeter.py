@@ -3,22 +3,21 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.ship.ShipMeter
 import copy
+
+from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from direct.gui.DirectGui import *
 from direct.task.Task import Task
 from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import (GuiButton, GuiTray, PiratesTimer,
+                                StatusEffectsPanel)
+from pirates.pvp import PVPGlobals
 from pirates.ship import ShipGlobals
 from pirates.ship.DistributedShipOV import DistributedShipOV
 from pirates.shipparts.DistributedHullOV import DistributedHullOV
 from pirates.shipparts.DistributedMastOV import DistributedMastOV
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import GuiTray
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import GuiButton
-from pirates.piratesgui import PiratesTimer
-from pirates.piratesgui import StatusEffectsPanel
-from pirates.pvp import PVPGlobals
+
 HullDict = {ShipGlobals.WARSHIPL1: 'models/shipparts/warshipMeter', ShipGlobals.WARSHIPL2: 'models/shipparts/warshipMeter', ShipGlobals.WARSHIPL3: 'models/shipparts/warshipMeter', ShipGlobals.WARSHIPL4: 'models/shipparts/warshipMeter', ShipGlobals.MERCHANTL1: 'models/shipparts/merchantMeter', ShipGlobals.MERCHANTL2: 'models/shipparts/merchantMeter', ShipGlobals.MERCHANTL3: 'models/shipparts/merchantMeter', ShipGlobals.MERCHANTL4: 'models/shipparts/merchantMeter', ShipGlobals.INTERCEPTORL1: 'models/shipparts/interceptorMeter', ShipGlobals.INTERCEPTORL2: 'models/shipparts/interceptorMeter', ShipGlobals.INTERCEPTORL3: 'models/shipparts/interceptorMeter', ShipGlobals.INTERCEPTORL4: 'models/shipparts/interceptorMeter', ShipGlobals.BLACK_PEARL: 'models/shipparts/merchantMeter', ShipGlobals.GOLIATH: 'models/shipparts/warshipMeter', ShipGlobals.SKEL_WARSHIPL3: 'models/shipparts/warshipMeter', ShipGlobals.SKEL_INTERCEPTORL3: 'models/shipparts/interceptorMeter'}
 MastDict = {ShipGlobals.MAINMASTL1: 'models/shipparts/mainmast_square', ShipGlobals.MAINMASTL2: 'models/shipparts/mainmast_square', ShipGlobals.MAINMASTL3: 'models/shipparts/mainmast_square', ShipGlobals.MAINMASTL4: 'models/shipparts/mainmast_square', ShipGlobals.MAINMASTL5: 'models/shipparts/mainmast_square', ShipGlobals.TRIMASTL1: 'models/shipparts/L2mastTri', ShipGlobals.TRIMASTL2: 'models/shipparts/L2mastTri', ShipGlobals.TRIMASTL3: 'models/shipparts/L2mastTri', ShipGlobals.TRIMASTL4: 'models/shipparts/L2mastTri', ShipGlobals.TRIMASTL5: 'models/shipparts/L2mastTri', ShipGlobals.FOREMASTL1: 'models/shipparts/L1foremast', ShipGlobals.FOREMASTL2: 'models/shipparts/L2foremast', ShipGlobals.FOREMASTL3: 'models/shipparts/L2foremast', ShipGlobals.AFTMASTL1: 'models/shipparts/L2aftmast', ShipGlobals.AFTMASTL2: 'models/shipparts/L2aftmast', ShipGlobals.AFTMASTL3: 'models/shipparts/L2aftmast', ShipGlobals.SKEL_MAINMASTL1_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL2_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL3_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL4_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL5_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL1_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL2_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL3_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL4_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL5_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_TRIMASTL1: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_TRIMASTL2: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_TRIMASTL3: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_TRIMASTL4: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_TRIMASTL5: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_FOREMASTL1: 'models/shipparts/L1foremast', ShipGlobals.SKEL_FOREMASTL2: 'models/shipparts/L1foremast', ShipGlobals.SKEL_FOREMASTL3: 'models/shipparts/L1foremast', ShipGlobals.SKEL_AFTMASTL1: 'models/shipparts/L2aftmast', ShipGlobals.SKEL_AFTMASTL2: 'models/shipparts/L2aftmast', ShipGlobals.SKEL_AFTMASTL3: 'models/shipparts/L2aftmast'}
 

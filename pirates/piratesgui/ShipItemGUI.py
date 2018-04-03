@@ -4,16 +4,14 @@
 # Embedded file name: pirates.piratesgui.ShipItemGUI
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui import InventoryItemGui
-from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer
-from pirates.uberdog import UberDogGlobals
 from pirates.battle import WeaponGlobals
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *
+from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
+from pirates.piratesgui import InventoryItemGui, PiratesGuiGlobals
 from pirates.reputation import ReputationGlobals
-from pirates.piratesbase import Freebooter
+from pirates.uberdog import UberDogGlobals
+
 
 class ShipItemGUI(InventoryItemGui.InventoryItemGui):
     __module__ = __name__

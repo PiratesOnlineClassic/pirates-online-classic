@@ -5,6 +5,7 @@
 from otp.chat.ChatInputWhiteList import ChatInputWhiteList
 from pirates.chat.PWhiteList import PWhiteList
 
+
 class PChatInputWhiteList(ChatInputWhiteList):
     __module__ = __name__
 

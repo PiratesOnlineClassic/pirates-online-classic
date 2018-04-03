@@ -6,6 +6,7 @@ from pandac.PandaModules import *
 from pirates.creature.SeaMonster import SeaMonster
 from pirates.pirate import AvatarTypes
 
+
 class SeaSerpent(SeaMonster):
     __module__ = __name__
     ModelInfo = ('models/char/serpent_hi', 'models/char/serpent_')

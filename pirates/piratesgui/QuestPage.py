@@ -2,23 +2,19 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.QuestPage
-from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from pirates.piratesgui import InventoryPage
-from pirates.piratesgui import QuestItemGui
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import QuestTitleList
-from pirates.piratesgui import BlackPearlCrew
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PiratesGlobals
-from pirates.uberdog.UberDogGlobals import *
-from pirates.piratesgui import BorderFrame
-from pirates.uberdog import DistributedInventoryBase
 import GuiButton
-from pirates.quest.QuestDetailGUI import QuestDetailBase
-from pirates.piratesgui import PDialog
+from direct.gui.DirectGui import *
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesgui import (BlackPearlCrew, BorderFrame, InventoryPage,
+                                PDialog, PiratesGuiGlobals, QuestItemGui,
+                                QuestTitleList)
+from pirates.quest.QuestDetailGUI import QuestDetailBase
+from pirates.uberdog import DistributedInventoryBase
+from pirates.uberdog.UberDogGlobals import *
+
 tpMgr = TextPropertiesManager.getGlobalPtr()
 questTitle = TextProperties()
 questTitle.setSmallCaps(1)

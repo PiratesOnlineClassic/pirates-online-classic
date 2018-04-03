@@ -5,10 +5,10 @@
 from direct.fsm import FSM
 from direct.showbase.PythonUtil import report
 from pirates.instance import DistributedInstanceWorld
-from pirates.quest import QuestHolder
-from pirates.quest import DistributedQuest
-from pirates.quest.MiniQuestItemGui import MiniQuestItemGui
 from pirates.piratesbase import PiratesGlobals
+from pirates.quest import DistributedQuest, QuestHolder
+from pirates.quest.MiniQuestItemGui import MiniQuestItemGui
+
 
 class DistributedTreasureMapInstance(DistributedInstanceWorld.DistributedInstanceWorld, QuestHolder.QuestHolder, FSM.FSM):
     __module__ = __name__

@@ -2,15 +2,17 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.shipparts.SailDNA
-from pandac.PandaModules import *
-from direct.directnotify.DirectNotifyGlobal import *
 import random
+
+from direct.directnotify.DirectNotifyGlobal import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from otp.avatar import AvatarDNA
 from otp.speedchat import ColorSpace
-from pirates.ship import ShipGlobals
+from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
+from pirates.ship import ShipGlobals
+
 notify = directNotify.newCategory('SailDNA')
 SailTextureDict = {1: 'ship_sail', 202: 'ship_sailBP'}
 LogoDict = {200: 'logo_redSkull', 201: 'ship_sailBP_patches', 202: 'logo_eitc', 203: 'logo_eitc_emblem', 210: 'logo_french_flag', 211: 'logo_spanish_flag'}

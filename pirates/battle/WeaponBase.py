@@ -3,17 +3,18 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.WeaponBase
 import math
-from pandac.PandaModules import *
+
+import CannonGlobals
+import WeaponGlobals
 from direct.distributed.ClockDelta import globalClockDelta
-from pirates.piratesbase import PLocalizer
+from pandac.PandaModules import *
+from pirates.battle import WeaponBaseBase
+from pirates.effects.ProjectileEffect import ProjectileEffect
+from pirates.piratesbase import PiratesGlobals, PLocalizer, TeamUtils
 from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesbase import PiratesGlobals
 from pirates.tutorial import TutorialGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-from pirates.effects.ProjectileEffect import ProjectileEffect
-from pirates.piratesbase import TeamUtils
-from pirates.battle import WeaponBaseBase
-import WeaponGlobals, CannonGlobals
+
 
 class WeaponBase(WeaponBaseBase.WeaponBaseBase):
     __module__ = __name__

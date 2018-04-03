@@ -2,8 +2,11 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.otpbase.OTPBase
+import time
+
+import OTPRender
 from direct.showbase.ShowBase import ShowBase
-import OTPRender, time
+
 
 class OTPBase(ShowBase):
     __module__ = __name__

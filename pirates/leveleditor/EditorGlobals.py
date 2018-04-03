@@ -2,11 +2,9 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.leveleditor.EditorGlobals
-from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from pirates.mockup import PythonNodePath
-from pirates.effects import DynamicLight
+from pandac.PandaModules import *
 from pirates.creature import Creature
 from pirates.creature.Alligator import Alligator
 from pirates.creature.Bat import Bat
@@ -21,9 +19,11 @@ from pirates.creature.Scorpion import Scorpion
 from pirates.creature.Seagull import Seagull
 from pirates.creature.Stump import Stump
 from pirates.creature.Wasp import Wasp
+from pirates.effects import DynamicLight, SoundFX
+from pirates.mockup import PythonNodePath
 from pirates.pirate import AvatarTypes
 from pirates.ship import ShipGlobals
-from pirates.effects import SoundFX
+
 LOD_STATE_NORMAL = 0
 LOD_STATE_HIGH = 1
 LOD_STATE_LOW = 2
