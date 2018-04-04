@@ -83,7 +83,7 @@ class AvatarChooser(DirectObject, StateData):
             self.load()
         base.disableMouse()
         self.quitButton.show()
-        if base.cr.loginInterface.supportsRelogin():
+        if base.cr.loginInterface.supportsRelogin() and base.config.GetBool('want-logout', False):
             self.logoutButton.show()
         self.scene.reparentTo(render)
         camera.reparentTo(render)
