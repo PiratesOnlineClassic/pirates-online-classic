@@ -1,32 +1,30 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.Hull
 import random
-
-from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
+from direct.gui.DirectGui import *
 from direct.showbase.PythonUtil import report
 from pandac.PandaModules import *
-from pirates.battle import CannonGlobals, WeaponGlobals
-from pirates.effects.BlackSmoke import BlackSmoke
-from pirates.effects.DarkShipFog import DarkShipFog
+from pirates.piratesbase.PiratesGlobals import *
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.ship import ShipGlobals
+from pirates.effects.SmokeCloud import SmokeCloud
+from pirates.effects.ShipSplintersA import ShipSplintersA
 from pirates.effects.ExplosionFlip import ExplosionFlip
 from pirates.effects.Fire import Fire
 from pirates.effects.Flame import Flame
-from pirates.effects.MuzzleFlash import MuzzleFlash
-from pirates.effects.ShipSplintersA import ShipSplintersA
-from pirates.effects.SmokeCloud import SmokeCloud
+from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.effects.WoodShards import WoodShards
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.piratesbase.PiratesGlobals import *
-from pirates.ship import ShipGlobals
-from pirates.shipparts import HullDNA, ShipPart, SplattableObject
+from pirates.effects.MuzzleFlash import MuzzleFlash
+from pirates.effects.DarkShipFog import DarkShipFog
+from pirates.battle import CannonGlobals
+from pirates.battle import WeaponGlobals
+from pirates.shipparts import HullDNA
+from pirates.shipparts import SplattableObject
+from pirates.shipparts import ShipPart
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
-    __module__ = __name__
     notify = directNotify.newCategory('Hull')
 
     def __init__(self, ship, cr):
@@ -51,7 +49,6 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         self.leftDamageLvl = 0
         self.rightDamageLvl = 0
         self.propCollisions = NodePath('Collisions-Hull')
-        return
 
     def disable(self):
         SplattableObject.SplattableObject.disable(self)
@@ -63,9 +60,9 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         if self.fogEffect:
             self.fogEffect.destroy()
             self.fogEffect = None
+
         del self.leftDamageLvl
         del self.rightDamageLvl
-        return
 
     def loadModel(self, dna):
         self.dna = dna
@@ -78,14 +75,14 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         if self.propCollisions:
             self.propCollisions.removeNode()
             self.propCollisions = None
+
         self.removeNode()
-        return
 
     def loadHigh(self):
         filePrefix = self.getPrefix(self.dna.modelClass)
-        result, data = ShipGlobals.getShipGeom('%s-geometry_High' % filePrefix)
+        (result, data) = ShipGlobals.getShipGeom('%s-geometry_High' % filePrefix)
         if result:
-            geom, static = data
+            (geom, static) = data
             hull = geom.copyTo(hidden)
             self.geom_High = hull
             self.tightBounds = hull.getTightBounds()
@@ -112,7 +109,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         else:
             self.geom_High = NodePath('Hull-model')
         if __dev__ and base.config.GetBool('show-ship-lods', 0):
-            s = loader.loadModelCopy('models/effects/explosion_sphere')
+            s = loader.loadModel('models/effects/explosion_sphere')
             s.reparentTo(self.geom_High)
             s.setColorScale(1, 0, 0, 1)
             s.setScale(30)
@@ -121,20 +118,22 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def unloadHigh(self):
         if not self.geom_High:
             return
+
         if self.geom_High.isEmpty():
             return
+
         if not self.panelsHigh:
             return
+
         self.geom_High.removeNode()
         self.geom_High = None
         self.panelsHigh = []
-        return
 
     def loadMedium(self):
         filePrefix = self.getPrefix(self.dna.modelClass)
-        result, data = ShipGlobals.getShipGeom('%s-geometry_Medium' % filePrefix)
+        (result, data) = ShipGlobals.getShipGeom('%s-geometry_Medium' % filePrefix)
         if result:
-            geom, static = data
+            (geom, static) = data
             hull = geom.copyTo(hidden)
             self.geom_Medium = hull
             staticGeom = static.copyTo(hidden)
@@ -161,32 +160,35 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
 
             self.initDestruction()
             if __dev__ and base.config.GetBool('show-ship-lods', 0):
-                s = loader.loadModelCopy('models/effects/explosion_sphere')
+                s = loader.loadModel('models/effects/explosion_sphere')
                 s.reparentTo(self.geom_Medium)
                 s.setColorScale(0, 1, 0, 1)
                 s.setScale(30)
                 s.setZ(250)
+
         else:
             self.geom_Medium = NodePath('hull-geom')
 
     def unloadMedium(self):
         if not self.geom_Medium:
             return
+
         if self.geom_Medium.isEmpty():
             return
+
         if not self.panelsMed:
             return
+
         self.geom_Medium.removeNode()
         self.geom_Medium = None
         self.panelsMed = []
-        return
 
     def requestLow(self):
         return self.geom_Low
 
     def loadLow(self):
         filePrefix = self.getPrefix(self.dna.modelClass)
-        result, data = ShipGlobals.getShipGeom('%s-geometry_Low' % filePrefix)
+        (result, data) = ShipGlobals.getShipGeom('%s-geometry_Low' % filePrefix)
         if result:
             hull = data[0].copyTo(hidden)
             self.geom_Low = hull
@@ -201,7 +203,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         else:
             self.geom_Low = NodePath('hull_geom')
         if __dev__ and base.config.GetBool('show-ship-lods', 0):
-            s = loader.loadModelCopy('models/effects/explosion_sphere')
+            s = loader.loadModel('models/effects/explosion_sphere')
             s.reparentTo(self.geom_Low)
             s.setColorScale(0, 0, 1, 1)
             s.setScale(30)
@@ -210,22 +212,26 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def unloadLow(self):
         if not self.geom_Low:
             return
+
         if self.geom_Low.isEmpty():
             return
+
         if not self.panelsLow:
             return
+
         self.geom_Low.removeNode()
         self.geom_Low = None
         self.panelsLow = []
-        return
 
     def loadCollisions(self):
         if config.GetBool('disable-ship-geom', 0):
             return
+
         filePrefix = self.getPrefix(self.dna.modelClass)
-        self.collisions = loader.loadModelCopy(filePrefix + '-collisions')
+        self.collisions = loader.loadModel(filePrefix + '-collisions')
         if not self.collisions:
             return
+
         self.collisions.reparentTo(self.propCollisions)
         numPanels = self.collisions.findAllMatches('**/collision_panel_*').getNumPaths()
         for i in range(numPanels):
@@ -237,13 +243,14 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def unloadCollisions(self):
         if not self.collisions:
             return
+
         if self.collisions.isEmpty():
             return
+
         self.collisions.removeNode()
         self.collisions = None
         self.collPanels = []
         self.clearTargetableCollisions()
-        return
 
     def getPrefix(self, shipClass):
         filePrefix = HullDNA.HullDict.get(shipClass)
@@ -269,16 +276,19 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             collideMask ^= PiratesGlobals.FloorBitmask
             collideMask |= PiratesGlobals.ShipFloorBitmask
             self.floors.setCollideMask(collideMask)
+
         self.deck = self.collisions.find('**/collision_deck')
         if not self.deck.isEmpty():
             collideMask = self.floors.getCollideMask()
             collideMask ^= PiratesGlobals.FloorBitmask
             collideMask |= PiratesGlobals.ShipFloorBitmask
             self.deck.setCollideMask(collideMask)
+
         collNodes = self.collisions.findAllMatches('**/collision_floors/*')
         for i in range(collNodes.getNumPaths()):
             if ship:
                 collNodes[i].setName(ship.deckName)
+
             setCannonballTags(collNodes[i])
             collNodes[i].setTag('hullCode', str(255))
             collNodes[i].setTag('objType', '9')
@@ -289,17 +299,20 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             setCannonballTags(collNode)
             collNode.setTag('hullCode', str(255))
             self.addTargetableCollision(collNode)
+
         collNode = self.collisions.find('**/collision_cannoncoll')
         if not collNode.isEmpty():
             setCannonballTags(collNode)
             collNode.setTag('hullCode', str(255))
             self.addTargetableCollision(collNode)
+
         shipCollWall = self.collisions.find('**/collision_hull')
         if not shipCollWall.isEmpty():
             shipCollWall.setCollideMask(PiratesGlobals.ShipCollideBitmask)
             shipCollWall.setTag('objType', str(PiratesGlobals.COLL_SHIP))
             if self.ship:
                 shipCollWall.setTag('shipId', str(self.ship.doId))
+
         self.shipInsideWall = self.collisions.find('**/collision_inside_edge')
         for i in range(len(self.collPanels)):
             setCannonballTags(self.collPanels[i])
@@ -311,12 +324,15 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             clippingPlane = self.prop.find('**/water_clipping_plane')
             if not clippingPlane.isEmpty():
                 clippingPlane.setBin('background', 199)
+
         if hasattr(base, 'localAvatar') and base.localAvatar:
             if base.localAvatar.ship:
                 if base.localAvatar.ship != self.ship:
                     self.stashFloorCollisions()
+
             else:
                 self.stashFloorCollisions()
+
         self.setTargetBitmask(1)
         self.stashPlaneCollisions()
 
@@ -330,17 +346,20 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def getInsideWallName(self):
         if self.shipInsideWall:
             return self.shipInsideWall.getName()
+
         return ''
 
     def stashPlaneCollisions(self):
         if not self.deck.isEmpty():
             self.deck.stash()
+
         if not self.shipInsideWall.isEmpty():
             self.shipInsideWall.stash()
 
     def unstashPlaneCollisions(self):
         if not self.deck.isEmpty():
             self.deck.unstash()
+
         if not self.shipInsideWall.isEmpty():
             self.shipInsideWall.unstash()
 
@@ -349,6 +368,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         if self.railing:
             if not self.railing.isEmpty():
                 self.railing.stash()
+
         if self.floors:
             if not self.floors.isEmpty():
                 self.floors.stash()
@@ -358,6 +378,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         if self.railing:
             if not self.railing.isEmpty():
                 self.railing.unstash()
+
         if self.floors:
             if not self.floors.isEmpty():
                 self.floors.unstash()
@@ -375,17 +396,19 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         if self.ship.invulnerable():
             return
+
         if localAvatar.ship == self.ship:
             sfx = random.choice(self.woodBreakSfx)
             base.playSfx(sfx, node=self.ship, cutoff=3000)
         else:
             sfx = random.choice(self.distantBreakSfx)
             base.playSfx(sfx, node=self.ship, cutoff=3500)
-        cannonCode, hullCode, sailCode = codes
+        (cannonCode, hullCode, sailCode) = codes
         if hullCode != 255:
             index = hullCode - 1
             if index > 0:
                 index = (index - 1) % 2 + 1
+
             self.playHoleSplat(pos, normal, index)
             if len(self.panelsMed) > index and len(self.panelsHigh) > index:
                 self.copyMultitexLayer(self.panelsMed[index], self.panelsHigh[index])
@@ -397,7 +420,6 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             self.playBreak(panelIndex, index)
             if len(self.panelsMed) > panelIndex and len(self.panelsHigh) > panelIndex:
                 self.copyMultitexLayer(self.panelsMed[panelIndex], self.panelsHigh[panelIndex])
-        return
 
     def respawn(self, index):
         self.resetDestruction(index)
@@ -411,6 +433,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             index = index % 2
             if index == 0:
                 index = 2
+
         return index
 
     def getClosestBoardingPos(self):
@@ -422,6 +445,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             self.fogEffect.reparentTo(self)
             if offset:
                 self.fogEffect.setY(self.fogEffect, offset)
+
             self.fogEffect.setZ(self.fogEffect, 50)
             self.fogEffect.startLoop()
 
@@ -429,9 +453,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         if self.fogEffect:
             self.fogEffect.stopLoop()
             self.fogEffect = None
-        return
 
     def addToShip(self):
         self.propCollisions.reparentTo(self.ship.modelCollisions)
         ShipPart.ShipPart.addToShip(self)
-# okay decompiling .\pirates\shipparts\Hull.pyc

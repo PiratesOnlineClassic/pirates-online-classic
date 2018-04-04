@@ -1,27 +1,26 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.DistributedMast
 import copy
-
-from direct.actor import Actor
-from direct.distributed import DistributedObject
-from direct.distributed.ClockDelta import *
-from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from direct.showbase import DirectObject
-from direct.showbase.PythonUtil import quickProfile
+from direct.distributed.ClockDelta import *
+from direct.distributed import DistributedObject
+from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.battle import CannonGlobals, WeaponGlobals
-from pirates.destructibles import DistributedDestructibleArray
-from pirates.piratesbase import PiratesGlobals, PLocalizer
+from direct.showbase import DirectObject
+from direct.actor import Actor
+from direct.showbase.PythonUtil import quickProfile
 from pirates.piratesbase.PiratesGlobals import *
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 from pirates.ship import ShipGlobals
-from pirates.shipparts import DistributedShippart, Mast, MastDNA
+from pirates.battle import CannonGlobals
+from pirates.battle import WeaponGlobals
+from pirates.shipparts import MastDNA
+from pirates.shipparts import Mast
+from pirates.shipparts import DistributedShippart
+from pirates.destructibles import DistributedDestructibleArray
 
 
-class DistributedMast(DistributedShippart.DistributedShippart, DistributedDestructibleArray.DistributedDestructibleArray, DirectObject.DirectObject):
-    __module__ = __name__
+class DistributedMast(DistributedShippart.DistributedShippart,
+                      DistributedDestructibleArray.DistributedDestructibleArray, DirectObject.DirectObject):
     notify = directNotify.newCategory('DistributedMast')
 
     def __init__(self, cr):
@@ -30,7 +29,6 @@ class DistributedMast(DistributedShippart.DistributedShippart, DistributedDestru
         DistributedDestructibleArray.DistributedDestructibleArray.__init__(self, cr)
         NodePath.__init__(self, 'DistributedMast')
         self.stats = None
-        return
 
     def generate(self):
         self.notify.debug('Generate ' + str(self.doId))
@@ -47,7 +45,6 @@ class DistributedMast(DistributedShippart.DistributedShippart, DistributedDestru
             if self.arrayHp[i] <= 0:
                 for j in range(i, len(self.arrayHp)):
                     self.prop.mastsState[j] = 1
-
                 break
             else:
                 self.prop.mastsState[i] = 0
@@ -62,11 +59,13 @@ class DistributedMast(DistributedShippart.DistributedShippart, DistributedDestru
                 self.prop = mast[0]
                 self.ship.masts[self.dna.posIndex][1] = self
                 return
+
         self.prop = Mast.Mast(self.ship, self.cr)
         self.prop.shipId = self.shipId
         self.prop.doId = self.doId
         self.ship.masts[self.dna.posIndex] = [
-         self.prop, self]
+            self.prop,
+            self]
 
     def disable(self):
         self.notify.debug('Disable ' + str(self.doId))
@@ -77,12 +76,13 @@ class DistributedMast(DistributedShippart.DistributedShippart, DistributedDestru
         self.notify.debug('Delete ' + str(self.doId))
         if self.ship.masts.get(self.dna.posIndex, 0):
             self.ship.masts[self.dna.posIndex][1] = None
+
         del self.dna
         if base.cr.config.GetBool('want-ship-hpdisplay', 0) is 1:
             self.destroyHpDisplay()
+
         DistributedShippart.DistributedShippart.delete(self)
         DistributedDestructibleArray.DistributedDestructibleArray.delete(self)
-        return
 
     def getFlagDNAString(self):
         return self.ship.hull[1].getFlagDNAString()
@@ -102,7 +102,9 @@ class DistributedMast(DistributedShippart.DistributedShippart, DistributedDestru
 
     def getArrayHp(self):
         return [
-         self.dna.posIndex, self.arrayHp, self.maxArrayHp]
+            self.dna.posIndex,
+            self.arrayHp,
+            self.maxArrayHp]
 
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
@@ -111,7 +113,6 @@ class DistributedMast(DistributedShippart.DistributedShippart, DistributedDestru
         if self.prop.mastsState[index] == 0 and self.isGenerated():
             if index != None and self.prop:
                 self.prop.death(index)
-        return
 
     def respawn(self, index):
         if self.prop:
@@ -126,8 +127,10 @@ class DistributedMast(DistributedShippart.DistributedShippart, DistributedDestru
     def loadStats(self):
         if self.stats:
             return
+
         if not self.dna.mastType:
             return
+
         self.stats = ShipGlobals.getMastStats(self.dna.mastType)
         self.maxArrayHp = copy.copy(self.stats['maxArrayHp'])
         self.arrayHp = copy.copy(self.maxArrayHp)
@@ -194,9 +197,13 @@ class DistributedMast(DistributedShippart.DistributedShippart, DistributedDestru
     def setSailConfig(self, val):
         self.dna.setSailConfig(val)
         messenger.send('setMastType-%s' % self.shipId, [
-         self.dna.mastType, self.dna.posIndex, self.dna.sailConfig])
+            self.dna.mastType,
+            self.dna.posIndex,
+            self.dna.sailConfig])
         messenger.send('setMastHp-%s' % self.shipId, [
-         self.dna.posIndex, self.arrayHp, self.maxArrayHp])
+            self.dna.posIndex,
+            self.arrayHp,
+            self.maxArrayHp])
 
     def getSailConfig(self):
         return self.dna.getSailConfig()
@@ -204,4 +211,3 @@ class DistributedMast(DistributedShippart.DistributedShippart, DistributedDestru
     def addPropToShip(self):
         self.prop.loadCollisions()
         self.prop.addToShip()
-# okay decompiling .\pirates\shipparts\DistributedMast.pyc

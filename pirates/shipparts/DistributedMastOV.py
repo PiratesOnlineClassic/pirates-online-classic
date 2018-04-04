@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.DistributedMastOV
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObjectOV
 from pirates.ship import ShipGlobals
 
 
 class DistributedMastOV(DistributedObjectOV.DistributedObjectOV):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedMastOV')
 
     def __init__(self, cr):
@@ -26,7 +21,7 @@ class DistributedMastOV(DistributedObjectOV.DistributedObjectOV):
         DistributedObjectOV.DistributedObjectOV.disable(self)
 
     def __repr__(self):
-        return `(self.doId)`
+        return repr(self.doId)
 
     def setShipId(self, val):
         self.shipId = val
@@ -51,5 +46,6 @@ class DistributedMastOV(DistributedObjectOV.DistributedObjectOV):
     def sendMessage(self):
         if not self.stopSend:
             messenger.send('setMastType-%s' % self.shipId, [
-             self.mastType, self.posIndex, self.sailConfig])
-# okay decompiling .\pirates\shipparts\DistributedMastOV.pyc
+                self.mastType,
+                self.posIndex,
+                self.sailConfig])

@@ -1,29 +1,27 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.Cabin
 import random
-
-from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
+from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.battle import CannonGlobals, WeaponGlobals
-from pirates.effects.BlackSmoke import BlackSmoke
-from pirates.effects.ExplosionFlip import ExplosionFlip
-from pirates.effects.Fire import Fire
-from pirates.effects.MuzzleFlash import MuzzleFlash
+from pirates.piratesbase.PiratesGlobals import *
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 from pirates.effects.ShipSplintersA import ShipSplintersA
 from pirates.effects.SmokeCloud import SmokeCloud
+from pirates.effects.ExplosionFlip import ExplosionFlip
+from pirates.effects.Fire import Fire
+from pirates.effects.BlackSmoke import BlackSmoke
+from pirates.effects.MuzzleFlash import MuzzleFlash
 from pirates.effects.WoodShards import WoodShards
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.piratesbase.PiratesGlobals import *
-from pirates.ship import ShipGlobals
-from pirates.shipparts import CabinDNA, ShipPart, SplattableObject
+from pirates.shipparts import CabinDNA
+from pirates.shipparts import SplattableObject
 from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.battle import CannonGlobals
+from pirates.battle import WeaponGlobals
+from pirates.shipparts import ShipPart
+from pirates.ship import ShipGlobals
 
 
 class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
-    __module__ = __name__
     notify = directNotify.newCategory('Cabin')
 
     def __init__(self, cr):
@@ -37,7 +35,6 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
         self.railing = None
         self.details = None
         self.propCollisions = NodePath('Collisions-Cabin')
-        return
 
     def disable(self):
         SplattableObject.SplattableObject.disable(self)
@@ -59,14 +56,14 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
         if self.propCollisions:
             self.propCollisions.removeNode()
             self.propCollisions = None
+
         self.removeNode()
-        return
 
     def loadHigh(self):
         filePrefix = self.getPrefix(self.dna.cabinType)
-        result, data = ShipGlobals.getShipGeom('%s-geometry_High' % filePrefix)
+        (result, data) = ShipGlobals.getShipGeom('%s-geometry_High' % filePrefix)
         if result:
-            geom, static = data
+            (geom, static) = data
             hull = geom.copyTo(hidden)
             self.geom_High = hull
             self.tightBounds = hull.getTightBounds()
@@ -97,20 +94,22 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def unloadHigh(self):
         if not self.geom_High:
             return
+
         if self.geom_High.isEmpty():
             return
+
         if not self.panelsHigh:
             return
+
         self.geom_High.removeNode()
         self.geom_High = None
         self.panelsHigh = []
-        return
 
     def loadMedium(self):
         filePrefix = self.getPrefix(self.dna.cabinType)
-        result, data = ShipGlobals.getShipGeom('%s-geometry_Medium' % filePrefix)
+        (result, data) = ShipGlobals.getShipGeom('%s-geometry_Medium' % filePrefix)
         if result:
-            geom, static = data
+            (geom, static) = data
             hull = geom.copyTo(hidden)
             self.geom_Medium = hull
             staticGeom = static.copyTo(hidden)
@@ -143,19 +142,21 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def unloadMedium(self):
         if not self.geom_Medium:
             return
+
         if self.geom_Medium.isEmpty():
             return
+
         if not self.panelsMed:
             return
+
         self.geom_Medium.removeNode()
         self.geom_Medium = None
         self.panelsMed = []
         self.flashPanelMed = {}
-        return
 
     def loadLow(self):
         filePrefix = self.getPrefix(self.dna.cabinType)
-        result, data = ShipGlobals.getShipGeom('%s-geometry_Low' % filePrefix)
+        (result, data) = ShipGlobals.getShipGeom('%s-geometry_Low' % filePrefix)
         if result:
             hull = data[0].copyTo(hidden)
             self.geom_Low = hull
@@ -172,25 +173,30 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def unloadLow(self):
         if not self.geom_Low:
             return
+
         if self.geom_Low.isEmpty():
             return
+
         if not self.panelsLow:
             return
+
         self.geom_Low.removeNode()
         self.geom_Low = None
         self.panelsLow = []
         self.flashPanelLow = {}
-        return
 
     def loadCollisions(self):
         if config.GetBool('disable-ship-geom', 0):
             return
+
         if self.collisions and self.prop or self.isEmpty():
             return
+
         filePrefix = self.getPrefix(self.dna.cabinType)
-        self.collisions = loader.loadModelCopy(filePrefix + '-collisions')
+        self.collisions = loader.loadModel(filePrefix + '-collisions')
         if not self.collisions:
             return
+
         self.collisions.reparentTo(self.propCollisions)
         numPanels = self.collisions.findAllMatches('**/collision_panel_*').getNumPaths()
         for i in range(numPanels):
@@ -202,12 +208,13 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def unloadCollisions(self):
         if not self.collisions:
             return
+
         if self.collisions.isEmpty():
             return
+
         self.collisions.removeNode()
         self.collisions = None
         self.collPanels = []
-        return
 
     def getPrefix(self, shipClass):
         filePrefix = CabinDNA.CabinDict.get(shipClass)
@@ -230,10 +237,12 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
             collideMask ^= PiratesGlobals.FloorBitmask
             collideMask |= PiratesGlobals.ShipFloorBitmask
             self.floors.setCollideMask(collideMask)
+
         collNodes = self.collisions.findAllMatches('**/collision_floors/*')
         for i in range(0, collNodes.getNumPaths()):
             if ship:
                 collNodes[i].setName(ship.deckName)
+
             setCannonballTags(collNodes[i])
             collNodes[i].setTag('hullCode', str(255))
             collNodes[i].setTag('objType', '9')
@@ -242,6 +251,7 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
         self.floors = self.collisions.find('**/collision_floors')
         if not self.floors.isEmpty():
             self.floors.flattenStrong()
+
         self.railing = self.collisions.find('**/collision_railing')
         if not self.railing.isEmpty():
             self.railing.flattenStrong()
@@ -252,19 +262,23 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
             self.railing.setTag('floorType', str(PiratesGlobals.COLL_EXIT))
             if ship:
                 self.railing.setName(ship.railingName)
+
             setCannonballTags(self.railing)
             self.railing.setTag('hullCode', str(255))
             self.addTargetableCollision(self.railing)
+
         collNode = self.collisions.find('**/collision_walls')
         if not collNode.isEmpty():
             setCannonballTags(collNode)
             collNode.setTag('hullCode', str(255))
             self.addTargetableCollision(collNode)
+
         collNode = self.collisions.find('**/collision_cannoncoll')
         if not collNode.isEmpty():
             setCannonballTags(collNode)
             collNode.setTag('hullCode', str(255))
             self.addTargetableCollision(collNode)
+
         for i in range(len(self.collPanels)):
             setCannonballTags(self.collPanels[i])
             self.collPanels[i].setTag('hullCode', str(i + 1))
@@ -273,6 +287,7 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
         if base.localAvatar and base.localAvatar.ship:
             if base.localAvatar.ship != self.ship:
                 self.stashFloorCollisions()
+
         else:
             self.stashFloorCollisions()
         self.setTargetBitmask(1)
@@ -282,6 +297,7 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
         if self.railing:
             if not self.railing.isEmpty():
                 self.railing.stash()
+
         if self.floors:
             if not self.floors.isEmpty():
                 self.floors.stash()
@@ -291,6 +307,7 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
         if self.railing:
             if not self.railing.isEmpty():
                 self.railing.unstash()
+
         if self.floors:
             if not self.floors.isEmpty():
                 self.floors.unstash()
@@ -312,7 +329,7 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
         else:
             sfx = random.choice(self.distantBreakSfx)
             base.playSfx(sfx, node=self.ship, cutoff=2000)
-        cannonCode, hullCode, sailCode = codes
+        (cannonCode, hullCode, sailCode) = codes
         if hullCode != 255:
             index = hullCode - 1
             self.playHoleSplat(pos, normal, index)
@@ -331,4 +348,3 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def addToShip(self):
         ShipPart.ShipPart.addToShip(self)
         self.propCollisions.reparentTo(self.ship.modelCollisions)
-# okay decompiling .\pirates\shipparts\Cabin.pyc

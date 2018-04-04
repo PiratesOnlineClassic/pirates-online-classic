@@ -349,34 +349,36 @@ class ChatPanel(DirectFrame, FSM):
     def decodeOpenMessage(self, message):
         chatCode = None
         chatString = ''
-        if message.getType() in (TYPEDCHAT, SPEEDCHAT_NORMAL, SPEEDCHAT_EMOTE, SPEEDCHAT_CUSTOM, AVATAR_UNAVAILABLE, GMCHAT):
+        if message.getType() in (
+        TYPEDCHAT, SPEEDCHAT_NORMAL, SPEEDCHAT_EMOTE, SPEEDCHAT_CUSTOM, AVATAR_UNAVAILABLE, GMCHAT):
             whisper = message.getWhisper()
             avName = message.getName()
             if message.getType() == SPEEDCHAT_NORMAL:
                 someMessage = SCDecoders.decodeSCStaticTextMsg(message.getBody())
-            else:
-                if message.getType() == SPEEDCHAT_EMOTE:
-                    from pirates.piratesbase import PLocalizer
-                    if message.sentRatherThanReceived:
-                        someMessage = PLocalizer.EmoteMessagesSelf.get(message.getBody(), None)
-                        if someMessage is None:
-                            self.notify.warning('Invalid emote ID: %s' % message.getBody())
-                            return 'Invalid emote ID: %s'
-                    else:
-                        someMessage = PLocalizer.EmoteMessagesThirdPerson[message.getBody()] % avName
-                        if someMessage is None:
-                            self.notify.warning('Invalid emote ID: %s' % message.getBody())
-                            return 'Invalid emote ID: %s'
+            elif message.getType() == SPEEDCHAT_EMOTE:
+                from pirates.piratesbase import PLocalizer
+                if message.sentRatherThanReceived:
+                    someMessage = PLocalizer.EmoteMessagesSelf.get(message.getBody(), None)
+                    if someMessage is None:
+                        self.notify.warning('Invalid emote ID: %s' % message.getBody())
+                        return 'Invalid emote ID: %s'
+
                 else:
-                    if message.getType() == SPEEDCHAT_CUSTOM:
-                        someMessage = SCDecoders.decodeSCCustomMsg(message.getBody(), message.getName())
-                    else:
-                        someMessage = message.getBody()
+                    someMessage = PLocalizer.EmoteMessagesThirdPerson[message.getBody()] % avName
+                    if someMessage is None:
+                        self.notify.warning('Invalid emote ID: %s' % message.getBody())
+                        return 'Invalid emote ID: %s'
+
+            elif message.getType() == SPEEDCHAT_CUSTOM:
+                someMessage = SCDecoders.decodeSCCustomMsg(message.getBody(), message.getName())
+            else:
+                someMessage = message.getBody()
             if message.getWhisper():
                 if message.getSentRatherThanReceived():
                     avName = OTPLocalizer.WhisperToFormatName % avName
                 else:
                     avName = OTPLocalizer.WhisperFromFormatName % avName
+
             if message.getType() in (SPEEDCHAT_EMOTE, AVATAR_UNAVAILABLE):
                 fullMsg = someMessage
             else:
@@ -391,24 +393,23 @@ class ChatPanel(DirectFrame, FSM):
                         formattedMsg = '\x01CPOrange\x01' + wrappedText[0] + '\x02'
                         if message.getType() in (AVATAR_UNAVAILABLE,):
                             formattedMsg = '\x01slant\x01%s\x02' % (formattedMsg,)
+
+                    elif message.getType() == GMCHAT:
+                        formattedName = ''
+                        formattedMsg = '\x01CPGoldGM\x01' + wrappedText[0] + '\x02'
                     else:
-                        if message.getType() == GMCHAT:
-                            formattedName = ''
-                            formattedMsg = '\x01CPGoldGM\x01' + wrappedText[0] + '\x02'
-                        else:
-                            formattedName = ''
-                            formattedMsg = wrappedText[0]
+                        formattedName = ''
+                        formattedMsg = wrappedText[0]
                     wrappedText[0] = formattedName + formattedMsg
+                elif whisper:
+                    wrappedText[i] = '%s%s%s%s' % ('\x01CPOrange\x01', tab, wrappedText[i], '\x02')
+                elif message.getType() == GMCHAT:
+                    wrappedText[i] = '%s%s%s%s' % ('\x01CPGoldGM\x01', tab, wrappedText[i], '\x02')
                 else:
-                    if whisper:
-                        wrappedText[i] = '%s%s%s%s' % ('\x01CPOrange\x01', tab, wrappedText[i], '\x02')
-                    else:
-                        if message.getType() == GMCHAT:
-                            wrappedText[i] = '%s%s%s%s' % ('\x01CPGoldGM\x01', tab, wrappedText[i], '\x02')
-                        else:
-                            wrappedText[i] = '%s%s%s%s' % ('\x01CPWhite\x01', tab, wrappedText[i], '\x02')
+                    wrappedText[i] = '%s%s%s%s' % ('\x01CPWhite\x01', tab, wrappedText[i], '\x02')
                 if i < len(wrappedText) - 1:
                     wrappedText[i] += '\n'
+                    continue
 
             for text in wrappedText:
                 chatString += text
@@ -417,41 +418,38 @@ class ChatPanel(DirectFrame, FSM):
             someMessage = '%s' % message.getBody()
             if message.getType() == GUILDCHAT:
                 chatCode = 'CPLtBlue'
+            elif message.getType() == GAMECHAT:
+                chatCode = 'CPGreenSlant'
+            elif message.getType() == PARTYCHAT:
+                chatCode = 'CPPurple'
+            elif message.getType() == SYSTEMCHAT:
+                chatCode = 'CPGoldSlant'
+            elif message.getType() == GUILD_UPDATE:
+                chatCode = 'CPLtBlue'
+            elif message.getType() == FRIEND_UPDATE:
+                chatCode = 'CPYellow'
+            elif message.getType() == CREW_UPDATE:
+                chatCode = 'CPPurple'
+            elif message.getType() == SHIPPVPCHAT:
+                chatCode = 'CPLtGold'
             else:
-                if message.getType() == GAMECHAT:
-                    chatCode = 'CPGreenSlant'
-                else:
-                    if message.getType() == PARTYCHAT:
-                        chatCode = 'CPPurple'
-                    else:
-                        if message.getType() == SYSTEMCHAT:
-                            chatCode = 'CPGoldSlant'
-                        else:
-                            if message.getType() == GUILD_UPDATE:
-                                chatCode = 'CPLtBlue'
-                            else:
-                                if message.getType() == FRIEND_UPDATE:
-                                    chatCode = 'CPYellow'
-                                else:
-                                    if message.getType() == CREW_UPDATE:
-                                        chatCode = 'CPPurple'
-                                    else:
-                                        if message.getType() == SHIPPVPCHAT:
-                                            chatCode = 'CPLtGold'
-                                        print 'Error no type'
-        self.wordWrapper.setText(someMessage)
-        wrappedText = self.wordWrapper.getWordwrappedText().split('\n')
-        tab = '    '
-        for i in range(len(wrappedText)):
-            if i > 0:
-                wrappedText[i] = '%s%s' % (tab, wrappedText[i])
-            if chatCode:
-                wrappedText[i] = '%s%s%s%s%s' % ('\x01', chatCode, '\x01', wrappedText[i], '\x02')
-            if i < len(wrappedText) - 1:
-                wrappedText[i] += '\n'
+                print 'Error no type'
+            self.wordWrapper.setText(someMessage)
+            wrappedText = self.wordWrapper.getWordwrappedText().split('\n')
+            tab = '    '
+            for i in range(len(wrappedText)):
+                if i > 0:
+                    wrappedText[i] = '%s%s' % (tab, wrappedText[i])
 
-        for text in wrappedText:
-            chatString += text
+                if chatCode:
+                    wrappedText[i] = '%s%s%s%s%s' % ('\x01', chatCode, '\x01', wrappedText[i], '\x02')
+
+                if i < len(wrappedText) - 1:
+                    wrappedText[i] += '\n'
+                    continue
+
+            for text in wrappedText:
+                chatString += text
 
         return chatString
 

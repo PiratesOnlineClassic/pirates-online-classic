@@ -1,27 +1,27 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.DistributedHull
+import random
 import copy
 import math
-import random
-
-from direct.distributed import DistributedObject
-from direct.distributed.ClockDelta import *
-from direct.gui.DirectGui import *
+from direct.showbase.PythonUtil import report, quickProfile
 from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import quickProfile, report
+from direct.distributed.ClockDelta import *
+from direct.distributed import DistributedObject
+from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.battle import CannonGlobals, WeaponGlobals
-from pirates.destructibles import DistributedDestructibleArray
-from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesbase.PiratesGlobals import *
-from pirates.ship import ShipBalance, ShipGlobals
-from pirates.shipparts import DistributedShippart, Hull, HullDNA
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.ship import ShipGlobals
+from pirates.ship import ShipBalance
+from pirates.battle import CannonGlobals
+from pirates.battle import WeaponGlobals
+from pirates.shipparts import HullDNA
+from pirates.shipparts import Hull
+from pirates.shipparts import DistributedShippart
+from pirates.destructibles import DistributedDestructibleArray
 
 
-class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestructibleArray.DistributedDestructibleArray):
-    __module__ = __name__
+class DistributedHull(DistributedShippart.DistributedShippart,
+                      DistributedDestructibleArray.DistributedDestructibleArray):
     notify = directNotify.newCategory('DistributedHull')
 
     def __init__(self, cr):
@@ -29,7 +29,16 @@ class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestru
         DistributedDestructibleArray.DistributedDestructibleArray.__init__(self, cr)
         NodePath.__init__(self, 'DistributedHull')
         self.stats = None
-        self.hackHullTransform = {0: 0, 1: 5, 2: 6, 3: 3, 4: 4, 5: 1, 6: 2, 7: 7, 8: 8}
+        self.hackHullTransform = {
+            0: 0,
+            1: 5,
+            2: 6,
+            3: 3,
+            4: 4,
+            5: 1,
+            6: 2,
+            7: 7,
+            8: 8}
         self.prop = None
         self.listingThreshold = 2
         self.listingIncrement = 5
@@ -39,7 +48,6 @@ class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestru
         self.rightDamageLvl = 0
         self.pendingLoadStats = None
         self.pendingStateTest = None
-        return
 
     def generate(self):
         self.notify.debug('Generate ' + str(self.doId))
@@ -63,16 +71,19 @@ class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestru
                 self.ship.hull[1] = self
                 self.stashFloorCollisions()
                 return
+
         self.prop = Hull.Hull(self.ship, base.cr)
         self.prop.shipId = self.shipId
         self.prop.doId = self.doId
         self.ship.hull = [
-         self.prop, self]
+            self.prop,
+            self]
         self.stashFloorCollisions()
 
     def propLoaded(self):
         if self.ship.getHp() <= 0:
             return
+
         for i in range(len(self.arrayHp)):
             if self.arrayHp[i] <= 0:
                 panelIndex = self.prop.getPanelIndex(i)
@@ -88,11 +99,11 @@ class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestru
         del self.dna
         if self.ship.hull:
             self.ship.hull[1] = None
+
         del self.leftDamageLvl
         del self.rightDamageLvl
         DistributedShippart.DistributedShippart.delete(self)
         DistributedDestructibleArray.DistributedDestructibleArray.delete(self)
-        return
 
     def getFlagDNAString(self):
         return self.ship.getFlagDNAString()
@@ -102,11 +113,14 @@ class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestru
 
     def getArmorStatus(self):
         if len(self.arrayHp) % 2 == 1:
-            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]) / float(self.maxArrayHp[1] + self.maxArrayHp[3] + self.maxArrayHp[5])
+            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]) / float(
+                self.maxArrayHp[1] + self.maxArrayHp[3] + self.maxArrayHp[5])
             rear = 1.0 - self.arrayHp[0] / float(self.maxArrayHp[0])
-            right = 1.0 - (self.arrayHp[2] + self.arrayHp[4] + self.arrayHp[6]) / float(self.maxArrayHp[2] + self.maxArrayHp[4] + self.maxArrayHp[6])
+            right = 1.0 - (self.arrayHp[2] + self.arrayHp[4] + self.arrayHp[6]) / float(
+                self.maxArrayHp[2] + self.maxArrayHp[4] + self.maxArrayHp[6])
         else:
-            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]) / float(self.maxArrayHp[1] + self.maxArrayHp[3] + self.maxArrayHp[5])
+            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]) / float(
+                self.maxArrayHp[1] + self.maxArrayHp[3] + self.maxArrayHp[5])
             rear = 1.0 - self.arrayHp[0] / float(self.maxArrayHp[0])
             right = 1.0 - (self.arrayHp[2] + self.arrayHp[4]) / float(self.maxArrayHp[2] + self.maxArrayHp[4])
         return (left, rear, right)
@@ -118,9 +132,11 @@ class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestru
             deltaHp = int(hpArray[index] - self.arrayHp[index])
             if deltaHp > 0 and self.arrayHp[index] == 0:
                 self.respawn(index)
+
             self.arrayHp[index] = int(hpArray[index])
             if base.cr.config.GetBool('want-ship-hpdisplay', 0) is 1:
                 self.updateHpDisplay(index)
+
             if deltaHp < 0:
                 if self.prop:
                     if self.arrayHp[index] <= 0 and self.arrayHp[index] - deltaHp > 0:
@@ -132,6 +148,7 @@ class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestru
 
         if self.ship:
             self.ship.adjustArmorDisplay()
+
         for index in range(len(self.arrayHp)):
             if index % 2 == 1:
                 if self.arrayHp[index] <= 0:
@@ -146,11 +163,13 @@ class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestru
 
     def getArrayHp(self):
         return [
-         self.arrayHp, self.maxArrayHp]
+            self.arrayHp,
+            self.maxArrayHp]
 
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         if self.ship.invulnerable():
             return
+
         self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
 
     def playDeath(self, index=None):
@@ -183,10 +202,13 @@ class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestru
     def loadStats(self, ship):
         if self.stats:
             return
+
         if not self.dna.shipClass:
             return
+
         if self.dna.baseTeam == PiratesGlobals.INVALID_TEAM:
             return
+
         self.stats = ShipGlobals.getHullStats(self.dna.shipClass)
         if self.stats:
             self.maxArrayHp = copy.copy(self.stats['maxArrayHp'])
@@ -210,7 +232,9 @@ class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestru
         DistributedShippart.DistributedShippart.setShipId(self, shipId)
         if self.pendingLoadStats:
             base.cr.relatedObjectMgr.abortRequest(self.pendingLoadStats)
-        self.pendingLoadStats = base.cr.relatedObjectMgr.requestObjects([self.shipId], eachCallback=self.loadStats)
+
+        self.pendingLoadStats = base.cr.relatedObjectMgr.requestObjects([
+            self.shipId], eachCallback=self.loadStats)
 
     def setShipClass(self, val):
         self.dna.setShipClass(val)
@@ -304,4 +328,3 @@ class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestru
 
     def addPropToShip(self):
         self.prop.addToShip()
-# okay decompiling .\pirates\shipparts\DistributedHull.pyc
