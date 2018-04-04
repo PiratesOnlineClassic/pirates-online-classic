@@ -109,6 +109,7 @@ class PiratesClientRepository(OTPClientRepository):
         self.matchMaker = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_MATCH_MAKER, 'DistributedMatchMaker')
         self.codeRedemption = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_CODE_REDEMPTION, 'CodeRedemption')
         self.settingsMgr = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_SETTINGS_MANAGER, 'PiratesSettingsMgr')
+        self.csm = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
         self.wantSeapatch = base.config.GetBool('want-seapatch', 1)
         self.wantSpecialEffects = base.config.GetBool('want-special-effects', 1)
         self.wantMakeAPirate = base.config.GetBool('wantMakeAPirate', 0)
