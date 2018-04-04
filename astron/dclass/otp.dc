@@ -33,7 +33,6 @@ struct AvatarPendingDel {
 dclass Account {
   string DcObjectType db;
   uint32 ACCOUNT_AV_SET[] required db;
-  uint32 ESTATE_ID db;
   AvatarPendingDel ACCOUNT_AV_SET_DEL[] db;
   string CREATED db;
   string LAST_LOGIN db;

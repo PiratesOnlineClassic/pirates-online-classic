@@ -117,8 +117,6 @@ class DeveloperAccountDB(AccountDB):
                 'accountId': 0,
                 'accessLevel': max(600, minAccessLevel)
             }
-            callback(response)
-            return response
 
         else:
 
@@ -128,8 +126,8 @@ class DeveloperAccountDB(AccountDB):
                 'userId': username,
                 'accountId': int(self.dbm[str(username)]),
             }
-            callback(response)
-            return response
+
+        callback(response)
 
 
 # This is the same as the DeveloperAccountDB, except it doesn't automatically
@@ -341,8 +339,7 @@ class LoginAccountFSM(OperationFSM):
 
     def enterCreateAccount(self):
         self.account = {
-            'ACCOUNT_AV_SET': [0] * 6,
-            'ESTATE_ID': 0,
+            'ACCOUNT_AV_SET': [0] * 4,
             'ACCOUNT_AV_SET_DEL': [],
             'CREATED': time.ctime(),
             'LAST_LOGIN': time.ctime(),
@@ -548,9 +545,10 @@ class AvatarOperationFSM(OperationFSM):
         self.account = fields
 
         self.avList = self.account['ACCOUNT_AV_SET']
+
         # Sanitize:
-        self.avList = self.avList[:6]
-        self.avList += [0] * (6-len(self.avList))
+        self.avList = self.avList[:4]
+        self.avList += [0] * (4-len(self.avList))
 
         self.demand(self.POST_ACCOUNT_STATE)
 
@@ -646,19 +644,6 @@ class DeleteAvatarFSM(GetAvatarsFSM):
         avsDeleted = list(self.account.get('ACCOUNT_AV_SET_DEL', []))
         avsDeleted.append([self.avId, int(time.time())])
 
-        estateId = self.account.get('ESTATE_ID', 0)
-
-        if estateId != 0:
-            # This assumes that the house already exists, but it shouldn't
-            # be a problem if it doesn't.
-            self.csm.air.dbInterface.updateObject(
-                self.csm.air.dbId,
-                estateId,
-                self.csm.air.dclassesByName['DistributedEstateAI'],
-                {'setSlot%dToonId' % index: [0],
-                 'setSlot%dItems' % index: [[]]}
-            )
-
         self.csm.air.dbInterface.updateObject(
             self.csm.air.dbId,
             self.target,
@@ -668,6 +653,7 @@ class DeleteAvatarFSM(GetAvatarsFSM):
             {'ACCOUNT_AV_SET': self.account['ACCOUNT_AV_SET'],
              'ACCOUNT_AV_SET_DEL': self.account['ACCOUNT_AV_SET_DEL']},
             self.__handleDelete)
+
         self.csm.accountDB.removeNameRequest(self.avId)
 
     def __handleDelete(self, fields):
