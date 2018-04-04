@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesbase.PiratesBase
 import __builtin__
 import os
 import sys
@@ -41,8 +37,11 @@ class PiratesBase(OTPBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesBase')
     lowMemoryStreamAudio = ConfigVariableBool('low-memory-stream-audio', 1)
     resolution_table = [
-     (
-      800, 600), (1024, 768), (1280, 1024), (1600, 1200)]
+     (800, 600), 
+     (1024, 768), 
+     (1280, 1024), 
+     (1600, 1200)
+    ]
     widescreen_resolution_table = [(1280, 720), (1920, 1080)]
     MinimumHorizontalResolution = 800
     MinimumVerticalResolution = 600
@@ -66,32 +65,25 @@ class PiratesBase(OTPBase):
             self.getDisplayResolutions(bits_per_pixel, base.pipe)
         use_recommended_options = False
         options = Options()
-        if __dev__:
-            Options.DEFAULT_FILE_PATH = Filename.expandFrom('$HOME/game_options.txt').toOsSpecific()
-            Options.WORKING_FILE_PATH = Filename.expandFrom('$HOME/last_working_options.txt').toOsSpecific()
-            Options.POSSIBLE_WORKING_FILE_PATH = Filename.expandFrom('$HOME/p_working_options.txt').toOsSpecific()
         options_loaded = options.load(Options.DEFAULT_FILE_PATH)
         if options_loaded:
             if options.state == Options.DEFAULT_STATE or options.state == Options.NEW_STATE:
                 options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
-            else:
-                if options.state == Options.ATTEMPT_STATE:
-                    working_options = Options()
-                    if working_options.load(Options.WORKING_FILE_PATH):
-                        options = working_options
-                        working_options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_WORKING_STATE)
-                    else:
-                        options.config_to_options()
-                        use_recommended_options = True
+            elif options.state == Options.ATTEMPT_STATE:
+                working_options = Options()
+                if working_options.load(Options.WORKING_FILE_PATH):
+                    options = working_options
+                    working_options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_WORKING_STATE)
                 else:
-                    if options.state == Options.WORKING_STATE:
-                        options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
-                    else:
-                        if options.state == Options.ATTEMPT_WORKING_STATE:
-                            options.config_to_options()
-                            use_recommended_options = True
-                        else:
-                            options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
+                    options.config_to_options()
+                    use_recommended_options = True
+            elif options.state == Options.WORKING_STATE:
+                options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
+            elif options.state == Options.ATTEMPT_WORKING_STATE:
+                options.config_to_options()
+                use_recommended_options = True
+            else:
+                options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
             string = options.pipeOptionsToPrcData()
             if string:
                 loadPrcFileData('game_options', string)
@@ -409,17 +401,16 @@ class PiratesBase(OTPBase):
         if sys.platform == 'darwin':
             import os
             os.system('/usr/bin/open %s' % url)
+        elif sys.platform == 'linux2':
+            import webbrowser
+            webbrowser.open(url)
         else:
-            if sys.platform == 'linux2':
+            try:
                 import webbrowser
                 webbrowser.open(url)
-            else:
-                try:
-                    import webbrowser
-                    webbrowser.open(url)
-                except WindowsError, e:
-                    import os
-                    os.system('explorer "%s"' % url)
+            except WindowsError, e:
+                import os
+                os.system('explorer "%s"' % url)
 
     def refreshAds(self):
         self.notify.debug('Refresh Ads')
@@ -433,14 +424,12 @@ class PiratesBase(OTPBase):
         self.gridDetail = gridDetail
         if gridDetail == 'high':
             self.farCull.setPos(0, 10000, 0)
+        elif gridDetail == 'med':
+            self.farCull.setPos(0, 5000, 0)
+        elif gridDetail == 'low':
+            self.farCull.setPos(0, 200, 0)
         else:
-            if gridDetail == 'med':
-                self.farCull.setPos(0, 5000, 0)
-            else:
-                if gridDetail == 'low':
-                    self.farCull.setPos(0, 200, 0)
-                else:
-                    raise StandardError, 'Invalid grid-detail: %s' % gridDetail
+            raise StandardError, 'Invalid grid-detail: %s' % gridDetail
 
     def setLowMemory(self, lowMemory):
         self.lowMemory = lowMemory
@@ -502,18 +491,14 @@ class PiratesBase(OTPBase):
         pandafile = Filename(str(ExecutionEnvironment.getCwd()) + '/' + str(fn))
         winfile = pandafile.toOsSpecific()
         self.notify.info('Screenshot captured: ' + winfile)
-        screenShotNotice = DirectLabel(text='Screenshot captured:\n' + winfile, scale=0.05, pos=(0.0,
-                                                                                                 0.0,
-                                                                                                 0.3), text_bg=(1,
-                                                                                                                1,
-                                                                                                                1,
-                                                                                                                0), text_fg=(1,
-                                                                                                                             1,
-                                                                                                                             1,
-                                                                                                                             1), frameColor=(1,
-                                                                                                                                             1,
-                                                                                                                                             1,
-                                                                                                                                             0), text_font=PiratesGlobals.getInterfaceOutlineFont())
+        screenShotNotice = DirectLabel(
+            text='Screenshot captured:\n' + winfile, 
+            scale=0.05, 
+            pos=(0.0, 0.0, 0.3), 
+            text_bg=(1, 1, 1, 0), 
+            text_fg=(1, 1, 1, 1), 
+            frameColor=(1, 1, 1,0), 
+            text_font=PiratesGlobals.getInterfaceOutlineFont())
         screenShotNotice.reparentTo(base.a2dBottomCenter)
         screenShotNotice.setBin('gui-popup', 0)
 
@@ -809,4 +794,3 @@ class PiratesBase(OTPBase):
 
     def getHoliday(self, holidayId):
         return self.holidays.get(holidayId)
-# okay decompiling .\pirates\piratesbase\PiratesBase.pyc

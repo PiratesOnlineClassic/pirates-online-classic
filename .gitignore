@@ -112,3 +112,7 @@ cache/
 # Visual Code
 .vscode/
 .vs/
+
+# Client
+**/game_options.txt
+**/p_working_options.txt
