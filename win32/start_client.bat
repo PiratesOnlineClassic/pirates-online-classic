@@ -6,8 +6,6 @@ echo Choose your server (Default: Localhost)
 echo #1 - Localhost
 echo #2 - Custom
 
-:selection
-
 set INPUT=-1
 set /P INPUT=Selection: 
 
