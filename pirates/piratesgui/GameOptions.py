@@ -245,7 +245,7 @@ class Options(OptionSpace):
                 'default', 'pandagl', 'pandadx7', 'pandadx8', 'pandadx9'])
             self.window_width = self.validate(int, 'window_width', 0)
             self.window_height = self.validate(int, 'window_height', 0)
-            if (elf.window_width, self.window_height) not in base.windowed_resolution_table:
+            if (self.window_width, self.window_height) not in base.windowed_resolution_table:
                 self.window_width, self.window_height = base.windowed_resolution_table[0]
             self.fullscreen_width = self.validate(int, 'fullscreen_width', 0)
             self.fullscreen_height = self.validate(int, 'fullscreen_height', 0)

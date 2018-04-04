@@ -56,7 +56,6 @@ class AvatarShadowCaster(DirectObject):
         self.shadowTex.setWrapU(Texture.WMBorderColor)
         self.shadowTex.setWrapV(Texture.WMBorderColor)
         self.casterState = NodePath('temp')
-        self.casterState.setAttrib(DrawMaskAttrib.makeShow())
         self.casterState.setColorScaleOff(2)
         self.casterState.setColor(self.shadowColor, self.shadowColor, self.shadowColor, 1, 2)
         self.casterState.setTextureOff(2)

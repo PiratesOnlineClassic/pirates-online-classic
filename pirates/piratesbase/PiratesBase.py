@@ -110,11 +110,11 @@ class PiratesBase(OTPBase):
                     break
 
         options.automaticGrapghicsApiSelection(base.pipe)
-        if use_recommended_options:
-            options.recommendedOptions(base.pipe, False)
-            options.log('Recommended Game Options')
-        overwrite_options = True
         # TODO: FIXME!
+        #if use_recommended_options:
+        #    options.recommendedOptions(base.pipe, False)
+        #    options.log('Recommended Game Options')
+        #overwrite_options = True
         #options.verifyOptions(base.pipe, overwrite_options)
         string = options.optionsToPrcData()
         loadPrcFileData('game_options', string)
