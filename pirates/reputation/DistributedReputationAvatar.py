@@ -22,7 +22,7 @@ class DistributedReputationAvatar(DistributedAvatar.DistributedAvatar, Distribut
         DistributedMovingObject.DistributedMovingObject.__init__(self, cr)
         DistributedInteractive.DistributedInteractive.__init__(self, cr)
         DistributedQuestGiver.DistributedQuestGiver.__init__(self)
-        self.nametag.setNameWordwrap(PiratesGlobals.NAMETAG_WORDWRAP)
+        self.nametag.setWordwrap(PiratesGlobals.NAMETAG_WORDWRAP)
 
     def generate(self):
         DistributedAvatar.DistributedAvatar.generate(self)
@@ -63,6 +63,7 @@ class DistributedReputationAvatar(DistributedAvatar.DistributedAvatar, Distribut
             doId = self.doId
         else:
             doId = 'no doId'
+
         name = self.getName()
         return '%s: %s: "%s"' % (className, doId, name)
 # okay decompiling .\pirates\reputation\DistributedReputationAvatar.pyc

@@ -7,6 +7,7 @@ import time
 
 import AvatarDNA
 from Avatar import Avatar
+from panda3d.core import *
 from direct.actor.DistributedActor import DistributedActor
 from direct.distributed import DistributedNode
 from direct.showbase import PythonUtil
@@ -14,7 +15,7 @@ from direct.task import Task
 from otp.chat import ChatGarbler, ChatManager
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.speedchat import SCDecoders
-from pandac.PandaModules import *
+from otp.nametag.Nametag import Nametag
 
 
 class DistributedAvatar(DistributedActor, Avatar):
@@ -35,7 +36,6 @@ class DistributedAvatar(DistributedActor, Avatar):
         self.hpText = None
         self.hp = None
         self.maxHp = None
-        return
 
     def disable(self):
         self.reparentTo(hidden)
@@ -47,7 +47,6 @@ class DistributedAvatar(DistributedActor, Avatar):
         self.ignore('nameTagShowName')
         self.ignoreNametagAmbientLightChange()
         DistributedActor.disable(self)
-        return
 
     def delete(self):
         try:
@@ -63,6 +62,7 @@ class DistributedAvatar(DistributedActor, Avatar):
         if not self.isLocal():
             self.addActive()
             self.considerUnderstandable()
+
         self.setParent(OTPGlobals.SPHidden)
         self.setTag('avatarDoId', str(self.doId))
         self.accept('nameTagShowAvId', self.__nameTagShowAvId)
@@ -71,6 +71,7 @@ class DistributedAvatar(DistributedActor, Avatar):
     def announceGenerate(self):
         if not self.isLocal():
             self.initializeBodyCollisions('distAvatarCollNode-' + str(self.doId))
+
         DistributedActor.announceGenerate(self)
 
     def __setTags(self, extra=None):
@@ -93,20 +94,22 @@ class DistributedAvatar(DistributedActor, Avatar):
     def toonUp(self, hpGained):
         if self.hp == None or hpGained < 0:
             return
+
         oldHp = self.hp
         if self.hp + hpGained <= 0:
             self.hp += hpGained
         else:
             self.hp = min(max(self.hp, 0) + hpGained, self.maxHp)
+
         hpGained = self.hp - max(oldHp, 0)
         if hpGained > 0:
             self.showHpText(hpGained)
             self.hpChange(quietly=0)
-        return
 
     def takeDamage(self, hpLost, bonus=0):
         if self.hp == None or hpLost < 0:
             return
+
         oldHp = self.hp
         self.hp = max(self.hp - hpLost, 0)
         hpLost = oldHp - self.hp
@@ -115,7 +118,6 @@ class DistributedAvatar(DistributedActor, Avatar):
             self.hpChange(quietly=0)
             if self.hp <= 0 and oldHp > 0:
                 self.died()
-        return
 
     def setHp(self, hitPoints):
         justRanOutOfHp = hitPoints is not None and self.hp is not None and self.hp - hitPoints > 0 and hitPoints <= 0
@@ -123,15 +125,14 @@ class DistributedAvatar(DistributedActor, Avatar):
         self.hpChange(quietly=1)
         if justRanOutOfHp:
             self.died()
-        return
 
     def hpChange(self, quietly=0):
         if hasattr(self, 'doId'):
             if self.hp != None and self.maxHp != None:
                 messenger.send(self.uniqueName('hpChange'), [self.hp, self.maxHp, quietly])
+
             if self.hp != None and self.hp > 0:
                 messenger.send(self.uniqueName('positiveHP'))
-        return
 
     def died(self):
         pass
@@ -163,11 +164,13 @@ class DistributedAvatar(DistributedActor, Avatar):
             if number != 0:
                 if self.hpText:
                     self.hideHpText()
+
                 self.HpTextGenerator.setFont(OTPGlobals.getSignFont())
                 if number < 0:
                     self.HpTextGenerator.setText(str(number))
                 else:
                     self.HpTextGenerator.setText('+' + str(number))
+
                 self.HpTextGenerator.clearShadow()
                 self.HpTextGenerator.setAlign(TextNode.ACenter)
                 if bonus == 1:
@@ -192,6 +195,7 @@ class DistributedAvatar(DistributedActor, Avatar):
                             g = 0.9
                             b = 0
                             a = 1
+
                 self.HpTextGenerator.setTextColor(r, g, b, a)
                 self.hpTextNode = self.HpTextGenerator.generate()
                 self.hpText = self.attachNewNode(self.hpTextNode)
@@ -199,7 +203,9 @@ class DistributedAvatar(DistributedActor, Avatar):
                 self.hpText.setBillboardPointEye()
                 self.hpText.setBin('fixed', 100)
                 self.hpText.setPos(0, 0, self.height / 2)
-                seq = Task.sequence(self.hpText.lerpPos(Point3(0, 0, self.height + 1.5), 1.0, blendType='easeOut'), Task.pause(0.85), self.hpText.lerpColor(Vec4(r, g, b, a), Vec4(r, g, b, 0), 0.1), Task.Task(self.hideHpTextTask))
+                seq = Task.sequence(self.hpText.lerpPos(Point3(0, 0, self.height + 1.5), 1.0, blendType='easeOut'), Task.pause(0.85),
+                    self.hpText.lerpColor(Vec4(r, g, b, a), Vec4(r, g, b, 0), 0.1), Task.Task(self.hideHpTextTask))
+
                 taskMgr.add(seq, self.uniqueName('hpText'))
 
     def showHpString(self, text, duration=0.85, scale=0.7):
@@ -207,6 +213,7 @@ class DistributedAvatar(DistributedActor, Avatar):
             if text != '':
                 if self.hpText:
                     self.hideHpText()
+
                 self.HpTextGenerator.setFont(OTPGlobals.getSignFont())
                 self.HpTextGenerator.setText(text)
                 self.HpTextGenerator.clearShadow()
@@ -219,7 +226,9 @@ class DistributedAvatar(DistributedActor, Avatar):
                 self.hpText.setScale(scale)
                 self.hpText.setBillboardAxis()
                 self.hpText.setPos(0, 0, self.height / 2)
-                seq = Task.sequence(self.hpText.lerpPos(Point3(0, 0, self.height + 1.5), 1.0, blendType='easeOut'), Task.pause(duration), self.hpText.lerpColor(Vec4(r, g, b, a), Vec4(r, g, b, 0), 0.1), Task.Task(self.hideHpTextTask))
+                seq = Task.sequence(self.hpText.lerpPos(Point3(0, 0, self.height + 1.5), 1.0, blendType='easeOut'), Task.pause(duration),
+                    self.hpText.lerpColor(Vec4(r, g, b, a), Vec4(r, g, b, 0), 0.1), Task.Task(self.hideHpTextTask))
+
                 taskMgr.add(seq, self.uniqueName('hpText'))
 
     def hideHpTextTask(self, task):
@@ -231,11 +240,9 @@ class DistributedAvatar(DistributedActor, Avatar):
             taskMgr.remove(self.uniqueName('hpText'))
             self.hpText.removeNode()
             self.hpText = None
-        return
 
     def getStareAtNodeAndOffset(self):
-        return (
-         self, Point3(0, 0, self.height))
+        return (self, Point3(0, 0, self.height))
 
     def __nameTagShowAvId(self, extra=None):
         self.setDisplayName('%s\n%s' % (self.getName(), self.doId))

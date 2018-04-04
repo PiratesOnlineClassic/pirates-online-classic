@@ -233,6 +233,7 @@ class NametagGroup:
 
     def updateNametag(self, tag):
         tag.font = self.font
+        tag.active = self.active
         tag.speechFont = self.speechFont
         tag.name = self.name
         tag.wordWrap = self.wordWrap or DEFAULT_WORDWRAPS[self.colorCode]

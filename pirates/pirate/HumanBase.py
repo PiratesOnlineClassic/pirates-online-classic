@@ -4,7 +4,7 @@
 # Embedded file name: pirates.pirate.HumanBase
 import copy
 
-from pirates.pirate import HumanDNA
+from pirates.pirate.HumanDNA import HumanDNA
 
 
 class HumanBase:
@@ -16,12 +16,15 @@ class HumanBase:
     def setDNAString(self, dnaString=None):
         if dnaString == None:
             self.setDefaultDNA()
+        elif isinstance(dnaString, HumanDNA):
+            self.style = dnaString
         else:
-            self.style = copy.deepcopy(dnaString)
-        return
+            dna = HumanDNA()
+            dna.makeFromNetString(dnaString)
+            self.style = dna
 
     def setDefaultDNA(self):
-        newDNA = HumanDNA.HumanDNA()
+        newDNA = HumanDNA()
         self.style = newDNA
 
     def setTutorial(self, val):

@@ -24,7 +24,7 @@ class StatusTray(GuiTray.GuiTray):
     def __init__(self, parent, showSkills=0, **kw):
         GuiTray.GuiTray.__init__(self, parent, 0.75, 0.15, **kw)
         self.initialiseoptions(StatusTray)
-        self.name = None
+        self.name = ''
         self.sticky = False
         self.level = 0
         self.doId = 0
@@ -131,11 +131,11 @@ class StatusTray(GuiTray.GuiTray):
             self.skillFrame['image_pos'] = (0, 0, 0.02)
             self.activeName['text_align'] = TextNode.ALeft
             self.activeName.setPos(0.09, 0, 0.01)
-        return
 
     def show(self):
         if not self.doId:
             return
+
         if base.cr.doId2do[self.doId].state != 'Spawn' and base.cr.doId2do[self.doId].state != 'Death' and base.cr.doId2do[self.doId].state != 'Waiting':
             GuiTray.GuiTray.show(self)
 
@@ -145,6 +145,7 @@ class StatusTray(GuiTray.GuiTray):
         if self.card:
             self.card.removeNode()
             self.card = None
+
         self.hpMeterDownIval.pause()
         self.hpMeterUpGreenIval.pause()
         self.hpMeterUpRedIval.pause()
@@ -160,7 +161,6 @@ class StatusTray(GuiTray.GuiTray):
 
         del self.icons
         GuiTray.GuiTray.destroy(self)
-        return
 
     def updateName(self, name, level, doId):
         self.name = name
@@ -170,11 +170,13 @@ class StatusTray(GuiTray.GuiTray):
         target = base.cr.doId2do.get(doId)
         if not target:
             return
+
         color = base.cr.battleMgr.getExperienceColor(base.localAvatar, target)
         if color:
             text = '%s  \x01smallCaps\x01%s%s%s\x02\x02' % (name, color, PLocalizer.Lv, self.level)
         else:
             text = '%s' % self.name
+
         self.nameLabel['text'] = text
         self.updateIcon(doId)
 
@@ -182,14 +184,16 @@ class StatusTray(GuiTray.GuiTray):
         target = base.cr.doId2do.get(doId)
         if not target:
             return
+
         if self.currentIcon:
             self.currentIcon.hide()
+
         icon = self.icons.get(target.getTeam(), None)
         if icon:
             icon.reparentTo(self.enemyFrame)
             icon.show()
+
         self.currentIcon = icon
-        return
 
     def updateSticky(self, bool):
         self.sticky = bool
@@ -207,6 +211,7 @@ class StatusTray(GuiTray.GuiTray):
         if srcDoId != self.doId:
             if srcDoId:
                 return
+
             if self.doId != self.prevDoId and self.doId:
                 self.prevDoId = self.doId
                 hp = base.cr.doId2do[self.doId].getHp()
@@ -224,6 +229,7 @@ class StatusTray(GuiTray.GuiTray):
                         barColor = (1.0, 1.0, 0.1, 1)
                     else:
                         barColor = (1.0, 0.0, 0.0, 1)
+
                 self.hpMeter['barColor'] = barColor
                 if self.hpMeterDownIval.isPlaying():
                     self.hpMeterDownIval.finish()
@@ -236,7 +242,7 @@ class StatusTray(GuiTray.GuiTray):
                         else:
                             if self.hpMeterUpYellowIval.isPlaying():
                                 self.hpMeterUpYellowIval.finish()
-                return
+
             hpFraction = float(hp) / float(maxHp)
             if hpFraction >= 0.5:
                 barColor = (0.1, 0.7, 0.1, 1)
@@ -245,6 +251,7 @@ class StatusTray(GuiTray.GuiTray):
                     barColor = (1.0, 1.0, 0.1, 1)
                 else:
                     barColor = (1.0, 0.0, 0.0, 1)
+
             self.hpMeter['barColor'] = barColor
             self.hpMeter['range'] = maxHp
             self.hpMeter['value'] = hp
@@ -252,6 +259,7 @@ class StatusTray(GuiTray.GuiTray):
                 if not self.doId:
                     localAvatar.guiMgr.gameGui.hpModMeter['value'] = hp
                     localAvatar.guiMgr.gameGui.hpModMeter['barColor'] = barColor
+
             if not self.hideValues:
                 if not self.doId:
                     inv = localAvatar.getInventory()
@@ -264,15 +272,18 @@ class StatusTray(GuiTray.GuiTray):
                     self.hpMeter['text'] = '%s\x01Bred\x01/%s\x02' % (hp, modHp)
             else:
                 self.hpMeter['text'] = '%s/%s' % (hp, maxHp)
+
         if self.hpMeterDownIval.isPlaying():
             currentTime = self.hpMeterDownIval.getT()
         else:
             currentTime = None
+
         if currentTime is not None:
             if currentTime < 0.5:
                 self.prevValue = self.prevValue + self.prevChange
                 if self.prevValue > maxHp:
                     self.prevValue = maxHp
+
         if self.prevValue > hp:
             self.hpMeterChange.setColor(1.0, 0.0, 0.0, 1.0)
             change = float(self.prevValue - hp)
@@ -288,10 +299,13 @@ class StatusTray(GuiTray.GuiTray):
             self.hpMeterChange['frameSize'] = (0.0, frameRight, frameBottom, frameTop)
             if self.hpMeterUpGreenIval.isPlaying():
                 self.hpMeterUpGreenIval.finish()
+
             if self.hpMeterUpRedIval.isPlaying():
                 self.hpMeterUpRedIval.finish()
+
             if self.hpMeterUpYellowIval.isPlaying():
                 self.hpMeterUpYellowIval.finish()
+
             self.prevChange = change
             self.prevRange = maxHp
             self.prevValue = hp
@@ -318,26 +332,34 @@ class StatusTray(GuiTray.GuiTray):
                 if frameLeft > 0.52:
                     diff = frameLeft - 0.52
                     frameRight = float(frameRight - diff)
+
                 self.prevChange = change
                 if self.hpMeterDownIval.isPlaying():
                     self.hpMeterDownIval.finish()
+
                 if self.hpMeterUpGreenIval.isPlaying():
                     self.hpMeterUpGreenIval.finish()
+
                 if self.hpMeterUpRedIval.isPlaying():
                     self.hpMeterUpRedIval.finish()
+
                 if self.hpMeterUpYellowIval.isPlaying():
                     self.hpMeterUpYellowIval.finish()
+
                 self.prevRange = maxHp
                 self.prevValue = hp
                 self.hpMeterChange['frameSize'] = (
-                 0.0, frameRight, frameBottom, frameTop)
+                    0.0,
+                    frameRight,
+                    frameBottom,
+                    frameTop)
+
                 if hpFraction >= 0.5:
                     self.hpMeterUpGreenIval.start()
                 elif hpFraction >= 0.25:
                     self.hpMeterUpYellowIval.start()
                 else:
                     self.hpMeterUpRedIval.start()
-        return
 
     def updateVoodoo(self, voodoo, maxVoodoo, srcDoId=None):
         self.voodooMeter['range'] = maxVoodoo
@@ -345,9 +367,11 @@ class StatusTray(GuiTray.GuiTray):
         if srcDoId != self.doId:
             if srcDoId:
                 return
+
             if localAvatar.guiMgr.gameGui.voodooModMeter:
                 if not self.doId:
                     localAvatar.guiMgr.gameGui.voodooModMeter['value'] = voodoo
+
             if not self.hideValues:
                 if not self.doId:
                     inv = localAvatar.getInventory()
@@ -360,7 +384,6 @@ class StatusTray(GuiTray.GuiTray):
                     self.voodooMeter['text'] = '%s\x01Bred\x01/%s\x02' % (voodoo, modVoodoo)
             else:
                 self.voodooMeter['text'] = '%s/%s' % (voodoo, maxVoodoo)
-        return
 
     def updateLuck(self, luck, maxLuck):
         pass
@@ -411,21 +434,21 @@ class StatusTray(GuiTray.GuiTray):
         if self.durationTask:
             taskMgr.remove(self.taskName('updateStatusPanelTask'))
             self.durationTask = None
-        return
 
     def updateDurationTask(self, task):
         if len(self.skillEffects) > 0:
             if self.statusEffectsPanel:
                 self.statusEffectsPanel.updateDurations()
+
             return Task.cont
         else:
             self.durationTask = None
             return Task.done
-        return
 
     def updateSkill(self, skillInfo, srcDoId=None):
         if srcDoId != self.doId:
             return
+
         if skillInfo:
             self.showSkill(skillInfo[0], skillInfo[1], skillInfo[2])
 
@@ -434,6 +457,7 @@ class StatusTray(GuiTray.GuiTray):
             visSkillId = ammoSkillId
         else:
             visSkillId = skillId
+
         self.activeName['text'] = PLocalizer.InventoryTypeNames[visSkillId]
         asset = RadialMenu.getSkillIconName(visSkillId, 0)
         if self.card:
@@ -441,11 +465,13 @@ class StatusTray(GuiTray.GuiTray):
             self.skillFrame['image'] = tex
             self.skillFrame['image_scale'] = 0.075
             self.skillFrame.setPos(-0.105, 0, -0.255)
+
         ts = globalClockDelta.localElapsedTime(timestamp)
         delay = self.SHOW_SKILL_DURATION - ts
         if delay > 0:
             if self.fader:
                 self.fader.finish()
+
             self.reloadFrame.show()
             self.reloadFrame.setAlphaScale(1.0)
             taskMgr.remove('hideSkillTask')

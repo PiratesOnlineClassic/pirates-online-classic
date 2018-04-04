@@ -4,8 +4,10 @@
 # Embedded file name: pirates.piratesbase.LoadingScreen
 import random
 
+from panda3d.core import *
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
+from direct.gui.DirectGuiGlobals import NO_FADE_SORT_INDEX
 from direct.showbase import DirectObject
 from direct.task import Task
 from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer

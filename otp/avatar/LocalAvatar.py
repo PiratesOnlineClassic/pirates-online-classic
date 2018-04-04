@@ -9,6 +9,7 @@ import string
 import Avatar
 import DistributedAvatar
 import PositionExaminer
+from panda3d.core import *
 from direct.controls import ControlManager
 from direct.controls.GhostWalker import GhostWalker
 from direct.controls.GravityWalker import GravityWalker
@@ -25,7 +26,7 @@ from direct.showbase.InputStateGlobal import inputState
 from direct.showbase.PythonUtil import *
 from direct.task import Task
 from otp.otpbase import OTPGlobals, OTPLocalizer
-from pandac.PandaModules import *
+from otp.nametag.Nametag import Nametag
 
 
 class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.DistributedSmoothNode):
@@ -43,9 +44,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
             self.LocalAvatar_initialized
             return
         except:
-            pass
+            self.LocalAvatar_initialized = 1
 
-        self.LocalAvatar_initialized = 1
         DistributedAvatar.DistributedAvatar.__init__(self, cr)
         DistributedSmoothNode.DistributedSmoothNode.__init__(self, cr)
         self.cTrav = CollisionTraverser('base.cTrav')
@@ -87,7 +87,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
         self.nametag2dNormalContents = Nametag.CSpeech
         self.showNametag2d()
         self.setPickable(0)
-        return
 
     def useSwimControls(self):
         self.controlManager.use('swim', self)
@@ -107,11 +106,13 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
     def lock(self):
         if self.lockedDown == 1:
             self.notify.debug('lock() - already locked!')
+
         self.lockedDown = 1
 
     def unlock(self):
         if self.lockedDown == 0:
             self.notify.debug('unlock() - already unlocked!')
+
         self.lockedDown = 0
 
     def isInWater(self):
@@ -134,32 +135,31 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
             return
         except:
             self.LocalAvatar_deleted = 1
-        else:
-            self.ignoreAll()
-            self.stopJumpLandTask()
-            taskMgr.remove('shadowReach')
-            base.popCTrav()
-            taskMgr.remove('posCamera')
-            self.disableAvatarControls()
-            self.stopTrackAnimToSpeed()
-            self.stopUpdateSmartCamera()
-            self.shutdownSmartCamera()
-            self.deleteCollisions()
-            self.controlManager.delete()
-            self.physControls = None
-            del self.controlManager
-            self.positionExaminer.delete()
-            del self.positionExaminer
-            taskMgr.remove(self.uniqueName('walkReturnTask'))
-            self.chatMgr.delete()
-            del self.chatMgr
-            del self.soundRun
-            del self.soundWalk
-            if hasattr(self, 'soundWhisper'):
-                del self.soundWhisper
+
+        self.ignoreAll()
+        self.stopJumpLandTask()
+        taskMgr.remove('shadowReach')
+        base.popCTrav()
+        taskMgr.remove('posCamera')
+        self.disableAvatarControls()
+        self.stopTrackAnimToSpeed()
+        self.stopUpdateSmartCamera()
+        self.shutdownSmartCamera()
+        self.deleteCollisions()
+        self.controlManager.delete()
+        self.physControls = None
+        del self.controlManager
+        self.positionExaminer.delete()
+        del self.positionExaminer
+        taskMgr.remove(self.uniqueName('walkReturnTask'))
+        self.chatMgr.delete()
+        del self.chatMgr
+        del self.soundRun
+        del self.soundWalk
+        if hasattr(self, 'soundWhisper'):
+            del self.soundWhisper
 
         DistributedAvatar.DistributedAvatar.delete(self)
-        return
 
     def shadowReach(self, state):
         base.localAvatar.shadowPlacer.lifter.setReach(base.localAvatar.getAirborneHeight() + 4.0)

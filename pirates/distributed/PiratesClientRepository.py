@@ -55,6 +55,7 @@ from pirates.ship import DistributedShip
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.world import WorldGlobals
 from PiratesMsgTypes import *
+from otp.nametag import NametagGlobals
 
 want_fifothreads = base.config.GetBool('want-fifothreads', 0)
 if want_fifothreads:
@@ -67,7 +68,6 @@ if want_fifothreads:
             self.repository = repository
             self.keeprunning = 1
             self.verbose = base.config.GetBool('network-thread-verbose', 0)
-            return
 
         def run(self):
             while self.keeprunning:
@@ -200,7 +200,8 @@ class PiratesClientRepository(OTPClientRepository):
             water = self.activeWorld.getWater()
             if water:
                 return water.enabled
-        return 0
+
+        return False
 
     def enterChooseAvatar(self, avList):
         self.sendSetAvatarIdMsg(0)
@@ -315,9 +316,16 @@ class PiratesClientRepository(OTPClientRepository):
                     data.append(OTPGlobals.AvatarPendingCreate)
                 else:
                     avNames = [
-                     av['name'], av['wishName'], '', '']
+                     av['name'],
+                     av['wishName'],
+                     '',
+                     '']
+
                     aName = 0
-                    pa = PotentialAvatar(av['id'], avNames, av['dna'], av['slot'], aName, av['creator'], av['shared'], av['online'], wishState=av['wishState'], wishName=av['wishName'], defaultShard=av['defaultShard'], lastLogout=av['lastLogout'])
+                    pa = PotentialAvatar(av['id'], avNames, av['dna'], av['slot'], aName, av['creator'], av['shared'],
+                        av['online'], wishState=av['wishState'], wishName=av['wishName'],
+                        defaultShard=av['defaultShard'], lastLogout=av['lastLogout'])
+
                     data.append(pa)
 
         if self.loginFSM.getCurrentState().getName() == 'chooseAvatar':
@@ -331,38 +339,44 @@ class PiratesClientRepository(OTPClientRepository):
     def handleGetAvatarsResp2Msg(self, di):
         pass
 
-    def handleAvatarResponseMsg(self, di):
+    def handleAvatarResponseMsg(self, avatarId, di):
         self.cleanupWaitingForDatabase()
-        avatarId = di.getUint32()
-        returnCode = di.getUint8()
-        if returnCode == 0:
-            dclass = self.dclassesByName['DistributedPlayerPirate']
-            NametagGlobals.setMasterArrowsOn(0)
-            self.loadingScreen.show(waitForLocation=True)
-            localAvatar = LocalPirate(self)
-            localAvatar.dclass = dclass
-            if __dev__:
-                __builtins__['lu'] = self.getDo
-            localAvatar.doId = avatarId
-            self.localAvatarDoId = avatarId
-            self.doId2do[avatarId] = localAvatar
-            parentId = None
-            zoneId = None
-            localAvatar.setLocation(parentId, zoneId)
-            localAvatar.generate()
-            localAvatar.updateAllRequiredFields(dclass, di)
-            locUID = localAvatar.getReturnLocation()
-            if locUID:
-                self.loadingScreen.showTarget(locUID)
-                self.loadingScreen.showHint(locUID)
-            else:
-                locUID = '1150922126.8dzlu'
-                localAvatar.setReturnLocation(locUID)
-                self.loadingScreen.showTarget(jail=True)
-            self.loginFSM.request('playingGame')
+        dclass = self.dclassesByName['DistributedPlayerPirate']
+        NametagGlobals.setMasterArrowsOn(0)
+        self.loadingScreen.show(waitForLocation=True)
+        localAvatar = LocalPirate(self)
+        localAvatar.dclass = dclass
+        if __dev__:
+            __builtins__['lu'] = self.getDo
+
+        localAvatar.doId = avatarId
+        self.localAvatarDoId = avatarId
+        self.doId2do[avatarId] = localAvatar
+        parentId = None
+        zoneId = None
+        localAvatar.generateInit()
+        localAvatar.generate()
+        localAvatar.dclass.receiveUpdateBroadcastRequiredOwner(localAvatar, di)
+        localAvatar.announceGenerate()
+        localAvatar.postGenerateMessage()
+        locUID = localAvatar.getReturnLocation()
+        if locUID:
+            self.loadingScreen.showTarget(locUID)
+            self.loadingScreen.showHint(locUID)
         else:
-            self.notify.error('Bad avatar: return code %d' % returnCode)
-        return
+            locUID = '1150922126.8dzlu'
+            localAvatar.setReturnLocation(locUID)
+            self.loadingScreen.showTarget(jail=True)
+
+        self.loginFSM.request('playingGame')
+
+    def handleGenerateWithRequiredOtherOwner(self, di):
+        if self.loginFSM.getCurrentState().getName() == 'waitForSetAvatarResponse':
+            doId = di.getUint32()
+            parentId = di.getUint32()
+            zoneId = di.getUint32()
+            dclassId = di.getUint16()
+            self.handleAvatarResponseMsg(doId, di)
 
     def enterWaitForDeleteAvatarResponse(self, potentialAvatar):
         raise StandardError, 'This should be handled within AvatarChooser.py'
@@ -400,6 +414,7 @@ class PiratesClientRepository(OTPClientRepository):
                 messenger.send('magicWord', ['~deployShip', base.localAvatar.getDoId(), base.localAvatar.zoneId])
 
             self.accept(PiratesGlobals.ShipHotkey, deployShip)
+
         if localAvatar.style.getTutorial() < PiratesGlobals.TUT_MET_JOLLY_ROGER and self.skipTutorial == 0:
             localAvatar.teleportToType = PiratesGlobals.INSTANCE_TUTORIAL
             localAvatar.teleportToName = WorldGlobals.PiratesTutorialSceneFileBase
@@ -429,9 +444,11 @@ class PiratesClientRepository(OTPClientRepository):
             self.ignore(PiratesGlobals.KrakenHotkey)
             self.ignore(PiratesGlobals.ShipHotkey)
             self.ignore(PiratesGlobals.LogoutHotkey)
+
         self.uidMgr.reset()
         if self.distributedDistrict:
             self.distributedDistrict.worldCreator.cleanupAllAreas()
+
         for doId, obj in self.doId2do.items():
             if not isinstance(obj, LocalPirate) and not isinstance(obj, DistributedDistrict.DistributedDistrict):
                 if hasattr(self, 'disableObject'):
@@ -441,9 +458,19 @@ class PiratesClientRepository(OTPClientRepository):
             camera.reparentTo(render)
             camera.setPos(0, 0, 0)
             camera.setHpr(0, 0, 0)
+
         base.transitions.noTransitions()
         if self._userLoggingOut:
-            self.detectLeaks(okTasks=['physics-avatar', 'memory-monitor-task', 'multitexFlatten'], okEvents=['destroy-ToontownLoadingScreenTitle', 'destroy-ToontownLoadingScreenTip', 'destroy-ToontownLoadingScreenWaitBar', 'f12', 'f7', 'close_main_window', 'open_main_window', PiratesGlobals.LogoutHotkey])
+            self.detectLeaks(okTasks=['physics-avatar', 'memory-monitor-task', 'multitexFlatten'], okEvents=[
+                'destroy-ToontownLoadingScreenTitle',
+                'destroy-ToontownLoadingScreenTip',
+                'destroy-ToontownLoadingScreenWaitBar',
+                'f12',
+                'f7',
+                'close_main_window',
+                'open_main_window',
+                PiratesGlobals.LogoutHotkey])
+
         OTPClientRepository.exitPlayingGame(self)
 
     def enterTutorialQuestion(self, hoodId, zoneId, avId):
@@ -452,37 +479,31 @@ class PiratesClientRepository(OTPClientRepository):
     def handleTutorialQuestion(self, msgType, di):
         if msgType == CLIENT_CREATE_OBJECT_REQUIRED:
             self.handleGenerateWithRequired(di)
+        elif msgType == CLIENT_CREATE_OBJECT_REQUIRED_OTHER:
+            self.handleGenerateWithRequiredOther(di)
+        elif msgType == CLIENT_OBJECT_UPDATE_FIELD:
+            self.handleUpdateField(di)
+        elif msgType == CLIENT_OBJECT_DISABLE:
+            self.handleDisable(di)
+        elif msgType == CLIENT_OBJECT_DISABLE_OWNER:
+            self.handleDisableOwner(di)
+        elif msgType == CLIENT_OBJECT_DELETE_RESP:
+            self.handleDelete(di)
+        elif msgType == CLIENT_GET_AVATAR_DETAILS_RESP:
+            self.handleGetAvatarDetailsResp(di)
         else:
-            if msgType == CLIENT_CREATE_OBJECT_REQUIRED_OTHER:
-                self.handleGenerateWithRequiredOther(di)
-            else:
-                if msgType == CLIENT_OBJECT_UPDATE_FIELD:
-                    self.handleUpdateField(di)
-                else:
-                    if msgType == CLIENT_OBJECT_DISABLE:
-                        self.handleDisable(di)
-                    else:
-                        if msgType == CLIENT_OBJECT_DISABLE_OWNER:
-                            self.handleDisableOwner(di)
-                        else:
-                            if msgType == CLIENT_OBJECT_DELETE_RESP:
-                                self.handleDelete(di)
-                            else:
-                                if msgType == CLIENT_GET_AVATAR_DETAILS_RESP:
-                                    self.handleGetAvatarDetailsResp(di)
-                                else:
-                                    self.handleUnexpectedMsgType(msgType, di)
+            self.handleUnexpectedMsgType(msgType, di)
 
     def exitTutorialQuestion(self):
         self.handler = None
         self.handlerArgs = None
         self.ignore('startTutorial')
         taskMgr.remove('waitingForTutorial')
-        return
 
     def __requestTutorial(self, hoodId, zoneId, avId):
         self.acceptOnce('startTutorial', self.__handleStartTutorial, [
-         avId])
+            avId])
+
         messenger.send('requestTutorial')
 
     def __handleStartTutorial(self, avId, zoneId):
@@ -497,6 +518,7 @@ class PiratesClientRepository(OTPClientRepository):
             district = self.activeDistrictMap.get(shardId)
         else:
             district = None
+
         if not district:
             self.distributedDistrict = self.getStartingDistrict()
             if self.distributedDistrict is None:
@@ -505,9 +527,9 @@ class PiratesClientRepository(OTPClientRepository):
             shardId = self.distributedDistrict.doId
         else:
             self.distributedDistrict = district
+
         self.waitForDatabaseTimeout(requestName='WaitOnEnterResponses')
         self.handleSetShardComplete()
-        return
 
     @report(types=['deltaStamp', 'module'], prefix='------', dConfigParam='want-teleport-report')
     def handleSetShardComplete(self):
@@ -515,7 +537,9 @@ class PiratesClientRepository(OTPClientRepository):
         hoodId = self.handlerArgs['hoodId']
         zoneId = self.handlerArgs['zoneId']
         avId = self.handlerArgs['avId']
-        self.uberZoneInterest = self.addInterest(base.localAvatar.getDefaultShard(), OTPGlobals.UberZone, 'uberZone', 'uberZoneInterestComplete')
+        self.uberZoneInterest = self.addInterest(base.localAvatar.getDefaultShard(), OTPGlobals.UberZone,
+            'uberZone', 'uberZoneInterestComplete')
+
         self.acceptOnce('uberZoneInterestComplete', self.uberZoneInterestComplete)
         self.waitForDatabaseTimeout(20, requestName='waitingForUberZone')
 
@@ -588,8 +612,10 @@ class PiratesClientRepository(OTPClientRepository):
             print 'reparenting camera to object %d' % self.currCamParent
         else:
             print 'problem finding a new camera parent, will try again'
+
         if task:
             task.delayTime = delay
+
         return Task.again
 
     def stopCycleCamera(self):
@@ -604,15 +630,19 @@ class PiratesClientRepository(OTPClientRepository):
         if taskMgr.hasTaskNamed(self.getCycleCamTaskName()):
             self.stopCycleCamera()
             return
+
         delay = 10
         args = word.split()
         if len(args) >= 2:
             delay = int(args[1])
+
         if word == '~ccNPC':
             objType = DistributedBattleNPC.DistributedBattleNPC
         else:
             objType = DistributedShip.DistributedShip
-        taskMgr.doMethodLater(0.5, self.cycleCameraObjects, self.getCycleCamTaskName(), extraArgs=[delay, objType], appendTask=True)
+
+        taskMgr.doMethodLater(0.5, self.cycleCameraObjects, self.getCycleCamTaskName(),
+            extraArgs=[delay, objType], appendTask=True)
 
     def performCamReparent(self, objDoId=None):
         selectedObj = localAvatar.currentTarget
@@ -621,6 +651,7 @@ class PiratesClientRepository(OTPClientRepository):
             if obj and self.currCamParent is not obj:
                 self.setViewpoint(obj)
                 return
+
         if selectedObj and self.currCamParent is None:
             self.currCamParent = selectedObj.getDoId()
             self.setViewpoint(selectedObj)
@@ -637,12 +668,13 @@ class PiratesClientRepository(OTPClientRepository):
 
                 else:
                     self.setViewpoint(selectedObj)
-        return
 
     def enterCloseShard(self, loginState=None):
         self.loadingScreen.show()
         self._processVisStopIW = InterestWatcher(self, 'stopProcessViz')
-        self.acceptOnce(self._processVisStopIW.getDoneEvent(), Functor(self._removeShardObjects, loginState))
+        self.acceptOnce(self._processVisStopIW.getDoneEvent(), Functor(self._removeShardObjects,
+            loginState))
+
         messenger.send(PiratesClientRepository.StopVisibilityEvent)
         self._processVisStopIW.stopCollect()
         OTPClientRepository.enterCloseShard(self, loginState)
@@ -652,7 +684,8 @@ class PiratesClientRepository(OTPClientRepository):
         self.cache.turnOff()
         localAvatar.clearInventoryInterest()
         if base.slowCloseShard:
-            taskMgr.doMethodLater(base.slowCloseShardDelay * 0.5, Functor(self.removeShardInterest, callback), 'slowCloseShard')
+            taskMgr.doMethodLater(base.slowCloseShardDelay * 0.5, Functor(self.removeShardInterest,
+                callback), 'slowCloseShard')
         else:
             self.removeShardInterest(callback)
 
@@ -701,8 +734,6 @@ class PiratesClientRepository(OTPClientRepository):
         for districtId in self.activeDistrictMap.keys():
             self._remInterests(districtId, parentId2childIds, parentId2handles)
 
-        return
-
     def _remInterests(self, parentId, parentId2childIds, parentId2handles):
         for childId in parentId2childIds.get(parentId, tuple()):
             self._remInterests(childId, parentId2childIds, parentId2handles)
@@ -716,14 +747,17 @@ class PiratesClientRepository(OTPClientRepository):
         if hasattr(self, 'closeShardEGroup'):
             self.ignore(self.closeShardEGroup.getDoneEvent())
             del self.closeShardEGroup
+
         if hasattr(self, '_localAvDisableIW'):
             self.ignore(self._localAvDisableIW.getDoneEvent())
             self._localAvDisableIW.destroy()
             del self._localAvDisableIW
+
         if hasattr(self, '_processVisStopIW'):
             self.ignore(self._processVisStopIW.getDoneEvent())
             self._processVisStopIW.destroy()
             del self._processVisStopIW
+
         OTPClientRepository.exitCloseShard(self)
 
     def startReaderPollTask(self):
@@ -773,15 +807,15 @@ class PiratesClientRepository(OTPClientRepository):
                 if self.fakeMSP is not None:
                     self.fakeMSP.destroy()
                     self.fakeMSP = None
-                return
 
             taskMgr.remove('cleanupFakeMSP')
             taskMgr.doMethodLater(25.0, cleanupFakeMSP, 'cleanupFakeMSP')
+
         if not self.systemMessageSfx:
             self.systemMessageSfx = base.loader.loadSfx('phase_3.5/audio/sfx/GUI_whisper_3.mp3')
+
         if self.systemMessageSfx:
             base.playSfx(self.systemMessageSfx)
-        return
 
     def getInventoryMgr(self, doId):
         return self.inventoryManager[doId % self.inventoryMgrCount]
@@ -790,7 +824,8 @@ class PiratesClientRepository(OTPClientRepository):
         self.inventoryMgrCount = num
         self.inventoryManager = []
         for i in xrange(num):
-            self.inventoryManager.append(self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_INVENTORY_MANAGER_BASE + i, 'DistributedInventoryManager'))
+            self.inventoryManager.append(self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_INVENTORY_MANAGER_BASE + i,
+                'DistributedInventoryManager'))
 
     def setDistrict(self, district):
         self.district = district

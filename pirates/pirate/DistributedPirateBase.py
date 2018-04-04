@@ -19,7 +19,6 @@ class DistributedPirateBase(DistributedObject.DistributedObject, Pirate.Pirate):
         DistributedObject.DistributedObject.__init__(self, cr)
         Pirate.Pirate.__init__(self)
         self.beacon = None
-        return
 
     def delete(self):
         Pirate.Pirate.delete(self)
@@ -33,6 +32,7 @@ class DistributedPirateBase(DistributedObject.DistributedObject, Pirate.Pirate):
     def showBeacon(self, team):
         if self.beacon:
             self.hideBeacon()
+
         if team > 0:
             self.beaconNodePath = self.nametag3d.attachNewNode('beacon')
             self.beacon = Beacon.getBeacon(self.beaconNodePath)
@@ -44,6 +44,6 @@ class DistributedPirateBase(DistributedObject.DistributedObject, Pirate.Pirate):
     def hideBeacon(self):
         if self.beacon:
             self.beacon.remove()
+
         self.beacon = None
-        return
 # okay decompiling .\pirates\pirate\DistributedPirateBase.pyc

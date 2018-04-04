@@ -11,7 +11,7 @@ set BASE_CHANNEL=401000000
 title Pirates Online Classic - AI (%DISTRICT_NAME%)
 
 rem Choose correct python command to execute the game
-set PYTHON_CMD=ppythona
+set PYTHON_CMD=ppython
 
 echo =============================================
 echo Starting Pirates Online Classic District...

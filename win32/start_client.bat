@@ -24,7 +24,7 @@ set /P POC_TOKEN=Token (Default: dev): || ^
 set POC_TOKEN=dev
 
 rem Choose correct python command to execute the game
-set PYTHON_CMD=ppythona
+set PYTHON_CMD=ppython
 
 echo ====================================
 echo Starting Pirates Online Classic...

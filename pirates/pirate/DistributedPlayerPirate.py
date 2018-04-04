@@ -5,6 +5,7 @@
 import string
 
 import PlayerPirateGameFSM
+from panda3d.core import *
 from direct.actor import Actor
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedNode, PyDatagram
@@ -46,6 +47,7 @@ from pirates.speedchat import PSCDecoders
 from pirates.uberdog.UberDogGlobals import *
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.world.DistributedGameArea import DistributedGameArea
+from otp.nametag.NametagGroup import NametagGroup
 
 
 class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, DistributedBattleAvatar, DistributedQuestAvatar, PAvatarHandle):
@@ -146,12 +148,13 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
                 gmWhiteColor = TextProperties()
                 gmWhiteColor.setTextColor(1, 1, 1, 1)
                 tpMgr.setProperties('whiteGM', gmWhiteColor)
-            self.name = ''
-            self.title = ''
+
             DistributedPirateBase.__init__(self, cr)
             DistributedBattleAvatar.__init__(self, cr)
             DistributedPlayer.__init__(self, cr)
             DistributedQuestAvatar.__init__(self)
+            self.name = ''
+            self.title = ''
             self.inPvp = False
             self.setPickable(1)
             self.interactioneer = None
@@ -559,6 +562,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         else:
             if not shipId and localAvatar.getDoId() == self.getDoId():
                 messenger.send('localAvatarToLand')
+
         self.activeShipId = shipId
 
     def getActiveShip(self):
@@ -572,6 +576,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         if self.pendingSetCrewShip:
             self.cr.relatedObjectMgr.abortRequest(self.pendingSetCrewShip)
             self.pendingSetCrewShip = None
+
         self.crewShipId = shipId
         if shipId:
             self.pendingSetCrewShip = self.cr.relatedObjectMgr.requestObjects([shipId], eachCallback=self._setCrewShip)
@@ -579,7 +584,6 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         else:
             self._setCrewShip(None)
             messenger.send('localAvatarToLand')
-        return
 
     def getCrewShipId(self):
         return self.crewShipId
@@ -943,6 +947,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         if self.motionFSM.state != 'Off':
             self.motionFSM.off()
             self.motionFSM.on()
+
         if not self.zombie:
             self.hideBeacon()
 
@@ -953,6 +958,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
     def setZombie(self, value):
         if self.zombie == value:
             return
+
         self.zombie = value
         self.changeBodyType()
 
