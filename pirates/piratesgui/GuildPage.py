@@ -1,20 +1,22 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.GuildPage
-from direct.fsm import StateData
-from direct.gui.DirectGui import *
 from direct.showbase.ShowBaseGlobal import *
-from otp.otpbase import OTPGlobals, OTPLocalizer
+from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
-from pirates.piratesgui import (PirateButtonChain, PirateMemberList,
-                                PiratesConfirm, PiratesGuiGlobals, PiratesInfo,
-                                PiratesOffLineRequest, SocialPage)
-
+from direct.fsm import StateData
+from otp.otpbase import OTPGlobals
+from otp.otpbase import OTPLocalizer
+from pirates.piratesbase import PLocalizer
+from pirates.piratesgui import SocialPage
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import Freebooter
+from pirates.piratesgui import PirateMemberList
+from pirates.piratesgui import PirateButtonChain
+from pirates.piratesgui import PiratesConfirm
+from pirates.piratesgui import PiratesInfo
+from pirates.piratesgui import PiratesOffLineRequest
 
 class GuildPage(SocialPage.SocialPage):
-    __module__ = __name__
     memberHeight = 0.1
 
     def __init__(self):
@@ -71,6 +73,7 @@ class GuildPage(SocialPage.SocialPage):
 
     def show(self):
         SocialPage.SocialPage.show(self)
+        self.initGuildPage()
         self.determineButtonState()
         if self.nameEntry:
             self.nameEntry.hide()
@@ -107,14 +110,12 @@ class GuildPage(SocialPage.SocialPage):
             rank = base.localAvatar.getGuildRank()
             if rank == 1:
                 ranktxt = PLocalizer.GuildRankMember
+            elif rank == 2:
+                ranktxt = PLocalizer.GuildRankSubLead
+            elif rank == 3:
+                ranktxt = PLocalizer.GuildRankLeader
             else:
-                if rank == 2:
-                    ranktxt = PLocalizer.GuildRankSubLead
-                else:
-                    if rank == 3:
-                        ranktxt = PLocalizer.GuildRankLeader
-                    else:
-                        ranktxt = PLocalizer.Loading
+                ranktxt = PLocalizer.Loading
             if not self.rankLabel:
                 self.rankLabel = DirectLabel(parent=self.mainFrame, relief=None, text=ranktxt, text_fg=(1,
                                                                                                         1,
@@ -156,9 +157,8 @@ class GuildPage(SocialPage.SocialPage):
         if self.guildName and self.guildName != PLocalizer.GuildNoGuild and (self.guildName != '0' or self.guildName != ''):
             self.nameLabel.show()
             self.nameLabel['text'] = self.guildName
-        else:
-            if self.nameLabel:
-                self.nameLabel.hide()
+        elif self.nameLabel:
+            self.nameLabel.hide()
         rank = base.localAvatar.getGuildRank()
         if rank == 1:
             ranktxt = PLocalizer.GuildRankMember
@@ -170,40 +170,38 @@ class GuildPage(SocialPage.SocialPage):
                     ranktxt = PLocalizer.GuildRankLeader
                 else:
                     ranktxt = None
-        if rank and ranktxt:
-            self.rankLabel['text'] = ranktxt
-            self.rankLabel.show()
-        else:
-            if self.rankLabel:
-                ranktxt = PLocalizer.Loading
-                self.rankLabel.hide()
-        if self.memberButton:
-            self.memberButton['state'] = DGG.DISABLED
-        self.renameButton['state'] = DGG.DISABLED
-        self.createButton['state'] = DGG.DISABLED
-        self.leaveButton['state'] = DGG.DISABLED
-        self.inviteButton['state'] = DGG.DISABLED
-        self.redeemInvite['state'] = DGG.NORMAL
-        self.codeInviteOptions['state'] = DGG.DISABLED
-        if self.guildRank > 2 and (self.guildReal == '0' or self.guildReal == ''):
-            self.renameButton['state'] = DGG.NORMAL
-            self.redeemInvite['state'] = DGG.DISABLED
-        if self.guildRank > 1:
-            self.inviteButton['state'] = DGG.NORMAL
-            self.redeemInvite['state'] = DGG.DISABLED
-            self.codeInviteOptions['state'] = DGG.NORMAL
-        if self.guildRank > 0:
-            self.leaveButton['state'] = DGG.NORMAL
-            self.memberButton['state'] = DGG.NORMAL
-            self.redeemInvite['state'] = DGG.DISABLED
-        else:
-            self.createButton['state'] = DGG.NORMAL
-        if Freebooter.FreeGuildRestrict:
-            if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
-                if self.createButton:
-                    self.createButton['state'] = DGG.DISABLED
-                if self.renameButton:
-                    self.renameButton['state'] = DGG.DISABLED
+                if rank and ranktxt:
+                    self.rankLabel['text'] = ranktxt
+                    self.rankLabel.show()
+                elif self.rankLabel:
+                    ranktxt = PLocalizer.Loading
+                    self.rankLabel.hide()
+                if self.memberButton:
+                    self.memberButton['state'] = DGG.DISABLED
+                self.renameButton['state'] = DGG.DISABLED
+                self.createButton['state'] = DGG.DISABLED
+                self.leaveButton['state'] = DGG.DISABLED
+                self.inviteButton['state'] = DGG.DISABLED
+                self.redeemInvite['state'] = DGG.NORMAL
+                self.codeInviteOptions['state'] = DGG.DISABLED
+                if self.guildRank > 2 and (self.guildReal == '0' or self.guildReal == ''):
+                    self.renameButton['state'] = DGG.NORMAL
+                    self.redeemInvite['state'] = DGG.DISABLED
+                if self.guildRank > 1:
+                    self.inviteButton['state'] = DGG.NORMAL
+                    self.redeemInvite['state'] = DGG.DISABLED
+                    self.codeInviteOptions['state'] = DGG.NORMAL
+                if self.guildRank > 0:
+                    self.leaveButton['state'] = DGG.NORMAL
+                    self.memberButton['state'] = DGG.NORMAL
+                    self.redeemInvite['state'] = DGG.DISABLED
+                self.createButton['state'] = DGG.NORMAL
+            if Freebooter.FreeGuildRestrict:
+                if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
+                    if self.createButton:
+                        self.createButton['state'] = DGG.DISABLED
+                    if self.renameButton:
+                        self.renameButton['state'] = DGG.DISABLED
         return
 
     def destroy(self):
@@ -276,11 +274,10 @@ class GuildPage(SocialPage.SocialPage):
     def displayInviteGuild(self, displayToken, preExistPerm):
         if displayToken == 'TOO_MANY_TOKENS':
             self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(PLocalizer.GuildInvite, PLocalizer.GuildInviteTooManyTokens)
+        elif displayToken == 'GUILD FULL':
+            self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(PLocalizer.GuildInvite, OTPLocalizer.GuildInviterTooFull)
         else:
-            if displayToken == 'GUILD FULL':
-                self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(PLocalizer.GuildInvite, OTPLocalizer.GuildInviterTooFull)
-            else:
-                self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(PLocalizer.GuildInvite, PLocalizer.GuildInviteResponse, displayToken, preExistPerm)
+            self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(PLocalizer.GuildInvite, PLocalizer.GuildInviteResponse, displayToken, preExistPerm)
 
     def leaveGuild(self):
         self.confirmBox = PiratesConfirm.PiratesConfirm(PLocalizer.GuildPageLeaveGuild, PLocalizer.GuildAskLeave, base.cr.guildManager.removeMember, base.localAvatar.getDoId())
@@ -456,10 +453,10 @@ class GuildPage(SocialPage.SocialPage):
                                                                                                           ''))
 
     def requestPermTokenValue(self):
-        base.cr.guildManager.requestPermToken()
+        pass # TODO base.cr.guildManager.requestPermToken()
 
     def requestNonPermTokenCount(self):
-        base.cr.guildManager.requestNonPermTokenCount()
+        pass # TODO base.cr.guildManager.requestNonPermTokenCount()
 
     def receivePermTokenValue(self, token):
         if not token:
@@ -488,4 +485,3 @@ class GuildPage(SocialPage.SocialPage):
 
     def b_codeInviteOptions(self):
         self.displayTokenOptionsFrame()
-# okay decompiling .\pirates\piratesgui\GuildPage.pyc

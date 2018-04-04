@@ -1,32 +1,33 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.world.DistributedGameArea
-import time
-
-from direct.actor import Actor
-from direct.distributed import DistributedNode, DistributedObject
-from direct.showbase.PythonUtil import Functor, report
 from pandac.PandaModules import *
-from pandac.PandaModules import (CollisionHandlerEvent, CollisionNode,
-                                 CollisionSphere)
-from pirates.chat.PiratesChatManager import PiratesChatManager
-from pirates.effects import (CaveEffects, EnvironmentEffects, ForestEffects,
-                             SwampEffects)
-from pirates.piratesbase import (PiratesGlobals, PLocalizer, TimeOfDayManager,
-                                 TODGlobals, UserFunnel)
+from direct.distributed import DistributedNode
+from direct.distributed import DistributedObject
+from direct.showbase.PythonUtil import Functor, report
+from direct.actor import Actor
+from pirates.world import WorldGlobals
 from pirates.piratesgui import PiratesGuiGlobals
+from pirates.effects import EnvironmentEffects
+from pirates.effects import SwampEffects
+from pirates.effects import ForestEffects
+from pirates.effects import CaveEffects
+from pirates.piratesbase import TimeOfDayManager, TODGlobals
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.piratesbase import UserFunnel
+from pirates.tutorial import ChatTutorial
+from pirates.tutorial import ChatTutorialAlt
+from pirates.tutorial import CrewTutorial
+from pandac.PandaModules import CollisionSphere
+from pandac.PandaModules import CollisionNode
+from pandac.PandaModules import CollisionHandlerEvent
 from pirates.quest.QuestConstants import LocationIds
-from pirates.seapatch.Reflection import Reflection
+from pirates.chat.PiratesChatManager import PiratesChatManager
 from pirates.seapatch.SeaPatch import SeaPatch
+from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import IslandWaterParameters
 from pirates.swamp.Swamp import Swamp
-from pirates.tutorial import ChatTutorial, ChatTutorialAlt, CrewTutorial
-from pirates.world import WorldGlobals
-
+import time
 
 class DistributedGameArea(DistributedNode.DistributedNode):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedGameArea')
 
     def __init__(self, cr):
@@ -48,9 +49,9 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         self.islandWaterParameters = None
         self.swamp_water = None
         self.entryTime = [
-         None, 0]
+            None,
+            0]
         self.timeCheck = 0
-        return
 
     def __repr__(self):
         return '%s (%s)' % (DistributedNode.DistributedNode.__repr__(self), self.getName())
@@ -60,6 +61,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         DistributedNode.DistributedNode.disable(self)
         if self.geom:
             self.geom.removeNode()
+
         self.unloadConnectors()
         for request in self.pendingSetupConnector.itervalues():
             self.cr.relatedObjectMgr.abortRequest(request)
@@ -76,15 +78,16 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         if self.envEffects:
             self.envEffects.delete()
             self.envEffects = None
+
         DistributedNode.DistributedNode.delete(self)
         if self.islandWaterParameters:
             del self.islandWaterParameters
+
         if self.swamp_water:
             self.swamp_water.delete()
             del self.swamp_water
-        return
 
-    def setLocation(self, parentId, zoneId, teleport=0):
+    def setLocation(self, parentId, zoneId, teleport = 0):
         DistributedObject.DistributedObject.setLocation(self, parentId, zoneId)
         if parentId != 0:
             parentObj = self.cr.doId2do.get(parentId)
@@ -104,6 +107,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
     def setUniqueId(self, uid):
         if self.uniqueId != '':
             self.cr.uidMgr.removeUid(self.uniqueId)
+
         self.uniqueId = uid
         self.cr.uidMgr.addUid(self.uniqueId, self.getDoId())
 
@@ -113,11 +117,14 @@ class DistributedGameArea(DistributedNode.DistributedNode):
     def loadModel(self):
         pass
 
-    @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report'])
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report'])
     def setLinks(self, links):
         for link in links:
-            areaNode, connId, areaUid, connParent, connZone, connNode, connWorld, connWorldZone = link
-            self.links.append([connId, connParent, connZone])
+            (areaNode, connId, areaUid, connParent, connZone, connNode, connWorld, connWorldZone) = link
+            self.links.append([
+                connId,
+                connParent,
+                connZone])
 
             def setupConnector(connector):
                 connector.interior = self
@@ -125,22 +132,22 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 request = self.pendingSetupConnector.pop(connector.doId, None)
                 if not request:
                     pass
-                return
 
             connector = self.cr.doId2do.get(connId)
             if connector:
                 self.pendingSetupConnector[connId] = None
                 setupConnector(connector)
+
             elif connId:
                 if connId in self.pendingSetupConnector:
                     request = self.pendingSetupConnector.pop(connId)
                     self.cr.relatedObjectMgr.abortRequest(request)
-                request = self.cr.relatedObjectMgr.requestObjects([connId], eachCallback=setupConnector)
+
+                request = self.cr.relatedObjectMgr.requestObjects([
+                    connId], eachCallback = setupConnector)
                 self.pendingSetupConnector[connId] = request
 
-        return
-
-    @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
     def loadConnectors(self):
         for link in self.links:
             if link:
@@ -150,44 +157,47 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                     parentId = link[1]
                     zoneId = link[2]
                     connectorEvent = 'connector-%s' % connectorId
-                    self.acceptOnce(connectorEvent, self.reparentConnector, extraArgs=[connectorId])
-                    localAvatar.setInterest(parentId, zoneId, [
-                     'Connectors-%s' % self.doId], connectorEvent)
-                else:
-                    self.reparentConnector(connectorId)
+                    self.acceptOnce(connectorEvent, self.reparentConnector,
+                                    extraArgs = [connectorId])
+                    localAvatar.setInterest(parentId, zoneId,
+                                            ['Connectors-%s' % self.doId],
+                                            connectorEvent)
 
-    @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
+                self.reparentConnector(connectorId)
+
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
     def unloadConnectors(self):
-        for connectorId, connector in self.connectors.iteritems():
+        for (connectorId, connector) in self.connectors.iteritems():
             if connector:
                 connector.setLoadedArea(None)
                 connector.turnOff()
 
         self.connectors = {}
         localAvatar.clearInterestNamed('connectorInterestCleared', [
-         'Connectors-%s' % self.doId])
+            'Connectors-%s' % self.doId])
         self.connectorInterests = set()
-        return
 
-    @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
     def reparentConnector(self, connectorId):
         connector = self.cr.doId2do.get(connectorId)
         if connector:
             self.connectors[connectorId] = connector
             if connector.dclass.getName() == 'DistributedGATunnel':
                 connector.reparentConnectorToArea(self)
+
             if self.__onOffState:
                 connector.turnOn()
             else:
                 connector.turnOff()
 
-    @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
-    def handleEnterGameArea(self, collEntry=None):
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
+    def handleEnterGameArea(self, collEntry = None):
         if localAvatar.style.getTutorial() == PiratesGlobals.TUT_CHAPTER3_STARTED:
             if localAvatar.chatMgr.noChat:
                 ct = ChatTutorialAlt.ChatTutorialAlt()
             else:
                 ct = ChatTutorial.ChatTutorial()
+
         taskMgr.doMethodLater(1, self.showEnterMessage, 'showEnterMessage')
         UserFunnel.logSubmit(0, 'ENTERING_' + str(self.funnelDisplayName))
         UserFunnel.logSubmit(1, 'ENTERING_' + str(self.funnelDisplayName))
@@ -202,7 +212,8 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             return
         else:
             self.entryTime = [
-             loc, time]
+                loc,
+                time]
 
     def readLocationTime(self):
         return self.entryTime[1]
@@ -212,8 +223,8 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         self.displayGameAreaName(displayName)
         localAvatar.guiMgr.radarGui.showLocation(self.uniqueId)
 
-    @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
-    def handleExitGameArea(self, collEntry=None):
+    @report(types = ['frameCount', 'args'], dConfigParam = [ 'want-jail-report', 'want-teleport-report'])
+    def handleExitGameArea(self, collEntry = None):
         UserFunnel.logSubmit(0, 'EXITING_' + str(self.funnelDisplayName))
         UserFunnel.logSubmit(1, 'EXITING_' + str(self.funnelDisplayName))
         self.previousDisplayName = None
@@ -224,7 +235,6 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         else:
             base.cr.centralLogger.writeClientEvent('EXITING_AREA|%s|%d' % (displayName, timeSpent))
             self.timeCheck = timeSpent
-        return
 
     def displayGameAreaName(self, displayName):
         self.funnelDisplayName = displayName
@@ -245,64 +255,59 @@ class DistributedGameArea(DistributedNode.DistributedNode):
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         pass
 
-    def startCustomEffects(self, interior=True):
+    def startCustomEffects(self, interior = True):
         if self.envEffects:
             self.envEffects.delete()
             self.envEffects = None
+
         if 'swamp' in self.modelPath:
             self.envEffects = SwampEffects.SwampEffects(self, self.modelPath)
             base.musicMgr.request('swamp')
+        elif 'jungle' in self.modelPath:
+            self.envEffects = ForestEffects.ForestEffects(self, self.modelPath)
+            base.musicMgr.request('jungle')
+        elif 'cave' in self.modelPath:
+            self.envEffects = CaveEffects.CaveEffects(self, self.modelPath)
+            base.musicMgr.request('cave')
+        elif self.uniqueId == '1189479168.0sdnaik0':
+            r = Reflection.getGlobalReflection()
+            saintPatricksDay = base.saintPatricksDay
+            water = SeaPatch(self, reflection = r, saintPatricksDay = saintPatricksDay)
+            water.loadSeaPatchFile('out.spf')
+            self.water = water
+            self.initializeIslandWaterParameters()
+            base.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_DEFAULT)
         else:
-            if 'jungle' in self.modelPath:
-                self.envEffects = ForestEffects.ForestEffects(self, self.modelPath)
-                base.musicMgr.request('jungle')
-            else:
-                if 'cave' in self.modelPath:
-                    self.envEffects = CaveEffects.CaveEffects(self, self.modelPath)
-                    base.musicMgr.request('cave')
-                else:
-                    if self.uniqueId == '1189479168.0sdnaik0':
-                        r = Reflection.getGlobalReflection()
-                        saintPatricksDay = base.saintPatricksDay
-                        water = SeaPatch(self, reflection=r, saintPatricksDay=saintPatricksDay)
-                        water.loadSeaPatchFile('out.spf')
-                        self.water = water
-                        self.initializeIslandWaterParameters()
-                    else:
-                        self.envEffects = EnvironmentEffects.EnvironmentEffects(self, self.modelPath)
-                        if interior:
-                            self.cr.timeOfDayManager.request('NoLighting')
-        return
+            self.envEffects = EnvironmentEffects.EnvironmentEffects(self, self.modelPath)
+            if interior:
+                self.cr.timeOfDayManager.request('NoLighting')
 
     def stopCustomEffects(self):
         if self.envEffects:
             self.envEffects.delete()
             self.envEffects = None
+
         if 'swamp' in self.modelPath:
             base.musicMgr.requestFadeOut('swamp')
-        else:
-            if 'jungle' in self.modelPath:
-                base.musicMgr.requestFadeOut('jungle')
-            else:
-                if 'cave' in self.modelPath:
-                    base.musicMgr.requestFadeOut('cave')
-                else:
-                    if self.uniqueId == '1189479168.0sdnaik0':
-                        self.water.delete()
-                        self.water = None
-        return
+        elif 'jungle' in self.modelPath:
+            base.musicMgr.requestFadeOut('jungle')
+        elif 'cave' in self.modelPath:
+            base.musicMgr.requestFadeOut('cave')
+        elif self.uniqueId == '1189479168.0sdnaik0':
+            self.water.delete()
+            self.water = None
 
     def updateAvReturnLocation(self, av, uniqueId):
         pass
 
-    @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
     def quickLoadOtherSide(self):
         connector = self.connectors.get(localAvatar.lastConnectorId)
         if connector:
             connector.quickLoadOtherSide()
 
     def addSpawnTriggers(self, triggerSpheres):
-        for x, y, z, triggerRadius, spawnPtId in triggerSpheres:
+        for (x, y, z, triggerRadius, spawnPtId) in triggerSpheres:
             objectSphere = CollisionSphere(x, y, z, triggerRadius)
             objectName = uniqueName('spawnTriggerSphere')
             objectSphere.setTangible(0)
@@ -310,24 +315,29 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             objectSphereNode.addSolid(objectSphere)
             objectSphereNode.setIntoCollideMask(PiratesGlobals.WallBitmask)
             objectSphereNodePath = self.attachNewNode(objectSphereNode)
-            self.accept('enter' + objectName, self.handleEnterSphere, extraArgs=[spawnPtId])
+            self.accept('enter' + objectName, self.handleEnterSphere, extraArgs = [
+                spawnPtId])
             self.spawnTriggers.append(objectSphereNodePath)
 
     def handleEnterSphere(self, spawnPtId, entry):
         if base.localAvatar:
             if hasattr(base.localAvatar, 'getDoId'):
                 doId = base.localAvatar.getDoId()
-                self.sendUpdate('spawnNPC', [spawnPtId, doId])
+                self.sendUpdate('spawnNPC', [
+                    spawnPtId,
+                    doId])
 
     def initBlockers(self, geom):
         self.disableBlockers = False
         if base.config.GetBool('disable-blockers', 0):
             self.disableBlockers = True
+
         blockerColls = geom.findAllMatches('**/blocker_*')
         interior = False
         if not blockerColls.isEmpty():
             if blockerColls[0].getName().find('_i') != -1:
                 interior = True
+
             for i in range(0, blockerColls.getNumPaths()):
                 self.blockerColls.append(blockerColls[i])
                 if self.disableBlockers:
@@ -364,43 +374,41 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         questId = localAvatar.activeQuestId
         if base.localAvatar.style.getTutorial() < PiratesGlobals.TUT_GOT_CUTLASS:
             localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.QuestStrings[questId]['description'])
-        else:
-            if base.localAvatar.style.getTutorial() < PiratesGlobals.TUT_KILLED_1_SKELETON:
-                questId = 'c2.2defeatSkeletons'
+        elif base.localAvatar.style.getTutorial() < PiratesGlobals.TUT_KILLED_1_SKELETON:
+            questId = 'c2.2defeatSkeletons'
+            localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.QuestStrings[questId]['blockerMessage'])
+        elif base.localAvatar.style.getTutorial() < PiratesGlobals.TUT_GOT_COMPASS:
+            questId = 'c2_visit_tia_dalma'
+            self.stashSpecificBlocker('blocker_0')
+            if entry.getIntoNodePath().getName() != 'blocker_0':
                 localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.QuestStrings[questId]['blockerMessage'])
-            else:
-                if base.localAvatar.style.getTutorial() < PiratesGlobals.TUT_GOT_COMPASS:
-                    questId = 'c2_visit_tia_dalma'
-                    self.stashSpecificBlocker('blocker_0')
-                    if entry.getIntoNodePath().getName() != 'blocker_0':
-                        localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.QuestStrings[questId]['blockerMessage'])
-                else:
-                    self.stashAllBlockers()
 
-    @report(types=['frameCount'], dConfigParam='want-connector-report')
-    def turnOn(self, av=None):
+        else:
+            self.stashAllBlockers()
+
+    @report(types = ['frameCount'], dConfigParam = 'want-connector-report')
+    def turnOn(self, av = None):
         self.__onOffState = True
-        for id, connector in self.connectors.iteritems():
+        for (id, connector) in self.connectors.iteritems():
             if connector:
                 connector.turnOn()
 
-    @report(types=['frameCount'], dConfigParam='want-connector-report')
+    @report(types = ['frameCount'], dConfigParam = 'want-connector-report')
     def turnOff(self):
         self.__onOffState = False
-        for id, connector in self.connectors.iteritems():
+        for (id, connector) in self.connectors.iteritems():
             if connector:
                 connector.turnOff()
 
     def getOnOffState(self):
         return self.__onOffState
 
-    def getTeleportDestPosH(self, index=0):
+    def getTeleportDestPosH(self, index = 0):
         pt = self._getTunnelSpawnPos(index)
-        return (
-         pt[0], pt[1], pt[2], 0)
+        return (pt[0], pt[1], pt[2], 0)
 
-    def _getTunnelSpawnPos(self, index=0):
-        connectorNodes = self.findAllMatches('**/portal_exterior*')  + self.findAllMatches('**/portal_interior*') 
+    def _getTunnelSpawnPos(self, index = 0):
+        connectorNodes = self.findAllMatches('**/portal_exterior*').asList() + self.findAllMatches('**/portal_interior*').asList()
         return self.getRelativePoint(connectorNodes[index % len(connectorNodes)], Point3(40, 0, 0))
 
     def initializeIslandWaterParameters(self):
@@ -413,10 +421,12 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         if debug:
             print self, '=', self.getName()
             print 'GAME AREA X OFF, Y OFF, Z OFF = ', world_x_offset, world_y_offset, world_z_offset
+
         model = self.geom.find('**/water_color')
         if model and model.isEmpty() == False:
             if debug:
                 print 'WATER COLOR X OFF, Y OFF, Z OFF = ', world_x_offset, world_y_offset, world_z_offset
+
             model.hide()
             min_point = Point3(0)
             max_point = Point3(0)
@@ -438,18 +448,21 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             island_water_parameters.map_y_scale = y_size
             if debug:
                 print 'X, Y, X SIZE, Y SIZE = ', min_point[0], min_point[1], x_size, y_size
+
             texture = model.findTexture('*')
             if texture:
                 island_water_parameters.water_color_texture = texture
                 if debug:
                     print 'WATER COLOR TEXTURE', texture
-        else:
-            if debug:
-                print '*** water_color NODE NOT FOUND'
+
+        elif debug:
+            print '*** water_color NODE NOT FOUND'
+
         model = self.geom.find('**/water_alpha')
         if model and model.isEmpty() == False:
             if debug:
                 print 'WATER ALPHA X OFF, Y OFF, Z OFF = ', world_x_offset, world_y_offset, world_z_offset
+
             model.hide()
             min_point = Point3(0)
             max_point = Point3(0)
@@ -471,17 +484,20 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             island_water_parameters.alpha_map_y_scale = y_size
             if debug:
                 print 'ALPHA X, Y, X SIZE, Y SIZE = ', min_point[0], min_point[1], x_size, y_size
+
             texture = model.findTexture('*')
             if texture:
                 island_water_parameters.water_alpha_texture = texture
                 if debug:
                     print 'WATER ALPHA TEXTURE', texture
-        else:
-            if debug:
-                print '*** water_alpha NODE NOT FOUND'
+
+        elif debug:
+            print '*** water_alpha NODE NOT FOUND'
+
         use_shader = False
         if base.config.GetBool('want-shaders', 1) and base.win and base.win.getGsg() and base.win.getGsg().getShaderModel() >= GraphicsStateGuardian.SM20:
             use_shader = True
+
         model_ns = self.geom.find('**/water_swamp_ns')
         if model_ns and model_ns.isEmpty() == False:
             if use_shader:
@@ -495,10 +511,11 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 stencil_one_node_path = NodePath('stencil_one')
                 stencil_one_node_path.reparentTo(parent)
                 model.instanceTo(stencil_one_node_path)
-                mask = 4294967295L
+                mask = 0xFFFFFFFFL
                 stencil_one = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
                 stencil_one_node_path.setAttrib(stencil_one, 100)
                 stencil_one_node_path.setDepthTest(0)
+
         model_alpha_texture = None
         model_alpha = self.geom.find('**/water_alpha_swamp')
         if model_alpha and model_alpha.isEmpty() == False:
@@ -506,6 +523,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             model_alpha.hide()
             if debug:
                 print 'model_alpha_texture', model_alpha_texture
+
             if False:
                 texture = model_alpha_texture
                 card_x_size = 0.5
@@ -517,6 +535,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 card_node_path.node().setBounds(OmniBoundingVolume())
                 card_node_path.node().setFinal(1)
                 card_node_path.reparentTo(render2d)
+
         else:
             model_alpha = None
         model = self.geom.find('**/water_color_swamp')
@@ -526,12 +545,13 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 model_texture = model.findTexture('*')
                 if debug:
                     print 'WATER COLOR SWAMP X OFF, Y OFF, Z OFF = ', world_x_offset, world_y_offset, world_z_offset
+
                 parent = model.getParent()
                 model.detachNode()
                 stencil_one_node_path = NodePath('stencil_one')
                 stencil_one_node_path.reparentTo(parent)
                 model.instanceTo(stencil_one_node_path)
-                mask = 4294967295L
+                mask = 0xFFFFFFFFL
                 stencil_one = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
                 stencil_one_node_path.setAttrib(stencil_one, 100)
                 stencil_one_node_path.setDepthTest(0)
@@ -548,17 +568,20 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                     print 'max_point', max_point
                     print 'size', size
                     print 'x y', x, y
+
                 island_water_parameters.swamp_map_x_origin = x
                 island_water_parameters.swamp_map_y_origin = y
                 island_water_parameters.swamp_map_x_scale = x_size
                 island_water_parameters.swamp_map_y_scale = y_size
                 if debug:
                     print 'X, Y, X SIZE, Y SIZE = ', min_point[0], min_point[1], x_size, y_size
+
                 texture = model.findTexture('*')
                 if texture:
                     island_water_parameters.swamp_water_color_texture = texture
                     if debug:
                         print 'SWAMP WATER COLOR TEXTURE', texture
+
                 water_color_file_path = island_water_parameters.default_water_color_file_path
                 alpha_texture_file_path = island_water_parameters.default_water_alpha_file_path
                 opacity_texture_file_path = None
@@ -581,19 +604,17 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 island_water_parameters.swamp_color_b = b
                 x = 0.0
                 y = 1.0
-                speed = 3.2
+                speed = 3.2000000000000002
                 island_water_parameters.swamp_direction_x = x
                 island_water_parameters.swamp_direction_y = y
                 island_water_parameters.swamp_speed = speed
                 self.swamp_water.update_water_direction_and_speed(x, y, speed)
             else:
                 model.hide()
-        else:
-            if debug:
-                print '*** water_color_swamp NODE NOT FOUND'
+        elif debug:
+            print '*** water_color_swamp NODE NOT FOUND'
+
         self.islandWaterParameters = island_water_parameters
-        return
 
     def getLevel(self):
         return 1
-# okay decompiling .\pirates\world\DistributedGameArea.pyc
