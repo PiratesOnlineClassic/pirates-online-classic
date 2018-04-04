@@ -32,7 +32,9 @@ class Avatar(Actor, ShadowCaster):
         except:
             self.Avatar_initialized = 1
 
-        Actor.__init__(self, None, None, other, flattenable=0, setFinal=1)
+        Actor.__init__(self, None, None, other, flattenable=False, setFinal=True,
+            mergeLODBundles=True, allowAsyncBind=True)
+
         ShadowCaster.__init__(self)
         self.name = ''
         self.__font = OTPGlobals.getInterfaceFont()
@@ -76,24 +78,26 @@ class Avatar(Actor, ShadowCaster):
         self.__chatSet = 0
         self.__chatLocal = 0
         self.__currentDialogue = None
-        return
 
     def delete(self):
         try:
             self.Avatar_deleted
+            return
         except:
-            self.deleteNametag3d()
-            Actor.cleanup(self)
-            if not self.ManagesNametagAmbientLightChanged:
-                self.ignoreNametagAmbientLightChange()
             self.Avatar_deleted = 1
-            del self.__font
-            del self.style
-            del self.soundChatBubble
-            del self.nametag
-            self.nametag3d.removeNode()
-            ShadowCaster.delete(self)
-            Actor.delete(self)
+
+        self.deleteNametag3d()
+        Actor.cleanup(self)
+        if not self.ManagesNametagAmbientLightChanged:
+            self.ignoreNametagAmbientLightChange()
+
+        del self.__font
+        del self.style
+        del self.soundChatBubble
+        del self.nametag
+        self.nametag3d.removeNode()
+        ShadowCaster.delete(self)
+        Actor.delete(self)
 
     def acceptNametagAmbientLightChange(self):
         self.accept('nametagAmbientLightChanged', self.nametagAmbientLightChanged)
