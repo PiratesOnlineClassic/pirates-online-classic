@@ -1,16 +1,12 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.DistributedShippart
-from direct.distributed import DistributedNode
 from direct.distributed.ClockDelta import *
+from direct.distributed import DistributedNode
 from direct.interval.IntervalGlobal import *
-from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesbase.PiratesGlobals import *
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 
 
 class DistributedShippart(DistributedNode.DistributedNode):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedShippart')
 
     def __init__(self, cr):
@@ -32,7 +28,6 @@ class DistributedShippart(DistributedNode.DistributedNode):
         self.instLow = None
         self.instFlat = None
         self.instColl = None
-        return
 
     def generate(self):
         DistributedNode.DistributedNode.generate(self)
@@ -49,9 +44,9 @@ class DistributedShippart(DistributedNode.DistributedNode):
     def delete(self):
         if self.prop:
             self.prop = None
+
         self.ship = None
         DistributedNode.DistributedNode.delete(self)
-        return
 
     def load(self):
         self.createProp()
@@ -70,7 +65,6 @@ class DistributedShippart(DistributedNode.DistributedNode):
     def unload(self):
         if self.prop:
             self.prop = None
-        return
 
     def loadModel(self):
         self.prop.loadModel(self.dna)
@@ -96,7 +90,8 @@ class DistributedShippart(DistributedNode.DistributedNode):
     def sendReadyMessage(self):
         if not self.sentReadyMessage:
             self.sentReadyMessage = 1
-            messenger.send('shippartReady-%s' % self.doId, [self])
+            messenger.send('shippartReady-%s' % self.doId, [
+                self])
 
     def setGeomParentId(self, geomParentId):
         self.geomParentId = geomParentId
@@ -121,4 +116,3 @@ class DistributedShippart(DistributedNode.DistributedNode):
 
     def getPVPTeam(self):
         return self.ship.getPVPTeam()
-# okay decompiling .\pirates\shipparts\DistributedShippart.pyc

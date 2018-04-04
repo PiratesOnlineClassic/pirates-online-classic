@@ -1,32 +1,31 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.DistributedCabin
-import random
-
-from direct.distributed import DistributedObject
-from direct.distributed.ClockDelta import *
-from direct.gui.DirectGui import *
+from pirates.piratesbase.PiratesGlobals import *
 from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import quickProfile
+from direct.distributed.ClockDelta import *
+from pirates.piratesbase import PiratesGlobals
+from direct.distributed import DistributedObject
+from pirates.piratesbase import PLocalizer
+from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from pirates.battle import CannonGlobals, WeaponGlobals
-from pirates.destructibles import DistributedDestructibleObject
-from pirates.effects.BlackSmoke import BlackSmoke
+from pirates.ship import ShipGlobals
+from pirates.battle import CannonGlobals
+from pirates.battle import WeaponGlobals
+from direct.showbase.PythonUtil import quickProfile
+from pirates.effects.SmokeCloud import SmokeCloud
+from pirates.effects.ShipSplintersA import ShipSplintersA
 from pirates.effects.ExplosionFlip import ExplosionFlip
 from pirates.effects.Fire import Fire
+from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.effects.MuzzleFlash import MuzzleFlash
-from pirates.effects.ShipSplintersA import ShipSplintersA
-from pirates.effects.SmokeCloud import SmokeCloud
 from pirates.effects.WoodShards import WoodShards
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.piratesbase.PiratesGlobals import *
-from pirates.ship import ShipGlobals
-from pirates.shipparts import Cabin, CabinDNA, DistributedShippart
+from pirates.shipparts import CabinDNA
+from pirates.shipparts import Cabin
+from pirates.shipparts import DistributedShippart
+from pirates.destructibles import DistributedDestructibleObject
+import random
 
 
-class DistributedCabin(DistributedShippart.DistributedShippart, DistributedDestructibleObject.DistributedDestructibleObject):
-    __module__ = __name__
+class DistributedCabin(DistributedShippart.DistributedShippart,
+                       DistributedDestructibleObject.DistributedDestructibleObject):
     notify = directNotify.newCategory('DistributedCabin')
     woodBreakSfx = None
 
@@ -39,7 +38,6 @@ class DistributedCabin(DistributedShippart.DistributedShippart, DistributedDestr
         self.hull = None
         self.decors = []
         self.pendingSetupCollisions = None
-        return
 
     def generate(self):
         self.notify.debug('Generate ' + str(self.doId))
@@ -59,11 +57,13 @@ class DistributedCabin(DistributedShippart.DistributedShippart, DistributedDestr
                 self.prop = cabin[0]
                 self.ship.cabin[1] = self
                 return
+
         self.prop = Cabin.Cabin(base.cr)
         self.prop.shipId = self.shipId
         self.prop.doId = self.doId
         self.ship.cabin = [
-         self.prop, self]
+            self.prop,
+            self]
 
     def propLoaded(self):
         pass
@@ -73,18 +73,18 @@ class DistributedCabin(DistributedShippart.DistributedShippart, DistributedDestr
         if self.pendingSetupCollisions:
             base.cr.relatedObjectMgr.abortRequest(self.pendingSetupCollisions)
             self.pendingSetupCollisions = None
+
         DistributedShippart.DistributedShippart.disable(self)
         DistributedDestructibleObject.DistributedDestructibleObject.disable(self)
-        return
 
     def delete(self):
         self.notify.debug('Delete ' + str(self.doId))
         if self.ship.cabin:
             self.ship.cabin[1] = None
+
         del self.dna
         DistributedShippart.DistributedShippart.delete(self)
         DistributedDestructibleObject.DistributedDestructibleObject.delete(self)
-        return
 
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
@@ -96,7 +96,8 @@ class DistributedCabin(DistributedShippart.DistributedShippart, DistributedDestr
 
     def getHp(self):
         return [
-         self.Hp, self.maxHp]
+            self.Hp,
+            self.maxHp]
 
     def playDeath(self):
         pass
@@ -185,4 +186,3 @@ class DistributedCabin(DistributedShippart.DistributedShippart, DistributedDestr
 
     def setMaxCargo(self, maxCargo):
         self.maxCargo = maxCargo
-# okay decompiling .\pirates\shipparts\DistributedCabin.pyc

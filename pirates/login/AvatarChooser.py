@@ -187,7 +187,7 @@ class AvatarChooser(DirectObject, StateData):
                 self.ship = ShipModel(None, ShipGlobals.INTERCEPTORL1, 0, 1)
                 self.ship.setPosHpr(140.86, 538.97, -3.62, -133.04, 0.0, 0.0)
                 self.ship.reparentTo(self.scene)
-                for n in self.ship.findAllMatches('**/+LODNode') :
+                for n in self.ship.findAllMatches('**/+LODNode'):
                     n.node().forceSwitch(n.node().getHighestSwitch())
 
         self.avatarListFrame = DirectFrame(parent=base.a2dTopLeft, relief=None)

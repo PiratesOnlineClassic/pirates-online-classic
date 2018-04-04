@@ -1,26 +1,24 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.BowSprit
-from direct.actor import Actor
-from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
+from direct.gui.DirectGui import *
+from direct.actor import Actor
 from pandac.PandaModules import *
-from pirates.battle import CannonGlobals, WeaponGlobals
-from pirates.effects.BlackSmoke import BlackSmoke
+from pirates.piratesbase.PiratesGlobals import *
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.effects.ShipSplintersA import ShipSplintersA
+from pirates.shipparts import BowSpritDNA
+from pirates.effects.SmokeCloud import SmokeCloud
 from pirates.effects.ExplosionFlip import ExplosionFlip
 from pirates.effects.Fire import Fire
-from pirates.effects.ShipSplintersA import ShipSplintersA
-from pirates.effects.SmokeCloud import SmokeCloud
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.piratesbase.PiratesGlobals import *
-from pirates.ship import ShipGlobals
-from pirates.shipparts import BowSpritDNA, ShipPart
+from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.battle import CannonGlobals
+from pirates.battle import WeaponGlobals
+from pirates.shipparts import ShipPart
+from pirates.ship import ShipGlobals
 
 
 class BowSprit(NodePath, ShipPart.ShipPart):
-    __module__ = __name__
     notify = directNotify.newCategory('BowSprit')
 
     def __init__(self):
@@ -29,7 +27,6 @@ class BowSprit(NodePath, ShipPart.ShipPart):
         self.rotateMin = 360
         self.rotateMax = 720
         self.texture = None
-        return
 
     def disable(self):
         ShipPart.ShipPart.disable(self)
@@ -42,8 +39,10 @@ class BowSprit(NodePath, ShipPart.ShipPart):
     def loadModel(self, dna):
         if config.GetBool('disable-ship-geom', 0):
             return
+
         if self.prop:
             return
+
         self.dna = dna
         filePrefix = self.getPrefix(self.dna.prowType)
         self.geom_High = loader.loadModel('%s_hi' % filePrefix)
@@ -60,12 +59,12 @@ class BowSprit(NodePath, ShipPart.ShipPart):
 
     def findDebris(self):
         self.break1High = self.controls
-        self.break2High = [self.geom_High]
+        self.break2High = [
+            self.geom_High]
         self.break1Med = None
         self.break2Med = None
         self.break1Low = None
         self.break2Low = None
-        return
 
     def getDebrisParent(self):
         return render
@@ -87,4 +86,3 @@ class BowSprit(NodePath, ShipPart.ShipPart):
     def addToShip(self):
         self.propCollisions.reparentTo(self.ship.modelCollisions)
         ShipPart.ShipPart.addToShip(self)
-# okay decompiling .\pirates\shipparts\BowSprit.pyc
