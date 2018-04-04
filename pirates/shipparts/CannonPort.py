@@ -1,21 +1,24 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.CannonPort
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
-from pirates.effects.Bonfire import Bonfire
-from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase.PiratesGlobals import *
+from direct.interval.IntervalGlobal import *
+from pirates.piratesbase import PiratesGlobals
+from pandac.PandaModules import *
+from direct.actor import Actor
 from pirates.ship import ShipGlobals
+from pirates.effects.Bonfire import Bonfire
 
-CannonPortDict = {InventoryType.CannonL1: 'models/shipparts/cannon_port', InventoryType.CannonL2: 'models/shipparts/cannon_port', InventoryType.CannonL3: 'models/shipparts/cannon_port', InventoryType.CannonL4: 'models/shipparts/cannon_port', ShipGlobals.BPCANNON: 'models/shipparts/cannon_bp_port', ShipGlobals.SKEL_CANNON_L1: 'models/shipparts/GP_cannonPort', ShipGlobals.SKEL_CANNON_L2: 'models/shipparts/GP_cannonPort', ShipGlobals.SKEL_CANNON_L3: 'models/shipparts/GP_cannonPort'}
-DefaultAnimDict = (
- ('zero', '_zero'), ('Fire', '_fire'), ('Open', '_open'), ('Close', '_close'))
+CannonPortDict = {
+    InventoryType.CannonL1: 'models/shipparts/cannon_port',
+    InventoryType.CannonL2: 'models/shipparts/cannon_port',
+    InventoryType.CannonL3: 'models/shipparts/cannon_port',
+    InventoryType.CannonL4: 'models/shipparts/cannon_port',
+    ShipGlobals.BPCANNON: 'models/shipparts/cannon_bp_port',
+    ShipGlobals.SKEL_CANNON_L1: 'models/shipparts/GP_cannonPort',
+    ShipGlobals.SKEL_CANNON_L2: 'models/shipparts/GP_cannonPort',
+    ShipGlobals.SKEL_CANNON_L3: 'models/shipparts/GP_cannonPort'}
+DefaultAnimDict = (('zero', '_zero'), ('Fire', '_fire'), ('Open', '_open'), ('Close', '_close'))
+
 
 class CannonPort(NodePath):
-    __module__ = __name__
     notify = directNotify.newCategory('cannonPort')
 
     def __init__(self, cannonType, parent, locator, side, index):
@@ -32,14 +35,15 @@ class CannonPort(NodePath):
         self.loaded = False
         self._isEnabled = 1
         self._isTargetable = 0
-        if cannonType in [InventoryType.CannonL4]:
+        if cannonType in [
+            InventoryType.CannonL4]:
             self._isTargetable = 1
             self._addCollisionSphere(parent, side, index)
-        return
 
     def _loadModel(self, cannonType):
         if config.GetBool('disable-ship-geom', 0):
             return
+
         filePrefix = CannonPortDict.get(cannonType)
         self.prop = ShipGlobals.getActor(filePrefix)[1]
         self.openIval = Sequence(self.prop.actorInterval('Open'))
@@ -74,14 +78,15 @@ class CannonPort(NodePath):
     def delete(self):
         if self.prop:
             self.prop.clearPythonData()
+
         self.prop.removeNode()
         self.removeNode()
         self.parent = None
         if self.collSphereNodePath:
             self.collSphereNodePath.removeNode()
+
         self.collSphereNodePath = None
         self.ship = None
-        return
 
     def playOpen(self, offset=0):
         if self._isEnabled:
@@ -102,14 +107,12 @@ class CannonPort(NodePath):
                 bf.reparentTo(self.locator)
                 bf.startLoop()
                 self.bf = bf
-            else:
-                if state == 1:
-                    if self.bf:
-                        self.bf.removeNode()
-                        self.bf = None
+            elif state == 1:
+                if self.bf:
+                    self.bf.removeNode()
+                    self.bf = None
+
             self._isEnabled = state
-        return
 
     def isEnabled(self):
         return self._isEnabled
-# okay decompiling .\pirates\shipparts\CannonPort.pyc

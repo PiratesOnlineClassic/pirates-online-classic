@@ -1,22 +1,22 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.DistributedBowSprit
-from direct.distributed.ClockDelta import *
-from direct.gui.DirectGui import *
-from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import quickProfile
-from pandac.PandaModules import *
-from pirates.battle import CannonGlobals, WeaponGlobals
-from pirates.destructibles import DistributedDestructibleObject
-from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesbase.PiratesGlobals import *
+from direct.interval.IntervalGlobal import *
+from direct.distributed.ClockDelta import *
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
 from pirates.ship import ShipGlobals
-from pirates.shipparts import BowSprit, BowSpritDNA, DistributedShippart
+from pirates.battle import CannonGlobals
+from pirates.battle import WeaponGlobals
+from pirates.shipparts import BowSpritDNA
+from pirates.shipparts import BowSprit
+from pirates.shipparts import DistributedShippart
+from pirates.destructibles import DistributedDestructibleObject
 
 
-class DistributedBowSprit(DistributedShippart.DistributedShippart, DistributedDestructibleObject.DistributedDestructibleObject):
-    __module__ = __name__
+class DistributedBowSprit(DistributedShippart.DistributedShippart,
+                          DistributedDestructibleObject.DistributedDestructibleObject):
     notify = directNotify.newCategory('DistributedBowSprit')
 
     def __init__(self, cr):
@@ -25,7 +25,6 @@ class DistributedBowSprit(DistributedShippart.DistributedShippart, DistributedDe
         NodePath.__init__(self, 'bowsprit')
         self.stats = None
         self.hull = None
-        return
 
     def generate(self):
         self.notify.debug('Generate ' + str(self.doId))
@@ -39,10 +38,11 @@ class DistributedBowSprit(DistributedShippart.DistributedShippart, DistributedDe
         DistributedDestructibleObject.DistributedDestructibleObject.announceGenerate(self)
         if self.Hp <= 0:
             self.prop.hideBreakAll()
-        breakThreshold = self.maxHp / self.prop.numBreaks
-        for i in range(self.prop.numBreaks):
-            if self.Hp < breakThreshold * i:
-                self.prop.hideBreak()
+        else:
+            breakThreshold = self.maxHp / self.prop.numBreaks
+            for i in range(self.prop.numBreaks):
+                if self.Hp < breakThreshold * i:
+                    self.prop.hideBreak()
 
     def disable(self):
         self.notify.debug('Disable ' + str(self.doId))
@@ -55,13 +55,13 @@ class DistributedBowSprit(DistributedShippart.DistributedShippart, DistributedDe
         if isRam:
             if self.ship.ram:
                 self.ship.ram[1] = None
-        else:
-            if self.ship.bowsprit:
-                self.ship.bowsprit[1] = None
+
+        elif self.ship.bowsprit:
+            self.ship.bowsprit[1] = None
+
         del self.dna
         DistributedShippart.DistributedShippart.delete(self)
         DistributedDestructibleObject.DistributedDestructibleObject.delete(self)
-        return
 
     def createProp(self):
         isRam = self.dna.prowIsRam(self.dna.prowType)
@@ -77,16 +77,19 @@ class DistributedBowSprit(DistributedShippart.DistributedShippart, DistributedDe
                 else:
                     self.ship.bowsprit[1] = self
                 return
+
         self.prop = BowSprit.BowSprit()
         self.prop.shipId = self.shipId
         self.prop.isAlive = 1
         if isRam:
             self.ship.ram = [
-             self.prop, self]
+                self.prop,
+                self]
             self.prop.hideDebris = 1
         else:
             self.ship.bowsprit = [
-             self.prop, self]
+                self.prop,
+                self]
 
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
@@ -100,7 +103,9 @@ class DistributedBowSprit(DistributedShippart.DistributedShippart, DistributedDe
                 messenger.send('setBowspritHp-%s' % self.ship.doId, self.getHp())
 
     def getHp(self):
-        return [self.Hp, self.maxHp]
+        return [
+            self.Hp,
+            self.maxHp]
 
     def playDeath(self):
         pass
@@ -159,7 +164,10 @@ class DistributedBowSprit(DistributedShippart.DistributedShippart, DistributedDe
         self.prop.geom_Low.setScale(lscl)
         if self.ship:
             if self.dna.prowIsRam(self.dna.prowType):
-                messenger.send('setRamHp-%s' % self.ship.doId, [self.Hp, self.maxHp])
+                messenger.send('setRamHp-%s' % self.ship.doId, [
+                    self.Hp,
+                    self.maxHp])
             else:
-                messenger.send('setBowspritHp-%s' % self.ship.doId, [self.Hp, self.maxHp])
-# okay decompiling .\pirates\shipparts\DistributedBowSprit.pyc
+                messenger.send('setBowspritHp-%s' % self.ship.doId, [
+                    self.Hp,
+                    self.maxHp])

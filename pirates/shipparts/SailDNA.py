@@ -1,29 +1,30 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.SailDNA
-import random
-
+from pandac.PandaModules import *
 from direct.directnotify.DirectNotifyGlobal import *
+import random
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from otp.avatar import AvatarDNA
 from otp.speedchat import ColorSpace
-from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
 from pirates.ship import ShipGlobals
-
+from pirates.piratesbase import PiratesGlobals
 notify = directNotify.newCategory('SailDNA')
-SailTextureDict = {1: 'ship_sail', 202: 'ship_sailBP'}
-LogoDict = {200: 'logo_redSkull', 201: 'ship_sailBP_patches', 202: 'logo_eitc', 203: 'logo_eitc_emblem', 210: 'logo_french_flag', 211: 'logo_spanish_flag'}
-DefaultAnimDict = (
- ('Idle', 'idle'), ('Hit', 'hit'), ('Billow', 'billow'), ('Rolldown', 'rolldown'), ('Hidden', 'hidden'))
+SailTextureDict = {
+    1: 'ship_sail',
+    202: 'ship_sailBP'}
+LogoDict = {
+    200: 'logo_redSkull',
+    201: 'ship_sailBP_patches',
+    202: 'logo_eitc',
+    203: 'logo_eitc_emblem',
+    210: 'logo_french_flag',
+    211: 'logo_spanish_flag'}
+DefaultAnimDict = (('Idle', 'idle'), ('Hit', 'hit'), ('Billow', 'billow'), ('Rolldown', 'rolldown'), ('Hidden', 'hidden'))
 SailColors = [
  VBase4(1.0, 1.0, 1.0, 1.0), VBase4(0.0, 0.0, 0.0, 1.0), VBase4(0.933594, 0.265625, 0.28125, 1.0), VBase4(0.863281, 0.40625, 0.417969, 1.0), VBase4(0.710938, 0.234375, 0.4375, 1.0), VBase4(0.992188, 0.480469, 0.167969, 1.0), VBase4(0.996094, 0.898438, 0.320312, 1.0), VBase4(0.550781, 0.824219, 0.324219, 1.0), VBase4(0.242188, 0.742188, 0.515625, 1.0), VBase4(0.433594, 0.90625, 0.835938, 1.0), VBase4(0.347656, 0.820312, 0.953125, 1.0), VBase4(0.191406, 0.5625, 0.773438, 1.0)]
 
-class SailDNA(AvatarDNA.AvatarDNA):
-    __module__ = __name__
 
+class SailDNA(AvatarDNA.AvatarDNA):
+    
     def __init__(self):
         self.baseTeam = PiratesGlobals.INVALID_TEAM
         self.mastType = 0
@@ -41,25 +42,21 @@ class SailDNA(AvatarDNA.AvatarDNA):
     def getMastClass(self):
         if self.mastType >= ShipGlobals.MAINMASTL1 and self.mastType <= ShipGlobals.MAINMASTL5:
             return 'mainmast'
+        elif self.mastType >= ShipGlobals.TRIMASTL1 and self.mastType <= ShipGlobals.TRIMASTL5:
+            return 'trimast'
+        elif self.mastType >= ShipGlobals.FOREMASTL1 and self.mastType <= ShipGlobals.FOREMASTL3:
+            return 'foremast'
+        elif self.mastType >= ShipGlobals.AFTMASTL1 and self.mastType <= ShipGlobals.AFTMASTL3:
+            return 'aftmast'
         else:
-            if self.mastType >= ShipGlobals.TRIMASTL1 and self.mastType <= ShipGlobals.TRIMASTL5:
-                return 'trimast'
-            else:
-                if self.mastType >= ShipGlobals.FOREMASTL1 and self.mastType <= ShipGlobals.FOREMASTL3:
-                    return 'foremast'
-                else:
-                    if self.mastType >= ShipGlobals.AFTMASTL1 and self.mastType <= ShipGlobals.AFTMASTL3:
-                        return 'aftmast'
-                    else:
-                        return
-        return
+            return None
 
     def setBaseTeam(self, val):
         self.baseTeam = val
-
+    
     def setMastType(self, val):
         self.mastType = val
-
+    
     def setMastPosIndex(self, val):
         self.mastPosIndex = val
 
@@ -89,16 +86,17 @@ class SailDNA(AvatarDNA.AvatarDNA):
 
     def getSailType(self):
         return self.sailType
-
+    
     def getPosIndex(self):
         return self.posIndex
-
+    
     def getTextureIndex(self):
         return self.textureIndex
-
+    
     def getColorIndex(self):
         return self.colorIndex
 
     def getLogoIndex(self):
         return self.logoIndex
-# okay decompiling .\pirates\shipparts\SailDNA.pyc
+
+

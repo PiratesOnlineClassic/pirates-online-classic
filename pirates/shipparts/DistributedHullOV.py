@@ -1,16 +1,10 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.DistributedHullOV
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObjectOV
 from pirates.ship import ShipGlobals
 
-
 class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedHullOV')
-
+    
     def __init__(self, cr):
         DistributedObjectOV.DistributedObjectOV.__init__(self, cr)
         self.shipId = 0
@@ -42,7 +36,6 @@ class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
         self.rBroadsideConfig = []
         self.lBroadsideConfig = []
         self.pendingLinkToShip = None
-        return
 
     def announceGenerate(self):
         DistributedObjectOV.DistributedObjectOV.announceGenerate(self)
@@ -51,18 +44,19 @@ class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
         DistributedObjectOV.DistributedObjectOV.disable(self)
 
     def __repr__(self):
-        return `(self.doId)`
+        return `self.doId`
 
     def setShipId(self, val):
         self.shipId = val
 
     def setShipClass(self, val):
         self.shipClass = val
-        messenger.send('setShipClass-%s' % self.shipId, [self.shipClass])
+        messenger.send('setShipClass-%s' % self.shipId, [
+            self.shipClass])
 
     def setBaseTeam(self, val):
         pass
-
+    
     def setHullTextureIndex(self, val):
         pass
 
@@ -92,25 +86,28 @@ class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
 
     def setAftsailConfig(self, val):
         pass
-
+    
     def setProwType(self, val):
         pass
-
+    
     def setRamType(self, val):
         pass
-
+    
     def setCabinType(self, val):
         pass
 
     def setCannonConfig(self, val):
         self.cannonConfig = val
-        messenger.send('setHullCannonConfig-%s' % self.shipId, [val])
+        messenger.send('setHullCannonConfig-%s' % self.shipId, [
+            val])
 
     def setLeftBroadsideConfig(self, val):
         self.lBroadsideConfig = val
-        messenger.send('setHullLeftBroadsideConfig-%s' % self.shipId, [val])
+        messenger.send('setHullLeftBroadsideConfig-%s' % self.shipId, [
+            val])
 
     def setRightBroadsideConfig(self, val):
         self.rBroadsideConfig = val
-        messenger.send('setHullRightBroadsideConfig-%s' % self.shipId, [val])
-# okay decompiling .\pirates\shipparts\DistributedHullOV.pyc
+        messenger.send('setHullRightBroadsideConfig-%s' % self.shipId, [
+            val])
+
