@@ -20,7 +20,6 @@ dc-file astron/dclass/otp.dc
 
 # Server:
 game-server 127.0.0.1
-server-port 7198
 server-version pirates-dev
 
 # Notifier:
