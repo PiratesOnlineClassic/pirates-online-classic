@@ -740,9 +740,13 @@ struct AvatarType {
   uint8 boss;
 };
 
-typedef char QuestId;
+struct QuestId {
+  string id;
+}
 
-typedef char QuestGiverId;
+struct QuestGiverId {
+  string giverId;
+}
 
 struct QuestTaskState {
   uint16 attempts;
