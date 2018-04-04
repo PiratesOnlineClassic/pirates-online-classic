@@ -92,7 +92,7 @@ class Flag(NodePath):
         self.__activateEmblems()
 
     def __activateEmblems(self):
-        oldEmblemNps = self.findAllMatches('**/emblem-*').asList()
+        oldEmblemNps = self.findAllMatches('**/emblem-*') 
         for np in oldEmblemNps:
             np.detachNode()
             np.remove()
@@ -160,7 +160,7 @@ class Flag(NodePath):
         self.__setBgVFlip()
 
     def __setBgStyle(self):
-        oldBgNps = self.findAllMatches('**/bg-*').asList()
+        oldBgNps = self.findAllMatches('**/bg-*') 
         for np in oldBgNps:
             np.detachNode()
             np.remove()
@@ -209,7 +209,7 @@ class Flag(NodePath):
 
     def __setBgHFlip(self):
         val = self.getBgHFlip()
-        bgNpCol = self.findAllMatches('**/bg-*').asList()
+        bgNpCol = self.findAllMatches('**/bg-*') 
         scale = [
          1.0, 1.0]
         if val:
@@ -229,7 +229,7 @@ class Flag(NodePath):
 
     def __setBgVFlip(self):
         val = self.getBgVFlip()
-        bgNpCol = self.findAllMatches('**/bg-*').asList()
+        bgNpCol = self.findAllMatches('**/bg-*') 
         scale = [
          1.0, 1.0]
         bgTexTransform = bgNpCol[0].getTexTransform(TextureStage.getDefault())

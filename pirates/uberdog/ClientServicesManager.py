@@ -9,13 +9,10 @@ class ClientServicesManager(DistributedObjectGlobal):
 
     def performLogin(self, doneEvent):
         self.doneEvent = doneEvent
-
         self.sendUpdate('login', [self.cr.playToken or 'dev'])
 
     def acceptLogin(self):
         messenger.send(self.doneEvent, [{'mode': 'success'}])
-        base.funnel.start_session()
-        base.funnel.submit_events()
 
     def requestAvatars(self):
         self.sendUpdate('requestAvatars')
@@ -39,7 +36,7 @@ class ClientServicesManager(DistributedObjectGlobal):
 
             data.append(PotentialAvatar(avNum, names, dna, avPosition, nameOpen))
 
-        avatarList[1] = data + [OTPGlobals.AvatarSlotAvailable] * (OTPGlobals.AvatarNumSlots - len(data))
+        avatarList[1] = data + [OTPGlobals.AvatarSlotAvailable] * (4 - len(data))
         self.cr.handleAvatarsList(avatarList)
 
     def sendCreateAvatar(self, avDNA, _, index):

@@ -1,4 +1,3 @@
-
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
@@ -7,8 +6,3 @@ class CentralLoggerAI(DistributedObjectAI):
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
-
-
-    # sendMessage(string, string, uint32, uint32) clsend
-
-

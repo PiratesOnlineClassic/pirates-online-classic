@@ -73,7 +73,7 @@ class Lantern(NodePath, ShatterableObject.ShatterableObject, ShipPart.ShipPart):
         self.propCollisions = self.attachNewNode('Lantern-%d' % self.dna.posIndex)
         self.prop.flattenMedium()
         self.initializeDebris(wantHidden=1, wantRotate=1)
-        self.coll = self.prop.findAllMatches('**/collisions/*').asList()
+        self.coll = self.prop.findAllMatches('**/collisions/*') 
         for c in self.coll:
             c.setTag('objType', str(PiratesGlobals.COLL_SHIPPART))
             c.setTag('propId', str(self.doId))

@@ -1,14 +1,8 @@
-
-from pirates.distributed.DistributedInteractiveUD import DistributedInteractiveUD
-from pirates.shipparts.DistributedShippartUD import DistributedShippartUD
+from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedSteeringWheelUD(DistributedInteractiveUD, DistributedShippartUD):
+class DistributedSteeringWheelUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSteeringWheelUD')
 
     def __init__(self, air):
-        DistributedInteractiveUD.__init__(self, air)
-        DistributedShippartUD.__init__(self, air)
-
-
-
+        DistributedObjectGlobalUD.__init__(self, air)

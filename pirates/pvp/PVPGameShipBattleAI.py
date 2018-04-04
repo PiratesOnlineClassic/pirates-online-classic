@@ -1,22 +1,8 @@
-
-from pirates.pvp.PVPGameBaseAI import PVPGameBaseAI
+from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-class PVPGameShipBattleAI(PVPGameBaseAI):
+class PVPGameShipBattleAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PVPGameShipBattleAI')
 
     def __init__(self, air):
-        PVPGameBaseAI.__init__(self, air)
-
-
-    # setShipDoId(DoId)
-
-    def setShipDoId(self, shipDoId):
-        self.sendUpdate('setShipDoId', [shipDoId])
-
-    # setBoarded() airecv clsend
-
-    def setBoarded(self, boarded):
-        pass
-
-
+        DistributedObjectAI.__init__(self, air)

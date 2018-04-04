@@ -34,3 +34,11 @@ notify-level-abs error
 notify-level-Actor error
 notify-level-DisplayOptions debug
 notify-timestamp 1
+
+# Buffer:
+framebuffer-alpha 1
+framebuffer-multisample #t
+multisamples 2
+prefer-parasite-buffer 1
+force-parasite-buffer 1
+alpha-bits 8

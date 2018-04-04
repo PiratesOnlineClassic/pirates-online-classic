@@ -35,7 +35,7 @@ class ShipDecor(NodePath, ShipPart.ShipPart):
         filePrefix = self.getPrefix(self.dna.decorType, self.dna.baseTeam)
         self.prop = loader.loadModelCopy(filePrefix[0])
         self.prop.flattenMedium()
-        self.coll = self.prop.findAllMatches('**/collision*').asList()
+        self.coll = self.prop.findAllMatches('**/collision*') 
         for c in self.coll:
             c.setTag('objType', str(PiratesGlobals.COLL_SHIPPART))
             c.setTag('propId', str(self.doId))

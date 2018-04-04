@@ -110,7 +110,7 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         self.notify.debug('enableFloors')
         floorName = 'floor_interior'
         self.uniqueFloorName = self.uniqueName(floorName)
-        collNodes = self.findAllMatches('**/+CollisionNode').asList()
+        collNodes = self.findAllMatches('**/+CollisionNode') 
         for collNode in collNodes:
             curMask = collNode.node().getIntoCollideMask()
             if curMask.hasBitsInCommon(PiratesGlobals.FloorBitmask):
@@ -218,7 +218,7 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         locatorNodes = self.geom.findAllMatches('**/portal_interior_*')
         locatorNodes.wrtReparentTo(self)
         self.locatorNodes = locatorNodes
-        self.portalNodes = self.geom.findAllMatches('**/portal_[0-9]').asList()
+        self.portalNodes = self.geom.findAllMatches('**/portal_[0-9]') 
         self.initBlockers(self.geom)
 
     def setName(self, name):

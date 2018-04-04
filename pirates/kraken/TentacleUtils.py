@@ -18,7 +18,7 @@ class TentacleUtils:
 
     def initStatusTable(self):
         self.statusTable = []
-        joints = self.findAllMatches('**/def_ten*').asList()
+        joints = self.findAllMatches('**/def_ten*') 
         for i in range(len(joints) - 1):
             self.statusTable.append([joints[i], joints[i + 1], 0, Vec3(0, 0, 0), [None, None, None]])
 

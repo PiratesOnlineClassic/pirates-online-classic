@@ -89,7 +89,7 @@ class Grabber(Creature, TentacleUtils):
 
     def getJoints(self):
         if not self.joints:
-            self.joints = self.findAllMatches('**/def_tent_*').asList()
+            self.joints = self.findAllMatches('**/def_tent_*') 
             self.joints.sort(key=NodePath.getName)
         return self.joints
 

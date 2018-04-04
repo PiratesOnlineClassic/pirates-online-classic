@@ -1,18 +1,8 @@
-
-from otp.friends.GuildManagerUD import GuildManagerUD
+from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
-class PCGuildManagerUD(GuildManagerUD):
+class PCGuildManagerUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('PCGuildManagerUD')
 
     def __init__(self, air):
-        GuildManagerUD.__init__(self, air)
-
-
-
-    # recvSCQuest(uint32, uint16, uint8, uint16)
-
-    def recvSCQuest(self, recvSCQuest, todo_uint16_1, todo_uint8_2, todo_uint16_3):
-        self.sendUpdate('recvSCQuest', [recvSCQuest, todo_uint16_1, todo_uint8_2, todo_uint16_3])
-
-
+        DistributedObjectGlobalUD.__init__(self, air)

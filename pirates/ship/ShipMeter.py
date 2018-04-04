@@ -96,7 +96,7 @@ class ShipMeter(DirectObject, NodePath):
         filePrefix = HullDict.get(modelType)
         self.hull = loader.loadModel(filePrefix)
         self.hull.reparentTo(self.modelRoot)
-        allPanels = self.hull.findAllMatches('**/panel_*').asList()
+        allPanels = self.hull.findAllMatches('**/panel_*') 
         for i in range(len(allPanels)):
             panel = self.hull.find('**/panel_' + str(i))
             if not panel.isEmpty():
@@ -123,7 +123,7 @@ class ShipMeter(DirectObject, NodePath):
         myMasts = []
         myMastStates = []
         mySails = []
-        mastSegments = self.mastModels[index].findAllMatches('**/mast_*').asList()
+        mastSegments = self.mastModels[index].findAllMatches('**/mast_*') 
         for i in range(len(mastSegments)):
             mastSegment = self.mastModels[index].find('**/mast_' + str(i))
             if not mastSegment.isEmpty():

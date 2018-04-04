@@ -1,4 +1,3 @@
-
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
@@ -11,10 +10,6 @@ class DistributedPopulationTrackerAI(DistributedObjectAI):
         self.population = 0
         self.popLimits = [0, 0]
 
-
-    # setShardId(uint32) required broadcast ram
-    
-    # AUTO GENERATED GETTER/SETTER. Inspection/Redoing recommended
     def setShardId(self, shardId):
         self.shardId = shardId
 
@@ -28,9 +23,6 @@ class DistributedPopulationTrackerAI(DistributedObjectAI):
     def getShardId(self):
         return self.shardId
 
-    # setPopulation(uint16) required broadcast ram
-    
-    # AUTO GENERATED GETTER/SETTER. Inspection/Redoing recommended
     def setPopulation(self, population):
         self.population = population
 
@@ -44,20 +36,15 @@ class DistributedPopulationTrackerAI(DistributedObjectAI):
     def getPopulation(self):
         return self.population
 
-    # setPopLimits(uint16, uint16) required broadcast ram
-    
-    # AUTO GENERATED GETTER/SETTER. Inspection/Redoing recommended
-    def setPopLimits(self, popLimits, todo_uint16_1):
-        self.popLimits = popLimits
+    def setPopLimits(self, min, max):
+        self.popLimits = [min, max]
 
-    def d_setPopLimits(self, popLimits, todo_uint16_1):
-        self.sendUpdate('setPopLimits', [popLimits, todo_uint16_1])
+    def d_setPopLimits(self, min, max):
+        self.sendUpdate('setPopLimits', [min, max])
 
-    def b_setPopLimits(self, popLimits, todo_uint16_1):
-        self.setPopLimits(popLimits, todo_uint16_1)
-        self.d_setPopLimits(popLimits, todo_uint16_1)
+    def b_setPopLimits(self, min, max):
+        self.setPopLimits(min, max)
+        self.d_setPopLimits(min, max)
 
     def getPopLimits(self):
         return self.popLimits
-
-

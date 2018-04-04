@@ -17,6 +17,8 @@ from pirates.piratesgui.GameOptions import *
 from pirates.seapatch.LerpSeaPatchInterval import LerpSeaPatchInterval
 from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import Water
+from pirates.seapatch.SeaPatchRoot import SeaPatchRoot
+from pirates.seapatch.SeaPatchNode import SeaPatchNode
 
 
 class SeaPatch(Water):

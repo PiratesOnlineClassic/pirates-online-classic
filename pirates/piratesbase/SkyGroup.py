@@ -27,7 +27,7 @@ class SkyGroup(NodePath):
         self.setScale(10)
         self.setZ(-10)
         skydome = loader.loadModel('models/sky/PiratesSkyDome')
-        geoms = skydome.findAllMatches('**/+GeomNode').asList()
+        geoms = skydome.findAllMatches('**/+GeomNode')
         for geom in geoms:
             self._clearTexAttrib(geom)
 

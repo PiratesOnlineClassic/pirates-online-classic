@@ -27,7 +27,7 @@ class ShipPanel(DirectFrame):
         DirectFrame.__init__(self, **kwargs)
         self.initialiseoptions(ShipPanel)
         gui = loader.loadModel('models/gui/toplevel_gui')
-        chestIcon = gui.findAllMatches('**/topgui_icon_ship_chest01').asList()
+        chestIcon = gui.findAllMatches('**/topgui_icon_ship_chest01') 
         cannonIcon = gui.find('**/topgui_icon_ship_cannon_single')
         broadsideIcon = gui.find('**/topgui_icon_ship_cannon_multiple')
         self.bottleFrame = ShipFrameBottle(parent=self, shipId=shipId, relief=None, state=DGG.DISABLED, pos=(0.075,

@@ -1,29 +1,32 @@
-
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import globalClockDelta
+from pirates.piratesbase import TODGlobals
 
 class DistributedTimeOfDayManagerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTimeOfDayManagerAI')
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
-        self.sync = [0, 0, 0, 0]
 
+        self.baseCycle = config.GetInt('tod-starting-cycle', TODGlobals.TOD_REGULAR_CYCLE)
+        self.cycleType = self.baseCycle
+        self.cycleSpeed = config.GetInt('tod-cycle-speed', 1)
+        self.startingNetTime = globalClockDelta.getRealNetworkTime(bits=32)
+        self.timeOffset = 0
 
-    # sync(uint8, uint8, uint32, uint32) required broadcast ram
-    
-    # AUTO GENERATED GETTER/SETTER. Inspection/Redoing recommended
-    def sync(self, sync, todo_uint8_1, todo_uint32_2, todo_uint32_3):
-        self.sync = sync
+    def sync(self, cycleType, cycleSpeed, startingNetTime, timeOffset):
+        self.cycleType = cycleType
+        self.cycleSpeed = cycleSpeed
+        self.startingNetTime = startingNetTime
+        self.timeOffset = timeOffset
 
-    def d_sync(self, sync, todo_uint8_1, todo_uint32_2, todo_uint32_3):
-        self.sendUpdate('sync', [sync, todo_uint8_1, todo_uint32_2, todo_uint32_3])
+    def d_sync(self, cycleType, cycleSpeed, startingNetTime, timeOffset):
+        self.sendUpdate('syncTOD', [cycleType, cycleSpeed, startingNetTime, timeOffset])
 
-    def b_sync(self, sync, todo_uint8_1, todo_uint32_2, todo_uint32_3):
-        self.sync(sync, todo_uint8_1, todo_uint32_2, todo_uint32_3)
-        self.d_sync(sync, todo_uint8_1, todo_uint32_2, todo_uint32_3)
+    def b_sync(self, cycleType, cycleSpeed, startingNetTime, timeOffset):
+        self.sync(cycleType, cycleSpeed, startingNetTime, timeOffset)
+        self.d_sync(cycleType, cycleSpeed, startingNetTime, timeOffset)
 
-    def gync(self):
-        return self.sync
-
-
+    def getSync(self):
+        return [self.cycleType, self.cycleSpeed, self.startingNetTime, self.timeOffset]

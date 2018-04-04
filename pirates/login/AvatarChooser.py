@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.login.AvatarChooser
 import math
 import os
 import time
@@ -191,7 +187,7 @@ class AvatarChooser(DirectObject, StateData):
                 self.ship = ShipModel(None, ShipGlobals.INTERCEPTORL1, 0, 1)
                 self.ship.setPosHpr(140.86, 538.97, -3.62, -133.04, 0.0, 0.0)
                 self.ship.reparentTo(self.scene)
-                for n in self.ship.findAllMatches('**/+LODNode').asList():
+                for n in self.ship.findAllMatches('**/+LODNode') :
                     n.node().forceSwitch(n.node().getHighestSwitch())
 
         self.avatarListFrame = DirectFrame(parent=base.a2dTopLeft, relief=None)
@@ -805,9 +801,7 @@ class AvatarChooser(DirectObject, StateData):
             height = 1.6
             x = -width / 2
             y = -height / 2
-            self.currentSubId = self.subIds[self.currentSubIndex]
-            subAccess = base.cr.accountDetailRecord.subDetails[self.currentSubId].subAccess
-            self.gameOptions = GameOptions('Game Options', x, y, width, height, base.options, access=subAccess, chooser=self)
+            self.gameOptions = GameOptions('Game Options', x, y, width, height, base.options, chooser=self)
             self.gameOptions.show()
 
     def __handleQuit(self):
@@ -1011,10 +1005,7 @@ class AvatarChooser(DirectObject, StateData):
         else:
             self.nextSubButton.show()
         self.currentSubId = self.subIds[self.currentSubIndex]
-        subName = base.cr.accountDetailRecord.subDetails[self.currentSubId].subName
-        subAccess = base.cr.accountDetailRecord.subDetails[self.currentSubId].subAccess
-        subAccessStr = PLocalizer.AccessLevel[subAccess]
-        subLabelText = '\x01white\x01%s\x02\n\x01smallCaps\x01%s\x02' % (subName, subAccessStr)
+        subLabelText = '\x01white\x01%s\x02' % base.cr.launcher.getPlayToken()
         self.subLabel['text'] = subLabelText
         for frame in self.subFrames.values():
             frame.hide()

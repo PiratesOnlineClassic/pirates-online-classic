@@ -43,6 +43,7 @@ from PotentialAvatar import PotentialAvatar
 class OTPClientRepository(ClientRepositoryBase):
     __module__ = __name__
     notify = directNotify.newCategory('OTPClientRepository')
+    notify.setDebug(True)
     avatarLimit = 6
     WishNameResult = Enum(['Failure', 'PendingApproval', 'Approved', 'Rejected'])
 
@@ -360,7 +361,7 @@ class OTPClientRepository(ClientRepositoryBase):
         self.renderFrame()
         self.loginDoneEvent = 'loginDone'
         self.accept(self.loginDoneEvent, self.__handleLoginDone)
-        #self.csm.performLogin(self.loginDoneEvent)
+        self.csm.performLogin(self.loginDoneEvent)
         self.waitForDatabaseTimeout(requestName='WaitOnCSMLoginResponse')
 
     def setGameType(self):
@@ -731,12 +732,10 @@ class OTPClientRepository(ClientRepositoryBase):
         return
 
     def enterWaitForAvatarList(self):
-        self.handler = self.handleWaitForAvatarList
         self._requestAvatarList()
 
     def _requestAvatarList(self):
-        self.cleanupWaitingForDatabase()
-        self.sendGetAvatarsMsg()
+        self.csm.requestAvatars()
         self.waitForDatabaseTimeout(requestName='WaitForAvatarList')
         self.acceptOnce(OtpAvatarManager.OtpAvatarManager.OnlineEvent, self._requestAvatarList)
 
@@ -750,6 +749,10 @@ class OTPClientRepository(ClientRepositoryBase):
         self.ignore(OtpAvatarManager.OtpAvatarManager.OnlineEvent)
         self.handler = None
         return
+
+    def handleAvatarsList(self, avatars):
+        self.avList = avatars
+        self.loginFSM.request('chooseAvatar', [self.avList])
 
     def handleWaitForAvatarList(self, msgType, di):
         if msgType == CLIENT_GET_AVATARS_RESP:
@@ -1787,8 +1790,8 @@ class OTPClientRepository(ClientRepositoryBase):
 
     def __doGenerate(self, doId, parentId, zoneId, classId, di, other):
         dclass = self.dclassesByNumber[classId]
-        if self._isInvalidPlayerAvatarGenerate(doId, dclass, parentId, zoneId):
-            return
+        #if self._isInvalidPlayerAvatarGenerate(doId, dclass, parentId, zoneId):
+        #    return
         dclass.startGenerate()
         if other:
             distObj = self.generateWithRequiredOtherFields(dclass, doId, di, parentId, zoneId)

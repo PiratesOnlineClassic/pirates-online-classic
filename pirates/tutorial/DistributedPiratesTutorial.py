@@ -366,7 +366,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             self.preloadCutscene(CutsceneData.PRELOADED_CUTSCENE_STAGE3)
             self._stopTutorialInteriorEffects()
             self.island.setZoneLevel(0)
-            self._targetNps = self.island.findAllMatches('**/TorchFire').asList()
+            self._targetNps = self.island.findAllMatches('**/TorchFire') 
             self._phantomCannon = PhantomCannon(self.cr, self.island, CannonDistance, 50, self._targetNps, self.island)
             self._phantomCannon.start()
 

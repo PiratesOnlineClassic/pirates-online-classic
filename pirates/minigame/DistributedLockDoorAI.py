@@ -1,12 +1,8 @@
-
-from pirates.minigame.DistributedLockAI import DistributedLockAI
+from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedLockDoorAI(DistributedLockAI):
+class DistributedLockDoorAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLockDoorAI')
 
     def __init__(self, air):
-        DistributedLockAI.__init__(self, air)
-
-
-
+        DistributedObjectAI.__init__(self, air)

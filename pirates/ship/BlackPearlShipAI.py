@@ -1,12 +1,8 @@
-
-from pirates.ship.DistributedShipAI import DistributedShipAI
+from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-class BlackPearlShipAI(DistributedShipAI):
+class BlackPearlShipAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('BlackPearlShipAI')
 
     def __init__(self, air):
-        DistributedShipAI.__init__(self, air)
-
-
-
+        DistributedObjectAI.__init__(self, air)

@@ -1083,8 +1083,7 @@ class GameOptions(BorderFrame):
     widescreen_resolution_table = [(1280, 720), (1920, 1080)]
     MinimumHorizontalResolution = 800
     MinimumVerticalResolution = 600
-
-    def __init__(self, title, x, y, width, height, options=None, file_path=None, pipe=None, access=0, chooser=0, keyMappings=None):
+    def __init__(self, title, x, y, width, height, options=None, file_path=None, pipe=None, chooser=0, keyMappings=None):
         self.inAdFrame = False
         self.width = width
         self.height = height
@@ -1140,16 +1139,7 @@ class GameOptions(BorderFrame):
         except:
             pass
         else:
-            if access == Freebooter.VELVET_ROPE:
-                self.freeLock = True
-            else:
-                self.freeLock = False
-            if os.getenv('GAME_SHOW_ADDS') == 'NO' or sys.platform == 'darwin' or sys.platform == 'linux2':
-                self.freeLock = False
-            else:
-                if hasattr(base, 'localAvatar'):
-                    if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
-                        self.freeLock = True
+            self.freeLock = False
             if base.config.GetBool('use-simple-gameoptions-gui', 1):
                 self.gui = GameOptionsGui(self, title, x, y, width, height, options, file_path, pipe, access, chooser, keyMappings)
                 return

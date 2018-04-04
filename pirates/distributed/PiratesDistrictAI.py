@@ -1,6 +1,6 @@
-
 from otp.distributed.DistributedDistrictAI import DistributedDistrictAI
 from direct.directnotify import DirectNotifyGlobal
+from pirates.piratesbase import PiratesGlobals
 
 class PiratesDistrictAI(DistributedDistrictAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesDistrictAI')
@@ -9,13 +9,13 @@ class PiratesDistrictAI(DistributedDistrictAI):
         DistributedDistrictAI.__init__(self, air)
         self.avatarCount = 0
         self.newAvatarCount = 0
-        self.mainWorld = ''
-        self.shardType = 0
+        self.mainWorldFile = ''
+        self.shardType = PiratesGlobals.SHARD_MAIN
+        self.populationLimits = [0, 0]
 
+    def getParentingRules(self):
+        return ['', '']
 
-    # setAvatarCount(uint32) broadcast required
-    
-    # AUTO GENERATED GETTER/SETTER. Inspection/Redoing recommended
     def setAvatarCount(self, avatarCount):
         self.avatarCount = avatarCount
 
@@ -23,15 +23,12 @@ class PiratesDistrictAI(DistributedDistrictAI):
         self.sendUpdate('setAvatarCount', [avatarCount])
 
     def b_setAvatarCount(self, avatarCount):
-        self.setAvatarCount(avatarCount)
         self.d_setAvatarCount(avatarCount)
+        self.setAvatarCount(avatarCount)
 
     def getAvatarCount(self):
         return self.avatarCount
 
-    # setNewAvatarCount(uint32) broadcast required
-    
-    # AUTO GENERATED GETTER/SETTER. Inspection/Redoing recommended
     def setNewAvatarCount(self, newAvatarCount):
         self.newAvatarCount = newAvatarCount
 
@@ -39,31 +36,25 @@ class PiratesDistrictAI(DistributedDistrictAI):
         self.sendUpdate('setNewAvatarCount', [newAvatarCount])
 
     def b_setNewAvatarCount(self, newAvatarCount):
-        self.setNewAvatarCount(newAvatarCount)
         self.d_setNewAvatarCount(newAvatarCount)
+        self.setNewAvatarCount(newAvatarCount)
 
     def getNewAvatarCount(self):
         return self.newAvatarCount
 
-    # setMainWorld(string) broadcast required
-    
-    # AUTO GENERATED GETTER/SETTER. Inspection/Redoing recommended
-    def setMainWorld(self, mainWorld):
-        self.mainWorld = mainWorld
+    def setMainWorld(self, mainWorldFile):
+        self.mainWorldFile = mainWorldFile
 
-    def d_setMainWorld(self, mainWorld):
-        self.sendUpdate('setMainWorld', [mainWorld])
+    def d_setMainWorld(self, mainWorldFile):
+        self.sendUpdate('setMainWorld', [mainWorldFile])
 
-    def b_setMainWorld(self, mainWorld):
-        self.setMainWorld(mainWorld)
-        self.d_setMainWorld(mainWorld)
+    def b_setMainWorld(self, mainWorldFile):
+        self.setMainWorld(mainWorldFile)
+        self.d_setMainWorld(mainWorldFile)
 
     def getMainWorld(self):
-        return self.mainWorld
+        return self.mainWorldFile
 
-    # setShardType(uint8) broadcast required ram
-    
-    # AUTO GENERATED GETTER/SETTER. Inspection/Redoing recommended
     def setShardType(self, shardType):
         self.shardType = shardType
 
@@ -76,10 +67,3 @@ class PiratesDistrictAI(DistributedDistrictAI):
 
     def getShardType(self):
         return self.shardType
-
-    # setPopulationLimits(uint16, uint16)
-
-    def setPopulationLimits(self, populationLimits, todo_uint16_1):
-        self.sendUpdate('setPopulationLimits', [populationLimits, todo_uint16_1])
-
-

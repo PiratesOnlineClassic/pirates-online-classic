@@ -1,12 +1,8 @@
-
-from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGridAI
+from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedOceanGridAI(DistributedCartesianGridAI):
+class DistributedOceanGridAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedOceanGridAI')
 
     def __init__(self, air):
-        DistributedCartesianGridAI.__init__(self, air)
-
-
-
+        DistributedObjectAI.__init__(self, air)

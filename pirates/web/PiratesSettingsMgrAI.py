@@ -1,12 +1,8 @@
-
-from otp.web.SettingsMgrAI import SettingsMgrAI
+from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-class PiratesSettingsMgrAI(SettingsMgrAI):
+class PiratesSettingsMgrAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesSettingsMgrAI')
 
     def __init__(self, air):
-        SettingsMgrAI.__init__(self, air)
-
-
-
+        DistributedObjectAI.__init__(self, air)

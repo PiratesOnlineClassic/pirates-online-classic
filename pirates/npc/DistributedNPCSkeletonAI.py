@@ -1,12 +1,8 @@
-
-from pirates.battle.DistributedBattleNPCAI import DistributedBattleNPCAI
+from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedNPCSkeletonAI(DistributedBattleNPCAI):
+class DistributedNPCSkeletonAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCSkeletonAI')
 
     def __init__(self, air):
-        DistributedBattleNPCAI.__init__(self, air)
-
-
-
+        DistributedObjectAI.__init__(self, air)

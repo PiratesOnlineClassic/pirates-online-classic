@@ -129,6 +129,7 @@ class PiratesClientRepository(OTPClientRepository):
         self.interactionMgr = InteractionManager.InteractionManager()
         self.currCamParent = None
         self.uidMgr = UniqueIdManager.UniqueIdManager(self)
+        self.accountDetailRecord = AccountDetailRecord()
         self.fakeMSP = None
         self.questDynMap = QuestLadderDynMap.QuestLadderDynMap()
         self.questDependency = QuestLadderDependency()

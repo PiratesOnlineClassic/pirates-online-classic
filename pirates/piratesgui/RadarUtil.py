@@ -48,10 +48,10 @@ class RadarUtil(DirectFrame):
     def modifyWorld(self):
         base.setBackgroundColor(Vec4(0.8))
         render.find('**/seapatch').hide()
-        for n in render.findAllMatches('**/+LODNode').asList():
+        for n in render.findAllMatches('**/+LODNode') :
             n.node().forceSwitch(n.node().getHighestSwitch())
 
-        for n in render.findAllMatches('**/*nametag3d*').asList():
+        for n in render.findAllMatches('**/*nametag3d*') :
             n.hide()
 
         if hasattr(base, 'localAvatar'):
@@ -65,10 +65,10 @@ class RadarUtil(DirectFrame):
     def resetWorld(self):
         render.find('**/seapatch').show()
         render.clearFog()
-        for n in render.findAllMatches('**/+LODNode').asList():
+        for n in render.findAllMatches('**/+LODNode') :
             n.node().clearForceSwitch()
 
-        for n in render.findAllMatches('**/*nametag3d*').asList():
+        for n in render.findAllMatches('**/*nametag3d*') :
             n.show()
 
         if hasattr(base, 'localAvatar'):

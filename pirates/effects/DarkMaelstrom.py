@@ -46,7 +46,7 @@ class DarkMaelstrom(DirectObject, NodePath):
         self.bolt4.setBillboardAxis()
         self.bolt4.setColorScaleOff()
         self.bolt4.setColor(Vec4(0))
-        stormTops = self.glow.findAllMatches('**/Swirl_*').asList()
+        stormTops = self.glow.findAllMatches('**/Swirl_*') 
         for top in stormTops:
             top.setBin('fixed', 125)
 

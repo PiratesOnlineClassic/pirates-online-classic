@@ -1,12 +1,8 @@
-
-from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
+from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedWelcomeWorldAI(DistributedInstanceBaseAI):
+class DistributedWelcomeWorldAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedWelcomeWorldAI')
 
     def __init__(self, air):
-        DistributedInstanceBaseAI.__init__(self, air)
-
-
-
+        DistributedObjectAI.__init__(self, air)

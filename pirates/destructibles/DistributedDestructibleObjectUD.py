@@ -1,12 +1,8 @@
-
-from direct.distributed.DistributedNodeUD import DistributedNodeUD
+from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedDestructibleObjectUD(DistributedNodeUD):
+class DistributedDestructibleObjectUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDestructibleObjectUD')
 
     def __init__(self, air):
-        DistributedNodeUD.__init__(self, air)
-
-
-
+        DistributedObjectGlobalUD.__init__(self, air)

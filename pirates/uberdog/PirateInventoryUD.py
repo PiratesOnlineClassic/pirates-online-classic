@@ -1,12 +1,8 @@
-
-from pirates.uberdog.DistributedInventoryUD import DistributedInventoryUD
+from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
-class PirateInventoryUD(DistributedInventoryUD):
+class PirateInventoryUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('PirateInventoryUD')
 
     def __init__(self, air):
-        DistributedInventoryUD.__init__(self, air)
-
-
-
+        DistributedObjectGlobalUD.__init__(self, air)

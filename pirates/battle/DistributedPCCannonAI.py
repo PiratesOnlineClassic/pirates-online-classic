@@ -1,17 +1,8 @@
-
-from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
+from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedPCCannonAI(DistributedWeaponAI):
+class DistributedPCCannonAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPCCannonAI')
 
     def __init__(self, air):
-        DistributedWeaponAI.__init__(self, air)
-
-
-    # gainSkill(uint32) airecv clsend
-
-    def gainSkill(self, gainSkill):
-        pass
-
-
+        DistributedObjectAI.__init__(self, air)

@@ -273,7 +273,7 @@ class Sail(NodePath, ShipPart.ShipPart):
         filePrefix = self.currPrefix
         self.collisions = loader.loadModel(filePrefix + 'zero_coll_' + fileSuffix)
         self.collisions.reparentTo(self.propCollisions)
-        self.coll = self.collisions.findAllMatches('**/collision*').asList()
+        self.coll = self.collisions.findAllMatches('**/collision*')
         for c in self.coll:
             c.setTag('objType', str(PiratesGlobals.COLL_SHIPPART))
             c.setTag('propId', str(self.doId))

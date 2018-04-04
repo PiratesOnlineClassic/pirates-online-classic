@@ -1,13 +1,8 @@
-
-from pirates.battle.DistributedWeaponUD import DistributedWeaponUD
+from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedPCCannonUD(DistributedWeaponUD):
+class DistributedPCCannonUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPCCannonUD')
 
     def __init__(self, air):
-        DistributedWeaponUD.__init__(self, air)
-
-
-
-
+        DistributedObjectGlobalUD.__init__(self, air)

@@ -1,16 +1,8 @@
-
-from direct.distributed.DistributedObjectUD import DistributedObjectUD
+from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedGoldReceiptUD(DistributedObjectUD):
+class DistributedGoldReceiptUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGoldReceiptUD')
 
     def __init__(self, air):
-        DistributedObjectUD.__init__(self, air)
-
-
-    # setGoldPaid(uint16) db
-
-    # setExpirationDate(uint32) db
-
-
+        DistributedObjectGlobalUD.__init__(self, air)

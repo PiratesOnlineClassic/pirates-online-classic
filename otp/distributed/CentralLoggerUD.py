@@ -1,14 +1,8 @@
-
-from direct.distributed.DistributedObjectUD import DistributedObjectUD
+from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
-class CentralLoggerUD(DistributedObjectUD):
+class CentralLoggerUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('CentralLoggerUD')
 
     def __init__(self, air):
-        DistributedObjectUD.__init__(self, air)
-
-
-    # sendMessage(string, string, uint32, uint32) clsend
-
-
+        DistributedObjectGlobalUD.__init__(self, air)

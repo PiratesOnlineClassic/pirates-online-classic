@@ -1,17 +1,8 @@
-
-from pirates.instance.DistributedInstanceWorldAI import DistributedInstanceWorldAI
+from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedPiratesTutorialWorldAI(DistributedInstanceWorldAI):
+class DistributedPiratesTutorialWorldAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPiratesTutorialWorldAI')
 
     def __init__(self, air):
-        DistributedInstanceWorldAI.__init__(self, air)
-
-
-    # setTutorialHandlerId(uint32) broadcast ram
-
-    def setTutorialHandlerId(self, tutorialHandlerId):
-        self.sendUpdate('setTutorialHandlerId', [tutorialHandlerId])
-
-
+        DistributedObjectAI.__init__(self, air)

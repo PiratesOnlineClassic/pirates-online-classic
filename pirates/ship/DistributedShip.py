@@ -985,7 +985,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             if entry[0]:
                 entry[0].prop.postFlatten()
 
-        for floor in self.modelCollisions.findAllMatches('**/*floors*').asList():
+        for floor in self.modelCollisions.findAllMatches('**/*floors*') :
             floor.node().setIntoCollideMask(floor.node().getIntoCollideMask() | PiratesGlobals.TargetBitmask)
             floor.setTag('shipId', str(self.doId))
 
@@ -1116,7 +1116,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.hull[0].stashPlaneCollisions()
         if self.isGenerated() and self.cr.activeWorld and self.cr.activeWorld.getType() == PiratesGlobals.INSTANCE_PVP and self.modelClass >= ShipGlobals.INTERCEPTORL1 and self.modelClass <= ShipGlobals.INTERCEPTORL4:
             mastCollisions = self.findAllMatches('**/*collision_mast*')
-            for currColl in mastCollisions.asList():
+            for currColl in mastCollisions :
                 currColl.unstash()
 
         if self.oldZoom:
@@ -1216,7 +1216,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                 anchorOffset = Vec3(0, 0, -1)
                 if shipRelX < 0:
                     grappleStr = '**/grapple_left*'
-                anchorNode = random.choice(self.locators.findAllMatches(grappleStr).asList())
+                anchorNode = random.choice(self.locators.findAllMatches(grappleStr) )
                 anchorPos = anchorNode.getPos(self.root) + anchorOffset
                 targetRelX = self.getX(ship)
                 targetStr = '**/grapple_right_'
@@ -1226,7 +1226,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                     targetStr += str(targetId)
                     locator = ship.locators.find(targetStr)
                 else:
-                    locator = random.choice(ship.locators.findAllMatches(targetStr + '*').asList())
+                    locator = random.choice(ship.locators.findAllMatches(targetStr + '*') )
                 rope = self.getRope(thickness=0.5)
                 targetPos = locator.getPos(self.root)
                 sagNode = self.root.attachNewNode('sagNode')
@@ -1326,7 +1326,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.accept(self.exitWorldEvent, self.handleOutOfRange)
             self.enableShipControls()
             self.setupRammingCollisions()
-            collNPs = self.findAllMatches('**/+CollisionNode').asList()
+            collNPs = self.findAllMatches('**/+CollisionNode') 
             self.disabledCollisionBits = {}
             for np in collNPs:
                 cMask = np.node().getIntoCollideMask()
@@ -3362,14 +3362,14 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def getRandomBoardingPos(self):
-        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s').asList()
+        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s') 
         if not allBoardingSpots:
             return
         return random.choice(allBoardingSpots).getPos()
 
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def getClosestBoardingPos(self):
-        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s').asList()
+        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s') 
         if not allBoardingSpots:
             return
         closestBoardingSpot = allBoardingSpots[0]
@@ -3383,7 +3383,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def getClosestBoardingPosH(self):
-        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s').asList()
+        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s') 
         if not allBoardingSpots:
             return
         closestBoardingSpot = allBoardingSpots[0]
