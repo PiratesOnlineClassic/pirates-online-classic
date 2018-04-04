@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.GameOptions
 import copy
 import datetime
 import os
@@ -1138,648 +1134,643 @@ class GameOptions(BorderFrame):
                 self.play = True
         except:
             pass
+        self.freeLock = False
+        BorderFrame.__init__(self, relief=None, state=DGG.NORMAL, frameColor=PiratesGuiGlobals.FrameColor, borderWidth=PiratesGuiGlobals.BorderWidth, pos=(x, 0.0, y), frameSize=(0, width, 0, height), sortOrder=20)
+        self.initialiseoptions(GameOptions)
+        if not base.config.GetBool('use-simple-gameoptions-gui', 0):
+            BorderFrame.hide(self)
+            self.gui = GameOptionsGui(self, title, x, y, width, height, options, file_path, pipe, chooser, keyMappings)
+            return
         else:
-            self.freeLock = False
-            if base.config.GetBool('use-simple-gameoptions-gui', 1):
-                self.gui = GameOptionsGui(self, title, x, y, width, height, options, file_path, pipe, access, chooser, keyMappings)
-                return
-            else:
-                self.gui = None
-            BorderFrame.__init__(self, relief=None, state=DGG.NORMAL, frameColor=PiratesGuiGlobals.FrameColor, borderWidth=PiratesGuiGlobals.BorderWidth, pos=(x, 0.0, y), frameSize=(0, width, 0, height), sortOrder=20)
-            self.initialiseoptions(GameOptions)
-            self.hide(False)
-            self.setBin('gui-popup', -10)
-            self.titleFrame = BorderFrame(parent=self, relief=None, frameSize=(0, width - 0.15, 0, PiratesGuiGlobals.TextScaleLarge * 2.5), pos=(0.075, 0, height - 0.11 - PiratesGuiGlobals.TextScaleLarge))
-            self.titleLabel = DirectLabel(parent=self.titleFrame, relief=None, text=title, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.03,
-                                                                                                                                                                             0.04), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, text_font=PiratesGlobals.getInterfaceOutlineFont(), textMayChange=1)
-            parent = self
-            y_section_increment = 0.15
-            y_section_increment2 = 0.12
-            y_section_offset = 0.3
-            x = 0.1
-            y = 0.15
-            if base.config.GetBool('want-custom-keys', 0):
-                x_increment = 0.133
-            else:
-                x_increment = 0.15
-            y_increment = 0.0
-            text = PLocalizer.GameOptionDisplay
-            button = GuiButton(parent=parent, command=self.display_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.display_button = button
-            text = PLocalizer.GameOptionsGraphics
-            button = GuiButton(parent=parent, command=self.graphics_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.graphics_button = button
-            text = PLocalizer.GameOptionsGeometry
-            button = GuiButton(parent=parent, command=self.geometry_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.geometry_button = button
-            text = PLocalizer.GameOptionsAudio
-            button = GuiButton(parent=parent, command=self.audio_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.audio_button = button
-            text = PLocalizer.GameOptionsInterface
-            button = GuiButton(parent=parent, command=self.controls_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.controls_button = button
-            text = PLocalizer.GameOptionsImage
-            button = GuiButton(parent=parent, command=self.gamma_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.gamma_button = button
-            if base.config.GetBool('want-custom-keys', 0):
-                text = PLocalizer.GameOptionsKeys
-                button = GuiButton(parent=parent, command=self.keys_button_function)
-                self.set_button_settings(button, x, y, text)
-                x += x_increment
-                y += y_increment
-                self.keys_button = button
-            label_x_offset = -0.07
-            label_y_offset = -0.05
-            increment1 = 0
-            increment2 = 0
-            self.display_page = DirectFrame(parent=self)
-            parent = self.display_page
-            start_x = 0.1
-            x = start_x
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+            self.gui = None
+        self.hide(False)
+        self.setBin('gui-popup', -10)
+        self.titleFrame = BorderFrame(parent=self, relief=None, frameSize=(0, width - 0.15, 0, PiratesGuiGlobals.TextScaleLarge * 2.5), pos=(0.075, 0, height - 0.11 - PiratesGuiGlobals.TextScaleLarge))
+        self.titleLabel = DirectLabel(parent=self.titleFrame, relief=None, text=title, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.03, 0.04), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, text_font=PiratesGlobals.getInterfaceOutlineFont(), textMayChange=1)
+        parent = self
+        y_section_increment = 0.15
+        y_section_increment2 = 0.12
+        y_section_offset = 0.3
+        x = 0.1
+        y = 0.15
+        if base.config.GetBool('want-custom-keys', 0):
+            x_increment = 0.133
+        else:
             x_increment = 0.15
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsFullscreenOnOff
-            self.fullscreen_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            text = PLocalizer.GameOptionsFullscreen
-            button = GuiButton(parent=parent, command=self.fullscreen_button_function2)
+        y_increment = 0.0
+        text = PLocalizer.GameOptionDisplay
+        button = GuiButton(parent=parent, command=self.display_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.display_button = button
+        text = PLocalizer.GameOptionsGraphics
+        button = GuiButton(parent=parent, command=self.graphics_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.graphics_button = button
+        text = PLocalizer.GameOptionsGeometry
+        button = GuiButton(parent=parent, command=self.geometry_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.geometry_button = button
+        text = PLocalizer.GameOptionsAudio
+        button = GuiButton(parent=parent, command=self.audio_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.audio_button = button
+        text = PLocalizer.GameOptionsInterface
+        button = GuiButton(parent=parent, command=self.controls_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.controls_button = button
+        text = PLocalizer.GameOptionsImage
+        button = GuiButton(parent=parent, command=self.gamma_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.gamma_button = button
+        if base.config.GetBool('want-custom-keys', 0):
+            text = PLocalizer.GameOptionsKeys
+            button = GuiButton(parent=parent, command=self.keys_button_function)
             self.set_button_settings(button, x, y, text)
             x += x_increment
             y += y_increment
-            if self.freeLock:
-                button['command'] = self.showUpsell
-                subCard = loader.loadModel('models/gui/toplevel_gui')
-                appendMe = DirectFrame(parent=button, relief=None, pos=(-0.165, 0, -0.058), state=DGG.DISABLED, geom=subCard.find('**/subscribers_lock'), geom_scale=0.15, geom_pos=(0.06,
+            self.keys_button = button
+        label_x_offset = -0.07
+        label_y_offset = -0.05
+        increment1 = 0
+        increment2 = 0
+        self.display_page = DirectFrame(parent=self)
+        parent = self.display_page
+        start_x = 0.1
+        x = start_x
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.15
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsFullscreenOnOff
+        self.fullscreen_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        text = PLocalizer.GameOptionsFullscreen
+        button = GuiButton(parent=parent, command=self.fullscreen_button_function2)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        if self.freeLock:
+            button['command'] = self.showUpsell
+            subCard = loader.loadModel('models/gui/toplevel_gui')
+            appendMe = DirectFrame(parent=button, relief=None, pos=(-0.165, 0, -0.058), state=DGG.DISABLED, geom=subCard.find('**/subscribers_lock'), geom_scale=0.15, geom_pos=(0.06,
                                                                                                                                                                                      0,
                                                                                                                                                                                      0.06))
-                appendMe.setAlphaScale(1.0, 2)
-                subCard.removeNode()
-            self.fullscreen_button2 = button
-            increment1 += 1
-            x = start_x
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            x_increment = 0.15
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsWindowedResolutions
-            self.windowed_resolutions_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            by_text = 'x'
-            buttons_per_row = 6
-            maximum_rows = 3
-            maximum_buttons = buttons_per_row * maximum_rows
-            total_windowed_resolutions = len(base.windowed_resolution_table)
-            if total_windowed_resolutions > maximum_buttons:
-                base.windowed_resolution_table[0:(total_windowed_resolutions - maximum_buttons)] = []
-            self.windowed_resolutions_button_array = []
-            total_windowed_resolutions = len(base.windowed_resolution_table)
-            if total_windowed_resolutions > 0:
-                index = 0
-                while index < total_windowed_resolutions:
-                    text = base.windowed_resolution_table[index][0].__repr__() + by_text + base.windowed_resolution_table[index][1].__repr__()
-                    button = GuiButton(parent=parent, command=self.windowed_resolution_button_function)
-                    button['extraArgs'] = [
-                     button]
-                    button.identifier = index
-                    self.set_button_settings(button, x, y, text)
-                    x += x_increment
-                    y += y_increment
-                    if (index + 1) % buttons_per_row == 0:
-                        next_row_y_increment = 0.0575
-                        x = start_x
-                        y += next_row_y_increment
-                    self.windowed_resolutions_button_array = self.windowed_resolutions_button_array + [button]
-                    index += 1
+            appendMe.setAlphaScale(1.0, 2)
+            subCard.removeNode()
+        self.fullscreen_button2 = button
+        increment1 += 1
+        x = start_x
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.15
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsWindowedResolutions
+        self.windowed_resolutions_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        by_text = 'x'
+        buttons_per_row = 6
+        maximum_rows = 3
+        maximum_buttons = buttons_per_row * maximum_rows
+        total_windowed_resolutions = len(base.windowed_resolution_table)
+        if total_windowed_resolutions > maximum_buttons:
+            base.windowed_resolution_table[0:(total_windowed_resolutions - maximum_buttons)] = []
+        self.windowed_resolutions_button_array = []
+        total_windowed_resolutions = len(base.windowed_resolution_table)
+        if total_windowed_resolutions > 0:
+            index = 0
+            while index < total_windowed_resolutions:
+                text = base.windowed_resolution_table[index][0].__repr__() + by_text + base.windowed_resolution_table[index][1].__repr__()
+                button = GuiButton(parent=parent, command=self.windowed_resolution_button_function)
+                button['extraArgs'] = [button]
+                button.identifier = index
+                self.set_button_settings(button, x, y, text)
+                x += x_increment
+                y += y_increment
+                if (index + 1) % buttons_per_row == 0:
+                    next_row_y_increment = 0.0575
+                    x = start_x
+                    y += next_row_y_increment
+                self.windowed_resolutions_button_array = self.windowed_resolutions_button_array + [button]
+                index += 1
 
-            increment1 += 2
-            x = start_x
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset - 0.07
-            x_increment = 0.15
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsFullscreenResolutions
-            self.fullscreen_resolutions_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            total_fullscreen_resolutions = len(base.fullscreen_resolution_table)
-            if total_fullscreen_resolutions > maximum_buttons:
-                base.fullscreen_resolution_table[0:(total_fullscreen_resolutions - maximum_buttons)] = []
-            self.fullscreen_resolutions_button_array = []
-            total_fullscreen_resolutions = len(base.fullscreen_resolution_table)
-            if total_fullscreen_resolutions > 0:
-                index = 0
-                while index < total_fullscreen_resolutions:
-                    text = base.fullscreen_resolution_table[index][0].__repr__() + by_text + base.fullscreen_resolution_table[index][1].__repr__()
-                    button = GuiButton(parent=parent, command=self.fullscreen_resolution_button_function)
-                    button['extraArgs'] = [
-                     button]
-                    button.identifier = index
-                    self.set_button_settings(button, x, y, text)
-                    x += x_increment
-                    y += y_increment
-                    if (index + 1) % buttons_per_row == 0:
-                        next_row_y_increment = 0.0575
-                        x = start_x
-                        y += next_row_y_increment
-                    self.fullscreen_resolutions_button_array = self.fullscreen_resolutions_button_array + [button]
-                    index += 1
+        increment1 += 2
+        x = start_x
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset - 0.07
+        x_increment = 0.15
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsFullscreenResolutions
+        self.fullscreen_resolutions_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        total_fullscreen_resolutions = len(base.fullscreen_resolution_table)
+        if total_fullscreen_resolutions > maximum_buttons:
+            base.fullscreen_resolution_table[0:(total_fullscreen_resolutions - maximum_buttons)] = []
+        self.fullscreen_resolutions_button_array = []
+        total_fullscreen_resolutions = len(base.fullscreen_resolution_table)
+        if total_fullscreen_resolutions > 0:
+            index = 0
+            while index < total_fullscreen_resolutions:
+                text = base.fullscreen_resolution_table[index][0].__repr__() + by_text + base.fullscreen_resolution_table[index][1].__repr__()
+                button = GuiButton(parent=parent, command=self.fullscreen_resolution_button_function)
+                button['extraArgs'] = [button]
+                button.identifier = index
+                self.set_button_settings(button, x, y, text)
+                x += x_increment
+                y += y_increment
+                if (index + 1) % buttons_per_row == 0:
+                    next_row_y_increment = 0.0575
+                    x = start_x
+                    y += next_row_y_increment
+                self.fullscreen_resolutions_button_array = self.fullscreen_resolutions_button_array + [button]
+                index += 1
 
-            increment1 = 0
-            increment2 = 0
-            self.graphics_page = DirectFrame(parent=self)
-            parent = self.graphics_page
-            y_offset = 0.1
-            x = 0.1
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsReflections
-            self.reflection_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        increment1 = 0
+        increment2 = 0
+        self.graphics_page = DirectFrame(parent=self)
+        parent = self.graphics_page
+        y_offset = 0.1
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsReflections
+        self.reflection_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        text = PLocalizer.GameOptionsOff
+        button = GuiButton(parent=parent, command=self.reflection_off_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.reflection_off_button = button
+        text = PLocalizer.GameOptionsSkyOnly
+        button = GuiButton(parent=parent, command=self.reflection_sky_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.reflection_sky_button = button
+        text = PLocalizer.GameOptionsOn
+        button = GuiButton(parent=parent, command=self.reflection_default_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.reflection_default_button = button
+        text = PLocalizer.GameOptionsAll
+        button = GuiButton(parent=parent, command=self.reflection_all_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.reflection_all_button = button
+        if True:
+            self.reflection_all_button.hide()
+        increment2 += 1
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        self.shader_off_button = None
+        self.shader_on_button = None
+        if self.shader_support:
+            text = PLocalizer.GameOptionsShaderLevel + ' ' + self.shader_model.__repr__() + ' *'
+        else:
+            text = PLocalizer.GameOptionsNoShader
+        self.shader_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        if self.shader_support:
             text = PLocalizer.GameOptionsOff
-            button = GuiButton(parent=parent, command=self.reflection_off_button_function)
+            button = GuiButton(parent=parent, command=self.shader_off_button_function)
             self.set_button_settings(button, x, y, text)
             x += x_increment
             y += y_increment
-            self.reflection_off_button = button
-            text = PLocalizer.GameOptionsSkyOnly
-            button = GuiButton(parent=parent, command=self.reflection_sky_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.reflection_sky_button = button
+            self.shader_off_button = button
             text = PLocalizer.GameOptionsOn
-            button = GuiButton(parent=parent, command=self.reflection_default_button_function)
+            button = GuiButton(parent=parent, command=self.shader_on_button_function)
             self.set_button_settings(button, x, y, text)
             x += x_increment
             y += y_increment
-            self.reflection_default_button = button
-            text = PLocalizer.GameOptionsAll
-            button = GuiButton(parent=parent, command=self.reflection_all_button_function)
+            self.shader_on_button = button
+        increment2 += 1
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsShadows
+        self.shadow_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        text = PLocalizer.GameOptionsSimple
+        button = GuiButton(parent=parent, command=self.simple_shadow_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.simple_shadow_button = button
+        text = PLocalizer.GameOptionsRendered
+        button = GuiButton(parent=parent, command=self.shadow_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.shadow_button = button
+        increment2 += 1
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsSpecialEffectsLevel
+        self.special_effects_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        text = PLocalizer.GameOptionsLow
+        button = GuiButton(parent=parent, command=self.special_effects_low_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.special_effects_low_button = button
+        text = PLocalizer.GameOptionsMedium
+        button = GuiButton(parent=parent, command=self.special_effects_medium_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.special_effects_medium_button = button
+        text = PLocalizer.GameOptionsHigh
+        button = GuiButton(parent=parent, command=self.special_effects_high_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.special_effects_high_button = button
+        increment2 += 1
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsTextureDetailLevel
+        self.texture_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        text = PLocalizer.GameOptionsLow
+        button = GuiButton(parent=parent, command=self.texture_low_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.texture_low_button = button
+        text = PLocalizer.GameOptionsMedium
+        button = GuiButton(parent=parent, command=self.texture_medium_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.texture_medium_button = button
+        text = PLocalizer.GameOptionsHigh
+        button = GuiButton(parent=parent, command=self.texture_high_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.texture_high_button = button
+        self.texture_maximum_button = None
+        if self.options.texture_scale_mode == False:
+            text = PLocalizer.GameOptionsMaximum
+            button = GuiButton(parent=parent, command=self.texture_maximum_button_function)
             self.set_button_settings(button, x, y, text)
             x += x_increment
             y += y_increment
-            self.reflection_all_button = button
-            if True:
-                self.reflection_all_button.hide()
-            increment2 += 1
-            x = 0.1
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            self.shader_off_button = None
-            self.shader_on_button = None
-            if self.shader_support:
-                text = PLocalizer.GameOptionsShaderLevel + ' ' + self.shader_model.__repr__() + ' *'
+            self.texture_maximum_button = button
+        text = PLocalizer.GameOptionsCompressed
+        button = GuiButton(parent=parent, command=self.texture_compression_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.texture_compression_button = button
+        x = 0.1
+        y = y_section_increment * 1 + y_section_increment2 * 4 + y_section_offset - 0.0
+        text = PLocalizer.GameOptionsRestartRequired
+        self.restart_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent, (0.7,
+                  0.7,
+                  0.7,
+                  1))
+        increment1 = 0
+        increment2 = 0
+        self.geometry_page = DirectFrame(parent=self)
+        parent = self.geometry_page
+        y_offset = 0.1
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsCharacterDetailLevel
+        self.texture_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        text = PLocalizer.GameOptionsLow
+        button = GuiButton(parent=parent, command=self.character_low_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.character_low_button = button
+        text = PLocalizer.GameOptionsMedium
+        button = GuiButton(parent=parent, command=self.character_medium_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.character_medium_button = button
+        text = PLocalizer.GameOptionsHigh
+        button = GuiButton(parent=parent, command=self.character_high_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.character_high_button = button
+        increment2 += 1
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsTerrainDetailLevel
+        self.texture_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        text = PLocalizer.GameOptionsLow
+        button = GuiButton(parent=parent, command=self.terrain_low_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.terrain_low_button = button
+        text = PLocalizer.GameOptionsMedium
+        button = GuiButton(parent=parent, command=self.terrain_medium_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.terrain_medium_button = button
+        text = PLocalizer.GameOptionsHigh
+        button = GuiButton(parent=parent, command=self.terrain_high_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.terrain_high_button = button
+        increment2 += 1
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsMemory
+        self.texture_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        text = PLocalizer.GameOptionsAggressive
+        button = GuiButton(parent=parent, command=self.aggressive_memory_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.aggressive_memory_button = button
+        text = PLocalizer.GameOptionsDefault
+        button = GuiButton(parent=parent, command=self.default_memory_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.default_memory_button = button
+        increment2 += 1
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        if self.enable_ship_visibility:
+            text = PLocalizer.GameOptionsShipVis
+            self.texture_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+            text = PLocalizer.GameOptionsShipVisOff
+            button = GuiButton(parent=parent, command=self.off_ship_vis_button_function)
+            self.set_button_settings(button, x, y, text)
+            x += x_increment
+            y += y_increment
+            self.off_ship_vis_button = button
+            text = PLocalizer.GameOptionsShipVisLow
+            button = GuiButton(parent=parent, command=self.low_ship_vis_button_function)
+            self.set_button_settings(button, x, y, text)
+            x += x_increment
+            y += y_increment
+            self.low_ship_vis_button = button
+            text = PLocalizer.GameOptionsShipVisHigh
+            button = GuiButton(parent=parent, command=self.high_ship_vis_button_function)
+            self.set_button_settings(button, x, y, text)
+            x += x_increment
+            y += y_increment
+            self.high_ship_vis_button = button
+        increment2 += 1
+        increment1 = 0
+        increment2 = 0
+        self.audio_page = DirectFrame(parent=self)
+        parent = self.audio_page
+        slider_y_offset = 0.1
+        x = 0.1
+        y = y_section_increment * 0 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsSoundEffects
+        self.sound_effects_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        text = PLocalizer.GameOptionsOff
+        button = GuiButton(parent=parent, command=self.sound_off_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.sound_off_button = button
+        text = PLocalizer.GameOptionsOn
+        button = GuiButton(parent=parent, command=self.sound_on_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.sound_on_button = button
+
+        def sound_volume_update_function(value):
+            self.options.sound_volume = value
+            if base.sfxManagerList:
+                index = 0
+                length = len(base.sfxManagerList)
+                while index < length:
+                    sfx_manager = base.sfxManagerList[index]
+                    sfx_manager.setVolume(value)
+                    index += 1
+
+        y += slider_y_offset
+        text = PLocalizer.GameOptionsSoundEffectsVolume
+        default_value = 0.5
+        resolution = 0.01
+        self.sound_volume_slider = self.create_slider(sound_volume_update_function, self.options.sound_volume, x, y, resolution, text, parent)
+        x = 0.1
+        y = y_section_increment * 2 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsMusic
+        self.music_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        text = PLocalizer.GameOptionsOff
+        button = GuiButton(parent=parent, command=self.music_off_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.music_off_button = button
+        text = PLocalizer.GameOptionsOn
+        button = GuiButton(parent=parent, command=self.music_on_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.music_on_button = button
+
+        def music_volume_update_function(value):
+            self.options.music_volume = value
+            if base.musicManager:
+                base.musicManager.setVolume(value)
+
+        y += slider_y_offset
+        text = PLocalizer.GameOptionsMusicVolume
+        default_value = 0.5
+        resolution = 0.01
+        self.music_volume_slider = self.create_slider(music_volume_update_function, self.options.music_volume, x, y, resolution, text, parent)
+        increment1 = 0
+        increment2 = 0
+        self.controls_page = DirectFrame(parent=self)
+        parent = self.controls_page
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsInvertMouseLook
+        self.invert_mouse_look_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        text = PLocalizer.GameOptionsOff
+        button = GuiButton(parent=parent, command=self.mouse_look_off_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.mouse_look_off_button = button
+        text = PLocalizer.GameOptionsOn
+        button = GuiButton(parent=parent, command=self.mouse_look_on_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.mouse_look_on_button = button
+        increment2 += 1.5
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+
+        def gui_scale_update_function(value):
+            self.options.gui_scale = value
+            try:
+                gui_manager = localAvatar.guiMgr
+            except:
+                gui_manager = None
             else:
-                text = PLocalizer.GameOptionsNoShader
-            self.shader_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            if self.shader_support:
-                text = PLocalizer.GameOptionsOff
-                button = GuiButton(parent=parent, command=self.shader_off_button_function)
-                self.set_button_settings(button, x, y, text)
-                x += x_increment
-                y += y_increment
-                self.shader_off_button = button
-                text = PLocalizer.GameOptionsOn
-                button = GuiButton(parent=parent, command=self.shader_on_button_function)
-                self.set_button_settings(button, x, y, text)
-                x += x_increment
-                y += y_increment
-                self.shader_on_button = button
-            increment2 += 1
+                if gui_manager:
+                    gui_manager.setUIScale(value * 0.6 + 0.7)
+            return
+
+        text = PLocalizer.GameOptionsGUIScale
+        self.gui_scale_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        x += x_increment * 2
+        text = PLocalizer.GameOptionsGUIScale
+        resolution = 0.01
+        self.gui_scale_slider = self.create_slider(gui_scale_update_function, self.options.gui_scale, x, y, resolution, text, parent)
+        increment2 += 1.5
+        if base.config.GetBool('want-cpu-frequency-warning', 0):
             x = 0.1
             y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsShadows
-            self.shadow_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            text = PLocalizer.GameOptionsSimple
-            button = GuiButton(parent=parent, command=self.simple_shadow_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.simple_shadow_button = button
-            text = PLocalizer.GameOptionsRendered
-            button = GuiButton(parent=parent, command=self.shadow_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.shadow_button = button
-            increment2 += 1
-            x = 0.1
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsSpecialEffectsLevel
-            self.special_effects_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            text = PLocalizer.GameOptionsLow
-            button = GuiButton(parent=parent, command=self.special_effects_low_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.special_effects_low_button = button
-            text = PLocalizer.GameOptionsMedium
-            button = GuiButton(parent=parent, command=self.special_effects_medium_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.special_effects_medium_button = button
-            text = PLocalizer.GameOptionsHigh
-            button = GuiButton(parent=parent, command=self.special_effects_high_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.special_effects_high_button = button
-            increment2 += 1
-            x = 0.1
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsTextureDetailLevel
-            self.texture_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            text = PLocalizer.GameOptionsLow
-            button = GuiButton(parent=parent, command=self.texture_low_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.texture_low_button = button
-            text = PLocalizer.GameOptionsMedium
-            button = GuiButton(parent=parent, command=self.texture_medium_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.texture_medium_button = button
-            text = PLocalizer.GameOptionsHigh
-            button = GuiButton(parent=parent, command=self.texture_high_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.texture_high_button = button
-            self.texture_maximum_button = None
-            if self.options.texture_scale_mode == False:
-                text = PLocalizer.GameOptionsMaximum
-                button = GuiButton(parent=parent, command=self.texture_maximum_button_function)
-                self.set_button_settings(button, x, y, text)
-                x += x_increment
-                y += y_increment
-                self.texture_maximum_button = button
-            text = PLocalizer.GameOptionsCompressed
-            button = GuiButton(parent=parent, command=self.texture_compression_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.texture_compression_button = button
-            x = 0.1
-            y = y_section_increment * 1 + y_section_increment2 * 4 + y_section_offset - 0.0
-            text = PLocalizer.GameOptionsRestartRequired
-            self.restart_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent, (0.7,
-                                                                                                          0.7,
-                                                                                                          0.7,
-                                                                                                          1))
-            increment1 = 0
-            increment2 = 0
-            self.geometry_page = DirectFrame(parent=self)
-            parent = self.geometry_page
-            y_offset = 0.1
-            x = 0.1
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsCharacterDetailLevel
-            self.texture_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            text = PLocalizer.GameOptionsLow
-            button = GuiButton(parent=parent, command=self.character_low_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.character_low_button = button
-            text = PLocalizer.GameOptionsMedium
-            button = GuiButton(parent=parent, command=self.character_medium_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.character_medium_button = button
-            text = PLocalizer.GameOptionsHigh
-            button = GuiButton(parent=parent, command=self.character_high_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.character_high_button = button
-            increment2 += 1
-            x = 0.1
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsTerrainDetailLevel
-            self.texture_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            text = PLocalizer.GameOptionsLow
-            button = GuiButton(parent=parent, command=self.terrain_low_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.terrain_low_button = button
-            text = PLocalizer.GameOptionsMedium
-            button = GuiButton(parent=parent, command=self.terrain_medium_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.terrain_medium_button = button
-            text = PLocalizer.GameOptionsHigh
-            button = GuiButton(parent=parent, command=self.terrain_high_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.terrain_high_button = button
-            increment2 += 1
-            x = 0.1
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsMemory
-            self.texture_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            text = PLocalizer.GameOptionsAggressive
-            button = GuiButton(parent=parent, command=self.aggressive_memory_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.aggressive_memory_button = button
-            text = PLocalizer.GameOptionsDefault
-            button = GuiButton(parent=parent, command=self.default_memory_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.default_memory_button = button
-            increment2 += 1
-            x = 0.1
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            if self.enable_ship_visibility:
-                text = PLocalizer.GameOptionsShipVis
-                self.texture_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-                text = PLocalizer.GameOptionsShipVisOff
-                button = GuiButton(parent=parent, command=self.off_ship_vis_button_function)
-                self.set_button_settings(button, x, y, text)
-                x += x_increment
-                y += y_increment
-                self.off_ship_vis_button = button
-                text = PLocalizer.GameOptionsShipVisLow
-                button = GuiButton(parent=parent, command=self.low_ship_vis_button_function)
-                self.set_button_settings(button, x, y, text)
-                x += x_increment
-                y += y_increment
-                self.low_ship_vis_button = button
-                text = PLocalizer.GameOptionsShipVisHigh
-                button = GuiButton(parent=parent, command=self.high_ship_vis_button_function)
-                self.set_button_settings(button, x, y, text)
-                x += x_increment
-                y += y_increment
-                self.high_ship_vis_button = button
-            increment2 += 1
-            increment1 = 0
-            increment2 = 0
-            self.audio_page = DirectFrame(parent=self)
-            parent = self.audio_page
-            slider_y_offset = 0.1
-            x = 0.1
-            y = y_section_increment * 0 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsSoundEffects
-            self.sound_effects_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+            text = PLocalizer.GameOptionsCpuFrequencyWarning
+            self.cpu_frequency_warning_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
             text = PLocalizer.GameOptionsOff
-            button = GuiButton(parent=parent, command=self.sound_off_button_function)
+            button = GuiButton(parent=parent, command=self.cpu_frequency_warning_off_button_function)
             self.set_button_settings(button, x, y, text)
             x += x_increment
             y += y_increment
-            self.sound_off_button = button
+            self.cpu_frequency_warning_off_button = button
             text = PLocalizer.GameOptionsOn
-            button = GuiButton(parent=parent, command=self.sound_on_button_function)
+            button = GuiButton(parent=parent, command=self.cpu_frequency_warning_on_button_function)
             self.set_button_settings(button, x, y, text)
             x += x_increment
             y += y_increment
-            self.sound_on_button = button
-
-            def sound_volume_update_function(value):
-                self.options.sound_volume = value
-                if base.sfxManagerList:
-                    index = 0
-                    length = len(base.sfxManagerList)
-                    while index < length:
-                        sfx_manager = base.sfxManagerList[index]
-                        sfx_manager.setVolume(value)
-                        index += 1
-
-            y += slider_y_offset
-            text = PLocalizer.GameOptionsSoundEffectsVolume
-            default_value = 0.5
-            resolution = 0.01
-            self.sound_volume_slider = self.create_slider(sound_volume_update_function, self.options.sound_volume, x, y, resolution, text, parent)
-            x = 0.1
-            y = y_section_increment * 2 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsMusic
-            self.music_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            text = PLocalizer.GameOptionsOff
-            button = GuiButton(parent=parent, command=self.music_off_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.music_off_button = button
-            text = PLocalizer.GameOptionsOn
-            button = GuiButton(parent=parent, command=self.music_on_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.music_on_button = button
-
-            def music_volume_update_function(value):
-                self.options.music_volume = value
-                if base.musicManager:
-                    base.musicManager.setVolume(value)
-
-            y += slider_y_offset
-            text = PLocalizer.GameOptionsMusicVolume
-            default_value = 0.5
-            resolution = 0.01
-            self.music_volume_slider = self.create_slider(music_volume_update_function, self.options.music_volume, x, y, resolution, text, parent)
-            increment1 = 0
-            increment2 = 0
-            self.controls_page = DirectFrame(parent=self)
-            parent = self.controls_page
-            x = 0.1
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsInvertMouseLook
-            self.invert_mouse_look_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            text = PLocalizer.GameOptionsOff
-            button = GuiButton(parent=parent, command=self.mouse_look_off_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.mouse_look_off_button = button
-            text = PLocalizer.GameOptionsOn
-            button = GuiButton(parent=parent, command=self.mouse_look_on_button_function)
-            self.set_button_settings(button, x, y, text)
-            x += x_increment
-            y += y_increment
-            self.mouse_look_on_button = button
+            self.cpu_frequency_warning_on_button = button
             increment2 += 1.5
+        increment1 = 0
+        increment2 = 0
+        delta_y = 1.0
+        self.gamma_page = DirectFrame(parent=self)
+        parent = self.gamma_page
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+        x_increment = 0.2
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsEnableGamma
+        self.enable_gamma_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        text = PLocalizer.GameOptionsOff
+        button = GuiButton(parent=parent, command=self.gamma_off_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.gamma_off_button = button
+        text = PLocalizer.GameOptionsOn
+        button = GuiButton(parent=parent, command=self.gamma_on_button_function)
+        self.set_button_settings(button, x, y, text)
+        x += x_increment
+        y += y_increment
+        self.gamma_on_button = button
+        increment2 += delta_y
+        x = 0.1
+        y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
+
+        def gamma_update_function(value):
+            self.options.gamma = value
+            if base.win and base.win.getGsg():
+                if self.options.gamma_enable:
+                    base.win.getGsg().setGamma(self.options.optionsGammaToGamma(self.options.gamma))
+
+        text = PLocalizer.GameOptionsGamma
+        self.gamma_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+        x += x_increment * 2
+        text = ''
+        resolution = 0.02
+        self.gamma_slider = self.create_slider2(gamma_update_function, self.options.gamma, x, y, resolution, text, parent)
+        increment2 += delta_y
+        if self.enable_hdr:
             x = 0.1
             y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-
-            def gui_scale_update_function(value):
-                self.options.gui_scale = value
-                try:
-                    gui_manager = localAvatar.guiMgr
-                except:
-                    gui_manager = None
-                else:
-                    if gui_manager:
-                        gui_manager.setUIScale(value * 0.6 + 0.7)
-
-                return
-
-            text = PLocalizer.GameOptionsGUIScale
-            self.gui_scale_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-            x += x_increment * 2
-            text = PLocalizer.GameOptionsGUIScale
-            resolution = 0.01
-            self.gui_scale_slider = self.create_slider(gui_scale_update_function, self.options.gui_scale, x, y, resolution, text, parent)
-            increment2 += 1.5
-            if base.config.GetBool('want-cpu-frequency-warning', 0):
-                x = 0.1
-                y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-                text = PLocalizer.GameOptionsCpuFrequencyWarning
-                self.cpu_frequency_warning_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-                text = PLocalizer.GameOptionsOff
-                button = GuiButton(parent=parent, command=self.cpu_frequency_warning_off_button_function)
-                self.set_button_settings(button, x, y, text)
-                x += x_increment
-                y += y_increment
-                self.cpu_frequency_warning_off_button = button
-                text = PLocalizer.GameOptionsOn
-                button = GuiButton(parent=parent, command=self.cpu_frequency_warning_on_button_function)
-                self.set_button_settings(button, x, y, text)
-                x += x_increment
-                y += y_increment
-                self.cpu_frequency_warning_on_button = button
-                increment2 += 1.5
-            increment1 = 0
-            increment2 = 0
-            delta_y = 1.0
-            self.gamma_page = DirectFrame(parent=self)
-            parent = self.gamma_page
-            x = 0.1
-            y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            x_increment = 0.2
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsEnableGamma
-            self.enable_gamma_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+            text = PLocalizer.GameOptionsHdr
+            self.hdr_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
             text = PLocalizer.GameOptionsOff
-            button = GuiButton(parent=parent, command=self.gamma_off_button_function)
+            button = GuiButton(parent=parent, command=self.hdr_off_button_function)
             self.set_button_settings(button, x, y, text)
             x += x_increment
             y += y_increment
-            self.gamma_off_button = button
+            self.hdr_off_button = button
+            helpPos = (0.35, 0.0, 0.0)
+            helpText = PLocalizer.GameOptionsOnLowerFrameRate
             text = PLocalizer.GameOptionsOn
-            button = GuiButton(parent=parent, command=self.gamma_on_button_function)
+            button = GuiButton(parent=parent, command=self.hdr_on_button_function, helpText=helpText, helpPos=helpPos, canReposition=True)
             self.set_button_settings(button, x, y, text)
+            button.resetHelpWatcher()
             x += x_increment
             y += y_increment
-            self.gamma_on_button = button
+            self.hdr_on_button = button
             increment2 += delta_y
             x = 0.1
             y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
 
-            def gamma_update_function(value):
-                self.options.gamma = value
-                if base.win and base.win.getGsg():
-                    if self.options.gamma_enable:
-                        base.win.getGsg().setGamma(self.options.optionsGammaToGamma(self.options.gamma))
+            def hdr_update_function(value):
+                self.options.hdr_factor = value
+                if base.hdr:
+                    if self.options.hdr:
+                        base.hdr.updateHdrFactor(value)
 
-            text = PLocalizer.GameOptionsGamma
-            self.gamma_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
+            text = PLocalizer.GameOptionsHdrIntensity
+            self.hdr_factor_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
             x += x_increment * 2
             text = ''
             resolution = 0.02
-            self.gamma_slider = self.create_slider2(gamma_update_function, self.options.gamma, x, y, resolution, text, parent)
+            self.hdr_factor_slider = self.create_slider(hdr_update_function, self.options.hdr_factor, x, y, resolution, text, parent)
             increment2 += delta_y
-            if self.enable_hdr:
-                x = 0.1
-                y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-                text = PLocalizer.GameOptionsHdr
-                self.hdr_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-                text = PLocalizer.GameOptionsOff
-                button = GuiButton(parent=parent, command=self.hdr_off_button_function)
-                self.set_button_settings(button, x, y, text)
-                x += x_increment
-                y += y_increment
-                self.hdr_off_button = button
-                helpPos = (0.35, 0.0, 0.0)
-                helpText = PLocalizer.GameOptionsOnLowerFrameRate
-                text = PLocalizer.GameOptionsOn
-                button = GuiButton(parent=parent, command=self.hdr_on_button_function, helpText=helpText, helpPos=helpPos, canReposition=True)
-                self.set_button_settings(button, x, y, text)
-                button.resetHelpWatcher()
-                x += x_increment
-                y += y_increment
-                self.hdr_on_button = button
-                increment2 += delta_y
-                x = 0.1
-                y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-
-                def hdr_update_function(value):
-                    self.options.hdr_factor = value
-                    if base.hdr:
-                        if self.options.hdr:
-                            base.hdr.updateHdrFactor(value)
-
-                text = PLocalizer.GameOptionsHdrIntensity
-                self.hdr_factor_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
-                x += x_increment * 2
-                text = ''
-                resolution = 0.02
-                self.hdr_factor_slider = self.create_slider(hdr_update_function, self.options.hdr_factor, x, y, resolution, text, parent)
-                increment2 += delta_y
-            x = 0.1
-            y = y_section_increment * 1 + y_section_increment2 * 4 + y_section_offset - 0.0
-            text = PLocalizer.GameOptionsRestartRequired
-            self.restart_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent, (0.7,
-                                                                                                          0.7,
-                                                                                                          0.7,
-                                                                                                          1))
-            if base.config.GetBool('want-custom-keys', 0):
-                increment1 = 0
-                increment2 = 0
-                self.keys_page = DirectFrame(parent=self)
-                parent = self.keys_page
-            parent = self
-            x = 0.1
-            y = 0.95
-            x_increment = 0.15
-            y_increment = 0.0
-            text = PLocalizer.GameOptionsLogout
-            button = GuiButton(parent=parent, command=self.logout_button_function)
-            self.set_button_settings(button, x, y, text)
-            if self.play == False:
-                self.disableButton(button)
-
+        x = 0.1
+        y = y_section_increment * 1 + y_section_increment2 * 4 + y_section_offset - 0.0
+        text = PLocalizer.GameOptionsRestartRequired
+        self.restart_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent, (0.7,
+                  0.7,
+                  0.7,
+                  1))
+        if base.config.GetBool('want-custom-keys', 0):
+            increment1 = 0
+            increment2 = 0
+            self.keys_page = DirectFrame(parent=self)
+            parent = self.keys_page
+        parent = self
+        x = 0.1
+        y = 0.95
+        x_increment = 0.15
+        y_increment = 0.0
+        text = PLocalizer.GameOptionsLogout
+        button = GuiButton(parent=parent, command=self.logout_button_function)
+        self.set_button_settings(button, x, y, text)
+        if self.play == False:
+            self.disableButton(button)
         x += x_increment
         y += y_increment
         x += x_increment

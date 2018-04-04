@@ -222,6 +222,8 @@ class PiratesBase(OTPBase):
         if base.config.GetBool('want-dev', 0):
             self.bamCache.setRoot(Filename('/c/cache'))
         self.bamCache.setRoot(Filename('./cache'))
+        CullBinManager.getGlobalPtr().addBin('gui-fixed', CullBinEnums.BTFixed, 55)
+        CullBinManager.getGlobalPtr().addBin('gui-popup', CullBinEnums.BTUnsorted, 60)
         self.textureFlattenMgr = TextureFlattenManager.TextureFlattenManager()
         self.showShipFlats = False
         self.hideShipNametags = False

@@ -40,18 +40,19 @@ class GameOptionsGui(DirectFrame):
      texture_scale_low, texture_scale_medium, texture_scale_high, texture_scale_maximum]
     textureOptionList = [texture_low, texture_medium, texture_high, texture_maximum]
 
-    def __init__(self, gameOptions, title, x, y, width, height, options=None, file_path=None, pipe=None, access=0, chooser=0, keyMappings=None):
+    def __init__(self, gameOptions, title, x, y, width, height, options=None, file_path=None, pipe=None, chooser=0, keyMappings=None):
         self.width = width
         self.height = height
         self.gameOptions = gameOptions
-        DirectFrame.__init__(self, relief=None, image=loader.loadModel('models/misc/fade'), image_scale=(5,
-                                                                                                         2,
-                                                                                                         2), image_color=(0,
-                                                                                                                          0,
-                                                                                                                          0,
-                                                                                                                          0.8), image_pos=(0.5,
-                                                                                                                                           0,
-                                                                                                                                           0.8), state=DGG.NORMAL, pos=(x, 0.0, y), sortOrder=20)
+        DirectFrame.__init__(self, 
+            relief=None, 
+            image=loader.loadModel('models/misc/fade'), 
+            image_scale=(5, 2, 2), 
+            image_color=(0, 0,0, 0.8), 
+            image_pos=(0.5, 0,0.8), 
+            state=DGG.NORMAL,
+            pos=(x, 0.0, y), 
+            sortOrder=20)
         self.initialiseoptions(GameOptionsGui)
         self.setBin('gui-fixed', 5)
         self.setupUpperFrame()
