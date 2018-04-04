@@ -15,6 +15,14 @@ model-path ../resources/phase_4
 model-path ../resources/phase_5
 default-model-extension .bam
 
+# Culling:
+cull-bin gui-popup 60 unsorted
+cull-bin shadow 15 fixed
+cull-bin ground 14 fixed
+cull-bin sky 28 fixed
+cull-bin water 28 fixed
+cull-bin gui-fixed 55 fixed
+
 # DClass:
 dc-file astron/dclass/pirates.dc
 dc-file astron/dclass/otp.dc
@@ -43,6 +51,11 @@ multisamples 2
 prefer-parasite-buffer 1
 force-parasite-buffer 1
 alpha-bits 8
+hardware-animated-vertices #t
+basic-shaders-only #f
+
+# GC:
+garbage-collect-states #f
 
 # Tutorial:
 skip-tutorial #f
