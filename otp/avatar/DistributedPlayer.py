@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.avatar.DistributedPlayer
 import string
 import time
 
@@ -11,6 +7,7 @@ from otp.avatar import Avatar, DistributedAvatar, PlayerBase
 from otp.chat import ChatAssistant, ChatGarbler
 from otp.margins.WhisperPopup import WhisperPopup
 from otp.otpbase import OTPLocalizer
+from otp.nametag.NametagConstants import CFQuicktalker, CFPageButton, CFQuitButton, CFSpeech, CFThought, CFTimeout
 from otp.speedchat import SCDecoders
 from panda3d.core import *
 

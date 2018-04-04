@@ -1412,17 +1412,15 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
             self.b_setGameState('LandRoam')
         if localAvatar.isWeaponDrawn:
             return True
+        elif gamestate in ('ShipPilot', 'Cannon', 'WaterRoam', 'WaterTreasureRoam',
+                           'ParlorGame', 'NPCInteract', 'DinghyInteract', 'TentacleAlive'):
+            return True
+        elif localAvatar.controlManager.currentControls.moving:
+            return True
         else:
-            if gamestate in ('ShipPilot', 'Cannon', 'WaterRoam', 'WaterTreasureRoam',
-                             'ParlorGame', 'NPCInteract', 'DinghyInteract', 'TentacleAlive'):
-                return True
-            else:
-                if localAvatar.controlManager.currentControls.moving:
-                    return True
-                else:
-                    self.d_setEmote(emoteId)
-                    self.b_setGameState('Emote')
-                    return True
+            self.d_setEmote(emoteId)
+            self.b_setGameState('Emote')
+            return True
 
     def playEmote(self, emoteId):
         if self.getGameState() != 'Emote' and self.getGameState() != 'WeaponReceive':

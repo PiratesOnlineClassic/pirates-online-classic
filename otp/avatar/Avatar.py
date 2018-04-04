@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.avatar.Avatar
 import random
 
 from panda3d.core import *
@@ -10,8 +6,9 @@ from direct.distributed import ClockDelta
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from otp.avatar.ShadowCaster import ShadowCaster
 from otp.otpbase import OTPGlobals, OTPLocalizer, OTPRender
-from otp.nametag.NametagGroup import NametagGroup
 from otp.nametag.Nametag import Nametag
+from otp.nametag.NametagGroup import NametagGroup
+from otp.nametag.NametagConstants import CFSpeech, CFThought, CFTimeout, CFPageButton, CFNoQuitButton, CFQuitButton
 
 
 def reconsiderAllUnderstandable():

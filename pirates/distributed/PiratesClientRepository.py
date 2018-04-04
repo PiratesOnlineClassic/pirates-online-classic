@@ -567,8 +567,12 @@ class PiratesClientRepository(OTPClientRepository):
         if pfm.isFriend(pId) or afm.isFriend(doId):
             return pfm.getFriendInfo(pId) or afm.getFriendInfo(doId)
 
+    def getAvatar(self, doId):
+        if doId in self.doId2do:
+            return self.doId2do[doId]
+
     def identifyAvatar(self, doId):
-        return self.crewMatchManager.getHandle(doId)
+        pass#return self.crewMatchManager.getHandle(doId) # TODO
 
     def identifyPlayer(self, playerId):
         return self.playerFriendsManager.getFriendInfo(playerId)
