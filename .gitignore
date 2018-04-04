@@ -108,3 +108,7 @@ venv.bak/
 # Other
 library/
 cache/
+
+# Visual Code
+.vscode/
+.vs/
