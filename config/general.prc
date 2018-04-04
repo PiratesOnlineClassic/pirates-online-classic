@@ -17,3 +17,16 @@ default-model-extension .bam
 # DClass:
 dc-file astron/dclass/pirates.dc
 dc-file astron/dclass/otp.dc
+
+# Notifier:
+notify-level-tiff error
+notify-level-dxgsg warning
+notify-level-gobj warning
+notify-level-loader warning
+notify-level-chan fatal
+notify-level-pgraph error
+notify-level-collide error
+notify-level-abs error
+notify-level-Actor error
+notify-level-DisplayOptions debug
+notify-timestamp 1

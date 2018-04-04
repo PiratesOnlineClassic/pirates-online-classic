@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesbase.PiratesGlobals
 import PLocalizer
 from direct.gui import DirectButton, DirectFrame
 from otp.otpbase import OTPLocalizer as OL
@@ -57,9 +53,9 @@ FRENCH_NAMETAG = (0.1, 0.1, 0.44, 1.0)
 SPANISH_NAMETAG = (0.85, 0.65, 0.13, 1.0)
 NAMETAG_WORDWRAP = 100
 MAX_COMBAT_DAMAGE = 999
-AI_BROADCAST_PERIOD = config.GetDouble('smooth-lag', 0.2) * 0.9
+AI_BROADCAST_PERIOD = ConfigVariableDouble('smooth-lag', 0.2).getValue() * 0.9
 AI_MOVEMENT_PERIOD = AI_BROADCAST_PERIOD * 0.9
-AI_EXAMINE_EVERY = config.GetInt('ai-examine-every', 2)
+AI_EXAMINE_EVERY = ConfigVariableInt('ai-examine-every', 2).getValue()
 IDLES_DONT_EXAMINE = [
  VILLAGER_TEAM, PLAYER_TEAM]
 COLL_MODE_NONE = 0
@@ -242,7 +238,7 @@ MarketingHotkeyList = ['.']
 SpeedChatHotkey = '`'
 SeaChestHotkey = 'uber-tab'
 EscapeHotkey = 'uber-escape'
-if config.GetBool('want-dev-hotkeys', 0):
+if ConfigVariableBool('want-dev-hotkeys', 0).getValue():
     ShipHotkey = 'f11'
     KrakenHotkey = 'f10'
     SynchronizeHotkey = 'f6'

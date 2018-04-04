@@ -1,14 +1,10 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.ai.MagicWordManager
 import __builtin__
 import string
 
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
 from direct.distributed.ClockDelta import *
-from direct.showbase import (ContainerReport, GarbageReport,
+from direct.showbase import (GarbageReport,
                              MessengerLeakDetector, PythonUtil)
 from direct.showbase.InputStateGlobal import inputState
 from direct.showbase.PythonUtil import DelayedCall, Functor, ScratchPad
@@ -369,7 +365,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
                                                                                                                                                                                         limit = 30
                                                                                                                                                                                         if 'full' in args:
                                                                                                                                                                                             limit = None
-                                                                                                                                                                                        ContainerReport.ContainerReport('~containers', log=True, limit=limit, threaded=True)
+                                                                                                                                                                                        #ContainerReport.ContainerReport('~containers', log=True, limit=limit, threaded=True)
                                                                                                                                                                                     else:
                                                                                                                                                                                         if wordIs('~garbage'):
                                                                                                                                                                                             args = word.split()
