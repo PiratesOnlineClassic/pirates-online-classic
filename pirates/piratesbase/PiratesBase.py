@@ -151,6 +151,7 @@ class PiratesBase(OTPBase):
         TextureStage.getDefault().setPriority(10)
         self.useDrive()
         self.disableMouse()
+        self.addCullBins()
         for key in PiratesGlobals.ScreenshotHotkeyList:
             self.accept(key, self.takeScreenShot)
 
@@ -522,6 +523,14 @@ class PiratesBase(OTPBase):
 
         taskMgr.doMethodLater(3.0, clearScreenshotMsg, 'clearWarning')
 
+    def addCullBins(self):
+        cbm = CullBinManager.getGlobalPtr()
+        cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
+        cbm.addBin('shadow', CullBinManager.BTFixed, 15)
+        cbm.addBin('ground', CullBinManager.BTFixed, 14)
+        cbm.addBin('water', CullBinManager.BTFixed, 1)
+        cbm.addBin('gui-fixed', CullBinManager.BTFixed, 55)
+
     def showScreenshots(self):
         if not self.screenshotViewer:
             self.screenshotViewer = ScreenshotViewer.ScreenshotViewer()
@@ -530,7 +539,6 @@ class PiratesBase(OTPBase):
     def cleanupDownloadWatcher(self):
         self.downloadWatcher.cleanup()
         self.downloadWatcher = None
-        return
 
     def startShow(self, cr):
         self.cr = cr
