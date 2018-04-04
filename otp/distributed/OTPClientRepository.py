@@ -520,7 +520,7 @@ class OTPClientRepository(ClientRepositoryBase):
 
     def enterShutdown(self, errorCode=None):
         self.handler = self.handleMessageType
-        self.sendShutdown()
+        self.sendDisconnect()
         self.notify.info('Exiting cleanly')
         base.exitShow(errorCode)
 
