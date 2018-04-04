@@ -1048,11 +1048,11 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         return
 
     def setupMovementSounds(self):
-        runSand = base.loadSfx('audio/sfx_avatar_run_sandx2.mp3')
-        walkSand = base.loadSfx('audio/sfx_avatar_walk_sandx2.mp3')
-        runWood = base.loadSfx('audio/sfx_avatar_run_woodx2.mp3')
-        walkWood = base.loadSfx('audio/sfx_avatar_walk_woodx2.mp3')
-        swimSound = base.loadSfx('audio/sfx_avatar_swim.mp3')
+        runSand = base.loader.loadSfx('audio/sfx_avatar_run_sandx2.mp3')
+        walkSand = base.loader.loadSfx('audio/sfx_avatar_walk_sandx2.mp3')
+        runWood = base.loader.loadSfx('audio/sfx_avatar_run_woodx2.mp3')
+        walkWood = base.loader.loadSfx('audio/sfx_avatar_walk_woodx2.mp3')
+        swimSound = base.loader.loadSfx('audio/sfx_avatar_swim.mp3')
         self.surfaceIndex = PiratesGlobals.SURFACE_DEFAULT
         self.movementIndex = PiratesGlobals.STAND_INDEX
         self.curMoveSound = None

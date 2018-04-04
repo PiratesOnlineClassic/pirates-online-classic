@@ -886,7 +886,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.motionFSM.off()
         base.transitions.letterboxOn()
         kickT = self.av.getDuration('kick_door_loop')
-        self.kickSfx = base.loadSfx('phase_4/audio/sfx_kick_door_loop.mp3')
+        self.kickSfx = base.loader.loadSfx('phase_4/audio/sfx_kick_door_loop.mp3')
         self.kickTrack = Sequence(Func(messenger.send, self.av.kickEvents[0]), Func(base.playSfx, self.kickSfx, node=self.av), Wait(kickT), Func(messenger.send, self.av.kickEvents[1]))
         self.kickTrack.loop()
         self.av.loop('kick_door_loop')

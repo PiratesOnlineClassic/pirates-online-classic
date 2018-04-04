@@ -101,7 +101,7 @@ class TutorialInteriorEffects:
     def _shootTask(self, task=None):
         targetPos = self._target.getPos()
         flightTime = 4.0
-        self.currSnd = base.loadSfx('audio/%s' % distFireSfxNames[random.randint(0, len(distFireSfxNames) - 1)])
+        self.currSnd = base.loader.loadSfx('audio/%s' % distFireSfxNames[random.randint(0, len(distFireSfxNames) - 1)])
         self.currSnd.play()
         taskMgr.doMethodLater(flightTime, Functor(self._handleCannonballHit, targetPos), uniqueName(self._hitTaskString))
         taskMgr.doMethodLater(1.0 + random.random() * 15.0, self._shootTask, uniqueName(self._shootTaskString))
@@ -112,7 +112,7 @@ class TutorialInteriorEffects:
 
     def _startFireSound(self):
         if self._fireSound is None:
-            self._fireSound = SoundInterval(base.loadSfx('audio/bonfire.wav'), node=self._target, volume=0.2)
+            self._fireSound = SoundInterval(base.loader.loadSfx('audio/bonfire.wav'), node=self._target, volume=0.2)
             self._fireSound.loop(stagger=True)
         return
 
@@ -716,7 +716,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             self.stageStumpyPositionOnBoat()
             self.acceptOnce('usedCannon', self.startShipMovement)
             stumpyBoat.cannons.values()[0][1].setIgnoreProximity(False)
-            dialogue = base.loadSfx('audio/beck_cs12_4_4c_tell_to_shoot.mp3')
+            dialogue = base.loader.loadSfx('audio/beck_cs12_4_4c_tell_to_shoot.mp3')
             localAvatar.guiMgr.subtitler.showText(PLocalizer.QuestScriptTutorialStumpy_1, sfx=dialogue, timeout=dialogue.length() + 1.0)
             localAvatar.guiMgr.subtitler.clearTextOverride = True
 
@@ -774,7 +774,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             localAvatar.cannon.fireCannonPanel.setWreckButtonText(self.shipWreckHitCount)
             localAvatar.gameFSM.lockFSM = False
             self.showCannonExitPanel()
-            dialogue = base.loadSfx('audio/beck_cs12_5_5a_tell_praise.mp3')
+            dialogue = base.loader.loadSfx('audio/beck_cs12_5_5a_tell_praise.mp3')
             localAvatar.guiMgr.subtitler.showText(PLocalizer.QuestScriptTutorialStumpy_6, sfx=dialogue, timeout=dialogue.length() + 1.0)
         else:
             if self.shipWreckHitCount > 5 and self.shipWreckState == 1:

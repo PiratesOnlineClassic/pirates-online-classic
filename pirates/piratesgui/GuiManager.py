@@ -1471,7 +1471,7 @@ class GuiManager(FSM.FSM):
                                                                                                                                                0,
                                                                                                                                                0.09), text_scale=0.08)
         self.pirateCode.hide()
-        self.pirateCodeDialog = base.loadSfx('audio/dialog/will_turner_7.2.b.mp3')
+        self.pirateCodeDialog = base.loader.loadSfx('audio/dialog/will_turner_7.2.b.mp3')
         return
 
     def showPirateCode(self):

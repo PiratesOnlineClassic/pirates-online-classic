@@ -84,7 +84,7 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
         self.aimAITrack = None
         self.headingNode = NodePath('dummy')
         OTPRender.renderReflection(False, self, 'p_cannon', None)
-        self.emptySound = base.loadSfx('audio/outofammo.mp3')
+        self.emptySound = base.loader.loadSfx('audio/outofammo.mp3')
         self.fireSubframeCall = None
         self.__invRequest = None
         return

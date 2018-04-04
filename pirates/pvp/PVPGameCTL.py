@@ -22,7 +22,7 @@ class PVPGameCTL(PVPGameBase):
         self.shipsNearBase = {}
         self.maxTeamScore = 0
         self.prevTeamScore = None
-        self.depositSound = base.loadSfx('audio/treasure_hit_1.mp3')
+        self.depositSound = base.loader.loadSfx('audio/treasure_hit_1.mp3')
         self.maxCarry = None
         self.pendingInstanceRequest = None
         return

@@ -134,7 +134,7 @@ def Cutscene1_1_1ivals(cutscene):
 
 def Cutscene1_1_2ivals(cutscene):
     av = cutscene.getActor(CutsceneActor.CutLocalPirate.getActorKey())
-    cballHitTrack = base.loadSfx('audio/in_cball_hit_1_f.mp3')
+    cballHitTrack = base.loader.loadSfx('audio/in_cball_hit_1_f.mp3')
     loader.loadModel('models/effects/explosion')
     loader.loadModel('models/effects/shockwaveRing')
     KickFrame = 245

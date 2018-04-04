@@ -25,7 +25,7 @@ class GreenBlood(PooledEffect, EffectController):
         self.card = model.find('**/particleGreenBlood')
         if not self.splashSfx:
             for filename in self.SfxNames:
-                self.splashSfx.append(base.loadSfx('audio/' + filename))
+                self.splashSfx.append(base.loader.loadSfx('audio/' + filename))
 
         if not GreenBlood.particleDummy:
             GreenBlood.particleDummy = render.attachNewNode(ModelNode('GreenBloodParticleDummy'))

@@ -116,7 +116,7 @@ class DistributedCellDoor(DistributedInteractive.DistributedInteractive):
         startHpr = self.doorGeomNodePath.getHpr()
         hpr = Vec3(self.openH, startHpr[1], startHpr[2])
         if not self.OpenSfx:
-            self.OpenSfx = base.loadSfx('audio/sfx_door_spanish_open.mp3')
+            self.OpenSfx = base.loader.loadSfx('audio/sfx_door_spanish_open.mp3')
         self.doorTrack = Sequence(Func(base.playSfx, self.OpenSfx, node=self.doorGeomNodePath), LerpHprInterval(self.doorGeomNodePath, 0.2, hpr=hpr, startHpr=startHpr))
         self.doorTrack.start()
 
@@ -131,7 +131,7 @@ class DistributedCellDoor(DistributedInteractive.DistributedInteractive):
         startHpr = self.doorGeomNodePath.getHpr()
         hpr = Vec3(self.shutH, startHpr[1], startHpr[2])
         if not self.CloseSfx:
-            self.CloseSfx = base.loadSfx('audio/sfx_door_shanty_slam.mp3')
+            self.CloseSfx = base.loader.loadSfx('audio/sfx_door_shanty_slam.mp3')
         self.doorTrack = Sequence(Func(base.playSfx, self.CloseSfx, node=self.doorGeomNodePath), LerpHprInterval(self.doorGeomNodePath, 0.2, hpr=hpr, startHpr=startHpr))
         self.doorTrack.start()
 

@@ -22,7 +22,7 @@ class CannonExplosion(PooledEffect, EffectController):
         EffectController.__init__(self)
         if not self.splashSfx:
             for filename in self.splashSfxNames:
-                self.splashSfx.append(base.loadSfx('audio/' + filename))
+                self.splashSfx.append(base.loader.loadSfx('audio/' + filename))
 
         self.splash = Actor.Actor()
         self.splash.loadModel('models/effects/cannonballExplosion-zero')

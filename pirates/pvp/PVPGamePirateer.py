@@ -28,7 +28,7 @@ class PVPGamePirateer(PVPGameBase):
         self.maxCarry = 0
         self.prevTeamScore = 0
         self.prevLoadScore = 0
-        self.depositSound = base.loadSfx('audio/treasure_hit_1.mp3')
+        self.depositSound = base.loader.loadSfx('audio/treasure_hit_1.mp3')
         self.pendingInstanceRequest = None
         return
 

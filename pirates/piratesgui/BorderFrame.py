@@ -31,7 +31,7 @@ class BorderFrame(DirectFrame):
 
     def destroy(self):
         if hasattr(self, 'frameParent') and self.frameParent:
-            for child in self.frameParent.getChildrenAsList():
+            for child in self.frameParent.getChildren():
                 childGui = self.guiDict.get(child.getName())
                 if childGui:
                     childGui.destroy()
@@ -44,7 +44,7 @@ class BorderFrame(DirectFrame):
             self.frameParent.removeNode()
             self.frameParent = None
         if hasattr(self, 'behindParent') and self.behindParent:
-            for child in self.behindParent.getChildrenAsList():
+            for child in self.behindParent.getChildren():
                 childGui = self.guiDict.get(child.getName())
                 if childGui:
                     childGui.destroy()

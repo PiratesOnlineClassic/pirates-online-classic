@@ -78,7 +78,7 @@ LEFT = -1
 
 def getRamSfx():
     hitSfxs = (
-     base.loadSfx('audio/wood_impact_1.mp3'), base.loadSfx('audio/wood_impact_3.mp3'))
+     base.loader.loadSfx('audio/wood_impact_1.mp3'), base.loader.loadSfx('audio/wood_impact_3.mp3'))
     return hitSfxs
 
 
