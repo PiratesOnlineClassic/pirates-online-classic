@@ -754,7 +754,7 @@ dclass DistributedFormation : DistributedSmoothNode {
 };
 
 dclass DistributedFlag : DistributedObject {
-  setDNAString(string) required broadcast ram db;
+  setDNAString(blob) required broadcast ram db;
   requestDNAString(string) airecv clsend;
 };
 
@@ -1084,6 +1084,7 @@ struct HUDIcons {
 dclass DistributedPlayerPirate : DistributedPlayer, HumanDNA, DistributedBattleAvatar, DistributedQuestAvatar {
   setParentingRules(string, string) broadcast ram;
   setAvatarType(AvatarType) required broadcast ram;
+  setDNAString(blob) required broadcast ram db;
   setOnWelcomeWorld(bool) required ownrecv airecv db;
   setFounder(uint8) broadcast ram airecv;
   setCrewIconIndicator(uint8) ownsend required ram broadcast;

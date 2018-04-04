@@ -247,12 +247,11 @@ class PiratesClientRepository(OTPClientRepository):
             self.avCreate.load()
             self.avCreate.enter()
             self.accept('makeAPirateComplete', self.__handleMakeAPirate)
-            self.accept('nameShopCreateAvatar', self.sendCreateAvatarMsg)
         else:
             self.tutorial = 1
             dna = HumanDNA.HumanDNA()
             newPotAv = PotentialAvatar(0, ['dbp', '', '', ''], dna, index, 0)
-            self.avatarManager.sendRequestCreateAvatar(subId)
+            self.csm.sendCreateAvatar(newPotAv.dna, '', newPotAv.position)
             self.accept('createdNewAvatar', self.handleAvatarCreated, [newPotAv])
 
     def handleAvatarCreated(self, newPotAv, avatarId, subId):

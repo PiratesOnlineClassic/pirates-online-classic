@@ -78,23 +78,27 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         self.randGen.seed(random.random())
         self.eyeFSM = ClassicFSM('eyeFSM', [
          State('off', self.enterEyeFSMOff, self.exitEyeFSMOff, [
-          'open', 'closed']),
+            'open', 'closed']),
+
          State('open', self.enterEyeFSMOpen, self.exitEyeFSMOpen, [
-          'closed', 'off']),
+            'closed', 'off']),
+
          State('closed', self.enterEyeFSMClosed, self.exitEyeFSMClosed, [
-          'open', 'off'])], 'off', 'off')
+            'open', 'off'])], 'off', 'off')
+
         self.eyeFSM.enterInitialState()
         if other != None:
             self.copyHuman(other)
-        return
 
     def removeCopiedNodes(self):
         self.dropShadow = self.find('**/drop_shadow*')
         if not self.dropShadow.isEmpty():
             self.deleteDropShadow()
+
         billboardNode = self.find('**/billboardNode')
         if not billboardNode.isEmpty():
             billboardNode.removeNode()
+
         self.getGeomNode().getParent().removeNode()
 
     def flattenHuman(self):
@@ -126,8 +130,6 @@ class Human(HumanBase.HumanBase, Biped.Biped):
             self.sliderNames = None
             Biped.Biped.delete(self)
 
-        return
-
     def isDeleted(self):
         try:
             self.Human_deleted
@@ -140,6 +142,7 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         idx = 0
         if self.gender == 'f':
             idx = 1
+
         jointName = 'def_head01'
         jointNameExtra = 'def_extra_jt'
         jointNameScale = 'def_scale_jt'
@@ -158,7 +161,6 @@ class Human(HumanBase.HumanBase, Biped.Biped):
 
         self.headNode.setScale(HeadScales[idx][self.style.getBodyShape()])
         self.setGlobalScale(self.calcBodyScale())
-        return
 
     def undoExtraNodes(self):
         jointNameExtra = 'def_extra_jt'
@@ -167,15 +169,16 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         if not joints.isEmpty():
             joints.detach()
             joints.clear()
+
         joints = self.findAllMatches('**/*' + jointNameScale)
         if not joints.isEmpty():
             joints.detach()
             joints.clear()
+
         if self.scaleNode:
             self.scaleNode.removeNode()
             self.scaleNode = None
             self.rootNode = None
-        return
 
     def fixEyes(self):
         self.eyeLids = {}
@@ -210,13 +213,16 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         if self.style.gender == 'f':
             filePrefix = 'models/char/f'
             genderPrefix = 'f'
+
         if self.reducedAnimList is None:
             self.animDict = self.prebuiltAnimData[genderPrefix + self.type]
             return
+
         filePrefix += 'p'
         animList = self.reducedAnimList
         if animList is None:
             animList = AnimListDict[self.type]
+
         self.animDict = {}
         for anim in animList:
             animSuffix = ''
@@ -229,6 +235,7 @@ class Human(HumanBase.HumanBase, Biped.Biped):
 
         if self.reducedAnimList is None:
             self.animDict.pop('intro')
+
         return filePrefix
 
     def getIsPaid(self):
@@ -245,6 +252,7 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         else:
             self.headFudgeHpr = Vec3(0, 0, 0)
             idx = 0
+
         other.zombie = self.zombie
         yieldThread('anim dict')
         other.isPaid = self.getIsPaid()
@@ -252,8 +260,10 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         yieldThread('showLOD')
         if other.zombie:
             other.showZombie()
+
         if hasattr(self, 'motionFSM'):
             self.motionFSM.setAvatar(self)
+
         yieldThread('zombie')
         other.applyBodyShaper()
         yieldThread('body shaper')
@@ -262,6 +272,7 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         if self.zombie:
             other.model.eyeBalls.stash()
             other.model.irises.stash()
+
         self.copyActor(other)
         self.floorOffsetZ = other.rootNode.getZ()
         yieldThread('copyActor')
@@ -269,6 +280,7 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         if self.zombie:
             other.model.eyeBalls.unstash()
             other.model.irises.unstash()
+
         self.rootNode = self.getLOD('2000').find('**/dx_root')
         self.headNode = self.getLOD('2000').find('**/def_head01')
         self.scaleNode = self.controlJoint(None, 'legs', 'def_scale_jt', '2000')
@@ -287,7 +299,6 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         self.setName(self.getName())
         yieldThread('misc nodes')
         self.loaded = 1
-        return
 
     def setGlobalScale(self, scale):
         self.scaleNode.setScale(scale)
@@ -319,11 +330,14 @@ class Human(HumanBase.HumanBase, Biped.Biped):
             other = others[1]
         else:
             other = others[0]
+
         if self.loaded:
             self.cleanupHuman()
+
         self.loadHuman(other)
         if self.isLocal():
             self.renderReflection = True
+
         self.setRenderReflection()
         self.resetEffectParent()
 
@@ -343,11 +357,13 @@ class Human(HumanBase.HumanBase, Biped.Biped):
     def __blinkOpenEyes(self, task):
         if self.eyeFSM.getCurrentState().getName() == 'closed':
             self.eyeFSM.request('open')
+
         r = self.randGen.random()
         if r < 0.1:
             t = 0.2
         else:
             t = r * 4.0 + 1.0
+
         taskMgr.doMethodLater(t, self.__blinkCloseEyes, self.__blinkName)
         return Task.done
 
@@ -357,13 +373,16 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         else:
             self.eyeFSM.request('closed')
             taskMgr.doMethodLater(0.125, self.__blinkOpenEyes, self.__blinkName)
+
         return Task.done
 
     def startBlink(self):
         taskMgr.remove(self.__blinkName)
         if self.eyeLids:
             self.openEyes()
-        taskMgr.doMethodLater(self.randGen.random() * 4.0 + 1, self.__blinkCloseEyes, self.__blinkName)
+
+        taskMgr.doMethodLater(self.randGen.random() * 4.0 + 1,  self.__blinkCloseEyes,
+            self.__blinkName)
 
     def stopBlink(self):
         taskMgr.remove(self.__blinkName)
@@ -408,7 +427,10 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         idx = 0
         if self.gender == 'f':
             idx = 1
-        mappedValue = (0.8 + (1 + self.style.getBodyHeight()) * 0.2) * BodyScales[idx][self.style.getBodyShape()]
+
+        mappedValue = (0.8 + (1 + self.style.getBodyHeight()) * 0.2) * BodyScales[
+            idx][self.style.getBodyShape()]
+
         return mappedValue
 
     @classmethod
@@ -432,7 +454,6 @@ class Human(HumanBase.HumanBase, Biped.Biped):
             cls.prebuiltAnimData[qualifier][anim[0]] = prefix + '_' + anim[1] + animSuffix
 
         cls.prebuiltAnimData[qualifier].pop('intro')
-
 
 Human.setupAnimDicts()
 # okay decompiling .\pirates\pirate\Human.pyc

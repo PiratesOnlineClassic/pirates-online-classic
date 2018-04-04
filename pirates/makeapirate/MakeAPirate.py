@@ -962,6 +962,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if hasattr(self, 'confirmInvalidName'):
             self.confirmInvalidName.destroy()
             del self.confirmInvalidName
+
         self.nameGui._checkTypeANameAsPickAName()
         if hasattr(base, 'pe') and base.pe or self.nameGui.cr is None:
             self._handleNameOK()
@@ -970,16 +971,17 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
                 if self._waitForServerDlg:
                     self._waitForServerDlg.destroy()
                     self._waitForServerDlg = None
+
                 self._waitForServerDlg = PDialog.PDialog(text=PLocalizer.MakeAPirateWait, style=OTPDialog.NoButtons)
                 self.nameGui.getTypeANameProblem(self._handleNameProblem)
             else:
                 self._handleNameOK()
-        return
 
     def _handleNameProblem(self, problemStr):
         if self._waitForServerDlg:
             self._waitForServerDlg.destroy()
             self._waitForServerDlg = None
+
         if problemStr:
 
             def confirmInvalidName(value):
@@ -989,7 +991,6 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             self.confirmInvalidName = PDialog.PDialog(text=problemStr, style=OTPDialog.Acknowledge, command=confirmInvalidName)
         else:
             self._handleNameOK()
-        return
 
     def _handleNameOK(self):
         self.bookModel.stash()
@@ -1023,19 +1024,16 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             messenger.send(self.doneEvent)
             base.transitions.fadeIn(1.0)
 
-        def populateAv(avId, subId):
+        def chooseAv(avId):
+            if not avId:
+                self.notify.error('An error occured when trying to create avatar!')
+
             self.avId = avId
-            self.acceptOnce('avatarPopulated', sendDone)
-            if self.nameGui.customName:
-                base.cr.sendWishName(avId, self.pirate.style.name)
-                base.cr.avatarManager.sendRequestPopulateAvatar(avId, self.pirate.style, 0, 0, 0, 0, 0)
-            else:
-                name = self.nameGui.getNumericName()
-                base.cr.avatarManager.sendRequestPopulateAvatar(avId, self.pirate.style, 1, name[0], name[1], name[2], name[3])
+            sendDone()
 
         def createAv():
-            self.acceptOnce('createdNewAvatar', populateAv)
-            base.cr.avatarManager.sendRequestCreateAvatar(self.subId)
+            self.acceptOnce('createdNewAvatar', chooseAv)
+            base.cr.csm.sendCreateAvatar(self.pirate.style, '', self.index)
 
         def acknowledgeTempName(value):
             self.confirmTempName.destroy()
@@ -1044,7 +1042,6 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
                 base.transitions.fadeOut(finishIval=Func(sendDone))
             else:
                 base.transitions.fadeOut(finishIval=Func(createAv))
-            return
 
         if self.nameGui.customName and not self.isNPCEditor and not self.confirmTempName:
             self.confirmTempName = PDialog.PDialog(text=PLocalizer.TempNameIssued, style=OTPDialog.Acknowledge, command=acknowledgeTempName)

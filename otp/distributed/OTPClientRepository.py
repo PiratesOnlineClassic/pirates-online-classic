@@ -694,7 +694,6 @@ class OTPClientRepository(ClientRepositoryBase):
         self.handler = None
         self.ignore('lostConnectionAck')
         self.lostConnectionBox.cleanup()
-        return
 
     def enterAfkTimeout(self):
         self.sendSetAvatarIdMsg(0)
@@ -710,8 +709,8 @@ class OTPClientRepository(ClientRepositoryBase):
         if self.afkDialog:
             self.afkDialog.cleanup()
             self.afkDialog = None
+
         self.handler = None
-        return
 
     def enterPeriodTimeout(self):
         self.sendSetAvatarIdMsg(0)
@@ -728,8 +727,8 @@ class OTPClientRepository(ClientRepositoryBase):
         if self.periodDialog:
             self.periodDialog.cleanup()
             self.periodDialog = None
+
         self.handler = None
-        return
 
     def enterWaitForAvatarList(self):
         self._requestAvatarList()
@@ -739,77 +738,14 @@ class OTPClientRepository(ClientRepositoryBase):
         self.waitForDatabaseTimeout(requestName='WaitForAvatarList')
         self.acceptOnce(OtpAvatarManager.OtpAvatarManager.OnlineEvent, self._requestAvatarList)
 
-    def sendGetAvatarsMsg(self):
-        datagram = PyDatagram()
-        datagram.addUint16(CLIENT_GET_AVATARS)
-        self.send(datagram)
-
     def exitWaitForAvatarList(self):
         self.cleanupWaitingForDatabase()
         self.ignore(OtpAvatarManager.OtpAvatarManager.OnlineEvent)
         self.handler = None
-        return
 
     def handleAvatarsList(self, avatars):
         self.avList = avatars
         self.loginFSM.request('chooseAvatar', [self.avList])
-
-    def handleWaitForAvatarList(self, msgType, di):
-        if msgType == CLIENT_GET_AVATARS_RESP:
-            self.handleGetAvatarsRespMsg(di)
-        else:
-            if msgType == CLIENT_GET_AVATARS_RESP2:
-                pass
-            else:
-                self.handleMessageType(msgType, di)
-
-    def handleGetAvatarsRespMsg(self, di):
-        returnCode = di.getUint8()
-        if returnCode == 0:
-            avatarTotal = di.getUint16()
-            avList = []
-            for i in range(0, avatarTotal):
-                avNum = di.getUint32()
-                avNames = [
-                 '', '', '', '']
-                avNames[0] = di.getString()
-                avNames[1] = di.getString()
-                avNames[2] = di.getString()
-                avNames[3] = di.getString()
-                avDNA = di.getString()
-                avPosition = di.getUint8()
-                aname = di.getUint8()
-                potAv = PotentialAvatar(avNum, avNames, avDNA, avPosition, aname)
-                avList.append(potAv)
-
-            self.avList = avList
-            self.loginFSM.request('chooseAvatar', [self.avList])
-        else:
-            self.notify.error('Bad avatar list return code: ' + str(returnCode))
-            self.loginFSM.request('shutdown')
-
-    def handleGetAvatarsResp2Msg(self, di):
-        returnCode = di.getUint8()
-        if returnCode == 0:
-            avatarTotal = di.getUint16()
-            avList = []
-            for i in range(0, avatarTotal):
-                avNum = di.getUint32()
-                avNames = [
-                 '', '', '', '']
-                avNames[0] = di.getString()
-                avDNA = None
-                avPosition = di.getUint8()
-                aname = None
-                potAv = PotentialAvatar(avNum, avNames, avDNA, avPosition, aname)
-                avList.append(potAv)
-
-            self.avList = avList
-            self.loginFSM.request('chooseAvatar', [self.avList])
-        else:
-            self.notify.error('Bad avatar list return code: ' + str(returnCode))
-            self.loginFSM.request('shutdown')
-        return
 
     def enterChooseAvatar(self, avList):
         pass
@@ -823,51 +759,13 @@ class OTPClientRepository(ClientRepositoryBase):
     def exitCreateAvatar(self):
         pass
 
-    def sendCreateAvatarMsg(self, avDNA, avName, avPosition):
-        datagram = PyDatagram()
-        datagram.addUint16(CLIENT_CREATE_AVATAR)
-        datagram.addUint16(0)
-        datagram.addString(avDNA.makeNetString())
-        datagram.addUint8(avPosition)
-        self.newName = avName
-        self.newDNA = avDNA
-        self.newPosition = avPosition
-        self.send(datagram)
-
-    def sendCreateAvatar2Msg(self, avClass, avDNA, avName, avPosition):
-        className = avClass.__name__
-        dclass = self.dclassesByName[className]
-        datagram = PyDatagram()
-        datagram.addUint16(CLIENT_CREATE_AVATAR2)
-        datagram.addUint16(0)
-        datagram.addUint8(avPosition)
-        datagram.addUint16(dclass.getNumber())
-        self.newName = avName
-        self.newDNA = avDNA
-        self.newPosition = avPosition
-        self.send(datagram)
-
     def enterWaitForDeleteAvatarResponse(self, potAv):
-        self.handler = self.handleWaitForDeleteAvatarResponse
-        self.sendDeleteAvatarMsg(potAv.id)
+        self.csm.sendDeleteAvatar(potAv.id)
         self.waitForDatabaseTimeout(requestName='WaitForDeleteAvatarResponse')
-
-    def sendDeleteAvatarMsg(self, avId):
-        datagram = PyDatagram()
-        datagram.addUint16(CLIENT_DELETE_AVATAR)
-        datagram.addUint32(avId)
-        self.send(datagram)
 
     def exitWaitForDeleteAvatarResponse(self):
         self.cleanupWaitingForDatabase()
         self.handler = None
-        return
-
-    def handleWaitForDeleteAvatarResponse(self, msgType, di):
-        if msgType == CLIENT_DELETE_AVATAR_RESP:
-            self.handleGetAvatarsRespMsg(di)
-        else:
-            self.handleMessageType(msgType, di)
 
     def enterRejectRemoveAvatar(self, reasonCode):
         self.notify.warning('Rejected removed avatar. (%s)' % (reasonCode,))
@@ -885,17 +783,14 @@ class OTPClientRepository(ClientRepositoryBase):
         self.ignore('rejectRemoveAvatarAck')
         self.rejectRemoveAvatarBox.cleanup()
         del self.rejectRemoveAvatarBox
-        return
 
     def enterWaitForSetAvatarResponse(self, potAv):
-        self.handler = self.handleWaitForSetAvatarResponse
         self.sendSetAvatarMsg(potAv)
         self.waitForDatabaseTimeout(requestName='WaitForSetAvatarResponse')
 
     def exitWaitForSetAvatarResponse(self):
         self.cleanupWaitingForDatabase()
         self.handler = None
-        return
 
     def sendSetAvatarMsg(self, potAv):
         self.sendSetAvatarIdMsg(potAv.id)
@@ -904,38 +799,11 @@ class OTPClientRepository(ClientRepositoryBase):
     def sendSetAvatarIdMsg(self, avId):
         if avId != self.__currentAvId:
             self.__currentAvId = avId
-            datagram = PyDatagram()
-            datagram.addUint16(CLIENT_SET_AVATAR)
-            datagram.addUint32(avId)
-            self.send(datagram)
+            self.csm.sendChooseAvatar(avId)
             if avId == 0:
                 self.stopPeriodTimer()
             else:
                 self.startPeriodTimer()
-
-    def handleAvatarResponseMsg(self, di):
-        pass
-
-    def handleWaitForSetAvatarResponse(self, msgType, di):
-        if msgType == CLIENT_GET_AVATAR_DETAILS_RESP:
-            self.handleAvatarResponseMsg(di)
-        else:
-            if msgType == CLIENT_GET_PET_DETAILS_RESP:
-                self.handleAvatarResponseMsg(di)
-            else:
-                if msgType == CLIENT_GET_FRIEND_LIST_RESP:
-                    self.handleGetFriendsList(di)
-                else:
-                    if msgType == CLIENT_GET_FRIEND_LIST_EXTENDED_RESP:
-                        self.handleGetFriendsListExtended(di)
-                    else:
-                        if msgType == CLIENT_FRIEND_ONLINE:
-                            self.handleFriendOnline(di)
-                        else:
-                            if msgType == CLIENT_FRIEND_OFFLINE:
-                                self.handleFriendOffline(di)
-                            else:
-                                self.handleMessageType(msgType, di)
 
     def enterPlayingGame(self):
         pass

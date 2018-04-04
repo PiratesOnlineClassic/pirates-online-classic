@@ -169,6 +169,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         idx = 0
         if self.gender == 'f':
             idx = 1
+
         jointName = 'def_head01'
         jointNameExtra = 'def_extra_jt'
         jointNameScale = 'def_scale_jt'
@@ -188,7 +189,6 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
 
         self.headNode.setScale(HeadScales[idx][self.style.getBodyShape])
         self.setGlobalScale(self.calcBodyScale())
-        return
 
     def undoExtraNodes(self):
         jointNameExtra = 'def_extra_jt'
@@ -433,20 +433,22 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             filePrefix = 'models/char/mp'
         else:
             filePrefix = 'models/char/fp'
+
         lodString = '2000'
         self.loadModel(filePrefix + '_' + lodString, 'modelRoot', '2000', copy)
         if loader.loadModel(filePrefix + '_' + '1000', allowInstance=True) != None:
             lodString = '1000'
+
         self.loadModel(filePrefix + '_' + lodString, 'modelRoot', '1000', copy)
         if loader.loadModel(filePrefix + '_' + '500', allowInstance=True) != None:
             lodString = '500'
+
         self.loadModel(filePrefix + '_' + lodString, 'modelRoot', '500', copy)
         self.makeSubpart('head', ['zz_head01'], [])
         self.makeSubpart('torso', ['zz_spine01'], ['zz_head01'])
         self.makeSubpart('legs', ['dx_root'], ['zz_spine01'])
         self.setSubpartsComplete(True)
         self.eyeIrisTextures = loader.loadModel('models/misc/eye_iris.bam')
-        return
 
     def setLODs(self):
         self.setLODNode()
@@ -464,11 +466,13 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
                      0, 5, 20, 280]
                 else:
                     raise StandardError, 'Invalid avatar-detail: %s' % avatarDetail
+
         self.addLOD(500, dist[3], dist[2])
         if self.optimizeLOD:
             lowLOD = self.getLOD('500')
             lowLOD.setTextureOff(1000)
             lowLOD.setTransparency(0, 1000)
+
         self.addLOD(1000, dist[2], dist[1])
         self.addLOD(2000, dist[1], dist[0])
         self.getLODNode().setCenter(Point3(0, 0, 5))
@@ -481,6 +485,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             if self.master:
                 self.model.setupSelectionChoices('NPC')
             self.model.loaded = 1
+
         self.model.setFromDNA()
         self.generateTexture()
 
@@ -493,6 +498,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         else:
             controlShapes = PirateMale.ControlShapes
             sliderNames = PirateMale.SliderNames
+
         self.setLODs()
         self.loadAnimatedHead = True
         self.generateBody()
@@ -500,6 +506,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             self.model = PirateFemale.PirateFemale(self, self.style)
         else:
             self.model = PirateMale.PirateMale(self, self.style)
+
         self.faceAwayFromViewer()
         self.lods = self.getLODNames()
         if self.gender == 'f':
@@ -508,6 +515,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         else:
             self.headFudgeHpr = Vec3(0, 0, 0)
             idx = 0
+
         self.showLOD(2000)
         self.showNormal()
         self.createAnimDict()
@@ -537,15 +545,16 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         self.initializeDropShadow()
         if self.getLOD('2000') == None:
             return
+
         exposedHeadJoint = self.getLOD('2000').find('**/def_head01')
         if not exposedHeadJoint.isEmpty():
             idx = 0
             if self.gender == 'f':
                 idx = 1
+
             exposedHeadJoint.setScale(1)
             self.headNode.reparentTo(exposedHeadJoint)
             self.headNode.setScale(HeadScales[idx][self.style.getBodyShape()])
-        return
 
     def undoControlJoints(self):
         self.getGeomNode().getParent().findAllMatches('def_*').detach()
@@ -583,11 +592,13 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
     def __blinkOpenEyes(self, task):
         if self.eyeFSM.getCurrentState().getName() == 'closed':
             self.eyeFSM.request('open')
+
         r = self.randGen.random()
         if r < 0.1:
             t = 0.2
         else:
             t = r * 4.0 + 1.0
+
         taskMgr.doMethodLater(t, self.__blinkCloseEyes, self.__blinkName)
         return Task.done
 
@@ -597,13 +608,16 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         else:
             self.eyeFSM.request('closed')
             taskMgr.doMethodLater(0.125, self.__blinkOpenEyes, self.__blinkName)
+
         return Task.done
 
     def startBlink(self):
         taskMgr.remove(self.__blinkName)
         if self.eyeLids:
             self.openEyes()
-        taskMgr.doMethodLater(self.randGen.random() * 4.0 + 1, self.__blinkCloseEyes, self.__blinkName)
+
+        taskMgr.doMethodLater(self.randGen.random() * 4.0 + 1, self.__blinkCloseEyes,
+            self.__blinkName)
 
     def stopBlink(self):
         taskMgr.remove(self.__blinkName)
@@ -784,8 +798,6 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
                     continue
                 elif lodName == '500':
                     continue
-
-        return
 
     def initHeadControlShapes(self):
         if self.style.getGender() == 'f':
@@ -1000,10 +1012,21 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             cjs = MaleHeadShapeControlJoints
             matrixF = MaleHeadShapeControlJointMatrix
             matrixI = MaleHeadShapeInitialControlJointMatrix
+
         posDelta = VBase3()
         hprDelta = VBase3()
         sclDelta = VBase3()
-        fdict2 = {0: posDelta.addX, 1: posDelta.addY, 2: posDelta.addZ, 3: hprDelta.addX, 4: hprDelta.addY, 5: hprDelta.addZ, 6: sclDelta.addX, 7: sclDelta.addY, 8: sclDelta.addZ}
+        fdict2 = {
+            0: posDelta.addX,
+            1: posDelta.addY,
+            2: posDelta.addZ,
+            3: hprDelta.addX,
+            4: hprDelta.addY,
+            5: hprDelta.addZ,
+            6: sclDelta.addX,
+            7: sclDelta.addY,
+            8: sclDelta.addZ}
+
         for jointName in cjs:
             posDelta.assign(matrixI[jointName][0])
             hprDelta.assign(matrixI[jointName][1])
@@ -1023,7 +1046,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             joint.applyFreeze(transform)
 
     def quickGetJointTransform(self, jointName):
-        return self.joints[jointName][0].getInitialValue()
+        return self.joints[jointName][0].getDefaultValue()
 
     def storeJoints(self):
         if self.style.gender == 'm':
@@ -1032,11 +1055,10 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         else:
             bJoints = FemaleBodyShapeControlJoints
             hJoints = FemaleHeadShapeControlJoints
-        for joint in bJoints + hJoints:
-            self.joints[joint] = self.getJoints(joint)
 
-        for joint in ['def_head01', 'def_extra_jt', 'def_scale_jt']:
-            self.joints[joint] = self.getJoints(joint)
+        for name in bJoints + hJoints + ('def_head01', 'def_extra_jt', 'def_scale_jt'):
+            joint = self.getJoints(jointName=name)
+            self.joints[name] = joint
 
     @classmethod
     def setupAnimDicts(cls):
@@ -1059,7 +1081,6 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             cls.prebuiltAnimData[qualifier][anim[0]] = prefix + '_' + anim[1] + animSuffix
 
         cls.prebuiltAnimData[qualifier].pop('intro')
-
 
 MasterHuman.setupAnimDicts()
 # okay decompiling .\pirates\pirate\MasterHuman.pyc
