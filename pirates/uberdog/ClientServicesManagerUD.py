@@ -76,7 +76,7 @@ class AccountDB:
         self.csm = csm
 
         filename = simbase.config.GetString(
-            'account-bridge-filename', 'account-bridge')
+            'account-bridge-filename', 'astron/databases/astrondb/account-bridge')
         self.dbm = semidbm.open(filename, 'c')
 
     def addNameRequest(self, avId, name):
