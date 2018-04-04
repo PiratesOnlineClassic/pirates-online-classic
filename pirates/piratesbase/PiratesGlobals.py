@@ -220,7 +220,6 @@ def setPirateBoldOutlineFont(path):
     global PirateBoldOutlineFontPath
     PirateBoldOutlineFontPath = path
     PirateBoldOutlineFont = None
-    return
 
 
 setInterfaceFont(PLocalizer.InterfaceFont)
@@ -238,7 +237,7 @@ MarketingHotkeyList = ['.']
 SpeedChatHotkey = '`'
 SeaChestHotkey = 'uber-tab'
 EscapeHotkey = 'uber-escape'
-if ConfigVariableBool('want-dev-hotkeys', 0).getValue():
+if ConfigVariableBool('want-dev-hotkeys', False).getValue():
     ShipHotkey = 'f11'
     KrakenHotkey = 'f10'
     SynchronizeHotkey = 'f6'

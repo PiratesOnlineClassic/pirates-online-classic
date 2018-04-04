@@ -393,7 +393,7 @@ class PiratesClientRepository(OTPClientRepository):
     @report(types=['deltaStamp', 'module'], prefix='------', dConfigParam='want-teleport-report')
     def enterPlayingGame(self):
         OTPClientRepository.enterPlayingGame(self)
-        if __dev__ and config.GetDouble('want-dev-hotkeys', 0):
+        if __dev__ and config.GetBool('want-dev-hotkeys', False):
 
             def toggleKraken():
                 if base.localAvatar:
@@ -408,7 +408,7 @@ class PiratesClientRepository(OTPClientRepository):
 
         self._userLoggingOut = False
         self.accept(PiratesGlobals.LogoutHotkey, logout)
-        if __dev__ and config.GetDouble('want-dev-hotkeys', 0):
+        if __dev__ and config.GetBool('want-dev-hotkeys', False):
 
             def deployShip():
                 messenger.send('magicWord', ['~deployShip', base.localAvatar.getDoId(), base.localAvatar.zoneId])
@@ -440,7 +440,7 @@ class PiratesClientRepository(OTPClientRepository):
         ivalMgr.interrupt()
         self.notify.info('sending clientLogout')
         messenger.send('clientLogout')
-        if config.GetDouble('want-dev-hotkeys', 0):
+        if config.GetBool('want-dev-hotkeys', False):
             self.ignore(PiratesGlobals.KrakenHotkey)
             self.ignore(PiratesGlobals.ShipHotkey)
             self.ignore(PiratesGlobals.LogoutHotkey)

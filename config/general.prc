@@ -45,3 +45,13 @@ alpha-bits 8
 
 # Tutorial:
 skip-tutorial #f
+force-tutorial #f
+
+# Seapatch:
+want-seapatch #t
+
+# Special Effects:
+want-special-effects #t
+
+# Make A Pirate:
+want-make-a-pirate #t
