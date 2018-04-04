@@ -122,7 +122,8 @@ class PiratesBase(OTPBase):
             options.recommendedOptions(base.pipe, False)
             options.log('Recommended Game Options')
         overwrite_options = True
-        options.verifyOptions(base.pipe, overwrite_options)
+        # TODO: FIXME!
+        #options.verifyOptions(base.pipe, overwrite_options)
         string = options.optionsToPrcData()
         loadPrcFileData('game_options', string)
         self.options = options
@@ -234,14 +235,12 @@ class PiratesBase(OTPBase):
         self.displayCpuFrequencyDialog = False
         self.taskMgr.doMethodLater(120.0, self.memoryMonitorTask, 'memory-monitor-task')
         self.supportAlphaFb = self.win.getFbProperties().getAlphaBits()
-        return
 
     def deleteDialogs(self):
         if self.cpuSpeedDialog:
             self.cpuSpeedDialog.destroy()
             del self.cpuSpeedDialog
             self.cpuSpeedDialog = None
-        return
 
     def cpuSpeedDialogCommand(self, value):
         if value == DGG.DIALOG_OK:
