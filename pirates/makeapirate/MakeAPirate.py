@@ -152,6 +152,10 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.music = None
         self.soundBack = None
         if self.isNPCEditor:
+            self.editorAvatar = self.avList[self.index]
+            self.piratesEditor = piratesEditor
+            self.loadNPC = True
+            self.camAdjusted = False
             self.avatarDummyNode = render.attachNewNode('Avatar Dummy Node')
             self.avatarDummyNode.setPos(self.avList[self.index].getPos(render))
             rot = self.avList[self.index].getHpr()
@@ -401,15 +405,14 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
                 id = 2
             else:
                 id = 0
+
+        lastRot = self.lastRot
+        self.lastRot = self.initH
+        self.rotatePirate()
+        if self.isNPCEditor:
+            self.camParent = self.avatarDummyNode
         else:
-            lastRot = self.lastRot
-            self.lastRot = self.initH
-            self.rotatePirate()
-            if self.isNPCEditor:
-                self.camParent = self.avatarDummyNode
-
             self.camParent = render
-
         camera.wrtReparentTo(character)
         camera.setPos(CamInitPosHprs[self.genderIdx][id][0])
         self.camInitPos = camera.getPos(self.camParent)
@@ -430,7 +433,6 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             self.genderIdx = 1
         else:
             self.genderIdx = 0
-
         self.pirate.setHpr(self.initH, 0, 0)
         if hasattr(self, 'lastAnim') == False:
             self.lastAnim = 0
@@ -438,31 +440,29 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             self.pirate.reparentTo(self.avatarDummyNode)
         else:
             self.pirate.reparentTo(render)
-
         self.aPos = self.pirate.getPos()
         self.pirate.loop(AnimList[self.lastAnim])
         if not self.isNPCEditor:
             self.setupCamera(self.pirate)
-        try:
-            id = self.pirate.style.getBodyShape()
-        except:
-            if self.skeletonType > 4:
-                id = 2
-            else:
-                id = 0
         else:
+            try:
+                id = self.pirate.style.getBodyShape()
+            except:
+                if self.skeletonType > 4:
+                    id = 2
+                else:
+                    id = 0
+
             self.camInitPos = CamInitPosHprs[self.genderIdx][id][0]
             self.camInitHpr = CamInitPosHprs[self.genderIdx][id][1]
             self.camZoomInPos = CamZoomInPosHprs[self.genderIdx][id][0]
             self.camZoomInHpr = CamZoomInPosHprs[self.genderIdx][id][1]
             self.camZoomOutPos = CamZoomOutPosHprs[self.genderIdx][id][0]
             self.camZoomOutHpr = CamZoomOutPosHprs[self.genderIdx][id][1]
-
         if not self.isNPCEditor and not self.wantNPCViewer:
             self.pirate.enableBlend()
             self.pirate.loop('idle')
             self.pirate.loop('idle_centered')
-
         self.assignPirateToGui()
 
     def assignPirateToGui(self):
@@ -489,7 +489,6 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.skeleton.setHpr(self.initH, 0, 0)
         if hasattr(self, 'lastAnim') == False:
             self.lastAnim = 0
-
         self.skeleton.loop(AnimList[self.lastAnim])
         self.pgsZoom['value'] = 0.0
         self.pgsRotate['value'] = 0.0
@@ -497,21 +496,21 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.skeleton.setPos(0, 0, 0)
         if not self.isNPCEditor:
             self.setupCamera(self.skeleton)
-        try:
-            id = self.pirate.style.getBodyShape()
-        except:
-            if self.skeletonType > 4:
-                id = 2
-            else:
-                id = 0
         else:
+            try:
+                id = self.pirate.style.getBodyShape()
+            except:
+                if self.skeletonType > 4:
+                    id = 2
+                else:
+                    id = 0
+
             self.camInitPos = CamInitPosHprs[self.genderIdx][id][0]
             self.camInitHpr = CamInitPosHprs[self.genderIdx][id][1]
             self.camZoomInPos = CamZoomInPosHprs[self.genderIdx][id][0]
             self.camZoomInHpr = CamZoomInPosHprs[self.genderIdx][id][1]
             self.camZoomOutPos = CamZoomOutPosHprs[self.genderIdx][id][0]
             self.camZoomOutHpr = CamZoomOutPosHprs[self.genderIdx][id][1]
-
         self.assignSkeletonToGui()
 
     def loadNPCButton(self):
@@ -1446,14 +1445,12 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             headPos = self.pirate.headNode.getPos(self.avatarDummyNode)
         else:
             headPos = self.pirate.headNode.getPos(render)
-
         if value > 0.0:
             deltaPos = (headPos + self.offsetZoomPos - self.camInitPos) * value
             if self.isNPCEditor:
                 deltaHpr = (self.camZoomOutHpr - self.camInitHpr) * value
             else:
                 deltaHpr = (self.offsetZoomHpr - self.camInitHpr) * value
-
             if not self.isNPCEditor and not self.wantNPCViewer:
                 subValue = (value - 0.5) * 2.0
                 if subValue >= 0:
@@ -1462,15 +1459,12 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
                 else:
                     self.pirate.setControlEffect('idle_centered', 0)
                     self.pirate.setControlEffect('idle', 1)
-        else:
-            if not self.isNPCEditor and not self.wantNPCViewer:
-                self.pirate.setControlEffect('idle_centered', 0)
-                self.pirate.setControlEffect('idle', 1)
-
+        elif not self.isNPCEditor and not self.wantNPCViewer:
+            self.pirate.setControlEffect('idle_centered', 0)
+            self.pirate.setControlEffect('idle', 1)
             value = -value
             deltaPos = (self.camZoomOutPos - self.camInitPos) * value
             deltaHpr = (self.camZoomOutHpr - self.camInitHpr) * value
-
         nPos = Vec3(iPos[0] + deltaPos[0], iPos[1] + deltaPos[1], iPos[2] + deltaPos[2])
         nHpr = Vec3(iHpr[0] + deltaHpr[0], iHpr[1] + deltaHpr[1], iHpr[2] + deltaHpr[2])
         if self.avatar.dna:
@@ -1481,7 +1475,6 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             bias = heightBiasArray['s'][self.skeletonType]
             camera.setPos(nPos)
             camera.setHpr(nHpr)
-
         return Task.cont
 
     def handleRotateSlider(self, pgs):
@@ -1610,19 +1603,17 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
                 self.makeRandomClothing()
             elif self.shop == NAMESHOP:
                 self.makeRandomName()
-        else:
-            if self.avatarType == AVATAR_SKELETON:
-                self.NPCGui.randomPick()
-            else:
-                if self.avatarType == AVATAR_NAVY:
-                    if self.shop == BODYSHOP:
-                        self.makeRandomBody()
-                        self.makeRandomHead()
-                        self.makeRandomHair()
-                    elif self.shop == HEADSHOP:
-                        self.makeRandomHead()
-                    elif self.shop == HAIRSHOP:
-                        self.makeRandomHair()
+        elif self.avatarType == AVATAR_SKELETON:
+            self.NPCGui.randomPick()
+        elif self.avatarType == AVATAR_NAVY:
+            if self.shop == BODYSHOP:
+                self.makeRandomBody()
+                self.makeRandomHead()
+                self.makeRandomHair()
+            elif self.shop == HEADSHOP:
+                self.makeRandomHead()
+            elif self.shop == HAIRSHOP:
+                self.makeRandomHair()
 
     def handleReset(self):
         if self.avatarType == AVATAR_PIRATE:
@@ -1652,19 +1643,17 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
                 self.resetTattoo()
             elif self.shop == JEWELRYSHOP:
                 self.resetJewelry()
-        else:
-            if self.avatarType == AVATAR_SKELETON:
-                self.NPCGui.reset()
-            else:
-                if self.avatarType == AVATAR_NAVY:
-                    if self.shop == BODYSHOP:
-                        self.resetBody()
-                        self.resetHead()
-                        self.resetHair()
-                    elif self.shop == HEADSHOP:
-                        self.resetHead()
-                    elif self.shop == HAIRSHOP:
-                        self.resetHair()
+        elif self.avatarType == AVATAR_SKELETON:
+            self.NPCGui.reset()
+        elif self.avatarType == AVATAR_NAVY:
+            if self.shop == BODYSHOP:
+                self.resetBody()
+                self.resetHead()
+                self.resetHair()
+            elif self.shop == HEADSHOP:
+                self.resetHead()
+            elif self.shop == HAIRSHOP:
+                self.resetHair()
 
     def addPage(self, pageName='Page'):
         self.addPageTab(pageName)
