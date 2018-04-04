@@ -35,8 +35,8 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
         self.whiteListActive = False
         self.active = False
         self.lastWhisper = None
-        self.whiteListEnabled = base.config.GetBool('whitelist-chat-enabled', 1) and base.cr.accountDetailRecord.WLChatEnabled
-        self.openChatEnabled = base.cr.accountDetailRecord.canOpenChatAndNotGetBooted()
+        self.whiteListEnabled = base.config.GetBool('whitelist-chat-enabled', False)
+        self.openChatEnabled = base.config.GetBool('open-chat-enabled', True)
         self.toggleEnabled = self.whiteListEnabled and self.openChatEnabled
         self.noChat = not (self.whiteListEnabled or self.openChatEnabled)
         if self.toggleEnabled:

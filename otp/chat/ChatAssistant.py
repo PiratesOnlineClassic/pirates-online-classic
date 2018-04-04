@@ -1,28 +1,25 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.chat.ChatAssistant
 import string
 import sys
-import time
-
-from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import DirectObject
+from otp.otpbase import OTPLocalizer
+from direct.directnotify import DirectNotifyGlobal
+from otp.otpbase import OTPGlobals
+from otp.speedchat import SCDecoders
+from panda3d.core import *
 from otp.chat.ChatGlobals import *
 from otp.chat.ChatMessage import ChatMessage
-from otp.otpbase import OTPGlobals, OTPLocalizer
-from otp.speedchat import SCDecoders
-from pandac.PandaModules import *
+from otp.nametag.NametagConstants import CFSpeech, CFTimeout, CFThought
+import time
 
 
 def isThought(message):
     if len(message) == 0:
         return 0
+    elif string.find(message, ThoughtPrefix, 0, len(ThoughtPrefix)) >= 0:
+        return 1
     else:
-        if string.find(message, ThoughtPrefix, 0, len(ThoughtPrefix)) >= 0:
-            return 1
-        else:
-            return 0
+        return 0
 
 
 def removeThoughtPrefix(message):
@@ -33,7 +30,6 @@ def removeThoughtPrefix(message):
 
 
 class ChatAssistant(DirectObject.DirectObject):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('ChatAssistant')
     execChat = base.config.GetBool('exec-chat', 0)
 
@@ -41,6 +37,7 @@ class ChatAssistant(DirectObject.DirectObject):
         self.logWhispers = 1
         self.whiteList = None
         self.historyOpen = []
+
         self.historyReceivedWhisperAvatar = {}
         self.historySentWhisperAvatar = {}
         self.historyReceivedWhisperPlayer = {}
@@ -281,7 +278,6 @@ class ChatAssistant(DirectObject.DirectObject):
     def sendAvatarOpenTypedChat(self, message):
         error = None
         if not self.checkOpenTypedChat():
-            print 'Chat error'
             error = ERROR_NO_OPEN_CHAT
         chatFlags = CFSpeech | CFTimeout
         if base.cr.wantSwitchboardHacks:
@@ -291,6 +287,9 @@ class ChatAssistant(DirectObject.DirectObject):
         if isThought(message):
             message = removeThoughtPrefix(message)
             chatFlags = CFThought
+        if base.cr.wantMagicWords and len(message) > 0 and message[0] == '~':
+            messenger.send('magicWord', [message])
+            return
         if self.useWhiteListFilter:
             message = self.whiteListFilterMessage(message)
         base.localAvatar.b_setChat(message, chatFlags)
@@ -313,16 +312,14 @@ class ChatAssistant(DirectObject.DirectObject):
             messenger.send(SCChatEvent)
             messenger.send('chatUpdateSC', [messageIndex])
             base.localAvatar.b_setSC(messageIndex)
-        else:
-            if type == SPEEDCHAT_EMOTE:
-                messenger.send('chatUpdateSCEmote', [messageIndex])
-                messenger.send(SCEmoteChatEvent)
-                base.localAvatar.b_setSCEmote(messageIndex)
-            else:
-                if type == SPEEDCHAT_CUSTOM:
-                    messenger.send('chatUpdateSCCustom', [messageIndex])
-                    messenger.send(SCCustomChatEvent)
-                    base.localAvatar.b_setSCCustom(messageIndex)
+        elif type == SPEEDCHAT_EMOTE:
+            messenger.send('chatUpdateSCEmote', [messageIndex])
+            messenger.send(SCEmoteChatEvent)
+            base.localAvatar.b_setSCEmote(messageIndex)
+        elif type == SPEEDCHAT_CUSTOM:
+            messenger.send('chatUpdateSCCustom', [messageIndex])
+            messenger.send(SCCustomChatEvent)
+            base.localAvatar.b_setSCCustom(messageIndex)
         return error
 
     def sendAvatarWhisperTypedChat(self, message, receiverId):
@@ -363,13 +360,12 @@ class ChatAssistant(DirectObject.DirectObject):
         else:
             if type == SPEEDCHAT_EMOTE:
                 base.localAvatar.whisperSCEmoteTo(messageIndex, receiverId, 0)
-            else:
-                if type == SPEEDCHAT_CUSTOM:
-                    base.localAvatar.whisperSCCustomTo(messageIndex, receiverId, 0)
-        self.historySentWhisperAvatar[receiverId].insert(0, ChatMessage(self.chatTime(), type, messageIndex, None, receiverId, self.findName(receiverId), 0, 1, 1))
-        if self.logWhispers:
-            self.historyOpen.insert(0, ChatMessage(self.chatTime(), type, messageIndex, None, receiverId, self.findName(receiverId), 0, 1, 1))
-            messenger.send('NewOpenMessage')
+            elif type == SPEEDCHAT_CUSTOM:
+                base.localAvatar.whisperSCCustomTo(messageIndex, receiverId, 0)
+            self.historySentWhisperAvatar[receiverId].insert(0, ChatMessage(self.chatTime(), type, messageIndex, None, receiverId, self.findName(receiverId), 0, 1, 1))
+            if self.logWhispers:
+                self.historyOpen.insert(0, ChatMessage(self.chatTime(), type, messageIndex, None, receiverId, self.findName(receiverId), 0, 1, 1))
+                messenger.send('NewOpenMessage')
         return error
 
     def sendPlayerOpenTypedChat(self, message):
@@ -411,20 +407,16 @@ class ChatAssistant(DirectObject.DirectObject):
         else:
             if type == SPEEDCHAT_EMOTE:
                 base.cr.playerFriendsManager.sendSCEmoteWhisper(receiverId, messageIndex)
-            else:
-                if type == SPEEDCHAT_CUSTOM:
-                    base.cr.playerFriendsManager.sendSCCustomWhisper(receiverId, messageIndex)
-        self.historySentWhisperPlayer[receiverId].insert(0, ChatMessage(self.chatTime(), type, messageIndex, None, receiverId, self.findName(receiverId), 1, 1, 1))
-        if self.logWhispers:
-            self.historyOpen.insert(0, ChatMessage(self.chatTime(), type, messageIndex, None, receiverId, self.findName(receiverId, 1), 1, 1, 1))
-            messenger.send('NewOpenMessage')
+            elif type == SPEEDCHAT_CUSTOM:
+                base.cr.playerFriendsManager.sendSCCustomWhisper(receiverId, messageIndex)
+            self.historySentWhisperPlayer[receiverId].insert(0, ChatMessage(self.chatTime(), type, messageIndex, None, receiverId, self.findName(receiverId), 1, 1, 1))
+            if self.logWhispers:
+                self.historyOpen.insert(0, ChatMessage(self.chatTime(), type, messageIndex, None, receiverId, self.findName(receiverId, 1), 1, 1, 1))
+                messenger.send('NewOpenMessage')
         return error
 
     def findName(self, id, isPlayer=0):
-        if isPlayer:
-            info = base.cr.identifyPlayer(id)
-        else:
-            info = base.cr.identifyAvatar(id)
+        info = base.cr.getAvatar(id)
         if info:
             return info.getName()
         else:
@@ -433,9 +425,8 @@ class ChatAssistant(DirectObject.DirectObject):
     def whiteListFilterMessage(self, text):
         if not self.useWhiteListFilter:
             return text
-        else:
-            if not base.whiteList:
-                return 'no list'
+        elif not base.whiteList:
+            return 'no list'
         words = text.split(' ')
         newwords = []
         for word in words:
@@ -444,9 +435,8 @@ class ChatAssistant(DirectObject.DirectObject):
             else:
                 newwords.append(base.whiteList.defaultWord)
 
-        newText = (' ').join(newwords)
+        newText = ' '.join(newwords)
         return newText
 
     def executeSlashCommand(self, text):
         pass
-# okay decompiling .\otp\chat\ChatAssistant.pyc

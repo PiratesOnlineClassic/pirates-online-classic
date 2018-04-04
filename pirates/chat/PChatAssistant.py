@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.chat.PChatAssistant
 import string
 import sys
 import time
@@ -18,7 +14,6 @@ from pirates.piratesbase import PLocalizer
 
 
 class PChatAssistant(ChatAssistant):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('PChatAssistant')
 
     def __init__(self):
@@ -218,47 +213,44 @@ class PChatAssistant(ChatAssistant):
     def executeSlashCommand(self, text):
         words = text[1:].split(' ')
         comm = words[0].lower()
-        argStr = ('').join(words[1:])
+        argStr = ' '.join(words[1:])
+        valid = True
         if comm in ('afk', 'away'):
             localAvatar.toggleAFK()
         else:
             if comm in PLocalizer.EmoteCommands.keys():
                 emoteCode = PLocalizer.EmoteCommands[comm]
                 messenger.send(SpeedChatGlobals.SCEmoteMsgEvent, [emoteCode])
-            else:
-                if comm == 'quit':
-                    import sys
-                    sys.exit(0)
+            elif comm == 'quit':
+                import sys
+                sys.exit(0)
+            elif comm == 'flirt':
+                emoteCode = PLocalizer.EMOTE_VALENTINES
+                messenger.send(SpeedChatGlobals.SCEmoteMsgEvent, [emoteCode])
+            elif comm in ('lfc', 'lfg', 'lookingforcrew'):
+                localAvatar.toggleLookingForCrewSign()
+            elif comm in ('code', 'redeemcode'):
+                localAvatar.submitCodeToServer(argStr)
+                base.chatAssistant.receiveGameMessage(PLocalizer.CodeSubmitting % argStr)
+            elif comm in ('holiday', 'holidays', 'holidaylist', 'event'):
+                base.cr.newsManager.displayHolidayStatus()
+            elif comm in ('x2', 'x2bonus'):
+                timeRemain = localAvatar.getTempDoubleXPReward()
+                if timeRemain:
+                    timeRemain = int(timeRemain)
+                    minutes, seconds = divmod(timeRemain, 60)
+                    hours, minutes = divmod(minutes, 60)
+                    base.chatAssistant.receiveGameMessage(PLocalizer.TEMP_DOUBLE_REP_CHAT % (hours, minutes))
                 else:
-                    if comm == 'flirt':
-                        emoteCode = PLocalizer.EMOTE_VALENTINES
-                        messenger.send(SpeedChatGlobals.SCEmoteMsgEvent, [emoteCode])
-                    else:
-                        if comm in ('lfc', 'lfg', 'lookingforcrew'):
-                            localAvatar.toggleLookingForCrewSign()
-                        else:
-                            if comm in ('code', 'redeemcode'):
-                                localAvatar.submitCodeToServer(argStr)
-                                base.chatAssistant.receiveGameMessage(PLocalizer.CodeSubmitting % argStr)
-                            else:
-                                if comm in ('holiday', 'holidays', 'holidaylist', 'event'):
-                                    base.cr.newsManager.displayHolidayStatus()
-                                else:
-                                    if comm in ('x2', 'x2bonus'):
-                                        timeRemain = localAvatar.getTempDoubleXPReward()
-                                        if timeRemain:
-                                            timeRemain = int(timeRemain)
-                                            minutes, seconds = divmod(timeRemain, 60)
-                                            hours, minutes = divmod(minutes, 60)
-                                            base.chatAssistant.receiveGameMessage(PLocalizer.TEMP_DOUBLE_REP_CHAT % (hours, minutes))
-                                        else:
-                                            base.chatAssistant.receiveGameMessage(PLocalizer.NO_TEMP_DOUBLE_REP)
-                                    else:
-                                        if comm in 'crewhud':
-                                            localAvatar.guiMgr.crewPage.crewHUD.toggleHUD()
-                                        else:
-                                            if comm == 'time':
-                                                messenger.send('requestServerTime')
+                    base.chatAssistant.receiveGameMessage(PLocalizer.NO_TEMP_DOUBLE_REP)
+            elif comm in 'crewhud':
+                localAvatar.guiMgr.crewPage.crewHUD.toggleHUD()
+            elif comm == 'time':
+                messenger.send('requestServerTime')
+            else:
+                valid = False
+            if valid:
+                base.cr.centralLogger.writeClientEvent(('slash command - %s(%s)' % (comm, argStr))[:255])
 
     def getWhisperReplyId(self):
         for message in self.historyOpen:
@@ -266,4 +258,3 @@ class PChatAssistant(ChatAssistant):
                 return (message.getId(), message.getIsPlayer())
 
         return (0, 0)
-# okay decompiling .\pirates\chat\PChatAssistant.pyc
