@@ -399,7 +399,7 @@ struct AccountInfo {
   AvatarInfo avatarData[];
 };
 
-struct PotentialToon {
+struct PotentialPirate {
   uint32 avNum;
   string avName;
   string avDNA;
@@ -411,7 +411,7 @@ dclass ClientServicesManager : DistributedObjectGlobal {
   login(string cookie) clsend;
   acceptLogin();
   requestAvatars() clsend;
-  setAvatars(PotentialToon avatars[]);
+  setAvatars(PotentialPirate avatars[]);
   createAvatar(blob dna, uint8 index) clsend;
   createAvatarResp(uint32 avId);
   setNameTyped(uint32 avId, string name) clsend;
