@@ -11,6 +11,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.MsgTypes import *
 from direct.fsm import ClassicFSM, State, StateData
 from direct.gui.DirectGui import *
+from direct.gui.DirectGuiGlobals import NO_FADE_SORT_INDEX
 from direct.task import Task
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.otpgui import OTPDialog

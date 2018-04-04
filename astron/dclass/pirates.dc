@@ -113,6 +113,7 @@ from pirates.instance import DistributedTeleportMgr/AI
 from pirates.instance import DistributedTravelAgent/UD
 from pirates.instance import DistributedMatchMaker/AI/UD
 from pirates.instance import DistributedTeleportHandler/AI
+from pirates.uberdog import ClientServicesManager/UD
 from pirates.uberdog import DistributedAvatarManager/AI/UD
 from pirates.uberdog import DistributedInventory/AI/UD
 from pirates.uberdog import DistributedInventoryManager/AI/UD
@@ -396,6 +397,33 @@ struct AccountInfo {
   uint8 maxAvatars;
   uint8 maxSlots;
   AvatarInfo avatarData[];
+};
+
+struct PotentialToon {
+  uint32 avNum;
+  string avName;
+  string avDNA;
+  uint8 avPosition;
+  uint8 aname;
+};
+
+dclass ClientServicesManager : DistributedObjectGlobal {
+  login(string cookie) clsend;
+  acceptLogin();
+  requestAvatars() clsend;
+  setAvatars(PotentialToon avatars[]);
+  createAvatar(blob dna, uint8 index) clsend;
+  createAvatarResp(uint32 avId);
+  setNameTyped(uint32 avId, string name) clsend;
+  setNameTypedResp(uint32 avId, uint8 status);
+  setNamePattern(uint32 avId, int16 p1, uint8 f1, int16 p2, uint8 f2, int16 p3, uint8 f3, int16 p4, uint8 f4) clsend;
+  setNamePatternResp(uint32 avId, uint8 status);
+  acknowledgeAvatarName(uint32 avId) clsend;
+  acknowledgeAvatarNameResp();
+  deleteAvatar(uint32 avId) clsend;
+  chooseAvatar(uint32 avId) clsend;
+  systemMessage(uint16 code, string params[]);
+  reportPlayer(uint32 avId, uint8 category) clsend;
 };
 
 dclass DistributedAvatarManager : OtpAvatarManager {
