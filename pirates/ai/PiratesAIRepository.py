@@ -18,6 +18,7 @@ from pirates.piratesbase.DistributedTimeOfDayManagerAI import DistributedTimeOfD
 from pirates.distributed.TargetManagerAI import TargetManagerAI
 from pirates.battle.DistributedEnemySpawnerAI import DistributedEnemySpawnerAI
 from pirates.trades.TradeManagerAI import TradeManagerAI
+from pirates.world.WorldCreatorAI import WorldCreatorAI
 
 class PiratesAIRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesAIRepository')
@@ -41,7 +42,7 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.setAI(self.districtId, self.ourChannel)
 
         self.createGlobals()
-        self.createZones()
+        self.createWorlds()
 
         self.distributedDistrict.b_setAvailable(1)
         self.notify.info('District (%s) is now ready.' % self.districtName)
@@ -114,8 +115,10 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.guildManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_GUILD_MANAGER, 'PCGuildManager')
 
-    def createZones(self):
+    def createWorlds(self):
         """
-        Create "zone" objects, e.g. DistributedOceanGrid et al.
+        Create "worlds" objects, e.g. DistributedInstanceBase, DistributedOceanGrid et al.
         """
-        pass
+
+        self.worldCreator = WorldCreatorAI(self)
+        self.worldCreator.loadObjectsFromFile(WorldGlobals.PiratesWorldSceneFile)

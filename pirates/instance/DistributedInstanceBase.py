@@ -34,9 +34,9 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         self._onOffState = False
         if hasattr(localAvatar, 'gameFSM') and localAvatar.gameFSM:
             localAvatar.gameFSM.setDefaultGameState('LandRoam')
+
         self.worldGrid = None
         self.fireworkShowMgr = None
-        return
 
     def disable(self):
         DistributedObject.disable(self)
@@ -47,13 +47,13 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         if self.pendingJail:
             self.cr.relatedObjectMgr.abortRequest(self.pendingJail)
             self.pendingJail = None
+
         del self.islands
         del self.playerSpawnPts
         del self.playerBootPts
         del self.worldGrid
         WorldNode.delete(self)
         DistributedObject.delete(self)
-        return
 
     def announceGenerate(self):
         WorldNode.announceGenerate(self)
@@ -66,7 +66,8 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
                 for currQuest in inventory.getQuestList():
                     currQuest.setActive()
 
-        DistributedInventoryBase.DistributedInventoryBase.getInventory(localAvatar.inventoryId, receiveActiveQuests)
+        DistributedInventoryBase.DistributedInventoryBase.getInventory(localAvatar.inventoryId,
+            receiveActiveQuests)
 
     def getInstanceNodePath(self):
         return render
@@ -80,7 +81,8 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         if self.worldGrid:
             if hasattr(self.worldGrid, 'water'):
                 return self.worldGrid.water
-        return
+
+        return None
 
     def addCutsceneOriginNode(self, node, name):
         self.cutsceneOriginNodes[name] = node
@@ -88,10 +90,10 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
     def getCutsceneOriginNode(self, name):
         if name in self.cutsceneOriginNodes:
             return self.cutsceneOriginNodes.get(name)
+
         node = render.find('**/%s' % name)
         if not node.isEmpty():
             return node
-        return
 
     def addPlayerSpawnPt(self, parent, spawnPt, index=-1):
         spawnPts = self.playerSpawnPts.setdefault(parent.getDoId(), {})
@@ -104,7 +106,6 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
             return getPlayerSpawnPt(parentDoId, index=-1)
         else:
             return spawnPt
-        return
 
     def addPlayerBootPt(self, areaUid, bootPt, parentDoId):
         self.playerBootPts[areaUid] = [bootPt, parentDoId]
@@ -125,12 +126,10 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         messenger.send(self.uniqueName('spawnInfoReceived'))
 
     def getAvTeam(self, av):
-        return [
-         False, None]
+        return [False, None]
 
     def setAvTeam(self, av, team):
-        return [
-         False, None]
+        return [False, None]
 
     def localAvEnterDeath(self, av):
         self.showDeathLoadingScreen(av)
@@ -185,8 +184,8 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         if isinstance(child, DistributedOceanGrid):
             if child == self.worldGrid:
                 self.setWorldGrid(None)
+
         DistributedObject.handleChildLeave(self, child, zoneId)
-        return
 
     @report(types=['frameCount', 'args'], dConfigParam=['want-connector-report', 'want-jail-report'])
     def addWorldInterest(self, area=None):
@@ -232,15 +231,18 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         uniqueId = sphere.getTag('uid')
         if not uniqueId:
             uniqueId = params[1]
+
         objId = None
         if collEntry.getFromNodePath().hasNetTag('avId'):
             objId = int(collEntry.getFromNodePath().getNetTag('avId'))
             if objId:
                 messenger.send(msgName + PiratesGlobals.SPHERE_ENTER_SUFFIX, [uniqueId, objId])
+
         if collEntry.getFromNodePath().hasNetTag('shipId'):
             objId = int(collEntry.getFromNodePath().getNetTag('shipId'))
             if objId:
                 messenger.send(msgName + PiratesGlobals.SPHERE_ENTER_SUFFIX, [uniqueId, objId])
+
         if msgName == PiratesGlobals.LOCATION_SPHERE:
             displayName = PLocalizer.LocationNames.get(uniqueId, '')
             base.localAvatar.guiMgr.createTitle(displayName, PiratesGuiGlobals.TextFG2)
@@ -248,9 +250,8 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
             parentDoId = base.cr.uidMgr.getDoId(parentUid)
             areaParent = base.cr.doId2do[parentDoId]
             locationInfo = areaParent.getLocationInfo(uniqueId)
-            if locationInfo:
-                localAvatar.sendUpdate('enterAreaSphere', [uniqueId, parentUid])
-        return
+            #f locationInfo:
+            #    localAvatar.sendUpdate('enterAreaSphere', [uniqueId, parentUid])
 
     def exitedSphere(self, params, collEntry):
         msgName = params[0]
@@ -258,24 +259,26 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         uniqueId = sphere.getTag('uid')
         if not uniqueId:
             uniqueId = params[1]
+
         objId = None
         if collEntry.getFromNodePath().hasNetTag('avId'):
             objId = int(collEntry.getFromNodePath().getNetTag('avId'))
             if objId:
                 messenger.send(msgName + PiratesGlobals.SPHERE_EXIT_SUFFIX, [uniqueId, objId])
+
         if collEntry.getFromNodePath().hasNetTag('shipId'):
             objId = int(collEntry.getFromNodePath().getNetTag('shipId'))
             if objId:
                 messenger.send(msgName + PiratesGlobals.SPHERE_EXIT_SUFFIX, [uniqueId, objId])
+
         if msgName == PiratesGlobals.LOCATION_SPHERE:
             parentUid = sphere.getTag('parentUid')
             parentDoId = base.cr.uidMgr.getDoId(parentUid)
             areaParent = base.cr.doId2do[parentDoId]
             locationInfo = areaParent.getLocationInfo(uniqueId)
-            if locationInfo:
-                print 'left area %s' % locationInfo[2]
-                localAvatar.sendUpdate('leaveAreaSphere', [uniqueId, parentUid])
-        return
+            #if locationInfo:
+            #    print 'left area %s' % locationInfo[2]
+            #    localAvatar.sendUpdate('leaveAreaSphere', [uniqueId, parentUid])
 
     def d_localAvatarDied(self):
         self.sendUpdate('avatarDied')
@@ -292,15 +295,19 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
                 currentArea = parentObj
             else:
                 currentArea = None
+
             alreadyHere = parentObj is base.cr.doId2do.get(jailDoId)
 
             @report(types=['frameCount'], dConfigParam='want-jail-report')
             def loadJailWorld():
                 localAvatar.setInterest(jailWorldParentId, jailWorldZone, [
                  'instanceInterest-Jail'])
+
                 if self.pendingJail:
                     self.cr.relatedObjectMgr.abortRequest(self.pendingJail)
-                self.pendingJail = self.cr.relatedObjectMgr.requestObjects([jailDoId], eachCallback=jailAreaLoaded)
+
+                self.pendingJail = self.cr.relatedObjectMgr.requestObjects([jailDoId],
+                    eachCallback=jailAreaLoaded)
 
             @report(types=['frameCount'], dConfigParam='want-jail-report')
             def jailAreaLoaded(jailArea):
@@ -309,6 +316,7 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
                     currentWorld.removeWorldInterest()
                     localAvatar.clearInterestNamed(None, ['instanceInterest'])
                     localAvatar.replaceInterestTag('instanceInterest-Jail', 'instanceInterest')
+
                 world = jailArea.getParentObj()
                 world.addWorldInterest(jailArea)
                 localAvatar.reparentTo(jailArea)
@@ -317,13 +325,12 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
                 localAvatar.b_setLocation(jailArea.doId, zone)
                 if alreadyHere:
                     jailArea.sendUpdate('avatarAlreadyInJail', [])
-                return
 
             ship = localAvatar.getShip()
             if ship:
                 localAvatar.removeFromShip(ship)
+
             loadJailWorld()
-        return
 
     def getWorldPos(self, node):
         return

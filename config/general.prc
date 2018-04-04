@@ -56,3 +56,6 @@ want-special-effects #t
 
 # Make A Pirate:
 want-make-a-pirate #t
+
+# Islands:
+remove-island-barriers #f

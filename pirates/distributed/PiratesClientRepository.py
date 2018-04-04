@@ -124,6 +124,7 @@ class PiratesClientRepository(OTPClientRepository):
         self.treasureMap = None
         self.distributedDistrict = None
         self.district = None
+        self.friendManager = None
         self.battleMgr = BattleManager.BattleManager(self)
         self.combatAnims = CombatAnimations.CombatAnimations()
         self.interactionMgr = InteractionManager.InteractionManager()
@@ -431,8 +432,8 @@ class PiratesClientRepository(OTPClientRepository):
                 self.sendMsgToTravelAgent('requestInitLocUD', ['unused', desiredShard])
 
     def playingGameLocReceived(self, shardId, zoneId):
-        self.gameFSM.request('waitOnEnterResponses', [
-         shardId, zoneId, zoneId, -1])
+        self.gameFSM.request('waitOnEnterResponses', [shardId, zoneId,
+            zoneId, -1])
 
     def exitPlayingGame(self):
         self.notify.info('exitPlayingGame')
@@ -512,8 +513,11 @@ class PiratesClientRepository(OTPClientRepository):
     @report(types=['deltaStamp', 'module'], prefix='------', dConfigParam='want-teleport-report')
     def enterWaitOnEnterResponses(self, shardId, hoodId, zoneId, avId):
         self.cleanGameExit = False
-        self.handler = self.handleWaitOnEnterResponses
-        self.handlerArgs = {'hoodId': hoodId, 'zoneId': zoneId, 'avId': avId}
+        self.handlerArgs = {
+            'hoodId': hoodId,
+            'zoneId': zoneId,
+            'avId': avId}
+
         if shardId is not None:
             district = self.activeDistrictMap.get(shardId)
         else:

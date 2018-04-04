@@ -1,15 +1,8 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.movement.PiratesGravityWalker
+from panda3d.core import *
 from direct.controls.GravityWalker import GravityWalker
 from direct.showbase.InputStateGlobal import inputState
-from direct.task.Task import Task
-from pandac.PandaModules import *
-
 
 class PiratesGravityWalker(GravityWalker):
-    __module__ = __name__
     notify = directNotify.newCategory('PiratesGravityWalker')
 
     def __init__(self, *args, **kwargs):
@@ -17,6 +10,10 @@ class PiratesGravityWalker(GravityWalker):
         self.predicting = 0
 
     def handleAvatarControls(self, task):
+        # TODO: FIXME!
+        from pirates.piratesbase import PiratesGlobals
+        self.setWalkSpeed(*PiratesGlobals.PirateSpeeds[PiratesGlobals.SPEED_NORMAL_INDEX])
+
         run = inputState.isSet('run')
         forward = inputState.isSet('forward')
         reverse = inputState.isSet('reverse')
@@ -28,6 +25,7 @@ class PiratesGravityWalker(GravityWalker):
         if base.localAvatar.getAutoRun():
             forward = 1
             reverse = 0
+
         self.speed = forward and self.avatarControlForwardSpeed or reverse and -self.avatarControlReverseSpeed
         self.slideSpeed = reverse and slideLeft and -self.avatarControlReverseSpeed * 0.75 or reverse and slideRight and self.avatarControlReverseSpeed * 0.75 or slideLeft and -self.avatarControlForwardSpeed * 0.75 or slideRight and self.avatarControlForwardSpeed * 0.75
         self.rotationSpeed = turnLeft and self.avatarControlRotateSpeed or turnRight and -self.avatarControlRotateSpeed
@@ -35,55 +33,57 @@ class PiratesGravityWalker(GravityWalker):
             if self.slideSpeed:
                 self.speed *= GravityWalker.DiagonalFactor
                 self.slideSpeed *= GravityWalker.DiagonalFactor
-            debugRunning = inputState.isSet('debugRunning')
-            if debugRunning:
-                self.speed *= base.debugRunningMultiplier
-                self.slideSpeed *= base.debugRunningMultiplier
-                self.rotationSpeed *= 1.25
-            if self.needToDeltaPos:
-                self.setPriorParentVector()
-                self.needToDeltaPos = 0
-            if self.wantDebugIndicator:
-                self.displayDebugInfo()
 
-            def sendLandMessage(impact):
-                if impact > -15.0:
-                    messenger.send('jumpEnd')
-                else:
-                    if -15.0 >= impact > -40.0:
-                        messenger.send('jumpLand')
-                        self.startJumpDelay(0.5)
-                    else:
-                        messenger.send('jumpLandHard')
-                        self.startJumpDelay(0.5)
+        debugRunning = inputState.isSet('debugRunning')
+        if debugRunning:
+            self.speed *= base.debugRunningMultiplier
+            self.slideSpeed *= base.debugRunningMultiplier
+            self.rotationSpeed *= 1.25
 
-            def predictHeightAndVelocity(aheadFrames):
-                dt = globalClock.getDt()
-                vel = self.lifter.getVelocity()
-                height = self.getAirborneHeight()
-                grav = self.lifter.getGravity()
-                dtt = dt * aheadFrames
-                futureHeight = height + vel * dtt + 0.5 * grav * dtt * dtt
-                futureVel = vel - grav * dtt
-                return (
-                 futureHeight, futureVel)
+        if self.needToDeltaPos:
+            self.setPriorParentVector()
+            self.needToDeltaPos = 0
 
-            if self.lifter.isOnGround():
-                if self.isAirborne:
-                    self.isAirborne = 0
-                    self.predicting = 0
-                    impact = self.lifter.getImpactVelocity()
-                    sendLandMessage(impact)
-                self.priorParent = Vec3.zero()
-                if jump and self.mayJump:
+        if self.wantDebugIndicator:
+            self.displayDebugInfo()
 
-                    def doJump(task):
-                        self.lifter.addVelocity(self.avatarControlJumpForce)
-                        self.isAirborne = 1
-                        self.predicting = 1
+        def sendLandMessage(impact):
+            if impact > -15.0:
+                messenger.send('jumpEnd')
+            elif -15.0 >= impact > -40.0:
+                messenger.send('jumpLand')
+                self.startJumpDelay(0.5)
+            else:
+                messenger.send('jumpLandHard')
+                self.startJumpDelay(0.5)
 
-                    taskMgr.hasTaskNamed('jumpWait') or taskMgr.doMethodLater(0.2, doJump, 'jumpWait')
-                    messenger.send('jumpStart')
+        def predictHeightAndVelocity(aheadFrames):
+            dt = globalClock.getDt()
+            vel = self.lifter.getVelocity()
+            height = self.getAirborneHeight()
+            grav = self.lifter.getGravity()
+            dtt = dt * aheadFrames
+            futureHeight = height + vel * dtt + 0.5 * grav * dtt * dtt
+            futureVel = vel - grav * dtt
+            return (futureHeight, futureVel)
+
+        if self.lifter.isOnGround():
+            if self.isAirborne:
+                self.isAirborne = 0
+                self.predicting = 0
+                impact = self.lifter.getImpactVelocity()
+                sendLandMessage(impact)
+
+            self.priorParent = Vec3.zero()
+            if jump and self.mayJump:
+
+                def doJump(task):
+                    self.lifter.addVelocity(self.avatarControlJumpForce)
+                    self.isAirborne = 1
+                    self.predicting = 1
+
+                taskMgr.hasTaskNamed('jumpWait') or taskMgr.doMethodLater(0.2, doJump, 'jumpWait')
+                messenger.send('jumpStart')
         else:
             if self.isAirborne and self.predicting:
                 futureHeight, futureVel = predictHeightAndVelocity(2)
@@ -91,10 +91,10 @@ class PiratesGravityWalker(GravityWalker):
                     self.isAirborne = 0
                     self.predicting = 0
                     sendLandMessage(futureVel)
-            else:
-                if self.getAirborneHeight() > 2.0:
-                    self.isAirborne = 1
-                    self.predicting = 1
+            elif self.getAirborneHeight() > 2.0:
+                self.isAirborne = 1
+                self.predicting = 1
+
         self.__oldPosDelta = self.avatarNodePath.getPosDelta(render)
         self.__oldDt = ClockObject.getGlobalClock().getDt()
         dt = self.__oldDt
@@ -111,6 +111,7 @@ class PiratesGravityWalker(GravityWalker):
                     contact = self.lifter.getContactNormal()
                     forward = contact.cross(Vec3.right())
                     forward.normalize()
+
                 self.vel = Vec3(forward * distance)
                 if slideDistance:
                     if self.isAirborne:
@@ -118,17 +119,30 @@ class PiratesGravityWalker(GravityWalker):
                     else:
                         right = forward.cross(contact)
                         right.normalize()
+
                     self.vel = Vec3(self.vel + right * slideDistance)
+
                 self.vel = Vec3(rotMat.xform(self.vel))
-                step = self.vel + self.priorParent * dt
+                step = self.vel + (self.priorParent * dt)
                 self.avatarNodePath.setFluidPos(Point3(self.avatarNodePath.getPos() + step))
                 self.vel /= dt
+
             self.avatarNodePath.setH(self.avatarNodePath.getH() + rotation)
         else:
             self.vel.set(0.0, 0.0, 0.0)
+
         if self.moving or jump:
             messenger.send('avatarMoving')
+
         return task.cont
+
+    def disableJump(self):
+        if base.localAvatar.controlManager.forceAvJumpToken is None:
+            base.localAvatar.controlManager.disableAvatarJump()
+
+    def enableJump(self):
+        if base.localAvatar.controlManager.forceAvJumpToken is not None:
+            base.localAvatar.controlManager.enableAvatarJump()
 
     def abortJump(self):
         taskMgr.remove('jumpWait')
@@ -140,4 +154,6 @@ class PiratesGravityWalker(GravityWalker):
     def disableAvatarControls(self):
         GravityWalker.disableAvatarControls(self)
         self.abortJump()
-# okay decompiling .\pirates\movement\PiratesGravityWalker.pyc
+
+    def setVelocity(self, velocity):
+        self.lifter.setVelocity(velocity)

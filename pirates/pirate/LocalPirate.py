@@ -55,7 +55,7 @@ from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from pirates.world import DistributedGameArea, OceanZone
 
 globalClock = ClockObject.getGlobalClock()
-if base.config.GetBool('want-custom-keys', 0):
+if base.config.GetBool('want-custom-keys', False):
     ControlManager.wantCustomKeys = 1
     ControlManager.wantWASD = 0
 else:
@@ -63,92 +63,96 @@ else:
     ControlManager.wantWASD = 1
 
 class LocalPirate(DistributedPlayerPirate, LocalAvatar):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('LocalPirate')
     neverDisable = 1
 
     def __init__(self, cr):
         try:
             self.LocalPirate_initialized
+            return
         except:
             self.LocalPirate_initialized = 1
-            DistributedPlayerPirate.__init__(self, cr)
-            chatMgr = PiratesChatManager()
-            chatAssistant = PChatAssistant()
-            LocalAvatar.__init__(self, cr, chatMgr, chatAssistant)
-            self.gameFSM = None
-            self.equippedWeapons = []
-            self.setLocalAvatarUsingWeapon(1)
-            self.cameraFSM = CameraFSM(self)
-            self.guiMgr = GuiManager.GuiManager(self)
-            self.interestHandles = []
-            if base.config.GetBool('debug-local-animMixer', 0):
-                self.animMixer.setVerbose(True)
-            self.currentMouseOver = None
-            self.currentAimOver = None
-            self.currentSelection = None
-            self.tutObject = None
-            self.currentDialogMovie = None
-            self.ship = None
-            self.shipList = []
-            self.interior = None
-            self.cannon = None
-            self.__turboOn = 0
-            self.__marioOn = 0
-            self.speedIndex = 0
-            self.curMoveSound = None
-            self.setupMovementSounds()
-            self.rangeDetector = RangeDetector.RangeDetector()
-            self.rangeDetector.detachNode()
-            self.showQuest = True
-            self.currentOcean = 0
-            self.soundWhisper = loader.loadSfx('audio/sfx_gui_whisper.mp3')
-            self.positionExaminer = PositionExaminer.PositionExaminer()
-            self.skillDiary = BattleSkillDiary.BattleSkillDiary(self.cr, self)
-            self.lookAtTarget = None
-            self.lookAtTimer = None
-            self.lookAtDummy = self.attachNewNode('lookAtDummy')
-            self.lookFromNode = self.attachNewNode('lookFromTargetHelper')
-            self.lookFromNode.setZ(self.getHeight())
-            self.lookToNode = NodePath('lookToTargetHelper')
-            if base.config.GetBool('want-dev', False):
-                self.accept('shift-f12', self.toggleAvVis)
-            self.money = 0
-            self.enableAutoRun = 0
-            self.kickEvents = None
-            self.battleTeleportFlagTask = None
-            self.openJailDoorTrack = None
-            self.questArrow = None
-            self.arrowPlacer = None
-            self.noQuestArrow = False
-            self.emote_track = None
-            self.emote_prop = None
-            self.currentStoryQuests = []
-            self.cloudScudEffect = None
-            self.questStatus = QuestStatus.QuestStatus(self)
-            self.soloInteraction = False
-            self.emoteAccess = []
-            self.AFKDelay = base.config.GetInt('afk-delay', 600)
-            self.playRewardAnimation = None
-            self.localProjectiles = []
-            self._cannonAmmoSkillId = InventoryType.CannonRoundShot
-            self._siegeTeamSV = StateVar(0)
-            self.guildPopupDialog = None
-            self.moralePopupDialog = None
-            self.gmNameTagEnabledLocal = 0
-            self.gmNameTagStringLocal = ''
-            self.gmNameTagColorLocal = ''
-            if self.gmNameTagAllowed:
-                if base.config.GetInt('gm-nametag-enabled', 0):
-                    self.gmNameTagEnabledLocal = 1
-            if base.config.GetString('gm-nametag-string', '') != '':
-                self.gmNameTagStringLocal = base.config.GetString('gm-nametag-string')
-            if base.config.GetString('gm-nametag-color', '') != '':
-                self.gmNameTagColorLocal = base.config.GetString('gm-nametag-color')
-            soundEffects = ['jollyroger_laugh_01.mp3', 'jollyroger_laugh_02.mp3', 'jollyroger_enjoy.mp3', 'jollyroger_submit.mp3', 'jollyroger_joinme.mp3']
-            self.jollySfx = loader.loadSfx('audio/' + random.choice(soundEffects))
 
-        return
+        DistributedPlayerPirate.__init__(self, cr)
+        chatMgr = PiratesChatManager()
+        chatAssistant = PChatAssistant()
+        LocalAvatar.__init__(self, cr, chatMgr, chatAssistant)
+        self.gameFSM = None
+        self.equippedWeapons = []
+        self.setLocalAvatarUsingWeapon(1)
+        self.cameraFSM = CameraFSM(self)
+        self.guiMgr = GuiManager.GuiManager(self)
+        self.interestHandles = []
+        if base.config.GetBool('debug-local-animMixer', 0):
+            self.animMixer.setVerbose(True)
+
+        self.currentMouseOver = None
+        self.currentAimOver = None
+        self.currentSelection = None
+        self.tutObject = None
+        self.currentDialogMovie = None
+        self.ship = None
+        self.shipList = []
+        self.interior = None
+        self.cannon = None
+        self.__turboOn = 0
+        self.__marioOn = 0
+        self.speedIndex = 0
+        self.curMoveSound = None
+        self.setupMovementSounds()
+        self.rangeDetector = RangeDetector.RangeDetector()
+        self.rangeDetector.detachNode()
+        self.showQuest = True
+        self.currentOcean = 0
+        self.soundWhisper = loader.loadSfx('audio/sfx_gui_whisper.mp3')
+        self.positionExaminer = PositionExaminer.PositionExaminer()
+        self.skillDiary = BattleSkillDiary.BattleSkillDiary(self.cr, self)
+        self.lookAtTarget = None
+        self.lookAtTimer = None
+        self.lookAtDummy = self.attachNewNode('lookAtDummy')
+        self.lookFromNode = self.attachNewNode('lookFromTargetHelper')
+        self.lookFromNode.setZ(self.getHeight())
+        self.lookToNode = NodePath('lookToTargetHelper')
+        if base.config.GetBool('want-dev', False):
+            self.accept('shift-f12', self.toggleAvVis)
+
+        self.money = 0
+        self.enableAutoRun = 0
+        self.kickEvents = None
+        self.battleTeleportFlagTask = None
+        self.openJailDoorTrack = None
+        self.questArrow = None
+        self.arrowPlacer = None
+        self.noQuestArrow = False
+        self.emote_track = None
+        self.emote_prop = None
+        self.currentStoryQuests = []
+        self.cloudScudEffect = None
+        self.questStatus = QuestStatus.QuestStatus(self)
+        self.soloInteraction = False
+        self.emoteAccess = []
+        self.AFKDelay = base.config.GetInt('afk-delay', 600)
+        self.playRewardAnimation = None
+        self.localProjectiles = []
+        self._cannonAmmoSkillId = InventoryType.CannonRoundShot
+        self._siegeTeamSV = StateVar(0)
+        self.guildPopupDialog = None
+        self.moralePopupDialog = None
+        self.gmNameTagEnabledLocal = 0
+        self.gmNameTagStringLocal = ''
+        self.gmNameTagColorLocal = ''
+        if self.gmNameTagAllowed:
+            if base.config.GetInt('gm-nametag-enabled', 0):
+                self.gmNameTagEnabledLocal = 1
+
+        if base.config.GetString('gm-nametag-string', '') != '':
+            self.gmNameTagStringLocal = base.config.GetString('gm-nametag-string')
+
+        if base.config.GetString('gm-nametag-color', '') != '':
+            self.gmNameTagColorLocal = base.config.GetString('gm-nametag-color')
+
+        soundEffects = ['jollyroger_laugh_01.mp3', 'jollyroger_laugh_02.mp3', 'jollyroger_enjoy.mp3', 'jollyroger_submit.mp3', 'jollyroger_joinme.mp3']
+        self.jollySfx = loader.loadSfx('audio/' + random.choice(soundEffects))
 
     def sendUpdate(self, *args, **kw):
         if self.isGenerated():
@@ -225,10 +229,12 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         if self.currentWeaponId != currentWeaponId or self.isWeaponDrawn != isWeaponDrawn:
             DistributedPlayerPirate.sendRequestRemoveStickyTargets(self, self.stickyTargets)
             self.setStickyTargets([])
+
         if WeaponGlobals.getWeaponCategory(currentWeaponId) == WeaponGlobals.VOODOO and isWeaponDrawn == True:
             self.guiMgr.attuneSelection.show()
         else:
             self.guiMgr.attuneSelection.hide()
+
         self.checkWeaponSwitch(currentWeaponId, isWeaponDrawn)
         self.guiMgr.setCurrentWeapon(currentWeaponId, isWeaponDrawn)
 
@@ -244,6 +250,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     def __drawWeaponIfTarget(self):
         if self.isWeaponDrawn:
             return
+
         if self.cr.targetMgr:
             target = self.cr.targetMgr.pickObject()
             if target and TeamUtils.damageAllowed(target, self):
@@ -830,8 +837,10 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         speedMult = max(speedMult, -1.0)
         if self.swiftness + self.swiftnessMod <= 0.0:
             speedMult = 0.0
+
         if speedMult > 0.5:
             speedMult += self.aimMod
+
         self.notify.debug('speedMult = %s' % speedMult)
         oldSpeeds = PiratesGlobals.PirateSpeeds[self.speedIndex]
         newSpeeds = map(lambda x: speedMult * x, oldSpeeds)
@@ -1057,7 +1066,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         self.movementIndex = PiratesGlobals.STAND_INDEX
         self.curMoveSound = None
         self.moveSound = {PiratesGlobals.STAND_INDEX: {PiratesGlobals.SURFACE_DEFAULT: None, PiratesGlobals.SURFACE_WATER: swimSound}, PiratesGlobals.WALK_INDEX: {PiratesGlobals.SURFACE_DEFAULT: walkSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: walkWood}, PiratesGlobals.RUN_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: runWood}, PiratesGlobals.REVERSE_INDEX: {PiratesGlobals.SURFACE_DEFAULT: walkSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: walkWood}, PiratesGlobals.STRAFE_LEFT_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: runWood}, PiratesGlobals.STRAFE_RIGHT_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: runWood}, PiratesGlobals.STRAFE_LEFT_DIAG_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: runWood}, PiratesGlobals.STRAFE_RIGHT_DIAG_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: runWood}, PiratesGlobals.STRAFE_LEFT_DIAG_REV_INDEX: {PiratesGlobals.SURFACE_DEFAULT: walkSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: walkWood}, PiratesGlobals.STRAFE_RIGHT_DIAG_REV_INDEX: {PiratesGlobals.SURFACE_DEFAULT: walkSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: walkWood}}
-        return
 
     def setSurfaceIndex(self, surfaceIndex):
         if surfaceIndex != self.surfaceIndex:

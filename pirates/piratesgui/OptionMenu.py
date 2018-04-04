@@ -1,3 +1,7 @@
+# uncompyle6 version 3.1.1
+# Python bytecode 2.4 (62061)
+# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
+# Embedded file name: pirates.piratesgui.OptionMenu
 from direct.gui import DirectGuiGlobals as DGG
 from direct.gui.DirectButton import *
 from direct.gui.DirectFrame import *
@@ -19,20 +23,8 @@ class OptionMenu(DirectOptionMenu):
         popupMarkerImageOver = char_gui.find('**/chargui_forward_over')
         char_gui.removeNode()
         optiondefs = (
-            ('image', titleImage, None), 
-            ('image_pos', (0, 0, -6), None), 
-            ('image_scale', (6, 3, 3), None), 
-            ('popupMarkerImage', (popupMarkerImage, popupMarkerImage, popupMarkerImageOver, popupMarkerImage), None), 
-            ('popupMarkerImageScale', 5, None), 
-            ('popupMarkerHpr', (0, 0, 90), None), 
-            ('text_fg', self.normal_fg_color, None),
-            ('text_align', TextNode.ACenter, None), 
-            ('popupBgColor', (0.0745, 0.0627, 0.0501, 1.0), None),
-            ('popupTextColor', (0.831, 0.745, 0.58, 1.0), None), 
-            ('popupHalfWidth', 3.8, None), 
-            ('highlightColor', (0.212, 0.192, 0.169, 1), None), 
-            ('frameSize', (0, 3.4, 0, 0.6), None), 
-            ('relief', None, None))
+         (
+          'image', titleImage, None), ('image_pos', (0, 0, -6), None), ('image_scale', (6, 3, 3), None), ('popupMarkerImage', (popupMarkerImage, popupMarkerImage, popupMarkerImageOver, popupMarkerImage), None), ('popupMarkerImageScale', 5, None), ('popupMarkerHpr', (0, 0, 90), None), ('text_fg', self.normal_fg_color, None), ('text_align', TextNode.ACenter, None), ('popupBgColor', (0.0745, 0.0627, 0.0501, 1.0), None), ('popupTextColor', (0.831, 0.745, 0.58, 1.0), None), ('popupHalfWidth', 3.8, None), ('highlightColor', (0.212, 0.192, 0.169, 1), None), ('frameSize', (0, 3.4, 0, 0.6), None), ('relief', None, None))
         self.defineoptions(kw, optiondefs)
         DirectOptionMenu.__init__(self, parent)
         self.popupMarker.removeNode()
@@ -148,9 +140,6 @@ class OptionMenu(DirectOptionMenu):
         newIndex = self.index(index)
         if newIndex is not None:
             self.selectedIndex = newIndex
-            #TODO: Find source of invalid index
-            if self.selectedIndex >= len(self['items']):
-                self.selectedIndex = len(self['items']) -1
             item = self['items'][self.selectedIndex]
             self['text'] = item
             if fCommand and self['command']:

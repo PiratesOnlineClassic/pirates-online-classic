@@ -815,6 +815,7 @@ class OTPClientRepository(ClientRepositoryBase):
         if not base.config.GetBool('enforce-clean-exit', 1):
             self.notify.warning('Not enforcing clean exit.')
             return
+
         leakedTasks = self.detectLeakedTasks(okTasks)
         leakedEvents = self.detectLeakedEvents(okEvents)
         leakedIvals = self.detectLeakedIntervals()
@@ -827,10 +828,12 @@ class OTPClientRepository(ClientRepositoryBase):
             else:
                 logFunc = self.notify.warning
                 allowExit = False
+
             if base.config.GetBool('direct-gui-edit', 0):
                 logFunc('There are leaks: %s tasks, %s events, %s ivals, %s garbage\nLeaked Events may be due to direct gui editing' % (leakedTasks, leakedEvents, leakedIvals, leakedGarbage))
             else:
                 logFunc('There are leaks: %s tasks, %s events, %s ivals, %s garbage' % (leakedTasks, leakedEvents, leakedIvals, leakedGarbage))
+
             if allowExit:
                 self.notify.info('Allowing client to leave, panda error code %s' % errorCode)
             else:
@@ -841,22 +844,54 @@ class OTPClientRepository(ClientRepositoryBase):
     def detectLeakedGarbage(self, callback=None):
         if not __debug__:
             return 0
+
         self.notify.info('checking for leaked garbage...')
         if gc.garbage:
             self.notify.warning('garbage already contains %d items' % len(gc.garbage))
+
         report = GarbageReport.GarbageReport('logout', verbose=True)
         numItems = report.getNumItems()
         if numItems:
             msg = "You can't leave until you take out your garbage. See report above & base.garbage"
             self.notify.info(msg)
+
         report.destroy()
         return numItems
 
     def detectLeakedTasks(self, extraTasks=None):
         allowedTasks = [
-         'dataLoop', 'resetPrevTransform', 'doLaterProcessor', 'eventManager', 'readerPollTask', 'heartBeat', 'gridZoneLoop', 'igLoop', 'audioLoop', 'collisionLoop', 'shadowCollisionLoop', 'ivalLoop', 'downloadSequence', 'patchAndHash', 'launcher-download', 'launcher-download-multifile', 'launcher-decompressFile', 'launcher-decompressMultifile', 'launcher-extract', 'launcher-patch', 'slowCloseShardCallback', 'tkLoop', 'manager-update', 'downloadStallTask', 'clientSleep', 'audioLoop', jobMgr.TaskName, taskMgr.GarbageCollectTaskName]
+            'dataLoop',
+            'resetPrevTransform',
+            'doLaterProcessor',
+            'eventManager',
+            'readerPollTask',
+            'heartBeat',
+            'gridZoneLoop',
+            'igLoop',
+            'audioLoop',
+            'collisionLoop',
+            'shadowCollisionLoop',
+            'ivalLoop',
+            'downloadSequence',
+            'patchAndHash',
+            'launcher-download',
+            'launcher-download-multifile',
+            'launcher-decompressFile',
+            'launcher-decompressMultifile',
+            'launcher-extract',
+            'launcher-patch',
+            'slowCloseShardCallback',
+            'tkLoop',
+            'manager-update',
+            'downloadStallTask',
+            'clientSleep',
+            'audioLoop',
+            jobMgr.TaskName,
+            taskMgr.GarbageCollectTaskName]
+
         if extraTasks is not None:
             allowedTasks.extend(extraTasks)
+
         problems = []
         for taskPriList in taskMgr.taskList:
             for task in taskPriList:
@@ -882,15 +917,41 @@ class OTPClientRepository(ClientRepositoryBase):
             return len(problems)
         else:
             return 0
-        return
 
     def detectLeakedEvents(self, extraHooks=None):
         allowedHooks = [
-         'destroy-DownloadWatcherBar', 'destroy-DownloadWatcherText', 'destroy-fade', 'f9', 'control-f9', 'launcherAllPhasesComplete', 'launcherPercentPhaseComplete', 'newDistributedDirectory', 'page_down', 'page_up', 'panda3d-render-error', 'PandaPaused', 'PandaRestarted', 'phaseComplete-3', 'press-mouse2-fade', 'print-fade', 'release-mouse2-fade', 'resetClock', 'window-event', 'TCRSetZoneDone', 'aspectRatioChanged', 'newDistributedDirectory', CConnectionRepository.getOverflowEventName(), 'render-texture-targets-changed', 'gotExtraFriendHandles']
+            'destroy-DownloadWatcherBar',
+            'destroy-DownloadWatcherText',
+            'destroy-fade',
+            'f9',
+            'control-f9',
+            'launcherAllPhasesComplete',
+            'launcherPercentPhaseComplete',
+            'newDistributedDirectory',
+            'page_down',
+            'page_up',
+            'panda3d-render-error',
+            'PandaPaused',
+            'PandaRestarted',
+            'phaseComplete-3',
+            'press-mouse2-fade',
+            'print-fade',
+            'release-mouse2-fade',
+            'resetClock',
+            'window-event',
+            'TCRSetZoneDone',
+            'aspectRatioChanged',
+            'newDistributedDirectory',
+            CConnectionRepository.getOverflowEventName(),
+            'render-texture-targets-changed',
+            'gotExtraFriendHandles']
+
         if hasattr(loader, 'hook'):
             allowedHooks.append(loader.hook)
+
         if extraHooks is not None:
             allowedHooks.extend(extraHooks)
+
         problems = []
         for hook in messenger.getEvents():
             if hook not in allowedHooks:
@@ -911,7 +972,6 @@ class OTPClientRepository(ClientRepositoryBase):
             return len(problems)
         else:
             return 0
-        return
 
     def detectLeakedIntervals(self):
         numIvals = ivalMgr.getNumIntervals()
@@ -921,12 +981,15 @@ class OTPClientRepository(ClientRepositoryBase):
                 ival = None
                 if i < len(ivalMgr.ivals):
                     ival = ivalMgr.ivals[i]
+
                 if ival == None:
                     ival = ivalMgr.getCInterval(i)
+
                 if ival:
                     print ival
                     if hasattr(ival, 'debugName'):
                         print ival.debugName
+
                     if hasattr(ival, 'debugInitTraceback'):
                         print ival.debugInitTraceback
 
@@ -935,7 +998,6 @@ class OTPClientRepository(ClientRepositoryBase):
             return numIvals
         else:
             return 0
-        return
 
     def _abandonShard(self):
         self.notify.error('%s must override _abandonShard' % self.__class__.__name__)
@@ -944,6 +1006,7 @@ class OTPClientRepository(ClientRepositoryBase):
         self.uberZoneInterest = None
         if not hasattr(self, 'cleanGameExit'):
             self.cleanGameExit = True
+
         if self.cleanGameExit:
             if self.isShardInterestOpen():
                 self.notify.error('enterGameOff: shard interest is still open')
@@ -951,57 +1014,43 @@ class OTPClientRepository(ClientRepositoryBase):
             if self.isShardInterestOpen():
                 self.notify.warning('unclean exit, abandoning shard')
                 self._abandonShard()
+
         self.cleanupWaitAllInterestsComplete()
         del self.cleanGameExit
         self.cache.flush()
         self.doDataCache.flush()
         self.handler = self.handleMessageType
-        return
 
     def exitGameOff(self):
         self.handler = None
-        return
 
     def enterWaitOnEnterResponses(self, shardId, hoodId, zoneId, avId):
         self.cleanGameExit = False
-        self.handler = self.handleWaitOnEnterResponses
-        self.handlerArgs = {'hoodId': hoodId, 'zoneId': zoneId, 'avId': avId}
+        self.handlerArgs = {
+            'hoodId': hoodId,
+            'zoneId': zoneId,
+            'avId': avId}
+
         if shardId is not None:
             district = self.activeDistrictMap.get(shardId)
         else:
             district = None
+
         if not district:
             self.distributedDistrict = self.getStartingDistrict()
             if self.distributedDistrict is None:
                 self.loginFSM.request('noShards')
                 return
+
             shardId = self.distributedDistrict.doId
         else:
             self.distributedDistrict = district
+
         self.notify.info('Entering shard %s' % shardId)
         localAvatar.setLocation(shardId, zoneId)
         base.localAvatar.defaultShard = shardId
         self.waitForDatabaseTimeout(requestName='WaitOnEnterResponses')
         self.handleSetShardComplete()
-        return
-
-    def handleWaitOnEnterResponses(self, msgType, di):
-        if msgType == CLIENT_GET_FRIEND_LIST_RESP:
-            self.handleGetFriendsList(di)
-        else:
-            if msgType == CLIENT_GET_FRIEND_LIST_EXTENDED_RESP:
-                self.handleGetFriendsListExtended(di)
-            else:
-                if msgType == CLIENT_FRIEND_ONLINE:
-                    self.handleFriendOnline(di)
-                else:
-                    if msgType == CLIENT_FRIEND_OFFLINE:
-                        self.handleFriendOffline(di)
-                    else:
-                        if msgType == CLIENT_GET_PET_DETAILS_RESP:
-                            self.handleGetAvatarDetailsResp(di)
-                        else:
-                            self.handleMessageType(msgType, di)
 
     def handleSetShardComplete(self):
         self.cleanupWaitingForDatabase()
@@ -1026,6 +1075,7 @@ class OTPClientRepository(ClientRepositoryBase):
             pyc = HashVal()
             if not __dev__:
                 self.hashFiles(pyc)
+
             self.timeManager.d_setSignature(self.userSignature, h.asBin(), pyc.asBin())
             if self.timeManager.synchronize('startup'):
                 self.accept('gotTimeSync', self.gotTimeSync)
@@ -1033,22 +1083,20 @@ class OTPClientRepository(ClientRepositoryBase):
             else:
                 self.notify.info('No sync from TimeManager.')
                 self.gotTimeSync()
-        return
 
     def exitWaitOnEnterResponses(self):
         self.ignore('uberZoneInterestComplete')
         self.cleanupWaitingForDatabase()
         self.handler = None
         self.handlerArgs = None
-        return
 
     def enterCloseShard(self, loginState=None):
         self.notify.info('Exiting shard')
         if loginState is None:
             loginState = 'waitForAvatarList'
+
         self._closeShardLoginState = loginState
         base.cr.setNoNewInterests(True)
-        return
 
     def _removeLocalAvFromStateServer(self):
         self.sendSetAvatarIdMsg(0)
@@ -1078,7 +1126,6 @@ class OTPClientRepository(ClientRepositoryBase):
             taskMgr.doMethodLater(base.slowCloseShardDelay * 0.5, Functor(self._callRemoveShardInterestCallback, callback), 'slowCloseShardCallback')
         else:
             self._callRemoveShardInterestCallback(callback, None)
-        return
 
     def _callRemoveShardInterestCallback(self, callback, task):
         callback()
@@ -1101,6 +1148,7 @@ class OTPClientRepository(ClientRepositoryBase):
         if self.music:
             self.music.stop()
             self.music = None
+
         self.handler = self.handlePlayGame
         self.accept(self.gameDoneEvent, self.handleGameDone)
         base.transitions.noFade()
@@ -1112,14 +1160,10 @@ class OTPClientRepository(ClientRepositoryBase):
 
         self.playGame.enter(hoodId, zoneId, avId)
 
-        def checkScale(task):
-            return Task.cont
-
-        return
-
     def handleGameDone(self):
         if self.timeManager:
             self.timeManager.setDisconnectReason(OTPGlobals.DisconnectSwitchShards)
+
         doneStatus = self.playGame.getDoneStatus()
         how = doneStatus['how']
         shardId = doneStatus['shardId']
@@ -1137,7 +1181,6 @@ class OTPClientRepository(ClientRepositoryBase):
         self.playGame.exit()
         self.playGame.unload()
         self.ignore(self.gameDoneEvent)
-        return
 
     def gotTimeSync(self):
         self.notify.info('gotTimeSync')
@@ -1149,6 +1192,7 @@ class OTPClientRepository(ClientRepositoryBase):
         if not self.__gotTimeSync:
             self.notify.info('Waiting for time sync.')
             return
+
         hoodId = self.handlerArgs['hoodId']
         zoneId = self.handlerArgs['zoneId']
         avId = self.handlerArgs['avId']
@@ -1172,13 +1216,15 @@ class OTPClientRepository(ClientRepositoryBase):
         elif msgType == CLIENT_OBJECT_SET_FIELD:
             self.handleUpdateField(di)
         elif msgType == CLIENT_OBJECT_LEAVING:
-            self.handleDelete(di)
+            try:
+                self.handleDelete(di)
+            except:
+                pass
         else:
             self.handleMessageType(msgType, di)
 
     def enterSwitchShards(self, shardId, hoodId, zoneId, avId):
-        self._switchShardParams = [
-         shardId, hoodId, zoneId, avId]
+        self._switchShardParams = [shardId, hoodId, zoneId, avId]
         localAvatar.setLeftDistrict()
         self.removeShardInterest(self._handleOldShardGone)
 
@@ -1209,6 +1255,7 @@ class OTPClientRepository(ClientRepositoryBase):
     def freeTimeLeft(self):
         if self.freeTimeExpiresAt == -1 or self.freeTimeExpiresAt == 0:
             return 0
+
         secsLeft = self.freeTimeExpiresAt - time.time()
         return max(0, secsLeft)
 
@@ -1262,21 +1309,23 @@ class OTPClientRepository(ClientRepositoryBase):
             self.notify.info('paid: %s (blue)' % self.isPaid())
         else:
             self.notify.info('paid: %s' % self.isPaid())
+
         if not self.isPaid():
             if self.isFreeTimeExpired():
                 self.notify.info('free time is expired')
             else:
                 secs = self.freeTimeLeft()
                 self.notify.info('free time left: %s' % PythonUtil.formatElapsedSeconds(secs))
+
         if self.periodTimerSecondsRemaining != None:
             self.notify.info('period time left: %s' % PythonUtil.formatElapsedSeconds(self.periodTimerSecondsRemaining))
-        return
 
     def getStartingDistrict(self):
         district = None
         if len(self.activeDistrictMap.keys()) == 0:
             self.notify.info('no shards')
             return
+
         if base.fillShardsToIdealPop:
             lowPop, midPop, highPop = base.getShardPopLimits()
             self.notify.debug('low: %s mid: %s high: %s' % (lowPop, midPop, highPop))
@@ -1298,6 +1347,7 @@ class OTPClientRepository(ClientRepositoryBase):
 
         if district is not None:
             self.notify.debug('chose %s: pop %s' % (district.name, district.avatarCount))
+
         return district
 
     def getShardName(self, shardId):
@@ -1330,7 +1380,6 @@ class OTPClientRepository(ClientRepositoryBase):
         if dclass is not None:
             fieldId = dclass.getFieldByName(fieldName).getNumber()
             self.queryObjectFieldId(doId, fieldId, context)
-        return
 
     def allocateDcFile(self):
         dcName = 'Shard %s cannot be found.'
@@ -1368,8 +1417,8 @@ class OTPClientRepository(ClientRepositoryBase):
             self.waitingForDatabase.hide()
             self.waitingForDatabase.cleanup()
             self.waitingForDatabase = None
+
         taskMgr.remove('waitingForDatabase')
-        return
 
     def __handleCancelWaiting(self, value):
         self.loginFSM.request('shutdown')
@@ -1410,16 +1459,15 @@ class OTPClientRepository(ClientRepositoryBase):
 
             self.runningPeriodTimeRemaining = self.periodTimerSecondsRemaining
             self.recordPeriodTimer(None)
-        return
 
     def stopPeriodTimer(self):
         if self.periodTimerStarted != None:
             elapsed = globalClock.getRealTime() - self.periodTimerStarted
             self.periodTimerSecondsRemaining -= elapsed
             self.periodTimerStarted = None
+
         taskMgr.remove('periodTimerCountdown')
         taskMgr.remove('periodTimerRecorder')
-        return
 
     def __periodTimerWarning(self, task):
         base.localAvatar.setSystemMessage(0, OTPLocalizer.PeriodTimerWarning)

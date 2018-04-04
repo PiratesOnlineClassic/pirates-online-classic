@@ -14,7 +14,6 @@ from pirates.world import WorldGlobals
 
 
 class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
-    __module__ = __name__
 
     def __init__(self, cr):
         DistributedCartesianGrid.__init__(self, cr)

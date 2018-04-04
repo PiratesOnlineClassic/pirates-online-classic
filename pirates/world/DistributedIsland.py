@@ -30,6 +30,8 @@ from pirates.seapatch.Water import IslandWaterParameters
 from pirates.swamp.Swamp import Swamp
 from pirates.world import (ClientArea, DistributedGameArea, WorldGlobals,
                            ZoneLOD)
+from otp.nametag.NametagGroup import NametagGroup
+from otp.nametag.Nametag import Nametag
 
 
 class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCartesianGrid.DistributedCartesianGrid, ZoneLOD.ZoneLOD, ClientArea.ClientArea, Teamable):
@@ -319,7 +321,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         DistributedGameArea.DistributedGameArea.handleChildArrive(self, child, zoneId)
         if child.isLocal():
             self.accept('ship_vis_change', self.shipVisibilityChanged)
-            if not base.cr.config.GetBool('remove-island-barriers', 0):
+            if base.cr.config.GetBool('remove-island-barriers', False):
                 self.setupPlayerBarrier()
             if not base.shipsVisibleFromIsland:
                 self.parentWorld.worldGrid.stopProcessVisibility()
@@ -369,7 +371,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.accept(self.gridSphereExitEvent, self.removeIslandFromOcean)
 
     def _handleSneakIntoKingshead(self, msgName, avId):
-        print 'handleSneakIntoKingshead'
         if avId == localAvatar.doId:
             if base.cr.isPaid() != OTPGlobals.AccessFull:
                 self.deniedEntryToIsland()
@@ -388,7 +389,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.ignore(self.gridSphereExitEvent)
         self.gridSphereNodePath.removeNode()
         self.gridSphere = None
-        return
 
     @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
     def setupPlayerBarrier(self):
@@ -402,6 +402,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.playerBarrierNP = self.attachNewNode(cSphereNode)
             self.accept('enter' + self.uniqueName('PlayerBarrier'), self.enteredPlayerBarrier)
             self.accept('islandPlayerBarrier', self.setPlayerBarrier)
+
         self.setPlayerBarrier(1)
 
     @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
@@ -520,7 +521,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             del self.islandShoreWave
 
     def foo(self):
-        collNodes = self.geom.findAllMatches('**/+CollisionNode') 
+        collNodes = self.geom.findAllMatches('**/+CollisionNode')
         for collNode in collNodes:
             curMask = collNode.node().getIntoCollideMask()
             if curMask.hasBitsInCommon(OTPGlobals.FloorBitmask):
@@ -601,7 +602,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.setupMadreDelFuegoEffects()
         self.ground = {}
         self.ground[0] = self.geom.find('**/island')
-        collNodes = self.geom.findAllMatches('**/+CollisionNode') 
+        collNodes = self.geom.findAllMatches('**/+CollisionNode')
         for collNode in collNodes:
             curMask = collNode.node().getIntoCollideMask()
             if curMask.hasBitsInCommon(OTPGlobals.FloorBitmask):
@@ -613,7 +614,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.initializeIslandWaterParameters()
 
     def loadIslandStuff(self):
-        self.largeObjects = self.geom.findAllMatches('**/*bldg*') 
+        self.largeObjects = self.geom.findAllMatches('**/*bldg*')
         for b in self.largeObjects:
             b.wrtReparentTo(self.largeObjectsHigh)
             wallGeom = b.find('**/wall*_n_window*')
@@ -711,7 +712,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     def initializeNametag3d(self):
         self.deleteNametag3d()
         self.nametag.setFont(PiratesGlobals.getPirateFont())
-        nametagNode = self.nametag.getNametag3d().upcastToPandaNode()
+        nametagNode = self.nametag.getNametag3d()
         self.nametag3d.attachNewNode(nametagNode)
         self.nametag3d.setFogOff()
         self.nametag3d.setLightOff()
@@ -721,6 +722,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         if self.iconNodePath.isEmpty():
             self.notify.warning('empty iconNodePath in initializeNametag3d')
             return 0
+
         if not self.nameText:
             self.nameText = OnscreenText(fg=Vec4(1, 1, 1, 1), bg=Vec4(0, 0, 0, 0), scale=1.1, align=TextNode.ACenter, mayChange=1, font=PiratesGlobals.getPirateBoldOutlineFont())
             self.nameText.setDepthWrite(0)
@@ -755,14 +757,13 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.nametag3d = self.attachNewNode('nametag3d')
         self.nametag3d.setTag('cam', 'nametag')
         self.nametag.setName(name)
-        self.nametag.setNameWordwrap(PiratesGlobals.NAMETAG_WORDWRAP)
+        self.nametag.setWordwrap(PiratesGlobals.NAMETAG_WORDWRAP)
         OTPRender.renderReflection(False, self.nametag3d, 'p_island_nametag', None)
         self.nametag3d.setPos(0, 0, WorldGlobals.getNametagHeight(self.name))
         self.setNametagScale(WorldGlobals.getNametagScale(self.name))
         self.nametag3d.setFogOff()
         self.setPickable(0)
         self.nametag.setColorCode(1)
-        return
 
     def getNametagScale(self):
         return self.nametagScale
@@ -779,15 +780,19 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         DistributedGameArea.DistributedGameArea.startCustomEffects(self, interior=False)
         if self.grass:
             self.grass.start()
+
         if self.blackSmokeEffect:
             self.blackSmokeEffect.reparentTo(self.geom)
             self.blackSmokeEffect.setPos(0, 0, 650)
             self.blackSmokeEffect.startLoop()
+
         if self.volcanoEffect:
             if self.lastZoneLevel <= 3:
                 self.startVolcanoSmokeEffect()
+
             if self.lastZoneLevel < 2:
                 self.startVolcanoRestEffects()
+
         base.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_DEFAULT)
         self.resumeSFX()
 

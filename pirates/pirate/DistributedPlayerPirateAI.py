@@ -20,3 +20,9 @@ class DistributedPlayerPirateAI(DistributedObjectAI):
 
     def getDNAString(self):
         return self.dnaString
+
+    def d_relayTeleportLoc(self, shardId, zoneId, teleportMgrDoId):
+        self.sendUpdateToAvatarId(self.doId, 'relayTeleportLoc', [shardId, zoneId, teleportMgrDoId])
+
+    def d_forceTeleportStart(self, instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone):
+        self.sendUpdateToAvatarId(self.doId, 'forceTeleportStart', [instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone])

@@ -49,25 +49,11 @@ class Nametag2d(Nametag, MarginPopup):
         # popup system:
         self.setPriority(1)
 
-        # Remove our pointer arrow:
-        if self.arrow is not None:
-            self.arrow.removeNode()
-        self.arrow = None
-
     def showName(self):
         Nametag.showName(self)
 
         # Revert our priority back to basic:
         self.setPriority(0)
-
-        # Tack on an arrow:
-        t = self.innerNP.find('**/+TextNode')
-        arrowZ = self.ARROW_OFFSET + t.node().getBottom()
-
-        self.arrow = NametagGlobals.arrowModel.copyTo(self.innerNP)
-        self.arrow.setZ(arrowZ)
-        self.arrow.setScale(self.ARROW_SCALE)
-        self.arrow.setColor(ARROW_COLORS.get(self.colorCode, self.nameFg))
 
     def update(self):
         Nametag.update(self)
@@ -77,36 +63,10 @@ class Nametag2d(Nametag, MarginPopup):
         self.considerUpdateClickRegion()
 
     def considerUpdateClickRegion(self):
-        # If we are onscreen, we update our click region:
-        if self.isDisplayed():
-            left, right, bottom, top = self.frame
-            self.updateClickRegion(left*self.SCALE_2D, right*self.SCALE_2D,
-                                   bottom*self.SCALE_2D, top*self.SCALE_2D)
-        else:
-            self.stashClickRegion()
+        pass
 
     def tick(self):
-        # Update the arrow's pointing.
-        if not self.isDisplayed() or self.arrow is None:
-            return # No arrow or not onscreen.
-
-        if self.avatar is None or self.avatar.isEmpty():
-            return # No avatar, can't be done.
-
-        # Get points needed in calculation:
-        cam = NametagGlobals.camera or base.cam
-        toon = NametagGlobals.toon or cam
-
-        # libotp calculates this using the offset from localToon->avatar, but
-        # the orientation from cam. Therefore, we duplicate it like so:
-        location = self.avatar.getPos(toon)
-        rotation = toon.getQuat(cam)
-
-        camSpacePos = rotation.xform(location)
-        arrowRadians = math.atan2(camSpacePos[0], camSpacePos[1])
-        arrowDegrees = arrowRadians/math.pi*180
-
-        self.arrow.setR(arrowDegrees - 90)
+        pass
 
     def getSpeechBalloon(self):
         return NametagGlobals.speechBalloon2d

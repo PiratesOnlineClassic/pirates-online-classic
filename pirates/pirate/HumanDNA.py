@@ -1,11 +1,11 @@
 import random
 
+from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from otp.avatar import AvatarDNA
 from otp.speedchat import ColorSpace
-from pandac.PandaModules import *
 from pirates.makeapirate import ClothingGlobals
 
 notify = directNotify.newCategory('HumanDNA')
@@ -95,7 +95,6 @@ def printColors():
 
 
 class PirateEyes:
-    __module__ = __name__
 
     def __init__(self, color=0):
         self.color = color
@@ -109,7 +108,6 @@ class PirateEyes:
 
 
 class PirateHair:
-    __module__ = __name__
 
     def __init__(self, hair=0, beard=0, mustache=0, color=0):
         self.hair = hair
@@ -131,7 +129,6 @@ class PirateHair:
 
 
 class PirateHead:
-    __module__ = __name__
 
     def __init__(self):
         self.headWidth = 0.0
@@ -299,7 +296,6 @@ class PirateClothes:
 
 
 class HumanDNA(AvatarDNA.AvatarDNA):
-    __module__ = __name__
 
     def __init__(self, gender='m'):
         self.type = 'pirate'
@@ -350,8 +346,8 @@ class HumanDNA(AvatarDNA.AvatarDNA):
                     self.clothes.hat = 3
                     self.clothes.hatColor = 0
                     self.head.texture = 0
-        self.tattooChest = [
-         0, 0.0, 0.0, 1, 0, 0]
+
+        self.tattooChest = [0, 0.0, 0.0, 1, 0, 0]
         self.tattooZone2 = [0, 0.0, 0.0, 1, 0, 0]
         self.tattooZone3 = [0, 0.0, 0.0, 1, 0, 0]
         self.tattooZone4 = [0, 0.0, 0.0, 1, 0, 0]
@@ -359,8 +355,7 @@ class HumanDNA(AvatarDNA.AvatarDNA):
         self.tattooZone6 = [0, 0.0, 0.0, 1, 0, 0]
         self.tattooZone7 = [0, 0.0, 0.0, 1, 0, 0]
         self.tattooZone8 = [0, 0.0, 0.0, 1, 0, 0]
-        self.jewelryZone1 = [
-         0, 0, 0]
+        self.jewelryZone1 = [0, 0, 0]
         self.jewelryZone2 = [0, 0, 0]
         self.jewelryZone3 = [0, 0, 0]
         self.jewelryZone4 = [0, 0, 0]
@@ -1331,6 +1326,9 @@ class HumanDNA(AvatarDNA.AvatarDNA):
     def makeNetString(self):
         dg = PyDatagram()
 
+        # Tutorial
+        dg.addUint8(self.tutorial)
+
         # Gender
         dg.addUint8(self.gender == 'm')
 
@@ -1505,6 +1503,9 @@ class HumanDNA(AvatarDNA.AvatarDNA):
     def makeFromNetString(self, netString):
         dg = PyDatagram(netString)
         dgi = PyDatagramIterator(dg)
+
+        # Tutorial
+        self.setTutorial(dgi.getUint8())
 
         # Gender
         self.setGender('m' if dgi.getUint8() else 'f')

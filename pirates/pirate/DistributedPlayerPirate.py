@@ -628,6 +628,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
             self.b_setGameState('TeleportOut', ['avatarTeleportEffect-done'])
         else:
             effectDoneCallback()
+
         self.cr.teleportMgr.doEffect = True
 
     @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
@@ -637,8 +638,9 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         if self.pendingTeleportMgr:
             base.cr.relatedObjectMgr.abortRequest(self.pendingTeleportMgr)
             self.pendingTeleportMgr = None
-        self.pendingTeleportMgr = base.cr.relatedObjectMgr.requestObjects([teleportMgrDoId], eachCallback=self.readyToTeleport)
-        return
+
+        self.pendingTeleportMgr = base.cr.relatedObjectMgr.requestObjects([teleportMgrDoId],
+            eachCallback=self.readyToTeleport)
 
     @report(types=['deltaStamp', 'module'], prefix='------', dConfigParam='want-teleport-report')
     def readyToTeleport(self, teleportMgr):

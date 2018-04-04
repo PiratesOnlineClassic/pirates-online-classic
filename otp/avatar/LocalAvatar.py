@@ -30,14 +30,13 @@ from otp.nametag.Nametag import Nametag
 
 
 class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.DistributedSmoothNode):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('LocalAvatar')
-    wantDevCameraPositions = base.config.GetBool('want-dev-camera-positions', 0)
-    wantMouse = base.config.GetBool('want-mouse', 0)
+    wantDevCameraPositions = base.config.GetBool('want-dev-camera-positions', True)
+    wantMouse = base.config.GetBool('want-mouse', False)
     sleepTimeout = base.config.GetInt('sleep-timeout', 120)
     swimTimeout = base.config.GetInt('afk-timeout', 600)
-    __enableMarkerPlacement = base.config.GetBool('place-markers', 0)
-    acceptingNewFriends = base.config.GetBool('accepting-new-friends', 1)
+    __enableMarkerPlacement = base.config.GetBool('place-markers', False)
+    acceptingNewFriends = base.config.GetBool('accepting-new-friends', True)
 
     def __init__(self, cr, chatMgr, chatAssistant, passMessagesThrough=False):
         try:
@@ -347,7 +346,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
         if self.jumpLandAnimFixTask:
             self.jumpLandAnimFixTask.remove()
             self.jumpLandAnimFixTask = None
-        return
 
     def jumpStart(self):
         if not self.sleepFlag and self.hp > 0:
@@ -362,6 +360,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
                 state = 'Happy'
             else:
                 state = 'Sad'
+
         self.b_setAnimState(state, 1.0)
         return Task.done
 
@@ -418,6 +417,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
     def disableAvatarControls(self):
         if not self.avatarControlsEnabled:
             return
+
         self.avatarControlsEnabled = 0
         self.ignoreAnimationEvents()
         self.controlManager.disable()

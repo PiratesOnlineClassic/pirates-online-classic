@@ -1,8 +1,5 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.ai.TimeManager
 import os
+import sys
 import time
 
 from direct.directnotify import DirectNotifyGlobal
@@ -29,6 +26,7 @@ class TimeManager(DistributedObject.DistributedObject):
         self.extraSkew = base.config.GetInt('time-manager-extra-skew', 0)
         if self.extraSkew != 0:
             self.notify.info('Simulating clock skew of %0.3f s' % self.extraSkew)
+
         self.reportFrameRateInterval = base.config.GetDouble('report-frame-rate-interval', 300.0)
         self.talkResult = 0
         self.thisContext = -1
@@ -41,13 +39,13 @@ class TimeManager(DistributedObject.DistributedObject):
     def generate(self):
         if self.cr.timeManager != None:
             self.cr.timeManager.delete()
+
         self.cr.timeManager = self
         DistributedObject.DistributedObject.generate(self)
         self.accept(OTPGlobals.SynchronizeHotkey, self.handleHotkey)
         self.accept('clock_error', self.handleClockError)
         if self.updateFreq > 0:
             self.startTask()
-        return
 
     def disable(self):
         self.ignore(OTPGlobals.SynchronizeHotkey)
@@ -56,8 +54,8 @@ class TimeManager(DistributedObject.DistributedObject):
         taskMgr.remove('frameRateMonitor')
         if self.cr.timeManager == self:
             self.cr.timeManager = None
+
         DistributedObject.DistributedObject.disable(self)
-        return
 
     def delete(self):
         self.ignore(OTPGlobals.SynchronizeHotkey)
@@ -66,8 +64,8 @@ class TimeManager(DistributedObject.DistributedObject):
         taskMgr.remove('frameRateMonitor')
         if self.cr.timeManager == self:
             self.cr.timeManager = None
+
         DistributedObject.DistributedObject.delete(self)
-        return
 
     def startTask(self):
         self.stopTask()
@@ -96,6 +94,7 @@ class TimeManager(DistributedObject.DistributedObject):
         if now - self.lastAttempt < self.minWait:
             self.notify.debug('Not resyncing (too soon): %s' % description)
             return 0
+
         self.talkResult = 0
         self.thisContext = self.nextContext
         self.attemptCount = 0
@@ -112,6 +111,7 @@ class TimeManager(DistributedObject.DistributedObject):
         if context != self.thisContext:
             self.notify.info('Ignoring TimeManager response for old context %d' % context)
             return
+
         elapsed = end - self.start
         self.attemptCount += 1
         self.notify.info('Clock sync roundtrip took %0.3f ms' % (elapsed * 1000.0))
@@ -126,9 +126,13 @@ class TimeManager(DistributedObject.DistributedObject):
                 self.start = globalClock.getRealTime()
                 self.sendUpdate('requestServerTime', [self.thisContext])
                 return
+
             self.notify.info('Giving up on uncertainty requirement.')
+
         if self.talkResult:
-            base.localAvatar.setChatAbsolute('latency %0.0f ms, sync \xc2\xb1%0.0f ms' % (elapsed * 1000.0, globalClockDelta.getUncertainty() * 1000.0), CFSpeech | CFTimeout)
+            base.localAvatar.setChatAbsolute('latency %0.0f ms, sync \xc2\xb1%0.0f ms' % (elapsed * 1000.0,
+                globalClockDelta.getUncertainty() * 1000.0), CFSpeech | CFTimeout)
+
         messenger.send('gotTimeSync')
 
     def setDisconnectReason(self, disconnectCode):
@@ -147,9 +151,11 @@ class TimeManager(DistributedObject.DistributedObject):
     def setFrameRateInterval(self, frameRateInterval):
         if frameRateInterval == 0:
             return
+
         if not base.frameRateMeter:
             maxFrameRateInterval = base.config.GetDouble('max-frame-rate-interval', 30.0)
             globalClock.setAverageFrameRateInterval(min(frameRateInterval, maxFrameRateInterval))
+
         taskMgr.remove('frameRateMonitor')
         task = taskMgr.add(self.frameRateMonitor, 'frameRateMonitor')
         task.delayTime = frameRateInterval
@@ -162,14 +168,17 @@ class TimeManager(DistributedObject.DistributedObject):
         pageFileUsage = 0
         physicalMemory = 0
         pageFaultCount = 0
-        osInfo = (
-         os.name, 0, 0, 0)
+        osInfo = (os.name, 0, 0, 0)
         cpuSpeed = (0, 0)
+        numCpuCores = 0
+        numLogicalCpus = 0
+        apiName = 'None'
         if getattr(base, 'pipe', None):
             di = base.pipe.getDisplayInformation()
             if di.getDisplayState() == DisplayInformation.DSSuccess:
                 vendorId = di.getVendorId()
                 deviceId = di.getDeviceId()
+
             di.updateMemoryInformation()
             oomb = 1.0 / (1024.0 * 1024.0)
             processMemory = di.getProcessMemory() * oomb
@@ -177,14 +186,29 @@ class TimeManager(DistributedObject.DistributedObject):
             physicalMemory = di.getPhysicalMemory() * oomb
             pageFaultCount = di.getPageFaultCount() / 1000.0
             osInfo = (os.name, di.getOsPlatformId(), di.getOsVersionMajor(), di.getOsVersionMinor())
+            if sys.platform == 'darwin':
+                osInfo = self.getMacOsInfo(osInfo)
+
             di.updateCpuFrequency(0)
             ooghz = 1e-09
             cpuSpeed = (di.getMaximumCpuFrequency() * ooghz, di.getCurrentCpuFrequency() * ooghz)
-        self.d_setFrameRate(globalClock.getAverageFrameRate(), globalClock.calcFrameRateDeviation(), len(Avatar.ActiveAvatars), base.locationCode or '', time.time() - base.locationCodeChanged, globalClock.getRealTime(), base.gameOptionsCode, vendorId, deviceId, processMemory, pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed)
+            numCpuCores = di.getNumCpuCores()
+            numLogicalCpus = di.getNumLogicalCpus()
+            apiName = base.pipe.getInterfaceName()
+
+        self.d_setFrameRate(max(0, globalClock.getAverageFrameRate()), max(0, globalClock.calcFrameRateDeviation()), len(Avatar.ActiveAvatars), base.locationCode or '',
+            max(0, time.time() - base.locationCodeChanged), max(0, globalClock.getRealTime()), base.gameOptionsCode, vendorId, deviceId,
+            processMemory, pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed, numCpuCores, numLogicalCpus, apiName)
+
         return task.again
 
-    def d_setFrameRate(self, fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId, processMemory, pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed):
-        info = '%0.1f fps|%0.3fd|%s avs|%s|%d|%d|%s|0x%04x|0x%04x|%0.1fMB|%0.1fMB|%0.1fMB|%d|%s|%s' % (fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId, processMemory, pageFileUsage, physicalMemory, pageFaultCount, '%s.%d.%d.%d' % osInfo, '%0.03f,%0.03f' % cpuSpeed)
-        print 'frame rate: %s' % info
-        self.sendUpdate('setFrameRate', [fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId, processMemory, pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed])
-# okay decompiling .\otp\ai\TimeManager.pyc
+    def d_setFrameRate(self, fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId, processMemory, pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed, numCpuCores, numLogicalCpus, apiName):
+        info = '%0.1f fps|%0.3fd|%s avs|%s|%d|%d|%s|0x%04x|0x%04x|%0.1fMB|%0.1fMB|%0.1fMB|%d|%s|%s|%s cpus|%s' % (fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode,
+            vendorId, deviceId, processMemory, pageFileUsage, physicalMemory, pageFaultCount, '%s.%d.%d.%d' % osInfo,
+            '%0.03f,%0.03f' % cpuSpeed, '%d,%d' % (numCpuCores, numLogicalCpus), apiName)
+
+        if base.config.GetBool('want-frame-rate-string', True):
+            print 'frame rate: %s' % info
+
+        self.sendUpdate('setFrameRate', [fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId, processMemory,
+            pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed, numCpuCores, numLogicalCpus, apiName])
