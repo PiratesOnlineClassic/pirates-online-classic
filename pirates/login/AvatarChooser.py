@@ -601,41 +601,26 @@ class AvatarChooser(DirectObject, StateData):
             self.__handleHighlight(sub, slot)
 
     def __handleCreate(self, subId, slot):
-        self.choice = (
-         subId, slot)
-        self.accept('rejectAvatarSlot', self.__rejectAvatarSlot)
-        self.accept('avatarSlotResponse', self.__avatarSlotResponse)
-        base.cr.avatarManager.sendRequestAvatarSlot(subId, slot)
-        base.cr.waitForDatabaseTimeout(requestName='WaitForCreateAvatarResponse')
-        self.blockInput()
-
-    def __rejectAvatarSlot(self, reasonId, subId, slot):
-        self.notify.warning('rejectAvatarSlot: %s' % reasonId)
-        self.ignore('rejectAvatarSlot')
-        self.ignore('avatarSlotResponse')
+        self.choice = (subId, slot)
         base.cr.cleanupWaitingForDatabase()
-        self.allowInput()
-
-    def __avatarSlotResponse(self, subId, slot):
-        UserFunnel.loggingAvID('write', 'NEW')
-        UserFunnel.loggingSubID('write', subId)
-        self.ignore('rejectAvatarSlot')
-        self.ignore('avatarSlotResponse')
-        base.cr.cleanupWaitingForDatabase()
+        base.transitions.fadeOut()
         self.doneStatus = {'mode': 'create'}
-        base.transitions.fadeOut(finishIval=Func(messenger.send, self.doneEvent, [self.doneStatus]))
+        messenger.send(self.doneEvent, [self.doneStatus])
 
     def __handleShare(self):
         if self.shareConfirmDialog:
             self.shareConfirmDialog.destroy()
+
         subId, slot = self.choice
         potAv = base.cr.avList[subId][slot]
         name = potAv.dna.getDNAName()
         self.blockInput()
         if potAv.shared:
-            self.shareConfirmDialog = PDialog.PDialog(text=PLocalizer.AvatarChooserConfirmLock % name, style=OTPDialog.TwoChoice, command=self.__handleShareConfirmation)
+            self.shareConfirmDialog = PDialog.PDialog(text=PLocalizer.AvatarChooserConfirmLock % name,
+                style=OTPDialog.TwoChoice, command=self.__handleShareConfirmation)
         else:
-            self.shareConfirmDialog = PDialog.PDialog(text=PLocalizer.AvatarChooserConfirmShare % name, style=OTPDialog.TwoChoice, command=self.__handleShareConfirmation)
+            self.shareConfirmDialog = PDialog.PDialog(text=PLocalizer.AvatarChooserConfirmShare % name,
+                style=OTPDialog.TwoChoice, command=self.__handleShareConfirmation)
 
     def __shareAvatarResponse(self, avatarId, subId, shared):
         base.cr.cleanupWaitingForDatabase()

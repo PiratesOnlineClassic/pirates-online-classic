@@ -22,7 +22,7 @@ class NametagGroup:
     def __init__(self):
         self.nametag2d = Nametag2d()
         self.nametag3d = Nametag3d()
-        self.icon = PandaNode('icon')
+        self.icon = NodePath('icon')
 
         self.chatTimeoutTask = None
 

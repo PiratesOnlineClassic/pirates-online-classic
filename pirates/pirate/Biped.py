@@ -277,6 +277,7 @@ class Biped(UsesAnimationMixer, Avatar, UsesEffectNode):
         if self.iconNodePath.isEmpty():
             self.notify.warning('empty iconNodePath in initializeNametag3d')
             return 0
+
         if not self.nameText:
             self.nameText = OnscreenText(fg=Vec4(1, 1, 1, 1), bg=Vec4(0, 0, 0, 0), scale=1.1, align=TextNode.ACenter, mayChange=1, font=PiratesGlobals.getPirateBoldOutlineFont())
             self.nameText.reparentTo(self.iconNodePath)

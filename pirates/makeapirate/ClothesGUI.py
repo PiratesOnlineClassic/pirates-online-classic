@@ -36,7 +36,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
 
     def __init__(self, main=None):
         self.main = main
-        self.parent = main.bookModel
+        self._parent = main.bookModel
         self.avatar = main.avatar
         self.mode = None
         self.entered = False
@@ -76,7 +76,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         self.loadHatGUI()
 
     def loadShirtGUI(self):
-        self.clothesFrame = DirectFrame(parent=self.parent, relief=None, pos=(0, 0,
+        self.clothesFrame = DirectFrame(parent=self._parent, relief=None, pos=(0, 0,
                                                                               0), scale=1)
         self.clothesFrame.hide()
         self.genPicsButtonsFrame = DirectFrame(parent=self.clothesFrame, relief=None, pos=(0,
@@ -260,7 +260,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
 
     def unload(self):
         del self.main
-        del self.parent
+        del self._parent
         del self.avatar
 
     def showApparelCollections(self):

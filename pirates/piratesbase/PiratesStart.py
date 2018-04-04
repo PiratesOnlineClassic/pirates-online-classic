@@ -11,6 +11,7 @@ gc.disable()
 
 if __debug__:
     loadPrcFile('config/general.prc')
+    loadPrcFile('config/dev.prc')
 
 print 'PiratesStart: Starting the game.'
 

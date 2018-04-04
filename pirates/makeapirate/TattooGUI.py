@@ -48,7 +48,7 @@ class TattooGUI(DirectFrame, StateData.StateData):
 
     def __init__(self, main=None):
         self.main = main
-        self.parent = main.bookModel
+        self._parent = main.bookModel
         self.avatar = main.avatar
         self.mode = None
         self.shownMale = None
@@ -91,7 +91,7 @@ class TattooGUI(DirectFrame, StateData.StateData):
         self.setupButtons()
 
     def loadZone1GUI(self):
-        self.zone1FrameTitle = DirectFrame(parent=self.parent, relief=DGG.FLAT, frameColor=(1,
+        self.zone1FrameTitle = DirectFrame(parent=self._parent, relief=DGG.FLAT, frameColor=(1,
                                                                                             1,
                                                                                             0,
                                                                                             1), text='Chest Tattoo', text_scale=0.18, text_pos=(0,
@@ -112,7 +112,7 @@ class TattooGUI(DirectFrame, StateData.StateData):
                                                                                                                                                                                                                                                    0,
                                                                                                                                                                                                                                                    1), pos=(-1.0, 0.0, -0.2))
         self.zone1Frame.hide()
-        self.zone2FrameTitle = DirectFrame(parent=self.parent, relief=DGG.FLAT, frameColor=(1,
+        self.zone2FrameTitle = DirectFrame(parent=self._parent, relief=DGG.FLAT, frameColor=(1,
                                                                                             1,
                                                                                             0,
                                                                                             1), text='LeftArm Tattoo', text_scale=0.18, text_pos=(0,
@@ -133,7 +133,7 @@ class TattooGUI(DirectFrame, StateData.StateData):
                                                                                                                                                                                                                                                    0,
                                                                                                                                                                                                                                                    1), pos=(-1.0, 0.0, -0.2))
         self.zone2Frame.hide()
-        self.zone3FrameTitle = DirectFrame(parent=self.parent, relief=DGG.FLAT, frameColor=(1,
+        self.zone3FrameTitle = DirectFrame(parent=self._parent, relief=DGG.FLAT, frameColor=(1,
                                                                                             1,
                                                                                             0,
                                                                                             1), text='RightArm Tattoo', text_scale=0.18, text_pos=(0,
@@ -154,7 +154,7 @@ class TattooGUI(DirectFrame, StateData.StateData):
                                                                                                                                                                                                                                                    0,
                                                                                                                                                                                                                                                    1), pos=(-1.0, 0.0, -0.2))
         self.zone3Frame.hide()
-        self.zone4FrameTitle = DirectFrame(parent=self.parent, relief=DGG.FLAT, frameColor=(1,
+        self.zone4FrameTitle = DirectFrame(parent=self._parent, relief=DGG.FLAT, frameColor=(1,
                                                                                             1,
                                                                                             0,
                                                                                             1), text='Face Tattoo', text_scale=0.18, text_pos=(0,
@@ -175,7 +175,7 @@ class TattooGUI(DirectFrame, StateData.StateData):
                                                                                                                                                                                                                                                    0,
                                                                                                                                                                                                                                                    1), pos=(-1.0, 0.0, -0.2))
         self.zone4Frame.hide()
-        self.zone5FrameTitle = DirectFrame(parent=self.parent, relief=DGG.FLAT, frameColor=(1,
+        self.zone5FrameTitle = DirectFrame(parent=self._parent, relief=DGG.FLAT, frameColor=(1,
                                                                                             1,
                                                                                             0,
                                                                                             1), text='Zone5 Tattoo', text_scale=0.18, text_pos=(0,
@@ -196,7 +196,7 @@ class TattooGUI(DirectFrame, StateData.StateData):
                                                                                                                                                                                                                                                    0,
                                                                                                                                                                                                                                                    1), pos=(-1.0, 0.0, -0.2))
         self.zone5Frame.hide()
-        self.zone6FrameTitle = DirectFrame(parent=self.parent, relief=DGG.FLAT, frameColor=(1,
+        self.zone6FrameTitle = DirectFrame(parent=self._parent, relief=DGG.FLAT, frameColor=(1,
                                                                                             1,
                                                                                             0,
                                                                                             1), text='Zone6 Tattoo', text_scale=0.18, text_pos=(0,
@@ -217,7 +217,7 @@ class TattooGUI(DirectFrame, StateData.StateData):
                                                                                                                                                                                                                                                    0,
                                                                                                                                                                                                                                                    1), pos=(-1.0, 0.0, -0.2))
         self.zone6Frame.hide()
-        self.zone7FrameTitle = DirectFrame(parent=self.parent, relief=DGG.FLAT, frameColor=(1,
+        self.zone7FrameTitle = DirectFrame(parent=self._parent, relief=DGG.FLAT, frameColor=(1,
                                                                                             1,
                                                                                             0,
                                                                                             1), text='Zone7 Tattoo', text_scale=0.18, text_pos=(0,
@@ -238,7 +238,7 @@ class TattooGUI(DirectFrame, StateData.StateData):
                                                                                                                                                                                                                                                    0,
                                                                                                                                                                                                                                                    1), pos=(-1.0, 0.0, -0.2))
         self.zone7Frame.hide()
-        self.zone8FrameTitle = DirectFrame(parent=self.parent, relief=DGG.FLAT, frameColor=(1,
+        self.zone8FrameTitle = DirectFrame(parent=self._parent, relief=DGG.FLAT, frameColor=(1,
                                                                                             1,
                                                                                             0,
                                                                                             1), text='Zone8 Tattoo', text_scale=0.18, text_pos=(0,
@@ -294,34 +294,34 @@ class TattooGUI(DirectFrame, StateData.StateData):
          self.editZone1, self.editZone2, self.editZone3, self.editZone4, self.editZone5, self.editZone5, self.editZone5, self.editZone5]
 
     def loadTabs(self):
-        self.zone1Tab = DirectButton(parent=self.parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+        self.zone1Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
                                                                                                                                0.008), text='Chest', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone1_Tab], pos=(-0.97, 0, 1.02))
         self.zone1Tab.hide()
-        self.zone2Tab = DirectButton(parent=self.parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+        self.zone2Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
                                                                                                                                0.008), text='LeftArm', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone2_Tab], pos=(-0.72, 0, 1.02))
         self.zone2Tab.hide()
-        self.zone3Tab = DirectButton(parent=self.parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+        self.zone3Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
                                                                                                                                0.008), text='RightArm', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone3_Tab], pos=(-0.47, 0, 1.02))
         self.zone3Tab.hide()
-        self.zone4Tab = DirectButton(parent=self.parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+        self.zone4Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
                                                                                                                                0.008), text='Face', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone4_Tab], pos=(-0.22, 0, 1.02))
         self.zone4Tab.hide()
-        self.zone5Tab = DirectButton(parent=self.parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+        self.zone5Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
                                                                                                                                0.008), text='Zone5', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone5_Tab], pos=(0.03,
                                                                                                                                                                                                                                                                            0,
                                                                                                                                                                                                                                                                            1.02))
         self.zone5Tab.hide()
-        self.zone6Tab = DirectButton(parent=self.parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+        self.zone6Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
                                                                                                                                0.008), text='Zone6', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone6_Tab], pos=(0.28,
                                                                                                                                                                                                                                                                            0,
                                                                                                                                                                                                                                                                            1.02))
         self.zone6Tab.hide()
-        self.zone7Tab = DirectButton(parent=self.parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+        self.zone7Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
                                                                                                                                0.008), text='Zone7', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone7_Tab], pos=(0.53,
                                                                                                                                                                                                                                                                            0,
                                                                                                                                                                                                                                                                            1.02))
         self.zone7Tab.hide()
-        self.zone8Tab = DirectButton(parent=self.parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+        self.zone8Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
                                                                                                                                0.008), text='Zone8', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone8_Tab], pos=(0.78,
                                                                                                                                                                                                                                                                            0,
                                                                                                                                                                                                                                                                            1.02))
@@ -329,7 +329,7 @@ class TattooGUI(DirectFrame, StateData.StateData):
 
     def unload(self):
         del self.main
-        del self.parent
+        del self._parent
         del self.avatar
 
     def setMode(self, mode, updateAnyways=0):

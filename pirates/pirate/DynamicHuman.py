@@ -425,17 +425,18 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
         self.loadAnims(AnimDict, 'modelRoot', 'all')
         if loader.loadModel(filePrefix + '_' + '1000', allowInstance=True) != None:
             lodString = '1000'
+
         self.loadModel(filePrefix + '_' + lodString, 'modelRoot', '1000', copy)
         if loader.loadModel(filePrefix + '_' + '500', allowInstance=True) != None:
             lodString = '500'
+
         self.loadModel(filePrefix + '_' + lodString, 'modelRoot', '500', copy)
-        self.makeSubpart('head', ['def_head_base', 'zz_head01'], [])
-        self.makeSubpart('torso', ['zz_spine01', 'def_head01'], ['zz_head01'])
+        self.makeSubpart('head', ['zz_head01'], [])
+        self.makeSubpart('torso', ['zz_spine01'], ['zz_head01'])
         self.makeSubpart('legs', ['dx_root'], ['zz_spine01'])
         self.setSubpartsComplete(True)
         self.getWeaponJoints()
         self.eyeIrisTextures = loader.loadModel('models/misc/eye_iris.bam')
-        return
 
     def refreshBody(self):
         if self.style.getGender() == 'f':
@@ -446,6 +447,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
             gender = 0
             cjs = MaleBodyShapeControlJoints
             matrix = MaleBodyShapeControlJointMatrix
+
         type = self.style.getBodyShape()
         filePrefix = self.createAnimDict()
         self.loadAnims(AnimDict, 'modelRoot', 'all')
@@ -479,11 +481,13 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
                      0, 5, 20, 280]
                 else:
                     raise StandardError, 'Invalid avatar-detail: %s' % avatarDetail
+
         self.addLOD(500, dist[3], dist[2])
         if self.optimizeLOD:
             lowLOD = self.getLOD('500')
             lowLOD.setTextureOff(1000)
             lowLOD.setTransparency(0, 1000)
+
         self.addLOD(1000, dist[2], dist[1])
         self.addLOD(2000, dist[1], dist[0])
         self.getLODNode().setCenter(Point3(0, 0, 5))

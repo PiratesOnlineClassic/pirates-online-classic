@@ -37,7 +37,7 @@ class Nametag(ClickablePopup):
         self.qtColor = VBase4(1,1,1,1)
         self.colorCode = CCNormal
         self.avatar = None
-        self.icon = NodePath('icon')
+        self.icon = PandaNode('icon')
 
         self.frame = (0, 0, 0, 0)
 

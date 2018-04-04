@@ -42,3 +42,6 @@ multisamples 2
 prefer-parasite-buffer 1
 force-parasite-buffer 1
 alpha-bits 8
+
+# Tutorial:
+skip-tutorial #f

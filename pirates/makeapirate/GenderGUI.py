@@ -21,7 +21,7 @@ class GenderGUI(DirectFrame, StateData.StateData):
 
     def __init__(self, main=None):
         self.main = main
-        self.parent = main.bookModel
+        self._parent = main.bookModel
         self.avatar = main.avatar
         self.mode = None
         self.maleDNA = HumanDNA.HumanDNA('m')
@@ -64,7 +64,7 @@ class GenderGUI(DirectFrame, StateData.StateData):
     def unload(self):
         self.notify.debug('called genderGUI unload')
         del self.main
-        del self.parent
+        del self._parent
         del self.avatar
 
     def show(self):
@@ -78,7 +78,7 @@ class GenderGUI(DirectFrame, StateData.StateData):
         self.genderFemaleButton.hide()
 
     def setupButtons(self):
-        self.genderFrameTitle = DirectFrame(parent=self.parent, relief=None, text=PLocalizer.GenderFrameTitle, text_scale=0.18, text_pos=(0,
+        self.genderFrameTitle = DirectFrame(parent=self._parent, relief=None, text=PLocalizer.GenderFrameTitle, text_scale=0.18, text_pos=(0,
                                                                                                                                           0), text_fg=(1,
                                                                                                                                                        1,
                                                                                                                                                        1,

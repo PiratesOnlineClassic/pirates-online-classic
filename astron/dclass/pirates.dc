@@ -110,7 +110,7 @@ from pirates.instance import DistributedWelcomeWorld/AI
 from pirates.instance import DistributedInstanceWorld/AI
 from pirates.instance import DistributedTeleportZone/AI/UD
 from pirates.instance import DistributedTeleportMgr/AI
-from pirates.instance import DistributedTravelAgent/UD
+from pirates.instance import DistributedTravelAgent/AI/UD
 from pirates.instance import DistributedMatchMaker/AI/UD
 from pirates.instance import DistributedTeleportHandler/AI
 from pirates.uberdog import ClientServicesManager/UD

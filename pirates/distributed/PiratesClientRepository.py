@@ -110,11 +110,11 @@ class PiratesClientRepository(OTPClientRepository):
         self.codeRedemption = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_CODE_REDEMPTION, 'CodeRedemption')
         self.settingsMgr = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_SETTINGS_MANAGER, 'PiratesSettingsMgr')
         self.csm = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
-        self.wantSeapatch = base.config.GetBool('want-seapatch', 1)
-        self.wantSpecialEffects = base.config.GetBool('want-special-effects', 1)
-        self.wantMakeAPirate = base.config.GetBool('wantMakeAPirate', 0)
-        self.forceTutorial = base.config.GetBool('force-tutorial', 0)
-        self.skipTutorial = base.config.GetBool('skip-tutorial', 0)
+        self.wantSeapatch = base.config.GetBool('want-seapatch', True)
+        self.wantSpecialEffects = base.config.GetBool('want-special-effects', True)
+        self.wantMakeAPirate = base.config.GetBool('want-make-a-pirate', False)
+        self.forceTutorial = base.config.GetBool('force-tutorial', False)
+        self.skipTutorial = base.config.GetBool('skip-tutorial', False)
         self.tutorialObject = None
         self.avCreate = None
         self.currentCutscene = None
@@ -134,7 +134,9 @@ class PiratesClientRepository(OTPClientRepository):
         self.questDynMap = QuestLadderDynMap.QuestLadderDynMap()
         self.questDependency = QuestLadderDependency()
         self.human = [
-         MasterHuman.MasterHuman(), MasterHuman.MasterHuman()]
+            MasterHuman.MasterHuman(),
+            MasterHuman.MasterHuman()]
+
         self.human[0].billboardNode.removeNode()
         self.human[1].billboardNode.removeNode()
         self.human[0].style = HumanDNA.HumanDNA('m')
@@ -150,9 +152,9 @@ class PiratesClientRepository(OTPClientRepository):
         self.preloadedCutscenes = {}
         if want_fifothreads:
             taskMgr.doYield = self.taskManagerDoYieldCall
+
         self.loadingScreen = LoadingScreen.LoadingScreen(self)
         self.defaultShard = 0
-        return
 
     def gotoFirstScreen(self):
         self.startReaderPollTask()
@@ -215,20 +217,21 @@ class PiratesClientRepository(OTPClientRepository):
             self.notify.info('handleAvatarChooserDone: shutting down')
             self.loginFSM.request('shutdown')
             return
+
         subId, slot = self.avChoice.getChoice()
         self.avChoice.exit()
-        access = self.accountDetailRecord.subDetails[subId].subAccess
-        base.setEmbeddedFrameMode(access)
         if done == 'chose':
             av = self.avList[subId][slot]
             if av.dna.getTutorial() < 3 and self.skipTutorial == 0:
                 self.tutorial = 1
             else:
                 self.tutorial = 0
+
             self.loginFSM.request('waitForSetAvatarResponse', [av])
         else:
             if done == 'create':
-                self.loginFSM.request('createAvatar', [self.avList[subId], slot, subId])
+                self.loginFSM.request('createAvatar', [self.avList[subId],
+                    slot, subId])
 
     def exitChooseAvatar(self):
         self.handler = None
@@ -236,10 +239,8 @@ class PiratesClientRepository(OTPClientRepository):
         self.avChoice.unload()
         self.avChoice = None
         self.ignore(self.avChoiceDoneEvent)
-        return
 
     def enterCreateAvatar(self, avList, index, subId):
-        self.handler = self.handleCreateAvatar
         if self.skipTutorial:
             self.tutorial = 0
             self.avCreate = MakeAPirate(avList, 'makeAPirateComplete', subId, index, self.isPaid())
@@ -278,25 +279,8 @@ class PiratesClientRepository(OTPClientRepository):
             self.avCreate.unload()
             self.avCreate = None
             self.handler = None
+
         self.ignore('createdNewAvatar')
-        return
-
-    def handleCreateAvatar(self, msgType, di):
-        if msgType == CLIENT_CREATE_AVATAR_RESP:
-            self.handleCreateAvatarResponseMsg(di)
-        else:
-            self.handleMessageType(msgType, di)
-
-    def handleCreateAvatarResponseMsg(self, di):
-        echoContext = di.getUint16()
-        returnCode = di.getUint8()
-        if returnCode == 0:
-            self.avId = di.getUint32()
-            newPotAv = PotentialAvatar(self.avId, [
-             self.newName, '', '', ''], self.newDNA, self.newPosition, 1)
-            self.loginFSM.request('waitForSetAvatarResponse', [newPotAv])
-        else:
-            self.notify.error('name rejected')
 
     def sendGetAvatarsMsg(self):
         self.accept('avatarListFailed', self.avatarListFailed)

@@ -69,7 +69,7 @@ class DynamicLight(NodePath):
         self.turnOff()
         self.type = type
         if isInit:
-            NodePath.NodePath.__init__(self, 'dynamicLight')
+            NodePath.__init__(self, 'dynamicLight')
         if self.lightNodePath:
             self.lightNodePath.removeNode()
         self.lightNodePath = self.attachNewNode(light)
