@@ -88,9 +88,11 @@ class PiratesInternalRepository(AstronInternalRepository):
                 if hasattr(self, 'distributedDistrict'):
                     districtName = self.distributedDistrict.getName()
 
-                header = 'Detected potential hacker on %s.' % districtName
-                webhookMessage = SlackWebhook(hackWebhookUrl, message='@everyone' if config.GetBool('discord-ping-everyone', not config.GetBool('want-dev', False)) else '')
+                discordMessage = '@everyone ' if config.GetBool('discord-ping-everyone', not config.GetBool('want-dev', False)) else ''
+                discordMessage += config.GetString('discord-hacker-message', '')
+                webhookMessage = SlackWebhook(hackWebhookUrl, message=discordMessage)
 
+                header = 'Detected potential hacker on %s.' % districtName
                 attachment = SlackAttachment(pretext=message, title=header)
 
                 for kwarg in kwargs:
@@ -102,7 +104,7 @@ class PiratesInternalRepository(AstronInternalRepository):
                 if avatar:
                     attachment.addField(SlackField(title='Character Pos', value=str(avatar.getPos())))
                     attachment.addField(SlackField(title='Character Name', value=avatar.getName()))
-                    attachment.addField(SlackField(title='Island', value=avatar.getParentObj().getLocalizerName()))
+                    #attachment.addField(SlackField(title='Island', value=avatar.getParentObj().getLocalizerName()))
 
                 attachment.addField(SlackField())
                 attachment.addField(SlackField(title='Game Account Id', value=accountId))
