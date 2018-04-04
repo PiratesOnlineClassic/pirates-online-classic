@@ -1,5 +1,6 @@
 # Window:
 window-title Pirates Online Classic
+icon-filename phase_3/etc/Pirates_Adds.ico
 win-orig -2 -2
 win-size 800 600
 
