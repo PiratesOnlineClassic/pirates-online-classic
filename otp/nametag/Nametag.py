@@ -124,5 +124,7 @@ class Nametag(ClickablePopup):
 
     def showName(self):
         if not self.font:
-            # If no font is set, we can't actually display a name yet...
+            # If no font is set, we can't display anything yet...
             return
+
+        self.innerNP.attachNewNode(self.icon.node())

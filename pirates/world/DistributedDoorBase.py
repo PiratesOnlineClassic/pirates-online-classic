@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.world.DistributedDoorBase
 import string
 
 from direct.distributed.ClockDelta import *
@@ -111,9 +107,11 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
         if not doorLeft.isEmpty():
             self.openDoorIval.append(LerpHprInterval(doorLeft, self.tOpen, Vec3(-90, 0, 0)))
             self.closeDoorIval.append(LerpHprInterval(doorLeft, self.tOpen, Vec3(0, 0, 0)))
+
         if not doorRight.isEmpty():
             self.openDoorIval.append(LerpHprInterval(doorRight, self.tOpen, Vec3(90, 0, 0)))
             self.closeDoorIval.append(LerpHprInterval(doorRight, self.tOpen, Vec3(0, 0, 0)))
+
         doorLocator = parent.find(self.doorLocatorStr)
         modelName = ''
         self.soundNode = doorLocator
@@ -122,28 +120,26 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
             self.setPos(0, 0, 0)
             self.wrtReparentTo(self.getParentObj())
             modelName = doorLocator.getParent().getParent().getName()
-        else:
-            if not doorLeft.isEmpty() and not doorRight.isEmpty():
-                doorPos = doorRight.getPos(doorLeft) * 0.5
-                self.reparentTo(doorLeft)
-                self.setPos(doorPos)
-                self.wrtReparentTo(self.getParentObj())
-                modelName = doorLeft.getParent().getParent().getName()
-                self.soundNode = doorRight
-            else:
-                if not doorLeft.isEmpty():
-                    self.reparentTo(doorLeft)
-                    self.setPos(4, 0, 0)
-                    self.wrtReparentTo(self.getParentObj())
-                    modelName = doorLeft.getParent().getParent().getName()
-                    self.soundNode = doorLeft
-                else:
-                    if not doorRight.isEmpty():
-                        self.reparentTo(doorRight)
-                        self.setPos(-4, 0, 0)
-                        self.wrtReparentTo(self.getParentObj())
-                        modelName = doorRight.getParent().getParent().getName()
-                        self.soundNode = doorRight
+        elif not doorLeft.isEmpty() and not doorRight.isEmpty():
+            doorPos = doorRight.getPos(doorLeft) * 0.5
+            self.reparentTo(doorLeft)
+            self.setPos(doorPos)
+            self.wrtReparentTo(self.getParentObj())
+            modelName = doorLeft.getParent().getParent().getName()
+            self.soundNode = doorRight
+        elif not doorLeft.isEmpty():
+            self.reparentTo(doorLeft)
+            self.setPos(4, 0, 0)
+            self.wrtReparentTo(self.getParentObj())
+            modelName = doorLeft.getParent().getParent().getName()
+            self.soundNode = doorLeft
+        elif not doorRight.isEmpty():
+            self.reparentTo(doorRight)
+            self.setPos(-4, 0, 0)
+            self.wrtReparentTo(self.getParentObj())
+            modelName = doorRight.getParent().getParent().getName()
+            self.soundNode = doorRight
+
         if doorLeft.isEmpty() and doorRight.isEmpty():
             self.hasDoors = 0
             self.openDoorIval.append(Wait(self.tOpen))
@@ -151,16 +147,14 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
         else:
             self.hasDoors = 1
         if string.find(modelName, 'english') >= 0:
-            self.openSfx = base.loader.loadSfx('audio/sfx_door_english_open.mp3')
+            self.openSfx = base.loadSfx('audio/sfx_door_english_open.mp3')
+        elif string.find(modelName, 'shanty') >= 0:
+            self.openSfx = base.loadSfx('audio/sfx_door_shanty_open.mp3')
+        elif string.find(modelName, 'spanish') >= 0:
+            self.openSfx = base.loadSfx('audio/sfx_door_spanish_open.mp3')
         else:
-            if string.find(modelName, 'shanty') >= 0:
-                self.openSfx = base.loader.loadSfx('audio/sfx_door_shanty_open.mp3')
-            else:
-                if string.find(modelName, 'spanish') >= 0:
-                    self.openSfx = base.loader.loadSfx('audio/sfx_door_spanish_open.mp3')
-                else:
-                    self.openSfx = base.loader.loadSfx('audio/sfx_door_english_open.mp3')
-        self.closeSfx = base.loader.loadSfx('audio/sfx_door_shanty_slam.mp3')
+            self.openSfx = base.loadSfx('audio/sfx_door_english_open.mp3')
+        self.closeSfx = base.loadSfx('audio/sfx_door_shanty_slam.mp3')
         self.openDoorIval.append(Func(base.playSfx, self.openSfx, node=self.soundNode, volume=0.7, cutoff=100))
 
     def getOtherSideParentModel(self):
@@ -223,4 +217,3 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
 
     def turnOff(self):
         pass
-# okay decompiling .\pirates\world\DistributedDoorBase.pyc
