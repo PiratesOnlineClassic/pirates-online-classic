@@ -121,64 +121,57 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
                 self.whiteListEntry.requestMode('AllChat')
             else:
                 self.chatEntry.requestMode('AllChat')
-        else:
-            if self.preferredMode == 'Crew':
-                if localAvatar.getBandId():
-                    self.chatPanel.activateCrewChat()
-                    if self.noChat:
-                        pass
-                    else:
-                        if self.whiteListActive:
-                            self.whiteListEntry.requestMode('CrewChat')
-                        else:
-                            self.chatEntry.requestMode('CrewChat')
-                    self.speedEntry.requestMode('CrewChat')
+        elif self.preferredMode == 'Crew':
+            if localAvatar.getBandId():
+                self.chatPanel.activateCrewChat()
+                if self.noChat:
+                    pass
+                elif self.whiteListActive:
+                    self.whiteListEntry.requestMode('CrewChat')
                 else:
-                    self.activateChat('All')
+                    self.chatEntry.requestMode('CrewChat')
+                self.speedEntry.requestMode('CrewChat')
             else:
-                if self.preferredMode == 'Guild':
-                    if localAvatar.getGuildId():
-                        self.chatPanel.activateGuildChat()
-                        if self.noChat:
-                            pass
-                        else:
-                            if self.whiteListActive:
-                                self.whiteListEntry.requestMode('GuildChat')
-                            else:
-                                self.chatEntry.requestMode('GuildChat')
-                        self.speedEntry.requestMode('GuildChat')
-                    else:
-                        self.activateChat('All')
+                self.activateChat('All')
+        elif self.preferredMode == 'Guild':
+            if localAvatar.getGuildId():
+                self.chatPanel.activateGuildChat()
+                if self.noChat:
+                    pass
+                elif self.whiteListActive:
+                    self.whiteListEntry.requestMode('GuildChat')
                 else:
-                    if self.preferredMode == 'ShipPVP':
-                        if not hasattr(localAvatar.ship, 'getSiegeTeam'):
-                            self.activateChat('All')
-                        elif localAvatar.ship.getSiegeTeam():
-                            self.chatPanel.activateShipPVPChat()
-                            if self.noChat:
-                                pass
-                            else:
-                                if self.whiteListActive:
-                                    self.whiteListEntry.requestMode('ShipPVPChat')
-                                else:
-                                    self.chatEntry.requestMode('ShipPVPChat')
-                            self.speedEntry.requestMode('ShipPVP')
-                        else:
-                            self.activateChat('All')
-                    else:
-                        if self.preferredMode == 'Whisper' and self.lastWhisper:
-                            id, isPlayer = self.lastWhisper
-                            handle = None
-                            if id:
-                                if isPlayer:
-                                    handle = base.cr.identifyPlayer(id)
-                                else:
-                                    handle = base.cr.identifyAvatar(id)
-                            if handle:
-                                self.activateWhisperChat(id, isPlayer)
-                                self.chatPanel.activateWhisperChat(*self.lastWhisper)
-                            else:
-                                self.activateChat(self.lastPreferred)
+                    self.chatEntry.requestMode('GuildChat')
+                self.speedEntry.requestMode('GuildChat')
+            else:
+                self.activateChat('All')
+        elif self.preferredMode == 'ShipPVP':
+            if not hasattr(localAvatar.ship, 'getSiegeTeam'):
+                self.activateChat('All')
+            elif localAvatar.ship.getSiegeTeam():
+                self.chatPanel.activateShipPVPChat()
+                if self.noChat:
+                    pass
+                elif self.whiteListActive:
+                    self.whiteListEntry.requestMode('ShipPVPChat')
+                else:
+                    self.chatEntry.requestMode('ShipPVPChat')
+                self.speedEntry.requestMode('ShipPVP')
+            else:
+                self.activateChat('All')
+        elif self.preferredMode == 'Whisper' and self.lastWhisper:
+            id, isPlayer = self.lastWhisper
+            handle = None
+            if id:
+                if isPlayer:
+                    handle = base.cr.identifyPlayer(id)
+                else:
+                    handle = base.cr.identifyAvatar(id)
+            if handle:
+                self.activateWhisperChat(id, isPlayer)
+                self.chatPanel.activateWhisperChat(*self.lastWhisper)
+            else:
+                self.activateChat(self.lastPreferred)
         return
 
     def activateWhisperChat(self, whisperId, toPlayer=False):
