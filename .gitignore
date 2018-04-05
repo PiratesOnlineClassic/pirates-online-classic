@@ -120,3 +120,7 @@ cache/
 
 # Tools
 tools/
+
+# logs/screens
+logs/
+screenshots/

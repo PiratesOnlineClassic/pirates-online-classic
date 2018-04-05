@@ -489,24 +489,14 @@ class PiratesBase(OTPBase):
     def takeScreenShot(self):
         self.notify.info('Beginning screenshot capture')
         dt = time.localtime()
-        date_time = '%d-%d-%d_%d-%d-%d' % (dt[0], dt[1], dt[2], dt[3], dt[4], dt[5])
-        uFilename = 'screenshot_' + date_time + '.' + base.screenshotExtension
+        date_time = '%04d-%02d-%02d_%02d-%02d-%02d' % (dt[0], dt[1], dt[2], dt[3], dt[4], dt[5])
+        uFilename = 'screenshots' + '/' + 'screenshot_' + date_time + '.' + base.screenshotExtension
+        pandafile = Filename(str(ExecutionEnvironment.getCwd()) + '/' + str(uFilename))
+        pandafile.makeDir()
         fn = base.screenshot(namePrefix=uFilename, defaultFilename=0)
-        pandafile = Filename(str(ExecutionEnvironment.getCwd()) + '/' + str(fn))
         winfile = pandafile.toOsSpecific()
         self.notify.info('Screenshot captured: ' + winfile)
-        screenShotNotice = DirectLabel(text='Screenshot captured:\n' + winfile, scale=0.05, pos=(0.0,
-                                                                                                 0.0,
-                                                                                                 0.3), text_bg=(1,
-                                                                                                                1,
-                                                                                                                1,
-                                                                                                                0), text_fg=(1,
-                                                                                                                             1,
-                                                                                                                             1,
-                                                                                                                             1), frameColor=(1,
-                                                                                                                                             1,
-                                                                                                                                             1,
-                                                                                                                                             0), text_font=PiratesGlobals.getInterfaceOutlineFont())
+        screenShotNotice = DirectLabel(text='Screenshot captured:\n' + winfile, scale=0.05, pos=(0.0, 0.0, 0.3), text_bg=(1, 1, 1, 0), text_fg=(1, 1, 1, 1), frameColor=(1, 1, 1, 0), text_font=PiratesGlobals.getInterfaceOutlineFont())
         screenShotNotice.reparentTo(base.a2dBottomCenter)
         screenShotNotice.setBin('gui-popup', 0)
 
@@ -514,7 +504,7 @@ class PiratesBase(OTPBase):
             print 'cleanup'
             screenShotNotice.destroy()
 
-        taskMgr.doMethodLater(3.0, clearScreenshotMsg, 'clearWarning')
+        taskMgr.doMethodLater(3.0, clearScreenshotMsg, 'clearScreenshot')
 
     def addCullBins(self):
         cbm = CullBinManager.getGlobalPtr()
