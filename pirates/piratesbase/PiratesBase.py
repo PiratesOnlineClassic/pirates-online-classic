@@ -67,32 +67,26 @@ class PiratesBase(OTPBase):
             self.getDisplayResolutions(bits_per_pixel, base.pipe)
         use_recommended_options = False
         options = Options()
-        if __dev__:
-            Options.DEFAULT_FILE_PATH = Filename.expandFrom('$HOME/game_options.txt').toOsSpecific()
-            Options.WORKING_FILE_PATH = Filename.expandFrom('$HOME/last_working_options.txt').toOsSpecific()
-            Options.POSSIBLE_WORKING_FILE_PATH = Filename.expandFrom('$HOME/p_working_options.txt').toOsSpecific()
         options_loaded = options.load(Options.DEFAULT_FILE_PATH)
         if options_loaded:
             if options.state == Options.DEFAULT_STATE or options.state == Options.NEW_STATE:
                 options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
-            else:
-                if options.state == Options.ATTEMPT_STATE:
-                    working_options = Options()
-                    if working_options.load(Options.WORKING_FILE_PATH):
-                        options = working_options
-                        working_options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_WORKING_STATE)
-                    else:
-                        options.config_to_options()
-                        use_recommended_options = True
+            elif options.state == Options.ATTEMPT_STATE:
+                working_options = Options()
+                if working_options.load(Options.WORKING_FILE_PATH):
+                    options = working_options
+                    working_options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_WORKING_STATE)
                 else:
-                    if options.state == Options.WORKING_STATE:
-                        options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
-                    else:
-                        if options.state == Options.ATTEMPT_WORKING_STATE:
-                            options.config_to_options()
-                            use_recommended_options = True
-                        else:
-                            options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
+                       options.config_to_options()
+                       use_recommended_options = True
+            elif options.state == Options.WORKING_STATE:
+                options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
+            else:
+                if options.state == Options.ATTEMPT_WORKING_STATE:
+                    options.config_to_options()
+                    use_recommended_options = True
+                else:
+                    options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
             string = options.pipeOptionsToPrcData()
             if string:
                 loadPrcFileData('game_options', string)
@@ -119,11 +113,11 @@ class PiratesBase(OTPBase):
                     break
 
         options.automaticGrapghicsApiSelection(base.pipe)
-        if use_recommended_options:
-            options.recommendedOptions(base.pipe, False)
-            options.log('Recommended Game Options')
-        overwrite_options = True
         # TODO: FIXME!
+        #if use_recommended_options:
+        #    options.recommendedOptions(base.pipe, False)
+        #    options.log('Recommended Game Options')
+        #overwrite_options = True
         #options.verifyOptions(base.pipe, overwrite_options)
         string = options.optionsToPrcData()
         loadPrcFileData('game_options', string)
@@ -409,17 +403,16 @@ class PiratesBase(OTPBase):
         if sys.platform == 'darwin':
             import os
             os.system('/usr/bin/open %s' % url)
+        elif sys.platform == 'linux2':
+            import webbrowser
+            webbrowser.open(url)
         else:
-            if sys.platform == 'linux2':
+            try:
                 import webbrowser
                 webbrowser.open(url)
-            else:
-                try:
-                    import webbrowser
-                    webbrowser.open(url)
-                except WindowsError, e:
-                    import os
-                    os.system('explorer "%s"' % url)
+            except WindowsError, e:
+                import os
+                os.system('explorer "%s"' % url)
 
     def refreshAds(self):
         self.notify.debug('Refresh Ads')
