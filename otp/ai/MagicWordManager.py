@@ -152,8 +152,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
                 response = response[1:]
             self.setMagicWordResponse(response)
         elif wordIs('~exec'):
-            ChatManager = ChatManager
-            import otp.chat
+            from otp.chat import ChatManager
             ChatManager.ChatManager.execChat = 1
         elif wordIs('~run'):
             self.toggleRun()
@@ -219,8 +218,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
                     fEnableLight = 1
 
             base.startTk()
-            DirectSession = DirectSession
-            import direct.directtools
+            from direct.directtools import DirectSession
             if fEnableLight:
                 direct.enableLight()
             else:
@@ -272,7 +270,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             axis10.setPos(base.localAvatar, 0, 0, 0)
             axis10.setScale(10)
             axis10.setHpr(render, 0, 0, 0)
-            axis10.setColorScale(1, 1, 1, 0.40000000000000002)
+            axis10.setColorScale(1, 1, 1, 0.4)
             axis10.setTransparency(1)
         elif wordIs('~clearAxes') or wordIs('~clearAxis'):
             render.findAllMatches('**/xyzAxis.egg').detach()
@@ -287,7 +285,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             onScreenDebug.enabled = not (onScreenDebug.enabled)
         elif wordIs('~osdScale'):
             args = word.split()
-            defScale = 0.050000000000000003
+            defScale = 0.05
             if len(args) > 1:
                 scale = float(args[1])
             else:
@@ -314,8 +312,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             self.setMagicWordResponse(response)
         elif wordIs('~objects'):
             args = word.split()
-            ObjectReport = ObjectReport
-            import direct.showbase
+            from direct.showbase import ObjectReport
             report = ObjectReport.ObjectReport('client ~objects')
             if 'all' in args:
                 self.notify.info('printing full object set...')
@@ -657,8 +654,8 @@ class MagicWordManager(DistributedObject.DistributedObject):
         tn.setText(' ')
         numXPages = 2
         numYPages = 2
-        pageScale = 0.80000000000000004
-        pageMargin = 0.10000000000000001
+        pageScale = 0.8
+        pageMargin = 0.1
         numPages = font.getNumPages()
         x = 0
         y = 0
