@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pirate.FPSCamera
 import math
 
 from direct.directnotify import DirectNotifyGlobal
@@ -18,11 +14,9 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('FPSCamera')
 
     class ParamSet(ParamObj.ParamSet):
-        __module__ = __name__
         Params = {'camOffset': Vec3(0, -14, 5.5)}
 
     UpdateTaskName = 'FPSCamUpdateTask'
@@ -49,23 +43,24 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
             self.setDefaultParams()
         else:
             params.applyTo(self)
+
         self.zIval = None
         self.camIval = None
         self.forceMaxDistance = True
-        return
 
     def destroy(self):
         if self.zIval:
             self.zIval.finish()
             self.zIval = None
+
         if self.camIval:
             self.camIval.finish()
             self.camIval = None
+
         del self.subject
         NodePath.removeNode(self)
         ParamObj.destroy(self)
         CameraMode.CameraMode.destroy(self)
-        return
 
     def getName(self):
         return 'FPS'
@@ -94,10 +89,10 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
         if self.camIval:
             self.camIval.finish()
             self.camIval = None
+
         self._stopCollisionCheck()
         base.camNode.setLodCenter(NodePath())
         CameraMode.CameraMode.exitActive(self)
-        return
 
     def enableMouseControl(self):
         CameraMode.CameraMode.enableMouseControl(self)
@@ -112,7 +107,9 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
             autoRun = localAvatar.getAutoRun()
         else:
             autoRun = False
-        return (inputState.isSet('forward') or inputState.isSet('reverse') or inputState.isSet('turnRight') or inputState.isSet('turnLeft') or inputState.isSet('slideRight') or inputState.isSet('slideLeft') or autoRun) and self.subject.controlManager.isEnabled
+
+        return (inputState.isSet('forward') or inputState.isSet('reverse') or inputState.isSet('turnRight') or inputState.isSet('turnLeft') or inputState.isSet('slideRight') or \
+            inputState.isSet('slideLeft') or autoRun) and self.subject.controlManager.isEnabled
 
     def isWeaponEquipped(self):
         return self.subject.isWeaponDrawn
@@ -120,19 +117,23 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
     def _avatarFacingTask(self, task):
         if hasattr(base, 'oobeMode') and base.oobeMode:
             return task.cont
+
         if self.isSubjectMoving() or self.isWeaponEquipped():
             camH = self.getH(render)
             subjectH = self.subject.getH(render)
             if abs(camH - subjectH) > 0.01:
                 self.subject.setH(render, camH)
                 self.setH(0)
+
         return task.cont
 
     def _mouseUpdateTask(self, task):
         if hasattr(base, 'oobeMode') and base.oobeMode:
             return task.cont
+
         if base.mouseWatcherNode.hasMouse():
             self.cTravOnFloor.traverse(render)
+
         subjectMoving = self.isSubjectMoving()
         subjectTurning = (inputState.isSet('turnRight') or inputState.isSet('turnLeft')) and self.subject.controlManager.isEnabled
         weaponEquipped = self.isWeaponEquipped()
@@ -140,12 +141,15 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
             hNode = self.subject
         else:
             hNode = self
+
         if self.mouseDelta[0] or self.mouseDelta[1]:
             dx, dy = self.mouseDelta
             if subjectTurning:
                 dx = 0
+
             if hasattr(base, 'options') and base.options.mouse_look:
                 dy = -dy
+
             hNode.setH(hNode, -dx * self.SensitivityH)
             curP = self.getP()
             newP = curP + -dy * self.SensitivityP
@@ -154,7 +158,9 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
             if self.baseH:
                 messenger.send('pistolMoved')
                 self._checkHBounds(hNode)
+
             self.setR(render, 0)
+
         return task.cont
 
     def setHBounds(self, baseH, minH, maxH):
@@ -165,11 +171,11 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
             hNode = self.subject
         else:
             hNode = self
+
         hNode.setH(maxH)
 
     def clearHBounds(self):
         self.baseH = self.minH = self.maxH = None
-        return
 
     def _checkHBounds(self, hNode):
         currH = fitSrcAngle2Dest(hNode.getH(), 180)
@@ -240,20 +246,28 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self._collSolid = CollisionSegment(0, 0, 0, 0, -(self._maxDistance + 1.0), 0)
         collSolidNode = CollisionNode('FPSCam.CollSolid')
         collSolidNode.addSolid(self._collSolid)
-        collSolidNode.setFromCollideMask(OTPGlobals.CameraBitmask | OTPGlobals.CameraTransparentBitmask | OTPGlobals.FloorBitmask)
+        collSolidNode.setFromCollideMask(OTPGlobals.CameraBitmask | OTPGlobals.CameraTransparentBitmask | \
+            OTPGlobals.FloorBitmask)
+
         collSolidNode.setIntoCollideMask(BitMask32.allOff())
         self._collSolidNp = self.attachNewNode(collSolidNode)
         self._cHandlerQueue = CollisionHandlerQueue()
         self._cTrav = CollisionTraverser('FPSCam.cTrav')
         self._cTrav.addCollider(self._collSolidNp, self._cHandlerQueue)
-        taskMgr.add(self._collisionCheckTask, FPSCamera.CollisionCheckTaskName, priority=45)
+        taskMgr.add(self._collisionCheckTask, FPSCamera.CollisionCheckTaskName,
+            priority=45)
 
     def _collisionCheckTask(self, task=None):
         if hasattr(base, 'oobeMode'):
             return Task.cont
+
         self._cTrav.traverse(render)
         if self._cHandlerQueue.getNumEntries() > 0:
-            self._cHandlerQueue.sortEntries()
+            try:
+                self._cHandlerQueue.sortEntries()
+            except AssertionError:
+                return Task.cont
+
             collEntry = self._cHandlerQueue.getEntry(0)
             cPoint = collEntry.getSurfacePoint(self)
             cNormal = collEntry.getSurfaceNormal(self)
@@ -268,7 +282,9 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
             if self.forceMaxDistance:
                 camera.setPos(self.camOffset)
                 camera.setZ(0)
+
             self.subject.getGeomNode().show()
+
         return Task.cont
 
     def _stopCollisionCheck(self):
@@ -283,7 +299,10 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
     def lerpFromZOffset(self, z=0.0, duration=1):
         if self.zIval:
             self.zIval.finish()
-        self.zIval = LerpFunc(self.setZ, duration, fromData=z + self.camOffset[2], toData=self.camOffset[2])
+
+        self.zIval = LerpFunc(self.setZ, duration, fromData=z + self.camOffset[2],
+            toData=self.camOffset[2])
+
         self.zIval.start()
         self.zIval.setT(0)
 
