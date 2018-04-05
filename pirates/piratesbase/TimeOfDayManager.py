@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesbase.TimeOfDayManager
 import random
 
 from direct.directnotify import DirectNotifyGlobal
@@ -453,22 +449,19 @@ class TimeOfDayManager(FSM.FSM):
     def setEnvironment(self, envId, geom=None):
         if envId == TODGlobals.ENV_OFF:
             self.request('Off')
+        elif envId == TODGlobals.ENV_SWAMP and self.currentState not in [PiratesGlobals.TOD_HALLOWEEN, PiratesGlobals.TOD_FULLMOON, PiratesGlobals.TOD_HALF2FULLMOON, PiratesGlobals.TOD_FULL2HALFMOON]:
+            self.fixedSky = True
+            base.win.setClearColor(TODGlobals.SkyColors[PiratesGlobals.TOD_SWAMP])
+            self.skyGroup.setSky(PiratesGlobals.TOD_SWAMP)
+        elif envId == TODGlobals.ENV_CAVE:
+            self._prepareState(PiratesGlobals.TOD_NIGHT)
+            self.skyGroup.stash()
+            self.fixedSky = True
+            self.pause()
         else:
-            if envId == TODGlobals.ENV_SWAMP and self.currentState not in [PiratesGlobals.TOD_HALLOWEEN, PiratesGlobals.TOD_FULLMOON, PiratesGlobals.TOD_HALF2FULLMOON, PiratesGlobals.TOD_FULL2HALFMOON]:
-                self.fixedSky = True
-                base.win.setClearColor(TODGlobals.SkyColors[PiratesGlobals.TOD_SWAMP])
-                self.skyGroup.setSky(PiratesGlobals.TOD_SWAMP)
-            else:
-                if envId == TODGlobals.ENV_CAVE:
-                    self._prepareState(PiratesGlobals.TOD_NIGHT)
-                    self.skyGroup.stash()
-                    self.fixedSky = True
-                    self.pause()
-                else:
-                    self.unpause()
-                    self.fixedSky = False
-                    if self.skyEnabled:
-                        self.skyGroup.unstash()
+            self.unpause()
+            self.fixedSky = False
+            if self.skyEnabled:
+                self.skyGroup.unstash()
         self.environment = envId
         self.enterInitState()
-# okay decompiling .\pirates\piratesbase\TimeOfDayManager.pyc
