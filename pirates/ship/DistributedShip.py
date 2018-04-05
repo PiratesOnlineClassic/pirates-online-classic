@@ -1776,7 +1776,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                 base.cTrav.removeCollider(self.rammingSphereNodePath)
                 self.collHandler = None
             if self.rammingSphereNodePath:
-                self.rammingSphereNodePath.remove_node()
+                self.rammingSphereNodePath.removeNode()
                 self.rammingSphereNodePath = None
         return
 
