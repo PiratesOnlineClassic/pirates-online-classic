@@ -3,6 +3,7 @@ from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.GridParent import GridParent
 from pirates.leveleditor import ObjectList
+from pirates.piratesbase import PLocalizer
 
 class ClientAreaBuilderAI(DirectObject):
     notify = directNotify.newCategory('ClientAreaBuilderAI')
@@ -106,7 +107,7 @@ class ClientAreaBuilderAI(DirectObject):
 
         island = DistributedIslandAI(self.air)
         island.setUniqueId(objKey)
-        island.setName(objectData.get('Name', ''))
+        island.setName(PLocalizer.LocationNames.get(objKey, 'Island'))
         island.setModelPath(objectData['Visual']['Model'])
         island.setPos(objectData.get('Pos', (0, 0, 0)))
         island.setHpr(objectData.get('Hpr', (0, 0, 0)))

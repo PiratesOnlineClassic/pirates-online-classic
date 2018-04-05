@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.world.DistributedIsland
 import imp
 import random
 import re
@@ -244,36 +240,31 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.startCustomEffects()
             self.handleEnterGameArea()
             return
-        else:
-            if level == 1:
-                localAvatar.setInterest(self.doId, PiratesGlobals.IslandShipDeployerZone, [
-                 'ShipDeployer'])
-                self.startVolcanoRestEffects()
-                self.adjustSmokeParentAndPos(self.geom, Vec3(-40.0, 75.0, 600.0))
-                self.showName()
-                self.setIslandWaterParameters(True)
-                if not self.undockable:
-                    localAvatar.setPort(self.doId)
-                return
-            else:
-                if level == 2:
-                    self.unloadIslandLowLod()
-                    self.retrieveIslandTerrain()
-                    self.setupIslandGeom()
-                    self.setIslandWaterParameters(True)
-                    self.addToOceanSeapatch()
-                    return
-                else:
-                    if level == 3:
-                        self.allEnabled = False
-                        self.loadIslandLowLod()
-                        self.startVolcanoSmokeEffect()
-                        self.adjustSmokeParentAndPos(self.islandLowLod, Vec3(-40.0, 75.0, 600.0))
-                        self.showName()
-                        return
-                    else:
-                        if level == 4:
-                            pass
+        elif level == 1:
+            localAvatar.setInterest(self.doId, PiratesGlobals.IslandShipDeployerZone, ['ShipDeployer'])
+            self.startVolcanoRestEffects()
+            self.adjustSmokeParentAndPos(self.geom, Vec3(-40.0, 75.0, 600.0))
+            self.showName()
+            self.setIslandWaterParameters(True)
+            if not self.undockable:
+                localAvatar.setPort(self.doId)
+            return
+        elif level == 2:
+            self.unloadIslandLowLod()
+            self.retrieveIslandTerrain()
+            self.setupIslandGeom()
+            self.setIslandWaterParameters(True)
+            self.addToOceanSeapatch()
+            return
+        elif level == 3:
+            self.allEnabled = False
+            self.loadIslandLowLod()
+            self.startVolcanoSmokeEffect()
+            self.adjustSmokeParentAndPos(self.islandLowLod, Vec3(-40.0, 75.0, 600.0))
+            self.showName()
+            return
+        elif level == 4:
+            pass
 
     @report(types=['frameCount', 'args'], dConfigParam=['want-connector-report', 'want-jail-report', 'want-island-report'])
     def unloadZoneLevel(self, level):
@@ -1233,4 +1224,3 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
 
         DistributedCartesianGrid.DistributedCartesianGrid.handleAvatarZoneChange(self, av, zoneId)
         return
-# okay decompiling .\pirates\world\DistributedIsland.pyc
