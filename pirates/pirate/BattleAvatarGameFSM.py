@@ -56,7 +56,7 @@ class BattleAvatarGameFSM(FSM.FSM):
     def cleanup(self):
         FSM.FSM.cleanup(self)
         if self.treasureChest:
-            self.treasureChest.remove()
+            self.treasureChest.remove_node()
             del self.treasureChest
         if self.av:
             self.av = None

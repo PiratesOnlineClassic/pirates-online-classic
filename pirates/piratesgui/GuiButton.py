@@ -196,12 +196,12 @@ class GuiButton(DirectButton):
     def removeNode(self):
         DirectButton.removeNode(self)
         if self.helpWatcher:
-            self.helpWatcher.removeNode()
+            self.helpWatcher.remove_node()
 
     def remove(self):
         DirectButton.remove(self)
         if self.helpWatcher:
-            self.helpWatcher.remove()
+            self.helpWatcher.remove_node()
 
     def detachNode(self):
         DirectButton.detachNode(self)

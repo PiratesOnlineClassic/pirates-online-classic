@@ -935,7 +935,7 @@ class AvatarChooser(DirectObject, StateData):
 
     def __handleFinalize(self, value):
         subId, slot = self.choice
-        self.notifications[slot].remove()
+        self.notifications[slot].removeNode()
         del self.notifications[slot]
         self.finalizeConfirmDialog.destroy()
         potAv = base.cr.avList[subId][slot]
@@ -955,7 +955,7 @@ class AvatarChooser(DirectObject, StateData):
 
     def __handleDenied(self, value):
         subId, slot = self.choice
-        self.notifications[slot].remove()
+        self.notifications[slot].removeNode()
         del self.notifications[slot]
         self.deniedConfirmDialog.destroy()
         self.handleDialogOnScreen = 0
@@ -994,7 +994,7 @@ class AvatarChooser(DirectObject, StateData):
                 avButton.setText()
 
             if self.notifications.get(slot, 0):
-                self.notifications[slot].remove()
+                self.notifications[slot].removeNode()
                 del self.notifications[slot]
         else:
             self.renameButton.show()
@@ -1028,7 +1028,7 @@ class AvatarChooser(DirectObject, StateData):
             numAvs = len(self.subAvButtons[self.subIds[self.currentSubIndex]])
             for slot in range(0, numAvs):
                 if self.notifications.get(slot, 0):
-                    self.notifications[slot].remove()
+                    self.notifications[slot].removeNode()
                     del self.notifications[slot]
 
         self.currentSubIndex = index

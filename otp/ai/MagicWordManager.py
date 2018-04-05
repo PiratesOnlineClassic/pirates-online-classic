@@ -1,7 +1,7 @@
 # File: M (Python 2.4)
 
 from pandac.PandaModules import *
-from direct.showbase import GarbageReport, ContainerReport, MessengerLeakDetector
+from direct.showbase import GarbageReport, MessengerLeakDetector
 from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.InputStateGlobal import inputState
@@ -339,7 +339,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             if 'full' in args:
                 limit = None
 
-            ContainerReport.ContainerReport('~containers', log=True, limit=limit, threaded=True)
+            #ContainerReport.ContainerReport('~containers', log=True, limit=limit, threaded=True)
         elif wordIs('~garbage'):
             args = word.split()
             full = 'full' in args

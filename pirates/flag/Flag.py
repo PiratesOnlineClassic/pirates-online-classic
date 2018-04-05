@@ -95,7 +95,6 @@ class Flag(NodePath):
         oldEmblemNps = self.findAllMatches('**/emblem-*') 
         for np in oldEmblemNps:
             np.detachNode()
-            np.remove()
             np.removeNode()
 
         del oldEmblemNps
@@ -163,7 +162,6 @@ class Flag(NodePath):
         oldBgNps = self.findAllMatches('**/bg-*') 
         for np in oldBgNps:
             np.detachNode()
-            np.remove()
             np.removeNode()
 
         del oldBgNps
@@ -326,7 +324,6 @@ class Flag(NodePath):
         oldNp = self.find('**/emblem-%02d*' % index)
         if not oldNp.isEmpty():
             oldNp.detachNode()
-            oldNp.remove()
             oldNp.removeNode()
         del oldNp
         eNp = self.__model.copyTo(self, sort=self.EmblemSortOffset + index)
