@@ -46,7 +46,7 @@ class DistributedPlayerPirateAI(DistributedObjectAI):
         # which means everyone in the same interest will need to hear about the message;
         # we must first send a direct update to our client object, then broadcast the message...
         self.sendUpdateToAvatarId(self.doId, 'playEmote', [emoteId])
-        self.sendUpdate('playEmote', [])
+        self.sendUpdate('playEmote', [emoteId])
 
     def getEmoteId(self):
         return self.emoteId
