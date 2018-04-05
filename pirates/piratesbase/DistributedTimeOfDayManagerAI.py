@@ -1,19 +1,24 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
+from direct.task import Task
+from pirates.piratesbase import TODGlobals, PiratesGlobals
 from direct.distributed.ClockDelta import globalClockDelta
-from pirates.piratesbase import TODGlobals
+import random
+import time
+
 
 class DistributedTimeOfDayManagerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTimeOfDayManagerAI')
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
-
-        self.baseCycle = config.GetInt('tod-starting-cycle', TODGlobals.TOD_REGULAR_CYCLE)
-        self.cycleType = self.baseCycle
+        self.cycleType = TODGlobals.TOD_REGULAR_CYCLE
         self.cycleSpeed = config.GetInt('tod-cycle-speed', 1)
-        self.startingNetTime = globalClockDelta.getRealNetworkTime(bits=32)
-        self.timeOffset = 0
+        self.startingNetTime = globalClockDelta.getFrameNetworkTime(bits=32)
+        self.timeOffset = time.time() % PiratesGlobals.TOD_CYCLE_DURATION
+
+    def delete(self):
+        DistributedObjectAI.delete(self)
 
     def sync(self, cycleType, cycleSpeed, startingNetTime, timeOffset):
         self.cycleType = cycleType
