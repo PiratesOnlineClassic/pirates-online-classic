@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.distributed.PlayGame
 import os
 
 from direct.directnotify import DirectNotifyGlobal
@@ -12,7 +8,6 @@ from pirates.uberdog import UberDogGlobals
 
 
 class PlayGame(StateData.StateData):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('PlayGame')
 
     def __init__(self, parentFSM, doneEvent):
@@ -34,7 +29,13 @@ class PlayGame(StateData.StateData):
         shardId = base.localAvatar.defaultShard
         if os.getenv('want_district_2'):
             shardId += 200000
-        self.fsm.request(state, [{'where': 'play', 'hoodId': hoodId, 'zoneId': zoneId, 'shardId': shardId, 'avId': avId}])
+
+        self.fsm.request(state, [{
+            'where': 'play',
+            'hoodId': hoodId,
+            'zoneId': zoneId,
+            'shardId': shardId,
+            'avId': avId}])
 
     def exit(self):
         pass
@@ -56,6 +57,7 @@ class PlayGame(StateData.StateData):
             base.transitions.fadeIn(1.0)
         else:
             base.transitions.fadeOut(0.0)
+
         base.localAvatar.startChat()
         base.localAvatar.gameFSM.request('LandRoam')
 
@@ -71,11 +73,13 @@ class PlayGame(StateData.StateData):
             del self.pendingInitQuest
 
         if base.localAvatar.style.getTutorial() == 0 and base.cr.forceTutorial == 0 and base.cr.skipTutorial == 1:
-            self.pendingInitQuest = base.cr.relatedObjectMgr.requestObjects([base.localAvatar.getInventoryId()], eachCallback=initDefQuest)
+            self.pendingInitQuest = base.cr.relatedObjectMgr.requestObjects([base.localAvatar.getInventoryId()],
+                eachCallback=initDefQuest)
 
     def exitPlay(self):
         if base.config.GetBool('want-dev', False):
             self.ignore('shift-f3')
+
         if hasattr(self, 'pendingInitQuest'):
             del self.pendingInitQuest
 
@@ -91,4 +95,3 @@ class PlayGame(StateData.StateData):
 
     def exitTeleportToShard(self):
         base.transitions.noFade()
-# okay decompiling .\pirates\distributed\PlayGame.pyc

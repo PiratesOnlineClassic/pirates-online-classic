@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.instance.DistributedTeleportMgr
 from pandac.PandaModules import *
 from direct.task import Task
 from direct.distributed import DistributedObject
@@ -15,7 +11,6 @@ from pirates.piratesgui import PDialog
 from otp.otpgui import OTPDialog
 
 class DistributedTeleportMgr(DistributedObject.DistributedObject):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedTeleportMgr')
 
     def __init__(self, cr):
@@ -647,4 +642,3 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         self.doneCallback = doneCallback
         self.startedCallback = startedCallback
         self.teleportInit(PiratesGlobals.INSTANCE_MAIN, fromInstanceType, 'Main World')
-# okay decompiling .\pirates\instance\DistributedTeleportMgr.pyc
