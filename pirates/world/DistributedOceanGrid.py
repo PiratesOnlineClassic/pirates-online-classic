@@ -66,13 +66,12 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
     def reparentLocalAvatarToWorld(self, parent=None):
         if parent:
             parent.addObjectToGrid(base.localAvatar)
+        elif len(self.islandGrids) > 0:
+            islandIds = self.islandGrids.keys()
+            island = self.islandGrids[islandIds[0]]
+            island.addObjectToGrid(base.localAvatar)
         else:
-            if len(self.islandGrids) > 0:
-                islandIds = self.islandGrids.keys()
-                island = self.islandGrids[islandIds[0]]
-                island.addObjectToGrid(base.localAvatar)
-            else:
-                self.addObjectToGrid(base.localAvatar)
+            self.addObjectToGrid(base.localAvatar)
 
     oceanAreas = {}
 
@@ -123,4 +122,3 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
 
     def getTeleportDestPosH(self, index=0):
         return (0, 0, 0, 0)
-# okay decompiling .\pirates\world\DistributedOceanGrid.pyc
