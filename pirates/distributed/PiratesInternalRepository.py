@@ -96,13 +96,12 @@ class PiratesInternalRepository(AstronInternalRepository):
                 for kwarg in kwargs:
                     attachment.addField(SlackField(title=kwarg, value=kwargs[kwarg]))
 
-                attachment.addField(SlackField())
-
                 avatar = self.doId2do.get(avatarId)
                 if avatar:
+                    attachment.addField(SlackField())
                     attachment.addField(SlackField(title='Character Pos', value=str(avatar.getPos())))
                     attachment.addField(SlackField(title='Character Name', value=avatar.getName()))
-                    attachment.addField(SlackField(title='Island', value=avatar.getParentObj().getLocalizerName()))
+                    #attachment.addField(SlackField(title='Island', value=avatar.getParentObj().getLocalizerName())) #TODO: Add island name to message using '08 code base
 
                 attachment.addField(SlackField())
                 attachment.addField(SlackField(title='Game Account Id', value=accountId))
