@@ -1,19 +1,13 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.world.ZoneLOD
+from pandac.PandaModules import *
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase.PythonUtil import *
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 
-
 class ZoneLOD(DirectObject):
-    __module__ = __name__
     notify = directNotify.newCategory('ZoneLOD')
 
-    def __init__(self, uniqueNameFunc, zoneRadii=[]):
+    def __init__(self, uniqueNameFunc, zoneRadii = []):
         self.uniqueNameFunc = uniqueNameFunc
         self.zoneRadii = zoneRadii
         self.zoneSphere = []
@@ -22,12 +16,12 @@ class ZoneLOD(DirectObject):
         self.levelForced = False
         self.lodCollideMask = OTPGlobals.WallBitmask | OTPGlobals.GhostBitmask | PiratesGlobals.ShipCollideBitmask
         self.allEnabled = False
-        return
 
     def delete(self):
         self.deleteZoneCollisions()
         if self.zoneSphere:
             del self.zoneSphere
+
         self.ignoreAll()
         del self.uniqueNameFunc
 
@@ -35,7 +29,7 @@ class ZoneLOD(DirectObject):
         if hasattr(self, 'outerSphere') and self.numSpheres:
             self.setZoneLevel(self.outerSphere + 1)
 
-    def setZoneRadii(self, zoneRadii, zoneCenter=[0, 0]):
+    def setZoneRadii(self, zoneRadii, zoneCenter = [0, 0]):
         self.numSpheres = len(zoneRadii)
         self.zoneRadii = zoneRadii
         self.zoneCenter = zoneCenter
@@ -101,7 +95,7 @@ class ZoneLOD(DirectObject):
 
         self.allEnabled = False
 
-    def clearAllEnabled(self, resetLastZoneLevel=False):
+    def clearAllEnabled(self, resetLastZoneLevel = False):
         self.allEnabled = False
         if resetLastZoneLevel:
             self.setCollLevel(self.lastZoneLevel)
@@ -109,6 +103,7 @@ class ZoneLOD(DirectObject):
     def setCollLevel(self, level):
         if self.allEnabled:
             return
+
         for i in range(self.numSpheres):
             self.ignore(self.uniqueNameFunc('enterzoneLevel' + str(i)))
             self.ignore(self.uniqueNameFunc('exitzoneLevel' + str(i)))
@@ -118,44 +113,50 @@ class ZoneLOD(DirectObject):
 
         if level <= self.outerSphere:
             self.zoneSphere[level].unstash()
+
         if level > self.innerSphere:
             self.zoneSphere[level - 1].unstash()
+
         if level <= self.outerSphere:
             self.accept(self.uniqueNameFunc('exitzoneLevel' + str(level)), Functor(self.handleExitZoneLevel, level + 1))
+
         if level > self.innerSphere:
             self.accept(self.uniqueNameFunc('enterzoneLevel' + str(level - 1)), Functor(self.handleEnterZoneLevel, level - 1))
 
-    def handleEnterZoneLevel(self, level, entry=None):
+    def handleEnterZoneLevel(self, level, entry = None):
         if level >= self.lastZoneLevel:
             return
+
         self.setZoneLevel(level, entry)
 
-    def handleExitZoneLevel(self, level, entry=None):
+    def handleExitZoneLevel(self, level, entry = None):
         if level < self.lastZoneLevel:
             return
+
         self.setZoneLevel(level, entry)
 
-    def setZoneLevel(self, level, entry=None):
+    def setZoneLevel(self, level, entry = None):
         self.notify.debug('Changing Zone %s:%s' % (self.name, level))
         if self.levelForced:
             return
+
         if self.lastZoneLevel == None:
             self.loadZoneLevel(level)
-        else:
-            if self.lastZoneLevel > level:
-                for i in range(self.lastZoneLevel - 1, level - 1, -1):
-                    self.loadZoneLevel(i)
+        elif self.lastZoneLevel > level:
+            for i in range(self.lastZoneLevel - 1, level - 1, -1):
+                self.loadZoneLevel(i)
+                self.lastZoneLevel = i
 
-            else:
-                if self.lastZoneLevel < level:
-                    for i in range(self.lastZoneLevel, level):
-                        self.unloadZoneLevel(i)
-                        if i == self.numSpheres:
-                            self.allEnabled = False
+        elif self.lastZoneLevel < level:
+            for i in range(self.lastZoneLevel, level):
+                self.unloadZoneLevel(i)
+                if i == self.numSpheres:
+                    self.allEnabled = False
+
+                self.lastZoneLevel = i
 
         self.setCollLevel(level)
         self.lastZoneLevel = level
-        return
 
     def setInitialZone(self, pos):
         avDist = pos.length()
@@ -186,7 +187,6 @@ class ZoneLOD(DirectObject):
             self.setCollLevel(self.lastZoneLevel)
         else:
             self.setCollLevel(self.outerSphere)
-        return
 
     def loadZoneLevel(self, level):
         pass
@@ -201,4 +201,3 @@ class ZoneLOD(DirectObject):
     def clearForceZoneLevel(self):
         self.levelForced = False
         self.setZoneLevel(self.outerSphere)
-# okay decompiling .\pirates\world\ZoneLOD.pyc

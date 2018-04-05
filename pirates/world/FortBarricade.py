@@ -1,19 +1,10 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.world.FortBarricade
-import math
-
+from pandac.PandaModules import NodePath, Point3
 from direct.directnotify import DirectNotifyGlobal
-from pandac.PandaModules import (CollisionNode, CollisionPolygon, Geom,
-                                 GeomNode, GeomTriangles, GeomVertexData,
-                                 GeomVertexFormat, GeomVertexWriter, NodePath,
-                                 Point3, Vec3, rad2Deg)
+from pandac.PandaModules import rad2Deg, Vec3, GeomVertexFormat, GeomVertexData, GeomVertexWriter, Geom, GeomTriangles, GeomNode, CollisionNode, CollisionPolygon
+import math
 from pirates.piratesbase import PiratesGlobals
 
-
 class FortBarricade:
-    __module__ = __name__
     notify = directNotify.newCategory('FortBarricade')
 
     def __init__(self, island, barricadeIds):
@@ -40,4 +31,3 @@ class FortBarricade:
     def enableCollisions(self):
         for coll in self.colNP:
             coll.unstash()
-# okay decompiling .\pirates\world\FortBarricade.pyc
