@@ -5,6 +5,7 @@ import random
 import gc
 import time
 import PiratesPreloader
+import ClassicLogger
 from panda3d.core import *
 
 gc.disable()
