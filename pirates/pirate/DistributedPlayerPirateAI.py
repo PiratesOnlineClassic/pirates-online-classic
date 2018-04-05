@@ -83,8 +83,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, HumanDNA):
         self.sendUpdateToAvatarId(self.doId, 'setCurrentIsland', [
             island.getUniqueId()])
 
-        print ("requestCurrentIsland", locationDoId, island)
-
     def hasEmote(self, emoteId):
         emote = PLocalizer.emotes.get(emoteId)
         if not emote:
