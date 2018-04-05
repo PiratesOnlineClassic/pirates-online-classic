@@ -117,3 +117,6 @@ cache/
 **/game_options.txt
 **/p_working_options.txt
 **/last_working_options.txt
+
+# Tools
+tools/
