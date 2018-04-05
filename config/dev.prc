@@ -7,3 +7,6 @@ want-dev-hotkeys #f
 
 # Physics:
 want-avatar-physics-indicator #f
+
+# Teleport:
+teleport-all #t
