@@ -9,8 +9,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
     notify.setInfo(True)
 
     def __init__(self, air):
-        DistributedCartesianGridAI.__init__(self, air, ISLAND_GRID_STARTING_ZONE, ISLAND_GRID_SIZE,
-            ISLAND_GRID_RADIUS, ISLAND_CELL_SIZE)
+        DistributedCartesianGridAI.__init__(self, air, ISLAND_GRID_STARTING_ZONE, LARGE_ISLAND_GRID_SIZE, ISLAND_GRID_RADIUS, ISLAND_CELL_SIZE)
 
         DistributedGameAreaAI.__init__(self, air)
         Teamable.__init__(self)
