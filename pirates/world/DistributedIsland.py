@@ -1119,10 +1119,10 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     def cleanupIslandData(self):
         self.clearAnims()
         self.unloadZoneObjects()
-        self.staticGridRoot.removeChildren()
-        self.largeObjectsHigh.removeChildren()
-        self.largeObjectsLow.removeChildren()
-        self.animNode.removeChildren()
+        self.staticGridRoot.get_children().detach()
+        self.largeObjectsHigh.get_children().detach()
+        self.largeObjectsLow.get_children().detach()
+        self.animNode.get_children().detach()
 
     def cleanupTerrain(self):
         self.geom.removeNode()

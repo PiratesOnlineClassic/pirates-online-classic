@@ -61,7 +61,7 @@ class Flag(NodePath):
     def __activate(self):
         self.clearColor()
         self.clearTexture()
-        self.removeChildren()
+        self.get_children().detach()
         if self.node().getNumGeoms() > 0:
             self.node().removeGeom(0)
         self.__setBaseModelColor(Vec4(1, 1, 1, 0))
@@ -123,7 +123,7 @@ class Flag(NodePath):
 
         def completeFlatten(par=par, tex=tex):
             if not par.isActive():
-                self.removeChildren()
+                self.get_children().detach()
                 self.clearEffect(DecalEffect.make().getType())
                 if callback:
                     callback()

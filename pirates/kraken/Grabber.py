@@ -99,7 +99,7 @@ class Grabber(Creature, TentacleUtils):
         axis.setDepthTest(0)
         joints = self.getJoints()
         for joint in joints:
-            joint.removeChildren()
+            joint.get_children().detach()
             axis.instanceTo(joint.attachNewNode('buffer'))
 
     def setupCollisions(self):
