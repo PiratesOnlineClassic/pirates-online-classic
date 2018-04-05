@@ -304,7 +304,10 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         def teleportConfirmation(confirmed, islandUid=islandUid):
             self.islandTeleportConfirmation(confirmed, islandUid)
 
-        localAvatar.setTeleportFlag(PiratesGlobals.TFNoIslandToken, localAvatar.confirmIslandTeleport, [islandUid])
+        if not base.config.GetBool('teleport-all', False):
+            localAvatar.setTeleportFlag(PiratesGlobals.TFNoIslandToken, localAvatar.confirmIslandTeleport, [
+                islandUid])
+
         localAvatar.confirmTeleport(teleportConfirmation, feedback=True)
         localAvatar.clearTeleportFlag(PiratesGlobals.TFNoIslandToken)
 
