@@ -11,6 +11,7 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
     def __init__(self, air):
         self.air = air
         self.world = None
+        self.worldDict = None
 
         WorldCreatorBase.__init__(self, air)
 
@@ -56,11 +57,15 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
 
         return (newObj, objParent)
 
+    def getIslandWorldDataByUid(self, uid):    
+        return self.worldDict['Objects'].get(uid, None)
+
     def __createWorldInstance(self, objectData, parent, parentUid, objKey, dynamic):
         self.world = DistributedMainWorldAI(self.air)
         self.world.setUniqueId(objKey)
         self.world.setName(objectData.get('Name', 'default'))
         self.world.generateWithRequired(PiratesGlobals.InstanceUberZone)
+        self.worldDict = objectData
 
         self.air.uidMgr.addUid(self.world.getUniqueId(), self.world.doId)
         return self.world

@@ -102,15 +102,14 @@ class ClientAreaBuilderAI(DirectObject):
     def __createIsland(self, objectData, parent, parentUid, objKey, dynamic):
         from pirates.world.DistributedIslandAI import DistributedIslandAI
 
-        if objectData.get('Name', '') != 'PortRoyalIsland':
-            return
+        worldIsland = self.air.worldCreator.getIslandWorldDataByUid(objKey)
 
         island = DistributedIslandAI(self.air)
         island.setUniqueId(objKey)
         island.setName(PLocalizer.LocationNames.get(objKey, 'Island'))
-        island.setModelPath(objectData['Visual']['Model'])
-        island.setPos(objectData.get('Pos', (0, 0, 0)))
-        island.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        island.setModelPath(worldIsland['Visual']['Model'])
+        island.setPos(worldIsland.get('Pos', (0, 0, 0)))
+        island.setHpr(worldIsland.get('Hpr', (0, 0, 0)))
         island.setScale(objectData.get('Scale', 1))
         island.setUndockable(objectData.get('Undockable', False))
 
