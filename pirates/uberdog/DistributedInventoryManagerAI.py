@@ -16,14 +16,14 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
     def addInventory(self, inventory):
         if self.hasInventory(inventory.doId):
-            self.notify.warning('Tried to add an already existing inventory %d!' % inventory.doId)
+            self.notify.debug('Tried to add an already existing inventory %d!' % inventory.doId)
             return
 
         self.inventories[inventory.doId] = inventory
 
     def removeInventory(self, inventory):
         if not self.hasInventory(inventory.doId):
-            self.notify.warning('Tried to remove a non-existant inventory %d!' % inventory.doId)
+            self.notify.debug('Tried to remove a non-existant inventory %d!' % inventory.doId)
             return
 
         del self.inventories[inventory.doId]
@@ -45,7 +45,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         def queryResponse(dclass, fields):
             if not dclass or not fields:
-                self.notify.warning('Failed to query avatar %d!' % avatarId)
+                self.notify.debug('Failed to query avatar %d!' % avatarId)
                 return
 
             inventoryId, = fields.get('setInventoryId', (0,))
