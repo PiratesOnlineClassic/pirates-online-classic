@@ -408,7 +408,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         return (pt[0], pt[1], pt[2], 0)
 
     def _getTunnelSpawnPos(self, index = 0):
-        connectorNodes = self.findAllMatches('**/portal_exterior*').asList() + self.findAllMatches('**/portal_interior*').asList()
+        connectorNodes = self.findAllMatches('**/portal_exterior*') + self.findAllMatches('**/portal_interior*')
         return self.getRelativePoint(connectorNodes[index % len(connectorNodes)], Point3(40, 0, 0))
 
     def initializeIslandWaterParameters(self):

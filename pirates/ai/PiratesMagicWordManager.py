@@ -450,7 +450,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             c.play()
             destroyCutscene = None
         elif wordIs('~forceLod'):
-            for n in render.findAllMatches('**/+LODNode').asList():
+            for n in render.findAllMatches('**/+LODNode'):
                 n.node().forceSwitch(n.node().getHighestSwitch())
             
         elif wordIs('~wave'):
