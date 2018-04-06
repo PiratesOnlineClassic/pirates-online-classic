@@ -10,15 +10,13 @@ class ChatBalloon:
     MIN_HEIGHT = 1
     BUBBLE_PADDING = 0.3
     BUBBLE_PADDING_PROP = 0.05
-    BUTTON_SCALE = 6
-    BUTTON_SHIFT = (-0.2, 0, 0.6)
     FRAME_SHIFT = (0.2, 1.4)
 
     def __init__(self, model):
         self.model = model
 
     def generate(self, text, font, textColor=(0,0,0,1), balloonColor=(1,1,1,1),
-                 wordWrap = 10.0, button=None, reversed=False):
+                 wordWrap = 10.0, reversed=False):
         root = NodePath('balloon')
 
         # Add balloon geometry:
@@ -53,13 +51,6 @@ class ChatBalloon:
             # rather than on the right side. Therefore, we move the text to the
             # opposite side:
             t.setX(self.TEXT_SHIFT_REVERSED - self.TEXT_SHIFT_PROP*width - width)
-
-        # Give the chat bubble a button, if one is requested:
-        if button:
-            np = button.copyTo(root)
-            np.setPos(t, width, 0, -height)
-            np.setPos(np, self.BUTTON_SHIFT)
-            np.setScale(self.BUTTON_SCALE)
 
         # Set a minimum width and height for short or empty messages
         if width < self.MIN_WIDTH:

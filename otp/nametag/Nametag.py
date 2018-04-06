@@ -72,15 +72,6 @@ class Nametag(ClickablePopup):
     def clickStateChanged(self):
         self.update()
 
-    def getButton(self):
-        cs = self.getClickState()
-        if self.buttons is None:
-            return None
-        elif cs in self.buttons:
-            return self.buttons[cs]
-        else:
-            return self.buttons.get(0)
-
     def update(self):
         if self.colorCode in NAMETAG_COLORS:
             cc = self.colorCode
@@ -92,26 +83,26 @@ class Nametag(ClickablePopup):
         self.innerNP.node().removeAllChildren()
         if self.contents & self.CThought and self.chatFlags & CFThought:
             self.showThought()
-        elif self.contents & self.CSpeech and self.chatFlags&CFSpeech:
+        elif self.contents & self.CSpeech and self.chatFlags & CFSpeech:
             self.showSpeech()
         elif self.contents & self.CName and self.displayName:
             self.showName()
 
     def showBalloon(self, balloon, text):
-        if not self.speechFont:
+        if not self.font:
             # If no font is set, we can't display anything yet...
             return
-        color = self.qtColor if (self.chatFlags&CFQuicktalker) else self.chatBg
+
+        color = self.qtColor if (self.chatFlags & CFQuicktalker) else self.chatBg
         if color[3] > self.CHAT_ALPHA:
             color = (color[0], color[1], color[2], self.CHAT_ALPHA)
 
-        reversed = (self.IS_3D and (self.chatFlags&CFReversed))
+        reversed = (self.IS_3D and (self.chatFlags & CFReversed))
 
-        balloon, frame = balloon.generate(text, self.speechFont, textColor=self.chatFg,
+        balloon, frame = balloon.generate(text, self.font, textColor=self.chatFg,
                                           balloonColor=color,
                                           wordWrap=self.chatWordWrap or \
                                             self.DEFAULT_CHAT_WORDWRAP,
-                                          button=self.getButton(),
                                           reversed=reversed)
         balloon.reparentTo(self.innerNP)
         self.frame = frame

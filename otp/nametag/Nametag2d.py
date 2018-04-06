@@ -17,37 +17,13 @@ class Nametag2d(Nametag, MarginPopup):
         Nametag.__init__(self)
         MarginPopup.__init__(self)
 
-        self.contents = self.CName|self.CSpeech
+        self.contents = self.CName | self.CSpeech
         self.chatWordWrap = 7.5
-
-        self.arrow = None
 
         self.innerNP.setScale(self.SCALE_2D)
 
     def showBalloon(self, balloon, text):
-        text = '%s: %s' % (self.name, text)
-        Nametag.showBalloon(self, balloon, text)
-
-        # Next, center the balloon in the cell:
-        balloon = NodePath.anyPath(self).find('*/balloon')
-
-        # Calculate the center of the TextNode.
-        text = balloon.find('**/+TextNode')
-        t = text.node()
-        left, right, bottom, top = t.getFrameActual()
-        center = self.innerNP.getRelativePoint(text,
-                                               ((left+right)/2., 0, (bottom+top)/2.))
-
-        # Next translate the balloon along the inverse.
-        balloon.setPos(balloon, -center)
-        # Also translate the frame:
-        left, right, bottom, top = self.frame
-        self.frame = (left-center.getX(), right-center.getX(),
-                      bottom-center.getZ(), top-center.getZ())
-
-        # When a balloon is active, we need to be somewhat higher-priority in the
-        # popup system:
-        self.setPriority(1)
+        pass
 
     def showName(self):
         Nametag.showName(self)
