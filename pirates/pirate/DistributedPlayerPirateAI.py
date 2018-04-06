@@ -1,16 +1,18 @@
 from direct.directnotify import DirectNotifyGlobal
 from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
+from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.HumanDNA import HumanDNA
 from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
 from pirates.piratesbase import PLocalizer
 from pirates.quest.QuestConstants import LocationIds
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 
-class DistributedPlayerPirateAI(DistributedPlayerAI, HumanDNA):
+class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNA):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
 
     def __init__(self, air):
         DistributedPlayerAI.__init__(self, air)
+        DistributedBattleAvatarAI.__init__(self, air)
         HumanDNA.__init__(self)
         self.dnaString = ''
         self.inventoryId = 0

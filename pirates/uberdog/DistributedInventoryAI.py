@@ -161,7 +161,7 @@ class DistributedInventoryAI(DistributedObjectAI):
         if not avatar:
             return
 
-        #avatar.b_setHp(avatar.getMaxHp(), 0)
+        avatar.b_setHp(avatar.getMaxHp(), 0)
 
     def sendMaxMojo(self, limit, avId):
         avatar = self.air.doId2do.get(self.ownerId)
@@ -169,7 +169,7 @@ class DistributedInventoryAI(DistributedObjectAI):
         if not avatar:
             return
 
-        #avatar.b_setMojo(avatar.getMaxMojo())
+        avatar.b_setMojo(avatar.getMaxMojo())
 
     def d_requestInventoryComplete(self):
         self.sendUpdateToAvatarId(self.ownerId, 'requestInventoryComplete', [])
