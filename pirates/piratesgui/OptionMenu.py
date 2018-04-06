@@ -140,6 +140,9 @@ class OptionMenu(DirectOptionMenu):
         newIndex = self.index(index)
         if newIndex is not None:
             self.selectedIndex = newIndex
+            #TODO: FIXME! Temp patch to resolve options auto resolution bug
+            if self.selectedIndex >= len(self['items']):
+                self.selectedIndex = len(self['items']) -1
             item = self['items'][self.selectedIndex]
             self['text'] = item
             if fCommand and self['command']:
