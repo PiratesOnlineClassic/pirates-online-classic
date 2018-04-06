@@ -57,7 +57,7 @@ class ClientAreaBuilderAI(DirectObject):
 
         island = DistributedIslandAI(self.air)
         island.setUniqueId(objKey)
-        island.setName(PLocalizer.LocationNames.get(objKey, 'Island'))
+        island.setName(PLocalizer.LocationNames.get(objKey, ''))
         island.setModelPath(worldIsland['Visual']['Model'])
         island.setPos(worldIsland.get('Pos', (0, 0, 0)))
         island.setHpr(worldIsland.get('Hpr', (0, 0, 0)))
