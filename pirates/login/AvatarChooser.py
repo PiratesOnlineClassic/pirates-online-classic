@@ -750,7 +750,6 @@ class AvatarChooser(DirectObject, StateData):
     def __handleDelete(self):
         if self.deleteConfirmDialog:
             self.deleteConfirmDialog.destroy()
-
         subId, slot = self.choice
         potAv = base.cr.avList[subId][slot]
         name = potAv.dna.getDNAName()
@@ -766,7 +765,7 @@ class AvatarChooser(DirectObject, StateData):
             self.notify.info('AvatarChooser: request delete slot: %s avId: %s subId: %s' % (slot, potAv.id, subId))
             self.accept('rejectRemoveAvatar', self.__rejectRemoveAvatar)
             self.accept('removeAvatarResponse', self.__removeAvatarResponse)
-            base.cr.avatarManager.sendRequestRemoveAvatar(potAv.id, subId, 'delete')
+            base.cr.csm.sendDeleteAvatar(potAv.id)
             base.cr.waitForDatabaseTimeout(requestName='WaitForDeleteAvatarResponse')
             self.blockInput()
         else:
@@ -796,7 +795,7 @@ class AvatarChooser(DirectObject, StateData):
         self.ignore('rejectRemoveAvatar')
         self.ignore('removeAvatarResponse')
         base.cr.cleanupWaitingForDatabase()
-        base.cr.sendGetAvatarsMsg()
+        base.cr.loginFSM.request('waitForAvatarList')
 
     def __rejectRemoveAvatar(self, reasonId):
         self.notify.warning('rejectRemoveAvatar: %s' % reasonId)

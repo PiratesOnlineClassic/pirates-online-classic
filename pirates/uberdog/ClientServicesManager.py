@@ -48,6 +48,12 @@ class ClientServicesManager(DistributedObjectGlobal):
     def sendDeleteAvatar(self, avId):
         self.sendUpdate('deleteAvatar', [avId])
 
+    def acknowledgeDeleteAvatarResp(self, avid, status):
+        if status == False:
+            messenger.send('rejectRemoveAvatar', [0])
+        if status == True:
+            messenger.send('removeAvatarResponse', [avid, 0])
+
     def sendSetNameTyped(self, avId, name, callback):
         self._callback = callback
         self.sendUpdate('setNameTyped', [avId, name])
