@@ -329,7 +329,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
 
     def initBlockers(self, geom):
         self.disableBlockers = False
-        if base.config.GetBool('disable-blockers', 0):
+        if base.config.GetBool('disable-blockers', False):
             self.disableBlockers = True
 
         blockerColls = geom.findAllMatches('**/blocker_*')

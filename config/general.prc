@@ -15,6 +15,19 @@ model-path ../resources/phase_4
 model-path ../resources/phase_5
 default-model-extension .bam
 
+# Exclude:
+exclude-texture-scale BardiT*
+exclude-texture-scale BriosoPro*
+exclude-texture-scale Buccaneer_outline_1*
+exclude-texture-scale playingcards*
+exclude-texture-scale gui_*
+exclude-texture-scale loading_screen*
+exclude-texture-scale loadingscreen_*
+exclude-texture-scale loading_window_texture*
+exclude-texture-scale vr_*
+exclude-texture-scale general_frame_*
+exclude-texture-scale drop-shadow
+
 # Culling:
 cull-bin gui-popup 60 unsorted
 cull-bin shadow 15 fixed
@@ -69,6 +82,9 @@ want-special-effects #t
 
 # Make A Pirate:
 want-make-a-pirate #t
+
+# Membership:
+want-membership #f
 
 # Islands:
 remove-island-barriers #f

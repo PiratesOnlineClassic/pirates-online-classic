@@ -10,3 +10,6 @@ want-avatar-physics-indicator #f
 
 # Teleport:
 teleport-all #t
+
+# Quests:
+disable-blockers #t
