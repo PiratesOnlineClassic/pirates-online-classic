@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesbase.PLocalizerEnglish
 import os
 import random
 import string
@@ -1372,7 +1368,7 @@ NameGUI_NextListItemText = lNext
 NameGUI_PrevListItemText = 'Prev'
 NameGUI_EmptyNameText = ' \n '
 NameGUI_NoNameWarnings = ["Don't you want to have any name at all?", 'You gotta have a first or a last name, mate!']
-NameGUI_Guidelines = 'Your name will need to be approved.  Make sure it has: \n\n  - No foul language\n  - No personal information\n  - No brand names\n'
+NameGUI_Guidelines = 'Your name will need to be approved.  \nMake sure it has: \n\n  - No foul language\n  - No personal information\n  - No brand names\n'
 NameGUI_URLText = '\x01uline\x01Click here to see all naming guidelines\x02'
 PirateNames_NickNamesGeneric = [
  'Crazy', 'Bloody']
