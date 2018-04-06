@@ -3,7 +3,7 @@ from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.GridParent import GridParent
 from pirates.leveleditor import ObjectList
-from pirates.piratesbase import PLocalizer
+from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 class ClientAreaBuilderAI(DirectObject):
     notify = directNotify.newCategory('ClientAreaBuilderAI')
@@ -118,7 +118,7 @@ class ClientAreaBuilderAI(DirectObject):
                 if obj['Type'] == 'LOD Sphere':
                     island.setZoneSphereSize(*obj['Radi'])
 
-        self.parent.generateChildWithRequired(island, island.startingZone)
+        self.parent.generateChildWithRequired(island, PiratesGlobals.IslandAvailableZoneStart)
         self.addObject(island)
 
         return island

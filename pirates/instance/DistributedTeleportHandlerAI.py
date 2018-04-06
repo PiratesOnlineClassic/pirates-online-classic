@@ -47,7 +47,7 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
             island.parentId, island.zoneId])
 
         self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
-        self.avatar.b_setLocation(island.doId, island.zoneId)
+        self.avatar.b_setLocation(island.doId, PiratesGlobals.IslandLocalZone)
 
     def teleportToInstanceFinal(self, avatarId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())

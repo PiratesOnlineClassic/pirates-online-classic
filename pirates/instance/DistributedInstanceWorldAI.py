@@ -17,4 +17,4 @@ class DistributedInstanceWorldAI(DistributedInstanceBaseAI):
         DistributedInstanceBaseAI.generate(self)
 
         self.oceanGrid = DistributedOceanGridAI(self.air)
-        self.generateChildWithRequired(self.oceanGrid, self.oceanGrid.startingZone)
+        self.generateChildWithRequired(self.oceanGrid, PiratesGlobals.IslandAvailableZoneStart)
