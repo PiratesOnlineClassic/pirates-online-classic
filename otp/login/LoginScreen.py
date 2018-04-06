@@ -5,8 +5,8 @@
 import os
 import time
 
-import GuiScreen
-import TTAccount
+from . import GuiScreen
+from . import TTAccount
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.MsgTypes import *
 from direct.fsm import ClassicFSM, State, StateData
@@ -228,7 +228,7 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         self.cr.password = self.password
         try:
             error = self.loginInterface.authorize(self.userName, self.password)
-        except TTAccount.TTAccountException, e:
+        except TTAccount.TTAccountException as e:
             self.fsm.request('showConnectionProblemDialog', [str(e)])
             return
         else:

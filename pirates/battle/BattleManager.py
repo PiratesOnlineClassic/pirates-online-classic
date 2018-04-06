@@ -4,7 +4,7 @@
 # Embedded file name: pirates.battle.BattleManager
 import math
 
-import BattleManagerBase
+from . import BattleManagerBase
 from pandac.PandaModules import *
 from pandac.PandaModules import NodePath
 from pirates.battle import DistributedBattleNPC, WeaponGlobals

@@ -203,7 +203,7 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         self.reducedAnimList = self.animTable
 
     def forceLoadAnimDict(self):
-        for anim in self.animDict.keys():
+        for anim in list(self.animDict.keys()):
             self.getAnimControls(anim)
 
     def createAnimDict(self, customList=None):

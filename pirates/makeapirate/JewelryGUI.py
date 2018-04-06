@@ -5,10 +5,10 @@
 import random
 from math import cos, pi, sin
 
-import JewelryGlobals
-import PirateFemale
-import PirateMale
-from CharGuiBase import CharGuiPicker, CharGuiSlider
+from . import JewelryGlobals
+from . import PirateFemale
+from . import PirateMale
+from .CharGuiBase import CharGuiPicker, CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
@@ -296,7 +296,7 @@ class JewelryGUI(DirectFrame, StateData.StateData):
 
     def handleNextJewelry(self, key):
         self.avatar.handleJewelryOptions(key, True)
-        print self.avatar.currentJewelry
+        print(self.avatar.currentJewelry)
 
     def handleLastJewelry(self, key):
         self.avatar.handleJewelryOptions(key, False)

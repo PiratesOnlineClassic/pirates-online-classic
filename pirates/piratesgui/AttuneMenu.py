@@ -66,7 +66,7 @@ class AvatarInfoButton(GuiButton):
             color = base.cr.battleMgr.getExperienceColor(base.localAvatar, avatar)
             try:
                 name = '%s\x02  %s\x01smallCaps\x01%s%s\x02\x02' % (avatar.getShortName(), color, PLocalizer.Lv, avatar.level)
-            except StandardError, e:
+            except Exception as e:
                 self.notify.error('updateItem(%s, %s)' % (str(avatar), str(e)))
             else:
                 self['text'] = name
@@ -131,7 +131,7 @@ class AttuneMenu(DirectFrame):
             button.hide()
             del self.buttons[avId]
             button.destroy()
-            for b in self.buttons.values():
+            for b in list(self.buttons.values()):
                 if b.getZ() > y:
                     b.setZ(b.getZ() - self.HEIGHT)
 
@@ -146,7 +146,7 @@ class AttuneMenu(DirectFrame):
             self.updateButton(avId)
             self.buttons[avId].show()
 
-        for avId in self.buttons.keys():
+        for avId in list(self.buttons.keys()):
             if avId > 0 and localAvatar.stickyTargets.count(avId) < 1:
                 self.removeButton(avId)
 
@@ -163,7 +163,7 @@ class AttuneMenu(DirectFrame):
         if hasattr(self, 'destroyed'):
             return
         self.destroyed = 1
-        for button in self.buttons.values():
+        for button in list(self.buttons.values()):
             button.destroy()
             button = None
 
@@ -172,5 +172,5 @@ class AttuneMenu(DirectFrame):
         return
 
     def unattuneAll(self):
-        localAvatar.sendRequestRemoveStickyTargets(self.buttons.keys())
+        localAvatar.sendRequestRemoveStickyTargets(list(self.buttons.keys()))
 # okay decompiling .\pirates\piratesgui\AttuneMenu.pyc

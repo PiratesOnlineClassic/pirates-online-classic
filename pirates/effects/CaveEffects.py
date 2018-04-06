@@ -60,7 +60,7 @@ class CaveEffects(EnvironmentEffects.EnvironmentEffects):
                 color = non_shader_water_color
                 water.setColorScale(color)
                 water.setTextureOff(1)
-                mask = 4294967295L
+                mask = 4294967295
                 stencil = StencilAttrib.make(1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOReplace, 1, mask, mask)
                 water.setAttrib(stencil)
                 water.setBin('water', 0)

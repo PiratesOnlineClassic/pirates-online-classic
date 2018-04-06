@@ -2,7 +2,7 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.launcher.LauncherBase
-import __builtin__
+import builtins
 import os
 import string
 import sys
@@ -87,29 +87,29 @@ class LauncherBase(DirectObject):
                 os.system('cat /proc/cpuinfo >>' + logfile)
                 os.system('cat /proc/meminfo >>' + logfile)
                 os.system('/sbin/ifconfig -a >>' + logfile)
-        print '\n\nStarting %s...' % self.GameName
-        print 'Current time: ' + time.asctime(time.localtime(time.time())) + ' ' + time.tzname[0]
-        print 'sys.path = ', sys.path
-        print 'sys.argv = ', sys.argv
-        print 'os.environ = ', os.environ
+        print('\n\nStarting %s...' % self.GameName)
+        print('Current time: ' + time.asctime(time.localtime(time.time())) + ' ' + time.tzname[0])
+        print('sys.path = ', sys.path)
+        print('sys.argv = ', sys.argv)
+        print('os.environ = ', os.environ)
         if len(sys.argv) >= self.ArgCount:
             Configrc_args = sys.argv[self.ArgCount - 1]
-            print "generating configrc using: '" + Configrc_args + "'"
+            print("generating configrc using: '" + Configrc_args + "'")
         else:
             Configrc_args = ''
-            print 'generating standard configrc'
-        if os.environ.has_key('PRC_EXECUTABLE_ARGS'):
-            print 'PRC_EXECUTABLE_ARGS is set to: ' + os.environ['PRC_EXECUTABLE_ARGS']
-            print 'Resetting PRC_EXECUTABLE_ARGS'
+            print('generating standard configrc')
+        if 'PRC_EXECUTABLE_ARGS' in os.environ:
+            print('PRC_EXECUTABLE_ARGS is set to: ' + os.environ['PRC_EXECUTABLE_ARGS'])
+            print('Resetting PRC_EXECUTABLE_ARGS')
         os.environ['PRC_EXECUTABLE_ARGS'] = '-stdout ' + Configrc_args
-        if os.environ.has_key('CONFIG_CONFIG'):
-            print 'CONFIG_CONFIG is set to: ' + os.environ['CONFIG_CONFIG']
-            print 'Resetting CONFIG_CONFIG'
+        if 'CONFIG_CONFIG' in os.environ:
+            print('CONFIG_CONFIG is set to: ' + os.environ['CONFIG_CONFIG'])
+            print('Resetting CONFIG_CONFIG')
         os.environ['CONFIG_CONFIG'] = ':_:configdir_.:configpath_:configname_Configrc.exe:configexe_1:configargs_-stdout ' + Configrc_args
         cpMgr = ConfigPageManager.getGlobalPtr()
         cpMgr.reloadImplicitPages()
         launcherConfig = getConfigExpress()
-        __builtin__.config = launcherConfig
+        builtins.config = launcherConfig
         self.VerifyFiles = self.getVerifyFiles()
         self.ServerVersion = launcherConfig.GetString('server-version', 'no_version_set')
         self.ServerVersionSuffix = launcherConfig.GetString('server-version-suffix', '')
@@ -165,7 +165,7 @@ class LauncherBase(DirectObject):
             self.fromCD = 0
         else:
             self.fromCD = tmpVal
-        self.notify.info('patch directory is ' + `(self.fromCD)`)
+        self.notify.info('patch directory is ' + repr((self.fromCD)))
         self.dbDir = self.topDir
         self.patchDir = self.topDir
         self.mfDir = self.topDir
@@ -192,7 +192,7 @@ class LauncherBase(DirectObject):
         tmpPhase3Map = [0.001, 0.996, 0.0, 0.0, 0.003]
         phaseIdx = 0
         for phase in self.LauncherPhases:
-            percentPhaseCompleteKey = 'PERCENT_PHASE_COMPLETE_' + `phase`
+            percentPhaseCompleteKey = 'PERCENT_PHASE_COMPLETE_' + repr(phase)
             self.setRegistry(percentPhaseCompleteKey, 0)
             self.phaseComplete[phase] = 0
             self.phaseNewDownload[phase] = 0
@@ -838,7 +838,7 @@ class LauncherBase(DirectObject):
 
     def getProgressSum(self, phase):
         sum = 0
-        for i in xrange(0, len(self.linesInProgress)):
+        for i in range(0, len(self.linesInProgress)):
             if self.linesInProgress[i].find(phase) > -1:
                 nameSizeTuple = self.linesInProgress[i].split()
                 numSize = nameSizeTuple[1].split('L')
@@ -860,7 +860,7 @@ class LauncherBase(DirectObject):
         token = 'phase_'
         self.progressSum = self.getProgressSum(token)
         self.progressSum -= self.getProgressSum(token + '2')
-        self.notify.info('total phases to be downloaded = ' + `(self.progressSum)`)
+        self.notify.info('total phases to be downloaded = ' + repr((self.progressSum)))
         self.checkClientDbExists()
 
     def prepareClient(self):
@@ -965,7 +965,7 @@ class LauncherBase(DirectObject):
             self.notify.info('maybeStartGame: starting game')
             self.launcherMessage(self.Localizer.LauncherStartingGame)
             self.background()
-            __builtin__.launcher = self
+            builtins.launcher = self
             self.startGame()
 
     def mainLoop(self):
@@ -995,7 +995,7 @@ class LauncherBase(DirectObject):
         return
 
     def updatePhase(self, phase):
-        self.notify.info('Updating multifiles in phase: ' + `phase`)
+        self.notify.info('Updating multifiles in phase: ' + repr(phase))
         self.setPercentPhaseComplete(self.currentPhase, 0)
         self.phaseMultifileNames = []
         numfiles = self.dldb.getServerNumMultifiles()
@@ -1017,7 +1017,7 @@ class LauncherBase(DirectObject):
                 for i in range(self.dldb.getServerNumMultifiles()):
                     mfname = self.dldb.getServerMultifileName(i)
                     phase = self.dldb.getServerMultifilePhase(mfname)
-                    print i, mfname, phase
+                    print(i, mfname, phase)
 
                 self.handleGenericMultifileError()
             decompressedMfname = os.path.splitext(self.currentMfname)[0]
@@ -1030,10 +1030,10 @@ class LauncherBase(DirectObject):
             vfs = VirtualFileSystem.getGlobalPtr()
             vfs.mount(localFilename, '.', VirtualFileSystem.MFReadOnly)
             self.setPercentPhaseComplete(self.currentPhase, 100)
-            self.notify.info('Done updating multifiles in phase: ' + `(self.currentPhase)`)
+            self.notify.info('Done updating multifiles in phase: ' + repr((self.currentPhase)))
             self.progressSoFar += int(round(self.phaseOverallMap[self.currentPhase] * 100))
-            self.notify.info('progress so far ' + `(self.progressSoFar)`)
-            messenger.send('phaseComplete-' + `(self.currentPhase)`)
+            self.notify.info('progress so far ' + repr((self.progressSoFar)))
+            messenger.send('phaseComplete-' + repr((self.currentPhase)))
             if nextIndex < len(self.LauncherPhases):
                 self.currentPhase = self.LauncherPhases[nextIndex]
                 self.currentPhaseIndex = nextIndex + 1
@@ -1250,7 +1250,7 @@ class LauncherBase(DirectObject):
         self.patchMultifile()
 
     def getPatchFilename(self, fname, currentVersion):
-        return fname + '.v' + `currentVersion` + '.' + self.patchExtension
+        return fname + '.v' + repr(currentVersion) + '.' + self.patchExtension
 
     def downloadPatches(self):
         if len(self.patchList) > 0:
@@ -1266,7 +1266,7 @@ class LauncherBase(DirectObject):
             else:
                 self.download(serverPatchFilePath, localPatchFilename, self.downloadPatchDone, self.downloadPatchOverallProgress)
         else:
-            self.notify.info('applyNextPatch: Done patching multifile: ' + `(self.currentPhase)`)
+            self.notify.info('applyNextPatch: Done patching multifile: ' + repr((self.currentPhase)))
             self.patchDone()
 
     def downloadPatchDone(self):
@@ -1275,7 +1275,7 @@ class LauncherBase(DirectObject):
         self.decompressFile(Filename(self.patchDir, Filename(self.currentPatch + '.pz')), self.decompressPatchDone)
 
     def decompressPatchDone(self):
-        self.notify.info('decompressPatchDone: Patching file: ' + self.currentPatchee + ' from ver: ' + `(self.currentPatchVersion)`)
+        self.notify.info('decompressPatchDone: Patching file: ' + self.currentPatchee + ' from ver: ' + repr((self.currentPatchVersion)))
         patchFile = Filename(self.patchDir, Filename(self.currentPatch))
         patchFile.setBinary()
         patchee = Filename(self.mfDir, Filename(self.currentPatchee))
@@ -1293,7 +1293,7 @@ class LauncherBase(DirectObject):
         self.extract(self.currentMfname, localFilename, destDir, self.updateMultifileDone)
 
     def startReextractingFiles(self):
-        self.notify.info('startReextractingFiles: Reextracting ' + `(len(self.reextractList))` + ' files for multifile: ' + self.currentMfname)
+        self.notify.info('startReextractingFiles: Reextracting ' + repr((len(self.reextractList))) + ' files for multifile: ' + self.currentMfname)
         self.launcherMessage(self.Localizer.LauncherRecoverFiles)
         self.currentMfile = Multifile()
         decompressedMfname = os.path.splitext(self.currentMfname)[0]
@@ -1312,12 +1312,12 @@ class LauncherBase(DirectObject):
                     self.notify.warning('reextractNextFile: Failure on reextract.')
                     failure = 1
             else:
-                self.notify.warning('reextractNextFile: File not found in multifile: ' + `currentReextractFile`)
+                self.notify.warning('reextractNextFile: File not found in multifile: ' + repr(currentReextractFile))
                 failure = 1
 
         if failure:
             sys.exit()
-        self.notify.info('reextractNextFile: Done reextracting files for multifile: ' + `(self.currentPhase)`)
+        self.notify.info('reextractNextFile: Done reextracting files for multifile: ' + repr((self.currentPhase)))
         del self.currentMfile
         self.updateMultifileDone()
 
@@ -1351,7 +1351,7 @@ class LauncherBase(DirectObject):
                 return
             else:
                 if clientVer > 1:
-                    self.notify.info('patchMultifile: Old version for multifile: ' + self.currentMfname + ' Client ver: ' + `clientVer`)
+                    self.notify.info('patchMultifile: Old version for multifile: ' + self.currentMfname + ' Client ver: ' + repr(clientVer))
                     self.maybeStartGame()
                     self.totalPatchDownload = 0
                     self.patchDownloadSoFar = 0
@@ -1363,7 +1363,7 @@ class LauncherBase(DirectObject):
                         if self.currentPhase == 3:
                             self.totalPatchDownload += self.getProgressSum(patch)
 
-                    self.notify.info('total patch to be downloaded = ' + `(self.totalPatchDownload)`)
+                    self.notify.info('total patch to be downloaded = ' + repr((self.totalPatchDownload)))
                     self.downloadPatches()
                     return
 
@@ -1484,7 +1484,7 @@ class LauncherBase(DirectObject):
             self.phaseComplete[phase] = percent
             messenger.send('launcherPercentPhaseComplete', [
              phase, percent, self.getBandwidth(), self.byteRate])
-            percentPhaseCompleteKey = 'PERCENT_PHASE_COMPLETE_' + `phase`
+            percentPhaseCompleteKey = 'PERCENT_PHASE_COMPLETE_' + repr(phase)
             self.setRegistry(percentPhaseCompleteKey, percent)
             self.overallComplete = int(round(percent * self.phaseOverallMap[phase])) + self.progressSoFar
             self.setRegistry('PERCENT_OVERALL_COMPLETE', self.overallComplete)
@@ -1661,19 +1661,19 @@ class LauncherBase(DirectObject):
     def scanForHacks(self):
         if not self.WIN32:
             return
-        import _winreg
+        import winreg
         hacksInstalled = {}
         hacksRunning = {}
         hackName = [
          '!xSpeed.net', 'A Speeder', 'Speed Gear']
-        knownHacksRegistryKeys = {hackName[0]: [[_winreg.HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Windows\\CurrentVersion\\Run\\!xSpeed'], [_winreg.HKEY_CURRENT_USER, 'Software\\!xSpeednethy'], [_winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MenuOrder\\Start Menu\\Programs\\!xSpeednet'], [_winreg.HKEY_LOCAL_MACHINE, 'Software\\Gentee\\Paths\\!xSpeednet'], [_winreg.HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\!xSpeed.net 2.0']], hackName[1]: [[_winreg.HKEY_CURRENT_USER, 'Software\\aspeeder'], [_winreg.HKEY_LOCAL_MACHINE, 'Software\\aspeeder'], [_winreg.HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\aspeeder']]}
+        knownHacksRegistryKeys = {hackName[0]: [[winreg.HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Windows\\CurrentVersion\\Run\\!xSpeed'], [winreg.HKEY_CURRENT_USER, 'Software\\!xSpeednethy'], [winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MenuOrder\\Start Menu\\Programs\\!xSpeednet'], [winreg.HKEY_LOCAL_MACHINE, 'Software\\Gentee\\Paths\\!xSpeednet'], [winreg.HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\!xSpeed.net 2.0']], hackName[1]: [[winreg.HKEY_CURRENT_USER, 'Software\\aspeeder'], [winreg.HKEY_LOCAL_MACHINE, 'Software\\aspeeder'], [winreg.HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\aspeeder']]}
         try:
-            for prog in knownHacksRegistryKeys.keys():
+            for prog in list(knownHacksRegistryKeys.keys()):
                 for key in knownHacksRegistryKeys[prog]:
                     try:
-                        h = _winreg.OpenKey(key[0], key[1])
+                        h = winreg.OpenKey(key[0], key[1])
                         hacksInstalled[prog] = 1
-                        _winreg.CloseKey(h)
+                        winreg.CloseKey(h)
                         break
                     except:
                         pass
@@ -1684,9 +1684,9 @@ class LauncherBase(DirectObject):
             knownHacksMUI = {'!xspeednet': hackName[0], 'aspeeder': hackName[1], 'speed gear': hackName[2]}
             i = 0
             try:
-                rh = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Windows\\ShellNoRoam\\MUICache')
+                rh = winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Windows\\ShellNoRoam\\MUICache')
                 while 1:
-                    name, value, type = _winreg.EnumValue(rh, i)
+                    name, value, type = winreg.EnumValue(rh, i)
                     i += 1
                     if type == 1:
                         val = value.lower()
@@ -1695,7 +1695,7 @@ class LauncherBase(DirectObject):
                                 hacksInstalled[knownHacksMUI[hackprog]] = 1
                                 break
 
-                _winreg.CloseKey(rh)
+                winreg.CloseKey(rh)
             except:
                 pass
             else:
@@ -1708,7 +1708,7 @@ class LauncherBase(DirectObject):
                     try:
                         for p in procapi.getProcessList():
                             pname = p.name
-                            if knownHacksExe.has_key(pname):
+                            if pname in knownHacksExe:
                                 hacksRunning[knownHacksExe[pname]] = 1
 
                     except:
@@ -1716,12 +1716,12 @@ class LauncherBase(DirectObject):
 
                 if len(hacksInstalled) > 0:
                     self.notify.info('Third party programs installed:')
-                    for hack in hacksInstalled.keys():
+                    for hack in list(hacksInstalled.keys()):
                         self.notify.info(hack)
 
             if len(hacksRunning) > 0:
                 self.notify.info('Third party programs running:')
-                for hack in hacksRunning.keys():
+                for hack in list(hacksRunning.keys()):
                     self.notify.info(hack)
 
                 self.setPandaErrorCode(8)

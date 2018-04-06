@@ -2,12 +2,12 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesbase.PiratesBase
-import __builtin__
+import builtins
 import os
 import sys
 import time
 
-import PiratesGlobals
+from . import PiratesGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
@@ -231,6 +231,7 @@ class PiratesBase(OTPBase):
         self.displayCpuFrequencyDialog = False
         self.taskMgr.doMethodLater(120.0, self.memoryMonitorTask, 'memory-monitor-task')
         self.supportAlphaFb = self.win.getFbProperties().getAlphaBits()
+        self.setFrameRateMeter(True)
 
     def deleteDialogs(self):
         if self.cpuSpeedDialog:
@@ -410,7 +411,7 @@ class PiratesBase(OTPBase):
             try:
                 import webbrowser
                 webbrowser.open(url)
-            except WindowsError, e:
+            except WindowsError as e:
                 import os
                 os.system('explorer "%s"' % url)
 
@@ -433,7 +434,7 @@ class PiratesBase(OTPBase):
                 if gridDetail == 'low':
                     self.farCull.setPos(0, 200, 0)
                 else:
-                    raise StandardError, 'Invalid grid-detail: %s' % gridDetail
+                    raise Exception('Invalid grid-detail: %s' % gridDetail)
 
     def setLowMemory(self, lowMemory):
         self.lowMemory = lowMemory
@@ -443,8 +444,8 @@ class PiratesBase(OTPBase):
             if self.lowMemoryStreamAudio.getValue():
                 ConfigVariableInt('miles-audio-preload-threshold').setValue(0)
         else:
-            GeomVertexArrayData.getIndependentLru().setMaxSize(4294967295L)
-            VertexDataPage.getGlobalLru(VertexDataPage.RCResident).setMaxSize(4294967295L)
+            GeomVertexArrayData.getIndependentLru().setMaxSize(4294967295)
+            VertexDataPage.getGlobalLru(VertexDataPage.RCResident).setMaxSize(4294967295)
             if self.lowMemoryStreamAudio.getValue():
                 ConfigVariableInt('miles-audio-preload-threshold').setValue(-1)
 
@@ -501,7 +502,7 @@ class PiratesBase(OTPBase):
         screenShotNotice.setBin('gui-popup', 0)
 
         def clearScreenshotMsg(event):
-            print 'cleanup'
+            print('cleanup')
             screenShotNotice.destroy()
 
         taskMgr.doMethodLater(3.0, clearScreenshotMsg, 'clearScreenshot')
@@ -526,13 +527,13 @@ class PiratesBase(OTPBase):
     def startShow(self, cr):
         self.cr = cr
         if self.config.GetBool('want-fifothreads', 0):
-            __builtin__.yieldThread = self.cr.yieldThread
+            builtins.yieldThread = self.cr.yieldThread
         else:
 
             def nullYield(comment=''):
                 pass
 
-            __builtin__.yieldThread = nullYield
+            builtins.yieldThread = nullYield
             del nullYield
         base.graphicsEngine.renderFrame()
         self.downloadWatcher = PiratesDownloadWatcher.PiratesDownloadWatcher(PLocalizer.LauncherPhaseNames)

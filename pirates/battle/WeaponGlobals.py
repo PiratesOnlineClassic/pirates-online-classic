@@ -3,24 +3,24 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.battle.WeaponGlobals
 import copy
-import cPickle
+import pickle
 import math
 import os
 import random
 
-import Bayonet
-import Consumable
-import Dagger
-import Doll
-import DualCutlass
-import Foil
-import Grenade
-import Melee
-import MonsterMelee
-import Pistol
-import Sword
-import Wand
-import Weapon
+from . import Bayonet
+from . import Consumable
+from . import Dagger
+from . import Doll
+from . import DualCutlass
+from . import Foil
+from . import Grenade
+from . import Melee
+from . import MonsterMelee
+from . import Pistol
+from . import Sword
+from . import Wand
+from . import Weapon
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import *
 from pandac.PandaModules import *
@@ -30,7 +30,7 @@ from pirates.economy import EconomyGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.reputation import RepChart
 from pirates.uberdog.UberDogGlobals import InventoryType
-from WeaponConstants import *
+from .WeaponConstants import *
 
 __defensiveBuffs = [
  C_TAKECOVER, C_OPENFIRE, C_ATTUNE, C_HASTEN, C_REGEN]
@@ -49,14 +49,14 @@ else:
 
 found = vfs.resolveFilename(filename, searchPath)
 if not found:
-    print 'WeaponGlobals.pkl file not found: %s' % filename.cStr()
+    print('WeaponGlobals.pkl file not found: %s' % filename.cStr())
 
 data = vfs.readFile(filename, 1)
-__skillInfo = cPickle.loads(data)
+__skillInfo = pickle.loads(data)
 __attackEffectsSkillInfo = {}
 __columnHeadings = __skillInfo.pop('columnHeadings')
-for heading, value in __columnHeadings.items():
-    exec '%s = %s' % (heading, value) in globals()
+for heading, value in list(__columnHeadings.items()):
+    exec('%s = %s' % (heading, value), globals())
 
 del searchPath
 del __columnHeadings
@@ -79,11 +79,11 @@ __humanWeapons = {InventoryType.MeleeWeaponL1: MELEE, InventoryType.MeleeWeaponL
 __enemyWeapons = {InventoryType.MonsterWeaponL1: COMBAT, InventoryType.MonsterWeaponL2: COMBAT, InventoryType.MonsterWeaponL3: COMBAT, InventoryType.MonsterWeaponL4: COMBAT, InventoryType.MonsterWeaponL5: COMBAT, InventoryType.DualCutlassL1: COMBAT, InventoryType.FoilL1: COMBAT}
 
 def getWeaponTypes():
-    return __humanWeapons.keys() + __enemyWeapons.keys()
+    return list(__humanWeapons.keys()) + list(__enemyWeapons.keys())
 
 
 def getHumanWeaponTypes():
-    return __humanWeapons.keys()
+    return list(__humanWeapons.keys())
 
 
 def getWeaponCategory(weaponId):
@@ -248,12 +248,12 @@ BACKSTAB_ANGLE = 60
 CHARGEABLE_WEAPONS = [
  InventoryType.PistolRep, InventoryType.GrenadeRep, InventoryType.WandRep]
 __skills = {}
-for skillId, skillData in __skillInfo.items():
+for skillId, skillData in list(__skillInfo.items()):
     repCat = skillData[REPUTATION_CATEGORY_INDEX]
     __skills.setdefault(repCat, []).append(skillId)
 
 def getAllSkillIds():
-    return __skillInfo.keys()
+    return list(__skillInfo.keys())
 
 
 def getSkills(weaponRepId):
@@ -365,7 +365,7 @@ def getSkillAmmoInventoryId(skillId):
 
 def getAllAmmoSkills():
     skillIds = []
-    for skillId in __skillInfo.keys():
+    for skillId in list(__skillInfo.keys()):
         if getSkillAmmoInventoryId(skillId):
             skillIds.append(skillId)
 
@@ -412,7 +412,7 @@ def getSkillTrack(skillId):
 
 
 def getSkillIcon(skillId):
-    if not __skillInfo.has_key(skillId):
+    if skillId not in __skillInfo:
         return 'base'
     icon = __skillInfo[skillId][SKILL_ICON_INDEX]
     if icon:
@@ -991,7 +991,7 @@ def getComboBonus(val):
 
 
 def skillTableSanityCheck():
-    for skillId, skillInfo in __skillInfo.items():
+    for skillId, skillInfo in list(__skillInfo.items()):
         maxQuant = getSkillMaxQuantity(skillId)
         ammoInvId = getSkillAmmoInventoryId(skillId)
         if maxQuant != INF_QUANT and maxQuant != STAFF_QUANT:

@@ -4,7 +4,7 @@
 # Embedded file name: pirates.makeapirate.Shape
 import random
 
-from CharGuiBase import CharGuiPicker, CharGuiSlider
+from .CharGuiBase import CharGuiPicker, CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
@@ -97,7 +97,7 @@ class Shape(DirectObject.DirectObject):
                 idx = 1
             optionsLeft = len(self.main.JSD_FACE[idx])
             if optionsLeft:
-                choice = random.choice(range(0, optionsLeft))
+                choice = random.choice(list(range(0, optionsLeft)))
                 if self.main.lastDialog:
                     self.main.lastDialog.stop()
                 dialog = self.main.JSD_FACE[idx][choice]
@@ -128,7 +128,7 @@ class Shape(DirectObject.DirectObject):
         self.pgsScale.node().setValue(self.avatar.dna.getHeadSize())
 
     def reset(self):
-        for i in xrange(0, len(self.pgs)):
+        for i in range(0, len(self.pgs)):
             self.resetSlider(self.pgs[i])
 
         self.avatar.faceTextureIdx = 0
@@ -144,7 +144,7 @@ class Shape(DirectObject.DirectObject):
     def randomPick(self):
         global damper
         damper = 1.0
-        for i in xrange(0, len(self.pgs)):
+        for i in range(0, len(self.pgs)):
             slider = self.pgs[i]
             self.resetSlider(slider)
             if self.avatar.pirate.gender == 'f':

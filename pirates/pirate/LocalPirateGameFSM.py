@@ -18,7 +18,7 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.RewardPanel import RewardPanel
 from pirates.reputation import ReputationGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-from PlayerPirateGameFSM import PlayerPirateGameFSM
+from .PlayerPirateGameFSM import PlayerPirateGameFSM
 
 
 class LocalPirateGameFSM(PlayerPirateGameFSM):
@@ -514,7 +514,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.guiMgr.request('Interface', [True, False])
         self.av.guiMgr.toggleGuiForNpcInteraction(0)
         self.av.stopAutoRun()
-        print 'startWeaponReceive'
+        print('startWeaponReceive')
         dummy = localAvatar.attachNewNode('dummy')
         dummy.setPos(localAvatar.headNode.getX(localAvatar), localAvatar.headNode.getY(localAvatar) + 10,
             localAvatar.headNode.getZ(localAvatar) + 3)
@@ -603,7 +603,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.guiMgr.toggleGuiForNpcInteraction(0)
         self.av.stopAutoRun()
         npc.playInteraction(hasMenu=hasMenu)
-        print 'startNPCInteract'
+        print('startNPCInteract')
         if npc.interactCamPosHpr:
             camPos = npc.interactCamPosHpr[0]
             camHpr = npc.interactCamPosHpr[1]
@@ -688,7 +688,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.guiMgr.request('Cutscene')
         self.av.cameraFSM.request('Control')
         self.av.guiMgr._hideCursor()
-        print 'enterCutscene'
+        print('enterCutscene')
         self.av.motionFSM.off()
         if base.camLens.getAspectRatio() < 1.77:
             base.transitions.letterboxOn()

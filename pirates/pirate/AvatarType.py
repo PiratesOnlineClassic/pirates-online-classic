@@ -96,6 +96,12 @@ class AvatarType:
     def __cmp__(self, other):
         return hash(self) - hash(other)
 
+    def __lt__(self, other):
+        return hash(self) - hash(other)
+
+    def __repr__(self):
+        return hash(self)
+
     def isA(self, other):
         return other._contains(self)
 

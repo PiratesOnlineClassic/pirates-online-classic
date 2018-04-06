@@ -67,7 +67,7 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         self.notify.debug('delete')
         del self.coll
         self.geom.removeNode()
-        for node in self.GridLOD.values():
+        for node in list(self.GridLOD.values()):
             node.cleanup()
 
         del self.GridLOD

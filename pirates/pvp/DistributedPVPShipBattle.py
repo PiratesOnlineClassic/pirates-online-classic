@@ -45,7 +45,7 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
         return
 
     def setShipDoId(self, shipId):
-        print '_shipId %s' % shipId
+        print('_shipId %s' % shipId)
         self.shipRequest = base.cr.relatedObjectMgr.requestObjects([shipId], eachCallback=self._shipArrived)
 
     def _shipArrived(self, ship):
@@ -53,7 +53,7 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
         ship.registerBuildCompleteFunction(Functor(self._boardShip, ship))
 
     def _boardShip(self, ship):
-        print '_boardShip %s' % ship.doId
+        print('_boardShip %s' % ship.doId)
         self.acceptOnce(ship.uniqueName('localAvBoardedShip'), self._boardShipDone)
         localAvatar.placeOnShip(ship, pvp=True)
 
@@ -89,7 +89,7 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
     def getScoreList(self):
         scoreList = []
         teamScores = {}
-        for playerId, stats in self.stats.items():
+        for playerId, stats in list(self.stats.items()):
             playerScore = stats[PVPGlobals.SCORE]
             playerTeam = self.teams[playerId]
             if playerTeam in teamScores:
@@ -99,7 +99,7 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
             if playerId == localAvatar.doId:
                 scoreList.append({'Team': playerId, 'Score': playerScore})
 
-        for teamName, teamScore in teamScores.items():
+        for teamName, teamScore in list(teamScores.items()):
             scoreList.append({'Team': teamName, 'Score': teamScore})
 
         scoreList.sort(self.sortScores)

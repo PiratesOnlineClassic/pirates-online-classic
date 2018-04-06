@@ -72,7 +72,7 @@ class SkillPage(InventoryPage.InventoryPage):
         return
 
     def destroy(self):
-        for spot in self.skillFrames.keys():
+        for spot in list(self.skillFrames.keys()):
             self.skillFrames[spot].destroy()
 
         if self.tabBar:
@@ -183,7 +183,7 @@ class SkillPage(InventoryPage.InventoryPage):
                     activeSkills.remove(skillId)
                     totalActiveSkills.remove(skillId)
 
-        for spot in self.skillFrames.keys():
+        for spot in list(self.skillFrames.keys()):
             if spot not in totalComboSkills:
                 self.skillFrames[spot].hide()
 

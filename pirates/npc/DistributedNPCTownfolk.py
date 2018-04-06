@@ -5,7 +5,7 @@
 import random
 import re
 
-import Townfolk
+from . import Townfolk
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
@@ -154,7 +154,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
         return 0
 
     def setDNAId(self, dnaId):
-        if dnaId and NPCList.NPC_LIST.has_key(dnaId):
+        if dnaId and dnaId in NPCList.NPC_LIST:
             dnaDict = NPCList.NPC_LIST[dnaId]
             customDNA = HumanDNA.HumanDNA()
             customDNA.loadFromNPCDict(dnaDict)
@@ -484,7 +484,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
             healMojoButtonState = InteractGlobals.NORMAL
         if self.shopInventory:
             storeButtonState = InteractGlobals.NORMAL
-        print 'DEBUG - optionIds: %s' % InteractGlobals.getNPCInteractMenu(self.avatarType)[1]
+        print('DEBUG - optionIds: %s' % InteractGlobals.getNPCInteractMenu(self.avatarType)[1])
         optionIds = InteractGlobals.getNPCInteractMenu(self.avatarType)[1]
         buttonStateDict = {InteractGlobals.QUEST: questButtonState, InteractGlobals.TALK: InteractGlobals.DISABLED, InteractGlobals.DUEL: InteractGlobals.DISABLED, InteractGlobals.STORE: storeButtonState, InteractGlobals.SHIPS: shipButtonState, InteractGlobals.SELL_SHIPS: sellShipButtonState, InteractGlobals.TRAIN: InteractGlobals.DISABLED, InteractGlobals.REPAIR: repairButtonState, InteractGlobals.UPGRADE: InteractGlobals.DISABLED, InteractGlobals.TRADE: InteractGlobals.DISABLED, InteractGlobals.HEAL_HP: healButtonState, InteractGlobals.HEAL_MOJO: healMojoButtonState, InteractGlobals.CANCEL: InteractGlobals.NORMAL, InteractGlobals.SAIL: sailButtonState, InteractGlobals.SAILTM: sailTMButtonState, InteractGlobals.BRIBE: bribeButtonState, InteractGlobals.ACCESSORIES_STORE: InteractGlobals.NORMAL, InteractGlobals.TATTOO_STORE: InteractGlobals.NORMAL, InteractGlobals.JEWELRY_STORE: InteractGlobals.NORMAL, InteractGlobals.BARBER_STORE: InteractGlobals.NORMAL, InteractGlobals.RESPEC: respecButtonState, InteractGlobals.MUSICIAN: InteractGlobals.NORMAL, InteractGlobals.PVP_REWARDS_TATTOO: InteractGlobals.NORMAL, InteractGlobals.PVP_REWARDS_EYE_PATCHES: InteractGlobals.DISABLED, InteractGlobals.PVP_REWARDS_HATS: InteractGlobals.DISABLED}
         stateCodes = []
@@ -584,7 +584,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
         DistributedBattleNPC.DistributedBattleNPC.setHp(self, hitPoints, quietly)
 
     def drawWeapon(self):
-        print 'draw weapon'
+        print('draw weapon')
         ival = self.pullOutCurrentWeapon()
         ival.start()
 
@@ -634,7 +634,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
 
     def shipTutorialPt1(self):
         nameData = [
-         PLocalizer.PirateShipPrefix.keys(), PLocalizer.PirateShipSuffix.keys()]
+         list(PLocalizer.PirateShipPrefix.keys()), list(PLocalizer.PirateShipSuffix.keys())]
         self.shipNamePanel = NamePanelGui.NamePanelGui(PLocalizer.NamePanelTitle, nameData, showClose=False)
         self.shipNamePanel.setPos(-1, 0, 0)
         self.acceptOnce('nameChosen', self.handleShipNameChosen)
@@ -834,7 +834,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
         return self.helpId
 
     def showVoodooDollToAvatar(self):
-        print 'triggering the interaction complete'
+        print('triggering the interaction complete')
 
     def showRespecMenu(self):
         if self.interactGUI:

@@ -73,7 +73,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         self.avatar2fsm = {}
 
     def getWorld(self, instanceType, instanceName):
-        for object in self.air.doId2do.values():
+        for object in list(self.air.doId2do.values()):
 
             if not object or not isinstance(object, DistributedInstanceBaseAI):
                 continue

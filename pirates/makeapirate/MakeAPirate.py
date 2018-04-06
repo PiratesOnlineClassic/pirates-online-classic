@@ -4,18 +4,18 @@
 # Embedded file name: pirates.makeapirate.MakeAPirate
 import random
 
-import BodyGUI
-import ClothesGUI
-import GenderGUI
-import HairGUI
-import HeadGUI
-import JewelryGUI
-import NameGUI
-import NPCGUI
-import PirateFemale
-import PirateMale
-import TattooGUI
-from CharGuiBase import CharGuiSlider
+from . import BodyGUI
+from . import ClothesGUI
+from . import GenderGUI
+from . import HairGUI
+from . import HeadGUI
+from . import JewelryGUI
+from . import NameGUI
+from . import NPCGUI
+from . import PirateFemale
+from . import PirateMale
+from . import TattooGUI
+from .CharGuiBase import CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import PyDatagram
 from direct.fsm import FSM, StateData
@@ -24,9 +24,8 @@ from direct.fsm.State import State
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import DirectObject
 from direct.task import Task
-from MakeAPirateGlobals import *
+from .MakeAPirateGlobals import *
 from otp.distributed import PotentialAvatar
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
@@ -52,7 +51,7 @@ CamZoomOutPosHprs = [
   [
    Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)]], [[Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)]]]
 
-class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
+class MakeAPirate(StateData.StateData, FSM.FSM):
     __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('MakeAPirate')
 
@@ -1765,7 +1764,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             if optionsLeft and random.choice([0, 1, 2, 3]) == 1:
                 if self.lastDialog:
                     self.lastDialog.stop()
-                choice = random.choice(range(0, optionsLeft))
+                choice = random.choice(list(range(0, optionsLeft)))
                 dialog = self.JSD_ANYTIME[idx][choice]
                 base.playSfx(dialog)
                 self.lastDialog = dialog
@@ -1931,7 +1930,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
     def playJackDialogOnClothes(self, clothesType):
         if self.inRandomAll:
             return
-        choice = random.choice(range(12))
+        choice = random.choice(list(range(12)))
         if choice != 0:
             return
         optionsLeft = len(self.JSD_CLOTHING[self.pirate.gender][clothesType])
@@ -1939,7 +1938,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             if self.lastDialog:
                 if self.lastDialog.status() == AudioSound.PLAYING:
                     return
-            choice = random.choice(range(0, optionsLeft))
+            choice = random.choice(list(range(0, optionsLeft)))
             dialog = self.JSD_CLOTHING[self.pirate.gender][clothesType][choice]
             base.playSfx(dialog)
             self.lastDialog = dialog

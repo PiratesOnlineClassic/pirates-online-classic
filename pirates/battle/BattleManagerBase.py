@@ -288,7 +288,7 @@ class BattleManagerBase:
          tHealth, targetEffects[1], targetEffects[2], tMojo, targetEffects[4]]
         attackerEffects = [aHealth, attackerEffects[1], attackerEffects[2], aMojo, attackerEffects[4]]
         if not target:
-            for i in xrange(len(targetEffects)):
+            for i in range(len(targetEffects)):
                 targetEffects[i] = 0
 
         targetEffects[0] = max(-30000, int(targetEffects[0]))

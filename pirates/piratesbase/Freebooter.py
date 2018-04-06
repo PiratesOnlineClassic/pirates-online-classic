@@ -48,7 +48,7 @@ def pruneFreebooterSkills(skillTrack):
     if getPaidStatus(base.localAvatar.getDoId()):
         return skillTrack
     else:
-        return filter(lambda skillId: WeaponGlobals.canFreeUse(skillId), skillTrack)
+        return [skillId for skillId in skillTrack if WeaponGlobals.canFreeUse(skillId)]
 
 
 def allowedFreebooterWeapon(repId):

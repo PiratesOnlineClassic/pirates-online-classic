@@ -66,7 +66,7 @@ class PlayerShip(DistributedShip):
             self.checkAnchor.remove()
             self.checkAnchor = None
         self._repairSpotMgr.destroy()
-        for ival in self._repairSpotIvals.itervalues():
+        for ival in self._repairSpotIvals.values():
             ival.pause()
 
         del self._repairSpotIvals
@@ -118,12 +118,12 @@ class PlayerShip(DistributedShip):
             self.loadFlat()
         if team:
             color = PVPGlobals.getSiegeColor(team)
-            for d in self.sails.itervalues():
-                for sail, distSail in d.itervalues():
+            for d in self.sails.values():
+                for sail, distSail in d.values():
                     sail.sailGeom.setColorScale(color)
 
-        for d in self.sails.itervalues():
-            for sail, distSail in d.itervalues():
+        for d in self.sails.values():
+            for sail, distSail in d.values():
                 sail.sailGeom.clearColorScale()
 
         return
@@ -143,12 +143,12 @@ class PlayerShip(DistributedShip):
             self.loadFlat()
         if team:
             color = PVPGlobals.getTeamColor(team)
-            for d in self.sails.itervalues():
-                for sail, distSail in d.itervalues():
+            for d in self.sails.values():
+                for sail, distSail in d.values():
                     sail.sailGeom.setColorScale(color)
 
-        for d in self.sails.itervalues():
-            for sail, distSail in d.itervalues():
+        for d in self.sails.values():
+            for sail, distSail in d.values():
                 sail.sailGeom.clearColorScale()
 
         return
@@ -283,7 +283,7 @@ class PlayerShip(DistributedShip):
             self._repairSpotWoodPiles[locName].setPosHpr(locator.getPos(), locator.getHpr())
 
     def _removeRepairSpotModels(self):
-        for woodPile in self._repairSpotWoodPiles.itervalues():
+        for woodPile in self._repairSpotWoodPiles.values():
             woodPile.detachNode()
 
         self._repairSpotWoodPiles = {}

@@ -40,7 +40,7 @@ class WaterShadow(NodePath):
             else:
                 shadow_spn.setEffect(CompassEffect.make(base.cr.activeWorld.getWater().patchNP, CompassEffect.PZ))
             if self.use_water_bin:
-                mask = 4294967295L
+                mask = 4294967295
                 stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
                 self.setAttrib(stencil)
         return

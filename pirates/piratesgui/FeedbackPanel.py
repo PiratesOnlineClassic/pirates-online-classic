@@ -166,5 +166,5 @@ class FeedbackPanel(GuiPanel.GuiPanel):
         self.feedbackInput.enterText(name.strip())
 
     def _catSelect(self, item):
-        print 'Item Selected is %s' % item
+        print('Item Selected is %s' % item)
 # okay decompiling .\pirates\piratesgui\FeedbackPanel.pyc

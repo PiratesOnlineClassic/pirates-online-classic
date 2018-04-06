@@ -2,7 +2,7 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.QuestPage
-import GuiButton
+from . import GuiButton
 from direct.gui.DirectGui import *
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
@@ -111,8 +111,8 @@ class QuestPage(InventoryPage.InventoryPage):
             self.titleList.showTracked(questId)
             quest = localAvatar.getQuestById(questId)
             if quest is None:
-                print 'Tracked quest not found on avatar!\n  Tracked quest: %s\n  Current quests: %s' % (questId,
-                 map(lambda q: q.getQuestId(), localAvatar.getQuests()))
+                print('Tracked quest not found on avatar!\n  Tracked quest: %s\n  Current quests: %s' % (questId,
+                 [q.getQuestId() for q in localAvatar.getQuests()]))
                 self.trackedQuestLabel.hide()
             else:
                 text = quest.getStatusText()
@@ -134,7 +134,7 @@ class QuestPage(InventoryPage.InventoryPage):
         self.updateQuestTitles(quest, newQuest=True)
 
     def updateQuestTitles(self, quest=None, newQuest=False):
-        questIds = map(lambda q: q.getQuestId(), localAvatar.getQuests())
+        questIds = [q.getQuestId() for q in localAvatar.getQuests()]
         self.titleList.update(questIds, quest, newQuest)
         self.titleList.showTracked(localAvatar.activeQuestId)
         self.updateTrackedQuestLabel(localAvatar.activeQuestId)

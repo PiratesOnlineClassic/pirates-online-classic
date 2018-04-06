@@ -2,7 +2,7 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.login.LoginWebPlayTokenAccount
-import LoginTTAccount
+from . import LoginTTAccount
 from direct.directnotify import DirectNotifyGlobal
 from pandac.PandaModules import *
 
@@ -45,7 +45,7 @@ class LoginWebPlayTokenAccount(LoginTTAccount.LoginTTAccount):
         pass
 
     def getErrorCode(self):
-        if not self.has_key('response'):
+        if 'response' not in self:
             return 0
         return self.response.getInt('errorCode', 0)
 

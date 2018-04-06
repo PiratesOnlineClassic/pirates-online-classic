@@ -4,7 +4,7 @@
 # Embedded file name: pirates.makeapirate.HairGUI
 import random
 
-from CharGuiBase import CharGuiPicker, CharGuiSlider
+from .CharGuiBase import CharGuiPicker, CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
@@ -147,11 +147,11 @@ class HairGUI(DirectFrame, StateData.StateData):
         self.avatar.pirate.setHairColor(choice)
         self.avatar.handleHeadHiding()
         if self.main.pirate.style.gender == 'm':
-            choice = random.choice(range(0, len(self.avatar.beards)))
+            choice = random.choice(list(range(0, len(self.avatar.beards))))
             self.avatar.beardIdx = choice
             self.avatar.pirate.setHairBeard(choice)
             if choice == 0 or choice > 3:
-                choice = random.choice(range(0, len(self.avatar.mustaches)))
+                choice = random.choice(list(range(0, len(self.avatar.mustaches))))
                 mustache = self.avatar.mustaches[choice]
                 self.avatar.mustacheIdx = choice
                 self.avatar.pirate.setHairMustache(choice)
@@ -249,7 +249,7 @@ class HairGUI(DirectFrame, StateData.StateData):
         if optionsLeft:
             if self.main.lastDialog:
                 self.main.lastDialog.stop()
-            choice = random.choice(range(0, optionsLeft))
+            choice = random.choice(list(range(0, optionsLeft)))
             dialog = self.main.JSD_HAIR[idx][choice]
             base.playSfx(dialog, node=self.avatar.pirate)
             self.main.lastDialog = dialog

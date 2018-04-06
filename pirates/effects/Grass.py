@@ -50,7 +50,7 @@ class Grass(DirectObject, NodePath):
         return
 
     def destroy(self):
-        print 'deleting grass'
+        print('deleting grass')
         self.stop()
         self.detachNode()
         del self.clumps
@@ -72,11 +72,11 @@ class Grass(DirectObject, NodePath):
     def setupClumps(self, actor=1):
         grassPath = 'models/vegetation/Grass_zero'
         if actor:
-            for i in xrange(self.numClumps):
+            for i in range(self.numClumps):
                 ga = self.createActor()
                 self.clumps.append(ga)
 
-        for i in xrange(self.numClumps):
+        for i in range(self.numClumps):
             clump = loader.loadModelCopy('models/misc/smiley')
             clump.setScale(1.0 + random.random())
             clump.reparentTo(self)
@@ -126,9 +126,9 @@ class Grass(DirectObject, NodePath):
         grassSamples = pickle.load(dataFile)
         dataFile.close()
         self._numDivX, self._numDivY, self._dx, self._dy, self._minX, self._minY, self._grassDensity, self.sampleDict = grassSamples
-        print self._numDivX, self._numDivY, self._dx, self._dy, self._minX, self._minY
+        print(self._numDivX, self._numDivY, self._dx, self._dy, self._minX, self._minY)
         self.radius = math.sqrt(self.numClumps / math.pi / self._grassDensity)
-        print 'radius = %s' % self.radius
+        print('radius = %s' % self.radius)
 
     def getAvatarCell(self):
         avPos = localAvatar.getPos(self.parent)
@@ -139,7 +139,7 @@ class Grass(DirectObject, NodePath):
          index, row, col)
 
     def placeAllClumps(self):
-        for sampleIndex in self.sampleDict.keys()[0:20]:
+        for sampleIndex in list(self.sampleDict.keys())[0:20]:
             samples = self.sampleDict.get(sampleIndex, [])
             for sample in samples:
                 samplePos = Vec3(sample[1], sample[2], sample[3])
@@ -154,7 +154,7 @@ class Grass(DirectObject, NodePath):
     def getNearbySamples(self, row, col):
         samples = []
         radius = 2
-        gridOffsets = xrange(-radius, radius + 1)
+        gridOffsets = range(-radius, radius + 1)
         for di in gridOffsets:
             for dj in gridOffsets:
                 i = row + di
@@ -220,7 +220,7 @@ class Grass(DirectObject, NodePath):
 
     def moveGrass(self):
         t = globalClock.getFrameTime()
-        for i in xrange(self.numClumps):
+        for i in range(self.numClumps):
             clump = self.clumps[i]
             hiFreq = 1.0 * math.sin(math.pi * i * t)
             lowFreq = 3.0 * math.sin(0.1 * math.pi * t) + 3.0

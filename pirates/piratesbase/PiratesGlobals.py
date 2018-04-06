@@ -1,4 +1,4 @@
-import PLocalizer
+from . import PLocalizer
 from direct.gui import DirectButton, DirectFrame
 from otp.otpbase import OTPLocalizer as OL
 from otp.otpbase.OTPGlobals import *

@@ -4,9 +4,9 @@
 # Embedded file name: pirates.effects.BossEffect
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
+from .EffectController import EffectController
 from pandac.PandaModules import *
-from PooledEffect import PooledEffect
+from .PooledEffect import PooledEffect
 
 
 class BossEffect(PooledEffect, EffectController):

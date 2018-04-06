@@ -358,7 +358,7 @@ class AccessoriesStoreGUI(DirectFrame):
                 localAvatar.guiMgr.questPage.trackedQuestLabel.hide()
                 self.showQuestLabel = True
         if config.GetBool('tailor-debug', 0):
-            print '######## STORE ID = %s' % self.shopId
+            print('######## STORE ID = %s' % self.shopId)
 
             def debugColor(id):
                 topColors = localAvatar.style.getClothesTopColor()
@@ -558,7 +558,7 @@ class AccessoriesStoreGUI(DirectFrame):
         camera.setPos(self.initialCamPos)
         camera.setHpr(self.initialCamHpr)
         equips = []
-        for type in self.equipRequests.keys():
+        for type in list(self.equipRequests.keys()):
             equip = self.equipRequests.get(type)
             if equip is not None:
                 uid = equip[0]

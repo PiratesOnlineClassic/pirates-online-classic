@@ -5,10 +5,10 @@
 import random
 
 from direct.interval.IntervalGlobal import *
-from EffectController import EffectController
+from .EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.SparksTrailLong import SparksTrailLong
-from PooledEffect import PooledEffect
+from .PooledEffect import PooledEffect
 
 
 class TrailExplosion(PooledEffect, EffectController):

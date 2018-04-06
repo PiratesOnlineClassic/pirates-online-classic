@@ -1,5 +1,5 @@
-from ClickablePopup import *
-from MarginPopup import *
+from .ClickablePopup import *
+from .MarginPopup import *
 from otp.nametag import NametagGlobals
 from otp.nametag.NametagConstants import *
 

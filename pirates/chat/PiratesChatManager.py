@@ -5,7 +5,7 @@
 import string
 import sys
 
-import PChatInputSpeedChat
+from . import PChatInputSpeedChat
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.showbase import DirectObject
@@ -15,8 +15,8 @@ from otp.chat.ChatGlobals import *
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.otpgui import OTPDialog
 from pandac.PandaModules import *
-from PChatInputTyped import PChatInputTyped
-from PChatInputWhiteList import PChatInputWhiteList
+from .PChatInputTyped import PChatInputTyped
+from .PChatInputWhiteList import PChatInputWhiteList
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import ChatPanel, GuiPanel, PDialog, PiratesGuiGlobals
 
@@ -209,7 +209,7 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
         if not self.toggleEnabled:
             return
         if not isinstance(self.preferredMode, str):
-            raise TypeError, 'preferredMode was non-string in toggleWhiteListChat'
+            raise TypeError('preferredMode was non-string in toggleWhiteListChat')
         self.whiteListActive = not self.whiteListActive
         if not self.active:
             self.activateChat()

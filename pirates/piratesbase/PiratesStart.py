@@ -1,11 +1,11 @@
-import __builtin__
+import builtins
 import os
 import sys
 import random
 import gc
 import time
-import PiratesPreloader
-import ClassicLogger
+from pirates.piratesbase import PiratesPreloader
+#from pirates.piratesbase import ClassicLogger
 from panda3d.core import *
 
 gc.disable()
@@ -13,29 +13,27 @@ gc.disable()
 if __debug__:
     loadPrcFile('config/general.prc')
     loadPrcFile('config/dev.prc')
-
-print 'PiratesStart: Starting the game.'
+print('PiratesStart: Starting the game.')
 
 class game:
     __module__ = __name__
     name = 'pirates'
     process = 'client'
 
-__builtin__.game = game()
-
+builtins.game = game()
 try:
     launcher
 except:
-    print 'Creating PiratesDummyLauncher'
+    print('Creating PiratesDummyLauncher')
     from pirates.launcher.PiratesDummyLauncher import PiratesDummyLauncher
     launcher = PiratesDummyLauncher()
-    __builtin__.launcher = launcher
+    builtins.launcher = launcher
 
 from direct.gui import DirectGuiGlobals
-import PiratesGlobals
+from . import PiratesGlobals
 DirectGuiGlobals.setDefaultFontFunc(PiratesGlobals.getInterfaceFont)
 launcher.setPandaErrorCode(7)
-import PiratesBase
+from . import PiratesBase
 PiratesBase.PiratesBase()
 from direct.showbase.ShowBaseGlobal import *
 
@@ -43,7 +41,7 @@ if base.config.GetBool('want-preloader', 0):
     base.preloader = PiratesPreloader.PiratesPreloader()
 
 if base.win == None:
-    print 'Unable to open window; aborting.'
+    print('Unable to open window; aborting.')
     sys.exit()
 
 launcher.setPandaErrorCode(0)
@@ -62,7 +60,7 @@ hdr = Hdr()
 from pirates.seapatch.Reflection import Reflection
 Reflection.initialize(render)
 serverVersion = base.config.GetString('server-version', 'no_version_set')
-print 'serverVersion: ', serverVersion
+print('serverVersion: ', serverVersion)
 from pirates.distributed import PiratesClientRepository
 cr = PiratesClientRepository.PiratesClientRepository(serverVersion, launcher)
 base.initNametagGlobals()

@@ -62,7 +62,7 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             if self.animSet != 'default':
                 allAnims = copy.copy(CustomAnims.INTERACT_ANIMS.get(self.animSet))
                 if allAnims:
-                    if allAnims.has_key('props'):
+                    if 'props' in allAnims:
                         del allAnims['props']
                     if self.startState != 'Idle':
                         allAnims['walk'] = [
@@ -364,13 +364,13 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
     def _handleEnterSphereTest(self, collEntry):
         otherCollNode = collEntry.getFromNodePath()
         myCollNode = collEntry.getIntoNodePath()
-        print 'NPC colliding me %s other %s' % (str(myCollNode), str(otherCollNode))
+        print('NPC colliding me %s other %s' % (str(myCollNode), str(otherCollNode)))
 
     def _handleAgainSphereTest(self, collEntry):
-        print 'NPC colliding'
+        print('NPC colliding')
 
     def _handleExitSphereTest(self, collEntry):
-        print 'NPC colliding'
+        print('NPC colliding')
 
     def updateMyAnimState(self, forwardVel, rotationVel, lateralVel):
         pass
@@ -395,7 +395,7 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             if inAttack:
                 self.setH(parentObj, oldH)
             if self.enableZPrint:
-                print '%s:  new z is %s, old z is %s' % (self.doId, newPos[2], oldZ)
+                print('%s:  new z is %s, old z is %s' % (self.doId, newPos[2], oldZ))
             headingNodePos = self.headingNode.getPos()
             xDiff = abs(newPos[0] - headingNodePos[0])
             yDiff = abs(newPos[1] - headingNodePos[1])
@@ -510,7 +510,7 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
         self.clearAnimProp()
         propPath = random.choice(availProps)
         propType = CustomAnims.PROP_TYPE_DYNAMIC
-        if type(propPath) is types.ListType:
+        if type(propPath) is list:
             propType = propPath[1]
             propPath = propPath[0]
         if propType == CustomAnims.PROP_TYPE_PERSIST:

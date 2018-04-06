@@ -7,10 +7,10 @@ import random
 from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from EffectController import EffectController
+from .EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
-from PooledEffect import PooledEffect
+from .PooledEffect import PooledEffect
 
 
 class BeamEffect(PooledEffect, EffectController):

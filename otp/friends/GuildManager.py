@@ -2,7 +2,7 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.friends.GuildManager
-import Queue
+import queue
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
@@ -104,7 +104,7 @@ class GuildManager(DistributedObjectGlobal):
         self.sendUpdate('sendSC', [msgIndex])
 
     def sendSCQuest(self, questInt, msgType, taskNum):
-        print 'GuildManager.sendSCQuest() called'
+        print('GuildManager.sendSCQuest() called')
         self.sendUpdate('sendSCQuest', [questInt, msgType, taskNum])
 
     def sendTokenRequest(self):
@@ -199,17 +199,17 @@ class GuildManager(DistributedObjectGlobal):
         base.localAvatar.guildNameChange(guildName, changeStatus)
 
     def guildNameUpdate(self, avatarId, guildName):
-        print 'DEBUG - guildNameUpdate for ', avatarId, ' to ', guildName
+        print('DEBUG - guildNameUpdate for ', avatarId, ' to ', guildName)
 
     def invitationFrom(self, avatarId, avatarName, guildId, guildName):
-        print 'GM invitationFrom %s(%d)' % (avatarName, avatarId)
+        print('GM invitationFrom %s(%d)' % (avatarName, avatarId))
         base.localAvatar.guiMgr.handleGuildInvitation(avatarId, avatarName, guildId, guildName)
 
     def retractInvite(self, avatarId):
-        print 'GM retraction'
+        print('GM retraction')
 
     def guildAcceptInvite(self, avatarId):
-        print 'sending accept event'
+        print('sending accept event')
         messenger.send(OTPGlobals.GuildAcceptInviteEvent, [avatarId])
 
     def leaderboardTopTen(self, stuff):

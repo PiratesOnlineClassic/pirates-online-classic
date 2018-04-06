@@ -214,12 +214,12 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         self.worldGrid.turnOn(av)
 
     def _turnOffIslands(self, cacheIslands=[]):
-        for island in self.islands.values():
+        for island in list(self.islands.values()):
             cache = island in cacheIslands
             island.turnOff(cache)
 
     def _turnOnIslands(self):
-        for island in self.islands.values():
+        for island in list(self.islands.values()):
             island.turnOn()
 
     def isOn(self):

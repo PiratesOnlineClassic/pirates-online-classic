@@ -54,7 +54,7 @@ class BarChart(DirectFrame):
             meter['range'] = self.maxValue
         meterWidth = meter['frameSize'][1] - meter['frameSize'][0]
         percentFilled = float(meter['value']) / float(meter['range'])
-        print percentFilled
+        print(percentFilled)
         newTextPos = meterWidth * percentFilled + 0.18
         meter['text_pos'] = (newTextPos, 0)
         label = DirectLabel(parent=meter, relief=None, text=data[0], text_scale=PiratesGuiGlobals.TextScaleSmall, text_align=TextNode.ALeft, text_pos=(0,

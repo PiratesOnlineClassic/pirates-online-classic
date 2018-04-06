@@ -4,8 +4,8 @@
 # Embedded file name: pirates.battle.DualCutlass
 import random
 
-import Weapon
-import WeaponGlobals
+from . import Weapon
+from . import WeaponGlobals
 from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
 from pirates.effects import PolyTrail

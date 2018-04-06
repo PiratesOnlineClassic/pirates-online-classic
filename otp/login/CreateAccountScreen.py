@@ -2,8 +2,8 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.login.CreateAccountScreen
-import GuiScreen
-import TTAccount
+from . import GuiScreen
+from . import TTAccount
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.MsgTypes import *
 from direct.fsm import ClassicFSM, State, StateData
@@ -187,7 +187,7 @@ class CreateAccountScreen(StateData.StateData, GuiScreen.GuiScreen):
             if referrer is not None:
                 data['referrer'] = referrer
             error = self.loginInterface.createAccount(self.userName, self.password, data)
-        except TTAccount.TTAccountException, e:
+        except TTAccount.TTAccountException as e:
             error = str(e)
             self.notify.info(error)
             self.dialog.setMessage(error + OTPLocalizer.CreateAccountScreenConnectionErrorSuffix)

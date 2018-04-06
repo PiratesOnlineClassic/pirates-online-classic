@@ -19,34 +19,34 @@ else:
         return language
 
 
-    print 'PLocalizer: Running in language: %s' % language
-    _languageModule = 'pirates.piratesbase.PLocalizer' + string.capitalize(language)
-    _questStringModule = 'pirates.piratesbase.PQuestStrings' + string.capitalize(language)
-    _greetingStringModule = 'pirates.piratesbase.PGreetingStrings' + string.capitalize(language)
-    exec 'from ' + _languageModule + ' import *'
-    exec 'from ' + _questStringModule + ' import *'
-    exec 'from ' + _greetingStringModule + ' import *'
+    print('PLocalizer: Running in language: %s' % language)
+    _languageModule = 'pirates.piratesbase.PLocalizer' + language[:1].upper() + language[1:]
+    _questStringModule = 'pirates.piratesbase.PQuestStrings' + language[:1].upper() + language[1:]
+    _greetingStringModule = 'pirates.piratesbase.PGreetingStrings' + language[:1].upper() + language[1:]
+    exec('from ' + _languageModule + ' import *')
+    exec('from ' + _questStringModule + ' import *')
+    exec('from ' + _greetingStringModule + ' import *')
     if checkLanguage:
         l = {}
         g = {}
         englishModule = __import__('pirates.piratesbase.PLocalizerEnglish', g, l)
         foreignModule = __import__(_languageModule, g, l)
-        for key, val in englishModule.__dict__.items():
-            if not foreignModule.__dict__.has_key(key):
-                print 'WARNING: Foreign module: %s missing key: %s' % (_languageModule, key)
+        for key, val in list(englishModule.__dict__.items()):
+            if key not in foreignModule.__dict__:
+                print('WARNING: Foreign module: %s missing key: %s' % (_languageModule, key))
                 locals()[key] = val
-            elif isinstance(val, types.DictType):
+            elif isinstance(val, dict):
                 fval = foreignModule.__dict__.get(key)
-                for dkey, dval in val.items():
-                    if not fval.has_key(dkey):
-                        print 'WARNING: Foreign module: %s missing key: %s.%s' % (_languageModule, key, dkey)
+                for dkey, dval in list(val.items()):
+                    if dkey not in fval:
+                        print('WARNING: Foreign module: %s missing key: %s.%s' % (_languageModule, key, dkey))
                         fval[dkey] = dval
 
-                for dkey in fval.keys():
-                    if not val.has_key(dkey):
-                        print 'WARNING: Foreign module: %s extra key: %s.%s' % (_languageModule, key, dkey)
+                for dkey in list(fval.keys()):
+                    if dkey not in val:
+                        print('WARNING: Foreign module: %s extra key: %s.%s' % (_languageModule, key, dkey))
 
-        for key in foreignModule.__dict__.keys():
-            if not englishModule.__dict__.has_key(key):
-                print 'WARNING: Foreign module: %s extra key: %s' % (_languageModule, key)
+        for key in list(foreignModule.__dict__.keys()):
+            if key not in englishModule.__dict__:
+                print('WARNING: Foreign module: %s extra key: %s' % (_languageModule, key))
 # okay decompiling .\pirates\piratesbase\PLocalizer.pyc

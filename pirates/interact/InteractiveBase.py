@@ -111,7 +111,7 @@ class InteractiveBase(FSM.FSM):
         else:
             if allowInteract or isTarget:
                 self.setupProximitySphere(parent)
-                if isinstance(sphereScale, types.TupleType):
+                if isinstance(sphereScale, tuple):
                     self.proximityCollisionNodePath.setScale(*sphereScale)
                 else:
                     self.proximityCollisionNodePath.setScale(sphereScale)

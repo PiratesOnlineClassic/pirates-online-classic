@@ -8,12 +8,12 @@ from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect, Particles
 from direct.showbase.DirectObject import *
-from EffectController import EffectController
+from .EffectController import EffectController
 from otp.otpbase import OTPRender
 from pandac.PandaModules import *
 from pirates.effects import PolyTrail
 from pirates.piratesbase import PiratesGlobals
-from PooledEffect import PooledEffect
+from .PooledEffect import PooledEffect
 
 
 class JollySoulDrain(PooledEffect, EffectController):

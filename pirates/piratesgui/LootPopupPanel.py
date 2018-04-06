@@ -76,7 +76,7 @@ class LootPopupPanel(StackMessage, DirectObject.DirectObject):
         self.show()
         self.setAlphaScale(1.0)
         treasure = []
-        for itemId in self.icons.iterkeys():
+        for itemId in self.icons.keys():
             count = 0
             for item in plunder:
                 if item == itemId:
@@ -286,7 +286,7 @@ class LootPopupPanel(StackMessage, DirectObject.DirectObject):
         z = 0.1
         iconXOffset = 0.09
         addHeight = (invHeight - 1) * z
-        for i in xrange(invHeight):
+        for i in range(invHeight):
             iconZOffset = z * (i + 1) - 0.01 - self.height - addHeight
             self.loot[i].setPos(iconXOffset, 0, iconZOffset)
 

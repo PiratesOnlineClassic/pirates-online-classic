@@ -2,7 +2,7 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.movement.Mover
-import __builtin__
+import builtins
 
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import PythonUtil
@@ -31,7 +31,7 @@ class Mover:
             self.pscInt = PStatCollector(Mover.PSCInt)
 
     def destroy(self):
-        for name, impulse in self.impulses.items():
+        for name, impulse in list(self.impulses.items()):
             self.notify.debug('removing impulse: %s' % name)
             self.removeImpulse(name)
 
@@ -54,12 +54,12 @@ class Mover:
         if self.Profile and not profile:
 
             def func(doMove=self.move):
-                for i in xrange(10000):
+                for i in range(10000):
                     doMove(dt, profile=1)
 
-            __builtin__.func = func
+            builtins.func = func
             PythonUtil.startProfile(cmd='func()', filename='profile', sorts=['cumulative'], callInfo=0)
-            del __builtin__.func
+            del builtins.func
             return
 
         if self.Pstats:
@@ -69,7 +69,7 @@ class Mover:
             self.pscCpp.stop()
             self.pscPy.start()
 
-        for impulse in self.impulses.values():
+        for impulse in list(self.impulses.values()):
             impulse._process(self.getDt())
 
         if self.Pstats:

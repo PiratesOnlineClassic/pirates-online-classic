@@ -206,9 +206,9 @@ class NameGUI(DirectFrame, StateData.StateData):
         def match(npcName, name=name):
             return TextEncoder.upper(npcName) == TextEncoder.upper(string.strip(name))
 
-        for npcId in NPCList.NPC_LIST.keys():
+        for npcId in list(NPCList.NPC_LIST.keys()):
             data = NPCList.NPC_LIST[npcId]
-            if type(data) is types.DictType and HumanDNA.HumanDNA.setName in data:
+            if type(data) is dict and HumanDNA.HumanDNA.setName in data:
                 npcName = data[HumanDNA.HumanDNA.setName]
                 if (self.independent or not self.main.isNPCEditor) and match(npcName):
                     self.notify.info('name matches NPC name "%s"' % npcName)
@@ -620,15 +620,15 @@ class NameGUI(DirectFrame, StateData.StateData):
             return
         if self.getDNA().getGender() == 'f':
             self.nicknameIndex = ''
-            self.firstIndex = random.choice(range(len(self.firstNamesFemale) - 4)) + 2
-            self.prefixIndex = random.choice(range(len(self.lastPrefixesFemale) - 4)) + 2
-            self.suffixIndex = random.choice(range(len(self.lastSuffixesFemale) - 4)) + 2
+            self.firstIndex = random.choice(list(range(len(self.firstNamesFemale) - 4))) + 2
+            self.prefixIndex = random.choice(list(range(len(self.lastPrefixesFemale) - 4))) + 2
+            self.suffixIndex = random.choice(list(range(len(self.lastSuffixesFemale) - 4))) + 2
         else:
             self.nicknameIndex = ''
-            self.firstIndex = random.choice(range(len(self.firstNamesMale) - 4)) + 2
-            self.prefixIndex = random.choice(range(len(self.lastPrefixesMale) - 4)) + 2
-            self.suffixIndex = random.choice(range(len(self.lastSuffixesMale) - 4)) + 2
-        nameCombo = random.choice(self.POSSIBLE_NAME_COMBOS.keys())
+            self.firstIndex = random.choice(list(range(len(self.firstNamesMale) - 4))) + 2
+            self.prefixIndex = random.choice(list(range(len(self.lastPrefixesMale) - 4))) + 2
+            self.suffixIndex = random.choice(list(range(len(self.lastSuffixesMale) - 4))) + 2
+        nameCombo = random.choice(list(self.POSSIBLE_NAME_COMBOS.keys()))
         self.nicknameActive, self.firstActive, self.lastActive = self.POSSIBLE_NAME_COMBOS[nameCombo]
         self._updateGuiToPickAName([self.nicknameActive, self.firstActive, self.lastActive], [
          0, self.firstIndex, self.prefixIndex, self.suffixIndex])
@@ -824,7 +824,7 @@ class NameGUI(DirectFrame, StateData.StateData):
         self.notify.debug('Chosen name: %s' % self.nameEntry.get())
         problem = NameCheck.checkName(name, [self._checkNpcNames])
         if problem:
-            print problem
+            print(problem)
             self.nameEntry.enterText('')
         else:
             self.fsm.request('Approved')
@@ -880,7 +880,7 @@ class NameGUI(DirectFrame, StateData.StateData):
         if self.customName:
             problem = NameCheck.checkName(name, [self._checkNpcNames])
             if problem:
-                print problem
+                print(problem)
                 self.nameEntry.enterText('')
             else:
                 self.fsm.request('Done')
@@ -912,7 +912,7 @@ class NameGUI(DirectFrame, StateData.StateData):
                 maxWidth = self.text.calcWidth(name)
                 maxName = name
 
-        print maxName + ' ' + str(maxWidth)
+        print(maxName + ' ' + str(maxWidth))
         return maxName
 
     def findWidestName(self):

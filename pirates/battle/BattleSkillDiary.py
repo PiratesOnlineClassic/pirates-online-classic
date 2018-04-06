@@ -48,7 +48,7 @@ class BattleSkillDiary:
             details[2] = globalClock.getFrameTime()
 
     def clearRecharging(self, skillId):
-        if self.__timers.has_key(skillId):
+        if skillId in self.__timers:
             del self.__timers[skillId]
 
     def getTimeSpentRecharging(self, skillId):
@@ -101,7 +101,7 @@ class BattleSkillDiary:
     def __str__(self):
         s = 'BattleSkillDiary\n'
         s += ' Skill: Timestamp\n'
-        for skillId, details in self.__timers.items():
+        for skillId, details in list(self.__timers.items()):
             skillName = WeaponGlobals.getSkillName(skillId)
             state = ('Idle', 'Charging')[details[0]]
             dt = details[1]

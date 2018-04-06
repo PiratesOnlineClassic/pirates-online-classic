@@ -97,7 +97,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             if locationName:
                 search = False
             numNamedIsles = 0
-            for currIsle in base.cr.activeWorld.islands.values():
+            for currIsle in list(base.cr.activeWorld.islands.values()):
                 if len(currIsle.name) > 0:
                     numNamedIsles += 1
                     if locationName and currIsle.name == locationName or lastTgtFound == True:
@@ -223,8 +223,8 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
 
         try:
             self.localTeleportingObj.reparentTo(teleportToObj)
-        except TypeError, err:
-            print 'teleportToObj:', teleportToObj
+        except TypeError as err:
+            print('teleportToObj:', teleportToObj)
             raise err
         else:
             teleportToObj.addObjectToGrid(self.localTeleportingObj)
@@ -609,7 +609,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             if parentObj:
                 callback(parentObj, teleportingObj)
             else:
-                if parentsLen > 2 and base.cr.doId2do.has_key(parents[2]):
+                if parentsLen > 2 and parents[2] in base.cr.doId2do:
                     base.cr.relatedObjectMgr.requestObjects([parents[0]], eachCallback=lambda param1=None, param2=teleportingObj: callback(param1, param2))
                     localAvatar.setInterest(parents[2], parents[1], ['instanceInterest'])
                 else:
