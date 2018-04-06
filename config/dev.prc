@@ -13,3 +13,6 @@ teleport-all #t
 
 # Quests:
 disable-blockers #t
+
+# Cartesian Grid:
+visualize-cartesian-grid #f

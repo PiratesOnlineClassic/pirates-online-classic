@@ -537,11 +537,11 @@ class RadarGui(GuiTray, FSM):
                                 inRange or basePiece.show()
                             else:
                                 basePiece.hide()
-                    child = outOfRangeNode.getChild(0)
-                    child.lookAt(dx, 0, dz)
-                    vec = VBase3(dx, 0, dz)
-                    vec.normalize()
-                    outOfRangeNode.setPos(vec[0], 0, vec[2])
+                        child = outOfRangeNode.getChild(0)
+                        child.lookAt(dx, 0, dz)
+                        vec = VBase3(dx, 0, dz)
+                        vec.normalize()
+                        outOfRangeNode.setPos(vec[0], 0, vec[2])
                 dummyNode = objInfo.get('dummySrcObjNode')
                 if dummyNode and objInfo['srcObjNode'].compareTo(dummyNode) != 0:
                     dummyNode.setPos(objInfo['srcObjNode'].getPos(render))

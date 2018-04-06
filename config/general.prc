@@ -89,3 +89,6 @@ want-membership #f
 # Islands:
 remove-island-barriers #f
 object-load-delay #f
+
+# Temporary:
+smooth-lag 0.4

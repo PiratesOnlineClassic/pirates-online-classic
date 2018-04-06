@@ -31,8 +31,21 @@ from otp.nametag.Nametag import Nametag
 
 
 class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCartesianGrid.DistributedCartesianGrid, ZoneLOD.ZoneLOD, ClientArea.ClientArea, Teamable):
-    __module__ = __name__
-    MusicNames = {'Port Royal': 'island-port-royal', 'Tortuga': 'island-tortuga', 'Cuba': 'island-cuba', 'Padre Del Fuego': 'island-padre-del-fuego', "Devil's Anvil": 'island-devils-anvil', 'Driftwood Island': 'island-driftwood', 'Kingshead': 'island-kingshead', 'Outcast Isle': 'island-outcast', 'Isla Perdida': 'island-perdida', "Rumrunner's Isle": 'island-rumrunner', 'Isla Tormenta': 'island-tormenta', 'Isla Cangrejos': 'island-cangrejos', 'Cutthroat Isle': 'island-cutthroat'}
+    MusicNames = {
+        'Port Royal': 'island-port-royal',
+        'Tortuga': 'island-tortuga',
+        'Cuba': 'island-cuba',
+        'Padre Del Fuego': 'island-padre-del-fuego',
+        'Devil\'s Anvil': 'island-devils-anvil',
+        'Driftwood Island': 'island-driftwood',
+        'Kingshead': 'island-kingshead',
+        'Outcast Isle': 'island-outcast',
+        'Isla Perdida': 'island-perdida',
+        'Rumrunner\'s Isle': 'island-rumrunner',
+        'Isla Tormenta': 'island-tormenta',
+        'Isla Cangrejos': 'island-cangrejos',
+        'Cutthroat Isle': 'island-cutthroat'}
+
     MusicDefault = 'island-general'
     SiegeIcon = None
     notify = directNotify.newCategory('DistributedIsland')
@@ -46,7 +59,11 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.islandObjectsLoaded = False
         self.animControls = None
         self.sphereRadii = [
-         1000, 2000, 3000, 100000]
+            1000,
+            2000,
+            3000,
+            100000]
+
         self.sphereCenter = [0, 0]
         ZoneLOD.ZoneLOD.__init__(self, self.uniqueName)
         self.parentWorld = None
@@ -73,6 +90,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.nametag = None
         self.nametag3d = None
         self.grass = None
+        self.localInterest = None
         self.blackSmokeEffect = None
         self.volcanoEffect = None
         self.lavaFlowEffect = None
@@ -88,8 +106,9 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         if not DistributedIsland.SiegeIcon and launcher.getPhaseComplete(3):
             logos = loader.loadModel('models/textureCards/sailLogo')
             if logos:
-                DistributedIsland.SiegeIcon = [logos.find('**/logo_french_flag'), logos.find('**/logo_spanish_flag')]
-        return
+                DistributedIsland.SiegeIcon = [
+                    logos.find('**/logo_french_flag'),
+                    logos.find('**/logo_spanish_flag')]
 
     def announceGenerate(self):
         DistributedGameArea.DistributedGameArea.announceGenerate(self)
@@ -110,6 +129,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.placeOnMap()
 
     def disable(self):
+        self.clearLocalInterest()
         self.removeFromMap()
         self.turnOff()
         ZoneLOD.ZoneLOD.cleanup(self)
@@ -122,13 +142,14 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.deleteNametag3d()
         if self.grass:
             self.grass.destroy()
+
         if self.blackSmokeEffect:
             self.blackSmokeEffect.destroy()
+
         if self.volcanoEffect:
             self.stopVolcanoSmokeEffect()
             self.stopVolcanoRestEffects()
             self.volcanoEffect.destroy()
-        return
 
     def delete(self):
         self.clearAnims()
@@ -148,8 +169,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             icon.removeNode()
             icon = None
 
-        return
-
     def turnOff(self, cache=False):
         self.stopCustomEffects()
         if not cache:
@@ -159,6 +178,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
                 self.removeIslandGridSphere()
                 if self.hasTunnelsOnRadar:
                     self.handleTunnelsOnRadar(False)
+
         DistributedGameArea.DistributedGameArea.turnOff(self)
         DistributedCartesianGrid.DistributedCartesianGrid.turnOff(self)
         ZoneLOD.ZoneLOD.turnOff(self)
@@ -169,14 +189,20 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         if self.lastZoneLevel == 0:
             if not self.gridSphere:
                 self.setupIslandGridSphere()
+
             if not self.hasTunnelsOnRadar:
                 self.handleTunnelsOnRadar(True)
+
+            self.addLocalInterest()
+
         if base.shipsVisibleFromIsland:
             self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
+
         if av:
             self.addObjectToGrid(av)
             self.setZoneLevel(0)
             self.loadConnectors()
+
         DistributedGameArea.DistributedGameArea.turnOn(self)
         DistributedCartesianGrid.DistributedCartesianGrid.turnOn(self, av)
         ZoneLOD.ZoneLOD.turnOn(self)
@@ -194,22 +220,24 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     def setLocation(self, parentId, zoneId):
         DistributedGameArea.DistributedGameArea.setLocation(self, parentId, zoneId)
         world = self.cr.doId2do.get(parentId)
-        if parentId not in (0, self.cr.getGameDoId()):
-            pass
         if world:
             self.reparentTo(world)
             self.parentWorld = world
 
     def setZoneSphereSize(self, rad0, rad1, rad2):
         self.sphereRadii = [
-         rad0, rad1, rad2, 100000]
+            rad0,
+            rad1,
+            rad2,
+            100000]
 
     def getZoneSphereSize(self):
         return self.sphereRadii
 
     def setZoneSphereCenter(self, x, y):
         self.sphereCenter = [
-         x, y]
+            x,
+            y]
 
     def getZoneSphereCenter(self):
         return self.sphereCenter
@@ -218,6 +246,16 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         islandName = self.getName()
         musicName = self.MusicNames.get(islandName, self.MusicDefault)
         return musicName
+
+    def addLocalInterest(self):
+        if not self.localInterest:
+            self.localInterest = self.cr.addTaggedInterest(self.doId, PiratesGlobals.IslandLocalZone,
+                self.cr.ITAG_GAME, 'IslandLocal')
+
+    def clearLocalInterest(self):
+        if self.localInterest:
+            self.cr.removeTaggedInterest(self.localInterest)
+            self.localInterest = None
 
     @report(types=['frameCount', 'args'], dConfigParam=['want-connector-report', 'want-jail-report', 'want-island-report'])
     def loadZoneLevel(self, level):
@@ -233,12 +271,15 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             base.localAvatar.guiMgr.radarGui.loadMap(self.geom)
             if not self.hasTunnelsOnRadar:
                 self.handleTunnelsOnRadar(True)
+
             self.setIslandWaterParameters(True)
             if base.config.GetBool('island-prepare-scene', 1) and base.win.getGsg():
                 render.prepareScene(base.win.getGsg())
+
             self.initBlockers(self.staticGridRoot)
             self.startCustomEffects()
             self.handleEnterGameArea()
+            self.addLocalInterest()
             return
         elif level == 1:
             localAvatar.setInterest(self.doId, PiratesGlobals.IslandShipDeployerZone, ['ShipDeployer'])
@@ -248,6 +289,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.setIslandWaterParameters(True)
             if not self.undockable:
                 localAvatar.setPort(self.doId)
+
             return
         elif level == 2:
             self.unloadIslandLowLod()
@@ -273,40 +315,37 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.handleExitGameArea()
             self.unloadConnectors()
             self.cleanupIslandData()
+            self.clearLocalInterest()
             self.stopListenForLocationSphere()
             self.removeIslandGridSphere()
             self.stopCustomEffects()
             base.localAvatar.guiMgr.radarGui.unloadMap()
             if self.hasTunnelsOnRadar:
                 self.handleTunnelsOnRadar(False)
+
             base.musicMgr.requestFadeOut(self.getMusicName())
             return
-        else:
-            if level == 1:
-                localAvatar.clearInterestNamed(None, ['ShipDeployer'])
-                self.stopVolcanoRestEffects()
-                localAvatar.clearPort(self.doId)
-                return
-            else:
-                if level == 2:
-                    self.showName()
-                    self.removeFromOceanSeapatch()
-                    self.setIslandWaterParameters(False)
-                    self.cleanupTerrain()
-                    self.loadIslandLowLod()
-                    self.startVolcanoSmokeEffect()
-                    self.adjustSmokeParentAndPos(self.islandLowLod, Vec3(-40.0, 75.0, 600.0))
-                    return
-                else:
-                    if level == 3:
-                        self.stopVolcanoSmokeEffect()
-                        self.unloadIslandLowLod()
-                        self.hideName()
-                        return
-                    else:
-                        if level == 4:
-                            pass
-        return
+        elif level == 1:
+            localAvatar.clearInterestNamed(None, ['ShipDeployer'])
+            self.stopVolcanoRestEffects()
+            localAvatar.clearPort(self.doId)
+            return
+        elif level == 2:
+            self.showName()
+            self.removeFromOceanSeapatch()
+            self.setIslandWaterParameters(False)
+            self.cleanupTerrain()
+            self.loadIslandLowLod()
+            self.startVolcanoSmokeEffect()
+            self.adjustSmokeParentAndPos(self.islandLowLod, Vec3(-40.0, 75.0, 600.0))
+            return
+        elif level == 3:
+            self.stopVolcanoSmokeEffect()
+            self.unloadIslandLowLod()
+            self.hideName()
+            return
+        elif level == 4:
+            pass
 
     def handleChildArrive(self, child, zoneId):
         DistributedGameArea.DistributedGameArea.handleChildArrive(self, child, zoneId)
@@ -318,6 +357,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
                 self.parentWorld.worldGrid.stopProcessVisibility()
             else:
                 self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
+
             base.hideShipNametags = True
             messenger.send('hide-ship-nametags')
             if base.shipsVisibleFromIsland == 1:
@@ -326,6 +366,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             else:
                 base.showShipFlats = False
                 messenger.send('normal-ships')
+
             self.setZoneLevel(0)
 
     def handleChildLeave(self, child, zoneId):
@@ -336,16 +377,19 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             base.showShipFlats = False
             base.hideShipNametags = False
             messenger.send('show-ship-nametags')
+
         DistributedGameArea.DistributedGameArea.handleChildLeave(self, child, zoneId)
 
     def handleEnterGameArea(self, collEntry=None):
         if self.uniqueId == LocationIds.KINGSHEAD_ISLAND:
             self.accept(PiratesGlobals.EVENT_SPHERE_SNEAK + PiratesGlobals.SPHERE_ENTER_SUFFIX, self._handleSneakIntoKingshead)
+
         DistributedGameArea.DistributedGameArea.handleEnterGameArea(self, collEntry)
 
     def handleExitGameArea(self, collEntry=None):
         if self.uniqueId == LocationIds.KINGSHEAD_ISLAND:
             self.ignore(PiratesGlobals.EVENT_SPHERE_SNEAK + PiratesGlobals.SPHERE_ENTER_SUFFIX)
+
         DistributedGameArea.DistributedGameArea.handleExitGameArea(self, collEntry)
 
     def setupIslandGridSphere(self):
@@ -407,7 +451,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         if self.playerBarrierNP:
             self.playerBarrierNP.removeNode()
             self.playerBarrierNP = None
-        return
 
     @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
     def setPlayerBarrier(self, isOn):
@@ -440,16 +483,18 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         flatName = self.modelPath.split('_zero')
         if not self.islandLowLod:
             self.islandLowLod = loader.loadModelCopy(flatName[0] + '_low')
+
         if self.islandLowLod and not self.islandLowLod.isEmpty():
             self.islandLowLod.reparentTo(self)
+
         if 'madre_del_fuego' in self.modelPath:
             self.setupMadreDelFuegoEffects()
 
     def unloadIslandLowLod(self):
         if self.islandLowLod:
             self.islandLowLod.removeNode()
+
         self.islandLowLod = None
-        return
 
     def loadIslandMapModel(self):
         if not self.islandMapModelPath:
@@ -461,28 +506,32 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.loadIslandMapModel()
         if not self.mapName and self.islandMapModelPath:
             mapPage = localAvatar.guiMgr.mapPage
-            self.mapName = mapPage.addIsland(self.name, self.uniqueId, self.islandMapModelPath, self.getPos(), self.getH())
+            self.mapName = mapPage.addIsland(self.name, self.uniqueId, self.islandMapModelPath,
+                self.getPos(), self.getH())
 
     @report(types=['frameCount', 'args'], dConfigParam='want-map-report')
     def removeFromMap(self):
         if self.mapName:
             mapPage = localAvatar.guiMgr.mapPage
             mapPage.removeIsland(self.mapName)
+
         self.mapName = None
-        return
 
     def loadIslandShoreWave(self, parent):
         if hasattr(self, 'islandShoreWave'):
             self.islandShoreWave.reparentTo(parent)
             return
+
         lowend = ''
         if base.options.terrain_detail_level == 0:
             lowend = '_lowend'
+
         islandBaseName = self.modelPath.split('_zero')[0]
         waveModel = loader.loadModelCopy(islandBaseName + lowend + '_wave_none')
         if lowend != '' and not waveModel:
             lowend = ''
             waveModel = loader.loadModelCopy(islandBaseName + lowend + '_wave_none')
+
         if waveModel:
             self.islandShoreWave = Actor.Actor(waveModel)
             self.islandShoreWave.loadAnims({'idle': islandBaseName + lowend + '_wave_idle'})
@@ -493,18 +542,19 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
                 mesh = meshes[0]
                 joint = self.islandShoreWave.findAllMatches('**/uvj_WakeWhiteTide1')[0]
                 mesh.setTexProjector(mesh.findTextureStage('default'), joint, parent)
+
             meshes = self.islandShoreWave.findAllMatches('**/mesh_tide2')
             if not meshes.isEmpty():
                 mesh = meshes[0]
                 joint = self.islandShoreWave.findAllMatches('**/uvj_WakeWhiteTide2')[0]
                 mesh.setTexProjector(mesh.findTextureStage('default'), joint, parent)
+
             self.islandShoreWave.setPlayRate(0.8, 'idle')
             OTPRender.renderReflection(False, self.islandShoreWave, 'p_island_shore', None)
             alpha_test_attrib = AlphaTestAttrib.make(RenderAttrib.MAlways, 0)
             self.islandShoreWave.setAttrib(alpha_test_attrib, 100)
             self.islandShoreWave.setTwoSided(1, 100)
             self.islandShoreWave.setDepthWrite(0, 100)
-        return
 
     def unloadIslandShoreWave(self):
         if hasattr(self, 'islandShoreWave'):
@@ -524,62 +574,78 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         lowend = ''
         if base.options.terrain_detail_level == 0:
             lowend = '_lowend'
+
         terrainModel = loader.loadModelCopy(islandBaseName + '_terrain', loaderOptions)
         if terrainModel:
             self.geom = terrainModel
         else:
             self.geom = loader.loadModelCopy(islandBaseName)
             return
+
         collNode = self.geom.find('**/cannoncol*')
         if collNode != collNode.notFound():
             collNode.node().setIntoCollideMask(collNode.node().getIntoCollideMask() | PiratesGlobals.TargetBitmask)
             collNode.setTag('objType', str(PiratesGlobals.COLL_BLOCKER))
+
         terrainDetailModel = loader.loadModelCopy(islandBaseName + lowend + '_terrain_detail', loaderOptions)
         if lowend != '' and not terrainDetailModel:
             terrainDetailModel = loader.loadModelCopy(islandBaseName + '_terrain_detail', loaderOptions)
+
         if terrainDetailModel:
             terrainDetailModel.getChild(0).reparentTo(self.geom)
+
         pierModel = loader.loadModelCopy(islandBaseName + lowend + '_pier', loaderOptions)
         if lowend != '' and not pierModel:
             pierModel = loader.loadModelCopy(islandBaseName + '_pier', loaderOptions)
+
         if pierModel:
             pierModel.getChild(0).reparentTo(self.geom)
+
         vegeWallModel = loader.loadModelCopy(islandBaseName + lowend + '_nat_wall', loaderOptions)
         if lowend != '' and not vegeWallModel:
             vegeWallModel = loader.loadModelCopy(islandBaseName + '_nat_wall', loaderOptions)
+
         if vegeWallModel:
             vegeWallModel.getChild(0).reparentTo(self.geom)
+
         fortModel = loader.loadModelCopy(islandBaseName + lowend + '_fort', loaderOptions)
         if lowend != '' and not fortModel:
             fortModel = loader.loadModelCopy(islandBaseName + '_fort', loaderOptions)
+
         if fortModel:
             fortModel.getChild(0).reparentTo(self.geom)
+
         tunnelModel = loader.loadModelCopy(islandBaseName + lowend + '_tunnel', loaderOptions)
         if lowend != '' and not tunnelModel:
             tunnelModel = loader.loadModelCopy(islandBaseName + '_tunnel', loaderOptions)
+
         if tunnelModel:
             tunnelModel.getChild(0).reparentTo(self.geom)
+
         rocksModel = loader.loadModelCopy(islandBaseName + lowend + '_rocks', loaderOptions)
         if lowend != '' and not rocksModel:
             rocksModel = loader.loadModelCopy(islandBaseName + '_rocks', loaderOptions)
+
         if rocksModel:
             rocksModel.getChild(0).reparentTo(self.geom)
+
         logsModel = loader.loadModelCopy(islandBaseName + lowend + '_logs', loaderOptions)
         if lowend != '' and not logsModel:
             logsModel = loader.loadModelCopy(islandBaseName + '_logs', loaderOptions)
+
         if logsModel:
             logsModel.getChild(0).reparentTo(self.geom)
 
     def addToOceanSeapatch(self):
         if self.parentWorld and self.parentWorld.getWater():
-            self.parentWorld.getWater().patch.addFlatWell(self.uniqueName('flatWell'), self, self.zoneCenter[0], self.zoneCenter[1], self.zoneRadii[0], self.zoneRadii[0] + 100)
+            self.parentWorld.getWater().patch.addFlatWell(self.uniqueName('flatWell'), self, self.zoneCenter[0],
+                self.zoneCenter[1], self.zoneRadii[0], self.zoneRadii[0] + 100)
 
     def removeFromOceanSeapatch(self):
         if self.parentWorld.getWater():
             if 0 and self.portCollisionSpheres:
                 for x, pcs in enumerate(self.portCollisionSpheres):
                     self.parentWorld.getWater().patch.removeFlatWell(self.uniqueName('island-%d' % x))
-
             else:
                 self.parentWorld.getWater().patch.removeFlatWell(self.uniqueName('flatWell'))
 
@@ -614,7 +680,11 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
                 self.setupCannonballBldgColl(c, PiratesGlobals.TargetBitmask)
 
         details = [
-         self.geom.find('**/barrels'), self.geom.find('**/crates'), self.geom.find('**/canopys'), self.geom.find('**/bushes')]
+         self.geom.find('**/barrels'),
+         self.geom.find('**/crates'),
+         self.geom.find('**/canopys'),
+         self.geom.find('**/bushes')]
+
         for detail in details:
             if not detail.isEmpty():
                 detail.wrtReparentTo(self.smallObjectsHigh)
@@ -636,6 +706,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.createNametag(self.name)
         else:
             self.nametag.setName(name)
+
         self.nametag.setDisplayName('        ')
         if self.nameText:
             self.nameText['text'] = name
@@ -650,6 +721,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
                 icon.setScale(0.75)
             else:
                 color = Vec4(0.6, 0.6, 1, 0.4)
+
             self.nameText['fg'] = color
 
     def setDisplayName(self, str):
@@ -715,7 +787,9 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             return 0
 
         if not self.nameText:
-            self.nameText = OnscreenText(fg=Vec4(1, 1, 1, 1), bg=Vec4(0, 0, 0, 0), scale=1.1, align=TextNode.ACenter, mayChange=1, font=PiratesGlobals.getPirateBoldOutlineFont())
+            self.nameText = OnscreenText(fg=Vec4(1, 1, 1, 1), bg=Vec4(0, 0, 0, 0), scale=1.1, align=TextNode.ACenter,
+                mayChange=1, font=PiratesGlobals.getPirateBoldOutlineFont())
+
             self.nameText.setDepthWrite(0)
             self.nameText.reparentTo(self.iconNodePath)
             self.nameText.setColorScaleOff(100)
@@ -791,19 +865,24 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         DistributedGameArea.DistributedGameArea.stopCustomEffects(self)
         if self.grass:
             self.grass.stop()
+
         if self.blackSmokeEffect:
             self.blackSmokeEffect.stop()
+
         if self.volcanoEffect:
             self.stopVolcanoSmokeEffect()
             self.stopVolcanoRestEffects()
+
         self.pauseSFX()
 
     def startVolcanoRestEffects(self):
         if self.volcanoEffect:
             self.volcanoEffect.enableFogSmoke()
             self.volcanoEffect.start()
+
         if self.lavaFlowEffect:
             self.startLavaFlow()
+
         if self.steamFlowEffect:
             self.startSteamFlow()
 
@@ -812,8 +891,10 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.volcanoEffect.stop()
             self.volcanoEffect.disableFogSmoke()
             self.volcanoEffect.disableRest()
+
         if self.lavaFlowEffect:
             self.stopLavaFlow()
+
         if self.steamFlowEffect:
             self.stopSteamFlow()
 
@@ -834,6 +915,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     def setupMadreDelFuegoEffects(self):
         if not self.volcanoEffect:
             self.volcanoEffect = VolcanoEffect()
+
         self.lavaFlowEffect = True
         self.steamFlowEffect = True
 
@@ -845,6 +927,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             if base.main_rtt:
                 lavaGeom.setFogOff()
                 lavaGeom.showThrough(OTPRender.GlowCameraBitmask)
+
             tex = None
             if not lavaGeom.findTextureStage('VertexColor'):
                 ts = TextureStage('VertexColor')
@@ -852,11 +935,13 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
                 tex = lavaGeom.findTexture('*')
                 if tex:
                     lavaGeom.setTexture(ts, tex)
+
             tsSet = lavaGeom.findAllTextureStages()
             tsSet = [ tsSet[x] for x in range(tsSet.getNumTextureStages()) ]
             tsSet.sort(key=lambda x: x.getSort())
             if not tsSet:
                 return
+
             TS = TextureStage
             tsSet[0].setCombineRgb(TS.CMReplace, TS.CSTexture, TS.COSrcColor)
             tsSet[1].setCombineRgb(TS.CMAdd, TS.CSTexture, TS.COSrcColor, TS.CSPrevious, TS.COSrcColor)
@@ -879,7 +964,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
                 return Task.cont
 
             taskMgr.add(flowLava, self.uniqueName('flowLava'))
-        return
 
     def stopLavaFlow(self):
         if self.geom and not self.geom.isEmpty():
@@ -887,6 +971,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             if lavaGeom and not lavaGeom.isEmpty():
                 lavaGeom.clearLight()
                 lavaGeom.clearFog()
+
         taskMgr.remove(self.uniqueName('flowLava'))
 
     def startSteamFlow(self):
@@ -989,8 +1074,10 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         dependencies = self.cr.distributedDistrict.worldCreator.getFilelistByUid(self.uniqueId)
         if self.playerBarrierNP:
             self.playerBarrierNP.detachNode()
+
         if self.geom:
             self.geom.detachNode()
+
         gridGeomCache = self.getGridCache()
         largeGeomCache = self.getLargeObjectsCache()
         animCache = self.getAnimCache()
@@ -1021,15 +1108,19 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.staticGridRoot.detachNode()
         if localAvatar.questStep and localAvatar.questStep.getStepDoId() == self.doId:
             localAvatar.questIndicator.indicatorNode.detachNode()
+
         shipDeployer = self.find('ShipDeployer')
         if not shipDeployer.isEmpty():
             shipDeployer.detachNode()
+
         coreCache.setData(self.node(), 0)
         base.bamCache.store(coreCache)
         if not shipDeployer.isEmpty():
             shipDeployer.reparentTo(self)
+
         if localAvatar.questStep and localAvatar.questStep.getStepDoId() == self.doId:
             localAvatar.questIndicator.indicatorNode.reparentTo(self)
+
         self.animNode.reparentTo(animNodeParent)
         self.staticGridRoot.reparentTo(staticGridParent)
         self.allDetails.reparentTo(allDetailsParent)
@@ -1038,6 +1129,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.nametag3d.reparentTo(nametagParent)
         if self.geom:
             self.geom.reparentTo(self)
+
         for sphere in self.zoneSphere:
             sphere.reparentTo(self)
 
@@ -1052,6 +1144,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             flat = self.geom.find('**/island_flat_lod')
             if not flat.isEmpty():
                 flat.removeNode()
+
             islandGeomCache.setData(self.geom.node(), 0)
             base.bamCache.store(islandGeomCache)
         else:
@@ -1127,7 +1220,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     def cleanupTerrain(self):
         self.geom.removeNode()
         self.geom = None
-        return
 
     def getCoreCache(self):
         return base.bamCache.lookup(Filename('/%s_%s_core_%s_%s' % (self.name, self.uniqueId, base.launcher.ServerVersion, base.gridDetail)), '')
@@ -1170,7 +1262,8 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         for i in range(0, portalNPs.getNumPaths()):
             pe = portalNPs[i]
             if show:
-                localAvatar.guiMgr.radarGui.addRadarObjectAtLoc(pe.getPos(render), objType=RadarGui.RADAR_OBJ_TYPE_EXIT, targetObjId='exit-' + str(i))
+                localAvatar.guiMgr.radarGui.addRadarObjectAtLoc(pe.getPos(render), objType=RadarGui.RADAR_OBJ_TYPE_EXIT,
+                    targetObjId='exit-' + str(i))
             else:
                 localAvatar.guiMgr.radarGui.removeRadarObject('exit-' + str(i))
 
@@ -1182,7 +1275,10 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
 
     def getIslandTransform(self):
         return (
-         self.getX(), self.getY(), self.getZ(), self.getH())
+            self.getX(),
+            self.getY(),
+            self.getZ(),
+            self.getH())
 
     def setIslandTransform(self, x, y, z, h):
         self.setXYZH(x, y, z, h)
@@ -1199,17 +1295,24 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         if av.isLocal():
             if not self.gridNodes:
                 self.buildGridTable()
+
             zonesNew = None
             zonesOld = None
             if self.visTable:
                 zonesNew = self.visTable.get(zoneId)
+
             if not zonesNew:
-                zonesNew = set(self.getConcentricZones(zoneId, 3) + self.getConcentricZones(zoneId, 2) + self.getConcentricZones(zoneId, 1))
+                zonesNew = set(self.getConcentricZones(zoneId, 3) + self.getConcentricZones(zoneId, 2) + \
+                    self.getConcentricZones(zoneId, 1))
+
             zonesNew.add(zoneId)
             if self.visTable:
                 zonesOld = self.visTable.get(av.zoneId)
+
             if not zonesOld:
-                zonesOld = set(self.getConcentricZones(av.zoneId, 3) + self.getConcentricZones(av.zoneId, 2) + self.getConcentricZones(av.zoneId, 1))
+                zonesOld = set(self.getConcentricZones(av.zoneId, 3) + self.getConcentricZones(av.zoneId, 2) + \
+                    self.getConcentricZones(av.zoneId, 1))
+
             zonesOld.add(av.zoneId)
             for zone in zonesOld:
                 gridZone = self.gridNodes.get(zone)
@@ -1223,4 +1326,3 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
                     gridZone.setColor(0, 1, 0, 1)
 
         DistributedCartesianGrid.DistributedCartesianGrid.handleAvatarZoneChange(self, av, zoneId)
-        return

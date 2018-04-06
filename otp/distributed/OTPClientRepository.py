@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.distributed.OTPClientRepository
 import gc
 import os
 import random
@@ -41,7 +37,6 @@ from PotentialAvatar import PotentialAvatar
 
 
 class OTPClientRepository(ClientRepositoryBase):
-    __module__ = __name__
     notify = directNotify.newCategory('OTPClientRepository')
     notify.setDebug(True)
     avatarLimit = 6
@@ -1772,6 +1767,7 @@ class OTPClientRepository(ClientRepositoryBase):
             self.send(datagram)
             self.notify.info('Sent disconnect message to server')
             self.disconnect()
+
         self.stopHeartbeat()
 
     def askAvatarKnown(self, avId):
@@ -1791,4 +1787,12 @@ class OTPClientRepository(ClientRepositoryBase):
 
     def queueRequestAvatarInfo(self, avId):
         pass
-# okay decompiling .\otp\distributed\OTPClientRepository.pyc
+
+    ITAG_PERM = 'perm'
+    ITAG_AVATAR = 'avatar'
+    ITAG_SHARD = 'shard'
+    ITAG_WORLD = 'world'
+    ITAG_GAME = 'game'
+
+    def addTaggedInterest(self, parentId, zoneId, mainTag, desc, otherTags = [], event = None):
+        return self.addInterest(parentId, zoneId, desc, event)

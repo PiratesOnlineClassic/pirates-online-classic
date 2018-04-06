@@ -69,7 +69,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable):
-    __module__ = __name__
     DiskUseColor = (1, 0, 0, 1)
     DiskWaitingColor = (1, 0, 0, 1)
     notify = directNotify.newCategory('DistributedBattleAvatar')
@@ -164,7 +163,6 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         self.floorNorm = Vec3(0, 0, 1)
         self.tracksTerrain = None
         self.gNodeFwdPt = None
-        return
 
     def generate(self):
         DistributedReputationAvatar.generate(self)
@@ -195,6 +193,15 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
             self.ambientFx = SoundInterval(self.ambientSfx, node=self)
             self.ambientFx.loop()
             yieldThread('sound')
+
+    def setLocation(self, parentId, zoneId, teleport):
+        DistributedReputationAvatar.setLocation(self, parentId, zoneId)
+
+        # TODO: FIXME!
+        try:
+            self.wrtReparentTo(self.getParentObj())
+        except:
+            pass
 
     def disable(self):
         self.ignoreAll()
