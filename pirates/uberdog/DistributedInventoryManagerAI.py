@@ -78,7 +78,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         if not inventory:
             return
 
-        self.removeInventory(inventory.doId)
+        self.removeInventory(inventory)
 
     def __sendInventory(self, avatarId, inventoryId):
         inventory = self.inventories.get(inventoryId)
