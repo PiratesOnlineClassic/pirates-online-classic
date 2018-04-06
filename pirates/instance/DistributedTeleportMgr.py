@@ -304,10 +304,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         def teleportConfirmation(confirmed, islandUid=islandUid):
             self.islandTeleportConfirmation(confirmed, islandUid)
 
-        if not base.config.GetBool('teleport-all', False):
-            localAvatar.setTeleportFlag(PiratesGlobals.TFNoIslandToken, localAvatar.confirmIslandTeleport, [
-                islandUid])
-
+        localAvatar.setTeleportFlag(PiratesGlobals.TFNoIslandToken, localAvatar.confirmIslandTeleport, [islandUid])
         localAvatar.confirmTeleport(teleportConfirmation, feedback=True)
         localAvatar.clearTeleportFlag(PiratesGlobals.TFNoIslandToken)
 
@@ -316,11 +313,10 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         if confirmed:
             islandDoId = self.cr.uidMgr.getDoId(islandUid)
             island = self.cr.getDo(islandDoId)
-            # TODO FIXME: Why would you teleport locally?????
-            #if island and island.getParentObj() is self.cr.activeWorld:
-            #    self.localTeleport(locationName=island.getName())
-            #else:
-            self.sendUpdate('requestTeleportToIsland', [islandUid])
+            if island and island.getParentObj() is self.cr.activeWorld:
+                self.localTeleport(locationName=island.getName())
+            else:
+                self.sendUpdate('requestTeleportToIsland', [islandUid])
 
             base.cr.loadingScreen.showTarget(islandUid)
             base.cr.loadingScreen.showHint(islandUid)

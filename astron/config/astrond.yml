@@ -27,10 +27,6 @@ uberdogs:
       id: 4679
       anonymous: false
 
-    - class: GuildManager
-      id: 4701
-      anonymous: true
-
 roles:
     - type: clientagent
       bind: 127.0.0.1:7198

@@ -1,8 +1,8 @@
-from direct.distributed.DistributedSmoothNodeAI import DistributedSmoothNodeAI
+from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedAvatarAI(DistributedSmoothNodeAI):
+class DistributedAvatarAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedAvatarAI')
 
     def __init__(self, air):
-        DistributedSmoothNodeAI.__init__(self, air)
+        DistributedObjectAI.__init__(self, air)

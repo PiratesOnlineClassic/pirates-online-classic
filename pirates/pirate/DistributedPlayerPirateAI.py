@@ -1,28 +1,14 @@
+from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
-from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
-from pirates.pirate.HumanDNA import HumanDNA
-from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
 from pirates.piratesbase import PLocalizer
-from pirates.quest.QuestConstants import LocationIds
-from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 
-class DistributedPlayerPirateAI(DistributedPlayerAI, HumanDNA):
+class DistributedPlayerPirateAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
 
     def __init__(self, air):
-        DistributedPlayerAI.__init__(self, air)
-        HumanDNA.__init__(self)
+        DistributedObjectAI.__init__(self, air)
         self.dnaString = ''
-        self.jailCellIndex = 0
-        self.returnLocation = ''
         self.emoteId = 0
-
-    def generate(self):
-        DistributedPlayerAI.generate(self)
-
-        if simbase.config.GetBool('skip-tutorial', False):
-            self.b_setReturnLocation(LocationIds.PORT_ROYAL_ISLAND)
-            self.b_setJailCellIndex(100)
 
     def setDNAString(self, dnaString):
         self.dnaString = dnaString
@@ -36,52 +22,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, HumanDNA):
 
     def getDNAString(self):
         return self.dnaString
-
-    def d_relayTeleportLoc(self, shardId, zoneId, teleportMgrDoId):
-        self.sendUpdateToAvatarId(self.doId, 'relayTeleportLoc', [shardId, zoneId,
-            teleportMgrDoId])
-
-    def d_forceTeleportStart(self, instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone):
-        self.sendUpdateToAvatarId(self.doId, 'forceTeleportStart', [instanceName, tzDoId, thDoId,
-            worldGridDoId, tzParent, tzZone])
-
-    def setReturnLocation(self, returnLocation):
-        self.returnLocation = returnLocation
-
-    def d_setReturnLocation(self, returnLocation):
-        self.sendUpdate('setReturnLocation', [returnLocation])
-
-    def b_setReturnLocation(self, returnLocation):
-        self.setReturnLocation(returnLocation)
-        self.d_setReturnLocation(returnLocation)
-
-    def getReturnLocation(self):
-        return self.returnLocation
-
-    def setJailCellIndex(self, jailCellIndex):
-        self.jailCellIndex = jailCellIndex
-
-    def d_setJailCellIndex(self, jailCellIndex):
-        self.sendUpdate('setJailCellIndex', [jailCellIndex])
-
-    def b_setJailCellIndex(self, jailCellIndex):
-        self.setJailCellIndex(jailCellIndex)
-        self.d_setJailCellIndex(jailCellIndex)
-
-    def getJailCellIndex(self):
-        return self.jailCellIndex
-
-    def requestCurrentIsland(self, locationDoId):
-        island = self.air.doId2do.get(locationDoId)
-
-        if not island:
-            return
-
-        if not isinstance(island, DistributedGameAreaAI):
-            return
-
-        self.sendUpdateToAvatarId(self.doId, 'setCurrentIsland', [
-            island.getUniqueId()])
 
     def hasEmote(self, emoteId):
         emote = PLocalizer.emotes.get(emoteId)
@@ -108,5 +48,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, HumanDNA):
         self.sendUpdateToAvatarId(self.doId, 'playEmote', [emoteId])
         self.sendUpdate('playEmote', [emoteId])
 
-    def getEmote(self):
+    def getEmoteId(self):
         return self.emoteId
+
+    def d_relayTeleportLoc(self, shardId, zoneId, teleportMgrDoId):
+        self.sendUpdateToAvatarId(self.doId, 'relayTeleportLoc', [shardId, zoneId, teleportMgrDoId])
+
+    def d_forceTeleportStart(self, instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone):
+        self.sendUpdateToAvatarId(self.doId, 'forceTeleportStart', [instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone])
