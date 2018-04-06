@@ -445,10 +445,6 @@ struct PresenceStatus {
   uint32 sublocation;
 };
 
-dclass Manager : DistributedObject {
-  online();
-};
-
 dclass DistributedGoldReceipt : DistributedObject {
   setGoldPaid(uint16) db;
   setExpirationDate(uint32) db;
@@ -550,7 +546,7 @@ dclass TradeManager : DistributedObject {
   createTradeResponse(uint32, uint32);
 };
 
-dclass DistributedInventoryManager : Manager {
+dclass DistributedInventoryManager : DistributedObjectGlobal {
   setParentingRules(string, string) broadcast ram;
   requestInventory() airecv clsend;
   approvedTrade(uint32, uint32, TradeSlot [], TradeSlot [], uint32);
@@ -1701,7 +1697,7 @@ dclass DistributedGATunnel : DistributedGAConnector {
 dclass DistributedGADoor : DistributedGAConnector {
 };
 
-dclass DistributedLocationManager : Manager {
+dclass DistributedLocationManager : DistributedObjectGlobal {
   requestLocation(uint8) airecv clsend;
   locationResponse(uint8);
 };

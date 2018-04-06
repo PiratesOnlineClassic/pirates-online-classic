@@ -13,6 +13,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, HumanDNA):
         DistributedPlayerAI.__init__(self, air)
         HumanDNA.__init__(self)
         self.dnaString = ''
+        self.inventoryId = 0
         self.jailCellIndex = 0
         self.returnLocation = ''
         self.emoteId = 0
@@ -36,6 +37,19 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, HumanDNA):
 
     def getDNAString(self):
         return self.dnaString
+
+    def setInventoryId(self, inventoryId):
+        self.inventoryId = inventoryId
+
+    def d_setInventoryId(self, inventoryId):
+        self.sendUpdate('setInventoryId', [inventoryId])
+
+    def b_setInventoryId(self, inventoryId):
+        self.setInventoryId(inventoryId)
+        self.d_setInventoryId(inventoryId)
+
+    def getInventoryId(self):
+        return self.inventoryId
 
     def d_relayTeleportLoc(self, shardId, zoneId, teleportMgrDoId):
         self.sendUpdateToAvatarId(self.doId, 'relayTeleportLoc', [shardId, zoneId,
