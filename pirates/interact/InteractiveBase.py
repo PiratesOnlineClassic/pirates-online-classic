@@ -104,7 +104,7 @@ class InteractiveBase(FSM.FSM):
             self.proximityCollisionNodePath = otherCollision
             self.proximityCollisionEnterEvent = 'enter' + otherCollisionName
             self.proximityCollisionExitEvent = 'exit' + otherCollisionName
-            self.proximityCollisionId = otherCollision.id()
+            self.proximityCollisionId = otherCollision.get_key()
             self.hasProximityCollision = 1
             if self.ignoreProximity:
                 self.proximityCollisionNodePath.stash()
@@ -152,7 +152,7 @@ class InteractiveBase(FSM.FSM):
             parentNP = parent
         self.proximityCollisionNodePath = parentNP.attachNewNode(proximityCollisionNode)
         self.proximityCollisionNodePath.hide()
-        self.proximityCollisionId = self.proximityCollisionNodePath.id()
+        self.proximityCollisionId = self.proximityCollisionNodePath.get_key()
         if self.ignoreProximity:
             self.proximityCollisionNodePath.stash()
         self.hasProximityCollision = 1

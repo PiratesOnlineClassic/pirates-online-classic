@@ -158,7 +158,7 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         if np.isEmpty():
             return
         else:
-            return self.objectDict.get(np.id(), None)
+            return self.objectDict.get(np.get_key(), None)
         return
 
     def pickObject(self):
