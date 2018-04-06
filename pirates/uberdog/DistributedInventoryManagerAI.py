@@ -51,7 +51,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
             inventoryId, = fields.get('setInventoryId', (0,))
 
             if not inventoryId:
-                self.notify.warning('Invalid inventory found for avatar %d!' % avatarId)
+                self.notify.debug('Invalid inventory found for avatar %d!' % avatarId)
                 return
 
             self.__sendInventory(avatarId, inventoryId)
@@ -68,23 +68,18 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         self.__sendInventory(avatarId, inventory.doId)
         return task.done
 
-    def __cleanupInventory(self, avatarId, inventoryId):
-        if avatarId in self.inventoryTasks:
-            taskMgr.remove(self.inventoryTasks[avatarId])
-            del self.inventoryTasks[avatarId]
-
-        inventory = self.inventories.get(inventoryId)
-
-        if not inventory:
+    def __cleanupWaitForInventory(self, avatarId):
+        if avatarId not in self.inventoryTasks:
             return
 
-        self.removeInventory(inventory)
+        taskMgr.remove(self.inventoryTasks[avatarId])
+        del self.inventoryTasks[avatarId]
 
     def __sendInventory(self, avatarId, inventoryId):
         inventory = self.inventories.get(inventoryId)
 
-        self.acceptOnce('distObjDelete-%d' % (avatarId), lambda: self.__cleanupInventory(
-            avatarId, inventoryId))
+        self.acceptOnce('distObjDelete-%d' % (avatarId), lambda: \
+            self.__cleanupWaitForInventory(avatarId))
 
         if not inventory:
             if avatarId in self.inventoryTasks:
