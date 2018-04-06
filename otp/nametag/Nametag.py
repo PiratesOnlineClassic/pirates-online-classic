@@ -1,5 +1,5 @@
-from . import NametagGlobals
-from .NametagConstants import *
+import NametagGlobals
+from NametagConstants import *
 from otp.margins.ClickablePopup import ClickablePopup
 from otp.otpbase import OTPGlobals
 from pandac.PandaModules import *

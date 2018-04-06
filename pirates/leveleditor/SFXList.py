@@ -7,7 +7,7 @@ SOUND_FX_LIST = {'Cannon Fire': ['audio/cball_fire_1.mp3', 'audio/cball_fire_2.m
 def getSFXList():
     resultDic = {}
     totalList = []
-    for sfxGroup in list(SOUND_FX_LIST.keys()):
+    for sfxGroup in SOUND_FX_LIST.keys():
         sfxList = [
          [
           sfxGroup], SOUND_FX_LIST[sfxGroup]]

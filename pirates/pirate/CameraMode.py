@@ -1,10 +1,15 @@
+# uncompyle6 version 3.1.1
+# Python bytecode 2.4 (62061)
+# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
+# Embedded file name: pirates.pirate.CameraMode
 from direct.fsm.FSM import FSM
+from direct.showbase import DirectObject
 from direct.showbase.PythonUtil import Enum
 from otp.otpbase import OTPGlobals
 from pandac.PandaModules import *
 
 
-class CameraMode(FSM):
+class CameraMode(DirectObject.DirectObject, FSM):
     __module__ = __name__
     Modes = Enum('NORMAL, BATTLE')
 
@@ -162,3 +167,4 @@ class CameraMode(FSM):
 
     def avFaceCamera(self):
         pass
+# okay decompiling .\pirates\pirate\CameraMode.pyc

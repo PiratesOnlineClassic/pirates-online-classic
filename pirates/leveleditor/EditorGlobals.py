@@ -31,43 +31,43 @@ LOD_STATE_MED = 3
 flickerTracks = []
 
 def LightDynamic(objData, parent=render, drawIcon=True):
-    if objData and 'Pos' in objData:
+    if objData and objData.has_key('Pos'):
         objPos = objData['Pos']
     else:
         objPos = Vec3(0, 0, 0)
-    if objData and 'Hpr' in objData:
+    if objData and objData.has_key('Hpr'):
         objHpr = objData['Hpr']
     else:
         objHpr = Vec3(0, 0, 0)
     color = None
-    if objData and 'Visual' in objData:
-        if 'Color' in objData['Visual']:
+    if objData and objData.has_key('Visual'):
+        if objData['Visual'].has_key('Color'):
             color = objData['Visual']['Color']
     attenuation = None
-    if objData and 'Attenuation' in objData:
+    if objData and objData.has_key('Attenuation'):
         attenuation = (
          0, 0, float(objData['Attenuation']))
     intensity = None
-    if objData and 'Intensity' in objData:
+    if objData and objData.has_key('Intensity'):
         intensity = float(objData['Intensity'])
     coneAngle = None
     dropOff = None
-    if objData and 'ConeAngle' in objData:
+    if objData and objData.has_key('ConeAngle'):
         coneAngle = float(objData['ConeAngle'])
         if coneAngle == 0.0:
             objData['ConeAngle'] = '60.0'
             coneAngle = 60.0
-    if objData and 'DropOff' in objData:
+    if objData and objData.has_key('DropOff'):
         dropOff = float(objData['DropOff'])
     exponent = None
     flickering = False
-    if objData and 'Flickering' in objData and objData['Flickering'] == True:
+    if objData and objData.has_key('Flickering') and objData['Flickering'] == True:
         flickering = True
     flickRate = 1.0
-    if objData and 'FlickRate' in objData:
+    if objData and objData.has_key('FlickRate'):
         flickRate = float(objData['FlickRate'])
     lightType = DynamicLight.DYN_LIGHT_POINT
-    if objData and 'LightType' in objData:
+    if objData and objData.has_key('LightType'):
         typeString = objData['LightType']
         if typeString == 'AMBIENT':
             lightType = DynamicLight.DYN_LIGHT_AMBIENT
@@ -93,7 +93,7 @@ def LightDynamic(objData, parent=render, drawIcon=True):
 def CreateAnimal(species=None):
     if not species:
         species = 'Pig'
-    exec('animal = %s()' % species)
+    exec 'animal = %s()' % species
     animal.generateCreature()
     return animal
 
@@ -101,7 +101,7 @@ def CreateAnimal(species=None):
 def CreateCreature(species=None):
     if not species:
         species = 'Crab'
-    exec('creature = %s()' % species)
+    exec 'creature = %s()' % species
     creature.show()
     creature.generateCreature()
     return creature

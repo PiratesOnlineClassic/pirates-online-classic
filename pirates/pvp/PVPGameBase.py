@@ -4,7 +4,7 @@
 # Embedded file name: pirates.pvp.PVPGameBase
 import random
 
-from . import PVPRulesPanel
+import PVPRulesPanel
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.distributed.DistributedObject import DistributedObject
 from direct.fsm import FSM
@@ -250,7 +250,7 @@ class PVPGameBase(DistributedObject, FSM.FSM):
 
     def getPlayerStats(self):
         displayStats = []
-        for playerId, stats in list(self.stats.items()):
+        for playerId, stats in self.stats.items():
             if playerId in base.cr.doId2do:
                 player = base.cr.doId2do.get(playerId)
                 playerName = player.getName()
@@ -275,7 +275,7 @@ class PVPGameBase(DistributedObject, FSM.FSM):
     def getTeamStats(self):
         displayStats = []
         teams = {}
-        for playerId, stats in list(self.stats.items()):
+        for playerId, stats in self.stats.items():
             if playerId in base.cr.doId2do:
                 player = base.cr.doId2do.get(playerId)
                 playerName = player.getName()
@@ -293,7 +293,7 @@ class PVPGameBase(DistributedObject, FSM.FSM):
                 playerColor = None
             teams[stats[PVPGlobals.TEAM]].append([playerName, playerStats, ['color', playerColor]])
 
-        for team, teamStats in list(teams.items()):
+        for team, teamStats in teams.items():
             teamTotals = []
             for stat in self.getColumnStats():
                 teamTotals.append([PVPGlobals.statText[stat], 0])

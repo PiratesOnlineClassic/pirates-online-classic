@@ -4,8 +4,8 @@
 # Embedded file name: pirates.battle.Wand
 import random
 
-from . import Weapon
-from . import WeaponGlobals
+import Weapon
+import WeaponGlobals
 from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
 from pirates.effects.RayGlow import RayGlow

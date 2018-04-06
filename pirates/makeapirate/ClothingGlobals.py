@@ -23,17 +23,17 @@ navy_coat_geoms = [
  3, 4]
 shopkeep_pant_geoms = [6]
 quickConfirmSet = set()
-for gender in list(textures.keys()):
+for gender in textures.keys():
     if gender == 'MALE':
         genderName = 'm'
     else:
         if gender == 'FEMALE':
             genderName = 'f'
     clothing = textures[gender]
-    for clothingType in list(clothing.keys()):
+    for clothingType in clothing.keys():
         models = clothing[clothingType]
-        for i in range(len(models)):
-            for j in range(len(models[i])):
+        for i in xrange(len(models)):
+            for j in xrange(len(models[i])):
                 quickConfirmSet.add((genderName, clothingType, i, j))
 
 def printList():
@@ -43,7 +43,7 @@ def printList():
                 for subtype in item:
                     outVal = [
                      int(subtype[1].getX() * 256), int(subtype[1].getY() * 256), int(subtype[1].getZ() * 256)]
-                    print(str(subtype[0]), str(outVal))
+                    print str(subtype[0]), str(outVal)
 
 
 def printList2():
@@ -51,7 +51,7 @@ def printList2():
         for type in textures[gender]:
             for item in textures[gender][type]:
                 for subtype in item:
-                    print(str(subtype[0]))
+                    print str(subtype[0])
 
 
 HAT_START_RANGE_MALE = 0
@@ -195,7 +195,7 @@ def getRandomClothingDrop(level, gender):
 
 
 def getItemById(itemId):
-    if itemId in list(UNIQUE_ID.keys()):
+    if itemId in UNIQUE_ID.keys():
         return UNIQUE_ID[itemId]
     else:
         return 0
@@ -269,7 +269,7 @@ def spitOutEconomy():
     for shopId in [PiratesGlobals.PORT_ROYAL_DEFAULTS, PiratesGlobals.PORT_ROYAL_THRIFT, PiratesGlobals.TORTUGA_DEFAULTS, PiratesGlobals.CUBA_DEFAULTS, PiratesGlobals.DEL_FUEGO_DEFAULTS]:
         shop = stores.get(shopId)
         if shop:
-            for itemId in list(shop.keys()):
+            for itemId in shop.keys():
                 item = UNIQUE_ID.get(itemId)
                 if item:
                     for color in shop.get(itemId):
@@ -279,7 +279,7 @@ def spitOutEconomy():
                         descString = item[7]
                         colorString = PLocalizer.TailorColorStrings.get(color)
                         if colorString:
-                            if itemId in repeats:
+                            if repeats.has_key(itemId):
                                 previousColors = repeats.get(itemId)
                                 if color in previousColors:
                                     numRepeats += 1
@@ -293,9 +293,9 @@ def spitOutEconomy():
                                 gender = 'Male'
                             else:
                                 gender = 'Female'
-                            print('Clothing Item UID %s\n - Type = %s(%s)\n - Long Desc = %s\n - Color = %s(%s)\n - Cost = %s gold\n - Gender = %s\n' % (itemId, typeString, type, descString, colorString, color, itemCost, gender))
+                            print 'Clothing Item UID %s\n - Type = %s(%s)\n - Long Desc = %s\n - Color = %s(%s)\n - Cost = %s gold\n - Gender = %s\n' % (itemId, typeString, type, descString, colorString, color, itemCost, gender)
                             itemsForSale += 1
 
-    print('\n%s items for sale.' % itemsForSale)
-    print('\n%s repeated items.' % numRepeats)
+    print '\n%s items for sale.' % itemsForSale
+    print '\n%s repeated items.' % numRepeats
 # okay decompiling .\pirates\makeapirate\ClothingGlobals.pyc

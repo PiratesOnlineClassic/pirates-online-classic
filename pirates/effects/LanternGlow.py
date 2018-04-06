@@ -8,7 +8,7 @@ from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
 from direct.task.Task import Task
-from .EffectController import EffectController
+from EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 
@@ -30,7 +30,7 @@ class LanternGlow(DirectObject, EffectController, NodePath):
         index = random.randint(0, len(level))
         level = level[index:-1] + level[0:index]
         for i in level:
-            for j in range(random.choice([1, 2, 3, 4])):
+            for j in xrange(random.choice([1, 2, 3, 4])):
                 newGlow = glowCard.copyTo(self.glow)
                 newGlow.setScale(i)
                 self.glowCards.append(newGlow)

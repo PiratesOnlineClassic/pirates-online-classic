@@ -6,12 +6,12 @@ from direct.fsm.FSM import FSM
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from .GuiTray import GuiTray
+from GuiTray import GuiTray
 from pandac.PandaModules import *
 from pirates.band.DistributedBandMember import DistributedBandMember
 from pirates.piratesbase import PiratesGlobals, PLocalizer, TeamUtils
 from pirates.world import OceanZone
-from .RadarMap import RadarMap
+from RadarMap import RadarMap
 
 RADAR_OBJ_TYPE_DEFAULT = 0
 RADAR_OBJ_TYPE_LANDMARK = 1
@@ -171,7 +171,7 @@ class RadarGui(GuiTray, FSM):
         self.locationLabel.hide()
 
     def destroy(self):
-        for currDoLater, ival in list(self.flashCleanupTasks.values()):
+        for currDoLater, ival in self.flashCleanupTasks.values():
             taskMgr.remove(currDoLater)
             ival.finish()
 
@@ -274,7 +274,7 @@ class RadarGui(GuiTray, FSM):
         del self.__cachedRadarObjects[objId]
 
     def restoreStickyCachedObjects(self):
-        cachedKeys = list(self.__cachedRadarObjects.keys())
+        cachedKeys = self.__cachedRadarObjects.keys()
         for currObjKey in cachedKeys:
             if self.__cachedRadarObjects[currObjKey]['type'] != RADAR_OBJ_TYPE_DEFAULT or self.__cachedRadarObjects[currObjKey]['type'] != RADAR_OBJ_TYPE_EXIT:
                 dummyObjNode = self.__cachedRadarObjects[currObjKey]['dummySrcObjNode']
@@ -362,7 +362,7 @@ class RadarGui(GuiTray, FSM):
         return
 
     def removeAllObjects(self):
-        objects = list(self.__radarObjects.keys())
+        objects = self.__radarObjects.keys()
         for key in objects:
             self.moveRadarObjToCache(key)
 
@@ -385,7 +385,7 @@ class RadarGui(GuiTray, FSM):
         return
 
     def clearCache(self):
-        objects = list(self.__cachedRadarObjects.keys())
+        objects = self.__cachedRadarObjects.keys()
         for key in objects:
             objInfo = self.__cachedRadarObjects[key]
             objInfo['radarObjNode'].removeNode()
@@ -395,7 +395,7 @@ class RadarGui(GuiTray, FSM):
             del self.__cachedRadarObjects[key]
 
     def printRadarObjects(self):
-        print(self.__radarObjects)
+        print self.__radarObjects
 
     def getRadarObjects(self):
         return self.__radarObjects
@@ -631,7 +631,7 @@ class RadarGui(GuiTray, FSM):
         return uItem
 
     def flashRadarObject(self, objId, duration=None, scaleMin=Point3(0.5, 0.5, 0.5), scaleMax=Point3(1.0, 1.0, 1.0)):
-        if duration != None and objId in self.flashCleanupTasks:
+        if duration != None and self.flashCleanupTasks.has_key(objId):
             task = self.flashCleanupTasks[objId][0]
             currentTime = taskMgr._TaskManager__getTime()
             task.delayTime = duration
@@ -688,7 +688,7 @@ class RadarGui(GuiTray, FSM):
             return True
         offRadar = objectInfo['srcObjNode'] is objectInfo['dummySrcObjNode'] and objectInfo['dummySrcObjNode'] != None
         if objectInfo and not offRadar:
-            if 'oldInfo' in objectInfo:
+            if objectInfo.has_key('oldInfo'):
                 objectInfo['type'] = objectInfo['oldInfo']['type']
                 radarObjNode = objectInfo.get('radarObjNode')
                 if radarObjNode and not radarObjNode.isEmpty():
@@ -710,7 +710,7 @@ class RadarGui(GuiTray, FSM):
                 if dummySrcObjNode and not dummySrcObjNode.isEmpty():
                     dummySrcObjNode.removeNode()
                 objectInfo['dummySrcObjNode'] = objectInfo['oldInfo']['dummySrcObjNode']
-                if radarObjNodeShown == False and 'dummySrcObjNode' in objectInfo and objectInfo['dummySrcObjNode']:
+                if radarObjNodeShown == False and objectInfo.has_key('dummySrcObjNode') and objectInfo['dummySrcObjNode']:
                     objectInfo['dummySrcObjNode'].show()
                 del objectInfo['oldInfo']
             else:

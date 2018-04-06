@@ -192,7 +192,7 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
                             base.chatAssistant.sendAvatarOpenTypedChat(text)
 
     def checkKey(self, key):
-        print('key typed: %s' % key.getKeycode())
+        print 'key typed: %s' % key.getKeycode()
 
     def movingRight(self):
         if self.guiItem.getCursorPosition() == self.guiItem.getNumCharacters():
@@ -245,14 +245,14 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
             self.set(inputText[self.slideDistance:] + self.savedStringRight[0:self.slideDistance])
             self.savedStringRight = self.savedStringRight[self.slideDistance:]
             self.guiItem.setCursorPosition(self.guiItem.getNumCharacters() - self.slideDistance)
-        print('%s + %s + %s' % (self.savedStringLeft, self.get(), self.savedStringRight))
+        print '%s + %s + %s' % (self.savedStringLeft, self.get(), self.savedStringRight)
 
     def slideFront(self, inputText):
         self.savedStringRight = inputText[-1 * self.slideDistance:] + self.savedStringRight
         self.set(self.savedStringLeft[-1 * self.slideDistance:] + inputText[:-1 * self.slideDistance])
         self.savedStringLeft = self.savedStringLeft[0:-1 * self.slideDistance]
         self.guiItem.setCursorPosition(self.slideDistance)
-        print('%s + %s + %s' % (self.savedStringLeft, self.get(), self.savedStringRight))
+        print '%s + %s + %s' % (self.savedStringLeft, self.get(), self.savedStringRight)
 
     def addToHistory(self, text):
         self.history = [
@@ -281,13 +281,13 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
     def __execMessage(self, message):
         if not PChatInputTyped.ExecNamespace:
             PChatInputTyped.ExecNamespace = {}
-            exec('from pandac.PandaModules import *', globals(), self.ExecNamespace)
+            exec 'from pandac.PandaModules import *' in globals(), self.ExecNamespace
             self.importExecNamespace()
         try:
             return str(eval(message, globals(), PChatInputTyped.ExecNamespace))
         except SyntaxError:
             try:
-                exec(message, globals(), PChatInputTyped.ExecNamespace)
+                exec message in globals(), PChatInputTyped.ExecNamespace
                 return 'ok'
             except:
                 exception = sys.exc_info()[0]

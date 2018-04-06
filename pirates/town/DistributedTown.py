@@ -67,7 +67,7 @@ class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartes
     def addPropFromFile(self, propData):
         objNode = None
         objModel = None
-        if 'SubObjs' in propData:
+        if propData.has_key('SubObjs'):
             objNode = self.loadSubModels(propData)
         else:
             objModel = loader.loadModelCopy(propData['Visual']['Model'])
@@ -84,9 +84,9 @@ class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartes
             objModel.reparentTo(objNode)
         objNode.setPos(propData['Pos'])
         objNode.setHpr(propData['Hpr'])
-        if 'Scale' in propData:
+        if propData.has_key('Scale'):
             objNode.setScale(propData['Scale'])
-        if 'Color' in propData['Visual']:
+        if propData['Visual'].has_key('Color'):
             objNode.setColorScale(*propData['Visual']['Color'])
         objNode.flattenStrong()
         wallGeom = objNode.find('**/wall*_n_window*')

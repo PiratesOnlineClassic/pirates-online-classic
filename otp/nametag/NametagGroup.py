@@ -1,6 +1,6 @@
-from .Nametag2d import *
-from .Nametag3d import *
-from .NametagConstants import *
+from Nametag2d import *
+from Nametag3d import *
+from NametagConstants import *
 from pandac.PandaModules import *
 
 

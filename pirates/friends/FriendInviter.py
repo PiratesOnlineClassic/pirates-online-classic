@@ -130,8 +130,8 @@ class FriendInviter(GuiPanel.GuiPanel):
             self.fsm.request('self')
         else:
             if self.isPlayerInvite:
-                print('isPlayerFriend: %s' % base.cr.playerFriendsManager.isPlayerFriend(self.avId))
-                print('isavatarofplayerfriend: %s' % base.cr.playerFriendsManager.findPlayerIdFromAvId(self.avId))
+                print 'isPlayerFriend: %s' % base.cr.playerFriendsManager.isPlayerFriend(self.avId)
+                print 'isavatarofplayerfriend: %s' % base.cr.playerFriendsManager.findPlayerIdFromAvId(self.avId)
                 if base.cr.playerFriendsManager.isAvatarOwnerPlayerFriend(self.avId):
                     self.fsm.request('alreadyFriends')
                 elif len(base.cr.playerFriendsManager.playerFriendsList) >= OTPGlobals.MaxFriends:
@@ -305,7 +305,7 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.bNo.hide()
 
     def enterFriendsNoMore(self):
-        print('enterFriendsNoMore %s %s' % (self.isPlayerInvite, self.avId))
+        print 'enterFriendsNoMore %s %s' % (self.isPlayerInvite, self.avId)
         if self.isPlayerInvite:
             pId = base.cr.playerFriendsManager.findPlayerIdFromAvId(self.avId)
             if pId:

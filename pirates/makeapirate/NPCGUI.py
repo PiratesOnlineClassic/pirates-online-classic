@@ -139,7 +139,7 @@ class NPCGUI(DirectFrame, StateData.StateData):
         self.handleGP1()
 
     def randomPick(self):
-        cList = list(range(0, 16))
+        cList = range(0, 16)
         cList.remove(self.main.skeletonType)
         choice = random.choice(cList)
         if choice == 0:

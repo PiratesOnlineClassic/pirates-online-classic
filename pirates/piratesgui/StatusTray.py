@@ -156,7 +156,7 @@ class StatusTray(GuiTray.GuiTray):
         del self.hpMeterUpYellowIval
         self.statusEffectsPanel.destroy()
         del self.statusEffectsPanel
-        for key in list(self.icons.keys()):
+        for key in self.icons.keys():
             self.icons[key].removeNode()
 
         del self.icons
@@ -401,18 +401,18 @@ class StatusTray(GuiTray.GuiTray):
         GuiTray.GuiTray.hide(self, *args, **kwargs)
 
     def updateStatusEffects(self, effects):
-        effectIdList = list(effects.keys())
+        effectIdList = effects.keys()
         for effectKeyId in effectIdList:
             effectId = effects[effectKeyId][0]
             maxDur = effects[effectKeyId][1]
             ts = effects[effectKeyId][2]
             attackerId = effects[effectKeyId][3]
-            if effectKeyId not in list(self.skillEffects.keys()) and effectId not in [WeaponGlobals.C_VOODOO_STUN, WeaponGlobals.C_INTERRUPTED, WeaponGlobals.C_OPENFIRE, WeaponGlobals.C_TAKECOVER]:
+            if effectKeyId not in self.skillEffects.keys() and effectId not in [WeaponGlobals.C_VOODOO_STUN, WeaponGlobals.C_INTERRUPTED, WeaponGlobals.C_OPENFIRE, WeaponGlobals.C_TAKECOVER]:
                 self.statusEffectsPanel.addStatusEffect(effectId, maxDur, ts, attackerId)
             else:
                 self.statusEffectsPanel.updateStatusEffect(effectId, maxDur, ts, attackerId)
 
-        for effectKeyId in list(self.skillEffects.keys()):
+        for effectKeyId in self.skillEffects.keys():
             if effectKeyId not in effectIdList:
                 buff = self.skillEffects.get(effectKeyId)
                 if buff:

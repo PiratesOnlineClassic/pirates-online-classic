@@ -57,7 +57,7 @@ class DistributedPVPTeamBattle(DistributedPVPInstance):
     def getScoreList(self):
         scoreList = []
         teamScores = {}
-        for playerId, stats in list(self.stats.items()):
+        for playerId, stats in self.stats.items():
             if playerId not in self.names:
                 continue
             playerScore = stats[PVPGlobals.SCORE]
@@ -69,7 +69,7 @@ class DistributedPVPTeamBattle(DistributedPVPInstance):
             if playerId == localAvatar.doId:
                 scoreList.append({'Team': playerId, 'Score': playerScore})
 
-        for teamName, teamScore in list(teamScores.items()):
+        for teamName, teamScore in teamScores.items():
             scoreList.append({'Team': teamName, 'Score': teamScore})
 
         scoreList.sort(self.sortScores)

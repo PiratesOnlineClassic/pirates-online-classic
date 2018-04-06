@@ -38,7 +38,7 @@ class MusicManager(AmbientManagerBase.AmbientManagerBase):
         return
 
     def load(self, name, looping=True):
-        if name in musicDict:
+        if musicDict.has_key(name):
             path = musicDict[name]
             retval = AmbientManagerBase.AmbientManagerBase.load(self, name, path, isMusic=True, looping=looping)
             if self.ambientDict[name].sfx == None:
@@ -59,7 +59,7 @@ class MusicManager(AmbientManagerBase.AmbientManagerBase):
         return
 
     def request(self, name, priority=0, looping=True, volume=0.8):
-        if name not in self.ambientDict:
+        if not self.ambientDict.has_key(name):
             if not self.load(name, looping):
                 return
         found = 0
@@ -99,8 +99,7 @@ class MusicManager(AmbientManagerBase.AmbientManagerBase):
                     return -1
             return 0
 
-        #TODO: FIXME!
-        #self.playlist.sort(compFunc)
+        self.playlist.sort(compFunc)
         self.notify.debug('playlist == ')
         for musicData in self.playlist:
             self.notify.debug('    musicData=%s' % musicData.name)

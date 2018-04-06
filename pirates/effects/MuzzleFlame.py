@@ -8,10 +8,10 @@ from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
 from direct.showbase.DirectObject import *
-from .EffectController import EffectController
+from EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
-from .PooledEffect import PooledEffect
+from PooledEffect import PooledEffect
 
 
 class MuzzleFlame(PooledEffect, EffectController):

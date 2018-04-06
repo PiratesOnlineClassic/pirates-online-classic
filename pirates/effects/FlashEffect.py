@@ -4,9 +4,9 @@
 # Embedded file name: pirates.effects.FlashEffect
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from .EffectController import EffectController
+from EffectController import EffectController
 from pandac.PandaModules import *
-from .PooledEffect import PooledEffect
+from PooledEffect import PooledEffect
 
 
 class FlashEffect(PooledEffect, EffectController):

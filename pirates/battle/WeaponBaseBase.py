@@ -4,7 +4,7 @@
 # Embedded file name: pirates.battle.WeaponBaseBase
 import math
 
-from . import WeaponGlobals
+import WeaponGlobals
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals, TeamUtils
 
@@ -166,6 +166,6 @@ class WeaponBaseBase:
             else:
                 continue
 
-        print('getting area list of %s' % targets)
+        print 'getting area list of %s' % targets
         return targets
 # okay decompiling .\pirates\battle\WeaponBaseBase.pyc

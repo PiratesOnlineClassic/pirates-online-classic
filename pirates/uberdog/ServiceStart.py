@@ -1,7 +1,7 @@
 from panda3d.core import *
 from direct.showbase import PythonUtil
 import traceback
-import builtins
+import __builtin__
 import os
 import argparse
 
@@ -18,7 +18,7 @@ args = parser.parse_args()
 
 for prc in args.config:
     if not os.path.exists(prc):
-        print(':ServiceStart(warning): Failed to locate prc %s!' % prc)
+        print ':ServiceStart(warning): Failed to locate prc %s!' % prc
         continue
     loadPrcFile(prc)
 
@@ -37,7 +37,7 @@ class game:
     name = 'uberDog'
     process = 'server'
 
-builtins.game = game
+__builtin__.game = game
 
 from otp.ai.AIBaseGlobal import *
 

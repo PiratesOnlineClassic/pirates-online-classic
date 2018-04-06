@@ -61,7 +61,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
 
     def doMagicWord(self, word, avId, zoneId):
         wordIs = self.getWordIs(word)
-        print(word)
+        print word
         if wordIs('~oobe'):
             base.oobe()
         elif wordIs('~oobeCull'):
@@ -135,7 +135,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             self.forAnother(word, avId, zoneId)
         elif wordIs('~badname'):
             word = '~for %s ~badname' % word[9:]
-            print('word is %s' % word)
+            print 'word is %s' % word
             self.forAnother(word, avId, zoneId)
         elif wordIs('~avId'):
             self.setMagicWordResponse(str(localAvatar.doId))
@@ -422,10 +422,10 @@ class MagicWordManager(DistributedObject.DistributedObject):
             base.cr.printObjectCount()
             self.setMagicWordResponse('logging client distributed object count...')
         elif wordIs('~taskmgr'):
-            print(taskMgr)
+            print taskMgr
             self.setMagicWordResponse('logging client taskMgr...')
         elif wordIs('~jobmgr'):
-            print(jobMgr)
+            print jobMgr
             self.setMagicWordResponse('logging client jobMgr...')
         elif wordIs('~jobtime'):
             args = word.split()
@@ -460,7 +460,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             taskMgr.setTaskDurationWarningThreshold(threshold)
             self.setMagicWordResponse(response)
         elif wordIs('~messenger'):
-            print(messenger)
+            print messenger
             self.setMagicWordResponse('logging client messenger...')
         elif wordIs('~clientcrash'):
             DelayedCall(Functor(self.notify.error, '~clientcrash: simulating a client crash'))
@@ -553,7 +553,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
     def identifyDistributedObjects(self, name):
         result = []
         lowerName = string.lower(name)
-        for obj in list(self.cr.doId2do.values()):
+        for obj in self.cr.doId2do.values():
             className = obj.__class__.__name__
 
             try:
@@ -612,7 +612,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
 
             try:
                 bitmask |= BitMask32.bit(int(w))
-                print(bitmask)
+                print bitmask
             except ValueError:
                 invalid += ' ' + w
                 continue
@@ -789,6 +789,6 @@ def magicWord(mw):
         mw])
 
 
-import builtins
+import __builtin__
 
-builtins.magicWord = magicWord
+__builtin__.magicWord = magicWord

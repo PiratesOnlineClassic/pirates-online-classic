@@ -106,9 +106,9 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
                 if getMissSfxFunc:
                     sfxs = getMissSfxFunc()
             if sfxs:
-                if type(sfxs) == dict:
+                if type(sfxs) == types.DictType:
                     soundFx = sfxs.get(ammoSkillId)
-                elif type(sfxs) == tuple:
+                elif type(sfxs) == types.TupleType:
                     soundFx = random.choice(sfxs)
                 else:
                     soundFx = sfxs

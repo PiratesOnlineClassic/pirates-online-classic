@@ -109,7 +109,7 @@ class DummyLauncherBase:
         self.setPhaseComplete(task.phase, percentComplete)
         messenger.send('launcherPercentPhaseComplete', [task.phase, percentComplete, 0, 0])
         if percentComplete >= 100.0:
-            messenger.send('phaseComplete-' + repr((task.phase)))
+            messenger.send('phaseComplete-' + `(task.phase)`)
             return Task.done
         else:
             return Task.cont
@@ -142,7 +142,7 @@ class DummyLauncherBase:
         if not path:
             path = ConfigVariableSearchPath('sound-path').findFile(file).cStr()
         if not path:
-            print('ERROR: loaderPhaseChecker: could not verify path: ' + path)
+            print 'ERROR: loaderPhaseChecker: could not verify path: ' + path
             return 1
         if path.find('phase_') != -1:
             phaseStr = path[path.find('phase_') + 6]
@@ -153,12 +153,12 @@ class DummyLauncherBase:
                 if self.getPhaseComplete(phase):
                     return 1
                 else:
-                    print('ERROR: loaderPhaseChecker: loaded out of phase: ' + path)
+                    print 'ERROR: loaderPhaseChecker: loaded out of phase: ' + path
                     return 1
             else:
-                print('ERROR: loaderPhaseChecker: phase not in LauncherPhases: ' + path)
+                print 'ERROR: loaderPhaseChecker: phase not in LauncherPhases: ' + path
                 return 1
         else:
-            print('ERROR: loaderPhaseChecker: loaded from NON phase directory: ' + path)
+            print 'ERROR: loaderPhaseChecker: loaded from NON phase directory: ' + path
             return 1
 # okay decompiling .\otp\launcher\DummyLauncherBase.pyc

@@ -86,8 +86,7 @@ class MiniScoreItemGui(DirectFrame):
     def colorLabel(self, color):
         self.descText['text_fg'] = color
 
-    def shakeItUp(self, xxx_todo_changeme):
-        (x, y, r, g, b, a) = xxx_todo_changeme
+    def shakeItUp(self, (x, y, r, g, b, a)):
         self.colorLabel((r, g, b, a))
         randX = random.random() * 0.005 + 0.005
         randY = random.random() * 0.005 + 0.005

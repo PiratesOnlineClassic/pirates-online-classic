@@ -5,9 +5,9 @@
 import math
 import random
 
-from . import CannonGlobals
-from . import WeaponGlobals
-from .CannonballProjectile import CannonballProjectile
+import CannonGlobals
+import WeaponGlobals
+from CannonballProjectile import CannonballProjectile
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
@@ -16,7 +16,7 @@ from direct.interval.ProjectileInterval import *
 from direct.showbase.DirectObject import *
 from direct.showbase.PythonUtil import quickProfile
 from direct.task import Task
-from .DistributedWeapon import DistributedWeapon
+from DistributedWeapon import DistributedWeapon
 from pandac.PandaModules import *
 from pirates.battle.EnemySkills import EnemySkills
 from pirates.battle.WeaponGlobals import *
@@ -514,7 +514,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         self.effectNode.reparentTo(self.ship.modelGeom)
 
     def completeCannonCheck(self):
-        for colList in list(self.collisionLists.values()):
+        for colList in self.collisionLists.values():
             colList.sort()
             ammo = colList[0][1].getFromNodePath().getPythonTag('ammo')
             if not ammo or ammo.destroyed:

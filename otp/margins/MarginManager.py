@@ -1,6 +1,6 @@
 import random
 
-from .MarginCell import MarginCell
+from MarginCell import MarginCell
 from pandac.PandaModules import *
 
 

@@ -58,7 +58,7 @@ class ForestEffects(EnvironmentEffects.EnvironmentEffects):
                 water.reparentTo(self.parent)
                 color = Vec4(0)
                 water.setColorScale(color)
-                mask = 4294967295
+                mask = 4294967295L
                 stencil = StencilAttrib.make(1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOReplace, 1, mask, mask)
                 water.setAttrib(stencil)
                 water.setBin('water', 0)

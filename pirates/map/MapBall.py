@@ -42,7 +42,7 @@ class MapBall(ArcBall):
 
     def _loadModels(self):
         self._modelInfo = {'globe': 'models/worldmap/world_map_globe'}
-        self._models = dict(list(zip(self._modelInfo, (loader.loadModel(self._modelInfo[name]) for name in self._modelInfo))))
+        self._models = dict(zip(self._modelInfo, (loader.loadModel(self._modelInfo[name]) for name in self._modelInfo)))
         self.attachForRotation(self._models['globe'])
         self._models['globe'].setBin('background', 0)
         self._models['globe'].setDepthWrite(0)

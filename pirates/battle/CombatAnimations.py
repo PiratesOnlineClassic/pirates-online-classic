@@ -4,11 +4,11 @@
 # Embedded file name: pirates.battle.CombatAnimations
 import random
 
-from . import WeaponGlobals
+import WeaponGlobals
 from direct.actor import Actor
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import *
-from .GrenadeProjectile import GrenadeProjectile
+from GrenadeProjectile import GrenadeProjectile
 from pandac.PandaModules import *
 from pirates.effects.AttuneSmoke import AttuneSmoke
 from pirates.effects.BeamEffect import BeamEffect

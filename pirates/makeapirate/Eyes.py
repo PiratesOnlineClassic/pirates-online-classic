@@ -4,7 +4,7 @@
 # Embedded file name: pirates.makeapirate.Eyes
 import random
 
-from .CharGuiBase import CharGuiPicker, CharGuiSlider
+from CharGuiBase import CharGuiPicker, CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
@@ -121,7 +121,7 @@ class Eyes(DirectObject.DirectObject):
         self.pgs8.node().setValue(self.avatar.dna.getEyeBulge())
 
     def reset(self):
-        for i in range(0, len(self.pgs)):
+        for i in xrange(0, len(self.pgs)):
             self.resetSlider(self.pgs[i])
 
         self.avatar.eyesColorIdx = 0
@@ -135,7 +135,7 @@ class Eyes(DirectObject.DirectObject):
     def randomPick(self):
         global damper
         damper = 1.0
-        for i in range(0, len(self.pgs)):
+        for i in xrange(0, len(self.pgs)):
             slider = self.pgs[i]
             self.resetSlider(slider)
             if self.avatar.pirate.gender == 'f':
@@ -152,7 +152,7 @@ class Eyes(DirectObject.DirectObject):
                     slider.node().setValue(value)
 
         self.saveDNA()
-        choice = random.choice(list(range(0, self.avatar.numEyeColors)))
+        choice = random.choice(range(0, self.avatar.numEyeColors))
         self.avatar.eyesColorIdx = choice
         self.avatar.pirate.setEyesColor(self.avatar.eyesColorIdx)
         self.avatar.pirate.generateEyesTexture()

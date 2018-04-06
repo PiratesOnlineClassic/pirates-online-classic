@@ -236,7 +236,7 @@ def getBlackjackHandValue(hand):
                 val = 11
         handValue += val
 
-    for i in range(0, aceCount):
+    for i in xrange(0, aceCount):
         if handValue > 21:
             handValue -= 10
 

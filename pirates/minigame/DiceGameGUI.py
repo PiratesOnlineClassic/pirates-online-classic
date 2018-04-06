@@ -137,7 +137,7 @@ class DiceGameGUI(DirectFrame):
         pos1 = Vec3(startX, startY, DiceGlobals.PIT_HEIGHT)
         self.dice[dienum].setPos(pos1)
         self.dice[dienum].setHpr(self.randomFace())
-        print('DiceGameGUI:loadDie - loaded die %d with value %d' % (dienum, self.diceval[dienum]))
+        print 'DiceGameGUI:loadDie - loaded die %d with value %d' % (dienum, self.diceval[dienum])
 
     def doTheRoll(self):
         if self.table.gameState != DiceGlobals.DSTATE_DOROLL:
@@ -153,8 +153,8 @@ class DiceGameGUI(DirectFrame):
             self.MouseFinalPosY = 0
         self.MouseEndTime = time.time()
         self.MouseTimeDiff = self.MouseEndTime - self.MouseStartTime
-        print('DiceGameGUI: rolling times %f and %f' % (self.MouseStartTime, self.MouseEndTime))
-        print('DiceGameGUI: difference of %f' % self.MouseTimeDiff)
+        print 'DiceGameGUI: rolling times %f and %f' % (self.MouseStartTime, self.MouseEndTime)
+        print 'DiceGameGUI: difference of %f' % self.MouseTimeDiff
         self.table.gameState = DiceGlobals.DSTATE_WAIT
         del self.diceval
         self.diceval = []
@@ -269,7 +269,7 @@ class DiceGameGUI(DirectFrame):
         oldTime = 0.0
         newTime = 0.0
         if xforce > DiceGlobals.PIT_X_MAX:
-            print('DiceGameGUI: Die %d Hit Right Wall' % dienum)
+            print 'DiceGameGUI: Die %d Hit Right Wall' % dienum
             oldX = DiceGlobals.PIT_X_MAX
             oldY = 0.0 + Yslope * oldX + CY
             wallDist = math.sqrt((oldX - startPos[0]) * (oldX - startPos[0]) + (oldY - startPos[1]) * (oldY - startPos[1]))
@@ -281,7 +281,7 @@ class DiceGameGUI(DirectFrame):
             newY = yforce
         else:
             if xforce < DiceGlobals.PIT_X_MIN:
-                print('DiceGameGUI: Die %d Hit Left wall' % dienum)
+                print 'DiceGameGUI: Die %d Hit Left wall' % dienum
                 oldX = DiceGlobals.PIT_X_MIN
                 oldY = 0.0 + Yslope * oldX + CY
                 wallDist = math.sqrt((oldX - startPos[0]) * (oldX - startPos[0]) + (oldY - startPos[1]) * (oldY - startPos[1]))
@@ -296,7 +296,7 @@ class DiceGameGUI(DirectFrame):
             possX = 0.0 + Xslope * possY + CX
             possDist = math.sqrt((possX - startPos[0]) * (possX - startPos[0]) + (possY - startPos[1]) * (possY - startPos[1]))
             if possDist < wallDist:
-                print('DiceGameGUI: Die %d Hit Top Wall' % dienum)
+                print 'DiceGameGUI: Die %d Hit Top Wall' % dienum
                 oldX = possX
                 oldY = possY
                 wallDist = possDist
@@ -312,7 +312,7 @@ class DiceGameGUI(DirectFrame):
                 possX = 0.0 + Xslope * possY + CX
                 possDist = math.sqrt((possX - startPos[0]) * (possX - startPos[0]) + (possY - startPos[1]) * (possY - startPos[1]))
                 if possDist < wallDist:
-                    print('DiceGameGUI: Die %d Hit Bottom Wall' % dienum)
+                    print 'DiceGameGUI: Die %d Hit Bottom Wall' % dienum
                     oldX = possX
                     oldY = possY
                     wallDist = possDist

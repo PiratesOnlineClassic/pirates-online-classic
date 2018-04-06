@@ -4,7 +4,7 @@
 # Embedded file name: pirates.makeapirate.Ear
 import random
 
-from .CharGuiBase import CharGuiPicker, CharGuiSlider
+from CharGuiBase import CharGuiPicker, CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
@@ -103,7 +103,7 @@ class Ear(DirectObject.DirectObject):
         self.pgs3.node().setValue(self.avatar.dna.getEarPosition())
 
     def reset(self):
-        for i in range(0, len(self.pgs)):
+        for i in xrange(0, len(self.pgs)):
             self.resetSlider(self.pgs[i])
 
         self.saveDNA()
@@ -114,7 +114,7 @@ class Ear(DirectObject.DirectObject):
     def randomPick(self):
         global damper
         damper = 1.0
-        for i in range(0, len(self.pgs)):
+        for i in xrange(0, len(self.pgs)):
             slider = self.pgs[i]
             self.resetSlider(slider)
             if random.choice([0, 1]):

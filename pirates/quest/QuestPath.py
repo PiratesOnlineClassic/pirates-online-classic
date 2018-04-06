@@ -24,17 +24,17 @@ class QuestGoal:
         return
 
     def getType(self):
-        if self.__goalType == list:
+        if self.__goalType == types.ListType:
             return self.Type_Custom
         return self.Type_Uid
 
     def getTargetType(self):
-        if self.__goalType == list:
+        if self.__goalType == types.ListType:
             return self.__goalData[1]
         return
 
     def compareTo(self, object, goalOwner=None):
-        if self.__goalType == list:
+        if self.__goalType == types.ListType:
             if self.__goalData[0] > 0 and self.__goalData[0] > object.getLevel():
                 return 1
             if object._isShip():
@@ -67,7 +67,7 @@ class QuestGoal:
             return self.__goalDataStr
         if self.__goalData == None:
             resultStr = ''
-        if self.__goalType == bytes:
+        if self.__goalType == types.StringType:
             resultStr = self.__goalData
         else:
             strRep = ''
@@ -120,7 +120,7 @@ class QuestStep:
         self.islandId = islandId
 
     def __repr__(self):
-        return 'QuestStep(%d, %d, %d, %s, %s)' % (self.getOriginDoId(), self.getStepDoId(), self.getStepType(), repr((self.getPosH())), self.islandId)
+        return 'QuestStep(%d, %d, %d, %s, %s)' % (self.getOriginDoId(), self.getStepDoId(), self.getStepType(), `(self.getPosH())`, self.islandId)
 
     def __cmp__(self, other):
         return not isinstance(other, QuestStep) or cmp(self.originDoId, other.originDoId) or cmp(self.stepDoId, other.stepDoId) or cmp(self.stepType, other.stepType) or cmp(self.posH, other.posH) or cmp(self.islandId, other.islandId)

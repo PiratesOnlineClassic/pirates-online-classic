@@ -286,7 +286,7 @@ Rating = 'Your Rating:'
 __highSeasAdventureRating = {0: 'Stowaway', 1: 'Cabinboy', 3: 'Swabbie', 6: 'Deckhand', 10: 'Seaman', 15: 'Mariner', 20: 'Swashbuckler', 30: 'First Mate', 50: 'Robber Baron!'}
 
 def getHighSeasRating(value):
-    probabilityTable = list(__highSeasAdventureRating.keys())
+    probabilityTable = __highSeasAdventureRating.keys()
     probabilityTable.sort()
     for rating in probabilityTable:
         if value <= rating:
@@ -298,7 +298,7 @@ def getHighSeasRating(value):
 __crewAdventureRating = {-1: 'Landlubbers', 0: 'Sailors', 5: 'Sea Dogs', 10: 'Adventurers!', 20: 'Plunderers!', 30: 'Raiders!', 40: 'Buccaneers!', 50: 'Warmongers!', 75: 'Robber Villains!', 100: 'HighSea Terrors!'}
 
 def getCrewRating(value):
-    probabilityTable = list(__crewAdventureRating.keys())
+    probabilityTable = __crewAdventureRating.keys()
     probabilityTable.sort()
     for rating in probabilityTable:
         if value <= rating:
@@ -1315,8 +1315,8 @@ def getHandNameFull(handCode, cards):
     def getRank(card):
         return card % 13
 
-    cardNames = [PlayingCardRanks[getRank(card)] for card in cards]
-    cardNamesPlural = [PlayingCardRanksPlural[getRank(card)] for card in cards]
+    cardNames = map(lambda card: PlayingCardRanks[getRank(card)], cards)
+    cardNamesPlural = map(lambda card: PlayingCardRanksPlural[getRank(card)], cards)
     if handCode == 'Nothing':
         return ''
     else:
@@ -1357,8 +1357,8 @@ PlayingCardTemplate = '%s of %s'
 PlayingCardUnknown = 'Unknown'
 
 def getPlayingCardName(suit, rank):
-    suitName = PlayingCardSuits[int(suit)]
-    rankName = PlayingCardRanks[int(rank)]
+    suitName = PlayingCardSuits[suit]
+    rankName = PlayingCardRanks[rank]
     return PlayingCardTemplate % (rankName, suitName)
 
 
@@ -2128,7 +2128,7 @@ TitleOn = 'On'
 TitleOff = 'Off'
 
 def getPVPRating(score):
-    return random.choice(list(_pvpRating.values()))
+    return random.choice(_pvpRating.values())
 
 
 PirateerTitle = 'Dubloon Lagoon'

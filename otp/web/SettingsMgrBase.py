@@ -22,7 +22,7 @@ class SettingsMgrBase:
         pass
 
     def _iterSettingNames(self):
-        for name in self._settings.keys():
+        for name in self._settings.iterkeys():
             yield name
 
     def _addSettings(self, *settings):

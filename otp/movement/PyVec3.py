@@ -11,7 +11,7 @@ from pandac.PandaModules import *
 class PyVec3:
     __module__ = __name__
     Epsilon = 0.0001
-    ScalarTypes = (float, int, int)
+    ScalarTypes = (types.FloatType, types.IntType, types.LongType)
 
     def __init__(self, *args):
         self.assign(*args)

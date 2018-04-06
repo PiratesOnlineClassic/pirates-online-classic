@@ -4,7 +4,7 @@
 # Embedded file name: pirates.makeapirate.BodyGUI
 import random
 
-from .CharGuiBase import CharGuiPicker, CharGuiSlider
+from CharGuiBase import CharGuiPicker, CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
@@ -212,7 +212,7 @@ class BodyGUI(DirectFrame, StateData.StateData):
         self.toggleBodyShapes(self.main.pirate.style.gender)
 
     def reset(self):
-        for i in range(0, len(self.pgs)):
+        for i in xrange(0, len(self.pgs)):
             self.resetSlider(self.pgs[i])
 
         self.handleShape(2)
@@ -223,7 +223,7 @@ class BodyGUI(DirectFrame, StateData.StateData):
         self.updateHeightSlider(slider)
 
     def randomPick(self):
-        for i in range(0, len(self.pgs)):
+        for i in xrange(0, len(self.pgs)):
             slider = self.pgs[i]
             self.resetSlider(slider)
             if random.choice([0, 1]):
@@ -237,14 +237,14 @@ class BodyGUI(DirectFrame, StateData.StateData):
                     slider.node().setValue(value)
                 self.updateHeightSlider(slider, slider['extraArgs'][1])
 
-        cList = list(range(0, len(HumanDNA.pirateModelTypes)))
+        cList = range(0, len(HumanDNA.pirateModelTypes))
         cList.remove(self.main.pirate.style.body.shape)
         choice = random.choice(cList)
         self.handleShape(choice)
         idx = 0
         if self.main.pirate.style.gender == 'f':
             idx = 1
-        choice = random.choice(list(range(1, len(HumanDNA.skinColors))))
+        choice = random.choice(range(1, len(HumanDNA.skinColors)))
         self.handleSetColor(choice)
 
     def handleShape(self, shapeIdx):
@@ -266,7 +266,7 @@ class BodyGUI(DirectFrame, StateData.StateData):
             return
         optionsLeft = len(self.main.JSD_BODY[shapeIdx])
         if optionsLeft and not random.randint(0, 4):
-            choice = random.choice(list(range(0, optionsLeft)))
+            choice = random.choice(range(0, optionsLeft))
             if self.main.lastDialog:
                 if self.main.lastDialog.status() == AudioSound.PLAYING:
                     return
