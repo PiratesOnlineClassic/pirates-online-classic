@@ -115,6 +115,8 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.guildManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_GUILD_MANAGER, 'PCGuildManager')
 
+        self.inventoryManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')
+
     def createWorlds(self):
         """
         Create "worlds" objects, e.g. DistributedInstanceBase, DistributedOceanGrid et al.

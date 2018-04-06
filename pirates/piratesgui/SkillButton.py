@@ -326,6 +326,7 @@ class SkillButton(DirectFrame):
         effectId = WeaponGlobals.getSkillEffectFlag(self.skillId)
         if effectId:
             description += ' ' + SkillEffectDescriptions.get(effectId)[0]
+        upgradeInfo = ''
         if self.skillId == InventoryType.SailBroadsideLeft or self.skillId == InventoryType.SailBroadsideRight:
             if damageMod > 0:
                 description += ' ' + PLocalizer.BroadsideDesc
@@ -337,7 +338,6 @@ class SkillButton(DirectFrame):
                 description += ' ' + PLocalizer.InterruptDesc
             if WeaponGlobals.getSkillUnattune(self.skillId):
                 description += ' ' + PLocalizer.UnattuneDesc
-            upgradeInfo = ''
             if self.showUpgrade and self.skillRank < 5:
                 if self.skillRank > 0:
                     upgradeInfo = skillInfo[2]

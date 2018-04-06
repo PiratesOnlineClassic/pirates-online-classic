@@ -27,9 +27,13 @@ uberdogs:
       id: 4679
       anonymous: false
 
+    - class: DistributedInventoryManager
+      id: 4677
+      anonymous: false
+
     - class: GuildManager
       id: 4701
-      anonymous: true
+      anonymous: false
 
 roles:
     - type: clientagent

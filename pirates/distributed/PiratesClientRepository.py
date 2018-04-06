@@ -89,7 +89,6 @@ if want_fifothreads:
 
 
 class PiratesClientRepository(OTPClientRepository):
-    __module__ = __name__
     notify = directNotify.newCategory('PiratesClientRepository')
     SupportTutorial = 0
     GameGlobalsId = OTP_DO_ID_PIRATES
@@ -110,6 +109,7 @@ class PiratesClientRepository(OTPClientRepository):
         self.codeRedemption = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_CODE_REDEMPTION, 'CodeRedemption')
         self.settingsMgr = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_SETTINGS_MANAGER, 'PiratesSettingsMgr')
         self.csm = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
+        self.inventoryManager = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')
         self.wantSeapatch = base.config.GetBool('want-seapatch', True)
         self.wantSpecialEffects = base.config.GetBool('want-special-effects', True)
         self.wantMakeAPirate = base.config.GetBool('want-make-a-pirate', False)
@@ -824,16 +824,6 @@ class PiratesClientRepository(OTPClientRepository):
 
         if self.systemMessageSfx:
             base.playSfx(self.systemMessageSfx)
-
-    def getInventoryMgr(self, doId):
-        return self.inventoryManager[doId % self.inventoryMgrCount]
-
-    def createInventoryManagers(self, num):
-        self.inventoryMgrCount = num
-        self.inventoryManager = []
-        for i in xrange(num):
-            self.inventoryManager.append(self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_INVENTORY_MANAGER_BASE + i,
-                'DistributedInventoryManager'))
 
     def setDistrict(self, district):
         self.district = district

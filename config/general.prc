@@ -72,4 +72,4 @@ want-make-a-pirate #t
 
 # Islands:
 remove-island-barriers #f
-object-load-delay #t
+object-load-delay #f
