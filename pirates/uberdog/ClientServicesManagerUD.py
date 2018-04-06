@@ -22,17 +22,18 @@ if accountDBType == 'remote':
 # Sometimes we'll want to force a specific access level, such as on the
 # developer server:
 minAccessLevel = simbase.config.GetInt('min-access-level', 100)
-accountServerEndpoint = simbase.config.GetString('account-server-endpoint', 'https://toontowninfinite.com/api/')
+accountServerEndpoint = simbase.config.GetString('account-server-endpoint', '')  # TODO
 accountServerSecret = simbase.config.GetString('account-server-secret', '6163636f756e7473')
 
 http = HTTPClient()
 http.setVerifySsl(0)
 
+
 def executeHttpRequest(url, **extras):
     timestamp = str(int(time.time()))
     signature = hmac.new(accountServerSecret, timestamp, hashlib.sha256)
-    request = urllib.request.Request(accountServerEndpoint + url)
-    request.add_header('User-Agent', 'TTI-CSM')
+    request = urllib2.Request(accountServerEndpoint + url)
+    request.add_header('User-Agent', 'POC-CSM')
     request.add_header('X-CSM-Timestamp', timestamp)
     request.add_header('X-CSM-Signature', signature.hexdigest())
     for k, v in list(extras.items()):
@@ -45,6 +46,7 @@ def executeHttpRequest(url, **extras):
 #blacklist = executeHttpRequest('names/blacklist.json')
 #if blacklist:
 #    blacklist = json.loads(blacklist)
+
 
 def judgeName(name):
     if not name:
@@ -64,10 +66,11 @@ def judgeName(name):
     return True
 
 # --- ACCOUNT DATABASES ---
-# These classes make up the available account databases for Toontown Infinite.
+# These classes make up the available account databases for Pirates Online Classic.
 # Databases with login tokens use the PyCrypto module for decrypting them.
 # DeveloperAccountDB is a special database that accepts a username, and assigns
 # each user with 600 access automatically upon login.
+
 
 class AccountDB:
     notify = directNotify.newCategory('AccountDB')
