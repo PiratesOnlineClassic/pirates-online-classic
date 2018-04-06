@@ -63,7 +63,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         inventory = self.inventories.get(inventoryId)
 
         if not inventory:
-            return task.cont
+            return task.again
 
         self.__sendInventory(avatarId, inventory.doId)
         return task.done
