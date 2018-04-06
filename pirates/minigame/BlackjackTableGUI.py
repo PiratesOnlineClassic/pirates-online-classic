@@ -318,7 +318,7 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
         self.playerStatusPanels[guiIndex].actionLabel.hide()
 
     def hideArrow(self):
-        list(map(lambda panel: panel.arrow.hide(), self.playerStatusPanels))
+        map(lambda panel: panel.arrow.hide(), self.playerStatusPanels)
 
     def getGuiIndex(self, seatIndex):
         return (self.LocalAvatarGuiIndex - self.table.localAvatarSeat + seatIndex) % (self.table.NumSeats + 1)

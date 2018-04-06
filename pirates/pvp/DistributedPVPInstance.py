@@ -200,7 +200,7 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
          True, None]
 
     def requestSpawnLocResp(self):
-        print('[rslr]')
+        print '[rslr]'
         if self.completed:
             return
         self.goToSpawnIval = Sequence(Func(localAvatar.cameraFSM.request, 'Off'), Wait(2.1), Func(self.respawn), Func(self.cleanupSpawnIval))
@@ -213,18 +213,18 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
         return
 
     def respawn(self):
-        print('[respawn]')
+        print '[respawn]'
         self.teleportToPosStep1()
 
     def teleportToPosStep1(self):
-        print('[teleportToPosStep1]')
+        print '[teleportToPosStep1]'
         if self.cr.activeWorld == None or self.cr.activeWorld.spawnInfo == None:
             return
         self.cr.teleportMgr.createSpawnInterests(self.cr.activeWorld.spawnInfo[2], self.teleportToPosStep2, self.worldGrid, localAvatar)
         return
 
     def teleportToPosStep2(self, parentObj, teleportingObj):
-        print('[teleportToPosStep2]')
+        print '[teleportToPosStep2]'
         base.cr.teleportMgr.localTeleportPos(self.cr.activeWorld.spawnInfo[0], parentObj, smooth=True)
 
     def requestPVPLeave(self):
@@ -393,7 +393,7 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
 
     def getPlayerStats(self):
         displayStats = []
-        for playerId, stats in list(self.stats.items()):
+        for playerId, stats in self.stats.items():
             if playerId not in self.names:
                 continue
             playerName = self.names[playerId]
@@ -415,7 +415,7 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
     def getTeamStats(self):
         displayStats = []
         teams = {}
-        for playerId, stats in list(self.stats.items()):
+        for playerId, stats in self.stats.items():
             if playerId not in self.names:
                 continue
             playerName = self.names[playerId]
@@ -432,7 +432,7 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
                 playerColor = None
             teams[playerTeam].append([playerName, playerStats, ['color', playerColor]])
 
-        for team, teamStats in list(teams.items()):
+        for team, teamStats in teams.items():
             teamTotals = []
             for stat in self.getColumnStats():
                 teamTotals.append([PVPGlobals.statText[stat], 0])

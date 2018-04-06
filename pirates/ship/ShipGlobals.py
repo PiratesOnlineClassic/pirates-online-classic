@@ -289,7 +289,7 @@ def getMaxHullStats():
     if not __maxHullStats:
         for shipClass in PLAYER_SHIPS:
             hullInfo = __hullStats[shipClass]
-            for key, val in hullInfo.items():
+            for key, val in hullInfo.iteritems():
                 __maxHullStats[key] = max(__maxHullStats.get(key, 0), val)
 
     return __maxHullStats
@@ -469,7 +469,7 @@ def getShipConfig(shipClass):
         return
     newData = {}
     for i in range(len(__shipAttributes)):
-        if __shipAttributes[i] in shipData:
+        if shipData.has_key(__shipAttributes[i]):
             newData[__shipDNAdata[i]] = shipData[__shipAttributes[i]]
 
     partStats = getHullStats(shipClass)
@@ -487,7 +487,7 @@ def getHullConfig(shipClass):
     shipData = getBaseShipConfig(shipClass)
     newData = {}
     for i in range(len(__hullAttributes)):
-        if __hullAttributes[i] in shipData:
+        if shipData.has_key(__hullAttributes[i]):
             newData[__hullDNAdata[i]] = shipData[__hullAttributes[i]]
 
     partStats = getHullStats(shipClass)
@@ -507,7 +507,7 @@ def getCabinConfig(shipClass):
     shipData = getBaseShipConfig(shipClass)
     newData = {}
     for i in range(len(__cabinAttributes)):
-        if __cabinAttributes[i] in shipData:
+        if shipData.has_key(__cabinAttributes[i]):
             newData[__cabinDNAdata[i]] = shipData[__cabinAttributes[i]]
 
     partStats = getCabinStats(newData['setCabinType'])
@@ -526,7 +526,7 @@ def getMastConfig(shipClass, index):
     mastAttrib = __mastAttributes.get(index)
     newData = {}
     for i in range(len(mastAttrib)):
-        if mastAttrib[i] in shipData:
+        if shipData.has_key(mastAttrib[i]):
             newData[__mastDNAdata[i]] = shipData[mastAttrib[i]]
 
     newData['setPosIndex'] = index
@@ -545,7 +545,7 @@ def getSailConfig(shipClass, mastIndex, sailIndex):
     sailAttrib = __sailAttributes.get(mastIndex)
     newData = {}
     for i in range(len(sailAttrib)):
-        if sailAttrib[i] in shipData:
+        if shipData.has_key(sailAttrib[i]):
             if __sailDNAdata[i] == 'setSailType':
                 newData[__sailDNAdata[i]] = shipData[sailAttrib[i]][sailIndex]
             else:
@@ -569,7 +569,7 @@ def getProwConfig(shipClass):
     shipData = getBaseShipConfig(shipClass)
     newData = {}
     for i in range(len(__prowAttributes)):
-        if __prowAttributes[i] in shipData:
+        if shipData.has_key(__prowAttributes[i]):
             newData[__prowDNAdata[i]] = shipData[__prowAttributes[i]]
 
     partStats = getProwStats(newData['setProwType'])
@@ -586,7 +586,7 @@ def getRamConfig(shipClass):
     shipData = getBaseShipConfig(shipClass)
     newData = {}
     for i in range(len(__ramAttributes)):
-        if __ramAttributes[i] in shipData:
+        if shipData.has_key(__ramAttributes[i]):
             newData[__prowDNAdata[i]] = shipData[__ramAttributes[i]]
 
     partStats = getProwStats(newData['setProwType'])
@@ -607,7 +607,7 @@ def getDecorConfig(shipClass, placement, decorIndex):
         decorAttrib = __floorDecorAttributes
     newData = {}
     for i in range(len(decorAttrib)):
-        if decorAttrib[i] in shipData:
+        if shipData.has_key(decorAttrib[i]):
             if __decorDNAdata[i] == 'setDecorType':
                 newData[__decorDNAdata[i]] = shipData[decorAttrib[i]][decorIndex]
             else:
@@ -661,7 +661,7 @@ shipData = {NAVY_FERRET: [2, NAVY_TEAM, 1], NAVY_BULWARK: [6, NAVY_TEAM, 1], NAV
 def getRandomShipLevel(shipClass):
     baselevel = getShipLevel(shipClass) - 1
     baselevel += random.randint(0, 2)
-    baselevel = min(len(list(__shipLevelStatMultiplier.keys())) - 1, baselevel)
+    baselevel = min(len(__shipLevelStatMultiplier.keys()) - 1, baselevel)
     return baselevel
 
 
@@ -867,7 +867,7 @@ def preprocessPhase5Ships(task=0):
     preprocessHull('skeletonInterceptorL3')
     preprocessHullMed('skeletonInterceptorL3')
     preprocessHullLow('skeletonInterceptorL3', isSkelShip=True)
-    for i in range(5):
+    for i in xrange(5):
         preprocessMast('models/char/mainmastA_tri_ghost', 2, i)
 
     return Task.done
@@ -971,19 +971,19 @@ def preprocessMast(name, maxHeight, index):
     mast.loadAnims(anims, 'modelRoot', 'all')
     riggingAttrib = CullBinAttrib.make('ShipRigging', 0)
     geomNodeList = mast.findAllMatches('**/+GeomNode')
-    for i in range(geomNodeList.getNumPaths()):
+    for i in xrange(geomNodeList.getNumPaths()):
         gn = geomNodeList[i].node()
-        for j in range(gn.getNumGeoms()):
+        for j in xrange(gn.getNumGeoms()):
             geomState = gn.getGeomState(j)
             texAttrib = geomState.getAttrib(TextureAttrib.getClassType())
-            for k in range(texAttrib.getNumOnStages()):
+            for k in xrange(texAttrib.getNumOnStages()):
                 stage = texAttrib.getOnStage(k)
                 tex = texAttrib.getOnTexture(stage)
                 if tex.getName() == 'ab_ship_rigging_alpha':
                     gn.setGeomState(j, geomState.addAttrib(riggingAttrib))
                     continue
 
-    for j in range(maxHeight):
+    for j in xrange(maxHeight):
         excludedJoint = [
          'def_sail_%d_a_1' % j, 'def_sail_%d_b_1' % j, 'def_sail_%d_c_1' % j]
         if j < maxHeight - 1:
@@ -998,7 +998,7 @@ def preprocessMast(name, maxHeight, index):
     tallestMast = Actor.Actor()
     tallestMast.copyActor(mast, 1)
     shipGeoms['%s_%s_%s' % (name, maxHeight, index)] = [tallestMast, locators]
-    for i in range(1, maxHeight):
+    for i in xrange(1, maxHeight):
         height = maxHeight - i
         if height < 3:
             mast.freezeJoint('mast_%d_%d' % (height, index), 'def_mast_%s' % height, scale=Vec3(0.001, 0.001, 0.001))

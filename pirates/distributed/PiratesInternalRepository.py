@@ -121,7 +121,7 @@ class PiratesInternalRepository(AstronInternalRepository):
     def readerPollOnce(self):
         try:
             return AstronInternalRepository.readerPollOnce(self)
-        except SystemExit as KeyboardInterrupt:
+        except SystemExit, KeyboardInterrupt:
             raise
         except Exception as e:
 
@@ -137,6 +137,7 @@ class PiratesInternalRepository(AstronInternalRepository):
                 exception=traceback.format_exc())
 
             self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
-            print(traceback.format_exc())
+            print traceback.format_exc()
+            sys.exc_clear()
 
         return 1

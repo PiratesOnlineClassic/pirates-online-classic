@@ -281,7 +281,7 @@ class PistolUpgradeReward(QuestReward):
         av.giveWeaponMessage(self.amount)
 
     def getDescriptionText(self):
-        if self.amount in PLocalizer.InventoryTypeNames:
+        if PLocalizer.InventoryTypeNames.has_key(self.amount):
             return PLocalizer.InventoryTypeNames.get(self.amount)
         else:
             return PLocalizer.PistolRewardDesc
@@ -334,7 +334,7 @@ class DaggerUpgradeReward(QuestReward):
         av.giveWeaponMessage(self.amount)
 
     def getDescriptionText(self):
-        if self.amount in PLocalizer.InventoryTypeNames:
+        if PLocalizer.InventoryTypeNames.has_key(self.amount):
             return PLocalizer.InventoryTypeNames.get(self.amount)
         else:
             return PLocalizer.DaggerRewardDesc
@@ -366,7 +366,7 @@ class CutlassUpgradeReward(QuestReward):
         av.giveWeaponMessage(self.amount)
 
     def getDescriptionText(self):
-        if self.amount in PLocalizer.InventoryTypeNames:
+        if PLocalizer.InventoryTypeNames.has_key(self.amount):
             return PLocalizer.InventoryTypeNames.get(self.amount)
         else:
             return PLocalizer.CutlassRewardDesc
@@ -398,7 +398,7 @@ class DollUpgradeReward(QuestReward):
         av.giveWeaponMessage(self.amount)
 
     def getDescriptionText(self):
-        if self.amount in PLocalizer.InventoryTypeNames:
+        if PLocalizer.InventoryTypeNames.has_key(self.amount):
             return PLocalizer.InventoryTypeNames.get(self.amount)
         else:
             return PLocalizer.DollRewardDesc
@@ -430,7 +430,7 @@ class WandUpgradeReward(QuestReward):
         av.giveWeaponMessage(self.amount)
 
     def getDescriptionText(self):
-        if self.amount in PLocalizer.InventoryTypeNames:
+        if PLocalizer.InventoryTypeNames.has_key(self.amount):
             return PLocalizer.InventoryTypeNames.get(self.amount)
         else:
             return PLocalizer.DollRewardDesc
@@ -598,7 +598,7 @@ class TattooQuestReward(QuestReward):
 
     def applyTo(self, trade, av):
         doId = av.getDoId()
-        keys = list(TattooGlobals.tattoos.keys())
+        keys = TattooGlobals.tattoos.keys()
         questDrop = TattooGlobals.questDrops.get(self.amount)
         for drop in questDrop:
             if drop in keys:
@@ -616,7 +616,7 @@ class ClothingQuestReward(QuestReward):
     def applyTo(self, trade, av):
         doId = av.getDoId()
         gender = av.dna.getGender()
-        keys = list(ClothingGlobals.UNIQUE_ID.keys())
+        keys = ClothingGlobals.UNIQUE_ID.keys()
         questDrop = ClothingGlobals.questDrops.get(self.amount)
         if questDrop is None:
             return

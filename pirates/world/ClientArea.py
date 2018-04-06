@@ -225,7 +225,7 @@ class ClientArea(DirectObject):
                     createDefSword = False
                     if allProps:
                         propInfo = random.choice(allProps)
-                        if isinstance(propInfo, list):
+                        if isinstance(propInfo, types.ListType):
                             propInfo = propInfo[0]
 
                         prop = loader.loadModel(propInfo)
@@ -323,7 +323,7 @@ class ClientArea(DirectObject):
                             path = currData['ObjectIds'][currLink[0]]
 
                         getDstPos = 'dstPos = currData' + path + '["Pos"]'
-                        exec(getDstPos)
+                        exec getDstPos
                         h0 = propAv.getH()
                         h1 = propAv.getH() + 180
                         p = propAv.getP()
@@ -429,7 +429,7 @@ class ClientArea(DirectObject):
                         objModel = objNode
                         bObjAnimated = True
                     else:
-                        if isinstance(objData['Visual']['Model'], list):
+                        if isinstance(objData['Visual']['Model'], types.ListType):
                             modelName = 'models/misc/smiley'
                             objData['Visual']['Color'] = (0.8, 0, 0, 1.0)
                             objData['Scale'] = VBase3(20.0, 20.0, 20.0)
@@ -508,7 +508,7 @@ class ClientArea(DirectObject):
                                     effects = objModel.findAllMatches('**/*_effect_*')
 
                                     if not effects.isEmpty():
-                                        for i in range(effects.getNumPaths()):
+                                        for i in xrange(effects.getNumPaths()):
                                             effect = effects[i]
                                             lform = NodePath('fooEffect')
                                             lform.setPos(objPos)
@@ -567,7 +567,7 @@ class ClientArea(DirectObject):
                                         lowOnly = True
                                         lodIdx = objLODNode.getNumChildren() - 1
 
-                                    for i in range(objLODNode.getNumChildren()):
+                                    for i in xrange(objLODNode.getNumChildren()):
                                         if not gldef.children[i]:
                                             continue
 
@@ -598,7 +598,7 @@ class ClientArea(DirectObject):
                                     specialGeo = objModel.findAllMatches('**/+GeomNode')
                                     if not specialGeo.isEmpty():
                                         tform = xform.copyTo(NodePath())
-                                        for i in range(specialGeo.getNumPaths()):
+                                        for i in xrange(specialGeo.getNumPaths()):
                                             specialGeo[i].setPos(specialGeo[i].getParent().getPos())
                                             specialGeo[i].setHpr(specialGeo[i].getParent().getHpr())
                                             specialGeo[i].setScale(specialGeo[i].getParent().getScale())
@@ -704,7 +704,7 @@ class ClientArea(DirectObject):
                         objLODNode = objLOD.node()
                         lodNP = NodePath(objLODNode.getChild(0))
                         tform.reparentTo(lodNP)
-                        for i in range(1, objLODNode.getNumChildren()):
+                        for i in xrange(1, objLODNode.getNumChildren()):
                             lodNP = NodePath(objLODNode.getChild(i))
                             xform = tform.copyTo(NodePath())
                             xform.reparentTo(lodNP)
@@ -857,7 +857,7 @@ class ClientArea(DirectObject):
         tparts = trunk.split('_')
         numDelms = len(tparts)
 
-        for i in range(len(tparts)):
+        for i in xrange(len(tparts)):
             syl = tparts[i]
 
             if syl == 'trunk':
@@ -868,7 +868,7 @@ class ClientArea(DirectObject):
         lparts = leaf.split('_')
         numDelms = len(lparts)
 
-        for i in range(len(lparts)):
+        for i in xrange(len(lparts)):
             syl = lparts[i]
 
             if syl == 'leaf':
@@ -909,12 +909,12 @@ class ClientArea(DirectObject):
 
         subObjs = obj.findAllMatches('**/*' + name + '*')
         if 'Scale' in propData['Visual']:
-            for i in range(len(subObjs)):
+            for i in xrange(len(subObjs)):
                 currSubObj = subObjs[i]
                 currSubObj.setScale(propData['Visual']['Scale'])
 
         if 'Color' in propData['Visual']:
-            for i in range(len(subObjs)):
+            for i in xrange(len(subObjs)):
                 currSubObj = subObjs[i]
                 currSubObj.setColorScale(*propData['Visual']['Color'])
 
@@ -923,8 +923,8 @@ class ClientArea(DirectObject):
             1.0]
 
         if 'SubObjs' in propData:
-            if isinstance(propData['SubObjs'], dict):
-                subObjsInfo = list(propData['SubObjs'].values())
+            if isinstance(propData['SubObjs'], types.DictType):
+                subObjsInfo = propData['SubObjs'].values()
             else:
                 subObjsInfo = propData['SubObjs']
             for currSubObj in subObjsInfo:
@@ -946,12 +946,12 @@ class ClientArea(DirectObject):
                         obj.freezeJoint('modelRoot', attachInfo[1], pos=Vec3(transform.getPos()), hpr=Vec3(
                                 transform.getHpr()), scale=currSubObj['Visual']['Scale'])
                     else:
-                        for i in range(len(subObjs)):
+                        for i in xrange(len(subObjs)):
                             currLOD = subObjs[i]
                             currLOD.setScale(currSubObj['Visual']['Scale'])
 
                 if 'Color' in currSubObj['Visual']:
-                    for i in range(len(subObjs)):
+                    for i in xrange(len(subObjs)):
                         currLOD = subObjs[i]
                         currLOD.setColorScale(*currSubObj['Visual']['Color'])
 
@@ -1042,7 +1042,7 @@ class ClientArea(DirectObject):
             VBase4(0, 1, 0, 1),
             VBase4(0, 0, 1, 1)]
 
-        for i in range(len(self.polyLights)):
+        for i in xrange(len(self.polyLights)):
             light = self.polyLights[i]
             plNode = light.node()
             plNode.flickerOff()
@@ -1114,7 +1114,7 @@ class ClientArea(DirectObject):
                     delObjs = []
                     addObjs = {}
                     for currToLoad in toLoad:
-                        if isinstance(toLoad[currToLoad], list):
+                        if isinstance(toLoad[currToLoad], types.ListType):
                             objInfo = toLoad[currToLoad][0]
                             altParent = toLoad[currToLoad][1]
                         else:
@@ -1135,7 +1135,7 @@ class ClientArea(DirectObject):
                         delObjs.append(currToLoad)
                         childens = objInfo.get('Objects')
                         if childens:
-                            for currChildUid in list(childens.keys()):
+                            for currChildUid in childens.keys():
                                 addObjs[currChildUid] = [
                                     childens[currChildUid],
                                     addedObj]
@@ -1146,24 +1146,24 @@ class ClientArea(DirectObject):
                             for currDelObj in delObjs:
                                 del toLoad[currDelObj]
 
-                            for currAddObj in list(addObjs.keys()):
+                            for currAddObj in addObjs.keys():
                                 toLoad[currAddObj] = addObjs[currAddObj]
 
-                            if len(list(toLoad.keys())) > 0:
+                            if len(toLoad.keys()) > 0:
                                 taskMgr.doMethodLater(0.25,
                                                       self.loadZoneObjects,
                                                       'loadZoneObjects' + str(id(self)),
                                                       extraArgs=[currZoneToLoad])
 
                                 self.notify.debug('ClientArea: delaying rest of loading, %s objects left...' % \
-                                    len(list(toLoad.keys())))
+                                    len(toLoad.keys()))
 
                             return
 
                     for currDelObj in delObjs:
                         del toLoad[currDelObj]
 
-                    for currAddObj in list(addObjs.keys()):
+                    for currAddObj in addObjs.keys():
                         toLoad[currAddObj] = addObjs[currAddObj]
 
                     continue
@@ -1317,7 +1317,7 @@ class ClientArea(DirectObject):
                 node = lod.node()
                 node.clearSwitches()
                 node.setCenter(center)
-                for i in range(lod.getNumChildren()):
+                for i in xrange(lod.getNumChildren()):
                     distance = radius * lodRadiusFactor[i + 1]
                     if forceLowLodSD:
                         if i == lod.getNumChildren() - 1 and forceLowLodSD > distance:
@@ -1399,7 +1399,7 @@ class ClientArea(DirectObject):
             self.animControls = AnimControlCollection()
             autoBind(self.node(), self.animControls, 3)
             self.bound = True
-            for i in range(self.animControls.getNumAnims()):
+            for i in xrange(self.animControls.getNumAnims()):
                 self.animControls.getAnim(i).setPlayRate(
                     random.uniform(0.8, 1))
 
@@ -1422,7 +1422,7 @@ class ClientArea(DirectObject):
         self.findAllMatches('**/=Holiday=%s;+s' % (holidayName,)).unstash()
 
     def checkForHolidayObjects(self):
-        for holidayId in list(base.holidays.keys()):
+        for holidayId in base.holidays.keys():
             if base.getHoliday(holidayId):
                 self.unstashHolidayObjects(
                     HolidayGlobals.getHolidayName(holidayId))

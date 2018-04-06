@@ -4,7 +4,7 @@
 # Embedded file name: otp.login.PrivacyPolicyPanel
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
-from .MultiPageTextFrame import *
+from MultiPageTextFrame import *
 from otp.otpbase import OTPLocalizer
 from otp.otpbase.OTPGlobals import *
 from otp.otpgui import OTPDialog

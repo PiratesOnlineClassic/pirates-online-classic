@@ -14,7 +14,7 @@ CycleStateTimeList = {TOD_REGULAR_CYCLE: [(PiratesGlobals.TOD_DAWN, 1), (Pirates
 StateBreakdownList = {}
 StateBeginTimeList = {}
 NumStates = {}
-cycles = list(CycleStateTimeList.keys())
+cycles = CycleStateTimeList.keys()
 for cycleKey in cycles:
     totalHours = 0.0
     StateBreakdownList[cycleKey] = {}
@@ -47,7 +47,7 @@ def getStateName(stateId):
 
 
 def getStateId(stateName):
-    stateKeys = list(StateDict.keys())
+    stateKeys = StateDict.keys()
     for stateId in stateKeys:
         if StateDict.get(stateId) == stateName:
             return stateId

@@ -1,4 +1,9 @@
+# uncompyle6 version 3.1.1
+# Python bytecode 2.4 (62061)
+# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
+# Embedded file name: pirates.treasuremap.DistributedTreasureMap
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed import DistributedObject
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.quest.QuestHolder import QuestHolder
@@ -6,11 +11,12 @@ from pirates.uberdog.DistributedInventory import DistributedInventory
 from pirates.world import GameTypeGlobals
 
 
-class DistributedTreasureMap(DistributedInventory, QuestHolder):
+class DistributedTreasureMap(DistributedObject.DistributedObject, DistributedInventory, QuestHolder):
     __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('TreasureMapManager')
 
     def __init__(self, cr):
+        DistributedObject.DistributedObject.__init__(self, cr)
         DistributedInventory.__init__(self, cr)
         self.mapId = None
         self.__enabled = 1
@@ -19,7 +25,7 @@ class DistributedTreasureMap(DistributedInventory, QuestHolder):
         return
 
     def announceGenerate(self):
-        DistributedInventory.announceGenerate(self)
+        DistributedObject.DistributedObject.announceGenerate(self)
         self.addInterest(2, self.uniqueName('TreasureMap'))
         GameTypeGlobals.GameTypes[PiratesGlobals.GAME_TYPE_TM]['hidden'] = False
         messenger.send(localAvatar.guiMgr.lookoutPage.getItemChangeMsg())
@@ -70,3 +76,4 @@ class DistributedTreasureMap(DistributedInventory, QuestHolder):
 
     def getIsEnabled(self):
         return self.__enabled
+# okay decompiling .\pirates\treasuremap\DistributedTreasureMap.pyc

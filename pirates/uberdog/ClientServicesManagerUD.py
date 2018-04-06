@@ -4,7 +4,7 @@ import hashlib
 import hmac
 import json
 import time
-import urllib.request, urllib.error, urllib.parse
+import urllib2
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.distributed.PyDatagram import *
@@ -36,10 +36,10 @@ def executeHttpRequest(url, **extras):
     request.add_header('User-Agent', 'POC-CSM')
     request.add_header('X-CSM-Timestamp', timestamp)
     request.add_header('X-CSM-Signature', signature.hexdigest())
-    for k, v in list(extras.items()):
+    for k, v in extras.items():
         request.add_header('X-CSM-' + k, v)
     try:
-        return urllib.request.urlopen(request).read()
+        return urllib2.urlopen(request).read()
     except:
         return None
 
@@ -231,8 +231,8 @@ class RemoteAccountDB(AccountDB):
                 raise ValueError
             if ('accesslevel' not in token) or (not isinstance(token['accesslevel'], int)):
                 raise ValueError
-        except ValueError as e:
-            print(e)
+        except ValueError, e:
+            print e
             self.notify.warning('Invalid token.')
             response = {
                 'success': False,
@@ -592,7 +592,7 @@ class GetAvatarsFSM(AvatarOperationFSM):
     def enterSendAvatars(self):
         potentialAvs = []
 
-        for avId, fields in list(self.avatarFields.items()):
+        for avId, fields in self.avatarFields.items():
             index = self.avList.index(avId)
             wishNameState = fields.get('WishNameState', [''])[0]
             name = fields['setName'][0]

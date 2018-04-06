@@ -98,7 +98,7 @@ class PChatAssistant(ChatAssistant):
         if self.checkGuildTypedChat():
             base.cr.guildManager.sendChat(message)
         else:
-            print('Guild chat error')
+            print 'Guild chat error'
             error = ERROR_NO_GUILD_CHAT
         return error
 
@@ -107,7 +107,7 @@ class PChatAssistant(ChatAssistant):
         if self.checkGuildSpeedChat():
             base.cr.guildManager.sendWLChat(message)
         else:
-            print('Guild chat error')
+            print 'Guild chat error'
             error = ERROR_NO_GUILD_CHAT
         return error
 
@@ -116,7 +116,7 @@ class PChatAssistant(ChatAssistant):
         if self.checkGuildSpeedChat():
             base.cr.guildManager.sendSC(msgIndex)
         else:
-            print('Guild chat error')
+            print 'Guild chat error'
             error = ERROR_NO_GUILD_CHAT
         return error
 
@@ -125,7 +125,7 @@ class PChatAssistant(ChatAssistant):
         if self.checkGuildSpeedChat():
             pass
         else:
-            print('Guild chat error')
+            print 'Guild chat error'
             error = ERROR_NO_GUILD_CHAT
         return error
 
@@ -135,7 +135,7 @@ class PChatAssistant(ChatAssistant):
             chatFlags = CFSpeech | CFTimeout
             localAvatar.bandMember.b_setChat(message, chatFlags)
         else:
-            print('Crew chat error')
+            print 'Crew chat error'
             error = ERROR_NO_CREW_CHAT
         return error
 
@@ -145,7 +145,7 @@ class PChatAssistant(ChatAssistant):
             chatFlags = CFSpeech | CFTimeout
             localAvatar.bandMember.b_setWLChat(message, chatFlags)
         else:
-            print('Crew chat error')
+            print 'Crew chat error'
             error = ERROR_NO_CREW_CHAT
         return error
 
@@ -154,7 +154,7 @@ class PChatAssistant(ChatAssistant):
         if self.checkCrewSpeedChat():
             localAvatar.bandMember.b_setSpeedChat(msgIndex)
         else:
-            print('Crew chat error')
+            print 'Crew chat error'
             error = ERROR_NO_CREW_CHAT
         return error
 
@@ -163,7 +163,7 @@ class PChatAssistant(ChatAssistant):
         if self.checkCrewSpeedChat():
             localAvatar.bandMember.b_setSCQuestChat(questInt, msgType, taskNum)
         else:
-            print('Quest Crew chat error')
+            print 'Quest Crew chat error'
             error = ERROR_NO_CREW_CHAT
         msgIndex = taskNum
         return error
@@ -173,7 +173,7 @@ class PChatAssistant(ChatAssistant):
         if self.checkShipPVPTypedChat():
             base.cr.distributedDistrict.siegeManager.sendChat(message)
         else:
-            print('Ship PVP chat error: Crew typed Chat')
+            print 'Ship PVP chat error: Crew typed Chat'
             error = ERROR_NO_SHIPPVP_CHAT
         return error
 
@@ -182,7 +182,7 @@ class PChatAssistant(ChatAssistant):
         if self.checkShipPVPTypedChat():
             base.cr.distributedDistrict.siegeManager.sendWLChat(message)
         else:
-            print('Ship PVP chat error: Crew WL Chat')
+            print 'Ship PVP chat error: Crew WL Chat'
             error = ERROR_NO_SHIPPVP_CHAT
         return error
 
@@ -191,7 +191,7 @@ class PChatAssistant(ChatAssistant):
         if self.checkShipPVPSpeedChat():
             base.cr.distributedDistrict.siegeManager.sendSC(msgIndex)
         else:
-            print('Ship PVP chat error: Crew Speed Chat')
+            print 'Ship PVP chat error: Crew Speed Chat'
             error = ERROR_NO_SHIPPVP_CHAT
         return error
 
@@ -200,7 +200,7 @@ class PChatAssistant(ChatAssistant):
         if self.checkShipPVPSpeedChat():
             pass
         else:
-            print('Ship PVP chat error: SCQuest Chat')
+            print 'Ship PVP chat error: SCQuest Chat'
             error = ERROR_NO_SHIPPVP_CHAT
         return error
 
@@ -218,7 +218,7 @@ class PChatAssistant(ChatAssistant):
         if comm in ('afk', 'away'):
             localAvatar.toggleAFK()
         else:
-            if comm in list(PLocalizer.EmoteCommands.keys()):
+            if comm in PLocalizer.EmoteCommands.keys():
                 emoteCode = PLocalizer.EmoteCommands[comm]
                 messenger.send(SpeedChatGlobals.SCEmoteMsgEvent, [emoteCode])
             elif comm == 'quit':

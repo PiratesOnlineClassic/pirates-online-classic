@@ -130,7 +130,7 @@ class TabBar(DirectFrame):
         self.refreshTabs()
 
     def destroy(self):
-        for tab in self.tabs.values():
+        for tab in self.tabs.itervalues():
             tab.destroy()
 
         self.bParent = None
@@ -157,7 +157,7 @@ class TabBar(DirectFrame):
         try:
             self.activeIndex = self.tabOrder.index(name)
             self.refreshTabs()
-            for tab in self.tabs.values():
+            for tab in self.tabs.itervalues():
                 tab['selected'] = False
 
             activeName = self.tabOrder[self.activeIndex]
@@ -190,11 +190,11 @@ class TabBar(DirectFrame):
 
     def stash(self):
         DirectFrame.stash(self)
-        for tab in self.tabs.values():
+        for tab in self.tabs.itervalues():
             tab.stash()
 
     def unstash(self):
         DirectFrame.unstash(self)
-        for tab in self.tabs.values():
+        for tab in self.tabs.itervalues():
             tab.unstash()
 # okay decompiling .\pirates\piratesgui\TabBar.pyc

@@ -95,7 +95,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         DistributedNode.DistributedNode.delete(self)
         self.stopCustomEffects()
         if self.fakeZoneId != None:
-            for node in list(self.GridLOD.values()):
+            for node in self.GridLOD.values():
                 node.cleanup()
 
             del self.GridLOD
@@ -201,8 +201,8 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
 
     def setupEntranceNodes(self):
         entranceNodes = self.findAllMatches('**/entrance_locator_*') 
-        eNodeMap = dict(list(zip([ node.getName() for node in entranceNodes ], entranceNodes)))
-        eNodeMapKeys = list(eNodeMap.keys())
+        eNodeMap = dict(zip([ node.getName() for node in entranceNodes ], entranceNodes))
+        eNodeMapKeys = eNodeMap.keys()
         eNodeMapKeys.sort()
         self.entranceNodes = [ eNodeMap[key] for key in eNodeMapKeys ]
 

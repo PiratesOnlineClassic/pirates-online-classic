@@ -47,7 +47,7 @@ class ButtonListItem(DirectButton):
         return
 
     def _createIface(self):
-        if type(self.item) is list:
+        if type(self.item) is types.ListType:
             itemText = self.item[0]
         else:
             itemText = self.item

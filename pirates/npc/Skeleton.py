@@ -257,8 +257,8 @@ class Skeleton(Biped.Biped):
     def getDeathAnimName(self, animNum=None):
         animStrings = [
          'death', 'death4']
-        if animNum not in list(range(len(animStrings))):
-            animNum = random.choice(list(range(0, len(animStrings))))
+        if animNum not in range(len(animStrings)):
+            animNum = random.choice(range(0, len(animStrings)))
         return animStrings[animNum]
 
     def getEnterDeathTrack(self):

@@ -4,7 +4,7 @@
 # Embedded file name: pirates.piratesgui.NewTutorialPanel
 import string
 
-from . import DialogButton
+import DialogButton
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *

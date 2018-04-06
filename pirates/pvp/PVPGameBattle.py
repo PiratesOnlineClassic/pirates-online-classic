@@ -63,7 +63,7 @@ class PVPGameBattle(PVPGameBase):
 
     def getScoreList(self):
         scoreList = []
-        for playerId, stats in list(self.stats.items()):
+        for playerId, stats in self.stats.items():
             scoreList.append({'Player': playerId, 'Score': stats[PVPGlobals.SCORE]})
 
         scoreList.sort(self.sortScores)

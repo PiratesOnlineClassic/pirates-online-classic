@@ -27,7 +27,7 @@ class QuestTitleNode:
         return
 
     def getChildren(self):
-        return list(self.children.values())
+        return self.children.values()
 
     def hasChild(self, questId):
         return questId in self.children
@@ -140,7 +140,7 @@ class QuestTitleList(DirectScrolledFrame):
 
         if len(questIdList) == 1:
             localAvatar.b_requestActiveQuest(questIdList[0])
-        for tree in list(self.trees.values()):
+        for tree in self.trees.values():
             self.__makeButtons(self.getCanvas(), tree)
 
         self.repack()

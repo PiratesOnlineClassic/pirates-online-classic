@@ -15,11 +15,11 @@ FortuneQuestLadderDict = {'TreasureRogues': QuestLadderDNA(name='TreasureRogues'
 LaddersInitialized = False
 
 def initializeLadders():
-    print('Initializing quest ladders...')
-    for ladder in list(FameQuestLadderDict.values()):
+    print 'Initializing quest ladders...'
+    for ladder in FameQuestLadderDict.values():
         ladder.initialize()
 
-    for ladder in list(FortuneQuestLadderDict.values()):
+    for ladder in FortuneQuestLadderDict.values():
         ladder.initializeFortune(ladder.getDroppable())
 
     LaddersInitialized = True
@@ -29,12 +29,12 @@ if not LaddersInitialized:
     initializeLadders()
 
 def getContainer(name):
-    for ladder in list(FameQuestLadderDict.values()):
+    for ladder in FameQuestLadderDict.values():
         container = ladder.getContainer(name)
         if container:
             return container
 
-    for ladder in list(FortuneQuestLadderDict.values()):
+    for ladder in FortuneQuestLadderDict.values():
         container = ladder.getContainer(name)
         if container:
             return container
@@ -62,7 +62,7 @@ def __getPath(node, path, name):
 
 def getFamePath(name):
     path = []
-    for ladder in list(FameQuestLadderDict.values()):
+    for ladder in FameQuestLadderDict.values():
         found, path = __getPath(ladder, path, name)
         if found:
             if ladder.getName() != 'MainStory':
@@ -74,7 +74,7 @@ def getFamePath(name):
 
 def getFortunePath(name):
     path = []
-    for ladder in list(FortuneQuestLadderDict.values()):
+    for ladder in FortuneQuestLadderDict.values():
         found, path = __getPath(ladder, path, name)
         if found:
             path.insert(0, ladder)
@@ -86,27 +86,27 @@ def getFortunePath(name):
 def compileStats(name=None):
     questStatData = QuestStatData()
     if not name:
-        for ladder in list(FameQuestLadderDict.values()):
+        for ladder in FameQuestLadderDict.values():
             ladder.compileStats(questStatData)
 
-        for ladder in list(FortuneQuestLadderDict.values()):
+        for ladder in FortuneQuestLadderDict.values():
             ladder.compileStats(questStatData)
 
     ladder = getContainer(name)
     if ladder:
         ladder.compileStats(questStatData)
-    print('=========================================================')
-    print(questStatData)
-    print('=========================================================')
+    print '========================================================='
+    print questStatData
+    print '========================================================='
 
 
 def generateRogerFile(dict):
-    for key, quest in list(dict.items()):
+    for key, quest in dict.items():
         recGenerateRogerFile(quest)
 
 
 def recGenerateRogerFile(ladder):
-    print('{"%s", %s},' % (ladder.getQuestId(), ladder.getQuestInt()))
+    print '{"%s", %s},' % (ladder.getQuestId(), ladder.getQuestInt())
     if ladder.isContainer():
         for container in ladder.containers:
             recGenerateRogerFile(container)

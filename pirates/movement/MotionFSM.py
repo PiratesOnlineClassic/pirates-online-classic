@@ -76,7 +76,7 @@ class MotionAnimFSM(FSM):
             if scale:
                 newScale = moveSpeed * scale
             else:
-                if type(style) is not bytes:
+                if type(style) is not types.StringType:
                     style = style.getBodyShape()
 
                 animFileName = self.av.getAnimFilename(self.av.getCurrentAnim())

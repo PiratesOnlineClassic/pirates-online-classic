@@ -4,7 +4,7 @@
 # Embedded file name: otp.otpbase.OTPBase
 import time
 
-from . import OTPRender
+import OTPRender
 from direct.showbase.ShowBase import ShowBase
 
 

@@ -13,7 +13,7 @@ class QuestAvatarBase:
             err = 'could not get inventory'
             if hasattr(self, 'doId'):
                 err += ' for %s' % self.doId
-            print(err)
+            print err
             return []
         else:
             return inventory.getQuestList()

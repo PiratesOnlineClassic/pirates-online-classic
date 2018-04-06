@@ -20,7 +20,7 @@ from pirates.shipparts import HullDNA
 def cutGeomTextureStates(geomNode, excludedStages=[]):
     numGeoms = geomNode.getNumGeoms()
     finalPacket = []
-    for i in range(numGeoms):
+    for i in xrange(numGeoms):
         geomState = geomNode.getGeomState(i)
         attrib = geomState.getAttrib(TextureAttrib.getClassType())
         finalPacket.append(attrib)
@@ -30,7 +30,7 @@ def cutGeomTextureStates(geomNode, excludedStages=[]):
 
 
 def pasteGeomTextureStates(geomNode, attribList):
-    for i in range(geomNode.getNumGeoms()):
+    for i in xrange(geomNode.getNumGeoms()):
         gs = geomNode.getGeomState(i).addAttrib(attribList[i])
         geomNode.setGeomState(i, gs)
 
@@ -131,11 +131,11 @@ class SplattableObject(NodePath):
         if len(self.panelsMed) - 1 >= index:
             self.panelsMed[index].setTexture(self.holeLayer, self.blankTex)
 
-        if index in self.fireEffects:
+        if self.fireEffects.has_key(index):
             self.fireEffects[index].stopLoop()
             del self.fireEffects[index]
 
-        if index in self.smokeEffects:
+        if self.smokeEffects.has_key(index):
             self.smokeEffects[index].stopLoop()
             del self.smokeEffects[index]
 
@@ -295,15 +295,15 @@ class SplattableObject(NodePath):
             'C',
             'D',
             'E']
-        for i in range(len(self.dna.hullTextureIndex)):
+        for i in xrange(len(self.dna.hullTextureIndex)):
             self.configColor(geom, 'hull%s' % suffix[i], self.dna.hullTextureIndex[i], self.dna.hullColorIndex[i],
                              self.dna.hullHilightColorIndex[i])
 
-        for i in range(len(self.dna.stripeTextureIndex)):
+        for i in xrange(len(self.dna.stripeTextureIndex)):
             self.configColor(geom, 'stripe%s' % suffix[i], self.dna.stripeTextureIndex[i], self.dna.stripeColorIndex[i],
                              self.dna.stripeHilightColorIndex[i])
 
-        for i in range(len(self.dna.patternTextureIndex)):
+        for i in xrange(len(self.dna.patternTextureIndex)):
             self.configColor(geom, 'pattern%s' % suffix[i], self.dna.patternTextureIndex[i],
                              self.dna.patternColorIndex[i], self.dna.patternHilightColorIndex[i])
 
@@ -437,7 +437,7 @@ class SplattableObject(NodePath):
     def cutGeomTextureStates(self, geomNode, excludedStages=[]):
         numGeoms = geomNode.getNumGeoms()
         finalPacket = []
-        for i in range(numGeoms):
+        for i in xrange(numGeoms):
             geomState = geomNode.getGeomState(i)
             attrib = geomState.getAttrib(TextureAttrib.getClassType())
             finalPacket.append(attrib)
@@ -446,7 +446,7 @@ class SplattableObject(NodePath):
         return finalPacket
 
     def pasteGeomTextureStates(self, geomNode, attribList):
-        for i in range(geomNode.getNumGeoms()):
+        for i in xrange(geomNode.getNumGeoms()):
             gs = geomNode.getGeomState(i).setAttrib(attribList[i])
             geomNode.setGeomState(i, gs)
 
@@ -458,11 +458,11 @@ class SplattableObject(NodePath):
         self.smokeEffects = {}
 
     def hideSmoke(self):
-        for effect in list(self.smokeEffects.values()):
+        for effect in self.smokeEffects.values():
             effect.p0.renderer.getRenderNodePath().hide()
 
     def showSmoke(self):
-        for effect in list(self.smokeEffects.values()):
+        for effect in self.smokeEffects.values():
             effect.p0.renderer.getRenderNodePath().show()
 
     def startSmoke(self, collIndex):

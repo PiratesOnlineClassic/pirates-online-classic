@@ -145,7 +145,7 @@ class Grabber(Creature, TentacleUtils):
              'a', 'b', 'c', 'd']
             self.idle = random.choice(options)
             self.loop('idle_' + self.idle)
-        self.iTask = self.doMethodLater(lerp(5, 20, random.random()), self.chooseIdle, repr((random.random())) + '-idle')
+        self.iTask = self.doMethodLater(lerp(5, 20, random.random()), self.chooseIdle, `(random.random())` + '-idle')
 
     def chooseIdle(self, task):
         transInfo = {'a': {'b': ('idle_a_to_b', 1), 'c': ('idle_c_to_a', -1)}, 'b': {'a': ('idle_a_to_b', -1), 'c': ('idle_b_to_c', 1), 'd': ('idle_a_to_b', -1)}, 'c': {'a': ('idle_c_to_a', 1), 'b': ('idle_b_to_c', -1), 'd': ('idle_a_to_b', -1)}, 'd': {'b': ('idle_a_to_b', 1), 'c': ('idle_c_to_a', -1)}}

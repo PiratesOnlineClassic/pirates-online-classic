@@ -74,7 +74,7 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
         self.parentObjId = parentObjId
 
         def putObjOnParent(parentObj, self=self):
-            print('putObj %s on parent %s' % (self.doId, parentObj))
+            print 'putObj %s on parent %s' % (self.doId, parentObj)
             self.parentObj = parentObj
             self.reparentTo(parentObj)
             self.setColorScale(1, 1, 1, 1, 1)

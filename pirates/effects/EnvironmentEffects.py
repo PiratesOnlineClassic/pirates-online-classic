@@ -26,7 +26,7 @@ from pirates.effects.TorchFire import TorchFire
 from pirates.effects.WaterSplash import WaterSplash
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.GameOptions import Options
-from .PooledEffect import PooledEffect
+from PooledEffect import PooledEffect
 
 
 class EnvironmentEffects:
@@ -34,8 +34,8 @@ class EnvironmentEffects:
     effectDict = {'effect_gypsyball': [(GypsyBallGlow, Options.SpecialEffectsLow)], 'candle_effect': [(CandleFlame, Options.SpecialEffectsLow)], 'torch_effect': [(TorchFire, Options.SpecialEffectsLow)], 'no_glow_effect': [(TorchFire, Options.SpecialEffectsLow)], 'lantern_effect': [(LanternGlow, Options.SpecialEffectsLow)], 'bonfire_effect': [(Bonfire, Options.SpecialEffectsMedium)], 'fireplace_effect': [(Fire, Options.SpecialEffectsLow)], 'watersplash_effect': [(WaterSplash, Options.SpecialEffectsMedium)], 'steam_effect': [(SteamEffect, Options.SpecialEffectsHigh)], 'darksteam_effect': [(DarkSteamEffect, Options.SpecialEffectsMedium)], 'steamcloud_effect': [(SteamCloud, Options.SpecialEffectsMedium)], 'cratersmoke_effect': [(CraterSmoke, Options.SpecialEffectsHigh)], 'lavaburst_effect': [(LavaBurst, Options.SpecialEffectsHigh)], 'blacksmoke_effect': [(BlackSmoke, Options.SpecialEffectsMedium)], 'lightsmoke_effect': [(LightSmoke, Options.SpecialEffectsMedium)], 'mysticsmoke_effect': [(MysticSmoke, Options.SpecialEffectsHigh)], 'mysticfire_effect': [(MysticFire, Options.SpecialEffectsHigh)]}
     soundDict = {'waterfall_sound': 'audio/sfx_waterfall_small.wav', 'waterfall_cave_sound': 'audio/sfx_cave_waterfall.wav'}
     particleDict = {}
-    EffectNodeNames = list(effectDict.keys())
-    EffectNodeNames.extend(list(particleDict.keys()))
+    EffectNodeNames = effectDict.keys()
+    EffectNodeNames.extend(particleDict.keys())
     animPartsDict = {'chandelier': [('Hpr', 2, Point3(2, 2, 0), Point3(-2, -2, 0))], 'hanging_pot': [('Hpr', 2, Point3(20, 20, 0), Point3(-20, -20, 0))], 'lightstream': [('UVOverlayScroll', 40, 0.15, 0.3, 'models/effects/cloudOverlay'), ('UVScroll', 1200, 1, 0), ('DelayColorFade', 2, Vec4(0.3, 0.3, 0.4, 1), Vec4(0.6, 0.6, 0.7, 1), 10), 'Unlit']}
 
     def __init__(self, parent, modelPath):
@@ -244,7 +244,7 @@ class EnvironmentEffects:
             for i in range(len(polyLights)):
                 light = polyLights[i]
                 plNode = light.node()
-                print('light node radius = %s' % plNode.getRadius())
+                print 'light node radius = %s' % plNode.getRadius()
                 plNode.setFlickerType(PolylightNode.FSIN)
                 plNode.setAttenuation(PolylightNode.AQUADRATIC)
                 plNode.setRadius(20)

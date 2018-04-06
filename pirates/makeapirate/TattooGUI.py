@@ -5,10 +5,10 @@
 import random
 from math import cos, pi, sin
 
-from . import PirateFemale
-from . import PirateMale
-from . import TattooGlobals
-from .CharGuiBase import CharGuiPicker, CharGuiSlider
+import PirateFemale
+import PirateMale
+import TattooGlobals
+from CharGuiBase import CharGuiPicker, CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
@@ -557,7 +557,7 @@ class TattooGUI(DirectFrame, StateData.StateData):
                                         self.reparentCommonGui(self.zone8Frame, self.zone8FrameTitle)
 
     def setEdit(self, mode):
-        print('editing %s' % mode)
+        print 'editing %s' % mode
         self.guiNextTattooButton.show()
         self.guiLastTattooButton.show()
         self.oXSlider.show()

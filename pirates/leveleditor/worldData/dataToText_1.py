@@ -9,8 +9,8 @@ import direct
 dataFileName = sys.argv[1]
 dataModule = dataFileName.split('.py')[0]
 textFileName = dataModule + '.txt'
-print('Parsing %s.py --> %s\n' % (dataModule, textFileName))
-exec('from pirates.leveleditor.worldData.%s import *' % dataModule)
+print 'Parsing %s.py --> %s\n' % (dataModule, textFileName)
+exec 'from pirates.leveleditor.worldData.%s import *' % dataModule
 lines = []
 for mainUid in objectStruct['Objects']:
     mainObj = objectStruct['Objects'][mainUid]
@@ -24,16 +24,16 @@ def printObjects(obj):
             pass
         else:
             if object['Type'] == 'Spawn Node':
-                line = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % (dataModule, obj['Type'], uid, object['Type'], object['Spawnables'], object['Team'], object['Min Population'], repr((object['Pos'])))
+                line = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % (dataModule, obj['Type'], uid, object['Type'], object['Spawnables'], object['Team'], object['Min Population'], `(object['Pos'])`)
             else:
                 if object['Type'] == 'Object Spawn Node':
-                    line = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % (dataModule, obj['Type'], uid, object['Type'], object['Spawnables'], object['SpawnDelay'], object['startingDepth'], repr((object['Pos'])))
+                    line = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % (dataModule, obj['Type'], uid, object['Type'], object['Spawnables'], object['SpawnDelay'], object['startingDepth'], `(object['Pos'])`)
                 else:
                     if object['Type'] == 'Searchable Container':
-                        line = '%s\t%s\t%s\t%s\t%s\t%s\t\t%s\n' % (dataModule, obj['Type'], uid, object['Type'], object['type'], object['searchTime'], repr((object['Pos'])))
+                        line = '%s\t%s\t%s\t%s\t%s\t%s\t\t%s\n' % (dataModule, obj['Type'], uid, object['Type'], object['type'], object['searchTime'], `(object['Pos'])`)
                     else:
                         if object['Type'] == 'Townsperson':
-                            line = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % (dataModule, obj['Type'], uid, object['Type'], object['Category'], object['Start State'], object['Team'], repr((object['Pos'])))
+                            line = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % (dataModule, obj['Type'], uid, object['Type'], object['Category'], object['Start State'], object['Team'], `(object['Pos'])`)
                         else:
                             if 'Objects' in object:
                                 printObjects(object)

@@ -150,7 +150,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         if self.isActive():
             if not self._fadeGeom and self.getPriorValue():
                 if hasattr(self, '_hiddenGeoms'):
-                    for np in list(self._hiddenGeoms.keys()):
+                    for np in self._hiddenGeoms.keys():
                         self._unfadeGeom(np)
 
                     self._hiddenGeoms = {}
@@ -412,7 +412,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
 
             else:
                 self.setPracticalDistance(None)
-            for np in list(nonObstrGeoms.keys()):
+            for np in nonObstrGeoms.keys():
                 self._unfadeGeom(np)
 
         else:
@@ -428,7 +428,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
 
     def _stopCollisionCheck(self):
         while len(self._hiddenGeoms):
-            self._unfadeGeom(list(self._hiddenGeoms.keys())[0])
+            self._unfadeGeom(self._hiddenGeoms.keys()[0])
 
         del self._hiddenGeoms
         del self._fadeOutIvals

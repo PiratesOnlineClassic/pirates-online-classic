@@ -138,7 +138,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         ClientArea.ClientArea.delete(self)
         self.unloadIslandShoreWave()
         self.unloadPlayerBarrier()
-        for node in list(self.GridLOD.values()):
+        for node in self.GridLOD.values():
             node.cleanup()
 
         del self.GridLOD
@@ -870,7 +870,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
 
             def flowLava(task):
                 dt = globalClock.getDt()
-                for key in list(lavaSpeed.keys()):
+                for key in lavaSpeed.keys():
                     offset = lavaGeom.getTexOffset(tsSet[key])[0]
                     offset -= lavaSpeed[key] * dt
                     offset %= 1.0
@@ -943,7 +943,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         if world:
             water = world.getWater()
             if water:
-                for uid, obj in self.floatables.items():
+                for uid, obj in self.floatables.iteritems():
                     water.addFloatable(uid, obj, mass=5)
 
     def stopFloatables(self):
@@ -1189,7 +1189,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
 
     def buildGridTable(self):
         nodes = self.staticGridRoot.findAllMatches('Grid*')
-        for i in range(nodes.getNumPaths()):
+        for i in xrange(nodes.getNumPaths()):
             node = nodes[i]
             gridNum = int(re.search('Grid-([0-9]+)Node', node.getName()).groups()[0])
             self.gridNodes[gridNum] = node

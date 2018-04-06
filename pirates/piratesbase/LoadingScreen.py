@@ -268,11 +268,11 @@ class LoadingScreen(DirectObject.DirectObject):
             else:
                 screenshot = screenShots_Locations.get(targetId)
                 if not screenshot:
-                    if targetId in areaType_Jungles:
+                    if areaType_Jungles.has_key(targetId):
                         screenshot = random.choice(screenShots_Jungles)
-                    elif targetId in areaType_Swamps:
+                    elif areaType_Swamps.has_key(targetId):
                         screenshot = random.choice(screenShots_Swamps)
-                    elif targetId in areaType_Caves:
+                    elif areaType_Caves.has_key(targetId):
                         screenshot = random.choice(screenShots_Caves)
                     else:
                         screenshot = random.choice(screenShots)

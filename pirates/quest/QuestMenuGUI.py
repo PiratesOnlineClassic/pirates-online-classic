@@ -2,8 +2,8 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.quest.QuestMenuGUI
-from . import QuestDB
-from . import QuestDetailGUI
+import QuestDB
+import QuestDetailGUI
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
@@ -46,7 +46,7 @@ class QuestMenuGUI(DirectFrame):
         middlePanelOver = gui.find('**/avatar_c_A_middle_over')
         bottomPanel = gui.find('**/avatar_c_A_bottom')
         bottomPanelOver = gui.find('**/avatar_c_A_bottom_over')
-        for i, offer in zip(list(range(len(offers))), offers):
+        for i, offer in zip(range(len(offers)), offers):
             if i == 0:
                 image = (
                  topPanel, topPanel, topPanelOver, topPanel)
@@ -60,7 +60,7 @@ class QuestMenuGUI(DirectFrame):
                     z -= 0.11
                 else:
                     z -= 0.105
-            if offer.questId in PLocalizer.QuestStrings and 'title' in list(PLocalizer.QuestStrings[offer.questId].keys()):
+            if PLocalizer.QuestStrings.has_key(offer.questId) and 'title' in PLocalizer.QuestStrings[offer.questId].keys():
                 questTitle = PLocalizer.QuestStrings[offer.questId]['title']
             else:
                 questTitle = offer.getTitle()

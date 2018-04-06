@@ -33,13 +33,13 @@ class OptionSpace:
     def read_integer(self, input_file):
         s = string.strip(input_file.readline())
         if self.debug:
-            print(s)
+            print s
         return string.atoi(s)
 
     def read_float(self, input_file):
         s = string.strip(input_file.readline())
         if self.debug:
-            print(s)
+            print s
         return string.atof(s)
 
     def read_string(self, input_file):
@@ -398,7 +398,7 @@ class Options(OptionSpace):
         if self.api == 'pandagl' or self.api == 'pandadx9' or self.api == 'pandadx8':
             string = '*********************'
             string = string + 'load-display ' + self.api + string
-            print(string)
+            print string
         return string
 
     def optionsToPrcData(self):
@@ -410,7 +410,7 @@ class Options(OptionSpace):
         else:
             string = string + 'compressed-textures 0\n'
         if self.debug:
-            print(string)
+            print string
         return string
 
     def setRuntimeOptions(self):
@@ -642,7 +642,7 @@ class Options(OptionSpace):
             if size > 0:
                 string = 'geom-cache-size ' + size.__repr__() + '\n'
                 if self.debug:
-                    print(string)
+                    print string
                 self.setPrc(string)
 
     def getPhysicalMemory(self, pipe):
@@ -677,7 +677,7 @@ class Options(OptionSpace):
                 api2 = 'pandadx8'
                 state = True
             if state:
-                print('self.api =', self.api, 'api =', api)
+                print 'self.api =', self.api, 'api =', api
                 if self.api == api or self.api == api2:
                     pass
                 else:
@@ -956,7 +956,7 @@ class Options(OptionSpace):
 
                 system_key = (
                  '0x%04x' % di.getVendorId(), '0x%04x' % di.getDeviceId(), '%s.%d.%d.%d' % (os.name, di.getOsPlatformId(), di.getOsVersionMajor(), di.getOsVersionMinor()))
-                if system_key in GameOptionsMatrix.GameOptionsMatrix:
+                if GameOptionsMatrix.GameOptionsMatrix.has_key(system_key):
                     options_from_data = GameOptionsMatrix.GameOptionsMatrix[system_key][0]
                     if validate_gameOptions(options_from_data):
                         self.reflection = int(options_from_data[1:2])
@@ -2133,24 +2133,24 @@ class GameOptions(BorderFrame):
             gsg = None
         if gsg == None or currentProperties.getFullscreen() != newProperties.getFullscreen():
             if self.debug:
-                print('window properties', properties, 'gsg', gsg)
+                print 'window properties', properties, 'gsg', gsg
             base.pipe = pipe
             if not base.openMainWindow(props=properties, gsg=gsg, keepCamera=True):
                 if self.debug:
-                    print('OPEN MAIN WINDOW FAILED')
+                    print 'OPEN MAIN WINDOW FAILED'
                 return 0
             if self.debug:
-                print('OPEN MAIN WINDOW PASSED')
+                print 'OPEN MAIN WINDOW PASSED'
             NametagGlobals.setCamera(base.cam)
             NametagGlobals.setMouseWatcher(base.mouseWatcherNode)
             base.graphicsEngine.openWindows()
             if base.win.isClosed():
-                print('Window did not open, removing.')
+                print 'Window did not open, removing.'
                 base.closeWindow(base.win)
                 return 0
         else:
             if self.debug:
-                print('Adjusting properties')
+                print 'Adjusting properties'
             base.win.requestProperties(properties)
             base.graphicsEngine.renderFrame()
         return 1
@@ -2710,15 +2710,15 @@ class GameOptions(BorderFrame):
         if di.getDisplayState() == DisplayInformation.DSSuccess:
             total_display_modes = di.getTotalDisplayModes()
             if debug:
-                print('maximum window width', di.getMaximumWindowWidth())
-                print('maximum window height', di.getMaximumWindowHeight())
-                print('bits per pixel', di.getWindowBitsPerPixel())
-                print('total_display_modes', total_display_modes)
+                print 'maximum window width', di.getMaximumWindowWidth()
+                print 'maximum window height', di.getMaximumWindowHeight()
+                print 'bits per pixel', di.getWindowBitsPerPixel()
+                print 'total_display_modes', total_display_modes
             index = 0
             widscreen = 0
             while index < total_display_modes:
                 if debug:
-                    print('W', di.getDisplayModeWidth(index), 'H', di.getDisplayModeHeight(index), 'BPP', di.getDisplayModeBitsPerPixel(index), 'RR', di.getDisplayModeRefreshRate(index), 'FS', di.getDisplayModeFullscreenOnly(index))
+                    print 'W', di.getDisplayModeWidth(index), 'H', di.getDisplayModeHeight(index), 'BPP', di.getDisplayModeBitsPerPixel(index), 'RR', di.getDisplayModeRefreshRate(index), 'FS', di.getDisplayModeFullscreenOnly(index)
                 aspect_ratio = di.getDisplayModeHeight(index) * 10000 / di.getDisplayModeWidth(index)
                 if aspect_ratio == 7500:
                     pass
@@ -2731,9 +2731,9 @@ class GameOptions(BorderFrame):
             if size == 0:
                 size = di.getTextureMemory()
             if debug:
-                print('shader_model', di.getShaderModel())
-                print('video_memory', di.getVideoMemory())
-                print('texture_memory', di.getTextureMemory())
+                print 'shader_model', di.getShaderModel()
+                print 'video_memory', di.getVideoMemory()
+                print 'texture_memory', di.getTextureMemory()
             mb = 1024 * 1024
             if size <= 0:
                 pass
@@ -2756,13 +2756,13 @@ class GameOptions(BorderFrame):
             elif size > 1024 * mb:
                 pass
         if debug:
-            print('physical_memory', di.getPhysicalMemory())
-            print('available_physical_memory', di.getAvailablePhysicalMemory())
+            print 'physical_memory', di.getPhysicalMemory()
+            print 'available_physical_memory', di.getAvailablePhysicalMemory()
 
     def set_display(self, options, pipe, width, height):
         state = False
         if self.debug:
-            print('SET DISPLAY')
+            print 'SET DISPLAY'
         if base.inAdFrame:
             if self.display_identifier >= 0:
                 embedded.setWindowMode(self.display_identifier)
@@ -2786,12 +2786,12 @@ class GameOptions(BorderFrame):
             self.current_pipe = base.pipe
             self.current_properties = WindowProperties(base.win.getProperties())
             if self.debug:
-                print('CURRENT X SIZE', self.current_properties.getXSize())
-                print('CURRENT Y SIZE', self.current_properties.getYSize())
-                print('CURRENT FULLSCREEN', self.current_properties.getFullscreen())
+                print 'CURRENT X SIZE', self.current_properties.getXSize()
+                print 'CURRENT Y SIZE', self.current_properties.getYSize()
+                print 'CURRENT FULLSCREEN', self.current_properties.getFullscreen()
             if self.current_properties.getFullscreen() == fullscreen and self.current_properties.getXSize() == width and self.current_properties.getYSize() == height:
                 if self.debug:
-                    print('NO DISPLAY CHANGE REQUIRED')
+                    print 'NO DISPLAY CHANGE REQUIRED'
                 state = True
             else:
                 properties = WindowProperties()
@@ -2799,27 +2799,27 @@ class GameOptions(BorderFrame):
                 properties.setFullscreen(fullscreen)
                 if self.resetDisplayProperties(pipe, properties):
                     if self.debug:
-                        print('DISPLAY CHANGE SET')
+                        print 'DISPLAY CHANGE SET'
                     properties = base.win.getProperties()
                     if self.debug:
-                        print('X SIZE', properties.getXSize())
-                        print('Y SIZE', properties.getYSize())
-                        print('FULLSCREEN', properties.getFullscreen())
+                        print 'X SIZE', properties.getXSize()
+                        print 'Y SIZE', properties.getYSize()
+                        print 'FULLSCREEN', properties.getFullscreen()
                     if properties.getFullscreen() == fullscreen and properties.getXSize() == width and properties.getYSize() == height:
                         if self.debug:
-                            print('DISPLAY CHANGE VERIFIED')
+                            print 'DISPLAY CHANGE VERIFIED'
                         state = True
                     else:
                         if self.debug:
-                            print('VERIFY DISPLAY CHANGE FAILED, RESTORING PREVIOUS DISPLAY')
+                            print 'VERIFY DISPLAY CHANGE FAILED, RESTORING PREVIOUS DISPLAY'
                         self.restore_display_properties()
                 else:
                     if self.debug:
-                        print('DISPLAY CHANGE FAILED')
-                        print('BEFORE RESTORE')
+                        print 'DISPLAY CHANGE FAILED'
+                        print 'BEFORE RESTORE'
                     self.restore_display_properties()
                     if self.debug:
-                        print('AFTER RESTORE')
+                        print 'AFTER RESTORE'
                 base.graphicsEngine.renderFrame()
                 base.graphicsEngine.renderFrame()
         if state:
@@ -2849,13 +2849,13 @@ class GameOptions(BorderFrame):
             windowed_index = self.resolutionToIndex(self.options.window_width, self.options.window_height, False)
             self.setPaid()
         fullscreen_index = self.resolutionToIndex(self.options.fullscreen_width, self.options.fullscreen_height, False)
-        for i in range(len(self.windowed_resolutions_button_array)):
+        for i in xrange(len(self.windowed_resolutions_button_array)):
             if i == windowed_index:
                 self.highlight_button(self.windowed_resolutions_button_array[i])
             else:
                 self.fade_button(self.windowed_resolutions_button_array[i])
 
-        for i in range(len(self.fullscreen_resolutions_button_array)):
+        for i in xrange(len(self.fullscreen_resolutions_button_array)):
             if base.inAdFrame:
                 self.inactive_button(self.fullscreen_resolutions_button_array[i])
             elif i == fullscreen_index:
@@ -2873,8 +2873,8 @@ class GameOptions(BorderFrame):
 
         if button:
             if self.debug:
-                print('windowed_resolution_button_function', button.identifier)
-                print(base.windowed_resolution_table[button.identifier])
+                print 'windowed_resolution_button_function', button.identifier
+                print base.windowed_resolution_table[button.identifier]
             index = 0
             while index < total_resolutions:
                 b = self.windowed_resolutions_button_array[index]
@@ -2928,8 +2928,8 @@ class GameOptions(BorderFrame):
         else:
             if button:
                 if self.debug:
-                    print('fullscreen_resolution_button_function', button.identifier)
-                    print(base.fullscreen_resolution_table[button.identifier])
+                    print 'fullscreen_resolution_button_function', button.identifier
+                    print base.fullscreen_resolution_table[button.identifier]
                 index = 0
                 while index < total_resolutions:
                     b = self.fullscreen_resolutions_button_array[index]

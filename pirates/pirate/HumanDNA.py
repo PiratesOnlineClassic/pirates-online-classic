@@ -35,13 +35,13 @@ clothesBotColors = [
   VBase4(255 / 255.0, 255 / 255.0, 255 / 255.0, 255 / 255.0), VBase4(194 / 255.0, 210 / 255.0, 222 / 255.0, 255 / 255.0), VBase4(255 / 255.0, 233 / 255.0, 198 / 255.0, 255 / 255.0), VBase4(208 / 255.0, 213 / 255.0, 152 / 255.0, 255 / 255.0), VBase4(164 / 255.0, 99 / 255.0, 60 / 255.0, 255 / 255.0), VBase4(196 / 255.0, 144 / 255.0, 147 / 255.0, 255 / 255.0), VBase4(189 / 255.0, 181 / 255.0, 197 / 255.0, 255 / 255.0), VBase4(146 / 255.0, 177 / 255.0, 188 / 255.0, 255 / 255.0), VBase4(107 / 255.0, 107 / 255.0, 107 / 255.0, 255 / 255.0), VBase4(203 / 255.0, 177 / 255.0, 122 / 255.0, 255 / 255.0), VBase4(155 / 255.0, 159 / 255.0, 107 / 255.0, 255 / 255.0), VBase4(148 / 255.0, 112 / 255.0, 72 / 255.0, 255 / 255.0), VBase4(158 / 255.0, 75 / 255.0, 80 / 255.0, 255 / 255.0), VBase4(152 / 255.0, 145 / 255.0, 159 / 255.0, 255 / 255.0), VBase4(83 / 255.0, 108 / 255.0, 135 / 255.0, 255 / 255.0), VBase4(41 / 255.0, 50 / 255.0, 60 / 255.0, 255 / 255.0), VBase4(178 / 255.0, 147 / 255.0, 80 / 255.0, 255 / 255.0), VBase4(106 / 255.0, 121 / 255.0, 96 / 255.0, 255 / 255.0), VBase4(101 / 255.0, 68 / 255.0, 32 / 255.0, 255 / 255.0), VBase4(110 / 255.0, 43 / 255.0, 47 / 255.0, 255 / 255.0), VBase4(115 / 255.0, 105 / 255.0, 126 / 255.0, 255 / 255.0), VBase4(220 / 255.0, 111 / 255.0, 45 / 255.0, 255 / 255.0), VBase4(250 / 255.0, 208 / 255.0, 117 / 255.0, 255 / 255.0), VBase4(59 / 255.0, 178 / 255.0, 220 / 255.0, 255 / 255.0), VBase4(158 / 255.0, 113 / 255.0, 207 / 255.0, 255 / 255.0), VBase4(87 / 255.0, 141 / 255.0, 88 / 255.0, 255 / 255.0), VBase4(190 / 255.0, 67 / 255.0, 128 / 255.0, 255 / 255.0), VBase4(46 / 255.0, 190 / 255.0, 68 / 255.0, 255 / 255.0), VBase4(70 / 255.0, 126 / 255.0, 219 / 255.0, 255 / 255.0), VBase4(201 / 255.0, 14 / 255.0, 14 / 255.0, 255 / 255.0), VBase4(21 / 255.0, 22 / 255.0, 24 / 255.0, 255 / 255.0)], [VBase4(255 / 255.0, 255 / 255.0, 255 / 255.0, 255 / 255.0), VBase4(194 / 255.0, 210 / 255.0, 222 / 255.0, 255 / 255.0), VBase4(255 / 255.0, 233 / 255.0, 198 / 255.0, 255 / 255.0), VBase4(206 / 255.0, 231 / 255.0, 153 / 255.0, 255 / 255.0), VBase4(252 / 255.0, 190 / 255.0, 171 / 255.0, 255 / 255.0), VBase4(196 / 255.0, 144 / 255.0, 147 / 255.0, 255 / 255.0), VBase4(226 / 255.0, 203 / 255.0, 249 / 255.0, 255 / 255.0), VBase4(167 / 255.0, 167 / 255.0, 167 / 255.0, 255 / 255.0), VBase4(133 / 255.0, 208 / 255.0, 222 / 255.0, 255 / 255.0), VBase4(203 / 255.0, 177 / 255.0, 122 / 255.0, 255 / 255.0), VBase4(150 / 255.0, 173 / 255.0, 100 / 255.0, 255 / 255.0), VBase4(237 / 255.0, 188 / 255.0, 216 / 255.0, 255 / 255.0), VBase4(158 / 255.0, 75 / 255.0, 80 / 255.0, 255 / 255.0), VBase4(185 / 255.0, 167 / 255.0, 203 / 255.0, 255 / 255.0), VBase4(94 / 255.0, 94 / 255.0, 94 / 255.0, 255 / 255.0), VBase4(72 / 255.0, 146 / 255.0, 159 / 255.0, 255 / 255.0), VBase4(101 / 255.0, 68 / 255.0, 32 / 255.0, 255 / 255.0), VBase4(106 / 255.0, 121 / 255.0, 96 / 255.0, 255 / 255.0), VBase4(195 / 255.0, 100 / 255.0, 154 / 255.0, 255 / 255.0), VBase4(110 / 255.0, 43 / 255.0, 47 / 255.0, 255 / 255.0), VBase4(148 / 255.0, 127 / 255.0, 171 / 255.0, 255 / 255.0), VBase4(220 / 255.0, 111 / 255.0, 45 / 255.0, 255 / 255.0), VBase4(250 / 255.0, 208 / 255.0, 117 / 255.0, 255 / 255.0), VBase4(59 / 255.0, 178 / 255.0, 220 / 255.0, 255 / 255.0), VBase4(158 / 255.0, 113 / 255.0, 207 / 255.0, 255 / 255.0), VBase4(87 / 255.0, 141 / 255.0, 88 / 255.0, 255 / 255.0), VBase4(190 / 255.0, 67 / 255.0, 128 / 255.0, 255 / 255.0), VBase4(46 / 255.0, 190 / 255.0, 68 / 255.0, 255 / 255.0), VBase4(70 / 255.0, 126 / 255.0, 219 / 255.0, 255 / 255.0), VBase4(201 / 255.0, 14 / 255.0, 14 / 255.0, 255 / 255.0), VBase4(21 / 255.0, 22 / 255.0, 24 / 255.0, 255 / 255.0)]]
 
 def printColors():
-    print('** Skin Colors:')
+    print '** Skin Colors:'
     for color in skinColors:
         outVal = [
          int(color.getX() * 256), int(color.getY() * 256), int(color.getZ() * 256)]
-        print(str(outVal))
+        print str(outVal)
 
-    print('\n ** Jewelry Colors:')
+    print '\n ** Jewelry Colors:'
     for color in jewelryColors:
         try:
             outVal = [
@@ -49,49 +49,49 @@ def printColors():
         except:
             pass
         else:
-            print(str(outVal))
+            print str(outVal)
 
-    print('\n ** Hair Colors:')
+    print '\n ** Hair Colors:'
     for color in hairColors:
         outVal = [
          int(color.getX() * 256), int(color.getY() * 256), int(color.getZ() * 256)]
-        print(str(outVal))
+        print str(outVal)
 
-    print('\n ** Male Hat Colors:')
+    print '\n ** Male Hat Colors:'
     for color in hatColors[0]:
         outVal = [
          int(color.getX() * 256), int(color.getY() * 256), int(color.getZ() * 256)]
-        print(str(outVal))
+        print str(outVal)
 
-    print('\n ** Female Hat Colors:')
+    print '\n ** Female Hat Colors:'
     for color in hatColors[1]:
         outVal = [
          int(color.getX() * 256), int(color.getY() * 256), int(color.getZ() * 256)]
-        print(str(outVal))
+        print str(outVal)
 
-    print('\n ** Male Top Colors:')
+    print '\n ** Male Top Colors:'
     for color in clothesTopColors[0]:
         outVal = [
          int(color.getX() * 256), int(color.getY() * 256), int(color.getZ() * 256)]
-        print(str(outVal))
+        print str(outVal)
 
-    print('\n ** Female Top Colors:')
+    print '\n ** Female Top Colors:'
     for color in clothesTopColors[1]:
         outVal = [
          int(color.getX() * 256), int(color.getY() * 256), int(color.getZ() * 256)]
-        print(str(outVal))
+        print str(outVal)
 
-    print('\n ** Male Bottom Colors:')
+    print '\n ** Male Bottom Colors:'
     for color in clothesBotColors[0]:
         outVal = [
          int(color.getX() * 256), int(color.getY() * 256), int(color.getZ() * 256)]
-        print(str(outVal))
+        print str(outVal)
 
-    print('\n ** Female Bottom Colors:')
+    print '\n ** Female Bottom Colors:'
     for color in clothesBotColors[1]:
         outVal = [
          int(color.getX() * 256), int(color.getY() * 256), int(color.getZ() * 256)]
-        print(str(outVal))
+        print str(outVal)
 
 
 class PirateEyes:
@@ -473,10 +473,10 @@ class HumanDNA(AvatarDNA.AvatarDNA):
         return d
 
     def loadFromNPCDict(self, npcDict):
-        for f in list(npcDict.keys()):
+        for f in npcDict.keys():
             if isinstance(npcDict[f], tuple):
                 val = npcDict[f]
-                exec('f(self, ' + str(val)[1:])
+                exec 'f(self, ' + str(val)[1:]
             else:
                 f(self, npcDict[f])
 
@@ -1144,7 +1144,7 @@ class HumanDNA(AvatarDNA.AvatarDNA):
             randomGen.seed(seed)
         else:
             randomGen = random
-        colors = list(range(len(clothesTopColors)))
+        colors = range(len(clothesTopColors))
         self.gender = randomGen.choice(['m', 'f'])
         if self.gender == 'm':
             self.body.shape = randomGen.choice([0, 1, 2, 3, 4])
@@ -1156,14 +1156,14 @@ class HumanDNA(AvatarDNA.AvatarDNA):
             self.clothes.sock = 0
             self.clothes.shoe = 1
             self.clothes.belt = 0
-            self.clothes.coat = randomGen.choice(list(range(3)))
+            self.clothes.coat = randomGen.choice(range(3))
             self.clothes.coatColor = randomGen.choice(colors)
             self.head.texture = 0
-            self.clothes.hat = randomGen.choice(list(range(5)))
+            self.clothes.hat = randomGen.choice(range(5))
             self.head.hair.hair = randomGen.choice([1, 2, 3, 4, 5, 6])
-            self.head.hair.beard = randomGen.choice(list(range(11)))
+            self.head.hair.beard = randomGen.choice(range(11))
             self.head.hair.mustache = randomGen.choice([0, 1, 2, 4])
-            self.head.hair.color = randomGen.choice(list(range(5)))
+            self.head.hair.color = randomGen.choice(range(5))
         else:
             self.body.shape = randomGen.choice([0, 1, 2, 3, 4])
             self.body.color = 0
@@ -1174,12 +1174,12 @@ class HumanDNA(AvatarDNA.AvatarDNA):
             self.clothes.sock = 0
             self.clothes.shoe = randomGen.choice([1, 2, 3, 4])
             self.clothes.belt = 0
-            self.clothes.coat = randomGen.choice(list(range(3)))
+            self.clothes.coat = randomGen.choice(range(3))
             self.clothes.coatColor = randomGen.choice(colors)
-            self.clothes.hat = randomGen.choice(list(range(5)))
+            self.clothes.hat = randomGen.choice(range(5))
             self.clothes.hatColor = randomGen.choice(colors)
-            self.head.hair.hair = randomGen.choice(list(range(16)))
-            self.head.hair.color = randomGen.choice(list(range(5)))
+            self.head.hair.hair = randomGen.choice(range(16))
+            self.head.hair.color = randomGen.choice(range(5))
 
     def makeNPCTownfolk(self, seed=None, gender='m'):
         if seed:

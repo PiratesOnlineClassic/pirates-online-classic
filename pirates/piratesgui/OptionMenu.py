@@ -143,7 +143,7 @@ class OptionMenu(DirectOptionMenu):
             item = self['items'][self.selectedIndex]
             self['text'] = item
             if fCommand and self['command']:
-                self['command'](*[item, index] + self['extraArgs'])
+                apply(self['command'], [item, index] + self['extraArgs'])
         return
 
     def setByValue(self, val, fCommand=True):

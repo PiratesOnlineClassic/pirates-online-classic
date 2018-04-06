@@ -247,7 +247,7 @@ class PVPInviter(GuiPanel.GuiPanel):
     def enterChallengeNoMore(self):
         self.message['text'] = PLocalizer.PVPInviterChallengeNoMore % self.avName
         self.bOk.show()
-        if self.avId not in base.cr.doId2do:
+        if not base.cr.doId2do.has_key(self.avId):
             messenger.send(self.avDisableName)
 
     def exitChallengeNoMore(self):

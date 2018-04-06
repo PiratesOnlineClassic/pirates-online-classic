@@ -7,10 +7,10 @@ import random
 from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
-from .EffectController import EffectController
+from EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesgui.GameOptions import Options
-from .PooledEffect import PooledEffect
+from PooledEffect import PooledEffect
 
 
 class LightSmoke(PooledEffect, EffectController):

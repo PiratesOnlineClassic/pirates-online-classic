@@ -97,13 +97,13 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             ships = base.cr.doFindAll('ship-')
             from pirates.ship.DistributedShip import DistributedShip
             ships = [ship for ship in ships if isinstance(ship, DistributedShip)]
-            print(ships)
+            print ships
             closestShip = ships[0]
             closestDist = Vec3(closestShip.getPos(localAvatar)).lengthSquared()
-            print(closestShip, closestDist)
+            print closestShip, closestDist
             for ship in ships[1:]:
                 dist = Vec3(ship.getPos(localAvatar)).lengthSquared()
-                print(ship, dist)
+                print ship, dist
                 if dist < closestDist:
                     closestShip = ship
                     closestDist = dist
@@ -115,7 +115,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             bf.reparentTo(render)
             bf.setPos(localAvatar, 0, 0, 0)
             bf.startLoop()
-            print('bonfire at %s, %s' % (localAvatar.getPos(), localAvatar.getHpr()))
+            print 'bonfire at %s, %s' % (localAvatar.getPos(), localAvatar.getHpr())
         elif __dev__ and wordIs('~mario'):
             localAvatar.toggleMario()
         elif wordIs('~islandShips'):
@@ -554,7 +554,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                                  '5': [Vec3(4245.52, 133.763, 37.9564), Vec3(-29.8904, -7.12525, 0), 39.3076, 1],
                                  '6': [Vec3(4939.1, -264.911, 37.9564), Vec3(-29.8904, -7.12525, 0), 39.3076, 1]}
             lodNodes = render.findAllMatches('**/+LODNode')
-            for i in range(0, lodNodes.getNumPaths()):
+            for i in xrange(0, lodNodes.getNumPaths()):
                 lodNodes[i].node().forceSwitch(lodNodes[i].node().getHighestSwitch())
             
             localAvatar.clearInterestNamed(None, [
@@ -783,7 +783,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 localAvatar.getLocation(),
                 localAvatar.getPos()]
         
-        if targetParentId not in base.cr.doId2do:
+        if not base.cr.doId2do.has_key(targetParentId):
             self.notify.debug('Parent of target object to reparent avatar/camera to does not yet exist, skipping reparent request')
             return None
         
@@ -791,7 +791,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             base.cr.doId2do[targetParentId].visAvatar = localAvatar
         
         localAvatar.b_setLocation(targetParentId, zoneId, teleport = 1)
-        if targetId in base.cr.doId2do:
+        if base.cr.doId2do.has_key(targetId):
             self.cameraFollowTgt(base.cr.doId2do[targetId], targetParentId)
         else:
             self.pendingCameraReparent = base.cr.relatedObjectMgr.requestObjects([
@@ -799,10 +799,10 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         localAvatar.stash()
 
     def shipCreated(self, shipId):
-        print('shipCreated(%s)' % shipId)
+        print 'shipCreated(%s)' % shipId
         ship = base.cr.doId2do.get(shipId)
         if ship:
-            print('ship created: %s' % ship)
+            print 'ship created: %s' % ship
             ship.localAvatarInstantBoard()
             ship.enableOnDeckInteractions()
 

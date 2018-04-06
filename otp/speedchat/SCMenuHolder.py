@@ -6,9 +6,9 @@ import types
 
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
-from .SCElement import SCElement
-from .SCMenu import SCMenu
-from .SCObject import SCObject
+from SCElement import SCElement
+from SCMenu import SCMenu
+from SCObject import SCObject
 
 
 class SCMenuHolder(SCElement):

@@ -338,7 +338,7 @@ class Sail(NodePath, ShipPart.ShipPart):
     def cutGeomTextureStates(self, geomNode, excludedStages=[]):
         numGeoms = geomNode.getNumGeoms()
         finalPacket = []
-        for i in range(numGeoms):
+        for i in xrange(numGeoms):
             geomState = geomNode.getGeomState(i)
             attrib = geomState.getAttrib(TextureAttrib.getClassType())
             finalPacket.append(attrib)
@@ -347,7 +347,7 @@ class Sail(NodePath, ShipPart.ShipPart):
         return finalPacket
 
     def pasteGeomTextureStates(self, geomNode, attribList):
-        for i in range(geomNode.getNumGeoms()):
+        for i in xrange(geomNode.getNumGeoms()):
             gs = geomNode.getGeomState(i).setAttrib(attribList[i])
             geomNode.setGeomState(i, gs)
 
@@ -395,7 +395,7 @@ class Sail(NodePath, ShipPart.ShipPart):
             geomState = None
             texAttrib = None
             if self.destructIndex is None:
-                for i in range(sailNode.getNumGeoms()):
+                for i in xrange(sailNode.getNumGeoms()):
                     geomState = sailNode.getGeomState(i)
                     geomIndex = i
                     texAttrib = geomState.getAttrib(TextureAttrib.getClassType())

@@ -208,7 +208,7 @@ class TimeManager(DistributedObject.DistributedObject):
             '%0.03f,%0.03f' % cpuSpeed, '%d,%d' % (numCpuCores, numLogicalCpus), apiName)
 
         if base.config.GetBool('want-frame-rate-string', True):
-            print('frame rate: %s' % info)
+            print 'frame rate: %s' % info
 
         self.sendUpdate('setFrameRate', [fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId, processMemory,
             pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed, numCpuCores, numLogicalCpus, apiName])

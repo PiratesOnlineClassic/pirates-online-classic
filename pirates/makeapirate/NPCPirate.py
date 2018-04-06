@@ -159,7 +159,7 @@ class NPCPirate(DirectObject.DirectObject):
     def randomPick(self):
         return
         if self.numHeads:
-            cList = list(range(0, self.numHeads))
+            cList = range(0, self.numHeads)
             cList.remove(self.headIdx)
             self.headIdx = random.choice(cList)
 

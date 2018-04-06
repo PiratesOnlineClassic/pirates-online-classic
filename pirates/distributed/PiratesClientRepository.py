@@ -6,7 +6,7 @@ import gc
 import random
 import types
 
-from . import PlayGame
+import PlayGame
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed import DistributedSmoothNode, DoInterestManager
 from direct.distributed.ClientRepositoryBase import ClientRepositoryBase
@@ -54,7 +54,7 @@ from pirates.reputation import ReputationGlobals
 from pirates.ship import DistributedShip
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.world import WorldGlobals
-from .PiratesMsgTypes import *
+from PiratesMsgTypes import *
 from otp.nametag import NametagGlobals
 
 want_fifothreads = base.config.GetBool('want-fifothreads', 0)
@@ -79,7 +79,7 @@ if want_fifothreads:
                         PStatClient.threadTick('ClientNetworkReader')
 
                     if self.verbose:
-                        print('traffic done')
+                        print 'traffic done'
 
         def PonderYield(self, comment=''):
             Thread.considerYield()
@@ -305,7 +305,7 @@ class PiratesClientRepository(OTPClientRepository):
         self.ignore('avatarListFailed')
         self.ignore('avatarList')
         self.avList = {}
-        for subId, avData in list(avatars.items()):
+        for subId, avData in avatars.items():
             data = []
             self.avList[subId] = data
             for av in avData:
@@ -380,10 +380,10 @@ class PiratesClientRepository(OTPClientRepository):
             self.handleAvatarResponseMsg(doId, di)
 
     def enterWaitForDeleteAvatarResponse(self, potentialAvatar):
-        raise Exception('This should be handled within AvatarChooser.py')
+        raise StandardError, 'This should be handled within AvatarChooser.py'
 
     def exitWaitForDeleteAvatarResponse(self):
-        raise Exception('This should be handled within AvatarChooser.py')
+        raise StandardError, 'This should be handled within AvatarChooser.py'
 
     def sendMsgToTravelAgent(self, fieldName, args):
         dcfile = self.getDcFile()
@@ -450,7 +450,7 @@ class PiratesClientRepository(OTPClientRepository):
         if self.distributedDistrict:
             self.distributedDistrict.worldCreator.cleanupAllAreas()
 
-        for doId, obj in list(self.doId2do.items()):
+        for doId, obj in self.doId2do.items():
             if not isinstance(obj, LocalPirate) and not isinstance(obj, DistributedDistrict.DistributedDistrict):
                 if hasattr(self, 'disableObject'):
                     self.disableObject(doId)
@@ -617,9 +617,9 @@ class PiratesClientRepository(OTPClientRepository):
         if newObj is not None:
             self.currCamParent = newObj.getDoId()
             self.setViewpoint(newObj, 0)
-            print('reparenting camera to object %d' % self.currCamParent)
+            print 'reparenting camera to object %d' % self.currCamParent
         else:
-            print('problem finding a new camera parent, will try again')
+            print 'problem finding a new camera parent, will try again'
 
         if task:
             task.delayTime = delay
@@ -720,26 +720,26 @@ class PiratesClientRepository(OTPClientRepository):
 
     def _removeCurrentShardInterest(self, callback):
         parentId2handles = {}
-        for handle, state in list(self._interests.items()):
+        for handle, state in self._interests.items():
             parentId2handles.setdefault(state.parentId, set())
             parentId2handles[state.parentId].add(handle)
 
         doId2parentId = {}
-        for doId in list(parentId2handles.keys()):
+        for doId in parentId2handles.keys():
             obj = self.getDo(doId)
             if obj is not None:
                 doId2parentId[doId] = obj.parentId
 
         parentId2childIds = {}
-        for doId, parentId in list(doId2parentId.items()):
+        for doId, parentId in doId2parentId.items():
             parentId2childIds.setdefault(parentId, set())
             parentId2childIds[parentId].add(doId)
 
-        print('parentId2handles: %s' % parentId2handles)
-        print('parentId2childIds: %s' % parentId2childIds)
+        print 'parentId2handles: %s' % parentId2handles
+        print 'parentId2childIds: %s' % parentId2childIds
         self.closeShardEGroup = EventGroup('closeShardInterest')
         self.acceptOnce(self.closeShardEGroup.getDoneEvent(), callback)
-        for districtId in list(self.activeDistrictMap.keys()):
+        for districtId in self.activeDistrictMap.keys():
             self._remInterests(districtId, parentId2childIds, parentId2handles)
 
     def _remInterests(self, parentId, parentId2childIds, parentId2handles):
@@ -769,7 +769,7 @@ class PiratesClientRepository(OTPClientRepository):
         OTPClientRepository.exitCloseShard(self)
 
     def startReaderPollTask(self):
-        print('########## startReaderPollTask Pirate')
+        print '########## startReaderPollTask Pirate'
         self.stopReaderPollTask()
         self.accept(CConnectionRepository.getOverflowEventName(), self.handleReaderOverflow)
         if want_fifothreads:
@@ -779,7 +779,7 @@ class PiratesClientRepository(OTPClientRepository):
             taskMgr.add(self.readerPollUntilEmpty, self.uniqueName('readerPollTask'), priority=self.taskPriority)
 
     def stopReaderPollTask(self):
-        print('########## stopReaderPollTask Pirate')
+        print '########## stopReaderPollTask Pirate'
         self.ignore(CConnectionRepository.getOverflowEventName())
         if want_fifothreads:
             if hasattr(self, 'ClientNetworkReader'):
@@ -831,7 +831,7 @@ class PiratesClientRepository(OTPClientRepository):
     def createInventoryManagers(self, num):
         self.inventoryMgrCount = num
         self.inventoryManager = []
-        for i in range(num):
+        for i in xrange(num):
             self.inventoryManager.append(self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_INVENTORY_MANAGER_BASE + i,
                 'DistributedInventoryManager'))
 

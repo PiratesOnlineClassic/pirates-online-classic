@@ -422,7 +422,7 @@ class GuildInviter(GuiPanel.GuiPanel):
                                         self.fsm.request('maybe')
 
     def __handleGuildAcceptInvite(self, avId):
-        print('Received accept invite event on inviter')
+        print 'Received accept invite event on inviter'
         self.fsm.request('yes')
 
     def __handleGuildRejectInvite(self, avId, reason):

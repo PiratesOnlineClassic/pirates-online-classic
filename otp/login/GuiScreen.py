@@ -33,14 +33,14 @@ class GuiScreen:
         self.__startFrameStartTask()
         self.userGlobalFocusHandler = globalFocusHandler
         self.focusHandlerAbsorbCounts = {}
-        for i in range(len(self.focusList)):
+        for i in xrange(len(self.focusList)):
             item = self.focusList[i]
             if isinstance(item, DirectEntry):
                 self.focusHandlerAbsorbCounts[item] = 0
 
         self.userFocusHandlers = {}
         self.userCommandHandlers = {}
-        for i in range(len(self.focusList)):
+        for i in xrange(len(self.focusList)):
             item = self.focusList[i]
             if isinstance(item, DirectEntry):
                 self.userFocusHandlers[item] = (
@@ -58,10 +58,10 @@ class GuiScreen:
                 item['extraArgs'] = [i]
 
         self.enterPressHandlers = {}
-        for i in range(len(self.focusList)):
+        for i in xrange(len(self.focusList)):
             item = self.focusList[i]
             behavior = enterPressBehavior
-            if item in overrides:
+            if overrides.has_key(item):
                 behavior = overrides[item]
             if callable(behavior):
                 self.enterPressHandlers[item] = behavior
@@ -154,15 +154,15 @@ class GuiScreen:
         if userHandler:
             if isinstance(item, DirectEntry):
                 enteredText = item.get()
-                userHandler(*[enteredText] + userHandlerArgs)
+                apply(userHandler, [enteredText] + userHandlerArgs)
             elif isinstance(item, DirectScrolledList):
-                userHandler(*userHandlerArgs)
+                apply(userHandler, userHandlerArgs)
 
     def __chainToUserFocusHandler(self, item):
         if isinstance(item, DirectEntry):
             userHandler, userHandlerArgs = self.userFocusHandlers[item]
             if userHandler:
-                userHandler(*userHandlerArgs)
+                apply(userHandler, userHandlerArgs)
 
     def __handleTab(self):
         self.tabPressed = 1

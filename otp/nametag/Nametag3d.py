@@ -1,8 +1,8 @@
 import math
 
-from . import NametagGlobals
-from .Nametag import *
-from .NametagConstants import *
+import NametagGlobals
+from Nametag import *
+from NametagConstants import *
 from pandac.PandaModules import *
 
 

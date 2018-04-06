@@ -2,8 +2,8 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: otp.login.RemoteValueSet
-from . import HTTPUtil
-from . import TTAccount
+import HTTPUtil
+import TTAccount
 from direct.directnotify import DirectNotifyGlobal
 
 
@@ -28,7 +28,7 @@ class RemoteValueSet:
                 continue
             try:
                 name, value = line.split('=', 1)
-            except ValueError as e:
+            except ValueError, e:
                 errMsg = 'unexpected response: %s' % response
                 self.notify.warning(errMsg)
                 onUnexpectedResponse(errMsg)
@@ -40,7 +40,7 @@ class RemoteValueSet:
                 self.dict[name] = value
 
         for name in expectedFields:
-            if name not in self.dict:
+            if not self.dict.has_key(name):
                 errMsg = "missing expected field '%s'" % name
                 self.notify.warning(errMsg)
                 onUnexpectedResponse(errMsg)
@@ -52,7 +52,7 @@ class RemoteValueSet:
         return 'RemoteValueSet:%s' % str(self.dict)
 
     def hasKey(self, key):
-        return key in self.dict
+        return self.dict.has_key(key)
 
     def getBool(self, name, default=None):
         return self.__getValue(name, lambda x: int(x) != 0, default)

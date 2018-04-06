@@ -7,8 +7,8 @@ from direct.showbase.PythonUtil import boolEqual
 from direct.task import Task
 from otp.otpbase import OTPGlobals
 from pandac.PandaModules import *
-from .SCConstants import *
-from .SCObject import SCObject
+from SCConstants import *
+from SCObject import SCObject
 
 
 class SCElement(SCObject, NodePath):
@@ -144,7 +144,7 @@ class SCElement(SCObject, NodePath):
             del self.button
         halfHeight = self.height / 2.0
         textX = 0
-        if 'text_align' in dbArgs:
+        if dbArgs.has_key('text_align'):
             if dbArgs['text_align'] == TextNode.ACenter:
                 textX = self.width / 2.0
         args = {'text': self.getDisplayText(), 'frameColor': (0, 0, 0, 0), 'rolloverColor': self.getColorScheme().getRolloverColor() + (1, ), 'pressedColor': self.getColorScheme().getPressedColor() + (1, ), 'text_font': OTPGlobals.getInterfaceFont(), 'text_align': TextNode.ALeft, 'text_fg': self.getColorScheme().getTextColor() + (1, ), 'text_pos': (textX, -0.25 - halfHeight, 0), 'relief': DGG.FLAT, 'pressEffect': 0}

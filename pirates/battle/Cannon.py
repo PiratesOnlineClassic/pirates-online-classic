@@ -4,7 +4,7 @@
 # Embedded file name: pirates.battle.Cannon
 import random
 
-from . import CannonGlobals
+import CannonGlobals
 from direct.actor import Actor
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *

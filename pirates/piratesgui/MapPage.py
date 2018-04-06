@@ -103,13 +103,13 @@ class MapPage(InventoryPage.InventoryPage):
             def changeMouseMode():
                 self.worldMap.mapBall.rMode += 1
                 self.worldMap.mapBall.rMode %= 2
-                self.mouseModeLabel['text'] = repr((self.worldMap.mapBall.rMode))
+                self.mouseModeLabel['text'] = `(self.worldMap.mapBall.rMode)`
 
             self.mouseModeButton = DirectButton(parent=self, text='MouseMode', scale=0.065, pos=(0.25,
                                                                                                  0,
                                                                                                  0.09), command=changeMouseMode)
             self.mouseModeLabel = DirectLabel(parent=self, scale=0.075, pos=(0.5, 0,
-                                                                             0.087), text=repr((self.worldMap.mapBall.rMode)), text_fg=(1,
+                                                                             0.087), text=`(self.worldMap.mapBall.rMode)`, text_fg=(1,
                                                                                                                                     1,
                                                                                                                                     1,
                                                                                                                                     1), textMayChange=1)
