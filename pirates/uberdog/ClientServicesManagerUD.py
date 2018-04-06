@@ -656,15 +656,17 @@ class DeleteAvatarFSM(GetAvatarsFSM):
             {'ACCOUNT_AV_SET': self.account['ACCOUNT_AV_SET'],
              'ACCOUNT_AV_SET_DEL': self.account['ACCOUNT_AV_SET_DEL']},
             self.__handleDelete)
-
         self.csm.accountDB.removeNameRequest(self.avId)
 
     def __handleDelete(self, fields):
         if fields:
+            status = False
+            self.csm.sendUpdateToAccountId(self.target, 'acknowledgeDeleteAvatarResp', [self.avId, status])
             self.demand('Kill', 'Database failed to mark the avatar as deleted!')
             return
 
-        self.csm.air.writeServerEvent('avatarDeleted', avId=self.avId, target=self.target)
+        status = True
+        self.csm.sendUpdateToAccountId(self.target, 'acknowledgeDeleteAvatarResp', [self.avId, status])
         self.demand('QueryAvatars')
 
 class SetNameTypedFSM(AvatarOperationFSM):
@@ -1101,8 +1103,6 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
             self.killAccount(accountId, 'A Toon is already chosen!')
             return
         elif not currentAvId and not avId:
-            # This isn't really an error, the client is probably just making sure
-            # none of its Toons are active.
             return
 
         if avId:
