@@ -85,7 +85,8 @@ class InventoryFSM(FSM):
 
     def enterLoad(self, inventoryId):
         if not inventoryId:
-            return self.warning('Failed to activate invalid inventory object!')
+            self.warning('Failed to activate invalid inventory object!')
+            return
 
         self.manager.air.sendActivate(inventoryId, self.avatarId, OTP_ZONE_ID_MANAGEMENT, dclass=\
             self.manager.air.dclassesByName['PirateInventoryUD'])

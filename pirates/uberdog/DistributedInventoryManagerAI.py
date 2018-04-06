@@ -9,6 +9,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         DistributedObjectGlobalAI.__init__(self, air)
 
         self.inventories = {}
+        self.inventoryTasks = {}
 
     def hasInventory(self, inventoryId):
         return inventoryId in self.inventories
@@ -37,42 +38,64 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         return None
 
     def requestInventory(self):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        avatarId = self.air.getAvatarIdFromSender()
 
-        if not avatar:
+        if not avatarId:
             return
 
         def queryResponse(dclass, fields):
             if not dclass or not fields:
-                self.notify.warning('Failed to query avatar %d!' % avatar.doId)
+                self.notify.warning('Failed to query avatar %d!' % avatarId)
                 return
 
             inventoryId, = fields.get('setInventoryId', (0,))
 
             if not inventoryId:
-                self.notify.warning('Invalid inventory found for avatar %d!' % avatar.doId)
+                self.notify.warning('Invalid inventory found for avatar %d!' % avatarId)
                 return
 
-            self.__sendInventory(avatar, self.inventories.get(inventoryId))
+            self.__sendInventory(avatarId, inventoryId)
 
-        self.air.dbInterface.queryObject(self.air.dbId, avatar.doId, callback=queryResponse, dclass=\
+        self.air.dbInterface.queryObject(self.air.dbId, avatarId, callback=queryResponse, dclass=\
             self.air.dclassesByName['DistributedPlayerPirateAI'])
 
-    def __sendInventory(self, avatar, inventory):
+    def __waitForInventory(self, avatarId, inventoryId, task):
+        inventory = self.inventories.get(inventoryId)
+
         if not inventory:
-            self.notify.warning('Failed to retrieve inventory for avatar %d!' % avatar.doId)
+            return task.cont
+
+        self.__sendInventory(avatarId, inventory.doId)
+        return task.done
+
+    def __cleanupInventory(self, avatarId, inventoryId):
+        if avatarId in self.inventoryTasks:
+            taskMgr.remove(self.inventoryTasks[avatarId])
+            del self.inventoryTasks[avatarId]
+
+        inventory = self.inventories.get(inventoryId)
+
+        if not inventory:
             return
 
-        #inventory.b_setStackLimit(InventoryType.Hp, avatar.getMaxHp())
-        #inventory.b_setStackLimit(InventoryType.Mojo, avatar.getMaxMojo())
+        self.removeInventory(inventory.doId)
 
-        #for index in xrange(len(inventory.accumulators)):
-        #    inventory.d_setAccumulator(*inventory.accumulators[index])
+    def __sendInventory(self, avatarId, inventoryId):
+        inventory = self.inventories.get(inventoryId)
 
-        #for index in xrange(len(inventory.stackLimits)):
-        #    inventory.d_setStackLimit(*inventory.stackLimits[index])
+        self.acceptOnce('distObjDelete-%d' % (avatarId), lambda: self.__cleanupInventory(
+            avatarId, inventoryId))
 
-        #for index in xrange(len(inventory.stacks)):
-        #    inventory.d_setStack(*inventory.stacks[index])
+        if not inventory:
+            if avatarId in self.inventoryTasks:
+                self.notify.debug('Cannot retrieve inventory avatar %d, already trying to get inventory!' % (
+                    avatarId))
+
+                return
+
+            self.inventoryTasks[avatarId] = taskMgr.doMethodLater(1.0, self.__waitForInventory, 'waitForInventory-%d-%s' % (
+                avatarId, id(self)), appendTask=True, extraArgs=[avatarId, inventoryId])
+
+            return
 
         inventory.d_requestInventoryComplete()
