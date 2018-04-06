@@ -131,7 +131,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
     def initiateTeleport(self, instanceType, fromInstanceType, shardId, locationUid, instanceDoId, instanceName, gameType, friendDoId, friendAreaDoId):
         if simbase.config.GetBool('force-teleport-pr', True):
-            islandUid = LocationIds.PORT_ROYAL_ISLAND
+            locationUid = LocationIds.PORT_ROYAL_ISLAND
 
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
@@ -139,18 +139,16 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             self.notify.warning('Cannot initiate teleport for unknown avatar!')
             return
 
-        self.d_initiateTeleport(avatar, instanceType, instanceName, islandUid)
+        self.d_initiateTeleport(avatar, instanceType, instanceName, locationUid)
 
-    def requestTeleportToIsland(self, islandUid):
+    def requestTeleportToIsland(self, locationUid):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
-        print ("requestTeleportToIsland", islandUid)
 
         if not avatar:
             self.notify.warning('Cannot initiate teleport for unknown avatar!')
             return
 
-        self.d_initiateTeleport(avatar, islandUid=islandUid)
+        self.d_initiateTeleport(avatar, locationUid=locationUid)
 
     def d_teleportHasBegun(self, avatarId, instanceType, fromInstanceType, instanceName, gameType):
         self.sendUpdateToAvatarId(avatarId, 'teleportHasBegun', [instanceType, fromInstanceType, instanceName, gameType])

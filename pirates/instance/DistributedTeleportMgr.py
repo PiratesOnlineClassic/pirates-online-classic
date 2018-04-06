@@ -316,10 +316,11 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         if confirmed:
             islandDoId = self.cr.uidMgr.getDoId(islandUid)
             island = self.cr.getDo(islandDoId)
-            if island and island.getParentObj() is self.cr.activeWorld:
-                self.localTeleport(locationName=island.getName())
-            else:
-                self.sendUpdate('requestTeleportToIsland', [islandUid])
+            # TODO FIXME: Why would you teleport locally?????
+            #if island and island.getParentObj() is self.cr.activeWorld:
+            #    self.localTeleport(locationName=island.getName())
+            #else:
+            self.sendUpdate('requestTeleportToIsland', [islandUid])
 
             base.cr.loadingScreen.showTarget(islandUid)
             base.cr.loadingScreen.showHint(islandUid)
