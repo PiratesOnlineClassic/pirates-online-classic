@@ -88,7 +88,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         if not inventory:
             if avatarId in self.inventoryTasks:
-                self.notify.debug('Cannot retrieve inventory avatar %d, already trying to get inventory!' % (
+                self.notify.debug('Cannot retrieve inventory for avatar %d, already trying to get inventory!' % (
                     avatarId))
 
                 return
