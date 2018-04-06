@@ -42,62 +42,13 @@ class ClientAreaBuilderAI(DirectObject):
         if zoneId is None:
             zoneId = self.parent.getZoneFromXYZ(object.getPos())
 
-        cell = GridParent.getCellOrigin(self, zoneId)
+        cell = GridParent.getCellOrigin(self.parent, zoneId)
         originalPos = object.getPos()
 
         object.reparentTo(cell)
         object.setPos(self.parent, originalPos)
 
         self.broadcastObjectPosition(object)
-
-    def isChildObject(self, objKey, parentUid):
-        return self.air.worldCreator.getObjectParentUid(objKey) != parentUid
-
-    def setObjectTruePosHpr(self, object, objKey, parentUid, objectData):
-        objectPos = objectData.get('Pos', Point3(0, 0, 0))
-        objectHpr = objectData.get('Hpr', Point3(0, 0, 0))
-
-        if not self.isChildObject(objKey, parentUid):
-            object.setPos(objectPos)
-            object.setHpr(objectHpr)
-            return object
-
-        parentUid = self.air.worldCreator.getObjectParentUid(objKey)
-        parentData = self.air.worldCreator.getObjectDataByUid(parentUid)
-
-        if parentData['Type'] == 'Island':
-            object.setPos(objectPos)
-            object.setHpr(objectHpr)
-            return object
-
-        parentObject = NodePath('psuedo-%s' % parentUid)
-        parentObject.setPos(parentData.get('Pos', Point3(0, 0, 0)))
-        parentObject.setHpr(parentData.get('Hpr', Point3(0, 0, 0)))
-
-        object.setPos(parentObject, objectPos)
-        object.setHpr(parentObject, objectHpr)
-
-        return object
-
-    def getObjectTruePosAndParent(self, objKey, parentUid, objectData):
-        if self.isChildObject(objKey, parentUid):
-            parentUid = self.air.worldCreator.getObjectParentUid(objKey)
-            parentData = self.air.worldCreator.getObjectDataByUid(parentUid)
-
-            if parentData['Type'] == 'Island':
-                return objectData.get('Pos'), NodePath()
-
-            parentObject = NodePath('psuedo-%s' % parentUid)
-
-            if not 'GridPos' in objectData:
-                parentObject.setPos(parentData.get('Pos', Point3(0, 0, 0)))
-
-            parentObject.setHpr(parentData.get('Hpr', Point3(0, 0, 0)))
-
-            objectPos = objectData.get('GridPos', objectData.get('Pos', Point3(0, 0, 0)))
-            return objectPos, parentObject
-
-        return objectData.get('Pos'), NodePath()
 
     def __createIsland(self, objectData, parent, parentUid, objKey, dynamic):
         from pirates.world.DistributedIslandAI import DistributedIslandAI
