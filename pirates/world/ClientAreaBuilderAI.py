@@ -113,6 +113,11 @@ class ClientAreaBuilderAI(DirectObject):
         island.setScale(objectData.get('Scale', 1))
         island.setUndockable(objectData.get('Undockable', False))
 
+        if 'Objects' in worldIsland:
+            for obj in worldIsland['Objects'].values():
+                if obj['Type'] == 'LOD Sphere':
+                    island.setZoneSphereSize(*obj['Radi'])
+
         self.parent.generateChildWithRequired(island, island.startingZone)
         self.addObject(island)
 
