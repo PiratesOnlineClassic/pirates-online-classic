@@ -4,7 +4,7 @@
 # Embedded file name: pirates.minigame.PlayingCardDropper
 import random
 
-import PlayingCardGlobals
+from . import PlayingCardGlobals
 from direct.gui.DirectGui import *
 from direct.task import Task
 from pandac.PandaModules import *

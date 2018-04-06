@@ -46,7 +46,7 @@ class RadioButton(DirectButton):
                 other.uncheck()
 
         if fCommand and self['command']:
-            apply(self['command'], [self['value']] + self['extraArgs'])
+            self['command'](*[self['value']] + self['extraArgs'])
 
     def setOthers(self, others):
         self['others'] = others

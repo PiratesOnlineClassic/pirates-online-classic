@@ -4,7 +4,7 @@
 # Embedded file name: pirates.piratesgui.PirateMemberList
 import copy
 
-import GuiButton
+from . import GuiButton
 from direct.fsm import StateData
 from direct.gui.DirectGui import *
 from direct.showbase.DirectObject import *

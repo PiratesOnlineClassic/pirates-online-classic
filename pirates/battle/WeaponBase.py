@@ -4,8 +4,8 @@
 # Embedded file name: pirates.battle.WeaponBase
 import math
 
-import CannonGlobals
-import WeaponGlobals
+from . import CannonGlobals
+from . import WeaponGlobals
 from direct.distributed.ClockDelta import globalClockDelta
 from pandac.PandaModules import *
 from pirates.battle import WeaponBaseBase
@@ -20,7 +20,7 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
     __module__ = __name__
 
     def __init__(self):
-        if __builtins__.has_key('localAvatar'):
+        if 'localAvatar' in __builtins__:
             av = localAvatar
         else:
             av = self

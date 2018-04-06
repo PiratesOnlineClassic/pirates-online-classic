@@ -9,7 +9,7 @@ from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, Particles
 from direct.particles.ParticleEffect import *
 from pandac.PandaModules import *
-from PooledEffect import PooledEffect
+from .PooledEffect import PooledEffect
 
 
 class Twister(PooledEffect):

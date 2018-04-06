@@ -417,7 +417,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
     def disable(self):
         DistributedInteractive.DistributedInteractive.disable(self)
         self.ignoreAll()
-        avIds = self.avId2ivals.keys()
+        avIds = list(self.avId2ivals.keys())
         for avId in avIds:
             for ival in self.avId2ivals.get(avId, []):
                 ival.finish()

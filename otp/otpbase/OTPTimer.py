@@ -4,7 +4,7 @@
 # Embedded file name: otp.otpbase.OTPTimer
 from direct.gui.DirectGui import *
 from direct.task import Task
-from OTPGlobals import *
+from .OTPGlobals import *
 from pandac.PandaModules import *
 
 

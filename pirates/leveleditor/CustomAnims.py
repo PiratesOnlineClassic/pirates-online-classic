@@ -14,7 +14,7 @@ PROP_ANIMS = {'models/char/seagull_hi': ['models/char/seagull_flying', 'models/c
 def getPropAnimList():
     resultDic = {}
     totalList = []
-    for propModel in PROP_ANIMS.keys():
+    for propModel in list(PROP_ANIMS.keys()):
         animList = [
          [
           propModel], PROP_ANIMS[propModel]]

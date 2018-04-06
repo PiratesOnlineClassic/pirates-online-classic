@@ -4,7 +4,7 @@
 # Embedded file name: pirates.piratesgui.RadialMenu
 import math
 
-import PiratesGuiGlobals
+from . import PiratesGuiGlobals
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
@@ -112,7 +112,7 @@ def AllComboSkills(repId, minlvl):
 def FindSkills(repId, skilltrack, minlvl):
     inv = base.localAvatar.getInventory()
     if inv == None:
-        print 'WARNING - FindSkills came up with no inventory for ', repId
+        print('WARNING - FindSkills came up with no inventory for ', repId)
         return []
     choices = []
     if repId == InventoryType.CutlassRep:
@@ -206,7 +206,7 @@ def FindSkills(repId, skilltrack, minlvl):
 def getAllSkills(repId, skilltrack):
     inv = base.localAvatar.getInventory()
     if inv == None:
-        print 'WARNING - getAllSkills came up with no inventory for ', repId
+        print('WARNING - getAllSkills came up with no inventory for ', repId)
         return []
     minlvl = 2
     choices = []

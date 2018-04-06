@@ -46,6 +46,8 @@ def readFile(filename):
     lastReadFile = filename
     scriptFile = StreamReader(vfs.openReadFile(filename, 1), 1)
     gen = tokenize.generate_tokens(scriptFile.readline)
+    #TODO: FIXME!
+    return
     line = getLineOfTokens(gen)
     while line is not None:
         if line == []:
@@ -53,14 +55,12 @@ def readFile(filename):
             continue
         if line[0] == 'ID':
             parseId(line)
+        elif line[0] == 'FUNC_DEF':
+            parseFuncDef(line)
+        elif currFuncId:
+            funcDefs[currFuncId].append(line)
         else:
-            if line[0] == 'FUNC_DEF':
-                parseFuncDef(line)
-            else:
-                if currFuncId:
-                    funcDefs[currFuncId].append(line)
-                else:
-                    lineDict[curId].append(line)
+            lineDict[curId].append(line)
         line = getLineOfTokens(gen)
 
     return
@@ -74,31 +74,27 @@ def reReadFile():
 def getLineOfTokens(gen):
     tokens = []
     nextNeg = 0
-    token = gen.next()
+    token = next(gen)
     if token[0] == tokenize.ENDMARKER:
         return
     while token[0] != tokenize.NEWLINE and token[0] != tokenize.NL:
         if token[0] == tokenize.COMMENT:
             pass
-        else:
-            if token[0] == tokenize.OP and token[1] == '-':
-                nextNeg = 1
+        elif token[0] == tokenize.OP and token[1] == '-':
+            nextNeg = 1
+        elif token[0] == tokenize.NUMBER:
+            if nextNeg:
+                tokens.append(-eval(token[1]))
+                nextNeg = 0
             else:
-                if token[0] == tokenize.NUMBER:
-                    if nextNeg:
-                        tokens.append(-eval(token[1]))
-                        nextNeg = 0
-                    else:
-                        tokens.append(eval(token[1]))
-                else:
-                    if token[0] == tokenize.STRING:
-                        tokens.append(eval(token[1]))
-                    else:
-                        if token[0] == tokenize.NAME:
-                            tokens.append(token[1])
-                        else:
-                            notify.warning('Ignored token type: %s on line: %s' % (tokenize.tok_name[token[0]], token[2][0]))
-        token = gen.next()
+                tokens.append(eval(token[1]))
+        elif token[0] == tokenize.STRING:
+            tokens.append(eval(token[1]))
+        elif token[0] == tokenize.NAME:
+            tokens.append(token[1])
+        else:
+            notify.warning('Ignored token type: %s on line: %s' % (tokenize.tok_name[token[0]], token[2][0]))
+        token = next(gen)
 
     return tokens
 
@@ -124,14 +120,14 @@ def parseFuncDef(line):
 
 
 def questDefined(scriptId):
-    return lineDict.has_key(scriptId)
+    return scriptId in lineDict
 
 
 class NPCMoviePlayer(DirectObject.DirectObject):
     __module__ = __name__
 
     def __init__(self, scriptId, toon, npc):
-        print 'initializing movie player'
+        print('initializing movie player')
         self.scriptId = scriptId
         self.toon = toon
         self.isLocalToon = self.toon == base.localAvatar
@@ -163,19 +159,19 @@ class NPCMoviePlayer(DirectObject.DirectObject):
     def getVar(self, varName):
         if len(globalVarDict) == 0:
             init()
-        if self.privateVarDict.has_key(varName):
+        if varName in self.privateVarDict:
             return self.privateVarDict[varName]
         else:
-            if globalVarDict.has_key(varName):
+            if varName in globalVarDict:
                 return globalVarDict[varName]
             else:
                 notify.error('Variable not defined: %s' % varName)
 
     def delVar(self, varName):
-        if self.privateVarDict.has_key(varName):
+        if varName in self.privateVarDict:
             del self.privateVarDict[varName]
         else:
-            if globalVarDict.has_key(varName):
+            if varName in globalVarDict:
                 del globalVarDict[varName]
             else:
                 notify.warning('Variable not defined: %s' % varName)
@@ -193,7 +189,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
             self.currentTrack = None
         self.ignoreAll()
         taskMgr.remove(self.uniqueId)
-        for toonHeadFrame in self.toonHeads.values():
+        for toonHeadFrame in list(self.toonHeads.values()):
             toonHeadFrame.destroy()
 
         while self.chars:
@@ -243,7 +239,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
             self.currentTrack.finish()
         if self.cleanedUp == True:
             return
-        trackList = self.chapterDict.keys()
+        trackList = list(self.chapterDict.keys())
         for currTrack in trackList:
             if self.cleanedUp == False and len(self.chapterDict[currTrack]) > 0:
                 self.currentTrack = self.chapterDict[currTrack].pop(0)
@@ -275,14 +271,14 @@ class NPCMoviePlayer(DirectObject.DirectObject):
             notify.error('No movie defined for scriptId: %s' % self.scriptId)
         chapterList = []
         timeoutList = []
-        print self.npc
-        print self.toon
-        for currEvent in self.events.keys():
+        print(self.npc)
+        print(self.toon)
+        for currEvent in list(self.events.keys()):
             self.ignore(currEvent)
 
         self.events = {}
         for line in lines:
-            print line
+            print(line)
             lineNum += 1
             command = line[0]
             chapterList, nextEvent = self.parseLine(command, line, chapterList, timeoutList, lineNum)
@@ -311,7 +307,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         lineList = []
         timeoutList = []
         for line in lines:
-            print line
+            print(line)
             lineNum += 1
             command = line[0]
             lineList, nextEvent = self.parseLine(command, line, lineList, timeoutList, lineNum)
@@ -818,7 +814,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
 
             def _handleYesTutorial():
                 nmp = None
-                if scriptYes in lineDict.keys():
+                if scriptYes in list(lineDict.keys()):
                     nmp = NPCMoviePlayer(scriptYes, self.toon, self.npc)
                 closeTutorialWindow(scriptYes)
                 if nmp and self.npc and hasattr(self.npc, 'currentDialogMovie') and self.npc.currentDialogMovie:
@@ -830,7 +826,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         if scriptNo:
 
             def _handleNoTutorial():
-                if scriptNo in lineDict.keys():
+                if scriptNo in list(lineDict.keys()):
                     nmp = NPCMoviePlayer(scriptNo, self.toon, self.npc)
                     nmp.play()
                 closeTutorialWindow(scriptNo)
@@ -1175,11 +1171,11 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         return Wait(waitTime)
 
     def parseChat(self, line):
-        print 'parsing chat line'
+        print('parsing chat line')
         toonId = self.toon.getDoId()
         avatarName = line[1]
         avatar = self.getVar(avatarName)
-        print avatar
+        print(avatar)
         chatString = eval('PLocalizer.' + line[2])
         chatFlags = CFSpeech | CFTimeout
         quitButton, extraChatFlags, dialogueList = self.parseExtraChatArgs(line[3:])

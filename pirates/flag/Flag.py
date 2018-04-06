@@ -4,11 +4,11 @@
 # Embedded file name: pirates.flag.Flag
 if __name__ == '__main__':
     from direct.directbase import DirectStart
-import FlagGlobals
+from . import FlagGlobals
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import *
-from FlagDNA import FlagDNA
+from .FlagDNA import FlagDNA
 from pandac.PandaModules import *
 
 
@@ -168,8 +168,8 @@ class Flag(NodePath):
         val = self.dna.bgData[0]
         bgTexCol = self.bgNode.findAllTextures('*_%02d_*' % val)
         bgTexCol = [ bgTexCol[x] for x in range(bgTexCol.getNumTextures()) ]
-        sortDict = dict(zip([ `x` for x in bgTexCol ], bgTexCol))
-        keys = sortDict.keys()
+        sortDict = dict(list(zip([ repr(x) for x in bgTexCol ], bgTexCol)))
+        keys = list(sortDict.keys())
         keys.sort()
         bgTexCol = [ sortDict[name] for name in keys ]
         for bgnum in range(0, len(bgTexCol) + 1):
@@ -469,8 +469,8 @@ if __name__ == '__main__':
     f = Flag('testflag')
     f.setDNAString(p.getDNAString())
     f.reparentTo(render)
-    print f
-    print `f`
+    print(f)
+    print(repr(f))
     base.mouseInterface.node().setPos(0, 3, 0)
     run()
 # okay decompiling .\pirates\flag\Flag.pyc

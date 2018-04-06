@@ -67,7 +67,7 @@ from pirates.effects.ShipDestruction import ShipDestruction
 from pirates.band.DistributedBandMember import DistributedBandMember
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPRender
-import ShipGlobals, ShipBalance
+from . import ShipGlobals, ShipBalance
 from direct.fsm.StatePush import FunctionCall, AttrSetter
 import random, math
 STOP = 0
@@ -124,14 +124,14 @@ class CachedShipData(CachedDOData):
             self.cabin[0].unloadModel()
             self.cabin[0].disable()
             self.cabin[0].delete()
-        for mast in self.sails.values():
-            for sail in mast.values():
+        for mast in list(self.sails.values()):
+            for sail in list(mast.values()):
                 sail[0].delete()
 
-        for mast in self.masts.values():
+        for mast in list(self.masts.values()):
             mast[0].delete()
 
-        for entry in self.cannons.values():
+        for entry in list(self.cannons.values()):
             cannon = entry[0]
             cannon.delete()
 
@@ -399,7 +399,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def destroy(self):
         if not self.DistributedObject_deleted:
             from direct.showbase.PythonUtil import StackTrace
-            print StackTrace()
+            print(StackTrace())
             self.notify.error('ship(%s,%d) called destroy() outside of delete()' % (self.name, self.doId))
         self._rocker.destroy()
         del self._rocker
@@ -443,21 +443,21 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.sailProjectors = cachedData.sailProjectors
             self.locators = cachedData.locators
             self.locators.reparentTo(self.root)
-            for sailProjector in self.sailProjectors.itervalues():
+            for sailProjector in self.sailProjectors.values():
                 sailProjector.reparentTo(self.modelGeom)
 
             if self.hull:
                 self.hull[0].uncache(self)
             if self.cabin:
                 self.cabin[0].uncache(self)
-            for mast in self.masts.values():
+            for mast in list(self.masts.values()):
                 mast[0].uncache(self)
 
-            for mast in self.sails.values():
-                for sail in mast.values():
+            for mast in list(self.sails.values()):
+                for sail in list(mast.values()):
                     sail[0].uncache(self)
 
-            for entry in self.cannons.values():
+            for entry in list(self.cannons.values()):
                 cannon = entry[0]
                 cannon.uncache(self)
 
@@ -569,8 +569,8 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             return 1.0
 
     def _doSailAlpha(self):
-        for d in self.sails.itervalues():
-            for sail, distSail in d.itervalues():
+        for d in self.sails.values():
+            for sail, distSail in d.values():
                 sail.sailGeom.setAlphaScale(0.4)
 
     def getModelGeomRoot(self):
@@ -813,14 +813,14 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.hull[0].cache()
         if self.cabin:
             self.cabin[0].cache()
-        for mast in self.sails.values():
-            for sail in mast.values():
+        for mast in list(self.sails.values()):
+            for sail in list(mast.values()):
                 sail[0].cache()
 
-        for mast in self.masts.values():
+        for mast in list(self.masts.values()):
             mast[0].cache()
 
-        for entry in self.cannons.values():
+        for entry in list(self.cannons.values()):
             cannon = entry[0]
             cannon.cache()
 
@@ -835,7 +835,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         self.modelCollisions = None
         self.locators.detachNode()
         self.locators = None
-        for sailProjector in self.sailProjectors.itervalues():
+        for sailProjector in self.sailProjectors.values():
             sailProjector.detachNode()
 
         self.broadside = None
@@ -943,8 +943,8 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             return
         self.hull[0].cutState()
         sailStates = {}
-        for mast in self.sails.values():
-            for entry in mast.values():
+        for mast in list(self.sails.values()):
+            for entry in list(mast.values()):
                 sail = entry[0]
                 sailStates[entry[0]] = sail.sailFSM.state
                 sail.setAnimState('Off')
@@ -958,14 +958,14 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         self.modelGeom.flattenStrong()
         self.modelGeom.getBounds()
         self.hull[0].pasteState()
-        for entry in self.masts.values():
+        for entry in list(self.masts.values()):
             mast = entry[0]
             if hasattr(mast.prop, 'postFlatten'):
                 mast.prop.postFlatten()
                 mast.setupMast()
 
-        for mast in self.sails.values():
-            for entry in mast.values():
+        for mast in list(self.sails.values()):
+            for entry in list(mast.values()):
                 sail = entry[0]
                 if hasattr(sail.sailActor, 'postFlatten'):
                     sail.sailActor.postFlatten()
@@ -981,7 +981,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                     if cannon:
                         cannon.prop.postFlatten()
 
-        for entry in self.cannons.values():
+        for entry in list(self.cannons.values()):
             if entry[0]:
                 entry[0].prop.postFlatten()
 
@@ -1080,12 +1080,12 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         if not self.hull:
             return
         self.hull[0].setTargetBitmask(bool)
-        for entry in self.masts.values():
+        for entry in list(self.masts.values()):
             mast = entry[1]
             if mast:
                 mast.prop.setTargetBitmask(bool)
-            for index in self.sails.values():
-                for entry in index.values():
+            for index in list(self.sails.values()):
+                for entry in list(index.values()):
                     sail = entry[0]
                     if sail:
                         sail.setTargetBitmask(bool)
@@ -1096,8 +1096,8 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.ram[0].setTargetBitmask(bool)
         if self.bowsprit:
             self.bowsprit[0].setTargetBitmask(bool)
-        for decorType in self.decors.values():
-            for decor in decorType.values():
+        for decorType in list(self.decors.values()):
+            for decor in list(decorType.values()):
                 if decor:
                     decor[0].setTargetBitmask(bool)
 
@@ -1376,7 +1376,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                 self.shipStatusDisplay.disableAnchorButton()
             if localAvatar.getGameState() == 'ShipPilot':
                 localAvatar.b_setGameState(localAvatar.gameFSM.defaultState)
-            for np, disabledBits in self.disabledCollisionBits.items():
+            for np, disabledBits in list(self.disabledCollisionBits.items()):
                 cMask = np.node().getIntoCollideMask()
                 cMask |= disabledBits
                 np.node().setIntoCollideMask(cMask)
@@ -1596,7 +1596,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def enableOnDeckInteractions(self):
         self.notify.debug('enableOnDeckInteractions')
-        for cannon in self.cannons.values():
+        for cannon in list(self.cannons.values()):
             if cannon[1]:
                 cannon[1].setAllowInteract(1)
                 cannon[1].checkInUse()
@@ -1610,7 +1610,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def disableOnDeckInteractions(self):
         self.notify.debug('disableOnDeckInteractions')
-        for cannon in self.cannons.values():
+        for cannon in list(self.cannons.values()):
             if cannon[1]:
                 cannon[1].setAllowInteract(0, forceOff=True)
                 cannon[1].refreshState()
@@ -1661,7 +1661,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                     self.hull[0].startSmoke(i)
 
     def hideMasts(self):
-        for entry in self.masts.values():
+        for entry in list(self.masts.values()):
             mast = entry[1]
             if mast:
                 if mast.prop:
@@ -1671,7 +1671,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                         mast.prop.propCollisions.hide()
 
     def showMasts(self):
-        for entry in self.masts.values():
+        for entry in list(self.masts.values()):
             mast = entry[1]
             if mast:
                 if mast.prop:
@@ -1781,7 +1781,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         return
 
     def isRamming(self):
-        for buffKeyId in self.skillEffects.keys():
+        for buffKeyId in list(self.skillEffects.keys()):
             buffId = self.skillEffects[buffKeyId][0]
             if WeaponGlobals.C_RAM == buffId:
                 return True
@@ -1998,7 +1998,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         return
 
     def autoAdjustPower(self, delta):
-        for cannon in self.cannons.values():
+        for cannon in list(self.cannons.values()):
             if not cannon[0].av:
                 cannon[0].adjustPower(delta)
 
@@ -2082,7 +2082,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         if world:
             water = world.getWater()
         if water:
-            for sp, node in self._sampleNPs.items():
+            for sp, node in list(self._sampleNPs.items()):
                 height = water.calcFilteredHeight(minWaveLength=3.0 * self._maxSampleDistance, node=node)
                 avgWaveHeight += height
                 lrIndex, fbIndex = DistributedShip.Sp2indices[sp]
@@ -2224,7 +2224,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         nearestDist = 99999999
         ropeAnchorNode = self.hull
         rightHand = av.rightHandNode
-        for entry in self.masts.values():
+        for entry in list(self.masts.values()):
             mast = entry[1]
             if mast:
                 boom0 = mast.prop.locators.find('**/joint_anchor_net_0;+s')
@@ -2637,7 +2637,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def setLocation(self, parentId, zoneId):
         if self.name == 'The Black Pearl':
-            print '---------------setLocation %s %s-----------' % (parentId, zoneId)
+            print('---------------setLocation %s %s-----------' % (parentId, zoneId))
         if self.parentId == parentId and self.zoneId == zoneId:
             return
         if hasattr(base, 'localAvatar'):
@@ -2718,7 +2718,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         newPriority = WeaponGlobals.getBuffPriority(effectId)
         newCategory = WeaponGlobals.getBuffCategory(effectId)
         if newPriority:
-            for buffKeyId in self.skillEffects.keys():
+            for buffKeyId in list(self.skillEffects.keys()):
                 buffId = self.skillEffects[buffKeyId][0]
                 priority = WeaponGlobals.getBuffPriority(buffId)
                 category = WeaponGlobals.getBuffCategory(buffId)
@@ -2757,13 +2757,13 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def setSkillEffects(self, buffs):
         for entry in buffs:
             buffKeyId = '%s-%s' % (entry[0], entry[3])
-            if buffKeyId not in self.skillEffects.keys():
+            if buffKeyId not in list(self.skillEffects.keys()):
                 self.skillEffects[buffKeyId] = (
                  entry[0], entry[1], entry[2], entry[3])
                 self.addStatusEffect(entry[0], entry[3])
 
         killList = []
-        for buffKeyId in self.skillEffects.keys():
+        for buffKeyId in list(self.skillEffects.keys()):
             foundEntry = 0
             for entry in buffs:
                 id = '%s-%s' % (entry[0], entry[3])
@@ -2781,7 +2781,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def getSkillEffects(self):
         buffIds = []
-        for buffKeyId in self.skillEffects.keys():
+        for buffKeyId in list(self.skillEffects.keys()):
             buffId = self.skillEffects[buffKeyId][0]
             if buffId not in buffIds:
                 buffIds.append(buffId)
@@ -2968,7 +2968,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                             if self.openFireEffect:
                                 self.openFireEffect.stop()
         slowDown = True
-        for buffKeyId in self.skillEffects.keys():
+        for buffKeyId in list(self.skillEffects.keys()):
             buffId = self.skillEffects[buffKeyId][0]
             if WeaponGlobals.C_FULLSAIL == buffId or WeaponGlobals.C_RAM == buffId:
                 slowDown = False
@@ -2979,7 +2979,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def findAllBuffCopyKeys(self, effectId):
         buffCopies = []
-        for buffKeyId in self.skillEffects.keys():
+        for buffKeyId in list(self.skillEffects.keys()):
             if self.skillEffects[buffKeyId][0] == effectId:
                 buffCopies.append(buffKeyId)
 
@@ -3120,7 +3120,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         if not TeamUtils.damageAllowed(target, self):
             localAvatar.guiMgr.createWarning(PLocalizer.FriendlyFireWarning, PiratesGuiGlobals.TextFG6)
             return
-        for buffKeyId in self.skillEffects.keys():
+        for buffKeyId in list(self.skillEffects.keys()):
             buffId = self.skillEffects[buffKeyId][0]
             if WeaponGlobals.C_RAM == buffId:
                 self.sendRequestShipRam(targetId, pos)
@@ -3280,14 +3280,14 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         self.b_animateSails('Rolldown')
 
     def animateSails(self, anim, rate=1.0):
-        for mast in self.sails.values():
-            for sail in mast.values():
+        for mast in list(self.sails.values()):
+            for sail in list(mast.values()):
                 if sail[1]:
                     sail[0].setAnimState(anim)
 
     def b_animateSails(self, anim, rate=1.0):
-        for mast in self.sails.values():
-            for sail in mast.values():
+        for mast in list(self.sails.values()):
+            for sail in list(mast.values()):
                 if sail[1]:
                     sail[1].b_setAnimState(anim)
 
@@ -3306,7 +3306,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                             targetList[dist] = shipId
 
         if targetList:
-            keys = targetList.keys()
+            keys = list(targetList.keys())
             keys.sort()
             return targetList[keys[0]]
         return 0
@@ -3451,11 +3451,11 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def getShipInfo(self):
         return [
-         self.doId, self.getName(), self.shipClass, [ [dMast.getMastType(), dMast.getPosIndex(), dMast.getSailConfig()] for mast, dMast in self.masts.itervalues() if dMast ]]
+         self.doId, self.getName(), self.shipClass, [ [dMast.getMastType(), dMast.getPosIndex(), dMast.getSailConfig()] for mast, dMast in self.masts.values() if dMast ]]
 
     def getLocalShipInfo(self):
         return [
-         self.doId, self.getName(), self.shipClass, [ [mast.dna.getMastType(), mast.dna.getPosIndex(), mast.dna.getSailConfig()] for mast, dMast in self.masts.itervalues() ]]
+         self.doId, self.getName(), self.shipClass, [ [mast.dna.getMastType(), mast.dna.getPosIndex(), mast.dna.getSailConfig()] for mast, dMast in self.masts.values() ]]
 
     def showBoardingChoice(self, shipToBoard):
         if not self.boardingPanel:
@@ -3913,12 +3913,12 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         self.localAvatarExitShip()
 
     def printCrazyInfo(self):
-        print 'Name:\t\t', self.getName()
-        print 'doId:\t\t', self.doId
-        print 'location:\t', self.getLocation()
-        print 'inv id:\t\t', self.getInventoryId()
-        print 'inventory:\t', bool(self.getInventory())
-        print 'shard:\t\t', self.cr.activeWorld.getParentObj().name, self.cr.activeWorld.getParentObj().doId
+        print('Name:\t\t', self.getName())
+        print('doId:\t\t', self.doId)
+        print('location:\t', self.getLocation())
+        print('inv id:\t\t', self.getInventoryId())
+        print('inventory:\t', bool(self.getInventory()))
+        print('shard:\t\t', self.cr.activeWorld.getParentObj().name, self.cr.activeWorld.getParentObj().doId)
 
     def addShipTarget(self, ship, priority=0):
         if self.getBuildComplete() and ship.getBuildComplete():

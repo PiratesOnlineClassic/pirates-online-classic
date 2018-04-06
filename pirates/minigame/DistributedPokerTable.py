@@ -387,7 +387,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable, PokerBase
             if playerHands:
                 numPlayers += 1
 
-        numPlayers = len(filter(lambda hand: hand, playerHands))
+        numPlayers = len([hand for hand in playerHands if hand])
         if numPlayers == 1 or round == self.numRounds:
             self.endOfHand = True
             self.processWinners(playerHands, totalWinningsArray)
@@ -773,7 +773,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable, PokerBase
             dealtCards.append([])
 
         for i in range(numCards):
-            seats = range(self.NumSeats)
+            seats = list(range(self.NumSeats))
             slicer = self.buttonSeat + 1 % self.NumSeats
             seats = seats[slicer:] + seats[:slicer]
             for player in seats:

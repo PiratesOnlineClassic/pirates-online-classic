@@ -6,10 +6,10 @@ import copy
 import math
 import random
 
-import Cannon
-import CannonGlobals
-import DistributedWeapon
-import WeaponGlobals
+from . import Cannon
+from . import CannonGlobals
+from . import DistributedWeapon
+from . import WeaponGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 from direct.fsm import ClassicFSM, State
@@ -456,7 +456,7 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
             self.requestExit()
 
     def completeCannonCheck(self):
-        for colList in self.collisionLists.values():
+        for colList in list(self.collisionLists.values()):
             colList.sort()
             ammo = colList[0][1].getFromNodePath().getPythonTag('ammo')
             if not ammo or ammo.destroyed:

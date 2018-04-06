@@ -535,7 +535,7 @@ class TattooStoreGUI(DirectFrame):
             offsetIndex = 5
         else:
             offsetIndex = 6
-        for type in self.equipRequests.keys():
+        for type in list(self.equipRequests.keys()):
             equip = self.equipRequests.get(type)
             if equip is not None:
                 zone = equip[0]

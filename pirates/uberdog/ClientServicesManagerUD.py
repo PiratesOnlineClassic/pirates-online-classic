@@ -4,7 +4,7 @@ import hashlib
 import hmac
 import json
 import time
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.distributed.PyDatagram import *
@@ -31,14 +31,14 @@ http.setVerifySsl(0)
 def executeHttpRequest(url, **extras):
     timestamp = str(int(time.time()))
     signature = hmac.new(accountServerSecret, timestamp, hashlib.sha256)
-    request = urllib2.Request(accountServerEndpoint + url)
+    request = urllib.request.Request(accountServerEndpoint + url)
     request.add_header('User-Agent', 'TTI-CSM')
     request.add_header('X-CSM-Timestamp', timestamp)
     request.add_header('X-CSM-Signature', signature.hexdigest())
-    for k, v in extras.items():
+    for k, v in list(extras.items()):
         request.add_header('X-CSM-' + k, v)
     try:
-        return urllib2.urlopen(request).read()
+        return urllib.request.urlopen(request).read()
     except:
         return None
 
@@ -228,8 +228,8 @@ class RemoteAccountDB(AccountDB):
                 raise ValueError
             if ('accesslevel' not in token) or (not isinstance(token['accesslevel'], int)):
                 raise ValueError
-        except ValueError, e:
-            print e
+        except ValueError as e:
+            print(e)
             self.notify.warning('Invalid token.')
             response = {
                 'success': False,
@@ -589,7 +589,7 @@ class GetAvatarsFSM(AvatarOperationFSM):
     def enterSendAvatars(self):
         potentialAvs = []
 
-        for avId, fields in self.avatarFields.items():
+        for avId, fields in list(self.avatarFields.items()):
             index = self.avList.index(avId)
             wishNameState = fields.get('WishNameState', [''])[0]
             name = fields['setName'][0]

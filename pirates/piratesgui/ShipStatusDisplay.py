@@ -401,18 +401,18 @@ class ShipStatusDisplay(GuiTray.GuiTray):
             self.lootPanel.hide()
 
     def updateStatusEffects(self, effects):
-        effectIdList = effects.keys()
+        effectIdList = list(effects.keys())
         for effectKeyId in effectIdList:
             effectId = effects[effectKeyId][0]
             maxDur = effects[effectKeyId][1]
             ts = effects[effectKeyId][2]
             attackerId = effects[effectKeyId][3]
-            if effectKeyId not in self.skillEffects.keys():
+            if effectKeyId not in list(self.skillEffects.keys()):
                 self.statusEffectsPanel.addStatusEffect(effectId, maxDur, ts, attackerId)
             else:
                 self.statusEffectsPanel.updateStatusEffect(effectId, maxDur, ts, attackerId)
 
-        for effectKeyId in self.skillEffects.keys():
+        for effectKeyId in list(self.skillEffects.keys()):
             if effectKeyId not in effectIdList:
                 buff = self.skillEffects.get(effectKeyId)
                 if buff:

@@ -92,7 +92,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             staticGeom.findAllMatches('*').reparentTo(self.ship.highStatic)
             staticGeom.detachNode()
             numPanels = hull.findAllMatches('**/panel_High_*').getNumPaths()
-            for i in xrange(numPanels):
+            for i in range(numPanels):
                 panel = hull.find('**/panel_High_%s' % i)
                 self.panelsHigh.append(panel)
 
@@ -142,7 +142,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             staticGeom.findAllMatches('*').reparentTo(self.ship.mediumStatic)
             staticGeom.detachNode()
             numPanels = hull.findAllMatches('**/panel_High_*').getNumPaths()
-            for i in xrange(numPanels):
+            for i in range(numPanels):
                 panel = hull.find('**/panel_High_%s' % i)
                 self.panelsMed.append(panel)
                 self.projScreensNodePaths[i] = panel.getParent()

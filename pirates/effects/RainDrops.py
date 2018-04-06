@@ -5,7 +5,7 @@
 import random
 
 from direct.interval.IntervalGlobal import *
-from EffectController import EffectController
+from .EffectController import EffectController
 from pandac.PandaModules import *
 
 

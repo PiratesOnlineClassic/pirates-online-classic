@@ -3,8 +3,8 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.leveleditor.TimeOfDayPanel
 import pprint
-import tkColorChooser
-from Tkinter import *
+import tkinter.colorchooser
+from tkinter import *
 
 import Pmw
 from direct.directtools.DirectUtil import getTkColorString
@@ -113,7 +113,7 @@ class TimeOfDayPanel(AppShell):
         self.fogColor['command'] = self.setFogColorVec
 
         def popupFogColorPicker():
-            color = tkColorChooser.askcolor(parent=interior, initialcolor=(0, 0, 0))
+            color = tkinter.colorchooser.askcolor(parent=interior, initialcolor=(0, 0, 0))
             if color[0] is not None:
                 self.fogColor.set((color[0][0], color[0][1], color[0][2]))
             return
@@ -136,7 +136,7 @@ class TimeOfDayPanel(AppShell):
         self.ambientColor['command'] = self.setAmbientColorVec
 
         def popupAmbientColorPicker():
-            color = tkColorChooser.askcolor(parent=interior, initialcolor=(0, 0, 0))
+            color = tkinter.colorchooser.askcolor(parent=interior, initialcolor=(0, 0, 0))
             if color[0] is not None:
                 self.ambientColor.set((color[0][0], color[0][1], color[0][2]))
             return
@@ -155,7 +155,7 @@ class TimeOfDayPanel(AppShell):
         self.directionalColor['command'] = self.setDirectionalColorVec
 
         def popupDirectionalColorPicker():
-            color = tkColorChooser.askcolor(parent=interior, initialcolor=(0, 0, 0))
+            color = tkinter.colorchooser.askcolor(parent=interior, initialcolor=(0, 0, 0))
             if color[0] is not None:
                 self.directionalColor.set((color[0][0], color[0][1], color[0][2]))
             return
@@ -220,16 +220,16 @@ class TimeOfDayPanel(AppShell):
             self.editor.objectMgr.currEditedObjInfo.setTodModified(True)
 
     def printSettings(self):
-        print '# Fog Colors'
-        print 'self.fogColors = ',
+        print('# Fog Colors')
+        print('self.fogColors = ', end=' ')
         pprint.pprint(TODGlobals.FogColors)
-        print '# Fog Ranges'
-        print 'self.fogExps = ',
+        print('# Fog Ranges')
+        print('self.fogExps = ', end=' ')
         pprint.pprint(TODGlobals.FogExps)
-        print '# Ambient Colors'
-        print 'self.ambientLightColors = ',
+        print('# Ambient Colors')
+        print('self.ambientLightColors = ', end=' ')
         pprint.pprint(TODGlobals.AmbientLightColors)
-        print '# Directional Colors'
-        print 'self.directionalLightColors = ',
+        print('# Directional Colors')
+        print('self.directionalLightColors = ', end=' ')
         pprint.pprint(TODGlobals.DirectionalLightColors)
 # okay decompiling .\pirates\leveleditor\TimeOfDayPanel.pyc

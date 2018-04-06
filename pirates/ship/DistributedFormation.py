@@ -30,7 +30,7 @@ class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM)
         self.stopSmooth()
 
     def setState(self, stateName, timeStamp):
-        print 'DistributedFormation.setState %s' % stateName
+        print('DistributedFormation.setState %s' % stateName)
         self.request(stateName)
 
     def enterAIPatrol(self):

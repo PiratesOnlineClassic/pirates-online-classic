@@ -38,7 +38,7 @@ class ScreenshotViewer:
         buttons = loader.loadModel('models/gui/lookout_gui')
         closeButton = (buttons.find('**/lookout_close_window'), buttons.find('**/lookout_close_window_down'), buttons.find('**/lookout_close_window_over'))
         xs = 1.2
-        self.nextButton = DirectButton(imageFrame, relief=None, command=self.next, pos=(0.7,
+        self.nextButton = DirectButton(imageFrame, relief=None, command=self.__next__, pos=(0.7,
                                                                                         0,
                                                                                         0), image=arrow, image_scale=(-xs, xs, xs), sortOrder=-5)
         self.prevButton = DirectButton(imageFrame, relief=None, command=self.prev, pos=(-0.7,
@@ -80,19 +80,19 @@ class ScreenshotViewer:
             self.prevButton['state'] = DGG.DISABLED
             self.prevButton['state'] = DGG.DISABLED
 
-    def next(self):
+    def __next__(self):
         self.currentIndex = (self.currentIndex + 1) % len(self.screens)
         try:
             self.showImage(self.currentIndex)
         except:
-            print 'badImage'
+            print('badImage')
 
     def prev(self):
         self.currentIndex = (self.currentIndex - 1) % len(self.screens)
         try:
             self.showImage(self.currentIndex)
         except:
-            print 'badImage'
+            print('badImage')
 
     def close(self):
         self.imageFrame.hide()

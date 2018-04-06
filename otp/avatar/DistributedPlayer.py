@@ -139,10 +139,10 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar, PlayerBase.PlayerBa
         self.displayWhisper(aboutId, chatString, whisperType)
 
     def displayWhisper(self, fromId, chatString, whisperType):
-        print 'Whisper type %s from %s: %s' % (whisperType, fromId, chatString)
+        print('Whisper type %s from %s: %s' % (whisperType, fromId, chatString))
 
     def displayWhisperPlayer(self, playerId, chatString, whisperType):
-        print 'Whisper type %s from %s: %s' % (whisperType, playerId, chatString)
+        print('Whisper type %s from %s: %s' % (whisperType, playerId, chatString))
 
     def whisperSCTo(self, msgIndex, sendToId, toPlayer):
         if toPlayer:
@@ -191,7 +191,7 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar, PlayerBase.PlayerBa
         return
 
     def whisperSCEmoteTo(self, emoteId, sendToId, toPlayer):
-        print 'whisperSCEmoteTo %s %s %s' % (emoteId, sendToId, toPlayer)
+        print('whisperSCEmoteTo %s %s %s' % (emoteId, sendToId, toPlayer))
         if toPlayer:
             base.cr.playerFriendsManager.sendSCEmoteWhisper(sendToId, emoteId)
             return

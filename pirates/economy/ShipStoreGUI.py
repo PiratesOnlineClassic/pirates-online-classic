@@ -151,7 +151,7 @@ class ShipStoreGUI(GuiPanel.GuiPanel):
                 base.localAvatar.guiMgr.createWarning(PLocalizer.CannotHoldShipWarning, PiratesGuiGlobals.TextFG6)
                 return
         nameData = [
-         PLocalizer.PirateShipPrefix.keys(), PLocalizer.PirateShipSuffix.keys()]
+         list(PLocalizer.PirateShipPrefix.keys()), list(PLocalizer.PirateShipSuffix.keys())]
         self.namePanel = NamePanelGui.NamePanelGui(PLocalizer.NamePanelTitle, nameData)
         self.namePanel.setPos(0.2, 0, 0)
         self.lockStore()

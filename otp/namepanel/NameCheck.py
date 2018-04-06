@@ -265,10 +265,10 @@ def checkName(name, otherCheckFuncs=[]):
             bName = te.decodeText(name)
             bName = list(bName)
             bName.reverse()
-            bName = (u'').join(bName)
+            bName = ('').join(bName)
             bName = te.encodeWtext(bName)
             problem = check(bName)
-            print 'problem = %s' % problem
+            print('problem = %s' % problem)
         if problem:
             return problem
 

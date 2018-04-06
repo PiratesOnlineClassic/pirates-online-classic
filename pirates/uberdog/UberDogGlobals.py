@@ -411,7 +411,7 @@ class InventoryType:
 
     @classmethod
     def getIslandUidFromTeleportToken(cls, token):
-        for key in cls.__islandToTeleportTokenMap.keys():
+        for key in list(cls.__islandToTeleportTokenMap.keys()):
             if cls.__islandToTeleportTokenMap[key] == token:
                 return key
 

@@ -5,10 +5,10 @@
 import math
 import random
 
-import BlackjackTableGUI
-import DistributedGameTable
-import PlayingCard
-import PlayingCardGlobals
+from . import BlackjackTableGUI
+from . import DistributedGameTable
+from . import PlayingCard
+from . import PlayingCardGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *

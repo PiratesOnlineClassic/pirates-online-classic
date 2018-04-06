@@ -70,10 +70,10 @@ class WeaponPage(InventoryPage.InventoryPage):
             self.tonicButtons[tonicId] = button
 
     def refreshList(self, newWeaponId=None):
-        for panel in self.weaponPanels.values():
+        for panel in list(self.weaponPanels.values()):
             panel.destroy()
 
-        for panel in self.tonicButtons.values():
+        for panel in list(self.tonicButtons.values()):
             panel.destroy()
 
         inventory = localAvatar.getInventory()
@@ -97,7 +97,7 @@ class WeaponPage(InventoryPage.InventoryPage):
         for i in range(len(InventoryType.Potions)):
             tonicId = InventoryType.Potions[i]
             tonicAmt = inv.getStackQuantity(tonicId)
-            if self.tonicButtons.has_key(tonicId):
+            if tonicId in self.tonicButtons:
                 self.tonicButtons[tonicId].updateQuantity(tonicAmt)
                 self.tonicButtons[tonicId].checkAmount()
 # okay decompiling .\pirates\piratesgui\WeaponPage.pyc

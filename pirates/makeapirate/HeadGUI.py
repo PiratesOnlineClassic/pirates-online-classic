@@ -2,11 +2,11 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.makeapirate.HeadGUI
-import Ear
-import Eyes
-import Mouth
-import Nose
-import Shape
+from . import Ear
+from . import Eyes
+from . import Mouth
+from . import Nose
+from . import Shape
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import DirectObject
 from direct.showbase.ShowBaseGlobal import *

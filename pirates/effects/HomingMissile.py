@@ -9,11 +9,11 @@ from direct.showbase import PythonUtil
 from direct.showbase.DirectObject import *
 from direct.showbase.PythonUtil import *
 from direct.task import Task
-from EffectController import EffectController
+from .EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects import PolyTrail
 from pirates.piratesbase import PiratesGlobals
-from PooledEffect import PooledEffect
+from .PooledEffect import PooledEffect
 
 
 class HomingMissile(PooledEffect, EffectController):

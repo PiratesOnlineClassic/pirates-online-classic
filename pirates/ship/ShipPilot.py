@@ -156,7 +156,7 @@ class ShipPilot(PhysicsWalker):
             indicator.instanceTo(contactIndicatorNode)
             self.physContactIndicator = contactIndicatorNode
         else:
-            print 'failed load of physics indicator'
+            print('failed load of physics indicator')
 
     def avatarPhysicsIndicator(self, task):
         self.physVelocityIndicator.setPos(self.shipNodePath, 0.0, 0.0, 6.0)

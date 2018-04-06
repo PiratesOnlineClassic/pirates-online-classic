@@ -408,7 +408,7 @@ class TextIsland(Island):
         self.helpBox.resetFrameSize()
 
     def showDetails(self, pos):
-        print pos
+        print(pos)
         if self.helpLabel['text'] != '':
             self.helpBox.setPos(pos - Point3(self.helpBox['frameSize'][1] * 1.25, 0, 0))
             self.helpBox.setBin('gui-popup', 0)

@@ -225,7 +225,7 @@ class Quest(POD):
                 choiceComplete = True
         returnGiverIds = self.questDNA.getReturnGiverIds()
         if returnGiverIds:
-            npcNames = map(lambda id: PLocalizer.NPCNames.get(id, PLocalizer.DefaultTownfolkName), returnGiverIds)
+            npcNames = [PLocalizer.NPCNames.get(id, PLocalizer.DefaultTownfolkName) for id in returnGiverIds]
             if len(returnGiverIds) == 1:
                 if choice and not choiceComplete:
                     return PLocalizer.SingleChoiceQuestReturnId % {'npcName': npcNames[0]}
