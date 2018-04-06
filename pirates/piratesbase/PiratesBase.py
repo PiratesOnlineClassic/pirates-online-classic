@@ -231,6 +231,7 @@ class PiratesBase(OTPBase):
         self.displayCpuFrequencyDialog = False
         self.taskMgr.doMethodLater(120.0, self.memoryMonitorTask, 'memory-monitor-task')
         self.supportAlphaFb = self.win.getFbProperties().getAlphaBits()
+        self.accept('f1', self.oobe)
 
     def deleteDialogs(self):
         if self.cpuSpeedDialog:

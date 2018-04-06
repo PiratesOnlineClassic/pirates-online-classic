@@ -1,14 +1,20 @@
-from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
-from pirates.battle.WeaponBase import WeaponBase
+from pirates.reputation. DistributedReputationAvatarAI import  DistributedReputationAvatarAI
+from pirates.battle.WeaponBaseAI import WeaponBaseAI
 from pirates.battle.Teamable import Teamable
+from direct.distributed.ClockDelta import globalClockDelta
 
-class DistributedBattleAvatarAI(WeaponBase, Teamable):
+class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleAvatarAI')
 
     def __init__(self, air):
-        WeaponBase.__init__(self)
+        DistributedReputationAvatarAI.__init__(self, air)
+        WeaponBaseAI.__init__(self, air)
         Teamable.__init__(self)
+        self.currentWeaponId = 0
+        self.isWeaponDrawn = False
+        self.currentAmmo = 0
+        self.shipId = 0
         self.maxHp = 0
         self.hp = 0
         self.quietly = False
@@ -22,6 +28,66 @@ class DistributedBattleAvatarAI(WeaponBase, Teamable):
         self.maxPower = 0
         self.luckMod = 0
         self.mojoMod = 0
+        self.swiftnessMod = 0
+        self.hasteMod = 0
+        self.stunMod = 0
+        self.powerMod = 0
+        self.attackerId = 0
+        self.combo = 0
+        self.teamCombo = 0
+        self.comboDamage = 0
+        self.skillEffects = []
+        self.ensaredTargetId = 0
+        self.level = 0
+
+    def setAvatarType(self, avatarType):
+        self.avatarType = avatarType
+
+    def getAvatarType(self):
+        return self.avatarType
+
+    def d_setGameState(self, gameState):
+        self.sendUpdate('setGameState', [gameState, globalClockDelta.getRealNetworkTime(bits=16)])
+
+    def setCurrentWeapon(self, currentWeapon, isWeaponDrawn):
+        self.currentWeaponId = currentWeapon
+        self.isWeaponDrawn = isWeaponDrawn
+
+    def d_setCurrentWeapon(self, currentWeapon, isWeaponDrawn):
+        self.sendUpdate('setCurrentWeapon', [currentWeapon, isWeaponDrawn])
+
+    def b_setCurrentWeapon(self, currentWeapon, isWeaponDrawn):
+        self.setCurrentWeapon(currentWeapon, isWeaponDrawn)
+        self.d_setCurrentWeapon(currentWeapon, isWeaponDrawn)
+
+    def getCurrentWeapon(self):
+        return [self.currentWeaponId, self.isWeaponDrawn]
+
+    def setCurrentAmmo(self, currentAmmo):
+        self.currentAmmo = currentAmmo
+
+    def d_setCurrentAmmo(self, currentAmmo):
+        self.sendUpdate('setCurrentAmmo', [currentAmmo])
+
+    def b_setCurrentAmmo(self, currentAmmo):
+        self.setCurrentAmmo(currentAmmo)
+        self.d_setCurrentAmmo(currentAmmo)
+
+    def getCurrentAmmo(self):
+        return self.currentAmmo
+
+    def setShipId(self, shipId):
+        self.shipId = shipId
+
+    def d_setShipId(self, shipId):
+        self.sendUpdate('setShipId', [shipId])
+
+    def b_setShipId(self, shipId):
+        self.setShipId(shipId)
+        self.d_setShipId(shipId)
+
+    def getShipId(self):
+        return self.shipId
 
     def setMaxHp(self, maxHp):
         self.maxHp = maxHp
@@ -43,7 +109,7 @@ class DistributedBattleAvatarAI(WeaponBase, Teamable):
     def d_setHp(self, hp, quietly):
         self.sendUpdate('setHp', [hp, quietly])
 
-    def b_setHp(self, hp, quietly=False):
+    def b_setHp(self, hp, quietly = False):
         self.setHp(hp, quietly)
         self.d_setHp(hp, quietly)
 
@@ -179,3 +245,73 @@ class DistributedBattleAvatarAI(WeaponBase, Teamable):
 
     def getMojoMod(self):
         return self.mojoMod
+
+    def getSwiftnessMod(self):
+        return self.swiftnessMod
+
+    def getHasteMod(self):
+        return self.hasteMod
+
+    def getStunMod(self):
+        return self.stunMod
+
+    def getPowerMod(self):
+        return self.powerMod
+
+    def setCombo(self, combo, teamCombo, comboDamage, attackerId):
+        self.combo = combo
+        self.teamCombo = teamCombo
+        self.comboDamage = comboDamage
+        self.attackerId = attackerId
+
+    def d_setCombo(self, combo, teamCombo, comboDamage, attackerId):
+        self.sendUpdate('setCombo', [combo, teamCombo, comboDamage, attackerId])
+
+    def b_setCombo(self, combo, teamCombo, comboDamage, attackerId):
+        self.setCombo(self, combo, teamCombo, comboDamage, attackerId)
+        self.d_setCombo(self, combo, teamCombo, comboDamage, attackerId)
+
+    def getCombo(self):
+        return [self.combo, self.teamCombo, self.comboDamage, self.attackerId]
+
+    def setSkillEffects(self, skillEffects):
+        self.skillEffects = skillEffects
+
+    def d_setSkillEffects(self, skillEffects):
+        self.sendUpdate('setSkillEffects', [skillEffects])
+
+    def b_setSkillEffects(self, skillEffects):
+        self.setSkillEffects(skillEffects)
+        self.d_setSkillEffects(skillEffects)
+
+    def getSkillEffects(self):
+        return self.skillEffects
+
+    def setEnsaredTargetId(self, ensaredTargetId):
+        self.ensaredTargetId = ensaredTargetId
+
+    def d_setEnsaredTargetId(self, ensaredTargetId):
+        self.sendUpdate('setEnsaredTargetId', [ensaredTargetId])
+
+    def b_setEnsaredTargetId(self, ensaredTargetId):
+        self.setEnsaredTargetId(ensaredTargetId)
+        self.d_setEnsaredTargetId(ensaredTargetId)
+
+    def getEnsnaredTargetId(self):
+        return self.ensaredTargetId
+
+    def interupted(self, todo):
+        pass
+
+    def setLevel(self, level):
+        self.level = level
+
+    def d_setLevel(self, level):
+        self.sendUpdate('setLevel', [level])
+
+    def b_setLevel(self, level):
+        self.setLevel(level)
+        self.d_setLevel(level)
+
+    def getLevel(self):
+        return self.level

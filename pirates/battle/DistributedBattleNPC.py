@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.DistributedBattleNPC
 import copy
 import random
 import types
@@ -19,6 +15,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.reputation.DistributedReputationAvatar import \
     DistributedReputationAvatar
 from pirates.uberdog.UberDogGlobals import *
+from panda3d.core import *
 
 
 class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
@@ -178,8 +175,8 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
     def requestGameState(self, state, optParam=None):
         self.gameFSM.request(state, optParam)
 
-    def setSpawnPos(self, x, y, z):
-        pass
+    def setSpawnPosHpr(self, x, y, z, h, p, r):
+        self.setPosHpr(self.getParentObj(), x, y, z, h, p, r)
 
     def lookAtTarget(self, task=None):
         if self.currentTarget:

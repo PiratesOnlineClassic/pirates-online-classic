@@ -16,3 +16,6 @@ disable-blockers #t
 
 # Cartesian Grid:
 visualize-cartesian-grid #f
+
+# Debug:
+show-frame-rate-meter #t
