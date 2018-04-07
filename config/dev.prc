@@ -2,6 +2,10 @@
 skip-tutorial #t
 force-tutorial #t
 
+# Npc:
+want-townfolk #t
+want-enemies #f
+
 # Hotkeys:
 want-dev-hotkeys #f
 
