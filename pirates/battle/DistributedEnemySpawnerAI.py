@@ -81,6 +81,7 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         enemy.setHpr(objectData.get('Hpr', (0, 0, 0)))
         enemy.setSpawnPosHpr(enemy.getPos(), enemy.getHpr())
         enemy.setScale(objectData.get('Scale'))
+        enemy.setInitZ(enemy.getZ())
 
         if avatarType.getBoss():
             enemy.setUniqueId('')
@@ -128,6 +129,7 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
 
         zoneId = PiratesGlobals.IslandLocalZone
         parent.generateChildWithRequired(enemy, zoneId)
+        enemy.d_setInitZ(enemy.getZ())
 
         print('Generating %s (%s) under zone %d at %s with doId %d' % (enemy.getName(), objKey, enemy.zoneId, enemy.getPos(), enemy.doId))
         return enemy
