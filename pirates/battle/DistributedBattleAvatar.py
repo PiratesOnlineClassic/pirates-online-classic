@@ -194,7 +194,7 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
             self.ambientFx.loop()
             yieldThread('sound')
 
-    def setLocation(self, parentId, zoneId, teleport):
+    def setLocation(self, parentId, zoneId, teleport=0):
         DistributedReputationAvatar.setLocation(self, parentId, zoneId)
 
         # TODO: FIXME!

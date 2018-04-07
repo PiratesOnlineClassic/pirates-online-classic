@@ -44,6 +44,7 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         return newObj
 
     def __createTownsperon(self, objType, objectData, parent, parentUid, objKey, dynamic):
+<<<<<<< HEAD
         townfolk = DistributedNPCTownfolkAI(self.air)
 
         townfolk.setScale(objectData.get('Scale'))
@@ -99,6 +100,9 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
 
         return townfolk
 
+=======
+        return None
+>>>>>>> 45ed8004f13f59c5da6cec5ffeb1ac579bf5dc96
 
     def __createEnemy(self, objType, objectData, parent, parentUid, objKey, dynamic):
         
@@ -131,7 +135,15 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
             return
 
         enemy = enemyCls(self.air)
+<<<<<<< HEAD
 
+=======
+        enemy.setPos(objectData.get('Pos', (0, 0, 0)))
+        enemy.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        enemy.setSpawnPosHpr(enemy.getPos(), enemy.getHpr())
+        enemy.setScale(objectData.get('Scale'))
+        enemy.setInitZ(enemy.getZ())
+>>>>>>> 45ed8004f13f59c5da6cec5ffeb1ac579bf5dc96
 
         if avatarType.getBoss():
             enemy.setUniqueId('')

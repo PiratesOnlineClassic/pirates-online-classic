@@ -9,7 +9,10 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
         self.name = ''
         self.spawnPos = [0, 0, 0, 0, 0, 0]
+<<<<<<< HEAD
         self.actorAnims = ['', '', '', '']
+=======
+>>>>>>> 45ed8004f13f59c5da6cec5ffeb1ac579bf5dc96
         self.animSet = ''
         self.collisionMode = 0
         self.initZ = 0
@@ -74,6 +77,7 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def getInitZ(self):
         return self.initZ
+<<<<<<< HEAD
 
     def setActorAnims(self, animSet, notice1, notice2, greet):
         self.actorAnims = [animSet, notice1, notice2, greet]
@@ -87,3 +91,5 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def getActorAnims(self):
         return self.actorAnims
+=======
+>>>>>>> 45ed8004f13f59c5da6cec5ffeb1ac579bf5dc96
