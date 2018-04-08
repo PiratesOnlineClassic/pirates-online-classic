@@ -65,6 +65,9 @@ prefer-parasite-buffer 1
 force-parasite-buffer 1
 alpha-bits 8
 
+# Stenciles:
+stencil-bits 8
+
 # GC:
 garbage-collect-states #f
 
