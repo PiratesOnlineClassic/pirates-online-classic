@@ -36,6 +36,9 @@ cull-bin sky 28 fixed
 cull-bin water 28 fixed
 cull-bin gui-fixed 55 fixed
 
+# Stencil:
+stencil-bits 8
+
 # DClass:
 dc-file astron/dclass/pirates.dc
 dc-file astron/dclass/otp.dc
