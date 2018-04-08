@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.npc.DistributedNPCTownfolk
 import random
 import re
 
@@ -12,6 +8,7 @@ from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import report
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
+from otp.nametag.NametagConstants import CFSpeech, CFThought, CFTimeout, CFPageButton, CFNoQuitButton, CFQuitButton
 from pandac.PandaModules import *
 from pirates.battle import (DistributedBattleAvatar, DistributedBattleNPC,
                             EnemyGlobals, WeaponGlobals)
@@ -988,8 +985,4 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
     def playMusic(self, songId):
         songName = MusicManager.songItem2MusicLabel[songId]
         base.musicMgr.request(name=songName, priority=5, looping=False)
-        base.localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.SongPlayingAnnouncement % PLocalizer.InventoryTypeNames[songId], seconds=10, priority=0, color=(0,
-                                                                                                                                                                       0,
-                                                                                                                                                                       0,
-                                                                                                                                                                       1))
-# okay decompiling .\pirates\npc\DistributedNPCTownfolk.pyc
+        base.localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.SongPlayingAnnouncement % PLocalizer.InventoryTypeNames[songId], seconds=10, priority=0, color=(0, 0, 0, 1))
