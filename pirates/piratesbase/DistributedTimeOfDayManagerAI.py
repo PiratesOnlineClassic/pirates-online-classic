@@ -45,7 +45,7 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         self.cycleDuration = cycleDuration
 
     def d_sync(self, cycleType, startingState, startingTime, cycleDuration):
-        self.sendUpdate('syncTOD', [cycleType, startingState, startingTime, cycleDuration])
+        self.sendUpdate('sync', [cycleType, startingState, startingTime, cycleDuration])
 
     def b_sync(self, cycleType, startingState, startingTime, cycleDuration):
         self.sync(cycleType, startingState, startingTime, cycleDuration)
@@ -53,3 +53,13 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
 
     def getSync(self):
         return [self.cycleType, self.startingState, self.startingTime, self.cycleDuration]
+
+    def changeCycleType(self, cycleType):
+
+        if self.cycleType == cycleType:
+            return
+
+        startingState = TODGlobals.getStartingState(cycleType)
+        cycleDuration = self.cycleSpeed * TODGlobals.getStateDuration(self.cycleType, self.startingState)
+
+        self.b_sync(cycleType, startingState, self.startingTime, cycleDuration)

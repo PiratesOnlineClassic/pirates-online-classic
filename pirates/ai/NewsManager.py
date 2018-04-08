@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.ai.NewsManager
 import time
 
 from direct.directnotify import DirectNotifyGlobal
@@ -21,7 +17,6 @@ from pirates.piratesgui import PiratesGuiGlobals
 messages = {0: PLocalizer.FullMoonWarning1, 1: PLocalizer.FullMoonWarning2, 2: PLocalizer.JollyRogerCurseComing, 3: PLocalizer.JollyRogerCurseActive, 4: PLocalizer.JollyRogerCurseIndoors, 5: PLocalizer.JollyRogerCurseOutdoors, 6: PLocalizer.JollyRogerCurseJail, 7: PLocalizer.JollyRogerCurseEnd}
 
 class NewsManager(DistributedObject.DistributedObject):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('NewsManager')
     neverDisable = 1
 
@@ -136,7 +131,6 @@ class NewsManager(DistributedObject.DistributedObject):
             self.startHoliday(startingHolidayId)
 
         messenger.send('setHolidayIdList', [holidayIdList])
-        return
 
     def getHolidayIdList(self):
         return self.holidayIdList
@@ -245,4 +239,3 @@ class NewsManager(DistributedObject.DistributedObject):
         self.multiplyClothingPrices(factor)
         self.multiplyJewelryPrices(factor)
         self.multiplyBarberPrices(factor)
-# okay decompiling .\pirates\ai\NewsManager.pyc

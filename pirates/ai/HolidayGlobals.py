@@ -1,51 +1,65 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.ai.HolidayGlobals
 from pirates.ai.HolidayDates import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 Month = Enum('JANUARY, FEBRUARY, MARCH, APRIL,               MAY, JUNE, JULY, AUGUST, SEPTEMBER,               OCTOBER, NOVEMBER, DECEMBER', 1)
 Day = Enum('MONDAY, TUESDAY, WEDNESDAY, THURSDAY,             FRIDAY, SATURDAY, SUNDAY')
-holidays = {PiratesGlobals.DOUBLEGOLDHOLIDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-                                    (
-                                     2008, Month.SEPTEMBER, 13, 12, 0, 0), (2008, Month.SEPTEMBER, 13, 15, 0, 0)]), 
-   PiratesGlobals.DOUBLEGOLDHOLIDAYPAID: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-                                        (
-                                         2008, Month.SEPTEMBER, 14, 12, 0, 0), (2008, Month.SEPTEMBER, 14, 15, 0, 0)]), 
-   PiratesGlobals.DOUBLEXPHOLIDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-                                  (
-                                   2008, Month.SEPTEMBER, 27, 12, 0, 0), (2008, Month.SEPTEMBER, 27, 15, 0, 0)]), 
-   PiratesGlobals.DOUBLEXPHOLIDAYPAID: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-                                      (
-                                       2008, Month.SEPTEMBER, 28, 12, 0, 0), (2008, Month.SEPTEMBER, 28, 15, 0, 0)]), 
-   PiratesGlobals.FREEHATWEEK: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-                              (
-                               2008, Month.FEBRUARY, 25, 0, 0, 0), (2008, Month.MARCH, 2, 0, 0, 0)]), 
-   PiratesGlobals.SAINTPATRICKSDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-                                   (
-                                    2008, Month.MARCH, 14, 0, 0, 0), (2008, Month.MARCH, 18, 0, 0, 0)]), 
-   PiratesGlobals.MOTHERSDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-                             (
-                              2008, Month.MAY, 10, 0, 0, 0), (2008, Month.MAY, 12, 0, 0, 0)]), 
-   PiratesGlobals.FATHERSDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-                             (
-                              2008, Month.JUNE, 13, 0, 0, 0), (2008, Month.JUNE, 16, 0, 0, 0)]), 
-   PiratesGlobals.FOURTHOFJULY: HolidayDates(HolidayDates.TYPE_YEARLY, [
-                               (
-                                Month.JULY, 3, 18, 0, 0), (Month.JULY, 7, 0, 0, 0)]), 
-   PiratesGlobals.HALFOFFCUSTOMIZATION: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-                                       (
-                                        2008, Month.AUGUST, 14, 0, 0, 0), (2008, Month.AUGUST, 18, 12, 0, 0)]), 
-   PiratesGlobals.ALLACCESSWEEKEND: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-                                   (
-                                    2008, Month.AUGUST, 14, 0, 0, 0), (2008, Month.AUGUST, 18, 12, 0, 0)]), 
-   PiratesGlobals.HALLOWEEN: HolidayDates(HolidayDates.TYPE_YEARLY, [
-                            (
-                             Month.OCTOBER, 31, 3, 0, 0), (Month.NOVEMBER, 3, 0, 0, 0)]), 
-   PiratesGlobals.JOLLYROGERCURSE: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-                                  (
-                                   2008, Month.OCTOBER, 31, 12, 0, 0), (2008, Month.OCTOBER, 31, 12, 30, 0), (2008, Month.OCTOBER, 31, 17, 0, 0), (2008, Month.OCTOBER, 31, 17, 30, 0), (2008, Month.OCTOBER, 31, 20, 0, 0), (2008, Month.OCTOBER, 31, 20, 30, 0), (2008, Month.NOVEMBER, 1, 12, 0, 0), (2008, Month.NOVEMBER, 1, 12, 30, 0), (2008, Month.NOVEMBER, 1, 16, 0, 0), (2008, Month.NOVEMBER, 1, 16, 30, 0), (2008, Month.NOVEMBER, 1, 21, 0, 0), (2008, Month.NOVEMBER, 1, 21, 30, 0), (2008, Month.NOVEMBER, 2, 13, 0, 0), (2008, Month.NOVEMBER, 2, 13, 30, 0), (2008, Month.NOVEMBER, 2, 16, 0, 0), (2008, Month.NOVEMBER, 2, 16, 30, 0), (2008, Month.NOVEMBER, 2, 19, 0, 0), (2008, Month.NOVEMBER, 2, 19, 30, 0)])}
+holidays = {
+    PiratesGlobals.DOUBLEGOLDHOLIDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [
+        (2008, Month.SEPTEMBER, 13, 12, 0, 0), 
+        (2008, Month.SEPTEMBER, 13, 15, 0, 0)]), 
+    PiratesGlobals.DOUBLEGOLDHOLIDAYPAID: HolidayDates(HolidayDates.TYPE_CUSTOM, [
+        (2008, Month.SEPTEMBER, 14, 12, 0, 0), 
+        (2008, Month.SEPTEMBER, 14, 15, 0, 0)]), 
+    PiratesGlobals.DOUBLEXPHOLIDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [
+        (2008, Month.SEPTEMBER, 27, 12, 0, 0), 
+        (2008, Month.SEPTEMBER, 27, 15, 0, 0)]), 
+    PiratesGlobals.DOUBLEXPHOLIDAYPAID: HolidayDates(HolidayDates.TYPE_CUSTOM, [
+        (2008, Month.SEPTEMBER, 28, 12, 0, 0), 
+        (2008, Month.SEPTEMBER, 28, 15, 0, 0)]), 
+    PiratesGlobals.FREEHATWEEK: HolidayDates(HolidayDates.TYPE_CUSTOM, [
+        (2008, Month.FEBRUARY, 25, 0, 0, 0), 
+        (2008, Month.MARCH, 2, 0, 0, 0)]), 
+    PiratesGlobals.SAINTPATRICKSDAY: HolidayDates(HolidayDates.TYPE_YEARLY, [
+        (Month.MARCH, 14, 0, 0, 0), 
+        (Month.MARCH, 18, 0, 0, 0)]), 
+    PiratesGlobals.MOTHERSDAY: HolidayDates(HolidayDates.TYPE_YEARLY, [
+        (Month.MAY, 10, 0, 0, 0), 
+        (Month.MAY, 12, 0, 0, 0)]), 
+    PiratesGlobals.FATHERSDAY: HolidayDates(HolidayDates.TYPE_YEARLY, [
+        (Month.JUNE, 13, 0, 0, 0), 
+        (Month.JUNE, 16, 0, 0, 0)]), 
+    PiratesGlobals.FOURTHOFJULY: HolidayDates(HolidayDates.TYPE_YEARLY, [
+        (Month.JULY, 3, 18, 0, 0), 
+        (Month.JULY, 7, 0, 0, 0)]), 
+    PiratesGlobals.HALFOFFCUSTOMIZATION: HolidayDates(HolidayDates.TYPE_CUSTOM, [
+        (2008, Month.AUGUST, 14, 0, 0, 0), 
+        (2008, Month.AUGUST, 18, 12, 0, 0)]), 
+    PiratesGlobals.ALLACCESSWEEKEND: HolidayDates(HolidayDates.TYPE_CUSTOM, [
+        (2008, Month.AUGUST, 14, 0, 0, 0),
+        (2008, Month.AUGUST, 18, 12, 0, 0)]), 
+    PiratesGlobals.HALLOWEEN: HolidayDates(HolidayDates.TYPE_YEARLY, [
+        (Month.OCTOBER, 31, 3, 0, 0), 
+        (Month.NOVEMBER, 3, 0, 0, 0)]), 
+    PiratesGlobals.JOLLYROGERCURSE: HolidayDates(HolidayDates.TYPE_CUSTOM, [
+        (2008, Month.OCTOBER, 31, 12, 0, 0), 
+        (2008, Month.OCTOBER, 31, 12, 30, 0), 
+        (2008, Month.OCTOBER, 31, 17, 0, 0), 
+        (2008, Month.OCTOBER, 31, 17, 30, 0), 
+        (2008, Month.OCTOBER, 31, 20, 0, 0), 
+        (2008, Month.OCTOBER, 31, 20, 30, 0), 
+        (2008, Month.NOVEMBER, 1, 12, 0, 0), 
+        (2008, Month.NOVEMBER, 1, 12, 30, 0), 
+        (2008, Month.NOVEMBER, 1, 16, 0, 0), 
+        (2008, Month.NOVEMBER, 1, 16, 30, 0), 
+        (2008, Month.NOVEMBER, 1, 21, 0, 0), 
+        (2008, Month.NOVEMBER, 1, 21, 30, 0), 
+        (2008, Month.NOVEMBER, 2, 13, 0, 0), 
+        (2008, Month.NOVEMBER, 2, 13, 30, 0), 
+        (2008, Month.NOVEMBER, 2, 16, 0, 0), 
+        (2008, Month.NOVEMBER, 2, 16, 30, 0), 
+        (2008, Month.NOVEMBER, 2, 19, 0, 0), 
+        (2008, Month.NOVEMBER, 2, 19, 30, 0)])
+}
 holidaysEnglish = {}
 holidaysJapanese = {}
 holidaysGerman = {}
