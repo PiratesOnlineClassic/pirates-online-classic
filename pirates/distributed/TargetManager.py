@@ -88,62 +88,47 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         
         TargetManagerBase.TargetManagerBase.removeTarget(self, nodePathId)
     
-    def takeAim(self, av, skillId = None, ammoSkillId = None):
-        if not self.aimTrav:
-            return None
-        
+    def takeAim(self, av, skillId=None, ammoSkillId=None):
         self.aimTrav.traverse(render)
         numEntries = self.aimQueue.getNumEntries()
         if numEntries == 0:
-            return None
-        
+            return
         self.aimQueue.sortEntries()
         avTeam = av.getTeam()
-        (currentWeaponId, isWeaponDrawn) = av.getCurrentWeapon()
+        currentWeaponId, isWeaponDrawn = av.getCurrentWeapon()
         friendlyWeapon = WeaponGlobals.isFriendlyFireWeapon(currentWeaponId)
         if skillId:
             friendlySkill = WeaponGlobals.isFriendlyFire(skillId, ammoSkillId)
-        
         for i in range(numEntries):
             entry = self.aimQueue.getEntry(i)
             targetColl = entry.getIntoNodePath()
             if targetColl.node().getIntoCollideMask() == PiratesGlobals.BattleAimOccludeBitmask:
                 break
-            
             target = self.getObjectFromNodepath(targetColl)
             if target:
                 targetTeam = target.getTeam()
                 if target.gameFSM.state == 'Death':
                     continue
-                
                 if target.getY(av) < 0:
                     continue
-                
                 if not TeamUtils.damageAllowed(target, localAvatar):
                     if not friendlyWeapon:
                         continue
-                    
                     if skillId and not friendlySkill:
                         continue
-
                 if not self.cr.battleMgr.obeysPirateCode(av, target):
                     localAvatar.guiMgr.showPirateCode()
                     continue
-                
                 return target
-                # what
+            else:
                 continue
-            continue
+        return
 
     def getAimHitPos(self, av):
-        if not self.aimTrav:
-            return None
-        
         self.aimTrav.traverse(render)
         numEntries = self.aimQueue.getNumEntries()
         if numEntries == 0:
-            return None
-        
+            return
         self.aimQueue.sortEntries()
         avTeam = av.getTeam()
         for i in range(numEntries):
@@ -151,21 +136,23 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
             targetColl = entry.getIntoNodePath()
             if targetColl.node().getIntoCollideMask().hasBitsInCommon(PiratesGlobals.BattleAimOccludeBitmask):
                 break
-            
             target = self.getObjectFromNodepath(targetColl)
             if target:
                 targetTeam = target.getTeam()
                 if not TeamUtils.damageAllowed(target, localAvatar):
                     continue
-                elif target.gameFSM.state == 'Death':
-                    continue
-                elif target.getY(av) < 0:
-                    continue
-                
+                else:
+                    if target.gameFSM.state == 'Death':
+                        continue
+                    else:
+                        if target.getY(av) < 0:
+                            continue
                 pos = entry.getSurfacePoint(target)
                 return pos
+            else:
                 continue
-            continue
+
+        return
 
     def setTargetNodePath(self, nodePath):
         self.targetNodePath = nodePath
@@ -315,7 +302,7 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
                     secondaryRange = max(baseRange, blastRange)
                     tolerance = 0
                     if distance <= secondaryRange + tolerance:
-                        self.reticle.setColorScale(1, 0.69999999999999996, 0, self.reticleAlpha)
+                        self.reticle.setColorScale(1, 0.7, 0, self.reticleAlpha)
 
                     if distance <= range + tolerance:
                         self.reticle.setColorScale(1, 0, 0, self.reticleAlpha)
@@ -375,14 +362,14 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
     def getTargetScreenXY(self, target):
         tNodePath = target.attachNewNode('temp')
         distance = camera.getDistance(target)
-        tNodePath.setPos(target, 0, 0, target.getHeight() * 0.66000000000000003)
+        tNodePath.setPos(target, 0, 0, target.getHeight() * 0.6)
         nearVec = self.getNearProjectionPoint(tNodePath)
         nearVec *= base.camLens.getFocalLength() / base.camLens.getNear()
-        render2dX = CLAMP(nearVec[0] / base.camLens.getFilmSize()[0] / 2.0, -0.90000000000000002, 0.90000000000000002)
+        render2dX = CLAMP(nearVec[0] / base.camLens.getFilmSize()[0] / 2.0, -0.9, 0.9)
         aspect2dX = render2dX * base.getAspectRatio()
-        aspect2dZ = CLAMP(nearVec[2] / base.camLens.getFilmSize()[1] / 2.0, -0.80000000000000004, 0.90000000000000002)
+        aspect2dZ = CLAMP(nearVec[2] / base.camLens.getFilmSize()[1] / 2.0, -0.8, 0.9)
         tNodePath.removeNode()
-        return (Vec3(aspect2dX, 0, aspect2dZ), distance)
+        return Vec3(aspect2dX, 0, aspect2dZ), distance
 
     def setWantAimAssist(self, val):
         self.wantAimAssist = True

@@ -284,9 +284,9 @@ class StatusTray(GuiTray.GuiTray):
 
         hpFraction = float(hp) / float(maxHp)
         if hpFraction >= 0.5:
-            barColor = (0.10000000000000001, 0.69999999999999996, 0.10000000000000001, 1)
+            barColor = (0.1, 0.7, 0.1, 1)
         elif hpFraction >= 0.25:
-            barColor = (1.0, 1.0, 0.10000000000000001, 1)
+            barColor = (1.0, 1.0, 0.1, 1)
         else:
             barColor = (1.0, 0.0, 0.0, 1)
         self.hpMeter['barColor'] = barColor
@@ -328,11 +328,11 @@ class StatusTray(GuiTray.GuiTray):
             valueScale = float(hp) / float(maxHp)
             changeScale = float(change) / float(maxHp)
             frameSize = tuple(self.hpMeter['frameSize'])
-            frameRight = float(changeScale * 0.52000000000000002)
-            frameBottom = float(frameSize[2] + 0.0050000000000000001)
-            frameTop = float(frameSize[3] - 0.0050000000000000001)
-            frameLeft = float(valueScale * 0.52000000000000002)
-            frameX = float(0.20499999999999999 + frameLeft) - 0.001
+            frameRight = float(changeScale * 0.52)
+            frameBottom = float(frameSize[2] + 0.005)
+            frameTop = float(frameSize[3] - 0.005)
+            frameLeft = float(valueScale * 0.52)
+            frameX = float(0.205 + frameLeft) - 0.001
             self.hpMeterChange.setPos(frameX + float(self.meterChangeOffset[0]), 0.0, float(self.meterChangeOffset[2]))
             self.hpMeterChange['frameSize'] = (0.0, frameRight, frameBottom, frameTop)
             if self.hpMeterUpGreenIval.isPlaying():
@@ -361,14 +361,14 @@ class StatusTray(GuiTray.GuiTray):
             valueScale = float(hp) / float(maxHp)
             changeScale = float(change) / float(maxHp)
             frameSize = tuple(self.hpMeter['frameSize'])
-            frameRight = float(changeScale * 0.52000000000000002)
-            frameBottom = float(frameSize[2] + 0.0050000000000000001)
-            frameTop = float(frameSize[3] - 0.0050000000000000001)
-            frameLeft = float(valueScale * 0.52000000000000002)
-            frameX = float(0.20499999999999999 + frameLeft) - frameRight
+            frameRight = float(changeScale * 0.5)
+            frameBottom = float(frameSize[2] + 0.05)
+            frameTop = float(frameSize[3] - 0.05)
+            frameLeft = float(valueScale * 0.5)
+            frameX = float(0.2 + frameLeft) - frameRight
             self.hpMeterChange.setPos(frameX + float(self.meterChangeOffset[0]), 0.0, float(self.meterChangeOffset[2]))
-            if frameLeft > 0.52000000000000002:
-                diff = frameLeft - 0.52000000000000002
+            if frameLeft > 0.5:
+                diff = frameLeft - 0.5
                 frameRight = float(frameRight - diff)
 
             self.prevChange = change
@@ -501,7 +501,7 @@ class StatusTray(GuiTray.GuiTray):
         if self.card:
             tex = self.card.find('**/%s' % asset)
             self.skillFrame['image'] = tex
-            self.skillFrame['image_scale'] = 0.074999999999999997
+            self.skillFrame['image_scale'] = 0.075
             self.skillFrame.setPos(-0.105, 0, -0.255)
 
         ts = globalClockDelta.localElapsedTime(timestamp)
