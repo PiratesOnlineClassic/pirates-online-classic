@@ -4,7 +4,7 @@ force-tutorial #t
 
 # Npc:
 want-townfolk #t
-want-enemies #f
+want-enemies #t
 
 # Hotkeys:
 want-dev-hotkeys #f

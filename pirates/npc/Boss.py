@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.npc.Boss
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import DirectObject
 from pandac.PandaModules import *
@@ -23,14 +19,15 @@ class Boss(BossBase):
         self.geometryNode = None
         self.instanceNode = None
         self.effectsNode = None
-        return
 
     def setupBoss(self, isUndead=1):
         if self.instanceNode:
             return
+
         root = self
         if hasattr(self, 'creature'):
             root = self.creature
+
         if root.hasLOD():
             geom = root.getLOD('500')
             if not geom:
@@ -38,15 +35,16 @@ class Boss(BossBase):
             geom = geom.getChild(0)
             while not geom.find('**/weapon*').isEmpty():
                 geom = geom.getChild(0)
-
         else:
             geom = root.getGeomNode().find('**/*actorGeom*')
+            
         parent = root.getGeomNode()
         self.geometryNode = parent.attachNewNode('GeometryNode')
         self.instanceNode = parent.attachNewNode('InstanceNode')
         self.effectsNode = parent.attachNewNode('EffectsNode')
         parent.getChild(0).reparentTo(self.geometryNode)
         geom.instanceTo(self.instanceNode)
+
         mask = 255
         ref = isUndead * 2 + 2
         stencil_A = StencilAttrib.make(1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOReplace, 6, mask, mask)
@@ -55,6 +53,7 @@ class Boss(BossBase):
         self.geometryNode.setAttrib(stencil_A)
         self.instanceNode.setAttrib(stencil_B)
         self.effectsNode.setAttrib(stencil_C)
+
         self.instanceNode.setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.instanceNode.setTransparency(1, 1)
         self.instanceNode.setDepthWrite(0)
@@ -63,13 +62,12 @@ class Boss(BossBase):
         ts.setCombineRgb(ts.CMReplace, ts.CSConstant, ts.COSrcColor)
         ts.setCombineAlpha(ts.CMReplace, ts.CSConstant, ts.COSrcAlpha)
         ts.setColor(Vec4(1, 1, 1, 0.01))
-        image = PNMImage.PNMImage(2, 2)
-        t = Texture.Texture()
+        image = PNMImage(2, 2)
+        t = Texture()
         t.load(image)
         self.instanceNode.setTexture(ts, t)
-        self.instanceNode.getState().getAttrib(3).addOnStage(ts, t)
-        TextureAttrib.makeAllOff().addOnStage(ts, t)
-
+        self.instanceNode.getState().getAttrib(TextureAttrib.getClassType()).addOnStage(ts, t)
+    
     def _getBossModelScale(self):
         return self.bossData['ModelScale']
 
@@ -77,7 +75,7 @@ class Boss(BossBase):
         return EnemyGlobals.getEnemyScale(self, self._getBossModelScale())
 
     def addBossEffect(self, avType):
-        isUndead = avType != AvatarTypes.Navy
+        isUndead = (avType != AvatarTypes.Navy)
         if not self.instanceNode:
             self.setupBoss(isUndead)
         color = Vec4(0.25, 0.8, 0.0, 1.0)
@@ -127,4 +125,3 @@ class Boss(BossBase):
 
 
 EffectModifiers = {AvatarTypes.Undead: [1.0, Point3(-1.3, 0, 0)], AvatarTypes.Navy: [1.0, Point3(-1.3, 0, 0)], AvatarTypes.Alligator: [0.75, Point3(0.75, 0, 0)], AvatarTypes.Bat: [0.6, Point3(0, 0, 0)], AvatarTypes.Crab: [1.0, Point3(0, 0, 0)], AvatarTypes.FlyTrap: [2.5, Point3(2.5, 0, 0)], AvatarTypes.Scorpion: [0.3, Point3(0, 0, 0)], AvatarTypes.Stump: [1.25, Point3(0, 0, 0)], AvatarTypes.Wasp: [0.25, Point3(-0.1, 0, 0)]}
-# okay decompiling .\pirates\npc\Boss.pyc

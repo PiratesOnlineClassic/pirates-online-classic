@@ -1,7 +1,8 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
+from direct.directnotify import DirectNotifyGlobal
 from pirates.battle.DistributedBattleNPCAI import DistributedBattleNPCAI
 from pirates.economy.DistributedShopKeeperAI import DistributedShopKeeperAI
-from direct.directnotify import DirectNotifyGlobal
+from pirates.piratesbase import PiratesGlobals
 
 
 class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
@@ -13,6 +14,21 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
         self.dnaId = ''
         self.shopId = 0
         self.helpId = 0
+
+    def handleRequestInteraction(self, avatar, interactType, instant):
+        if interactType == PiratesGlobals.INTERACT_TYPE_FRIENDLY:
+            
+            self.sendUpdateToAvatarId(avatar.doId, 'triggerInteractShow', [0])
+            self.sendUpdateToAvatarId(avatar.doId, 'offerOptions', [2])
+
+        return self.DENY
+
+    def handleRequestExit(self, avatar):
+        return self.ACCEPT
+
+    def selectOption(self, optionId):
+        if optionId == 0:
+            self.requestExit()
 
     def setDNAId(self, dnaId):
         self.dnaId = dnaId

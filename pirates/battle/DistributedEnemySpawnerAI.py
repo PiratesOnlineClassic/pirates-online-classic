@@ -20,12 +20,20 @@ import random
 
 class DistributedEnemySpawnerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedEnemySpawnerAI')
+    notify.setInfo(True)
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
 
         self.wantTownfolk = config.GetBool('want-townfolk', True)
         self.wantEnemies = config.GetBool('want-enemies', True)
+        self.wantAnimals = config.GetBool('want-animals', True)
+        self.wantNormalBosses = config.GetBool('want-normal-bosses', True)
+        self.wantRandomBosses = config.GetBool('want-random-bosses', True)
+
+        self.randomBosses = []
+        self.randomBossChance = config.GetInt('random-boss-spawn-change', 5)
+        self.ignoreDoubleRandom = config.GetBool('ignore-double-random-bosses', False)
 
         self._enemies = {}
 
@@ -44,7 +52,6 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         return newObj
 
     def __createTownsperon(self, objType, objectData, parent, parentUid, objKey, dynamic):
-<<<<<<< HEAD
         townfolk = DistributedNPCTownfolkAI(self.air)
 
         townfolk.setScale(objectData.get('Scale'))
@@ -96,36 +103,46 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         townfolk.d_setInitZ(townfolk.getZ())
 
         townfolkName = townfolk.getName()
-        print('Generating %s (%s) under zone %d at %s with doId %d' % (townfolk.getName(), objKey, townfolk.zoneId, townfolk.getPos(), townfolk.doId))
+        self.notify.debug('Generating %s (%s) under zone %d on %s at %s with doId %d' % (townfolk.getName(), objKey, townfolk.zoneId, parent.getLocalizerName(), townfolk.getPos(), townfolk.doId))
 
         return townfolk
 
-=======
-        return None
->>>>>>> 45ed8004f13f59c5da6cec5ffeb1ac579bf5dc96
 
     def __createEnemy(self, objType, objectData, parent, parentUid, objKey, dynamic):
-        
+
         spawnable = objectData.get('Spawnables', '')
         if spawnable not in AvatarTypes.NPC_SPAWNABLES:
             self.notify.warning('Failed to spawn %s (%s); Not a valid spawnable.' % (spawnable, objKey))
 
         avatarType = random.choice(AvatarTypes.NPC_SPAWNABLES[spawnable])()
         bossType = avatarType.getRandomBossType()
+        
+        if bossType and self.wantRandomBosses:
+            if random.randint(1, 100) <= self.randomBossChance:
+                if bossType not in self.randomBosses or self.ignoreDoubleRandom:
+                    self.randomBosses.append(bossType)
+                    avatarType = bossType
+            elif config.GetBool('force-random-bosses', False):
+                if bossType not in self.randomBosses or self.ignoreDoubleRandom:
+                    self.randomBosses.append(bossType)
+                    avatarType = bossType
 
         enemyCls = None
         if avatarType.isA(AvatarTypes.Undead):
             if avatarType.getBoss():
                 enemyCls = DistributedBossSkeletonAI
-                return
             else:
                 enemyCls = DistributedNPCSkeletonAI
         elif avatarType.isA(AvatarTypes.TradingCo) or avatarType.isA(AvatarTypes.Navy):
             if avatarType.getBoss():
                 enemyCls = DistributedBossNavySailorAI
-                return
             else:
                 enemyCls = DistributedNPCNavySailorAI
+        elif avatarType.isA(AvatarTypes.LandCreature) or avatarType.isA(AvatarTypes.AirCreature):
+            if avatarType.getBoss():
+                enemyCls = DistributedBossCreatureAI
+            else:
+                enemyCls = DistributedCreatureAI
         else:
             self.notify.warning('Received unknown AvatarType: %s' % avatarType)
             return
@@ -135,15 +152,13 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
             return
 
         enemy = enemyCls(self.air)
-<<<<<<< HEAD
 
-=======
+        enemy.setScale(objectData.get('Scale'))
+        enemy.setUniqueId(objKey)
         enemy.setPos(objectData.get('Pos', (0, 0, 0)))
         enemy.setHpr(objectData.get('Hpr', (0, 0, 0)))
         enemy.setSpawnPosHpr(enemy.getPos(), enemy.getHpr())
-        enemy.setScale(objectData.get('Scale'))
         enemy.setInitZ(enemy.getZ())
->>>>>>> 45ed8004f13f59c5da6cec5ffeb1ac579bf5dc96
 
         if avatarType.getBoss():
             enemy.setUniqueId('')
@@ -193,5 +208,10 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         parent.generateChildWithRequired(enemy, zoneId)
         enemy.d_setInitZ(enemy.getZ())
 
-        print('Generating %s (%s) under zone %d at %s with doId %d' % (enemy.getName(), objKey, enemy.zoneId, enemy.getPos(), enemy.doId))
+        locationName = parent.getLocalizerName()
+        self.notify.debug('Generating %s (%s) under zone %d on %s at %s with doId %d' % (enemy.getName(), objKey, enemy.zoneId, locationName, enemy.getPos(), enemy.doId))
+
+        if avatarType.getBoss():
+            self.notify.info('Spawning boss %s (%s) on %s!' % (enemy.getName(), objKey, locationName))
+
         return enemy

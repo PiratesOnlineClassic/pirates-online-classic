@@ -3,6 +3,7 @@ from direct.distributed.DistributedNodeAI import DistributedNodeAI
 from pirates.piratesbase import PLocalizer
 from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
+from pirates.piratesbase import PLocalizer
 
 class DistributedGameAreaAI(DistributedNodeAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGameAreaAI')
@@ -68,6 +69,12 @@ class DistributedGameAreaAI(DistributedNodeAI):
 
     def getName(self):
         return self.name
+
+    def getLocalizerName(self):
+        name = self.getName()
+        if self.getUniqueId() in PLocalizer.LocationNames:
+            name = PLocalizer.LocationNames[self.getUniqueId()]
+        return name
 
     def d_addSpawnTriggers(self, triggerSpheres):
         self.sendUpdate('addSpawnTriggers', [triggerSpheres])
