@@ -46,6 +46,9 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         elif objType == 'Spawn Node':
             if self.wantEnemies:
                 newObj = self.__createEnemy(objType, objectData, parent, parentUid, objKey, dynamic)
+        elif objType == 'Animal':
+            if self.wantAnimals:
+                newObj = self.__createAnimal(objType, objectData, parent, parentUid, objKey, dynamic)
         else:
             self.notify.warning('Received unknown generate: %s' % objType)
 
@@ -215,3 +218,38 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
             self.notify.info('Spawning boss %s (%s) on %s!' % (enemy.getName(), objKey, locationName))
 
         return enemy
+
+    def __createAnimal(self, objType, objectData, parent, parentUid, objKey, dynamic):
+        species = objectData.get('Species', None)
+        if not species:
+            self.notify.warning('Failed to generate Animal %s; Species was not defined' % objKey)
+            return
+
+        if not hasattr(AvatarTypes, species):
+            self.notify.warning('Failed to generate Animal %s; %s is not a valid species' % (objKey, species))
+            return
+        avatarType = getattr(AvatarTypes, species, AvatarTypes.Chicken)
+
+        animalClass = DistributedAnimalAI
+        if species == 'Seagull':
+            animalClass = DistributedSeagullAI
+
+        animal = animalClass(self.air)
+
+        animal.setScale(objectData.get('Scale'))
+        animal.setUniqueId(objKey)
+        animal.setPos(objectData.get('Pos', (0, 0, 0)))
+        animal.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        animal.setSpawnPosHpr(animal.getPos(), animal.getHpr())
+        animal.setInitZ(animal.getZ())
+
+        animal.setAvatarType(avatarType)
+
+        zoneId = PiratesGlobals.IslandLocalZone
+        parent.generateChildWithRequired(animal, zoneId)
+        animal.d_setInitZ(animal.getZ())
+
+        locationName = parent.getLocalizerName()
+        #print 'Generating %s (%s) under zone %d in %s at %s with doId %d' % (species, objKey, animal.zoneId, locationName, animal.getPos(), animal.doId))
+
+        return animal
