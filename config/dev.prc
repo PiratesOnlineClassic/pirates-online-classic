@@ -5,6 +5,7 @@ force-tutorial #t
 # Npc:
 want-townfolk #t
 want-enemies #t
+want-animals #t
 
 # Hotkeys:
 want-dev-hotkeys #f
