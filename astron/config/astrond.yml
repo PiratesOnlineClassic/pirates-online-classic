@@ -37,7 +37,7 @@ uberdogs:
 
 roles:
     - type: clientagent
-      bind: 127.0.0.1:7198
+      bind: 0.0.0.0:7198
       version: pirates-dev
       client:
        relocate: true

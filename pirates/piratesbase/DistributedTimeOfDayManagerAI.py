@@ -15,8 +15,28 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         self.cycleType = config.GetInt('tod-starting-cycle', TODGlobals.TOD_REGULAR_CYCLE)
         self.startingState = TODGlobals.getStartingState(self.cycleType)
         self.startingTime = globalClockDelta.getFrameNetworkTime(bits=32)
-        self.cycleDuration = TODGlobals.getStateDuration(self.cycleType, self.startingState)
+        self.cycleSpeed = config.GetInt('tod-cycle-duration', int(PiratesGlobals.TOD_CYCLE_DURATION))
+        self.cycleDuration = self.cycleSpeed * TODGlobals.getStateDuration(self.cycleType, self.startingState)
         self.cycleTask = None
+
+    def announceGenerate(self):
+        DistributedObjectAI.announceGenerate(self)
+        self.cycleTask = taskMgr.doMethodLater(1, self._runCycle, self.uniqueName('runCycle'))
+
+    def delete(self):
+        DistributedObjectAI.delete(self)
+        if self.cycleTask:
+            taskMgr.remove(self.cycleTask)
+
+    def _runCycle(self, task):
+        self.cycleDuration -= 1
+
+        if self.cycleDuration <= 0:
+            nextStateId = TODGlobals.getNextStateId(self.cycleType, self.startingState)
+            self.startingState = nextStateId
+            self.cycleDuration = self.cycleSpeed * TODGlobals.getStateDuration(self.cycleType, self.startingState)
+
+        return task.again
    
     def sync(self, cycleType, startingState, startingTime, cycleDuration):
         self.cycleType = cycleType

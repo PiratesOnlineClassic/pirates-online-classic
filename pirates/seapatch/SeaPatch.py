@@ -45,13 +45,15 @@ class SeaPatch(Water):
         patchNode.setWantReflect(0)
         self.patchNP = NodePath(patchNode)
         shader_file_path = None
-        if base.config.GetBool('want-shaders', 1) and base.win and base.win.getGsg() and base.win.getGsg().getShaderModel() >= GraphicsStateGuardian.SM20:
+        if base.config.GetBool('want-shaders', True) and base.win and base.win.getGsg() and base.win.getGsg().getShaderModel() >= GraphicsStateGuardian.SM20:
             patchNode.setWantColor(0)
             shader_directory = 'models/sea/'
             shader_file_name_array = [
              '', 'water008_11.cg', 'water008_20.cg', 'water008_2X.cg']
             shader_model = base.win.getGsg().getShaderModel()
             maximum_shader_model = len(shader_file_name_array) - 1
+            if base.config.GetBool('want-low-end-water', False):
+                maximum_shader_model = 2
             if shader_model > maximum_shader_model:
                 shader_model = maximum_shader_model
             file_name = shader_file_name_array[shader_model]
