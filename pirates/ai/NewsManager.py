@@ -32,7 +32,6 @@ class NewsManager(DistributedObject.DistributedObject):
 
         self.cr.newsManager = None
         DistributedObject.DistributedObject.delete(self)
-        return
 
     def displayMessage(self, messageId):
         message = messages.get(messageId)
@@ -62,7 +61,6 @@ class NewsManager(DistributedObject.DistributedObject):
                 base.localAvatar.guiMgr.messageStack.addModalTextMessage(message, seconds=45, priority=0, color=PiratesGuiGlobals.TextFG14, icon=(HolidayGlobals.getHolidayIcon(holidayId), ''), suffix='_f')
             if chatMessage:
                 base.chatAssistant.receiveGameMessage(chatMessage)
-        return
 
     def startHoliday(self, holidayId):
         if holidayId not in self.holidayIdList:

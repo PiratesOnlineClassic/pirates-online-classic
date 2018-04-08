@@ -1,6 +1,7 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
+from panda3d.core import ConfigVariableList
 from pirates.ai import HolidayGlobals
 from pirates.ai.HolidayDates import HolidayDates
 from pirates.piratesbase import PiratesGlobals, TODGlobals
@@ -23,6 +24,17 @@ class NewsManagerAI(DistributedObjectAI):
         self.__checkHolidays()
         self.holidayCheckTask = taskMgr.doMethodLater(15, self.__checkHolidays, 'checkHolidays')
         self.holdayTimerTask = taskMgr.doMethodLater(15, self.__runHolidayTimer, 'holidayTimerTask')
+
+        # Load holidays from PRC
+        if self.wantHolidays:
+            debugHolidays = ConfigVariableList('debug-holiday')
+            for holiday in debugHolidays:
+                holidaySplit = holiday.split(';')
+
+                holidayId = int(holidaySplit[0])
+                endTime = int(holidaySplit[1])
+
+                self.startHoliday(holidayId, time=endTime)
 
     def delete(self):
         DistributedObjectAI.delete(self) 
