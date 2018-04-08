@@ -16,3 +16,6 @@ disable-blockers #t
 
 # Cartesian Grid:
 visualize-cartesian-grid #f
+
+# Water: 
+want-low-end-water #t
