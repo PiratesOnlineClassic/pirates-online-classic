@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.Twister
 import os
 import random
 
@@ -23,10 +19,9 @@ class Twister(PooledEffect):
         self.psParent.setColorScale(Vec4(1), 1)
         self.psParent.setLightOff()
         self.psParent.setColorScaleOff()
-        basePath = os.path.expandvars('$PIRATES') or './pirates'
         particleSearchPath = DSearchPath()
-        particleSearchPath.appendDirectory(Filename.fromOsSpecific(basePath + '/src/effects'))
-        particleSearchPath.appendDirectory(Filename('etc'))
+        particleSearchPath.appendDirectory(Filename('../resources/phase_2/etc'))
+        particleSearchPath.appendDirectory(Filename('phase_2/etc'))
         particleSearchPath.appendDirectory(Filename('.'))
         pfile = Filename('dust.ptf')
         found = vfs.resolveFilename(pfile, particleSearchPath)
@@ -84,4 +79,3 @@ class Twister(PooledEffect):
         del self.dirt
         self.removeNode()
         PooledEffect.destroy(self, self)
-# okay decompiling .\pirates\effects\Twister.pyc
