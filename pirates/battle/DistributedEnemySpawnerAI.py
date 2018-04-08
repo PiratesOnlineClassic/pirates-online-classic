@@ -49,6 +49,9 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         elif objType == 'Animal':
             if self.wantAnimals:
                 newObj = self.__createAnimal(objType, objectData, parent, parentUid, objKey, dynamic)
+        elif objType == 'Skeleton':
+            if self.wantEnemies and self.wantNormalBosses:
+                newObj = self.__createBossSkeleton(objType, objectData, parent, parentUid, objKey, dynamic)
         else:
             self.notify.warning('Received unknown generate: %s' % objType)
 
@@ -64,23 +67,16 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         townfolk.setSpawnPosHpr(townfolk.getPos(), townfolk.getHpr())
         townfolk.setInitZ(townfolk.getZ())
 
-        animSet = objectData.get('AnimSet', 'default')
-        noticeAnim1 = objectData.get('Notice Animation 1', '')
-        noticeAnim2 = objectData.get('Notice Animation 2', '')
-        greetingAnim = objectData.get('Greeting Animation', '')
-        townfolk.setActorAnims(animSet, noticeAnim1, noticeAnim2, greetingAnim)
+        townfolk.setAnimSet(objectData.get('AnimSet', 'default'))
+        townfolk.setStartState(objectData.get('Start State', 'Idle'))
 
         townfolk.setLevel(int(objectData.get('Level', 0)))
-
         townfolk.setAggroRadius(float(objectData.get('Aggro Radius', 0)))
 
         name = PLocalizer.Unknown
         if objKey in NPCList.NPC_LIST:
             name = NPCList.NPC_LIST[objKey][NPCList.setName]
         townfolk.setName(name)
-
-        if 'Start State' in objectData:
-            townfolk.setStartState(objectData['Start State'])
 
         townfolk.setDNAId(objKey)
         if objectData.get('CustomModel', 'None') != 'None':
@@ -202,8 +198,8 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
             name = PLocalizer.BossNames[avatarType.faction][avatarType.track][avatarType.id][0]
         enemy.setName(name)  
 
-        if 'Start State' in objectData:
-            enemy.setStartState(objectData['Start State'])
+        enemy.setAnimSet(objectData.get('AnimSet', 'default'))
+        enemy.setStartState(objectData.get('Start State', 'Idle'))
 
         self._enemies[objKey] = enemy
 
@@ -250,6 +246,56 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         animal.d_setInitZ(animal.getZ())
 
         locationName = parent.getLocalizerName()
-        #print 'Generating %s (%s) under zone %d in %s at %s with doId %d' % (species, objKey, animal.zoneId, locationName, animal.getPos(), animal.doId))
+        self.notify.debug('Generating %s (%s) under zone %d in %s at %s with doId %d' % (species, objKey, animal.zoneId, locationName, animal.getPos(), animal.doId))
 
         return animal
+
+    def __createBossSkeleton(self, objType, objectData, parent, parentUid, objKey, dynamic):
+        skeleton = DistributedBossSkeletonAI(self.air)
+
+        skeleton.setScale(objectData.get('Scale'))
+        skeleton.setUniqueId(objKey)
+        skeleton.setPos(objectData.get('Pos', (0, 0, 0)))
+        skeleton.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        skeleton.setSpawnPosHpr(skeleton.getPos(), skeleton.getHpr())
+        skeleton.setInitZ(skeleton.getZ())
+
+        avId = objectData.get('AvId', 1)
+        avTrack = objectData.get('AvTrack', 0)
+        avatarType = AvatarType(faction=AvatarTypes.Undead.faction, track=avTrack, id=avId)
+        avatarType = avatarType.getBossType()
+        skeleton.setAvatarType(avatarType)
+        try:
+            skeleton.loadBossData(objKey, avatarType)
+        except:
+            self.notify.warning('Failed to load %s (%s); An error occured while loading boss data' % (objType, objKey))
+            return None
+
+        skeleton.setName(skeleton.bossData['Name'])
+        skeleton.setLevel(skeleton.bossData['Level'] or EnemyGlobals.getRandomEnemyLevel(avatarType))
+
+        enemyHp, enemyMp = EnemyGlobals.getEnemyStats(avatarType, skeleton.getLevel())
+        enemyHp = enemyHp * skeleton.bossData.get('HpScale', 1)
+        enemyMp = enemyMp * skeleton.bossData.get('MpScale', 1)
+
+        skeleton.setMaxHp(enemyHp)
+        skeleton.setHp(skeleton.getMaxHp(), True)
+
+        skeleton.setMaxMojo(enemyMp)
+        skeleton.setMojo(enemyMp)
+
+        weapons = EnemyGlobals.getEnemyWeapons(avatarType, skeleton.getLevel()).keys()
+        skeleton.setCurrentWeapon(weapons[0], False)
+
+        skeleton.setAnimSet(objectData.get('AnimSet', 'default'))
+        skeleton.setStartState(objectData.get('Start State', 'Idle'))
+
+        self._enemies[objKey] = skeleton
+
+        zoneId = PiratesGlobals.IslandLocalZone
+        parent.generateChildWithRequired(skeleton, zoneId)
+
+        locationName = parent.getLocalizerName()
+        self.notify.debug('Generating %s (%s) under zone %d in %s at %s with doId %d' % (skeleton.getName(), objKey, skeleton.zoneId, locationName, skeleton.getPos(), skeleton.doId))
+
+        return skeleton

@@ -74,16 +74,3 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def getInitZ(self):
         return self.initZ
-
-    def setActorAnims(self, animSet, notice1, notice2, greet):
-        self.actorAnims = [animSet, notice1, notice2, greet]
-
-    def d_setActorAnims(self, animSet, notice1, notice2, greet):
-        self.sendUpdate('setActorAnims', [animSet, notice1, notice2, greet])
-
-    def b_setActorAnims(self, animSet, notice1, notice2, greet):
-        self.setActorAnims(animSet, notice1, notice2, greet)
-        self.d_setActorAnims(animSet, notice1, notice2, greet)
-
-    def getActorAnims(self):
-        return self.actorAnims
