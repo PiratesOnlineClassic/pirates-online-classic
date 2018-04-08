@@ -4,7 +4,6 @@ from pirates.movement.AnimationMixer import AnimationMixer
 
 class BipedAnimationMixer(AnimationMixer):
 
-    __module__ = __name__
     NA_INDEX = -1
     IDLE_INDEX = 0
     INPLACE_INDEX_0 = 1
