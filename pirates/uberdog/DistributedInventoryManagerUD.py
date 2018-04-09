@@ -53,20 +53,44 @@ class InventoryFSM(FSM):
             self.manager.air.dbInterface.updateObject(self.manager.air.dbId, self.avatarId, self.manager.air.dclassesByName['DistributedPlayerPirateUD'],
                 {'setInventoryId': (inventoryId,)}, callback=lambda fields: inventorySet(fields, inventoryId))
 
-        accumulators = []
-        #accumulators.append([InventoryType.OverallRep, 0])
+        accumulators = [
+            # Experience
+            [InventoryType.CutlassRep, 0],
+            [InventoryType.PistolRep, 0],
+            [InventoryType.DollRep, 0],
+            [InventoryType.DaggerRep, 0],
+            [InventoryType.GrenadeRep, 0],
+            [InventoryType.WandRep, 0],
+            [InventoryType.CannonRep, 0],
+            [InventoryType.SailingRep, 0],
+        ]
 
         categoryLimits = []
-        #for key, limit in InventoryInit.CategoryLimits.iteritems():
-        #    categoryLimits.append((key, limit))
-
         stackLimits = []
-        #for key, limit in InventoryInit.StackLimits.iteritems():
-        #    stackLimits.append((key, limit))
 
-        startStacks = []
-        #for key, amount in InventoryInit.StackStartsWith.iteritems():
-        #    startStacks.append((key, amount))
+        stacks = [
+            # Weapons
+            [InventoryType.CutlassWeaponL1, 1],
+            [InventoryType.PistolWeaponL1, 1],
+            [InventoryType.MusketWeaponL1, 1],
+            [InventoryType.DaggerWeaponL1, 1],
+            [InventoryType.GrenadeWeaponL1, 1],
+            [InventoryType.DollWeaponL1, 1],
+            [InventoryType.WandWeaponL1, 1],
+
+            # Skills
+            [InventoryType.CutlassHack, 1],
+            [InventoryType.CutlassSlash, 1],
+            [InventoryType.PistolShoot, 1],
+            [InventoryType.PistolLeadShot, 1],
+            [InventoryType.DollAttune, 1],
+            [InventoryType.DollPoke, 1],
+            [InventoryType.DaggerCut, 1],
+            [InventoryType.DaggerSwipe, 1],
+            [InventoryType.StaffBlast, 1],
+            [InventoryType.StaffSoulFlay, 1],
+            [InventoryType.GrenadeThrow, 1],
+        ]
 
         fields = {
             'setOwnerId': (self.avatarId,),
@@ -74,7 +98,7 @@ class InventoryFSM(FSM):
             'setCategoryLimits': (categoryLimits,),
             'setAccumulators': (accumulators,),
             'setStackLimits': (stackLimits,),
-            'setStacks': (startStacks,)
+            'setStacks': (stacks,)
         }
 
         self.manager.air.dbInterface.createObject(self.manager.air.dbId, self.manager.air.dclassesByName[

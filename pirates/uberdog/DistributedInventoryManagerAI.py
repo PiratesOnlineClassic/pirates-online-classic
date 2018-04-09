@@ -102,38 +102,24 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         inventory.b_setStackLimit(InventoryType.Hp, avatar.getMaxHp())
         inventory.b_setStackLimit(InventoryType.Mojo, avatar.getMaxMojo())
 
-        # Weapons
-        inventory.b_setStack(InventoryType.CutlassWeaponL1, 1)
-        inventory.b_setStack(InventoryType.PistolWeaponL1, 1)
-        inventory.b_setStack(InventoryType.MusketWeaponL1, 1)
-        inventory.b_setStack(InventoryType.DaggerWeaponL1, 1)
-        inventory.b_setStack(InventoryType.GrenadeWeaponL1, 1)
-        inventory.b_setStack(InventoryType.DollWeaponL1, 1)
-        inventory.b_setStack(InventoryType.WandWeaponL1, 1)
+        def inventoryResponse(dclass, fields):
+            if not dclass or not fields:
+                self.notify.debug('Failed to query inventory %d!' % avatarId)
+                return
 
-        # Cutlass Skills
-        inventory.b_setStack(InventoryType.CutlassHack, 1)
-        inventory.b_setStack(InventoryType.CutlassSlash, 1)
+            accumulators, = fields.get('setAccumulators', [])
+            stackLimits, = fields.get('setStackLimits', [])
+            stacks, = fields.get('setStacks', [])
 
-        # Gun Skills
-        inventory.b_setStack(InventoryType.PistolShoot, 1)
-        inventory.b_setStack(InventoryType.PistolLeadShot, 1)
-        # TODO: Add musket and other gun types
+            for accumulator in accumulators:
+                inventory.b_setAccumulator(*accumulator)
 
-        # Doll Skills
-        inventory.b_setStack(InventoryType.DollAttune, 1)
-        inventory.b_setStack(InventoryType.DollPoke, 1)
+            inventory.b_setStackLimits(stackLimits)
 
-        # Dagger Skills
-        inventory.b_setStack(InventoryType.DaggerCut, 1)
-        inventory.b_setStack(InventoryType.DaggerSwipe, 1)
+            for stack in stacks:
+                inventory.b_setStack(*stack)
 
-        # Staff Skills
-        inventory.b_setStack(InventoryType.StaffBlast, 1)
-        inventory.b_setStack(InventoryType.StaffSoulFlay, 1)
+            inventory.d_requestInventoryComplete()
 
-        # Grenade Skills
-        inventory.b_setStack(InventoryType.GrenadeThrow, 1)
-
-        # Request inventory completion
-        inventory.d_requestInventoryComplete()
+        self.air.dbInterface.queryObject(self.air.dbId, inventoryId, callback=inventoryResponse, dclass=\
+            self.air.dclassesByName['DistributedInventoryAI'])
