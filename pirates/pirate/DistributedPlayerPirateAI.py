@@ -140,10 +140,27 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         pass
         
     def spendSkillPoint(self, skillId):
-        pass
+        avatarId = self.air.getAvatarIdFromSender()
+        inventory = simbase.air.inventoryManager.getInventory(avatarId)
+        if inventory:
+            stack = inventory.getStack(skillId)
+            if stack[1] > 0:
+                inventory.b_setStack(stack[0], stack[1] - 1)
+                if stack[0] = InventoryCategory.UnspentMelee:
+                    stack = inventory.getStack(InventoryCategory.CannonShoot)
+                    if not stack:
+                        inventory.b_setStack(InventoryCategory.CannonShoot, 1)
+                    else:
+                        inventory.b_setStack(stack[0], stack[1] + 1)
+                self.spentSkillPoint(skillId)
+            else:
+                self.notify.debug("Player tried to spend invalid skill!")
+        
+    def spentSkillPoint(self, category):
+        self.sendUpdate("spentSkillPoint", [category])
     
     def resetSkillPoints(self, skillId):
-        pass
+        self.sendUpdate("resetSkillPoints", [skillId])
         
     def useTonic(self, tonicId):
         pass
