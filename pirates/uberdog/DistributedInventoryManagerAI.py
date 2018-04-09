@@ -102,6 +102,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         inventory.b_setStackLimit(InventoryType.Hp, avatar.getMaxHp())
         inventory.b_setStackLimit(InventoryType.Mojo, avatar.getMaxMojo())
 
+        # Weapons
         inventory.b_setStack(InventoryType.CutlassWeaponL1, 1)
         inventory.b_setStack(InventoryType.PistolWeaponL1, 1)
         inventory.b_setStack(InventoryType.MusketWeaponL1, 1)
@@ -110,4 +111,29 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         inventory.b_setStack(InventoryType.DollWeaponL1, 1)
         inventory.b_setStack(InventoryType.WandWeaponL1, 1)
 
+        # Cutlass Skills
+        inventory.b_setStack(InventoryType.CutlassHack, 1)
+        inventory.b_setStack(InventoryType.CutlassSlash, 1)
+
+        # Gun Skills
+        inventory.b_setStack(InventoryType.PistolShoot, 1)
+        inventory.b_setStack(InventoryType.PistolLeadShot, 1)
+        # TODO: Add musket and other gun types
+
+        # Doll Skills
+        inventory.b_setStack(InventoryType.DollAttune, 1)
+        inventory.b_setStack(InventoryType.DollPoke, 1)
+
+        # Dagger Skills
+        inventory.b_setStack(InventoryType.DaggerCut, 1)
+        inventory.b_setStack(InventoryType.DaggerSwipe, 1)
+
+        # Staff Skills
+        inventory.b_setStack(InventoryType.StaffBlast, 1)
+        inventory.b_setStack(InventoryType.StaffSoulFlay, 1)
+
+        # Grenade Skills
+        inventory.b_setStack(InventoryType.GrenadeThrow, 1)
+
+        # Request inventory completion
         inventory.d_requestInventoryComplete()

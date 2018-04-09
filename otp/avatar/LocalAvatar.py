@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.avatar.LocalAvatar
 import math
 import random
 import string
@@ -27,6 +23,7 @@ from direct.showbase.PythonUtil import *
 from direct.task import Task
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.nametag.Nametag import Nametag
+from otp.ai.MagicWordGlobal import *
 
 
 class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.DistributedSmoothNode):
@@ -1137,4 +1134,12 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
     def handlePlayerFriendWhisper(self, playerId, charMessage):
         print 'handlePlayerFriendWhisper'
         self.displayWhisperPlayer(playerId, charMessage, WhisperPopup.WTNormal)
-# okay decompiling .\otp\avatar\LocalAvatar.pyc
+
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def rocketMan():
+    if not localAvatar.rocketOn == 0:
+        localAvatar.endRocketJumpMode()
+        return "Disabled Rocket Man."
+    localAvatar.startRocketJumpMode()
+    return 'Enabled Rocket Man.'

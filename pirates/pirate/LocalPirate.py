@@ -136,6 +136,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         self.gmNameTagEnabledLocal = 0
         self.gmNameTagStringLocal = ''
         self.gmNameTagColorLocal = ''
+        self.rocketOn = 0
         if self.gmNameTagAllowed:
             if base.config.GetInt('gm-nametag-enabled', 0):
                 self.gmNameTagEnabledLocal = 1
@@ -148,6 +149,41 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
 
         soundEffects = ['jollyroger_laugh_01.mp3', 'jollyroger_laugh_02.mp3', 'jollyroger_enjoy.mp3', 'jollyroger_submit.mp3', 'jollyroger_joinme.mp3']
         self.jollySfx = loader.loadSfx('audio/' + random.choice(soundEffects))
+
+    def startRocketJumpMode(self):
+        self.oldGravity = None
+        self.accept('space', self.moveUpStart)
+        self.accept('space-up', self.moveUpEnd)
+        self.rocketOn = 1
+
+    def endRocketJumpMode(self):
+        self.moveUpEnd()
+        self.ignore('space')
+        self.ignore('space-up')
+        self.rocketOn = 0
+
+    def moveUpEnd(self):
+        taskMgr.remove('rocketDelayTask')
+        if self.oldGravity != None:
+            if self.oldGravity and 0:
+                self.controlManager.get('walk').lifter.setGravity(self.oldGravity)
+            else:
+                self.controlManager.get('walk').lifter.setGravity(32.173 * 2.0)
+            self.oldGravity = None
+
+    def moveUpStart(self):
+        self.lastJumpTime = None
+        self.jumpStartTime = globalClock.getFrameTime()
+        self.oldGravity = self.controlManager.get('walk').lifter.getGravity()
+        if self.controlManager.get('walk').lifter.isOnGround():
+            taskMgr.doMethodLater(0.5, self.rocketGrav, 'rocketDelayTask')
+        else:
+            self.rocketGrav()
+
+    def rocketGrav(self, task=None):
+        self.controlManager.get('walk').lifter.setGravity(-32.173)
+        if task:
+            return task.done
 
     def sendUpdate(self, *args, **kw):
         if self.isGenerated():
