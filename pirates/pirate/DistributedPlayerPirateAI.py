@@ -135,3 +135,21 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             return
 
         self.b_setCurrentWeapon(currentWeaponId, isWeaponDrawn)
+        
+    def setCurseStatus(self, curseStat):
+        pass
+        
+    def spendSkillPoint(self, skillId):
+        pass
+    
+    def resetSkillPoints(self, skillId):
+        pass
+        
+    def useTonic(self, tonicId):
+        pass
+        
+    def useBestTonic(self):
+        pass
+        
+    def flagFirstDeath(self):
+        pass
