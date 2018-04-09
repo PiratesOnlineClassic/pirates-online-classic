@@ -32,11 +32,13 @@ class MagicWordManager(DistributedObject.DistributedObject):
             magicWord = magicWord[1:]
 
         targetId = target.doId
-        self.sendUpdate('sendMagicWord', [magicWord, targetId])
         if target == base.localAvatar:
             response = spellbook.process(base.localAvatar, target, magicWord)
             if response:
                 self.sendMagicWordResponse(response)
+        else:
+            #TODO: This is most likely incorrect
+            self.sendUpdate('sendMagicWord', [magicWord, targetId])
 
     def sendMagicWordResponse(self, response):
         self.notify.info(response)

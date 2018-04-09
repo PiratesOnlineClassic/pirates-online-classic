@@ -10,7 +10,6 @@ class MagicWordManagerAI(DistributedObjectAI):
 
     def sendMagicWord(self, word, targetId):
         invokerId = self.air.getAvatarIdFromSender()
-
         invoker = self.air.doId2do.get(invokerId)
 
         if invoker.getAdminAccess() <= MINIMUM_MAGICWORD_ACCESS:
