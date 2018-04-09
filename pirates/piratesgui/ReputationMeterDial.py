@@ -1,3 +1,7 @@
+# uncompyle6 version 3.1.1
+# Python bytecode 2.4 (62061)
+# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
+# Embedded file name: pirates.piratesgui.ReputationMeterDial
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
@@ -100,7 +104,7 @@ class ReputationMeterDial(DirectFrame):
             self.meter.meterFaceHalf1.hide()
             self.meter.meterFaceHalf2.hide()
             self.meter.meterFace.setColor(0.1, 0.4, 0.1, 1.0)
-            self.valueLabel.setZ(-0.163)
+            self.valueLabel.setZ(0.03)
             self.showMasterOrnament()
             self.masteredFX()
         else:
@@ -110,7 +114,7 @@ class ReputationMeterDial(DirectFrame):
             self.valueLabel['text'] = '%s / %s' % (leftoverValue, self.max)
             self.valueLabel['text_scale'] = PiratesGuiGlobals.TextScaleLarge
             self.valueLabel['text_fg'] = PiratesGuiGlobals.TextFG2
-            self.valueLabel.setZ(-0.2)
+            self.valueLabel.setZ(0.0)
             self.meter.update(leftoverValue, self.max)
             self.hideMasterOrnament()
             if self.lastLevel == None:
