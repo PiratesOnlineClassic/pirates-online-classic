@@ -127,3 +127,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def getEmote(self):
         return self.emoteId
+
+    def requestCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+
+        if not avatar:
+            return
+
+        self.b_setCurrentWeapon(currentWeaponId, isWeaponDrawn)
