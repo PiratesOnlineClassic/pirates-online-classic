@@ -511,7 +511,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
 
     @report(types=['frameCount', 'args'], dConfigParam='want-map-report')
     def removeFromMap(self):
-        if self.mapName:
+        if self.mapNameand:
             mapPage = localAvatar.guiMgr.mapPage
             mapPage.removeIsland(self.mapName)
 

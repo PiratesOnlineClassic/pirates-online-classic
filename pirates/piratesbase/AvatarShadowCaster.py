@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesbase.AvatarShadowCaster
 from direct.showbase.DirectObject import DirectObject
 from direct.task import Task
 from otp.avatar import ShadowCaster
@@ -23,7 +19,6 @@ class AvatarShadowCaster(DirectObject):
         self.shadowColorIndex = 0
         self.shadowsEnabled = 0
         self.clearColor = VBase4(1, 1, 1, 1)
-        return
 
     def enable(self, fMoreShadows=False):
         self.fMoreShadows = fMoreShadows
@@ -103,7 +98,6 @@ class AvatarShadowCaster(DirectObject):
         ShadowCaster.setGlobalDropShadowFlag(1)
         self.ignore('close_main_window')
         self.ignore('open_main_window')
-        return
 
     def setLightSrc(self, light):
         self.disable()
@@ -143,5 +137,3 @@ class AvatarShadowCaster(DirectObject):
         if self.shadowBuffer:
             base.graphicsEngine.removeWindow(self.shadowBuffer)
             self.shadowBuffer = None
-        return
-# okay decompiling .\pirates\piratesbase\AvatarShadowCaster.pyc

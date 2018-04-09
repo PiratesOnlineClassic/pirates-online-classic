@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pirate.LocalPirate
 import copy
 import math
 import random
@@ -32,8 +28,7 @@ from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
 from otp.speedchat import SCDecoders
 from pandac.PandaModules import *
-from pirates.battle import (BattleSkillDiary, DistributedBattleAvatar,
-                            RangeDetector, WeaponGlobals)
+from pirates.battle import (BattleSkillDiary, DistributedBattleAvatar, RangeDetector, WeaponGlobals)
 from pirates.chat.PChatAssistant import PChatAssistant
 from pirates.chat.PiratesChatManager import PiratesChatManager
 from pirates.economy import EconomyGlobals
@@ -203,22 +198,20 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.d_requestCurrentWeapon(newWeaponId, 1)
             self.l_setCurrentWeapon(newWeaponId, 1)
             self.b_setGameState('Battle')
+        elif not self.isWeaponDrawn and fromWheel:
+            self.d_requestCurrentWeapon(newWeaponId, 1)
+            self.l_setCurrentWeapon(newWeaponId, 1)
+            self.b_setGameState('Battle')
+        elif not self.isWeaponDrawn:
+            self.d_requestCurrentWeapon(newWeaponId, 1)
+            self.l_setCurrentWeapon(newWeaponId, 1)
+            self.b_setGameState('Battle')
+            messenger.send('weaponEquipped')
         else:
-            if not self.isWeaponDrawn and fromWheel:
-                self.d_requestCurrentWeapon(newWeaponId, 1)
-                self.l_setCurrentWeapon(newWeaponId, 1)
-                self.b_setGameState('Battle')
-            else:
-                if not self.isWeaponDrawn:
-                    self.d_requestCurrentWeapon(newWeaponId, 1)
-                    self.l_setCurrentWeapon(newWeaponId, 1)
-                    self.b_setGameState('Battle')
-                    messenger.send('weaponEquipped')
-                else:
-                    self.d_requestCurrentWeapon(newWeaponId, 0)
-                    self.l_setCurrentWeapon(newWeaponId, 0)
-                    self.b_setGameState('LandRoam')
-                    messenger.send('weaponSheathed')
+            self.d_requestCurrentWeapon(newWeaponId, 0)
+            self.l_setCurrentWeapon(newWeaponId, 0)
+            self.b_setGameState('LandRoam')
+            messenger.send('weaponSheathed')
 
     def setCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
         pass
@@ -294,10 +287,10 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             if self.guiMgr and self.guiMgr.mapPage:
                 pos = base.cr.activeWorld.getWorldPos(ship)
                 self.guiMgr.mapPage.addShip(ship.getShipInfo(), pos)
-        else:
-            self.b_clearTeleportFlag(PiratesGlobals.TFOnShip)
-            self.b_clearTeleportFlag(PiratesGlobals.TFNotSameCrew)
-            self.b_clearTeleportFlag(PiratesGlobals.TFSiegeCaptain)
+            return
+        self.b_clearTeleportFlag(PiratesGlobals.TFOnShip)
+        self.b_clearTeleportFlag(PiratesGlobals.TFNotSameCrew)
+        self.b_clearTeleportFlag(PiratesGlobals.TFSiegeCaptain)
 
     @report(types=['deltaStamp', 'module', 'args'], dConfigParam='want-shipboard-report')
     def setActiveShipId(self, shipId):
@@ -348,38 +341,39 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.stopLookAtTarget()
         self.cr.interactionMgr.start()
         DistributedPlayerPirate.setCurrentTarget(self, targetId)
-        return
 
     def delete(self):
         try:
             self.LocalPirate_deleted
+            return
         except:
             self.LocalPirate_deleted = 1
-            self.guiMgr.delete()
-            del self.guiMgr
-            self.cameraFSM.cleanup()
-            del self.cameraFSM
-            del self.currentMouseOver
-            self.currentAimOver = None
-            del self.currentSelection
-            del self.skillDiary
-            self.cr.avatarFriendsManager.reset()
-            DistributedPlayerPirate.delete(self)
-            taskMgr.remove(self.uniqueName('questShow'))
-            taskMgr.remove(self.uniqueName('oceanCheck'))
-            self.currentStoryQuests = []
-            LocalAvatar.delete(self)
-            if self.cloudScudEffect:
-                self.cloudScudEffect.stopLoop()
-                self.cloudScudEffect = None
-            self.questStatus.delete()
-            del self.questStatus
-            self.__cleanupGuildDialog()
-            self.__cleanupMoraleDialog()
-            del base.localAvatar
-            del __builtins__['localAvatar']
-
-        return
+        
+        self.guiMgr.delete()
+        del self.guiMgr
+        self.cameraFSM.cleanup()
+        del self.cameraFSM
+        del self.currentMouseOver
+        self.currentAimOver = None
+        del self.currentSelection
+        del self.skillDiary
+        self.cr.avatarFriendsManager.reset()
+        DistributedPlayerPirate.delete(self)
+        taskMgr.remove(self.uniqueName('questShow'))
+        taskMgr.remove(self.uniqueName('oceanCheck'))
+        self.currentStoryQuests = []
+        LocalAvatar.delete(self)
+        if self.cloudScudEffect:
+            self.cloudScudEffect.stopLoop()
+            self.cloudScudEffect = None
+        self.questStatus.delete()
+        del self.questStatus
+        self.__cleanupGuildDialog()
+        self.__cleanupMoraleDialog()
+        del base.localAvatar
+        base.localAvatar = None
+        del __builtins__['localAvatar']
+        __builtins__['localAvatar'] = None
 
     def targetMgrCreated(self):
         self.startLookAroundTask()
@@ -506,7 +500,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         self.cleanupLocalProjectiles()
         messenger.send('localPirateDisabled')
         DistributedPlayerPirate.disable(self)
-        return
 
     def clearInventoryInterest(self):
         self.removeInterest(self.invInterest, event=self.uniqueName('localAvatar-close-inventory'))
@@ -532,106 +525,76 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         self.equippedWeapons = [0, 0, 0, 0, 0, 0]
         if inventory.getStackQuantity(InventoryType.CutlassWeaponL6) > 0:
             self.equippedWeapons[0] = InventoryType.CutlassWeaponL6
-        else:
-            if inventory.getStackQuantity(InventoryType.CutlassWeaponL5) > 0:
-                self.equippedWeapons[0] = InventoryType.CutlassWeaponL5
-            else:
-                if inventory.getStackQuantity(InventoryType.CutlassWeaponL4) > 0:
-                    self.equippedWeapons[0] = InventoryType.CutlassWeaponL4
-                else:
-                    if inventory.getStackQuantity(InventoryType.CutlassWeaponL3) > 0:
-                        self.equippedWeapons[0] = InventoryType.CutlassWeaponL3
-                    else:
-                        if inventory.getStackQuantity(InventoryType.CutlassWeaponL2) > 0:
-                            self.equippedWeapons[0] = InventoryType.CutlassWeaponL2
-                        else:
-                            if inventory.getStackQuantity(InventoryType.CutlassWeaponL1) > 0:
-                                self.equippedWeapons[0] = InventoryType.CutlassWeaponL1
+        elif inventory.getStackQuantity(InventoryType.CutlassWeaponL5) > 0:
+            self.equippedWeapons[0] = InventoryType.CutlassWeaponL5
+        elif inventory.getStackQuantity(InventoryType.CutlassWeaponL4) > 0:
+            self.equippedWeapons[0] = InventoryType.CutlassWeaponL4
+        elif inventory.getStackQuantity(InventoryType.CutlassWeaponL3) > 0:
+            self.equippedWeapons[0] = InventoryType.CutlassWeaponL3
+        elif inventory.getStackQuantity(InventoryType.CutlassWeaponL2) > 0:
+            self.equippedWeapons[0] = InventoryType.CutlassWeaponL2
+        elif inventory.getStackQuantity(InventoryType.CutlassWeaponL1) > 0:
+            self.equippedWeapons[0] = InventoryType.CutlassWeaponL1
         if inventory.getStackQuantity(InventoryType.PistolWeaponL6) > 0:
             self.equippedWeapons[1] = InventoryType.PistolWeaponL6
-        else:
-            if inventory.getStackQuantity(InventoryType.PistolWeaponL5) > 0:
-                self.equippedWeapons[1] = InventoryType.PistolWeaponL5
-            else:
-                if inventory.getStackQuantity(InventoryType.PistolWeaponL4) > 0:
-                    self.equippedWeapons[1] = InventoryType.PistolWeaponL4
-                else:
-                    if inventory.getStackQuantity(InventoryType.PistolWeaponL3) > 0:
-                        self.equippedWeapons[1] = InventoryType.PistolWeaponL3
-                    else:
-                        if inventory.getStackQuantity(InventoryType.PistolWeaponL2) > 0:
-                            self.equippedWeapons[1] = InventoryType.PistolWeaponL2
-                        else:
-                            if inventory.getStackQuantity(InventoryType.PistolWeaponL1) > 0:
-                                self.equippedWeapons[1] = InventoryType.PistolWeaponL1
+        elif inventory.getStackQuantity(InventoryType.PistolWeaponL5) > 0:
+            self.equippedWeapons[1] = InventoryType.PistolWeaponL5
+        elif inventory.getStackQuantity(InventoryType.PistolWeaponL4) > 0:
+            self.equippedWeapons[1] = InventoryType.PistolWeaponL4
+        elif inventory.getStackQuantity(InventoryType.PistolWeaponL3) > 0:
+            self.equippedWeapons[1] = InventoryType.PistolWeaponL3
+        elif inventory.getStackQuantity(InventoryType.PistolWeaponL2) > 0:
+            self.equippedWeapons[1] = InventoryType.PistolWeaponL2
+        elif inventory.getStackQuantity(InventoryType.PistolWeaponL1) > 0:
+            self.equippedWeapons[1] = InventoryType.PistolWeaponL1
         if inventory.getStackQuantity(InventoryType.DollWeaponL6) > 0:
             self.equippedWeapons[2] = InventoryType.DollWeaponL6
-        else:
-            if inventory.getStackQuantity(InventoryType.DollWeaponL5) > 0:
-                self.equippedWeapons[2] = InventoryType.DollWeaponL5
-            else:
-                if inventory.getStackQuantity(InventoryType.DollWeaponL4) > 0:
-                    self.equippedWeapons[2] = InventoryType.DollWeaponL4
-                else:
-                    if inventory.getStackQuantity(InventoryType.DollWeaponL3) > 0:
-                        self.equippedWeapons[2] = InventoryType.DollWeaponL3
-                    else:
-                        if inventory.getStackQuantity(InventoryType.DollWeaponL2) > 0:
-                            self.equippedWeapons[2] = InventoryType.DollWeaponL2
-                        else:
-                            if inventory.getStackQuantity(InventoryType.DollWeaponL1) > 0:
-                                self.equippedWeapons[2] = InventoryType.DollWeaponL1
+        elif inventory.getStackQuantity(InventoryType.DollWeaponL5) > 0:
+            self.equippedWeapons[2] = InventoryType.DollWeaponL5
+        elif inventory.getStackQuantity(InventoryType.DollWeaponL4) > 0:
+            self.equippedWeapons[2] = InventoryType.DollWeaponL4
+        elif inventory.getStackQuantity(InventoryType.DollWeaponL3) > 0:
+            self.equippedWeapons[2] = InventoryType.DollWeaponL3
+        elif inventory.getStackQuantity(InventoryType.DollWeaponL2) > 0:
+            self.equippedWeapons[2] = InventoryType.DollWeaponL2
+        elif inventory.getStackQuantity(InventoryType.DollWeaponL1) > 0:
+            self.equippedWeapons[2] = InventoryType.DollWeaponL1
         if inventory.getStackQuantity(InventoryType.DaggerWeaponL6) > 0:
             self.equippedWeapons[3] = InventoryType.DaggerWeaponL6
-        else:
-            if inventory.getStackQuantity(InventoryType.DaggerWeaponL5) > 0:
-                self.equippedWeapons[3] = InventoryType.DaggerWeaponL5
-            else:
-                if inventory.getStackQuantity(InventoryType.DaggerWeaponL4) > 0:
-                    self.equippedWeapons[3] = InventoryType.DaggerWeaponL4
-                else:
-                    if inventory.getStackQuantity(InventoryType.DaggerWeaponL3) > 0:
-                        self.equippedWeapons[3] = InventoryType.DaggerWeaponL3
-                    else:
-                        if inventory.getStackQuantity(InventoryType.DaggerWeaponL2) > 0:
-                            self.equippedWeapons[3] = InventoryType.DaggerWeaponL2
-                        else:
-                            if inventory.getStackQuantity(InventoryType.DaggerWeaponL1) > 0:
-                                self.equippedWeapons[3] = InventoryType.DaggerWeaponL1
-        if inventory.getStackQuantity(InventoryType.GrenadeWeaponL6) > 0:
+        elif inventory.getStackQuantity(InventoryType.DaggerWeaponL5) > 0:
+            self.equippedWeapons[3] = InventoryType.DaggerWeaponL5
+        elif inventory.getStackQuantity(InventoryType.DaggerWeaponL4) > 0:
+            self.equippedWeapons[3] = InventoryType.DaggerWeaponL4
+        elif inventory.getStackQuantity(InventoryType.DaggerWeaponL3) > 0:
+            self.equippedWeapons[3] = InventoryType.DaggerWeaponL3
+        elif inventory.getStackQuantity(InventoryType.DaggerWeaponL2) > 0:
+            self.equippedWeapons[3] = InventoryType.DaggerWeaponL2
+        elif inventory.getStackQuantity(InventoryType.DaggerWeaponL1) > 0:
+            self.equippedWeapons[3] = InventoryType.DaggerWeaponL1
+        elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL6) > 0:
             self.equippedWeapons[4] = InventoryType.GrenadeWeaponL6
-        else:
-            if inventory.getStackQuantity(InventoryType.GrenadeWeaponL5) > 0:
-                self.equippedWeapons[4] = InventoryType.GrenadeWeaponL5
-            else:
-                if inventory.getStackQuantity(InventoryType.GrenadeWeaponL4) > 0:
-                    self.equippedWeapons[4] = InventoryType.GrenadeWeaponL4
-                else:
-                    if inventory.getStackQuantity(InventoryType.GrenadeWeaponL3) > 0:
-                        self.equippedWeapons[4] = InventoryType.GrenadeWeaponL3
-                    else:
-                        if inventory.getStackQuantity(InventoryType.GrenadeWeaponL2) > 0:
-                            self.equippedWeapons[4] = InventoryType.GrenadeWeaponL2
-                        else:
-                            if inventory.getStackQuantity(InventoryType.GrenadeWeaponL1) > 0:
-                                self.equippedWeapons[4] = InventoryType.GrenadeWeaponL1
+        if inventory.getStackQuantity(InventoryType.GrenadeWeaponL5) > 0:
+            self.equippedWeapons[4] = InventoryType.GrenadeWeaponL5
+        elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL4) > 0:
+            self.equippedWeapons[4] = InventoryType.GrenadeWeaponL4
+        elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL3) > 0:
+            self.equippedWeapons[4] = InventoryType.GrenadeWeaponL3
+        elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL2) > 0:
+            self.equippedWeapons[4] = InventoryType.GrenadeWeaponL2
+        elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL1) > 0:
+            self.equippedWeapons[4] = InventoryType.GrenadeWeaponL1
         if inventory.getStackQuantity(InventoryType.WandWeaponL6) > 0:
             self.equippedWeapons[5] = InventoryType.WandWeaponL6
-        else:
-            if inventory.getStackQuantity(InventoryType.WandWeaponL5) > 0:
-                self.equippedWeapons[5] = InventoryType.WandWeaponL5
-            else:
-                if inventory.getStackQuantity(InventoryType.WandWeaponL4) > 0:
-                    self.equippedWeapons[5] = InventoryType.WandWeaponL4
-                else:
-                    if inventory.getStackQuantity(InventoryType.WandWeaponL3) > 0:
-                        self.equippedWeapons[5] = InventoryType.WandWeaponL3
-                    else:
-                        if inventory.getStackQuantity(InventoryType.WandWeaponL2) > 0:
-                            self.equippedWeapons[5] = InventoryType.WandWeaponL2
-                        else:
-                            if inventory.getStackQuantity(InventoryType.WandWeaponL1) > 0:
-                                self.equippedWeapons[5] = InventoryType.WandWeaponL1
+        elif inventory.getStackQuantity(InventoryType.WandWeaponL5) > 0:
+            self.equippedWeapons[5] = InventoryType.WandWeaponL5
+        elif inventory.getStackQuantity(InventoryType.WandWeaponL4) > 0:
+            self.equippedWeapons[5] = InventoryType.WandWeaponL4
+        elif inventory.getStackQuantity(InventoryType.WandWeaponL3) > 0:
+            self.equippedWeapons[5] = InventoryType.WandWeaponL3
+        elif inventory.getStackQuantity(InventoryType.WandWeaponL2) > 0:
+            self.equippedWeapons[5] = InventoryType.WandWeaponL2
+        elif inventory.getStackQuantity(InventoryType.WandWeaponL1) > 0:
+            self.equippedWeapons[5] = InventoryType.WandWeaponL1
         if not self.currentWeaponId:
             self.currentWeaponId = self.equippedWeapons[0]
         self.guiMgr.setEquippedWeapons(self.equippedWeapons)
@@ -666,14 +629,14 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     def toggleAutoRun(self):
         if self.enableAutoRun:
             self.stopAutoRun()
-        else:
-            self.startAutoRun()
+            return
+        self.startAutoRun()
 
     def toggleTurbo(self):
         if self.__turboOn:
             self.__turboOn = 0
-        else:
-            self.__turboOn = 1
+            return
+        self.__turboOn = 1
 
     def getTurbo(self):
         return self.__turboOn
@@ -683,9 +646,9 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             if self.__marioOn:
                 self.__marioOn = 0
                 self.setSwiftness(1.0)
-            else:
-                self.__marioOn = 1
-                self.setSwiftness(6.0)
+                return
+            self.__marioOn = 1
+            self.setSwiftness(6.0)
 
     def getMario(self):
         return self.__marioOn
@@ -804,7 +767,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         strPos = '\nMaya Pos: \n%.1f, %.1f, %.1f' % (pos[0], pos[2], -pos[1]) + '\nPanda Pos: \n%.1f, %.1f, %.1f' % (pos[0], pos[1], pos[2]) + '\nH: %.1f' % hpr[0] + '\nModel: %s' % model + '\nTexture: %s, Terrain: %s, Avatar: %s' % (base.options.getTextureScaleString(), base.options.getGameOptionString(base.options.terrain_detail_level), base.options.getGameOptionString(base.options.character_detail_level)) + '\nLoc: (%s, %s)' % (str(parentId), str(zoneId)) + ',\nVer: %s, ' % serverVersion + '\nDistrict: %s' % districtName
         print 'Current position=', strPos.replace('\n', ', ')
         self.setChatAbsolute(strPos, CFThought | CFTimeout)
-        return
 
     def openSpeedChat(self):
         pass
@@ -853,11 +815,11 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     def requestEnterBattle(self):
         if self.gameFSM.state == 'LandRoam':
             self.b_setGameState('Battle')
-        else:
-            if self.gameFSM.state == 'Battle':
-                self.notify.debug('You are already in battle!')
-            else:
-                self.notify.debug('You cannot use weapons now.')
+            return
+        if self.gameFSM.state == 'Battle':
+            self.notify.debug('You are already in battle!')
+            return
+        self.notify.debug('You cannot use weapons now.')
 
     def requestExitBattle(self):
         if self.gameFSM.state == 'Battle':
@@ -899,10 +861,9 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
 
             taskMgr.add(doPrint, 'printAnimBlends')
             print 'togglePrintAnimBlends ON'
-        else:
-            taskMgr.remove('printAnimBlends')
-            print 'togglePrintAnimBlends OFF'
-        return
+            return
+        taskMgr.remove('printAnimBlends')
+        print 'togglePrintAnimBlends OFF'
 
     def toggleOsdAnimBlends(self, enable=None):
         if not hasattr(self, '_osdAnimBlends'):
@@ -918,10 +879,9 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
 
             taskMgr.add(doOsd, 'osdAnimBlends')
             print 'toggleOsdAnimBlends ON'
-        else:
-            taskMgr.remove('osdAnimBlends')
-            print 'toggleOsdAnimBlends OFF'
-        return
+            return
+        taskMgr.remove('osdAnimBlends')
+        print 'toggleOsdAnimBlends OFF'
 
     def toggleAvVis(self):
         self.getLOD('2000').toggleVis()
@@ -939,8 +899,8 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         if context:
             self.notify.debug('adding interest %d: %d %d' % (context.asInt(), parentId, zone))
             self.interestHandles.append([interestTags, context])
-        else:
-            self.notify.warning('Tried to set interest when shard was closed')
+            return
+        self.notify.warning('Tried to set interest when shard was closed')
 
     @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def clearInterest(self, event):
@@ -1054,7 +1014,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.battleTeleportFlagTask = None
         if send:
             self.b_clearTeleportFlag(PiratesGlobals.TFInBattle)
-        return
 
     def setupMovementSounds(self):
         runSand = base.loader.loadSfx('audio/sfx_avatar_run_sandx2.mp3')
@@ -1089,7 +1048,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.curMoveSound = sound
         self.surfaceIndex = surfaceIndex
         self.movementIndex = movementIndex
-        return
 
     def stopSound(self):
         if self.curMoveSound:
@@ -1097,7 +1055,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.curMoveSound = None
             self.surfaceIndex = None
             self.movementIndex = None
-        return
 
     def refreshStatusTray(self):
         if self.isGenerated():
@@ -1113,8 +1070,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     def getConeOriginNode(self):
         if self.cannon:
             return self.cannon.prop.pivot
-        else:
-            return self
+        return self
 
     def composeRequestProjectileSkill(self, skillId, ammoSkillId, posHpr, charge=0):
         timestamp = 0
@@ -1242,7 +1198,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         jail_door_collision.setR(30)
         if not jail_lock.isEmpty():
             jail_lock.stash()
-        return
 
     def beginTrackTarget(self, target, timer=-1):
         self.lookAtTarget = target
@@ -1259,7 +1214,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     def endTrackTarget(self):
         taskMgr.remove('localAvTrackTarget')
         self.lookAtTarget = None
-        return
 
     def startLookAtTarget(self):
         self.stopLookAroundTask()
@@ -1309,8 +1263,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         targetHeading = self.lookAtDummy.getH()
         if targetHeading > -45 and targetHeading < 45:
             return 1
-        else:
-            return 0
+        return 0
 
     def displayWhisper(self, fromAvId, chatString, whisperType):
         if base.cr.avatarFriendsManager.checkIgnored(fromAvId):
@@ -1372,9 +1325,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
                             objRef.handleUseKey()
                         else:
                             taskMgr.doMethodLater(3, objRef.autoTriggerCheck, objRef.uniqueName('autoTriggerCheck'), extraArgs=[])
-                        return
-
-        return
 
     def swapFloorCollideMask(self, oldMask, newMask):
         cMask = self.cFloorNodePath.node().getFromCollideMask()
@@ -1443,15 +1393,15 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         DistributedPlayerPirate.setGuildId(self, guildId)
         if self.guildId:
             self.chatMgr.enableGuildChat()
-        else:
-            self.chatMgr.disableGuildChat()
+            return
+        self.chatMgr.disableGuildChat()
 
     def setBandId(self, bandmanager, bandId):
         DistributedPlayerPirate.setBandId(self, bandmanager, bandId)
         if self.BandId:
             self.chatMgr.enableCrewChat()
-        else:
-            self.chatMgr.disableCrewChat()
+            return
+        self.chatMgr.disableCrewChat()
 
     def setSiegeTeam(self, team):
         self._siegeTeamSV.set(team)
@@ -1482,8 +1432,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
                 self.currentOcean = newOcean
                 self.guiMgr.flashOceanMsg(PLocalizer.OceanZoneNames.get(newOcean))
             return task.again
-        else:
-            return task.done
+        return task.done
 
     def l_setQuestStep(self, questStep):
         DistributedPlayerPirate.l_setQuestStep(self, questStep)
@@ -1495,7 +1444,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         if hasattr(self.guiMgr, 'questPage'):
             if self.guiMgr.questPage is not None:
                 self.guiMgr.questPage.titleList.showTracked(questId)
-        return
 
     @report(types=['deltaStamp', 'args'], dConfigParam=['want-shipboard-report', 'want-teleport-report'])
     def wrtReparentTo(self, *args, **kw):
@@ -1508,9 +1456,9 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         offset = entry.getSurfacePoint(self).getZ()
         if offset < 0.0:
             self.disableWaterEffect()
-        else:
-            speeds = self.controlManager.getSpeeds()
-            self.adjustWaterEffect((offset + 0.15), *speeds)
+            return
+        speeds = self.controlManager.getSpeeds()
+        self.adjustWaterEffect((offset + 0.15), *speeds)
 
     def handleWaterOut(self, entry):
         self.disableWaterEffect()
@@ -1673,7 +1621,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         if self.cloudScudEffect:
             self.cloudScudEffect.stopLoop()
             self.cloudScudEffect = None
-        return
 
     @report(types=['deltaStamp'], prefix='------', dConfigParam='want-teleport-report')
     def teleportCleanupComplete(self, instanceType):
@@ -1884,11 +1831,9 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         if self.moralePopupDialog:
             self.moralePopupDialog.destroy()
             self.moralePopupDialog = None
-        return
 
     def __destroyedMoraleDialog(self):
         self.moralePopupDialog = None
-        return
 
     def guildStatusUpdate(self, guildId, guildName, guildRank):
         self.setGuildId(guildId)
@@ -1915,8 +1860,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         if self.guildPopupDialog:
             self.guildPopupDialog.destroy()
             self.guildPopupDialog = None
-        return
 
     def __destroyedGuildDialog(self):
         self.guildPopupDialog = None
-        return
