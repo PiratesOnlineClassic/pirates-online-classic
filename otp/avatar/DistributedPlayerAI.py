@@ -6,3 +6,10 @@ class DistributedPlayerAI(DistributedAvatarAI):
 
     def __init__(self, air):
         DistributedAvatarAI.__init__(self, air)
+        self.adminAccess = 0
+
+    def setAdminAccess(self, access):
+        self.adminAccess = access
+
+    def getAdminAccess(self):
+        return self.adminAccess

@@ -898,6 +898,11 @@ class LoadAvatarFSM(AvatarOperationFSM):
         datagram.addString(datagramCleanup.getMessage())
         self.csm.air.send(datagram)
 
+        adminAccess = self.account.get('ACCESS_LEVEL', 0)
+        adminAccess = adminAccess - adminAccess % 100
+        self.csm.air.sendActivate(self.avId, 0, 0, self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
+                                           {'setAdminAccess': [adminAccess]})
+
         # setup the avatar's inventory.
         self.csm.air.inventoryManager.initiateInventory(self.avId,
             self.inventorySetup)

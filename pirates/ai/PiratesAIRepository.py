@@ -11,7 +11,7 @@ from pirates.world import WorldGlobals
 from pirates.ai.NewsManagerAI import NewsManagerAI
 from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 from pirates.distributed.DistributedPopulationTrackerAI import DistributedPopulationTrackerAI
-from pirates.ai.PiratesMagicWordManagerAI import PiratesMagicWordManagerAI
+from otp.ai.MagicWordManagerAI import MagicWordManagerAI
 from otp.ai.TimeManagerAI import TimeManagerAI
 from pirates.instance.DistributedTeleportMgrAI import DistributedTeleportMgrAI
 from pirates.piratesbase.DistributedTimeOfDayManagerAI import DistributedTimeOfDayManagerAI
@@ -107,7 +107,7 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.inventoryManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')
 
-        self.magicWords = PiratesMagicWordManagerAI(self)
+        self.magicWords = MagicWordManagerAI(self)
         self.magicWords.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
         self.tradeMgr = TradeManagerAI(self)

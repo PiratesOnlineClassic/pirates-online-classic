@@ -9,6 +9,8 @@ from otp.otpbase import OTPGlobals, OTPLocalizer, OTPRender
 from otp.nametag.Nametag import Nametag
 from otp.nametag.NametagGroup import NametagGroup
 from otp.nametag.NametagConstants import CFSpeech, CFThought, CFTimeout, CFPageButton, CFNoQuitButton, CFQuitButton
+from otp.ai.MagicWordGlobal import *
+from direct.showbase.InputStateGlobal import inputState
 
 
 def reconsiderAllUnderstandable():
@@ -583,4 +585,22 @@ class Avatar(Actor, ShadowCaster):
 
     def loop(self, animName, restart=1, partName=None, fromFrame=None, toFrame=None):
         return Actor.loop(self, animName, restart, partName, fromFrame, toFrame)
-# okay decompiling .\otp\avatar\Avatar.pyc
+
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def run():
+    """
+    Toggles the debug running on/off
+    """
+    inputState.set('debugRunning', inputState.isSet('debugRunning') != True)
+    if inputState.isSet('debugRunning'):
+        return 'Debug running disabled!'
+    return 'Debug running enabled!'
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def oobe():
+    """
+    Toggles the ShowBase Oobe state
+    """
+    base.oobe()
+    return 'Toggled OOBE'
