@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesbase.LoadingScreen
 import random
 
 from panda3d.core import *
@@ -16,23 +12,97 @@ from pirates.reputation import ReputationGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 screenShots = [
- 'models/gui/loadingScreen_01', 'models/gui/loadingScreen_02', 'models/gui/loadingScreen_03', 'models/gui/loadingScreen_04', 'models/gui/loadingScreen_05', 'models/gui/loadingScreen_06', 'models/gui/loadingScreen_07', 'models/gui/loadingScreen_08', 'models/gui/loadingScreen_09', 'models/gui/loadingScreen_10', 'models/gui/loadingScreen_11', 'models/gui/loadingScreen_12', 'models/gui/loadingScreen_13', 'models/gui/loadingScreen_14', 'models/gui/loadingScreen_15', 'models/gui/loadingScreen_16', 'models/gui/loadingScreen_17', 'models/gui/loadingScreen_18', 'models/gui/loadingScreen_19', 'models/gui/loadingScreen_20', 'models/gui/loadingScreen_21', 'models/gui/loadingScreen_22', 'models/gui/loadingScreen_23', 'models/gui/loadingScreen_24', 'models/gui/loadingScreen_25']
-screenShots_Jungles = [
- 'models/gui/loadingScreen_13']
-screenShots_Swamps = [
- 'models/gui/loadingScreen_18']
-screenShots_Caves = [
- 'models/gui/loadingScreen_03', 'models/gui/loadingScreen_04', 'models/gui/loadingScreen_23', 'models/gui/loadingScreen_22']
-areaType_Jungles = {'1161798288.34sdnaik': 0, '1164141722.61sdnaik': 1, '1169592956.59sdnaik': 2, '1165004570.58sdnaik': 3, '1165009873.53sdnaik': 4, '1165009856.72sdnaik': 5, '1167857698.16sdnaik': 6, '1172209955.25sdnaik': 7}
+    'models/gui/loadingScreen_01',
+    'models/gui/loadingScreen_02',
+    'models/gui/loadingScreen_03',
+    'models/gui/loadingScreen_04',
+    'models/gui/loadingScreen_05',
+    'models/gui/loadingScreen_06',
+    'models/gui/loadingScreen_07',
+    'models/gui/loadingScreen_08',
+    'models/gui/loadingScreen_09',
+    'models/gui/loadingScreen_10',
+    'models/gui/loadingScreen_11',
+    'models/gui/loadingScreen_12',
+    'models/gui/loadingScreen_13',
+    'models/gui/loadingScreen_14',
+    'models/gui/loadingScreen_15',
+    'models/gui/loadingScreen_16',
+    'models/gui/loadingScreen_17',
+    'models/gui/loadingScreen_18',
+    'models/gui/loadingScreen_19',
+    'models/gui/loadingScreen_20',
+    'models/gui/loadingScreen_21',
+    'models/gui/loadingScreen_22',
+    'models/gui/loadingScreen_23',
+    'models/gui/loadingScreen_24',
+    'models/gui/loadingScreen_25',
+    ]
+screenShots_Jungles = ['models/gui/loadingScreen_13']
+screenShots_Swamps = ['models/gui/loadingScreen_18']
+screenShots_Caves = ['models/gui/loadingScreen_03',
+                     'models/gui/loadingScreen_04',
+                     'models/gui/loadingScreen_23',
+                     'models/gui/loadingScreen_22']
+areaType_Jungles = {
+    '1161798288.34sdnaik': 0,
+    '1164141722.61sdnaik': 1,
+    '1169592956.59sdnaik': 2,
+    '1165004570.58sdnaik': 3,
+    '1165009873.53sdnaik': 4,
+    '1165009856.72sdnaik': 5,
+    '1167857698.16sdnaik': 6,
+    '1172209955.25sdnaik': 7,
+    }
 areaType_Swamps = {'1169179552.88sdnaik': 0, '1161732578.06sdnaik': 1}
-areaType_Caves = {'1164952144.06sdnaik': 0, '1165001772.05sdnaik': 1, '1158121765.09sdnaik': 2, '1167862588.52sdnaik': 3, '1168057131.73sdnaik': 4, '1164929110.98sdnaik': 5, '1172208344.92sdnaik': 6}
+areaType_Caves = {
+    '1164952144.06sdnaik': 0,
+    '1165001772.05sdnaik': 1,
+    '1158121765.09sdnaik': 2,
+    '1167862588.52sdnaik': 3,
+    '1168057131.73sdnaik': 4,
+    '1164929110.98sdnaik': 5,
+    '1172208344.92sdnaik': 6,
+    }
 screenShot_Dinghy = 'models/gui/loadingScreen_08'
 screenShot_Jail = 'models/gui/loadingScreen_12'
-screenShots_Locations = {'1164135492.81dzlu': ['models/gui/loadingScreen_01'], '1156359855.24bbathen': ['models/gui/loadingScreen_02', 'models/gui/loadingScreen_10'], '1160614528.73sdnaik': ['models/gui/loadingScreen_05'], '1173382404.64sdnaik': ['models/gui/loadingScreen_06'], '1142018473.22dxschafe': ['models/gui/loadingScreen_07'], '1164763706.66sdnaik': ['models/gui/loadingScreen_09'], '1164157132.99dzlu': ['models/gui/loadingScreen_11'], '1159933206.48sdnaik': ['models/gui/loadingScreen_14'], '1173381952.2sdnaik': ['models/gui/loadingScreen_19'], '1150922126.8dzlu': ['models/gui/loadingScreen_16'], '1161282725.84kmuller': ['models/gui/loadingScreen_17'], '1164150392.42dzlu': ['models/gui/loadingScreen_15'], '1156207188.95dzlu': ['models/gui/loadingScreen_20'], '1172209006.11sdnaik': ['models/gui/loadingScreen_22'], '1196970035.53sdnaik': ['models/gui/loadingScreen_24'], '1196970080.56sdnaik': ['models/gui/loadingScreen_25']}
+screenShots_Locations = {
+    '1164135492.81dzlu': ['models/gui/loadingScreen_01'],
+    '1156359855.24bbathen': ['models/gui/loadingScreen_02',
+                             'models/gui/loadingScreen_10'],
+    '1160614528.73sdnaik': ['models/gui/loadingScreen_05'],
+    '1173382404.64sdnaik': ['models/gui/loadingScreen_06'],
+    '1142018473.22dxschafe': ['models/gui/loadingScreen_07'],
+    '1164763706.66sdnaik': ['models/gui/loadingScreen_09'],
+    '1164157132.99dzlu': ['models/gui/loadingScreen_11'],
+    '1159933206.48sdnaik': ['models/gui/loadingScreen_14'],
+    '1173381952.2sdnaik': ['models/gui/loadingScreen_19'],
+    '1150922126.8dzlu': ['models/gui/loadingScreen_16'],
+    '1161282725.84kmuller': ['models/gui/loadingScreen_17'],
+    '1164150392.42dzlu': ['models/gui/loadingScreen_15'],
+    '1156207188.95dzlu': ['models/gui/loadingScreen_20'],
+    '1172209006.11sdnaik': ['models/gui/loadingScreen_22'],
+    '1196970035.53sdnaik': ['models/gui/loadingScreen_24'],
+    '1196970080.56sdnaik': ['models/gui/loadingScreen_25'],
+    }
+
 
 def getOceanHint():
     oceans = [
-     'Windward_Passage', 'Brigand_Bay', 'Bloody_Bayou', 'Scurvy_Shallows', 'Blackheart_Strait', 'Salty_Flats', 'Mar_de_Plata', 'Smugglers_Run', 'The_Hinterseas', 'Dead_Mans_Trough', 'Leeward_Passage', 'Boiling_Bay', 'Mariners_Reef']
+        'Windward_Passage',
+        'Brigand_Bay',
+        'Bloody_Bayou',
+        'Scurvy_Shallows',
+        'Blackheart_Strait',
+        'Salty_Flats',
+        'Mar_de_Plata',
+        'Smugglers_Run',
+        'The_Hinterseas',
+        'Dead_Mans_Trough',
+        'Leeward_Passage',
+        'Boiling_Bay',
+        'Mariners_Reef',
+        ]
     ocean = random.choice(oceans)
     hints = PLocalizer.HintMap_Locations.get(ocean)
     if hints:
@@ -44,7 +114,8 @@ def getOceanHint():
 
 def getGeneralHint():
     type = random.choice([0, 1])
-    if not Freebooter.getPaidStatus(base.localAvatar.getDoId()) and type == 1:
+    if not Freebooter.getPaidStatus(base.localAvatar.getDoId()) \
+        and type == 1:
         hint = random.choice(PLocalizer.Hints_VelvetRope)
     else:
         hint = random.choice(PLocalizer.Hints_General)
@@ -77,39 +148,36 @@ def getHint(destId=None, level=None):
                 hint = getGeneralHint()
         else:
             hint = getGeneralHint()
-    else:
-        if destId and not level:
-            type = random.choice([0, 1])
-            if type == 0:
-                hints = PLocalizer.HintMap_Locations.get(destId)
-                if hints is None:
-                    hint = getGeneralHint()
-                elif len(hints):
-                    hint = random.choice(hints)
-                else:
-                    hint = getGeneralHint()
+    elif destId and not level:
+        type = random.choice([0, 1])
+        if type == 0:
+            hints = PLocalizer.HintMap_Locations.get(destId)
+            if hints is None:
+                hint = getGeneralHint()
+            elif len(hints):
+                hint = random.choice(hints)
             else:
                 hint = getGeneralHint()
         else:
-            if level and not destId:
-                type = random.choice([0, 1])
-                if type == 0:
-                    hints = PLocalizer.HintMap_Levels.get(level)
-                    if hints is None:
-                        hint = getGeneralHint()
-                    elif len(hints):
-                        hint = random.choice(hints)
-                    else:
-                        hint = getGeneralHint()
-                else:
-                    hint = getGeneralHint()
+            hint = getGeneralHint()
+    elif level and not destId:
+        type = random.choice([0, 1])
+        if type == 0:
+            hints = PLocalizer.HintMap_Levels.get(level)
+            if hints is None:
+                hint = getGeneralHint()
+            elif len(hints):
+                hint = random.choice(hints)
             else:
                 hint = getGeneralHint()
+        else:
+            hint = getGeneralHint()
+    else:
+        hint = getGeneralHint()
     return '%s:  %s' % (PLocalizer.LoadingScreen_Hint, hint)
 
 
 class LoadingScreen(DirectObject.DirectObject):
-    __module__ = __name__
 
     def __init__(self, parent):
         DirectObject.DirectObject.__init__(self)
@@ -125,7 +193,6 @@ class LoadingScreen(DirectObject.DirectObject):
         self.hintLabel = None
         self.hintText = None
         self.title_art = []
-        return
 
     def destroy(self):
         for part in (self.model, self.snapshot):
@@ -145,7 +212,6 @@ class LoadingScreen(DirectObject.DirectObject):
             self.hintLabel.destroy()
         taskMgr.remove('updateLoadingScreen')
         self.ignoreAll()
-        return
 
     def showTitleFrame(self):
         if base.config.GetBool('no-loading-screen', 0):
@@ -162,8 +228,31 @@ class LoadingScreen(DirectObject.DirectObject):
             return
         self.state = True
         self.model = loader.loadModelOnce('models/gui/loading_screen')
-        self.locationLabel = DirectLabel(parent=aspect2dp, relief=None, text='', text_font=PiratesGlobals.getPirateOutlineFont(), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, text_scale=PiratesGuiGlobals.TextScaleTitleJumbo * 0.7, text_align=TextNode.ACenter, text_pos=(0.0, -0.52), textMayChange=1)
-        self.hintLabel = DirectLabel(parent=aspect2dp, relief=None, text='', text_font=PiratesGlobals.getPirateOutlineFont(), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, text_scale=PiratesGuiGlobals.TextScaleTitleJumbo * 0.5, text_align=TextNode.ACenter, text_pos=(0.0, -0.8), text_wordwrap=30, textMayChange=1)
+        self.locationLabel = DirectLabel(
+            parent=aspect2dp,
+            relief=None,
+            text='',
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            text_fg=PiratesGuiGlobals.TextFG1,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_scale=PiratesGuiGlobals.TextScaleTitleJumbo * 0.7,
+            text_align=TextNode.ACenter,
+            text_pos=(0.0, -0.52),
+            textMayChange=1,
+            )
+        self.hintLabel = DirectLabel(
+            parent=aspect2dp,
+            relief=None,
+            text='',
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            text_fg=PiratesGuiGlobals.TextFG1,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_scale=PiratesGuiGlobals.TextScaleTitleJumbo * 0.5,
+            text_align=TextNode.ACenter,
+            text_pos=(0.0, -0.8),
+            text_wordwrap=30,
+            textMayChange=1,
+            )
         self.wheel = self.model.find('**/red_wheel')
         self.title_art.append(self.model.find('**/title_bg'))
         self.title_art.append(self.model.find('**/title_frame'))
@@ -177,13 +266,9 @@ class LoadingScreen(DirectObject.DirectObject):
         else:
             if self.snapshot:
                 self.snapshot.show()
-        self.snapshotFrame = DirectFrame(parent=aspect2dp, relief=DGG.FLAT, frameColor=(0.0,
-                                                                                        0.0,
-                                                                                        0.0,
-                                                                                        1.0), frameSize=(-2.0,
-                                                                                                         2.0,
-                                                                                                         2.0,
-                                                                                                         -2.0))
+        self.snapshotFrame = DirectFrame(parent=aspect2dp,
+                relief=DGG.FLAT, frameColor=(0.0, 0.0, 0.0, 1.0),
+                frameSize=(-2.0, 2.0, 2.0, -2.0))
         self.snapshotFrame.setBin('fixed', 0)
         self.model.reparentTo(aspect2dp, NO_FADE_SORT_INDEX)
         self.locationLabel.reparentTo(aspect2dp, NO_FADE_SORT_INDEX)
@@ -211,10 +296,13 @@ class LoadingScreen(DirectObject.DirectObject):
                 totalReputation = 0
                 inv = base.localAvatar.getInventory()
                 if inv:
-                    for repCat in ReputationGlobals.getReputationCategories():
+                    for repCat in \
+                        ReputationGlobals.getReputationCategories():
                         totalReputation += inv.getReputation(repCat)
 
-                level, leftoverValue = ReputationGlobals.getLevelFromTotalReputation(InventoryType.OverallRep, totalReputation)
+                (level, leftoverValue) = \
+                    ReputationGlobals.getLevelFromTotalReputation(InventoryType.OverallRep,
+                        totalReputation)
                 if totalReputation:
                     hint = getHint(destId, level)
                 else:
@@ -222,7 +310,8 @@ class LoadingScreen(DirectObject.DirectObject):
             else:
                 hint = getHint()
         shipPVPIslands = ['1196970035.53sdnaik', '1196970080.56sdnaik']
-        if destId in shipPVPIslands or ocean and base.localAvatar.getCurrentIsland() in shipPVPIslands:
+        if destId in shipPVPIslands or ocean \
+            and base.localAvatar.getCurrentIsland() in shipPVPIslands:
             hint = getPrivateeringHint()
         self.__setHintText(hint)
 
@@ -257,30 +346,33 @@ class LoadingScreen(DirectObject.DirectObject):
         taskMgr.remove('updateLoadingScreen')
         return
 
-    def showTarget(self, targetId=None, ocean=False, jail=False):
+    def showTarget(
+        self,
+        targetId=None,
+        ocean=False,
+        jail=False,
+        ):
         if base.config.GetBool('no-loading-screen', 0):
             return
         if ocean:
             screenshot = screenShot_Dinghy
+        elif jail:
+            screenshot = screenShot_Jail
         else:
-            if jail:
-                screenshot = screenShot_Jail
-            else:
-                screenshot = screenShots_Locations.get(targetId)
-                if not screenshot:
-                    if areaType_Jungles.has_key(targetId):
-                        screenshot = random.choice(screenShots_Jungles)
-                    elif areaType_Swamps.has_key(targetId):
-                        screenshot = random.choice(screenShots_Swamps)
-                    elif areaType_Caves.has_key(targetId):
-                        screenshot = random.choice(screenShots_Caves)
-                    else:
-                        screenshot = random.choice(screenShots)
+            screenshot = screenShots_Locations.get(targetId)
+            if not screenshot:
+                if areaType_Jungles.has_key(targetId):
+                    screenshot = random.choice(screenShots_Jungles)
+                elif areaType_Swamps.has_key(targetId):
+                    screenshot = random.choice(screenShots_Swamps)
+                elif areaType_Caves.has_key(targetId):
+                    screenshot = random.choice(screenShots_Caves)
                 else:
-                    if len(screenshot) > 1:
-                        screenshot = random.choice(screenshot)
-                    else:
-                        screenshot = screenshot[0]
+                    screenshot = random.choice(screenShots)
+        if len(screenshot) > 1:
+            screenshot = random.choice(screenshot)
+        else:
+            screenshot = screenshot[0]
         self.__setLoadingArt(screenshot)
         if ocean:
             targetName = PLocalizer.LoadingScreen_Ocean
@@ -327,4 +419,3 @@ class LoadingScreen(DirectObject.DirectObject):
     def scheduleHide(self, function):
         base.cr.queueAllInterestsCompleteEvent()
         self.acceptOnce(function, self.hide)
-# okay decompiling .\pirates\piratesbase\LoadingScreen.pyc

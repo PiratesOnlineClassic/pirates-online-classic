@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.movement.AnimationMixer
 import types
 
 from direct.actor.Actor import Actor
@@ -13,7 +9,7 @@ from direct.showbase.PythonUtil import lerp, report
 
 
 class AnimationChannel:
-    __module__ = __name__
+
     notify = DirectNotifyGlobal.directNotify.newCategory('AnimationChannel')
 
     def __init__(self, chanId, loop, actor, partName, checkInFunc):
@@ -123,21 +119,20 @@ class AnimationChannel:
     def moveUpToDown(self, newAnim, animSpanId):
         if newAnim == self.getUpAnimName():
             self.saveWeightState(animSpanId)
+        elif newAnim == self.getDownAnimName():
+            weight = self.getDownAnimWeight()
+            self.setDownAnimName(self.getUpAnimName(), animSpanId)
+            self.setDownAnimWeight(self.getUpAnimWeight(), animSpanId)
+            self.setUpAnimName(newAnim, animSpanId)
+            self.setUpAnimWeight(weight, animSpanId)
+            self.saveWeightState(animSpanId)
         else:
-            if newAnim == self.getDownAnimName():
-                weight = self.getDownAnimWeight()
-                self.setDownAnimName(self.getUpAnimName(), animSpanId)
-                self.setDownAnimWeight(self.getUpAnimWeight(), animSpanId)
-                self.setUpAnimName(newAnim, animSpanId)
-                self.setUpAnimWeight(weight, animSpanId)
-                self.saveWeightState(animSpanId)
-            else:
-                self.clearDownAnim(animSpanId)
-                self.setDownAnimName(self.getUpAnimName(), animSpanId)
-                self.setDownAnimWeight(self.getUpAnimWeight(), animSpanId)
-                self.setUpAnimName(newAnim, animSpanId)
-                self.setUpAnimWeight(0.0, animSpanId)
-                self.saveWeightState(animSpanId)
+            self.clearDownAnim(animSpanId)
+            self.setDownAnimName(self.getUpAnimName(), animSpanId)
+            self.setDownAnimWeight(self.getUpAnimWeight(), animSpanId)
+            self.setUpAnimName(newAnim, animSpanId)
+            self.setUpAnimWeight(0.0, animSpanId)
+            self.saveWeightState(animSpanId)
 
     def saveWeightState(self, animSpanId):
         if self.animSpanId == animSpanId:
@@ -321,14 +316,12 @@ class AnimationMixer:
     def getSectionList(self, sectionName):
         if not sectionName:
             return self.sectionNames
+        elif isinstance(sectionName, types.StringType):
+            return [sectionName]
+        elif isinstance(sectionName, types.ListType):
+            return sectionName
         else:
-            if isinstance(sectionName, types.StringType):
-                return [sectionName]
-            else:
-                if isinstance(sectionName, types.ListType):
-                    return sectionName
-                else:
-                    return []
+            return []
 
     def addIvalToOwnedList(self, ival):
         self.ownedIvals = [ i for i in self.ownedIvals if i.isPlaying() ]
@@ -503,4 +496,3 @@ class AnimationMixer:
         self.actor = None
         self.partMixers = {}
         return
-# okay decompiling .\pirates\movement\AnimationMixer.pyc
