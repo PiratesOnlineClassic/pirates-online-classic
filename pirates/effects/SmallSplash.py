@@ -13,7 +13,7 @@ from PooledEffect import PooledEffect
 
 
 class SmallSplash(PooledEffect, EffectController):
-    __module__ = __name__
+    
     cardScale = 64.0
     splashSfxNames = ('wtrsplash_1.mp3', 'wtrsplash_2.mp3', 'wtrsplash_3.mp3', 'wtrsplash_4.mp3',
                       'wtrsplash_5.mp3', 'wtrsplash_6.mp3', 'wtrsplash_7.mp3', 'wtrsplash_8.mp3')

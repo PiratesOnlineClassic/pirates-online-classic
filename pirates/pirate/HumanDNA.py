@@ -216,7 +216,7 @@ class PirateHead:
 
 
 class PirateBody:
-    __module__ = __name__
+    
 
     def __init__(self, shape=0, height=0.0, color=0):
         self.shape = shape
@@ -238,7 +238,7 @@ class PirateBody:
 
 
 class PirateClothes:
-    __module__ = __name__
+    
 
     def __init__(self, top=0, bot=0, shoe=0, color=0):
         self.shirt = top

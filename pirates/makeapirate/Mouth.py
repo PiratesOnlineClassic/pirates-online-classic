@@ -18,7 +18,7 @@ damper = 0.5
 sliderRange = (-0.5, 0.5)
 
 class Mouth(DirectObject.DirectObject):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('Mouth')
 
     def __init__(self, main=None):

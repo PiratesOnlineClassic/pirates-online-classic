@@ -8,7 +8,7 @@ from pirates.piratesgui import GuiButton, PiratesGuiGlobals
 
 
 class DialogButton(GuiButton.GuiButton):
-    __module__ = __name__
+    
     yesGeom = None
     noGeom = None
     arrowGeom = None

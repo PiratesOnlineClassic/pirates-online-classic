@@ -11,7 +11,7 @@ from pirates.uberdog.UberDogGlobals import (InventoryCategory, InventoryId,
 
 
 class DistributedInventoryBase:
-    __module__ = __name__
+    
     GetInvRequests = {}
     GetInvRequestId2InvId = {}
     InvRequestSerialGen = SerialNumGen()

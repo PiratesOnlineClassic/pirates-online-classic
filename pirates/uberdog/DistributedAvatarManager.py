@@ -7,7 +7,7 @@ from otp.uberdog.OtpAvatarManager import OtpAvatarManager
 
 
 class DistributedAvatarManager(OtpAvatarManager):
-    __module__ = __name__
+    
 
     def sendAvIdList(self, avIds):
         pass

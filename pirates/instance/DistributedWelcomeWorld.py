@@ -11,7 +11,7 @@ from pirates.battle import EnemyGlobals
 from pirates.pvp import PVPGlobals
 
 class DistributedWelcomeWorld(DistributedInstanceBase.DistributedInstanceBase):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedWelcomeWorld')
 
     def announceGenerate(self):

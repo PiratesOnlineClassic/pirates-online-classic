@@ -9,7 +9,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class ClientComboDiary(ComboDiary.ComboDiary):
-    __module__ = __name__
+    
     TOLERANCE = 1.5
     TimingCache = {}
 

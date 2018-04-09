@@ -11,7 +11,7 @@ from pirates.ship import ShipGlobals
 
 
 class Kraken(DistributedNode):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedNode.__init__(self, cr)

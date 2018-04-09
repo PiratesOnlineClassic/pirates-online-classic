@@ -13,7 +13,7 @@ DYN_LIGHT_POINT = 2
 DYN_LIGHT_SPOT = 3
 
 class DynamicLight(NodePath):
-    __module__ = __name__
+    
 
     def __init__(self, type=DYN_LIGHT_POINT, parent=None, pos=None, hpr=None, color=None, atten=None, exp=None, flicker=False, drawIcon=False):
         self.light = None

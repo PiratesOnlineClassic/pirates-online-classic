@@ -15,7 +15,7 @@ from PooledEffect import PooledEffect
 
 
 class DaggerProjectile(PooledEffect, EffectController):
-    __module__ = __name__
+    
 
     def __init__(self, type=None):
         PooledEffect.__init__(self)

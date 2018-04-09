@@ -17,7 +17,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class WeaponBase(WeaponBaseBase.WeaponBaseBase):
-    __module__ = __name__
+    
 
     def __init__(self):
         if __builtins__.has_key('localAvatar'):

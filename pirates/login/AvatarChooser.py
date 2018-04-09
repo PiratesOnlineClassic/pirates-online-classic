@@ -31,7 +31,7 @@ APPROVED = 1
 DENIED = 2
 
 class AvatarChooser(DirectObject, StateData):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('AvatarChooser')
 
     def __init__(self, parentFSM, doneEvent):

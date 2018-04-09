@@ -17,7 +17,7 @@ from pirates.reputation import ReputationGlobals
 
 
 class WeaponPage(InventoryPage.InventoryPage):
-    __module__ = __name__
+    
 
     def __init__(self):
         InventoryPage.InventoryPage.__init__(self)

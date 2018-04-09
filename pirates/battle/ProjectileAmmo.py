@@ -11,7 +11,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class ProjectileAmmo(DirectObject, NodePath):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('ProjectileAmmo')
 
     def __init__(self, cr, ammoSkillId, event, weaponControlled=False):

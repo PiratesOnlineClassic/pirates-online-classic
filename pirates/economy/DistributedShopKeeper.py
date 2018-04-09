@@ -25,7 +25,7 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class DistributedShopKeeper:
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedShopKeeper')
     shopCoins = None
     barberCoin = None

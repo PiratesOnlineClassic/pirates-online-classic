@@ -13,7 +13,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class CrewMatchInviteeButton(RequestButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -21,7 +21,7 @@ class CrewMatchInviteeButton(RequestButton):
 
 
 class CrewMatchInvitee(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('CrewMatchInvitee')
 
     def __init__(self, avId, avName, location, initialRequest=False, crewType=1):

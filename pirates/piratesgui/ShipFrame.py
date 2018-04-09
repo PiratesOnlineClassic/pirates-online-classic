@@ -11,7 +11,7 @@ from pirates.ship.ShipMeter import ShipMeter
 
 
 class ShipFrame(DirectFrame):
-    __module__ = __name__
+    
     logos = None
 
     def __init__(self, parent, **kw):

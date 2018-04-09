@@ -11,7 +11,7 @@ from pirates.ship import DistributedShip
 
 
 class DistributedPVPShipBattle(DistributedPVPInstance):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedPVPShipBattle')
 
     def __init__(self, cr):

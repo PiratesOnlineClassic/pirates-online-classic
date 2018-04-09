@@ -29,7 +29,7 @@ from WeaponBase import WeaponBase
 
 
 class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractive):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedWeapon')
 
     def __init__(self, cr):

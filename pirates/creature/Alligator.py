@@ -8,7 +8,7 @@ from pirates.creature.Creature import Creature
 
 
 class Alligator(Creature):
-    __module__ = __name__
+    
     ModelInfo = ('models/char/alligator_hi', 'models/char/alligator_')
     SfxNames = dict(Creature.SfxNames)
     SfxNames.update({'death': 'sfx_alligator_death.mp3', 'pain': 'sfx_alligator_flinch_left.mp3'})
@@ -17,7 +17,7 @@ class Alligator(Creature):
      ('idle', 'idle'), ('walk', 'walk'), ('run', 'run'), ('swim', 'swim'), ('swim_alt', 'swim_alt'), ('pull_back', 'pull_back'), ('pain', 'pull_back'), ('attack_left', 'attack_left'), ('attack_right', 'attack_right'), ('attack_straight', 'attack_straight'), ('flinch_left', 'flinch_left'), ('flinch_right', 'flinch_right'), ('death', 'death'))
 
     class AnimationMixer(Creature.AnimationMixer):
-        __module__ = __name__
+        
         notify = DirectNotifyGlobal.directNotify.newCategory('AlligatorAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION

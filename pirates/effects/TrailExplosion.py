@@ -12,7 +12,7 @@ from PooledEffect import PooledEffect
 
 
 class TrailExplosion(PooledEffect, EffectController):
-    __module__ = __name__
+    
     trailsVel = [
      [
       Vec3(150, -50, 100), Vec3(-150, -50, 100), Vec3(0, 150, 100)], [Vec3(120, 120, 100), Vec3(120, -120, 100), Vec3(-120, 120, 100), Vec3(-120, -120, 100)], [Vec3(0, 150, 100), Vec3(140, 30, 100), Vec3(-140, 30, 100), Vec3(30, -60, 100), Vec3(-30, -60, 100)]]

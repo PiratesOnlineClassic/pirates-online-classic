@@ -12,7 +12,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class BattleManagerBase:
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManager')
     PirateCodeWeapons = (
      InventoryType.PistolWeaponL1, InventoryType.PistolWeaponL2, InventoryType.PistolWeaponL3, InventoryType.PistolWeaponL4, InventoryType.PistolWeaponL5, InventoryType.PistolWeaponL6, InventoryType.MusketWeaponL1, InventoryType.MusketWeaponL2, InventoryType.MusketWeaponL3)

@@ -11,7 +11,7 @@ from PooledEffect import PooledEffect
 
 
 class ExplosionTip(PooledEffect, EffectController):
-    __module__ = __name__
+    
     NUM_PARTS = 10
 
     def __init__(self):

@@ -14,7 +14,7 @@ from pirates.piratesgui import GuiTray, PiratesGuiGlobals
 
 
 class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedDiceGame.DistributedDiceGame.__init__(self, cr, numdice=5, public=0, name="Liar's Dice")

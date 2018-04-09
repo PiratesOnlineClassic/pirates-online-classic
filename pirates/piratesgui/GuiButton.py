@@ -15,7 +15,7 @@ from pirates.piratesgui.BorderFrame import BorderFrame
 
 
 class GuiButton(DirectButton):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('GuiButton')
     genericButton = None
 

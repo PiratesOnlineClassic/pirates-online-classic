@@ -438,7 +438,7 @@ def ExactRingMatch(maxSlot, xc, yc):
 
 
 class RadialMenu:
-    __module__ = __name__
+    
     SkillIcons = None
 
     def __init__(self, rep, weaponMode):
@@ -636,7 +636,7 @@ class RadialMenu:
 
 
 class SkillTray:
-    __module__ = __name__
+    
     SkillIcons = None
     MeterFrame = None
 

@@ -43,7 +43,7 @@ ROTATE = 4
 COLOR = 5
 
 class TattooGUI(DirectFrame, StateData.StateData):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('TattooGUI')
 
     def __init__(self, main=None):

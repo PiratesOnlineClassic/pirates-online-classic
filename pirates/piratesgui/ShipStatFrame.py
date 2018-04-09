@@ -11,7 +11,7 @@ from pirates.piratesgui.ShipSnapshot import ShipSnapshot
 
 
 class ShipStatFrame(BorderFrame):
-    __module__ = __name__
+    
 
     def __init__(self, parent, shipOV=None, shipName='', shipClass=0, mastInfo=[], hp=0, maxHp=0, sp=0, maxSp=0, cargo=0, maxCargo=0, crew=0, maxCrew=0, adventureTime=0, **kw):
         optiondefs = (

@@ -14,7 +14,7 @@ from pirates.world import WorldGlobals
 
 
 class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedNPCToy')
 
     def __init__(self, cr):

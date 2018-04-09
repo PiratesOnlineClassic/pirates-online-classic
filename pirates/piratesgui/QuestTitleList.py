@@ -15,7 +15,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class QuestTitleNode:
-    __module__ = __name__
+    
 
     def __init__(self, questDNA):
         self.questDNA = questDNA
@@ -37,7 +37,7 @@ class QuestTitleNode:
 
 
 class QuestTitleList(DirectScrolledFrame):
-    __module__ = __name__
+    
     HeadingFrameColor = (
      (0, 0, 0, 0), (0.45, 0.35, 0.15, 0.4), (0.55, 0.45, 0.25, 0.4))
     SelectedFrameColor = (

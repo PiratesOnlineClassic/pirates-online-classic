@@ -14,7 +14,7 @@ from pirates.world.ZoneLOD import ZoneLOD
 
 
 class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
-    __module__ = __name__
+    
 
     def __init__(self, name, zoneRadii, questStep):
         zoneRadii += [1000000]

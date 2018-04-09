@@ -9,7 +9,7 @@ from bisect import bisect_left
 
 
 class WhiteList:
-    __module__ = __name__
+    
 
     def __init__(self, wordlist):
         self.words = []

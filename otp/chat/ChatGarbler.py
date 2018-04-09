@@ -9,7 +9,7 @@ from otp.otpbase import OTPLocalizer
 
 
 class ChatGarbler:
-    __module__ = __name__
+    
 
     def garble(self, avatar, message):
         newMessage = ''

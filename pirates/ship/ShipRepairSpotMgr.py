@@ -8,7 +8,7 @@ from pirates.ship.ShipRepairSpotMgrBase import ShipRepairSpotMgrBase
 
 
 class ShipRepairSpotMgr(ShipRepairSpotMgrBase):
-    __module__ = __name__
+    
 
     def __init__(self, cr, shipId):
         ShipRepairSpotMgrBase.__init__(self)

@@ -8,7 +8,7 @@ from direct.showbase.PythonUtil import pivotScalar, rad90, rad270, reduceAngle
 
 
 class ShipRockerOffState:
-    __module__ = __name__
+    
 
     def getRollAngle(self):
         return 0.0
@@ -21,7 +21,7 @@ class ShipRockerOffState:
 
 
 class ShipRockerImpactState:
-    __module__ = __name__
+    
 
     def set(self, timebase, duration, startRoll, targetRoll):
         self.timebase = timebase
@@ -48,7 +48,7 @@ class ShipRockerImpactState:
 
 
 class ShipRockerRollState:
-    __module__ = __name__
+    
 
     def set(self, timebase, duration, timeScale, amplitude, thetaBase):
         self.timebase = timebase
@@ -81,7 +81,7 @@ class ShipRockerRollState:
 
 
 class ShipRocker:
-    __module__ = __name__
+    
     DefMaxRoll = 15.0
     DefFakeMass = 1.0
 

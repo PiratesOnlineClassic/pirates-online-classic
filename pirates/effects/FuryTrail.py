@@ -13,7 +13,7 @@ from PooledEffect import PooledEffect
 
 
 class FuryTrail(PooledEffect, EffectController):
-    __module__ = __name__
+    
     faceCardScale = 64.0
     cardScale = 128.0
 

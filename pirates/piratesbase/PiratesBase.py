@@ -37,7 +37,7 @@ except ImportError:
 
 
 class PiratesBase(OTPBase):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesBase')
     lowMemoryStreamAudio = ConfigVariableBool('low-memory-stream-audio', True)
     resolution_table = [

@@ -5,7 +5,7 @@
 
 
 class PlayerBase:
-    __module__ = __name__
+    
 
     def atLocation(self, locationId):
         return True

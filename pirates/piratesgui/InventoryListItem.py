@@ -17,7 +17,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class InventoryListItem(DirectButton):
-    __module__ = __name__
+    
     width = 0
     height = 0
     guiLoaded = False

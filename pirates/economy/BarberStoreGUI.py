@@ -24,7 +24,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 FACE_CAMERA = 0
 
 class BarberStoreTab(LeftTab):
-    __module__ = __name__
+    
 
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None))
@@ -35,7 +35,7 @@ class BarberStoreTab(LeftTab):
 
 
 class BarberStoreTabBar(TabBar):
-    __module__ = __name__
+    
 
     def refreshTabs(self):
         for x, name in enumerate(self.tabOrder):
@@ -57,7 +57,7 @@ class BarberStoreTabBar(TabBar):
 
 
 class BarberStoreGUI(DirectFrame):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('BarberStoreGUI')
     width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.5

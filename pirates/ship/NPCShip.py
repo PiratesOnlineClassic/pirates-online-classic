@@ -9,7 +9,7 @@ from pirates.ship.DistributedShip import DistributedShip
 
 
 class NPCShip(DistributedShip):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedShip.__init__(self, cr)

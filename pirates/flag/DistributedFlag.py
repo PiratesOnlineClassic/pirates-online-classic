@@ -9,7 +9,7 @@ from pandac.PandaModules import *
 
 
 class DistributedFlag(DistributedObject, Flag):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedFlag')
 
     def __init__(self, cr):

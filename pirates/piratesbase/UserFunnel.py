@@ -13,7 +13,7 @@ from pandac.PandaModules import (DocumentSpec, HTTPClient, HTTPCookie,
 notify = directNotify.newCategory('UserFunnel')
 
 class UserFunnel:
-    __module__ = __name__
+    
 
     def __init__(self):
         self.hitboxAcct = 'DM560804E8WD'
@@ -341,7 +341,7 @@ def getVRSFunnelURL():
 
 
 class HitBoxCookie:
-    __module__ = __name__
+    
 
     def __init__(self):
         self.ieCookieDir = os.getenv('USERPROFILE') + '\\Cookies'

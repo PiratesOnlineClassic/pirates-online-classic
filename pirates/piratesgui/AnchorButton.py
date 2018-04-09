@@ -9,7 +9,7 @@ from pirates.piratesgui import BlinkButton, PiratesGuiGlobals
 
 
 class AnchorButton(BlinkButton.BlinkButton):
-    __module__ = __name__
+    
 
     def __init__(self, hotkeys=(), hotkeyLabel=None, helpText=PLocalizer.AnchorButtonHelp, parent=None, **kw):
         card = loader.loadModel('models/textureCards/icons')

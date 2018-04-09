@@ -5,7 +5,7 @@
 
 
 class PickANamePattern:
-    __module__ = __name__
+    
 
     def __init__(self, nameStr, gender):
         self._nameStr = nameStr
@@ -85,7 +85,7 @@ class PickANamePattern:
 
 
 class PickANamePatternTwoPartLastName(PickANamePattern):
-    __module__ = __name__
+    
 
     def getNameString(self, pattern, gender):
         name = PickANamePattern.getNameString(self, pattern, gender)

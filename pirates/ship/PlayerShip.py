@@ -14,7 +14,7 @@ from pirates.ship.ShipRepairSpotMgr import ShipRepairSpotMgr
 
 
 class PlayerShip(DistributedShip):
-    __module__ = __name__
+    
     RepairSpotFadeAfter = 2.0
     RepairSpotFadeDur = 3.0
 

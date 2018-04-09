@@ -13,7 +13,7 @@ from pirates.speedchat.PSpeedChatQuestTerminal import *
 
 
 class PSpeedChatQuestMenu(SCMenu):
-    __module__ = __name__
+    
 
     def __init__(self):
         SCMenu.__init__(self)

@@ -57,7 +57,7 @@ def _playHitEffect(pos, hitObject, skillId, task=None):
 
 
 class TutorialInteriorEffects:
-    __module__ = __name__
+    
 
     def __init__(self, startFire=False, cannonDelay=None):
         self._target = render.attachNewNode('target')
@@ -118,7 +118,7 @@ class TutorialInteriorEffects:
 
 
 class PhantomCannon(Cannon):
-    __module__ = __name__
+    
 
     def __init__(self, cr, parent, distance, height, targetNps, island):
         Cannon.__init__(self, cr)
@@ -174,7 +174,7 @@ class PhantomCannon(Cannon):
 
 
 class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedPiratesTutorial')
     PRELOADED_CUTSCENES = []
 

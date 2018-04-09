@@ -8,6 +8,6 @@ from pirates.uberdog.DistributedInventory import DistributedInventory
 
 
 class PirateInventory(DistributedInventory):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('Inventory')
 # okay decompiling .\pirates\uberdog\PirateInventory.pyc

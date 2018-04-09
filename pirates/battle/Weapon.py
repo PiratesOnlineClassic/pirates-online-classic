@@ -8,7 +8,7 @@ from pirates.effects.SmokeCloud import SmokeCloud
 
 
 class Weapon(NodePath):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('Weapon')
     models = {}
     icons = {}

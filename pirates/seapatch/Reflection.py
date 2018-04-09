@@ -8,7 +8,7 @@ from pandac.PandaModules import *
 
 
 class Reflection(DirectObject):
-    __module__ = __name__
+    
     global_reflection = None
 
     @classmethod

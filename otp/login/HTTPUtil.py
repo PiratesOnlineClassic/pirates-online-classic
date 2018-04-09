@@ -6,14 +6,14 @@ from pandac.PandaModules import *
 
 
 class HTTPUtilException(Exception):
-    __module__ = __name__
+    
 
     def __init__(self, what):
         Exception.__init__(self, what)
 
 
 class ConnectionError(HTTPUtilException):
-    __module__ = __name__
+    
 
     def __init__(self, what, statusCode):
         HTTPUtilException.__init__(self, what)
@@ -21,7 +21,7 @@ class ConnectionError(HTTPUtilException):
 
 
 class UnexpectedResponse(HTTPUtilException):
-    __module__ = __name__
+    
 
     def __init__(self, what):
         HTTPUtilException.__init__(self, what)

@@ -8,7 +8,7 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase.PiratesGlobals import *
 
 class ShatterableObject(DirectObject):
-    __module__ = __name__
+    
 
     def __init__(self):
         self.resetPos = []

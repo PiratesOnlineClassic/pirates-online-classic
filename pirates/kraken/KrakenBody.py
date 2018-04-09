@@ -8,7 +8,7 @@ from pirates.kraken.BodyGameFSM import BodyGameFSM
 
 
 class KrakenBody(Body, DistributedCreature):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedCreature.__init__(self, cr)

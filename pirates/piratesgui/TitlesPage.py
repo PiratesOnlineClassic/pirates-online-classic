@@ -16,7 +16,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class TitlePanel(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, parent, titleId, position, panelIndex, titlesPage):
         DirectFrame.__init__(self, parent, pos=position)
@@ -146,7 +146,7 @@ class TitlePanel(DirectFrame):
 
 
 class TitlesPage(InventoryPage.InventoryPage):
-    __module__ = __name__
+    
 
     def __init__(self):
         InventoryPage.InventoryPage.__init__(self)

@@ -26,7 +26,7 @@ def setGlobalDropShadowGrayLevel(grayLevel):
 
 
 class ShadowCaster:
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('ShadowCaster')
 
     def __init__(self, squareShadow=False):

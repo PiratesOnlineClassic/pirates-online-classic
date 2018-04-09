@@ -4,7 +4,7 @@ from pirates.kraken.HolderGameFSM import HolderGameFSM
 
 
 class HolderTentacle(DistributedCreature):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedCreature.__init__(self, cr, Holder())

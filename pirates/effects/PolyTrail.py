@@ -9,7 +9,7 @@ from pandac.PandaModules import *
 
 
 class PolyTrail(NodePath):
-    __module__ = __name__
+    
 
     def __init__(self, root_node_path=None, vertex_list=None, color_list=None, time_window=0.25):
         NodePath.__init__(self, 'PolyTrail')

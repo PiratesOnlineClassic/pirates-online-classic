@@ -15,7 +15,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class DistributedLock(DistributedInteractive.DistributedInteractive):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLock')
 
     def __init__(self, cr):

@@ -7,6 +7,6 @@ from pirates.pirate.BipedAnimationMixer import BipedAnimationMixer
 
 
 class HumanAnimationMixer(BipedAnimationMixer):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('HumanAnimationMixer')
 # okay decompiling .\pirates\pirate\HumanAnimationMixer.pyc

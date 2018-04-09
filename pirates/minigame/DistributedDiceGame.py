@@ -15,7 +15,7 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class DistributedDiceGame(DistributedGameTable.DistributedGameTable):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDiceGame')
     SeatInfo = (
      (

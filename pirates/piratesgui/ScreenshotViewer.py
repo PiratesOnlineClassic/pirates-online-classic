@@ -14,7 +14,7 @@ from pirates.piratesgui.PDialog import PDialog
 
 
 class ScreenshotViewer:
-    __module__ = __name__
+    
 
     def __init__(self):
         self.resetImages()

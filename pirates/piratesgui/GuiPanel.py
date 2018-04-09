@@ -12,7 +12,7 @@ from pirates.piratesgui.BorderFrame import BorderFrame
 
 
 class GuiPanel(BorderFrame):
-    __module__ = __name__
+    
 
     def __init__(self, title, w, h, showClose=True, titleSize=0, modelSuffix='_f', **kw):
         self.width = w

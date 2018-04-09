@@ -18,7 +18,7 @@ PadresLocation = Point3(6700, -22800, 100)
 PadresH = 0.0
 
 class FireworkShowManager:
-    __module__ = __name__
+    
 
     def __init__(self):
         self.showType = None

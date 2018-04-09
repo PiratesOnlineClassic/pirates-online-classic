@@ -8,7 +8,7 @@ from pandac.PandaModules import *
 
 
 class LoginWebPlayTokenAccount(LoginTTAccount.LoginTTAccount):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('LoginWebPlayTokenAccount')
 
     def supportsRelogin(self):

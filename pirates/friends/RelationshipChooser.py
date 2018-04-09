@@ -16,7 +16,7 @@ from pirates.piratesgui import GuiPanel, PirateButtonChain, PiratesGuiGlobals
 
 
 class RelationshipChooser(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('FriendInviter')
 
     def __init__(self, avId, avName, pId=None):

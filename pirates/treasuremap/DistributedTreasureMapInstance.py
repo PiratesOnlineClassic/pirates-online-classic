@@ -11,7 +11,7 @@ from pirates.quest.MiniQuestItemGui import MiniQuestItemGui
 
 
 class DistributedTreasureMapInstance(DistributedInstanceWorld.DistributedInstanceWorld, QuestHolder.QuestHolder, FSM.FSM):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedTreasureMapInstance')
 
     def __init__(self, cr):

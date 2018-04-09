@@ -6,7 +6,7 @@ from pirates.piratesgui.SheetFrame import SheetFrame
 
 
 class ScoreFrame(SheetFrame):
-    __module__ = __name__
+    
 
     def __init__(self, w, h, holder, team, **kw):
         self.team = team

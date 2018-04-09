@@ -8,7 +8,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesbase.PiratesGlobals import *
 
 class DistributedDestructibleObject(DistributedNode.DistributedNode):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedDestructibleObject')
 
     def __init__(self, cr):

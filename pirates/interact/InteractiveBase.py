@@ -17,7 +17,7 @@ PROXIMITY = 0
 MOUSE_OVER = 1
 
 class InteractiveBase(FSM.FSM):
-    __module__ = __name__
+    
     DiskUseColor = None
     DiskDefaultColor = (0, 1, 0, 1)
     DiskWaitingColor = (0, 0, 1, 0.5)

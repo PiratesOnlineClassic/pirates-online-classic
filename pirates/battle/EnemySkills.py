@@ -5,7 +5,7 @@
 
 
 class EnemySkills:
-    __module__ = __name__
+    
     CLAW_RAKE = 2000
     CLAW_STRIKE = 2001
     DUAL_CLAW = 2002

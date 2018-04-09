@@ -13,7 +13,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class WorkMeter(DirectFrame):
-    __module__ = __name__
+    
     Card = None
 
     def __init__(self):

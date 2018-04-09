@@ -13,7 +13,7 @@ from panda3d.core import *
 
 
 class DistributedPlayer(DistributedAvatar.DistributedAvatar, PlayerBase.PlayerBase):
-    __module__ = __name__
+    
     TeleportFailureTimeout = 60.0
     chatGarbler = ChatGarbler.ChatGarbler()
 

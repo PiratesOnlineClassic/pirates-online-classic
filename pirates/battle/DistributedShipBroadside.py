@@ -39,7 +39,7 @@ distFireSfxNames = [
  'dist_cannon_01.mp3', 'dist_cannon_02.mp3', 'dist_cannon_03.mp3', 'dist_cannon_04.mp3', 'dist_cannon_05.mp3', 'dist_cannon_06.mp3', 'dist_cannon_07.mp3', 'dist_cannon_08.mp3', 'dist_cannon_09.mp3', 'dist_cannon_10.mp3']
 
 class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedShipBroadside')
     localFireSfx = []
     distFireSfx = []

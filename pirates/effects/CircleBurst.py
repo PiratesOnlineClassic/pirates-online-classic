@@ -12,7 +12,7 @@ from PooledEffect import PooledEffect
 
 
 class CircleBurst(PooledEffect, EffectController):
-    __module__ = __name__
+    
 
     def __init__(self):
         PooledEffect.__init__(self)

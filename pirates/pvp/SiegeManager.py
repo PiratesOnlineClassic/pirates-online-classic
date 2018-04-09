@@ -11,7 +11,7 @@ from pirates.speedchat import PSCDecoders
 
 
 class SiegeManager(DistributedObject, SiegeManagerBase):
-    __module__ = __name__
+    
     TeamJoinableChangedEvent = 'PVPTeamJoinableChanged'
 
     def __init__(self, cr):

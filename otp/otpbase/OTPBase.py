@@ -9,7 +9,7 @@ from direct.showbase.ShowBase import ShowBase
 
 
 class OTPBase(ShowBase):
-    __module__ = __name__
+    
 
     def __init__(self):
         ShowBase.__init__(self)

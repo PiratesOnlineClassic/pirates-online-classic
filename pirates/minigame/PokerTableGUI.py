@@ -17,7 +17,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class PokerStatusPanel(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, maxHandCards):
         DirectFrame.__init__(self, parent=base.a2dBackground, relief=DGG.FLAT)
@@ -93,7 +93,7 @@ class PokerStatusPanel(DirectFrame):
 
 
 class PokerTellMeter(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self):
         DirectFrame.__init__(self, relief=None)
@@ -102,7 +102,7 @@ class PokerTellMeter(DirectFrame):
 
 
 class PokerTableGUI(DirectFrame, TableGUI):
-    __module__ = __name__
+    
     HandPos = (
      Vec3(0, 0, 0.4), Vec3(0.38, 0, 0.33), Vec3(0.65, 0, 0.1), Vec3(0.45, 0, -0.26), Vec3(0, 0, -0.3), Vec3(-0.45, 0, -0.26), Vec3(-0.65, 0, 0.1), Vec3(-0.38, 0, 0.33))
     LocalAvatarGuiIndex = 4

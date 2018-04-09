@@ -9,7 +9,7 @@ from PooledEffect import PooledEffect
 
 
 class Twister(PooledEffect):
-    __module__ = __name__
+    
     particleDummy = None
 
     def __init__(self):

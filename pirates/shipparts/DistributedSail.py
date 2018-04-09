@@ -17,7 +17,7 @@ from pirates.shipparts import DistributedShippart, MastDNA, Sail, SailDNA
 
 
 class DistributedSail(DistributedShippart.DistributedShippart, DistributedDestructibleObject.DistributedDestructibleObject):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedSail')
 
     def __init__(self, cr):

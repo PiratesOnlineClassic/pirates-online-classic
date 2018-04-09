@@ -9,7 +9,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class BattleRandom:
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleRandom')
 
     def __init__(self, avId):

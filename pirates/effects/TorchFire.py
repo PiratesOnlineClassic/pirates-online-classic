@@ -13,7 +13,7 @@ from pirates.piratesgui.GameOptions import Options
 
 
 class TorchFire(EffectController, NodePath):
-    __module__ = __name__
+    
     cardScale = 64.0
 
     def __init__(self, newParent=None):

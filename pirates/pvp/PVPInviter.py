@@ -17,7 +17,7 @@ from pirates.uberdog import UberDogGlobals
 
 
 class PVPInviterButton(RequestButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -25,7 +25,7 @@ class PVPInviterButton(RequestButton):
 
 
 class PVPInviter(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('PVPInviter')
 
     def __init__(self, avId, avName):

@@ -14,7 +14,7 @@ from pirates.swamp.Swamp import Swamp
 
 
 class CaveEffects(EnvironmentEffects.EnvironmentEffects):
-    __module__ = __name__
+    
     WaterCaves = [
      'models/caves/cave_a_', 'models/caves/cave_b_', 'models/caves/cave_barbossa_']
     LavaCaves = [

@@ -11,7 +11,7 @@ from pirates.piratesbase.PiratesGlobals import *
 
 
 class DistributedDestructibleArray(DistributedDestructibleObject.DistributedDestructibleObject):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedDestructibleArray')
 
     def __init__(self, cr):

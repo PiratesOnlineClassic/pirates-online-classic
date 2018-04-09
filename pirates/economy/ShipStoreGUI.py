@@ -15,7 +15,7 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class ShipStoreGUI(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('ShipStoreGUI')
     width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.35

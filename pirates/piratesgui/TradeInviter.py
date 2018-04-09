@@ -15,7 +15,7 @@ from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 
 
 class TradeInviterButton(DirectButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command):
         DirectButton.__init__(self, relief=DGG.RAISED, borderWidth=PiratesGuiGlobals.BorderWidthSmall, pos=(0,
@@ -29,7 +29,7 @@ class TradeInviterButton(DirectButton):
 
 
 class TradeInviter(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('TradeInviter')
 
     def __init__(self, avId, avName):

@@ -19,7 +19,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedPokerTable(DistributedGameTable.DistributedGameTable, PokerBase.PokerBase):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPokerTable')
 
     def __init__(self, cr, evaluatorGame, numRounds):

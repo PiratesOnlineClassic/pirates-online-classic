@@ -8,7 +8,7 @@ from pirates.piratesbase import PLocalizer
 from pirates.effects.FeastFire import FeastFire
 
 class DistributedHolidayBonfire(DistributedHolidayObject):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedHolidayObject.__init__(self, cr, proximityText=PLocalizer.InteractHolidayBonfire)

@@ -11,7 +11,7 @@ from pirates.ship import DistributedShip
 
 
 class PVPGameBattle(PVPGameBase):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('PVPGameBattle')
 
     def __init__(self, cr):

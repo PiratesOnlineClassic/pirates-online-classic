@@ -10,7 +10,7 @@ from pandac.PandaModules import Point3, TextNode
 
 
 class PiratesDownloadWatcher(DownloadWatcher.DownloadWatcher):
-    __module__ = __name__
+    
     positions = [(Point3(1.18333, 0, -0.97333), Point3(1.02333, 0, -0.9867)), (Point3(-0.549997, 0, 0.969997), Point3(-0.71333, 0, 0.95333)), (Point3(-0.636666, 0, 0.686667), Point3(-0.793333, 0, 0.67))]
 
     def __init__(self, phaseNames):

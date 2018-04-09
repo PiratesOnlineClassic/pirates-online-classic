@@ -7,7 +7,7 @@ from pirates.piratesgui.ScoreFrame import ScoreFrame
 
 
 class SiegeBoard:
-    __module__ = __name__
+    
 
     def __init__(self, holder):
         self.one = ScoreFrame(PiratesGuiGlobals.ScorePanelWidth, PiratesGuiGlobals.ScorePanelHeight, holder, 1, sortOrder=2)

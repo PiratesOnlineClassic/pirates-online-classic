@@ -15,7 +15,7 @@ from pirates.world import (ClientArea, DistributedGameArea, DistributedIsland,
 
 
 class DistributedGAInterior(DistributedGameArea.DistributedGameArea, DistributedCartesianGrid.DistributedCartesianGrid, ClientArea.ClientArea):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedGAInterior')
 
     def __init__(self, cr):

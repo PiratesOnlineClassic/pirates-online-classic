@@ -14,7 +14,7 @@ from pirates.pirate import AvatarTypes
 
 
 class Grabber(Creature, TentacleUtils):
-    __module__ = __name__
+    
     ModelInfo = ('models/char/grabberTentacle_high', 'models/char/grabberTentacle_')
     SfxNames = dict(Creature.SfxNames)
     SfxNames.update({'pain': 'sfx_crab_pain.mp3', 'death': 'sfx_crab_death.mp3'})
@@ -23,7 +23,7 @@ class Grabber(Creature, TentacleUtils):
      ('idle_d', 'idle'), ('idle_a', 'idleA'), ('idle_a_to_b', 'idle_a_to_b'), ('idle_b', 'idleB'), ('idle_b_to_c', 'idle_b_to_c'), ('idle_c', 'idleC'), ('idle_c_to_a', 'idle_c_to_a'), ('grab_avatar', 'grab'), ('grab_avatar_idle', 'grab_idle'), ('lift_avatar', 'lift_player'), ('lift_avatar_idle', 'lift_player_idle'), ('lower_avatar', 'lower_player'), ('release_avatar', 'release_player'), ('emerge', 'emerge'), ('grab_mast', 'grab_mast'), ('grab_mast_idle', 'grab_mast_idle'), ('death', 'death'), ('hit_react', 'hit_reaction'), ('smackdown_avatar', 'smackdown_player'))
 
     class AnimationMixer(Creature.AnimationMixer):
-        __module__ = __name__
+        
         notify = DirectNotifyGlobal.directNotify.newCategory('CrabAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION

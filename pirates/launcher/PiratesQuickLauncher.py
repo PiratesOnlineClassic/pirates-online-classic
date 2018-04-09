@@ -21,7 +21,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class PiratesQuickLauncher(LauncherBase):
-    __module__ = __name__
+    
     GameName = 'Pirates'
     ArgCount = 3
     LauncherPhases = [

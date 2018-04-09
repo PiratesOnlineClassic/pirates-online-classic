@@ -14,7 +14,7 @@ from pirates.piratesgui.GuiPanel import GuiPanel
 
 
 class BoardingPermissionPanel(GuiPanel):
-    __module__ = __name__
+    
 
     def __init__(self, parent, *args, **kw):
         self.guiSetup = False

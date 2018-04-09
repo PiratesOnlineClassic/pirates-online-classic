@@ -10,7 +10,7 @@ from direct.distributed import DistributedObject
 notify = DirectNotifyGlobal.directNotify.newCategory('AvatarManager')
 
 class OtpAvatarManager(DistributedObject.DistributedObject):
-    __module__ = __name__
+    
     notify = notify
     OnlineEvent = 'GlobalAvatarManagerOnline'
 

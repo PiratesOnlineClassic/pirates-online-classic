@@ -9,7 +9,7 @@ from pirates.piratesbase import PiratesGlobals
 AnimDict = {}
 
 class Townfolk(Human.Human):
-    __module__ = __name__
+    
 
     def __init__(self):
         Human.Human.__init__(self)

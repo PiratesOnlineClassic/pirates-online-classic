@@ -10,7 +10,7 @@ from pirates.friends.PCFriendInfo import PCFriendInfo
 
 
 class PCAvatarFriendsManager(AvatarFriendsManager):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('PCAvatarFriendsManager')
 
     def __init__(self, cr):

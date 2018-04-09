@@ -7,7 +7,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class PCGuildManager(GuildManager):
-    __module__ = __name__
+    
 
     def sendSCQuest(self, questInt, msgType, taskNum):
         self.notify.debugCall()

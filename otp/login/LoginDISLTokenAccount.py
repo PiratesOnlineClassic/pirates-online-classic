@@ -10,7 +10,7 @@ from direct.showbase.ShowBaseGlobal import *
 
 
 class LoginDISLTokenAccount(LoginBase.LoginBase):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         LoginBase.LoginBase.__init__(self, cr)

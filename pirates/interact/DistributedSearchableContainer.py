@@ -15,7 +15,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class DistributedSearchableContainer(DistributedInteractive.DistributedInteractive):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSearchableContainer')
 
     def __init__(self, cr):

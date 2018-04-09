@@ -14,7 +14,7 @@ from PooledEffect import PooledEffect
 
 
 class LightningStrike(PooledEffect, EffectController):
-    __module__ = __name__
+    
     soundFx = []
     soundFxNames = ('thunderclap.mp3', 'thunder-start.mp3')
 

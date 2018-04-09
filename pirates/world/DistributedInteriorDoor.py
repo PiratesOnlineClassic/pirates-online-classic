@@ -13,7 +13,7 @@ from pirates.world import DistributedDoorBase
 
 
 class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedInteriorDoor')
 
     def __init__(self, cr):

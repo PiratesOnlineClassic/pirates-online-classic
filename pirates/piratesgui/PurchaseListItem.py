@@ -18,7 +18,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class PurchaseListItem(InventoryListItem):
-    __module__ = __name__
+    
     itemCount = 0
     itemCost = 0
     itemQuantity = 0

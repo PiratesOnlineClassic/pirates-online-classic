@@ -12,7 +12,7 @@ from PooledEffect import PooledEffect
 
 
 class QuestIndicatorEffect(PooledEffect, EffectController):
-    __module__ = __name__
+    
     cardScale = 16.0
     cardScale2 = 64.0
 

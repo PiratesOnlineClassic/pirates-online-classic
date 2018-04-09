@@ -11,7 +11,7 @@ from pandac.PandaModules import *
 
 
 class RainSplashes(EffectController, NodePath):
-    __module__ = __name__
+    
     cardScale = 32.0
 
     def __init__(self, reference=None):

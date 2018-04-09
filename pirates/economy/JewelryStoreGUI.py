@@ -30,7 +30,7 @@ LHAND_CAMERA = 6
 RHAND_CAMERA = 7
 
 class JewelryStoreTab(LeftTab):
-    __module__ = __name__
+    
 
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None))
@@ -41,7 +41,7 @@ class JewelryStoreTab(LeftTab):
 
 
 class JewelryStoreTabBar(TabBar):
-    __module__ = __name__
+    
 
     def refreshTabs(self):
         for x, name in enumerate(self.tabOrder):
@@ -63,7 +63,7 @@ class JewelryStoreTabBar(TabBar):
 
 
 class JewelryStoreCartList(DirectScrolledFrame):
-    __module__ = __name__
+    
 
     def __init__(self, parent, width, height, itemWidth, itemHeight):
         self.width = width + PiratesGuiGlobals.ScrollbarSize
@@ -190,7 +190,7 @@ class JewelryStoreCartList(DirectScrolledFrame):
 
 
 class JewelryStoreGUI(DirectFrame):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('JewelryStoreGUI')
     width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.5

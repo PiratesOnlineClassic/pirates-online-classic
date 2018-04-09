@@ -4,7 +4,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class DistributedLocatableObject(DistributedObject):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)

@@ -12,7 +12,7 @@ from pirates.pvp import PVPGlobals
 
 
 class DistributedShipRepairSpot(DistributedInteractive):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedShipRepairSpot')
 
     def __init__(self, cr):

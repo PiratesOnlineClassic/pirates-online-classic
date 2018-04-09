@@ -61,7 +61,7 @@ want_fifothreads = base.config.GetBool('want-fifothreads', 0)
 if want_fifothreads:
 
     class ClientNetworkReader(PythonThread):
-        __module__ = __name__
+        
 
         def __init__(self, repository):
             PythonThread.__init__(self, self.run, None, 'ClientNetworkReader', 'ClientNetworkReader')
@@ -482,16 +482,15 @@ class PiratesClientRepository(OTPClientRepository):
             localAvatar.teleportToType = PiratesGlobals.INSTANCE_TUTORIAL
             localAvatar.teleportToName = WorldGlobals.PiratesTutorialSceneFileBase
             self.sendMsgToTravelAgent('requestInitLocUD', ['unused', 0])
+        elif localAvatar.onWelcomeWorld and self.defaultShard != 0 and config.GetBool('want-welcome-worlds', 0):
+            localAvatar.teleportToType = PiratesGlobals.INSTANCE_WELCOME
+            localAvatar.teleportToName = 'Welcome World'
+            self.sendMsgToTravelAgent('requestInitLocUD', ['unused', 0])
         else:
-            if localAvatar.onWelcomeWorld and self.defaultShard != 0 and config.GetBool('want-welcome-worlds', 0):
-                localAvatar.teleportToType = PiratesGlobals.INSTANCE_WELCOME
-                localAvatar.teleportToName = 'Welcome World'
-                self.sendMsgToTravelAgent('requestInitLocUD', ['unused', 0])
-            else:
-                desiredShard = self.defaultShard
-                localAvatar.teleportToType = PiratesGlobals.INSTANCE_MAIN
-                localAvatar.teleportToName = WorldGlobals.PiratesWorldSceneFileBase
-                self.sendMsgToTravelAgent('requestInitLocUD', ['unused', desiredShard])
+            desiredShard = self.defaultShard
+            localAvatar.teleportToType = PiratesGlobals.INSTANCE_MAIN
+            localAvatar.teleportToName = WorldGlobals.PiratesWorldSceneFileBase
+            self.sendMsgToTravelAgent('requestInitLocUD', ['unused', desiredShard])
 
     def playingGameLocReceived(self, shardId, zoneId):
         self.gameFSM.request('waitOnEnterResponses', [shardId, zoneId,

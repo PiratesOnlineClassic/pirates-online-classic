@@ -5,7 +5,7 @@
 
 
 class QuestHolderBase:
-    __module__ = __name__
+    
 
     def getQuests(self):
         raise 'derived must implement'

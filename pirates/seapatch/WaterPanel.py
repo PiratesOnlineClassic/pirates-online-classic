@@ -15,7 +15,7 @@ from pandac.PandaModules import *
 
 
 class WaterPanel(AppShell):
-    __module__ = __name__
+    
     appversion = '1.0'
     frameWidth = 500
     frameHeight = 550
@@ -765,7 +765,7 @@ class WaterPanel(AppShell):
 
 
 class BaseTen:
-    __module__ = __name__
+    
 
     def __init__(self, value):
         original_value = value

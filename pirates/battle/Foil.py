@@ -14,7 +14,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class Foil(Weapon.Weapon):
-    __module__ = __name__
+    
     modelTypes = {InventoryType.FoilL1: ('models/handheld/cutlass_rusty_high', Vec4(1, 1, 1, 1))}
     models = {}
     icons = {}

@@ -20,7 +20,7 @@ def getAvatarHealMojoCost(mojo):
 
 
 class ItemType:
-    __module__ = __name__
+    
     MELEE = 1
     SWORD = 2
     PISTOL = 3
@@ -61,7 +61,7 @@ class ItemType:
 
 
 class ItemTypeGroup:
-    __module__ = __name__
+    
     CUTLASS = 1
     DAGGER = 2
     PISTOL = 3
@@ -75,7 +75,7 @@ class ItemTypeGroup:
 __itemTypeList = {ItemType.DAGGER: ItemTypeGroup.DAGGER, ItemType.DAGGERAMMO: ItemTypeGroup.DAGGER, ItemType.DAGGER_POUCH: ItemTypeGroup.DAGGER, ItemType.SWORD: ItemTypeGroup.CUTLASS, ItemType.PISTOL: ItemTypeGroup.PISTOL, ItemType.PISTOLAMMO: ItemTypeGroup.PISTOL, ItemType.PISTOL_POUCH: ItemTypeGroup.PISTOL, ItemType.CANNONAMMO: ItemTypeGroup.CANNON, ItemType.CANNON_POUCH: ItemTypeGroup.CANNON, ItemType.DOLL: ItemTypeGroup.DOLL, ItemType.POTION: ItemTypeGroup.POTION, ItemType.GRENADE: ItemTypeGroup.GRENADE, ItemType.GRENADEAMMO: ItemTypeGroup.GRENADE, ItemType.GRENADE_POUCH: ItemTypeGroup.GRENADE, ItemType.WAND: ItemTypeGroup.WAND}
 
 class ItemId:
-    __module__ = __name__
+    
     GOLD = InventoryType.GoldInPocket
     COLLECT = InventoryType.Collection_Set1
     CARD = InventoryType.begin_Cards

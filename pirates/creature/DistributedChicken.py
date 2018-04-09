@@ -3,7 +3,7 @@ from pirates.creature.DistributedAnimal import DistributedAnimal
 
 
 class DistributedChicken(DistributedAnimal):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedAnimal.__init__(self, cr, Chicken())

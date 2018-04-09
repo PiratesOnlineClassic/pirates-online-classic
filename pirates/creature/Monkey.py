@@ -8,7 +8,7 @@ from pirates.creature.Creature import Creature
 
 
 class Monkey(Creature):
-    __module__ = __name__
+    
     ModelInfo = ('models/char/monkey_hi', 'models/char/monkey_')
     SfxNames = dict(Creature.SfxNames)
     SfxNames.update({})
@@ -17,7 +17,7 @@ class Monkey(Creature):
      ('idle', 'idle'), ('run', 'run'), ('pain', 'get_hit'), ('jump', 'jump'), ('taunt', 'taunt'))
 
     class AnimationMixer(Creature.AnimationMixer):
-        __module__ = __name__
+        
         notify = DirectNotifyGlobal.directNotify.newCategory('MonkeyAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION

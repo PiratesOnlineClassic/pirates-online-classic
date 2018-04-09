@@ -21,7 +21,7 @@ except:
     pass
 
 class GameOptionsGui(DirectFrame):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('GameOptions')
     debug = False
     resolution_table = [(800, 600), (1024, 768), (1280, 1024), (1600, 1200)]

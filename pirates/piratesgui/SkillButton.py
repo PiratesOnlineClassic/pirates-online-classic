@@ -26,7 +26,7 @@ def getGeomScale(repId, skillId=0):
 
 
 class SkillButton(DirectFrame):
-    __module__ = __name__
+    
     SkillIcons = None
     Image = None
     SkillRechargedSound = None

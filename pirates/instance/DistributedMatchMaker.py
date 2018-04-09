@@ -5,7 +5,7 @@
 from direct.distributed import DistributedObjectGlobal
 
 class DistributedMatchMaker(DistributedObjectGlobal.DistributedObjectGlobal):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedMatchMaker')
 
     def __init__(self, cr):

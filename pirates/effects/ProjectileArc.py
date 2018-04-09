@@ -14,7 +14,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class ProjectileArc(DirectObject, NodePath):
-    __module__ = __name__
+    
 
     def __init__(self, wantRotate=1, wantColl=0):
         NodePath.__init__(self, 'projectileArcRenderParent')

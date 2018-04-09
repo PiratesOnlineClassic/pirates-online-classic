@@ -11,7 +11,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class DistributedHoldemTable(DistributedPokerTable.DistributedPokerTable):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedPokerTable.DistributedPokerTable.__init__(self, cr, 'holdem', numRounds=5)

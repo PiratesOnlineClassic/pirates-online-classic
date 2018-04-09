@@ -11,7 +11,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class ListFrame(DirectFrame, DirectObject):
-    __module__ = __name__
+    
     revealSpeed = PiratesGuiGlobals.ItemRevealTime
     pageFinishWait = PiratesGuiGlobals.PageFinishWaitTime
     maxTotalWait = PiratesGuiGlobals.MaxTotalRevealTime

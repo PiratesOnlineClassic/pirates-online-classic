@@ -35,7 +35,7 @@ distFireSfxNames = [
  'dist_cannon_01.mp3', 'dist_cannon_02.mp3', 'dist_cannon_03.mp3', 'dist_cannon_04.mp3', 'dist_cannon_05.mp3', 'dist_cannon_06.mp3', 'dist_cannon_07.mp3', 'dist_cannon_08.mp3', 'dist_cannon_09.mp3', 'dist_cannon_10.mp3']
 
 class Cannon(ShipPart.ShipPart, NodePath):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('Cannon')
     localFireSfx = None
     distFireSfx = None

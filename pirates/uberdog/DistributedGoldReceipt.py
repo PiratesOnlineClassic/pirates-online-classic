@@ -9,7 +9,7 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class DistributedGoldReceipt(DistributedObject):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('GoldReceipt')
 
     def setGoldPaid(self, goldPaid):

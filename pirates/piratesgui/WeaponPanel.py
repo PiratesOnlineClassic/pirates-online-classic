@@ -18,7 +18,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class WeaponPanel(DirectFrame):
-    __module__ = __name__
+    
     width = PiratesGuiGlobals.InventoryInfoWidth
     height = PiratesGuiGlobals.InventoryInfoHeight
     guiLoaded = False

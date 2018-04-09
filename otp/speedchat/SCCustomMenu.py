@@ -8,7 +8,7 @@ from SCMenu import SCMenu
 
 
 class SCCustomMenu(SCMenu):
-    __module__ = __name__
+    
 
     def __init__(self):
         SCMenu.__init__(self)

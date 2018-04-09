@@ -17,7 +17,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class SplitBase:
-    __module__ = __name__
+    
 
     def deleteSplitDisplay(self, node):
         if node:
@@ -33,7 +33,7 @@ class SplitBase:
 
 
 class BlackjackStatusPanel(DirectFrame, SplitBase):
-    __module__ = __name__
+    
 
     def __init__(self, maxHandCards):
         DirectFrame.__init__(self, parent=base.a2dBackground, relief=DGG.FLAT)
@@ -115,7 +115,7 @@ class BlackjackStatusPanel(DirectFrame, SplitBase):
 
 
 class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
-    __module__ = __name__
+    
     HandPos = (
      Vec3(0, 0, 0.4), Vec3(0.38, 0, 0.33), Vec3(0.65, 0, 0.1), Vec3(0.45, 0, -0.26), Vec3(0, 0, -0.3), Vec3(-0.45, 0, -0.26), Vec3(-0.65, 0, 0.1), Vec3(-0.38, 0, 0.33))
     LocalAvatarGuiIndex = 4

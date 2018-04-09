@@ -16,7 +16,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class GenderGUI(DirectFrame, StateData.StateData):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('GenderGUI')
 
     def __init__(self, main=None):

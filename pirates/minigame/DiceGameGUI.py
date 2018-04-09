@@ -16,7 +16,7 @@ from pirates.piratesgui import GuiTray, PiratesGuiGlobals
 
 
 class DiceGameGUI(DirectFrame):
-    __module__ = __name__
+    
     HandPos = (
      Vec3(-4.0, 3.5, DiceGlobals.PIT_HEIGHT), Vec3(-8.0, 0, DiceGlobals.PIT_HEIGHT), Vec3(-4.0, -4.5, DiceGlobals.PIT_HEIGHT), Vec3(0, -4.5, DiceGlobals.PIT_HEIGHT), Vec3(4.0, -4.5, DiceGlobals.PIT_HEIGHT), Vec3(8.0, 0, DiceGlobals.PIT_HEIGHT), Vec3(4.0, 3.5, DiceGlobals.PIT_HEIGHT))
     ArrowPosHpr = (

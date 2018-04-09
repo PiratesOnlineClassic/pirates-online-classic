@@ -10,7 +10,7 @@ from pandac.PandaModules import *
 
 
 class RainDrops(EffectController, NodePath):
-    __module__ = __name__
+    
 
     def __init__(self, reference=None):
         NodePath.__init__(self, 'RainDrops')

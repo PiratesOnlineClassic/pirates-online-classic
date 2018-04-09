@@ -9,7 +9,7 @@ from pirates.pirate.BattleAvatarGameFSM import BattleAvatarGameFSM
 
 
 class PlayerPirateGameFSM(BattleAvatarGameFSM):
-    __module__ = __name__
+    
 
     def __init__(self, av, fsmName='PlayerPirateGameFSM'):
         BattleAvatarGameFSM.__init__(self, av, fsmName)

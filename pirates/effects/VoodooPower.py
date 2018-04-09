@@ -12,7 +12,7 @@ from PooledEffect import PooledEffect
 
 
 class VoodooPower(PooledEffect, EffectController):
-    __module__ = __name__
+    
     cardScale = 64.0
     card2Scale = 128.0
 

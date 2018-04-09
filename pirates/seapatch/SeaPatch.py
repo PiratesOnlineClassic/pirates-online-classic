@@ -22,7 +22,7 @@ from pirates.seapatch.SeaPatchNode import SeaPatchNode
 
 
 class SeaPatch(Water):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('SeaPatch')
 
     def __init__(self, parentNP=render, reflection=None, todMgr=None, saintPatricksDay=False):

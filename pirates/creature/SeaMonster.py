@@ -27,7 +27,7 @@ ADVANCE_CUTOFF = 0.5
 RUN_CUTOFF = PiratesGlobals.ToonForwardSpeed
 
 class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
-    __module__ = __name__
+    
     FailsafeAnims = (('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0))
     SfxNames = {'death': 'bodyFall-08.mp3'}
     sfx = {}
@@ -35,7 +35,7 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
     animInfo = {}
 
     class AnimationMixer(AnimationMixer):
-        __module__ = __name__
+        
         LOOP = AnimationMixer.LOOP
         ACTION = dict(AnimationMixer.ACTION)
         ACTION['MOVIE'] = AnimationMixer.ACTION_INDEX + 1

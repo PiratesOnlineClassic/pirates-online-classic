@@ -17,7 +17,7 @@ from pirates.piratesgui import PDialog
 
 
 class DistributedGameTable(DistributedInteractive.DistributedInteractive):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGameTable')
 
     def __init__(self, cr):

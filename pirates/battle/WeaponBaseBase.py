@@ -10,7 +10,7 @@ from pirates.piratesbase import PiratesGlobals, TeamUtils
 
 
 class WeaponBaseBase:
-    __module__ = __name__
+    
     areaCollisionsCreated = 0
     areaCollSphere = None
     areaCollTube = None

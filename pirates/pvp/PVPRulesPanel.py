@@ -12,7 +12,7 @@ from pirates.piratesgui.BorderFrame import BorderFrame
 
 
 class PVPRulesPanel(BorderFrame):
-    __module__ = __name__
+    
 
     def __init__(self, panelName, gameTitle, instructions):
         BorderFrame.__init__(self, parent=base.a2dBottomCenter, frameSize=(-1, 1, 0,

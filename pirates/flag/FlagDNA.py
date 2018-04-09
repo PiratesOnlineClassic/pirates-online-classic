@@ -14,7 +14,7 @@ from otp.avatar import AvatarDNA
 
 
 class FlagDNA(AvatarDNA.AvatarDNA):
-    __module__ = __name__
+    
     DefaultShapeData = 0
     DefaultBackgroundData = [0, 1, 0, 0, 0, 0, 0]
     DefaultLayoutData = [0, 128, 128, 0, 2]

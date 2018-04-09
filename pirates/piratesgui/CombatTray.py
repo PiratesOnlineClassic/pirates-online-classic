@@ -34,7 +34,7 @@ STAFF_INTERVAL = 0.4
 AIM_ASSIST_DURATION = 2.0
 
 class WeaponButton(GuiButton):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('WeaponButton')
 
     def __init__(self, hotkeys=(), hotkeyLabel=None, helpText=None, parent=None, showQuant=0, **kw):
@@ -170,7 +170,7 @@ class WeaponButton(GuiButton):
 
 
 class TonicButton(SkillButton):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('TonicButton')
 
     def __init__(self):
@@ -266,7 +266,7 @@ class TonicButton(SkillButton):
 
 
 class ShipRepairButton(SkillButton):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('ShipRepairButton')
 
     def __init__(self):
@@ -352,7 +352,7 @@ class ShipRepairButton(SkillButton):
 
 
 class CombatTray(GuiTray):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('CombatTray')
     InstantCast = base.config.GetBool('instant-cast', 0)
     WeaponButtonPositions = (

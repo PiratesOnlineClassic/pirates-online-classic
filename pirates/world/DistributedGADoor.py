@@ -6,7 +6,7 @@ import DistributedGAConnector
 
 
 class DistributedGADoor(DistributedGAConnector.DistributedGAConnector):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedGADoor')
 
     def __init__(self, cr):

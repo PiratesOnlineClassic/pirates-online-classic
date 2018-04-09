@@ -17,7 +17,7 @@ from pandac.PandaModules import *
 
 
 class ChatManagerV2(DirectObject.DirectObject):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('ChatManagerV2')
 
     def __init__(self):

@@ -13,7 +13,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class ReputationMeterDial(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, category, width=0.4):
         DirectFrame.__init__(self, state=DGG.DISABLED, relief=None)

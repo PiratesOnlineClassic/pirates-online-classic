@@ -8,7 +8,7 @@ from pirates.creature.Animal import Animal
 
 
 class Seagull(Animal):
-    __module__ = __name__
+    
     ModelInfo = ('models/char/seagull_hi', 'models/char/seagull_')
     SfxNames = dict(Animal.SfxNames)
     SfxNames.update({})
@@ -16,7 +16,7 @@ class Seagull(Animal):
      ('idle', 'flying'), ('walk', 'flying'), ('run', 'flying'), ('flying', 'flying'), ('takeoff', 'takeoff'), ('landing', 'landing'), ('groom_idle', 'groom_idle'))
 
     class AnimationMixer(Animal.AnimationMixer):
-        __module__ = __name__
+        
         notify = DirectNotifyGlobal.directNotify.newCategory('SeagullAnimationMixer')
         LOOP = Animal.AnimationMixer.LOOP
         ACTION = Animal.AnimationMixer.ACTION

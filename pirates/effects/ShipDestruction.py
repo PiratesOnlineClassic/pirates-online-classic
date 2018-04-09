@@ -15,7 +15,7 @@ from PooledEffect import PooledEffect
 ObjectDict = {'0': 'models/props/testBoard', '1': 'models/props/testBoard'}
 
 class ShipDestruction(PooledEffect, EffectController):
-    __module__ = __name__
+    
 
     def __init__(self):
         PooledEffect.__init__(self)

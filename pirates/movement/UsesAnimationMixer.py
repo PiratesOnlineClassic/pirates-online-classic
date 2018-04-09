@@ -8,7 +8,7 @@ from direct.showbase.PythonUtil import report
 
 
 class UsesAnimationMixer:
-    __module__ = __name__
+    
 
     def __init__(self, animationMixerType=None):
         if hasattr(self, 'animationMixer') and self.animationMixer:

@@ -8,7 +8,7 @@ from pandac.PandaModules import *
 
 
 class FadingCard(EffectController, NodePath):
-    __module__ = __name__
+    
 
     def __init__(self, card=None, color=Vec4(1, 1, 1, 1), fadeTime=0.25, waitTime=1.25, startScale=0.25, endScale=3.0):
         NodePath.__init__(self, 'FadingCard')

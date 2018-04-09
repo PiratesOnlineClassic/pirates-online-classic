@@ -14,7 +14,7 @@ from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 
 
 class ShipPage(InventoryPage):
-    __module__ = __name__
+    
     BottleFrame = None
 
     def __init__(self):

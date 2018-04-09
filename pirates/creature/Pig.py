@@ -8,7 +8,7 @@ from pirates.creature.Animal import Animal
 
 
 class Pig(Animal):
-    __module__ = __name__
+    
     ModelInfo = ('models/char/pig_hi', 'models/char/pig_')
     SfxNames = dict(Animal.SfxNames)
     SfxNames.update({})
@@ -16,7 +16,7 @@ class Pig(Animal):
      ('walk', 'walk'), ('run', 'walk'), ('idle', 'rooting'), ('rooting', 'rooting'))
 
     class AnimationMixer(Animal.AnimationMixer):
-        __module__ = __name__
+        
         notify = DirectNotifyGlobal.directNotify.newCategory('PigAnimationMixer')
         LOOP = Animal.AnimationMixer.LOOP
         ACTION = Animal.AnimationMixer.ACTION

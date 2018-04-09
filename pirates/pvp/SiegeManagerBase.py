@@ -6,7 +6,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class SiegeManagerBase:
-    __module__ = __name__
+    
 
     def __init__(self):
         self._useIslandRegen = False

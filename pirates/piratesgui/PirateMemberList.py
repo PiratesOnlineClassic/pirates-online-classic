@@ -24,7 +24,7 @@ MODE_CREW_HUD = 4
 MODE_CREW_HUD_SEA = 5
 
 class PirateMemberButton(GuiButton.GuiButton):
-    __module__ = __name__
+    
     memberImageColor = (Vec4(0.31, 0.3, 0.3, 1), Vec4(0.41, 0.4, 0.4, 1), Vec4(0.41, 0.4, 0.4, 1), Vec4(0.21, 0.2, 0.2, 1))
     OnlineTextColor = (1, 1, 1, 1)
     OnlineButtonColor = VBase4(0.7, 0.7, 0.7, 1.0)
@@ -324,7 +324,7 @@ class PirateMemberButton(GuiButton.GuiButton):
 
 
 class PirateMemberList(DirectObject):
-    __module__ = __name__
+    
 
     def __init__(self, numShown, parent, title=None, height=0.6, memberHeight=0.065, memberOffset=0.021, memberWidth=0.45, bottom=0, hud=False, width=0.48):
         if hasattr(self, 'initialized'):

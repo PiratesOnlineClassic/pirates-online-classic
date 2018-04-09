@@ -8,7 +8,7 @@ from pirates.pirate import AvatarTypes
 
 
 class SeaSerpent(SeaMonster):
-    __module__ = __name__
+    
     ModelInfo = ('models/char/serpent_hi', 'models/char/serpent_')
     SfxNames = dict(SeaMonster.SfxNames)
     SfxNames.update({'death': 'sfx_wasp_death.mp3', 'pain': 'sfx_wasp_ouch.mp3'})
@@ -17,7 +17,7 @@ class SeaSerpent(SeaMonster):
      ('idle', 'idle'), ('swim', 'swim'), ('walk', 'swim'), ('submerge', 'submerge'), ('attack', 'attack'), ('emerge', 'emerge'), ('death', 'submerge'))
 
     class AnimationMixer(SeaMonster.AnimationMixer):
-        __module__ = __name__
+        
         LOOP = SeaMonster.AnimationMixer.LOOP
         ACTION = SeaMonster.AnimationMixer.ACTION
         AnimRankings = {'idle': (LOOP['LOOP'],), 'swim': (LOOP['LOOP'],), 'walk': (LOOP['LOOP'],), 'submerge': (ACTION['ACTION'],), 'attack': (ACTION['ACTION'],), 'emerge': (ACTION['ACTION'],), 'death': (ACTION['MOVIE'],)}

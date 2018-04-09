@@ -7,7 +7,7 @@ from pandac.PandaModules import *
 
 
 class RadioButton(DirectButton):
-    __module__ = __name__
+    
 
     def __init__(self, parent=None, **kw):
         gui_main = loader.loadModel('models/gui/gui_main')

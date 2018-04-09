@@ -12,7 +12,7 @@ from pirates.shipparts import CannonDNA, DistributedShippart
 
 
 class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, DistributedShippart.DistributedShippart):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedPCCannon.DistributedPCCannon.__init__(self, cr)

@@ -12,11 +12,11 @@ songItem2MusicLabel = {UberDogGlobals.InventoryType.Song_1: 'island-driftwood', 
 musicLabel2Length = {'island-driftwood': 62, 'island-cangrejos': 63, 'island-outcast': 61, 'death': 16, 'performers-02': 64, 'performers-07': 68, 'performers-09': 62, 'performers-10': 65, 'island-cutthroat': 61, 'island-kingshead': 67, 'island-rumrunner': 59}
 
 class MusicManager(AmbientManagerBase.AmbientManagerBase):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('MusicManager')
 
     class MusicData:
-        __module__ = __name__
+        
 
         def __init__(self, name, priority=0, looping=1, volume=0.8):
             self.name = name

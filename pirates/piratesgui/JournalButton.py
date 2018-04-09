@@ -10,7 +10,7 @@ from pirates.piratesgui import GuiButton, PiratesGuiGlobals
 
 
 class JournalButton(GuiButton.GuiButton):
-    __module__ = __name__
+    
 
     def __init__(self, hotkeys=(), hotkeyLabel='J', helpText=None, parent=None, **kw):
         gui = loader.loadModelOnce('models/gui/toplevel_gui')

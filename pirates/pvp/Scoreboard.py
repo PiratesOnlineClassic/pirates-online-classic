@@ -11,7 +11,7 @@ from pirates.pvp import PVPGlobals
 
 
 class Scoreboard(DistributedObject):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)

@@ -31,7 +31,7 @@ jewelry_keys = [
  'LEar', 'REar', 'LBrow', 'RBrow', 'Nose', 'Mouth', 'LHand', 'RHand']
 
 class JewelryGUI(DirectFrame, StateData.StateData):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('JewelryGUI')
 
     def __init__(self, main=None):

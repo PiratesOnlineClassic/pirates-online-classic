@@ -19,7 +19,7 @@ if base.config.GetBool('want-water-panel', False):
     from pirates.seapatch.WaterPanel import *
 
 class Swamp(Water):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('Swamp')
 
     def __init__(self, swamp_model_file_path, parentNP=render, reflection=None, input_swamp_model=None, input_shader_file_path=None, input_water_color=None):

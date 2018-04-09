@@ -9,7 +9,7 @@ from pandac.PandaModules import *
 
 
 class PWhiteList(WhiteList):
-    __module__ = __name__
+    
 
     def __init__(self):
         vfs = VirtualFileSystem.getGlobalPtr()

@@ -18,7 +18,7 @@ from pirates.reputation import ReputationGlobals
 
 
 class AvatarInfoButton(GuiButton):
-    __module__ = __name__
+    
     memberImageColor = (
      Vec4(0.31, 0.3, 0.3, 1), Vec4(0.41, 0.4, 0.4, 1), Vec4(0.41, 0.4, 0.4, 1), Vec4(0.21, 0.2, 0.2, 1))
     OnlineTextColor = (1, 1, 1, 1)
@@ -90,7 +90,7 @@ class AvatarInfoButton(GuiButton):
 
 
 class AttuneMenu(DirectFrame):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('AttuneMenu')
     WIDTH = 0.45
     HEIGHT = 0.09

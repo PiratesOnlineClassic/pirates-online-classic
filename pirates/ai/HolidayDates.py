@@ -6,7 +6,7 @@ import time
 
 
 class HolidayDates:
-    __module__ = __name__
+    
     TYPE_CUSTOM = 0
     TYPE_YEARLY = 1
     TYPE_MONTHLY = 2

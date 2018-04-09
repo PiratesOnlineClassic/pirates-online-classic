@@ -24,7 +24,7 @@ except:
     pass
 
 class OptionSpace:
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('OptionSpace')
 
     def __init__(self):
@@ -66,7 +66,7 @@ class OptionSpace:
 
 
 class Options(OptionSpace):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('Options')
     debug = False
     options_version = 16
@@ -1078,7 +1078,7 @@ class Options(OptionSpace):
 
 
 class KeyMappings(OptionSpace):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('KeyMappings')
 
     def __init__(self):
@@ -1094,7 +1094,7 @@ class KeyMappings(OptionSpace):
 
 
 class GameOptions(BorderFrame):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('GameOptions')
     debug = False
     resolution_table = [(800, 600), (1024, 768), (1280, 1024), (1600, 1200)]

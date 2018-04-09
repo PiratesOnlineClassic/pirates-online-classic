@@ -19,7 +19,7 @@ from panda3d.core import *
 
 
 class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleNPC')
     deferrable = True
 

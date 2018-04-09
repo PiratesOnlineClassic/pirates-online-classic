@@ -23,7 +23,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class ShipBroadside(NodePath):
-    __module__ = __name__
+    
 
     def __init__(self, ship):
         NodePath.__init__(self, 'shipBroadside')
@@ -35,7 +35,7 @@ class ShipBroadside(NodePath):
 
 
 class ShipModel(NodePath):
-    __module__ = __name__
+    
 
     def __init__(self, cr, shipClass, team, wantCollisions=0, fromEditor=False):
         NodePath.__init__(self, 'ShipModel')

@@ -11,7 +11,7 @@ ReportRudeBehavior = 'MODERATION_RUDE_BEHAVIOR'
 ReportBadName = 'MODERATION_BAD_NAME'
 
 class CentralLogger(DistributedObjectGlobal):
-    __module__ = __name__
+    
     PlayersReportedThisSession = {}
 
     def hasReportedPlayer(self, targetDISLId, targetAvId):

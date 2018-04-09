@@ -8,7 +8,7 @@ from pirates.creature.Creature import Creature
 
 
 class Scorpion(Creature):
-    __module__ = __name__
+    
     ModelInfo = ('models/char/scorpion_hi', 'models/char/scorpion_')
     SfxNames = dict(Creature.SfxNames)
     SfxNames.update({'death': 'sfx_scorp_death.mp3', 'pain': 'sfx_scorp_knockback.mp3'})
@@ -17,7 +17,7 @@ class Scorpion(Creature):
      ('idle', 'idle'), ('walk', 'walk'), ('run', 'run'), ('attack_left', 'attack_left'), ('attack_right', 'attack_right'), ('attack_both', 'attack_both'), ('attack_tail_sting', 'attack_tail_sting'), ('pick_up_human', 'pick_up_human'), ('react_left', 'react_left'), ('react_right', 'react_right'), ('pain', 'knockback'), ('rear_up', 'rear_up'), ('death', 'death'))
 
     class AnimationMixer(Creature.AnimationMixer):
-        __module__ = __name__
+        
         notify = DirectNotifyGlobal.directNotify.newCategory('ScorpionAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION

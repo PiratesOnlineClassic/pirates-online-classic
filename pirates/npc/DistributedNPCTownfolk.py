@@ -27,7 +27,7 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, DistributedShopKeeper.DistributedShopKeeper, Townfolk.Townfolk):
-    __module__ = __name__
+    
     DiskWaitingColor = (0, 0, 1, 0.5)
     DiskUseColor = None
     HelpTextIconTexture = None

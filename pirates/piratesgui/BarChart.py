@@ -9,7 +9,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class BarChart(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, data, height, width, name='', titleColor=(1.0, 1.0, 1.0, 1.0), maxValue=None):
         self.width = width

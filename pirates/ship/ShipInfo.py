@@ -7,7 +7,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class ShipInfo(DistributedObject):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('ShipCrewMember')
 
     def __init__(self, cr):

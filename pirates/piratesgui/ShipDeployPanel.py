@@ -15,7 +15,7 @@ from pirates.ship import ShipGlobals
 
 
 class ShipDeployPanel(ShipSelectionPanel):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('ShipDeployPanel')
 
     def __init__(self, title, doneCallback, siegeTeam=0):

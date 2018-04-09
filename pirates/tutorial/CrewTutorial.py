@@ -13,7 +13,7 @@ from pirates.tutorial import TutorialGlobals
 
 
 class CrewTutorial(DirectObject.DirectObject):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('CrewTutorial')
 
     def __init__(self):

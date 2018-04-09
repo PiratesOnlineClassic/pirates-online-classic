@@ -19,7 +19,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class ShipWreck(NodePath):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('ShipWreck')
 
     def __init__(self, npShipWreck, uid):

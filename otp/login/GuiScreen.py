@@ -11,7 +11,7 @@ from pandac.PandaModules import *
 
 
 class GuiScreen:
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('GuiScreen')
     DGG.ENTERPRESS_ADVANCE = 0
     DGG.ENTERPRESS_ADVANCE_IFNOTEMPTY = 1

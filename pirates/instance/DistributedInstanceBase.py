@@ -19,7 +19,7 @@ from pirates.battle import EnemyGlobals
 import random
 
 class DistributedInstanceBase(DistributedObject, WorldNode):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)

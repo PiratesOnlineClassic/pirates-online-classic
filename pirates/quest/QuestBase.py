@@ -6,7 +6,7 @@ from pirates.quest import QuestReward
 
 
 class QuestBase:
-    __module__ = __name__
+    
 
     def delete(self):
         messenger.send(self.getDeletedEventString(), [self.getDeletedEventString()])

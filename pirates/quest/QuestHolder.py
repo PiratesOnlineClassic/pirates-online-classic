@@ -6,7 +6,7 @@ from pirates.quest import QuestHolderBase
 
 
 class QuestHolder(QuestHolderBase.QuestHolderBase):
-    __module__ = __name__
+    
 
     def getLinkedHolders(self):
         return []

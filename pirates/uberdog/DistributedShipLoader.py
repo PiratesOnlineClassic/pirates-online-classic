@@ -11,7 +11,7 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class DistributedShipLoader(DistributedObject.DistributedObject):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipLoader')
 
     def __init__(self, cr):

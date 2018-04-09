@@ -5,7 +5,7 @@
 
 
 class LoginBase:
-    __module__ = __name__
+    
     freeTimeExpires = -1
 
     def __init__(self, cr):

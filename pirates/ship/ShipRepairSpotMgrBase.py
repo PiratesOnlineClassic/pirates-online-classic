@@ -7,7 +7,7 @@ from pirates.pvp import PVPGlobals
 
 
 class ShipRepairSpotMgrBase:
-    __module__ = __name__
+    
 
     def __init__(self):
         self._state = DestructiveScratchPad(hp=StateVar(0), maxHp=StateVar(0), sp=StateVar(0), maxSp=StateVar(0), shipClass=StateVar(0), pvpTeam=StateVar(0), siegeTeam=StateVar(0), fullHealth=StateVar(False), validShipClass=StateVar(False), hasTeam=StateVar(False))

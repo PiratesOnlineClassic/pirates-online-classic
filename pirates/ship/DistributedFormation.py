@@ -9,7 +9,7 @@ from pandac.PandaModules import NodePath
 
 
 class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedSmoothNode.DistributedSmoothNode.__init__(self, cr)
