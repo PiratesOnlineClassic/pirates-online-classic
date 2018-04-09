@@ -13,7 +13,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class ChestTray(GuiTray.GuiTray):
-    
+    __module__ = __name__
     WantClothingPage = base.config.GetBool('want-clothing-page', 0)
     WantTitlesPage = base.config.GetBool('want-titles-page', 0)
 

@@ -13,7 +13,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class PiratesInfoButton(RequestButton):
-    
+    __module__ = __name__
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -21,7 +21,7 @@ class PiratesInfoButton(RequestButton):
 
 
 class PiratesInfo(GuiPanel.GuiPanel):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesInfo')
 
     def __init__(self, title, messageList):

@@ -12,7 +12,7 @@ from pirates.effects.VolcanoSplats import VolcanoSplats
 
 
 class VolcanoEffect(NodePath):
-    
+    __module__ = __name__
     eruptionSfx = None
 
     def __init__(self):

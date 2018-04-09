@@ -8,7 +8,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 
 class DistributedBandMemberOV(DistributedObjectOV.DistributedObjectOV):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('PirateBand')
 
     def __init__(self, cr):

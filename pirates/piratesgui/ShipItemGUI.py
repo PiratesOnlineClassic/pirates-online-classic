@@ -14,7 +14,7 @@ from pirates.uberdog import UberDogGlobals
 
 
 class ShipItemGUI(InventoryItemGui.InventoryItemGui):
-    
+    __module__ = __name__
 
     def __init__(self, data, trade=0, buy=0, sell=0, use=0, **kw):
         optiondefs = ()

@@ -6,7 +6,7 @@ from otp.avatar.AvatarHandle import AvatarHandle
 
 
 class PAvatarHandle(AvatarHandle):
-    
+    __module__ = __name__
 
     def getBandId(self):
         if __dev__:

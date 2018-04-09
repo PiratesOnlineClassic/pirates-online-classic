@@ -15,7 +15,7 @@ CREW_ICON_BAM = 'models/gui/gui_main'
 CREW_ICONS = {1: 'crew_member/crew_member', 2: 'crew_member/crew_member'}
 
 class CrewIconSelectorConfirmButton(RequestButton):
-    
+    __module__ = __name__
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -23,7 +23,7 @@ class CrewIconSelectorConfirmButton(RequestButton):
 
 
 class CrewIconSelectorCancelButton(RequestButton):
-    
+    __module__ = __name__
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -31,7 +31,7 @@ class CrewIconSelectorCancelButton(RequestButton):
 
 
 class CrewIconSelector(GuiPanel.GuiPanel):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('CrewIconSelector')
 
     def __init__(self, title, selectedIconKey=0):

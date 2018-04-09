@@ -9,7 +9,7 @@ from pirates.quest.QuestConstants import LocationIds
 
 
 class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedDoorBase')
     notify.setDebug(0)
 

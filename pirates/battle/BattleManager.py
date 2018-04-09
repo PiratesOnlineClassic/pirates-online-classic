@@ -13,7 +13,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class BattleManager(BattleManagerBase.BattleManagerBase):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         self.cr = cr

@@ -22,7 +22,7 @@ from pirates.piratesgui import ChatPanel, GuiPanel, PDialog, PiratesGuiGlobals
 
 
 class PiratesChatManager(ChatManagerV2.ChatManagerV2):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesChatManager')
     execChat = base.config.GetBool('exec-chat', 0)
 

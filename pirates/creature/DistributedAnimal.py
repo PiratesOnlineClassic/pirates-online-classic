@@ -10,7 +10,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class DistributedAnimal(DistributedCreature.DistributedCreature):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedCreature.DistributedCreature.__init__(self, cr)

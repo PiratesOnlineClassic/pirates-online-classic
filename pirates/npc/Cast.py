@@ -7,7 +7,7 @@ from pirates.pirate import AvatarTypes
 
 
 class JackSparrow(Avatar):
-    
+    __module__ = __name__
 
     def __init__(self):
         Avatar.__init__(self)
@@ -22,7 +22,7 @@ class JackSparrow(Avatar):
 
 
 class WillTurner(Avatar):
-    
+    __module__ = __name__
 
     def __init__(self):
         Avatar.__init__(self)
@@ -37,7 +37,7 @@ class WillTurner(Avatar):
 
 
 class ElizabethSwan(Avatar):
-    
+    __module__ = __name__
 
     def __init__(self):
         Avatar.__init__(self)
@@ -52,7 +52,7 @@ class ElizabethSwan(Avatar):
 
 
 class CaptBarbossa(Avatar):
-    
+    __module__ = __name__
 
     def __init__(self):
         Avatar.__init__(self)
@@ -67,7 +67,7 @@ class CaptBarbossa(Avatar):
 
 
 class TiaDalma(Avatar):
-    
+    __module__ = __name__
 
     def __init__(self):
         Avatar.__init__(self)
@@ -82,7 +82,7 @@ class TiaDalma(Avatar):
 
 
 class JoshGibbs(Avatar):
-    
+    __module__ = __name__
 
     def __init__(self):
         Avatar.__init__(self)
@@ -97,7 +97,7 @@ class JoshGibbs(Avatar):
 
 
 class JollyRoger(Avatar):
-    
+    __module__ = __name__
 
     def __init__(self):
         Avatar.__init__(self)

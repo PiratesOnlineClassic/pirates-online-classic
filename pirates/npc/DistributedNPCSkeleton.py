@@ -10,7 +10,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC, Skeleton.Skeleton):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCSkeleton')
 
     def __init__(self, cr):

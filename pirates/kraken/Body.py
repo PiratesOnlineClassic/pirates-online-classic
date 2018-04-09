@@ -9,7 +9,7 @@ from pirates.pirate import AvatarTypes
 
 
 class Body(Creature):
-    
+    __module__ = __name__
     ModelInfo = ('models/char/krakenHead-high', 'models/char/krakenHead-')
     SfxNames = dict(Creature.SfxNames)
     SfxNames.update({'pain': 'sfx_crab_pain.mp3', 'death': 'sfx_crab_death.mp3'})
@@ -17,7 +17,7 @@ class Body(Creature):
     AnimList = (('idle', 'idle'), )
 
     class AnimationMixer(Creature.AnimationMixer):
-        
+        __module__ = __name__
         notify = DirectNotifyGlobal.directNotify.newCategory('CrabAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION

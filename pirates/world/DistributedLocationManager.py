@@ -9,7 +9,7 @@ from pirates.world import WorldGlobals
 
 
 class DistributedLocationManager(DistributedObject):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('LocationManager')
 
     def __init__(self, cr):

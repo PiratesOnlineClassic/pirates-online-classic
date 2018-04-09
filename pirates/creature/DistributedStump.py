@@ -8,7 +8,7 @@ from pirates.creature.Stump import Stump
 
 
 class DistributedStump(DistributedCreature):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedCreature.__init__(self, cr, Stump())

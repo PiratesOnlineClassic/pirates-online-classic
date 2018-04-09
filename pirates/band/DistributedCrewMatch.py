@@ -9,7 +9,7 @@ PVP_ISLAND_TWO = '1196970035.53sdnaik'
 PVP_ISLAND_LIST = [PVP_ISLAND_ONE, PVP_ISLAND_TWO]
 
 class DistributedCrewMatch(DistributedObject):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedCrewMatch')
 
     def __init__(self, cr):

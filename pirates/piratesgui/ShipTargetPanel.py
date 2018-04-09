@@ -14,7 +14,7 @@ from pirates.uberdog import UberDogGlobals
 
 
 class ShipTargetPanel(GuiTray.GuiTray):
-    
+    __module__ = __name__
     Width = PiratesGuiGlobals.ShipTargetPanelWidth
     Height = PiratesGuiGlobals.ShipTargetPanelHeight
 

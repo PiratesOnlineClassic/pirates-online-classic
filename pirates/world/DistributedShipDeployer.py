@@ -12,7 +12,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class DistributedShipDeployer(DistributedNode):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedNode.__init__(self, cr)

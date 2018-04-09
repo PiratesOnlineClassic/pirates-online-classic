@@ -12,7 +12,7 @@ from direct.task.Task import Task
 from direct.controls.PhysicsWalker import PhysicsWalker
 
 class ShipPilot(PhysicsWalker):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('ShipPilot')
     wantDebugIndicator = base.config.GetBool('want-avatar-physics-indicator', 0)
     MAX_STRAIGHT_SAIL_BONUS = 1.25

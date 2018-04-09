@@ -6,7 +6,7 @@ from direct.distributed.DistributedObject import DistributedObject
 
 
 class DistributedPopulationTracker(DistributedObject):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)

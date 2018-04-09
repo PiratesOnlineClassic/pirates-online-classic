@@ -13,7 +13,7 @@ from pirates.ship import ShipGlobals
 
 
 class ShipFrameBoard(ShipFrame):
-    
+    __module__ = __name__
 
     def __init__(self, parent, **kw):
         gui = loader.loadModelCopy('models/gui/toplevel_gui')

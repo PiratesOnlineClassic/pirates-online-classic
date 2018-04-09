@@ -10,7 +10,7 @@ from pirates.piratesgui import (InventoryItemList, PiratesGuiGlobals,
 
 
 class ShipItemList(InventoryItemList.InventoryItemList):
-    
+    __module__ = __name__
 
     def __init__(self, inventory, height, trade=0, buy=0, sell=0, use=0):
         InventoryItemList.InventoryItemList.__init__(self, inventory, height, trade, buy, sell, use)

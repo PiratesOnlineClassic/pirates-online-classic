@@ -10,7 +10,7 @@ from pandac.PandaModules import *
 
 
 class DownloadWatcher(DirectObject):
-    
+    __module__ = __name__
 
     def __init__(self, phaseNames):
         self.phaseNames = phaseNames

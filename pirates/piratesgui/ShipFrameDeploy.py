@@ -12,7 +12,7 @@ from pirates.ship import ShipGlobals
 
 
 class ShipFrameDeploy(ShipFrameSelect):
-    
+    __module__ = __name__
 
     def __init__(self, parent, **kw):
         optiondefs = (('avatarName', '', None), )

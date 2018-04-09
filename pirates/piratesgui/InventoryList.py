@@ -13,7 +13,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class InventoryList(DirectScrolledFrame):
-    
+    __module__ = __name__
 
     def __init__(self, inventory, height, trade=0, buy=0, sell=0, use=0, weapon=0, listItemClass=InventoryListItem.InventoryListItem, listItemWidth=0, listItemHeight=0):
         self.ListItem = listItemClass

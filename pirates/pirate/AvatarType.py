@@ -8,7 +8,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class AvatarType:
-    
+    __module__ = __name__
     Unspecified = -1
     Any = 0
     Faction = 1

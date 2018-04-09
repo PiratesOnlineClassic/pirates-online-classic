@@ -17,7 +17,7 @@ def decodeSCEmoteWhisperMsg(emoteId, avName):
 
 
 class SCEmoteTerminal(SCTerminal):
-    
+    __module__ = __name__
 
     def __init__(self, emoteId):
         SCTerminal.__init__(self)

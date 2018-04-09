@@ -16,7 +16,7 @@ from PooledEffect import PooledEffect
 DebrisDict = {'0': 'models/props/rock_1_floor', '1': 'models/props/rock_2_floor', '2': 'models/props/rock_3_floor', '3': 'models/props/rock_4_floor'}
 
 class RockDebris(PooledEffect):
-    
+    __module__ = __name__
     BaseEndPlaneZ = -10
 
     def __init__(self):

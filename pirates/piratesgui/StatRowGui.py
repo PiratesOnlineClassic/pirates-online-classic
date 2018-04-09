@@ -8,7 +8,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class StatRowGui(DirectFrame):
-    
+    __module__ = __name__
     Width = PiratesGuiGlobals.TMCompletePanelWidth - PiratesGuiGlobals.GridSize
     Height = PiratesGuiGlobals.TMCompletePageHeight / 7
 

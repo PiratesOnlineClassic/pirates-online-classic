@@ -13,7 +13,7 @@ from PooledEffect import PooledEffect
 
 
 class MysticFire(PooledEffect, EffectController):
-    
+    __module__ = __name__
     cardScale = 64.0
     burningSfx = None
 

@@ -17,7 +17,7 @@ from pirates.reputation.ReputationGlobals import getLevelFromTotalReputation
 
 
 class DistributedQuestGiver(Avatar.Avatar):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedQuestGiver')
     NoOffer = 0
     LadderOffer = 1

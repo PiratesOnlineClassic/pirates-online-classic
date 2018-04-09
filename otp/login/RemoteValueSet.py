@@ -8,7 +8,7 @@ from direct.directnotify import DirectNotifyGlobal
 
 
 class RemoteValueSet:
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('RemoteValueSet')
 
     def __init__(self, url, http, body='', expectedHeader=None, expectedFields=[], onUnexpectedResponse=None):

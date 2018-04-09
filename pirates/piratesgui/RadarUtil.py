@@ -7,7 +7,7 @@ from pandac.PandaModules import *
 
 
 class RadarUtil(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, *args, **kwargs):
         super(DirectFrame, self).__init__(*args, **kwargs)

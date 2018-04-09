@@ -12,7 +12,7 @@ from PooledEffect import PooledEffect
 
 
 class SparkBurst(PooledEffect, EffectController):
-    
+    __module__ = __name__
     darkCardScale = 128.0
     blueCardScale = 128.0
     cardScale = 128.0

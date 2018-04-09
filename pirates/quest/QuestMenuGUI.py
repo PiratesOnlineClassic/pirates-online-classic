@@ -14,7 +14,7 @@ from pirates.quest import QuestConstants
 
 
 class QuestMenuGUI(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, offers, callback, descriptionCallback):
         DirectFrame.__init__(self, relief=None, pos=(-0.5, 0, -0.4))

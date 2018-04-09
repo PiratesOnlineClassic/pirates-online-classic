@@ -9,7 +9,7 @@ from pirates.kraken.TentacleUtils import TentacleUtils
 
 
 class DoomTentacle(Actor, TentacleUtils):
-    
+    __module__ = __name__
     ModelInfo = ('models/char/doomTentacle_high', 'models/char/doomTentacle_')
     SfxNames = dict()
     SfxNames.update({'pain': 'sfx_crab_pain.mp3', 'death': 'sfx_crab_death.mp3'})

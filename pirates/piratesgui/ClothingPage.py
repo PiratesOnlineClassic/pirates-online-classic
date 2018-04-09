@@ -8,7 +8,7 @@ from pirates.piratesgui import InventoryPage, PiratesGuiGlobals
 
 
 class ClothingPage(InventoryPage.InventoryPage):
-    
+    __module__ = __name__
 
     def __init__(self):
         InventoryPage.InventoryPage.__init__(self)

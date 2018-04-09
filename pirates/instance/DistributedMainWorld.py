@@ -13,7 +13,7 @@ from pirates.effects.FireworkGlobals import *
 from pirates.effects.FireworkShowManager import FireworkShowManager
 
 class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedMainWorld')
 
     def __init__(self, cr):

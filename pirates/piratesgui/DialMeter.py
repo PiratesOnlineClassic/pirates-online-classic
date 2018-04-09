@@ -7,7 +7,7 @@ from pandac.PandaModules import *
 
 
 class DialMeter(DirectFrame):
-    
+    __module__ = __name__
     MeterFull = None
     MeterHalf = None
 

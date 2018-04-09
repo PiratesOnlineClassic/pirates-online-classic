@@ -7,7 +7,7 @@ from pirates.battle import WeaponGlobals
 
 
 class RangeDetector(NodePath):
-    
+    __module__ = __name__
 
     def __init__(self):
         NodePath.__init__(self, 'rangeDetector')

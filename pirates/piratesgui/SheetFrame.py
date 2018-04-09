@@ -6,7 +6,7 @@ from pirates.piratesgui import ListFrame, PiratesGuiGlobals
 
 
 class SheetFrame(ListFrame.ListFrame):
-    
+    __module__ = __name__
 
     def __init__(self, w, h, title, holder=None, hideAll=True, delayedReveal=None, **kw):
         ListFrame.ListFrame.__init__(self, w, h, title, holder, hideAll, delayedReveal, frameColor=(1,

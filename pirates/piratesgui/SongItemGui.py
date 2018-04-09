@@ -18,7 +18,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class SongItemGui(SongListItem):
-    
+    __module__ = __name__
     width = PiratesGuiGlobals.InventoryItemGuiWidth
     height = PiratesGuiGlobals.InventoryItemGuiHeight
     available = True

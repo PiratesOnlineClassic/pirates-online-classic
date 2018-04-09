@@ -8,7 +8,7 @@ from pirates.creature.Creature import Creature
 
 
 class Wasp(Creature):
-    
+    __module__ = __name__
     ModelInfo = ('models/char/wasp_hi', 'models/char/wasp_')
     SfxNames = dict(Creature.SfxNames)
     SfxNames.update({'death': 'sfx_wasp_death.mp3', 'pain': 'sfx_wasp_ouch.mp3'})
@@ -17,7 +17,7 @@ class Wasp(Creature):
      ('idle', 'idle'), ('idle_flying', 'idle_fly'), ('walk', 'walk'), ('drop', 'react_drop'), ('advance', 'attack_advance'), ('sting', 'attack_sting'), ('leap_sting', 'attack_leap_sting'), ('pain', 'react_pull_back'), ('death', 'react_death'))
 
     class AnimationMixer(Creature.AnimationMixer):
-        
+        __module__ = __name__
         notify = DirectNotifyGlobal.directNotify.newCategory('WaspAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION

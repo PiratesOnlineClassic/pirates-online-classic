@@ -17,11 +17,11 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('OrbitCamera')
 
     class ParamSet(ParamObj.ParamSet):
-        
+        __module__ = __name__
         Params = {'lookAtOffset': Vec3(0, 0, 0), 'escapement': 10.0, 'rotation': 0.0, 'fadeGeom': False, 'idealDistance': 25.0, 'minDistance': 3.0, 'maxDistance': 40.0, 'minEsc': -20.0, 'maxEsc': 25.0, 'minDomeEsc': 0.0, 'maxCamtiltEsc': 0.0, 'autoFaceForward': True, 'autoFaceForwardMaxDur': 14.0}
 
     UpdateTaskName = 'OrbitCamUpdateTask'

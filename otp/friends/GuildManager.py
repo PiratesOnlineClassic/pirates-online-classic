@@ -16,7 +16,7 @@ GUILDRANK_OFFICER = 2
 GUILDRANK_MEMBER = 1
 
 class GuildMemberInfo(AvatarHandle):
-    
+    __module__ = __name__
 
     def __init__(self, name, isOnline, rank, bandId):
         self.name = name
@@ -49,7 +49,7 @@ class GuildMemberInfo(AvatarHandle):
 
 
 class GuildManager(DistributedObjectGlobal):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('GuildManager')
 
     def __init__(self, cr):

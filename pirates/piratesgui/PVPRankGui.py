@@ -20,7 +20,7 @@ SHIP_RENOWN_DISPLAY = 0
 LAND_RENOWN_DISPLAY = 1
 
 class PVPRankGui(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, parent, displayType, **kw):
         DirectFrame.__init__(self, parent, **kw)

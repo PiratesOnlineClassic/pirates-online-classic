@@ -12,7 +12,7 @@ from pirates.world import DistributedGameArea, DistributedIsland
 
 
 class DistributedGAConnector(DistributedNode.DistributedNode):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedGAConnector')
 
     def __init__(self, cr, name='DistributedGAConnector'):

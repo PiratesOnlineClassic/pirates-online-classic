@@ -50,7 +50,7 @@ def getMissSfx():
 
 
 class Consumable(Weapon.Weapon):
-    
+    __module__ = __name__
 
     def __init__(self, itemId):
         Weapon.Weapon.__init__(self, itemId, 'consumable')

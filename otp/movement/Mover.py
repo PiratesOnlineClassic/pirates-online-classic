@@ -11,7 +11,7 @@ from panda3d.core import *
 
 
 class Mover:
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('Mover')
     SerialNum = 0
     Profile = 0

@@ -6,5 +6,5 @@ from direct.distributed import DistributedObject
 
 
 class TestObject(DistributedObject.DistributedObject):
-    
+    __module__ = __name__
 # okay decompiling .\pirates\testobject\TestObject.pyc

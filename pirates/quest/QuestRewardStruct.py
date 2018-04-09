@@ -6,6 +6,6 @@ from direct.showbase.PythonUtil import POD
 
 
 class QuestRewardStruct(POD):
-    
+    __module__ = __name__
     DataSet = {'rewardType': None, 'amount': None, 'questId': None}
 # okay decompiling .\pirates\quest\QuestRewardStruct.pyc

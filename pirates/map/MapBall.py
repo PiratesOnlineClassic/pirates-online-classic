@@ -10,7 +10,7 @@ from pirates.map.ArcBall import ArcBall
 
 
 class MapBall(ArcBall):
-    
+    __module__ = __name__
 
     def __init__(self, name, worldMap, maxTilt=math.pi / 4, mapSize=2.0, *args, **kwargs):
         ArcBall.__init__(self, name, *args, **kwargs)

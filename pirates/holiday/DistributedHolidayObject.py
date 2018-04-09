@@ -7,7 +7,7 @@ from pandac.PandaModules import NodePath
 from pirates.distributed.DistributedInteractive import DistributedInteractive
 
 class DistributedHolidayObject(DistributedInteractive):
-    
+    __module__ = __name__
 
     def __init__(self, cr, proximityText):
         NodePath.__init__(self, self.__class__.__name__)

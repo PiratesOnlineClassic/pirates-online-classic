@@ -16,7 +16,7 @@ from pirates.world import GameTypeGlobals
 
 
 class LookoutRequestLVL2(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, name, titleTextScale=None, itemList=None, parentPanel=None):
         self.width = PiratesGuiGlobals.LookoutRequestLVL2Width

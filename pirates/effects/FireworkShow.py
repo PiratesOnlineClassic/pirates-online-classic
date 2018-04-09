@@ -13,7 +13,7 @@ from pirates.effects.FireworkGlobals import *
 colors = [Vec4(1, 1, 1, 1), Vec4(1, 0, 0, 1), Vec4(0, 1, 0, 1), Vec4(0.3, 1, 0.3, 1), Vec4(0.2, 0.2, 1, 1), Vec4(1, 1, 0, 1), Vec4(1, 0.5, 0, 1), Vec4(1, 0, 1, 1), Vec4(0, 1, 1, 1), Vec4(0, 0.5, 1, 1)]
 
 class FireworkShow(NodePath):
-    
+    __module__ = __name__
 
     def __init__(self, showType):
         NodePath.__init__(self, 'FireworkShow')

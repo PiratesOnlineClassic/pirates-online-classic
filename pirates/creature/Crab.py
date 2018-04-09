@@ -8,7 +8,7 @@ from pirates.creature.Creature import Creature
 
 
 class Crab(Creature):
-    
+    __module__ = __name__
     ModelInfo = ('models/char/crab_hi', 'models/char/crab_')
     SfxNames = dict(Creature.SfxNames)
     SfxNames.update({'pain': 'sfx_crab_pain.mp3', 'death': 'sfx_crab_death.mp3'})
@@ -17,7 +17,7 @@ class Crab(Creature):
      ('idle', 'idle'), ('walk', 'walk'), ('attack_left', 'attack_left'), ('attack_right', 'attack_right'), ('attack_both', 'attack_both'), ('pain', 'pain'), ('death', 'death'))
 
     class AnimationMixer(Creature.AnimationMixer):
-        
+        __module__ = __name__
         notify = DirectNotifyGlobal.directNotify.newCategory('CrabAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION

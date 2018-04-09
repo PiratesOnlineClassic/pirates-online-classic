@@ -40,7 +40,7 @@ def nLerp(a, b, t):
 
 
 class ArcBall(NodePath, DirectObject):
-    
+    __module__ = __name__
 
     def __init__(self, name, radius=1, scrollFactor=1, camera=base.cam, frame=Vec4(-1, 1, -1, 1), keepUpright=0, mouseDownEvent='mouse1', mouseUpEvent='mouse1-up', *args, **kwargs):
         NodePath.__init__(self, name, *args, **kwargs)

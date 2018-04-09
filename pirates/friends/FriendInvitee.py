@@ -12,7 +12,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class FriendInviteeButton(RequestButton):
-    
+    __module__ = __name__
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -20,7 +20,7 @@ class FriendInviteeButton(RequestButton):
 
 
 class FriendInvitee(GuiPanel.GuiPanel):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('FriendInvitee')
 
     def __init__(self, avId, avName, isPlayerInvite):

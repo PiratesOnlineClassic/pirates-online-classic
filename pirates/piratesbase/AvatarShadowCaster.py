@@ -7,7 +7,7 @@ from pirates.piratesbase import TODGlobals
 
 
 class AvatarShadowCaster(DirectObject):
-    
+    __module__ = __name__
 
     def __init__(self, lightSrc):
         DirectObject.__init__(self)

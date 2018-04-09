@@ -19,7 +19,7 @@ from pirates.uberdog.UberDogGlobals import (InventoryCategory, InventoryId,
 MAX_REP = 6
 
 class SkillPage(InventoryPage.InventoryPage):
-    
+    __module__ = __name__
     MAX_UPGRADE_DOTS = 5
     EXCLUDED_SKILLS = [
      InventoryType.CannonGrappleHook]

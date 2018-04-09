@@ -10,7 +10,7 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class Trade(DistributedObject):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('Trade')
 
     def __init__(self, cr):

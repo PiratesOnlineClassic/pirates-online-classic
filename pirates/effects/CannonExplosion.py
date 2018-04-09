@@ -13,7 +13,7 @@ from PooledEffect import PooledEffect
 
 
 class CannonExplosion(PooledEffect, EffectController):
-    
+    __module__ = __name__
     splashSfx = []
     splashSfxNames = ('explo_wood_1.mp3', 'explo_wood_2.mp3')
 

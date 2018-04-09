@@ -9,7 +9,7 @@ from pirates.piratesgui.BorderFrame import BorderFrame
 
 
 class Tab(BorderFrame):
-    
+    __module__ = __name__
 
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('state', DGG.DISABLED, None), ('command', None, self.setCommand), ('extraArgs', [], self.setExtraArgs), ('name', name, None), ('mouseEntered', None, None), ('mouseLeft', None, None), ('selected', False, self.setSelected), ('textMayChange', 1, None))
@@ -83,7 +83,7 @@ class Tab(BorderFrame):
 
 
 class LeftTab(Tab):
-    
+    __module__ = __name__
 
     def __init__(self, tabBar, name, **kw):
         Tab.__init__(self, tabBar, name, **kw)
@@ -96,7 +96,7 @@ class LeftTab(Tab):
 
 
 class TopTab(Tab):
-    
+    __module__ = __name__
 
     def __init__(self, tabBar, name, **kw):
         Tab.__init__(self, tabBar, name, **kw)
@@ -109,7 +109,7 @@ class TopTab(Tab):
 
 
 class TabBar(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, backParent, frontParent, parent=None, offset=0, **kw):
         optiondefs = (('relief', None, None), ('state', DGG.DISABLED, None))

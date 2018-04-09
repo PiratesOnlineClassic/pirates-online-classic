@@ -21,7 +21,7 @@ from pirates.ship import ShipGlobals
 
 
 class QuestTaskDNA(POD):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('QuestTaskDNA')
     DataSet = {'location': LocationIds.ANY_LOCATION, 'autoTriggerInfo': tuple(), 'goalLocation': None}
 
@@ -161,7 +161,7 @@ class QuestTaskDNA(POD):
 
 
 class VisitTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'npcId': None}
 
     def handleNPCVisit(self, questEvent, taskState):
@@ -220,7 +220,7 @@ class VisitTaskDNA(QuestTaskDNA):
 
 
 class RecoverAvatarItemTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75, 'enemyType': AvatarTypes.AnyAvatar, 'level': 0}
 
     def getInitialTaskState(self, holder):
@@ -324,7 +324,7 @@ class RecoverAvatarItemTaskDNA(QuestTaskDNA):
 
 
 class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75, 'enemyType': AvatarTypes.AnyAvatar, 'level': 0, 'enemyList': (AvatarTypes.AnyAvatar,), 'enemyNames': ('', '')}
 
     def getInitialTaskState(self, holder):
@@ -433,7 +433,7 @@ class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
 
 
 class RecoverShipItemTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75, 'faction': None, 'hull': None, 'level': 0, 'isFlagship': False, 'level': 0}
 
     def getInitialTaskState(self, holder):
@@ -623,7 +623,7 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
 
 
 class RecoverContainerItemTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'containerId': PropIds.ANY_PROP, 'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75}
 
     def getInitialTaskState(self, holder):
@@ -723,7 +723,7 @@ class RecoverContainerItemTaskDNA(QuestTaskDNA):
 
 
 class DeliverItemTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'item': None, 'num': 1, 'npcId': None, 'location': None}
 
     def handleNPCVisit(self, questEvent, taskState):
@@ -812,7 +812,7 @@ class DeliverItemTaskDNA(QuestTaskDNA):
 
 
 class SmuggleItemTaskDNA(DeliverItemTaskDNA):
-    
+    __module__ = __name__
 
     def getSCSummaryText(self, state):
         if self.npcId:
@@ -880,7 +880,7 @@ class SmuggleItemTaskDNA(DeliverItemTaskDNA):
 
 
 class MaroonNPCTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'npcId': None}
 
     def handleDockedAtPort(self, questEvent, taskState):
@@ -920,7 +920,7 @@ class MaroonNPCTaskDNA(QuestTaskDNA):
 
 
 class BribeNPCTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'npcId': None, 'gold': 1, 'bribeType': 0}
 
     def handleNPCBribe(self, questEvent, taskState):
@@ -977,11 +977,11 @@ class BribeNPCTaskDNA(QuestTaskDNA):
 
 
 class PurchaseItemTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
 
 
 class PokerTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'gold': 1}
 
     def getInitialTaskState(self, holder):
@@ -1032,7 +1032,7 @@ class PokerTaskDNA(QuestTaskDNA):
 
 
 class BlackjackTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'gold': 1}
 
     def getInitialTaskState(self, holder):
@@ -1083,7 +1083,7 @@ class BlackjackTaskDNA(QuestTaskDNA):
 
 
 class RecoverTreasureItemTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'treasureId': TreasureIds.ANY_TREASURE, 'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75}
 
     def getInitialTaskState(self, holder):
@@ -1181,7 +1181,7 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
 
 
 class DefeatTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'enemyType': AvatarTypes.AnyAvatar, 'num': 1, 'level': 0, 'weaponType': None}
 
     def getInitialTaskState(self, holder):
@@ -1345,7 +1345,7 @@ class DefeatTaskDNA(QuestTaskDNA):
 
 
 class DefeatGroupTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'enemyList': (AvatarTypes.AnyAvatar,), 'num': 1, 'level': 0, 'weaponType': None, 'enemyNames': ('', '')}
 
     def getInitialTaskState(self, holder):
@@ -1475,7 +1475,7 @@ class DefeatGroupTaskDNA(QuestTaskDNA):
 
 
 class ShipPVPDefeatTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'enemyClass': None, 'num': None, 'damage': None, 'gameType': None, 'killType': None, 'killWeapon': None, 'damageWeapon': None, 'withoutSink': False}
 
     def getInitialTaskState(self, holder):
@@ -1714,7 +1714,7 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
 
 
 class DefeatNPCTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'npcId': None}
 
     def handleNPCDefeat(self, questEvent, taskState):
@@ -1751,7 +1751,7 @@ class DefeatNPCTaskDNA(QuestTaskDNA):
 
 
 class DefeatShipTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'faction': None, 'hull': None, 'level': 0, 'isFlagship': False, 'num': 1, 'level': 0}
 
     def getInitialTaskState(self, holder):
@@ -1965,7 +1965,7 @@ class DefeatShipTaskDNA(QuestTaskDNA):
 
 
 class RandomizedDefeatTaskDNA(DefeatTaskDNA):
-    
+    __module__ = __name__
 
     def getInitialTaskState(self, holder):
         state = DefeatTaskDNA.getInitialTaskState(self, holder)
@@ -1997,7 +1997,7 @@ class RandomizedDefeatTaskDNA(DefeatTaskDNA):
 
 
 class RandomizedDefeatShipTaskDNA(DefeatShipTaskDNA):
-    
+    __module__ = __name__
 
     def getInitialTaskState(self, holder):
         state = DefeatShipTaskDNA.getInitialTaskState(self, holder)
@@ -2046,7 +2046,7 @@ class RandomizedDefeatShipTaskDNA(DefeatShipTaskDNA):
 
 
 class ViewCutsceneTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'npcId': None, 'cutsceneId': None, 'dialogId': None, 'waitEvent': None}
 
     def handleStart(self, avId):
@@ -2118,7 +2118,7 @@ class ViewCutsceneTaskDNA(QuestTaskDNA):
 
 
 class CaptureShipNPCTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'npcId': None, 'maxAttempts': 2, 'probability': 0.9, 'faction': None, 'hull': None, 'level': 0, 'isFlagship': False, 'level': 0}
 
     def handleShipDefeat(self, questEvent, taskState):
@@ -2232,7 +2232,7 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
 
 
 class CaptureNPCTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'npcId': None, 'itemId': None}
 
     def getSCSummaryText(self, state):
@@ -2252,7 +2252,7 @@ class CaptureNPCTaskDNA(QuestTaskDNA):
 
 
 class BossBattleTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'treasureMapId': None}
 
     def handleBossBattleCompleted(self, questEvent, taskState):
@@ -2280,7 +2280,7 @@ class BossBattleTaskDNA(QuestTaskDNA):
 
 
 class DeployShipTaskDNA(QuestTaskDNA):
-    
+    __module__ = __name__
     DataSet = {'location': None}
 
     def handleDeployedShip(self, questEvent, taskState):

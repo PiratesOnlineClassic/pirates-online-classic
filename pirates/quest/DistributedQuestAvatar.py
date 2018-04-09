@@ -13,7 +13,7 @@ from pirates.quest.QuestStepIndicator import QuestStepIndicator
 
 
 class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestHolder):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedQuestAvatar')
 
     def __init__(self):

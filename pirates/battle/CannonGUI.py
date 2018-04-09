@@ -14,7 +14,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class CannonGUI(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, cannon):
         gui = loader.loadModelOnce('models/gui/toplevel_gui')

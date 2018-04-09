@@ -3,7 +3,7 @@ from pirates.band import BandConstance
 
 
 class DistributedPirateBandManager(DistributedObject):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('PirateBandManager')
 
     def __init__(self, cr):

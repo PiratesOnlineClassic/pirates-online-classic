@@ -6,7 +6,7 @@ from pirates.instance import DistributedInstanceBase
 from pandac.PandaModules import NodePath
 
 class DistributedTeleportZone(DistributedInstanceBase.DistributedInstanceBase, NodePath):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedInstanceBase.DistributedInstanceBase.__init__(self, cr)

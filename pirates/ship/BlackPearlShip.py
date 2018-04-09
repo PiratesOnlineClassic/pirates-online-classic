@@ -6,7 +6,7 @@ from pirates.ship.DistributedShip import DistributedShip
 
 
 class BlackPearlShip(DistributedShip):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedShip.__init__(self, cr)

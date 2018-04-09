@@ -14,7 +14,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 TextDict = {PiratesGlobals.RewardBlackPearl: [PLocalizer.RewardBlackPearlComplete, PLocalizer.RewardBlackPearlReward, PLocalizer.RewardBlackPearlDescription, 'sail_recharge', False], PiratesGlobals.RewardVoodooDoll: [PLocalizer.RewardVoodooDollComplete, PLocalizer.RewardVoodooDollReward, PLocalizer.RewardVoodooDollDescription, 'doll', True], PiratesGlobals.RewardDagger: [PLocalizer.RewardDaggerComplete, PLocalizer.RewardDaggerReward, PLocalizer.RewardDaggerDescription, 'dagger', True], PiratesGlobals.RewardVoodooStaff: [PLocalizer.RewardVoodooStaffComplete, PLocalizer.RewardVoodooStaffReward, PLocalizer.RewardVoodooStaffDescription, 'staff', True], PiratesGlobals.RewardGrenade: [PLocalizer.RewardGrenadeComplete, PLocalizer.RewardGrenadeReward, PLocalizer.RewardGrenadeDescription, 'grenade', True]}
 
 class RewardPanel(PDialog):
-    
+    __module__ = __name__
 
     def __init__(self, parent=None, type=PiratesGlobals.RewardBlackPearl, doneCallback=None, **kw):
         optiondefs = (('pad', (0.55, 0.475), self.resetFrameSize),)

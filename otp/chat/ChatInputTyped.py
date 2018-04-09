@@ -11,7 +11,7 @@ from pandac.PandaModules import *
 
 
 class ChatInputTyped(DirectObject.DirectObject):
-    
+    __module__ = __name__
     ExecNamespace = None
 
     def __init__(self, mainEntry=0):

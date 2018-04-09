@@ -15,7 +15,7 @@ from pirates.ship.ShipMeter import ShipMeter
 
 
 class Item(NodePath):
-    
+    __module__ = __name__
 
     def __init__(self, name, *args, **kwargs):
         NodePath.__init__(self, name, *args, **kwargs)
@@ -31,7 +31,7 @@ class Item(NodePath):
 
 
 class Billboard(Item):
-    
+    __module__ = __name__
 
     def __init__(self, name, nodePath=NodePath(), *args, **kwargs):
         Item.__init__(self, name, *args, **kwargs)
@@ -48,7 +48,7 @@ class Billboard(Item):
 
 
 class Model(Item):
-    
+    __module__ = __name__
 
     def __init__(self, name, modelName, scale=1.0, modelPath=None, *args, **kwargs):
         Item.__init__(self, name, *args, **kwargs)
@@ -82,7 +82,7 @@ class Model(Item):
 
 
 class PickableModel(Model):
-    
+    __module__ = __name__
 
     def __init__(self, name, modelName, scale=1.0, collisionIndex=17, modelPath=None, *args, **kwargs):
         Model.__init__(self, name, modelName, scale, modelPath, *args, **kwargs)
@@ -94,7 +94,7 @@ class PickableModel(Model):
 
 
 class BillboardModel(Billboard, PickableModel):
-    
+    __module__ = __name__
 
     def __init__(self, name, modelName, nodePath=NodePath(), offset=0.0, scale=1.0, collisionIndex=17, *args, **kwargs):
         Billboard.__init__(self, name, nodePath)
@@ -103,7 +103,7 @@ class BillboardModel(Billboard, PickableModel):
 
 
 class Ship(Item):
-    
+    __module__ = __name__
 
     def __init__(self, shipInfo, *args, **kwargs):
         name = shipInfo[1]
@@ -141,7 +141,7 @@ class Ship(Item):
 
 
 class Island(PickableModel):
-    
+    __module__ = __name__
 
     def __init__(self, name, islandUid, modelName, isTeleportIsland, scale=1.0, collisionIndex=17, stencilId=0, *args, **kwargs):
         PickableModel.__init__(self, name, modelName, (scale / 160.0), collisionIndex, *args, **kwargs)
@@ -202,7 +202,7 @@ class Island(PickableModel):
 
 
 class Text(Billboard):
-    
+    __module__ = __name__
 
     def __init__(self, name, nodePath, offset, text, stencilId, scale=0.025, *args, **kwargs):
         Billboard.__init__(self, name, nodePath, *args, **kwargs)
@@ -223,7 +223,7 @@ class Text(Billboard):
 
 
 class TextIsland(Island):
-    
+    __module__ = __name__
 
     def __init__(self, name, islandUid, modelName, isTeleportIsland, nodePath=NodePath(), offset=0.0, scale=1.0, collisionIndex=17, stencilId=0, *args, **kwargs):
         Island.__init__(self, name, islandUid, modelName, isTeleportIsland, scale, collisionIndex, stencilId, *args, **kwargs)
@@ -420,7 +420,7 @@ class TextIsland(Island):
 
 
 class OceanAreaText(Text):
-    
+    __module__ = __name__
 
     def __init__(self, name, areaUid):
         name = PLocalizer.LocationNames[name]
@@ -462,7 +462,7 @@ class OceanAreaText(Text):
 
 
 class Swirl(Model):
-    
+    __module__ = __name__
 
     def __init__(self, name, scale=1.0, speed=1, *args, **kwargs):
         Model.__init__(self, name, 'models/worldmap/world_map_swirl', (scale / 80.0), *args, **kwargs)
@@ -473,7 +473,7 @@ class Swirl(Model):
 
 
 class Dart(PickableModel):
-    
+    __module__ = __name__
 
     def __init__(self, name, parent, defaultPos, color=Vec4(1), offset=0.0, *args, **kwargs):
         self.startScale = 0.075

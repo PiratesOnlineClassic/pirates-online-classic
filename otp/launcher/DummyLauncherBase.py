@@ -13,7 +13,7 @@ from pandac.PandaModules import *
 
 
 class DummyLauncherBase:
-    
+    __module__ = __name__
 
     def __init__(self):
         self.logPrefix = ''

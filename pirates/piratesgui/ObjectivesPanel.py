@@ -10,7 +10,7 @@ from pirates.piratesgui.ListFrame import ListFrame
 
 
 class ObjectivesPanel(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, name, holder=None, mouseFade=False):
         DirectFrame.__init__(self, relief=None, frameSize=(0.0, PiratesGuiGlobals.ObjectivesPanelWidth, 0.0, PiratesGuiGlobals.ObjectivesPanelHeight))

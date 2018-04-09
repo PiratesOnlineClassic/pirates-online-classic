@@ -14,7 +14,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class Fireflies(EffectController, NodePath):
-    
+    __module__ = __name__
     cardScale = 128.0
 
     def __init__(self):

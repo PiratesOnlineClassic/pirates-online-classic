@@ -15,7 +15,7 @@ from pirates.quest.QuestTaskDNA import VisitTaskDNA
 
 
 class QuestContainerDNA(POD):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestContainerDNA')
     Counter = 1102
     DataSet = {'name': None, 'questInt': -1, 'title': '', 'description': '', 'giverId': None, 'firstQuestId': None, 'containers': None, 'rewards': tuple(), 'completeCount': QuestChoice.CompleteAll, 'dialogBefore': '', 'dialogDuring': '', 'dialogAfter': '', 'dialogBrushoff': '', 'droppable': False}
@@ -136,21 +136,21 @@ class QuestContainerDNA(POD):
 
 
 class QuestChoiceDNA(QuestContainerDNA):
-    
+    __module__ = __name__
 
     def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
         return QuestChoice(name, title, av, questInt, parent, giverId, rewards, description, completeCount)
 
 
 class QuestChoiceSingleDNA(QuestContainerDNA):
-    
+    __module__ = __name__
 
     def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
         return QuestChoiceSingle(name, title, av, questInt, parent, giverId, rewards, firstQuestId, description)
 
 
 class QuestLadderDNA(QuestContainerDNA):
-    
+    __module__ = __name__
 
     def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
         return QuestLadder(name, title, av, questInt, parent, giverId, rewards, firstQuestId, description)

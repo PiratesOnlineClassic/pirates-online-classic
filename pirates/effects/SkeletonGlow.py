@@ -14,7 +14,7 @@ from PooledEffect import PooledEffect
 
 
 class SkeletonGlow(PooledEffect, EffectController):
-    
+    __module__ = __name__
 
     def __init__(self, newParent=render, billboardOffset=0.0):
         PooledEffect.__init__(self)

@@ -16,7 +16,7 @@ from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 
 
 class DistributedDinghy(DistributedInteractive):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedDinghy')
     camPos = Point3(227.48, 222.273, 71.208)
     camHpr = VBase3(172.233, -15.2738, -0.376993)

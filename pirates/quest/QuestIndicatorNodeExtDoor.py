@@ -9,7 +9,7 @@ from pirates.quest.QuestIndicatorGridNode import QuestIndicatorGridNode
 
 
 class QuestIndicatorNodeExtDoor(QuestIndicatorGridNode):
-    
+    __module__ = __name__
 
     def __init__(self, questStep):
         self.nearEffect = None

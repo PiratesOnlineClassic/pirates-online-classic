@@ -4,7 +4,7 @@
 # Embedded file name: pirates.seapatch.LerpSeaPatchInterval
 
 class LerpSeaPatchInterval():
-    
+    __module__ = __name__
     lerpNum = 1
 
     def __init__(self, name, duration, blendType, patch, initial, target):

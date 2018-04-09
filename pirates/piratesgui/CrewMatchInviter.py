@@ -13,7 +13,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class CrewMatchInviterButton(RequestButton):
-    
+    __module__ = __name__
 
     def __init__(self, text, command):
         if text == PLocalizer.CrewMatchAdvancedOptionsButton or text == PLocalizer.CrewMatchSimpleOptionsButton:
@@ -24,7 +24,7 @@ class CrewMatchInviterButton(RequestButton):
 
 
 class CrewMatchInviter(GuiPanel.GuiPanel):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('CrewMatchInviter')
 
     def __init__(self, currentRepLevel, advancedOptions=False):

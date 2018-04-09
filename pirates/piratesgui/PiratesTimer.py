@@ -15,7 +15,7 @@ from pirates.piratesgui import GuiButton, PiratesGuiGlobals
 
 
 class PiratesTimer(OTPTimer.OTPTimer):
-    
+    __module__ = __name__
     BGImage = None
 
     def __init__(self, showMinutes=0, mode=None, titleText='', titleFg=None, infoText='', cancelText='', cancelCallback=None, alarmTime=0):

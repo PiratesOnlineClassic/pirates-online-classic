@@ -6,7 +6,7 @@ from pirates.pirate.AvatarType import AvatarType
 
 
 class AvatarTypeSet(AvatarType):
-    
+    __module__ = __name__
 
     def __init__(self, strings, *avatarTypes):
         self._strings = strings

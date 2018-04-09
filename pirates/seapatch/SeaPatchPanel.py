@@ -13,7 +13,7 @@ from pandac.PandaModules import *
 
 
 class SeaPatchPanel(AppShell):
-    
+    __module__ = __name__
     appversion = '1.0'
     appname = 'SeaPatch Panel'
     frameWidth = 500

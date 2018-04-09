@@ -17,7 +17,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class NPCGUI(DirectFrame, StateData.StateData):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('NPCGUI')
 
     def __init__(self, main=None):

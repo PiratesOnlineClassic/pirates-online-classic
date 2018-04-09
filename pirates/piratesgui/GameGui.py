@@ -13,7 +13,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class GameGui(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, parent, **kw):
         gui = loader.loadModel('models/gui/toplevel_gui')

@@ -11,7 +11,7 @@ from pirates.piratesgui.ShipStatFrame import ShipStatFrame
 
 
 class ShipFrameBottle(ShipFrame):
-    
+    __module__ = __name__
 
     def __init__(self, parent, **kw):
         optiondefs = (('frameSize', (0, 0.9, 0.0, 0.53), None), ('frameColor', PiratesGuiGlobals.ButtonColor1, None), ('relief', DGG.FLAT, None), ('shipPos', VBase3(0.58, 0, 0.13), None), ('shipHpr', VBase3(-70, 6, 15), None), ('shipScale', VBase3(0.65), None), ('inBottle', True, self.setInBottle))

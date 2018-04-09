@@ -11,7 +11,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class DistributedNPCPirate(DistributedBattleNPC.DistributedBattleNPC, DistributedPirateBase.DistributedPirateBase):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCPirate')
 
     def __init__(self, cr):

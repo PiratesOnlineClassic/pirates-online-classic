@@ -12,7 +12,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class InteractionManager(DirectObject.DirectObject):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('InteractionManager')
     Forward = Vec3(0, 1, 0)
 

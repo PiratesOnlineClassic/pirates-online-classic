@@ -16,7 +16,7 @@ from pirates.piratesgui import PirateMemberList, PiratesGuiGlobals, SocialPage
 
 
 class FriendsPage(SocialPage.SocialPage):
-    
+    __module__ = __name__
     NumVisible = 6
 
     def __init__(self):

@@ -13,7 +13,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class TeleportConfirmButton(RequestButton):
-    
+    __module__ = __name__
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -21,7 +21,7 @@ class TeleportConfirmButton(RequestButton):
 
 
 class TeleportConfirm(GuiPanel.GuiPanel):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('TeleportConfirm')
 
     def __init__(self, avId, avName):

@@ -10,7 +10,7 @@ from PooledEffect import PooledEffect
 
 
 class WaterMist(PooledEffect, EffectController):
-    
+    __module__ = __name__
 
     def __init__(self, parent=None):
         PooledEffect.__init__(self)

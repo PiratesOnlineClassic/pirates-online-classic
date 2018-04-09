@@ -6,7 +6,7 @@ from pirates.instance.DistributedInstanceBase import DistributedInstanceBase
 from pandac.PandaModules import NodePath
 
 class DistributedInstanceWorld(DistributedInstanceBase, NodePath):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedInstanceBase.__init__(self, cr)

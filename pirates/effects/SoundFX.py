@@ -9,7 +9,7 @@ from pandac.PandaModules import *
 
 
 class SoundFX(NodePath):
-    
+    __module__ = __name__
 
     def __init__(self, sfxFile, volume=0.5, looping=True, delayMin=0, delayMax=0, pos=None, hpr=None, parent=None, listenerNode=None, taskName='playSfx', drawIcon=False):
         NodePath.NodePath.__init__(self, 'soundFX')

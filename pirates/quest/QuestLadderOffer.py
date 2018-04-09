@@ -7,7 +7,7 @@ from pirates.quest import QuestLadderDB, QuestReward
 
 
 class QuestLadderOffer(POD):
-    
+    __module__ = __name__
     DataSet = {'questId': None, 'title': '', 'rewardStructs': tuple()}
 
     def __init__(self, questId=None, title=None, rewards=None):

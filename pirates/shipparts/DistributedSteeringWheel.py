@@ -8,7 +8,7 @@ from pirates.shipparts import DistributedShippart, Wheel
 
 
 class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, DistributedShippart.DistributedShippart):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedSteeringWheel')
 
     def __init__(self, cr):

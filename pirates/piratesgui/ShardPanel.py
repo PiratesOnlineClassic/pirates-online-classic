@@ -12,7 +12,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 POP_COLORS = (Vec4(0.4, 0.4, 1.0, 1.0), Vec4(0.4, 1.0, 0.4, 1.0), Vec4(1.0, 0.4, 0.4, 1.0))
 
 class ShardPanel(DirectFrame):
-    
+    __module__ = __name__
     UPPOS = Vec3(0.55, 0, 1.52)
     DOWNPOS = Vec3(0.55, 0, 0.72)
     SHOWTIME = 0.5

@@ -12,7 +12,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 from pirates.effects.SmallFire import SmallFire
 
 class DistributedHolidayPig(DistributedHolidayObject):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedHolidayObject.__init__(self, cr, proximityText=PLocalizer.InteractHolidayPig)

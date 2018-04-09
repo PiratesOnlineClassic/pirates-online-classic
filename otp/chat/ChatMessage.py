@@ -5,7 +5,7 @@
 
 
 class ChatMessage:
-    
+    __module__ = __name__
 
     def __init__(self, timeStamp, type, body, flags, id, name, isPlayer, whisper, sentRatherThanReceived):
         self.timeStamp = timeStamp

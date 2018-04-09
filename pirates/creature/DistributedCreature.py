@@ -24,7 +24,7 @@ from pirates.piratesbase import PLocalizer
 CreatureTypes = {AvatarTypes.Crab: Crab, AvatarTypes.RockCrab: Crab, AvatarTypes.GiantCrab: Crab, AvatarTypes.Chicken: Chicken, AvatarTypes.Rooster: Rooster, AvatarTypes.Pig: Pig, AvatarTypes.Dog: Dog, AvatarTypes.Seagull: Seagull, AvatarTypes.Stump: Stump, AvatarTypes.FlyTrap: FlyTrap, AvatarTypes.Scorpion: Scorpion, AvatarTypes.DreadScorpion: Scorpion, AvatarTypes.Alligator: Alligator, AvatarTypes.BigGator: Alligator, AvatarTypes.HugeGator: Alligator, AvatarTypes.Bat: Bat, AvatarTypes.VampireBat: Bat, AvatarTypes.Wasp: Wasp, AvatarTypes.AngryWasp: Wasp, AvatarTypes.Monkey: Monkey}
 
 class DistributedCreature(DistributedBattleNPC):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCreature')
 
     def __init__(self, cr):

@@ -23,7 +23,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 BODY_CAMERA = 0
 
 class AccessoriesStoreTab(LeftTab):
-    
+    __module__ = __name__
 
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None))
@@ -34,7 +34,7 @@ class AccessoriesStoreTab(LeftTab):
 
 
 class AccessoriesStoreTabBar(TabBar):
-    
+    __module__ = __name__
 
     def refreshTabs(self):
         for x, name in enumerate(self.tabOrder):
@@ -56,7 +56,7 @@ class AccessoriesStoreTabBar(TabBar):
 
 
 class AccessoriesStoreCartList(DirectScrolledFrame):
-    
+    __module__ = __name__
 
     def __init__(self, parent, width, height, itemWidth, itemHeight):
         self.width = width + PiratesGuiGlobals.ScrollbarSize
@@ -197,7 +197,7 @@ class AccessoriesStoreCartList(DirectScrolledFrame):
 
 
 class AccessoriesStoreGUI(DirectFrame):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('AccessoriesStoreGUI')
     width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.5

@@ -12,7 +12,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class GuildMemberButton(RequestButton):
-    
+    __module__ = __name__
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command, 2.0)
@@ -20,7 +20,7 @@ class GuildMemberButton(RequestButton):
 
 
 class GuildMember(GuiPanel.GuiPanel):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('GuildMember')
 
     def __init__(self, avId, avName, guildId, canpromote, candemote, cankick):

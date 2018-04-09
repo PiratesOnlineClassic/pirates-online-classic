@@ -9,7 +9,7 @@ from pirates.pirate import AvatarTypes
 
 
 class Boss(BossBase):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         BossBase.__init__(self, cr)

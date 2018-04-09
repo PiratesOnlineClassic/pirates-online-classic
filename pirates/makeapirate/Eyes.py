@@ -19,7 +19,7 @@ damper = 0.5
 sliderRange = (-0.5, 0.5)
 
 class Eyes(DirectObject.DirectObject):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('Eyes')
 
     def __init__(self, main=None):

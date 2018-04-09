@@ -6,7 +6,7 @@ from direct.task import Task
 
 
 class Target:
-    
+    __module__ = __name__
 
     def __init__(self, ship):
         self.ship = ship
@@ -41,7 +41,7 @@ class Target:
 
 
 class ShipTargets:
-    
+    __module__ = __name__
 
     def __init__(self, ship):
         self.ship = ship

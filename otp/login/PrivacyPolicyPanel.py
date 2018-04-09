@@ -12,7 +12,7 @@ from pandac.PandaModules import *
 
 
 class PrivacyPolicyTextPanel(getGlobalDialogClass()):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('PrivacyPolicyTextPanel')
 
     def __init__(self, doneEvent, hidePageNum=0, pageChangeCallback=None, textList=[]):
@@ -31,7 +31,7 @@ class PrivacyPolicyTextPanel(getGlobalDialogClass()):
 
 
 class PrivacyPolicyPanel(getGlobalDialogClass()):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('PrivacyPolicyPanel')
 
     def __init__(self, doneEvent, hidePageNum=0, pageChangeCallback=None, textList=1):

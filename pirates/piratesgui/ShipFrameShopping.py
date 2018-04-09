@@ -11,7 +11,7 @@ from pirates.piratesgui.ShipSnapshot import ShipSnapshot
 
 
 class ShipFrameShopping(ShipFrameSelect):
-    
+    __module__ = __name__
 
     def __init__(self, parent, **kw):
         optiondefs = (('mode', 'repair', None), )

@@ -10,7 +10,7 @@ from pirates.piratesbase.PiratesGlobals import (femaleNames,
 
 
 class PCPickANamePattern(PickANamePatternTwoPartLastName):
-    
+    __module__ = __name__
     NameParts = None
 
     def _getNameParts(self, gender):

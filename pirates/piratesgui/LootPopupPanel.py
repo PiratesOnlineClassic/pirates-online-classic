@@ -20,7 +20,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class LootPopupPanel(StackMessage, DirectObject.DirectObject):
-    
+    __module__ = __name__
     width = 0.8
     height = 0.2
     lootSfx = None

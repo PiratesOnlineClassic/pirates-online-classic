@@ -14,7 +14,7 @@ from pirates.piratesgui import GuiButton, PiratesGuiGlobals
 
 
 class PiratesTimerHourglass(OTPTimer.OTPTimer):
-    
+    __module__ = __name__
 
     def __init__(self, showMinutes=0, mode=None, titleText='', titleFg=None, infoText='', cancelText='', cancelCallback=None):
         self.showMinutes = showMinutes

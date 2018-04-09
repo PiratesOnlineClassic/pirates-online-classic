@@ -8,7 +8,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class InventoryPage(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self):
         DirectFrame.__init__(self, relief=None, state=DGG.DISABLED, frameColor=PiratesGuiGlobals.FrameColor, borderWidth=PiratesGuiGlobals.BorderWidth, frameSize=(0.0, PiratesGuiGlobals.InventoryPageWidth, 0.0, PiratesGuiGlobals.InventoryPageHeight), pos=(-0.54, 0, -0.72))

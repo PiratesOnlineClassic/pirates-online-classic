@@ -16,7 +16,7 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class HighSeasScoreboard(GuiPanel.GuiPanel):
-    
+    __module__ = __name__
     width = PiratesGuiGlobals.PortPanelWidth
     height = PiratesGuiGlobals.PortPanelHeight
     titleHeight = PiratesGuiGlobals.PortTitleHeight

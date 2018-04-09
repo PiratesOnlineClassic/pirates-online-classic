@@ -13,7 +13,7 @@ from pirates.piratesgui import GuiButton, GuiPanel, PiratesGuiGlobals
 
 
 class ReportAPlayer(GuiPanel.GuiPanel, FSM.FSM):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('ReportAPlayer')
 
     def __init__(self, playerId, avId, avName):

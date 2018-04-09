@@ -6,7 +6,7 @@ from direct.distributed import DistributedObject
 
 
 class PiratesTutorialManager(DistributedObject.DistributedObject):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('PiratesTutorialManager')
     neverDisable = 1
 

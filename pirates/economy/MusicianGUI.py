@@ -17,7 +17,7 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class MusicianGUI(DirectFrame):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('MusicianGUI')
     width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.35

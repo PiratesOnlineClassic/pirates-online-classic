@@ -15,7 +15,7 @@ from pirates.quest.QuestPath import QuestStep
 
 
 class QuestStepIndicator:
-    
+    __module__ = __name__
     TypeMap = {QuestStep.STNPC: QuestIndicatorNodeNPC, QuestStep.STItem: QuestIndicatorNodeItem, QuestStep.STArea: QuestIndicatorNodeArea, QuestStep.STTunnel: QuestIndicatorNodeTunnel, QuestStep.STExteriorDoor: QuestIndicatorNodeExtDoor, QuestStep.STInteriorDoor: QuestIndicatorNodeIntDoor, QuestStep.STQuestNode: QuestIndicatorNodeQuestNode, QuestStep.STShip: QuestIndicatorNodeShip}
 
     def __init__(self):

@@ -54,7 +54,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class CombatEffect(NodePath):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('CombatEffect')
     MAX_DURATION = 10.0
 

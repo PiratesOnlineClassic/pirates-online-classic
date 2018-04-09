@@ -12,7 +12,7 @@ from pirates.quest import QuestConstants
 
 
 class QuestGoal:
-    
+    __module__ = __name__
     Type_Uid = 0
     Type_Custom = 1
 
@@ -101,7 +101,7 @@ class QuestGoal:
 
 
 class QuestStep:
-    
+    __module__ = __name__
     STNPC = 1
     STItem = 2
     STArea = 3
@@ -153,7 +153,7 @@ class QuestStep:
 
 
 class QuestPath:
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestPath')
 
     def __init__(self, air):

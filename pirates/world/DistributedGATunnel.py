@@ -11,7 +11,7 @@ from pirates.world import ClientArea
 
 
 class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientArea.ClientArea):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedGATunnel')
 
     def __init__(self, cr):

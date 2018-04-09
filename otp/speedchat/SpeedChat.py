@@ -10,7 +10,7 @@ from SpeedChatTypes import *
 
 
 class SpeedChat(SCMenu):
-    
+    __module__ = __name__
 
     def __init__(self, name='', structure=None, backgroundModelName=None, guiModelName=None):
         SCMenu.BackgroundModelName = backgroundModelName

@@ -18,7 +18,7 @@ from PooledEffect import PooledEffect
 DebrisDict = {'0': 'models/props/rock_1_floor', '1': 'models/props/rock_2_floor', '2': 'models/props/rock_3_floor', '3': 'models/props/rock_4_floor'}
 
 class FlamingDebris(PooledEffect):
-    
+    __module__ = __name__
 
     def __init__(self):
         PooledEffect.__init__(self)

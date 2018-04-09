@@ -206,7 +206,7 @@ class AnimationChannel:
 
 
 class PartMixer:
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('PartMixer')
 
     def __init__(self, mixer, channelCount, actor, partNameList):
@@ -261,7 +261,7 @@ class PartMixer:
 
 
 class AnimationMixer:
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('AnimationMixer')
     NA_INDEX = -1
     LOOP_INDEX = 0

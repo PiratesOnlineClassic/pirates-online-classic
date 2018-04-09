@@ -13,7 +13,7 @@ from pirates.piratesgui.TabBar import TabBar, TopTab
 
 
 class ChatTab(TopTab):
-    
+    __module__ = __name__
 
     def __init__(self, tabBar, name, text_xyz=None, **kw):
         optiondefs = (('suffix', '_c', None), ('frameSize', (0, 0.22, 0.0, 0.1), None), ('borderScale', 0.135, None), ('bgBuffer', 0.14, None), ('label', '', None), ('textMayChange', 1, None))
@@ -28,7 +28,7 @@ class ChatTab(TopTab):
 
 
 class ChatTabBar(TabBar):
-    
+    __module__ = __name__
 
     def refreshTabs(self):
         for x, name in enumerate(self.tabOrder):
@@ -55,7 +55,7 @@ class ChatTabBar(TabBar):
 
 
 class WhisperTab(TopTab):
-    
+    __module__ = __name__
 
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_c', None), ('frameSize', (0, 0.745, 0.0, 0.11), None), ('borderScale', 0.135, None), ('bgBuffer', 0.14, None))
@@ -66,7 +66,7 @@ class WhisperTab(TopTab):
 
 
 class WhisperTabBar(TabBar):
-    
+    __module__ = __name__
 
     def refreshTabs(self):
         for x, name in enumerate(self.tabOrder):
@@ -90,7 +90,7 @@ class WhisperTabBar(TabBar):
 
 
 class ChatBar(DirectFrame, FSM):
-    
+    __module__ = __name__
 
     def __init__(self, parent, chatMgr, chatEntry, whiteListEntry, *args, **kw):
         optiondefs = (('relief', None, None), ('state', DGG.DISABLED, None), ('frameSize', (0, 1, 0, 0.75), None), ('frameColor', (1, 0, 1, 0.2), None))

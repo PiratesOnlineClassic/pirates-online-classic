@@ -13,7 +13,7 @@ from direct.showbase.ShowBaseGlobal import *
 
 
 class HeadGUI(DirectObject.DirectObject):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('HeadGUI')
 
     def __init__(self, main=None):

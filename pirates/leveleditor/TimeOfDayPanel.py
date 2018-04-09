@@ -19,7 +19,7 @@ from pirates.piratesbase import TODGlobals
 
 
 class TimeOfDayPanel(AppShell):
-    
+    __module__ = __name__
     appname = 'Time Of Day Panel'
     appversion = '1.0'
     copyright = 'Copyright 2006 Walt Disney Internet Group.' + ' All Rights Reserved'

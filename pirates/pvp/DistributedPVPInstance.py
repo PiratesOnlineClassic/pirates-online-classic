@@ -22,7 +22,7 @@ JOINED = 2
 READY = 3
 
 class ScoreboardHolder:
-    
+    __module__ = __name__
 
     def __init__(self, game):
         self.game = game
@@ -38,7 +38,7 @@ class ScoreboardHolder:
 
 
 class StatsHolder:
-    
+    __module__ = __name__
 
     def __init__(self, game):
         self.game = game
@@ -62,7 +62,7 @@ class StatsHolder:
 
 
 class DistributedPVPInstance(DistributedInstanceWorld, FSM):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedPVPInstance')
     RulesDoneEvent = 'rulesDone'
 

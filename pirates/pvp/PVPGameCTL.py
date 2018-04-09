@@ -10,7 +10,7 @@ from pirates.ship import DistributedShip
 
 
 class PVPGameCTL(PVPGameBase):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('PVPGameCTL')
 
     def __init__(self, cr):

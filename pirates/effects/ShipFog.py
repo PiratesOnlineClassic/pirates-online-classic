@@ -13,7 +13,7 @@ from pandac.PandaModules import *
 
 
 class ShipFog(NodePath):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('ShipFog')
 
     def __init__(self, parent, psbskp, bin, binPriority, camera, renderParent=None, color=Vec4(1)):

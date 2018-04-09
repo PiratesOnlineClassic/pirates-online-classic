@@ -17,7 +17,7 @@ from PooledEffect import PooledEffect
 
 
 class Wake(PooledEffect):
-    
+    __module__ = __name__
     MinWakeVelocity = 6.0
     FadeOutVelocity = 10.0
     WakeFactor = 0.025

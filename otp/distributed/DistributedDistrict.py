@@ -7,7 +7,7 @@ from direct.distributed.DistributedObject import DistributedObject
 
 
 class DistributedDistrict(DistributedObject):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedDistrict')
     neverDisable = 1
 

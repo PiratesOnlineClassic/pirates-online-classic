@@ -18,7 +18,7 @@ damper = 0.5
 sliderRange = (-0.5, 0.5)
 
 class Shape(DirectObject.DirectObject):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('Shape')
 
     def __init__(self, main=None):

@@ -13,7 +13,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class Dagger(Weapon.Weapon):
-    
+    __module__ = __name__
     modelTypes = {InventoryType.DaggerWeaponL1: ('models/handheld/dagger_high', Vec4(1, 1, 1, 1)), InventoryType.DaggerWeaponL2: ('models/handheld/dagger_dirk_high', Vec4(1, 1, 1, 1)), InventoryType.DaggerWeaponL3: ('models/handheld/dagger_gauche_high', Vec4(1, 1, 1, 1)), InventoryType.DaggerWeaponL4: ('models/handheld/dagger_coltello_high', Vec4(1, 1, 1, 1)), InventoryType.DaggerWeaponL5: ('models/handheld/dagger_bloodletter_high', Vec4(1, 1, 1, 1)), InventoryType.DaggerWeaponL6: ('models/handheld/dagger_slicer_high', Vec4(1, 1, 1, 1))}
     models = {}
     icons = {}

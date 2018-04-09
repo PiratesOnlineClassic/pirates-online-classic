@@ -7,7 +7,7 @@ from direct.showbase import DirectObject, TaskThreaded
 
 
 class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('GarbageReport')
 
     def __init__(self, cr):
@@ -15,7 +15,7 @@ class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
         TaskThreaded.TaskThreaded.__init__(self, self.__class__.__name__)
 
         class TimeoutTest(DirectObject.DirectObject):
-            
+            __module__ = __name__
             Timeout = 10
 
             def _getTaskName(self, name):
@@ -36,7 +36,7 @@ class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
                 pdb.set_trace()
 
         class MsgHandlerTest:
-            
+            __module__ = __name__
 
             def installMsgHandler(self):
                 self.oldHandler = self.parent.handler
@@ -50,7 +50,7 @@ class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
                 self.parent.cr.handler(msgType, di)
 
         class TestGetAvatars(TaskThreaded.TaskThread, TimeoutTest, MsgHandlerTest):
-            
+            __module__ = __name__
 
             def setUp(self):
                 self.state = 'request'
@@ -73,7 +73,7 @@ class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
                 self.removeMsgHandler()
 
         class TestInterestOpenAndClose(TaskThreaded.TaskThread, TimeoutTest):
-            
+            __module__ = __name__
 
             def setUp(self):
                 self.state = 'open'
@@ -126,7 +126,7 @@ class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
                 return
 
         class TestNonRequiredNonSetFields(TaskThreaded.TaskThread, TimeoutTest):
-            
+            __module__ = __name__
             Timeout = 60
 
             def setUp(self):

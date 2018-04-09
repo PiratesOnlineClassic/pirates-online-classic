@@ -5,7 +5,7 @@
 
 
 class QuestAvatarBase:
-    
+    __module__ = __name__
 
     def getQuests(self):
         inventory = self.getInventory()

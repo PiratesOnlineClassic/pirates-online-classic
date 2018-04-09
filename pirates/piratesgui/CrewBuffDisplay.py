@@ -16,7 +16,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class CrewBuffDisplay(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, parent, skillIcon=None, duration=10, buffName='', buffDesc='', **kw):
         DirectFrame.__init__(self, parent, **kw)

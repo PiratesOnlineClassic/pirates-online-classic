@@ -17,7 +17,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class FriendInviterButton(RequestButton):
-    
+    __module__ = __name__
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -25,7 +25,7 @@ class FriendInviterButton(RequestButton):
 
 
 class FriendInviter(GuiPanel.GuiPanel):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('FriendInviter')
 
     def __init__(self, avId, avName, isPlayerInvite, quickYesNo=True):

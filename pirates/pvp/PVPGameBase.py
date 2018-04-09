@@ -16,7 +16,7 @@ from pirates.pvp import PVPGlobals
 
 
 class ScoreboardHolder:
-    
+    __module__ = __name__
 
     def __init__(self, gameRules):
         self.gameRules = gameRules
@@ -32,7 +32,7 @@ class ScoreboardHolder:
 
 
 class StatsHolder:
-    
+    __module__ = __name__
 
     def __init__(self, gameRules):
         self.gameRules = gameRules
@@ -56,7 +56,7 @@ class StatsHolder:
 
 
 class PVPGameBase(DistributedObject, FSM.FSM):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('PVPGameBase')
     RulesDoneEvent = 'rulesDone'
 

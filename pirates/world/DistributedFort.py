@@ -22,7 +22,7 @@ from pirates.treasuremap import TreasureMapBlackPearlGlobals
 
 
 class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedFort')
     endingR = 60
     zeroHpR = 90

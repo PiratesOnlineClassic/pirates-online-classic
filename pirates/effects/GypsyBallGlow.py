@@ -11,7 +11,7 @@ from PooledEffect import PooledEffect
 
 
 class GypsyBallGlow(PooledEffect, EffectController):
-    
+    __module__ = __name__
 
     def __init__(self, effectParent=None, billboardOffset=1.0):
         PooledEffect.__init__(self)

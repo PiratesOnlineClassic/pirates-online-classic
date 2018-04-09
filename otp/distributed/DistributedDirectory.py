@@ -6,5 +6,5 @@ from direct.distributed.DistributedObject import DistributedObject
 
 
 class DistributedDirectory(DistributedObject):
-    
+    __module__ = __name__
 # okay decompiling .\otp\distributed\DistributedDirectory.pyc

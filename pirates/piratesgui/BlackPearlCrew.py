@@ -25,7 +25,7 @@ from pirates.seapatch.Water import Water
 
 
 class BlackPearlCrew(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self):
         DirectFrame.__init__(self, relief=None)

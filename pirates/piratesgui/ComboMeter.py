@@ -11,7 +11,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class ComboMeter(DirectObject.DirectObject):
-    
+    __module__ = __name__
     COMBO_METER_RESET = 2.0
     COMBO_NUM_SCALE = 0.14
     BACKSTAB_SCALE = 0.09

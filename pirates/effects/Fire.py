@@ -14,7 +14,7 @@ from PooledEffect import PooledEffect
 
 
 class Fire(PooledEffect, EffectController):
-    
+    __module__ = __name__
     cardScale = 64.0
     burningSfx = None
 

@@ -10,7 +10,7 @@ from pandac.PandaModules import *
 
 
 class SceneBuffer(DirectObject):
-    
+    __module__ = __name__
 
     def __init__(self, name, size=Vec2(512, 512) * 2.0, camAspectRatio=1.0, clearColor=Vec4(0.85, 0.85, 0.85, 1.0), sceneGraph=None):
         DirectObject.__init__(self)

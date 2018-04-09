@@ -10,7 +10,7 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class PVPManager(DistributedObject):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('PVPManager')
 
     def __init__(self, cr):

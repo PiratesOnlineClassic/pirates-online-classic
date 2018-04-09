@@ -15,7 +15,7 @@ from pirates.ship import ShipGlobals
 
 
 class ShipShoppingPanel(ShipSelectionPanel):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('ShipShoppingPanel')
 
     def __init__(self, title, doneCallback, mode):

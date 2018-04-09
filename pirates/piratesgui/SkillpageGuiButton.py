@@ -17,7 +17,7 @@ SkillEffectDescriptions = {WeaponGlobals.C_POISON: [PLocalizer.PoisonDesc, PLoca
 SkillComboReq = {InventoryType.DaggerCut: None, InventoryType.DaggerSwipe: None, InventoryType.DaggerGouge: PLocalizer.ComboReqSwipe, InventoryType.DaggerEviscerate: PLocalizer.ComboReqGouge, InventoryType.CutlassHack: None, InventoryType.CutlassSlash: None, InventoryType.CutlassCleave: PLocalizer.ComboReqSlash, InventoryType.CutlassFlourish: PLocalizer.ComboReqCleave, InventoryType.CutlassStab: PLocalizer.ComboReqFlourish}
 
 class SkillpageGuiButton(DirectButton):
-    
+    __module__ = __name__
     SkillIcons = None
 
     def __init__(self, callback, skillId, skillRank):

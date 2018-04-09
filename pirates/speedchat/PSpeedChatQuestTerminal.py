@@ -43,7 +43,7 @@ def decodeSCQuestMsgInt(questInt, msgType, taskNum):
 
 
 class PSpeedChatQuestTerminal(SCTerminal):
-    
+    __module__ = __name__
 
     def __init__(self, msg, questInt, toNpcId, msgType, taskNum):
         SCTerminal.__init__(self)

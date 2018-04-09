@@ -10,7 +10,7 @@ from pirates.treasuremap.RewardItemGui import RewardItemGui
 
 
 class TreasureMapCompletePanel(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, name, tm, results):
         self.width = PiratesGuiGlobals.TMCompletePanelWidth

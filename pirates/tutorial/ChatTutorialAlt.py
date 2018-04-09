@@ -13,7 +13,7 @@ from pirates.tutorial import TutorialGlobals
 
 
 class ChatTutorialAlt(DirectObject.DirectObject):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('ChatTutorialAlt')
 
     def __init__(self):

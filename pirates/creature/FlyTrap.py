@@ -8,7 +8,7 @@ from pirates.creature.Creature import Creature
 
 
 class FlyTrap(Creature):
-    
+    __module__ = __name__
     ModelInfo = ('models/char/flytrap_hi', 'models/char/flytrap_')
     SfxNames = dict(Creature.SfxNames)
     SfxNames.update({'death': 'sfx_flytrap_death.mp3', 'pain': 'sfx_flytrap_hit.mp3', 'spawn': 'sfx_flytrap_rise_ground.mp3'})
@@ -17,7 +17,7 @@ class FlyTrap(Creature):
      ('idle', 'idle'), ('attack_a', 'attack_a'), ('attack_jab', 'attack_jab'), ('attack_left_fake', 'attack_left_fake'), ('attack_right_fake', 'attack_right_fake'), ('intro', 'rise_from_ground'), ('shoot', 'spit'), ('pain', 'hit'), ('death', 'death'))
 
     class AnimationMixer(Creature.AnimationMixer):
-        
+        __module__ = __name__
         notify = DirectNotifyGlobal.directNotify.newCategory('FlyTrapAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION

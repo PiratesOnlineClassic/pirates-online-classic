@@ -10,7 +10,7 @@ from PooledEffect import PooledEffect
 
 
 class GroundDirt(PooledEffect, EffectController):
-    
+    __module__ = __name__
     cardScale = 128.0
 
     def __init__(self):

@@ -7,7 +7,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class BattleSkillDiary:
-    
+    __module__ = __name__
     IDLE = 0
     CHARGING = 1
 

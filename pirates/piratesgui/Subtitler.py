@@ -13,7 +13,7 @@ from pirates.piratesgui.GuiButton import GuiButton
 
 
 class Subtitler(DirectObject.DirectObject):
-    
+    __module__ = __name__
 
     def __init__(self):
         DirectObject.DirectObject.__init__(self)

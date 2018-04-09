@@ -6,7 +6,7 @@ from SCColorScheme import SCColorScheme
 
 
 class SCSettings:
-    
+    __module__ = __name__
 
     def __init__(self, eventPrefix, whisperMode=0, colorScheme=None, submenuOverlap=2.0 / 3, topLevelOverlap=None):
         self.eventPrefix = eventPrefix

@@ -17,7 +17,7 @@ MAX_NAME_WIDTH = 14
 PICK_A_NAME_ENABLED = 0
 
 class NamePanelGui(GuiPanel.GuiPanel):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('NamePanelGui')
     width = PiratesGuiGlobals.NamePanelWidth
     height = PiratesGuiGlobals.NamePanelHeight

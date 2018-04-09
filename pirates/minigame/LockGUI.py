@@ -15,7 +15,7 @@ from pirates.reputation import DistributedReputationAvatar
 
 
 class LockGUI(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, table, avId, difficulty=10):
         DirectFrame.__init__(self, relief=None)

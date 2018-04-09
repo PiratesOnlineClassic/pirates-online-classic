@@ -14,7 +14,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class InventoryItemList(InventoryList):
-    
+    __module__ = __name__
 
     def __init__(self, inventory, height, trade=0, buy=0, sell=0, use=0, weapon=0, listItemClass=InventoryItemGui.InventoryItemGui, listItemWidth=PiratesGuiGlobals.InventoryItemGuiWidth):
         InventoryList.__init__(self, inventory=inventory, height=height, trade=trade, buy=buy, sell=sell, use=use, weapon=weapon, listItemClass=listItemClass, listItemWidth=listItemWidth, listItemHeight=PiratesGuiGlobals.InventoryItemGuiHeight)

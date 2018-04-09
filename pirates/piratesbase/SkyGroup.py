@@ -9,7 +9,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class SkyGroup(NodePath):
-    
+    __module__ = __name__
 
     def __init__(self):
         NodePath.__init__(self, 'SkyGroup')

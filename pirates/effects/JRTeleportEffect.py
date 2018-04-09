@@ -12,7 +12,7 @@ from PooledEffect import PooledEffect
 
 
 class JRTeleportEffect(PooledEffect, EffectController):
-    
+    __module__ = __name__
     card2Scale = 32.0
     cardScale = 32.0
 

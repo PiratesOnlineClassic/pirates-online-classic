@@ -9,7 +9,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class DistributedFortCannon(DistributedIslandCannon.DistributedIslandCannon):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedFortCannon')
 
     def __init__(self, cr):

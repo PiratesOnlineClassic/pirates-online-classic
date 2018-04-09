@@ -11,7 +11,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 
 class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSurfaceTreasure')
 
     def __init__(self, cr):

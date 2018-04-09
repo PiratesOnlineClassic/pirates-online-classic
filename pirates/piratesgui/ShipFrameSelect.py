@@ -12,7 +12,7 @@ from pirates.piratesgui.ShipSnapshot import ShipSnapshot
 
 
 class ShipFrameSelect(ShipFrame):
-    
+    __module__ = __name__
     STOwn = 0
     STFriend = 1
     STBand = 2

@@ -7,7 +7,7 @@ from pirates.quest import QuestDB, QuestReward
 
 
 class QuestOffer(POD):
-    
+    __module__ = __name__
     DataSet = {'questId': None, 'title': '', 'initialTaskStates': tuple(), 'rewardStructs': tuple()}
 
     @staticmethod

@@ -6,7 +6,7 @@ from pirates.quest.QuestIndicatorNode import QuestIndicatorNode
 
 
 class QuestIndicatorNodeItem(QuestIndicatorNode):
-    
+    __module__ = __name__
 
     def __init__(self, questStep):
         self.pendingStepObj = None

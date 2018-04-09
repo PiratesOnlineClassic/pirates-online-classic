@@ -10,7 +10,7 @@ from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 
 
 class TeleportBlockerPanel(GuiPanel.GuiPanel):
-    
+    __module__ = __name__
     _Messages = {PiratesGlobals.TFInBattle.getWord(): PLocalizer.TeleportBlockerMsgBattle, PiratesGlobals.TFOnShip.getWord(): PLocalizer.TeleportBlockerMsgOnShip, PiratesGlobals.TFInPVP.getWord(): PLocalizer.TeleportBlockerMsgInPVP}
 
     def __init__(self):

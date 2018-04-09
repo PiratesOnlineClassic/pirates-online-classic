@@ -13,7 +13,7 @@ from pirates.piratesgui.GameOptions import Options
 from EffectController import EffectController
 
 class SmallFire(EffectController, NodePath):
-    
+    __module__ = __name__
     cardScale = 64.0
 
     def __init__(self, effectParent=None):

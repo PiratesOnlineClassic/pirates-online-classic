@@ -8,7 +8,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class MiniQuestItemGui(DirectFrame):
-    
+    __module__ = __name__
     Width = PiratesGuiGlobals.ObjectivesPanelWidth - PiratesGuiGlobals.GridSize
     Height = 0.1
 

@@ -18,7 +18,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class InventoryItemGui(InventoryListItem):
-    
+    __module__ = __name__
     width = PiratesGuiGlobals.InventoryItemGuiWidth
     height = PiratesGuiGlobals.InventoryItemGuiHeight
     available = True

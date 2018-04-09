@@ -15,7 +15,7 @@ from PooledEffect import PooledEffect
 
 
 class RoundshotProjectile(EffectController, NodePath):
-    
+    __module__ = __name__
     motion_color = [
      Vec4(0.5, 0.6, 0.8, 1.0), Vec4(0.5, 0.6, 0.8, 1.0), Vec4(0.5, 0.6, 0.8, 1.0)]
     vertex_list = [

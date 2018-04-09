@@ -10,7 +10,7 @@ from pandac.PandaModules import *
 
 
 class OptionMenu(DirectOptionMenu):
-    
+    __module__ = __name__
     normal_fg_color = (0.2, 0.8, 0.6, 1.0)
     disabled_fg_color = (0.2, 0.2, 0.2, 1.0)
 

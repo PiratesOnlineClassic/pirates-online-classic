@@ -19,7 +19,7 @@ from pirates.quest import QuestParser
 
 
 class DistributedPiratesTutorialWorld(DistributedInstanceBase.DistributedInstanceBase):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedPiratesTutorialWorld')
 
     def __init__(self, cr):

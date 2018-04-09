@@ -15,7 +15,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 
 class GameFSMShip(FSM.FSM):
-    
+    __module__ = __name__
 
     def __init__(self, ship):
         FSM.FSM.__init__(self, 'GameFSMShip')

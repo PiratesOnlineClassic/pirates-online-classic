@@ -13,7 +13,7 @@ from PooledEffect import PooledEffect
 
 
 class FireTrail(PooledEffect, EffectController):
-    
+    __module__ = __name__
     cardScale = 128.0
 
     def __init__(self):

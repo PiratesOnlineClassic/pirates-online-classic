@@ -6,7 +6,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class CodeRedemption(DistributedObjectGlobal):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedObjectGlobal.__init__(self, cr)

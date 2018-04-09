@@ -11,7 +11,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedPirateBase(DistributedObject.DistributedObject, Pirate.Pirate):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPirateBase')
 
     def __init__(self, cr):

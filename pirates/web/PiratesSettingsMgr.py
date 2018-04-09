@@ -8,7 +8,7 @@ from pirates.web.PiratesSettingsMgrBase import PiratesSettingsMgrBase
 
 
 class PiratesSettingsMgr(SettingsMgr, PiratesSettingsMgrBase):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('PiratesSettingsMgr')
 
     def _initSettings(self):

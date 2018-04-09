@@ -8,7 +8,7 @@ from pirates.creature.Creature import Creature
 
 
 class Bat(Creature):
-    
+    __module__ = __name__
     ModelInfo = ('models/char/bat_hi', 'models/char/bat_')
     SfxNames = dict(Creature.SfxNames)
     SfxNames.update({'attack_left': 'sfx_bat_attack_left.mp3', 'death': 'sfx_bat_death.mp3', 'pain': 'sfx_bat_pain_left.mp3'})
@@ -17,7 +17,7 @@ class Bat(Creature):
      ('idle', 'idle'), ('idle_hang', 'idle_hang'), ('glide', 'glide'), ('wounded_flight', 'wounded_flight'), ('takeoff', 'takeoff'), ('land', 'land'), ('attack_forward', 'attack_forward'), ('attack_right', 'attack_right'), ('sudden_gust', 'sudden_gust'), ('sudden_gust_alt', 'sudden_gust_alt'), ('pain', 'pain_left'), ('pain_right', 'pain_right'), ('death', 'death'), ('intro', 'spawn'))
 
     class AnimationMixer(Creature.AnimationMixer):
-        
+        __module__ = __name__
         notify = DirectNotifyGlobal.directNotify.newCategory('BatAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION

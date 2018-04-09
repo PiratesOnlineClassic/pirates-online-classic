@@ -10,7 +10,7 @@ from pirates.creature.Animal import Animal
 
 
 class Dog(Animal):
-    
+    __module__ = __name__
     ModelInfo = ('models/char/dog_hi', 'models/char/dog_')
     SfxNames = dict(Animal.SfxNames)
     SfxNames.update({})
@@ -18,14 +18,14 @@ class Dog(Animal):
      ('idle', 'idle_sitting_keys'), ('idle_sitting', 'idle_sitting_keys'), ('walk', 'walk_keys'), ('idle_standing', 'idle_standing_keys'), ('bark_sitting', 'bark_sitting_keys'), ('bark_standing', 'bark_standing_keys'), ('into_sit', 'into_sit_keys'), ('into_lying_down', 'into_lying_down'), ('wag_sitting', 'wag_sitting_keys'), ('wag_standing', 'wag_standing_keys'))
 
     class AnimationMixer(Animal.AnimationMixer):
-        
+        __module__ = __name__
         notify = DirectNotifyGlobal.directNotify.newCategory('DogAnimationMixer')
         LOOP = Animal.AnimationMixer.LOOP
         ACTION = Animal.AnimationMixer.ACTION
         AnimRankings = {'idle': (LOOP['LOOP'],), 'idle_sitting': (LOOP['LOOP'],), 'idle_standing': (LOOP['LOOP'],), 'bark_sitting': (ACTION['ACTION'],), 'bark_standing': (ACTION['ACTION'],), 'into_sit': (ACTION['ACTION'],), 'into_lying_down': (ACTION['ACTION'],), 'walk': (LOOP['LOOP'],), 'wag_sitting': (LOOP['LOOP'],), 'wag_sitting': (LOOP['LOOP'],)}
 
     class PhasedNode(BufferedDistancePhasedNode):
-        
+        __module__ = __name__
 
         def __init__(self, dog):
             self.dog = dog

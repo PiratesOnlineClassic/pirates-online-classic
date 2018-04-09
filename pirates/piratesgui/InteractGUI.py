@@ -11,7 +11,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class InteractGUI(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self):
         DirectFrame.__init__(self, relief=None, sortOrder=3, pos=(-0.5, 0, -0.4))

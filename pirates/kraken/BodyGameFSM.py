@@ -6,5 +6,5 @@ from pirates.pirate.BattleAvatarGameFSM import BattleAvatarGameFSM
 
 
 class BodyGameFSM(BattleAvatarGameFSM):
-    
+    __module__ = __name__
 # okay decompiling .\pirates\kraken\BodyGameFSM.pyc

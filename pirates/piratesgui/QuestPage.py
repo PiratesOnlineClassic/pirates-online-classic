@@ -36,7 +36,7 @@ questComplete.setGlyphScale(0.8)
 tpMgr.setProperties('questComplete', questComplete)
 
 class QuestPage(InventoryPage.InventoryPage):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('QuestPage')
 
     def __init__(self):

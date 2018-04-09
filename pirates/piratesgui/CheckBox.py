@@ -12,7 +12,7 @@ from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 
 
 class CheckBox(DirectCheckBox):
-    
+    __module__ = __name__
 
     def __init__(self, text, command):
         self.charGui = loader.loadModelOnce('models/gui/toplevel_gui')

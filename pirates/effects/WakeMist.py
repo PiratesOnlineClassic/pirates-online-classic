@@ -13,7 +13,7 @@ from PooledEffect import PooledEffect
 
 
 class WakeMist(PooledEffect, EffectController):
-    
+    __module__ = __name__
     cardScale = 64.0
     splashSfxNames = ('wtrsplash_1.mp3', 'wtrsplash_2.mp3', 'wtrsplash_3.mp3', 'wtrsplash_4.mp3')
     splashSfx = []

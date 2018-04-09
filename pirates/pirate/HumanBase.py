@@ -8,7 +8,7 @@ from pirates.pirate.HumanDNA import HumanDNA
 
 
 class HumanBase:
-    
+    __module__ = __name__
 
     def setDNA(self, dna=None):
         self.setDNAString(dna)

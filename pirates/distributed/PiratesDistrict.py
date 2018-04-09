@@ -10,7 +10,7 @@ from pirates.world import WorldCreator, WorldGlobals
 
 
 class PiratesDistrict(DistributedDistrict):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesDistrict')
 
     def __init__(self, cr):

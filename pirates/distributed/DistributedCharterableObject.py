@@ -9,7 +9,7 @@ from pirates.ship import ShipGlobals
 
 
 class DistributedCharterableObject(DistributedNode.DistributedNode):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedCharterableObject')
 
     def __init__(self, cr):

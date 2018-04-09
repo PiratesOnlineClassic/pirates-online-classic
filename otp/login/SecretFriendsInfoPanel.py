@@ -11,7 +11,7 @@ from pandac.PandaModules import *
 
 
 class SecretFriendsInfoPanel(getGlobalDialogClass()):
-    
+    __module__ = __name__
 
     def __init__(self, doneEvent, hidePageNum=0, pageChangeCallback=None):
         dialogClass = getGlobalDialogClass()

@@ -8,7 +8,7 @@ from pirates.quest.QuestIndicatorGridNode import QuestIndicatorGridNode
 
 
 class QuestIndicatorNodeNPC(QuestIndicatorGridNode):
-    
+    __module__ = __name__
 
     def __init__(self, questStep):
         self.nearEffect = None

@@ -7,5 +7,5 @@ from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 
 
 class SnapshotDispatcher(DistributedObjectGlobal):
-    
+    __module__ = __name__
 # okay decompiling .\otp\snapshot\SnapshotDispatcher.pyc

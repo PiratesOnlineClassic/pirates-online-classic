@@ -10,7 +10,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class PlayingCardBase:
-    
+    __module__ = __name__
 
     def __init__(self, value):
         self.faceUp = 1
@@ -56,7 +56,7 @@ class PlayingCardBase:
 
 
 class PlayingCardNodePath(NodePath, PlayingCardBase):
-    
+    __module__ = __name__
 
     def __init__(self, style, value):
         self.image = None
@@ -76,7 +76,7 @@ class PlayingCardNodePath(NodePath, PlayingCardBase):
 
 
 class PlayingCardButton(PlayingCardBase, DirectButton):
-    
+    __module__ = __name__
 
     def __init__(self, style, value):
         PlayingCardBase.__init__(self, value)

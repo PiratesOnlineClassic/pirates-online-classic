@@ -7,7 +7,7 @@ from pirates.minigame import DistributedLock
 
 
 class DistributedLockDoor(DistributedLock.DistributedLock):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedLock.DistributedLock.__init__(self, cr)

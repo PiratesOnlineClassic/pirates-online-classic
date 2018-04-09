@@ -8,7 +8,7 @@ from pirates.creature.Creature import Creature
 
 
 class Stump(Creature):
-    
+    __module__ = __name__
     ModelInfo = ('models/char/mossman_hi', 'models/char/mossman_')
     SfxNames = dict(Creature.SfxNames)
     SfxNames.update({'death': 'sfx_mossman_death.mp3', 'pain': 'sfx_mossman_agitated.mp3', 'spawn': 'sfx_mossman_intro.mp3'})
@@ -17,7 +17,7 @@ class Stump(Creature):
      ('idle', 'idle'), ('walk', 'walk'), ('run', 'run'), ('death', 'death'), ('intro', 'intro'), ('jump', 'jump'), ('kick', 'kick'), ('kick_right', 'kick_right'), ('slap_left', 'slap_left'), ('slap_right', 'slap_right'), ('strafe_left', 'strafe_left'), ('strafe_right', 'strafe_right'), ('swat_left', 'swat_left'), ('swat_right', 'swat_right'), ('jump_attack', 'jump_attack'), ('pain', 'pain'))
 
     class AnimationMixer(Creature.AnimationMixer):
-        
+        __module__ = __name__
         notify = DirectNotifyGlobal.directNotify.newCategory('StumpAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION

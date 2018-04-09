@@ -11,7 +11,7 @@ from pirates.pirate import CannonCamera, FPSCamera, ShipCamera
 
 
 class CameraFSM(FSM):
-    
+    __module__ = __name__
 
     def __init__(self, av):
         FSM.__init__(self, 'CameraFSM')

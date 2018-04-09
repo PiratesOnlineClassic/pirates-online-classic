@@ -7,7 +7,7 @@ from pirates.piratesbase import AmbientManagerBase
 
 
 class PiratesAmbientManager(AmbientManagerBase.AmbientManagerBase):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesAmbientManager')
 
     def __init__(self):

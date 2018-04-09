@@ -9,7 +9,7 @@ from pandac.PandaModules import *
 
 
 class FriendManager(DistributedObject.DistributedObject):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('FriendManager')
     neverDisable = 1
 

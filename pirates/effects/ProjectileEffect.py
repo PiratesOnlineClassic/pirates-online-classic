@@ -58,7 +58,7 @@ def getSkillSfx():
 
 
 class ProjectileEffect:
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('ProjectileEffect')
 
     def __init__(self, cr, attackerId, hitObject, objType, pos, skillId, ammoSkillId, normal=None):

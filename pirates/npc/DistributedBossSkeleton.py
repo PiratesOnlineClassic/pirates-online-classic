@@ -10,7 +10,7 @@ from pirates.pirate import AvatarTypes
 
 
 class DistributedBossSkeleton(DistributedNPCSkeleton, Boss):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBossSkeleton')
 
     def __init__(self, cr):

@@ -14,7 +14,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class TableGUI:
-    
+    __module__ = __name__
     use_hourglass = False
 
     def suitImage(self, suit):

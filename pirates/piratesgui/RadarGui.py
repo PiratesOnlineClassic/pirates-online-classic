@@ -21,7 +21,7 @@ RADAR_OBJ_TYPE_EXIT = 4
 RADAR_OBJ_TYPE_TUTORIAL = 5
 
 class RadarZoomFSM(FSM):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('RadarZoomFSM')
 
     def __init__(self, radarGui):
@@ -64,7 +64,7 @@ class RadarZoomFSM(FSM):
 
 
 class RadarGui(GuiTray, FSM):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('RadarGui')
 
     def __init__(self, parent, av, radius=200.0, **kw):

@@ -9,7 +9,7 @@ from pandac.PandaModules import *
 
 
 class OTPTimer(DirectFrame):
-    
+    __module__ = __name__
     ClockImage = None
     TimerId = 0
 

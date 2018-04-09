@@ -13,7 +13,7 @@ from pirates.world import GameTypeGlobals
 
 
 class OptionItemGui(DirectFrame):
-    
+    __module__ = __name__
     Width = PiratesGuiGlobals.OptionItemWidth
     Height = PiratesGuiGlobals.OptionItemHeight
     TOPLEVEL_GUI_FILE = 'models/gui/toplevel_gui'

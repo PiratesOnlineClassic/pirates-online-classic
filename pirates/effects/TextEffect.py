@@ -160,10 +160,10 @@ def genColor(number, type, npc):
 
 
 class TextEffect:
-    
+    __module__ = __name__
 
     class TextEffectMod:
-        
+        __module__ = __name__
 
         def __init__(self, index, modValue, reason, type=0):
             self.modValue = modValue

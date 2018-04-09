@@ -5,7 +5,7 @@ from TimeOfDayManager import TimeOfDayManager
 
 
 class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
-    
+    __module__ = __name__
     from direct.directnotify import DirectNotifyGlobal
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTimeOfDayManager')
 

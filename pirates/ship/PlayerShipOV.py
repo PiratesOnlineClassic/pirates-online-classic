@@ -10,7 +10,7 @@ from pirates.ship import ShipGlobals
 
 
 class PlayerShipOV(DistributedObjectOV.DistributedObjectOV):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipOV')
 
     def __init__(self, cr):

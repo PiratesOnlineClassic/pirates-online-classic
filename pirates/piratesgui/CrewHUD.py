@@ -14,7 +14,7 @@ from pirates.uberdog.UberDogGlobals import CrewStatus
 HUD_ICONS = {0: None, 1: 'icon_cutlass_black', 2: 'icon_pistol_single', 3: 'icon_voodoo_doll_straw', 4: 'icon_dagger_dagger', 5: 'icon_grenade', 6: 'icon_voodoo_staff_L1', 7: 'icon_cannon', 8: 'sail_come_about', 9: 'topgui_icon_ship', 10: 'treasure_w_card'}
 
 class CrewHUD(SocialPage.SocialPage):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('CrewHUD')
 
     def __init__(self):

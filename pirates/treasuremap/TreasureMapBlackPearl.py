@@ -22,7 +22,7 @@ from pirates.world import FortBarricade
 
 
 class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMapInstance):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('TreasureMapBlackPearl')
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')

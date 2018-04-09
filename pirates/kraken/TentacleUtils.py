@@ -10,7 +10,7 @@ from pirates.effects.WaterRipple2 import WaterRipple2
 
 
 class TentacleUtils:
-    
+    __module__ = __name__
 
     def __init__(self):
         self.statusTable = []

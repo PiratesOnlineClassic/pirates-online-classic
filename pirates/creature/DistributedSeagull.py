@@ -7,7 +7,7 @@ from pirates.creature.Seagull import Seagull
 
 
 class DistributedSeagull(DistributedAnimal):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedAnimal.__init__(self, cr, Seagull())

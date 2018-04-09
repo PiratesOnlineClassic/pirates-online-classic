@@ -26,7 +26,7 @@ from pirates.piratesgui import GuiButton, PiratesGuiGlobals
 MAX_NAME_WIDTH = 9
 
 class NameGUI(DirectFrame, StateData.StateData):
-    
+    __module__ = __name__
     NICKNAME = 'Nickname'
     FIRST = 'First'
     PREFIX = 'Prefix'

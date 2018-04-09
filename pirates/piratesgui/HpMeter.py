@@ -11,7 +11,7 @@ from pirates.reputation import ReputationGlobals
 
 
 class HpMeter(DirectFrame):
-    
+    __module__ = __name__
     FADEOUT_TIME = 8.0
 
     def __init__(self, name='', width=0.4, height=0.025, fadeOut=0, parent=None, originAtMidPt=False):

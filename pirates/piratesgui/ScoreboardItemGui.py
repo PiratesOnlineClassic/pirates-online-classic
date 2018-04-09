@@ -12,7 +12,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class ScoreboardItemGui(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, item, width, height, parent=None, **kw):
         self.width = width

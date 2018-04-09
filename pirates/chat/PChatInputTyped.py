@@ -8,7 +8,7 @@ from pandac.PandaModules import *
 
 
 class PChatInputTyped(FSM.FSM, DirectEntry):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('PChatInputTyped')
     ExecNamespace = None
 

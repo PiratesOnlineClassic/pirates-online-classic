@@ -7,7 +7,7 @@ from pirates.piratesgui import NonPayerPanel
 
 
 class StayTunedPanel(NonPayerPanel.NonPayerPanel):
-    
+    __module__ = __name__
 
     def configurePanel(self):
         self.NUM_IMAGES = 0

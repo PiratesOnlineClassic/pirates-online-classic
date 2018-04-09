@@ -10,7 +10,7 @@ from pirates.map.MapConfig import RangeSlider
 MapData = {'jungle_a_terrain.egg': [{'name': 'radar_jungle_a_0', 'pos': (-20, 32), 'scale': 480}], 'rum_runner_terrain.egg': [{'name': 'radar_rumrunner_0', 'pos': (-30, 155), 'scale': 825}], 'port_royal_terrain.egg': [{'name': 'radar_port_royal_0', 'pos': (48, -1407), 'scale': 1228}, {'name': 'radar_port_royal_1', 'pos': (100, -1380), 'scale': 495}, {'name': 'radar_port_royal_town_0', 'pos': (-76, -1724), 'scale': 253}, {'name': 'radar_port_royal_mansion_0', 'pos': (179, -1009), 'scale': 504}, {'name': 'radar_port_royal_mansion_1', 'pos': (173, -1043), 'scale': 166}]}
 
 class RadarMap(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, av, *args, **kwargs):
         kwargs['frameSize'] = (-0.5, 0.5, -0.5, 0.5)
@@ -145,7 +145,7 @@ class RadarMap(DirectFrame):
 
 
 class RadarUtil(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, *args, **kwargs):
         super(DirectFrame, self).__init__(*args, **kwargs)

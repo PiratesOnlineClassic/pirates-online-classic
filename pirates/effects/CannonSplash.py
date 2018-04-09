@@ -13,7 +13,7 @@ from PooledEffect import PooledEffect
 
 
 class CannonSplash(PooledEffect, EffectController):
-    
+    __module__ = __name__
     cardScale = 64.0
     splashSfx = []
     particleDummy = None

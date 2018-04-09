@@ -6,5 +6,5 @@ from pirates.ship.DistributedShip import DistributedShip
 
 
 class TutorialShip(DistributedShip):
-    
+    __module__ = __name__
 # okay decompiling .\pirates\ship\TutorialShip.pyc

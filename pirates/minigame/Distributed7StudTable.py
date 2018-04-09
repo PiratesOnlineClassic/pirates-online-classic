@@ -9,7 +9,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class Distributed7StudTable(DistributedPokerTable.DistributedPokerTable):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedPokerTable.DistributedPokerTable.__init__(self, cr, '7stud', numRounds=6)

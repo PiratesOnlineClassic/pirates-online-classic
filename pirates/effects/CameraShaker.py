@@ -9,7 +9,7 @@ from pandac.PandaModules import *
 
 
 class CameraShaker(NodePath):
-    
+    __module__ = __name__
     CutsceneScale = None
     TutorialInteriorScale = None
 

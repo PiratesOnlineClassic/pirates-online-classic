@@ -7,7 +7,7 @@ from pandac.PandaModules import *
 
 
 class CheckButton(DirectButton):
-    
+    __module__ = __name__
 
     def __init__(self, parent=None, **kw):
         toplevel_gui = loader.loadModel('models/gui/toplevel_gui')

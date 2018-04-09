@@ -15,7 +15,7 @@ from pirates.map.SceneBuffer import SceneBuffer
 
 
 class WorldMap(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, parent, **kwargs):
         cm = CardMaker('Portrait')

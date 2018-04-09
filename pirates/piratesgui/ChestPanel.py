@@ -12,7 +12,7 @@ from pirates.piratesgui.TabBar import LeftTab, TabBar
 
 
 class ChestTab(LeftTab):
-    
+    __module__ = __name__
 
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None), ('frameSize', (-0.125, 0.125, -0.1, 0.1), None), ('unfocusSize', (0, 0, 0, 0), None), ('focusSize', (-0.125, 0.125, -0.11, 0.11), None), ('heightFactor', 0.6, None), ('mouseEntered', None, None), ('mouseLeft', None, None))
@@ -24,7 +24,7 @@ class ChestTab(LeftTab):
 
 
 class ChestTabBar(TabBar):
-    
+    __module__ = __name__
 
     def refreshTabs(self):
         zOffset = 0.0
@@ -48,7 +48,7 @@ class ChestTabBar(TabBar):
 
 
 class ChestPanel(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, parent, **kw):
         optiondefs = (('relief', None, None), ('state', DGG.NORMAL, None), ('frameSize', (-0.55, 0.55, -0.82, 0.72), None), ('pos', (-0.55, 0, 0.8), None))

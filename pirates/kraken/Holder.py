@@ -10,7 +10,7 @@ from pirates.pirate import AvatarTypes
 
 
 class Holder(Creature, TentacleUtils):
-    
+    __module__ = __name__
     ModelInfo = ('models/char/holderTentacle_high', 'models/char/holderTentacle_')
     SfxNames = dict(Creature.SfxNames)
     SfxNames.update({'pain': 'sfx_crab_pain.mp3', 'death': 'sfx_crab_death.mp3'})
@@ -19,7 +19,7 @@ class Holder(Creature, TentacleUtils):
      ('idle', 'idle'), ('emerge', 'emerge'))
 
     class AnimationMixer(Creature.AnimationMixer):
-        
+        __module__ = __name__
         notify = DirectNotifyGlobal.directNotify.newCategory('CrabAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION

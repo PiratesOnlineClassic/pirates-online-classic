@@ -18,7 +18,7 @@ damper = 0.5
 sliderRange = (-0.5, 0.5)
 
 class Ear(DirectObject.DirectObject):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('Ear')
 
     def __init__(self, main=None):

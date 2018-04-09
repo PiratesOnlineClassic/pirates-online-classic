@@ -17,11 +17,11 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class CannonCamera(CameraMode.CameraMode, NodePath, ParamObj):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('CannonCamera')
 
     class ParamSet(ParamObj.ParamSet):
-        
+        __module__ = __name__
         Params = {'minH': -60.0, 'maxH': 60.0, 'minP': -12.0, 'maxP': 24, 'sensitivityH': 0.07, 'sensitivityP': 0.03}
 
     CamParentPos = (

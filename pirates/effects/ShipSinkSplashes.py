@@ -12,7 +12,7 @@ from PooledEffect import PooledEffect
 
 
 class ShipSinkSplashes(PooledEffect, EffectController):
-    
+    __module__ = __name__
     card2Scale = 64.0
     cardScale = 64.0
 

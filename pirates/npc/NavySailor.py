@@ -9,7 +9,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class NavySailor(Human.Human):
-    
+    __module__ = __name__
 
     def __init__(self, avatarType=AvatarTypes.Navy):
         Human.Human.__init__(self)

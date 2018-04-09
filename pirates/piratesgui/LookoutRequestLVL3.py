@@ -11,7 +11,7 @@ from pirates.piratesgui.OptionItemGui import OptionItemGui
 
 
 class LookoutRequestLVL3(DirectFrame):
-    
+    __module__ = __name__
 
     def __init__(self, name, titleTextScale=None, itemList=None, optionsFor=None):
         self.width = PiratesGuiGlobals.LookoutRequestLVL3Width

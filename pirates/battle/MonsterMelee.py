@@ -122,7 +122,7 @@ def getMossmanAttackJumpSfx():
 
 
 class MonsterMelee(Weapon.Weapon):
-    
+    __module__ = __name__
     vertex_list = [
      Vec4(0.0, 0.4, 0.0, 1.0), Vec4(0.0, 2.0, 0.0, 1.0), Vec4(-0.55, 2.95, 0.0, 1.0)]
     motion_color = [

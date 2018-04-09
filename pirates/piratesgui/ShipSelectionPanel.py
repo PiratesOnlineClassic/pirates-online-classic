@@ -13,7 +13,7 @@ from pirates.ship import ShipGlobals
 
 
 class ShipSelectionPanel(GuiPanel.GuiPanel):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('ShipSelectionPanel')
     width = 1.03
     height = 1.45

@@ -7,7 +7,7 @@ from pirates.creature.Scorpion import Scorpion
 
 
 class DistributedScorpion(DistributedCreature):
-    
+    __module__ = __name__
 
     def __init__(self, cr):
         DistributedCreature.__init__(self, cr, Scorpion())

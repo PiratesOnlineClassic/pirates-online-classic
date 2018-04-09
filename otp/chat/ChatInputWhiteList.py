@@ -14,7 +14,7 @@ from pandac.PandaModules import *
 
 
 class ChatInputWhiteList(FSM.FSM, DirectEntry):
-    
+    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('ChatInputWhiteList')
     ExecNamespace = None
 

@@ -11,7 +11,7 @@ from pirates.world import DistributedDoorBase
 
 
 class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
-    
+    __module__ = __name__
     notify = directNotify.newCategory('DistributedBuildingDoor')
 
     def __init__(self, cr):

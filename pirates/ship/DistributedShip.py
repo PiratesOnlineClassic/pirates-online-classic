@@ -83,7 +83,7 @@ def getRamSfx():
 
 
 class CachedShipData(CachedDOData):
-    
+    __module__ = __name__
 
     def __init__(self, optimized, broadside, hull, cabin, masts, sails, cannons, wheel, bowsprit, fullsailSfx, rammingSfx, sinkingSfx, lodRoot, highDetail, medDetail, lowDetail, highStatic, medStatic, lowStatic, modelCollisions, sailProjectors, locators):
         self.optimized = optimized
@@ -139,7 +139,7 @@ class CachedShipData(CachedDOData):
 
 
 class ActorNodeMgr:
-    
+    __module__ = __name__
 
     def __init__(self, actorNode):
         self._actorNode = actorNode
@@ -178,7 +178,7 @@ class ActorNodeMgr:
 
 
 class DistributedShip(DistributedMovingObject, DistributedCharterableObject, ZoneLOD.ZoneLOD, Teamable):
-    
+    __module__ = __name__
     deferrable = True
     notify = directNotify.newCategory('DistributedShip')
     WantWake = config.GetBool('want-wake', 1)

@@ -7,7 +7,7 @@ from pirates.destructibles import ShatterableObject
 from pirates.effects.ProjectileArc import ProjectileArc
 
 class ShatterableSkeleton(ShatterableObject.ShatterableObject, NodePath):
-    
+    __module__ = __name__
 
     def __init__(self):
         ShatterableObject.ShatterableObject.__init__(self)
