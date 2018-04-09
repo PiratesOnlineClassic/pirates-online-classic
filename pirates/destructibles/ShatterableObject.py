@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.destructibles.ShatterableObject
 import random
 
 from direct.interval.IntervalGlobal import *
@@ -10,7 +6,6 @@ from pandac.PandaModules import *
 from pirates.effects.ProjectileArc import ProjectileArc
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase.PiratesGlobals import *
-
 
 class ShatterableObject(DirectObject):
     __module__ = __name__
@@ -25,7 +20,6 @@ class ShatterableObject(DirectObject):
         self.debrisA = None
         self.debrisB = None
         self.hasDestructionSequence = 0
-        return
 
     def disable(self):
         for i in self.intervals:
@@ -94,7 +88,6 @@ class ShatterableObject(DirectObject):
         self.break2Med = None
         self.break1Low = None
         self.break2Low = None
-        return
 
     def getDebrisParent(self):
         return self.prop
@@ -140,9 +133,6 @@ class ShatterableObject(DirectObject):
                     if self.break1Low:
                         if len(self.break1Low) > i:
                             self.break1Low[i] = None
-                    return
-
-        return
 
     def playBreakAll(self):
         for i in range(len(self.break1High)):
@@ -171,8 +161,6 @@ class ShatterableObject(DirectObject):
                 if len(self.break2Low) > i:
                     self.break2Low[i].hide()
 
-        return
-
     def hideBreak(self):
         if self.prop and self.isAlive:
             for i in range(len(self.break1High)):
@@ -185,9 +173,6 @@ class ShatterableObject(DirectObject):
                 if self.break1Low[i] != None:
                     self.break1Low[i].hide()
                     self.break1Low[i] = None
-                    return
-
-        return
 
     def hideBreakAll(self):
         for i in range(len(self.break1High)):
@@ -207,6 +192,3 @@ class ShatterableObject(DirectObject):
                 self.break2Med[i].hide()
             if self.break2Low[i] != None:
                 self.break2Low[i].hide()
-
-        return
-# okay decompiling .\pirates\destructibles\ShatterableObject.pyc

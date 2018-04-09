@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.destructibles.DistributedDestructibleArray
 import copy
 
 from direct.distributed import DistributedObject
@@ -72,14 +68,11 @@ class DistributedDestructibleArray(DistributedDestructibleObject.DistributedDest
         self.damageDummy[index] = self.attachNewNode('damageDummy' + str(index))
         self.damageDummy[index].reparentTo(self.arrayObjects[index])
         self.damageDummy[index].setBillboardPointEye()
-        self.HpDisplay[index] = DirectLabel(text='HP: ' + str(self.arrayHp[index]) + '/' + str(self.maxHp), scale=3.0, relief=None, text_fg=(1,
-                                                                                                                                             1,
-                                                                                                                                             1,
-                                                                                                                                             1))
+        self.HpDisplay[index] = DirectLabel(text='HP: ' + str(self.arrayHp[index]) + '/' + str(self.maxHp), 
+                                            scale=3.0, relief=None, text_fg=(1, 1, 1, 1))
         self.HpDisplay[index].reparentTo(self.damageDummy[index])
         self.HpDisplay[index].setBin('fixed', 0)
         self.HpDisplay[index].setDepthTest(0)
-        return
 
     def updateHpDisplay(self, index):
         if self.hasHpMeter:
@@ -95,4 +88,3 @@ class DistributedDestructibleArray(DistributedDestructibleObject.DistributedDest
                 self.damageDummy[i].removeNode()
 
             del self.damageDummy
-# okay decompiling .\pirates\destructibles\DistributedDestructibleArray.pyc

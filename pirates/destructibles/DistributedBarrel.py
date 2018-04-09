@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.destructibles.DistributedBarrel
 from direct.distributed import DistributedObject
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
@@ -27,7 +23,6 @@ class DistributedBarrel(DistributedDestructibleObject.DistributedDestructibleObj
         self.HpDisplay = None
         self.prop = None
         self.modelType = 0
-        return
 
     def load(self):
         self.loadModel()
@@ -58,13 +53,8 @@ class DistributedBarrel(DistributedDestructibleObject.DistributedDestructibleObj
             for c in self.coll:
                 c.setCollideMask(PiratesGlobals.AmmoBitmask.allOff())
 
-        return
-
     def respawn(self):
         if self.prop != None:
             self.prop.show()
             for c in self.coll:
                 c.setCollideMask(PiratesGlobals.AmmoBitmask | self.curMask)
-
-        return
-# okay decompiling .\pirates\destructibles\DistributedBarrel.pyc

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.creature.Creature
 import random
 
 from direct.actor import Actor
@@ -57,7 +53,6 @@ class Creature(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
         self.setupReflection()
         animationMixer = animationMixer or self.AnimationMixer
         UsesAnimationMixer.__init__(self, animationMixer)
-        return
 
     def delete(self):
         Avatar.Avatar.delete(self)
@@ -66,7 +61,6 @@ class Creature(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
 
     def setupReflection(self):
         OTPRender.renderReflection(False, self, 'p_creature', None)
-        return
 
     def forceLoadAnimDict(self):
         for anim in self.animDict:
@@ -287,11 +281,9 @@ class Creature(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
             cls.actor.loadModel(cls.ModelInfo[0])
             cls.actor.loadAnims(cls.animDict)
         cls.actor.getGeomNode().setH(180)
-        return
 
     def getSfx(self, name):
         return self.sfx.get(name)
 
 
 Creature.setupAnimInfo()
-# okay decompiling .\pirates\creature\Creature.pyc

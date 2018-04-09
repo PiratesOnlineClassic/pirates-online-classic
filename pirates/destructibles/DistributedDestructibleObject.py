@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.destructibles.DistributedDestructibleObject
 from direct.distributed import DistributedNode, DistributedObject
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
@@ -10,7 +6,6 @@ from pandac.PandaModules import *
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesbase.PiratesGlobals import *
-
 
 class DistributedDestructibleObject(DistributedNode.DistributedNode):
     __module__ = __name__
@@ -24,7 +19,6 @@ class DistributedDestructibleObject(DistributedNode.DistributedNode):
         self.isAlive = 1
         self.level = 0
         self.classType = 0
-        return
 
     def generate(self):
         DistributedNode.DistributedNode.generate(self)
@@ -43,10 +37,9 @@ class DistributedDestructibleObject(DistributedNode.DistributedNode):
 
     def initHpDisplay(self):
         if self.maxHp <= 50:
-            pass
-        else:
-            if base.cr.config.GetBool('want-ship-hpdisplay', 0) is 1:
-                self.displayHp()
+            return
+        if base.cr.config.GetBool('want-ship-hpdisplay', 0) is 1:
+            self.displayHp()
         if base.cr.config.GetBool('want-ship-hpdisplay', 0) is 1:
             self.updateHpDisplay()
 
@@ -54,14 +47,11 @@ class DistributedDestructibleObject(DistributedNode.DistributedNode):
         self.hasHpMeter = 1
         self.damageDummy = self.attachNewNode('damageDummy')
         self.damageDummy.setBillboardPointEye()
-        self.HpDisplay = DirectLabel(text='HP: ' + str(self.Hp) + '/' + str(self.maxHp), scale=2.5, relief=None, text_fg=(1,
-                                                                                                                          1,
-                                                                                                                          1,
-                                                                                                                          1))
+        self.HpDisplay = DirectLabel(text='HP: ' + str(self.Hp) + '/' + str(self.maxHp), 
+                                     scale=2.5, relief=None, text_fg=(1, 1, 1, 1))
         self.HpDisplay.reparentTo(self.damageDummy)
         self.HpDisplay.setBin('fixed', 0)
         self.HpDisplay.setDepthTest(0)
-        return
 
     def updateHpDisplay(self):
         if self.hasHpMeter:
@@ -84,10 +74,9 @@ class DistributedDestructibleObject(DistributedNode.DistributedNode):
                 self.respawn()
             elif self.Hp > 0:
                 self.restoreDamage()
-        else:
-            if deltaHp < 0:
-                if self.Hp <= 0 and self.Hp - deltaHp > 0:
-                    self.playDeath()
+        elif deltaHp < 0:
+            if self.Hp <= 0 and self.Hp - deltaHp > 0:
+                self.playDeath()
 
     def getHp(self):
         return self.Hp
@@ -124,4 +113,3 @@ class DistributedDestructibleObject(DistributedNode.DistributedNode):
 
     def restoreDamage(self):
         pass
-# okay decompiling .\pirates\destructibles\DistributedDestructibleObject.pyc

@@ -1,8 +1,8 @@
-from direct.distributed.DistributedObjectAI import DistributedObjectAI
+from direct.distributed.DistributedNodeAI import DistributedNodeAI
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedDestructibleObjectAI(DistributedObjectAI):
+class DistributedDestructibleObjectAI(DistributedNodeAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDestructibleObjectAI')
 
     def __init__(self, air):
-        DistributedObjectAI.__init__(self, air)
+        DistributedNodeAI.__init__(self, air)

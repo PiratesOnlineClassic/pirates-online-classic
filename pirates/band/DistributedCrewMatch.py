@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.band.DistributedCrewMatch
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
 from pirates.piratesbase import PLocalizer
@@ -29,14 +25,13 @@ class DistributedCrewMatch(DistributedObject):
     def disable(self):
         DistributedObject.disable(self)
         base.cr.pirateCrewMatch = None
-        return
 
     def addCrewToLookoutList(self, range, sailValue, cannonValue):
         self.sendUpdate('requestCrewAdd', [range, sailValue, cannonValue])
         if localAvatar.getCurrentIsland() in PVP_ISLAND_LIST:
             self.stackMessage(PLocalizer.CrewMatchEnabledForCrewPVP)
-        else:
-            self.stackMessage(PLocalizer.CrewMatchEnabledForCrew)
+            return
+        self.stackMessage(PLocalizer.CrewMatchEnabledForCrew)
 
     def deleteCrewFromLookoutList(self):
         self.sendUpdate('requestCrewDelete', [])
@@ -73,9 +68,8 @@ class DistributedCrewMatch(DistributedObject):
     def deleteAvatarFromLookoutList(self):
         if self.crewType == 1:
             self.stackMessage(PLocalizer.CrewMatchRemoveAvatarFromLookout)
-        else:
-            if self.crewType == 2:
-                self.stackMessage(PLocalizer.CrewMatchRemoveAvatarFromLookoutPVP)
+        elif self.crewType == 2:
+            self.stackMessage(PLocalizer.CrewMatchRemoveAvatarFromLookoutPVP)
         self.sendUpdate('requestdeleteAvatarFromLookoutList', [])
 
     def responseCrewFound(self, sponsorName, crewOwnAvId, location):
@@ -84,8 +78,8 @@ class DistributedCrewMatch(DistributedObject):
             self.availableCrew = crewOwnAvId
             self.notify.debug('responseCrewFound(%s, %s, %s)' % (sponsorName, crewOwnAvId, location))
             confirmBox = CrewMatchInvitee.CrewMatchInvitee(localAvatar.getDoId(), sponsorName, location, False)
-        else:
-            self.offerRequestCache.append([sponsorName, crewOwnAvId, location])
+            return
+        self.offerRequestCache.append([sponsorName, crewOwnAvId, location])
 
     def acceptInvite(self):
         self.sendUpdate('requestAcceptInvite', [self.availableCrew])
@@ -106,8 +100,8 @@ class DistributedCrewMatch(DistributedObject):
             self.responseCrewFound(sponsorName, crewOwnAvId, location)
 
     def stackMessage(self, msg):
-        base.localAvatar.guiMgr.messageStack.addTextMessage(msg, seconds=15, priority=0, color=PiratesGuiGlobals.TextFG14, suffix='_f', icon=('friends',
-                                                                                                                                              ''))
+        base.localAvatar.guiMgr.messageStack.addTextMessage(msg, seconds=15, priority=0, 
+                                                            color=PiratesGuiGlobals.TextFG14, suffix='_f', icon=('friends',''))
 
     def requestCrewOfOne(self):
         self.sendUpdate('requestCrewOfOneCreation', [])
@@ -117,4 +111,3 @@ class DistributedCrewMatch(DistributedObject):
 
     def notifySponsorNewMember(self, avName):
         self.stackMessage(PLocalizer.CrewMatchAvatarAddedToYourCrew % avName)
-# okay decompiling .\pirates\band\DistributedCrewMatch.pyc

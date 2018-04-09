@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.band.DistributedPirateBandManager
 from direct.distributed.DistributedObject import DistributedObject
 from pirates.band import BandConstance
 
@@ -20,7 +16,6 @@ class DistributedPirateBandManager(DistributedObject):
     def disable(self):
         DistributedObject.disable(self)
         base.cr.PirateBandManager = None
-        return
 
     def d_requestInvite(self, avatarId):
         self.sendUpdate('requestInvite', [avatarId])
@@ -33,8 +28,8 @@ class DistributedPirateBandManager(DistributedObject):
             if len(localAvatar.guiMgr.crewPage.crew) <= 1 and localAvatar.getLookingForCrew() == 1:
                 localAvatar.toggleLookingForCrewSign()
             messenger.send('BandAdded-%s' % (avatarId,), [avatarId])
-        else:
-            messenger.send('BandRequestRejected-%s' % (avatarId,), [avatarId, responce])
+            return
+        messenger.send('BandRequestRejected-%s' % (avatarId,), [avatarId, responce])
 
     def invitationFrom(self, avatarId, avatarName):
         messenger.send(BandConstance.BandInvitationEvent, [avatarId, avatarName])
@@ -55,4 +50,3 @@ class DistributedPirateBandManager(DistributedObject):
 
     def receiveUpdatedCrewIcon(self, iconKey):
         base.localAvatar.setCrewIcon(iconKey)
-# okay decompiling .\pirates\band\DistributedPirateBandManager.pyc

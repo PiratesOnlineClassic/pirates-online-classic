@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.band.DistributedBandMember
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
 from otp.speedchat import SCDecoders
@@ -32,8 +28,7 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
         bm = cls.getBandMember(doId)
         if bm:
             return cls.band_map.get(bm.bandId, set())
-        else:
-            return set()
+        return set()
 
     @classmethod
     def getBandSetLocalAvatar(cls):
@@ -49,15 +44,13 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
                 return b.name
 
         print '---------------------------- Return None'
-        return
 
     @classmethod
     def IsAvatarHeadOfBand(cls, doId):
         br = cls.getBandMember(doId)
         if br:
             return br.isManager
-        else:
-            return 0
+        return 0
 
     @classmethod
     def IsLocalAvatarHeadOfBand(cls):
@@ -74,7 +67,6 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
         self.shipInfo = [0, '', 0, []]
         self.whiteListEnabled = base.config.GetBool('whitelist-chat-enabled', 1)
         print 'GENERATING NEW BAND MEMBER'
-        return
 
     def announceGenerate(self):
         DistributedObject.announceGenerate(self)
@@ -93,7 +85,6 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
     def delete(self):
         self.avatarId = None
         DistributedObject.delete(self)
-        return
 
     def setAvatarId(self, avatarId):
         if self.avatarId != 0:
@@ -205,4 +196,3 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
     def d_teleportResponse(self, available, shardId, instanceDoId, areaDoId, sendToId):
         self.sendUpdate('teleportResponse', [localAvatar.doId, available, shardId, instanceDoId, areaDoId])
-# okay decompiling .\pirates\band\DistributedBandMember.pyc
