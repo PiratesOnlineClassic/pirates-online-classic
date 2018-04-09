@@ -124,3 +124,6 @@ tools/
 # logs/screens
 logs/
 screenshots/
+
+# Misc
+cf2.txt
