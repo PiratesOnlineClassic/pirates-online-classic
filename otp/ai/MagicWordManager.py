@@ -26,16 +26,21 @@ class MagicWordManager(DistributedObject.DistributedObject):
                 target = base.localAvatar
             else:
                 target = lastClickedNametag
+
             magicWord = magicWord[2:]
+
         if magicWord.startswith('~'):
             target = base.localAvatar
             magicWord = magicWord[1:]
 
         targetId = target.doId
-        self.sendUpdate('sendMagicWord', [magicWord, targetId])
         if target == base.localAvatar:
             response = spellbook.process(base.localAvatar, target, magicWord)
+            if response:
+                self.sendMagicWordResponse(response)
+                return
 
+        self.sendUpdate('sendMagicWord', [magicWord, targetId])
 
     def sendMagicWordResponse(self, response):
         self.notify.info(response)

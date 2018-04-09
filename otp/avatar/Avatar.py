@@ -592,9 +592,13 @@ def run():
     """
     Toggles the debug running on/off
     """
-    inputState.set('debugRunning', inputState.isSet('debugRunning') != True)
-    if inputState.isSet('debugRunning'):
+
+    debugRunning = not inputState.isSet('debugRunning')
+    inputState.set('debugRunning', debugRunning)
+
+    if not debugRunning:
         return 'Debug running disabled!'
+
     return 'Debug running enabled!'
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
@@ -602,5 +606,6 @@ def oobe():
     """
     Toggles the ShowBase Oobe state
     """
+
     base.oobe()
-    return 'Toggled OOBE'
+    return 'Toggled OOBE mode.'

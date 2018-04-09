@@ -29,7 +29,5 @@ class MagicWordManagerAI(DistributedObjectAI):
         if response:
             self.sendUpdateToAvatarId(invokerId, 'sendMagicWordResponse', [response])
 
-        self.air.writeServerEvent('magic-word',
-                                  invokerId=invokerId, invokerName=invoker.getName(), invokerAccess=invoker.getAdminAccess(),
-                                  targetId=targetId, targetName=target.getName(), targetAccess=target.getAdminAccess(),
-                                  command=word, response=response)
+        self.air.writeServerEvent('magic-word', invokerId=invokerId, invokerName=invoker.getName(), invokerAccess=invoker.getAdminAccess(), targetId=targetId,
+            targetName=target.getName(), targetAccess=target.getAdminAccess(), command=word, response=response)
