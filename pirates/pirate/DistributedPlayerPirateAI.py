@@ -146,7 +146,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             stack = inventory.getStack(skillId)
             if stack[1] > 0:
                 inventory.b_setStack(stack[0], stack[1] - 1)
-                if stack[0] = InventoryCategory.UnspentMelee:
+                if stack[0] = InventoryCategory.UnspentCannon:
                     stack = inventory.getStack(InventoryCategory.CannonShoot)
                     if not stack:
                         inventory.b_setStack(InventoryCategory.CannonShoot, 1)
