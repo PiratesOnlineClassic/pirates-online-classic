@@ -168,7 +168,7 @@ struct FriendEntry {
 
 dclass DistributedPlayer : DistributedAvatar {
   arrivedOnDistrict(uint32) ownrecv ram;
-  setAccountName(string) required ownrecv db;
+  setAccountName(string="") required ownrecv db;
   setChat(string, uint8, uint32) broadcast ownsend;
   setWLChat(string, uint8, uint32) broadcast ownsend;
   setWhisperFrom(uint32, string, uint32) ownrecv clsend;
@@ -182,11 +182,11 @@ dclass DistributedPlayer : DistributedAvatar {
   setSCCustom(uint16) broadcast ownsend airecv;
   setFriendsList(FriendEntry friendsList[] = []) ownrecv required db airecv;
   setDISLname(string) broadcast ownrecv ram;
-  setDISLid(uint32) broadcast ownrecv ram db;
+  setDISLid(uint32=0) broadcast ownrecv ram db;
   OwningAccount(uint32);
-  WishName(string) db ram;
-  WishNameState(string) db ram;
-  setPreviousAccess(uint8) required db airecv;
+  WishName(string="") db ram;
+  WishNameState(string="") db ram;
+  setPreviousAccess(uint8=0) required db airecv;
   setAccess(uint8) broadcast ownrecv required ram airecv;
 };
 

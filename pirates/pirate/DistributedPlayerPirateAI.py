@@ -22,10 +22,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def generate(self):
         DistributedPlayerAI.generate(self)
+        DistributedBattleAvatarAI.generate(self)
 
-        if simbase.config.GetBool('skip-tutorial', False):
-            self.b_setReturnLocation(LocationIds.PORT_ROYAL_ISLAND)
-            self.b_setJailCellIndex(100)
+    def announceGenerate(self):
+        DistributedPlayerAI.announceGenerate(self)
+        DistributedBattleAvatarAI.announceGenerate(self)
 
     def setDNAString(self, dnaString):
         self.dnaString = dnaString

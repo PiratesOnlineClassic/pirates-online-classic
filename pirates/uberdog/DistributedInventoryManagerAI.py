@@ -1,6 +1,6 @@
 from direct.distributed.DistributedObjectGlobalAI import DistributedObjectGlobalAI
 from direct.directnotify import DirectNotifyGlobal
-from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType
+from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
 
 class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryManagerAI')
@@ -92,5 +92,22 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
                 avatarId, id(self)), appendTask=True, extraArgs=[avatarId, inventoryId])
 
             return
+
+        avatar = self.air.doId2do.get(avatarId)
+
+        if not avatar:
+            self.notify.debug('Cannot send inventory, unknown avatar!')
+            return
+
+        inventory.b_setStackLimit(InventoryType.Hp, avatar.getMaxHp())
+        inventory.b_setStackLimit(InventoryType.Mojo, avatar.getMaxMojo())
+
+        inventory.b_setStack(InventoryType.CutlassWeaponL1, 1)
+        inventory.b_setStack(InventoryType.PistolWeaponL1, 1)
+        inventory.b_setStack(InventoryType.MusketWeaponL1, 1)
+        inventory.b_setStack(InventoryType.DaggerWeaponL1, 1)
+        inventory.b_setStack(InventoryType.GrenadeWeaponL1, 1)
+        inventory.b_setStack(InventoryType.DollWeaponL1, 1)
+        inventory.b_setStack(InventoryType.WandWeaponL1, 1)
 
         inventory.d_requestInventoryComplete()

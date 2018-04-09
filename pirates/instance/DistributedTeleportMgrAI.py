@@ -83,7 +83,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
         return None
 
-    def d_initiateTeleport(self, avatar, instanceType=None, instanceName=None, locationUid=LocationIds.PORT_ROYAL_ISLAND, spawnPt=None):
+    def d_initiateTeleport(self, avatar, instanceType=None, instanceName=None, locationUid=None, spawnPt=None):
         if avatar.doId in self.avatar2fsm:
             self.notify.warning('Cannot initiate teleport for avatar %d, already teleporting!' % (
                 avatar.doId))
@@ -130,9 +130,6 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         self.avatar2fsm[avatar.doId].request('Start')
 
     def initiateTeleport(self, instanceType, fromInstanceType, shardId, locationUid, instanceDoId, instanceName, gameType, friendDoId, friendAreaDoId):
-        if simbase.config.GetBool('force-teleport-pr', True):
-            locationUid = LocationIds.PORT_ROYAL_ISLAND
-
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
