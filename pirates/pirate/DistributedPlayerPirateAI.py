@@ -6,6 +6,7 @@ from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
 from pirates.piratesbase import PLocalizer
 from pirates.quest.QuestConstants import LocationIds
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 
 class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNA):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
@@ -146,7 +147,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             stack = inventory.getStack(skillId)
             if stack[1] > 0:
                 inventory.b_setStack(stack[0], stack[1] - 1)
-                if stack[0] = InventoryCategory.UnspentCannon:
+                if stack[0] == InventoryCategory.UnspentCannon:
                     stack = inventory.getStack(InventoryCategory.CannonShoot)
                     if not stack:
                         inventory.b_setStack(InventoryCategory.CannonShoot, 1)
