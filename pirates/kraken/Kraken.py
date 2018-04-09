@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.kraken.Kraken
 import math
 import random
 import time
@@ -31,7 +27,6 @@ class Kraken(DistributedNode):
         self.sinkCutsceneIval = None
         self.sinkShipIval = None
         self.sinkEffectsNode = None
-        return
 
     def disable(self):
         self.grabberTentacles = {}
@@ -54,7 +49,6 @@ class Kraken(DistributedNode):
         if ship:
             ship.setKraken(None)
         DistributedNode.disable(self)
-        return
 
     def setShipId(self, shipId):
         self.shipId = shipId
@@ -69,10 +63,7 @@ class Kraken(DistributedNode):
                 grabber.attachToShipLocator()
                 grabber.setupCollisions()
 
-            return
-
         self.shipRomRequest = self.cr.relatedObjectMgr.requestObjects((shipId,), eachCallback=shipArrived)
-        return
 
     def getShipId(self):
         return self.shipId
@@ -116,7 +107,6 @@ class Kraken(DistributedNode):
         if self.rTask:
             taskMgr.remove(self.rTask)
             self.rTask = None
-        return
 
     def rangeTask(self, task):
         t = task.time
@@ -145,4 +135,3 @@ class Kraken(DistributedNode):
         numTent = len(self.grabberTentacles) / 2
         for i in range(numTent):
             self.grabberTentacles[i + numTent * side].emerge(0)
-# okay decompiling .\pirates\kraken\Kraken.pyc

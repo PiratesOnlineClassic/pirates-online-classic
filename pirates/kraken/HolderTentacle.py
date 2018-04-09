@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.kraken.HolderTentacle
 from pirates.creature.DistributedCreature import DistributedCreature
 from pirates.kraken.Holder import Holder
 from pirates.kraken.HolderGameFSM import HolderGameFSM
@@ -15,7 +11,6 @@ class HolderTentacle(DistributedCreature):
         Holder.__init__(self)
         Holder.generateCreature(self)
         self.emergeIval = None
-        return
 
     def delete(self):
         Holder.delete(self)
@@ -44,5 +39,3 @@ class HolderTentacle(DistributedCreature):
             self.setPlayRate(-1, 'emerge')
             self.emergeIval = Sequence(Wait(random.random()), Func(self.play, 'emerge', blendOutT=0), Wait(self.creature.getDuration('emerge') / abs(self.creature.getPlayRate('emerge')) - 0.1), Func(self.creature.hide))
         self.emergeIval.start()
-        return
-# okay decompiling .\pirates\kraken\HolderTentacle.pyc
