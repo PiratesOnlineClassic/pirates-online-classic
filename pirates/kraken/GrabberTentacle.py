@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.kraken.GrabberTentacle
 import math
 import random
 
@@ -12,9 +8,7 @@ from pirates.creature.DistributedCreature import DistributedCreature
 from pirates.kraken.Grabber import Grabber
 from pirates.kraken.GrabberGameFSM import GrabberGameFSM
 
-
 class GrabberTentacle(DistributedCreature):
-    __module__ = __name__
 
     def __init__(self, cr):
         DistributedCreature.__init__(self, cr, Grabber(self.uniqueName))
@@ -29,7 +23,6 @@ class GrabberTentacle(DistributedCreature):
         self.emergeIval = None
         self.locatorId = -1
         self.rangeCollisions = None
-        return
 
     def setupCreature(self):
         self.slideBase = NodePath('slideBase')
@@ -81,7 +74,6 @@ class GrabberTentacle(DistributedCreature):
             self.rangeCollisions.detachNode()
             self.rangeCollisions = None
         DistributedCreature.disable(self)
-        return
 
     def delete(self):
         self.creature.delete()
@@ -91,7 +83,6 @@ class GrabberTentacle(DistributedCreature):
         self.slideBase = None
         self.creature = None
         DistributedCreature.delete(self)
-        return
 
     def wantsSmoothing(self):
         return 0
@@ -108,11 +99,10 @@ class GrabberTentacle(DistributedCreature):
 
     def setLocatorId(self, locatorId):
         self.locatorId = locatorId
-
+        
         def krakenArrived(kraken):
             self.krakenRequest = None
             kraken.addGrabberTentacle(self.locatorId, self)
-            return
 
         self.krakenRequest = self.cr.relatedObjectMgr.requestObjects((self.krakenId,), eachCallback=krakenArrived)
 
@@ -123,7 +113,6 @@ class GrabberTentacle(DistributedCreature):
         return self.rockingDampen
 
     def attachToShipLocator(self, time=0, pos=Point3(0), wrt=False):
-
         def shipArrived(ship):
             self.shipRequest = None
             locator = ship.getKrakenGrabberLocator(self.locatorId)
@@ -133,28 +122,23 @@ class GrabberTentacle(DistributedCreature):
                 self.setBase(locator, scale=1)
             self.resetSlider(time=time, pos=pos)
             self.creature.setEffectsScale(2 * locator.getScale()[0])
-            return
 
         kraken = self.getKraken()
         if self.shipRequest:
             self.cr.relatedObjectMgr.abortRequest(self.shipRequest)
             self.shipRequest = None
         self.shipRequest = self.cr.relatedObjectMgr.requestObjects((kraken.getShipId(),), eachCallback=shipArrived)
-        return
 
     def attachToShipModel(self):
-
         def shipArrived(ship):
             self.shipRequest = None
             self.wrtSetBase(ship.getModelRoot())
-            return
 
         kraken = self.getKraken()
         if self.shipRequest:
             self.cr.relatedObjectMgr.abortRequest(self.shipRequest)
             self.shipRequest = None
         self.shipRequest = self.cr.relatedObjectMgr.requestObjects((kraken.getShipId(),), eachCallback=shipArrived)
-        return
 
     def setBase(self, node, scale=0):
         self.slideBase.reparentTo(node)
@@ -183,7 +167,6 @@ class GrabberTentacle(DistributedCreature):
             self.setPlayRate(-1, 'emerge')
             self.emergeIval = Sequence(Wait(random.random()), Func(self.play, 'emerge', blendOutT=0), Wait(self.creature.getDuration('emerge') / abs(self.creature.getPlayRate('emerge')) - 0.1), Func(self.creature.hide))
         self.emergeIval.start()
-        return
 
     def setEmerged(self, val):
         self.emerged = val
@@ -199,26 +182,22 @@ class GrabberTentacle(DistributedCreature):
             def avatarArrived(av):
                 self.avRequest = None
                 self.l_grabAvatar(av)
-                return
 
             self.avRequest = self.cr.relatedObjectMgr.requestObjects((avId,), eachCallback=avatarArrived)
-        else:
-            if self.avatarId:
-                if self.avRequest:
-                    self.cr.relatedObjectMgr.abortRequest(self.avRequest)
-                    self.avRequest = None
-                else:
+            return
+            
+        if self.avatarId:
+            if self.avRequest:
+                self.cr.relatedObjectMgr.abortRequest(self.avRequest)
+                self.avRequest = None
 
-                    def avatarArrived(av):
-                        self.avRequest = None
-                        self.l_releaseAvatar(av)
-                        return
+            def avatarArrived(av):
+                self.avRequest = None
+                self.l_releaseAvatar(av)
 
-                    self.avRequest = self.cr.relatedObjectMgr.requestObjects((self.avatarId,), eachCallback=avatarArrived)
-        return
+            self.avRequest = self.cr.relatedObjectMgr.requestObjects((self.avatarId,), eachCallback=avatarArrived)
 
     def l_grabAvatar(self, av):
-
         def moveComplete(completed):
             if completed:
                 self.attachToShipModel()
@@ -228,8 +207,8 @@ class GrabberTentacle(DistributedCreature):
                     av.setY(-4)
                     av.loop('tentacle_struggle')
                     taskMgr.doMethodLater(2, self.setAvatarToGrabbedState, self.uniqueName('grabDelay'), extraArgs=[av])
-            else:
-                print 'move interrupted'
+                return
+            print 'move interrupted'
 
         time = self.creature.getDuration('grab_avatar')
         blendDelay = 0.5
@@ -257,8 +236,8 @@ class GrabberTentacle(DistributedCreature):
         av.wrtReparentTo(self.getShip().getModelRoot())
         if av.isLocal():
             av.b_setGameState('LandRoam')
-        else:
-            av.setGameState('LandRoam')
+            return
+        av.setGameState('LandRoam')
 
     def reparentNodeToTip(self, node):
         node.wrtReparentTo(self.creature.getGrabTipNode())
@@ -269,27 +248,24 @@ class GrabberTentacle(DistributedCreature):
         state = 'TentacleGrabbed'
         if av.isLocal():
             av.b_setGameState(state, [self])
-        else:
-            av.setGameState(state)
+            return
+        av.setGameState(state)
 
     def setGrabbedAvatar(self, avId):
         if self.isMoving():
-            pass
-        else:
+            return
 
-            def avatarArrived(av):
-                self.avRequest = None
-                self.reparentNodeToTip(av)
-                self.avatarId = avId
-                self.loop('grab_avatar_idle', blendT=0)
-                self.attachToShipModel()
-                return
+        def avatarArrived(av):
+            self.avRequest = None
+            self.reparentNodeToTip(av)
+            self.avatarId = avId
+            self.loop('grab_avatar_idle', blendT=0)
+            self.attachToShipModel()
 
-            if self.avRequest:
-                self.cr.relatedObjectMgr.abortRequest(self.avRequest)
-                self.avRequest = None
-            self.avRequest = self.cr.relatedObjectMgr.requestObjects((avId,), eachCallback=avatarArrived)
-        return
+        if self.avRequest:
+            self.cr.relatedObjectMgr.abortRequest(self.avRequest)
+            self.avRequest = None
+        self.avRequest = self.cr.relatedObjectMgr.requestObjects((avId,), eachCallback=avatarArrived)
 
     def moveToTarget(self, targetNode, time, dampenRocking=False, callback=None):
         self.stopMove()
@@ -354,11 +330,10 @@ class GrabberTentacle(DistributedCreature):
             task.sPosFinal = pos
             self.moveTask = task
             return task
-        else:
-            self.slideBase.setPosHpr(0, 0, 0, 0, 0, 0)
-            self.slider.setPos(pos)
-            if callback:
-                callback(True)
+        self.slideBase.setPosHpr(0, 0, 0, 0, 0, 0)
+        self.slider.setPos(pos)
+        if callback:
+            callback(True)
 
     def resetSliderTask(self, task):
         t = min(1, task.time / task.tFinal)
@@ -382,7 +357,6 @@ class GrabberTentacle(DistributedCreature):
             if self.moveTask.callback:
                 self.moveTask.callback(False)
             self.moveTask = None
-        return
 
     def isMoving(self):
         return bool(self.moveTask)
@@ -430,4 +404,3 @@ class GrabberTentacle(DistributedCreature):
     def hideAllVis():
         for t in base.tentacles:
             t.hideVis()
-# okay decompiling .\pirates\kraken\GrabberTentacle.pyc

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shader.Blur
 import math
 import random
 
@@ -10,7 +6,6 @@ from direct.showbase.DirectObject import DirectObject
 from direct.task import Task
 from otp.otpbase import OTPRender
 from pandac.PandaModules import *
-
 
 class DependencyArray:
     __module__ = __name__
@@ -55,8 +50,6 @@ class DependencyArray:
                     item = None
 
             self.array = None
-        return
-
 
 class RenderToTexture(DirectObject):
     __module__ = __name__
@@ -81,7 +74,6 @@ class RenderToTexture(DirectObject):
         if self.__createBuffer():
             self.accept('close_main_window', self.__destroyBuffer)
             self.accept('open_main_window', self.__createBuffer)
-        return
 
     def addDependencyArray(self, array):
         if array:
@@ -95,9 +87,9 @@ class RenderToTexture(DirectObject):
         if enable:
             if self.texture_buffer:
                 self.texture_buffer.setActive(1)
-        else:
-            if self.texture_buffer:
-                self.texture_buffer.setActive(0)
+            return
+        if self.texture_buffer:
+            self.texture_buffer.setActive(0)
 
     def getTextureBuffer(self):
         return self.texture_buffer
@@ -120,7 +112,6 @@ class RenderToTexture(DirectObject):
             base.graphicsEngine.removeWindow(self.texture_buffer)
         self.texture_buffer = None
         self.created = False
-        return
 
     def __createBuffer(self):
         state = False
@@ -160,7 +151,6 @@ class RenderToTexture(DirectObject):
                         self.dependency_arrays[i] = None
 
             self.dependency_arrays = None
-        return
 
 
 class Glow(DirectObject):
@@ -218,7 +208,6 @@ class Glow(DirectObject):
         dependency_array.checkDependencies()
         self.updateCamera(self.camera)
         taskMgr.add(self.camTask, 'glowCamTask-' + str(id(self)), priority=49)
-        return
 
     def camTask(self, task):
         self.updateCamera(self.camera)
@@ -278,7 +267,6 @@ class Glow(DirectObject):
             self.glow_rtt.delete()
             self.glow_rtt = None
         taskMgr.remove('glowCamTask-' + str(id(self)))
-        return
 
 
 class Blur(DirectObject):
@@ -495,7 +483,6 @@ class Blur(DirectObject):
             card.reparentTo(render2d)
             card.setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
         self.displaySliders(self.display_sliders)
-        return
 
     def __init__(self, width, height, source_rtt, luminance=1, add=0, order=-1, format=0, hdr=1, hdr_output=1, add_glow=0, glow_rtt=0, average=0):
         DirectObject.__init__(self)
@@ -623,7 +610,6 @@ class Blur(DirectObject):
         self.enable(0)
         self.enable(1)
         self.success = self.checkArray(self.shader_array, self.checkShader) and self.checkArray(self.rtt_array, self.checkRtt)
-        return
 
     def setGlowFactor(self, factor):
         self.glow_factor = factor
@@ -634,14 +620,12 @@ class Blur(DirectObject):
     def checkShader(self, shader):
         if shader:
             return True
-        else:
-            return False
+        return False
 
     def checkRtt(self, rtt):
         if rtt:
             return rtt.created
-        else:
-            return False
+        return False
 
     def enableRtt(self, rtt):
         if rtt:
@@ -663,8 +647,6 @@ class Blur(DirectObject):
                     if function:
                         function(array[i])
                     array[i] = None
-
-        return
 
     def processArray(self, array, function=None):
         if array:
@@ -801,8 +783,8 @@ class Blur(DirectObject):
     def toggleSliders(self):
         if self.display_sliders:
             self.displaySliders(0)
-        else:
-            self.displaySliders(1)
+            return
+        self.displaySliders(1)
 
     def deleteSliders(self):
         if self.slider_array:
@@ -864,4 +846,3 @@ class Blur(DirectObject):
             self.lcard = None
             self.tcard = None
             self.deleted = True
-        return
