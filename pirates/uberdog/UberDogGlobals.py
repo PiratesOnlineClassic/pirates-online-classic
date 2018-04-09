@@ -1025,20 +1025,17 @@ class InventoryId:
 
     idFlags[InventoryCategory.CLOTHING] = (0, FREE_TAKE_CATEGORY)
     idFlags[InventoryType.Clothing] = (0, FREE_TAKE_CATEGORY)
-    idFlags[InventoryCategory.CARDS] = (
-     0, FREE_TAKE_CATEGORY)
+    idFlags[InventoryCategory.CARDS] = (0, FREE_TAKE_CATEGORY)
     CardsStack = (InventoryCategory.CARDS, FREE_TAKE_STACK)
     for i in range(InventoryType.begin_Cards, InventoryType.end_Cards):
         idFlags[i] = CardsStack
 
-    idFlags[InventoryCategory.SONGS] = (
-     0, FREE_TAKE_CATEGORY)
+    idFlags[InventoryCategory.SONGS] = (0, FREE_TAKE_CATEGORY)
     SongsStack = (InventoryCategory.SONGS, FREE_TAKE_STACK)
     for i in range(InventoryType.begin_Songs, InventoryType.end_Songs):
         idFlags[i] = SongsStack
 
-    idFlags[InventoryCategory.CLOTHING] = (
-     0, AUTO_LOCATION_DO_ID)
+    idFlags[InventoryCategory.CLOTHING] = (0, AUTO_LOCATION_DO_ID)
     idFlags[InventoryCategory.FURNITURE] = (0, AUTO_LOCATION_DO_ID)
     idFlags[InventoryCategory.TREASURE_MAPS] = (0, AUTO_LOCATION_DO_ID)
     idFlags[InventoryCategory.SHIP_MAINPARTS] = (0, AUTO_LOCATION_DO_ID)
@@ -1046,12 +1043,10 @@ class InventoryId:
     idFlags[InventoryCategory.QUESTS] = (0, AUTO_LOCATION_DO_ID)
     idFlags[InventoryCategory.SHIP_ACCESSORIES] = (0, AUTO_LOCATION_DO_ID)
     idFlags[InventoryCategory.FLAGS] = (0, AUTO_LOCATION_DO_ID)
-    idFlags[InventoryCategory.SHIPS] = (
-     0, AUTO_OWNER_DO_ID)
+    idFlags[InventoryCategory.SHIPS] = (0, AUTO_OWNER_DO_ID)
     idFlags[InventoryCategory.PETS] = (0, AUTO_OWNER_DO_ID)
     idFlags[InventoryCategory.WAGERS] = (0, AUTO_OWNER_DO_ID)
-    idFlags[InventoryCategory.TRASH] = (
-     0, SPECIAL)
+    idFlags[InventoryCategory.TRASH] = (0, SPECIAL)
     idFlags[InventoryType.UberDogRev] = (InventoryCategory.PLAYER_RANKING, FREE_TAKE_STACK)
 
     @staticmethod
@@ -1117,4 +1112,3 @@ class InventoryId:
     @staticmethod
     def getChangeCategoryOrType(id):
         return id & ~InventoryId.IS_LIMIT_CHANGE
-# okay decompiling .\pirates\uberdog\UberDogGlobals.pyc

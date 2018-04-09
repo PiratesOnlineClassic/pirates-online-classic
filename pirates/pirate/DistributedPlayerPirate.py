@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pirate.DistributedPlayerPirate
 import string
 
 import PlayerPirateGameFSM
@@ -303,8 +299,8 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
     def setBeacon(self, team):
         if self.isLocal():
             localAvatar.guiMgr.showPVPTeamIcon(team)
-        else:
-            self.showBeacon(team)
+            return
+        self.showBeacon(team)
 
     def createGameFSM(self):
         self.gameFSM = PlayerPirateGameFSM.PlayerPirateGameFSM(self)
@@ -323,7 +319,6 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
             self.accept('phaseComplete-4', self.handlePhaseComplete, extraArgs=[4])
         self.initVisibleToCamera()
         yieldThread('current Item')
-        return
 
     def handlePhaseComplete(self, phase):
         if phase == 4:
@@ -363,14 +358,12 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         if titleId < 0 or rank < 0:
             self.badge = None
         self.refreshName()
-        return
 
     def setShipBadgeIcon(self, titleId, rank):
         self.shipBadge = (
          titleId, rank)
         if titleId < 0 or rank < 0:
             self.shipBadge = None
-        return
 
     def sendRequestSetBadgeIcon(self, titleId, rank):
         self.sendUpdate('requestBadgeIcon', [titleId, rank])
@@ -482,9 +475,6 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         inventory = self.cr.doId2do.get(self.inventoryId)
         if inventory:
             return inventory
-        else:
-            return
-        return
 
     def getFriendsListId(self):
         pass
@@ -579,9 +569,9 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         if shipId:
             self.pendingSetCrewShip = self.cr.relatedObjectMgr.requestObjects([shipId], eachCallback=self._setCrewShip)
             messenger.send('localAvatarToSea')
-        else:
-            self._setCrewShip(None)
-            messenger.send('localAvatarToLand')
+            return
+        self._setCrewShip(None)
+        messenger.send('localAvatarToLand')
 
     def getCrewShipId(self):
         return self.crewShipId
@@ -748,11 +738,10 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
                     self.attuneEffect.setEffectColor(Vec4(0.2, 0.1, 0.5, 1))
                 elif hasEnemies and hasFriendly:
                     self.attuneEffect.setEffectColor(Vec4(0, 0.15, 0.15, 1))
-        else:
-            if self.attuneEffect:
-                self.attuneEffect.stopLoop()
-                self.attuneEffect = None
-        return
+            return
+        if self.attuneEffect:
+            self.attuneEffect.stopLoop()
+            self.attuneEffect = None
 
     def getStickyTargets(self):
         return self.stickyTargets
@@ -794,7 +783,6 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
 
     def clearTutorialHandlerZone(self):
         localAvatar.clearInterestNamed(None, ['tutorialHandlerInterest'])
-        return
 
     def sendClothingMessage(self, clothingId, colorId):
         localAvatar.guiMgr.messageStack.showLoot([], gold=0, collect=0, card=0, cloth=clothingId, color=colorId)
@@ -1022,7 +1010,6 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
                     return
 
         callback(True)
-        return
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
     def confirmTeleportTo(self, callback, avId):
@@ -1036,7 +1023,6 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
                 return
 
         callback(True, avId, flag)
-        return
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
     def b_setTeleportFlag(self, flag, confirmCallback=None, confirmArgs=[]):
@@ -1047,11 +1033,9 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
 
     def b_clearTeleportFlag(self, flag):
         self.b_setTeleportFlags(self.teleportFlags & ~flag, {flag: (None, [])})
-        return
 
     def clearTeleportFlag(self, flag):
         self.setTeleportFlags(self.teleportFlags & ~flag, {flag: (None, [])})
-        return
 
     def b_setTeleportFlags(self, flags, confirmDict):
         if self.teleportFlags != flags:
@@ -1072,8 +1056,6 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
                 if b in confirmDict:
                     self.teleportConfirmCallbacks[b] = confirmDict[b]
             b >>= 1
-
-        return
 
     def getTeleportFlags(self):
         return self.teleportFlags
@@ -1123,22 +1105,18 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
     def confirmIslandTeleport(self, toFrom, incomingAvid=0, islandUid=''):
         if toFrom == 'from':
             return self.hasIslandTeleportToken(islandUid) or self.returnLocation == islandUid or self.currentIsland == islandUid or self.cr.distributedDistrict.worldCreator.isPvpIslandByUid(islandUid) or base.config.GetBool('teleport-all', 0)
-        else:
-            return True
+        return True
 
     def confirmSwimmingTeleport(self, toFrom, incomingAvid=0):
         if toFrom == 'from':
             return True
-        else:
-            return True
+        return True
 
     def setBandId(self, bandmanager, bandId):
         if bandId:
-            self.BandId = (
-             bandmanager, bandId)
-        else:
-            self.BandId = None
-        return
+            self.BandId = (bandmanager, bandId)
+            return
+        self.BandId = None
 
     def getBandId(self):
         return self.BandId
@@ -1179,8 +1157,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         self.d_setSCEmote(emoteId)
 
     def d_setSCEmote(self, emoteId):
-        self.sendUpdate('setSCEmote', [
-         emoteId])
+        self.sendUpdate('setSCEmote', [emoteId])
 
     def setSCEmote(self, emoteId):
         if self.doId in base.localAvatar.ignoreList:
@@ -1190,12 +1167,9 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
     def b_setSpeedChatQuest(self, questInt, msgType, taskNum):
         self.setSpeedChatQuest(questInt, msgType, taskNum)
         self.d_setSpeedChatQuest(questInt, msgType, taskNum)
-        return
 
     def d_setSpeedChatQuest(self, questInt, msgType, taskNum):
-        self.sendUpdate('setSpeedChatQuest', [
-         questInt, msgType, taskNum])
-        return
+        self.sendUpdate('setSpeedChatQuest', [questInt, msgType, taskNum])
 
     def setSpeedChatQuest(self, questInt, msgType, taskNum):
         if self.doId in base.localAvatar.ignoreList:
@@ -1203,13 +1177,11 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         chatString = PSCDecoders.decodeSCQuestMsgInt(questInt, msgType, taskNum)
         if chatString:
             self.setChatAbsolute(chatString, CFSpeech | CFQuicktalker | CFTimeout)
-        return
 
     def getAccess(self):
         if Freebooter.AllAccessHoliday:
             return 2
-        else:
-            return self.getGameAccess()
+        return self.getGameAccess()
 
     def setAccess(self, access):
         self.setGameAccess(access)
@@ -1281,7 +1253,6 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         if self.waterSplash:
             self.waterSplash.stopLoop()
             self.waterSplash = None
-        return
 
     def adjustWaterEffect(self, offset, forwardSpeed=0.0, rotateSpeed=0.0, slideSpeed=0.0):
         if base.options.getSpecialEffectsSetting() < base.options.SpecialEffectsMedium:
@@ -1323,7 +1294,6 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         if self.waterSplash:
             self.waterSplash.setX(slideSpeed / 20.0)
             self.waterSplash.setZ(offset - 0.75)
-        return
 
     def setCompositeDNA(self, *dna):
         counter = 0
@@ -1493,17 +1463,14 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
                 self.guiMgr.lookoutPage.restoreOrCancelSearch()
                 if numFailed == 0:
                     if DistributedBandMember.DistributedBandMember.getBandMember(localAvatar.doId):
-                        self.guiMgr.messageStack.addTextMessage(PLocalizer.LookoutInviteIgnore, icon=('lookout',
-                                                                                                      None))
+                        self.guiMgr.messageStack.addTextMessage(PLocalizer.LookoutInviteIgnore, icon=('lookout', None))
                     else:
-                        self.guiMgr.messageStack.addTextMessage(PLocalizer.LookoutInviteNeedCrew, icon=('lookout',
-                                                                                                        None))
+                        self.guiMgr.messageStack.addTextMessage(PLocalizer.LookoutInviteNeedCrew, icon=('lookout', None))
             else:
                 self.guiMgr.lookoutPage.requestInvitesResponse([])
 
         if numFailed > 0:
-            self.guiMgr.messageStack.addTextMessage(PLocalizer.LookoutInviteFail % numFailed, icon=('lookout',
-                                                                                                    None))
+            self.guiMgr.messageStack.addTextMessage(PLocalizer.LookoutInviteFail % numFailed, icon=('lookout', None))
 
     def getTutorialState(self):
         return self.tutorialState
@@ -1519,14 +1486,14 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         pStatus = self.getGameAccess()
         if pStatus == 2 or pStatus == 0:
             self.isPaid = True
-        else:
-            self.isPaid = False
+            return
+        self.isPaid = False
 
     def initVisibleToCamera(self):
         if self is not localAvatar and localAvatar.getSoloInteraction():
             self.hideFromCamera()
-        else:
-            self.showToCamera()
+            return
+        self.showToCamera()
 
     def hideFromCamera(self):
         self.accept('showOtherAvatars', self.showToCamera)
@@ -1567,8 +1534,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         t = int(seconds)
         minutes, seconds = divmod(t, 60)
         hours, minutes = divmod(minutes, 60)
-        return [
-         hours, minutes]
+        return [hours, minutes]
 
     def setCrewHUDUpdate(self, numberOfNearByCrew, cMemberIcons):
         localAvatar.guiMgr.crewPage.crewHUD.updateAll(numberOfNearByCrew, cMemberIcons)
@@ -1591,17 +1557,14 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
     def updateGMNameTag(self, state, color, tagString):
         if color == 'gold':
             color = 'goldGM'
+        elif color == 'red':
+            color = 'redGM'
+        elif color == 'green':
+            color = 'greenGM'
+        elif color == 'blue':
+            color = 'blueGM'
         else:
-            if color == 'red':
-                color = 'redGM'
-            else:
-                if color == 'green':
-                    color = 'greenGM'
-                else:
-                    if color == 'blue':
-                        color = 'blueGM'
-                    else:
-                        color = 'whiteGM'
+            color = 'whiteGM'
         self.setGMNameTagState(state)
         self.setGMNameTagColor(color)
         self.setGMNameTagString(tagString)
@@ -1627,7 +1590,6 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
     def setChatAbsolute(self, chatString, chatFlags, dialogue=None, interrupt=1, quiet=0):
         if not self.gmNameTagAllowed:
             DistributedPlayer.setChatAbsolute(self, chatString, chatFlags, dialogue, interrupt, quiet)
-        else:
-            if not quiet:
-                base.chatAssistant.receiveGMOpenTypedChat(chatString, chatFlags, self.doId)
-# okay decompiling .\pirates\pirate\DistributedPlayerPirate.pyc
+            return
+        if not quiet:
+            base.chatAssistant.receiveGMOpenTypedChat(chatString, chatFlags, self.doId)

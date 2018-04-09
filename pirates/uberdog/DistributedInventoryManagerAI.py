@@ -1,5 +1,6 @@
 from direct.distributed.DistributedObjectGlobalAI import DistributedObjectGlobalAI
 from direct.directnotify import DirectNotifyGlobal
+from otp.ai.MagicWordGlobal import *
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
 
 class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
@@ -123,3 +124,23 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         self.air.dbInterface.queryObject(self.air.dbId, inventoryId, callback=inventoryResponse, dclass=\
             self.air.dclassesByName['DistributedInventoryAI'])
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def maxOutSkillPoints():
+    invoker = spellbook.getInvoker()
+    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    if inventory:
+        inventory.b_setStack(InventoryType.UnspentMelee, 255)
+        inventory.b_setStack(InventoryType.UnspentCutlass, 255)
+        inventory.b_setStack(InventoryType.UnspentPistol, 255)
+        inventory.b_setStack(InventoryType.UnspentMusket, 255)
+        inventory.b_setStack(InventoryType.UnspentDagger, 255)
+        inventory.b_setStack(InventoryType.UnspentGrenade, 255)
+        inventory.b_setStack(InventoryType.UnspentWand, 255)
+        inventory.b_setStack(InventoryType.UnspentDoll, 255)
+        inventory.b_setStack(InventoryType.UnspentKettle, 255)
+        inventory.b_setStack(InventoryType.UnspentCannon, 255)
+        inventory.b_setStack(InventoryType.UnspentSailing, 255)
+        return "Maxed out Skill Points!"
+
+    return "Failed to max out Skill Points!"
