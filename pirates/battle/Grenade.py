@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.Grenade
 import Weapon
 import WeaponGlobals
 from direct.interval.IntervalGlobal import *
@@ -12,7 +8,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class Grenade(Weapon.Weapon):
-    __module__ = __name__
     modelTypes = {InventoryType.GrenadeWeaponL1: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)), InventoryType.GrenadeWeaponL2: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)), InventoryType.GrenadeWeaponL3: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)), InventoryType.GrenadeWeaponL4: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)), InventoryType.GrenadeWeaponL5: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)), InventoryType.GrenadeWeaponL6: ('models/ammunition/grenade', Vec4(1, 1, 1, 1))}
     walkAnim = 'walk'
     runAnim = 'run_with_weapon'
@@ -49,41 +44,40 @@ class Grenade(Weapon.Weapon):
             av.speedIndex = PiratesGlobals.SPEED_BATTLE_INDEX
             if av.isLocal():
                 av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[av.speedIndex])
+        elif self.ammoSkillId == InventoryType.GrenadeSiege:
+            self.walkAnim = 'bigbomb_walk'
+            self.runAnim = 'bigbomb_walk'
+            self.walkBackAnim = 'bigbomb_walk'
+            self.neutralAnim = 'bigbomb_idle'
+            self.strafeLeftAnim = 'bigbomb_walk_left'
+            self.strafeRightAnim = 'bigbomb_walk_right'
+            self.strafeDiagLeftAnim = 'bigbomb_walk_left_diagonal'
+            self.strafeDiagRightAnim = 'bigbomb_walk_right_diagonal'
+            self.strafeRevDiagLeftAnim = 'bigbomb_walk_back_left'
+            self.strafeRevDiagRightAnim = 'bigbomb_walk_back_right'
+            self.painAnim = 'boxing_hit_head_right'
+            self.prop.setPos(-0.15, -0.25, -0.5)
+            self.prop.setScale(1.25)
+            av.speedIndex = PiratesGlobals.SPEED_HEAVY_INDEX
+            if av.isLocal():
+                av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[av.speedIndex])
         else:
-            if self.ammoSkillId == InventoryType.GrenadeSiege:
-                self.walkAnim = 'bigbomb_walk'
-                self.runAnim = 'bigbomb_walk'
-                self.walkBackAnim = 'bigbomb_walk'
-                self.neutralAnim = 'bigbomb_idle'
-                self.strafeLeftAnim = 'bigbomb_walk_left'
-                self.strafeRightAnim = 'bigbomb_walk_right'
-                self.strafeDiagLeftAnim = 'bigbomb_walk_left_diagonal'
-                self.strafeDiagRightAnim = 'bigbomb_walk_right_diagonal'
-                self.strafeRevDiagLeftAnim = 'bigbomb_walk_back_left'
-                self.strafeRevDiagRightAnim = 'bigbomb_walk_back_right'
-                self.painAnim = 'boxing_hit_head_right'
-                self.prop.setPos(-0.15, -0.25, -0.5)
-                self.prop.setScale(1.25)
-                av.speedIndex = PiratesGlobals.SPEED_HEAVY_INDEX
-                if av.isLocal():
-                    av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[av.speedIndex])
-            else:
-                self.walkAnim = 'walk'
-                self.runAnim = 'run'
-                self.walkBackAnim = 'walk'
-                self.neutralAnim = 'bomb_idle'
-                self.strafeLeftAnim = 'strafe_left'
-                self.strafeRightAnim = 'strafe_right'
-                self.strafeDiagLeftAnim = 'run_diagonal_left'
-                self.strafeDiagRightAnim = 'run_diagonal_right'
-                self.strafeRevDiagLeftAnim = 'walk_back_diagonal_left'
-                self.strafeRevDiagRightAnim = 'walk_back_diagonal_right'
-                self.painAnim = 'boxing_hit_head_right'
-                self.prop.setPos(-0.05, -0.05, -0.2)
-                self.prop.setScale(0.45)
-                av.speedIndex = PiratesGlobals.SPEED_BATTLE_INDEX
-                if av.isLocal():
-                    av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[av.speedIndex])
+            self.walkAnim = 'walk'
+            self.runAnim = 'run'
+            self.walkBackAnim = 'walk'
+            self.neutralAnim = 'bomb_idle'
+            self.strafeLeftAnim = 'strafe_left'
+            self.strafeRightAnim = 'strafe_right'
+            self.strafeDiagLeftAnim = 'run_diagonal_left'
+            self.strafeDiagRightAnim = 'run_diagonal_right'
+            self.strafeRevDiagLeftAnim = 'walk_back_diagonal_left'
+            self.strafeRevDiagRightAnim = 'walk_back_diagonal_right'
+            self.painAnim = 'boxing_hit_head_right'
+            self.prop.setPos(-0.05, -0.05, -0.2)
+            self.prop.setScale(0.45)
+            av.speedIndex = PiratesGlobals.SPEED_BATTLE_INDEX
+            if av.isLocal():
+                av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[av.speedIndex])
         av.setWalkForWeapon()
 
     def setAmmoSkillId(self, ammoSkillId):
@@ -130,8 +124,7 @@ class Grenade(Weapon.Weapon):
     @classmethod
     def setupSounds(cls):
         Grenade.aimSfxs = (loader.loadSfx('audio/sfx_pistol_cock.mp3'),)
-        Grenade.reloadSfxs = (
-         loader.loadSfx('audio/sfx_pistol_reload.mp3'),)
+        Grenade.reloadSfxs = (loader.loadSfx('audio/sfx_pistol_reload.mp3'),)
         Grenade.skillSfxs = {InventoryType.GrenadeThrow: loader.loadSfx('audio/sfx_grenade_throw.mp3'), InventoryType.GrenadeSiege: loader.loadSfx('audio/sfx_grenade_bigbomb_throw.mp3'), InventoryType.GrenadeLongVolley: loader.loadSfx('audio/sfx_grenade_long_volley_throw.mp3')}
         Grenade.chargingSfx = loader.loadSfx('audio/sfx_grenade_long_volley_charging.mp3')
         Grenade.drawSfx = loader.loadSfx('audio/sfx_grenade_bigbomb_draw.mp3')
@@ -160,4 +153,3 @@ def getAimSfx():
 
 def getReloadSfx():
     return Grenade.reloadSfxs
-# okay decompiling .\pirates\battle\Grenade.pyc

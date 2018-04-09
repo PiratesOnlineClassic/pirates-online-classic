@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.Pistol
 import random
 
 import Weapon
@@ -12,7 +8,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class Pistol(Weapon.Weapon):
-    __module__ = __name__
     modelTypes = {InventoryType.PistolWeaponL1: ('models/handheld/pistol_high', Vec4(1, 1, 1, 1)), InventoryType.PistolWeaponL2: ('models/handheld/double_barrel_pistol_high', Vec4(1, 1, 1, 1)), InventoryType.PistolWeaponL3: ('models/handheld/triple_barrel_pistol_high', Vec4(1, 1, 1, 1)), InventoryType.PistolWeaponL4: ('models/handheld/triple_barrel_pistol_b_high', Vec4(1, 1, 1, 1)), InventoryType.PistolWeaponL5: ('models/handheld/triple_barrel_pistol_c_high', Vec4(1, 1, 1, 1)), InventoryType.PistolWeaponL6: ('models/handheld/quad_barrel_pistol_high', Vec4(1, 1, 1, 1))}
     walkAnim = 'walk'
     runAnim = 'run_with_weapon'
@@ -69,4 +64,3 @@ def getMissSfx():
 
 def getAimSfx():
     return Pistol.aimSfxs
-# okay decompiling .\pirates\battle\Pistol.pyc

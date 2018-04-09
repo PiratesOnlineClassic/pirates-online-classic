@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.Doll
 import random
 
 import Weapon
@@ -12,7 +8,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class Doll(Weapon.Weapon):
-    __module__ = __name__
     modelTypes = {InventoryType.DollWeaponL1: ('models/handheld/voodoo_doll_high', Vec4(1, 1, 1, 1), 'None'), InventoryType.DollWeaponL2: ('models/handheld/voodoo_doll_cloth_high', Vec4(0.5, 0.3, 1, 1), 'effectCloth'), InventoryType.DollWeaponL3: ('models/handheld/voodoo_doll_witch_high', Vec4(1, 0.7, 0.7, 1), 'effectWitch'), InventoryType.DollWeaponL4: ('models/handheld/voodoo_doll_pirate_high', Vec4(1, 1, 1, 1), 'effectPirate'), InventoryType.DollWeaponL5: ('models/handheld/voodoo_doll_taboo_high', Vec4(1, 1, 1, 1), 'effectTaboo'), InventoryType.DollWeaponL6: ('models/handheld/voodoo_doll_mojo_high', Vec4(0.7, 0.5, 1, 1), 'effectMojo')}
     painAnim = 'voodoo_doll_hurt'
 
@@ -107,4 +102,3 @@ def getShacklesSfx():
 
 def getLifedrainSfx():
     return Doll.lifedrainSfx
-# okay decompiling .\pirates\battle\Doll.pyc
