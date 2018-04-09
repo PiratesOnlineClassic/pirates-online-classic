@@ -118,7 +118,29 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         # Gun Skills
         inventory.b_setStack(InventoryType.PistolShoot, 1)
         inventory.b_setStack(InventoryType.PistolLeadShot, 1)
-        # TODO: Add musket and other gun types
+        inventory.b_setStack(InventoryType.PistolVenomShot, 0)
+        inventory.b_setStack(InventoryType.PistolBaneShot, 0)
+        inventory.b_setStack(InventoryType.PistolHexEaterShot, 0)
+        inventory.b_setStack(InventoryType.PistolSilverShot, 0)
+        inventory.b_setStack(InventoryType.PistolSteelShot, 0)
+        inventory.b_setStack(InventoryType.PistolSharpShooter, 0)
+        inventory.b_setStack(InventoryType.PistolDodge, 0)
+        inventory.b_setStack(InventoryType.PistolEagleEye, 0)
+        inventory.b_setStack(InventoryType.PistolTakeAim, 0)
+        
+        # Musket Skills
+        inventory.b_setStack(InventoryType.MusketShoot, 1)
+        inventory.b_setStack(InventoryType.MusketTakeAim, 1)
+        inventory.b_setStack(InventoryType.MusketDeadeye, 0)
+        inventory.b_setStack(InventoryType.MusketEagleEye, 0)
+        inventory.b_setStack(InventoryType.MusketCrackShot, 0)
+        inventory.b_setStack(InventoryType.MusketMarksman, 0)
+        inventory.b_setStack(InventoryType.MusketLeadShot, 0)
+        inventory.b_setStack(InventoryType.MusketScatterShot, 0)
+        inventory.b_setStack(InventoryType.MusketCursedShot, 0)
+        inventory.b_setStack(InventoryType.MusketCoalfireShot, 0)
+        inventory.b_setStack(InventoryType.MusketHeavySlug, 0)
+        inventory.b_setStack(InventoryType.MusketExploderShot, 0)
 
         # Doll Skills
         inventory.b_setStack(InventoryType.DollAttune, 1)
@@ -127,6 +149,15 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         # Dagger Skills
         inventory.b_setStack(InventoryType.DaggerCut, 1)
         inventory.b_setStack(InventoryType.DaggerSwipe, 1)
+        inventory.b_setStack(InventoryType.DaggerGouge, 0)
+        inventory.b_setStack(InventoryType.DaggerEviscerate, 0)
+        inventory.b_setStack(InventoryType.DaggerFinesse, 0)
+        inventory.b_setStack(InventoryType.DaggerBladeInstinct, 0)
+        inventory.b_setStack(InventoryType.DaggerAsp, 0)
+        inventory.b_setStack(InventoryType.DaggerAdder, 0)
+        inventory.b_setStack(InventoryType.DaggerThrowDirt, 0)
+        inventory.b_setStack(InventoryType.DaggerSidewinder, 0)
+        inventory.b_setStack(InventoryType.DaggerViperNest, 0)
 
         # Staff Skills
         inventory.b_setStack(InventoryType.StaffBlast, 1)
@@ -134,6 +165,19 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         # Grenade Skills
         inventory.b_setStack(InventoryType.GrenadeThrow, 1)
+        
+        # Skill Points
+        inventory.b_setStack(InventoryType.UnspentMelee, 0)
+        inventory.b_setStack(InventoryType.UnspentCutlass, 0)
+        inventory.b_setStack(InventoryType.UnspentPistol, 0)
+        inventory.b_setStack(InventoryType.UnspentMusket, 0)
+        inventory.b_setStack(InventoryType.UnspentDagger, 0)
+        inventory.b_setStack(InventoryType.UnspentGrenade, 0)
+        inventory.b_setStack(InventoryType.UnspentWand, 0)
+        inventory.b_setStack(InventoryType.UnspentDoll, 0)
+        inventory.b_setStack(InventoryType.UnspentKettle, 0)
+        inventory.b_setStack(InventoryType.UnspentCannon, 0)
+        inventory.b_setStack(InventoryType.UnspentSailing, 0)
 
         # Request inventory completion
         inventory.d_requestInventoryComplete()
