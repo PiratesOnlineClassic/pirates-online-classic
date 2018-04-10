@@ -411,7 +411,7 @@ dclass ClientServicesManager : DistributedObjectGlobal {
   acceptLogin();
   requestAvatars() clsend;
   setAvatars(PotentialPirate avatars[]);
-  createAvatar(blob dna, uint8 index) clsend;
+  createAvatar(blob dna, uint8 index, string name) clsend;
   createAvatarResp(uint32 avId);
   setNameTyped(uint32 avId, string name) clsend;
   setNameTypedResp(uint32 avId, uint8 status);

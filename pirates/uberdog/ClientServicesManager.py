@@ -39,8 +39,8 @@ class ClientServicesManager(DistributedObjectGlobal):
         avatarList[1] = data + [OTPGlobals.AvatarSlotAvailable] * (4 - len(data))
         self.cr.handleAvatarsList(avatarList)
 
-    def sendCreateAvatar(self, avDNA, _, index):
-        self.sendUpdate('createAvatar', [avDNA.makeNetString(), index])
+    def sendCreateAvatar(self, avDNA, _, index, name):
+        self.sendUpdate('createAvatar', [avDNA.makeNetString(), index, name])
 
     def createAvatarResp(self, avId):
         messenger.send('createdNewAvatar', [avId])
