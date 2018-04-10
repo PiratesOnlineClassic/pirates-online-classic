@@ -1211,10 +1211,7 @@ class OTPClientRepository(ClientRepositoryBase):
         elif msgType == CLIENT_OBJECT_SET_FIELD:
             self.handleUpdateField(di)
         elif msgType == CLIENT_OBJECT_LEAVING:
-            try:
-                self.handleDelete(di)
-            except:
-                pass
+            self.handleDelete(di)
         else:
             self.handleMessageType(msgType, di)
 

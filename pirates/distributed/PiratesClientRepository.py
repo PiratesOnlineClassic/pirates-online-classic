@@ -739,6 +739,22 @@ class PiratesClientRepository(OTPClientRepository):
                 else:
                     self.setViewpoint(selectedObj)
 
+    def handleDelete(self, di):
+        doId = di.getUint32()
+        self.deleteObject(doId)
+
+    def deleteObject(self, doId, ownerView = False):
+        if self.doId2do.has_key(doId):
+            obj = self.doId2do[doId]
+            del self.doId2do[doId]
+            obj.deleteOrDelay()
+            if obj.getDelayDeleteCount() <= 0:
+                obj.detectLeaks()
+        elif self.cache.contains(doId):
+            self.cache.delete(doId)
+        else:
+            self.notify.warning('Asked to delete non-existent DistObj ' + str(doId))
+
     def enterCloseShard(self, loginState=None):
         self.loadingScreen.show()
         self._processVisStopIW = InterestWatcher(self, 'stopProcessViz')
