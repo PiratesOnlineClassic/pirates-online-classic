@@ -1,8 +1,6 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.instance.DistributedInstanceBase
-from pandac.PandaModules import *
+import random
+
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.distributed.DistributedObject import DistributedObject
 from pirates.world.WorldNode import WorldNode
@@ -16,10 +14,8 @@ from direct.interval.IntervalGlobal import *
 from pirates.uberdog import DistributedInventoryBase
 from pirates.cutscene import Cutscene
 from pirates.battle import EnemyGlobals
-import random
 
 class DistributedInstanceBase(DistributedObject, WorldNode):
-    __module__ = __name__
 
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)
@@ -48,10 +44,11 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
             self.cr.relatedObjectMgr.abortRequest(self.pendingJail)
             self.pendingJail = None
 
-        del self.islands
-        del self.playerSpawnPts
-        del self.playerBootPts
-        del self.worldGrid
+        self.islands = {}
+        self.playerSpawnPts = {}
+        self.playerBootPts = {}
+        self.worldGrid = None
+
         WorldNode.delete(self)
         DistributedObject.delete(self)
 
@@ -343,4 +340,3 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
 
     def disableFireworkShow(self):
         pass
-# okay decompiling .\pirates\instance\DistributedInstanceBase.pyc
