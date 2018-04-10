@@ -90,6 +90,14 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
             return
 
+        returnLocation = avatar.getReturnLocation()
+        currentIsland = avatar.getCurrentIsland()
+
+        # check to see which island the avatar exited last at,
+        # then ensure this is their login teleport; not a normal teleport request...
+        if returnLocation and not currentIsland:
+            locationUid = returnLocation
+
         island = avatar.getParentObj()
 
         if island is not None and island.getUniqueId() == locationUid:

@@ -19,6 +19,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.inventoryId = 0
         self.jailCellIndex = 0
         self.returnLocation = ''
+        self.currentIsland = ''
         self.emoteId = 0
 
     def generate(self):
@@ -28,6 +29,18 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
         DistributedBattleAvatarAI.announceGenerate(self)
+
+    def setLocation(self, parentId, zoneId):
+        DistributedPlayerAI.setLocation(self, parentId, zoneId)
+        DistributedBattleAvatarAI.setLocation(self, parentId, zoneId)
+
+        parentObj = self.getParentObj()
+        if parentObj:
+            if isinstance(parentObj, DistributedGameAreaAI):
+                if self.currentIsland:
+                    self.b_setReturnLocation(self.currentIsland)
+
+                self.b_setCurrentIsland(parentObj.getUniqueId())
 
     def setDNAString(self, dnaString):
         self.dnaString = dnaString
@@ -90,16 +103,20 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return self.jailCellIndex
 
     def requestCurrentIsland(self, locationDoId):
-        island = self.air.doId2do.get(locationDoId)
+        pass
 
-        if not island:
-            return
+    def setCurrentIsland(self, currentIsland):
+        self.currentIsland = currentIsland
 
-        if not isinstance(island, DistributedGameAreaAI):
-            return
+    def d_setCurrentIsland(self, currentIsland):
+        self.sendUpdateToAvatarId(self.doId, 'setCurrentIsland', [currentIsland])
 
-        self.sendUpdateToAvatarId(self.doId, 'setCurrentIsland', [
-            island.getUniqueId()])
+    def b_setCurrentIsland(self, currentIsland):
+        self.setCurrentIsland(currentIsland)
+        self.d_setCurrentIsland(currentIsland)
+
+    def getCurrentIsland(self):
+        return self.currentIsland
 
     def hasEmote(self, emoteId):
         emote = PLocalizer.emotes.get(emoteId)
@@ -136,10 +153,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             return
 
         self.b_setCurrentWeapon(currentWeaponId, isWeaponDrawn)
-        
+
     def setCurseStatus(self, curseStat):
         pass
-        
+
     def spendSkillPoint(self, skillId):
         avatarId = self.air.getAvatarIdFromSender()
         inventory = simbase.air.inventoryManager.getInventory(avatarId)
@@ -203,18 +220,18 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             self.spentSkillPoint(skillId)
         else:
             self.notify.debug("Player has no inventory!")
-        
+
     def spentSkillPoint(self, category):
         self.sendUpdate("spentSkillPoint", [category])
-    
+
     def resetSkillPoints(self, skillId):
         self.sendUpdate("resetSkillPoints", [skillId])
-        
+
     def useTonic(self, tonicId):
         pass
-        
+
     def useBestTonic(self):
         pass
-        
+
     def flagFirstDeath(self):
         pass
