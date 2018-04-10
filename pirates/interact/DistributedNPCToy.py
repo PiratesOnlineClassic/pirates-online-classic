@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.interact.DistributedNPCToy
 import random
 import re
 import types
@@ -26,7 +22,6 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
         self.pendingPlacement = None
         self.name = 'NPC Toy Name'
         self.interactSeq = None
-        return
 
     def generate(self):
         DistributedInteractive.DistributedInteractive.generate(self)
@@ -46,7 +41,6 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
         DistributedInteractive.DistributedInteractive.delete(self)
         self.removeNode()
         taskMgr.remove(self.uniqueName('playReact'))
-        return
 
     def setUniqueId(self, uid):
         if self.uniqueId != '':
@@ -125,4 +119,3 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
             else:
                 reactDelay = 0.4
             taskMgr.doMethodLater(reactDelay, self.playInteraction, self.uniqueName('playReact'))
-# okay decompiling .\pirates\interact\DistributedNPCToy.pyc

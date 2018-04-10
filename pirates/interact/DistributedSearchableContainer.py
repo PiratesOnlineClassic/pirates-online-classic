@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.interact.DistributedSearchableContainer
 import math
 
 from direct.directnotify import DirectNotifyGlobal
@@ -30,7 +26,6 @@ class DistributedSearchableContainer(DistributedInteractive.DistributedInteracti
         self.sphereScale = 10
         self.container = None
         self.startSearchTime = 0.0
-        return
 
     def setSearchTime(self, t):
         self.searchTime = t
@@ -60,7 +55,6 @@ class DistributedSearchableContainer(DistributedInteractive.DistributedInteracti
         if self.container:
             self.container.removeNode()
             self.container = None
-        return
 
     def delete(self):
         DistributedInteractive.DistributedInteractive.delete(self)
@@ -114,6 +108,4 @@ class DistributedSearchableContainer(DistributedInteractive.DistributedInteracti
         self.containerColorA = a
 
     def getContainerColor(self):
-        return (
-         self.containerColorR, self.containerColorG, self.containerColorB, self.containerColorA)
-# okay decompiling .\pirates\interact\DistributedSearchableContainer.pyc
+        return (self.containerColorR, self.containerColorG, self.containerColorB, self.containerColorA)

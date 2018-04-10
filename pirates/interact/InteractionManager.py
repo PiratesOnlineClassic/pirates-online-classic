@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.interact.InteractionManager
 import InteractiveBase
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
@@ -28,7 +24,6 @@ class InteractionManager(DirectObject.DirectObject):
         self.lifter = None
         self.cRayNode = None
         self.setupLifter()
-        return
 
     def delete(self):
         self.cleanupLifter()
@@ -63,7 +58,6 @@ class InteractionManager(DirectObject.DirectObject):
         if self.__mouseOver:
             self.__mouseOver.hideMouseOverInfo()
             self.__mouseOver = None
-        return
 
     def lock(self):
         self.__locked = 1
@@ -73,14 +67,12 @@ class InteractionManager(DirectObject.DirectObject):
 
     def addInteractive(self, iObj, priority=InteractiveBase.PROXIMITY):
         if iObj.allowInteract:
-            if (
-             iObj, priority) in self.__interactives:
+            if (iObj, priority) in self.__interactives:
                 raise HierarchyException(HierarchyException.JOSWILSO, 'Redundant Interactive - %s(%d)' % (iObj.getName(), iObj.doId))
             self.__interactives.append((iObj, priority))
 
     def removeInteractive(self, iObj, priority=InteractiveBase.PROXIMITY):
-        if (
-         iObj, priority) in self.__interactives:
+        if (iObj, priority) in self.__interactives:
             self.__interactives.remove((iObj, priority))
         if iObj == self.__nearest:
             iObj.hideProximityInfo()
@@ -88,7 +80,6 @@ class InteractionManager(DirectObject.DirectObject):
         if iObj == self.__mouseOver:
             iObj.hideMouseOverInfo()
             self.__mouseOver = None
-        return
 
     def sortInteractives(self):
         maxObj = None
@@ -97,8 +88,7 @@ class InteractionManager(DirectObject.DirectObject):
             if pri > maxPri:
                 maxObj = iObj
                 maxPri = pri
-                return (
-                 maxObj, maxPri)
+                return (maxObj, maxPri)
 
         maxDot = -1
         maxPri = -1
@@ -157,7 +147,6 @@ class InteractionManager(DirectObject.DirectObject):
         if self.__mouseOver:
             self.__mouseOver.hideMouseOverInfo()
             self.__mouseOver = None
-        return
 
     def getCurrentInteractive(self):
         return self.__currentInteractive
@@ -200,7 +189,6 @@ class InteractionManager(DirectObject.DirectObject):
             self.cTrav = None
             self.lifter = None
             self.cRayNode = None
-        return
 
     def useLifter(self, liftedNodePath, severity=2):
         self.cRayNodePath.reparentTo(liftedNodePath)
@@ -211,4 +199,3 @@ class InteractionManager(DirectObject.DirectObject):
         self.lifter.removeCollider(self.cRayNodePath)
         self.cRayNodePath
         self.cRayNodePath.detachNode()
-# okay decompiling .\pirates\interact\InteractionManager.pyc

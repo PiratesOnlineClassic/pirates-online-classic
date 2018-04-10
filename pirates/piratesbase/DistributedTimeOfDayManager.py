@@ -22,7 +22,6 @@ class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
         DistributedObject.disable(self)
         if self.cr.timeOfDayManager == self:
             self.cr.timeOfDayManager = None
-        return
 
     def delete(self):
         TimeOfDayManager.delete(self)

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesbase.PLocalizer
 import string
 import types
 
@@ -14,7 +10,6 @@ except:
     language = simbase.config.GetString('language', 'english')
     checkLanguage = simbase.config.GetBool('check-language', 1)
 else:
-
     def getLanguage():
         return language
 
@@ -49,4 +44,3 @@ else:
         for key in foreignModule.__dict__.keys():
             if not englishModule.__dict__.has_key(key):
                 print 'WARNING: Foreign module: %s extra key: %s' % (_languageModule, key)
-# okay decompiling .\pirates\piratesbase\PLocalizer.pyc

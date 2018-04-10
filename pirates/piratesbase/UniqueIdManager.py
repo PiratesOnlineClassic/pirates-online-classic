@@ -1,9 +1,4 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesbase.UniqueIdManager
 from direct.task import Task
-
 
 class UniqueIdManager:
     __module__ = __name__
@@ -34,7 +29,6 @@ class UniqueIdManager:
         self.reset()
         self.instance = None
         self.repository = None
-        return
 
     def reset(self):
         for currUid in self.uid2doId.keys():
@@ -76,10 +70,6 @@ class UniqueIdManager:
                         doId = currSubInstance.uidMgr.uid2doId.get(uid)
                         if doId != None:
                             return doId
-
-            else:
-                return
-        return
 
     def addUidCallback(self, uid, callback, timeout=None, onlyOnce=True):
         objDoId = self.uid2doId.get(uid)
@@ -150,8 +140,6 @@ class UniqueIdManager:
             for currSubInstance in subInstances:
                 currSubInstance.uidMgr._requestUidCallback(uid, objId, checkParents=False, objInstance=objInstance)
 
-        return
-
     def removeUidObj(self, uid):
         if self.uid2obj.has_key(uid):
             del self.uid2obj[uid]
@@ -172,4 +160,3 @@ class UniqueIdManager:
             objDoId = self.getDoId(uid)
             obj = self.repository.doId2do.get(objDoId)
         return obj
-# okay decompiling .\pirates\piratesbase\UniqueIdManager.pyc

@@ -1,22 +1,14 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesbase.TeamUtils
 from pirates.piratesbase import PiratesGlobals
-
 
 def teamStatus(team1, team2):
     if team1 == team2:
         return PiratesGlobals.FRIEND
+    elif team1 in PiratesGlobals.FriendlyTeams and team2 in PiratesGlobals.FriendlyTeams:
+        return PiratesGlobals.FRIEND
+    elif team1 in PiratesGlobals.NeutralTeams and team2 in PiratesGlobals.NeutralTeams:
+        return PiratesGlobals.NEUTRAL
     else:
-        if team1 in PiratesGlobals.FriendlyTeams and team2 in PiratesGlobals.FriendlyTeams:
-            return PiratesGlobals.FRIEND
-        else:
-            if team1 in PiratesGlobals.NeutralTeams and team2 in PiratesGlobals.NeutralTeams:
-                return PiratesGlobals.NEUTRAL
-            else:
-                return PiratesGlobals.ENEMY
-
+        return PiratesGlobals.ENEMY
 
 def friendOrFoe(thing1, thing2):
     try:
@@ -50,17 +42,13 @@ def friendOrFoe(thing1, thing2):
 
     return PiratesGlobals.NEUTRAL
 
-
 def damageAllowed(thing1, thing2):
     status = friendOrFoe(thing1, thing2)
     if status == PiratesGlobals.NEUTRAL:
         return False
+    elif status == PiratesGlobals.PVP_ENEMY or status == PiratesGlobals.ENEMY:
+        return True
+    elif getBase().config.GetBool('want-friendly-fire', 0):
+        return True
     else:
-        if status == PiratesGlobals.PVP_ENEMY or status == PiratesGlobals.ENEMY:
-            return True
-        else:
-            if getBase().config.GetBool('want-friendly-fire', 0):
-                return True
-            else:
-                return False
-# okay decompiling .\pirates\piratesbase\TeamUtils.pyc
+        return False

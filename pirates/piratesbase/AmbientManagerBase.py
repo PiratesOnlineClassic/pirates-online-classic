@@ -1,12 +1,7 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesbase.AmbientManagerBase
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import LerpFunc, Sequence
 from direct.showbase.DirectObject import DirectObject
 from pandac.PandaModules import AudioSound
-
 
 class AmbientSound:
     __module__ = __name__
@@ -28,7 +23,6 @@ class AmbientSound:
         self.finalVolume = 0
         self.startVolume = 0
         self.activeInterval = None
-        return
 
     def unload(self):
         if self.activeInterval:
@@ -98,7 +92,6 @@ class AmbientSound:
             self.sfx.stop()
             self.curPriority = 0
 
-
 class AmbientManagerBase(DirectObject):
     __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('AmbientManagerBase')
@@ -150,4 +143,3 @@ class AmbientManagerBase(DirectObject):
             self.masterAmbientVolume = newMasterAmbientVolume
             for name in self.ambientDict.keys():
                 self.ambientDict[name].changeMasterAmbientVolume(self.masterAmbientVolume)
-# okay decompiling .\pirates\piratesbase\AmbientManagerBase.pyc

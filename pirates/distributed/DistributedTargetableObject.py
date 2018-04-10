@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.distributed.DistributedTargetableObject
 import random
 import types
 
@@ -27,7 +23,6 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
         self.height = 5
         self.gameFSM = None
         self.voodooSmokeEffect2 = None
-        return
 
     def getHeight(self):
         return self.height
@@ -35,7 +30,6 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
     def generate(self):
         DistributedNode.DistributedNode.generate(self)
         self.ouchAnim = None
-        return
 
     def disable(self):
         DistributedNode.DistributedNode.disable(self)
@@ -45,7 +39,6 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
         if self.voodooSmokeEffect2:
             self.voodooSmokeEffect2.stopLoop()
             self.voodooSmokeEffect2 = None
-        return
 
     def delete(self):
         DistributedNode.DistributedNode.delete(self)
@@ -53,7 +46,6 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
             self.comboDiary.cleanup()
             self.comboDiary = None
         self.currentWeapon = None
-        return
 
     def initializeBattleCollisions(self):
         pass
@@ -114,7 +106,6 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
                     soundFx = sfxs
             if soundFx:
                 base.playSfx(soundFx, node=self, volume=0.7, cutoff=100)
-        return
 
     def setCombo(self, combo, teamCombo, comboDamage, attackerId=0):
         pass
@@ -127,7 +118,6 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
         if hasCombo:
             combo, comboDamage, teamCombo = self.comboDiary.getCombo()
             self.setCombo(combo, self.isTeamCombo, comboDamage)
-        return
 
     def cleanupOuchIval(self):
         pass
@@ -182,7 +172,6 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
                 self.voodooSmokeEffect2.reparentTo(self)
                 self.voodooSmokeEffect2.setPos(0, 0, 0.2)
                 self.voodooSmokeEffect2.play()
-        return
 
     def showHpString(self, text, pos=0, duration=2.0, scale=0.5):
         pass
@@ -342,15 +331,12 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
         if hpLost > 0:
             self.showHpText(-hpLost, pos, bonus)
             self.hpChange(quietly=0)
-        return
 
     def takeMpDamage(self, mpLost, pos, bonus=3):
         if self.mojo == None or mpLost < 0 or self.mojo <= 0:
             return
         if mpLost > 0:
             self.showHpText(-mpLost, pos, bonus)
-        return
 
     def respawn(self):
         pass
-# okay decompiling .\pirates\distributed\DistributedTargetableObject.pyc
