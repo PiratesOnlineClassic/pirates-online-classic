@@ -313,46 +313,67 @@ class SkillPage(InventoryPage.InventoryPage):
     def addPoint(self, skillId):
         if skillId == InventoryType.SailPowerRecharge:
             return
+
         inv = localAvatar.getInventory()
-        if self.currentRep == InventoryType.CutlassRep and localAvatar.style.tutorial < PiratesGlobals.TUT_GOT_CUTLASS:
-            if inv.getStackQuantity(InventoryType.CutlassSweep) < 2:
-                if skillId != InventoryType.CutlassSweep:
-                    return
-            elif skillId == InventoryType.CutlassSweep:
-                messenger.send('skillImprovementAttempted')
+        #if self.currentRep == InventoryType.CutlassRep and localAvatar.style.tutorial < PiratesGlobals.TUT_GOT_CUTLASS:
+        #    if inv.getStackQuantity(InventoryType.CutlassSweep) < 2:
+        #        if skillId != InventoryType.CutlassSweep:
+        #            return
+        #    elif skillId == InventoryType.CutlassSweep:
+        #        messenger.send('skillImprovementAttempted')
+
         unSpentId = self.getUnspent()
         unSp = inv.getStackQuantity(unSpentId)
         if unSpentId in self.localMods:
             unSp = self.localMods[unSpentId]
-        if unSp < 1:
-            return
+
+        #if unSp < 1:
+        #    return
+
         if inv.getStackLimit(skillId):
             curAmt = inv.getStackQuantity(skillId)
             if skillId in self.localMods:
                 curAmt = self.localMods[skillId]
             if curAmt > 5:
-                return
+                pass#return
             else:
                 curAmt += 1
         else:
-            return
+            curAmt = 1
+        #else:
+        #    return
+
         self.__handleFreeDialog()
         if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
-            if curAmt > Freebooter.FreeSkillCap:
-                self.spentDialog = PDialog.PDialog(text=PLocalizer.FreebooterSkillMax, style=OTPDialog.CancelOnly, command=self.__handleFreeDialog)
-                return
+            #if curAmt > Freebooter.FreeSkillCap:
+            #    self.spentDialog = PDialog.PDialog(text=PLocalizer.FreebooterSkillMax, style=OTPDialog.CancelOnly,
+            #        command=self.__handleFreeDialog)
+            #
+            #    return
+
             playerExp = inv.getAccumulator(self.currentRep)
             categoryLevel, extra = ReputationGlobals.getLevelFromTotalReputation(self.currentRep, playerExp)
             alreadySpent = categoryLevel - 1 - unSp
-            if alreadySpent > 5:
-                self.spentDialog = PDialog.PDialog(text=PLocalizer.FreebooterSkillLock, style=OTPDialog.CancelOnly, command=self.__handleFreeDialog)
-                return
-        if not base.config.GetBool('want-combo-skips', 0):
+            #if alreadySpent > 5:
+            #    self.spentDialog = PDialog.PDialog(text=PLocalizer.FreebooterSkillLock, style=OTPDialog.CancelOnly,
+            #        command=self.__handleFreeDialog)
+            #
+            #    return
+
+        if not base.config.GetBool('want-combo-skips', False):
             comboSkills = [
-             InventoryType.CutlassSlash, InventoryType.CutlassCleave, InventoryType.CutlassFlourish, InventoryType.CutlassStab, InventoryType.DaggerSwipe, InventoryType.DaggerGouge, InventoryType.DaggerEviscerate]
-            if skillId in comboSkills and inv.getStackQuantity(skillId - 1) <= 1:
-                base.localAvatar.guiMgr.createWarning(PLocalizer.ComboOrderWarn, PiratesGuiGlobals.TextFG6)
-                return
+                InventoryType.CutlassSlash,
+                InventoryType.CutlassCleave,
+                InventoryType.CutlassFlourish,
+                InventoryType.CutlassStab,
+                InventoryType.DaggerSwipe,
+                InventoryType.DaggerGouge,
+                InventoryType.DaggerEviscerate]
+
+            #if skillId in comboSkills and inv.getStackQuantity(skillId - 1) <= 1:
+            #    base.localAvatar.guiMgr.createWarning(PLocalizer.ComboOrderWarn, PiratesGuiGlobals.TextFG6)
+            #    return
+
         messenger.send('skillImprovementAttempted')
         localAvatar.spendSkillPoint(skillId)
         self.localMods[skillId] = curAmt
@@ -389,7 +410,6 @@ class SkillPage(InventoryPage.InventoryPage):
         else:
             amount = localAvatar.getInventory().getStackQuantity(ammoId)
             return amount
-        return
 
     def setRep(self, repId):
         self.currentRep = repId
@@ -400,6 +420,7 @@ class SkillPage(InventoryPage.InventoryPage):
     def updateUnspent(self, category, value):
         if category in self.localMods:
             del self.localMods[category]
+
         self.dataChanged = True
         self.update(self.currentRep)
 

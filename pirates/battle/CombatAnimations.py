@@ -60,6 +60,7 @@ from pirates.effects.WispSpiral import WispSpiral
 from pirates.effects.WitherCharge import WitherCharge
 from pirates.piratesbase import PLocalizer
 from pirates.uberdog.UberDogGlobals import InventoryType
+from otp.nametag.NametagConstants import *
 
 
 class CombatAnimations:

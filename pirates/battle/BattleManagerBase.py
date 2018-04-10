@@ -240,11 +240,11 @@ class BattleManagerBase:
                         avClass = EnemyGlobals.getMonsterClass(target.avatarType)
                         if avClass == EnemyGlobals.MONSTER and (buff == WeaponGlobals.C_UNDEAD_KILLER or ammoBuff == WeaponGlobals.C_UNDEAD_KILLER):
                             tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
-                    elif avClass == EnemyGlobals.SKELETON and (buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER):
-                        tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
-                elif avClass == EnemyGlobals.HUMAN:
-                    if buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER or buff == WeaponGlobals.C_UNDEAD_KILLER or ammoBuff == WeaponGlobals.C_UNDEAD_KILLER:
-                        tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
+                        elif avClass == EnemyGlobals.SKELETON and (buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER):
+                            tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
+                        elif avClass == EnemyGlobals.HUMAN:
+                            if buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER or buff == WeaponGlobals.C_UNDEAD_KILLER or ammoBuff == WeaponGlobals.C_UNDEAD_KILLER:
+                                tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
         if buff == WeaponGlobals.C_LIFEDRAIN or ammoBuff == WeaponGlobals.C_LIFEDRAIN:
             aHealth += abs(tHealth)
         else:

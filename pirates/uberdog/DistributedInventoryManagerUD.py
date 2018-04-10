@@ -66,7 +66,20 @@ class InventoryFSM(FSM):
         ]
 
         categoryLimits = []
-        stackLimits = []
+        stackLimits = [
+            # Skills
+            [InventoryType.CutlassHack, 1],
+            [InventoryType.CutlassSlash, 1],
+            [InventoryType.PistolShoot, 1],
+            [InventoryType.PistolLeadShot, 1],
+            [InventoryType.DollAttune, 1],
+            [InventoryType.DollPoke, 1],
+            [InventoryType.DaggerCut, 1],
+            [InventoryType.DaggerSwipe, 1],
+            [InventoryType.StaffBlast, 1],
+            [InventoryType.StaffSoulFlay, 1],
+            [InventoryType.GrenadeThrow, 1],
+        ]
 
         stacks = [
             # Weapons
