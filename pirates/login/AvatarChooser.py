@@ -359,7 +359,7 @@ class AvatarChooser(DirectObject, StateData):
                             imageColor = Vec4(0.7, 0.7, 0.7, 1)
                             textPos = (textPos[0] + 0.034, textPos[1])
                         else:
-                            avName = av.dna.getDNAName()
+                            avName = av.name
                             text = avName
                             command = self.__handleHighlight
                             state = DGG.NORMAL
