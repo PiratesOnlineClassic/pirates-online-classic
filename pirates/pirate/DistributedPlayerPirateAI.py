@@ -7,6 +7,7 @@ from pirates.piratesbase import PLocalizer
 from pirates.quest.QuestConstants import LocationIds
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
+from otp.ai.MagicWordGlobal import *
 
 class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNA):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
@@ -235,3 +236,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def flagFirstDeath(self):
         pass
+
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
+def name(name):
+    spellbook.getTarget().d_setName(name)
+    return "Your name has been set to %s" % name
