@@ -235,6 +235,18 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                     else:
                         self.notify.warning("Player has no skill points to use!")
                         return
+            elif skillId >= InventoryType.begin_WeaponSkillDoll and skillId < InventoryType.end_WeaponSkillDoll:
+                unspentStack = inventory.getStack(InventoryType.UnspentDoll)
+                if not unspentStack:
+                    inventory.b_setStack(InventoryCategory.UnspentDoll, 0)
+                    self.notify.warning("Player has no skill points to use!")
+                    return
+                else:
+                    if unspentStack[1] > 0:
+                        inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
+                    else:
+                        self.notify.warning("Player has no skill points to use!")
+                        return
             elif skillId >= InventoryType.begin_WeaponSkillWand and skillId < InventoryType.end_WeaponSkillWand:
                 unspentStack = inventory.getStack(InventoryType.UnspentWand)
                 if not unspentStack:
