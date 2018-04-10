@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.PVPInviter
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State
 from direct.gui.DirectGui import *
@@ -15,14 +11,12 @@ from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.RequestButton import RequestButton
 from pirates.uberdog import UberDogGlobals
 
-
 class PVPInviterButton(RequestButton):
     __module__ = __name__
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
         self.initialiseoptions(PVPInviterButton)
-
 
 class PVPInviter(GuiPanel.GuiPanel):
     __module__ = __name__
@@ -58,9 +52,9 @@ class PVPInviter(GuiPanel.GuiPanel):
          State.State('maybe', self.enterMaybe, self.exitMaybe),
          State.State('down', self.enterDown, self.exitDown),
          State.State('cancel', self.enterCancel, self.exitCancel)], 'off', 'off')
-        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.25,
-                                                                                                                                                                                                                                                    0,
-                                                                                                                                                                                                                                                    0.35), textMayChange=1)
+        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, 
+                                   text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, 
+                                   pos=(0.25, 0, 0.35), textMayChange=1)
         self.context = None
         self.bOk = PVPInviterButton(text=OTPLocalizer.DialogOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
@@ -84,7 +78,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.bNo.hide()
         self.fsm.enterInitialState()
         self.fsm.request('begin')
-        return
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
@@ -105,8 +98,8 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.accept(self.avDisableName, self.__handleDisableAvatar)
         if self.avId == myId:
             self.fsm.request('self')
-        else:
-            self.fsm.request('notYet')
+            return
+        self.fsm.request('notYet')
 
     def exitBegin(self):
         self.ignore(self.avDisableName)
@@ -168,7 +161,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.message['text'] = PLocalizer.PVPInviterBusy % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitNotAvailable(self):
         self.bOk.hide()
@@ -177,7 +169,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.message['text'] = PLocalizer.PVPInviterBusy % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitNotAcceptingChallenges(self):
         self.bOk.hide()
@@ -187,7 +178,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         if self.context != None:
             self.context = None
         self.bOk.show()
-        return
 
     def exitWentAway(self):
         self.bOk.hide()
@@ -198,7 +188,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.context = None
         self.bStop.show()
         self.bCancel.show()
-        return
 
     def exitAlreadyChallenging(self):
         self.message['text'] = ''
@@ -212,7 +201,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.context = None
         self.bStop.show()
         self.bCancel.show()
-        return
 
     def exitAlreadyInvited(self):
         self.message['text'] = ''
@@ -238,7 +226,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.context = None
         self.bYes.show()
         self.bNo.show()
-        return
 
     def exitEndChallenge(self):
         self.bYes.hide()
@@ -257,7 +244,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.message['text'] = PLocalizer.PVPInviterSelf
         self.context = None
         self.bOk.show()
-        return
 
     def exitSelf(self):
         self.bOk.hide()
@@ -266,7 +252,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.message['text'] = PLocalizer.PVPInviterBusy % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitIgnored(self):
         self.bOk.hide()
@@ -288,7 +273,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.message['text'] = PLocalizer.PVPInviterSaidYes % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitYes(self):
         self.bOk.hide()
@@ -297,7 +281,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.message['text'] = PLocalizer.PVPInviterSaidNo % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitNo(self):
         self.bOk.hide()
@@ -306,7 +289,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.message['text'] = PLocalizer.PVPInviterBusy % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitOtherInBattle(self):
         self.bOk.hide()
@@ -315,7 +297,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.message['text'] = PLocalizer.PVPInviterMaybe % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitMaybe(self):
         self.bOk.hide()
@@ -324,7 +305,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.message['text'] = PLocalizer.PVPInviterDown
         self.context = None
         self.bOk.show()
-        return
 
     def exitDown(self):
         self.bOk.hide()
@@ -333,7 +313,6 @@ class PVPInviter(GuiPanel.GuiPanel):
         if self.context != None:
             self.context = None
         self.fsm.request('off')
-        return
 
     def exitCancel(self):
         pass
@@ -352,11 +331,10 @@ class PVPInviter(GuiPanel.GuiPanel):
             localAvatar.guiMgr.showLookoutPanel()
             localAvatar.guiMgr.lookoutPage.displayLookout(gameType=PiratesGlobals.GAME_TYPE_PVP, gameStyle=PiratesGlobals.GAME_STYLE_TEAM_BATTLE, inviteOptions=[PiratesGlobals.LOOKOUT_INVITE_CREW], additionalAvs=[self.avId])
             self.__handleOk()
+        elif self.fsm.getCurrentState().getName() == 'endChallenge':
+            self.fsm.request('challengeNoMore')
         else:
-            if self.fsm.getCurrentState().getName() == 'endChallenge':
-                self.fsm.request('challengeNoMore')
-            else:
-                self.destroy()
+            self.destroy()
 
     def __handleNo(self):
         self.destroy()
@@ -365,51 +343,39 @@ class PVPInviter(GuiPanel.GuiPanel):
         if yesNoAlready == 1:
             self.context = context
             self.fsm.request('asking')
+        elif yesNoAlready == 0:
+            self.fsm.request('notAvailable')
+        elif yesNoAlready == 2:
+            self.fsm.request('alreadyChallenging')
+        elif yesNoAlready == 3:
+            self.fsm.request('self')
+        elif yesNoAlready == 4:
+            self.fsm.request('ignored')
+        elif yesNoAlready == 6:
+            self.fsm.request('notAcceptingChallenges')
+        elif yesNoAlready == 10:
+            self.fsm.request('no')
+        elif yesNoAlready == 13:
+            self.fsm.request('otherInBattle')
         else:
-            if yesNoAlready == 0:
-                self.fsm.request('notAvailable')
-            else:
-                if yesNoAlready == 2:
-                    self.fsm.request('alreadyChallenging')
-                else:
-                    if yesNoAlready == 3:
-                        self.fsm.request('self')
-                    else:
-                        if yesNoAlready == 4:
-                            self.fsm.request('ignored')
-                        else:
-                            if yesNoAlready == 6:
-                                self.fsm.request('notAcceptingChallenges')
-                            else:
-                                if yesNoAlready == 10:
-                                    self.fsm.request('no')
-                                else:
-                                    if yesNoAlready == 13:
-                                        self.fsm.request('otherInBattle')
-                                    else:
-                                        self.notify.warning('Got unexpected response to challengeConsidering: %s' % yesNoAlready)
-                                        self.fsm.request('maybe')
+            self.notify.warning('Got unexpected response to challengeConsidering: %s' % yesNoAlready)
+            self.fsm.request('maybe')
 
     def __challengeRejected(self, avId, reason):
         if reason == RejectCode.INVITEE_NOT_ONLINE:
             self.fsm.request('notAvailable')
+        elif reason == RejectCode.ALREADY_INVITED:
+            self.fsm.request('alreadyInvited')
+        elif reason == RejectCode.ALREADY_CHALLENGED:
+            self.fsm.request('alreadyChallenging')
+        elif reason == RejectCode.PVP_IN_BATTLE:
+            self.fsm.request('inBattle')
+        elif reason == RejectCode.PVP_OTHER_IN_BATTLE:
+            self.fsm.request('otherInBattle')
+        elif reason == RejectCode.INVITATION_DECLINED:
+            self.fsm.request('no')
         else:
-            if reason == RejectCode.ALREADY_INVITED:
-                self.fsm.request('alreadyInvited')
-            else:
-                if reason == RejectCode.ALREADY_CHALLENGED:
-                    self.fsm.request('alreadyChallenging')
-                else:
-                    if reason == RejectCode.PVP_IN_BATTLE:
-                        self.fsm.request('inBattle')
-                    else:
-                        if reason == RejectCode.PVP_OTHER_IN_BATTLE:
-                            self.fsm.request('otherInBattle')
-                        else:
-                            if reason == RejectCode.INVITATION_DECLINED:
-                                self.fsm.request('no')
-                            else:
-                                self.notify.warning('challengeRejectInvite: %s unknown reason: %s.' % (avId, reason))
+            self.notify.warning('challengeRejectInvite: %s unknown reason: %s.' % (avId, reason))
 
     def __challengeResponse(self, yesNoMaybe, context):
         if self.context != context:
@@ -417,16 +383,13 @@ class PVPInviter(GuiPanel.GuiPanel):
             self.context = context
         if yesNoMaybe == 1:
             self.fsm.request('yes')
+        elif yesNoMaybe == 0:
+            self.fsm.request('no')
+        elif yesNoMaybe == 3:
+            self.fsm.request('otherInBattle')
         else:
-            if yesNoMaybe == 0:
-                self.fsm.request('no')
-            else:
-                if yesNoMaybe == 3:
-                    self.fsm.request('otherInBattle')
-                else:
-                    self.notify.warning('Got unexpected response to challengeResponse: %s' % yesNoMaybe)
-                    self.fsm.request('maybe')
+            self.notify.warning('Got unexpected response to challengeResponse: %s' % yesNoMaybe)
+            self.fsm.request('maybe')
 
     def __handleDisableAvatar(self):
         self.fsm.request('wentAway')
-# okay decompiling .\pirates\pvp\PVPInviter.pyc

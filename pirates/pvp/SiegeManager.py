@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.SiegeManager
 from direct.distributed.DistributedObject import DistributedObject
 from direct.fsm.StatePush import FunctionCall
 from otp.speedchat import SCDecoders
 from pirates.piratesbase import PLocalizer
 from pirates.pvp.SiegeManagerBase import SiegeManagerBase
 from pirates.speedchat import PSCDecoders
-
 
 class SiegeManager(DistributedObject, SiegeManagerBase):
     __module__ = __name__
@@ -25,7 +20,6 @@ class SiegeManager(DistributedObject, SiegeManagerBase):
         DistributedObject.generate(self)
         self._pvpTeamJoinable = {}
         base.cr.distributedDistrict.siegeManager = self
-        return
 
     def delete(self):
         self._siegeTeamUpdater.destroy()
@@ -79,11 +73,10 @@ class SiegeManager(DistributedObject, SiegeManagerBase):
     def getPVPChatTeamName(self, teamId):
         if teamId == 2:
             return PLocalizer.PVPSpanish
+        elif teamId == 1:
+            return PLocalizer.PVPFrench
         else:
-            if teamId == 1:
-                return PLocalizer.PVPFrench
-            else:
-                return PLocalizer.PVPPrefix
+            return PLocalizer.PVPPrefix
 
     def _addAnnouncerInterest(self):
         if not self._announcerInterest:
@@ -93,13 +86,10 @@ class SiegeManager(DistributedObject, SiegeManagerBase):
         if self._announcerInterest:
             self.removeInterest(self._announcerInterest)
             self._announcerInterest = None
-        return
 
     def _setSiegeTeam(self, siegeTeam):
         if siegeTeam and not self._siegeTeam:
             self._addAnnouncerInterest()
-        else:
-            if not siegeTeam and self._siegeTeam:
-                self._removeAnnouncerInterest()
+        elif not siegeTeam and self._siegeTeam:
+            self._removeAnnouncerInterest()
         self._siegeTeam = siegeTeam
-# okay decompiling .\pirates\pvp\SiegeManager.pyc

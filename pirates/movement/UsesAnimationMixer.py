@@ -1,11 +1,6 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.movement.UsesAnimationMixer
 from direct.actor.Actor import Actor
 from direct.interval.IntervalGlobal import ActorInterval
 from direct.showbase.PythonUtil import report
-
 
 class UsesAnimationMixer:
     __module__ = __name__
@@ -21,7 +16,6 @@ class UsesAnimationMixer:
         else:
             self.animationMixer = None
             self.mixingEnabled = False
-        return
 
     def lateInit(self, animationMixerType):
         if self.animationMixer:
@@ -31,7 +25,6 @@ class UsesAnimationMixer:
     def delete(self):
         self.animationMixer.delete()
         self.animationMixer = None
-        return
 
     @report(types=['args', 'deltaStamp'], dConfigParam=['want-animmixer-report', 'want-jump-report'])
     def loop(self, *args, **kwargs):
@@ -59,7 +52,6 @@ class UsesAnimationMixer:
             self.animationMixer.play(blendInT=blendInT, blendOutT=blendOutT, blendInto=blendInto, *args, **kwargs)
         else:
             Actor.play(self, *args, **kwargs)
-        return
 
     @report(types=['args', 'deltaStamp'], dConfigParam=['want-animmixer-report', 'want-jump-report'])
     def pingpong(self, *args, **kwargs):
@@ -105,9 +97,7 @@ class UsesAnimationMixer:
         if mixingWanted:
             partName = kwargs.get('partName', None)
             return self.animationMixer.actorInterval(ActorInterval(self, *args, **kwargs), partName, blendInT, blendOutT, blendInto)
-        else:
-            return ActorInterval(self, *args, **kwargs)
-        return
+        return ActorInterval(self, *args, **kwargs)
 
     @report(types=['args', 'deltaStamp'], dConfigParam=['want-animmixer-report', 'want-jump-report'])
     def disableMixing(self):
@@ -124,4 +114,3 @@ class UsesAnimationMixer:
 
     def isMixingEnabled(self):
         return self.mixingEnabled
-# okay decompiling .\pirates\movement\UsesAnimationMixer.pyc

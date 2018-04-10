@@ -1,13 +1,8 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.PVPGameCTL
 from pirates.interact import InteractiveBase
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.pvp.PVPGameBase import PVPGameBase
 from pirates.ship import DistributedShip
-
 
 class PVPGameCTL(PVPGameBase):
     __module__ = __name__
@@ -25,7 +20,6 @@ class PVPGameCTL(PVPGameBase):
         self.depositSound = base.loader.loadSfx('audio/treasure_hit_1.mp3')
         self.maxCarry = None
         self.pendingInstanceRequest = None
-        return
 
     def generate(self):
         PVPGameBase.generate(self)
@@ -47,7 +41,6 @@ class PVPGameCTL(PVPGameBase):
             base.cr.relatedObjectMgr.abortRequest(self.pendingInstanceRequest)
             self.pendingInstanceRequest = None
         base.localAvatar.guiMgr.hidePVPUI()
-        return
 
     def delete(self):
         self.ignoreAll()
@@ -83,8 +76,8 @@ class PVPGameCTL(PVPGameBase):
     def updateShipProximityText(self, ship):
         if localAvatar.lootCarried > 0:
             ship.proximityText = PLocalizer.ShipDepositInstructions
-        else:
-            ship.b_setIsBoardable(ship.isBoardable)
+            return
+        ship.b_setIsBoardable(ship.isBoardable)
 
     def handleShipUse(self, ship):
         amt = localAvatar.lootCarried
@@ -136,11 +129,10 @@ class PVPGameCTL(PVPGameBase):
         baseType = self.shipsNearBase.get(treasure.parentId)
         if baseType and baseType == 'Team ' + str(localAvatar.getTeam()):
             treasure.proximityText = PLocalizer.ShipTransferInstructions
+        elif treasure.zoneId == PiratesGlobals.ShipZoneOnDeck:
+            treasure.proximityText = PLocalizer.PirateerDeckTreasure
         else:
-            if treasure.zoneId == PiratesGlobals.ShipZoneOnDeck:
-                treasure.proximityText = PLocalizer.PirateerDeckTreasure
-            else:
-                treasure.initInteractOpts()
+            treasure.initInteractOpts()
 
     def setShipsNearBase(self, shipIds, baseTeams):
         self.shipsNearBase = {}
@@ -157,7 +149,6 @@ class PVPGameCTL(PVPGameBase):
     def complete(self):
         PVPGameBase.complete(self)
         self.prevTeamScore = None
-        return
 
     def getScoreList(self):
         return self.scoreList
@@ -178,11 +169,10 @@ class PVPGameCTL(PVPGameBase):
         team2 = item2.get('Team')
         if team1 == localAvatar.getDoId():
             return 1000
+        elif team1 == localAvatar.getTeam():
+            return -1000
         else:
-            if team1 == localAvatar.getTeam():
-                return -1000
-            else:
-                return team1 - team2
+            return team1 - team2
 
     def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
         itemColorScale = None
@@ -201,11 +191,9 @@ class PVPGameCTL(PVPGameBase):
         if team == localAvatar.getTeam():
             maxTeamScore = str(self.maxTeamScore)
             return PLocalizer.PVPYourTeam + str(score) + '/' + str(maxTeamScore) + PLocalizer.PVPGoldAbbrev
+        elif team == localAvatar.getDoId():
+            maxCarry = str(self.maxCarry)
+            return '\n' + PLocalizer.PVPYouCarry + str(score) + '/' + maxCarry + PLocalizer.PVPGoldAbbrev
         else:
-            if team == localAvatar.getDoId():
-                maxCarry = str(self.maxCarry)
-                return '\n' + PLocalizer.PVPYouCarry + str(score) + '/' + maxCarry + PLocalizer.PVPGoldAbbrev
-            else:
-                maxTeamScore = str(self.maxTeamScore)
-                return PLocalizer.PVPOtherTeam + str(score) + '/' + str(maxTeamScore) + PLocalizer.PVPGoldAbbrev
-# okay decompiling .\pirates\pvp\PVPGameCTL.pyc
+            maxTeamScore = str(self.maxTeamScore)
+            return PLocalizer.PVPOtherTeam + str(score) + '/' + str(maxTeamScore) + PLocalizer.PVPGoldAbbrev
