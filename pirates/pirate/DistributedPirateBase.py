@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pirate.DistributedPirateBase
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
 from pirates.pirate import Pirate
 from pirates.piratesbase import PiratesGlobals
 from pirates.pvp import Beacon, PVPGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-
 
 class DistributedPirateBase(DistributedObject.DistributedObject, Pirate.Pirate):
     __module__ = __name__
@@ -46,4 +41,3 @@ class DistributedPirateBase(DistributedObject.DistributedObject, Pirate.Pirate):
             self.beacon.remove()
 
         self.beacon = None
-# okay decompiling .\pirates\pirate\DistributedPirateBase.pyc

@@ -154,9 +154,42 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             return
 
         self.b_setCurrentWeapon(currentWeaponId, isWeaponDrawn)
+        
+    def requestCurrentAmmo(self, skillId):
+        pass
+        
+    def requestUseSkill(self, skillId, index):
+        pass
+        
+    def requestDeployShip(self, shipId):
+        pass
+        
+    def requestReturnShip(self, shipId):
+        pass
 
     def setCurseStatus(self, curseStat):
         pass
+        
+    def sendClothingMessage(self, clothingId, colorId):
+        self.sendUpdate("sendClothingMessage", [clothingId, colorId])
+        
+    def sendLootMessage(self, lootId):
+        self.sendUpdate("sendLootMessage", [lootId])
+        
+    def sendCardMessage(self, cardId):
+        self.sendUpdate("sendCardMessage", [cardId])
+        
+    def sendWeaponMessage(self, weapon):
+        self.sendUpdate("sendWeaponMessage", [weapon])
+        
+    def sendJewelryMessage(self, jewelryUID):
+        self.sendUpdate("sendJewelryMessage", [jewelryUID])
+        
+    def sendTattooMessage(self, tattooUID):
+        self.sendUpdate("sendTattooMessage", [tattooUID])
+        
+    def sendReputationMessage(self, targetId, categories, reputationList, basicPenalty, crewBonus, doubleXPBonus, holidayBonus):
+        self.sendUpdate("sendReputationMessage", [targetId, categories, reputationList, basicPenalty, crewBonus, doubleXPBonus, holidayBonus])
 
     def spendSkillPoint(self, skillId):
         avatarId = self.air.getAvatarIdFromSender()
@@ -168,48 +201,44 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                     inventory.b_setStack(InventoryCategory.UnspentMelee, 0)
                     self.notify.warning("Player has no skill points to use!")
                     return
+                elif unspentStack[1] > 0:
+                    inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                 else:
-                    if unspentStack[1] > 0:
-                        inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
-                    else:
-                        self.notify.warning("Player has no skill points to use!")
-                        return
+                    self.notify.warning("Player has no skill points to use!")
+                    return
             elif skillId >= begin_WeaponSkillCutlass and skillId < end_WeaponSkillCutlass:
                 unspentStack = inventory.getStack(InventoryCategory.UnspentCutlass)
                 if not stack:
                     inventory.b_setStack(InventoryCategory.UnspentCutlass, 0)
                     self.notify.warning("Player has no skill points to use!")
                     return
+                elif unspentStack[1] > 0:
+                    inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                 else:
-                    if unspentStack[1] > 0:
-                        inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
-                    else:
-                        self.notify.warning("Player has no skill points to use!")
-                        return
+                    self.notify.warning("Player has no skill points to use!")
+                    return
             elif skillId >= begin_WeaponSkillPistol and skillId < end_WeaponSkillPistol:
                 unspentStack = inventory.getStack(InventoryCategory.UnspentPistol)
                 if not stack:
                     inventory.b_setStack(InventoryCategory.UnspentPistol, 0)
                     self.notify.warning("Player has no skill points to use!")
                     return
+                elif unspentStack[1] > 0:
+                    inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                 else:
-                    if unspentStack[1] > 0:
-                        inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
-                    else:
-                        self.notify.warning("Player has no skill points to use!")
-                        return
+                    self.notify.warning("Player has no skill points to use!")
+                    return
             elif skillId >= begin_WeaponSkillMusket and skillId < end_WeaponSkillMusket:
                 unspentStack = inventory.getStack(InventoryCategory.UnspentMusket)
                 if not stack:
                     inventory.b_setStack(InventoryCategory.UnspentMusket, 0)
                     self.notify.warning("Player has no skill points to use!")
                     return
+                elif unspentStack[1] > 0:
+                    inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                 else:
-                    if unspentStack[1] > 0:
-                        inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
-                    else:
-                        self.notify.warning("Player has no skill points to use!")
-                        return
+                    self.notify.warning("Player has no skill points to use!")
+                    return
             else:
                 self.notify.warning("SkillID %s has no unspent category!!" % (str(skillId)))
                 return
