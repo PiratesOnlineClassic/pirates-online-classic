@@ -444,6 +444,7 @@ class LoginAccountFSM(OperationFSM):
         self.csm.sendUpdateToChannel(self.target, 'acceptLogin', [])
         self.demand('Off')
 
+
 class CreateAvatarFSM(OperationFSM):
     notify = directNotify.newCategory('CreateAvatarFSM')
 
@@ -489,7 +490,7 @@ class CreateAvatarFSM(OperationFSM):
 
     def enterCreateAvatar(self):
         pirateFields = {
-            'setName': ('dbp',),
+            'setName': (self.name,),
             'WishNameState': ('OPEN',),
             'WishName': ('',),
             'setDNAString': (self.dna,),
