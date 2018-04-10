@@ -112,8 +112,8 @@ class ClientAreaBuilderAI(DirectObject):
             self.notify.warning('Cannot delete an invalid object!')
             return
 
-        object.requestDelete()
         self.removeObject(object)
+        object.requestDelete()
 
     def broadcastObjectPosition(self, object):
         if not object:
