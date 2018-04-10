@@ -184,8 +184,11 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         enemy.setMojo(enemyMp)
 
         weapons = EnemyGlobals.getEnemyWeapons(avatarType, enemy.getLevel()).keys()
-        enemy.setCurrentWeapon(weapons[0], False)
-        
+        if config.GetBool('want-enemy-weapons', False):
+            enemy.setCurrentWeapon(weapons[0], True)
+        else:
+            enemy.setCurrentWeapon(weapons[0], False)
+
         dnaId = objKey
         if dnaId and hasattr(enemy,'setDNAId'):
             enemy.setDNAId(dnaId)

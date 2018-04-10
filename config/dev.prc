@@ -3,6 +3,7 @@ skip-tutorial #t
 force-tutorial #t
 
 # Npc:
+want-enemy-weapons #t
 want-townfolk #t
 want-enemies #t
 want-animals #t
