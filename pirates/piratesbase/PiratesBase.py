@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesbase.PiratesBase
 import __builtin__
 import os
 import sys
@@ -40,9 +36,7 @@ class PiratesBase(OTPBase):
     __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesBase')
     lowMemoryStreamAudio = ConfigVariableBool('low-memory-stream-audio', True)
-    resolution_table = [
-     (
-      800, 600), (1024, 768), (1280, 1024), (1600, 1200)]
+    resolution_table = [(800, 600), (1024, 768), (1280, 1024), (1600, 1200)]
     widescreen_resolution_table = [(1280, 720), (1920, 1080)]
     MinimumHorizontalResolution = 800
     MinimumVerticalResolution = 600
@@ -681,8 +675,7 @@ class PiratesBase(OTPBase):
         low = self.config.GetInt('shard-pop-limit-low', 100)
         mid = self.config.GetInt('shard-pop-limit-mid', 200)
         high = self.config.GetInt('shard-pop-limit-high', 300)
-        return (
-         low, mid, high)
+        return (low, mid, high)
 
     def toggleMarketingViewer(self):
         if not self.marketingViewerOn:
@@ -799,4 +792,3 @@ class PiratesBase(OTPBase):
 
     def getHoliday(self, holidayId):
         return self.holidays.get(holidayId)
-# okay decompiling .\pirates\piratesbase\PiratesBase.pyc

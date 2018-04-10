@@ -1,12 +1,7 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesbase.SkyGroup
 from direct.interval.IntervalGlobal import *
 from otp.otpbase import OTPRender
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
-
 
 class SkyGroup(NodePath):
     __module__ = __name__
@@ -147,7 +142,6 @@ class SkyGroup(NodePath):
 
         messenger.send('nametagAmbientLightChanged', [self.ambLight])
         self.shadowCaster = None
-        return
 
     def getLight(self, tod):
         return self.lightSettings.get(tod)
@@ -294,7 +288,6 @@ class SkyGroup(NodePath):
         if self.cloudIval:
             self.cloudIval.pause()
             self.cloudIval = None
-        return
 
     def setCloudLevel(self, level):
         self.startCloudIval()
@@ -339,4 +332,3 @@ class SkyGroup(NodePath):
         self.tsTop[1].setTexcoordName(settingsB[1][1])
         ival = Parallel(LerpFunctionInterval(self.setStageColor, duration, fromData=0.0, toData=1.0, extraArgs=[self.tsSides[2], settingsA[0][2], Vec4(0, 0, 0, 0)]), LerpFunctionInterval(self.setStageColor, duration, fromData=0.0, toData=1.0, extraArgs=[self.tsSides[1], Vec4(0, 0, 0, 0), settingsB[0][2]]), LerpFunctionInterval(self.setStageColor, duration, fromData=0.0, toData=1.0, extraArgs=[self.tsTop[1], Vec4(0, 0, 0, 0), Vec4(1, 1, 1, 1)]), LerpColorScaleInterval(self.sides, duration, settingsB[0][3]), LerpColorScaleInterval(self.top, duration, settingsB[1][3]), LerpColorScaleInterval(self.clouds, duration, settingsB[2]), LerpColorScaleInterval(self.horizon, duration, settingsB[3]))
         return ival
-# okay decompiling .\pirates\piratesbase\SkyGroup.pyc

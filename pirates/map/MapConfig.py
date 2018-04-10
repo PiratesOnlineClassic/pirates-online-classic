@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.map.MapConfig
 import sys
 
 from direct.gui.DirectGui import (DGG, DirectButton, DirectEntry, DirectFrame,
@@ -30,26 +26,22 @@ class RangeSlider(DirectFrame):
                     value(val)
 
             self.slider['command'] = finalCommand
+        elif key == 'value':
+            self.slider['value'] = value
+        elif key == 'range':
+            self.slider['range'] = value
         else:
-            if key == 'value':
-                self.slider['value'] = value
-            else:
-                if key == 'range':
-                    self.slider['range'] = value
-                else:
-                    super(self.__class__, self).__setitem__(key, value)
+            super(self.__class__, self).__setitem__(key, value)
 
     def __getitem__(self, key):
         if key == 'command':
             return self.slider['command']
+        elif key == 'value':
+            return self.slider['value']
+        elif key == 'range':
+            return self.slider['range']
         else:
-            if key == 'value':
-                return self.slider['value']
-            else:
-                if key == 'range':
-                    return self.slider['range']
-                else:
-                    return super(self.__class__, self).__getitem__(key)
+            return super(self.__class__, self).__getitem__(key)
 
     def setup(self, label, range, value, orientation, *args, **kwargs):
 
@@ -90,7 +82,6 @@ class RangeSlider(DirectFrame):
         updateField(self.max, 'command', lambda x: updateField(self.slider, 'range', (
          self.slider['range'][0], float(x))))
         self.label = DirectLabel(parent=self, relief=None, text=label, text_scale=0.05, text_pos=(0.03 - 0.395, 0.35 - 0.24, 0), text_align=TextNode.ALeft)
-        return
 
 
 class MapConfig(DirectFrame):
@@ -165,5 +156,3 @@ class MapConfig(DirectFrame):
                                                                                                                                       0.1), text='save pt0')
         self.saveState1Button = DirectButton(guiId='save1Button', parent=self.mainFrame, scale=0.1, pos=(0.6, 0, -0.65), borderWidth=(0.1,
                                                                                                                                       0.1), text='save pt1')
-        return
-# okay decompiling .\pirates\map\MapConfig.pyc

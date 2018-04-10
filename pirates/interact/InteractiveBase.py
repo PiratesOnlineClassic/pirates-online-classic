@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.interact.InteractiveBase
 import types
 
 from direct.fsm import FSM
@@ -47,7 +43,6 @@ class InteractiveBase(FSM.FSM):
         self.ignoreProximity = False
         self.allowInteract = True
         self.proximityCollisionEnterEvent = None
-        return
 
     def delete(self):
         FSM.FSM.cleanup(self)
@@ -84,7 +79,6 @@ class InteractiveBase(FSM.FSM):
             self.tutorialPanel.destroy()
             self.tutorialPanel = None
         self.ignoreAll()
-        return
 
     def setInteractOptions(self, tutorialMode=None, proximityText=None, mouseClickText=None, mouseOver=0, mouseClick=0, otherCollision=None, otherCollisionName=None, sphereScale=12.0, diskRadius=5.0, parent=None, isTarget=0, exclusive=1, endInteract=1, allowInteract=True):
         self.tutorialMode = tutorialMode
@@ -161,7 +155,6 @@ class InteractiveBase(FSM.FSM):
         if self.hasProximityCollision:
             self.proximityCollisionNodePath.removeNode()
             self.proximityCollisionNodePath = None
-        return
 
     def handleEnterProximity(self, collEntry):
         if not self.allowInteract:
@@ -174,8 +167,7 @@ class InteractiveBase(FSM.FSM):
     def getPosRelToAv(self):
         if self.proximityCollisionNodePath:
             return self.proximityCollisionNodePath.getPos(base.localAvatar)
-        else:
-            return self.getPos(base.localAvatar)
+        return self.getPos(base.localAvatar)
 
     def loadTargetIndicator(self):
         if self.isGenerated():
@@ -192,14 +184,9 @@ class InteractiveBase(FSM.FSM):
             self.disk.setDepthTest(0)
 
     def loadUseLabel(self):
-        self.useLabel = DirectLabel(parent=aspect2d, frameColor=(0.1, 0.1, 0.25, 0.2), text='', text_align=TextNode.ACenter, text_scale=0.06, text_pos=(0.02,
-                                                                                                                                                        0.02), text_fg=(1,
-                                                                                                                                                                        1,
-                                                                                                                                                                        1,
-                                                                                                                                                                        1), text_shadow=(0,
-                                                                                                                                                                                         0,
-                                                                                                                                                                                         0,
-                                                                                                                                                                                         1), textMayChange=1, text_font=PiratesGlobals.getPirateOutlineFont())
+        self.useLabel = DirectLabel(parent=aspect2d, frameColor=(0.1, 0.1, 0.25, 0.2), text='', text_align=TextNode.ACenter, text_scale=0.06, 
+                                    text_pos=(0.02,0.02), text_fg=(1, 1, 1, 1), text_shadow=(0, 0, 0, 1), textMayChange=1, 
+                                    text_font=PiratesGlobals.getPirateOutlineFont())
         self.useLabel.setPos(0, 0, -0.7)
         self.useLabel.setAlphaScale(0)
         self.useLabel.hide()
@@ -376,7 +363,6 @@ class InteractiveBase(FSM.FSM):
         if currentInteractive and currentInteractive != self and currentInteractive.isExclusiveInteraction():
             currentInteractive.requestExit()
         self.requestInteraction(base.localAvatar.doId, interactType)
-        return
 
     def handleEndInteractKey(self):
         self.requestExit()
@@ -391,9 +377,8 @@ class InteractiveBase(FSM.FSM):
             return
         if on:
             self.request('MouseOver')
-        else:
-            if self.state == 'MouseOver':
-                self.request('Idle')
+        elif self.state == 'MouseOver':
+            self.request('Idle')
 
     def enterIdle(self):
         if self.__mouseOver:
@@ -467,7 +452,6 @@ class InteractiveBase(FSM.FSM):
         base.cr.interactionMgr.setCurrentInteractive(None)
         if self.__endInteract:
             self.ignore(END_INTERACT_EVENT)
-        return
 
     def setIgnoreProximity(self, ignore):
         self.ignoreProximity = ignore
@@ -476,4 +460,3 @@ class InteractiveBase(FSM.FSM):
                 self.proximityCollisionNodePath.stash()
             else:
                 self.proximityCollisionNodePath.unstash()
-# okay decompiling .\pirates\interact\InteractiveBase.pyc
