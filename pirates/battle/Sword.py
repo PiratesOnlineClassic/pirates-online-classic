@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.Sword
 import random
 
 import Weapon
@@ -12,14 +8,12 @@ from pirates.effects import PolyTrail
 from pirates.piratesbase import PLocalizer
 from pirates.uberdog.UberDogGlobals import InventoryType
 
-
 class Sword(Weapon.Weapon):
     __module__ = __name__
     modelTypes = {InventoryType.CutlassWeaponL1: ('models/handheld/cutlass_rusty_high', Vec4(1, 1, 1, 1)), InventoryType.CutlassWeaponL2: ('models/handheld/cutlass_iron_high', Vec4(1, 1, 1, 1)), InventoryType.CutlassWeaponL3: ('models/handheld/cutlass_steel_high', Vec4(1, 1, 1, 1)), InventoryType.CutlassWeaponL4: ('models/handheld/cutlass_fine_high', Vec4(1, 1, 1, 1)), InventoryType.CutlassWeaponL5: ('models/handheld/cutlass_pirateblade_high', Vec4(1, 1, 1, 1)), InventoryType.CutlassWeaponL6: ('models/handheld/cutlass_dark_high', Vec4(1, 1, 1, 1))}
     models = {}
     icons = {}
-    vertex_list = [
-     Vec4(0.0, 0.4, 0.0, 1.0), Vec4(0.0, 2.0, 0.0, 1.0), Vec4(-0.55, 2.95, 0.0, 1.0)]
+    vertex_list = [Vec4(0.0, 0.4, 0.0, 1.0), Vec4(0.0, 2.0, 0.0, 1.0), Vec4(-0.55, 2.95, 0.0, 1.0)]
     motion_color = {InventoryType.CutlassWeaponL1: [Vec4(0.3, 0.4, 0.1, 0.5), Vec4(0.3, 0.3, 0.3, 0.5), Vec4(0.6, 0.6, 0.6, 0.5)], InventoryType.CutlassWeaponL2: [Vec4(0.1, 0.2, 0.4, 0.5), Vec4(0.4, 0.5, 0.7, 0.5), Vec4(0.5, 0.5, 0.9, 0.75)], InventoryType.CutlassWeaponL3: [Vec4(1, 1, 0.4, 0.5), Vec4(0.4, 0.5, 0.6, 0.5), Vec4(0.7, 0.7, 0.8, 0.75)], InventoryType.CutlassWeaponL4: [Vec4(0.6, 0.6, 0.75, 1), Vec4(0.6, 0.5, 0.2, 1), Vec4(0.6, 0.6, 0.4, 1)], InventoryType.CutlassWeaponL5: [Vec4(1, 0.2, 0.2, 0.5), Vec4(0.5, 0.5, 0.5, 0.75), Vec4(0.7, 0.7, 0.9, 1)], InventoryType.CutlassWeaponL6: [Vec4(1, 1, 0, 0.5), Vec4(0.3, 0.3, 0.3, 1), Vec4(0.1, 0.1, 0.1, 1)]}
     walkAnim = 'walk'
     runAnim = 'run_with_weapon'
@@ -42,7 +36,6 @@ class Sword(Weapon.Weapon):
         self.endAttack(None)
         self.removeTrail()
         Weapon.Weapon.delete(self)
-        return
 
     def getDrawIval(self, av, ammoSkillId=0, blendInT=0.1, blendOutT=0):
         track = Parallel(Func(base.playSfx, self.drawSfx, node=av), av.actorInterval('sword_draw', playRate=1.5, endFrame=15, blendInT=blendInT, blendOutT=blendOutT), Sequence(Wait(0.187), Func(self.attachTo, av)))
@@ -79,7 +72,6 @@ class Sword(Weapon.Weapon):
         if self.motion_trail:
             self.motion_trail.destroy()
             self.motion_trail = None
-        return
 
     def getBlurColor(self):
         return self.motion_color.get(self.itemId)[2]
@@ -97,11 +89,8 @@ class Sword(Weapon.Weapon):
         Sword.drawSfx = loader.loadSfx('audio/sfx_cutlass_draw.mp3')
         Sword.returnSfx = loader.loadSfx('audio/sfx_cutlass_sheathe.mp3')
 
-
 def getHitSfx():
     return Sword.hitSfxs
 
-
 def getMissSfx():
     return Sword.missSfxs
-# okay decompiling .\pirates\battle\Sword.pyc

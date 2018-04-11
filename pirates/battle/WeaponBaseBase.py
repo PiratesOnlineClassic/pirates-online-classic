@@ -1,13 +1,8 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.WeaponBaseBase
 import math
 
 import WeaponGlobals
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals, TeamUtils
-
 
 class WeaponBaseBase:
     __module__ = __name__
@@ -78,7 +73,6 @@ class WeaponBaseBase:
     def delete(self):
         self.repository = None
         self.avatar = None
-        return
 
     def runSphereAreaCollisions(self, skillId, ammoSkillId, target, pos):
         self.createCollisions()
@@ -124,15 +118,13 @@ class WeaponBaseBase:
         areaShape = WeaponGlobals.getAttackAreaShape(skillId, ammoSkillId)
         if areaShape == WeaponGlobals.AREA_SPHERE:
             self.runSphereAreaCollisions(skillId, ammoSkillId, target, pos)
+        elif areaShape == WeaponGlobals.AREA_TUBE:
+            self.runTubeAreaCollisions(skillId, ammoSkillId, target, pos)
+        elif areaShape == WeaponGlobals.AREA_CONE:
+            self.runConeAreaCollisions(skillId, ammoSkillId, target, pos)
         else:
-            if areaShape == WeaponGlobals.AREA_TUBE:
-                self.runTubeAreaCollisions(skillId, ammoSkillId, target, pos)
-            else:
-                if areaShape == WeaponGlobals.AREA_CONE:
-                    self.runConeAreaCollisions(skillId, ammoSkillId, target, pos)
-                else:
-                    if areaShape == WeaponGlobals.AREA_OFF:
-                        return targets
+            if areaShape == WeaponGlobals.AREA_OFF:
+                return targets
         numEntries = self.areaCollQueue.getNumEntries()
         if numEntries == 0:
             return targets
@@ -168,4 +160,3 @@ class WeaponBaseBase:
 
         print 'getting area list of %s' % targets
         return targets
-# okay decompiling .\pirates\battle\WeaponBaseBase.pyc

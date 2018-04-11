@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.avatar.ShadowCaster
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.ShadowPlacer import ShadowPlacer
 from otp.otpbase import OTPGlobals
@@ -15,7 +11,6 @@ def setGlobalDropShadowFlag(flag):
         globalDropShadowFlag = flag
         messenger.send('globalDropShadowFlagChanged')
 
-
 globalDropShadowGrayLevel = 0.5
 
 def setGlobalDropShadowGrayLevel(grayLevel):
@@ -23,7 +18,6 @@ def setGlobalDropShadowGrayLevel(grayLevel):
     if grayLevel != globalDropShadowGrayLevel:
         globalDropShadowGrayLevel = grayLevel
         messenger.send('globalDropShadowGrayLevelChanged')
-
 
 class ShadowCaster:
     __module__ = __name__
@@ -41,7 +35,6 @@ class ShadowCaster:
         if hasattr(base, 'wantDynamicShadows') and base.wantDynamicShadows:
             messenger.accept('globalDropShadowFlagChanged', self, self.__globalDropShadowFlagChanged)
             messenger.accept('globalDropShadowGrayLevelChanged', self, self.__globalDropShadowGrayLevelChanged)
-        return
 
     def delete(self):
         if hasattr(base, 'wantDynamicShadows') and base.wantDynamicShadows:
@@ -49,7 +42,6 @@ class ShadowCaster:
             messenger.ignore('globalDropShadowGrayLevelChanged', self)
         self.deleteDropShadow()
         self.shadowJoint = None
-        return
 
     def initializeDropShadow(self, hasGeomNode=True):
         self.deleteDropShadow()
@@ -74,7 +66,6 @@ class ShadowCaster:
         if self.dropShadow:
             self.dropShadow.removeNode()
             self.dropShadow = None
-        return
 
     def setActiveShadow(self, isActive=1):
         self.wantsActive = isActive
@@ -86,7 +77,6 @@ class ShadowCaster:
                     self.shadowPlacer.on()
                 else:
                     self.shadowPlacer.off()
-        return
 
     def setShadowHeight(self, shadowHeight):
         if self.dropShadow:
@@ -115,10 +105,7 @@ class ShadowCaster:
         if self.dropShadow != None:
             self.showShadow()
             self.setActiveShadow(self.wantsActive)
-        return
 
     def __globalDropShadowGrayLevelChanged(self):
         if self.dropShadow != None:
             self.dropShadow.setColor(0.0, 0.0, 0.0, globalDropShadowGrayLevel, 1)
-        return
-# okay decompiling .\otp\avatar\ShadowCaster.pyc

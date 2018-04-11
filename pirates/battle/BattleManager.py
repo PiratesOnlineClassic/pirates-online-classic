@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.BattleManager
 import math
 
 import BattleManagerBase
@@ -10,7 +6,6 @@ from pandac.PandaModules import NodePath
 from pirates.battle import DistributedBattleNPC, WeaponGlobals
 from pirates.piratesbase import TeamUtils
 from pirates.uberdog.UberDogGlobals import InventoryType
-
 
 class BattleManager(BattleManagerBase.BattleManagerBase):
     __module__ = __name__
@@ -33,8 +28,7 @@ class BattleManager(BattleManagerBase.BattleManagerBase):
 
         if distance <= range + tolerance:
             return 1
-        else:
-            return 0
+        return 0
 
     def doAttack(self, attacker, skillId, ammoSkillId, targetId, areaIdList, pos, combo=0, charge=0):
         attacker.battleRandom.advanceAttackSeed()
@@ -70,4 +64,3 @@ class BattleManager(BattleManagerBase.BattleManagerBase):
                 return WeaponGlobals.RESULT_MISS
         messenger.send('properHit')
         return weaponHit
-# okay decompiling .\pirates\battle\BattleManager.pyc

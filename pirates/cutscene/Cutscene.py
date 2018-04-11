@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.cutscene.Cutscene
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import DirectObject
@@ -13,7 +9,6 @@ from pirates.effects.CameraShaker import CameraShaker
 from pirates.pirate import AvatarTypes
 from pirates.piratesbase import TimeOfDayManager, TODGlobals
 from pirates.piratesgui import PiratesGuiGlobals
-
 
 class Cutscene(NodePath, DirectObject):
     __module__ = __name__
@@ -36,7 +31,6 @@ class Cutscene(NodePath, DirectObject):
         self._loadActors()
         self._loadSound()
         self.startedCallback = None
-        return
 
     def initialize(self, doneCallback=None, giverId=None, patch=False):
         self._callback = doneCallback
@@ -58,15 +52,14 @@ class Cutscene(NodePath, DirectObject):
                 giverObject = self.cr.doId2do[giverId]
             if giverObject and giverObject.getParent().getParent().getName() == 'GameArea':
                 self.reparentTo(giverObject.getParent().getParent())
-            else:
-                if 'localAvatar' in __builtins__:
-                    if localAvatar.ship:
-                        self.reparentTo(render)
-                        self.setPos(localAvatar.ship.getPos(render))
-                    else:
-                        self.reparentTo(localAvatar.getParent().getParent())
-                else:
+            elif 'localAvatar' in __builtins__:
+                if localAvatar.ship:
                     self.reparentTo(render)
+                    self.setPos(localAvatar.ship.getPos(render))
+                else:
+                    self.reparentTo(localAvatar.getParent().getParent())
+            else:
+                self.reparentTo(render)
             self.forceOriginNode()
         self.getEnvEffects()
         self.oldTodState = None
@@ -76,7 +69,6 @@ class Cutscene(NodePath, DirectObject):
                 self.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_OFF)
                 for currLight in self.gameArea.dynamicLights:
                     currLight.turnOn()
-
             else:
                 self.oldTodState = base.pe.todManager.getTimeOfDayState()
                 base.pe.disableTOD()
@@ -87,7 +79,6 @@ class Cutscene(NodePath, DirectObject):
             self._axis.reparentTo(self)
         if patch:
             self.patch()
-        return
 
     def patch(self):
         for actor in self._actors:
@@ -103,21 +94,15 @@ class Cutscene(NodePath, DirectObject):
                 self.gameArea = ga
         else:
             self.envEffects = base.pe.envEffects
-        return
 
     def setShowTimer(self, showTimer):
         if showTimer:
             if self.timer == None:
-                self.timer = DirectLabel(parent=render2d, pos=(0.0, 0, 0.9), frameSize=(0,
-                                                                                        0.16,
-                                                                                        0,
-                                                                                        0.12), text='0.0', text_align=TextNode.ARight, text_scale=0.05, text_pos=(0.15,
-                                                                                                                                                                  0.05), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1)
+                self.timer = DirectLabel(parent=render2d, pos=(0.0, 0, 0.9), frameSize=(0, 0.16, 0, 0.12), text='0.0', text_align=TextNode.ARight, text_scale=0.05, text_pos=(0.15, 0.05), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1)
         else:
             if self.timer:
                 self.timer.removeNode()
                 self.timer = None
-        return
 
     def addFlatWell(self):
         water = None
@@ -125,7 +110,6 @@ class Cutscene(NodePath, DirectObject):
             water = self.cr.activeWorld.getWater()
         if water:
             water.patch.addFlatWell(self.getName(), self, 0, 0, 400, 400 + 200)
-        return
 
     def destroy(self):
         if self._destroyed:
@@ -151,7 +135,6 @@ class Cutscene(NodePath, DirectObject):
             self.timer.removeNode()
             self.timer = None
         self.ignore('cutscene-finish')
-        return
 
     def getName(self):
         return '%s-%s' % (self._data.id, self._serial)
@@ -170,20 +153,15 @@ class Cutscene(NodePath, DirectObject):
             self.setPos(render, 0, 0, 0)
         if self._data.id == CutsceneData.Cutscene1_1_5_a:
             self.setPos(render, 1.5, 34.837, 1.082)
-        else:
-            if self._data.id == CutsceneData.Cutscene1_1_5_b:
-                self.setPos(render, 1.5, 34.837, 1.082)
-            else:
-                if self._data.id == CutsceneData.Cutscene1_1_5_c:
-                    self.setPos(render, 1.5, 34.837, 1.082)
-                else:
-                    if self._data.id == CutsceneData.Cutscene2_2:
-                        self.setPos(-393.0, -487.0, 5.406)
-                    else:
-                        if self._data.id == CutsceneData.Cutscene3_1:
-                            self.setPos(253.226, -430.155, 1.241)
-                            self.setH(120.39)
-        return
+        elif self._data.id == CutsceneData.Cutscene1_1_5_b:
+            self.setPos(render, 1.5, 34.837, 1.082)
+        elif self._data.id == CutsceneData.Cutscene1_1_5_c:
+            self.setPos(render, 1.5, 34.837, 1.082)
+        elif self._data.id == CutsceneData.Cutscene2_2:
+            self.setPos(-393.0, -487.0, 5.406)
+        elif self._data.id == CutsceneData.Cutscene3_1:
+            self.setPos(253.226, -430.155, 1.241)
+            self.setH(120.39)
 
     def _loadActors(self):
         cutCam = CutsceneActor.CutCam(self._data)
@@ -236,8 +214,8 @@ class Cutscene(NodePath, DirectObject):
             self._ival.finish()
             base.sfxManagerList[0].stopAllSounds()
             messenger.send('cutscene-skipped')
-        else:
-            messenger.send('cutscene-not-skipped')
+            return
+        messenger.send('cutscene-not-skipped')
 
     def skipNow(self):
         self._ival.finish()
@@ -300,7 +278,6 @@ class Cutscene(NodePath, DirectObject):
             scene.append(SoundInterval(sound, duration=seqDuration))
 
         DelayedCall(self._ival.start, 'cutscene-start-sync', delay=0.001)
-        return
 
     def isPlaying(self):
         return self._ival and self._ival.isPlaying()
@@ -331,4 +308,3 @@ class Cutscene(NodePath, DirectObject):
 
     def setStartCallback(self, callback):
         self.startedCallback = callback
-# okay decompiling .\pirates\cutscene\Cutscene.pyc

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.DistributedWeapon
 import WeaponGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import ClockDelta
@@ -27,7 +23,6 @@ from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 from WeaponBase import WeaponBase
 
-
 class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractive):
     __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedWeapon')
@@ -40,7 +35,6 @@ class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractiv
         self.av = None
         self.weaponSphereNodePath = None
         self.pendingDoMovie = None
-        return
 
     def generate(self):
         DistributedInteractive.DistributedInteractive.generate(self)
@@ -80,24 +74,20 @@ class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractiv
         pass
 
     def setMovie(self, mode, avId):
-
         def doMovie(av):
             if mode == WeaponGlobals.WEAPON_MOVIE_START:
                 self.startWeapon(av)
+            elif mode == WeaponGlobals.WEAPON_MOVIE_STOP:
+                self.stopWeapon(av)
             else:
-                if mode == WeaponGlobals.WEAPON_MOVIE_STOP:
-                    self.stopWeapon(av)
-                else:
-                    if mode == WeaponGlobals.WEAPON_MOVIE_CLEAR:
-                        pass
+                if mode == WeaponGlobals.WEAPON_MOVIE_CLEAR:
+                    pass
 
         if self.pendingDoMovie:
             base.cr.relatedObjectMgr.abortRequest(self.pendingDoMovie)
             self.pendingDoMovie = None
         self.pendingDoMovie = base.cr.relatedObjectMgr.requestObjects([avId], eachCallback=doMovie, timeout=60)
-        return
 
     def rejectInteraction(self):
         base.localAvatar.motionFSM.on()
         DistributedInteractive.DistributedInteractive.rejectInteraction(self)
-# okay decompiling .\pirates\battle\DistributedWeapon.pyc

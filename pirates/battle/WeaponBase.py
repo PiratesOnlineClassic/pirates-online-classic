@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.WeaponBase
 import math
 
 import CannonGlobals
@@ -15,7 +11,6 @@ from pirates.piratesgui import PiratesGuiGlobals
 from pirates.tutorial import TutorialGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
-
 class WeaponBase(WeaponBaseBase.WeaponBaseBase):
     __module__ = __name__
 
@@ -28,7 +23,6 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
         self.prop = None
         self.ammoSequence = 0
         self.setLocalAvatarUsingWeapon(0)
-        return
 
     def generate(self):
         self.projectileHitEvent = self.uniqueName('projectileHit')
@@ -101,51 +95,43 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
             if avId:
                 avId = int(avId)
                 self.__avatarHit(avId, hitObject, entry, skillId, ammoSkillId)
+        elif objType == PiratesGlobals.COLL_NEWSHIP:
+            if self.localAvatarUsingWeapon:
+                self.simpleShipHit(hitObject, entry, skillId, ammoSkillId)
+        elif objType == PiratesGlobals.COLL_SHIPPART:
+            if self.localAvatarUsingWeapon:
+                self.__shippartHit(hitObject, entry, skillId, ammoSkillId)
+        elif objType == PiratesGlobals.COLL_SEA:
+            self.__waterHit(hitObject, entry, skillId, ammoSkillId)
+        elif objType == PiratesGlobals.COLL_LAND:
+            groundId = hitObject.getNetTag('groundId')
+            if groundId:
+                groundId = int(groundId)
+                self.__groundHit(groundId, hitObject, entry, skillId, ammoSkillId)
+        elif objType == PiratesGlobals.COLL_BLDG:
+            self.__buildingHit(hitObject, entry, skillId, ammoSkillId)
+        elif objType == PiratesGlobals.COLL_SHIP_WRECK:
+            propId = int(hitObject.getNetTag('propId'))
+            self.__shipWreckHit(propId, hitObject, entry)
+        elif objType == PiratesGlobals.COLL_GRAPPLE_TARGET:
+            shipId = hitObject.getNetTag('shipId')
+            if shipId:
+                shipId = int(shipId)
+                self.__grappleTargetHit(shipId, hitObject, entry, skillId, ammoSkillId)
+        elif objType == PiratesGlobals.COLL_CANNON:
+            cannonId = hitObject.getNetTag('cannonId')
+            if cannonId:
+                cannonId = int(cannonId)
+                self.__cannonHit(cannonId, hitObject, entry, skillId, ammoSkillId)
+            broadsideId = hitObject.getNetTag('broadsideId')
+            if broadsideId:
+                self.__cannonPortHit(hitObject, broadsideId)
         else:
-            if objType == PiratesGlobals.COLL_NEWSHIP:
-                if self.localAvatarUsingWeapon:
-                    self.simpleShipHit(hitObject, entry, skillId, ammoSkillId)
-            else:
-                if objType == PiratesGlobals.COLL_SHIPPART:
-                    if self.localAvatarUsingWeapon:
-                        self.__shippartHit(hitObject, entry, skillId, ammoSkillId)
-                else:
-                    if objType == PiratesGlobals.COLL_SEA:
-                        self.__waterHit(hitObject, entry, skillId, ammoSkillId)
-                    else:
-                        if objType == PiratesGlobals.COLL_LAND:
-                            groundId = hitObject.getNetTag('groundId')
-                            if groundId:
-                                groundId = int(groundId)
-                                self.__groundHit(groundId, hitObject, entry, skillId, ammoSkillId)
-                        else:
-                            if objType == PiratesGlobals.COLL_BLDG:
-                                self.__buildingHit(hitObject, entry, skillId, ammoSkillId)
-                            else:
-                                if objType == PiratesGlobals.COLL_SHIP_WRECK:
-                                    propId = int(hitObject.getNetTag('propId'))
-                                    self.__shipWreckHit(propId, hitObject, entry)
-                                else:
-                                    if objType == PiratesGlobals.COLL_GRAPPLE_TARGET:
-                                        shipId = hitObject.getNetTag('shipId')
-                                        if shipId:
-                                            shipId = int(shipId)
-                                            self.__grappleTargetHit(shipId, hitObject, entry, skillId, ammoSkillId)
-                                    else:
-                                        if objType == PiratesGlobals.COLL_CANNON:
-                                            cannonId = hitObject.getNetTag('cannonId')
-                                            if cannonId:
-                                                cannonId = int(cannonId)
-                                                self.__cannonHit(cannonId, hitObject, entry, skillId, ammoSkillId)
-                                            broadsideId = hitObject.getNetTag('broadsideId')
-                                            if broadsideId:
-                                                self.__cannonPortHit(hitObject, broadsideId)
-                                        else:
-                                            if objType == PiratesGlobals.COLL_FORT:
-                                                fortId = hitObject.getNetTag('fortId')
-                                                if fortId:
-                                                    fortId = int(fortId)
-                                                    self.__fortHit(fortId, hitObject, entry, skillId, ammoSkillId)
+            if objType == PiratesGlobals.COLL_FORT:
+                fortId = hitObject.getNetTag('fortId')
+                if fortId:
+                    fortId = int(fortId)
+                    self.__fortHit(fortId, hitObject, entry, skillId, ammoSkillId)
         ammo = entry.getFromNodePath().getNetPythonTag('ammo')
         if ammo and ammo.weaponControlled:
             ammo.projectileHitObject(entry)
@@ -175,9 +161,7 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
                 return
             areaList = self.getAreaList(skillId, ammoSkillId, av, pos, attackerId)
             result = self.cr.battleMgr.doAttack(attacker, skillId, ammoSkillId, avId, areaList, pos)
-            self.sendSuggestProjectileSkillResult(skillId, ammoSkillId, result, avId, areaList, [
-             pos[0], pos[1], pos[2]], [
-             normal[0], normal[1], normal[2]], codes, timestamp32)
+            self.sendSuggestProjectileSkillResult(skillId, ammoSkillId, result, avId, areaList, [pos[0], pos[1], pos[2]], [normal[0], normal[1], normal[2]], codes, timestamp32)
             for doId in [avId] + areaList:
                 target = self.cr.doId2do.get(doId)
                 attackerEffects, targetEffects = self.cr.battleMgr.getModifiedSkillEffects(attacker, target, skillId, ammoSkillId)
@@ -406,17 +390,17 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
         ship = self.cr.doId2do.get(shipId)
         if not ship:
             return
-        else:
-            targetIndex = int(hitObject.getNetTag('targetId')[-1:])
-            codes = [0, 99, targetIndex]
-            pos = entry.getSurfacePoint(ship)
-            normal = entry.getSurfaceNormal(render)
-            timestamp32 = globalClockDelta.getFrameNetworkTime(bits=32)
-            areaList = []
-            result = WeaponGlobals.RESULT_HIT
-            self.sendSuggestProjectileSkillResult(skillId, ammoSkillId, result, shipId, areaList, [
-             pos[0], pos[1], pos[2]], [
-             normal[0], normal[1], normal[2]], codes, timestamp32)
+
+        targetIndex = int(hitObject.getNetTag('targetId')[-1:])
+        codes = [0, 99, targetIndex]
+        pos = entry.getSurfacePoint(ship)
+        normal = entry.getSurfaceNormal(render)
+        timestamp32 = globalClockDelta.getFrameNetworkTime(bits=32)
+        areaList = []
+        result = WeaponGlobals.RESULT_HIT
+        self.sendSuggestProjectileSkillResult(skillId, ammoSkillId, result, shipId, areaList, [
+         pos[0], pos[1], pos[2]], [
+         normal[0], normal[1], normal[2]], codes, timestamp32)
 
     def __cannonHit(self, cannonId, hitObject, entry, skillId, ammoSkillId):
         pos = entry.getFromNodePath().getParent().getPos()
@@ -443,4 +427,3 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
 
     def getRender(self):
         return render
-# okay decompiling .\pirates\battle\WeaponBase.pyc
