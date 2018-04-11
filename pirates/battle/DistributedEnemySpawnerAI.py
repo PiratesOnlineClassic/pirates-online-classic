@@ -114,10 +114,14 @@ class SpawnNodeBase:
 
         # Load boss data if applicable
         if avatarType.getBoss() and hasattr(npc, 'loadBossData'):
-            npc.loadBossData(npc.getUniqueId(), avatarType)
+            bossId = self.objKey if self.objType != 'Spawn Node' else npc.getUniqueId()
+            npc.loadBossData(bossId, avatarType)
 
         # Set NPC health
-        npc.setLevel(EnemyGlobals.getRandomEnemyLevel(avatarType))
+        if hasattr(npc, 'bossData'):
+            npc.setLevel(npc.bossData.get('Level', 0) or EnemyGlobals.getRandomEnemyLevel(avatarType))
+        else:
+            npc.setLevel(EnemyGlobals.getRandomEnemyLevel(avatarType))
         npcHp, npcMp = EnemyGlobals.getEnemyStats(avatarType, npc.getLevel())
 
         if avatarType.getBoss() and hasattr(npc, 'bossData'):
@@ -145,7 +149,9 @@ class SpawnNodeBase:
         if dnaId and dnaId in NPCList.NPC_LIST:
             name = NPCList.NPC_LIST[dnaId][NPCList.setName]
 
-        if avatarType.getBoss():
+        if hasattr(npc, 'bossData'):
+            name = npc.bossData.get('Name', PLocalizer.Unknown)
+        elif avatarType.getBoss():
             name = random.choice(PLocalizer.BossNames[avatarType.faction][avatarType.track][avatarType.id])
         npc.setName(name)
 
@@ -167,7 +173,7 @@ class SpawnNodeBase:
             npc.zoneId, locationName, npc.getPos(), npc.doId))
 
         if avatarType.getBoss():
-            self.notify.debug('Spawning boss %s (%s) on %s!' % (npc.getName(), self.objKey, locationName))
+            print('Spawning boss %s (%s) on %s!' % (npc.getName(), self.objKey, locationName))
 
         return Task.done
 
@@ -228,10 +234,7 @@ class EnemySpawnNode(SpawnNodeBase):
 
     def setNPCAttributes(self, npc):
         weapons = EnemyGlobals.getEnemyWeapons(npc.getAvatarType(), npc.getLevel()).keys()
-        if config.GetBool('want-enemy-weapons', False):
-            npc.setCurrentWeapon(weapons[0], True)
-        else:
-            npc.setCurrentWeapon(weapons[0], False)
+        npc.setCurrentWeapon(random.choice(weapons), config.GetBool('want-enemy-weapons', False))
 
     def getNPCClass(self, avatarType):
         enemyCls = None
@@ -276,6 +279,21 @@ class AnimalSpawnNode(SpawnNodeBase):
             animalClass = DistributedSeagullAI
         return animalClass
 
+class BossEnemySpawnNode(EnemySpawnNode):
+
+    def getAvatarType(self):
+        avId = self.objectData.get('AvId', 1)
+        avTrack = self.objectData.get('AvTrack', 0)
+
+        faction = AvatarTypes.Undead.faction
+        if self.objType == 'Creature':
+            faction = AvatarTypes.Creature.faction
+        elif self.objType == 'NavySailor':
+            faction = AvatarTypes.Navy.faction
+
+        avatarType = AvatarType(faction=faction, track=avTrack, id=avId)
+        return avatarType.getBossType()
+
 class DistributedEnemySpawnerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedEnemySpawnerAI')
     notify.setInfo(True)
@@ -318,11 +336,14 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic):
         newObj = None
 
-        #TODO: Is there a better more clean way of doing this?
         spawnClasses = {
             'Townsperson': TownfolkSpawnNode,
             'Spawn Node': EnemySpawnNode,
-            'Animal': AnimalSpawnNode
+            'Dormant NPC Spawn Node': EnemySpawnNode,
+            'Animal': AnimalSpawnNode,
+            'Skeleton': BossEnemySpawnNode,
+            'NavySailor': BossEnemySpawnNode,
+            'Creature': BossEnemySpawnNode
         }
 
         if objType not in spawnClasses:
@@ -334,52 +355,3 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         self.__registerSpawnNode(objType, spawnNode)
 
         return newObj
-
-    def __createBossSkeleton(self, objType, objectData, parent, parentUid, objKey, dynamic):
-        skeleton = DistributedBossSkeletonAI(self.air)
-
-        skeleton.setScale(objectData.get('Scale'))
-        skeleton.setUniqueId(objKey)
-        skeleton.setPos(objectData.get('Pos', (0, 0, 0)))
-        skeleton.setHpr(objectData.get('Hpr', (0, 0, 0)))
-        skeleton.setSpawnPosHpr(skeleton.getPos(), skeleton.getHpr())
-        skeleton.setInitZ(skeleton.getZ())
-
-        avId = objectData.get('AvId', 1)
-        avTrack = objectData.get('AvTrack', 0)
-        avatarType = AvatarType(faction=AvatarTypes.Undead.faction, track=avTrack, id=avId)
-        avatarType = avatarType.getBossType()
-        skeleton.setAvatarType(avatarType)
-        try:
-            skeleton.loadBossData(objKey, avatarType)
-        except:
-            self.notify.warning('Failed to load %s (%s); An error occured while loading boss data' % (objType, objKey))
-            return None
-
-        skeleton.setName(skeleton.bossData['Name'])
-        skeleton.setLevel(skeleton.bossData['Level'] or EnemyGlobals.getRandomEnemyLevel(avatarType))
-
-        enemyHp, enemyMp = EnemyGlobals.getEnemyStats(avatarType, skeleton.getLevel())
-        enemyHp = enemyHp * skeleton.bossData.get('HpScale', 1)
-        enemyMp = enemyMp * skeleton.bossData.get('MpScale', 1)
-
-        skeleton.setMaxHp(enemyHp)
-        skeleton.setHp(skeleton.getMaxHp(), True)
-
-        skeleton.setMaxMojo(enemyMp)
-        skeleton.setMojo(enemyMp)
-
-        weapons = EnemyGlobals.getEnemyWeapons(avatarType, skeleton.getLevel()).keys()
-        skeleton.setCurrentWeapon(weapons[0], False)
-
-        skeleton.setAnimSet(objectData.get('AnimSet', 'default'))
-        skeleton.setStartState(objectData.get('Start State', 'Idle'))
-
-        zoneId = PiratesGlobals.IslandLocalZone
-        parent.generateChildWithRequired(skeleton, zoneId)
-
-        locationName = parent.getLocalizerName()
-        self.notify.debug('Generating %s (%s) under zone %d in %s at %s with doId %d' % (skeleton.getName(), objKey,
-            skeleton.zoneId, locationName, skeleton.getPos(), skeleton.doId))
-
-        return skeleton
