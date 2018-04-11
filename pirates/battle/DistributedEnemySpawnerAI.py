@@ -301,11 +301,6 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
 
-        self.wantTownfolk = config.GetBool('want-townfolk', True)
-        self.wantEnemies = config.GetBool('want-enemies', True)
-        self.wantAnimals = config.GetBool('want-animals', True)
-        self.wantNormalBosses = config.GetBool('want-normal-bosses', True)
-
         self.randomBosses = []
         self.spawnNodes = {}
 
