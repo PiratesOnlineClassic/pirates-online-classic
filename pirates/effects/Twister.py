@@ -7,7 +7,6 @@ from direct.particles.ParticleEffect import *
 from pandac.PandaModules import *
 from PooledEffect import PooledEffect
 
-
 class Twister(PooledEffect):
     __module__ = __name__
     particleDummy = None
@@ -36,7 +35,6 @@ class Twister(PooledEffect):
         if found:
             self.dirt.loadConfig(pfile)
         self.pIval = None
-        return
 
     def getParticleInterval(self, duration):
         if not self.pIval:
@@ -63,7 +61,6 @@ class Twister(PooledEffect):
             p.clearToInitial()
 
         self.dirt.disable()
-        return
 
     def cleanUpEffect(self):
         self.stop()
