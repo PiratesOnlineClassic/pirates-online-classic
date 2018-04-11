@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.town.DistributedTown
 import random
 import re
 import types
@@ -10,7 +6,6 @@ from direct.actor import *
 from direct.distributed import DistributedCartesianGrid
 from pirates.piratesbase import PiratesGlobals
 from pirates.world import ClientArea, DistributedGameArea, WorldGlobals
-
 
 class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartesianGrid.DistributedCartesianGrid, ClientArea.ClientArea):
     __module__ = __name__
@@ -25,7 +20,6 @@ class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartes
         self.uniqueId = ''
         self.name = 'Town Name'
         self.childens = []
-        return
 
     def announceGenerate(self):
         DistributedGameArea.DistributedGameArea.announceGenerate(self)
@@ -59,7 +53,6 @@ class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartes
             return
         self.geom = None
         self.__townGeomLoaded = 1
-        return
 
     def unloadTownGeom(self):
         self.allDetails.stash()
@@ -96,6 +89,3 @@ class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartes
                 self.setupCannonballBldgColl(c, PiratesGlobals.TargetBitmask)
                 c.wrtReparentTo(self.highDetailBldgNp)
                 c.flattenLight()
-
-        return
-# okay decompiling .\pirates\town\DistributedTown.pyc

@@ -1,9 +1,4 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.SiegeManagerBase
 from pirates.piratesbase import PLocalizer
-
 
 class SiegeManagerBase:
     __module__ = __name__
@@ -16,9 +11,8 @@ class SiegeManagerBase:
     def setUseIslandRegen(self, useIslandRegen):
         if self._useIslandRegen and not useIslandRegen:
             self._disableUseIslandRegen()
-        else:
-            if not self._useIslandRegen and useIslandRegen:
-                self._enableUseIslandRegen()
+        elif not self._useIslandRegen and useIslandRegen:
+            self._enableUseIslandRegen()
         self._useIslandRegen = useIslandRegen
 
     def _enableUseIslandRegen(self):
@@ -36,9 +30,8 @@ class SiegeManagerBase:
     def setUseRepairSpots(self, useRepairSpots):
         if self._useRepairSpots and not useRepairSpots:
             self._disableRepairSpots()
-        else:
-            if not self._useRepairSpots and useRepairSpots:
-                self._enableRepairSpots()
+        elif not self._useRepairSpots and useRepairSpots:
+            self._enableRepairSpots()
         self._useRepairSpots = useRepairSpots
 
     def _enableRepairSpots(self):
@@ -56,9 +49,8 @@ class SiegeManagerBase:
     def setUseRepairKit(self, useRepairKit):
         if self._useRepairKit and not useRepairKit:
             self._disableRepairKit()
-        else:
-            if not self._useRepairKit and useRepairKit:
-                self._enableRepairKit()
+        elif not self._useRepairKit and useRepairKit:
+            self._enableRepairKit()
         self._useRepairKit = useRepairKit
 
     def _enableRepairKit(self):
@@ -72,4 +64,3 @@ class SiegeManagerBase:
 
     def getUseRepairKit(self):
         return self._useRepairKit
-# okay decompiling .\pirates\pvp\SiegeManagerBase.pyc

@@ -1,11 +1,6 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.SiegeAnnouncer
 from direct.distributed.DistributedObject import DistributedObject
 from pirates.piratesbase import PLocalizer
 from pirates.pvp import PVPGlobals
-
 
 class SiegeAnnouncer(DistributedObject):
     __module__ = __name__
@@ -13,8 +8,7 @@ class SiegeAnnouncer(DistributedObject):
     def _otherTeam(self, team):
         if team == 1:
             return 2
-        else:
-            return 1
+        return 1
 
     def _makeTeamsDisplayable(self, team, assistTeam, sunkTeam):
         if not team:
@@ -47,7 +41,6 @@ class SiegeAnnouncer(DistributedObject):
         stringDict = {'teamName': PVPGlobals.siegeTeamNames[team], 'shipName': shipName, 'sunkTeamName': PVPGlobals.siegeTeamNames[sunkTeam], 'sunkShipName': sunkShipName}
         msg = PLocalizer.PVPSinkAnnouncement % stringDict
         base.chatAssistant.receiveGameMessage(msg)
-        return
 
     def announceSinkWithAssist(self, team, shipName, assistTeam, assistShipName, sunkTeam, sunkShipName):
         team, assistTeam, sunkTeam = self._makeTeamsDisplayable(team, assistTeam, sunkTeam)
@@ -60,5 +53,3 @@ class SiegeAnnouncer(DistributedObject):
         stringDict = {'teamName': PVPGlobals.siegeTeamNames[team], 'shipName': shipName, 'amount': amount}
         msg = PLocalizer.PVPSinkStreakAnnouncement % stringDict
         base.chatAssistant.receiveGameMessage(msg)
-        return
-# okay decompiling .\pirates\pvp\SiegeAnnouncer.pyc

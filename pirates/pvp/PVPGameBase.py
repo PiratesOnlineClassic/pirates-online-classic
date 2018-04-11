@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.PVPGameBase
 import random
 
 import PVPRulesPanel
@@ -13,7 +9,6 @@ from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.StatRowGui import StatRowGui
 from pirates.piratesgui.StatRowHeadingGui import StatRowHeadingGui
 from pirates.pvp import PVPGlobals
-
 
 class ScoreboardHolder:
     __module__ = __name__
@@ -29,7 +24,6 @@ class ScoreboardHolder:
 
     def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
         return self.gameRules.createScoreboardItem(item, parent, itemType=None, columnWidths=[], color=None)
-
 
 class StatsHolder:
     __module__ = __name__
@@ -75,7 +69,6 @@ class PVPGameBase(DistributedObject, FSM.FSM):
         self.ignoreAll()
         base.cr.gameRules = None
         DistributedObject.delete(self)
-        return
 
     def announceGenerate(self):
         DistributedObject.announceGenerate(self)
@@ -209,12 +202,10 @@ class PVPGameBase(DistributedObject, FSM.FSM):
         messenger.send(self.taskName('statsChanged'))
 
     def getColumnStats(self):
-        return [
-         PVPGlobals.KILLS, PVPGlobals.DEATHS]
+        return [PVPGlobals.KILLS, PVPGlobals.DEATHS]
 
     def getColumnLabels(self):
-        return [
-         PLocalizer.PVPPlayer, PLocalizer.PVPEnemiesDefeated, PLocalizer.PVPTimesDefeated]
+        return [PLocalizer.PVPPlayer, PLocalizer.PVPEnemiesDefeated, PLocalizer.PVPTimesDefeated]
 
     def addPlayer(self, playerId):
         if playerId in base.cr.doId2do:
@@ -302,8 +293,7 @@ class PVPGameBase(DistributedObject, FSM.FSM):
                 for i in range(len(playerStats)):
                     teamTotals[i][1] = str(int(teamTotals[i][1]) + int(playerStats[i][1]))
 
-            teamStat = [
-             'Team %s' % team, teamTotals, ['color', PVPGlobals.TEAM_COLOR[team]]]
+            teamStat = ['Team %s' % team, teamTotals, ['color', PVPGlobals.TEAM_COLOR[team]]]
             teamStats = self.sortStats(teamStats)
             teamStats.insert(0, teamStat)
             displayStats += teamStats
@@ -325,17 +315,15 @@ class PVPGameBase(DistributedObject, FSM.FSM):
             else:
                 firstPersonMsgs = None
         else:
-            thirdPersonMsgs = [
-             PLocalizer.PVPDefeat]
+            thirdPersonMsgs = [PLocalizer.PVPDefeat]
             if defeatedId == localAvatar.doId:
                 firstPersonMsgs = [
                  PLocalizer.PVPYouWereDefeated]
+            elif defeaterId == localAvatar.doId:
+                firstPersonMsgs = [
+                 PLocalizer.PVPYouDefeated]
             else:
-                if defeaterId == localAvatar.doId:
-                    firstPersonMsgs = [
-                     PLocalizer.PVPYouDefeated]
-                else:
-                    firstPersonMsgs = None
+                firstPersonMsgs = None
         firstPersonMsg = None
         if firstPersonMsgs:
             firstPersonMsg = self.eventRng.choice(firstPersonMsgs)
@@ -349,5 +337,3 @@ class PVPGameBase(DistributedObject, FSM.FSM):
         if firstPersonMsg:
             localAvatar.guiMgr.messageStack.addTextMessage(firstPersonMsg)
         base.chatAssistant.receiveSystemMessage(thirdPersonMsg)
-        return
-# okay decompiling .\pirates\pvp\PVPGameBase.pyc

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.treasuremap.DistributedBuriedTreasure
 import math
 
 from direct.directnotify import DirectNotifyGlobal
@@ -9,7 +5,6 @@ from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
 from pirates.distributed import DistributedInteractive
 from pirates.piratesbase import PiratesGlobals, PLocalizer
-
 
 class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
     __module__ = __name__
@@ -23,13 +18,11 @@ class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
         self.raiseTreasureIval = None
         self.currentDepth = 0.0
         self.startingDepth = 0.0
-        return
 
     def generate(self):
         DistributedInteractive.DistributedInteractive.generate(self)
         self.chest = None
         self.setInteractOptions(proximityText=PLocalizer.InteractBuriedTreasure, sphereScale=10, diskRadius=10, exclusive=0)
-        return
 
     def disable(self):
         DistributedInteractive.DistributedInteractive.disable(self)
@@ -42,7 +35,6 @@ class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
         if self.raiseTreasureIval:
             self.raiseTreasureIval.pause()
             self.raiseTreasureIval = None
-        return
 
     def loadChest(self):
         if self.chest:
@@ -125,19 +117,18 @@ class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
                 self.dirt.stash()
                 self.chest.setZ(z)
                 self.dirt.setZ(z * 1.5)
-        else:
-            self.loadChest()
-            self.chest.unstash()
-            self.dirt.unstash()
-            if self.raiseTreasureIval:
-                self.raiseTreasureIval.pause()
-            self.raiseTreasureIval = Parallel(LerpPosInterval(self.chest, self.UpdateDelay, Vec3(0, 0, z), startPos=Vec3(0, 0, oldZ)), LerpPosInterval(self.dirt, self.UpdateDelay, Vec3(0, 0, dirtZ), startPos=Vec3(0, 0, dirtOldZ)))
-            self.raiseTreasureIval.start()
-            if self.state == 'Use':
-                localAvatar.guiMgr.workMeter.startTimer(self.startingDepth, self.currentDepth)
+            return
+        self.loadChest()
+        self.chest.unstash()
+        self.dirt.unstash()
+        if self.raiseTreasureIval:
+            self.raiseTreasureIval.pause()
+        self.raiseTreasureIval = Parallel(LerpPosInterval(self.chest, self.UpdateDelay, Vec3(0, 0, z), startPos=Vec3(0, 0, oldZ)), LerpPosInterval(self.dirt, self.UpdateDelay, Vec3(0, 0, dirtZ), startPos=Vec3(0, 0, dirtOldZ)))
+        self.raiseTreasureIval.start()
+        if self.state == 'Use':
+            localAvatar.guiMgr.workMeter.startTimer(self.startingDepth, self.currentDepth)
 
     def showTreasure(self, gold):
         self.loadChest()
         self.showTreasureIval = Sequence(Parallel(LerpHprInterval(self.chestLidHigh, 1, Vec3(0, -40, 0)), LerpHprInterval(self.chestLidMed, 1, Vec3(0, -40, 0)), LerpHprInterval(self.chestLidLow, 1, Vec3(0, -40, 0))), Wait(3.0), Func(self.setTransparency, 1), LerpColorScaleInterval(self, 0.5, Vec4(1, 1, 1, 0)), Func(self.chest.stash))
         self.showTreasureIval.start()
-# okay decompiling .\pirates\treasuremap\DistributedBuriedTreasure.pyc

@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.PVPGameTeamBattle
 from pirates.interact import InteractiveBase
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.pvp import PVPGlobals
 from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.pvp.PVPGameBase import PVPGameBase
 from pirates.ship import DistributedShip
-
 
 class PVPGameTeamBattle(PVPGameBase):
     __module__ = __name__
@@ -25,7 +20,6 @@ class PVPGameTeamBattle(PVPGameBase):
         self.depositSound = base.loader.loadSfx('audio/treasure_hit_1.mp3')
         self.maxCarry = None
         self.pendingInstanceRequest = None
-        return
 
     def announceGenerate(self):
         PVPGameBase.announceGenerate(self)
@@ -40,7 +34,6 @@ class PVPGameTeamBattle(PVPGameBase):
             base.cr.relatedObjectMgr.abortRequest(self.pendingInstanceRequest)
             self.pendingInstanceRequest = None
         base.localAvatar.guiMgr.hidePVPUI()
-        return
 
     def delete(self):
         self.ignoreAll()
@@ -61,7 +54,6 @@ class PVPGameTeamBattle(PVPGameBase):
     def complete(self):
         PVPGameBase.complete(self)
         self.prevTeamScore = None
-        return
 
     def setResults(self, stats, rank):
         for playerId, playerStats in stats:
@@ -87,8 +79,7 @@ class PVPGameTeamBattle(PVPGameBase):
         team2 = item2.get('Team')
         if team1 == localAvatar.getDoId():
             return 1000
-        else:
-            return item2.get('Score') - item1.get('Score')
+        return item2.get('Score') - item1.get('Score')
 
     def getScoreList(self):
         scoreList = []
@@ -131,21 +122,18 @@ class PVPGameTeamBattle(PVPGameBase):
         if team == localAvatar.getTeam():
             maxTeamScore = str(self.maxTeamScore)
             return PLocalizer.PVPYourTeam + str(score)
+        elif team == localAvatar.getDoId():
+            maxCarry = str(self.maxCarry)
+            return PLocalizer.PVPYourScoreIs + str(score)
         else:
-            if team == localAvatar.getDoId():
-                maxCarry = str(self.maxCarry)
-                return PLocalizer.PVPYourScoreIs + str(score)
-            else:
-                maxTeamScore = str(self.maxTeamScore)
-                return PLocalizer.PVPOtherTeam + str(score)
+            maxTeamScore = str(self.maxTeamScore)
+            return PLocalizer.PVPOtherTeam + str(score)
 
     def getColumnStats(self):
-        return [
-         PVPGlobals.SCORE, PVPGlobals.DEATHS]
+        return [PVPGlobals.SCORE, PVPGlobals.DEATHS]
 
     def getColumnLabels(self):
-        return [
-         PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
+        return [PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
 
     def addPlayer(self, playerId):
         self.stats[playerId] = {PVPGlobals.SCORE: 0, PVPGlobals.KILLS: 0, PVPGlobals.DEATHS: 0, PVPGlobals.TEAM: 0}
@@ -164,4 +152,3 @@ class PVPGameTeamBattle(PVPGameBase):
 
     def getStats(self):
         return self.getTeamStats()
-# okay decompiling .\pirates\pvp\PVPGameTeamBattle.pyc

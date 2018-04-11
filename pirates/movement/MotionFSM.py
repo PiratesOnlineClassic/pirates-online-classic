@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.movement.MotionFSM
 import random
 import types
 
@@ -126,40 +122,35 @@ class MotionAnimFSM(FSM):
         animScaleAdjust = False
         if self.canBeAirborne and self.airborneState:
             state = 'Airborne'
+        elif slideSpeed >= WALK_CUTOFF:
+            if self.av.getAnimFilename('strafe_right'):
+                state = 'StrafeRight'
+            else:
+                state = 'WalkForward'
+        elif slideSpeed <= -WALK_CUTOFF:
+            if self.av.getAnimFilename('strafe_left'):
+                state = 'StrafeLeft'
+            else:
+                state = 'WalkForward'
         else:
-            if slideSpeed >= WALK_CUTOFF:
-                if self.av.getAnimFilename('strafe_right'):
-                    state = 'StrafeRight'
+            if forwardSpeed >= NPC_RUN_CUTOFF:
+                state = 'Run'
+                animScaleAdjust = True
+            elif forwardSpeed > NPC_WALK_CUTOFF:
+                state = 'WalkForward'
+                animScaleAdjust = True
+            elif rotateSpeed > 0.0:
+                if self.av.getAnimFilename('spin_left'):
+                    state = 'SpinLeft'
+                else:
+                    state = 'WalkForward'
+            elif rotateSpeed < 0.0:
+                if self.av.getAnimFilename('spin_right'):
+                    state = 'SpinRight'
                 else:
                     state = 'WalkForward'
             else:
-                if slideSpeed <= -WALK_CUTOFF:
-                    if self.av.getAnimFilename('strafe_left'):
-                        state = 'StrafeLeft'
-                    else:
-                        state = 'WalkForward'
-                else:
-                    if forwardSpeed >= NPC_RUN_CUTOFF:
-                        state = 'Run'
-                        animScaleAdjust = True
-                    else:
-                        if forwardSpeed > NPC_WALK_CUTOFF:
-                            state = 'WalkForward'
-                            animScaleAdjust = True
-                        else:
-                            if rotateSpeed > 0.0:
-                                if self.av.getAnimFilename('spin_left'):
-                                    state = 'SpinLeft'
-                                else:
-                                    state = 'WalkForward'
-                            else:
-                                if rotateSpeed < 0.0:
-                                    if self.av.getAnimFilename('spin_right'):
-                                        state = 'SpinRight'
-                                    else:
-                                        state = 'WalkForward'
-                                else:
-                                    state = 'Idle'
+                state = 'Idle'
         zeroSpeedLimit = 0.1
         if globalClock.getFrameTime() - self.zeroSpeedTimer < zeroSpeedLimit and self.motionFSMLag:
             if state != self.state and self.state != 'Idle':
@@ -180,42 +171,31 @@ class MotionAnimFSM(FSM):
     def updateAnimState(self, forwardSpeed, rotateSpeed, slideSpeed=0.0):
         if self.canBeAirborne and self.airborneState:
             state = 'Airborne'
+        elif forwardSpeed >= WALK_CUTOFF and slideSpeed >= WALK_CUTOFF:
+            state = 'StrafeRightDiag'
+        elif forwardSpeed >= WALK_CUTOFF and slideSpeed <= -WALK_CUTOFF:
+            state = 'StrafeLeftDiag'
+        elif forwardSpeed >= RUN_CUTOFF:
+            state = 'Run'
+        elif forwardSpeed >= WALK_CUTOFF:
+            state = 'WalkForward'
+            self.adjustAnimScale(state, forwardSpeed)
+        elif forwardSpeed <= -WALK_CUTOFF and slideSpeed >= WALK_CUTOFF:
+            state = 'StrafeRightDiagReverse'
+        elif forwardSpeed <= -WALK_CUTOFF and slideSpeed <= -WALK_CUTOFF:
+            state = 'StrafeLeftDiagReverse'
+        elif forwardSpeed <= -WALK_CUTOFF:
+            state = 'WalkReverse'
+        elif slideSpeed >= WALK_CUTOFF:
+            state = 'StrafeRight'
+        elif slideSpeed <= -WALK_CUTOFF:
+            state = 'StrafeLeft'
+        elif rotateSpeed > 0.0:
+            state = 'SpinLeft'
+        elif rotateSpeed < 0.0:
+            state = 'SpinRight'
         else:
-            if forwardSpeed >= WALK_CUTOFF and slideSpeed >= WALK_CUTOFF:
-                state = 'StrafeRightDiag'
-            else:
-                if forwardSpeed >= WALK_CUTOFF and slideSpeed <= -WALK_CUTOFF:
-                    state = 'StrafeLeftDiag'
-                else:
-                    if forwardSpeed >= RUN_CUTOFF:
-                        state = 'Run'
-                    else:
-                        if forwardSpeed >= WALK_CUTOFF:
-                            state = 'WalkForward'
-                            self.adjustAnimScale(state, forwardSpeed)
-                        else:
-                            if forwardSpeed <= -WALK_CUTOFF and slideSpeed >= WALK_CUTOFF:
-                                state = 'StrafeRightDiagReverse'
-                            else:
-                                if forwardSpeed <= -WALK_CUTOFF and slideSpeed <= -WALK_CUTOFF:
-                                    state = 'StrafeLeftDiagReverse'
-                                else:
-                                    if forwardSpeed <= -WALK_CUTOFF:
-                                        state = 'WalkReverse'
-                                    else:
-                                        if slideSpeed >= WALK_CUTOFF:
-                                            state = 'StrafeRight'
-                                        else:
-                                            if slideSpeed <= -WALK_CUTOFF:
-                                                state = 'StrafeLeft'
-                                            else:
-                                                if rotateSpeed > 0.0:
-                                                    state = 'SpinLeft'
-                                                else:
-                                                    if rotateSpeed < 0.0:
-                                                        state = 'SpinRight'
-                                                    else:
-                                                        state = 'Idle'
+            state = 'Idle'
         if self.state != state:
             if self.av.doId < 300000000:
                 pass

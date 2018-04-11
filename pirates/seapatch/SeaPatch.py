@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.seapatch.SeaPatch
 import math
 import os
 
@@ -19,7 +15,6 @@ from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import Water
 from pirates.seapatch.SeaPatchRoot import SeaPatchRoot
 from pirates.seapatch.SeaPatchNode import SeaPatchNode
-
 
 class SeaPatch(Water):
     __module__ = __name__
@@ -228,7 +223,6 @@ class SeaPatch(Water):
                 self.set_water_color_texture(default_water_color_texture_filename)
                 self.setup_color_map()
         self.create_interface()
-        return
 
     def hide(self):
         self.patchNP.hide()
@@ -241,8 +235,8 @@ class SeaPatch(Water):
     def toggle_display(self):
         if self.hidden:
             self.show()
-        else:
-            self.hide()
+            return
+        self.hide()
 
     def getTodMgr(self):
         if self.todMgr:
@@ -251,8 +245,6 @@ class SeaPatch(Water):
             return base.cr.timeOfDayManager
         except:
             return
-
-        return
 
     def delete(self):
         self.ccNodePath.removeNode()
@@ -269,7 +261,6 @@ class SeaPatch(Water):
             self.floats.clear()
             self.floatmasses.clear()
         self.ignoreAll()
-        return
 
     def disable(self):
         if self.enabled:
@@ -360,7 +351,6 @@ class SeaPatch(Water):
         self.floats[name] = [
          transNode, rotNode]
         self.floatmasses[name] = mass
-        return
 
     def removeFloatable(self, name):
         if self.floats.has_key(name):
@@ -374,9 +364,8 @@ class SeaPatch(Water):
     def toggleRes(self):
         if self.seamodel == self.lowres:
             self.seamodel = self.highres
-        else:
-            if self.seamodel == self.highres:
-                self.seamodel = self.lowres
+        elif self.seamodel == self.highres:
+            self.seamodel = self.lowres
 
     def floatTask(self, task):
         mass = -6.0
@@ -406,12 +395,10 @@ class SeaPatch(Water):
             self.reflectStage.setCombineRgb(TextureStage.CMInterpolate, TextureStage.CSTexture, TextureStage.COSrcColor, TextureStage.CSPrevious, TextureStage.COSrcColor, TextureStage.CSConstant, TextureStage.COSrcAlpha)
             self.reflectStage.setColor(VBase4(1, 1, 1, factor))
         self.seamodel.setTexture(self.reflectStage, tex)
-        return
 
     def clearReflection(self):
         if self.reflectStage != None:
             self.seamodel.clearTexture(self.reflectStage)
-        return
 
     def saveSeaPatchFile(self, filename):
         if not isinstance(filename, Filename):
@@ -464,19 +451,16 @@ class SeaPatch(Water):
     def __formatWaveTarget(self, target):
         if target == SeaPatchRoot.WTZ:
             return 'SeaPatchRoot.WTZ'
-        else:
-            if target == SeaPatchRoot.WTU:
-                return 'SeaPatchRoot.WTU'
-            else:
-                if target == SeaPatchRoot.WTV:
-                    return 'SeaPatchRoot.WTV'
+        elif target == SeaPatchRoot.WTU:
+            return 'SeaPatchRoot.WTU'
+        elif target == SeaPatchRoot.WTV:
+            return 'SeaPatchRoot.WTV'
 
     def __formatWaveFunc(self, func):
         if func == SeaPatchRoot.WFSin:
             return 'SeaPatchRoot.WFSin'
-        else:
-            if func == SeaPatchRoot.WFNoise:
-                return 'SeaPatchRoot.WFNoise'
+        elif func == SeaPatchRoot.WFNoise:
+            return 'SeaPatchRoot.WFNoise'
 
     def loadSeaPatchFileExt(self, filename, patch=None):
         if patch == None:
@@ -546,8 +530,7 @@ class SeaPatch(Water):
         height = self.patch.calcHeight(ap[0], ap[1], dist)
         normal = self.patch.calcNormal(height, ap[0], ap[1], dist)
         normal = node.getRelativeVector(self.anchor, normal)
-        return (
-         height, normal)
+        return (height, normal)
 
     def calcHeightAndNormalForMass(self, x=0, y=0, z=0, node=None, mass=1, area=1):
         p3 = Point3(x, y, z)
@@ -559,8 +542,7 @@ class SeaPatch(Water):
         height = self.patch.calcHeightForMass(ap[0], ap[1], dist, mass, area)
         normal = self.patch.calcNormalForMass(height, ap[0], ap[1], dist, mass, area)
         normal = node.getRelativeVector(self.anchor, normal)
-        return (
-         height, normal)
+        return (height, normal)
 
     def setSeaWeights(self, weight_map):
         pass
@@ -570,46 +552,36 @@ class SeaPatch(Water):
         if stateId == PiratesGlobals.TOD_DAWN2DAY:
             highColor = Vec4(1.0, 1.0, 1.0, 0.5)
             lowColor = Vec4(0.5, 0.3, 0.3, 0.8)
-        else:
-            if stateId == PiratesGlobals.TOD_DAY2DUSK:
-                highColor = Vec4(1.0, 1.0, 1.0, 0.5)
-                lowColor = Vec4(0.5, 0.2, 0.2, 0.8)
-            else:
-                if stateId == PiratesGlobals.TOD_DUSK2NIGHT:
-                    highColor = Vec4(1.0, 1.0, 1.0, 0.5)
-                    lowColor = Vec4(0.4, 0.2, 0.2, 0.8)
-                else:
-                    if stateId == PiratesGlobals.TOD_NIGHT2STARS:
-                        highColor = Vec4(1.0, 1.0, 1.0, 0.5)
-                        lowColor = Vec4(0.2, 0.2, 0.6, 0.8)
-                    else:
-                        if stateId == PiratesGlobals.TOD_STARS2DAWN:
-                            highColor = Vec4(1.0, 1.0, 1.0, 0.5)
-                            lowColor = Vec4(0.4, 0.4, 0.4, 0.8)
-                        else:
-                            if stateId == PiratesGlobals.TOD_DAWN:
-                                highColor = Vec4(1.0, 1.0, 1.0, 0.5)
-                                lowColor = Vec4(0.5, 0.3, 0.3, 0.8)
-                            else:
-                                if stateId == PiratesGlobals.TOD_DAY:
-                                    highColor = Vec4(1.0, 1.0, 1.0, 0.5)
-                                    lowColor = Vec4(0.2, 0.2, 0.2, 0.8)
-                                else:
-                                    if stateId == PiratesGlobals.TOD_DUSK:
-                                        highColor = Vec4(1.0, 1.0, 1.0, 0.5)
-                                        lowColor = Vec4(0.7, 0.2, 0.2, 0.8)
-                                    else:
-                                        if stateId == PiratesGlobals.TOD_NIGHT:
-                                            highColor = Vec4(1.0, 1.0, 1.0, 0.5)
-                                            lowColor = Vec4(0.2, 0.2, 0.8, 0.8)
-                                        else:
-                                            if stateId == PiratesGlobals.TOD_STARS:
-                                                highColor = Vec4(1.0, 1.0, 1.0, 0.5)
-                                                lowColor = Vec4(0.2, 0.2, 0.4, 0.8)
-                                            else:
-                                                if stateId == PiratesGlobals.TOD_HALLOWEEN or stateId == PiratesGlobals.TOD_FULLMOON or stateId == PiratesGlobals.TOD_HALF2FULLMOON or stateId == PiratesGlobals.TOD_FULL2HALFMOON:
-                                                    highColor = Vec4(1.0, 1.0, 1.0, 0.5)
-                                                    lowColor = Vec4(0.5, 0.25, 0.6, 0.8)
+        elif stateId == PiratesGlobals.TOD_DAY2DUSK:
+            highColor = Vec4(1.0, 1.0, 1.0, 0.5)
+            lowColor = Vec4(0.5, 0.2, 0.2, 0.8)
+        elif stateId == PiratesGlobals.TOD_DUSK2NIGHT:
+            highColor = Vec4(1.0, 1.0, 1.0, 0.5)
+            lowColor = Vec4(0.4, 0.2, 0.2, 0.8)
+        elif stateId == PiratesGlobals.TOD_NIGHT2STARS:
+            highColor = Vec4(1.0, 1.0, 1.0, 0.5)
+            lowColor = Vec4(0.2, 0.2, 0.6, 0.8)
+        elif stateId == PiratesGlobals.TOD_STARS2DAWN:
+            highColor = Vec4(1.0, 1.0, 1.0, 0.5)
+            lowColor = Vec4(0.4, 0.4, 0.4, 0.8)
+        elif stateId == PiratesGlobals.TOD_DAWN:
+            highColor = Vec4(1.0, 1.0, 1.0, 0.5)
+            lowColor = Vec4(0.5, 0.3, 0.3, 0.8)
+        elif stateId == PiratesGlobals.TOD_DAY:
+            highColor = Vec4(1.0, 1.0, 1.0, 0.5)
+            lowColor = Vec4(0.2, 0.2, 0.2, 0.8)
+        elif stateId == PiratesGlobals.TOD_DUSK:
+            highColor = Vec4(1.0, 1.0, 1.0, 0.5)
+            lowColor = Vec4(0.7, 0.2, 0.2, 0.8)
+        elif stateId == PiratesGlobals.TOD_NIGHT:
+            highColor = Vec4(1.0, 1.0, 1.0, 0.5)
+            lowColor = Vec4(0.2, 0.2, 0.8, 0.8)
+        elif stateId == PiratesGlobals.TOD_STARS:
+            highColor = Vec4(1.0, 1.0, 1.0, 0.5)
+            lowColor = Vec4(0.2, 0.2, 0.4, 0.8)
+        elif stateId == PiratesGlobals.TOD_HALLOWEEN or stateId == PiratesGlobals.TOD_FULLMOON or stateId == PiratesGlobals.TOD_HALF2FULLMOON or stateId == PiratesGlobals.TOD_FULL2HALFMOON:
+            highColor = Vec4(1.0, 1.0, 1.0, 0.5)
+            lowColor = Vec4(0.5, 0.25, 0.6, 0.8)
         self.patch.setHighColor(highColor)
         self.patch.setLowColor(lowColor)
 
@@ -671,8 +643,8 @@ class SeaPatch(Water):
         animate = True
         if self.getSpecialEffectsLevel() == Options.SpecialEffectsLow:
             self.patch.animateUv(False)
-        else:
-            self.patch.animateUv(True)
+            return
+        self.patch.animateUv(True)
 
     def addMotionTrail(self, parent):
         if self.motion_trail == None:
@@ -748,5 +720,3 @@ class SeaPatch(Water):
                 angle = (1.0 - time) * 90.0
                 matrix = Mat4.rotateMat(angle, axis)
                 self.motion_trail.update_motion_trail(time, matrix)
-        return
-# okay decompiling .\pirates\seapatch\SeaPatch.pyc

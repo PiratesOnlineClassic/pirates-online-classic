@@ -36,7 +36,7 @@ dc-file astron/dclass/pirates.dc
 dc-file astron/dclass/otp.dc
 
 # Server:
-game-server 127.0.0.1
+game-server 47.133.210.240
 server-version pirates-dev
 
 # Notifier:
@@ -88,3 +88,5 @@ object-load-delay #f
 
 # Temporary:
 smooth-lag 0.4
+
+want-friendly-fire #t

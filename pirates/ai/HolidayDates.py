@@ -1,12 +1,7 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.ai.HolidayDates
 import time
 
 
 class HolidayDates:
-    __module__ = __name__
     TYPE_CUSTOM = 0
     TYPE_YEARLY = 1
     TYPE_MONTHLY = 2
@@ -76,4 +71,3 @@ class HolidayDates:
             return time.mktime((date[0], date[1], day + 7, t[1], t[2], t[3], 0, 0, -1))
         if self.holidayType == HolidayDates.TYPE_DAILY:
             return time.mktime((date[0], date[1], date[2] + 1, t[0], t[1], t[2], 0, 0, -1))
-# okay decompiling .\pirates\ai\HolidayDates.pyc

@@ -360,27 +360,27 @@ class LoadingScreen(DirectObject.DirectObject):
             screenshot = screenShot_Jail
         else:
             screenshot = screenShots_Locations.get(targetId)
-            if not screenshot:
-                if areaType_Jungles.has_key(targetId):
-                    screenshot = random.choice(screenShots_Jungles)
-                elif areaType_Swamps.has_key(targetId):
-                    screenshot = random.choice(screenShots_Swamps)
-                elif areaType_Caves.has_key(targetId):
-                    screenshot = random.choice(screenShots_Caves)
-                else:
-                    screenshot = random.choice(screenShots)
-        if len(screenshot) > 1:
+
+        if not screenshot:
+            if areaType_Jungles.has_key(targetId):
+                screenshot = random.choice(screenShots_Jungles)
+            elif areaType_Swamps.has_key(targetId):
+                screenshot = random.choice(screenShots_Swamps)
+            elif areaType_Caves.has_key(targetId):
+                screenshot = random.choice(screenShots_Caves)
+            else:
+                screenshot = random.choice(screenShots)
+
+        if isinstance(screenshot, list):
             screenshot = random.choice(screenshot)
-        else:
-            screenshot = screenshot[0]
+
         self.__setLoadingArt(screenshot)
         if ocean:
             targetName = PLocalizer.LoadingScreen_Ocean
+        elif jail:
+            targetName = PLocalizer.LoadingScreen_Jail
         else:
-            if jail:
-                targetName = PLocalizer.LoadingScreen_Jail
-            else:
-                targetName = PLocalizer.LocationNames.get(targetId)
+            targetName = PLocalizer.LocationNames.get(targetId)
         base.setLocationCode('Loading: %s' % targetName)
         if targetName is None:
             return

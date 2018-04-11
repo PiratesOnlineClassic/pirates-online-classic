@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.movement.DistributedMovingObject
 import random
 
 from direct.distributed import DistributedSmoothNode
@@ -15,7 +11,6 @@ from pirates.demo import DemoGlobals
 from pirates.distributed import DistributedTargetableObject
 from pirates.piratesbase import PiratesGlobals
 
-
 class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, DistributedTargetableObject.DistributedTargetableObject):
     __module__ = __name__
     notify = directNotify.newCategory('DistributedMovingObject')
@@ -28,7 +23,6 @@ class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, Distr
         self.aggroMode = EnemyGlobals.AGGRO_MODE_FORCED
         self.debugName = None
         self.debugNameNP = None
-        return
 
     def requestGameState(self, state):
         pass
@@ -101,8 +95,7 @@ class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, Distr
             self.debugNameNP.setDepthTest(0)
 
     def getDebugNamePosScale(self):
-        return [
-         (0, 0, 10), 2.0]
+        return [(0, 0, 10), 2.0]
 
     def setStartState(self, startState):
         self.startState = startState
@@ -118,4 +111,3 @@ class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, Distr
 
     def getAggroMode(self):
         return self.aggroMode
-# okay decompiling .\pirates\movement\DistributedMovingObject.pyc

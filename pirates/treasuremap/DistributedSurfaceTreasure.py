@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.treasuremap.DistributedSurfaceTreasure
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
 from pirates.distributed import DistributedInteractive
 from pirates.interact import InteractiveBase
 from pirates.piratesbase import PiratesGlobals, PLocalizer
-
 
 class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
     __module__ = __name__
@@ -18,7 +13,6 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
         NodePath.__init__(self, 'DistributedSurfaceTreasure')
         DistributedInteractive.DistributedInteractive.__init__(self, cr)
         self.showLerp = None
-        return
 
     def generate(self):
         DistributedInteractive.DistributedInteractive.generate(self)
@@ -65,8 +59,8 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
     def setOpen(self, open):
         if open:
             self.chestLid.setHpr(0, -40, 0)
-        else:
-            self.chestLid.setHpr(0, 0, 0)
+            return
+        self.chestLid.setHpr(0, 0, 0)
 
     def showProximityInfo(self):
         self.cr.activeWorld.updateTreasureProximityText(self)
@@ -109,4 +103,3 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
         else:
             self.showLerp = Sequence(LerpColorScaleInterval(self, 0.5, Vec4(1, 1, 1, 1)), Func(self.clearTransparency))
             self.showLerp.start()
-# okay decompiling .\pirates\treasuremap\DistributedSurfaceTreasure.pyc

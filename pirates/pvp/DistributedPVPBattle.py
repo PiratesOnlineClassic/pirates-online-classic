@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.DistributedPVPBattle
 from pirates.interact import InteractiveBase
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.pvp import PVPGlobals
 from pirates.pvp.DistributedPVPInstance import DistributedPVPInstance
 from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.ship import DistributedShip
-
 
 class DistributedPVPBattle(DistributedPVPInstance):
     __module__ = __name__
@@ -74,12 +69,10 @@ class DistributedPVPBattle(DistributedPVPInstance):
         return '     ' + str(scoreValue.get('Score')) + ' ' + str(scoreValue.get('Player'))
 
     def getColumnStats(self):
-        return [
-         PVPGlobals.SCORE, PVPGlobals.DEATHS]
+        return [PVPGlobals.SCORE, PVPGlobals.DEATHS]
 
     def getColumnLabels(self):
-        return [
-         PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
+        return [PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
 
     def addPlayerStats(self, playerId):
         self.stats[playerId] = {PVPGlobals.SCORE: 0, PVPGlobals.KILLS: 0, PVPGlobals.DEATHS: 0}
@@ -93,4 +86,3 @@ class DistributedPVPBattle(DistributedPVPInstance):
 
     def sortStats(self, stats):
         return sorted(sorted(stats, key=lambda x: int(x[1][1][1])), key=lambda x: int(x[1][0][1]), reverse=True)
-# okay decompiling .\pirates\pvp\DistributedPVPBattle.pyc

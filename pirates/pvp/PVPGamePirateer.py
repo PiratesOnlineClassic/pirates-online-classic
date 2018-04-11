@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.PVPGamePirateer
 import random
 
 from direct.gui.DirectGui import *
@@ -12,7 +8,6 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.pvp.PVPGameBase import PVPGameBase
 from pirates.ship import DistributedShip
-
 
 class PVPGamePirateer(PVPGameBase):
     __module__ = __name__
@@ -30,7 +25,6 @@ class PVPGamePirateer(PVPGameBase):
         self.prevLoadScore = 0
         self.depositSound = base.loader.loadSfx('audio/treasure_hit_1.mp3')
         self.pendingInstanceRequest = None
-        return
 
     def generate(self):
         PVPGameBase.generate(self)
@@ -53,7 +47,6 @@ class PVPGamePirateer(PVPGameBase):
             base.cr.relatedObjectMgr.abortRequest(self.pendingInstanceRequest)
             self.pendingInstanceRequest = None
         base.localAvatar.guiMgr.hidePVPUI()
-        return
 
     def delete(self):
         self.ignoreAll()
@@ -106,9 +99,7 @@ class PVPGamePirateer(PVPGameBase):
         self.notify.debug('<PIRATEER> ------ we gots us a coin thief %s' % shipId)
         ship.stats['maxSpeed'] = ship.stats['maxSpeed'] * 3 / 4
         barUI = loader.loadModelCopy('models/gui/treasure_loaded')
-        self.titleFrameImage = OnscreenImage(image=barUI, pos=(0, -45, 210), scale=(45,
-                                                                                    45,
-                                                                                    45), parent=ship)
+        self.titleFrameImage = OnscreenImage(image=barUI, pos=(0, -45, 210), scale=(45, 45, 45), parent=ship)
         self.titleFrameImage.setBillboardPointEye()
         self.titleFrameImage.setLightOff()
 
@@ -158,8 +149,7 @@ class PVPGamePirateer(PVPGameBase):
         team2 = item2.get('Team')
         if team1 == 0:
             return 100
-        else:
-            return team1 - team2
+        return team1 - team2
 
     def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
         itemColorScale = None
@@ -198,4 +188,3 @@ class PVPGamePirateer(PVPGameBase):
                     return 'Loading [     ]'
             else:
                 return PLocalizer.PVPTeam % str(team) + str(score) + '/' + str(maxTeamScore)
-# okay decompiling .\pirates\pvp\PVPGamePirateer.pyc

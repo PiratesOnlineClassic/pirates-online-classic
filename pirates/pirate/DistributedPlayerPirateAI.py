@@ -200,9 +200,42 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             WeaponGlobals.WEAPON_MOVIE_STOP, avatar.doId)
 
         self.b_setCurrentWeapon(currentWeaponId, isWeaponDrawn)
+        
+    def requestCurrentAmmo(self, skillId):
+        pass
+        
+    def requestUseSkill(self, skillId, index):
+        pass
+        
+    def requestDeployShip(self, shipId):
+        pass
+        
+    def requestReturnShip(self, shipId):
+        pass
 
     def setCurseStatus(self, curseStat):
         pass
+        
+    def sendClothingMessage(self, clothingId, colorId):
+        self.sendUpdate("sendClothingMessage", [clothingId, colorId])
+        
+    def sendLootMessage(self, lootId):
+        self.sendUpdate("sendLootMessage", [lootId])
+        
+    def sendCardMessage(self, cardId):
+        self.sendUpdate("sendCardMessage", [cardId])
+        
+    def sendWeaponMessage(self, weapon):
+        self.sendUpdate("sendWeaponMessage", [weapon])
+        
+    def sendJewelryMessage(self, jewelryUID):
+        self.sendUpdate("sendJewelryMessage", [jewelryUID])
+        
+    def sendTattooMessage(self, tattooUID):
+        self.sendUpdate("sendTattooMessage", [tattooUID])
+        
+    def sendReputationMessage(self, targetId, categories, reputationList, basicPenalty, crewBonus, doubleXPBonus, holidayBonus):
+        self.sendUpdate("sendReputationMessage", [targetId, categories, reputationList, basicPenalty, crewBonus, doubleXPBonus, holidayBonus])
 
     def spendSkillPoint(self, skillId):
         avatarId = self.air.getAvatarIdFromSender()
@@ -225,6 +258,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 if not unspentStack:
                     self.notify.warning("Player has no skill points to use!")
                     return
+                elif unspentStack[1] > 0:
+                    inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                 else:
                     if unspentStack[1] > 0:
                         inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
@@ -236,6 +271,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 if not unspentStack:
                     self.notify.warning("Player has no skill points to use!")
                     return
+                elif unspentStack[1] > 0:
+                    inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                 else:
                     if unspentStack[1] > 0:
                         inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
@@ -247,6 +284,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 if not unspentStack:
                     self.notify.warning("Player has no skill points to use!")
                     return
+                elif unspentStack[1] > 0:
+                    inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                 else:
                     if unspentStack[1] > 0:
                         inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
@@ -291,12 +330,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 if not unspentStack:
                     self.notify.warning("Player has no skill points to use!")
                     return
+                elif unspentStack[1] > 0:
+                    inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                 else:
-                    if unspentStack[1] > 0:
-                        inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
-                    else:
-                        self.notify.warning("Player has no skill points to use!")
-                        return
+                    self.notify.warning("Player has no skill points to use!")
+                    return
             else:
                 self.notify.warning("SkillId %s has no unspent category!!" % (str(skillId)))
                 return

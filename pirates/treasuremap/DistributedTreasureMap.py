@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.treasuremap.DistributedTreasureMap
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
 from pirates.piratesbase import PiratesGlobals
@@ -9,7 +5,6 @@ from pirates.piratesgui import PiratesGuiGlobals
 from pirates.quest.QuestHolder import QuestHolder
 from pirates.uberdog.DistributedInventory import DistributedInventory
 from pirates.world import GameTypeGlobals
-
 
 class DistributedTreasureMap(DistributedObject.DistributedObject, DistributedInventory, QuestHolder):
     __module__ = __name__
@@ -22,7 +17,6 @@ class DistributedTreasureMap(DistributedObject.DistributedObject, DistributedInv
         self.__enabled = 1
         self.quests = []
         self.tmName = 'treasureMapCove'
-        return
 
     def announceGenerate(self):
         DistributedObject.DistributedObject.announceGenerate(self)
@@ -35,15 +29,13 @@ class DistributedTreasureMap(DistributedObject.DistributedObject, DistributedInv
 
     def requestTreasureMapGo(self, quick=True):
         if quick:
-
             def teleportConfirm(confirmed):
                 if confirmed:
                     self.teleportStarted()
-
             localAvatar.confirmTeleport(teleportConfirm, feedback=True)
-        else:
-            localAvatar.guiMgr.showLookoutPanel()
-            localAvatar.guiMgr.lookoutPage.displayLookout(gameStyle=self.mapId, inviteOptions=[PiratesGlobals.LOOKOUT_INVITE_CREW], additionalOptions=[[str(GameTypeGlobals.GAME_OPTION_TM_ID), str(self.getDoId())]])
+            return
+        localAvatar.guiMgr.showLookoutPanel()
+        localAvatar.guiMgr.lookoutPage.displayLookout(gameStyle=self.mapId, inviteOptions=[PiratesGlobals.LOOKOUT_INVITE_CREW], additionalOptions=[[str(GameTypeGlobals.GAME_OPTION_TM_ID), str(self.getDoId())]])
 
     def teleportStarted(self):
         base.cr.loadingScreen.showTarget()
@@ -65,8 +57,7 @@ class DistributedTreasureMap(DistributedObject.DistributedObject, DistributedInv
 
         if numPlayersList:
             return {'options': {GameTypeGlobals.GAME_OPTION_MIN_PLAYERS: [PiratesGuiGlobals.UIItemType_ListItem, numPlayersList]}}
-        else:
-            return {'options': {}}
+        return {'options': {}}
 
     def setMapId(self, mapId):
         self.mapId = mapId
@@ -76,4 +67,3 @@ class DistributedTreasureMap(DistributedObject.DistributedObject, DistributedInv
 
     def getIsEnabled(self):
         return self.__enabled
-# okay decompiling .\pirates\treasuremap\DistributedTreasureMap.pyc

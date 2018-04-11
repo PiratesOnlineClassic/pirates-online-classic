@@ -9,7 +9,7 @@ class ClientServicesManager(DistributedObjectGlobal):
 
     def performLogin(self, doneEvent):
         self.doneEvent = doneEvent
-        self.sendUpdate('login', [self.cr.playToken or 'dev'])
+        self.sendUpdate('login', ['thetestgame']) #self.cr.playToken or 'dev'])
 
     def acceptLogin(self):
         messenger.send(self.doneEvent, [{'mode': 'success'}])
