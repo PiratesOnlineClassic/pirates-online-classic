@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.BattleManagerBase
 from direct.directnotify import DirectNotifyGlobal
 from pirates.battle import EnemyGlobals, WeaponGlobals
 from pirates.battle.EnemySkills import EnemySkills
@@ -12,7 +8,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class BattleManagerBase:
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManager')
     PirateCodeWeapons = (
      InventoryType.PistolWeaponL1, InventoryType.PistolWeaponL2, InventoryType.PistolWeaponL3, InventoryType.PistolWeaponL4, InventoryType.PistolWeaponL5, InventoryType.PistolWeaponL6, InventoryType.MusketWeaponL1, InventoryType.MusketWeaponL2, InventoryType.MusketWeaponL3)
@@ -468,7 +463,7 @@ class BattleManagerBase:
         return int(damage)
 
     def getModifiedRechargeTime(self, av, skillId, ammoSkillId=0):
-        if config.GetBool('instant-skill-recharge', 0):
+        if config.GetBool('instant-skill-recharge', False):
             return 0.0
         if self.SkillRechargeTimeConfig >= 0.0:
             return self.SkillRechargeTimeConfig
@@ -498,7 +493,7 @@ class BattleManagerBase:
         return rechargeTime
 
     def getModifiedReloadTime(self, av, skillId, ammoSkillId=0):
-        if config.GetBool('instant-skill-recharge', 0):
+        if config.GetBool('instant-skill-recharge', False):
             return 0.0
         rechargeTime = WeaponGlobals.getAttackRechargeTime(0, ammoSkillId)
         if rechargeTime:
@@ -602,4 +597,3 @@ class BattleManagerBase:
                     else:
                         color = '\x01white\x01'
         return color
-# okay decompiling .\pirates\battle\BattleManagerBase.pyc

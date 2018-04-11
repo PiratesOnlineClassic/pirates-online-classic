@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.WeaponBase
 import math
 
 import CannonGlobals
@@ -17,18 +13,17 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class WeaponBase(WeaponBaseBase.WeaponBaseBase):
-    __module__ = __name__
 
     def __init__(self):
         if __builtins__.has_key('localAvatar'):
             av = localAvatar
         else:
             av = self
+
         WeaponBaseBase.WeaponBaseBase.__init__(self, av, self.cr)
         self.prop = None
         self.ammoSequence = 0
         self.setLocalAvatarUsingWeapon(0)
-        return
 
     def generate(self):
         self.projectileHitEvent = self.uniqueName('projectileHit')
@@ -443,4 +438,3 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
 
     def getRender(self):
         return render
-# okay decompiling .\pirates\battle\WeaponBase.pyc

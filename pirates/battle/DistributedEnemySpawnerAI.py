@@ -35,7 +35,14 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         self.randomBossChance = config.GetInt('random-boss-spawn-change', 5)
         self.ignoreDoubleRandom = config.GetBool('ignore-double-random-bosses', False)
 
-        self._enemies = {}
+        self.__enemies = {}
+        self.__currentTask = None
+
+    def generate(self):
+        DistributedObjectAI.generate(self)
+
+    def announceGenerate(self):
+        DistributedObjectAI.announceGenerate(self)
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic):
         newObj = None
@@ -102,20 +109,19 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         townfolk.d_setInitZ(townfolk.getZ())
 
         townfolkName = townfolk.getName()
-        self.notify.debug('Generating %s (%s) under zone %d on %s at %s with doId %d' % (townfolk.getName(), objKey, townfolk.zoneId, parent.getLocalizerName(), townfolk.getPos(), townfolk.doId))
+        self.notify.debug('Generating %s (%s) under zone %d on %s at %s with doId %d' % (townfolk.getName(), objKey,
+            townfolk.zoneId, parent.getLocalizerName(), townfolk.getPos(), townfolk.doId))
 
         return townfolk
 
-
     def __createEnemy(self, objType, objectData, parent, parentUid, objKey, dynamic):
-
         spawnable = objectData.get('Spawnables', '')
         if spawnable not in AvatarTypes.NPC_SPAWNABLES:
             self.notify.warning('Failed to spawn %s (%s); Not a valid spawnable.' % (spawnable, objKey))
 
         avatarType = random.choice(AvatarTypes.NPC_SPAWNABLES[spawnable])()
         bossType = avatarType.getRandomBossType()
-        
+
         if bossType and self.wantRandomBosses:
             if random.randint(1, 100) <= self.randomBossChance:
                 if bossType not in self.randomBosses or self.ignoreDoubleRandom:
@@ -199,19 +205,20 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
 
         if avatarType.getBoss():
             name = PLocalizer.BossNames[avatarType.faction][avatarType.track][avatarType.id][0]
-        enemy.setName(name)  
+        enemy.setName(name)
 
         enemy.setAnimSet(objectData.get('AnimSet', 'default'))
         enemy.setStartState(objectData.get('Start State', 'Idle'))
 
-        self._enemies[objKey] = enemy
+        self.__enemies[objKey] = enemy
 
         zoneId = PiratesGlobals.IslandLocalZone
         parent.generateChildWithRequired(enemy, zoneId)
         enemy.d_setInitZ(enemy.getZ())
 
         locationName = parent.getLocalizerName()
-        self.notify.debug('Generating %s (%s) under zone %d on %s at %s with doId %d' % (enemy.getName(), objKey, enemy.zoneId, locationName, enemy.getPos(), enemy.doId))
+        self.notify.debug('Generating %s (%s) under zone %d on %s at %s with doId %d' % (enemy.getName(), objKey,
+            enemy.zoneId, locationName, enemy.getPos(), enemy.doId))
 
         if avatarType.getBoss():
             self.notify.info('Spawning boss %s (%s) on %s!' % (enemy.getName(), objKey, locationName))
@@ -249,7 +256,8 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         animal.d_setInitZ(animal.getZ())
 
         locationName = parent.getLocalizerName()
-        self.notify.debug('Generating %s (%s) under zone %d in %s at %s with doId %d' % (species, objKey, animal.zoneId, locationName, animal.getPos(), animal.doId))
+        self.notify.debug('Generating %s (%s) under zone %d in %s at %s with doId %d' % (species, objKey,
+            animal.zoneId, locationName, animal.getPos(), animal.doId))
 
         return animal
 
@@ -293,12 +301,13 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         skeleton.setAnimSet(objectData.get('AnimSet', 'default'))
         skeleton.setStartState(objectData.get('Start State', 'Idle'))
 
-        self._enemies[objKey] = skeleton
+        self.__enemies[objKey] = skeleton
 
         zoneId = PiratesGlobals.IslandLocalZone
         parent.generateChildWithRequired(skeleton, zoneId)
 
         locationName = parent.getLocalizerName()
-        self.notify.debug('Generating %s (%s) under zone %d in %s at %s with doId %d' % (skeleton.getName(), objKey, skeleton.zoneId, locationName, skeleton.getPos(), skeleton.doId))
+        self.notify.debug('Generating %s (%s) under zone %d in %s at %s with doId %d' % (skeleton.getName(), objKey,
+            skeleton.zoneId, locationName, skeleton.getPos(), skeleton.doId))
 
         return skeleton

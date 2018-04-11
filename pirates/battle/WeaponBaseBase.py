@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.WeaponBaseBase
 import math
 
 import WeaponGlobals
@@ -78,7 +74,6 @@ class WeaponBaseBase:
     def delete(self):
         self.repository = None
         self.avatar = None
-        return
 
     def runSphereAreaCollisions(self, skillId, ammoSkillId, target, pos):
         self.createCollisions()
@@ -133,11 +128,14 @@ class WeaponBaseBase:
                 else:
                     if areaShape == WeaponGlobals.AREA_OFF:
                         return targets
+
         numEntries = self.areaCollQueue.getNumEntries()
         if numEntries == 0:
             return targets
+
         if numEntries > WeaponGlobals.MAX_AREA_TARGETS:
             numEntries = WeaponGlobals.MAX_AREA_TARGETS
+
         avTeam = self.avatar.getTeam()
         for i in range(numEntries):
             entry = self.areaCollQueue.getEntry(i)
@@ -145,27 +143,33 @@ class WeaponBaseBase:
             if potentialTargetColl in self.avatar.aimTubeNodePaths:
                 potentialTarget = self.avatar
             else:
-                potentialTarget = self.repository.targetMgr.getObjectFromNodepath(potentialTargetColl)
+                potentialTarget = self.repository.targetMgr.getObjectFromNodepath(
+                    potentialTargetColl)
+
             if potentialTarget:
                 potentialTargetId = potentialTarget.getDoId()
                 if potentialTargetId == target.getDoId():
                     continue
+
                 if potentialTargetId in targets:
                     continue
+
                 if not TeamUtils.damageAllowed(potentialTarget, self.avatar):
                     if attackerId and potentialTargetId == attackerId:
                         if not WeaponGlobals.isAttackAreaSelfDamaging(skillId, ammoSkillId):
                             continue
                     else:
                         continue
+
                 if potentialTarget.gameFSM.state == 'Death':
                     continue
+
                 if not self.repository.battleMgr.obeysPirateCode(self.avatar, potentialTarget):
                     continue
+
                 targets.append(potentialTargetId)
             else:
                 continue
 
         print 'getting area list of %s' % targets
         return targets
-# okay decompiling .\pirates\battle\WeaponBaseBase.pyc

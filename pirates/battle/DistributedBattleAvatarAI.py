@@ -11,6 +11,9 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         DistributedReputationAvatarAI.__init__(self, air)
         WeaponBaseAI.__init__(self, air)
         Teamable.__init__(self)
+
+        self.isNpc = True
+
         self.currentWeaponId = 0
         self.isWeaponDrawn = False
         self.currentAmmo = 0
@@ -102,7 +105,11 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def getMaxHp(self):
         return self.maxHp
 
-    def setHp(self, hp, quietly):
+    def setHp(self, hp, quietly=False):
+        if hp <= 0:
+            self.d_setGameState('Death')
+            return
+
         self.hp = hp
         self.quietly = quietly
 

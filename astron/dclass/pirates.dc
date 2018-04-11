@@ -1586,9 +1586,8 @@ dclass DistributedShipRepairSpot : DistributedInteractive {
   setIndex(uint8) required broadcast ram;
 };
 
-dclass DistributedWeapon : WeaponBase, DistributedInteractive {
+dclass DistributedWeapon : DistributedInteractive, WeaponBase {
   setMovie(uint8, uint32) broadcast ram;
-  doAIAttack(int32/10, int32/10, int32/10, uint32, SkillId, SkillId, int16) broadcast;
 };
 
 dclass DistributedPCCannon : DistributedWeapon {

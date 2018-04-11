@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.BattleRandom
 import random
 
 from direct.directnotify import DirectNotifyGlobal
@@ -9,7 +5,6 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class BattleRandom:
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleRandom')
 
     def __init__(self, avId):
@@ -43,9 +38,8 @@ class BattleRandom:
     def resync(self, seed=None):
         if seed is None:
             seed = self.avId
+
         self.mainRandomGen.seed(self.avId)
         self.attackRandomGen.seed(self.avId)
         self.mainCounter = 0
         self.attackCounter = 0
-        return
-# okay decompiling .\pirates\battle\BattleRandom.pyc

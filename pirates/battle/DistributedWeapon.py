@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.DistributedWeapon
 import WeaponGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import ClockDelta
@@ -29,7 +25,6 @@ from WeaponBase import WeaponBase
 
 
 class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractive):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedWeapon')
 
     def __init__(self, cr):
@@ -40,7 +35,6 @@ class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractiv
         self.av = None
         self.weaponSphereNodePath = None
         self.pendingDoMovie = None
-        return
 
     def generate(self):
         DistributedInteractive.DistributedInteractive.generate(self)
@@ -49,7 +43,7 @@ class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractiv
     def announceGenerate(self):
         DistributedInteractive.DistributedInteractive.announceGenerate(self)
         WeaponBase.announceGenerate(self)
-        if __dev__ and base.config.GetBool('show-ai-cannon-targets', 0):
+        if __dev__ and base.config.GetBool('show-ai-cannon-targets', False):
             self.tracker = loader.loadModelCopy('models/effects/explosion_sphere')
             self.tracker.reparentTo(render)
             self.tracker.setScale(30)
@@ -58,9 +52,9 @@ class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractiv
         if self.pendingDoMovie:
             base.cr.relatedObjectMgr.abortRequest(self.pendingDoMovie)
             self.pendingDoMovie = None
+
         DistributedInteractive.DistributedInteractive.disable(self)
         WeaponBase.disable(self)
-        return
 
     def delete(self):
         DistributedInteractive.DistributedInteractive.delete(self)
@@ -94,10 +88,10 @@ class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractiv
         if self.pendingDoMovie:
             base.cr.relatedObjectMgr.abortRequest(self.pendingDoMovie)
             self.pendingDoMovie = None
-        self.pendingDoMovie = base.cr.relatedObjectMgr.requestObjects([avId], eachCallback=doMovie, timeout=60)
-        return
+
+        self.pendingDoMovie = base.cr.relatedObjectMgr.requestObjects([avId],
+            eachCallback=doMovie, timeout=60)
 
     def rejectInteraction(self):
         base.localAvatar.motionFSM.on()
         DistributedInteractive.DistributedInteractive.rejectInteraction(self)
-# okay decompiling .\pirates\battle\DistributedWeapon.pyc

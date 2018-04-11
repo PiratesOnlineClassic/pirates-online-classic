@@ -2,12 +2,16 @@ from direct.directnotify import DirectNotifyGlobal
 from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.HumanDNA import HumanDNA
+from pirates.battle.BattleRandom import BattleRandom
 from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
 from pirates.piratesbase import PLocalizer
 from pirates.quest.QuestConstants import LocationIds
+from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from otp.ai.MagicWordGlobal import *
+from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
+from pirates.battle import WeaponGlobals
 
 class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNA):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
@@ -16,6 +20,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedPlayerAI.__init__(self, air)
         DistributedBattleAvatarAI.__init__(self, air)
         HumanDNA.__init__(self)
+
+        self.isNpc = False
+        self.battleRandom = None
+
         self.dnaString = ''
         self.inventoryId = 0
         self.jailCellIndex = 0
@@ -23,9 +31,13 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.currentIsland = ''
         self.emoteId = 0
 
+        self.weapon = None
+
     def generate(self):
         DistributedPlayerAI.generate(self)
         DistributedBattleAvatarAI.generate(self)
+
+        self.battleRandom = BattleRandom(self.doId)
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -42,6 +54,26 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                     self.b_setReturnLocation(self.currentIsland)
 
                 self.b_setCurrentIsland(parentObj.getUniqueId())
+
+            if self.weapon:
+                self.weapon.b_setLocation(parentId, zoneId)
+
+    def getWorld(self):
+        parentObj = self.getParentObj()
+        if parentObj:
+            if isinstance(parentObj, DistributedGameAreaAI):
+                parentObj = parentObj.getParentObj()
+
+        if not parentObj:
+            return None
+
+        if isinstance(parentObj, DistributedInstanceBaseAI):
+            return parentObj
+
+        return None
+
+    def getInventory(self):
+        self.air.inventoryManager.getInventory(self.doId)
 
     def setDNAString(self, dnaString):
         self.dnaString = dnaString
@@ -152,6 +184,20 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         if not avatar:
             return
+
+        # we need to generate the avatar a new weapon object here, this is because
+        # we cannot generate the object during the avatar's generation. Because,
+        # the avatar switches zones and is re-generated several times...
+        # so let's just check if we have a weapon yet, and if not generate it here...
+        if not self.weapon:
+            self.weapon = DistributedWeaponAI(self.air)
+            self.weapon.generateWithRequiredAndId(self.air.allocateChannel(),
+                self.parentId, self.zoneId)
+
+            return
+
+        self.weapon.d_setMovie(WeaponGlobals.WEAPON_MOVIE_START if isWeaponDrawn else \
+            WeaponGlobals.WEAPON_MOVIE_STOP, avatar.doId)
 
         self.b_setCurrentWeapon(currentWeaponId, isWeaponDrawn)
 
@@ -280,6 +326,18 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def flagFirstDeath(self):
         pass
 
+    def delete(self):
+        DistributedPlayerAI.delete(self)
+        DistributedBattleAvatarAI.delete(self)
+
+        if self.battleRandom:
+            self.battleRandom.delete()
+
+        if self.weapon:
+            self.weapon.requestDelete()
+
+        self.battleRandom = None
+        self.weapon = None
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def name(name):

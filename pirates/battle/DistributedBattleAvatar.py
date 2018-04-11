@@ -955,7 +955,8 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
 
         def wrap():
             self.motionFSM.motionAnimFSM.setAirborneState(airborneState)
-            self.motionFSM.motionAnimFSM.updateAnimState(self.smoother.getSmoothForwardVelocity(), self.smoother.getSmoothRotationalVelocity(), self.smoother.getSmoothLateralVelocity())
+            self.motionFSM.motionAnimFSM.updateAnimState(self.smoother.getSmoothForwardVelocity(), self.smoother.getSmoothRotationalVelocity(),
+                self.smoother.getSmoothLateralVelocity())
 
         taskMgr.doMethodLater(wait, wrap, self.taskName('playMotionAnim-%s-%d' % (airborneState, timestamp)), [])
 
@@ -977,8 +978,8 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
     @report(types=['args', 'deltaStamp'], dConfigParam=['want-jump-report'])
     def playMotionAnim(self, anim, timestamp):
         wait = self.smoother.getDelay() - globalClockDelta.localElapsedTime(timestamp)
-        taskMgr.doMethodLater(wait, self.motionFSM.motionAnimFSM.playMotionAnim, self.taskName('playMotionAnim-%s-%d' % (anim, timestamp)), [
-         anim, False])
+        taskMgr.doMethodLater(wait, self.motionFSM.motionAnimFSM.playMotionAnim, self.taskName('playMotionAnim-%s-%d' % \
+            (anim, timestamp)), [anim, False])
 
     def b_setGroundState(self, groundState):
         timestamp = globalClockDelta.getFrameNetworkTime()
