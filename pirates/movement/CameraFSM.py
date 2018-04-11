@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.movement.CameraFSM
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.FSM import FSM
 from direct.showbase.InputStateGlobal import inputState
 from direct.task import Task
 from pandac.PandaModules import *
 from pirates.pirate import CannonCamera, FPSCamera, ShipCamera
-
 
 class CameraFSM(FSM):
     __module__ = __name__
@@ -21,10 +16,8 @@ class CameraFSM(FSM):
         self.fpsCamera = FPSCamera.FPSCamera(self.av)
         self.cannonCamera = CannonCamera.CannonCamera()
         self.currentCamera = None
-        self.cameras = (
-         self.orbitCamera, self.fpsCamera, self.cannonCamera)
+        self.cameras = (self.orbitCamera, self.fpsCamera, self.cannonCamera)
         self._rmbToken = inputState.watchWithModifiers('RMB', 'mouse3')
-        return
 
     def cleanup(self):
         FSM.cleanup(self)
@@ -72,11 +65,9 @@ class CameraFSM(FSM):
     def defaultFilter(self, request, args):
         if request != self.getCurrentOrNextState():
             return FSM.defaultFilter(self, request, args)
-        return
 
     def enterOff(self):
         self.currentCamera = None
-        return
 
     def exitOff(self):
         pass
@@ -90,7 +81,6 @@ class CameraFSM(FSM):
     def exitOrbit(self):
         self.orbitCamera.setSubject(None)
         self.orbitCamera.stop()
-        return
 
     def enterFPS(self):
         self.fpsCamera.start()
@@ -116,4 +106,3 @@ class CameraFSM(FSM):
 
     def exitControl(self):
         pass
-# okay decompiling .\pirates\movement\CameraFSM.pyc

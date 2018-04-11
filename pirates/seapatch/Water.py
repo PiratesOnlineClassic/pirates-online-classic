@@ -1,13 +1,8 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.seapatch.Water
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
 from direct.showbase.DirectObject import DirectObject
 from otp.otpbase import OTPRender
 from pandac.PandaModules import *
-
 
 class Water(DirectObject):
     __module__ = __name__
@@ -88,7 +83,6 @@ class Water(DirectObject):
         self.total_cycles = 0.0
         self.color_map_texture_stage = None
         self.supports_sky_only = True
-        return
 
     def setup_color_map(self):
         self.color_map_texture_stage = TextureStage('color_map')
@@ -126,7 +120,6 @@ class Water(DirectObject):
         self.ignoreAll()
         if self in self.water_array:
             self.water_array.remove(self)
-        return
 
     def display_state(self):
         TexturePool.listContents()
@@ -209,7 +202,6 @@ class Water(DirectObject):
                 if self.water_panel != None:
                     self.water_panel.setSeaPatch(self)
                     self.enable_water_panel = True
-                return
 
             self.accept('shift-7', display_water_panel)
 
@@ -434,12 +426,10 @@ class Water(DirectObject):
         self.shader = shader
         self.seamodel.setShader(shader)
         shader = None
-        return
 
     def unload_shader(self):
         loader.unloadShader(self.shader_file_path)
         self.shader_file_path = None
-        return
 
     def set_water_color_texture(self, input_file_path, unload_previous_texture=False, texture=None):
         if texture:
@@ -464,13 +454,11 @@ class Water(DirectObject):
         self.set_wrap_or_clamp(self.clamp)
         self.set_water_color_texture_filtering()
         water_color_texture = None
-        return
 
     def unload_water_color_texture(self):
         if self.water_color_texture != None:
             loader.unloadTexture(self.water_color_texture)
             self.water_color_texture = None
-        return
 
     def set_water_alpha_texture(self, input_file_path, unload_previous_texture=False, texture=None):
         if texture:
@@ -501,7 +489,6 @@ class Water(DirectObject):
         if self.water_alpha_texture:
             loader.unloadTexture(self.water_alpha_texture)
             self.water_alpha_texture = None
-        return
 
     def set_wrap_or_clamp(self, wrap):
         if self.water_color_texture:
@@ -550,8 +537,8 @@ class Water(DirectObject):
     def toggle_reflection(self):
         if self.reflection_state:
             self.reflection_off()
-        else:
-            self.reflection_on()
+            return
+        self.reflection_on()
 
     def toggle_ui(self):
         if self.enable_ui:
@@ -1301,7 +1288,6 @@ class IslandWaterParameters:
         self.water_alpha_texture = None
         self.unload_previous_texture = False
         self.swamp_water = None
-        return
 
     def setIslandWaterParameters(self, water, use_alpha_map):
         if water:
@@ -1341,5 +1327,3 @@ class IslandWaterParameters:
             self.swamp_water.water_b = self.swamp_color_b
             self.swamp_water.set_water_color_np()
             self.swamp_water.update_water_direction_and_speed(self.swamp_direction_x, self.swamp_direction_y, self.swamp_speed)
-        return
-# okay decompiling .\pirates\seapatch\Water.pyc

@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.Scoreboard
 from direct.distributed.DistributedObject import DistributedObject
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.StatRowGui import StatRowGui
 from pirates.piratesgui.StatRowHeadingGui import StatRowHeadingGui
 from pirates.pvp import PVPGlobals
-
 
 class Scoreboard(DistributedObject):
     __module__ = __name__
@@ -36,7 +31,6 @@ class Scoreboard(DistributedObject):
         self._stats = None
         del self._stats
         DistributedObject.delete(self)
-        return
 
     def generate(self):
         DistributedObject.generate(self)
@@ -110,15 +104,13 @@ class Scoreboard(DistributedObject):
 
     def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
         if itemType == PiratesGuiGlobals.UIListItemType_ColumHeadings:
-            newItem = StatRowHeadingGui(item, self.getColumnLabels(), parent, itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16, itemWidth=columnWidths[0] + columnWidths[1] * 2 - PiratesGuiGlobals.BorderWidth[0] * 2, itemWidths=columnWidths, frameColor=(0.2,
-                                                                                                                                                                                                                                                                   0.2,
-                                                                                                                                                                                                                                                                   0.2,
-                                                                                                                                                                                                                                                                   0.9))
+            newItem = StatRowHeadingGui(item, self.getColumnLabels(), parent, itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16, 
+                                        itemWidth=columnWidths[0] + columnWidths[1] * 2 - PiratesGuiGlobals.BorderWidth[0] * 2, 
+                                        itemWidths=columnWidths, frameColor=(0.2, 0.2, 0.2, 0.9))
         else:
-            newItem = StatRowGui(item, self.getColumnLabels(), parent, itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16, itemWidth=columnWidths[0] + columnWidths[1] * 2 - PiratesGuiGlobals.BorderWidth[0] * 2, itemWidths=columnWidths, txtColor=color, frameColor=(0.2,
-                                                                                                                                                                                                                                                                            0.2,
-                                                                                                                                                                                                                                                                            0.2,
-                                                                                                                                                                                                                                                                            0.9))
+            newItem = StatRowGui(item, self.getColumnLabels(), parent, itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16, 
+                                 itemWidth=columnWidths[0] + columnWidths[1] * 2 - PiratesGuiGlobals.BorderWidth[0] * 2, 
+                                 itemWidths=columnWidths, txtColor=color, frameColor=(0.2, 0.2, 0.2, 0.9))
         newItem.setup()
         return newItem
 
@@ -145,4 +137,3 @@ class Scoreboard(DistributedObject):
 
     def getRowTextColor(self, rowHeading):
         return self.game.rowColors.get(rowHeading)
-# okay decompiling .\pirates\pvp\Scoreboard.pyc

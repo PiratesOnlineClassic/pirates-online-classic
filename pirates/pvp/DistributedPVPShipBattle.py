@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.DistributedPVPShipBattle
 from pirates.interact import InteractiveBase
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.pvp import PVPGlobals
 from pirates.pvp.DistributedPVPInstance import DistributedPVPInstance
 from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.ship import DistributedShip
-
 
 class DistributedPVPShipBattle(DistributedPVPInstance):
     __module__ = __name__
@@ -19,7 +14,6 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
         self.prevTeamScore = None
         self.localShip = None
         self.teleportCallback = None
-        return
 
     def announceGenerate(self):
         DistributedPVPInstance.announceGenerate(self)
@@ -42,7 +36,6 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
                 self.localShip.sinkTrack.pause()
                 self.localShip.sinkTrack = None
         self.prevTeamScore = None
-        return
 
     def setShipDoId(self, shipId):
         print '_shipId %s' % shipId
@@ -83,8 +76,7 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
         team2 = item2.get('Team')
         if team1 == localAvatar.getDoId():
             return 1000
-        else:
-            return item2.get('Score') - item1.get('Score')
+        return item2.get('Score') - item1.get('Score')
 
     def getScoreList(self):
         scoreList = []
@@ -125,19 +117,16 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
         score = scoreValue.get('Score')
         if team == localAvatar.getTeam():
             return PLocalizer.PVPYourTeam + str(score)
+        elif team == localAvatar.getDoId():
+            return PLocalizer.PVPYourScoreIs + str(score)
         else:
-            if team == localAvatar.getDoId():
-                return PLocalizer.PVPYourScoreIs + str(score)
-            else:
-                return PLocalizer.PVPOtherTeam + str(score)
+            return PLocalizer.PVPOtherTeam + str(score)
 
     def getColumnStats(self):
-        return [
-         PVPGlobals.SCORE, PVPGlobals.DEATHS]
+        return [PVPGlobals.SCORE, PVPGlobals.DEATHS]
 
     def getColumnLabels(self):
-        return [
-         PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
+        return [PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
 
     def addPlayerStats(self, playerId):
         self.stats[playerId] = {PVPGlobals.SCORE: 0, PVPGlobals.KILLS: 0, PVPGlobals.DEATHS: 0, PVPGlobals.TEAM: 0}
@@ -154,4 +143,3 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
 
     def getStats(self):
         return self.getTeamStats()
-# okay decompiling .\pirates\pvp\DistributedPVPShipBattle.pyc

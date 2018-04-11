@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.DistributedPVPInstance
 import random
 
 from direct.distributed.ClockDelta import *
@@ -77,7 +73,6 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
         self.scoreboardHolder = ScoreboardHolder(self)
         self.statsHolder = StatsHolder(self)
         localAvatar.guiMgr.radarGui.request('On')
-        return
 
     def generate(self):
         DistributedInstanceWorld.generate(self)
@@ -196,8 +191,7 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
     def localAvRespawn(self, av):
         self.sendUpdate('requestSpawnLoc')
         self.acceptOnce(self.cr.activeWorld.uniqueName('spawnInfoReceived'), self.requestSpawnLocResp)
-        return [
-         True, None]
+        return [True, None]
 
     def requestSpawnLocResp(self):
         print '[rslr]'
@@ -210,7 +204,6 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
         if self.goToSpawnIval:
             self.goToSpawnIval.pause()
             self.goToSpawnIval = None
-        return
 
     def respawn(self):
         print '[respawn]'
@@ -221,7 +214,6 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
         if self.cr.activeWorld == None or self.cr.activeWorld.spawnInfo == None:
             return
         self.cr.teleportMgr.createSpawnInterests(self.cr.activeWorld.spawnInfo[2], self.teleportToPosStep2, self.worldGrid, localAvatar)
-        return
 
     def teleportToPosStep2(self, parentObj, teleportingObj):
         print '[teleportToPosStep2]'
@@ -275,10 +267,7 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
         avTeam = self.teams.get(av.getDoId())
         if avTeam:
             return [True, avTeam]
-        else:
-            return [
-             False, None]
-        return
+        return [False, None]
 
     def showDeathLoadingScreen(self, av):
         pass
@@ -301,20 +290,20 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
     def setLocalAvatarDefaultGameState(self, loot):
         if localAvatar.lootCarried > 0:
             localAvatar.gameFSM.setDefaultGameState('LandTreasureRoam')
-        else:
-            localAvatar.gameFSM.setDefaultGameState('LandRoam')
+            return
+        localAvatar.gameFSM.setDefaultGameState('LandRoam')
 
     def handleLocalAvatarEnterWater(self):
         if localAvatar.lootCarried > 0:
             localAvatar.b_setGameState('WaterTreasureRoam')
-        else:
-            localAvatar.b_setGameState('WaterRoam')
+            return
+        localAvatar.b_setGameState('WaterRoam')
 
     def handleLocalAvatarExitWater(self):
         if localAvatar.lootCarried > 0:
             localAvatar.b_setGameState('LandTreasureRoam')
-        else:
-            localAvatar.b_setGameState('LandRoam')
+            return
+        localAvatar.b_setGameState('LandRoam')
 
     def handleDeposit(self, team, avId, bankId):
         pass
@@ -359,12 +348,10 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
         messenger.send(self.taskName('statsChanged'))
 
     def getColumnStats(self):
-        return [
-         PVPGlobals.KILLS, PVPGlobals.DEATHS]
+        return [PVPGlobals.KILLS, PVPGlobals.DEATHS]
 
     def getColumnLabels(self):
-        return [
-         PLocalizer.PVPPlayer, PLocalizer.PVPEnemiesDefeated, PLocalizer.PVPTimesDefeated]
+        return [PLocalizer.PVPPlayer, PLocalizer.PVPEnemiesDefeated, PLocalizer.PVPTimesDefeated]
 
     def addPlayerStats(self, playerId):
         pass
@@ -469,12 +456,11 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
             if defeatedId == localAvatar.doId:
                 firstPersonMsgs = [
                  PLocalizer.PVPYouWereDefeated]
+            elif defeaterId == localAvatar.doId:
+                firstPersonMsgs = [
+                 PLocalizer.PVPYouDefeated]
             else:
-                if defeaterId == localAvatar.doId:
-                    firstPersonMsgs = [
-                     PLocalizer.PVPYouDefeated]
-                else:
-                    firstPersonMsgs = None
+                firstPersonMsgs = None
         firstPersonMsg = None
         if firstPersonMsgs:
             firstPersonMsg = self.eventRng.choice(firstPersonMsgs)
@@ -488,5 +474,3 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
         if firstPersonMsg:
             localAvatar.guiMgr.messageStack.addTextMessage(firstPersonMsg)
         base.chatAssistant.receiveSystemMessage(thirdPersonMsg)
-        return
-# okay decompiling .\pirates\pvp\DistributedPVPInstance.pyc

@@ -18,6 +18,7 @@ class SeaPatchRoot(object):
         self.anchor = None
         self.overallSpeed = 0
         self.uvSpeed = Vec2(0, 0)
+        self.passiveMove = Vec2(0.0001, 0.0001)
         self.thresfold = 0
         self.radius = 0
         self.uvScale = VBase2(0, 0)

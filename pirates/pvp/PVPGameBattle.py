@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pvp.PVPGameBattle
 from pirates.interact import InteractiveBase
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.pvp import PVPGlobals
 from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.pvp.PVPGameBase import PVPGameBase
 from pirates.ship import DistributedShip
-
 
 class PVPGameBattle(PVPGameBase):
     __module__ = __name__
@@ -35,7 +30,6 @@ class PVPGameBattle(PVPGameBase):
             base.cr.relatedObjectMgr.abortRequest(self.pendingInstanceRequest)
             self.pendingInstanceRequest = None
         base.localAvatar.guiMgr.hidePVPUI()
-        return
 
     def delete(self):
         self.ignoreAll()
@@ -50,7 +44,6 @@ class PVPGameBattle(PVPGameBase):
     def complete(self):
         PVPGameBase.complete(self)
         self.prevTeamScore = None
-        return
 
     def hasTimeLimit(self):
         return True
@@ -81,9 +74,8 @@ class PVPGameBattle(PVPGameBase):
             name = avatar.getName()
         if player == localAvatar.doId:
             itemColorScale = (1, 1, 1, 1)
-        else:
-            if team != None:
-                itemColorScale = PVPGlobals.TEAM_COLOR[team]
+        elif team != None:
+            itemColorScale = PVPGlobals.TEAM_COLOR[team]
         item['Player'] = name
         return MiniScoreItemGui(item, parent, self.instance, itemColorScale, self.instance.gameRules)
 
@@ -91,12 +83,10 @@ class PVPGameBattle(PVPGameBase):
         return '     ' + str(scoreValue.get('Score')) + ' ' + str(scoreValue.get('Player'))
 
     def getColumnStats(self):
-        return [
-         PVPGlobals.SCORE, PVPGlobals.DEATHS]
+        return [PVPGlobals.SCORE, PVPGlobals.DEATHS]
 
     def getColumnLabels(self):
-        return [
-         PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
+        return [PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
 
     def addPlayer(self, playerId):
         self.stats[playerId] = {PVPGlobals.SCORE: 0, PVPGlobals.KILLS: 0, PVPGlobals.DEATHS: 0}
@@ -112,4 +102,3 @@ class PVPGameBattle(PVPGameBase):
 
     def sortStats(self, stats):
         return sorted(sorted(stats, key=lambda x: int(x[1][1][1])), key=lambda x: int(x[1][0][1]), reverse=True)
-# okay decompiling .\pirates\pvp\PVPGameBattle.pyc

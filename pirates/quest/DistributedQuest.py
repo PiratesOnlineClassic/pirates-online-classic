@@ -1,17 +1,16 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.quest.DistributedQuest
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
 from pandac.PandaModules import *
 from pirates.cutscene import Cutscene, CutsceneActor, CutsceneData
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import NewTutorialPanel, PiratesGuiGlobals, RadarGui
-from pirates.quest import (Quest, QuestBase, QuestConstants, QuestDB,
-                           QuestTaskDNA)
+from pirates.quest import (Quest, QuestBase, QuestConstants, QuestDB, QuestTaskDNA)
 
-QuestPopupDict = {'c2_visit_will_turner': ['showBlacksmith', 'closeShowBlacksmith'], 'c2.2defeatSkeletons': ['showSkeleton', 'closeShowSkeleton'], 'c2_visit_tia_dalma': ['showJungleTia', 'closeShowJungleTia'], 'c2.4recoverOrders': ['showNavy', 'closeShowNavy'], 'c2.5deliverOrders': ['showGovMansion', 'closeShowGovMansion'], 'c2.9visitDarby': ['showDarby', 'closeShowDarby'], 'c2.10visitDockworker': ['showDinghy', 'closeShowDinghy'], 'c2.11visitBarbossa': ['showBarbossa', 'closeShowbarbossa'], 'c3visitJack': ['showTortugaJack', 'closeShowTortugaJack']}
+QuestPopupDict = {'c2_visit_will_turner': ['showBlacksmith', 'closeShowBlacksmith'], 'c2.2defeatSkeletons': ['showSkeleton', 'closeShowSkeleton'], 
+                  'c2_visit_tia_dalma': ['showJungleTia', 'closeShowJungleTia'], 'c2.4recoverOrders': ['showNavy', 'closeShowNavy'], 
+                  'c2.5deliverOrders': ['showGovMansion', 'closeShowGovMansion'], 'c2.9visitDarby': ['showDarby', 'closeShowDarby'], 
+                  'c2.10visitDockworker': ['showDinghy', 'closeShowDinghy'], 'c2.11visitBarbossa': ['showBarbossa', 'closeShowbarbossa'], 
+                  'c3visitJack': ['showTortugaJack', 'closeShowTortugaJack']}
 QUEST_TYPE_AVATAR = 0
 QUEST_TYPE_TM = 1
 
@@ -31,7 +30,6 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
         self.preloadedCutscenes = []
         self.prevLocalAvState = None
         self.viewedInGUI = True
-        return
 
     def announceGenerate(self):
         DistributedObject.DistributedObject.announceGenerate(self)
@@ -66,7 +64,6 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
             self.popupDialog.destroy()
             del self.popupDialog
             self.popupDialog = None
-        return
 
     def setTaskStates(self, taskStates):
         oldTaskStates = getattr(self, 'taskStates', None)
@@ -87,19 +84,16 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
                     newGoal = taskState.getGoal()
                     if oldProgress >= oldGoal:
                         note = QuestConstants.QuestItemNotification.AlreadyFound
-                    else:
-                        if newProgress > oldProgress:
-                            if newProgress >= newGoal:
-                                note = QuestConstants.QuestItemNotification.ProgressMadeGoalMet
-                            else:
-                                note = QuestConstants.QuestItemNotification.ProgressMadeGoalUnmet
+                    elif newProgress > oldProgress:
+                        if newProgress >= newGoal:
+                            note = QuestConstants.QuestItemNotification.ProgressMadeGoalMet
                         else:
-                            if newAttempts > oldAttempts:
-                                note = QuestConstants.QuestItemNotification.ValidAttempt
-                            else:
-                                note = QuestConstants.QuestItemNotification.InvalidAttempt
+                            note = QuestConstants.QuestItemNotification.ProgressMadeGoalUnmet
+                    elif newAttempts > oldAttempts:
+                        note = QuestConstants.QuestItemNotification.ValidAttempt
+                    else:
+                        note = QuestConstants.QuestItemNotification.InvalidAttempt
                     messenger.send('localAvatarQuestItemUpdate', [self, task.item, note])
-                    return
 
         if self.isGenerated():
             if self.isComplete():
@@ -107,7 +101,6 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
                 self.__cleanupDialog()
             else:
                 messenger.send('localAvatarQuestUpdate', [self])
-        return
 
     def announceNewQuest(self):
         base.localAvatar.guiMgr.showQuestAddedText(self)
@@ -117,15 +110,12 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
             questTaskDNA = self.questDNA.getTaskDNAs()[0]
             taskState = self.taskStates[0]
             return questTaskDNA.getProgressMessage(taskState)
-        else:
-            return (None, None)
-        return
+        return (None, None)
 
     def getCompleteText(self):
         if self.type == QUEST_TYPE_AVATAR:
             return 'QUEST COMPLETE!'
-        else:
-            return 'OBJECTIVE COMPLETE!'
+        return 'OBJECTIVE COMPLETE!'
 
     def startFinalizeScene(self, idx, giverId, endEvent=None):
         sceneInfo = self.questDNA.getFinalizeInfo()
@@ -162,7 +152,6 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
                     self.sceneObj.setStartCallback(cutsceneStarted)
                 else:
                     self.sceneObj.overrideOldAvState(self.prevLocalAvState)
-        return
 
     def doneFinalizeScene(self):
         if self.sceneObj:
@@ -171,7 +160,6 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
         self.sendUpdate('doneFinalizeScene')
         if self.endEvent != '':
             messenger.send(self.endEvent)
-        return
 
     def setActive(self):
         self.sendUpdate('setActive')
@@ -201,4 +189,3 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
         if checkPoint != -1:
             base.localAvatar.b_setTutorial(checkPoint)
         base.localAvatar.resetStoryQuest()
-# okay decompiling .\pirates\quest\DistributedQuest.pyc
