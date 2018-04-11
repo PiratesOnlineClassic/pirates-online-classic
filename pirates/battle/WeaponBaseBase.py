@@ -68,8 +68,10 @@ class WeaponBaseBase:
     def __init__(self, avatar, repository):
         self.repository = repository
         self.avatar = avatar
-        if not hasattr(self.avatar, 'aimTubeNodePaths'):
-            self.avatar.aimTubeNodePaths = []
+
+        if self.avatar:
+            if not hasattr(self.avatar, 'aimTubeNodePaths'):
+                self.avatar.aimTubeNodePaths = []
 
     def delete(self):
         self.repository = None

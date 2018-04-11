@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.CollectionMain
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from pirates.piratesbase import CollectionMap, PiratesGlobals, PLocalizer
@@ -11,7 +7,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class CollectionMain(InventoryPage.InventoryPage):
-    __module__ = __name__
 
     def __init__(self):
         InventoryPage.InventoryPage.__init__(self)
@@ -53,7 +48,6 @@ class CollectionMain(InventoryPage.InventoryPage):
         blipFrame = DirectFrame(parent=self.treasureList.getCanvas(), relief=None, geom=blipParent)
         gui.removeNode()
         self.setPics = {}
-        return
 
     def show(self):
         self.refreshList()
@@ -63,7 +57,8 @@ class CollectionMain(InventoryPage.InventoryPage):
         InventoryPage.InventoryPage.hide(self)
         if hideSub:
             if hasattr(base, 'localAvatar'):
-                base.localAvatar.guiMgr.collectionPage.hide()
+                if base.localAvatar:
+                    base.localAvatar.guiMgr.collectionPage.hide()
 
     def addPanel(self, data, repack=1):
         pass
@@ -84,6 +79,7 @@ class CollectionMain(InventoryPage.InventoryPage):
         inv = localAvatar.getInventory()
         if not inv:
             return
+
         cardCount = 0
         for i in range(52):
             cardCount += inv.getStackQuantity(InventoryType.begin_Cards + i)
@@ -113,10 +109,9 @@ class CollectionMain(InventoryPage.InventoryPage):
                                                                                                                                                                   0,
                                                                                                                                                                   0), pos=(0.24 + 0.18 * rowSpot, 0, localHeight - 0.4 - 0.18 * colSpot), command=self.goToCollection, extraArgs=[setKey], text=PLocalizer.Collections[setKey], text0_fg=PiratesGuiGlobals.TextFG1, text1_fg=PiratesGuiGlobals.TextFG1, text2_fg=PiratesGuiGlobals.TextFG2, text_wordwrap=5, text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleTiny, text_pos=(0, -0.085, 0))
                 self.setPics[setKey].setTransparency(1)
+
             if inv.getStackQuantity(setKey) > 1:
                 pass
-
-        return
 
     def buryTreasure(self):
         print 'DPARIS DEBUG - Attempting to bury treasure here'
@@ -126,4 +121,3 @@ class CollectionMain(InventoryPage.InventoryPage):
         self.treasureList.destroy()
         del self.treasureList
         DirectFrame.destroy(self)
-# okay decompiling .\pirates\piratesgui\CollectionMain.pyc
