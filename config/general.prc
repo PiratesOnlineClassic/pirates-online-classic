@@ -36,7 +36,7 @@ dc-file astron/dclass/pirates.dc
 dc-file astron/dclass/otp.dc
 
 # Server:
-game-server 47.133.210.240
+game-server 127.0.0.1
 server-version pirates-dev
 
 # Notifier:
