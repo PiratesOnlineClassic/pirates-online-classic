@@ -2,6 +2,8 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from pirates.world.ClientAreaBuilderAI import ClientAreaBuilderAI
 from pirates.interact.DistributedSearchableContainerAI import DistributedSearchableContainerAI
 from pirates.world.DistributedDinghyAI import DistributedDinghyAI
+from pirates.treasuremap.DistributedBuriedTreasureAI import DistributedBuriedTreasureAI
+from pirates.treasuremap.DistributedSurfaceTreasureAI import DistributedSurfaceTreasureAI
 
 class GameAreaBuilderAI(ClientAreaBuilderAI):
     notify = directNotify.newCategory('GameAreaBuilderAI')
@@ -10,7 +12,8 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         ClientAreaBuilderAI.__init__(self, air, parent)
 
         self.wantSearchables = config.GetBool('want-searchables', True)
-        self.wantDinghys = config.GetBool('want-dignhys', True)
+        self.wantDinghys = config.GetBool('want-dinghys', True)
+        self.wantSpawnNodes = config.GetBool('want-spawn-nodes', True)
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
@@ -23,6 +26,8 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             newObj = self.__createDinghy(parent, parentUid, objKey, objectData)
         elif objType in ['Animal', 'Townsperson', 'Spawn Node', 'Dormant NPC Spawn Node', 'Skeleton', 'NavySailor', 'Creature', 'Ghost']:
             newObj = self.air.spawner.createObject(objType, objectData, parent, parentUid, objKey, dynamic)
+        elif objType == 'Object Spawn Node' and self.wantSpawnNodes:
+            newObj = self.__createObjectSpawnNode(parent, parentUid, objKey, objectData)
             
         return newObj
 
@@ -85,3 +90,24 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         self.broadcastObjectPosition(dinghy)
 
         return dinghy
+
+    def __createObjectSpawnNode(self, parent, parentUid, objKey, objectData):
+        spawnClass = DistributedSurfaceTreasureAI if objectData['Spawnables'] == 'Surface Treasure' else DistributedBuriedTreasureAI
+
+        spawnNode = spawnClass(self.air)
+
+        spawnNode.setPos(objectData.get('Pos', (0, 0, 0)))
+        spawnNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        spawnNode.setScale(objectData.get('Scale', (1, 1, 1)))
+        spawnNode.setStartingDepth(int(objectData.get('startingDepth', 10)))
+        spawnNode.setCurrentDepth(spawnNode.getStartingDepth())
+        spawnNode.setVisZone(objectData.get('VisZone', ''))
+
+        zoneId = self.parent.getZoneFromXYZ(spawnNode.getPos())
+        parent.generateChildWithRequired(spawnNode, zoneId)
+        self.parentObjectToCell(spawnNode, zoneId)
+
+        self.addObject(spawnNode)
+        self.broadcastObjectPosition(spawnNode)
+
+        return spawnNode
