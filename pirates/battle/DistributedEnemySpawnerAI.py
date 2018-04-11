@@ -68,11 +68,19 @@ class SpawnNodeBase:
         raise NotImplementedError('%s does not extend getNPCClass!' % self.__class__.__name__)
 
     def processDeath(self):
+        if not self._npc:
+            self.notify.warning('Attempted to perform death on a %s without a npc!' % \
+                self.__class__.__name__)
+
+            return
+
+        self._npc.d_setGameState('Death')
         taskMgr.doMethodLater(5, self.__respawn, 'perform-respawn-%s' % self.objKey)
 
     def __respawn(self, task):
         if not self._npc:
-            self.notify.warning('Attempted to perform respawn on a %s without a npc!' % self.__class__.__name__)
+            self.notify.warning('Attempted to perform respawn on a %s without a npc!' % \
+                self.__class__.__name__)
             return
 
         self._npc.requestDelete()
@@ -81,7 +89,7 @@ class SpawnNodeBase:
         respawns = self.objectData.get('Respawns', True)
         if not respawns:
             #TODO: is this the proper way of handling this?
-            removeSpawnNode(self.objType, self)
+            self.removeSpawnNode(self.objType, self)
             return
 
         #TODO: Is this a constant?
@@ -98,6 +106,7 @@ class SpawnNodeBase:
         if npcCls is None:
             self.notify.warning('No NPC class defined for AvatarType: %s' % avatarType)
             return
+
         npc = npcCls(self.spawner.air)
 
         # Set NPC Node data
@@ -118,11 +127,12 @@ class SpawnNodeBase:
 
         # Set NPC health
         if hasattr(npc, 'bossData'):
-            npc.setLevel(npc.bossData.get('Level', 0) or EnemyGlobals.getRandomEnemyLevel(avatarType))
+            npc.setLevel(npc.bossData.get('Level', 0) or EnemyGlobals.getRandomEnemyLevel(
+                avatarType))
         else:
             npc.setLevel(EnemyGlobals.getRandomEnemyLevel(avatarType))
-        npcHp, npcMp = EnemyGlobals.getEnemyStats(avatarType, npc.getLevel())
 
+        npcHp, npcMp = EnemyGlobals.getEnemyStats(avatarType, npc.getLevel())
         if avatarType.getBoss() and hasattr(npc, 'bossData'):
             npcHp = npcHp * npc.bossData['HpScale']
             npcMp = npcMp * npc.bossData['MpScale']
@@ -152,6 +162,7 @@ class SpawnNodeBase:
             name = npc.bossData.get('Name', PLocalizer.Unknown)
         elif avatarType.getBoss():
             name = random.choice(PLocalizer.BossNames[avatarType.faction][avatarType.track][avatarType.id])
+
         npc.setName(name)
 
         # Set starting state info
@@ -172,7 +183,7 @@ class SpawnNodeBase:
             npc.zoneId, locationName, npc.getPos(), npc.doId))
 
         if avatarType.getBoss():
-            print('Spawning boss %s (%s) on %s!' % (npc.getName(), self.objKey, locationName))
+            self.notify.debug('Spawning boss %s (%s) on %s!' % (npc.getName(), self.objKey, locationName))
 
         return Task.done
 
@@ -306,6 +317,7 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
     def getSpawnNodesFromType(self, type):
         if type not in self.spawnNodes:
             return []
+
         return self.spawnNodes[type]
 
     def getSpawnNodeFromTypeAndKey(self, type, key):
@@ -315,16 +327,19 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
             if spawn.objkey == key:
                 found = spawn
                 break
+
         return found
 
     def removeSpawnNode(self, type, spawnNode):
         if not type in self.spawnNodes:
             return
+
         self.spawnNodes[type].remove(spawnNode)
 
     def __registerSpawnNode(self, type, spawnNode):
         if not self.getSpawnNodesFromType(type):
             self.spawnNodes[type] = []
+
         self.spawnNodes[type].append(spawnNode)
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic):
