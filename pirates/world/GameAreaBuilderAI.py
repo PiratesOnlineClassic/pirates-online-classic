@@ -24,7 +24,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             newObj = self.__createSearchableContainer(parent, parentUid, objKey, objectData)
         elif objType == 'Dinghy' and self.wantDinghys:
             newObj = self.__createDinghy(parent, parentUid, objKey, objectData)
-        elif objType in ['Animal', 'Townsperson', 'Spawn Node', 'Dormant NPC Spawn Node', 'Skeleton', 'NavySailor', 'Creature', 'Ghost']:
+        elif objType in ['Animal', 'Townsperson', 'Spawn Node', 'Dormant NPC Spawn Node', 'Skeleton', 'NavySailor', 'Creature']:
             newObj = self.air.spawner.createObject(objType, objectData, parent, parentUid, objKey, dynamic)
         elif objType == 'Object Spawn Node' and self.wantSpawnNodes:
             newObj = self.__createObjectSpawnNode(parent, parentUid, objKey, objectData)
