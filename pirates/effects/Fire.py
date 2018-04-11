@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.Fire
 import random
 
 from direct.actor import Actor
@@ -11,7 +7,6 @@ from EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesgui.GameOptions import Options
 from PooledEffect import PooledEffect
-
 
 class Fire(PooledEffect, EffectController):
     __module__ = __name__
@@ -38,8 +33,7 @@ class Fire(PooledEffect, EffectController):
         self.effectScale = 1.0
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1')
-        self.p0.setPoolSize(96)
+        self.p0 = Particles.Particles('particles-1', 96)
         self.p0.setBirthRate(0.01)
         self.p0.setLitterSize(4)
         self.p0.setFactory('ZSpinParticleFactory')
@@ -125,4 +119,3 @@ class Fire(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\Fire.pyc

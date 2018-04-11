@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.GroundFog
 import random
 
 from direct.actor import Actor
@@ -12,7 +8,6 @@ from EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.GameOptions import Options
-
 
 class GroundFog(EffectController, NodePath):
     __module__ = __name__
@@ -81,4 +76,3 @@ class GroundFog(EffectController, NodePath):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.setPoolSize, 128.0), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(4.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
-# okay decompiling .\pirates\effects\GroundFog.pyc

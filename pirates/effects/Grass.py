@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.Grass
 import math
 import os
 import pickle
@@ -22,7 +18,6 @@ GrassProfiles = {'models/islands/bilgewater_zero': 'bilgewaterGrass.dat', 'model
 
 def HasGrass(modelPath):
     return GrassProfiles.get(modelPath)
-
 
 class Grass(DirectObject, NodePath):
     __module__ = __name__
@@ -47,8 +42,6 @@ class Grass(DirectObject, NodePath):
                 self.setLight(todMgr.grassLight)
                 self.setLight(todMgr.alight)
 
-        return
-
     def destroy(self):
         print 'deleting grass'
         self.stop()
@@ -56,9 +49,7 @@ class Grass(DirectObject, NodePath):
         del self.clumps
 
     def createActor(self):
-        models = [
-         (
-          loader.loadModelCopy('models/vegetation/Grass_huge_zero'), 'models/vegetation/Grass_huge_idle', 1.0)]
+        models = [(loader.loadModelCopy('models/vegetation/Grass_huge_zero'), 'models/vegetation/Grass_huge_idle', 1.0)]
         ga = Actor.Actor()
         model, anim, scale = random.choice(models)
         ga.loadModel(model)
@@ -90,7 +81,6 @@ class Grass(DirectObject, NodePath):
             clump = self.clumps.pop()
             clump.loop('idle')
             return clump
-        return
 
     def getNumClumpsAvailable(self):
         return len(self.clumps)
@@ -135,8 +125,7 @@ class Grass(DirectObject, NodePath):
         row = int(avPos[0] - self._minX) / self._dx
         col = int(avPos[1] - self._minY) / self._dx
         index = int(col * self._numDivX + row)
-        return (
-         index, row, col)
+        return (index, row, col)
 
     def placeAllClumps(self):
         for sampleIndex in self.sampleDict.keys()[0:20]:
@@ -226,4 +215,3 @@ class Grass(DirectObject, NodePath):
             lowFreq = 3.0 * math.sin(0.1 * math.pi * t) + 3.0
             p = hiFreq + lowFreq
             clump.setP(p)
-# okay decompiling .\pirates\effects\Grass.pyc
