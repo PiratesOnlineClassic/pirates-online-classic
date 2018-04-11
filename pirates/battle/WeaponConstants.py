@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.WeaponConstants
 AC_COMBAT = 1
 AC_MISSILE = 2
 AC_MAGIC = 3
@@ -85,4 +81,3 @@ VFX_DESOLATION = 35
 VFX_SOULFLAY = 36
 VFX_HELLFIRE = 37
 VFX_TONIC = 38
-# okay decompiling .\pirates\battle\WeaponConstants.pyc

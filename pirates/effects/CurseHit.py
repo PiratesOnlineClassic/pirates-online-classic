@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.CurseHit
 import random
 
 from direct.interval.IntervalGlobal import *
@@ -26,14 +22,13 @@ class CurseHit(PooledEffect, EffectController):
             CurseHit.particleDummy.setDepthWrite(0)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1')
+        self.p0 = Particles.Particles('particles-1', 256)
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereSurfaceEmitter')
         self.f.addParticles(self.p0)
 
     def createTrack(self, rate=1):
-        self.p0.setPoolSize(256)
         self.p0.setBirthRate(0.01)
         self.p0.setLitterSize(5)
         self.p0.setLitterSpread(0)
@@ -81,4 +76,3 @@ class CurseHit(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\CurseHit.pyc

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.WispSpiral
 import random
 
 from direct.actor import Actor
@@ -11,7 +7,6 @@ from EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from PooledEffect import PooledEffect
-
 
 class WispSpiral(PooledEffect, EffectController):
     __module__ = __name__
@@ -62,4 +57,3 @@ class WispSpiral(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\WispSpiral.pyc
