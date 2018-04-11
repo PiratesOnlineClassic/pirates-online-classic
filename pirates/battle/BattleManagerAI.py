@@ -48,8 +48,6 @@ class BattleManagerAI(BattleManagerBase):
             self.notify.warning('Cannot calculate targeted skill, unknown weapon skill result was found, %d!' % (
                 skillResult))
 
-            return
-
         return [skillId, ammoSkillId, skillResult, target.doId, areaIdList, attackerEffects, targetEffects,
             areaIdEffects, timestamp, pos, charge]
 
