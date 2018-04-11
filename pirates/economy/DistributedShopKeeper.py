@@ -161,14 +161,15 @@ class DistributedShopKeeper:
         else:
             self.shopCoin.setScale(2.5)
             self.shopCoin.setPos(0.0, 0.0, 3.5)
-        self.shopCoin.reparentTo(self.getNameText())
-        self.shopCoinGlow.reparentTo(self.nametag.getNameIcon())
-        if not self.nametagIcon:
-            self.shopCoinGlow.setScale(20.0)
-            self.shopCoinGlow.setPos(0, -0.05, 3.0)
-        else:
-            self.shopCoinGlow.setScale(15.0)
-            self.shopCoinGlow.setPos(0, -0.05, 6.5)
+        if self.shopCoin:
+            self.shopCoin.reparentTo(self.getNameText())
+            self.shopCoinGlow.reparentTo(self.nametag.getNameIcon())
+            if not self.nametagIcon:
+                self.shopCoinGlow.setScale(20.0)
+                self.shopCoinGlow.setPos(0, -0.05, 3.0)
+            else:
+                self.shopCoinGlow.setScale(15.0)
+                self.shopCoinGlow.setPos(0, -0.05, 6.5)
 
     def disable(self):
         DistributedShopKeeper.notify.debug('disable(%s)' % self.doId)
