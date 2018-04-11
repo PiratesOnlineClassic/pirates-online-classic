@@ -71,7 +71,6 @@ class SpawnNodeBase:
         taskMgr.doMethodLater(5, self.__respawn, 'perform-respawn-%s' % self.objKey)
 
     def __respawn(self, task):
-        print(self._npc)
         if not self._npc:
             self.notify.warning('Attempted to perform respawn on a %s without a npc!' % self.__class__.__name__)
             return
@@ -344,7 +343,7 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         if objType not in spawnClasses:
             self.notify.warning('Received unknown generate: %s' % objType)
             return
-        
+
         spawnClass = spawnClasses[objType]
         spawnNode = spawnClass(self, objType, objectData, parent, objKey)
         self.__registerSpawnNode(objType, spawnNode)
