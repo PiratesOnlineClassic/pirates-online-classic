@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.Wand
 import random
 
 import Weapon
@@ -10,7 +6,6 @@ from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
 from pirates.effects.RayGlow import RayGlow
 from pirates.uberdog.UberDogGlobals import InventoryType
-
 
 class Wand(Weapon.Weapon):
     __module__ = __name__
@@ -47,7 +42,6 @@ class Wand(Weapon.Weapon):
         self.chargeSoundSequence = None
         self.gem = None
         self.fadePulse = None
-        return
 
     def delete(self):
         self.stopChargeEffect()
@@ -58,7 +52,6 @@ class Wand(Weapon.Weapon):
         self.prop.reparentTo(self)
 
     def getDrawIval(self, av, ammoSkillId=0, blendInT=0.1, blendOutT=0):
-
         def playSfx():
             base.playSfx(self.unsheathSfx, node=self)
 
@@ -102,7 +95,6 @@ class Wand(Weapon.Weapon):
         if self.gem and not self.gem.isEmpty():
             self.gem.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MNone))
             self.gem.clearColorScale()
-        return
 
     @classmethod
     def setupSounds(cls):
@@ -136,115 +128,86 @@ class Wand(Weapon.Weapon):
         Wand.desolationHitSfx = loader.loadSfx('audio/sfx_wand_desolation_impact.mp3')
         Wand.unsheathSfx = loader.loadSfx('audio/sword-unsheath.mp3')
 
-
 def getSoulflayChargeSfx():
     return Wand.soulflayChargeSfx
-
 
 def getPestilenceChargeSfx():
     return Wand.pestilenceChargeSfx
 
-
 def getWitherChargeSfx():
     return Wand.witherChargeSfx
-
 
 def getHellfireChargeSfx():
     return Wand.hellfireChargeSfx
 
-
 def getBanishChargeSfx():
     return Wand.banishChargeSfx
-
 
 def getDesolationChargeSfx():
     return Wand.desolationChargeSfx
 
-
 def getSoulflayHoldSfx():
     return Wand.soulflayHoldSfx
-
 
 def getPestilenceHoldSfx():
     return Wand.pestilenceHoldSfx
 
-
 def getWitherHoldSfx():
     return Wand.witherHoldSfx
-
 
 def getHellfireHoldSfx():
     return Wand.hellfireHoldSfx
 
-
 def getBanishHoldSfx():
     return Wand.banishHoldSfx
-
 
 def getDesolationHoldSfx():
     return Wand.desolationHoldSfx
 
-
 def getBlastFireSfx():
     return Wand.blastFireSfx
-
 
 def getSoulflayFireSfx():
     return Wand.soulflayFireSfx
 
-
 def getPestilenceFireSfx():
     return Wand.pestilenceFireSfx
-
 
 def getWitherFireSfx():
     return Wand.witherFireSfx
 
-
 def getHellfireFireSfx():
     return Wand.hellfireFireSfx
-
 
 def getBanishFireSfx():
     return Wand.banishFireSfx
 
-
 def getDesolationFireSfx():
     return Wand.desolationFireSfx
-
 
 def getBlastHitSfx():
     return Wand.blastHitSfx
 
-
 def getSoulflayHitSfx():
     return Wand.soulflayHitSfx
-
 
 def getPestilenceHitSfx():
     return Wand.pestilenceHitSfx
 
-
 def getWitherHitSfx():
     return Wand.witherHitSfx
-
 
 def getHellfireHitSfx():
     return Wand.hellfireHitSfx
 
-
 def getBanishHitSfx():
     return Wand.banishHitSfx
-
 
 def getDesolationHitSfx():
     return Wand.desolationHitSfx
 
-
 def getChargeSfx():
     return Wand.chargeSfx
 
-
 def getChargeLoopSfx():
     return Wand.chargeLoopSfx
-# okay decompiling .\pirates\battle\Wand.pyc

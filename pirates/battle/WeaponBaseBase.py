@@ -4,7 +4,6 @@ import WeaponGlobals
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals, TeamUtils
 
-
 class WeaponBaseBase:
     __module__ = __name__
     areaCollisionsCreated = 0
@@ -121,16 +120,12 @@ class WeaponBaseBase:
         areaShape = WeaponGlobals.getAttackAreaShape(skillId, ammoSkillId)
         if areaShape == WeaponGlobals.AREA_SPHERE:
             self.runSphereAreaCollisions(skillId, ammoSkillId, target, pos)
-        else:
-            if areaShape == WeaponGlobals.AREA_TUBE:
-                self.runTubeAreaCollisions(skillId, ammoSkillId, target, pos)
-            else:
-                if areaShape == WeaponGlobals.AREA_CONE:
-                    self.runConeAreaCollisions(skillId, ammoSkillId, target, pos)
-                else:
-                    if areaShape == WeaponGlobals.AREA_OFF:
-                        return targets
-
+        elif areaShape == WeaponGlobals.AREA_TUBE:
+            self.runTubeAreaCollisions(skillId, ammoSkillId, target, pos)
+        elif areaShape == WeaponGlobals.AREA_CONE:
+            self.runConeAreaCollisions(skillId, ammoSkillId, target, pos)
+        elif areaShape == WeaponGlobals.AREA_OFF:
+            return targets
         numEntries = self.areaCollQueue.getNumEntries()
         if numEntries == 0:
             return targets

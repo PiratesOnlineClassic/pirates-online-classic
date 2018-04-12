@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.Bayonet
 import random
 
 import Weapon
@@ -10,11 +6,9 @@ from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
 from pirates.uberdog.UberDogGlobals import InventoryType
 
-
 def beginInterrupt(av):
     if av.isLocal():
         messenger.send('skillFinished')
-
 
 class Bayonet(Weapon.Weapon):
     __module__ = __name__
@@ -62,8 +56,7 @@ class Bayonet(Weapon.Weapon):
     def getAnimState(self, animState):
         if animState == 'LandRoam':
             return 'BayonetLandRoam'
-        else:
-            return animState
+        return animState
 
     @classmethod
     def setupSounds(cls):
@@ -71,31 +64,22 @@ class Bayonet(Weapon.Weapon):
         Bayonet.aimSfxs = (None, )
         Bayonet.gunCockSfxs = (None, )
         Bayonet.reloadSfxs = (None, )
-        Bayonet.missSfxs = (
-         loader.loadSfx('audio/whoosh-10.mp3'), loader.loadSfx('audio/arm-Whoosh-05.mp3'))
-        return
-
+        Bayonet.missSfxs = (loader.loadSfx('audio/whoosh-10.mp3'), loader.loadSfx('audio/arm-Whoosh-05.mp3'))
 
 def getShootSfx():
     return Bayonet.hitSfxs
 
-
 def getHitSfx():
     return Bayonet.hitSfxs
-
 
 def getMissSfx():
     return Bayonet.missSfxs
 
-
 def getAimSfx():
     return Bayonet.aimSfxs
-
 
 def getReloadSfx():
     return Bayonet.reloadSfxs
 
-
 def getGunCockSfx():
     return Bayonet.gunCockSfxs
-# okay decompiling .\pirates\battle\Bayonet.pyc

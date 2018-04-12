@@ -1,9 +1,4 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.friends.FriendInfo
 from otp.avatar.AvatarHandle import AvatarHandle
-
 
 class FriendInfo(AvatarHandle):
     __module__ = __name__
@@ -25,15 +20,13 @@ class FriendInfo(AvatarHandle):
     def getName(self):
         if self.avatarName:
             return self.avatarName
+        elif self.playerName:
+            return self.playerName
         else:
-            if self.playerName:
-                return self.playerName
-            else:
-                return ''
+            return ''
 
     def isUnderstandable(self):
         return self.understandableYesNo
 
     def isOnline(self):
         return self.onlineYesNo
-# okay decompiling .\otp\friends\FriendInfo.pyc

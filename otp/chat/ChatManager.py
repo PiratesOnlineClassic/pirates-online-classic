@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.chat.ChatManager
 import string
 import sys
 
@@ -9,8 +5,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State
 from direct.gui.DirectGui import *
 from direct.showbase import DirectObject
-from otp.login import (LeaveToPayDialog, PrivacyPolicyPanel,
-                       SecretFriendsInfoPanel)
+from otp.login import (LeaveToPayDialog, PrivacyPolicyPanel, SecretFriendsInfoPanel)
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from pandac.PandaModules import *
 
@@ -27,18 +22,15 @@ ThoughtPrefix = '.'
 def isThought(message):
     if len(message) == 0:
         return 0
-    else:
-        if string.find(message, ThoughtPrefix, 0, len(ThoughtPrefix)) >= 0:
-            return 1
-        else:
-            return 0
+    elif string.find(message, ThoughtPrefix, 0, len(ThoughtPrefix)) >= 0:
+        return 1
+    return 0
 
 
 def removeThoughtPrefix(message):
     if isThought(message):
         return message[len(ThoughtPrefix):]
-    else:
-        return message
+    return message
 
 
 class ChatManager(DirectObject.DirectObject):
@@ -90,7 +82,6 @@ class ChatManager(DirectObject.DirectObject):
          State.State('whiteListAvatarChat', self.enterWhiteListAvatarChat, self.exitWhiteListAvatarChat),
          State.State('whiteListPlayerChat', self.enterWhiteListPlayerChat, self.exitWhiteListPlayerChat)], 'off', 'off')
         self.fsm.enterInitialState()
-        return
 
     def delete(self):
         self.ignoreAll()
@@ -135,7 +126,6 @@ class ChatManager(DirectObject.DirectObject):
             self.problemActivatingChat = None
         del self.localAvatar
         del self.cr
-        return
 
     def obscure(self, normal, sc):
         self.__scObscured = sc
@@ -146,8 +136,7 @@ class ChatManager(DirectObject.DirectObject):
             self.normalButton.hide()
 
     def isObscured(self):
-        return (
-         self.__normalObscured, self.__scObscured)
+        return (self.__normalObscured, self.__scObscured)
 
     def stop(self):
         self.fsm.request('off')
@@ -327,9 +316,7 @@ class ChatManager(DirectObject.DirectObject):
             elif online and chatToToon:
                 if self.wantBackgroundFocus:
                     self.chatInputNormal.chatEntry['backgroundFocus'] = 1
-                self.acceptOnce('enterNormalChat', self.fsm.request, [
-                 'whisperChat', [avatarName, avatarId]])
-        return
+                self.acceptOnce('enterNormalChat', self.fsm.request, ['whisperChat', [avatarName, avatarId]])
 
     def disablewhisperButton(self):
         pass
@@ -415,13 +402,11 @@ class ChatManager(DirectObject.DirectObject):
             self.leaveToPayDialog = LeaveToPayDialog.LeaveToPayDialog(self.paidNoParentPassword)
             self.leaveToPayDialog.setCancel(self.__handleLeaveToPayCancel)
         self.leaveToPayDialog.show()
-        return
 
     def exitLeaveToPayDialog(self):
         if self.leaveToPayDialog:
             self.leaveToPayDialog.destroy()
             self.leaveToPayDialog = None
-        return
 
     def enterUnpaidChatWarning(self):
         self.notify.error('called enterUnpaidChatWarning() on parent class')
@@ -475,13 +460,11 @@ class ChatManager(DirectObject.DirectObject):
             self.chatPrivacyPolicy = PrivacyPolicyPanel.PrivacyPolicyPanel('privacyPolicyDone')
         self.chatPrivacyPolicy.show()
         self.accept('privacyPolicyDone', self.__privacyPolicyDone)
-        return
 
     def exitChatPrivacyPolicy(self):
         cleanupDialog('privacyPolicyDialog')
         self.chatPrivacyPolicy = None
         self.ignore('privacyPolicyDone')
-        return
 
     def enterSecretChatActivated(self):
         self.notify.error('called enterSecretChatActivated() on parent class')
@@ -503,4 +486,3 @@ class ChatManager(DirectObject.DirectObject):
 
     def __privacyPolicyDone(self):
         self.fsm.request('activateChat')
-# okay decompiling .\otp\chat\ChatManager.pyc

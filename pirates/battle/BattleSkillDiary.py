@@ -1,10 +1,5 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.BattleSkillDiary
 from pirates.battle import WeaponGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-
 
 class BattleSkillDiary:
     __module__ = __name__
@@ -74,12 +69,10 @@ class BattleSkillDiary:
         timeSpent = self.getTimeSpentRecharging(skillId)
         if timeSpent is None:
             return 0.0
+        elif timeSpent >= timeRequired:
+            return 0.0
         else:
-            if timeSpent >= timeRequired:
-                return 0.0
-            else:
-                return timeRequired - timeSpent
-        return
+            return timeRequired - timeSpent
 
     def canUseSkill(self, skillId, ammoSkillId, tolerance=0.0):
         timeRequired = self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId, ammoSkillId)
@@ -88,15 +81,13 @@ class BattleSkillDiary:
         timeSpent = self.getTimeSpentRecharging(skillId)
         if timeSpent is None:
             return 1
+        elif timeSpent + tolerance >= timeRequired:
+            return 1
         else:
-            if timeSpent + tolerance >= timeRequired:
+            if skillId == InventoryType.CannonShoot:
                 return 1
             else:
-                if skillId == InventoryType.CannonShoot:
-                    return 1
-                else:
-                    return 0
-        return
+                return 0
 
     def __str__(self):
         s = 'BattleSkillDiary\n'
@@ -108,6 +99,3 @@ class BattleSkillDiary:
             timeStamp = details[2]
             remaining = self.getTimeRemaining(skillId)
             s += ' %s (%s): %s, dt=%f, t=%f, remaining=%f (s)\n' % (skillName, skillId, state, dt, timeStamp, remaining)
-
-        return s
-# okay decompiling .\pirates\battle\BattleSkillDiary.pyc

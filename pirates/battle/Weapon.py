@@ -6,7 +6,6 @@ from direct.showbase.DirectObject import *
 from pandac.PandaModules import *
 from pirates.effects.SmokeCloud import SmokeCloud
 
-
 class Weapon(NodePath):
     __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('Weapon')
@@ -49,8 +48,7 @@ class Weapon(NodePath):
         pass
 
     def getWalkForWeapon(self, av):
-        return [
-         self.walkAnim, self.runAnim, self.walkBackAnim, self.neutralAnim, self.strafeLeftAnim, self.strafeRightAnim, self.strafeDiagLeftAnim, self.strafeDiagRightAnim, self.strafeRevDiagLeftAnim, self.strafeRevDiagRightAnim, self.fallGroundAnim, self.fallWaterAnim, self.spinLeftAnim, self.spinRightAnim]
+        return [self.walkAnim, self.runAnim, self.walkBackAnim, self.neutralAnim, self.strafeLeftAnim, self.strafeRightAnim, self.strafeDiagLeftAnim, self.strafeDiagRightAnim, self.strafeRevDiagLeftAnim, self.strafeRevDiagRightAnim, self.fallGroundAnim, self.fallWaterAnim, self.spinLeftAnim, self.spinRightAnim]
 
     def getAutoAttackIval(self, av, blendInT, blendOutT):
         return

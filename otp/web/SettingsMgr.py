@@ -1,11 +1,6 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.web.SettingsMgr
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.web.SettingsMgrBase import SettingsMgrBase
-
 
 class SettingsMgr(DistributedObjectGlobal, SettingsMgrBase):
     __module__ = __name__
@@ -20,7 +15,6 @@ class SettingsMgr(DistributedObjectGlobal, SettingsMgrBase):
                 self._scheduleChangedSettingRequest()
             self._crConnectEvent = self.cr.getConnectedEvent()
             self.accept(self._crConnectEvent, self._handleConnected)
-        return
 
     def _handleConnected(self):
         self._scheduleChangedSettingRequest()
@@ -45,4 +39,3 @@ class SettingsMgr(DistributedObjectGlobal, SettingsMgrBase):
             return
         self.notify.info('got setting change: %s -> %s' % (settingName, valueStr))
         self._changeSetting(settingName, valueStr)
-# okay decompiling .\otp\web\SettingsMgr.pyc

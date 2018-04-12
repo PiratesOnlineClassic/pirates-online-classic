@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.chat.ChatManagerV2
 import string
 import sys
 
@@ -10,11 +6,9 @@ from direct.fsm import ClassicFSM, State
 from direct.fsm.FSM import FSM
 from direct.gui.DirectGui import *
 from direct.showbase import DirectObject
-from otp.login import (LeaveToPayDialog, PrivacyPolicyPanel,
-                       SecretFriendsInfoPanel)
+from otp.login import (LeaveToPayDialog, PrivacyPolicyPanel, SecretFriendsInfoPanel)
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from pandac.PandaModules import *
-
 
 class ChatManagerV2(DirectObject.DirectObject):
     __module__ = __name__
@@ -51,7 +45,6 @@ class ChatManagerV2(DirectObject.DirectObject):
         self.accept('Chat-Failed open typed chat test', self.__handleFailOpenTypedChat)
         self.accept('Chat-Failed player typed chat test', self.__handleFailPlayerTypedWhsiper)
         self.accept('Chat-Failed avatar typed chat test', self.__handleFailAvatarTypedWhsiper)
-        return
 
     def delete(self):
         self.ignoreAll()
@@ -134,4 +127,3 @@ class ChatManagerV2(DirectObject.DirectObject):
 
     def exitLeaveToPayDialog(self):
         self.notify.error('called exitLeaveToPayDialog() on parent class')
-# okay decompiling .\otp\chat\ChatManagerV2.pyc
