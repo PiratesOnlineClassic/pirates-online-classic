@@ -59,27 +59,32 @@ class SpawnNodeBase:
         return self._npc
 
     def getAvatarType(self):
-        raise NotImplementedError('%s does not extend getAvatarType!' % self.__class__.__name__)
+        raise NotImplementedError('%s does not extend getAvatarType!' % \
+            self.__class__.__name__)
 
     def setNPCAttributes(self, npc):
         pass
 
     def getNPCClass(self, avatarType):
-        raise NotImplementedError('%s does not extend getNPCClass!' % self.__class__.__name__)
+        raise NotImplementedError('%s does not extend getNPCClass!' % \
+            self.__class__.__name__)
 
     def processDeath(self):
         if not self._npc:
-            self.notify.warning('Attempted to perform death on a %s without a npc!' % \
+            self.notify.debug('Attempted to perform death on a %s without a npc!' % \
                 self.__class__.__name__)
 
             return
 
+        self._npc.setIsKilled(True)
         self._npc.d_setGameState('Death')
-        taskMgr.doMethodLater(5, self.__respawn, 'perform-respawn-%s' % self.objKey)
+
+        taskMgr.doMethodLater(5, self.__respawn, 'perform-respawn-%s' % \
+            self.objKey)
 
     def __respawn(self, task):
         if not self._npc:
-            self.notify.warning('Attempted to perform respawn on a %s without a npc!' % \
+            self.notify.debug('Attempted to perform respawn on a %s without a npc!' % \
                 self.__class__.__name__)
             return
 
@@ -94,7 +99,8 @@ class SpawnNodeBase:
 
         #TODO: Is this a constant?
         spawnTimer = 20
-        taskMgr.doMethodLater(spawnTimer, self.__spawn, 'perform-spawn-%s' % self.objKey)
+        taskMgr.doMethodLater(spawnTimer, self.__spawn, 'perform-spawn-%s' % \
+            self.objKey)
 
         return task.done
 

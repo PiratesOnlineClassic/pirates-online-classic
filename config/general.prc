@@ -96,4 +96,4 @@ object-load-delay #f
 
 # Temporary:
 smooth-lag 0.4
-want-friendly-fire #t
+want-friendly-fire #f

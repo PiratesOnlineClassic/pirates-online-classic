@@ -13,6 +13,7 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         self.animSet = ''
         self.collisionMode = 0
         self.initZ = 0
+        self.isKilled = False
 
         self.spawnerNode = None
 
@@ -77,18 +78,14 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     def getInitZ(self):
         return self.initZ
 
-    def setSpawner(self, spawner):
-        self.spawnerNode = spawner
+    def setIsKilled(self, isKilled):
+        self.isKilled = isKilled
 
-    def setHp(self, hp, quietly=False):
-        DistributedBattleAvatarAI.setHp(self, hp, quietly)
+    def getIsKilled(self):
+        return self.isKilled
 
-        # Tell the spawner we have perished!
-        if hp <= 0:
-            if not self.spawnerNode:
-                self.notify.warning('%s died without a spawner node to respawn!' % \
-                    self.__class__.__name__)
+    def setSpawner(self, spawnerNode):
+        self.spawnerNode = spawnerNode
 
-                return
-
-            self.spawnerNode.processDeath()
+    def getSpawner(self):
+        return self.spawnerNode

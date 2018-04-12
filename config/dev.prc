@@ -27,4 +27,4 @@ visualize-cartesian-grid #f
 want-low-end-water #t
 
 # Weapons:
-instant-skill-recharge #t
+instant-skill-recharge #f

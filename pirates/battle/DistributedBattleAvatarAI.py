@@ -106,7 +106,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         return self.maxHp
 
     def setHp(self, hp, quietly=False):
-        self.hp = hp
+        self.hp = hp if hp >= 0 else 0
         self.quietly = quietly
 
     def d_setHp(self, hp, quietly=False):

@@ -8,7 +8,6 @@ from pirates.piratesbase import TeamUtils
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 class BattleManager(BattleManagerBase.BattleManagerBase):
-    __module__ = __name__
 
     def __init__(self, cr):
         self.cr = cr
@@ -16,9 +15,10 @@ class BattleManager(BattleManagerBase.BattleManagerBase):
 
     def targetInRange(self, attacker, target, skillId, ammoSkillId, pos):
         tolerance = 0
-        range = self.getModifiedAttackRange(attacker, skillId, ammoSkillId)
-        if range == WeaponGlobals.INF_RANGE:
-            return 1
+        attackRange = self.getModifiedAttackRange(attacker, skillId, ammoSkillId)
+        if attackRange == WeaponGlobals.INF_RANGE:
+            return False
+
         distance = attacker.getDistance(target)
         if hasattr(target, 'battleTubeNodePaths'):
             for tube in target.battleTubeNodePaths:
@@ -26,9 +26,10 @@ class BattleManager(BattleManagerBase.BattleManagerBase):
                 if distance - tubeLength < distance:
                     distance -= tubeLength
 
-        if distance <= range + tolerance:
-            return 1
-        return 0
+        if distance <= attackRange + tolerance:
+            return True
+
+        return True
 
     def doAttack(self, attacker, skillId, ammoSkillId, targetId, areaIdList, pos, combo=0, charge=0):
         attacker.battleRandom.advanceAttackSeed()

@@ -1,12 +1,11 @@
+
 class CrewStatus:
-    __module__ = __name__
     ADMIRAL = 1
     CAPTAIN = 2
     MEMBER = 3
 
 
 class GuildStatus:
-    __module__ = __name__
     INVITED = -2
     APPLICANT = -1
     NOT_IN_GUILD = 0
@@ -15,7 +14,6 @@ class GuildStatus:
 
 
 class GiftOrigin:
-    __module__ = __name__
     _BEGIN_VALUE = 0
     MAGIC_WORD = 0
     COMBAT = 1
@@ -39,7 +37,6 @@ class GiftOrigin:
 
 
 class TradeStatus:
-    __module__ = __name__
     ACTIVE = 1
     APPROVED = 2
     DISAPPROVED = 3
@@ -47,7 +44,6 @@ class TradeStatus:
 
 
 class InventoryCategory:
-    __module__ = __name__
     _BEGIN_CATEGORY = 0
     BAD_CATEGORY = 0
     MONEY = 1000
@@ -110,7 +106,6 @@ class InventoryCategory:
 
 
 class InventoryType:
-    __module__ = __name__
     begin_Money = 10000
     GoldInPocket = 10000
     GoldWagered = 10001
@@ -784,7 +779,6 @@ def getNumRespecType(weaponRep):
 
 
 class InventoryId:
-    __module__ = __name__
     CATEGORY = 1
     BOOLEAN = 2
     STACK = 4
