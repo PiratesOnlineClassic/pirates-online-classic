@@ -200,40 +200,40 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             WeaponGlobals.WEAPON_MOVIE_STOP, avatar.doId)
 
         self.b_setCurrentWeapon(currentWeaponId, isWeaponDrawn)
-        
+
     def requestCurrentAmmo(self, skillId):
         pass
-        
+
     def requestUseSkill(self, skillId, index):
         pass
-        
+
     def requestDeployShip(self, shipId):
         pass
-        
+
     def requestReturnShip(self, shipId):
         pass
 
     def setCurseStatus(self, curseStat):
         pass
-        
+
     def sendClothingMessage(self, clothingId, colorId):
         self.sendUpdate("sendClothingMessage", [clothingId, colorId])
-        
+
     def sendLootMessage(self, lootId):
         self.sendUpdate("sendLootMessage", [lootId])
-        
+
     def sendCardMessage(self, cardId):
         self.sendUpdate("sendCardMessage", [cardId])
-        
+
     def sendWeaponMessage(self, weapon):
         self.sendUpdate("sendWeaponMessage", [weapon])
-        
+
     def sendJewelryMessage(self, jewelryUID):
         self.sendUpdate("sendJewelryMessage", [jewelryUID])
-        
+
     def sendTattooMessage(self, tattooUID):
         self.sendUpdate("sendTattooMessage", [tattooUID])
-        
+
     def sendReputationMessage(self, targetId, categories, reputationList, basicPenalty, crewBonus, doubleXPBonus, holidayBonus):
         self.sendUpdate("sendReputationMessage", [targetId, categories, reputationList, basicPenalty, crewBonus, doubleXPBonus, holidayBonus])
 
@@ -401,3 +401,8 @@ def mojo(mojo):
 def maxMojo(maxMojo):
     spellbook.getTarget().b_setMaxMojo(maxMojo)
     return "Your maxMojo has been set to %d." % maxMojo
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def level(level):
+    spellbook.getTarget().b_setLevel(level)
+    return "Your level has been set to %d." % level
