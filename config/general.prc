@@ -70,6 +70,10 @@ textures-auto-power-2 #t
 lock-to-one-cpu #f
 lock-to-one-core #f
 
+# Animations:
+anim-blend-type normalized_linear
+interpolate-frames #t
+
 # Tutorial:
 skip-tutorial #f
 force-tutorial #f
