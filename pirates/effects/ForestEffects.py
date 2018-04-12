@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.ForestEffects
 import random
 
 from direct.task import Task
@@ -12,7 +8,6 @@ from pirates.effects.GroundFog import GroundFog
 from pirates.piratesbase import PiratesGlobals, TimeOfDayManager, TODGlobals
 from pirates.seapatch.Reflection import Reflection
 from pirates.swamp.Swamp import Swamp
-
 
 class ForestEffects(EnvironmentEffects.EnvironmentEffects):
     __module__ = __name__
@@ -29,7 +24,6 @@ class ForestEffects(EnvironmentEffects.EnvironmentEffects):
         self.randomAnimalSoundFiles = ['phase_4/audio/sfx_jungle_birds_v1.mp3', 'phase_4/audio/sfx_jungle_birds_v2.mp3']
         self.randomSfx = []
         self.startEffects()
-        return
 
     def delete(self):
         del self.animActor
@@ -70,7 +64,6 @@ class ForestEffects(EnvironmentEffects.EnvironmentEffects):
             self.randomSfx.append(sfx)
 
         taskMgr.doMethodLater(self.RANDOM_SOUND_PERIOD, self.checkForRandomSound, name='checkForRandomSound-' + str(id(self)))
-        return
 
     def stopEffects(self):
         if hasattr(base, 'cr') and not hasattr(base.cr, 'isFake'):
@@ -87,7 +80,6 @@ class ForestEffects(EnvironmentEffects.EnvironmentEffects):
             sfx.stop()
 
         base.ambientMgr.requestFadeOut('jungle', duration=5, priority=1)
-        return
 
     def checkForRandomSound(self, task):
         randomSoundPlaying = False
@@ -115,4 +107,3 @@ class ForestEffects(EnvironmentEffects.EnvironmentEffects):
         if self.fireflies:
             return Task.cont
         return Task.done
-# okay decompiling .\pirates\effects\ForestEffects.pyc

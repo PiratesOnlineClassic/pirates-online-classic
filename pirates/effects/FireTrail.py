@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.FireTrail
 import random
 
 from direct.actor import Actor
@@ -10,7 +6,6 @@ from direct.particles import ForceGroup, ParticleEffect, Particles
 from EffectController import EffectController
 from pandac.PandaModules import *
 from PooledEffect import PooledEffect
-
 
 class FireTrail(PooledEffect, EffectController):
     __module__ = __name__
@@ -34,12 +29,11 @@ class FireTrail(PooledEffect, EffectController):
             FireTrail.particleDummy.setTwoSided(1)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1')
+        self.p0 = Particles.Particles('particles-1', 48)
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('PointEmitter')
         self.f.addParticles(self.p0)
-        self.p0.setPoolSize(48)
         self.p0.setBirthRate(0.1)
         self.p0.setLitterSize(1)
         self.p0.setLitterSpread(0)
@@ -79,7 +73,6 @@ class FireTrail(PooledEffect, EffectController):
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 1.0))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
-        return
 
     def loadGlow(self):
         if not self.glow and self.wantGlow:
@@ -116,7 +109,6 @@ class FireTrail(PooledEffect, EffectController):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Func(self.startPulseTrack))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.stopPulseTrack), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(6.0), self.endEffect)
-        return
 
     def cleanUpEffect(self):
         self.stopPulseTrack()
@@ -130,5 +122,3 @@ class FireTrail(PooledEffect, EffectController):
             self.glow = None
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-        return
-# okay decompiling .\pirates\effects\FireTrail.pyc

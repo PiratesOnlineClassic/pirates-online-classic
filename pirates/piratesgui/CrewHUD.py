@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.CrewHUD
 from direct.gui.DirectGui import *
 from direct.showbase.ShowBaseGlobal import *
 from pandac.PandaModules import *
@@ -56,7 +52,6 @@ class CrewHUD(SocialPage.SocialPage):
         self.accept('chatPanelOpen', self.chatPanelOpen)
         self.accept('chatPanelClose', self.chatPanelClose)
         self.chatPanelOpen = False
-        return
 
     def addCrew(self, member):
         avId = member.avatarId
@@ -83,18 +78,17 @@ class CrewHUD(SocialPage.SocialPage):
             skillFrameSea.setTransparency(1)
             self.crew[avId + self.debugCount] = [
              button, reloadFrame, skillFrame, buttonSea, reloadFrameSea, skillFrameSea]
+
         if self.debugAvId and self.debugCount < 11:
             print 'In CrewHUD Debug mode, generating debug button %s' % self.debugCount
             self.debugCount += 1
             self.addCrew(member)
-        return
 
     def removeCrew(self, member):
         avId = member.avatarId
         self.crew.pop(avId, None)
         self.membersList.removeMember(avId, None, PirateMemberList.MODE_CREW_HUD)
         self.membersListSea.removeMember(avId, None, PirateMemberList.MODE_CREW_HUD_SEA)
-        return
 
     def updateActionIcon(self, avId, action):
         skillFrameObj = self.crew.get(avId)
@@ -140,7 +134,6 @@ class CrewHUD(SocialPage.SocialPage):
                     skillFrameSea['image'] = self.weaponCard.find('**/%s' % newIcon)
                     skillFrameSea['image_scale'] = 0.035
             skillFrameSea['image_pos'] = (0, 0, 0.02)
-        return
 
     def updateAll(self, crewNearBy, actionList):
         for element in actionList:
@@ -214,14 +207,14 @@ class CrewHUD(SocialPage.SocialPage):
 
     def chatPanelClose(self):
         if hasattr(base, 'localAvatar'):
-            if base.localAvatar.guiMgr.crewHUDTurnedOff:
-                pass
-            elif self.chatPanelOpen:
-                self.setHUDOn()
-                self.chatPanelOpen = False
+            if base.localAvatar:
+                if base.localAvatar.guiMgr.crewHUDTurnedOff:
+                    pass
+                elif self.chatPanelOpen:
+                    self.setHUDOn()
+                    self.chatPanelOpen = False
 
     def updateCrewMemberHp(self, member, hp, maxHp):
         hudButton = self.crew.get(member.avatarId)
         if hudButton:
             hudButton[0].updateHp(hp, maxHp)
-# okay decompiling .\pirates\piratesgui\CrewHUD.pyc

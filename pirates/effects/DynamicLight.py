@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.DynamicLight
 import random
 
 from direct.interval.IntervalGlobal import *
@@ -46,26 +42,22 @@ class DynamicLight(NodePath):
         self.setHpr(hpr)
         if self.flicker:
             self.startFlickering()
-        return
 
     def setType(self, type, isInit=False):
         if self.type == type:
             return
         if type == DYN_LIGHT_AMBIENT:
             light = AmbientLight('AmbientLight')
+        elif type == DYN_LIGHT_DIRECTIONAL:
+            light = DirectionalLight('DirectionalLight')
+            self.stopFlickering()
+        elif type == DYN_LIGHT_POINT:
+            light = PointLight('PointLight')
+        elif type == DYN_LIGHT_SPOT:
+            light = Spotlight('Spotlight')
+            light.setExponent(self.baseExp)
         else:
-            if type == DYN_LIGHT_DIRECTIONAL:
-                light = DirectionalLight('DirectionalLight')
-                self.stopFlickering()
-            else:
-                if type == DYN_LIGHT_POINT:
-                    light = PointLight('PointLight')
-                else:
-                    if type == DYN_LIGHT_SPOT:
-                        light = Spotlight('Spotlight')
-                        light.setExponent(self.baseExp)
-                    else:
-                        return
+            return
         self.turnOff()
         self.type = type
         if isInit:
@@ -152,15 +144,13 @@ class DynamicLight(NodePath):
         self.flicker = flickering
         if flickering:
             self.startFlickering()
-        else:
-            self.stopFlickering()
+            return
+        self.stopFlickering()
 
     def turnOn(self):
         if self.light:
             render.setLight(self.lightNodePath)
             return self
-        else:
-            return
         return
 
     def turnOff(self):
@@ -169,8 +159,6 @@ class DynamicLight(NodePath):
                 self.stopFlickering()
             render.clearLight(self.lightNodePath)
             return self
-        else:
-            return
         return
 
     def canFlicker(self):
@@ -208,8 +196,6 @@ class DynamicLight(NodePath):
         if self.attenIval:
             self.attenIval.finish()
             self.attenIval = None
-        return
 
     def setFlickRate(self, flickRate):
         self.flickRate = flickRate
-# okay decompiling .\pirates\effects\DynamicLight.pyc

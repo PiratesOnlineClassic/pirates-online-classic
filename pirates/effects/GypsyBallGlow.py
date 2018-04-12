@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.GypsyBallGlow
 from direct.interval.IntervalGlobal import *
 from EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.GameOptions import Options
 from PooledEffect import PooledEffect
-
 
 class GypsyBallGlow(PooledEffect, EffectController):
     __module__ = __name__
@@ -32,7 +27,6 @@ class GypsyBallGlow(PooledEffect, EffectController):
         self.glowHalo.setColorScale(0.25, 0.2, 0.3, 0.75)
         self.fadeIval = None
         self.scaleIval = None
-        return
 
     def createTrack(self, lod=Options.SpecialEffectsHigh):
         self.glow.setColor(0.9, 0.85, 0.95, 0.95)
@@ -59,4 +53,3 @@ class GypsyBallGlow(PooledEffect, EffectController):
         self.glow.removeNode()
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\GypsyBallGlow.pyc

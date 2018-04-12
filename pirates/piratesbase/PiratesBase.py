@@ -24,6 +24,7 @@ from pirates.shipparts import TextureFlattenManager
 from otp.nametag.ChatBalloon import ChatBalloon
 from otp.nametag import NametagGlobals
 from otp.margins.MarginManager import MarginManager
+from otp.ai.MagicWordGlobal import *
 
 try:
     import embedded
@@ -792,3 +793,8 @@ class PiratesBase(OTPBase):
 
     def getHoliday(self, holidayId):
         return self.holidays.get(holidayId)
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def analyze():
+    render.analyze()
+    return "Analyzed the current scenegraph under render."

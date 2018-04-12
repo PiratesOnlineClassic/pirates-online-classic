@@ -9,25 +9,19 @@ class BattleManagerAI(BattleManagerBase):
     def __init__(self, air):
         self.air = air
 
-    def calculateTargetedSkill(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+    def useTargetedSkill(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+        if not avatar:
+            self.notify.debug('Cannot calculate targeted skill for unknown avatar!')
+            return None
+
+        if not target:
+            self.notify.debug('Cannot calculate targeted skill for avatar %d, unknown target!' % (
+                avatar.doId))
+
+            return None
+
         skillResult = self.willWeaponHit(avatar, target, skillId,
             ammoSkillId, charge)
-
-        attackerEffects = [
-            avatar.getHp()[0],
-            avatar.getPower(),
-            avatar.getLuck(),
-            avatar.getMojo(),
-            avatar.getSwiftness(),
-        ]
-
-        targetEffects = [
-            target.getHp()[0],
-            target.getPower(),
-            target.getLuck(),
-            target.getMojo(),
-            target.getSwiftness(),
-        ]
 
         timestamp = globalClockDelta.getRealNetworkTime(bits=32)
         distance = avatar.getDistance(target)
@@ -40,11 +34,43 @@ class BattleManagerAI(BattleManagerBase):
             targetEffects
         ]
 
-        target.b_setHp(target.getHp()[0] + targetEffects[0], True)
+        if skillResult == WeaponGlobals.RESULT_HIT:
+            self.__applyTargetEffects(target, targetEffects)
+        elif skillResult == WeaponGlobals.RESULT_MISS:
+            pass
+        elif skillResult == WeaponGlobals.RESULT_DODGE:
+            pass
+        elif skillResult == WeaponGlobals.RESULT_PARRY:
+            pass
+        elif skillResult == WeaponGlobals.RESULT_RESIST:
+            pass
+        else:
+            self.notify.debug('Cannot calculate targeted skill, unknown weapon skill result was found, %d!' % (
+                skillResult))
+
+            return None
+
+        return [skillId, ammoSkillId, skillResult, target.doId, areaIdList, attackerEffects, targetEffects,
+            areaIdEffects, timestamp, pos, charge]
+
+    def __applyTargetEffects(self, target, targetEffects):
+        if not target:
+            self.notify.debug('Cannot apply target effects for unknown target!')
+            return
+
+        target.b_setHp(target.getHp()[0] + targetEffects[0])
         target.b_setPower(target.getPower() + targetEffects[1])
         target.b_setLuck(target.getLuck() + targetEffects[2])
         target.b_setMojo(target.getMojo() + targetEffects[3])
         target.b_setSwiftness(target.getSwiftness() + targetEffects[4])
 
-        return [skillId, ammoSkillId, skillResult, target.doId, areaIdList, attackerEffects,
-            targetEffects, areaIdEffects, timestamp, pos, charge]
+    def __applyAttackerEffects(self, avatar, attackerEffects):
+        if not target:
+            self.notify.debug('Cannot apply attacker effects for unknown avatar!')
+            return
+
+        avatar.b_setHp(avatar.getHp()[0] + targetEffects[0])
+        avatar.b_setPower(avatar.getPower() + targetEffects[1])
+        avatar.b_setLuck(avatar.getLuck() + targetEffects[2])
+        avatar.b_setMojo(avatar.getMojo() + targetEffects[3])
+        avatar.b_setSwiftness(avatar.getSwiftness() + targetEffects[4])

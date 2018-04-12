@@ -70,7 +70,7 @@ class PlayGame(StateData.StateData):
 
         def initDefQuest(inventory):
             base.localAvatar.sendUpdate('giveDefaultQuest')
-            del self.pendingInitQuest
+            self.pendingInitQuest = None
 
         if base.localAvatar.style.getTutorial() == 0 and base.cr.forceTutorial == 0 and base.cr.skipTutorial == 1:
             self.pendingInitQuest = base.cr.relatedObjectMgr.requestObjects([base.localAvatar.getInventoryId()],

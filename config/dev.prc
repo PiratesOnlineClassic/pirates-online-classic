@@ -22,5 +22,8 @@ disable-blockers #t
 # Cartesian Grid:
 visualize-cartesian-grid #f
 
-# Water: 
+# Water:
 want-low-end-water #t
+
+# Weapons:
+instant-skill-recharge #t

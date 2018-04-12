@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.HomingMissile
 import random
 
 from direct.interval.IntervalGlobal import *
@@ -14,7 +10,6 @@ from pandac.PandaModules import *
 from pirates.effects import PolyTrail
 from pirates.piratesbase import PiratesGlobals
 from PooledEffect import PooledEffect
-
 
 class HomingMissile(PooledEffect, EffectController):
     __module__ = __name__
@@ -29,17 +24,14 @@ class HomingMissile(PooledEffect, EffectController):
         self.wantTrail = 1
         self.particleEffect = None
         self.motion_color = [Vec4(0.5, 0.6, 0.8, 1.0), Vec4(0.5, 0.6, 0.8, 1.0)]
-        vertex_list = [
-         Vec4(0.0, 1.0, 0.0, 1.0), Vec4(0.0, -1.0, 0.0, 1.0)]
+        vertex_list = [Vec4(0.0, 1.0, 0.0, 1.0), Vec4(0.0, -1.0, 0.0, 1.0)]
         self.motion_trail = PolyTrail.PolyTrail(None, vertex_list, self.motion_color, 1.5)
         self.motion_trail.reparentTo(self)
-        vertex_list = [
-         Vec4(1.0, 0.0, 0.0, 1.0), Vec4(-1.0, 0.0, 0.0, 1.0)]
+        vertex_list = [Vec4(1.0, 0.0, 0.0, 1.0), Vec4(-1.0, 0.0, 0.0, 1.0)]
         self.motion_trail2 = PolyTrail.PolyTrail(None, vertex_list, self.motion_color, 1.5)
         self.motion_trail2.reparentTo(self)
         self.motion_trail.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha))
         self.motion_trail2.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha))
-        return
 
     def createTrack(self):
         self.timeLeft = self.duration
@@ -89,4 +81,3 @@ class HomingMissile(PooledEffect, EffectController):
         taskMgr.remove(PythonUtil.uniqueName('homingMissileTask'))
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\HomingMissile.pyc

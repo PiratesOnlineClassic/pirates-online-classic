@@ -85,7 +85,10 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
         # Tell the spawner we have perished!
         if hp <= 0:
-            if self.spawnerNode:
-                self.spawnerNode.processDeath()
-            else:
-                self.notify.warning('%s died without a spawner node to respawn!' % self.__class__.__name__)
+            if not self.spawnerNode:
+                self.notify.warning('%s died without a spawner node to respawn!' % \
+                    self.__class__.__name__)
+
+                return
+
+            self.spawnerNode.processDeath()

@@ -67,8 +67,10 @@ class WeaponBaseBase:
     def __init__(self, avatar, repository):
         self.repository = repository
         self.avatar = avatar
-        if not hasattr(self.avatar, 'aimTubeNodePaths'):
-            self.avatar.aimTubeNodePaths = []
+
+        if self.avatar:
+            if not hasattr(self.avatar, 'aimTubeNodePaths'):
+                self.avatar.aimTubeNodePaths = []
 
     def delete(self):
         self.repository = None
@@ -122,16 +124,8 @@ class WeaponBaseBase:
             self.runTubeAreaCollisions(skillId, ammoSkillId, target, pos)
         elif areaShape == WeaponGlobals.AREA_CONE:
             self.runConeAreaCollisions(skillId, ammoSkillId, target, pos)
-        else:
-            if areaShape == WeaponGlobals.AREA_TUBE:
-                self.runTubeAreaCollisions(skillId, ammoSkillId, target, pos)
-            else:
-                if areaShape == WeaponGlobals.AREA_CONE:
-                    self.runConeAreaCollisions(skillId, ammoSkillId, target, pos)
-                else:
-                    if areaShape == WeaponGlobals.AREA_OFF:
-                        return targets
-
+        elif areaShape == WeaponGlobals.AREA_OFF:
+            return targets
         numEntries = self.areaCollQueue.getNumEntries()
         if numEntries == 0:
             return targets
@@ -174,5 +168,4 @@ class WeaponBaseBase:
             else:
                 continue
 
-        print 'getting area list of %s' % targets
         return targets

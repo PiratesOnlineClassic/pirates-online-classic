@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.DesolationSmoke
 import random
 
 from direct.actor import Actor
@@ -10,7 +6,6 @@ from direct.particles import ForceGroup, ParticleEffect, Particles
 from EffectController import EffectController
 from pandac.PandaModules import *
 from PooledEffect import PooledEffect
-
 
 class DesolationSmoke(PooledEffect, EffectController):
     __module__ = __name__
@@ -25,7 +20,7 @@ class DesolationSmoke(PooledEffect, EffectController):
         self.setLightOff()
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1')
+        self.p0 = Particles.Particles('particles-1', 128)
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('RingEmitter')
@@ -35,7 +30,6 @@ class DesolationSmoke(PooledEffect, EffectController):
         force0.setActive(1)
         f0.addForce(force0)
         self.f.addForceGroup(f0)
-        self.p0.setPoolSize(128)
         self.p0.setLitterSpread(1)
         self.p0.setSystemLifespan(0.0)
         self.p0.setLocalVelocityFlag(1)
@@ -89,4 +83,3 @@ class DesolationSmoke(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\DesolationSmoke.pyc

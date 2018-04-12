@@ -1,8 +1,3 @@
-# uncompyle6 version 3.1.0
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.14 (default, Mar  9 2018, 23:57:12) 
-# [GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2)]
-# Embedded file name: pirates.effects.FeastFire
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from pirates.piratesgui.GameOptions import Options
@@ -37,7 +32,6 @@ class FeastFire(NodePath):
             self._smoke.reparentTo(self)
         if self._feastSmoke:
             self._feastSmoke.reparentTo(self)
-        return
 
     def setCustomSettings(self):
         if self._fire:
@@ -89,7 +83,6 @@ class FeastFire(NodePath):
         if self.fireSfxIval:
             self.fireSfxIval.finish()
             self.fireSfxIval = None
-        return
 
     def startFarEffects(self):
         if self._feastSmoke:
@@ -113,7 +106,6 @@ class FeastFire(NodePath):
         if self.fireSfxIval:
             self.fireSfxIval.finish()
             self.fireSfxIval = None
-        return
 
     def destroy(self):
         if self._fire:
@@ -135,5 +127,3 @@ class FeastFire(NodePath):
         del self._smoke
         del self._feastSmoke
         del self.fireSfx
-        return
-# okay decompiling FeastFire.pyc

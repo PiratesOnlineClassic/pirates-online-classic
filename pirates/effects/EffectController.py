@@ -1,9 +1,4 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.EffectController
 from pandac.PandaModules import *
-
 
 class EffectController:
     __module__ = __name__
@@ -15,7 +10,6 @@ class EffectController:
         self.endEffect = None
         self.f = None
         self.p0 = None
-        return
 
     def createTrack(self):
         pass
@@ -27,7 +21,6 @@ class EffectController:
         self.f = None
         self.p0 = None
         self.removeNode()
-        return
 
     def cleanUpEffect(self):
         self.setPosHpr(0, 0, 0, 0, 0, 0)
@@ -62,7 +55,6 @@ class EffectController:
             self.endEffect.pause()
             self.endEffect = None
         self.cleanUpEffect()
-        return
 
     def finish(self):
         if self.track:
@@ -74,7 +66,6 @@ class EffectController:
         if self.endEffect:
             self.endEffect.pause()
             self.endEffect = None
-        return
 
     def startLoop(self, lod=None):
         if lod != None:
@@ -87,7 +78,6 @@ class EffectController:
             self.createTrack()
         if self.startEffect:
             self.startEffect.start()
-        return
 
     def stopLoop(self):
         if self.startEffect:
@@ -95,10 +85,8 @@ class EffectController:
             self.startEffect = None
         if self.endEffect and not self.endEffect.isPlaying():
             self.endEffect.start()
-        return
 
     def getTrack(self):
         if not self.track:
             self.createTrack()
         return self.track
-# okay decompiling .\pirates\effects\EffectController.pyc

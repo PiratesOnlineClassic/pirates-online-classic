@@ -55,6 +55,7 @@ class InventoryFSM(FSM):
 
         accumulators = [
             # Experience
+            [InventoryType.OverallRep, 0],
             [InventoryType.CutlassRep, 0],
             [InventoryType.PistolRep, 0],
             [InventoryType.DollRep, 0],
@@ -128,9 +129,10 @@ class InventoryFSM(FSM):
         self.manager.air.sendActivate(inventoryId, self.avatarId, OTP_ZONE_ID_MANAGEMENT, dclass=\
             self.manager.air.dclassesByName['PirateInventoryUD'])
 
+        self.callback(inventoryId)
+
         del self.manager.avatar2fsm[self.avatarId]
         self.demand('Off')
-        self.callback(inventoryId)
 
     def exitLoad(self):
         pass
