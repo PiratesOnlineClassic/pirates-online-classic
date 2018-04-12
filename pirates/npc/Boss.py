@@ -75,7 +75,7 @@ class Boss(BossBase):
         return EnemyGlobals.getEnemyScale(self, self._getBossModelScale())
 
     def addBossEffect(self, avType):
-        isUndead = (avType != AvatarTypes.Navy)
+        isUndead = not avType.isA(AvatarTypes.Navy)
         if not self.instanceNode:
             self.setupBoss(isUndead)
         color = Vec4(0.25, 0.8, 0.0, 1.0)
@@ -85,6 +85,8 @@ class Boss(BossBase):
         endScale = Vec3(1.15, 1.1, 1.01)
         self.effectIval = Sequence(LerpScaleInterval(self.instanceNode, 0.5, endScale, startScale=startScale), LerpScaleInterval(self.instanceNode, 0.5, startScale, startScale=endScale))
         self.effectIval.loop()
+        if not isUndead:
+            return
         self.bossEffect = BossEffect.getEffect()
         if self.bossEffect:
             self.bossEffect.reparentTo(self.effectsNode)
