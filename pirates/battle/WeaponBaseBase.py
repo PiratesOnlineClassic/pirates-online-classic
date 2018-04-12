@@ -168,5 +168,4 @@ class WeaponBaseBase:
             else:
                 continue
 
-        print 'getting area list of %s' % targets
         return targets
