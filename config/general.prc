@@ -66,6 +66,10 @@ basic-shaders-only #f
 driver-compress-textures #t
 textures-auto-power-2 #t
 
+# Performance:
+lock-to-one-cpu #f
+lock-to-one-core #f
+
 # Tutorial:
 skip-tutorial #f
 force-tutorial #f
@@ -88,5 +92,4 @@ object-load-delay #f
 
 # Temporary:
 smooth-lag 0.4
-
 want-friendly-fire #t

@@ -25,7 +25,7 @@ class WeaponBaseAI(WeaponBaseBase):
 
         for targetId in areaIdList:
 
-            if targetId is avatar.doId:
+            if targetId == avatar.doId:
                 continue
 
             target = self.air.doId2do.get(targetId)
