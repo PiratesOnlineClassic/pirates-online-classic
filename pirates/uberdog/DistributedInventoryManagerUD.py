@@ -55,6 +55,7 @@ class InventoryFSM(FSM):
 
         accumulators = [
             # Experience
+            [InventoryType.OverallRep, 0],
             [InventoryType.CutlassRep, 0],
             [InventoryType.PistolRep, 0],
             [InventoryType.DollRep, 0],
