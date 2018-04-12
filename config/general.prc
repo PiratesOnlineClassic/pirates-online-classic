@@ -74,6 +74,10 @@ basic-shaders-only #f
 driver-compress-textures #t
 textures-auto-power-2 #t
 
+# Animations:
+anim-blend-type normalized_linear
+interpolate-frames #t
+
 # Tutorial:
 skip-tutorial #f
 force-tutorial #f
