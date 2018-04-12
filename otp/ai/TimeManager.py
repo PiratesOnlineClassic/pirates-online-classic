@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 import time
 
 from direct.directnotify import DirectNotifyGlobal
@@ -13,7 +14,6 @@ from pandac.PandaModules import *
 
 
 class TimeManager(DistributedObject.DistributedObject):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('TimeManager')
     neverDisable = 1
 
@@ -21,7 +21,7 @@ class TimeManager(DistributedObject.DistributedObject):
         DistributedObject.DistributedObject.__init__(self, cr)
         self.updateFreq = base.config.GetFloat('time-manager-freq', 1800)
         self.minWait = base.config.GetFloat('time-manager-min-wait', 10)
-        self.maxUncertainty = base.config.GetFloat('time-manager-max-uncertainty', 1)
+        self.maxUncertainty = base.config.GetFloat('time-manager-max-uncertainty', 1.0)
         self.maxAttempts = base.config.GetInt('time-manager-max-attempts', 5)
         self.extraSkew = base.config.GetInt('time-manager-extra-skew', 0)
         if self.extraSkew != 0:
@@ -212,3 +212,27 @@ class TimeManager(DistributedObject.DistributedObject):
 
         self.sendUpdate('setFrameRate', [fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId, processMemory,
             pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed, numCpuCores, numLogicalCpus, apiName])
+
+    def getMacOsInfo(self, defaultOsInfo):
+        result = defaultOsInfo
+        try:
+            theFile = open('/System/Library/CoreServices/SystemVersion.plist')
+        except IOError:
+            pass
+
+        key = re.search('<key>ProductUserVisibleVersion</key>\\s*' + '<string>(.*?)</string>', theFile.read())
+        theFile.close()
+        if key is not None:
+            try:
+                verString = key.group(1)
+                parts = verString.split('.')
+                major = int(parts[0])
+                minor = int(parts[1])
+                bugfix = int(parts[2])
+                result = (
+                 sys.platform, bugfix, major, minor)
+            except Exception, e:
+                self.notify.debug('getMacOsInfo %s' % str(e))
+
+        self.notify.debug('getMacOsInfo returning %s' % str(result))
+        return result

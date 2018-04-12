@@ -8,7 +8,7 @@ import PiratesPreloader
 import ClassicLogger
 from panda3d.core import *
 
-gc.disable()
+gc.enable()
 
 if __debug__:
     loadPrcFile('config/general.prc')

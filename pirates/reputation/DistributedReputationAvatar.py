@@ -10,7 +10,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedReputationAvatar(DistributedAvatar.DistributedAvatar, DistributedMovingObject.DistributedMovingObject, DistributedInteractive.DistributedInteractive, DistributedQuestGiver.DistributedQuestGiver):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedReputationAvatar')
 
     def __init__(self, cr):
