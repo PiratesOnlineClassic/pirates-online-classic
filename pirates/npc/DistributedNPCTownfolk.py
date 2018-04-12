@@ -322,29 +322,24 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
     def selectOptionConfirm(self, optionId):
         if optionId == InteractGlobals.BRIBE:
             self.confirmBribe()
+        elif optionId == InteractGlobals.HEAL_HP:
+            self.confirmHealHp()
+        elif optionId == InteractGlobals.HEAL_MOJO:
+            self.confirmHealMojo()
+        elif optionId == InteractGlobals.RESPEC:
+            self.showRespecMenu()
         else:
-            if optionId == InteractGlobals.HEAL_HP:
-                self.confirmHealHp()
-            else:
-                if optionId == InteractGlobals.HEAL_MOJO:
-                    self.confirmHealMojo()
-                else:
-                    if optionId == InteractGlobals.RESPEC:
-                        self.showRespecMenu()
-                    else:
-                        self.b_selectOption(optionId)
+            self.b_selectOption(optionId)
 
     def setMovie(self, mode, avId):
 
         def doMovie(av):
             if mode == 'start':
                 pass
-            else:
-                if mode == 'stop':
-                    self.cancelInteraction(av)
-                else:
-                    if mode == 'clear':
-                        pass
+            elif mode == 'stop':
+                self.cancelInteraction(av)
+            elif mode == 'clear':
+                pass
             self.pendingDoMovie = None
             return
 
@@ -503,40 +498,33 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
             if self.interactGUI:
                 self.interactGUI.hide()
             self.startShopping(optionId)
-        else:
-            if optionId == InteractGlobals.MUSICIAN:
+        elif optionId == InteractGlobals.MUSICIAN:
+            if self.interactGUI:
+                self.interactGUI.hide()
+            self.startShopping(optionId)
+        elif optionId == InteractGlobals.REPAIR:
+            if self.interactGUI:
+                self.interactGUI.hide()
+            self.startRepair(optionId)
+        elif optionId == InteractGlobals.SELL_SHIPS:
                 if self.interactGUI:
                     self.interactGUI.hide()
-                self.startShopping(optionId)
-            else:
-                if optionId == InteractGlobals.REPAIR:
-                    if self.interactGUI:
-                        self.interactGUI.hide()
-                    self.startRepair(optionId)
-                else:
-                    if optionId == InteractGlobals.SELL_SHIPS:
-                        if self.interactGUI:
-                            self.interactGUI.hide()
-                        self.startSellShip(optionId)
-                    else:
-                        if optionId == InteractGlobals.OVERHAUL:
-                            if self.interactGUI:
-                                self.interactGUI.hide()
-                            self.startOverhaul(optionId)
-                        else:
-                            if optionId == InteractGlobals.QUEST:
-                                if self.interactGUI:
-                                    self.interactGUI.hide()
-                            else:
-                                if optionId == InteractGlobals.BRIBE:
-                                    if self.interactGUI:
-                                        self.interactGUI.destroy()
-                                        self.interactGUI = None
-                                else:
-                                    if optionId == InteractGlobals.CANCEL:
-                                        if self.interactGUI:
-                                            self.interactGUI.hide()
-                                        self.cancelInteraction(base.localAvatar)
+                self.startSellShip(optionId)
+        elif optionId == InteractGlobals.OVERHAUL:
+                if self.interactGUI:
+                    self.interactGUI.hide()
+                self.startOverhaul(optionId)
+        elif optionId == InteractGlobals.QUEST:
+            if self.interactGUI:
+                self.interactGUI.hide()
+        elif optionId == InteractGlobals.BRIBE:
+            if self.interactGUI:
+                self.interactGUI.destroy()
+            self.interactGUI = None
+        elif optionId == InteractGlobals.CANCEL:
+            if self.interactGUI:
+                self.interactGUI.hide()
+            self.cancelInteraction(base.localAvatar)
         return
 
     @report(types=['frameCount', 'args'], dConfigParam='want-shipdeploy-report')
@@ -863,41 +851,35 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
                 if weaponRep == InventoryType.PistolRep:
                     begin = InventoryType.begin_WeaponSkillPistol
                     end = InventoryType.end_WeaponSkillPistol
+                elif weaponRep == InventoryType.DaggerRep:
+                    begin = InventoryType.begin_WeaponSkillDagger
+                    end = InventoryType.end_WeaponSkillDagger
+                elif weaponRep == InventoryType.GrenadeRep:
+                    begin = InventoryType.begin_WeaponSkillGrenade
+                    end = InventoryType.end_WeaponSkillGrenade
+                elif weaponRep == InventoryType.DollRep:
+                    begin = InventoryType.begin_WeaponSkillDoll
+                    end = InventoryType.end_WeaponSkillDoll
+                elif weaponRep == InventoryType.WandRep:
+                    begin = InventoryType.begin_WeaponSkillWand
+                    end = InventoryType.end_WeaponSkillWand
+                elif weaponRep == InventoryType.SailingRep:
+                    begin = InventoryType.begin_SkillSailing
+                    end = InventoryType.end_SkillSailing
+                elif weaponRep == InventoryType.CannonRep:
+                    begin = InventoryType.begin_WeaponSkillCannon
+                    end = InventoryType.end_WeaponSkillCannon
                 else:
-                    if weaponRep == InventoryType.DaggerRep:
-                        begin = InventoryType.begin_WeaponSkillDagger
-                        end = InventoryType.end_WeaponSkillDagger
-                    else:
-                        if weaponRep == InventoryType.GrenadeRep:
-                            begin = InventoryType.begin_WeaponSkillGrenade
-                            end = InventoryType.end_WeaponSkillGrenade
-                        else:
-                            if weaponRep == InventoryType.DollRep:
-                                begin = InventoryType.begin_WeaponSkillDoll
-                                end = InventoryType.end_WeaponSkillDoll
-                            else:
-                                if weaponRep == InventoryType.WandRep:
-                                    begin = InventoryType.begin_WeaponSkillWand
-                                    end = InventoryType.end_WeaponSkillWand
-                                else:
-                                    if weaponRep == InventoryType.SailingRep:
-                                        begin = InventoryType.begin_SkillSailing
-                                        end = InventoryType.end_SkillSailing
-                                    else:
-                                        if weaponRep == InventoryType.CannonRep:
-                                            begin = InventoryType.begin_WeaponSkillCannon
-                                            end = InventoryType.end_WeaponSkillCannon
-                                        else:
-                                            return InteractGlobals.DISABLED
-            for skillId in range(begin, end):
-                if skillId in InventoryType.DontResetSkills:
-                    continue
-                skillPts = localAvatar.getInventory().getStackQuantity(skillId)
-                if skillId in basicSkills:
-                    if skillPts > 2:
+                    return InteractGlobals.DISABLED
+                for skillId in range(begin, end):
+                    if skillId in InventoryType.DontResetSkills:
+                        continue
+                    skillPts = localAvatar.getInventory().getStackQuantity(skillId)
+                    if skillId in basicSkills:
+                        if skillPts > 2:
+                            return InteractGlobals.NORMAL
+                    elif skillPts > 1:
                         return InteractGlobals.NORMAL
-                elif skillPts > 1:
-                    return InteractGlobals.NORMAL
 
             return InteractGlobals.DISABLED
 
