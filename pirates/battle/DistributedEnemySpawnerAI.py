@@ -71,7 +71,6 @@ class SpawnNodeBase:
         taskMgr.doMethodLater(5, self.__respawn, 'perform-respawn-%s' % self.objKey)
 
     def __respawn(self, task):
-        print(self._npc)
         if not self._npc:
             self.notify.warning('Attempted to perform respawn on a %s without a npc!' % self.__class__.__name__)
             return
@@ -234,7 +233,11 @@ class EnemySpawnNode(SpawnNodeBase):
 
     def setNPCAttributes(self, npc):
         weapons = EnemyGlobals.getEnemyWeapons(npc.getAvatarType(), npc.getLevel()).keys()
-        npc.setCurrentWeapon(random.choice(weapons), config.GetBool('want-enemy-weapons', False))
+
+        #TODO: Better place to add this?
+        drawnAnimSets = ['attention']
+        defaultDrawn = True if self.objectData['AnimSet'] in drawnAnimSets else False
+        npc.setCurrentWeapon(random.choice(weapons), config.GetBool('want-enemy-weapons', defaultDrawn))
 
     def getNPCClass(self, avatarType):
         enemyCls = None
