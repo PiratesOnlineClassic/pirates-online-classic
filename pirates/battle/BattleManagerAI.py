@@ -9,16 +9,16 @@ class BattleManagerAI(BattleManagerBase):
     def __init__(self, air):
         self.air = air
 
-    def calculateTargetedSkill(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+    def useTargetedSkill(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         if not avatar:
-            self.notify.warning('Cannot calculate targeted skill for unknown avatar!')
-            return
+            self.notify.debug('Cannot calculate targeted skill for unknown avatar!')
+            return None
 
         if not target:
-            self.notify.warning('Cannot calculate targeted skill for avatar %d, unknown target!' % (
+            self.notify.debug('Cannot calculate targeted skill for avatar %d, unknown target!' % (
                 avatar.doId))
 
-            return
+            return None
 
         skillResult = self.willWeaponHit(avatar, target, skillId,
             ammoSkillId, charge)
@@ -45,15 +45,17 @@ class BattleManagerAI(BattleManagerBase):
         elif skillResult == WeaponGlobals.RESULT_RESIST:
             pass
         else:
-            self.notify.warning('Cannot calculate targeted skill, unknown weapon skill result was found, %d!' % (
+            self.notify.debug('Cannot calculate targeted skill, unknown weapon skill result was found, %d!' % (
                 skillResult))
+
+            return None
 
         return [skillId, ammoSkillId, skillResult, target.doId, areaIdList, attackerEffects, targetEffects,
             areaIdEffects, timestamp, pos, charge]
 
     def __applyTargetEffects(self, target, targetEffects):
         if not target:
-            self.notify.warning('Cannot apply target effects for unknown target!')
+            self.notify.debug('Cannot apply target effects for unknown target!')
             return
 
         target.b_setHp(target.getHp()[0] + targetEffects[0])
@@ -64,7 +66,7 @@ class BattleManagerAI(BattleManagerBase):
 
     def __applyAttackerEffects(self, avatar, attackerEffects):
         if not target:
-            self.notify.warning('Cannot apply attacker effects for unknown avatar!')
+            self.notify.debug('Cannot apply attacker effects for unknown avatar!')
             return
 
         avatar.b_setHp(avatar.getHp()[0] + targetEffects[0])
