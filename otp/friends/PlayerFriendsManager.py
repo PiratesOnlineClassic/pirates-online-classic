@@ -1,11 +1,6 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.friends.PlayerFriendsManager
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.otpbase import OTPGlobals
-
 
 class PlayerFriendsManager(DistributedObjectGlobal):
     __module__ = __name__
@@ -88,16 +83,15 @@ class PlayerFriendsManager(DistributedObjectGlobal):
             self.playerFriendsList.add(id)
             self.playerId2Info[id] = info
             messenger.send(OTPGlobals.PlayerFriendAddEvent, [id, info])
-        else:
-            if self.playerId2Info.has_key(id):
-                if not self.playerId2Info[id].onlineYesNo and info.onlineYesNo:
-                    self.playerId2Info[id] = info
-                    messenger.send('playerOnline', [id])
-                    base.chatAssistant.receiveFriendUpdate(id, info.playerName, info.onlineYesNo)
-                elif self.playerId2Info[id].onlineYesNo and not info.onlineYesNo:
-                    self.playerId2Info[id] = info
-                    messenger.send('playerOffline', [id])
-                    base.chatAssistant.receiveFriendUpdate(id, info.playerName, info.onlineYesNo)
+        elif self.playerId2Info.has_key(id):
+            if not self.playerId2Info[id].onlineYesNo and info.onlineYesNo:
+                self.playerId2Info[id] = info
+                messenger.send('playerOnline', [id])
+                base.chatAssistant.receiveFriendUpdate(id, info.playerName, info.onlineYesNo)
+            elif self.playerId2Info[id].onlineYesNo and not info.onlineYesNo:
+                self.playerId2Info[id] = info
+                messenger.send('playerOffline', [id])
+                base.chatAssistant.receiveFriendUpdate(id, info.playerName, info.onlineYesNo)
         if not self.askAvatarKnownHere(info.avatarId):
             self.requestAvatarInfo(info.avatarId)
         self.playerId2Info[id] = info
@@ -105,7 +99,6 @@ class PlayerFriendsManager(DistributedObjectGlobal):
         if av is not None:
             av.considerUnderstandable()
         messenger.send(OTPGlobals.PlayerFriendUpdateEvent, [id, info])
-        return
 
     def removePlayerFriend(self, id):
         if id not in self.playerFriendsList:
@@ -117,7 +110,6 @@ class PlayerFriendsManager(DistributedObjectGlobal):
             if av is not None:
                 av.considerUnderstandable()
         messenger.send(OTPGlobals.PlayerFriendRemoveEvent, [id])
-        return
 
     def whisperFrom(self, playerId, msg):
         base.chatAssistant.receivePlayerWhisperTypedChat(msg, playerId)
@@ -138,8 +130,7 @@ class PlayerFriendsManager(DistributedObjectGlobal):
         pId = self.findPlayerIdFromAvId(avId)
         if pId and self.isPlayerFriend(pId):
             return True
-        else:
-            return False
+        return False
 
     def getFriendInfo(self, pId):
         return self.playerId2Info.get(pId)
@@ -156,16 +147,12 @@ class PlayerFriendsManager(DistributedObjectGlobal):
         pInfo = self.playerId2Info.get(pId)
         if pInfo:
             return pInfo.avatarId
-        else:
-            return
         return
 
     def findPlayerInfoFromAvId(self, avId):
         playerId = self.findPlayerIdFromAvId(avId)
         if playerId:
             return self.getFriendInfo(playerId)
-        else:
-            return
         return
 
     def askAvatarOnline(self, avId):
@@ -191,14 +178,12 @@ class PlayerFriendsManager(DistributedObjectGlobal):
     def askTransientFriend(self, avId):
         if self.playerAvId2avInfo.has_key(avId) and not base.cr.isAvatarFriend(avId):
             return 1
-        else:
-            return 0
+        return 0
 
     def askAvatarKnown(self, avId):
         if self.askAvatarKnownElseWhere(avId) or self.askAvatarKnownHere(avId):
             return 1
-        else:
-            return 0
+        return 0
 
     def askAvatarKnownElseWhere(self, avId):
         if hasattr(base, 'cr'):
@@ -209,8 +194,7 @@ class PlayerFriendsManager(DistributedObjectGlobal):
     def askAvatarKnownHere(self, avId):
         if self.playerAvId2avInfo.has_key(avId):
             return 1
-        else:
-            return 0
+        return 0
 
     def requestAvatarInfo(self, avId):
         if hasattr(base, 'cr'):
@@ -225,8 +209,6 @@ class PlayerFriendsManager(DistributedObjectGlobal):
     def getAvHandleFromId(self, avId):
         if self.playerAvId2avInfo.has_key(avId):
             return self.playerAvId2avInfo[avId]
-        else:
-            return
         return
 
     def identifyFriend(self, avId):
@@ -249,9 +231,7 @@ class PlayerFriendsManager(DistributedObjectGlobal):
     def identifyAvatar(self, doId):
         if base.cr.doId2do.has_key(doId):
             return base.cr.doId2do[doId]
-        else:
-            return self.identifyFriend(doId)
+        return self.identifyFriend(doId)
 
     def friendsListFull(self):
         return len(self.playerFriendsList) >= OTPGlobals.MaxPlayerFriends
-# okay decompiling .\otp\friends\PlayerFriendsManager.pyc

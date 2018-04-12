@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.economy.StoreGUI
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
@@ -9,12 +5,10 @@ from pirates.battle import WeaponGlobals
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.piratesgui import (GuiButton, GuiPanel, InventoryItemList,
-                                PiratesGuiGlobals, PurchaseList)
+from pirates.piratesgui import (GuiButton, GuiPanel, InventoryItemList, PiratesGuiGlobals, PurchaseList)
 from pirates.piratesgui.TabBar import LeftTab, TabBar
 from pirates.reputation import ReputationGlobals
 from pirates.uberdog.UberDogGlobals import *
-
 
 class StoreTab(LeftTab):
     __module__ = __name__
@@ -24,8 +18,6 @@ class StoreTab(LeftTab):
         self.defineoptions(kw, optiondefs)
         LeftTab.__init__(self, tabBar, name, **kw)
         self.initialiseoptions(StoreTab)
-        return
-
 
 class StoreTabBar(TabBar):
     __module__ = __name__
@@ -48,7 +40,6 @@ class StoreTabBar(TabBar):
     def makeTab(self, name, **kw):
         return StoreTab(self, name, **kw)
 
-
 class StoreGUI(DirectFrame):
     __module__ = __name__
     notify = directNotify.newCategory('StoreGUI')
@@ -60,8 +51,7 @@ class StoreGUI(DirectFrame):
     SkillIcons = None
 
     def __init__(self, inventory, name, **kw):
-        optiondefs = (
-         ('relief', None, None), ('framSize', (0, self.width, 0, self.height), None), ('sortOrder', 20, None))
+        optiondefs = (('relief', None, None), ('framSize', (0, self.width, 0, self.height), None), ('sortOrder', 20, None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, None, **kw)
         self.initialiseoptions(StoreGUI)
@@ -89,20 +79,10 @@ class StoreGUI(DirectFrame):
         self.purchaseInventory.reparentTo(self.cartFrame)
         self.purchaseInventory.setPos(0, 0, 0.2)
         self.frontTabParent = self.panel.attachNewNode('frontTab', sort=2)
-        self.balanceTitle = DirectFrame(parent=self.cartFrame, relief=None, text=PLocalizer.Total, text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.0,
-                                                                                                                                                                                                                        0.0), pos=(0.01,
-                                                                                                                                                                                                                                   0,
-                                                                                                                                                                                                                                   0.225))
-        self.balanceValue = DirectFrame(parent=self.cartFrame, relief=None, text=str(self.balance), text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ARight, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(-0.055, 0.0), textMayChange=1, image=StoreGUI.CoinImage, image_scale=0.15, image_pos=(-0.025,
-                                                                                                                                                                                                                                                                                                                0,
-                                                                                                                                                                                                                                                                                                                0.025), pos=(self.cartWidth, 0, 0.225))
-        self.myGoldTitle = DirectFrame(parent=self.cartFrame, relief=None, text=PLocalizer.YourMoney, text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.0,
-                                                                                                                                                                                                                           0.0), pos=(0.01,
-                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                      0.155))
-        self.myGold = DirectFrame(parent=self.cartFrame, relief=None, text=str(localAvatar.getMoney()), text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ARight, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(-0.055, 0.0), textMayChange=1, image=StoreGUI.CoinImage, image_scale=0.15, image_pos=(-0.025,
-                                                                                                                                                                                                                                                                                                                    0,
-                                                                                                                                                                                                                                                                                                                    0.025), pos=(self.cartWidth, 0, 0.155))
+        self.balanceTitle = DirectFrame(parent=self.cartFrame, relief=None, text=PLocalizer.Total, text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.0, 0.0), pos=(0.01, 0, 0.225))
+        self.balanceValue = DirectFrame(parent=self.cartFrame, relief=None, text=str(self.balance), text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ARight, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(-0.055, 0.0), textMayChange=1, image=StoreGUI.CoinImage, image_scale=0.15, image_pos=(-0.025, 0, 0.025), pos=(self.cartWidth, 0, 0.225))
+        self.myGoldTitle = DirectFrame(parent=self.cartFrame, relief=None, text=PLocalizer.YourMoney, text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.0, 0.0), pos=(0.01, 0, 0.155))
+        self.myGold = DirectFrame(parent=self.cartFrame, relief=None, text=str(localAvatar.getMoney()), text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ARight, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(-0.055, 0.0), textMayChange=1, image=StoreGUI.CoinImage, image_scale=0.15, image_pos=(-0.025, 0, 0.025), pos=(self.cartWidth, 0, 0.155))
         self.commitButton = GuiButton.GuiButton(command=self.handleCommitPurchase, parent=self.cartFrame, text=PLocalizer.PurchaseCommit, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0, -PiratesGuiGlobals.TextScaleLarge * 0.25), text_scale=PiratesGuiGlobals.TextScaleLarge, pos=(self.width - 0.2, 0, 0.075))
         self.commitButton.setPos(self.cartWidth / 2, 0, 0.05)
         self.initTabs()
@@ -110,7 +90,6 @@ class StoreGUI(DirectFrame):
         self.accept('inventoryQuantity-%s-%s' % (base.localAvatar.getInventoryId(), InventoryType.GoldInPocket), self.updateBalance)
         self.accept(PiratesGuiGlobals.InventoryBuyEvent, self.handleBuyItem)
         self.acceptOnce('escape', self.closePanel)
-        return
 
     def closePanel(self):
         messenger.send('exitStore')
@@ -149,19 +128,17 @@ class StoreGUI(DirectFrame):
             if itemCategory == ItemType.WEAPON and itemQuantity >= 1:
                 base.localAvatar.guiMgr.createWarning(PLocalizer.TradeItemFullWarning, PiratesGuiGlobals.TextFG6)
                 return
+            elif itemCategory == ItemType.WEAPON and currStock >= 1:
+                base.localAvatar.guiMgr.createWarning(PLocalizer.AlreadyOwnWeaponWarning, PiratesGuiGlobals.TextFG6)
+                return
             else:
-                if itemCategory == ItemType.WEAPON and currStock >= 1:
-                    base.localAvatar.guiMgr.createWarning(PLocalizer.AlreadyOwnWeaponWarning, PiratesGuiGlobals.TextFG6)
+                if currStock + itemQuantity >= currStockLimit:
+                    base.localAvatar.guiMgr.createWarning(PLocalizer.TradeItemFullWarning, PiratesGuiGlobals.TextFG6)
                     return
-                else:
-                    if currStock + itemQuantity >= currStockLimit:
-                        base.localAvatar.guiMgr.createWarning(PLocalizer.TradeItemFullWarning, PiratesGuiGlobals.TextFG6)
-                        return
             self.purchaseInventory.addPanel(data)
             self.purchaseInventory.inventory.append(data)
-        else:
-            if useCode == PiratesGuiGlobals.InventoryRemove:
-                self.purchaseInventory.removePanel(data)
+        elif useCode == PiratesGuiGlobals.InventoryRemove:
+            self.purchaseInventory.removePanel(data)
         panel = self.storeInventory.getPanel(data)
         if panel:
             self.checkPanel(panel, inventory, itemId)
@@ -191,13 +168,12 @@ class StoreGUI(DirectFrame):
         if self.balance > 0:
             self.balanceTitle['text'] = PLocalizer.Total
             self.balanceValue['text'] = str(abs(self.balance))
+        elif self.balance < 0:
+            self.balanceTitle['text'] = PLocalizer.Gain
+            self.balanceValue['text'] = str(abs(self.balance))
         else:
-            if self.balance < 0:
-                self.balanceTitle['text'] = PLocalizer.Gain
-                self.balanceValue['text'] = str(abs(self.balance))
-            else:
-                self.balanceTitle['text'] = PLocalizer.Total
-                self.balanceValue['text'] = str(abs(self.balance))
+            self.balanceTitle['text'] = PLocalizer.Total
+            self.balanceValue['text'] = str(abs(self.balance))
         if self.balance > localAvatar.getMoney() or self.balance == 0:
             if self.balance > localAvatar.getMoney():
                 self.balanceValue['text_fg'] = PiratesGuiGlobals.TextFG6
@@ -237,29 +213,23 @@ class StoreGUI(DirectFrame):
         if repId:
             iconName = ReputationGlobals.RepIcons.get(repId)
             icon = StoreGUI.WeaponIcons.find('**/%s' % iconName)
-        else:
-            if InventoryType.begin_Consumables <= item < InventoryType.end_Consumables:
-                iconName = EconomyGlobals.getItemIcons(item)
-                if iconName == 'icon_cannon':
-                    icon = StoreGUI.WeaponIcons.find('**/%s' % iconName)
-                else:
-                    icon = StoreGUI.SkillIcons.find('**/%s' % iconName)
+        elif InventoryType.begin_Consumables <= item < InventoryType.end_Consumables:
+            iconName = EconomyGlobals.getItemIcons(item)
+            if iconName == 'icon_cannon':
+                icon = StoreGUI.WeaponIcons.find('**/%s' % iconName)
             else:
-                if InventoryType.begin_WeaponCannonAmmo <= item < InventoryType.end_WeaponCannonAmmo:
-                    iconName = EconomyGlobals.getItemIcons(InventoryType.CannonL1)
-                    icon = StoreGUI.WeaponIcons.find('**/%s' % iconName)
-                else:
-                    if InventoryType.begin_WeaponGrenadeAmmo <= item < InventoryType.end_WeaponGrenadeAmmo:
-                        itemId = InventoryType.GrenadeWeaponL1
-                        iconName = EconomyGlobals.getItemIcons(itemId)
-                        icon = StoreGUI.WeaponIcons.find('**/%s' % iconName)
-                    else:
-                        icon = None
-        newTab.nameTag = DirectLabel(parent=newTab, relief=None, state=DGG.DISABLED, image=icon, image_scale=0.4, image_pos=(0,
-                                                                                                                             0,
-                                                                                                                             0.04), pos=(0.06, 0, -0.035))
+                icon = StoreGUI.SkillIcons.find('**/%s' % iconName)
+        elif InventoryType.begin_WeaponCannonAmmo <= item < InventoryType.end_WeaponCannonAmmo:
+            iconName = EconomyGlobals.getItemIcons(InventoryType.CannonL1)
+            icon = StoreGUI.WeaponIcons.find('**/%s' % iconName)
+        elif InventoryType.begin_WeaponGrenadeAmmo <= item < InventoryType.end_WeaponGrenadeAmmo:
+            itemId = InventoryType.GrenadeWeaponL1
+            iconName = EconomyGlobals.getItemIcons(itemId)
+            icon = StoreGUI.WeaponIcons.find('**/%s' % iconName)
+        else:
+            icon = None
+        newTab.nameTag = DirectLabel(parent=newTab, relief=None, state=DGG.DISABLED, image=icon, image_scale=0.4, image_pos=(0, 0, 0.04), pos=(0.06, 0, -0.035))
         self.pageNames.append(itemGroup)
-        return
 
     def isPageAdded(self, pageName):
         return self.pageNames.count(pageName) > 0
@@ -267,4 +237,3 @@ class StoreGUI(DirectFrame):
     def setPage(self, pageName):
         self.tabBar.unstash()
         self.storeInventory.filterByItemGroup(pageName)
-# okay decompiling .\pirates\economy\StoreGUI.pyc

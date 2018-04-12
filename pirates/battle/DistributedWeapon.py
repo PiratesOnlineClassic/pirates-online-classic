@@ -23,7 +23,6 @@ from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 from WeaponBase import WeaponBase
 
-
 class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractive):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedWeapon')
 
@@ -74,16 +73,14 @@ class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractiv
         pass
 
     def setMovie(self, mode, avId):
-
         def doMovie(av):
             if mode == WeaponGlobals.WEAPON_MOVIE_START:
                 self.startWeapon(av)
+            elif mode == WeaponGlobals.WEAPON_MOVIE_STOP:
+                self.stopWeapon(av)
             else:
-                if mode == WeaponGlobals.WEAPON_MOVIE_STOP:
-                    self.stopWeapon(av)
-                else:
-                    if mode == WeaponGlobals.WEAPON_MOVIE_CLEAR:
-                        pass
+                if mode == WeaponGlobals.WEAPON_MOVIE_CLEAR:
+                    pass
 
         if self.pendingDoMovie:
             base.cr.relatedObjectMgr.abortRequest(self.pendingDoMovie)

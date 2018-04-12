@@ -1,12 +1,7 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.friends.AvatarFriendsManager
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.uberdog.RejectCode import RejectCode
-
 
 class AvatarFriendsManager(DistributedObjectGlobal):
     __module__ = __name__
@@ -89,7 +84,6 @@ class AvatarFriendsManager(DistributedObjectGlobal):
         self.avatarFriendsList.remove(avId)
         self.avatarId2Info.pop(avId, None)
         messenger.send(OTPGlobals.AvatarFriendRemoveEvent, [avId])
-        return
 
     def setFriends(self, avatarIds):
         self.notify.debugCall()
@@ -110,4 +104,3 @@ class AvatarFriendsManager(DistributedObjectGlobal):
                 count += 1
 
         return count
-# okay decompiling .\otp\friends\AvatarFriendsManager.pyc

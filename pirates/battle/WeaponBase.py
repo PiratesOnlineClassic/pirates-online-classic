@@ -389,17 +389,17 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
         ship = self.cr.doId2do.get(shipId)
         if not ship:
             return
-        else:
-            targetIndex = int(hitObject.getNetTag('targetId')[-1:])
-            codes = [0, 99, targetIndex]
-            pos = entry.getSurfacePoint(ship)
-            normal = entry.getSurfaceNormal(render)
-            timestamp32 = globalClockDelta.getFrameNetworkTime(bits=32)
-            areaList = []
-            result = WeaponGlobals.RESULT_HIT
-            self.sendSuggestProjectileSkillResult(skillId, ammoSkillId, result, shipId, areaList, [
-             pos[0], pos[1], pos[2]], [
-             normal[0], normal[1], normal[2]], codes, timestamp32)
+
+        targetIndex = int(hitObject.getNetTag('targetId')[-1:])
+        codes = [0, 99, targetIndex]
+        pos = entry.getSurfacePoint(ship)
+        normal = entry.getSurfaceNormal(render)
+        timestamp32 = globalClockDelta.getFrameNetworkTime(bits=32)
+        areaList = []
+        result = WeaponGlobals.RESULT_HIT
+        self.sendSuggestProjectileSkillResult(skillId, ammoSkillId, result, shipId, areaList, [
+         pos[0], pos[1], pos[2]], [
+         normal[0], normal[1], normal[2]], codes, timestamp32)
 
     def __cannonHit(self, cannonId, hitObject, entry, skillId, ammoSkillId):
         pos = entry.getFromNodePath().getParent().getPos()

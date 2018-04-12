@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.uberdog.OtpAvatarManager
 from cPickle import dumps, loads
 
 from direct.directnotify import DirectNotifyGlobal
@@ -22,7 +18,6 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
         self.ignoreAll()
         self.cr.avatarManager = None
         DistributedObject.DistributedObject.delete(self)
-        return
 
     def online(self):
         messenger.send(OtpAvatarManager.OnlineEvent)
@@ -79,4 +74,3 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
 
     def playAvatarResponse(self, avatarId, subId, access, founder):
         messenger.send('playAvatarResponse', [avatarId, subId, access, founder])
-# okay decompiling .\otp\uberdog\OtpAvatarManager.pyc

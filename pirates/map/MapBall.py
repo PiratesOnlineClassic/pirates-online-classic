@@ -6,7 +6,6 @@ from pirates.map.ArcBall import ArcBall
 
 
 class MapBall(ArcBall):
-    __module__ = __name__
 
     def __init__(self, name, worldMap, maxTilt=math.pi / 4, mapSize=2.0, *args, **kwargs):
         ArcBall.__init__(self, name, *args, **kwargs)
@@ -21,7 +20,12 @@ class MapBall(ArcBall):
 
     def mapPosToSpherePt(self, mapPos):
         pt = self.tsMat.xformPoint(Point2(mapPos[0], mapPos[1]))
-        theta = math.acos(2 / Vec3(pt[0], pt[1], 2).length())
+
+        try:
+            theta = math.acos(2 / Vec3(pt[0], pt[1], 2).length())
+        except:
+            theta = 1.0
+
         sinTheta = math.sin(theta)
         z = 1 - 2 * sinTheta * sinTheta
         coef = (z + 1) / 2.0
@@ -38,7 +42,9 @@ class MapBall(ArcBall):
 
     def _loadModels(self):
         self._modelInfo = {'globe': 'models/worldmap/world_map_globe'}
-        self._models = dict(zip(self._modelInfo, (loader.loadModel(self._modelInfo[name]) for name in self._modelInfo)))
+        self._models = dict(zip(self._modelInfo, (loader.loadModel(self._modelInfo[name]) \
+            for name in self._modelInfo)))
+
         self.attachForRotation(self._models['globe'])
         self._models['globe'].setBin('background', 0)
         self._models['globe'].setDepthWrite(0)

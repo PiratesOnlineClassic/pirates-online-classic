@@ -21,6 +21,8 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
             self.sendUpdateToAvatarId(avatar.doId, 'triggerInteractShow', [0])
             self.sendUpdateToAvatarId(avatar.doId, 'offerOptions', [2])
 
+            return self.ACCEPT
+
         return self.DENY
 
     def handleRequestExit(self, avatar):

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.friends.FriendSecret
 import string
 
 from direct.directnotify import DirectNotifyGlobal
@@ -42,14 +38,12 @@ def showFriendSecret(secretType=AvatarSecret):
                     chatMgr.fsm.request('unpaidChatWarning')
             else:
                 chatMgr.fsm.request('noSecretChatAtAll')
+        elif base.cr.needParentPasswordForSecretChat():
+            unloadFriendSecret()
+            globalFriendSecret = FriendSecretNeedsParentLogin(secretType)
+            globalFriendSecret.enter()
         else:
-            if base.cr.needParentPasswordForSecretChat():
-                unloadFriendSecret()
-                globalFriendSecret = FriendSecretNeedsParentLogin(secretType)
-                globalFriendSecret.enter()
-            else:
-                openFriendSecret(secretType)
-
+            openFriendSecret(secretType)
 
 def openFriendSecret(secretType):
     global globalFriendSecret
@@ -57,22 +51,16 @@ def openFriendSecret(secretType):
         globalFriendSecret.unload()
     globalFriendSecret = FriendSecret(secretType)
     globalFriendSecret.enter()
-    return
-
 
 def hideFriendSecret():
     if globalFriendSecret != None:
         globalFriendSecret.exit()
-    return
-
 
 def unloadFriendSecret():
     global globalFriendSecret
     if globalFriendSecret != None:
         globalFriendSecret.unload()
         globalFriendSecret = None
-    return
-
 
 class FriendSecretNeedsParentLogin(StateData.StateData):
     __module__ = __name__
@@ -82,7 +70,6 @@ class FriendSecretNeedsParentLogin(StateData.StateData):
         StateData.StateData.__init__(self, 'friend-secret-needs-parent-login-done')
         self.dialog = None
         self.secretType = secretType
-        return
 
     def enter(self):
         StateData.StateData.enter(self)
@@ -138,7 +125,6 @@ class FriendSecretNeedsParentLogin(StateData.StateData):
                     self.passwordEntry['focus'] = 1
                     self.passwordEntry.enterText('')
         self.dialog.show()
-        return
 
     def exit(self):
         self.ignoreAll()
@@ -148,7 +134,6 @@ class FriendSecretNeedsParentLogin(StateData.StateData):
         if self.isEntered:
             base.localAvatar.chatMgr.fsm.request('mainMenu')
             StateData.StateData.exit(self)
-        return
 
     def __handleUsername(self, *args):
         if self.passwordEntry:

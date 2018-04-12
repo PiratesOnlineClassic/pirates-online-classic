@@ -1,12 +1,7 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.friends.FriendManager
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
 from otp.otpbase import OTPGlobals
 from pandac.PandaModules import *
-
 
 class FriendManager(DistributedObject.DistributedObject):
     __module__ = __name__
@@ -17,7 +12,6 @@ class FriendManager(DistributedObject.DistributedObject):
         DistributedObject.DistributedObject.__init__(self, cr)
         self.__available = 0
         self.gameSpecificFunction = None
-        return
 
     def setAvailable(self, available):
         self.__available = available
@@ -39,18 +33,15 @@ class FriendManager(DistributedObject.DistributedObject):
             base.cr.friendManager.delete()
         base.cr.friendManager = self
         DistributedObject.DistributedObject.generate(self)
-        return
 
     def disable(self):
         base.cr.friendManager = None
         DistributedObject.DistributedObject.disable(self)
-        return
 
     def delete(self):
         self.gameSpecificFunction = None
         base.cr.friendManager = None
         DistributedObject.DistributedObject.delete(self)
-        return
 
     def up_friendQuery(self, inviteeId):
         self.sendUpdate('friendQuery', [inviteeId])
@@ -112,4 +103,3 @@ class FriendManager(DistributedObject.DistributedObject):
 
     def submitSecretResponse(self, result, avId):
         messenger.send('submitSecretResponse', [result, avId])
-# okay decompiling .\otp\friends\FriendManager.pyc
