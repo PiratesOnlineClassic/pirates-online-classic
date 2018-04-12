@@ -212,7 +212,7 @@ class PartMixer:
     def __init__(self, mixer, channelCount, actor, partNameList):
         self.actor = actor
         self.partNameList = partNameList
-        self.channels = [ AnimationChannel(x, x in mixer.LOOP.values(), actor, partNameList, self.distributeWeight) for x in range(channelCount) ]
+        self.channels = [AnimationChannel(x, x in mixer.LOOP.values(), actor, partNameList, self.distributeWeight) for x in range(channelCount)]
 
     def __str__(self):
         outStr = '(PartMixer: parts = %s)\n' % `(self.partNameList)`
