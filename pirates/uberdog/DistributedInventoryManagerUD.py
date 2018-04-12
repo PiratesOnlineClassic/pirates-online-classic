@@ -129,9 +129,10 @@ class InventoryFSM(FSM):
         self.manager.air.sendActivate(inventoryId, self.avatarId, OTP_ZONE_ID_MANAGEMENT, dclass=\
             self.manager.air.dclassesByName['PirateInventoryUD'])
 
+        self.callback(inventoryId)
+
         del self.manager.avatar2fsm[self.avatarId]
         self.demand('Off')
-        self.callback(inventoryId)
 
     def exitLoad(self):
         pass
