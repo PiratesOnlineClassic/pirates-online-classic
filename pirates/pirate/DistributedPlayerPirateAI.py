@@ -5,6 +5,7 @@ from pirates.pirate.HumanDNA import HumanDNA
 from pirates.battle.BattleRandom import BattleRandom
 from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
 from pirates.piratesbase import PLocalizer
+from pirates.piratesbase import PiratesGlobals
 from pirates.quest.QuestConstants import LocationIds
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
@@ -31,6 +32,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.returnLocation = ''
         self.currentIsland = ''
         self.emoteId = 0
+
+        self.stickyTargets = []
 
         self.weapon = None
 
@@ -380,6 +383,49 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         self.battleRandom = None
         self.weapon = None
+
+    def setStickyTargets(self, stickyTargets):
+        self.stickyTargets = stickyTargets
+
+    def d_setStickyTargets(self, stickyTargets):
+        self.sendUpdate('setStickyTargets', [stickyTargets])
+
+    def b_setStickyTargets(self, stickyTargets):
+        self.setStickyTargets(stickyTargets)
+        self.d_setStickyTargets(stickyTargets)
+
+    def getStickyTargets(self):
+        return self.stickyTargets
+
+    def addStickyTarget(self, target):
+        if target in self.stickyTargets:
+            return
+
+        self.stickyTargets.append(target)
+        self.d_setStickyTargets(self.stickyTargets)
+
+    def getHostileStickyTargets(self):
+        hostile = []
+        friendlyTeams = [
+            PiratesGlobals.VILLAGER_TEAM,
+            PiratesGlobals.PLAYER_TEAM
+        ]
+        for targetId in self.stickyTargets:
+            target = self.air.doId2do.get(targetId)
+
+            if not target:
+                continue
+
+            if target.getTeam() not in friendlyTeams:
+                hostile.append(target)
+        return hostile
+
+    def requestRemoveStickyTargets(self, targets):
+        for target in targets:
+            if target in self.stickyTargets:
+                self.stickyTargets.remove(target)
+
+                target.remove()
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def name(name):

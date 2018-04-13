@@ -364,8 +364,15 @@ class BattleManagerBase:
                 scale = WeaponGlobals.getWeaponPvpDamageScale(attacker.currentWeaponId)
                 tDamage *= scale
         return (
-         [
-          0, 0, 0, 0, 0], [int(tDamage), targetEffects[1], targetEffects[2], targetEffects[3], targetEffects[4]])
+            [0, 0, 0, 0, 0], 
+            [
+                int(tDamage), 
+                targetEffects[1], 
+                targetEffects[2], 
+                targetEffects[3], 
+                targetEffects[4]
+            ]
+        )
 
     def getModifiedShipEffects(self, skillId, ammoSkillId=0, distance=0.0):
         shipEffects = WeaponGlobals.getShipEffects(skillId, ammoSkillId)

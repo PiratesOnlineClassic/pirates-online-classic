@@ -62,6 +62,7 @@ class BattleAttackerSkillData(object):
 
         self._reputation = 0
 
+
 class BattleAttackerData(object):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleAttackerData')
 
@@ -128,6 +129,9 @@ class BattleAttackerData(object):
 
         self._skillData[skillId] = skillData
 
+        if skillData.skillId == WeaponGlobals.C_ATTUNE:
+            self._avatar.addStickyTarget(self._target.doId)
+
     def removeSkillData(self, skillData):
         if not skillData:
             return
@@ -137,6 +141,11 @@ class BattleAttackerData(object):
 
         if not self.hasSkillData(skillData):
             return
+
+        if skillData.skillId == WeaponGlobals.C_ATTUNE:
+
+            # This function already exists for the client. Might as well repurpose it
+            self._avatar.reqeuestRemoveStickyTargets([self._target.doId])
 
         del self._skillData[skillData.skillId]
         skillData.destroy()
@@ -343,6 +352,16 @@ class BattleManagerAI(BattleManagerBase):
             attackerEffects,
             targetEffects
         ]
+
+        targetSkillId = targetEffects[2]
+        if targetSkillId:
+            duration = 10 #TODO: Calculate Proper
+            target.addSkillEffect(targetSkillId, duration, timestamp, avatar.doId)
+
+        attackerSkillEffect = attackerEffects[2]
+        if attackerSkillEffect:
+            duration = 10 #TODO: Calculate Proper
+            target.addSkillEffect(attackerSkillId, duration, timestamp, avatar.doId)  
 
         targetData = self.getTargetData(target.doId)
 

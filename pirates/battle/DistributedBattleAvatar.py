@@ -1214,179 +1214,165 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         if effectId == WeaponGlobals.C_BLIND:
             if self.isLocal():
                 self.guiMgr.showSmokePanel()
-        else:
-            if effectId == WeaponGlobals.C_DIRT:
-                if self.isLocal():
-                    self.guiMgr.showDirtPanel()
-            else:
-                if effectId == WeaponGlobals.C_POISON:
-                    LerpColorScaleInterval(self.getGeomNode(), 1.0, Vec4(0.7, 1, 0.6, 1), startColorScale=Vec4(1, 1, 1, 1)).start()
-                    if self.poisonEffect:
-                        return
-                    if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
-                        avatarScale = self.getEnemyScale()
-                        self.poisonEffect = PoisonEffect.getEffect()
-                        if self.poisonEffect:
-                            self.poisonEffect.reparentTo(self)
-                            self.poisonEffect.setPos(0, 0.75, self.height - 1.5)
-                            self.poisonEffect.effectScale = avatarScale
-                            self.poisonEffect.startLoop()
+        elif effectId == WeaponGlobals.C_DIRT:
+            if self.isLocal():
+                self.guiMgr.showDirtPanel()
+        elif effectId == WeaponGlobals.C_POISON:
+            LerpColorScaleInterval(self.getGeomNode(), 1.0, Vec4(0.7, 1, 0.6, 1), startColorScale=Vec4(1, 1, 1, 1)).start()
+            if self.poisonEffect:
+                return
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
+                avatarScale = self.getEnemyScale()
+                self.poisonEffect = PoisonEffect.getEffect()
+                if self.poisonEffect:
+                    self.poisonEffect.reparentTo(self)
+                    self.poisonEffect.setPos(0, 0.75, self.height - 1.5)
+                    self.poisonEffect.effectScale = avatarScale
+                    self.poisonEffect.startLoop()
+        elif effectId == WeaponGlobals.C_ACID:
+            self.smokeWispEffect = SmokeWisps.getEffect()
+            if self.smokeWispEffect:
+                self.smokeWispEffect.reparentTo(self)
+                self.smokeWispEffect.setPos(0, 0, self.height)
+                self.smokeWispEffect.startLoop()
+        elif effectId == WeaponGlobals.C_WOUND:
+            pass
+        elif effectId == WeaponGlobals.C_TAUNT:
+            self.getGeomNode().setColorScale(1.0, 0.4, 0.4, 1)
+        elif effectId == WeaponGlobals.C_ON_FIRE:
+            if self.fireEffect:
+                return
+            avatarScale = self.getEnemyScale()
+            self.fireEffect = Flame.getEffect()
+            if self.fireEffect:
+                if hasattr(self, 'headNode') and self.headNode:
+                    self.fireEffect.reparentTo(self.headNode)
+                    self.fireEffect.setPos(self.headNode, -2, 0, 0)
+                    self.fireEffect.setHpr(0, 0, 80)
                 else:
-                    if effectId == WeaponGlobals.C_ACID:
-                        self.smokeWispEffect = SmokeWisps.getEffect()
-                        if self.smokeWispEffect:
-                            self.smokeWispEffect.reparentTo(self)
-                            self.smokeWispEffect.setPos(0, 0, self.height)
-                            self.smokeWispEffect.startLoop()
-                    else:
-                        if effectId == WeaponGlobals.C_WOUND:
-                            pass
-                        else:
-                            if effectId == WeaponGlobals.C_TAUNT:
-                                self.getGeomNode().setColorScale(1.0, 0.4, 0.4, 1)
-                            else:
-                                if effectId == WeaponGlobals.C_ON_FIRE:
-                                    if self.fireEffect:
-                                        return
-                                    avatarScale = self.getEnemyScale()
-                                    self.fireEffect = Flame.getEffect()
-                                    if self.fireEffect:
-                                        if hasattr(self, 'headNode') and self.headNode:
-                                            self.fireEffect.reparentTo(self.headNode)
-                                            self.fireEffect.setPos(self.headNode, -2, 0, 0)
-                                            self.fireEffect.setHpr(0, 0, 80)
-                                        else:
-                                            self.fireEffect.reparentTo(self)
-                                            self.fireEffect.setPos(0, 0, self.height * 0.8)
-                                        self.fireEffect.effectScale = 0.25 * avatarScale
-                                        self.fireEffect.duration = 4.0
-                                        self.fireEffect.play()
-                                    self.smokeWispEffect = SmokeWisps.getEffect()
-                                    if self.smokeWispEffect:
-                                        self.smokeWispEffect.reparentTo(self)
-                                        self.smokeWispEffect.setPos(0, 0, self.height)
-                                        self.smokeWispEffect.startLoop()
-                                else:
-                                    if effectId == WeaponGlobals.C_SLOW:
-                                        if self.slowEffect:
-                                            return
-                                        self.slowEffect = SlowEffect.getEffect()
-                                        if self.slowEffect:
-                                            self.slowEffect.duration = 1.75
-                                            self.slowEffect.effectScale = 0.85
-                                            if hasattr(self, 'headNode') and self.headNode:
-                                                self.slowEffect.reparentTo(self.headNode)
-                                                self.slowEffect.setHpr(0, 0, 90)
-                                                self.slowEffect.setPos(self.headNode, 1.5, 0, 0)
-                                            else:
-                                                self.slowEffect.reparentTo(self)
-                                                self.slowEffect.setHpr(self, 0, 0, 0)
-                                                self.slowEffect.setPos(self, 0, 0, self.getHeight() + 1.5)
-                                            self.slowEffect.startLoop()
-                                        self.slowEffect2 = SlowEffect.getEffect()
-                                        if self.slowEffect2:
-                                            self.slowEffect2.duration = 1.75
-                                            self.slowEffect2.effectScale = 0.75
-                                            if hasattr(self, 'headNode') and self.headNode:
-                                                self.slowEffect2.reparentTo(self.headNode)
-                                                self.slowEffect2.setHpr(0, 120, 90)
-                                                self.slowEffect2.setPos(self.headNode, 1.75, 0, 0)
-                                            else:
-                                                self.slowEffect2.reparentTo(self)
-                                                self.slowEffect2.setHpr(self, 120, 0, 0)
-                                                self.slowEffect2.setPos(self, 0, 0, self.getHeight() + 1.25)
-                                            self.slowEffect2.startLoop()
-                                    else:
-                                        if effectId == WeaponGlobals.C_STUN:
-                                            if self.stunEffect:
-                                                return
-                                            self.stunEffect = StunEffect.getEffect()
-                                            if self.stunEffect:
-                                                self.stunEffect.duration = 1.0
-                                                self.stunEffect.direction = 1
-                                                self.stunEffect.effectScale = 0.65
-                                                if hasattr(self, 'headNode') and self.headNode:
-                                                    self.stunEffect.reparentTo(self.headNode)
-                                                    self.stunEffect.setHpr(0, 0, 90)
-                                                    self.stunEffect.setPos(self.headNode, 1, 0, 0)
-                                                else:
-                                                    self.stunEffect.reparentTo(self)
-                                                    self.stunEffect.setHpr(self, 0, 0, 0)
-                                                    self.stunEffect.setPos(self, 0, 0, self.getHeight() + 1)
-                                                self.stunEffect.startLoop()
-                                            self.stunEffect2 = StunEffect.getEffect()
-                                            if self.stunEffect2:
-                                                self.stunEffect2.duration = 1.0
-                                                self.stunEffect2.direction = -1
-                                                self.stunEffect2.effectScale = 0.5
-                                                if hasattr(self, 'headNode') and self.headNode:
-                                                    self.stunEffect2.reparentTo(self.headNode)
-                                                    self.stunEffect2.setHpr(0, 120, 90)
-                                                    self.stunEffect2.setPos(self.headNode, 1.25, 0, 0)
-                                                else:
-                                                    self.stunEffect2.reparentTo(self)
-                                                    self.stunEffect2.setHpr(self, 120, 0, 0)
-                                                    self.stunEffect2.setPos(self, 0, 0, self.getHeight() + 0.9)
-                                                self.stunEffect2.startLoop()
-                                        else:
-                                            if effectId == WeaponGlobals.C_HOLD:
-                                                if self.shacklesEffect:
-                                                    return
-                                                avatarScale = self.getEnemyScale()
-                                                self.shacklesEffect = GraveShackles.getEffect()
-                                                if self.shacklesEffect:
-                                                    self.shacklesEffect.reparentTo(self)
-                                                    self.shacklesEffect.setScale(avatarScale * 1.25)
-                                                    self.shacklesEffect.setPos(0, 0, 0)
-                                                    self.shacklesEffect.startLoop()
-                                                self.voodooSmokeEffect = AttuneSmoke.getEffect()
-                                                if self.voodooSmokeEffect:
-                                                    self.voodooSmokeEffect.reparentTo(self)
-                                                    self.voodooSmokeEffect.setPos(0, 0, 0.2)
-                                                    self.voodooSmokeEffect.startLoop()
-                                                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
-                                                    effect = GroundDirt.getEffect()
-                                                    if effect:
-                                                        effect.effectScale = avatarScale
-                                                        effect.setScale(avatarScale)
-                                                        effect.reparentTo(self)
-                                                        effect.play()
-                                                    cameraShakerEffect = CameraShaker()
-                                                    cameraShakerEffect.reparentTo(self)
-                                                    cameraShakerEffect.setPos(0, 0, 0)
-                                                    cameraShakerEffect.shakeSpeed = 0.08
-                                                    cameraShakerEffect.shakePower = 1.5
-                                                    cameraShakerEffect.numShakes = 2
-                                                    cameraShakerEffect.scalePower = 1
-                                                    cameraShakerEffect.play(100.0)
-                                            else:
-                                                if effectId == WeaponGlobals.C_ATTUNE:
-                                                    self.checkAttuneBuffEffect()
-                                                    if attacker and attacker.isLocal():
-                                                        attacker.addStickyTarget(self.doId)
-                                                else:
-                                                    if effectId == WeaponGlobals.C_VOODOO_STUN:
-                                                        self.showVoodooDollUnattuned()
-                                                        self.showEffectString(PLocalizer.AttackUnattune)
-                                                    else:
-                                                        if effectId == WeaponGlobals.C_INTERRUPTED:
-                                                            self.showEffectString(PLocalizer.AttackInterrupt)
-                                                        else:
-                                                            if effectId == WeaponGlobals.C_OPENFIRE and self.doId == localAvatar.doId:
-                                                                if self.crewBuffDisplay:
-                                                                    self.crewBuffDisplay.stop()
-                                                                    self.crewBuffDisplay.destroy()
-                                                                self.crewBuffDisplay = CrewBuffDisplay(skillIcon=loader.loadModel('models/textureCards/skillIcons').find('**/sail_openfire2'), duration=duration, buffName=PLocalizer.CrewBuffOpenFireString, buffDesc=PLocalizer.CrewBuffOpenFire % int((WeaponGlobals.OPEN_FIRE_BONUS - 1) * 100), parent=base.a2dBottomRight)
-                                                                self.crewBuffDisplay.reparentTo(base.a2dBottomRight, sort=-1000)
-                                                                self.crewBuffDisplay.play()
-                                                            else:
-                                                                if effectId == WeaponGlobals.C_TAKECOVER and self.doId == localAvatar.doId:
-                                                                    if self.crewBuffDisplay:
-                                                                        self.crewBuffDisplay.stop()
-                                                                        self.crewBuffDisplay.destroy()
-                                                                    self.crewBuffDisplay = CrewBuffDisplay(skillIcon=loader.loadModel('models/textureCards/skillIcons').find('**/sail_take_cover'), duration=duration, buffName=PLocalizer.CrewBuffTakeCoverString, buffDesc=PLocalizer.CrewBuffTakeCover % int((1 - WeaponGlobals.TAKE_COVER_BONUS) * 100), parent=base.a2dBottomRight)
-                                                                    self.crewBuffDisplay.reparentTo(base.a2dBottomRight, sort=-1000)
-                                                                    self.crewBuffDisplay.play()
+                    self.fireEffect.reparentTo(self)
+                    self.fireEffect.setPos(0, 0, self.height * 0.8)
+                self.fireEffect.effectScale = 0.25 * avatarScale
+                self.fireEffect.duration = 4.0
+                self.fireEffect.play()
+            self.smokeWispEffect = SmokeWisps.getEffect()
+            if self.smokeWispEffect:
+                self.smokeWispEffect.reparentTo(self)
+                self.smokeWispEffect.setPos(0, 0, self.height)
+                self.smokeWispEffect.startLoop()
+        elif effectId == WeaponGlobals.C_SLOW:
+            if self.slowEffect:
+                return
+            self.slowEffect = SlowEffect.getEffect()
+            if self.slowEffect:
+                self.slowEffect.duration = 1.75
+                self.slowEffect.effectScale = 0.85
+                if hasattr(self, 'headNode') and self.headNode:
+                    self.slowEffect.reparentTo(self.headNode)
+                    self.slowEffect.setHpr(0, 0, 90)
+                    self.slowEffect.setPos(self.headNode, 1.5, 0, 0)
+                else:
+                    self.slowEffect.reparentTo(self)
+                    self.slowEffect.setHpr(self, 0, 0, 0)
+                    self.slowEffect.setPos(self, 0, 0, self.getHeight() + 1.5)
+                self.slowEffect.startLoop()
+            self.slowEffect2 = SlowEffect.getEffect()
+            if self.slowEffect2:
+                self.slowEffect2.duration = 1.75
+                self.slowEffect2.effectScale = 0.75
+                if hasattr(self, 'headNode') and self.headNode:
+                    self.slowEffect2.reparentTo(self.headNode)
+                    self.slowEffect2.setHpr(0, 120, 90)
+                    self.slowEffect2.setPos(self.headNode, 1.75, 0, 0)
+                else:
+                    self.slowEffect2.reparentTo(self)
+                    self.slowEffect2.setHpr(self, 120, 0, 0)
+                    self.slowEffect2.setPos(self, 0, 0, self.getHeight() + 1.25)
+                self.slowEffect2.startLoop()
+        elif effectId == WeaponGlobals.C_STUN:
+            if self.stunEffect:
+                return
+            self.stunEffect = StunEffect.getEffect()
+            if self.stunEffect:
+                self.stunEffect.duration = 1.0
+                self.stunEffect.direction = 1
+                self.stunEffect.effectScale = 0.65
+                if hasattr(self, 'headNode') and self.headNode:
+                    self.stunEffect.reparentTo(self.headNode)
+                    self.stunEffect.setHpr(0, 0, 90)
+                    self.stunEffect.setPos(self.headNode, 1, 0, 0)
+                else:
+                    self.stunEffect.reparentTo(self)
+                    self.stunEffect.setHpr(self, 0, 0, 0)
+                    self.stunEffect.setPos(self, 0, 0, self.getHeight() + 1)
+                self.stunEffect.startLoop()
+            self.stunEffect2 = StunEffect.getEffect()
+            if self.stunEffect2:
+                self.stunEffect2.duration = 1.0
+                self.stunEffect2.direction = -1
+                self.stunEffect2.effectScale = 0.5
+                if hasattr(self, 'headNode') and self.headNode:
+                    self.stunEffect2.reparentTo(self.headNode)
+                    self.stunEffect2.setHpr(0, 120, 90)
+                    self.stunEffect2.setPos(self.headNode, 1.25, 0, 0)
+                else:
+                    self.stunEffect2.reparentTo(self)
+                    self.stunEffect2.setHpr(self, 120, 0, 0)
+                    self.stunEffect2.setPos(self, 0, 0, self.getHeight() + 0.9)
+                self.stunEffect2.startLoop()
+        elif effectId == WeaponGlobals.C_HOLD:
+            if self.shacklesEffect:
+                return
+            avatarScale = self.getEnemyScale()
+            self.shacklesEffect = GraveShackles.getEffect()
+            if self.shacklesEffect:
+                self.shacklesEffect.reparentTo(self)
+                self.shacklesEffect.setScale(avatarScale * 1.25)
+                self.shacklesEffect.setPos(0, 0, 0)
+                self.shacklesEffect.startLoop()
+            self.voodooSmokeEffect = AttuneSmoke.getEffect()
+            if self.voodooSmokeEffect:
+                self.voodooSmokeEffect.reparentTo(self)
+                self.voodooSmokeEffect.setPos(0, 0, 0.2)
+                self.voodooSmokeEffect.startLoop()
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
+                    effect = GroundDirt.getEffect()
+                    if effect:
+                        effect.effectScale = avatarScale
+                        effect.setScale(avatarScale)
+                        effect.reparentTo(self)
+                        effect.play()
+                    cameraShakerEffect = CameraShaker()
+                    cameraShakerEffect.reparentTo(self)
+                    cameraShakerEffect.setPos(0, 0, 0)
+                    cameraShakerEffect.shakeSpeed = 0.08
+                    cameraShakerEffect.shakePower = 1.5
+                    cameraShakerEffect.numShakes = 2
+                    cameraShakerEffect.scalePower = 1
+                    cameraShakerEffect.play(100.0)
+        elif effectId == WeaponGlobals.C_ATTUNE:
+            self.checkAttuneBuffEffect()
+            if attacker and attacker.isLocal():
+                attacker.addStickyTarget(self.doId)
+        elif effectId == WeaponGlobals.C_VOODOO_STUN:
+            self.showVoodooDollUnattuned()
+            self.showEffectString(PLocalizer.AttackUnattune)
+        elif effectId == WeaponGlobals.C_INTERRUPTED:
+            self.showEffectString(PLocalizer.AttackInterrupt)
+        elif effectId == WeaponGlobals.C_OPENFIRE and self.doId == localAvatar.doId:
+            if self.crewBuffDisplay:
+                self.crewBuffDisplay.stop()
+                self.crewBuffDisplay.destroy()
+            self.crewBuffDisplay = CrewBuffDisplay(skillIcon=loader.loadModel('models/textureCards/skillIcons').find('**/sail_openfire2'), duration=duration, buffName=PLocalizer.CrewBuffOpenFireString, buffDesc=PLocalizer.CrewBuffOpenFire % int((WeaponGlobals.OPEN_FIRE_BONUS - 1) * 100), parent=base.a2dBottomRight)
+            self.crewBuffDisplay.reparentTo(base.a2dBottomRight, sort=-1000)
+            self.crewBuffDisplay.play()
+        elif effectId == WeaponGlobals.C_TAKECOVER and self.doId == localAvatar.doId:
+            if self.crewBuffDisplay:
+                self.crewBuffDisplay.stop()
+                self.crewBuffDisplay.destroy()
+            self.crewBuffDisplay = CrewBuffDisplay(skillIcon=loader.loadModel('models/textureCards/skillIcons').find('**/sail_take_cover'), duration=duration, buffName=PLocalizer.CrewBuffTakeCoverString, buffDesc=PLocalizer.CrewBuffTakeCover % int((1 - WeaponGlobals.TAKE_COVER_BONUS) * 100), parent=base.a2dBottomRight)
+            self.crewBuffDisplay.reparentTo(base.a2dBottomRight, sort=-1000)
+            self.crewBuffDisplay.play()
 
     def removeStatusEffect(self, effectId, attackerId):
         if effectId == WeaponGlobals.C_ATTUNE:
@@ -1396,82 +1382,69 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         if effectId == WeaponGlobals.C_BLIND:
             if self.isLocal():
                 self.guiMgr.hideSmokePanel()
-        else:
-            if effectId == WeaponGlobals.C_DIRT:
-                if self.isLocal():
-                    self.guiMgr.hideDirtPanel()
-            else:
-                if effectId == WeaponGlobals.C_POISON:
-                    LerpColorScaleInterval(self.getGeomNode(), 1.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(0.7, 1.0, 0.6, 1)).start()
-                    if self.poisonEffect:
-                        self.poisonEffect.stopLoop()
-                        self.poisonEffect = None
-                else:
-                    if effectId == WeaponGlobals.C_ACID:
-                        if self.smokeWispEffect:
-                            self.smokeWispEffect.stopLoop()
-                            self.smokeWispEffect = None
-                    else:
-                        if effectId == WeaponGlobals.C_WOUND:
-                            pass
-                        else:
-                            if effectId == WeaponGlobals.C_TAUNT:
-                                self.getGeomNode().setColorScale(1, 1, 1, 1)
-                            else:
-                                if effectId == WeaponGlobals.C_ON_FIRE:
-                                    if self.fireEffect:
-                                        self.fireEffect.stopLoop()
-                                        self.fireEffect = None
-                                    if self.smokeWispEffect:
-                                        self.smokeWispEffect.stopLoop()
-                                        self.smokeWispEffect = None
-                                else:
-                                    if effectId == WeaponGlobals.C_SLOW:
-                                        if self.slowEffect:
-                                            self.slowEffect.stopLoop()
-                                            self.slowEffect = None
-                                        if self.slowEffect2:
-                                            self.slowEffect2.stopLoop()
-                                            self.slowEffect2 = None
-                                    else:
-                                        if effectId == WeaponGlobals.C_STUN:
-                                            if self.stunEffect:
-                                                self.stunEffect.stopLoop()
-                                                self.stunEffect = None
-                                            if self.stunEffect2:
-                                                self.stunEffect2.stopLoop()
-                                                self.stunEffect2 = None
-                                        else:
-                                            if effectId == WeaponGlobals.C_HOLD:
-                                                effect = GroundDirt.getEffect()
-                                                if effect:
-                                                    avatarScale = self.getEnemyScale()
-                                                    effect.effectScale = avatarScale / 1.5
-                                                    effect.setScale(avatarScale)
-                                                    effect.reparentTo(self)
-                                                    effect.play()
-                                                if self.voodooSmokeEffect:
-                                                    self.voodooSmokeEffect.stopLoop()
-                                                    self.voodooSmokeEffect = None
-                                                if self.shacklesEffect:
-                                                    self.shacklesEffect.stopLoop()
-                                                    self.shacklesEffect = None
-                                            else:
-                                                if effectId == WeaponGlobals.C_VOODOO_STUN and self.currentTarget:
-                                                    self.showVoodooDollAttuned()
-                                                else:
-                                                    if effectId == WeaponGlobals.C_OPENFIRE:
-                                                        if self.crewBuffDisplay:
-                                                            self.crewBuffDisplay.stop()
-                                                            self.crewBuffDisplay.destroy()
-                                                            self.crewBuffDisplay = None
-                                                    else:
-                                                        if effectId == WeaponGlobals.C_TAKECOVER:
-                                                            if self.crewBuffDisplay:
-                                                                self.crewBuffDisplay.stop()
-                                                                self.crewBuffDisplay.destroy()
-                                                                self.crewBuffDisplay = None
-        return
+        elif effectId == WeaponGlobals.C_DIRT:
+            if self.isLocal():
+                self.guiMgr.hideDirtPanel()
+        elif effectId == WeaponGlobals.C_POISON:
+            LerpColorScaleInterval(self.getGeomNode(), 1.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(0.7, 1.0, 0.6, 1)).start()
+            if self.poisonEffect:
+                self.poisonEffect.stopLoop()
+                self.poisonEffect = None
+        elif effectId == WeaponGlobals.C_ACID:
+            if self.smokeWispEffect:
+                self.smokeWispEffect.stopLoop()
+                self.smokeWispEffect = None
+        elif effectId == WeaponGlobals.C_WOUND:
+            pass
+        elif effectId == WeaponGlobals.C_TAUNT:
+            self.getGeomNode().setColorScale(1, 1, 1, 1)
+        elif effectId == WeaponGlobals.C_ON_FIRE:
+            if self.fireEffect:
+                self.fireEffect.stopLoop()
+                self.fireEffect = None
+            if self.smokeWispEffect:
+                self.smokeWispEffect.stopLoop()
+                self.smokeWispEffect = None
+        elif effectId == WeaponGlobals.C_SLOW:
+            if self.slowEffect:
+                self.slowEffect.stopLoop()
+                self.slowEffect = None
+            if self.slowEffect2:
+                self.slowEffect2.stopLoop()
+                self.slowEffect2 = None
+        elif effectId == WeaponGlobals.C_STUN:
+            if self.stunEffect:
+                self.stunEffect.stopLoop()
+                self.stunEffect = None
+            if self.stunEffect2:
+                self.stunEffect2.stopLoop()
+                self.stunEffect2 = None
+        elif effectId == WeaponGlobals.C_HOLD:
+            effect = GroundDirt.getEffect()
+            if effect:
+                avatarScale = self.getEnemyScale()
+                effect.effectScale = avatarScale / 1.5
+                effect.setScale(avatarScale)
+                effect.reparentTo(self)
+                effect.play()
+            if self.voodooSmokeEffect:
+                self.voodooSmokeEffect.stopLoop()
+                self.voodooSmokeEffect = None
+            if self.shacklesEffect:
+                self.shacklesEffect.stopLoop()
+                self.shacklesEffect = None
+        elif effectId == WeaponGlobals.C_VOODOO_STUN and self.currentTarget:
+            self.showVoodooDollAttuned()
+        elif effectId == WeaponGlobals.C_OPENFIRE:
+            if self.crewBuffDisplay:
+                self.crewBuffDisplay.stop()
+                self.crewBuffDisplay.destroy()
+                self.crewBuffDisplay = None
+        elif effectId == WeaponGlobals.C_TAKECOVER:
+            if self.crewBuffDisplay:
+                self.crewBuffDisplay.stop()
+                self.crewBuffDisplay.destroy()
+                self.crewBuffDisplay = None
 
     def checkAttuneBuffEffect(self):
         attuneBuffs = self.findAllBuffCopyKeys(WeaponGlobals.C_ATTUNE)

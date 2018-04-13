@@ -513,7 +513,7 @@ class StatusTray(GuiTray.GuiTray):
             attackerId = effects[effectKeyId][3]
             if effectKeyId not in self.skillEffects.keys() and effectId \
                 not in [WeaponGlobals.C_VOODOO_STUN,
-                        WeaponGlobals.C_VOODOO_HEX_STUN,
+                        #WeaponGlobals.C_VOODOO_HEX_STUN,
                         WeaponGlobals.C_INTERRUPTED,
                         WeaponGlobals.C_OPENFIRE,
                         WeaponGlobals.C_TAKECOVER]:
