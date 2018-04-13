@@ -104,6 +104,25 @@ class SpawnNodeBase:
 
         return task.done
 
+    def getNPCTeam(self, avatarType):
+        if avatarType.isA(AvatarTypes.Navy):
+            return PiratesGlobals.NAVY_TEAM
+        elif avatarType.isA(AvatarTypes.TradingCo):
+            return PiratesGlobals.TRADING_CO_TEAM
+        elif avatarType.isA(AvatarTypes.Undead):  
+            if avatarType.isA(AvatarTypes.French):
+                return PiratesGlobals.FRENCH_UNDEAD_TEAM
+            elif avatarType.isA(AvatarTypes.Spanish):
+                return PiratesGlobals.SPANISH_UNDEAD_TEAM
+            else:
+                return PiratesGlobals.UNDEAD_TEAM
+        elif avatarType.isA(AvatarTypes.Creature):
+            return PiratesGlobals.UNDEAD_TEAM
+        elif avatarType.isA(AvatarTypes.Townfolk):
+            return PiratesGlobals.VILLAGER_TEAM
+        else:
+            return PiratesGlobals.PLAYER_TEAM
+
     def __spawn(self, task=None):
 
         # Create the npc class
@@ -122,6 +141,7 @@ class SpawnNodeBase:
         npc.setHpr(self.objectData.get('Hpr', (0, 0, 0)))
         npc.setSpawnPosHpr(npc.getPos(), npc.getHpr())
         npc.setInitZ(npc.getZ())
+        npc.setTeam(self.getNPCTeam(avatarType))
 
         npc.setAvatarType(avatarType)
         npc.setAggroRadius(float(self.objectData.get('Aggro Radius', 0)))

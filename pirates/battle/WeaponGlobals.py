@@ -3,7 +3,6 @@ import cPickle
 import math
 import os
 import random
-import base64
 
 import Bayonet
 import Consumable
@@ -48,7 +47,7 @@ if not found:
     print 'WeaponGlobals.pkl file not found: %s' % filename.cStr()
 
 data = vfs.readFile(filename, 1)
-__skillInfo = cPickle.loads(base64.b64decode(data))
+__skillInfo = cPickle.loads(data)
 __attackEffectsSkillInfo = {}
 __columnHeadings = __skillInfo.pop('columnHeadings')
 for heading, value in __columnHeadings.items():
