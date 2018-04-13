@@ -6,7 +6,7 @@ from pirates.reputation import ReputationGlobals
 class PirateInventoryAI(DistributedInventoryAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PirateInventoryAI')
 
-    def setGeneralRep(self, quantity):
+    def setReputation(self, repType, quantity, repAccType=None):
         avatar = self.air.doId2do.get(self.ownerId)
 
         if not avatar:
@@ -15,17 +15,30 @@ class PirateInventoryAI(DistributedInventoryAI):
 
             return
 
+        oldLevel, oldReputation = ReputationGlobals.getLevelFromTotalReputation(
+            repType, self.getReputation(repType))
+
         newLevel, newReputation = ReputationGlobals.getLevelFromTotalReputation(
-            InventoryType.OverallRep, quantity)
+            repType, quantity)
 
-        if newLevel > avatar.getLevel():
-            avatar.d_levelUpMsg(InventoryType.OverallRep, newLevel, 0)
+        if repType == InventoryType.OverallRep or repType == InventoryType.GeneralRep:
+            if newLevel > avatar.getLevel():
+                avatar.b_setLevel(newLevel)
+                avatar.d_levelUpMsg(repType, newLevel, 0)
+        else:
+            if newLevel > oldLevel:
+                avatar.d_levelUpMsg(repType, newLevel, 0)
 
-        avatar.b_setLevel(newLevel)
-        self.b_setAccumulator(InventoryType.GeneralRep, quantity)
+        self.b_setAccumulator(repAccType or repType, quantity)
+
+    def getReputation(self, repType):
+        return self.getItem(self.getAccumulator, repType)
+
+    def setGeneralRep(self, quantity):
+        self.setReputation(InventoryType.OverallRep, quantity, InventoryType.GeneralRep)
 
     def getGeneralRep(self):
-        return self.getItem(self.getAccumulator, InventoryType.GeneralRep)
+        return self.getReputation(InventoryType.GeneralRep)
 
     def setGoldInPocket(self, quantity):
         self.b_setStack(InventoryType.GoldInPocket, quantity)

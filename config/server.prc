@@ -5,3 +5,6 @@ discord-ping-everyone #t
 
 # Notifer:
 notify-timestamp #t
+
+# Enemies:
+target-range-tolerance 10.0

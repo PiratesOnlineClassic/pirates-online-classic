@@ -1,37 +1,34 @@
+import random
+
+from panda3d.core import *
 from pirates.battle.BattleManagerBase import BattleManagerBase
 from direct.directnotify import DirectNotifyGlobal
 from pirates.battle import WeaponGlobals
 from direct.distributed.ClockDelta import globalClockDelta
+from pirates.uberdog import UberDogGlobals
+from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
+from pirates.battle import EnemyGlobals
 
-class BattleAttackerData(object):
+class BattleAttackerSkillData(object):
+    notify = DirectNotifyGlobal.directNotify.newCategory('BattleAttackerSkillData')
 
     def __init__(self, battleManager):
         self._battleManager = battleManager
 
-        self._avatar = None
-        self._target = None
+        self._attacker = None
 
         self._skillId = 0
         self._ammoSkillId = 0
 
         self._reputation = 0
-        self._gold = 0
 
     @property
-    def target(self):
-        return self._target
+    def attacker(self):
+        return self._attacker
 
-    @target.setter
-    def target(self, target):
-        self._target = target
-
-    @property
-    def avatar(self):
-        return self._avatar
-
-    @avatar.setter
-    def avatar(self, avatar):
-        self._avatar = avatar
+    @attacker.setter
+    def attacker(self, attacker):
+        self._attacker = attacker
 
     @property
     def skillId(self):
@@ -57,25 +54,102 @@ class BattleAttackerData(object):
     def reputation(self, reputation):
         self._reputation = reputation
 
-    @property
-    def gold(self):
-        return self._gold
-
-    @gold.setter
-    def gold(self, gold):
-        self._gold = gold
-
     def destroy(self):
-        self._target = None
-        self._avatar = None
+        self._attacker = None
 
         self._skillId = 0
         self._ammoSkillId = 0
 
         self._reputation = 0
-        self._gold = 0
+
+class BattleAttackerData(object):
+    notify = DirectNotifyGlobal.directNotify.newCategory('BattleAttackerData')
+
+    def __init__(self, battleManager):
+        self._battleManager = battleManager
+
+        self._avatar = None
+        self._target = None
+
+        self._skillData = {}
+        self._currentSkillId = 0
+
+    @property
+    def target(self):
+        return self._target
+
+    @target.setter
+    def target(self, target):
+        self._target = target
+
+    @property
+    def avatar(self):
+        return self._avatar
+
+    @avatar.setter
+    def avatar(self, avatar):
+        self._avatar = avatar
+
+    @property
+    def skillData(self):
+        return self._skillData
+
+    @property
+    def currentSkillId(self):
+        return self._currentSkillId
+
+    @currentSkillId.setter
+    def currentSkillId(self, currentSkillId):
+        self._currentSkillId = currentSkillId
+
+    def hasSkillData(self, skillId):
+        if not skillId:
+            return False
+
+        return skillId in self._skillData
+
+    def getSkillData(self, skillId):
+        if not self.hasSkillData(skillId):
+            return None
+
+        return self._skillData[skillId]
+
+    def addSkillData(self, skillId, ammoSkillId):
+        if not skillId:
+            return
+
+        if self.hasSkillData(skillId):
+            return
+
+        skillData = BattleAttackerSkillData(self._battleManager)
+        skillData.avatar = self
+        skillData.skillId = skillId
+        skillData.ammoSkillId = ammoSkillId
+
+        self._skillData[skillId] = skillData
+
+    def removeSkillData(self, skillData):
+        if not skillData:
+            return
+
+        if not isinstance(skillData, BattleAttackerSkillData):
+            return
+
+        if not self.hasSkillData(skillData):
+            return
+
+        del self._skillData[skillData.skillId]
+        skillData.destroy()
+
+    def destroy(self):
+        self._avatar = None
+        self._target = None
+
+        self._skillData = {}
+        self._currentSkillId = 0
 
 class BattleTargetData(object):
+    notify = DirectNotifyGlobal.directNotify.newCategory('BattleTargetData')
 
     def __init__(self, battleManager):
         self._battleManager = battleManager
@@ -116,7 +190,7 @@ class BattleTargetData(object):
         if not avatar:
             return
 
-        if avatar.doId in self._attackerData:
+        if self.hasAttackerData(attackerDoId):
             return
 
         attacker = BattleAttackerData(self._battleManager)
@@ -132,13 +206,15 @@ class BattleTargetData(object):
         if not isinstance(attackerData, BattleAttackerData):
             return
 
-        if not attackerData.avatar:
+        avatar = attackerData.avatar
+
+        if not avatar:
             return
 
-        if attackerData.avatar.doId not in self._attackerData:
+        if not self.hasAttackerData(avatar.doId):
             return
 
-        del self._attackerData[attackerData.avatar.doId]
+        del self._attackerData[avatar.doId]
         attackerData.destroy()
 
     def destroy(self):
@@ -204,17 +280,32 @@ class BattleManagerAI(BattleManagerBase):
         targetData.destroy()
         del self.__targetData[targetData.target.doId]
 
-    def targetInRange(self, attacker, target, skillId, ammoSkillId, pos):
-        if not skillId or not ammoSkillId:
+    def getTrueDistance(self, avatar, target):
+        targetParent = target.getParentObj()
+
+        if not targetParent:
+            return 0
+
+        targetNP = NodePath('psuedo-target-%d' % target.doId)
+        targetNP.setPosHpr(targetParent, target.getPos(), target.getHpr())
+
+        avatarNP = NodePath('psuedo-target-%d' % avatar.doId)
+        avatarNP.setPosHpr(targetParent, avatar.getPos(), avatar.getHpr())
+
+        return avatarNP.getDistance(targetNP)
+
+    def targetInRange(self, attacker, target, skillId, ammoSkillId):
+        if not skillId:
             return False
 
-        tolerance = 0
+        tolerance = simbase.config.GetFloat('target-range-tolerance', 10.0)
         attackRange = self.getModifiedAttackRange(attacker, skillId, ammoSkillId)
+        distance = self.getTrueDistance(attacker, target)
+
         if attackRange == WeaponGlobals.INF_RANGE:
             return True
 
-        distance = attacker.getDistance(target)
-        if distance <= attackRange + tolerance:
+        if distance <= attackRange * tolerance:
             return True
 
         return False
@@ -237,10 +328,16 @@ class BattleManagerAI(BattleManagerBase):
             ammoSkillId, charge)
 
         timestamp = globalClockDelta.getRealNetworkTime(bits=32)
-        distance = avatar.getDistance(target)
+        distance = self.getTrueDistance(avatar, target)
 
-        attackerEffects, targetEffects = self.getModifiedSkillEffects(avatar, target,
-            skillId, ammoSkillId, charge, distance)
+        if self.skillInRange(skillId, InventoryType.begin_WeaponSkillCutlass, InventoryType.end_WeaponSkillCutlass) or self.skillInRange(skillId,
+            InventoryType.begin_WeaponSkillDagger, InventoryType.end_WeaponSkillDagger):
+
+            attackerEffects, targetEffects = self.getModifiedSkillEffectsSword(avatar, target, skillId,
+                ammoSkillId, charge, distance)
+        else:
+            attackerEffects, targetEffects = self.getModifiedSkillEffects(avatar, target,
+                skillId, ammoSkillId, charge, distance)
 
         areaIdEffects = [
             attackerEffects,
@@ -248,8 +345,6 @@ class BattleManagerAI(BattleManagerBase):
         ]
 
         targetData = self.getTargetData(target.doId)
-        targetData.skillId = skillId
-        targetData.ammoSkillId = ammoSkillId
 
         if not targetData:
             self.notify.warning('Cannot calculate targeted skill for avatar %d, no target data for target %d!' % (
@@ -261,19 +356,30 @@ class BattleManagerAI(BattleManagerBase):
             targetData.addAttackerData(avatar.doId)
 
         attackerData = targetData.getAttackerData(avatar.doId)
+        attackerData.currentSkillId = skillId
 
-        if not targetData:
+        if not attackerData:
             self.notify.warning('Cannot calculate targeted skill for avatar %d, no data for avatar!' % (
                 avatar.doId))
 
             return None
 
+        if not attackerData.hasSkillData(skillId):
+            attackerData.addSkillData(skillId, ammoSkillId)
+
+        skillData = attackerData.getSkillData(skillId)
+
+        if not skillData:
+            self.notify.warning('Cannot calculate targeted skill for avatar %d, no data for skill!' % (
+                avatar.doId))
+
+            return None
+
         if skillResult == WeaponGlobals.RESULT_HIT:
-            attackerData.reputation += self.getModifiedAttackReputation(avatar, target,
+            reputation = self.getModifiedAttackReputation(avatar, target,
                 skillId, ammoSkillId)
 
-            attackerData.gold += 1
-
+            skillData.reputation += reputation
             self.__applyTargetEffects(target, targetEffects)
         elif skillResult == WeaponGlobals.RESULT_MISS:
             pass
@@ -326,13 +432,18 @@ class BattleManagerAI(BattleManagerBase):
         if not targetData:
             return
 
-        # TODO: FIXME!
-        #for attackerData in list(targetData.attackerData.values()):
-        #    avatar = attackerData.avatar
-        #
-        #    if not self.targetInRange(avatar, spawnNode.npc, attackerData.skillId, attackerData.ammoSkillId, avatar.getPos()):
-        #        print ("Av out of range", avatar, spawnNode.npc, avatar.getPos())
-        #        targetData.removeAttackerData(attackerData)
+        for attackerData in list(targetData.attackerData.values()):
+            avatar = attackerData.avatar
+
+            if not avatar:
+                targetData.removeAttackerData(attackerData)
+                continue
+
+            skillData = attackerData.getSkillData(attackerData.currentSkillId)
+
+            if not self.targetInRange(avatar, spawnNode.npc, skillData.skillId, skillData.ammoSkillId):
+                targetData.removeAttackerData(attackerData)
+                continue
 
         if spawnNode.npc.getHp()[0] <= 0:
             self.__enemyDied(spawnNode, spawnNode.npc)
@@ -356,15 +467,28 @@ class BattleManagerAI(BattleManagerBase):
             return
 
         for attackerData in list(targetData.attackerData.values()):
-            self.__giveAttackerReward(attackerData.avatar, target, attackerData.reputation,
-                attackerData.gold)
 
+            if not attackerData.avatar:
+                targetData.removeAttackerData(attackerData)
+                continue
+
+            self.__giveAttackerReward(attackerData, targetData)
             targetData.removeAttackerData(attackerData)
 
         self.removeTargetData(targetData)
         spawnNode.processDeath()
 
-    def __giveAttackerReward(self, avatar, target, reputation, gold):
+    def skillInRange(self, skillId, start, end):
+        return skillId >= start and skillId <= end
+
+    def getGoldReward(self, avatarType, level, dropMultiplier=1):
+        return random.randint(EnemyGlobals.getGoldDrop(avatarType, level, dropMultiplier), EnemyGlobals.getMaxGoldDrop(
+            avatarType, level, dropMultiplier))
+
+    def __giveAttackerReward(self, attackerData, targetData):
+        avatar = attackerData.avatar
+        target = targetData.target
+
         inventory = self.air.inventoryManager.getInventory(avatar.doId)
 
         if not inventory:
@@ -373,5 +497,35 @@ class BattleManagerAI(BattleManagerBase):
 
             return
 
-        inventory.setGeneralRep(inventory.getGeneralRep() + reputation)
-        inventory.setGoldInPocket(inventory.getGoldInPocket() + gold)
+        totalReputation = 0
+        goldReward = EnemyGlobals.getGoldDrop(target.getAvatarType(),
+            target.getLevel())
+
+        for skillData in list(attackerData.skillData.values()):
+            self.__giveSkillReward(inventory, skillData)
+            totalReputation += skillData.reputation
+            attackerData.removeSkillData(skillData)
+
+        inventory.setGeneralRep(inventory.getGeneralRep() + totalReputation)
+        inventory.setGoldInPocket(inventory.getGoldInPocket() + goldReward)
+
+    def __giveSkillReward(self, inventory, skillData):
+        skillId = skillData.skillId
+
+        if self.skillInRange(skillId, InventoryType.begin_WeaponSkillCutlass, InventoryType.end_WeaponSkillCutlass):
+            reputationType = InventoryType.CutlassRep
+        elif self.skillInRange(skillId, InventoryType.begin_WeaponSkillPistol, InventoryType.end_WeaponSkillPistol):
+            reputationType = InventoryType.PistolRep
+        elif self.skillInRange(skillId, InventoryType.begin_WeaponSkillMusket, InventoryType.end_WeaponSkillMusket):
+            reputationType = InventoryType.MusketRep
+        elif self.skillInRange(skillId, InventoryType.begin_WeaponSkillDagger, InventoryType.end_WeaponSkillDagger):
+            reputationType = InventoryType.DaggerRep
+        elif self.skillInRange(skillId, InventoryType.begin_WeaponSkillGrenade, InventoryType.end_WeaponSkillGrenade):
+            reputationType = InventoryType.GrenadeRep
+        elif self.skillInRange(skillId, InventoryType.begin_WeaponSkillDoll, InventoryType.end_WeaponSkillDoll):
+            reputationType = InventoryType.DollRep
+        elif self.skillInRange(skillId, InventoryType.begin_WeaponSkillWand, InventoryType.end_WeaponSkillWand):
+            reputationType = InventoryType.WandRep
+
+        inventory.setReputation(reputationType, inventory.getReputation(reputationType) + \
+            skillData.reputation)
