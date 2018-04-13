@@ -21,7 +21,7 @@ class PirateInventoryAI(DistributedInventoryAI):
         newLevel, newReputation = ReputationGlobals.getLevelFromTotalReputation(
             repType, quantity)
 
-        if repType == InventoryType.OverallRep or repType == InventoryType.GeneralRep:
+        if repType == InventoryType.OverallRep:
             if newLevel > avatar.getLevel():
                 avatar.b_setLevel(newLevel)
                 avatar.d_levelUpMsg(repType, newLevel, 0)
