@@ -481,10 +481,6 @@ class BattleManagerAI(BattleManagerBase):
     def skillInRange(self, skillId, start, end):
         return skillId >= start and skillId <= end
 
-    def getGoldReward(self, avatarType, level, dropMultiplier=1):
-        return random.randint(EnemyGlobals.getGoldDrop(avatarType, level, dropMultiplier), EnemyGlobals.getMaxGoldDrop(
-            avatarType, level, dropMultiplier))
-
     def __giveAttackerReward(self, attackerData, targetData):
         avatar = attackerData.avatar
         target = targetData.target
