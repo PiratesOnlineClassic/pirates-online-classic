@@ -188,4 +188,4 @@ def maxWeapons():
         inventory.b_setStack(InventoryType.AmmoGrenadeSiege, 99)
         return "Maxed weapons to Rank 5!"
 
-    return "Failed to maax Weapons"
+    return "Failed to max Weapons"
