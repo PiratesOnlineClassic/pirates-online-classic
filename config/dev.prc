@@ -24,3 +24,5 @@ visualize-cartesian-grid #f
 
 # Water: 
 want-low-end-water #t
+
+debug-holiday 13;9999

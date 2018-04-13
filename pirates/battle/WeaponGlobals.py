@@ -1,12 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.WeaponGlobals
 import copy
 import cPickle
 import math
 import os
 import random
+import base64
 
 import Bayonet
 import Consumable
@@ -32,8 +29,7 @@ from pirates.reputation import RepChart
 from pirates.uberdog.UberDogGlobals import InventoryType
 from WeaponConstants import *
 
-__defensiveBuffs = [
- C_TAKECOVER, C_OPENFIRE, C_ATTUNE, C_HASTEN, C_REGEN]
+__defensiveBuffs = [C_TAKECOVER, C_OPENFIRE, C_ATTUNE, C_HASTEN, C_REGEN]
 
 def getIsDefensiveBuff(effectId):
     return __defensiveBuffs.count(effectId)
@@ -52,7 +48,7 @@ if not found:
     print 'WeaponGlobals.pkl file not found: %s' % filename.cStr()
 
 data = vfs.readFile(filename, 1)
-__skillInfo = cPickle.loads(data)
+__skillInfo = cPickle.loads(base64.b64decode(data))
 __attackEffectsSkillInfo = {}
 __columnHeadings = __skillInfo.pop('columnHeadings')
 for heading, value in __columnHeadings.items():
