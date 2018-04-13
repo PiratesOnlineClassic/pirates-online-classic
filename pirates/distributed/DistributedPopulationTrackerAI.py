@@ -25,6 +25,7 @@ class DistributedPopulationTrackerAI(DistributedObjectAI):
 
     def setPopulation(self, population):
         self.population = population
+        self.air.districtTracker.sendDistrictStatusQuery()
 
     def d_setPopulation(self, population):
         self.sendUpdate('setPopulation', [population])

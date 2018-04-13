@@ -25,6 +25,10 @@ class NewsManagerAI(DistributedObjectAI):
         self.holidayCheckTask = taskMgr.doMethodLater(15, self.__checkHolidays, 'checkHolidays')
         self.holdayTimerTask = taskMgr.doMethodLater(15, self.__runHolidayTimer, 'holidayTimerTask')
 
+        # Accept remote networked start and stop of holidays from the UberDOG
+        self.air.netMessenger.accept('startHoliday', self, self.startHoliday)
+        self.air.netMessenger.accept('stopHoliday', self, self.endHoliday)
+
         # Load holidays from PRC
         if self.wantHolidays:
             debugHolidays = ConfigVariableList('debug-holiday')
@@ -91,8 +95,9 @@ class NewsManagerAI(DistributedObjectAI):
         self.processHolidayChange()
 
     def endHoliday(self, holidayId):
-        
+
         if not self.isHolidayActive(holidayId):
+            self.notify.warning('Attempted to stop inactive holiday %d!' % holidayId)
             return
 
         if holidayId in self.holidayList:
@@ -104,6 +109,10 @@ class NewsManagerAI(DistributedObjectAI):
     def processHolidayChange(self):
         self.updateTODCycle()
         self.sendHolidayList()
+
+        # Tell the UberDOG about the change
+        if self.air.districtTracker:
+            self.air.districtTracker.sendDistrictStatusQuery()
 
     def sendHolidayList(self):
         # Send updated holiday list
