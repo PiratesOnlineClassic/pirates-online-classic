@@ -364,6 +364,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def flagFirstDeath(self):
         pass
 
+    def d_levelUpMsg(self, category, level, messageId):
+        self.sendUpdate('levelUpMsg', [category, level, messageId])
+
     def delete(self):
         DistributedPlayerAI.delete(self)
         DistributedBattleAvatarAI.delete(self)
