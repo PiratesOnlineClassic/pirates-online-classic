@@ -19,7 +19,7 @@ class PirateInventoryAI(DistributedInventoryAI):
             InventoryType.OverallRep, quantity)
 
         if newLevel > avatar.getLevel():
-            avatar.d_levelUpMsg(InventoryType.OverallRep, avatar.getLevel(), 0)
+            avatar.d_levelUpMsg(InventoryType.OverallRep, newLevel, 0)
 
         avatar.b_setLevel(newLevel)
         self.b_setAccumulator(InventoryType.GeneralRep, quantity)
