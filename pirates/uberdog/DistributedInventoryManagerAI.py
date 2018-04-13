@@ -144,3 +144,21 @@ def maxOutSkillPoints():
         return "Maxed out Skill Points!"
 
     return "Failed to max out Skill Points!"
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def maxWeapons():
+    invoker = spellbook.getInvoker()
+    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    if inventory:
+        # there is a rank higher, but i don't think it was even a thing in-game back then,
+        # cause i've heard alot about pirate blade being the best which is L5,
+        # so i think L5 was the highest available to the player at the time
+        inventory.b_setStack(InventoryType.CutlassWeaponL5, 1)
+        inventory.b_setStack(InventoryType.PistolWeaponL5, 1)
+        inventory.b_setStack(InventoryType.DollWeaponL5, 1)
+        inventory.b_setStack(InventoryType.DaggerWeaponL5, 1)
+        inventory.b_setStack(InventoryType.GrenadeWeaponL5, 1)
+        inventory.b_setStack(InventoryType.WandWeaponL5, 1)
+        return "Maxed weapons to Rank 5!"
+
+    return "Failed to maax Weapons"
