@@ -12,6 +12,7 @@ from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from otp.ai.MagicWordGlobal import *
 from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 from pirates.battle import WeaponGlobals
+from pirates.reputation import ReputationGlobals
 
 class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNA):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
@@ -407,5 +408,15 @@ def maxMojo(maxMojo):
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def level(level):
-    spellbook.getTarget().b_setLevel(level)
+    invoker = spellbook.getInvoker()
+    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    if inventory:
+        totalRep = 0
+
+        for levelIndex in xrange(level):
+            totalRep += ReputationGlobals.getReputationNeededToLevel(
+                InventoryType.OverallRep, levelIndex)
+
+        inventory.setGeneralRep(totalRep)
+
     return "Your level has been set to %d." % level
