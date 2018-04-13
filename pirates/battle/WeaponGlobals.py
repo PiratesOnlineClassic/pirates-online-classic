@@ -3,7 +3,7 @@ import cPickle
 import math
 import os
 import random
-import base64
+import zlib
 
 import Bayonet
 import Consumable
@@ -48,7 +48,7 @@ if not found:
     print 'WeaponGlobals.pkl file not found: %s' % filename.cStr()
 
 data = vfs.readFile(filename, 1)
-__skillInfo = cPickle.loads(base64.b64decode(data))
+__skillInfo = cPickle.loads(zlib.decompress(data))
 __attackEffectsSkillInfo = {}
 __columnHeadings = __skillInfo.pop('columnHeadings')
 for heading, value in __columnHeadings.items():
@@ -498,22 +498,7 @@ def getAttackEffects(skillId, ammoSkillId=None):
                 targetMojo += skill[TARGET_MOJO_INDEX]
                 selfSwiftness = skill[SELF_SWIFTNESS_INDEX]
                 targetSwiftness += skill[TARGET_SWIFTNESS_INDEX]
-        finalData = (
-            [
-                selfHP,
-                selfPower, 
-                selfLuck, 
-                selfMojo, 
-                selfSwiftness
-            ], 
-            [
-                targetHP, 
-                targetPower, 
-                targetEffect, 
-                targetMojo, 
-                targetSwiftness
-            ]
-        )
+        finalData = ([selfHP, selfPower, selfLuck, selfMojo, selfSwiftness], [targetHP, targetPower, targetEffect, targetMojo, targetSwiftness])
         __attackEffectsSkillInfo[(skillId, ammoSkillId)] = finalData
         return finalData
 
