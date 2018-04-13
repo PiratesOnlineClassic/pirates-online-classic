@@ -1,17 +1,12 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.RainSplashes2
+from panda3d.core import *
+from panda3d.physics import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from EffectController import EffectController
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
-from pandac.PandaModules import *
-
-
 class RainSplashes2(EffectController, NodePath):
-    __module__ = __name__
     cardScale = 64.0
 
     def __init__(self, reference=None):
@@ -29,7 +24,7 @@ class RainSplashes2(EffectController, NodePath):
             stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
             RainSplashes2.particleDummy.setAttrib(stencil)
         self.reference = reference
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('RainSplashes2')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
@@ -90,4 +85,3 @@ class RainSplashes2(EffectController, NodePath):
 
     def destroy(self):
         EffectController.destroy(self)
-# okay decompiling .\pirates\effects\RainSplashes2.pyc
