@@ -4,7 +4,7 @@ discord-log-hacks-url https://discordapp.com/api/webhooks/430876170846863360/uQX
 discord-ping-everyone #t
 
 # Discord Exception Log:
-discord-log-exception #f
+discord-log-exceptions #f
 discord-exception-url https://discordapp.com/api/webhooks/434065950472405007/U-QwQq3PAxQS4PYZ-v1X9T56aTSUf7jHh-9GbTEJ0dqzqVFHlLrjYY4dJMShlHTeVI8z
 
 # Notifer:

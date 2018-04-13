@@ -139,7 +139,7 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
         print(trace)
 
-        if config.GetBool('discord-log-exceptions', True):
+        if config.GetBool('discord-log-exceptions', False):
             exceptionWebhookUrl = config.GetString('discord-exception-url', '')
 
             if exceptionWebhookUrl:
