@@ -1604,6 +1604,9 @@ class OTPClientRepository(ClientRepositoryBase):
         if msgType == 65535:
             self.lostConnection()
             return
+        if msgType == 10:
+            self.handleSystemMessage(di)
+            return
         if self.handler == None:
             self.handleMessageType(msgType, di)
         else:

@@ -7,6 +7,7 @@ from otp.distributed.OtpDoGlobals import *
 from otp.friends.FriendManagerAI import FriendManagerAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.distributed.PiratesDistrictAI import PiratesDistrictAI
+from pirates.distributed.DistrictTrackerAI import DistrictTrackerAI
 from pirates.world import WorldGlobals
 from pirates.ai.NewsManagerAI import NewsManagerAI
 from pirates.piratesbase.UniqueIdManager import UniqueIdManager
@@ -31,6 +32,8 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.zoneAllocator = UniqueIdAllocator(PiratesGlobals.DynamicZonesBegin, PiratesGlobals.DynamicZonesEnd)
         self.zoneId2owner = {}
         self.uidMgr = UniqueIdManager(self)
+
+        self.districtTracker = None
 
     def handleConnected(self):
         PiratesInternalRepository.handleConnected(self)
@@ -114,6 +117,8 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.tradeMgr.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
         self.guildManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_GUILD_MANAGER, 'PCGuildManager')
+
+        self.districtTracker = DistrictTrackerAI(self)
 
     def createWorlds(self):
         """

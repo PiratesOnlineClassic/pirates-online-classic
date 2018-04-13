@@ -13,6 +13,16 @@ class PiratesInternalRepository(AstronInternalRepository):
 
     def __init__(self, baseChannel, serverId=None, dcFileNames = None, dcSuffix='AI', connectMethod=None, threadedNet=None):
         AstronInternalRepository.__init__(self, baseChannel, serverId, dcFileNames, dcSuffix, connectMethod, threadedNet)
+        self.__registerNetMessages()
+
+    def __registerNetMessages(self):
+        # District Status
+        self.netMessenger.register(0, 'districtStatus')
+        self.netMessenger.register(1, 'queryDistrictStatus')
+
+        # Remote Holiday Control
+        self.netMessenger.register(2, 'startHoliday')
+        self.netMessenger.register(3, 'stopHoliday')
 
     def handleConnected(self):
         if config.GetBool('send-hacker-test-message', False):
@@ -48,7 +58,7 @@ class PiratesInternalRepository(AstronInternalRepository):
 
     def systemMessage(self, message, channel=10):
         msgDg = PyDatagram()
-        msgDg.addUint16(6)
+        msgDg.addUint16(10)
         msgDg.addString(message)
 
         self.writeServerEvent('system-message', 
@@ -116,7 +126,45 @@ class PiratesInternalRepository(AstronInternalRepository):
                 self.notify.warning('Discord Hacker Webhook url not defined!')
 
         if kickChannel:
-            self.kickChannel(kickChannel)     
+            self.kickChannel(kickChannel)   
+
+    def logException(self, e):
+        trace = traceback.format_exc()
+
+        self.writeServerEvent('internal-exception', 
+            avId=self.getAvatarIdFromSender(),
+            accountId=self.getAccountIdFromSender(),
+            exception=trace)
+
+        self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
+        print(trace)
+
+        if config.GetBool('discord-log-exceptions', True):
+            exceptionWebhookUrl = config.GetString('discord-exception-url', '')
+
+            if exceptionWebhookUrl:
+                districtName = 'Unknown'
+                if hasattr(self, 'distributedDistrict'):
+                    districtName = self.distributedDistrict.getName()
+
+                header = 'Internal Exception occured on %s.' % districtName
+                webhookMessage = SlackWebhook(exceptionWebhookUrl, message='')
+
+                attachment = SlackAttachment(title=header)
+                attachment.addField(SlackField(title='Traceback', value=trace))
+
+                attachment.addField(SlackField())
+                attachment.addField(SlackField(title='Avatar Id', value=self.getAvatarIdFromSender()))
+                attachment.addField(SlackField(title='Account Id', value=self.getAccountIdFromSender()))
+
+                webhookMessage.addAttachment(attachment)
+                webhookMessage.send()
+            else:
+                self.notify.warning('Discord exception Webhook url not defined!')
+
+        # Python 2 Vs 3 compatibility
+        if not sys.version_info >= (3, 0):
+            sys.exc_clear()
 
     def readerPollOnce(self):
         try:
@@ -131,13 +179,6 @@ class PiratesInternalRepository(AstronInternalRepository):
                 if avatar:
                     self.kickChannel(self.getMsgSender())
 
-            self.writeServerEvent('internal-exception', 
-                avId=self.getAvatarIdFromSender(),
-                accountId=self.getAccountIdFromSender(),
-                exception=traceback.format_exc())
-
-            self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
-            print traceback.format_exc()
-            sys.exc_clear()
+            self.logException(e)
 
         return 1
