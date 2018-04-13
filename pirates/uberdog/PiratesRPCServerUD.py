@@ -1,94 +1,102 @@
-from rpyc import Service
-from rpyc.utils.server import ThreadedServer
-from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.stdpy import threading
+from direct.directnotify.DirectNotifyGlobal import *
+from direct.task import Task
+from SimpleXMLRPCServer import SimpleXMLRPCServer
+from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
+from threading import Thread
+import traceback
+import json
+import sys
 
-activeConnections = set()
 
-class PiratesService(Service):
-    notify = directNotify.newCategory('PiratesService')
+class PiratesRPCHandler(SimpleXMLRPCRequestHandler):
+    rpc_paths = ('/PRPC2',)
+
+
+class PiratesRPCServerUD(Thread):
+    notify = directNotify.newCategory('PiratesRPCServerUD')
     notify.setInfo(True)
 
-    def __init__(self, conn, air):
-        self._air = air
-        Service.__init__(self, conn)
+    def __init__(self, air):
+        Thread.__init__(self)
+        self.air = air
+        self.hostname = config.GetString('rpc-hostname', '127.0.0.1')
+        self.port = config.GetInt('rpc-port', 6484)
+        self.running = True
+        self.server = SimpleXMLRPCServer((self.hostname, self.port), logRequests=False, requestHandler=PiratesRPCHandler)
+        self.server.register_introspection_functions()
+        self.registerCommands()
 
-    @property
-    def air(self):
-        return self._air
+    def register_function(self, function, name=None):
+        self.server.register_function(function, name)
 
-    def on_connect(self):
-        self.token = None
+    def run(self):
+        self.notify.info('Starting RPC server at %s:%d' % (self.hostname, self.port))
+        self.server.serve_forever()
 
-    def on_disconnect(self):
-        if self.token:
-            self.exposed_disconnect()
+    def stop_Server(self):
+        self.server.shutdown()
+        self.server.server_close()
 
-    def exposed_authenticate(self, token):
-        client_ip = self._conn._config['endpoints'][1]
-        if self.token:
-            raise ValueError('Connection already authenticated')
-        elif self.__verifyToken(token):
-            self.token = token
+    def registerCommands(self):
+        self.register_function(self.ping)
+        self.register_function(self.systemMessage)
+        self.register_function(self.systemMessageChannel)
+        self.register_function(self.kickChannel)
+        self.register_function(self.getDistricts)
+        self.register_function(self.getHolidays)
+        self.register_function(self.startHoliday)
+        self.register_function(self.stopHoliday)
 
-            self.notify.info('Received new RPC connection from %s:%s' % client_ip)
-            self.air.writeServerEvent('rpc-connection',
-                message='Success!',
-                client_ip=client_ip[0])
-        else:
-            self.notify.warning('Received an invalid rpc token from %s:%s!' % client_ip)
-            self.air.writeServerEvent('rpc-connection',
-                message='Invalid authentication token',
-                client_ip=client_ip[0])
-            raise ValueError('Invalid authentication token')
+    def formatCallback(self, code=200, message='Success', **kwargs):
+        response = {'code': code, 'message': message}
+        for keyword in kwargs:
+            response[keyword] = kwargs[keyword]
+        return json.dumps(response)
 
-    def __verifyToken(self, token):
-        return token == 'test_token' #TODO
-
-    def __verifyConnection(self):
-        if self.token is None:
-            raise Exception('Connection has not been authenticated')
-
-    def exposed_disconnect(self):
-        self._callback = None
-        activeConnections.discard(self)
-
-        # Log RPC activity
-        self.air.writeServerEvent('rpc-disconnect',
-            client_ip=self._conn._config['endpoints'][1][0])
-
-    def exposed_ping(self, incoming):
+    def ping(self, response):
         """
         Summary:
             Responds with the [data] that was sent. This method exists only for
             testing purposes.
+
         Parameters:
             [any data] = The data to be given back in response.
+
         Example response: 'pong'
         """
-        self.__verifyConnection()
+        return self.formatCallback(response=response)
 
-        return incoming
-
-    def exposed_systemMessage(self, message, channel=10):
+    def systemMessage(self, message):
         """
         Summary:
-            Broadcasts a [message] to any client whose Client Agent
-            is subscribed to the provided [channel]. Channel 10
-            is a global broadcast
+            Broadcasts a [message] to the entire server globally.
+
+        Parameters:
+            [str message] = The message to broadcast.
+        """
+        self.air.systemMessage(message)
+
+        return self.formatCallback()
+
+    def systemMessageChannel(self, message, channel):
+        """
+        Summary:
+            Broadcasts a [message] to any client whose Client Agent is
+            subscribed to the provided [channel].
+
         Parameters:
             [int channel] = The channel to direct the message to.
             [str message] = The message to broadcast.
         """
-        self.__verifyConnection()
-
         self.air.systemMessage(message, channel)
-        return True
+
+        return self.formatCallback()
 
     def kickChannel(self, channel, reason=1, message=''):
         """
         Summary:
             Kicks any users whose CAs are subscribed to a particular [channel] with a [code].
+
         Parameters:
             [int channel] = The channel to direct the message to.
             [int code] = An optional code to kick.
@@ -98,46 +106,58 @@ class PiratesService(Service):
         try:
             self.air.kickChannel(channel, reason, message)
         except Exception as e:
-            raise Exception('Failed to kick channel, An unexpected error occured: %s' % repr(e))
+            return self.formatCallback(code=100, message='Failed to kick channel, An unexpected error occured', error=repr(e))
 
-        return True
+        return self.formatCallback()
 
-class PiratesRPCFactory:
-    notify = directNotify.newCategory('PiratesRPCFactory')
+    def getDistricts(self):
+        """
+        Summary:
+            Retrieves the last reported status of all the districts in the server cluster
+        Returns:
+            districts: List containing all districts
+        """
 
-    def __init__(self, air):
-        self._air = air
+        districts = self.air.districtTracker.getShards()
+        return self.formatCallback(districts=districts)
 
-    def get_service_name(self):
-        return 'PiratesService'
+    def getHolidays(self):
+        """
+        Summary: 
+            Retrieves a list of all holidays happening on the cluster
+        Returns:
+            holidays: List containing all unique holidays
+        """
 
-    def get_service_aliases(self):
-        return ('PIRATES',)
+        districts = self.air.districtTracker.getShards()
+        holidays = []
+        for district in districts:
+            holidays += district['holidays']
 
-    def __call__(self, conn):
-        return PiratesService(conn, self._air)
+        return self.formatCallback(holidays=str(set(holidays)))
 
-class PiratesRPCServerUD:
-    notify = directNotify.newCategory('PiratesRPCServerUD')
-    notify.setInfo(True)
-    
-    def __init__(self, air):
-        self._server = None
-        self._air = air
+    def startHoliday(self, holidayId, time):
+        """
+        Summary:
+            Tells all NewsManagers in the cluster to start a specific holiday id for a 
+            set amount of time.
+        Parameters:
+            [int holidayId] = The holiday id to start
+            [int time] = The time in seconds for the holiday to run
+        """
 
-    @property
-    def server(self):
-        return self._server
+        self.air.newsManager.startHoliday(int(holidayId), int(time))
 
-    @property
-    def air(self):
-        return self._air
+        return self.formatCallback()
 
-    def start(self):
-        port = config.GetInt('rpc-server-port', 19912)
-        self._server = ThreadedServer(PiratesRPCFactory(self._air), port=port)
+    def stopHoliday(self, holidayId):
+        """
+        Summary:
+            Tells all NewsManagers in the cluster to stop a specific holiday id.
+        Parameters:
+            [int holidayId] = The holiday id to stop
+        """
 
-        self.notify.info('Starting RPC server on port %d' % port)
-        t = threading.Thread(target=self._server.start)
-        t.daemon = True
-        t.start()
+        self.air.newsManager.stopHoliday(int(holidayId))
+
+        return self.formatCallback()

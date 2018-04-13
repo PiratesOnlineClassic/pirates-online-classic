@@ -13,6 +13,16 @@ class PiratesInternalRepository(AstronInternalRepository):
 
     def __init__(self, baseChannel, serverId=None, dcFileNames = None, dcSuffix='AI', connectMethod=None, threadedNet=None):
         AstronInternalRepository.__init__(self, baseChannel, serverId, dcFileNames, dcSuffix, connectMethod, threadedNet)
+        self.__registerNetMessages()
+
+    def __registerNetMessages(self):
+        # District Status
+        self.netMessenger.register(0, 'districtStatus')
+        self.netMessenger.register(1, 'queryDistrictStatus')
+
+        # Remote Holiday Control
+        self.netMessenger.register(2, 'startHoliday')
+        self.netMessenger.register(3, 'stopHoliday')
 
     def handleConnected(self):
         if config.GetBool('send-hacker-test-message', False):
