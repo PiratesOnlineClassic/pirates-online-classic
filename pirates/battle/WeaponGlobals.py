@@ -3,7 +3,7 @@ import cPickle
 import math
 import os
 import random
-import base64
+import zlib
 
 import Bayonet
 import Consumable
@@ -48,7 +48,7 @@ if not found:
     print 'WeaponGlobals.pkl file not found: %s' % filename.cStr()
 
 data = vfs.readFile(filename, 1)
-__skillInfo = cPickle.loads(base64.b64decode(data))
+__skillInfo = cPickle.loads(zlib.decompress(data))
 __attackEffectsSkillInfo = {}
 __columnHeadings = __skillInfo.pop('columnHeadings')
 for heading, value in __columnHeadings.items():
@@ -123,9 +123,7 @@ def getWeaponStats(itemId):
     entry = __weaponStatList.get(itemId)
     if entry:
         return entry
-    else:
-        return (None, None)
-    return
+    return (None, None)
 
 
 cutlassScalePVP = 1.6
@@ -141,32 +139,28 @@ def getWeaponDamageScale(itemId):
     entry = __weaponDamageScaleList.get(itemId)
     if entry:
         return entry[0]
-    else:
-        return 1.0
+    return 1.0
 
 
 def getAmmoNPCDamageScale(ammoId):
     entry = __ammoNPCDamageScaleList.get(ammoId)
     if entry:
         return entry
-    else:
-        return 1.0
+    return 1.0
 
 
 def getWeaponExperienceScale(itemId):
     entry = __weaponDamageScaleList.get(itemId)
     if entry:
         return entry[1]
-    else:
-        return 1.0
+    return 1.0
 
 
 def getWeaponPvpDamageScale(itemId):
     entry = __weaponDamageScaleList.get(itemId)
     if entry:
         return entry[2]
-    else:
-        return 1.0
+    return 1.0
 
 
 __invId2RepId = {InventoryType.MeleeWeaponL1: InventoryType.MeleeRep, InventoryType.MeleeWeaponL2: InventoryType.MeleeRep, InventoryType.MeleeWeaponL3: InventoryType.MeleeRep, InventoryType.MeleeWeaponL4: InventoryType.MeleeRep, InventoryType.MeleeWeaponL5: InventoryType.MeleeRep, InventoryType.MeleeWeaponL6: InventoryType.MeleeRep, InventoryType.CutlassWeaponL1: InventoryType.CutlassRep, InventoryType.CutlassWeaponL2: InventoryType.CutlassRep, InventoryType.CutlassWeaponL3: InventoryType.CutlassRep, InventoryType.CutlassWeaponL4: InventoryType.CutlassRep, InventoryType.CutlassWeaponL5: InventoryType.CutlassRep, InventoryType.CutlassWeaponL6: InventoryType.CutlassRep, InventoryType.DualCutlassL1: InventoryType.CutlassRep, InventoryType.FoilL1: InventoryType.CutlassRep, InventoryType.PistolWeaponL1: InventoryType.PistolRep, InventoryType.PistolWeaponL2: InventoryType.PistolRep, InventoryType.PistolWeaponL3: InventoryType.PistolRep, InventoryType.PistolWeaponL4: InventoryType.PistolRep, InventoryType.PistolWeaponL5: InventoryType.PistolRep, InventoryType.PistolWeaponL6: InventoryType.PistolRep, InventoryType.MusketWeaponL1: InventoryType.MusketRep, InventoryType.MusketWeaponL2: InventoryType.MusketRep, InventoryType.MusketWeaponL3: InventoryType.MusketRep, InventoryType.BayonetWeaponL1: InventoryType.MusketRep, InventoryType.BayonetWeaponL2: InventoryType.MusketRep, InventoryType.BayonetWeaponL3: InventoryType.MusketRep, InventoryType.DaggerWeaponL1: InventoryType.DaggerRep, InventoryType.DaggerWeaponL2: InventoryType.DaggerRep, InventoryType.DaggerWeaponL3: InventoryType.DaggerRep, InventoryType.DaggerWeaponL4: InventoryType.DaggerRep, InventoryType.DaggerWeaponL5: InventoryType.DaggerRep, InventoryType.DaggerWeaponL6: InventoryType.DaggerRep, InventoryType.GrenadeWeaponL1: InventoryType.GrenadeRep, InventoryType.GrenadeWeaponL2: InventoryType.GrenadeRep, InventoryType.GrenadeWeaponL3: InventoryType.GrenadeRep, InventoryType.GrenadeWeaponL4: InventoryType.GrenadeRep, InventoryType.GrenadeWeaponL5: InventoryType.GrenadeRep, InventoryType.GrenadeWeaponL6: InventoryType.GrenadeRep, InventoryType.WandWeaponL1: InventoryType.WandRep, InventoryType.WandWeaponL2: InventoryType.WandRep, InventoryType.WandWeaponL3: InventoryType.WandRep, InventoryType.WandWeaponL4: InventoryType.WandRep, InventoryType.WandWeaponL5: InventoryType.WandRep, InventoryType.WandWeaponL6: InventoryType.WandRep, InventoryType.DollWeaponL1: InventoryType.DollRep, InventoryType.DollWeaponL2: InventoryType.DollRep, InventoryType.DollWeaponL3: InventoryType.DollRep, InventoryType.DollWeaponL4: InventoryType.DollRep, InventoryType.DollWeaponL5: InventoryType.DollRep, InventoryType.DollWeaponL6: InventoryType.DollRep, InventoryType.KettleWeaponL1: InventoryType.KettleRep, InventoryType.KettleWeaponL2: InventoryType.KettleRep, InventoryType.KettleWeaponL3: InventoryType.KettleRep, InventoryType.MonsterWeaponL1: InventoryType.MonsterRep, InventoryType.MonsterWeaponL2: InventoryType.MonsterRep, InventoryType.MonsterWeaponL3: InventoryType.MonsterRep, InventoryType.MonsterWeaponL4: InventoryType.MonsterRep, InventoryType.MonsterWeaponL5: InventoryType.MonsterRep, InventoryType.PistolPouchL1: InventoryType.PistolRep, InventoryType.PistolPouchL2: InventoryType.PistolRep, InventoryType.PistolPouchL3: InventoryType.PistolRep, InventoryType.DaggerPouchL1: InventoryType.DaggerRep, InventoryType.DaggerPouchL2: InventoryType.DaggerRep, InventoryType.DaggerPouchL3: InventoryType.DaggerRep, InventoryType.GrenadePouchL1: InventoryType.GrenadeRep, InventoryType.GrenadePouchL2: InventoryType.GrenadeRep, InventoryType.GrenadePouchL3: InventoryType.GrenadeRep, InventoryType.CannonPouchL1: InventoryType.CannonRep, InventoryType.CannonPouchL2: InventoryType.CannonRep, InventoryType.CannonPouchL3: InventoryType.CannonRep}
@@ -175,8 +169,7 @@ def getRepId(inventoryId):
     newId = __invId2RepId.get(inventoryId)
     if newId:
         return newId
-    else:
-        return 0
+    return 0
 
 
 PERFECT_ACC = 100.0
@@ -196,8 +189,7 @@ LONG_RANGE = 100.0
 FAR_RANGE = 150.0
 DISTANT_RANGE = 200.0
 INF_RANGE = NA
-Ranges = (
- CLOSE_RANGE, SHORT_RANGE, MED_RANGE, LONG_RANGE, FAR_RANGE, DISTANT_RANGE)
+Ranges = (CLOSE_RANGE, SHORT_RANGE, MED_RANGE, LONG_RANGE, FAR_RANGE, DISTANT_RANGE)
 MaxAimDistance = DISTANT_RANGE
 AI_RANGE_TOLERANCE = 5.0
 AI_AOE_RANGE_TOLERANCE = 10.0
@@ -230,8 +222,7 @@ MAX_AREA_TARGETS = 10
 SWIFT_NORM = 0
 SWIFT_INC = 1
 SWIFT_DEC = -1
-SWIFT_MOD = [
- -1.0, -0.5, 0.0, 0.5]
+SWIFT_MOD = [-1.0, -0.5, 0.0, 0.5]
 SWIFT_NORM_INDEX = 2
 SWIFT_MIN_INDEX = 0
 SWIFT_MAX_INDEX = 3
@@ -274,8 +265,7 @@ def getSkillReputationCategoryId(skillId):
     cat = __skillInfo.get(skillId)
     if cat:
         return cat[REPUTATION_CATEGORY_INDEX]
-    else:
-        return 0
+    return 0
 
 
 def canFreeUse(skillId):
@@ -374,8 +364,6 @@ def getSkillIdForAmmoSkillId(ammoSkillId):
         if ammoSkillId == getSkillAmmoInventoryId(skillId):
             return skillId
 
-    return
-
 
 def getSkillMaxQuantity(skillId):
     return __skillInfo[skillId][MAX_QUANTITY_INDEX]
@@ -403,8 +391,7 @@ def getSkillTrack(skillId):
     track = __skillInfo[skillId][SKILL_TRACK_INDEX]
     if track:
         return track
-    else:
-        return -1
+    return -1
 
 
 def getSkillIcon(skillId):
@@ -413,16 +400,14 @@ def getSkillIcon(skillId):
     icon = __skillInfo[skillId][SKILL_ICON_INDEX]
     if icon:
         return str(icon)
-    else:
-        return 'base'
+    return 'base'
 
 
 def getMojoCost(skillId):
     mojoCost = __skillInfo[skillId][SELF_MOJO_INDEX]
     if mojoCost:
         return mojoCost
-    else:
-        return 0
+    return 0
 
 
 def getHitEffect(skillId):
@@ -513,12 +498,9 @@ def getAttackEffects(skillId, ammoSkillId=None):
                 targetMojo += skill[TARGET_MOJO_INDEX]
                 selfSwiftness = skill[SELF_SWIFTNESS_INDEX]
                 targetSwiftness += skill[TARGET_SWIFTNESS_INDEX]
-        finalData = (
-         [
-          selfHP, selfPower, selfLuck, selfMojo, selfSwiftness], [targetHP, targetPower, targetEffect, targetMojo, targetSwiftness])
+        finalData = ([selfHP, selfPower, selfLuck, selfMojo, selfSwiftness], [targetHP, targetPower, targetEffect, targetMojo, targetSwiftness])
         __attackEffectsSkillInfo[(skillId, ammoSkillId)] = finalData
         return finalData
-    return
 
 
 def getAttackTargetHP(skillId, ammoSkillId=None):
@@ -1028,13 +1010,11 @@ def getBuffCategory(buffId):
         return val[0]
     return 0
 
-
 def getBuffPriority(buffId):
     val = __buffPriority.get(buffId)
     if val:
         return val[1]
     return 0
-
 
 __weaponVolley = {InventoryType.PistolWeaponL1: 1, InventoryType.PistolWeaponL2: 2, InventoryType.PistolWeaponL3: 3, InventoryType.PistolWeaponL4: 3, InventoryType.PistolWeaponL5: 3, InventoryType.PistolWeaponL6: 4, InventoryType.MusketWeaponL1: 1, InventoryType.MusketWeaponL2: 2, InventoryType.MusketWeaponL3: 3, InventoryType.BayonetWeaponL1: 1, InventoryType.BayonetWeaponL2: 2, InventoryType.BayonetWeaponL3: 3, InventoryType.GrenadeWeaponL1: 1, InventoryType.GrenadeWeaponL2: 1, InventoryType.GrenadeWeaponL3: 1}
 
@@ -1044,21 +1024,14 @@ def getWeaponVolley(weaponId):
         return val
     return 0
 
-
 __staffChargeSkills = {InventoryType.StaffWither: EnemySkills.STAFF_WITHER_CHARGE, InventoryType.StaffSoulFlay: EnemySkills.STAFF_SOULFLAY_CHARGE, InventoryType.StaffPestilence: EnemySkills.STAFF_PESTILENCE_CHARGE, InventoryType.StaffHellfire: EnemySkills.STAFF_HELLFIRE_CHARGE, InventoryType.StaffBanish: EnemySkills.STAFF_BANISH_CHARGE, InventoryType.StaffDesolation: EnemySkills.STAFF_DESOLATION_CHARGE}
 
 def getChargeSkill(skillId):
     return __staffChargeSkills.get(skillId)
 
-
 def getAIProjectileAirTime(distance):
     return max(min(distance * 0.04, 2.6), 1.2)
 
-
-BackstabSkills = (
- InventoryType.DaggerCut, InventoryType.DaggerSwipe, InventoryType.DaggerGouge, InventoryType.DaggerEviscerate)
-StartingSkills = [
- InventoryType.CutlassHack, InventoryType.CutlassSlash, InventoryType.SailBroadsideLeft, InventoryType.SailBroadsideRight, InventoryType.DaggerCut, InventoryType.DaggerSwipe, InventoryType.StaffBlast, InventoryType.StaffSoulFlay, InventoryType.GrenadeThrow, InventoryType.GrenadeExplosion, InventoryType.PistolShoot, InventoryType.PistolLeadShot, InventoryType.DollAttune, InventoryType.DollPoke, InventoryType.CannonShoot, InventoryType.CannonRoundShot]
-DontResetSkills = [
- InventoryType.SailPowerRecharge, InventoryType.CannonGrappleHook]
-# okay decompiling .\pirates\battle\WeaponGlobals.pyc
+BackstabSkills = (InventoryType.DaggerCut, InventoryType.DaggerSwipe, InventoryType.DaggerGouge, InventoryType.DaggerEviscerate)
+StartingSkills = [InventoryType.CutlassHack, InventoryType.CutlassSlash, InventoryType.SailBroadsideLeft, InventoryType.SailBroadsideRight, InventoryType.DaggerCut, InventoryType.DaggerSwipe, InventoryType.StaffBlast, InventoryType.StaffSoulFlay, InventoryType.GrenadeThrow, InventoryType.GrenadeExplosion, InventoryType.PistolShoot, InventoryType.PistolLeadShot, InventoryType.DollAttune, InventoryType.DollPoke, InventoryType.CannonShoot, InventoryType.CannonRoundShot]
+DontResetSkills = [InventoryType.SailPowerRecharge, InventoryType.CannonGrappleHook]
