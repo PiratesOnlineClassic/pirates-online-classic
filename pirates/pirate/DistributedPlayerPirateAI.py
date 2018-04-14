@@ -32,6 +32,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.returnLocation = ''
         self.currentIsland = ''
         self.emoteId = 0
+        self.zombie = 0
 
         self.stickyTargets = []
 
@@ -431,6 +432,19 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def requestRemoveStickyTargets(self, doIdList):
         for targetDoId in doIdList:
             self.removeStickyTarget(targetDoId)
+
+    def setZombie(self, zombie):
+        self.zombie = zombie
+
+    def d_setZombie(self, zombie):
+        self.sendUpdate('setZombie', [zombie])
+
+    def b_setZombie(self, zombie):
+        self.setZombie(zombie)
+        self.d_setZombie(zombie)
+
+    def getZombie(self):
+        return self.zombie
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def name(name):
