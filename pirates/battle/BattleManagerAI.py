@@ -420,19 +420,11 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         ]
 
         if skillId == InventoryType.UseItem:
+
             if self.getIsConsumable(ammoSkillId):
+
                 # Already wrote code for the old way of processing tonics. Might as well use it
                 avatar.useTonic(ammoSkillId)
-            else:
-                self.notify.debug('Failed to use special targeted skill. %d is not a valid use item; avatarId=%d' % (
-                    ammoSkillId, avatar.doId))
-
-                return None
-        else:
-            self.notify.debug('Failed to use special targeted skill. %d is not a valid skillId; avatarId=%d' % (
-                skillId, avatar.doId))
-
-            return None
 
         return [skillId, ammoSkillId, skillResult, 0, areaIdList, attackerEffects, targetEffects,
             areaIdEffects, timestamp, pos, charge]
