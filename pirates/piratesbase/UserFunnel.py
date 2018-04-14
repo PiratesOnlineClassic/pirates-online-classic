@@ -282,11 +282,11 @@ class UserFunnel:
         if status_code != 200:
             self.notify.warning('Failed to submit events; %s' % status_code)
             if self.GetBool('want-dev', __dev__):
-                print response_string
+                self.notify.debug(response_string)
                 if isinstance(response_dict, dict):
-                    print response_dict
+                    self.notify.debug(response_dict)
                 elif isinstance(init_response.text, basestring):
-                    print 'Response contents: %s' % init_response.text
+                    self.notify.debug('Response contents: %s' % init_response.text)
             return (None, None)
 
         if status_code == 200:
