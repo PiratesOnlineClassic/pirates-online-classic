@@ -152,6 +152,26 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
         DistributedObjectGlobalUD.__init__(self, air)
 
         self.avatar2fsm = {}
+        
+        self.air.netMessenger.accept('hasInventoryResponse', self, self.proccessCallbackResponse)
+        self.air.netMessenger.accept('getInventoryResponse', self, self.proccessCallbackResponse)
+        
+    def announceGenerate(self):
+        DistributedObjectGlobalUD.announceGenerate(self)
+        
+    def hasInventory(self, inventoryId, callback):
+        self.air.netMessenger.send('hasInventory', [inventoryId, callback])
+        
+    def addInventory(self, inventory):
+        if inventory and inventory.doId:
+            self.air.netMessenger.send('addInventory', [inventory])
+            
+    def removeInventory(self, inventory):
+        if inventory and inventory.doId:
+            self.air.netMessenger.send('removeInventory', [inventory])
+        
+    def getInventory(self, avatarId, callback):
+        self.air.netMessenger.send('getInventory', [avatarId, callback])
 
     def initiateInventory(self, avatarId, callback):
         if not avatarId:
@@ -165,3 +185,9 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
 
         self.avatar2fsm[avatarId] = InventoryFSM(self, avatarId, callback)
         self.avatar2fsm[avatarId].request('Start')
+        
+    def proccessCallbackResponse(self, callback, *args, **kwargs):
+        if callback and callable(callback):
+            callback(*args, **kwargs)
+            return
+        self.notify.warning("No valid callback for a callback response! What was the purpose of that?")
