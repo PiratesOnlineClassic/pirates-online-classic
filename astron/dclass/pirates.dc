@@ -1206,7 +1206,7 @@ dclass DistributedTeleportMgr : DistributedObject {
 
 dclass DistributedTravelAgent : DistributedObjectGlobal {
   requestInitLocUD(string, uint32) clsend;
-  requestInitLocUDtoAI(DoId) airecv;
+  requestInitLocUDtoAI(DoId);
 };
 
 dclass DistributedMatchMaker : DistributedObject {
