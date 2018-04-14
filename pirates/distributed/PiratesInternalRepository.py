@@ -84,11 +84,15 @@ class PiratesInternalRepository(AstronInternalRepository):
         avatarId = self.getAvatarIdFromSender() or 0
         accountId = self.getAccountIdFromSender() or 0
 
+        # Log to event logger
         self.writeServerEvent('suspicious-event',
             message=message, 
             avatarId=avatarId, 
             accountId=accountId, 
             **kwargs)
+
+        self.notify.warning('Suspicious event occured; message=%s, avatarId=%d, accountId=%d' % 
+            (message, avatarId, accountId))
 
         # Build a Discord message
         if config.GetBool('discord-log-hacks', False):
@@ -112,7 +116,7 @@ class PiratesInternalRepository(AstronInternalRepository):
                     attachment.addField(SlackField())
                     attachment.addField(SlackField(title='Character Pos', value=str(avatar.getPos())))
                     attachment.addField(SlackField(title='Character Name', value=avatar.getName()))
-                    #attachment.addField(SlackField(title='Island', value=avatar.getParentObj().getLocalizerName())) #TODO: Add island name to message using '08 code base
+                    attachment.addField(SlackField(title='Island', value=avatar.getParentObj().getLocalizerName()))
 
                 attachment.addField(SlackField())
                 attachment.addField(SlackField(title='Game Account Id', value=accountId))
