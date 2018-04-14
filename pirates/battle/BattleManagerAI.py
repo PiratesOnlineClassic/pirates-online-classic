@@ -329,39 +329,57 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
     def getSkillInRange(self, skillId, start, end):
         return skillId >= start and skillId <= end
 
-    def getWeaponReputationType(self, skillId):
-        if self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillCutlass, InventoryType.end_WeaponSkillCutlass):
-            return InventoryType.CutlassRep
-        elif self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillPistol, InventoryType.end_WeaponSkillPistol):
-            return InventoryType.PistolRep
-        elif self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillMusket, InventoryType.end_WeaponSkillMusket):
-            return InventoryType.MusketRep
-        elif self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDagger, InventoryType.end_WeaponSkillDagger):
-            return InventoryType.DaggerRep
-        elif self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillGrenade, InventoryType.end_WeaponSkillGrenade):
-            return InventoryType.GrenadeRep
-        elif self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDoll, InventoryType.end_WeaponSkillDoll):
-            return InventoryType.DollRep
-        elif self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillWand, InventoryType.end_WeaponSkillWand):
-            return InventoryType.WandRep
-
-        return None
-
     def getIsCutlass(self, skillId):
         return self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillCutlass,
             InventoryType.end_WeaponSkillCutlass)
+
+    def getIsPistol(self, skillId):
+        return self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillPistol,
+            InventoryType.end_WeaponSkillPistol)
+
+    def getIsMusket(self, skillId):
+        return self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillMusket,
+            InventoryType.end_WeaponSkillMusket)
 
     def getIsDagger(self, skillId):
         return self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDagger,
             InventoryType.end_WeaponSkillDagger)
 
+    def getIsGrenade(self, skillId):
+        return self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillGrenade,
+            InventoryType.end_WeaponSkillGrenade)
+
     def getIsVoodooDoll(self, skillId):
         return self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDoll,
             InventoryType.end_WeaponSkillDoll)
 
+    def getIsWand(self, skillId):
+        return self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillWand,
+            InventoryType.end_WeaponSkillWand)
+
     def getIsConsumable(self, ammoSkillId):
         return self.getSkillInRange(ammoSkillId, InventoryType.begin_Consumables,
             InventoryType.end_Consumables)
+
+    def getWeaponReputationType(self, skillId):
+        reputationType = 0
+
+        if self.getIsCutlass(skillId):
+            reputationType = InventoryType.CutlassRep
+        elif self.getIsPistol(skillId):
+            reputationType = InventoryType.PistolRep
+        elif self.getIsMusket(skillId):
+            reputationType = InventoryType.MusketRep
+        elif self.getIsDagger(skillId):
+            reputationType = InventoryType.DaggerRep
+        elif self.getIsGrenade(skillId):
+            reputationType = InventoryType.GrenadeRep
+        elif self.getIsVoodooDoll(skillId):
+            reputationType =  InventoryType.DollRep
+        elif self.getIsWand(skillId):
+            reputationType = InventoryType.WandRep
+
+        return reputationType
 
     def getTargetInRange(self, attacker, target, skillId, ammoSkillId):
         if not skillId:
@@ -393,30 +411,30 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         skillResult = WeaponGlobals.RESULT_HIT
         timestamp = globalClockDelta.getRealNetworkTime(bits=32)
         distance = 0
+        attackerEffects, targetEffects = self.getModifiedSkillEffects(avatar, target,
+            skillId, ammoSkillId, charge, distance)
+
         areaIdEffects = [
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0]
         ]
 
         if skillId == InventoryType.UseItem:
-
             if self.getIsConsumable(ammoSkillId):
-
                 # Already wrote code for the old way of processing tonics. Might as well use it
                 avatar.useTonic(ammoSkillId)
-
-                attackerEffects, targetEffects = self.getModifiedSkillEffects(avatar, target,
-                    skillId, ammoSkillId, charge, distance)
-
             else:
-                self.notify.warning('Failed to use special targeted skill. %d is not a valid use item; avatarId=%d' %
-                    (ammoSkillId, avatar.doId))
+                self.notify.debug('Failed to use special targeted skill. %d is not a valid use item; avatarId=%d' % (
+                    ammoSkillId, avatar.doId))
+
                 return None
         else:
-            self.notify.warning('Failed to use special targeted skill. %d is not a valid skillId; avatarId=%d' % (skillId, avatar.doId))
+            self.notify.debug('Failed to use special targeted skill. %d is not a valid skillId; avatarId=%d' % (
+                skillId, avatar.doId))
+
             return None
 
-        return [skillId, ammoSkillId, skillResult, target.doId, areaIdList, attackerEffects, targetEffects,
+        return [skillId, ammoSkillId, skillResult, 0, areaIdList, attackerEffects, targetEffects,
             areaIdEffects, timestamp, pos, charge]
 
     def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
