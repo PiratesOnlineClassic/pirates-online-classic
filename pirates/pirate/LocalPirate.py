@@ -27,6 +27,7 @@ from otp.avatar.LocalAvatar import LocalAvatar
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
 from otp.speedchat import SCDecoders
+from otp.nametag.NametagConstants import CFQuicktalker, CFPageButton, CFQuitButton, CFSpeech, CFThought, CFTimeout
 from pandac.PandaModules import *
 from pirates.battle import (BattleSkillDiary, DistributedBattleAvatar, RangeDetector, WeaponGlobals)
 from pirates.chat.PChatAssistant import PChatAssistant
