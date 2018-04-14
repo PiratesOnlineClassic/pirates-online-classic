@@ -51,7 +51,7 @@ class WeaponBaseAI(WeaponBaseBase):
         self.d_useTargetedSkill(*targetResult)
 
     def __useSpecialTargetedSkill(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
-        specialResult =  self.air.battleMgr.useSpecialTargetedSkillResult(avatar, target, skillId, ammoSkillId,
+        specialResult =  self.air.battleMgr.getSpecialTargetedSkillResult(avatar, target, skillId, ammoSkillId,
             clientResult, areaIdList, timestamp, pos, charge)
 
         if not specialResult:

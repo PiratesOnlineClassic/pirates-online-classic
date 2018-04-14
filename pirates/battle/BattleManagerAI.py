@@ -359,6 +359,10 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         return self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDoll,
             InventoryType.end_WeaponSkillDoll)
 
+    def getIsConsumable(self, ammoSkillId):
+        return self.getSkillInRange(ammoSkillId, InventoryType.begin_Consumables,
+            InventoryType.end_Consumables)
+
     def getTargetInRange(self, attacker, target, skillId, ammoSkillId):
         if not skillId:
             return False
@@ -385,8 +389,7 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
     def removeSkillEffectForTarget(self, target, skillId):
         target.removeSkillEffect(self.getEffectIdFromSkillId(skillId))
 
-    def useSpecialTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
-
+    def getSpecialTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         skillResult = WeaponGlobals.RESULT_HIT
         timestamp = globalClockDelta.getRealNetworkTime(bits=32)
         distance = 0
@@ -397,7 +400,7 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
 
         if skillId == InventoryType.UseItem:
 
-            if self.getSkillInRange(ammoSkillId, InventoryType.begin_Consumables, InventoryType.end_Consumables):
+            if self.getIsConsumable(ammoSkillId):
 
                 # Already wrote code for the old way of processing tonics. Might as well use it
                 avatar.useTonic(ammoSkillId)
