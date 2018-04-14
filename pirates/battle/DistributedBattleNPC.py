@@ -2,21 +2,18 @@ import copy
 import random
 import types
 
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
 from otp.otpbase import OTPGlobals
-from pirates.battle import (DistributedBattleAvatar, EnemyGlobals, EnemySkills,
-                            WeaponGlobals)
+from pirates.battle import (DistributedBattleAvatar, EnemyGlobals, EnemySkills, WeaponGlobals)
 from pirates.leveleditor import CustomAnims
 from pirates.pirate import AvatarTypes, BattleNPCGameFSM, Biped
 from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.reputation.DistributedReputationAvatar import \
-    DistributedReputationAvatar
+from pirates.reputation.DistributedReputationAvatar import DistributedReputationAvatar
 from pirates.uberdog.UberDogGlobals import *
-from panda3d.core import *
-
 
 class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
     __module__ = __name__
@@ -52,7 +49,6 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
         self.animSetSetup = False
         self.loaded = 0
         self.lastSmoothPosUpdateTime = 0
-        return
 
     def setupStyle(self):
         if self.style:
@@ -99,9 +95,7 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
                 oldAnimInfo = animInfoCopy.get(currAnimState)
                 if oldAnimInfo == None:
                     continue
-                newAnimInfo = (
-                 (
-                  currChoice, oldAnimInfo[0][1]),) + oldAnimInfo[1:]
+                newAnimInfo = ((currChoice, oldAnimInfo[0][1]),) + oldAnimInfo[1:]
                 if self.motionFSM.motionAnimFSM.state == currAnimState:
                     self.motionFSM.setAnimInfo(newAnimInfo)
                 self.animInfo[currAnimState] = newAnimInfo
@@ -110,7 +104,6 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             self.holdAnimProp(allProps)
             self.canCheckFloors = False
             yieldThread('hold anim prop')
-        return
 
     def announceGenerate(self):
         DistributedBattleAvatar.DistributedBattleAvatar.announceGenerate(self)
@@ -134,7 +127,6 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
     def freezeShadow(self):
         self.shadowPlacer.off()
         self.freezeTask = None
-        return
 
     def generate(self):
         DistributedBattleAvatar.DistributedBattleAvatar.generate(self)
@@ -164,7 +156,6 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
 
         self.spawnIvals = []
         DistributedBattleAvatar.DistributedBattleAvatar.disable(self)
-        return
 
     def delete(self):
         DistributedBattleAvatar.DistributedBattleAvatar.delete(self)
@@ -182,8 +173,7 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
         if self.currentTarget:
             self.headsUp(self.currentTarget)
             return Task.cont
-        else:
-            return Task.done
+        return Task.done
 
     def getUpdateLookAtTaskName(self):
         return self.taskName('lookAtTarget')
@@ -201,7 +191,6 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
         enemyScale = self.getEnemyScale()
         self.height *= enemyScale
         self.setAvatarScale(self.scale * enemyScale)
-        return
 
     def setState(self, stateName, timeStamp):
         self.request(stateName)
@@ -211,12 +200,10 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             base.cr.relatedObjectMgr.abortRequest(self.pendingBoardVehicle)
             self.pendingBoardVehicle = None
         self.pendingBoardVehicle = base.cr.relatedObjectMgr.requestObjects([vehicleDoId], eachCallback=self.boardExistingVehicle)
-        return
 
     def boardExistingVehicle(self, vehicle):
         self.reparentTo(vehicle.getModel())
         self.pendingBoardVehicle = None
-        return
 
     def initializeBodyCollisions(self, collIdStr):
         pass
@@ -257,7 +244,6 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             if base.config.GetBool('npcs-auto-target', 1):
                 enterCollEvent = self.uniqueName('enter' + 'AggroSphere')
                 self.accept(enterCollEvent, self._handleEnterAggroSphere)
-        return
 
     def disableFloorChecks(self):
         if self.floorChecksEnabled and self.lifter:
@@ -289,7 +275,6 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
         self.notify.debug('  quick floor check hasContact: %s' % floorRay.hasContact())
         self.notify.debug('  myPos NEW is %s' % self.getPos())
         self.lastFloorCheckedXYZ = [self.getX(), self.getY(), self.getZ()]
-        return
 
     def disableBodyCollisions(self):
         if self.cRayNodePath:
@@ -313,7 +298,6 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             self.cAggro = None
         if self.handler:
             self.handler = None
-        return
 
     def sendRequestClientAggro(self):
         self.sendUpdate('requestClientAggro', [])
@@ -356,7 +340,6 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
         if self.debugCSphere:
             del self.debugCSphere
             self.debugCSphere = None
-        return
 
     def _handleEnterSphereTest(self, collEntry):
         otherCollNode = collEntry.getFromNodePath()
@@ -533,13 +516,11 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             self.animPropType = propType
         else:
             self.notify.warning('could not load prop %s to be used with DistInteractiveProp' % propPath)
-        return
-
+        
     def clearAnimProp(self):
         if self.animProp:
             self.animProp.removeNode()
             self.animProp = None
-        return
 
     def setAggroMode(self, val):
         DistributedBattleAvatar.DistributedBattleAvatar.setAggroMode(self, val)
@@ -591,7 +572,6 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             anim = skillInfo[WeaponGlobals.PLAYABLE_INDEX]
             reloadAnim = getattr(self.cr.combatAnims, anim)(self, EnemySkills.EnemySkills.GRENADE_RELOAD, 0, 0, None)
             self.curAttackAnim = Sequence(self.curAttackAnim, reloadAnim)
-        return
 
     def checkWeaponSwitch(self, currentWeaponId, isWeaponDrawn):
         if isWeaponDrawn == self.isWeaponDrawn and currentWeaponId == self.currentWeaponId:
@@ -601,11 +581,9 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
     def getFloorRayReach(self):
         if self.ship:
             return 1000.0
-        else:
-            return 8.0
+        return 8.0
 
     def setShipId(self, shipId):
         DistributedBattleAvatar.DistributedBattleAvatar.setShipId(self, shipId)
         if self.lifter:
             self.lifter.setReach(self.getFloorRayReach())
-# okay decompiling .\pirates\battle\DistributedBattleNPC.pyc

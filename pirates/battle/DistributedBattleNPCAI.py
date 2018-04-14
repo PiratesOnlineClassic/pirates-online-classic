@@ -89,3 +89,6 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def getSpawner(self):
         return self.spawnerNode
+        
+    def requestClientAggro(self):
+        pass

@@ -78,9 +78,8 @@ class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractiv
                 self.startWeapon(av)
             elif mode == WeaponGlobals.WEAPON_MOVIE_STOP:
                 self.stopWeapon(av)
-            else:
-                if mode == WeaponGlobals.WEAPON_MOVIE_CLEAR:
-                    pass
+            elif mode == WeaponGlobals.WEAPON_MOVIE_CLEAR:
+                pass
 
         if self.pendingDoMovie:
             base.cr.relatedObjectMgr.abortRequest(self.pendingDoMovie)

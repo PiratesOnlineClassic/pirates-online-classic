@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.DistributedBattleAvatar
 import math
 import random
 
@@ -306,7 +302,6 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
             self.ambientFx.pause()
         self.ambientFx = None
         del self.battleRandom
-        return
 
     def delete(self):
         self.ropeActor = None
@@ -317,7 +312,6 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         taskMgr.remove(self.getSwimTaskName())
         DistributedReputationAvatar.delete(self)
         WeaponBase.delete(self)
-        return
 
     def startSmooth(self):
         if not self.isLocal():
@@ -351,7 +345,6 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
                     geom = self.getGeomNode()
                     geom.setP(render, normal[1] * 90 - 7)
         self.updateMyAnimState(self.smoother.getSmoothForwardVelocity(), self.smoother.getSmoothRotationalVelocity(), self.smoother.getSmoothLateralVelocity())
-        return
 
     def updateMyAnimState(self, forwardVel, rotationVel, lateralVel):
         self.motionFSM.motionAnimFSM.updateAnimState(forwardVel, rotationVel, lateralVel)
@@ -388,7 +381,6 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
             if self.crewBuffDisplay and self.isLocal():
                 self.crewBuffDisplay.stop()
                 self.crewBuffDisplay.destroy()
-        return
 
     def getShipId(self):
         return self.ship and self.ship.doId or 0
@@ -1832,4 +1824,3 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
     def battleRandomSync(self):
         if hasattr(self, 'battleRandom'):
             self.battleRandom.resync()
-# okay decompiling .\pirates\battle\DistributedBattleAvatar.pyc

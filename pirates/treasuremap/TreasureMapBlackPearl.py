@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.treasuremap.TreasureMapBlackPearl
 import random
 
 from pirates.ship import ShipPilot
@@ -11,12 +7,9 @@ from direct.task import Task
 from pandac.PandaModules import *
 from pirates.cutscene import Cutscene, CutsceneData
 from pirates.effects.DarkWaterFog import DarkWaterFog
-from pirates.piratesbase import (PiratesGlobals, PLocalizer, TimeOfDayManager,
-                                 TODGlobals)
+from pirates.piratesbase import (PiratesGlobals, PLocalizer, TimeOfDayManager, TODGlobals)
 from pirates.ship import ShipGlobals
-from pirates.treasuremap import (DistributedTreasureMapInstance,
-                                 TreasureMapBlackPearlGlobals,
-                                 TreasureMapRulesPanel)
+from pirates.treasuremap import (DistributedTreasureMapInstance, TreasureMapBlackPearlGlobals, TreasureMapRulesPanel)
 from pirates.uberdog import DistributedInventoryBase
 from pirates.world import FortBarricade
 
@@ -49,8 +42,7 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         self.barricadesDestroyed = []
         self.barricadesWarned = []
         self.fortIdToUidDict = {}
-        self.stageInstructions = [
-         PLocalizer.BlackPearlStageZero, PLocalizer.BlackPearlStageOne, PLocalizer.BlackPearlStageTwo, PLocalizer.BlackPearlStageThree, PLocalizer.BlackPearlStageFour, PLocalizer.BlackPearlLoser, PLocalizer.BlackPearlWinner, PLocalizer.BlackPearlWaitCutscene, PLocalizer.BlackPearlWaitCutscene2]
+        self.stageInstructions = [PLocalizer.BlackPearlStageZero, PLocalizer.BlackPearlStageOne, PLocalizer.BlackPearlStageTwo, PLocalizer.BlackPearlStageThree, PLocalizer.BlackPearlStageFour, PLocalizer.BlackPearlLoser, PLocalizer.BlackPearlWinner, PLocalizer.BlackPearlWaitCutscene, PLocalizer.BlackPearlWaitCutscene2]
         from pirates.ship import ShipGlobals
         if launcher.getPhaseComplete(5):
             ShipGlobals.preprocessBlackPearl()
@@ -68,7 +60,6 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         self.stageFourIval = None
         self.cameraState = None
         self.cameraSubject = None
-        return
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def delete(self):
@@ -102,7 +93,6 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         base.musicMgr.request('island-general', priority=1)
         self.customTimeOfDayOff()
         self.ignoreAll()
-        return
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def announceGenerate(self):
@@ -124,9 +114,8 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         if not pier.isEmpty() and 'Teleport' not in localAvatar.gameFSM.state:
             self.playCutscene()
             return Task.done
-        else:
-            task.delayTime = 0.2
-            return Task.again
+        task.delayTime = 0.2
+        return Task.again
 
     def __requestState(self, state):
         self.sendUpdate('requestState', [state])
@@ -157,13 +146,11 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         if self.pearlId:
             pearl = base.cr.doId2do.get(self.pearlId)
             return pearl
-        return
 
     def __gotPearl(self, pearl):
         self.pearlRequest = None
         self.pearl = pearl
         self.accept('setShipHp-%s' % pearl.doId, self.handleHpWarning)
-        return
 
     def handleHpWarning(self, hp, maxHp):
         if not self.warned and hp < 1000:
@@ -326,7 +313,6 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
             self.messageHolder.removeNode()
             self.messageHolder = None
         self.stageOneCutsceneDone()
-        return
 
     def displayCutsceneMessage(self, doId, messageNum):
         if localAvatar.doId == doId:
@@ -344,14 +330,12 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         if self.cutscene:
             self.cutscene.destroy()
             self.cutscene = None
-        return
 
     def filterStageOne(self, request, args=[]):
         if request in ['StageTwo', 'NotCompleted']:
             return self.defaultFilter(request, args)
-        else:
-            if __dev__ and request in ['StageFour']:
-                return self.defaultFilter(request, args)
+        elif __dev__ and request in ['StageFour']:
+            return self.defaultFilter(request, args)
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def stageOneCutsceneDone(self):
@@ -376,7 +360,6 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         if self.newEventSphereNodePath:
             self.newEventSphereNodePath.removeNode()
             self.newEventSphereNodePath = None
-        return
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def handleShipCapture(self, entry):
@@ -437,7 +420,6 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         camera.wrtReparentTo(render)
         self.camIval = self.getCameraMove1()
         self.camIval.start()
-        return
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def exitStageTwo(self):
@@ -537,7 +519,6 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
             if self.goliath.wake:
                 self.goliath.wake.stopFakeAnimate()
                 self.goliath.wake.startAnimate(self.goliath)
-        return
 
     def startStageFourCutscene(self):
         if localAvatar.ship.clientController == localAvatar.doId:
@@ -697,7 +678,6 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         self.camIvalReward.start()
         base.musicMgr.requestFadeOut('final_battle')
         base.musicMgr.request('victory', priority=1, looping=0)
-        return
 
     def exitReward(self):
         self.camIvalReward.finish()
@@ -761,4 +741,3 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def setAllPlayersReady(self, ready):
         self.gotAllPlayers = True
-# okay decompiling .\pirates\treasuremap\TreasureMapBlackPearl.pyc
