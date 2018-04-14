@@ -80,6 +80,13 @@ class InventoryFSM(FSM):
             [InventoryType.StaffBlast, 1],
             [InventoryType.StaffSoulFlay, 1],
             [InventoryType.GrenadeThrow, 1],
+
+            # Potions
+            [InventoryType.Potion1, 3],
+            [InventoryType.Potion2, 3],
+            [InventoryType.Potion3, 3],
+            [InventoryType.Potion4, 3],
+            [InventoryType.Potion5, 3],
         ]
 
         stacks = [

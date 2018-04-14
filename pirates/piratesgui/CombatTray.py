@@ -711,23 +711,28 @@ class CombatTray(GuiTray):
     def trySkill(self, skillId, ammoSkillId, combo=0, charge=0):
         if localAvatar.hp <= 0:
             return 0
+
         if not skillId:
             return 0
+
         if ammoSkillId in (InventoryType.Potion1, InventoryType.Potion2, InventoryType.Potion3, InventoryType.Potion4, InventoryType.Potion5):
-            if localAvatar.getHp() == localAvatar.getMaxHp():
-                if localAvatar.getMojo() == localAvatar.getMaxMojo():
-                    localAvatar.guiMgr.createWarning(PLocalizer.FullHealthWarning, PiratesGuiGlobals.TextFG6)
-                    return 0
-            if ammoSkillId in (InventoryType.ShipRepairKit,) and hasattr(localAvatar, 'ship') and localAvatar.ship:
-                if localAvatar.ship.getHp() == localAvatar.ship.getMaxHp() and localAvatar.ship.getSp() == localAvatar.ship.getMaxSp():
-                    localAvatar.guiMgr.createWarning(PLocalizer.FullShipHealthWarning, PiratesGuiGlobals.TextFG6)
-                    return 0
-            if WeaponGlobals.getIsShipSkill(skillId) and not WeaponGlobals.getIsShout(skillId) and not skillId == InventoryType.SailBroadsideLeft and not skillId == InventoryType.SailBroadsideRight:
-                if localAvatar.ship:
-                    localAvatar.ship.sailsReady or localAvatar.guiMgr.createWarning(PLocalizer.SailsNotReadyWarning, PiratesGuiGlobals.TextFG6)
+            if localAvatar.getHp() == localAvatar.getMaxHp() and localAvatar.getMojo() == localAvatar.getMaxMojo():
+                localAvatar.guiMgr.createWarning(PLocalizer.FullHealthWarning, PiratesGuiGlobals.TextFG6)
+                return 0
+                
+        if ammoSkillId in (InventoryType.ShipRepairKit,) and hasattr(localAvatar, 'ship') and localAvatar.ship:
+            if localAvatar.ship.getHp() == localAvatar.ship.getMaxHp() and localAvatar.ship.getSp() == localAvatar.ship.getMaxSp():
+                localAvatar.guiMgr.createWarning(PLocalizer.FullShipHealthWarning, PiratesGuiGlobals.TextFG6)
+                return 0
+
+        if WeaponGlobals.getIsShipSkill(skillId) and not WeaponGlobals.getIsShout(skillId) and not skillId == InventoryType.SailBroadsideLeft and not skillId == InventoryType.SailBroadsideRight:
+            if localAvatar.ship:
+                if not localAvatar.ship.sailsReady:
+                    localAvatar.guiMgr.createWarning(PLocalizer.SailsNotReadyWarning, PiratesGuiGlobals.TextFG6)
                     return 0
             else:
                 return 0
+
         if WeaponGlobals.getIsShipSkill(skillId):
             if localAvatar.ship:
                 if skillId == InventoryType.SailRammingSpeed and localAvatar.ship.queryGameState() in 'InBoardingPosition':
@@ -735,34 +740,42 @@ class CombatTray(GuiTray):
                     return 0
                 if localAvatar.ship.isRamming() and skillId != InventoryType.SailBroadsideLeft and skillId != InventoryType.SailBroadsideRight:
                     return 0
+        
         if skillId not in self.IGNORES_INPUT_LOCK and not WeaponGlobals.getIsShipSkill(skillId):
             if not self.isAcceptingInput:
                 return 0
+
             if not localAvatar.currentWeapon or not self.weaponId:
                 return 0
+
             if localAvatar.getGameState() != 'Battle':
                 return 0
+
             weaponVolley = WeaponGlobals.getWeaponVolley(localAvatar.currentWeaponId)
             if weaponVolley > 0 and self.volley >= weaponVolley:
                 return 0
+
             skillRepCategory = WeaponGlobals.getSkillReputationCategoryId(skillId)
             if self.rep != skillRepCategory and skillRepCategory > 0:
                 return 0
+
             if ammoSkillId:
                 ammoRepCategory = WeaponGlobals.getSkillReputationCategoryId(ammoSkillId)
                 if self.rep != ammoRepCategory and ammoRepCategory > 0:
                     return 0
+            
         skillEffects = localAvatar.getSkillEffects()
         if WeaponGlobals.C_STUN in skillEffects:
             localAvatar.guiMgr.createWarning(PLocalizer.StunWarning, PiratesGuiGlobals.TextFG6)
             return 0
+
         if not WeaponGlobals.getIsInstantSkill(skillId, ammoSkillId):
             if self.isUsingSkill:
                 if (self.weaponMode == WeaponGlobals.COMBAT or self.weaponMode == WeaponGlobals.THROWING) and skillId != EnemySkills.DOLL_UNATTUNE:
                     if not self.skillQueue and not self.weaponQueue:
-                        self.skillQueue = (
-                         skillId, ammoSkillId, combo)
+                        self.skillQueue = (skillId, ammoSkillId, combo)
                 return 0
+
         if WeaponGlobals.getNeedSight(skillId, ammoSkillId):
             inView = 0
             target = 0

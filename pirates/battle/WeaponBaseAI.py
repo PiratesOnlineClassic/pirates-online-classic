@@ -15,10 +15,9 @@ class WeaponBaseAI(WeaponBaseBase):
             return
 
         target = self.air.doId2do.get(targetId)
-
         if not target:
-            self.notify.debug('Cannot request targeted skill, unknown specified target; avatarId=%d!' % (
-                avatar.doId))
+            self.__useSpecialTargetedSkill(avatar, target, skillId, ammoSkillId, clientResult,
+                areaIdList, timestamp, pos, charge)
         else:
             self.__useTargetedSkill(avatar, target, skillId, ammoSkillId, clientResult,
                 areaIdList, timestamp, pos, charge)
@@ -44,12 +43,24 @@ class WeaponBaseAI(WeaponBaseBase):
             clientResult, areaIdList, timestamp, pos, charge)
 
         if not targetResult:
-            self.notify.debug('Cannot get targeted skill, no valid result was given; avatarId=%d, targetId=%d, skillId=%d!' % (
+            print('Cannot get targeted skill, no valid result was given; avatarId=%d, targetId=%d, skillId=%d!' % (
                 avatar.doId, target.doId, skillId))
 
             return
 
         self.d_useTargetedSkill(*targetResult)
+
+    def __useSpecialTargetedSkill(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+        specialResult =  self.air.battleMgr.useSpecialTargetedSkillResult(avatar, target, skillId, ammoSkillId,
+            clientResult, areaIdList, timestamp, pos, charge)
+
+        if not specialResult:
+            print('Cannot get special targeted skill, no valid result was given; avatarId=%d, targetId=%d, skillId=%d!' % (
+                avatar.doId, target.doId, skillId))
+
+            return
+
+        self.d_useTargetedSkill(*specialResult)
 
     def d_useTargetedSkill(self, skillId, ammoSkillId, skillResult, targetDoId, areaIdList, attackerEffects, targetEffects, areaIdEffects, timestamp, pos, charge):
         self.sendUpdate('useTargetedSkill', [skillId, ammoSkillId, skillResult, targetDoId, areaIdList, attackerEffects,

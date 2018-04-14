@@ -237,18 +237,18 @@ class BattleManagerBase:
                         if WeaponGlobals.C_TAKECOVER in skillEffects:
                             tHealth = 0
                             aHealth = 0
-                buff = WeaponGlobals.getSkillEffectFlag(skillId)
-                ammoBuff = WeaponGlobals.getSkillEffectFlag(ammoSkillId)
-                if target and skillId != InventoryType.UseItem and not inPVPMode:
-                    if hasattr(target, 'avatarType'):
-                        avClass = EnemyGlobals.getMonsterClass(target.avatarType)
-                        if avClass == EnemyGlobals.MONSTER and (buff == WeaponGlobals.C_UNDEAD_KILLER or ammoBuff == WeaponGlobals.C_UNDEAD_KILLER):
-                            tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
-                        elif avClass == EnemyGlobals.SKELETON and (buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER):
-                            tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
-                        elif avClass == EnemyGlobals.HUMAN:
-                            if buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER or buff == WeaponGlobals.C_UNDEAD_KILLER or ammoBuff == WeaponGlobals.C_UNDEAD_KILLER:
-                                tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
+        buff = WeaponGlobals.getSkillEffectFlag(skillId)
+        ammoBuff = WeaponGlobals.getSkillEffectFlag(ammoSkillId)
+        if target and skillId != InventoryType.UseItem and not inPVPMode:
+            if hasattr(target, 'avatarType'):
+                avClass = EnemyGlobals.getMonsterClass(target.avatarType)
+                if avClass == EnemyGlobals.MONSTER and (buff == WeaponGlobals.C_UNDEAD_KILLER or ammoBuff == WeaponGlobals.C_UNDEAD_KILLER):
+                    tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
+                elif avClass == EnemyGlobals.SKELETON and (buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER):
+                    tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
+                elif avClass == EnemyGlobals.HUMAN:
+                    if buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER or buff == WeaponGlobals.C_UNDEAD_KILLER or ammoBuff == WeaponGlobals.C_UNDEAD_KILLER:
+                        tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
         if buff == WeaponGlobals.C_LIFEDRAIN or ammoBuff == WeaponGlobals.C_LIFEDRAIN:
             aHealth += abs(tHealth)
         else:
@@ -307,8 +307,7 @@ class BattleManagerBase:
                     target.b_setHpDelta(hpDelta)
                     spDelta = WeaponGlobals.getAttackSailHP(skillId, ammoSkillId)
                     target.b_setSpDelta(spDelta)
-        return (
-         attackerEffects, targetEffects)
+        return (attackerEffects, targetEffects)
 
     def getModifiedSkillEffectsSword(self, attacker, target, skillId, ammoSkillId, charge=0, distance=0.0):
         if not target or not attacker.getWorld():

@@ -351,11 +351,78 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def resetSkillPoints(self, skillId):
         self.sendUpdate("resetSkillPoints", [skillId])
 
+    def getHighestTonic(self):
+        inventory = simbase.air.inventoryManager.getInventory(self.doId)
+
+        if not inventory:
+            self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
+            return 0
+
+        detected = 0
+        for tonicId in range(InventoryType.begin_Consumables, InventoryType.end_Consumables, -1):
+            amount = inventory.getStack(tonicId)
+            if amount > 0:
+                detected = tonicId
+                break
+        return detected
+
+    def getBestTonic(self):
+        inventory = simbase.air.inventoryManager.getInventory(self.doId)
+
+        if not inventory:
+            self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
+            return 0
+
+        tonics = inventory.getTonics()
+        idealAmount = max(0, self.getMaxHp() * 0.8 - self.getHp()[0])
+        bestTonicId = InventoryType.Potion1
+        for tonicId, count in sorted(tonics.iteritems()):
+            if count:
+                bestTonicId = tonicId
+                if WeaponGlobals.getAttackSelfHP(tonicId) > idealAmount:
+                    break
+
+        return bestTonicId   
+
     def useTonic(self, tonicId):
-        pass
+        inventory = simbase.air.inventoryManager.getInventory(self.doId)
+
+        if not inventory:
+            self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
+            return 
+
+        amount = inventory.getStack(tonicId)
+        if amount <= 0:
+            # This should never happen. Log it
+            self.air.logPotentialHacker(
+                message='Attempted to use a tonic they do not have',
+                tonicId=tonicId)
+
+            return
+
+        # Calculate max potential values for restoring
+        healedHp = min(WeaponGlobals.getAttackSelfHP(tonicId) + self.getHp()[0], self.getMaxHp())
+        restoredMojo = min(WeaponGlobals.getAttackSelfMojo(tonicId) + self.getMojo(), self.getMaxMojo())
+        restoredPower = min(WeaponGlobals.getAttackSelfPower(tonicId) + self.getPower(), self.getMaxPower())
+
+        print(healedHp)
+        print(restoredMojo)
+        print(restoredPower)
+
+        # Apply values
+        self.b_setHp(healedHp)
+        self.b_setMojo(restoredMojo)
+        self.b_setPower(restoredPower)
+
+        inventory.b_setStack(tonicId, inventory.getStack(tonicId)[1] - 1)
 
     def useBestTonic(self):
-        pass
+        tonicId = self.getBestTonic()
+        if tonicId == 0:
+            self.notify.warning('Failed to determine the best tonic for %d' % self.doId)
+            return
+
+        self.useTonic(tonicId)
 
     def flagFirstDeath(self):
         pass

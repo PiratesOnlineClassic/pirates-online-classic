@@ -178,3 +178,6 @@ class DistributedInventoryAI(DistributedObjectAI):
         self.air.inventoryManager.removeInventory(self)
 
         DistributedObjectAI.delete(self)
+
+    def getTonics(self):
+        return dict(((tonicId, self.getStack(tonicId)[1]) for tonicId in InventoryType.Potions))

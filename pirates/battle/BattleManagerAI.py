@@ -384,6 +384,37 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
     def removeSkillEffectForTarget(self, target, skillId):
         target.removeSkillEffect(self.getEffectIdFromSkillId(skillId))
 
+    def useSpecialTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+
+        skillResult = WeaponGlobals.RESULT_HIT
+        timestamp = globalClockDelta.getRealNetworkTime(bits=32)
+        distance = 0
+        areaIdEffects = [
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0]
+        ]
+
+        if skillId == InventoryType.UseItem:
+
+            if self.getSkillInRange(ammoSkillId, InventoryType.begin_Consumables, InventoryType.end_Consumables):
+
+                # Already wrote code for the old way of processing tonics. Might as well use it
+                avatar.useTonic(ammoSkillId)
+
+                attackerEffects, targetEffects = self.getModifiedSkillEffects(avatar, target,
+                    skillId, ammoSkillId, charge, distance)
+
+            else:
+                self.notify.warning('Failed to use special targeted skill. %d is not a valid use item; avatarId=%d' %
+                    (ammoSkillId, avatar.doId))
+                return None
+        else:
+            self.notify.warning('Failed to use special targeted skill. %d is not a valid skillId; avatarId=%d' % (skillId, avatar.doId))
+            return None
+
+        return [skillId, ammoSkillId, skillResult, target.doId, areaIdList, attackerEffects, targetEffects,
+            areaIdEffects, timestamp, pos, charge]
+
     def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         if not avatar:
             self.notify.warning('Cannot calculate targeted skill for unknown avatar; skillId=%d!' % (
@@ -400,7 +431,7 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         obeysPirateCode = self.obeysPirateCode(avatar, target)
 
         if not obeysPirateCode:
-            self.notify.debug('Cannot calculate targeted skill, avatar does not obey pirate code; avatarId=%d, targetId=%d, skillId=%d' % (
+            print('Cannot calculate targeted skill, avatar does not obey pirate code; avatarId=%d, targetId=%d, skillId=%d' % (
                 avatar.doId, target.doId, skillId))
 
             return None
