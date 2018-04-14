@@ -9,6 +9,7 @@ from direct.distributed.ClockDelta import globalClockDelta
 from pirates.uberdog import UberDogGlobals
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
 from pirates.battle import EnemyGlobals
+from pirates.battle import WeaponConstants
 
 class BattleAttackerSkillData(object):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleAttackerSkillData')
@@ -371,10 +372,10 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         if not skillId:
             return 0
 
+        effectId = 0
+
         if self.getIsVoodooDoll(skillId):
             effectId = WeaponConstants.C_ATTUNE
-        else:
-            effectId = skillId
 
         return effectId
 
@@ -423,13 +424,10 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
 
         # add the skill effects for the target and avatar if a valid skill is
         # provided for the client that corresponds to an effect...
-        targetSkillId = targetEffects[2]
-        if targetSkillId:
-            self.addSkillEffectForTarget(target, avatar, targetSkillId)
+        targetEffectId = self.getEffectIdFromSkillId(skillId)
 
-        attackerSkillEffect = attackerEffects[2]
-        if attackerSkillEffect:
-            self.addSkillEffectForTarget(avatar, target, attackerSkillEffect)
+        if targetEffectId:
+            self.addSkillEffectForTarget(target, avatar, targetEffectId)
 
         targetData = self.getTargetDefaultData(target, avatar)
 
