@@ -23,6 +23,18 @@ class PiratesInternalRepository(AstronInternalRepository):
         # Remote Holiday Control
         self.netMessenger.register(2, 'startHoliday')
         self.netMessenger.register(3, 'stopHoliday')
+        
+        # Remote Inventory Manager Control
+        #AI
+        self.netMessenger.register(4, 'hasInventory')
+        self.netMessenger.register(5, 'addInventory')
+        self.netMessenger.register(6, 'removeInventory')
+        self.netMessenger.register(7, 'getInventory')
+        
+        #UD
+        self.netMessenger.register(8, 'hasInventoryResponse')
+        self.netMessenger.register(9, 'getInventoryResponse')
+        
 
     def handleConnected(self):
         if config.GetBool('send-hacker-test-message', False):

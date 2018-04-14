@@ -11,9 +11,20 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         self.inventories = {}
         self.inventoryTasks = {}
+        
+    def announceGenerate(self):
+        DistributedObjectGlobalAI.announceGenerate(self)
+        
+        self.air.netMessenger.accept('hasInventory', self, self.sendHasInventory)
+        self.air.netMessenger.accept('addInventory', self, self.addInventory)
+        self.air.netMessenger.accept('removeInventory', self, self.removeInventory)
+        self.air.netMessenger.accept('getInventory', self, self.sendGetInventory)
 
     def hasInventory(self, inventoryId):
         return inventoryId in self.inventories
+        
+    def sendHasInventory(self, inventoryId, callback):
+        self.air.netMessenger.send('hasInventoryResponse', [callback, self.hasInventory(inventoryId)])
 
     def addInventory(self, inventory):
         if self.hasInventory(inventory.doId):
@@ -32,11 +43,13 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
     def getInventory(self, avatarId):
         for inventory in self.inventories.values():
-
             if inventory.getOwnerId() == avatarId:
                 return inventory
 
         return None
+        
+    def sendGetInventory(self, avatarId, callback):
+        self.air.netMessenger.send('getInventoryResponse', [callback, self.getInventory(avatarId)])
 
     def requestInventory(self):
         avatarId = self.air.getAvatarIdFromSender()
@@ -124,6 +137,12 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         self.air.dbInterface.queryObject(self.air.dbId, inventoryId, callback=inventoryResponse, dclass=\
             self.air.dclassesByName['DistributedInventoryAI'])
+            
+    def proccessCallbackResponse(self, callback, *args, **kwargs):
+        if callback and callable(callback):
+            callback(*args, **kwargs)
+            return
+        self.notify.warning("No valid callback for a callback response! What was the purpose of that?")
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def maxOutSkillPoints():
