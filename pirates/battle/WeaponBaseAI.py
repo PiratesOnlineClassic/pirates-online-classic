@@ -43,8 +43,8 @@ class WeaponBaseAI(WeaponBaseBase):
             clientResult, areaIdList, timestamp, pos, charge)
 
         if not targetResult:
-            print('Cannot get targeted skill, no valid result was given; avatarId=%d, targetId=%d, skillId=%d!' % (
-                avatar.doId, target.doId, skillId))
+            self.notify.debug('Cannot get targeted skill, no valid result was given; avatarId=%d, skillId=%d!' % (
+                avatar.doId, skillId))
 
             return
 
@@ -55,7 +55,7 @@ class WeaponBaseAI(WeaponBaseBase):
             clientResult, areaIdList, timestamp, pos, charge)
 
         if not specialResult:
-            print('Cannot get special targeted skill, no valid result was given; avatarId=%d, targetId=%d, skillId=%d!' % (
+            self.notify.debug('Cannot get special targeted skill, no valid result was given; avatarId=%d, targetId=%d, skillId=%d!' % (
                 avatar.doId, target.doId, skillId))
 
             return
