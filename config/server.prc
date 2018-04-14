@@ -10,8 +10,5 @@ discord-exception-url https://discordapp.com/api/webhooks/434065950472405007/U-Q
 # Notifer:
 notify-timestamp #t
 
-# Enemies:
-target-range-tolerance 10.0
-
 # RPC:
 want-rpc-server #t

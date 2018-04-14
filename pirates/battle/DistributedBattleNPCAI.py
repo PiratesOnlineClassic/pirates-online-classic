@@ -13,7 +13,6 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         self.animSet = ''
         self.collisionMode = 0
         self.initZ = 0
-        self.isKilled = False
 
         self.spawnerNode = None
 
@@ -78,17 +77,11 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     def getInitZ(self):
         return self.initZ
 
-    def setIsKilled(self, isKilled):
-        self.isKilled = isKilled
-
-    def getIsKilled(self):
-        return self.isKilled
-
     def setSpawner(self, spawnerNode):
         self.spawnerNode = spawnerNode
 
     def getSpawner(self):
         return self.spawnerNode
-        
+
     def requestClientAggro(self):
         pass
