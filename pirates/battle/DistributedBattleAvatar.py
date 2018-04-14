@@ -1164,7 +1164,11 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
             buffKeyId = '%s-%s' % (entry[0], entry[3])
             if buffKeyId not in self.skillEffects.keys():
                 self.skillEffects[buffKeyId] = (
-                 entry[0], entry[1], entry[2], entry[3])
+                    entry[0],
+                    entry[1],
+                    entry[2],
+                    entry[3])
+
                 self.addStatusEffect(entry[0], entry[3], entry[1])
 
         killList = []
@@ -1176,7 +1180,8 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
                     foundEntry = 1
 
             if not foundEntry:
-                killList.append((buffKeyId, self.skillEffects[buffKeyId][0], self.skillEffects[buffKeyId][3]))
+                killList.append((buffKeyId, self.skillEffects[buffKeyId][0],
+                    self.skillEffects[buffKeyId][3]))
 
         for buffKeyId, effectId, attackerId in killList:
             del self.skillEffects[buffKeyId]

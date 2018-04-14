@@ -149,9 +149,7 @@ class BattleAttackerData(object):
         # avatar's sticky targets...
         target = self._target.avatar
 
-        if self._battleManager.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDoll, \
-            InventoryType.end_WeaponSkillDoll):
-
+        if self._battleManager.getIsVoodooDoll(skillData.skillId):
             self._avatar.addStickyTarget(self._target.avatar.doId)
 
     def removeSkillData(self, skillData):
@@ -165,11 +163,10 @@ class BattleAttackerData(object):
         # the avatar's sticky targets...
         target = self._target.avatar
 
-        if self._battleManager.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDoll, \
-            InventoryType.end_WeaponSkillDoll):
-
+        if self._battleManager.getIsVoodooDoll(skillData.skillId):
             self._avatar.removeStickyTarget(target.doId)
-            target.removeSkillEffect(self._skillId)
+            self._battleManager.removeSkillEffectForTarget(target,
+                skillData.skillId)
 
         del self._skillData[skillData.skillId]
         skillData.destroy()
@@ -349,6 +346,18 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
 
         return None
 
+    def getIsCutlass(self, skillId):
+        return self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillCutlass,
+            InventoryType.end_WeaponSkillCutlass)
+
+    def getIsDagger(self, skillId):
+        return self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDagger,
+            InventoryType.end_WeaponSkillDagger)
+
+    def getIsVoodooDoll(self, skillId):
+        return self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDoll,
+            InventoryType.end_WeaponSkillDoll)
+
     def getTargetInRange(self, attacker, target, skillId, ammoSkillId):
         if not skillId:
             return False
@@ -357,6 +366,23 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         distance = self.getTrueDistance(attacker, target)
 
         return attackRange == WeaponGlobals.INF_RANGE or distance <= attackRange
+
+    def getEffectIdFromSkillId(self, skillId):
+        if not skillId:
+            return 0
+
+        if self.getIsVoodooDoll(skillId):
+            effectId = WeaponConstants.C_ATTUNE
+        else:
+            effectId = skillId
+
+        return effectId
+
+    def addSkillEffectForTarget(self, target, avatar, skillId, duration=10):
+        target.addSkillEffect(self.getEffectIdFromSkillId(skillId), duration, avatar.doId)
+
+    def removeSkillEffectForTarget(self, target, skillId):
+        target.removeSkillEffect(self.getEffectIdFromSkillId(skillId))
 
     def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         if not avatar:
@@ -383,8 +409,7 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         timestamp = globalClockDelta.getRealNetworkTime(bits=32)
         distance = self.getTrueDistance(avatar, target)
 
-        # TODO FIXME: Find a better way to determine the weapon type...
-        if self.getWeaponReputationType(skillId) == InventoryType.CutlassRep:
+        if self.getIsCutlass(skillId) or self.getIsDagger(skillId):
             attackerEffects, targetEffects = self.getModifiedSkillEffectsSword(avatar, target, skillId,
                 ammoSkillId, charge, distance)
         else:
@@ -396,15 +421,15 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
             targetEffects
         ]
 
+        # add the skill effects for the target and avatar if a valid skill is
+        # provided for the client that corresponds to an effect...
         targetSkillId = targetEffects[2]
         if targetSkillId:
-            duration = 10 #TODO FIXME: Calculate Properly!
-            target.addSkillEffect(targetSkillId, duration, avatar.doId)
+            self.addSkillEffectForTarget(target, avatar, targetSkillId)
 
         attackerSkillEffect = attackerEffects[2]
         if attackerSkillEffect:
-            duration = 10 #TODO FIXME: Calculate Properly!
-            target.addSkillEffect(attackerSkillId, duration, avatar.doId)
+            self.addSkillEffectForTarget(avatar, target, attackerSkillEffect)
 
         targetData = self.getTargetDefaultData(target, avatar)
 
@@ -457,9 +482,12 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
 
     def __targetedSkillHit(self, avatar, target, targetData, attackerData, areaIdEffects, skillData, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         reputation = self.getModifiedAttackReputation(avatar, target, skillId, ammoSkillId)
+
         skillData.reputation += reputation
         attackerData.reputation += reputation
+
         self.__applyTargetEffects(target, areaIdEffects[1])
+        self.__applyTargetEffects(avatar, areaIdEffects[0])
 
     def __targetedSkillMiss(self, avatar, target, targetData, attackerData, areaIdEffects, skillData, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         pass

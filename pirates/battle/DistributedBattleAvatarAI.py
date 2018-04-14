@@ -314,7 +314,12 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
                 break
 
         if not found:
-            skillEffect = [effectId, duration, timestamp, attackerId]
+            skillEffect = [
+                effectId,
+                duration,
+                timestamp,
+                attackerId]
+
             self.skillEffects.append(skillEffect)
 
         self.d_setSkillEffects(self.skillEffects)
