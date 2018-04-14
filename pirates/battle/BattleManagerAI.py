@@ -356,10 +356,6 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         attackRange = self.getModifiedAttackRange(attacker, skillId, ammoSkillId)
         distance = self.getTrueDistance(attacker, target)
 
-        # TODO FIXME: calculate the range distance in a better way!
-        if self.getWeaponReputationType(skillId) == InventoryType.CutlassRep:
-            attackRange *= 4
-
         return attackRange == WeaponGlobals.INF_RANGE or distance <= attackRange
 
     def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
