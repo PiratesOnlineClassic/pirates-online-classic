@@ -363,7 +363,6 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         return attackRange == WeaponGlobals.INF_RANGE or distance <= attackRange
 
     def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
-        print ("getTargetedSkillResult", avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge)
         if not avatar:
             self.notify.warning('Cannot calculate targeted skill for unknown avatar; skillId=%d!' % (
                 skillId))
