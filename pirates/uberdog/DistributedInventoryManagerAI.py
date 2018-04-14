@@ -11,6 +11,11 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         self.inventories = {}
         self.inventoryTasks = {}
+        
+    def announceGenerate(self):
+        DistributedObjectGlobalAI.announceGenerate(self)
+        
+        self.air.netMessenger.accept('hasInventory', self, self.hasInventory)
 
     def hasInventory(self, inventoryId):
         return inventoryId in self.inventories
