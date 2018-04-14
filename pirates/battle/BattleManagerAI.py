@@ -502,11 +502,11 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         pass
 
     def __applyTargetEffects(self, target, targetEffects):
-        target.b_setHp(target.getHp()[0] + targetEffects[0])
-        target.b_setPower(target.getPower() + targetEffects[1])
-        target.b_setLuck(target.getLuck() + targetEffects[2])
-        target.b_setMojo(target.getMojo() + targetEffects[3])
-        target.b_setSwiftness(target.getSwiftness() + targetEffects[4])
+        target.b_setHp(max(0, min(target.getHp()[0] + targetEffects[0], target.getMaxHp())))
+        target.b_setPower(max(0, min(target.getPower() + targetEffects[1], target.getMaxPower())))
+        target.b_setLuck(max(0, min(target.getLuck() + targetEffects[2], target.getMaxLuck())))
+        target.b_setMojo(max(0, min(target.getMojo() + targetEffects[3], target.getMaxMojo())))
+        target.b_setSwiftness(max(0, min(target.getSwiftness() + targetEffects[4], target.getMaxSwiftness())))
 
     def __checkEnemySpawnNode(self, spawnNode):
         if not spawnNode:
