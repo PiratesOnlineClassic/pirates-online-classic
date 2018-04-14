@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.MessageStackPanel
 from direct.gui.DirectGui import DGG, DirectButton, DirectFrame
 from direct.gui.OnscreenText import OnscreenText
 from direct.interval.IntervalGlobal import *
@@ -120,96 +116,85 @@ class StackMessage(BorderFrame):
                 image = StackMessage.CoinTex
                 imageScale = 0.27
                 command = localAvatar.guiMgr.showCollectionMain
-            else:
-                if category == 'skills':
-                    image = StackMessage.SkillTex
-                    imageScale = 0.27
-                    command = localAvatar.guiMgr.showSkillPage
+            elif category == 'skills':
+                image = StackMessage.SkillTex
+                imageScale = 0.27
+                command = localAvatar.guiMgr.showSkillPage
+            elif category == 'reputation':
+                repId = detail
+                if repId == InventoryType.OverallRep:
+                    model = StackMessage.TopLevel
+                    imageScale = 0.09
+                elif repId == InventoryType.SailingRep:
+                    model = StackMessage.SkillIcons
+                    imageScale = 0.12
                 else:
-                    if category == 'reputation':
-                        repId = detail
-                        if repId == InventoryType.OverallRep:
-                            model = StackMessage.TopLevel
-                            imageScale = 0.09
-                        else:
-                            if repId == InventoryType.SailingRep:
-                                model = StackMessage.SkillIcons
-                                imageScale = 0.12
-                            else:
-                                model = StackMessage.WeaponIcons
-                                imageScale = 0.12
-                        asset = ReputationGlobals.RepIcons.get(repId)
-                        image = model.find('**/%s' % asset)
-                        command = localAvatar.guiMgr.showSkillPage
-                    else:
-                        if category == 'card':
-                            suit = PlayingCardGlobals.getSuit(detail)
-                            rank = PlayingCardGlobals.getRank(detail)
-                            image = PlayingCardGlobals.getImage('standard', suit, rank)
-                            imageScale = 0.2
-                            command = localAvatar.guiMgr.showCollectionMain
-                        else:
-                            if category == 'collect':
-                                name = CollectionMap.Assets[detail]
-                                image = StackMessage.TreasureGui.find('**/%s*' % name)
-                                imageScale = 0.35
-                                command = localAvatar.guiMgr.showCollectionMain
-                            else:
-                                if category == 'quests':
-                                    image = StackMessage.QuestTex
-                                    imageScale = 0.18
-                                    command = localAvatar.guiMgr.showQuestPanel
-                                else:
-                                    if category == 'friends':
-                                        image = StackMessage.FriendTex
-                                        imageScale = 0.15
-                                        command = localAvatar.guiMgr.socialPanel.show
-                                    else:
-                                        if category == 'lookout':
-                                            image = StackMessage.LookoutTex
-                                            imageScale = 0.18
-                                            command = localAvatar.guiMgr.showLookoutPanel
-                                        else:
-                                            if category == 'weapon':
-                                                image = StackMessage.WeaponTex
-                                                imageScale = 0.12
-                                                command = localAvatar.guiMgr.showWeaponPanel
-                                            else:
-                                                if category == 'loot':
-                                                    if detail == ItemId.CARGO_CRATE:
-                                                        image = StackMessage.CrateTex
-                                                    else:
-                                                        if detail == ItemId.CARGO_CHEST:
-                                                            image = StackMessage.ChestTex
-                                                        else:
-                                                            if detail == ItemId.CARGO_SKCHEST:
-                                                                image = StackMessage.RoyalChestTex
-                                                            else:
-                                                                if detail == ItemId.GOLD:
-                                                                    StackMessage.CoinTex
-                                                                else:
-                                                                    StackMessage.CoinTex
-                                                    imageScale = 0.35
-                                                    command = localAvatar.guiMgr.showShipPanel
-                                                else:
-                                                    if category == 'admin':
-                                                        image = StackMessage.AdminTex
-                                                        imageScale = 0.3
-                                                        command = None
-                                                    else:
-                                                        if category == 'hat':
-                                                            image = StackMessage.HatTex
-                                                            imageScale = 0.16
-                                                            imagePos = (0.1, 0, -0.12)
-                                                            command = localAvatar.guiMgr.showNonPayer
-                                                            extraArgs = ['Restricted_Message_Stack_Panel', 10]
-                                                        else:
-                                                            if category == 'tattoo':
-                                                                image = StackMessage.TattooTex
-                                                                imageScale = 0.12
-                                                                imagePos = (0.1, 0, -0.1)
-                                                                command = localAvatar.guiMgr.showNonPayer
-                                                                extraArgs = [None, 10]
+                    model = StackMessage.WeaponIcons
+                    imageScale = 0.12
+                asset = ReputationGlobals.RepIcons.get(repId)
+                image = model.find('**/%s' % asset)
+                command = localAvatar.guiMgr.showSkillPage
+            elif category == 'card':
+                suit = PlayingCardGlobals.getSuit(detail)
+                rank = PlayingCardGlobals.getRank(detail)
+                image = PlayingCardGlobals.getImage('standard', suit, rank)
+                imageScale = 0.2
+                command = localAvatar.guiMgr.showCollectionMain
+            elif category == 'collect':
+                name = CollectionMap.Assets[detail]
+                image = StackMessage.TreasureGui.find('**/%s*' % name)
+                imageScale = 0.35
+                command = localAvatar.guiMgr.showCollectionMain
+            elif category == 'quests':
+                image = StackMessage.QuestTex
+                imageScale = 0.18
+                command = localAvatar.guiMgr.showQuestPanel
+            elif category == 'friends':
+                image = StackMessage.FriendTex
+                imageScale = 0.15
+                command = localAvatar.guiMgr.socialPanel.show
+            elif category == 'lookout':
+                image = StackMessage.LookoutTex
+                imageScale = 0.18
+                command = localAvatar.guiMgr.showLookoutPanel
+            elif category == 'weapon':
+                image = StackMessage.WeaponTex
+                imageScale = 0.12
+                command = localAvatar.guiMgr.showWeaponPanel
+            elif category == 'loot':
+                if detail == ItemId.CARGO_CRATE:
+                    image = StackMessage.CrateTex
+                elif detail == ItemId.CARGO_CHEST:
+                    image = StackMessage.ChestTex
+                elif detail == ItemId.CARGO_SKCHEST:
+                    image = StackMessage.RoyalChestTex
+                elif detail == ItemId.GOLD:
+                    StackMessage.CoinTex
+                else:
+                    StackMessage.CoinTex
+                imageScale = 0.35
+                command = localAvatar.guiMgr.showShipPanel
+            elif category == 'admin':
+                image = StackMessage.AdminTex
+                imageScale = 0.3
+                command = None
+            elif category == 'hat':
+                image = StackMessage.HatIcon
+                imageScale = 0.13
+                imagePos = (0.095, 0, -0.09)
+                command = localAvatar.guiMgr.showNonPayer
+                extraArgs = ['Restricted_Message_Stack_Panel', 10]
+            elif category == 'tattoo':
+                image = StackMessage.TattooTex
+                imageScale = 0.12
+                imagePos = (0.1, 0, -0.1)
+                command = localAvatar.guiMgr.showNonPayer
+                extraArgs = [None, 10]
+            elif category == 'pork':
+                image = StackMessage.PorkChunkTex
+                imageScale = 0.1
+                imagePos = (0.1, 0, -0.08)
+                command = localAvatar.guiMgr.showNonPayer
             self.icon = DirectButton(parent=self, relief=None, image=image, image_scale=imageScale, pos=imagePos, command=command, extraArgs=extraArgs)
         return
 
@@ -502,4 +487,4 @@ class MessageStackPanel(DirectFrame):
         self.addMessage(msg)
         self.lastMessage = text
         return msg
-# okay decompiling .\pirates\piratesgui\MessageStackPanel.pyc
+
