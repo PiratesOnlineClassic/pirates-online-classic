@@ -296,7 +296,6 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.skillEffects = skillEffects
 
     def d_setSkillEffects(self, skillEffects):
-        print(skillEffects)
         self.sendUpdate('setSkillEffects', [skillEffects])
 
     def b_setSkillEffects(self, skillEffects):

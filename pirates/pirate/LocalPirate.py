@@ -384,7 +384,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             return
         except:
             self.LocalPirate_deleted = 1
-        
+
         self.guiMgr.delete()
         del self.guiMgr
         self.cameraFSM.cleanup()
@@ -559,7 +559,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         if not inventory:
             return
         self.equippedWeapons = [0, 0, 0, 0, 0, 0]
-        
+
         if inventory.getStackQuantity(InventoryType.CutlassWeaponL6) > 0:
             self.equippedWeapons[0] = InventoryType.CutlassWeaponL6
         elif inventory.getStackQuantity(InventoryType.CutlassWeaponL5) > 0:
@@ -572,7 +572,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.equippedWeapons[0] = InventoryType.CutlassWeaponL2
         elif inventory.getStackQuantity(InventoryType.CutlassWeaponL1) > 0:
             self.equippedWeapons[0] = InventoryType.CutlassWeaponL1
-            
+
         if inventory.getStackQuantity(InventoryType.PistolWeaponL6) > 0:
             self.equippedWeapons[1] = InventoryType.PistolWeaponL6
         elif inventory.getStackQuantity(InventoryType.PistolWeaponL5) > 0:
@@ -585,14 +585,14 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.equippedWeapons[1] = InventoryType.PistolWeaponL2
         elif inventory.getStackQuantity(InventoryType.PistolWeaponL1) > 0:
             self.equippedWeapons[1] = InventoryType.PistolWeaponL1
-            
+
         if inventory.getStackQuantity(InventoryType.BayonetWeaponL3) > 0:
             self.equippedWeapons[1] = InventoryType.BayonetWeaponL3
         elif inventory.getStackQuantity(InventoryType.BayonetWeaponL2) > 0:
             self.equippedWeapons[1] = InventoryType.BayonetWeaponL2
-        elif inventory.getStackQuantity(InventoryType.BayonetWeaponL1) > 0:   
+        elif inventory.getStackQuantity(InventoryType.BayonetWeaponL1) > 0:
             self.equippedWeapons[1] = InventoryType.BayonetWeaponL1
-            
+
         if inventory.getStackQuantity(InventoryType.DollWeaponL6) > 0:
             self.equippedWeapons[2] = InventoryType.DollWeaponL6
         elif inventory.getStackQuantity(InventoryType.DollWeaponL5) > 0:
@@ -605,7 +605,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.equippedWeapons[2] = InventoryType.DollWeaponL2
         elif inventory.getStackQuantity(InventoryType.DollWeaponL1) > 0:
             self.equippedWeapons[2] = InventoryType.DollWeaponL1
-            
+
         if inventory.getStackQuantity(InventoryType.DaggerWeaponL6) > 0:
             self.equippedWeapons[3] = InventoryType.DaggerWeaponL6
         elif inventory.getStackQuantity(InventoryType.DaggerWeaponL5) > 0:
@@ -618,7 +618,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.equippedWeapons[3] = InventoryType.DaggerWeaponL2
         elif inventory.getStackQuantity(InventoryType.DaggerWeaponL1) > 0:
             self.equippedWeapons[3] = InventoryType.DaggerWeaponL1
-            
+
         if inventory.getStackQuantity(InventoryType.GrenadeWeaponL6) > 0:
             self.equippedWeapons[4] = InventoryType.GrenadeWeaponL6
         elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL5) > 0:
@@ -631,7 +631,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.equippedWeapons[4] = InventoryType.GrenadeWeaponL2
         elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL1) > 0:
             self.equippedWeapons[4] = InventoryType.GrenadeWeaponL1
-            
+
         if inventory.getStackQuantity(InventoryType.WandWeaponL6) > 0:
             self.equippedWeapons[5] = InventoryType.WandWeaponL6
         elif inventory.getStackQuantity(InventoryType.WandWeaponL5) > 0:
@@ -1131,9 +1131,15 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     def composeRequestTargetedSkill(self, skillId, ammoSkillId, combo=0, charge=0):
         newPos = self.cr.targetMgr.getAimHitPos(self)
         if newPos:
-            pos = [newPos[0], newPos[1], newPos[2]]
+            pos = [
+                newPos[0],
+                newPos[1],
+                newPos[2]]
         else:
-            pos = [0, 0, 0]
+            pos = [
+                0,
+                0,
+                0]
         if WeaponGlobals.getIsShipSkill(skillId) or ammoSkillId == InventoryType.ShipRepairKit:
             targetId = self.ship.getDoId()
             areaCenter = self.ship
@@ -1144,47 +1150,65 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
                     doId = self.getDoId()
                     if areaIdList.count(doId):
                         areaIdList.remove(doId)
-        elif WeaponGlobals.getIsDollAttackSkill(skillId):
-            targetId = 0
-            areaIdList = copy.copy(self.stickyTargets)
-            friendlySkill = WeaponGlobals.isFriendlyFire(skillId)
-            toRemove = []
-            for avId in areaIdList:
-                av = self.cr.doId2do.get(avId)
-                if av:
-                    if friendlySkill and TeamUtils.damageAllowed(self, av):
-                        toRemove.append(avId)
-                    elif not friendlySkill and not TeamUtils.damageAllowed(self, av):
-                        toRemove.append(avId)
-                else:
-                    toRemove.append(avId)
-
-            for currToRemove in toRemove:
-                areaIdList.remove(currToRemove)
-        elif self.currentTarget and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
-            targetId = self.currentTarget.getDoId()
-            areaCenter = self.currentTarget
         else:
-            targetId = 0
-            areaCenter = self
-        areaIdList = self.getAreaList(skillId, ammoSkillId, areaCenter, Point3(*pos), self.doId)
-        skillResult = self.cr.battleMgr.doAttack(self, skillId, ammoSkillId, targetId, areaIdList, Point3(*pos), combo, charge)
+            if WeaponGlobals.getIsDollAttackSkill(skillId):
+                targetId = 0
+                areaIdList = copy.copy(self.stickyTargets)
+                friendlySkill = WeaponGlobals.isFriendlyFire(skillId)
+                toRemove = []
+                for avId in areaIdList:
+                    av = self.cr.doId2do.get(avId)
+                    if av:
+                        if friendlySkill and TeamUtils.damageAllowed(self, av):
+                            toRemove.append(avId)
+                        elif not friendlySkill and not TeamUtils.damageAllowed(self, av):
+                            toRemove.append(avId)
+                    else:
+                        toRemove.append(avId)
+
+                for currToRemove in toRemove:
+                    areaIdList.remove(currToRemove)
+
+            else:
+                if self.currentTarget and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
+                    targetId = self.currentTarget.getDoId()
+                    areaCenter = self.currentTarget
+                else:
+                    targetId = 0
+                    areaCenter = self
+
+                areaIdList = self.getAreaList(skillId, ammoSkillId, areaCenter,
+                    Point3(*pos), self.doId)
+
+        skillResult = self.cr.battleMgr.doAttack(self, skillId, ammoSkillId, targetId, areaIdList,
+            Point3(*pos), combo, charge)
+
         if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
             messenger.send('skillFinished')
             return
+
         timestamp32 = 0
-        self.sendRequestTargetedSkill(skillId, ammoSkillId, skillResult, targetId, areaIdList, timestamp32, pos, charge)
-        attackerEffects, targetEffects = self.cr.battleMgr.getModifiedSkillEffects(self, self.currentTarget, skillId, ammoSkillId, charge)
+        self.sendRequestTargetedSkill(skillId, ammoSkillId, skillResult, targetId,
+            areaIdList, timestamp32, pos, charge)
+
+        attackerEffects, targetEffects = self.cr.battleMgr.getModifiedSkillEffects(self, self.currentTarget,
+            skillId, ammoSkillId, charge)
+
         areaEffects = []
         for avId in areaIdList:
             av = base.cr.doId2do.get(avId)
             if av:
-                skillTargetEffects = self.cr.battleMgr.getModifiedSkillEffects(self, av, skillId, ammoSkillId, charge)[1]
+                skillTargetEffects = self.cr.battleMgr.getModifiedSkillEffects(self, av,
+                    skillId, ammoSkillId, charge)[1]
+
                 areaEffects.append(skillTargetEffects)
 
-        self.useTargetedSkill(skillId, ammoSkillId, skillResult, targetId, areaIdList, attackerEffects, targetEffects, areaEffects, timestamp32, pos, charge, localSignal=1)
+        self.useTargetedSkill(skillId, ammoSkillId, skillResult, targetId, areaIdList, attackerEffects,
+            targetEffects, areaEffects, timestamp32, pos, charge, localSignal=1)
+
         if attackerEffects != [0, 0, 0, 0, 0]:
-            self.targetedWeaponHit(skillId, ammoSkillId, WeaponGlobals.RESULT_HIT, attackerEffects, self, pos)
+            self.targetedWeaponHit(skillId, ammoSkillId, WeaponGlobals.RESULT_HIT,
+                attackerEffects, self, pos)
 
     def composeRequestShipSkill(self, skillId, ammoSkillId):
         targetId = self.ship.getDoId()
