@@ -1315,38 +1315,29 @@ def getHandNameFull(handCode, cards):
     cardNamesPlural = map(lambda card: PlayingCardRanksPlural[getRank(card)], cards)
     if handCode == 'Nothing':
         return ''
-    else:
-        if handCode == 'NoPair':
-            return '%s High' % cardNames[0]
+    elif handCode == 'NoPair':
+        return '%s High' % cardNames[0]
+    elif handCode == 'OnePair':
+        return 'Pair of %s\n%s kicker' % (cardNamesPlural[0], cardNames[2])
+    elif handCode == 'TwoPair':
+        return 'Two Pair\n%s and %s' % (cardNamesPlural[0], cardNamesPlural[2])
+    elif handCode == 'Trips':
+        return 'Three of a Kind\n%s' % cardNamesPlural[0]
+    elif handCode == 'Straight':
+        return 'Straight to the %s' % cardNames[0]
+    elif handCode == 'Flush':
+        return 'Flush\n%s high' % cardNames[0]
+    elif handCode == 'FlHouse':
+        return 'Full House\n%s over %s' % (cardNamesPlural[0], cardNamesPlural[3])
+    elif handCode == 'Quads':
+        return 'Four of a Kind\n%s' % cardNamesPlural[0]
+    elif handCode == 'StFlush':
+        if getRank(cards[0]) == 12:
+            return 'Royal Flush'
         else:
-            if handCode == 'OnePair':
-                return 'Pair of %s\n%s kicker' % (cardNamesPlural[0], cardNames[2])
-            else:
-                if handCode == 'TwoPair':
-                    return 'Two Pair\n%s and %s' % (cardNamesPlural[0], cardNamesPlural[2])
-                else:
-                    if handCode == 'Trips':
-                        return 'Three of a Kind\n%s' % cardNamesPlural[0]
-                    else:
-                        if handCode == 'Straight':
-                            return 'Straight to the %s' % cardNames[0]
-                        else:
-                            if handCode == 'Flush':
-                                return 'Flush\n%s high' % cardNames[0]
-                            else:
-                                if handCode == 'FlHouse':
-                                    return 'Full House\n%s over %s' % (cardNamesPlural[0], cardNamesPlural[3])
-                                else:
-                                    if handCode == 'Quads':
-                                        return 'Four of a Kind\n%s' % cardNamesPlural[0]
-                                    else:
-                                        if handCode == 'StFlush':
-                                            if getRank(cards[0]) == 12:
-                                                return 'Royal Flush'
-                                            else:
-                                                return 'Straight Flush\n%s High' % cardNames[0]
-                                        else:
-                                            return 'Unknown'
+            return 'Straight Flush\n%s High' % cardNames[0]
+    else:
+        return 'Unknown'
 
 
 PlayingCardTemplate = '%s of %s'
@@ -3213,4 +3204,3 @@ ShipRepaired = 'Your ship has been repaired.'
 def getServerTimeString(secondsSinceEpoch):
     import datetime
     return 'Server Time: %s' % datetime.datetime.fromtimestamp(secondsSinceEpoch).ctime()
-# okay decompiling .\pirates\piratesbase\PLocalizerEnglish.pyc
