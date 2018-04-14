@@ -193,7 +193,7 @@ class SpawnNodeBase:
         if hasattr(npc, 'bossData'):
             name = npc.bossData.get('Name', PLocalizer.Unknown)
         elif avatarType.getBoss():
-            name = random.choice(PLocalizer.BossNames[avatarType.faction][avatarType.track][avatarType.id])
+            name = PLocalizer.BossNames[avatarType.faction][avatarType.track][avatarType.id][avatarType.boss]
 
         npc.setName(name)
 
@@ -215,7 +215,7 @@ class SpawnNodeBase:
             npc.zoneId, locationName, npc.getPos(), npc.doId))
 
         if avatarType.getBoss():
-            self.notify.debug('Spawning boss %s (%s) on %s!' % (npc.getName(), self.objKey, locationName))
+            print('Spawning boss %s (%s) on %s!' % (npc.getName(), self.objKey, locationName))
 
         return Task.done
 
