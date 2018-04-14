@@ -156,7 +156,8 @@ def maxWeapons():
         ## Some nice ol grammar better put together while this comment has bad grammar fix ~ Dan.
         inventory.b_setStack(InventoryType.CutlassWeaponL5, 1)
         inventory.b_setStack(InventoryType.PistolWeaponL5, 1)
-        inventory.b_setStack(InventoryType.MusketWeaponL3, 1)
+        inventory.b_setStack(InventoryType.BayonetWeaponL3, 0)
+        inventory.b_setStack(InventoryType.MusketWeaponL3, 0)
         inventory.b_setStack(InventoryType.DollWeaponL5, 1)
         inventory.b_setStack(InventoryType.DaggerWeaponL5, 1)
         inventory.b_setStack(InventoryType.GrenadeWeaponL5, 1)
