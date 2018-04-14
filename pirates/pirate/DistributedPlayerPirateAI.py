@@ -429,6 +429,24 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         return hostile
 
+    def getFriendlyStickyTargets(self):
+        friendly = []
+        friendlyTeams = [
+            PiratesGlobals.VILLAGER_TEAM,
+            PiratesGlobals.PLAYER_TEAM
+        ]
+
+        for targetId in self.stickyTargets:
+            target = self.air.doId2do.get(targetId)
+
+            if not target:
+                continue
+
+            if target.getTeam() in friendlyTeams:
+                friendly.append(target)
+
+        return friendly
+  
     def requestRemoveStickyTargets(self, doIdList):
         for targetDoId in doIdList:
             self.removeStickyTarget(targetDoId)
