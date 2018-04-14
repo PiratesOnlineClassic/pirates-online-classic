@@ -157,7 +157,7 @@ class BattleAttackerData(object):
         if not isinstance(skillData, BattleAttackerSkillData):
             return
 
-        if not self.hasSkillData(skillData):
+        if not self.hasSkillData(skillData.skillId):
             return
 
         # if the target is using a doll skill, remove the sticky target from
