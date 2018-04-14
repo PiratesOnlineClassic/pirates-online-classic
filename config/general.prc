@@ -99,7 +99,7 @@ want-make-a-pirate #t
 want-membership #f
 
 # Islands:
-remove-island-barriers #f
+want-island-barriers #t
 object-load-delay #f
 
 # Temporary:

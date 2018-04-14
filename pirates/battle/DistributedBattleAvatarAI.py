@@ -305,7 +305,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def addSkillEffect(self, effectId, duration, attackerId):
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
         found = False
-        for i in range(0, len(self.skillEffects)):
+        for i in range(len(self.skillEffects)):
             effect = self.skillEffects[i]
             if effect[0] == effectId and effect[3] == attackerId:
                 self.skillEffects[i][1] = duration
@@ -324,15 +324,20 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
         self.d_setSkillEffects(self.skillEffects)
 
-    def removeSkillEffect(self, skillEffectId):
-        del self.skillEffects[skillEffectId]
+    def removeSkillEffect(self, effectId):
+        for i in range(len(self.skillEffects)):
+            effect = self.skillEffects[i]
+            if effect[0] == effectId:
+                self.skillEffects.remove(effect)
+                break
+
         self.d_setSkillEffects(self.skillEffects)
 
     def __processSkills(self, task):
         if len(self.skillEffects) == 0:
             return task.again
 
-        for i in range(0, len(self.skillEffects)):
+        for i in range(len(self.skillEffects)):
 
             if not i in self.skillEffects:
                 continue
