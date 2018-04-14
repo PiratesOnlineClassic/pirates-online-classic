@@ -324,15 +324,7 @@ class UserFunnel:
 
 
 def logSubmit(setHostID, setMileStone):
-    if __dev__:
-        return
-    if setHostID == 1 or setHostID == 2:
-        setHostID = 3
-    trackItem = UserFunnel()
-    trackItem.setmilestone(quote_plus(setMileStone))
-    trackItem.setHost(setHostID)
-    trackItem.prerun()
-    trackItem.run()
+    pass
 
 
 def getVRSFunnelURL():
