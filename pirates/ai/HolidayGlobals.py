@@ -93,4 +93,3 @@ def getHolidayStatusMsg(holidayId):
 
 def getHolidayIcon(holidayId):
     return holidayMessages.get(holidayId)[5]
-# okay decompiling .\pirates\ai\HolidayGlobals.pyc

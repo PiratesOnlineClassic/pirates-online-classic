@@ -1,4 +1,5 @@
 import random
+import math
 
 from panda3d.core import *
 from pirates.battle.BattleManagerBase import BattleManagerBase
@@ -62,7 +63,6 @@ class BattleAttackerSkillData(object):
 
         self._reputation = 0
 
-
 class BattleAttackerData(object):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleAttackerData')
 
@@ -73,7 +73,9 @@ class BattleAttackerData(object):
         self._target = None
 
         self._skillData = {}
+
         self._currentSkillId = 0
+        self._reputation = 0
 
     @property
     def target(self):
@@ -103,6 +105,14 @@ class BattleAttackerData(object):
     def currentSkillId(self, currentSkillId):
         self._currentSkillId = currentSkillId
 
+    @property
+    def reputation(self):
+        return self._reputation
+
+    @reputation.setter
+    def reputation(self, reputation):
+        self._reputation = reputation
+
     def hasSkillData(self, skillId):
         if not skillId:
             return False
@@ -114,6 +124,12 @@ class BattleAttackerData(object):
             return None
 
         return self._skillData[skillId]
+
+    def getSkillDefaultData(self, skillId, ammoSkillId):
+        if not self.hasSkillData(skillId):
+            self.addSkillData(skillId, ammoSkillId)
+
+        return self.getSkillData(skillId)
 
     def addSkillData(self, skillId, ammoSkillId):
         if not skillId:
@@ -129,23 +145,31 @@ class BattleAttackerData(object):
 
         self._skillData[skillId] = skillData
 
-        if skillData.skillId == WeaponGlobals.C_ATTUNE:
-            self._avatar.addStickyTarget(self._target.doId)
+        # if the target is using a doll skill, add the target to the
+        # avatar's sticky targets...
+        target = self._target.avatar
+
+        if self._battleManager.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDoll, \
+            InventoryType.end_WeaponSkillDoll):
+
+            self._avatar.addStickyTarget(self._target.avatar.doId)
 
     def removeSkillData(self, skillData):
-        if not skillData:
-            return
-
         if not isinstance(skillData, BattleAttackerSkillData):
             return
 
         if not self.hasSkillData(skillData):
             return
 
-        if skillData.skillId == WeaponGlobals.C_ATTUNE:
+        # if the target is using a doll skill, remove the sticky target from
+        # the avatar's sticky targets...
+        target = self._target.avatar
 
-            # This function already exists for the client. Might as well repurpose it
-            self._avatar.reqeuestRemoveStickyTargets([self._target.doId])
+        if self._battleManager.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDoll, \
+            InventoryType.end_WeaponSkillDoll):
+
+            self._avatar.removeStickyTarget(target.doId)
+            target.removeSkillEffect(self._skillId)
 
         del self._skillData[skillData.skillId]
         skillData.destroy()
@@ -155,7 +179,9 @@ class BattleAttackerData(object):
         self._target = None
 
         self._skillData = {}
+
         self._currentSkillId = 0
+        self._reputation = 0
 
 class BattleTargetData(object):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleTargetData')
@@ -164,6 +190,7 @@ class BattleTargetData(object):
         self._battleManager = battleManager
 
         self._avatar = None
+
         self._attackerData = {}
 
     @property
@@ -190,35 +217,27 @@ class BattleTargetData(object):
 
         return self._attackerData[attackerDoId]
 
-    def addAttackerData(self, attackerDoId):
-        if not attackerDoId:
-            return
+    def getAttackerDefaultData(self, avatar):
+        if not self.hasAttackerData(avatar.doId):
+            self.addAttackerData(avatar)
 
-        avatar = self._battleManager.air.doId2do.get(attackerDoId)
+        return self.getAttackerData(avatar.doId)
 
-        if not avatar:
-            return
-
-        if self.hasAttackerData(attackerDoId):
+    def addAttackerData(self, avatar):
+        if self.hasAttackerData(avatar.doId):
             return
 
         attacker = BattleAttackerData(self._battleManager)
         attacker.avatar = avatar
         attacker.target = self
 
-        self._attackerData[attacker.avatar.doId] = attacker
+        self._attackerData[avatar.doId] = attacker
 
     def removeAttackerData(self, attackerData):
-        if not attackerData:
-            return
-
         if not isinstance(attackerData, BattleAttackerData):
             return
 
         avatar = attackerData.avatar
-
-        if not avatar:
-            return
 
         if not self.hasAttackerData(avatar.doId):
             return
@@ -228,28 +247,14 @@ class BattleTargetData(object):
 
     def destroy(self):
         self._target = None
+
         self._attackerData = {}
 
-class BattleManagerAI(BattleManagerBase):
-    notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
+class BattleManagerData(object):
+    notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerData')
 
-    def __init__(self, air):
-        self.air = air
-        self.enemySpawner = self.air.enemySpawner
-
-        self.__updateTask = None
+    def __init__(self):
         self.__targetData = {}
-
-    def startup(self):
-        self.__updateTask = taskMgr.add(self.__update, '%s-update-task-%s' % (
-            self.__class__.__name__, id(self)))
-
-    def __update(self, task):
-        for spawnType, spawnNodes in self.enemySpawner.spawnNodes.items():
-            for spawnNode in spawnNodes:
-                self.__checkEnemySpawnNode(spawnNode)
-
-        return task.cont
 
     def hasTargetData(self, targetDoId):
         if not targetDoId:
@@ -263,31 +268,51 @@ class BattleManagerAI(BattleManagerBase):
 
         return self.__targetData[targetDoId]
 
+    def getTargetDefaultData(self, target, avatar):
+        if not self.hasTargetData(target.doId):
+            self.addTargetData(target, avatar)
+
+        return self.getTargetData(target.doId)
+
     def addTargetData(self, target, avatar):
-        if not target:
-            return
-
-        if not avatar:
-            return
-
         if self.hasTargetData(target.doId):
             return
 
         targetData = BattleTargetData(self)
-        targetData.target = target
-        targetData.addAttackerData(avatar.doId)
+        targetData.avatar = target
+        targetData.addAttackerData(avatar)
 
-        self.__targetData[targetData.target.doId] = targetData
+        self.__targetData[target.doId] = targetData
 
     def removeTargetData(self, targetData):
-        if not targetData:
-            return
-
-        if not self.hasTargetData(targetData.target.doId):
+        target = targetData.avatar
+        if not self.hasTargetData(target.doId):
             return
 
         targetData.destroy()
-        del self.__targetData[targetData.target.doId]
+        del self.__targetData[target.doId]
+
+class BattleManagerAI(BattleManagerBase, BattleManagerData):
+    notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
+
+    def __init__(self, air):
+        BattleManagerData.__init__(self)
+
+        self.air = air
+        self.enemySpawner = self.air.enemySpawner
+
+        self.__updateTask = None
+
+    def startup(self):
+        self.__updateTask = taskMgr.add(self.__update, '%s-update-task-%s' % (
+            self.__class__.__name__, id(self)))
+
+    def __update(self, task):
+        for spawnNodes in self.enemySpawner.spawnNodes.values():
+            for spawnNode in spawnNodes:
+                self.__checkEnemySpawnNode(spawnNode)
+
+        return task.cont
 
     def getTrueDistance(self, avatar, target):
         targetParent = target.getParentObj()
@@ -298,50 +323,72 @@ class BattleManagerAI(BattleManagerBase):
         targetNP = NodePath('psuedo-target-%d' % target.doId)
         targetNP.setPosHpr(targetParent, target.getPos(), target.getHpr())
 
-        avatarNP = NodePath('psuedo-target-%d' % avatar.doId)
+        avatarNP = NodePath('psuedo-avatar-%d' % avatar.doId)
         avatarNP.setPosHpr(targetParent, avatar.getPos(), avatar.getHpr())
 
         return avatarNP.getDistance(targetNP)
 
-    def targetInRange(self, attacker, target, skillId, ammoSkillId):
+    def getSkillInRange(self, skillId, start, end):
+        return skillId >= start and skillId <= end
+
+    def getWeaponReputationType(self, skillId):
+        if self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillCutlass, InventoryType.end_WeaponSkillCutlass):
+            return InventoryType.CutlassRep
+        elif self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillPistol, InventoryType.end_WeaponSkillPistol):
+            return InventoryType.PistolRep
+        elif self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillMusket, InventoryType.end_WeaponSkillMusket):
+            return InventoryType.MusketRep
+        elif self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDagger, InventoryType.end_WeaponSkillDagger):
+            return InventoryType.DaggerRep
+        elif self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillGrenade, InventoryType.end_WeaponSkillGrenade):
+            return InventoryType.GrenadeRep
+        elif self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillDoll, InventoryType.end_WeaponSkillDoll):
+            return InventoryType.DollRep
+        elif self.getSkillInRange(skillId, InventoryType.begin_WeaponSkillWand, InventoryType.end_WeaponSkillWand):
+            return InventoryType.WandRep
+
+        return None
+
+    def getTargetInRange(self, attacker, target, skillId, ammoSkillId):
         if not skillId:
             return False
 
-        tolerance = simbase.config.GetFloat('target-range-tolerance', 10.0)
         attackRange = self.getModifiedAttackRange(attacker, skillId, ammoSkillId)
         distance = self.getTrueDistance(attacker, target)
 
-        if attackRange == WeaponGlobals.INF_RANGE:
-            return True
+        # TODO FIXME: calculate the range distance in a better way!
+        if self.getWeaponReputationType(skillId) == InventoryType.CutlassRep:
+            attackRange *= 4
 
-        if distance <= attackRange * tolerance:
-            return True
+        return attackRange == WeaponGlobals.INF_RANGE or distance <= attackRange
 
-        return False
-
-    def useTargetedSkill(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+    def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         if not avatar:
-            self.notify.debug('Cannot calculate targeted skill for unknown avatar!')
+            self.notify.warning('Cannot calculate targeted skill for unknown avatar; skillId=%d!' % (
+                skillId))
+
             return None
 
         if not target:
-            self.notify.debug('Cannot calculate targeted skill for avatar %d, unknown target!' % (
-                avatar.doId))
+            self.notify.warning('Cannot calculate targeted skill, unknown target; avatarId=%d, skillId=%d!' % (
+                avatar.doId, skillId))
 
             return None
 
-        if not self.hasTargetData(target.doId):
-            self.addTargetData(target, avatar)
+        obeysPirateCode = self.obeysPirateCode(avatar, target)
 
-        skillResult = self.willWeaponHit(avatar, target, skillId,
-            ammoSkillId, charge)
+        if not obeysPirateCode:
+            self.notify.debug('Cannot calculate targeted skill, avatar does not obey pirate code; avatarId=%d, targetId=%d, skillId=%d' % (
+                avatar.doId, target.doId, skillId))
 
+            return None
+
+        skillResult = self.willWeaponHit(avatar, target, skillId, ammoSkillId, charge)
         timestamp = globalClockDelta.getRealNetworkTime(bits=32)
         distance = self.getTrueDistance(avatar, target)
 
-        if self.skillInRange(skillId, InventoryType.begin_WeaponSkillCutlass, InventoryType.end_WeaponSkillCutlass) or self.skillInRange(skillId,
-            InventoryType.begin_WeaponSkillDagger, InventoryType.end_WeaponSkillDagger):
-
+        # TODO FIXME: Find a better way to determine the weapon type...
+        if self.getWeaponReputationType(skillId) == InventoryType.CutlassRep:
             attackerEffects, targetEffects = self.getModifiedSkillEffectsSword(avatar, target, skillId,
                 ammoSkillId, charge, distance)
         else:
@@ -355,129 +402,95 @@ class BattleManagerAI(BattleManagerBase):
 
         targetSkillId = targetEffects[2]
         if targetSkillId:
-            duration = 10 #TODO: Calculate Proper
-            target.addSkillEffect(targetSkillId, duration, timestamp, avatar.doId)
+            duration = 10 #TODO FIXME: Calculate Properly!
+            target.addSkillEffect(targetSkillId, duration, avatar.doId)
 
         attackerSkillEffect = attackerEffects[2]
         if attackerSkillEffect:
-            duration = 10 #TODO: Calculate Proper
-            target.addSkillEffect(attackerSkillId, duration, timestamp, avatar.doId)  
+            duration = 10 #TODO FIXME: Calculate Properly!
+            target.addSkillEffect(attackerSkillId, duration, avatar.doId)
 
-        targetData = self.getTargetData(target.doId)
+        targetData = self.getTargetDefaultData(target, avatar)
 
         if not targetData:
-            self.notify.warning('Cannot calculate targeted skill for avatar %d, no target data for target %d!' % (
-                avatar.doId, target.doId))
+            self.notify.warning('Cannot calculate targeted skill, no target data for target; avatarId=%d, targetId=%d, skillId=%d!' % (
+                avatar.doId, target.doId, skillId))
 
             return None
 
-        if not targetData.hasAttackerData(avatar.doId):
-            targetData.addAttackerData(avatar.doId)
-
-        attackerData = targetData.getAttackerData(avatar.doId)
+        attackerData = targetData.getAttackerDefaultData(avatar)
         attackerData.currentSkillId = skillId
 
         if not attackerData:
-            self.notify.warning('Cannot calculate targeted skill for avatar %d, no data for avatar!' % (
-                avatar.doId))
+            self.notify.warning('Cannot calculate targeted skill, no data for avatar; avatarId=%d, targetId=%d, skillId=%d!' % (
+                avatar.doId, target.doId, skillId))
 
             return None
 
-        if not attackerData.hasSkillData(skillId):
-            attackerData.addSkillData(skillId, ammoSkillId)
-
-        skillData = attackerData.getSkillData(skillId)
+        skillData = attackerData.getSkillDefaultData(skillId, ammoSkillId)
 
         if not skillData:
-            self.notify.warning('Cannot calculate targeted skill for avatar %d, no data for skill!' % (
-                avatar.doId))
+            self.notify.warning('Cannot calculate targeted skill for, no data for skill; avatarId=%d, targetId=%d, skillId=%d!' % (
+                avatar.doId, target.doId, skillId))
 
             return None
 
         if skillResult == WeaponGlobals.RESULT_HIT:
-            reputation = self.getModifiedAttackReputation(avatar, target,
-                skillId, ammoSkillId)
-
-            skillData.reputation += reputation
-            self.__applyTargetEffects(target, targetEffects)
+            self.__targetedSkillHit(avatar, target, targetData, attackerData, areaIdEffects, skillData,
+                skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge)
         elif skillResult == WeaponGlobals.RESULT_MISS:
-            pass
+            self.__targetedSkillMiss(avatar, target, targetData, attackerData, areaIdEffects, skillData,
+                skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge)
         elif skillResult == WeaponGlobals.RESULT_DODGE:
-            pass
+            self.__targetedSkillDodge(avatar, target, targetData, attackerData, areaIdEffects, skillData,
+                skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge)
         elif skillResult == WeaponGlobals.RESULT_PARRY:
-            pass
+            self.__targetedSkillParry(avatar, target, targetData, attackerData, areaIdEffects, skillData,
+                skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge)
         elif skillResult == WeaponGlobals.RESULT_RESIST:
-            pass
+            self.__targetedSkillResist(avatar, target, targetData, attackerData, areaIdEffects, skillData,
+                skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge)
         else:
-            self.notify.debug('Cannot calculate targeted skill, unknown weapon skill result was found, %d!' % (
-                skillResult))
+            self.notify.warning('Cannot calculate targeted skill, unknown weapon skill result was found; avatarId=%d, targetId=%d, skillId=%d, skillResult=%d!' % (
+                avatar.doId, target.doId, skillId, skillResult))
 
             return None
 
         return [skillId, ammoSkillId, skillResult, target.doId, areaIdList, attackerEffects, targetEffects,
             areaIdEffects, timestamp, pos, charge]
 
-    def __applyTargetEffects(self, target, targetEffects):
-        if not target:
-            self.notify.debug('Cannot apply target effects for unknown target!')
-            return
+    def __targetedSkillHit(self, avatar, target, targetData, attackerData, areaIdEffects, skillData, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+        reputation = self.getModifiedAttackReputation(avatar, target, skillId, ammoSkillId)
+        skillData.reputation += reputation
+        attackerData.reputation += reputation
+        self.__applyTargetEffects(target, areaIdEffects[1])
 
+    def __targetedSkillMiss(self, avatar, target, targetData, attackerData, areaIdEffects, skillData, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+        pass
+
+    def __targetedSkillDodge(self, avatar, target, targetData, attackerData, areaIdEffects, skillData, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+        pass
+
+    def __targetedSkillParry(self, avatar, target, targetData, attackerData, areaIdEffects, skillData, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+        pass
+
+    def __targetedSkillResist(self, avatar, target, targetData, attackerData, areaIdEffects, skillData, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+        pass
+
+    def __applyTargetEffects(self, target, targetEffects):
         target.b_setHp(target.getHp()[0] + targetEffects[0])
         target.b_setPower(target.getPower() + targetEffects[1])
         target.b_setLuck(target.getLuck() + targetEffects[2])
         target.b_setMojo(target.getMojo() + targetEffects[3])
         target.b_setSwiftness(target.getSwiftness() + targetEffects[4])
 
-    def __applyAttackerEffects(self, avatar, attackerEffects):
-        if not target:
-            self.notify.debug('Cannot apply attacker effects for unknown avatar!')
-            return
-
-        avatar.b_setHp(avatar.getHp()[0] + targetEffects[0])
-        avatar.b_setPower(avatar.getPower() + targetEffects[1])
-        avatar.b_setLuck(avatar.getLuck() + targetEffects[2])
-        avatar.b_setMojo(avatar.getMojo() + targetEffects[3])
-        avatar.b_setSwiftness(avatar.getSwiftness() + targetEffects[4])
-
     def __checkEnemySpawnNode(self, spawnNode):
         if not spawnNode:
             return
 
-        if not spawnNode.npc:
-            return
-
-        targetData = self.getTargetData(spawnNode.npc.doId)
-
-        if not targetData:
-            return
-
-        for attackerData in list(targetData.attackerData.values()):
-            avatar = attackerData.avatar
-
-            if not avatar:
-                targetData.removeAttackerData(attackerData)
-                continue
-
-            skillData = attackerData.getSkillData(attackerData.currentSkillId)
-
-            if not self.targetInRange(avatar, spawnNode.npc, skillData.skillId, skillData.ammoSkillId):
-                targetData.removeAttackerData(attackerData)
-                continue
-
-        if spawnNode.npc.getHp()[0] <= 0:
-            self.__enemyDied(spawnNode, spawnNode.npc)
-            return
-
-        if not targetData.attackerData:
-            self.removeTargetData(targetData)
-
-    def __enemyDied(self, spawnNode, target):
-        target = self.air.doId2do.get(target.doId)
+        target = spawnNode.npc
 
         if not target:
-            return
-
-        if target.getIsKilled():
             return
 
         targetData = self.getTargetData(target.doId)
@@ -485,62 +498,104 @@ class BattleManagerAI(BattleManagerBase):
         if not targetData:
             return
 
-        for attackerData in list(targetData.attackerData.values()):
+        for attackerData in targetData.attackerData.values():
+            avatar = attackerData.avatar
 
-            if not attackerData.avatar:
+            # ensure the avatar still exists...
+            if not avatar:
                 targetData.removeAttackerData(attackerData)
                 continue
 
+            skillData = attackerData.getSkillData(attackerData.currentSkillId)
+            targetInRange = self.getTargetInRange(avatar, spawnNode.npc, skillData.skillId,
+                skillData.ammoSkillId)
+
+            # check to see if the avatar is still in range of target it was attacking
+            # if they are not, remove them from the target data; assuming they've moved on...
+            if not targetInRange:
+                self.notify.debug('Found an avatar that is no longer in range of target; avatarId=%d, targetId=%d!' % (
+                    avatar.doId, target.doId))
+
+                targetData.removeAttackerData(attackerData)
+                continue
+
+        # check to see if the npc has just died.
+        if target.getHp()[0] <= 0:
+            self.__enemySpawnNodeDied(spawnNode)
+            return
+
+        # check to see if the target has any current attackers,
+        # if not then let's just remove the targets data...
+        if not targetData.attackerData:
+            self.removeTargetData(targetData)
+
+    def __enemySpawnNodeDied(self, spawnNode):
+        target = spawnNode.npc
+
+        if not target:
+            return
+
+        targetData = self.getTargetData(target.doId)
+
+        if not targetData:
+            return
+
+        # give the avatar it's reward for killing the target...
+        for attackerData in targetData.attackerData.values():
             self.__giveAttackerReward(attackerData, targetData)
-            targetData.removeAttackerData(attackerData)
 
         self.removeTargetData(targetData)
         spawnNode.processDeath()
 
-    def skillInRange(self, skillId, start, end):
-        return skillId >= start and skillId <= end
-
     def __giveAttackerReward(self, attackerData, targetData):
         avatar = attackerData.avatar
-        target = targetData.target
+        target = targetData.avatar
 
         inventory = self.air.inventoryManager.getInventory(avatar.doId)
 
         if not inventory:
-            self.notify.debug('Cannot calculate targeted skill reward, unknown inventory for avatar %d!' %(
+            self.notify.warning('Cannot calculate targeted skill reward, unknown inventory; avatarId=%d!' %(
                 avatar.doId))
 
             return
 
-        totalReputation = 0
+        # calculate the total reputation for the avatar by adding up each bit of reputation
+        # that was given out to the weapons the avatar used to kill the target...
         goldReward = EnemyGlobals.getGoldDrop(target.getAvatarType(),
             target.getLevel())
 
-        for skillData in list(attackerData.skillData.values()):
-            self.__giveSkillReward(inventory, skillData)
-            totalReputation += skillData.reputation
-            attackerData.removeSkillData(skillData)
-
-        inventory.setGeneralRep(inventory.getGeneralRep() + totalReputation)
+        # update the avatar's inventory details.
+        inventory.setGeneralRep(inventory.getGeneralRep() + attackerData.reputation)
         inventory.setGoldInPocket(inventory.getGoldInPocket() + goldReward)
 
-    def __giveSkillReward(self, inventory, skillData):
-        skillId = skillData.skillId
+        # give the avatar an reward for each weapon it used to kill the target...
+        for skillData in attackerData.skillData.values():
+            self.__giveSkillReward(inventory, attackerData, skillData)
 
-        if self.skillInRange(skillId, InventoryType.begin_WeaponSkillCutlass, InventoryType.end_WeaponSkillCutlass):
-            reputationType = InventoryType.CutlassRep
-        elif self.skillInRange(skillId, InventoryType.begin_WeaponSkillPistol, InventoryType.end_WeaponSkillPistol):
-            reputationType = InventoryType.PistolRep
-        elif self.skillInRange(skillId, InventoryType.begin_WeaponSkillMusket, InventoryType.end_WeaponSkillMusket):
-            reputationType = InventoryType.MusketRep
-        elif self.skillInRange(skillId, InventoryType.begin_WeaponSkillDagger, InventoryType.end_WeaponSkillDagger):
-            reputationType = InventoryType.DaggerRep
-        elif self.skillInRange(skillId, InventoryType.begin_WeaponSkillGrenade, InventoryType.end_WeaponSkillGrenade):
-            reputationType = InventoryType.GrenadeRep
-        elif self.skillInRange(skillId, InventoryType.begin_WeaponSkillDoll, InventoryType.end_WeaponSkillDoll):
-            reputationType = InventoryType.DollRep
-        elif self.skillInRange(skillId, InventoryType.begin_WeaponSkillWand, InventoryType.end_WeaponSkillWand):
-            reputationType = InventoryType.WandRep
+        # remove the attackers data
+        targetData.removeAttackerData(attackerData)
+
+    def __giveSkillReward(self, inventory, attackerData, skillData):
+        avatar = attackerData.avatar
+        target = attackerData.target.avatar
+
+        reputationType = self.getWeaponReputationType(skillData.skillId)
+
+        if not reputationType:
+            self.notify.warning('Cannot give skill reward for unknown reputation type; avatarId=%d, targetId=%d, skillId=%d' % (
+                avatar.doId, target.doId, skillData.skillId))
+
+            attackerData.removeSkillData(skillData)
+            return
 
         inventory.setReputation(reputationType, inventory.getReputation(reputationType) + \
             skillData.reputation)
+
+        # remove the skills data
+        attackerData.removeSkillData(skillData)
+
+    def destroy(self):
+        if self.__updateTask:
+            taskMgr.remove(self.__updateTask)
+
+        self.__updateTask = None

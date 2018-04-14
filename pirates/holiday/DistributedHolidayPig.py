@@ -1,8 +1,3 @@
-# uncompyle6 version 3.1.0
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.14 (default, Mar  9 2018, 23:57:12) 
-# [GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2)]
-# Embedded file name: pirates.holiday.DistributedHolidayPig
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from otp.uberdog.RejectCode import RejectCode
@@ -20,7 +15,6 @@ class DistributedHolidayPig(DistributedHolidayObject):
         self.fireEffect = None
         self.pigInterval = None
         self.pigModel = None
-        return
 
     def delete(self):
         if self.pigInterval:
@@ -32,7 +26,6 @@ class DistributedHolidayPig(DistributedHolidayObject):
             self.fireEffect.stopLoop()
             self.fireEffect = None
         DistributedHolidayObject.delete(self)
-        return
 
     def setPigRoasting(self, value=False):
         self.pigRoasting = value
@@ -71,19 +64,15 @@ class DistributedHolidayPig(DistributedHolidayObject):
         if self.fireEffect:
             self.fireEffect.stopLoop()
             self.fireEffect = None
-        return
 
     def makeTradeResponse(self, result):
         if result == 0:
             localAvatar.guiMgr.createWarning(PLocalizer.TradeItemFullWarning, PiratesGuiGlobals.TextFG6)
+        elif result == 1:
+            localAvatar.guiMgr.messageStack.addModalTextMessage(PLocalizer.PorkChunkReceived, seconds=10, icon=('pork', ''))
+            localAvatar.guiMgr.combatTray.tonicButton.getBestTonic()
+            localAvatar.guiMgr.weaponPage.updateTonics()
         else:
-            if result == 1:
-                localAvatar.guiMgr.messageStack.addModalTextMessage(PLocalizer.PorkChunkReceived, seconds=10, icon=('pork',
-                                                                                                                    ''))
-                localAvatar.guiMgr.combatTray.tonicButton.getBestTonic()
-                localAvatar.guiMgr.weaponPage.updateTonics()
-            else:
-                localAvatar.guiMgr.createWarning(PLocalizer.TradeFailedWarning, PiratesGuiGlobals.TextFG6)
+            localAvatar.guiMgr.createWarning(PLocalizer.TradeFailedWarning, PiratesGuiGlobals.TextFG6)
         base.cr.interactionMgr.start()
         self.refreshState()
-# okay decompiling DistributedHolidayPig.pyc

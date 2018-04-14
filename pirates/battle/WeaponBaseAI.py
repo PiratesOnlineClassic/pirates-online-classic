@@ -17,7 +17,7 @@ class WeaponBaseAI(WeaponBaseBase):
         target = self.air.doId2do.get(targetId)
 
         if not target:
-            self.notify.debug('Cannot request targeted skill for avatar %d, unknown specified target!' % (
+            self.notify.debug('Cannot request targeted skill, unknown specified target; avatarId=%d!' % (
                 avatar.doId))
         else:
             self.__useTargetedSkill(avatar, target, skillId, ammoSkillId, clientResult,
@@ -31,7 +31,7 @@ class WeaponBaseAI(WeaponBaseBase):
             target = self.air.doId2do.get(targetId)
 
             if not target:
-                self.notify.debug('Cannot request targeted skill for avatar %d, unknown areaId target!' % (
+                self.notify.debug('Cannot request targeted skill, unknown areaId target; avatarId=%d!' % (
                     avatar.doId))
 
                 continue
@@ -40,13 +40,17 @@ class WeaponBaseAI(WeaponBaseBase):
                 areaIdList, timestamp, pos, charge)
 
     def __useTargetedSkill(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
-        targetResult = self.air.battleMgr.useTargetedSkill(avatar, target, skillId, ammoSkillId,
+        targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId,
             clientResult, areaIdList, timestamp, pos, charge)
 
         if not targetResult:
-            self.notify.debug('Cannot handle targeted skill for avatar %d, no valid result was given!' % (
-                avatar.doId))
+            self.notify.debug('Cannot get targeted skill, no valid result was given; avatarId=%d, targetId=%d, skillId=%d!' % (
+                avatar.doId, target.doId, skillId))
 
             return
 
-        self.sendUpdate('useTargetedSkill', targetResult)
+        self.d_useTargetedSkill(*targetResult)
+
+    def d_useTargetedSkill(self, skillId, ammoSkillId, skillResult, targetDoId, areaIdList, attackerEffects, targetEffects, areaIdEffects, timestamp, pos, charge):
+        self.sendUpdate('useTargetedSkill', [skillId, ammoSkillId, skillResult, targetDoId, areaIdList, attackerEffects,
+            targetEffects, areaIdEffects, timestamp, pos, charge])

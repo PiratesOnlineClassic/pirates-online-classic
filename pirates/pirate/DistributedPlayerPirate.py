@@ -101,12 +101,11 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
                     self.myCrewColorGlow = np.copyTo(self.crewIconDict[k])
                     self.myCrewColorGlow.setScale(1.25)
                     self.myCrewColorGlow.setColor(0, 1, 0, 1)
-                else:
-                    if k == 2:
-                        np = crewIconGui.find('**/icon_glow')
-                        self.otherCrewColorGlow = np.copyTo(self.crewIconDict[k])
-                        self.otherCrewColorGlow.setScale(1.25)
-                        self.otherCrewColorGlow.setColor(1, 0, 0, 1)
+                elif k == 2:
+                    np = crewIconGui.find('**/icon_glow')
+                    self.otherCrewColorGlow = np.copyTo(self.crewIconDict[k])
+                    self.otherCrewColorGlow.setScale(1.25)
+                    self.otherCrewColorGlow.setColor(1, 0, 0, 1)
                 tpMgr.setGraphic('crewIcon%s' % k, self.crewIconDict[k])
 
         if not self.badgeIconDict:

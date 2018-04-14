@@ -173,10 +173,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             return
 
         self.emoteId = emoteId
-
-        # we must send play emote twice because the field is marked broadcast,
-        # which means everyone in the same interest will need to hear about the message;
-        # we must first send a direct update to our client object, then broadcast the message...
         self.sendUpdateToAvatarId(self.doId, 'playEmote', [emoteId])
         self.sendUpdate('playEmote', [emoteId])
 
@@ -184,11 +180,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return self.emoteId
 
     def requestCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
-        if not avatar:
-            return
-
         # we need to generate the avatar a new weapon object here, this is because
         # we cannot generate the object during the avatar's generation. Because,
         # the avatar switches zones and is re-generated several times...
@@ -201,7 +192,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             return
 
         self.weapon.d_setMovie(WeaponGlobals.WEAPON_MOVIE_START if isWeaponDrawn else \
-            WeaponGlobals.WEAPON_MOVIE_STOP, avatar.doId)
+            WeaponGlobals.WEAPON_MOVIE_STOP, self.doId)
 
         self.b_setCurrentWeapon(currentWeaponId, isWeaponDrawn)
 
@@ -239,23 +230,23 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.sendUpdate("sendTattooMessage", [tattooUID])
 
     def sendReputationMessage(self, targetId, categories, reputationList, basicPenalty, crewBonus, doubleXPBonus, holidayBonus):
-        self.sendUpdate("sendReputationMessage", [targetId, categories, reputationList, basicPenalty, crewBonus, doubleXPBonus, holidayBonus])
+        self.sendUpdate("sendReputationMessage", [targetId, categories, reputationList, basicPenalty,
+            crewBonus, doubleXPBonus, holidayBonus])
 
     def spendSkillPoint(self, skillId):
-        avatarId = self.air.getAvatarIdFromSender()
-        inventory = simbase.air.inventoryManager.getInventory(avatarId)
+        inventory = simbase.air.inventoryManager.getInventory(self.doId)
 
         if inventory:
             if skillId >= InventoryType.begin_WeaponSkillMelee and skillId < InventoryType.end_WeaponSkillMelee:
                 unspentStack = inventory.getStack(InventoryType.UnspentMelee)
                 if not unspentStack:
-                    self.notify.warning("Player has no skill points to use!")
+                    self.notify.debug("Player has no skill points to use!")
                     return
                 else:
                     if unspentStack[1] > 0:
                         inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                     else:
-                        self.notify.warning("Player has no skill points to use!")
+                        self.notify.debug("Player has no skill points to use!")
                         return
             elif skillId >= InventoryType.begin_WeaponSkillCutlass and skillId < InventoryType.end_WeaponSkillCutlass:
                 unspentStack = inventory.getStack(InventoryType.UnspentCutlass)
@@ -268,7 +259,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                     if unspentStack[1] > 0:
                         inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                     else:
-                        self.notify.warning("Player has no skill points to use!")
+                        self.notify.debug("Player has no skill points to use!")
                         return
             elif skillId >= InventoryType.begin_WeaponSkillPistol and skillId < InventoryType.end_WeaponSkillPistol:
                 unspentStack = inventory.getStack(InventoryType.UnspentPistol)
@@ -281,7 +272,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                     if unspentStack[1] > 0:
                         inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                     else:
-                        self.notify.warning("Player has no skill points to use!")
+                        self.notify.debug("Player has no skill points to use!")
                         return
             elif skillId >= InventoryType.begin_WeaponSkillMusket and skillId < InventoryType.end_WeaponSkillMusket:
                 unspentStack = inventory.getStack(InventoryType.UnspentMusket)
@@ -294,7 +285,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                     if unspentStack[1] > 0:
                         inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                     else:
-                        self.notify.warning("Player has no skill points to use!")
+                        self.notify.debug("Player has no skill points to use!")
                         return
             elif skillId >= InventoryType.begin_WeaponSkillDagger and skillId < InventoryType.end_WeaponSkillDagger:
                 unspentStack = inventory.getStack(InventoryType.UnspentDagger)
@@ -305,42 +296,42 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                     if unspentStack[1] > 0:
                         inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                     else:
-                        self.notify.warning("Player has no skill points to use!")
+                        self.notify.debug("Player has no skill points to use!")
                         return
             elif skillId >= InventoryType.begin_WeaponSkillGrenade and skillId < InventoryType.end_WeaponSkillGrenade:
                 unspentStack = inventory.getStack(InventoryType.UnspentGrenade)
                 if not unspentStack:
-                    self.notify.warning("Player has no skill points to use!")
+                    self.notify.debug("Player has no skill points to use!")
                     return
                 else:
                     if unspentStack[1] > 0:
                         inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                     else:
-                        self.notify.warning("Player has no skill points to use!")
+                        self.notify.debug("Player has no skill points to use!")
                         return
             elif skillId >= InventoryType.begin_WeaponSkillDoll and skillId < InventoryType.end_WeaponSkillDoll:
                 unspentStack = inventory.getStack(InventoryType.UnspentDoll)
                 if not unspentStack:
-                    self.notify.warning("Player has no skill points to use!")
+                    self.notify.debug("Player has no skill points to use!")
                     return
                 else:
                     if unspentStack[1] > 0:
                         inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                     else:
-                        self.notify.warning("Player has no skill points to use!")
+                        self.notify.debug("Player has no skill points to use!")
                         return
             elif skillId >= InventoryType.begin_WeaponSkillWand and skillId < InventoryType.end_WeaponSkillWand:
                 unspentStack = inventory.getStack(InventoryType.UnspentWand)
                 if not unspentStack:
-                    self.notify.warning("Player has no skill points to use!")
+                    self.notify.debug("Player has no skill points to use!")
                     return
                 elif unspentStack[1] > 0:
                     inventory.b_setStack(unspentStack[0], unspentStack[1] - 1)
                 else:
-                    self.notify.warning("Player has no skill points to use!")
+                    self.notify.debug("Player has no skill points to use!")
                     return
             else:
-                self.notify.warning("SkillId %s has no unspent category!!" % (str(skillId)))
+                self.notify.debug("SkillId %s has no unspent category!!" % (str(skillId)))
                 return
 
             stack = inventory.getStack(skillId)
@@ -397,11 +388,26 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getStickyTargets(self):
         return self.stickyTargets
 
-    def addStickyTarget(self, target):
-        if target in self.stickyTargets:
+    def addStickyTarget(self, targetDoId):
+        if targetDoId in self.stickyTargets:
             return
 
-        self.stickyTargets.append(target)
+        self.stickyTargets.append(targetDoId)
+        self.d_setStickyTargets(self.stickyTargets)
+
+    def removeStickyTarget(self, targetDoId):
+        if targetDoId not in self.stickyTargets:
+            return
+
+        targetData = self.air.battleMgr.getTargetData(targetDoId)
+
+        if targetData:
+            attackerData = targetData.getAttackerData(self.doId)
+
+            if attackerData:
+                targetData.removeAttackerData(attackerData)
+
+        self.stickyTargets.remove(targetDoId)
         self.d_setStickyTargets(self.stickyTargets)
 
     def getHostileStickyTargets(self):
@@ -410,6 +416,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             PiratesGlobals.VILLAGER_TEAM,
             PiratesGlobals.PLAYER_TEAM
         ]
+
         for targetId in self.stickyTargets:
             target = self.air.doId2do.get(targetId)
 
@@ -418,14 +425,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             if target.getTeam() not in friendlyTeams:
                 hostile.append(target)
+
         return hostile
 
-    def requestRemoveStickyTargets(self, targets):
-        for target in targets:
-            if target in self.stickyTargets:
-                self.stickyTargets.remove(target)
-
-                target.remove()
+    def requestRemoveStickyTargets(self, doIdList):
+        for targetDoId in doIdList:
+            self.removeStickyTarget(targetDoId)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def name(name):

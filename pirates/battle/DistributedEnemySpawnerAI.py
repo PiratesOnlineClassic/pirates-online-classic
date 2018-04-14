@@ -76,20 +76,28 @@ class SpawnNodeBase:
 
             return
 
-        self._npc.setIsKilled(True)
         self._npc.d_setGameState('Death')
 
-        taskMgr.doMethodLater(5, self.__respawn, 'perform-respawn-%s' % \
-            self.objKey)
+        taskMgr.doMethodLater(5, self.__died, 'perform-respawn-%s' % self.objKey,
+            extraArgs=[self._npc], appendTask=True)
 
-    def __respawn(self, task):
-        if not self._npc:
-            self.notify.debug('Attempted to perform respawn on a %s without a npc!' % \
-                self.__class__.__name__)
+        self._npc = None
+
+    def __died(self, npc, task):
+        if not npc:
             return
 
-        self._npc.requestDelete()
-        self._npc = None
+        npc.requestDelete()
+        self.__respawn()
+
+        return task.done
+
+    def __respawn(self):
+        if self._npc:
+            self.notify.debug('Attempted to respawn on a %s with an already existing npc!' % \
+                self.__class__.__name__)
+
+            return
 
         respawns = self.objectData.get('Respawns', True)
         if not respawns:
@@ -102,14 +110,12 @@ class SpawnNodeBase:
         taskMgr.doMethodLater(spawnTimer, self.__spawn, 'perform-spawn-%s' % \
             self.objKey)
 
-        return task.done
-
     def getNPCTeam(self, avatarType):
         if avatarType.isA(AvatarTypes.Navy):
             return PiratesGlobals.NAVY_TEAM
         elif avatarType.isA(AvatarTypes.TradingCo):
             return PiratesGlobals.TRADING_CO_TEAM
-        elif avatarType.isA(AvatarTypes.Undead):  
+        elif avatarType.isA(AvatarTypes.Undead):
             if avatarType.isA(AvatarTypes.French):
                 return PiratesGlobals.FRENCH_UNDEAD_TEAM
             elif avatarType.isA(AvatarTypes.Spanish):

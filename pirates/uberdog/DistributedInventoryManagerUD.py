@@ -86,7 +86,8 @@ class InventoryFSM(FSM):
             # Weapons
             [InventoryType.CutlassWeaponL1, 1],
             [InventoryType.PistolWeaponL1, 1],
-            [InventoryType.MusketWeaponL1, 1],
+            [InventoryType.MusketWeaponL1, 0],
+            [InventoryType.BayonetWeaponL1, 0],
             [InventoryType.DaggerWeaponL1, 1],
             [InventoryType.GrenadeWeaponL1, 1],
             [InventoryType.DollWeaponL1, 1],

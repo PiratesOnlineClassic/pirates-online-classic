@@ -10,7 +10,16 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 class BattleManagerBase:
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManager')
     PirateCodeWeapons = (
-     InventoryType.PistolWeaponL1, InventoryType.PistolWeaponL2, InventoryType.PistolWeaponL3, InventoryType.PistolWeaponL4, InventoryType.PistolWeaponL5, InventoryType.PistolWeaponL6, InventoryType.MusketWeaponL1, InventoryType.MusketWeaponL2, InventoryType.MusketWeaponL3)
+        InventoryType.PistolWeaponL1,
+        InventoryType.PistolWeaponL2,
+        InventoryType.PistolWeaponL3,
+        InventoryType.PistolWeaponL4,
+        InventoryType.PistolWeaponL5,
+        InventoryType.PistolWeaponL6,
+        InventoryType.MusketWeaponL1,
+        InventoryType.MusketWeaponL2,
+        InventoryType.MusketWeaponL3)
+
     SkillRechargeTimeConfig = config.GetFloat('skill-recharge-time', -1.0)
 
     def isPVP(self, attacker, target):
@@ -364,12 +373,12 @@ class BattleManagerBase:
                 scale = WeaponGlobals.getWeaponPvpDamageScale(attacker.currentWeaponId)
                 tDamage *= scale
         return (
-            [0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0],
             [
-                int(tDamage), 
-                targetEffects[1], 
-                targetEffects[2], 
-                targetEffects[3], 
+                int(tDamage),
+                targetEffects[1],
+                targetEffects[2],
+                targetEffects[3],
                 targetEffects[4]
             ]
         )

@@ -187,8 +187,7 @@ class InventoryType:
     Potion5 = 11204
     ShipRepairKit = 11205
     end_Consumables = ShipRepairKit + 1
-    Potions = (
-     Potion1, Potion2, Potion3, Potion4, Potion5)
+    Potions = (Potion1, Potion2, Potion3, Potion4, Potion5)
     begin_MaxPlayerAttribute = 11400
     Hp = 11400
     Mojo = 11401
@@ -351,12 +350,9 @@ class InventoryType:
     BayonetRush = 13102
     BayonetBash = 13103
     end_WeaponSkillBayonet = BayonetBash + 1
-    BackstabSkills = (
-     DaggerCut, DaggerSwipe, DaggerGouge, DaggerEviscerate)
-    StartingSkills = [
-     CutlassHack, CutlassSlash, SailBroadsideLeft, SailBroadsideRight, DaggerCut, DaggerSwipe, StaffBlast, StaffSoulFlay, GrenadeThrow, GrenadeExplosion, PistolShoot, PistolLeadShot, DollAttune, DollPoke, CannonShoot, CannonRoundShot]
-    DontResetSkills = [
-     SailPowerRecharge, CannonGrappleHook]
+    BackstabSkills = (DaggerCut, DaggerSwipe, DaggerGouge, DaggerEviscerate)
+    StartingSkills = [CutlassHack, CutlassSlash, SailBroadsideLeft, SailBroadsideRight, DaggerCut, DaggerSwipe, StaffBlast, StaffSoulFlay, GrenadeThrow, GrenadeExplosion, PistolShoot, PistolLeadShot, DollAttune, DollPoke, CannonShoot, CannonRoundShot]
+    DontResetSkills = [SailPowerRecharge, CannonGrappleHook]
     begin_NumRespec = 13200
     NumRespecCutlass = 13200
     NumRespecPistol = 13201

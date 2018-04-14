@@ -559,6 +559,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         if not inventory:
             return
         self.equippedWeapons = [0, 0, 0, 0, 0, 0]
+        
         if inventory.getStackQuantity(InventoryType.CutlassWeaponL6) > 0:
             self.equippedWeapons[0] = InventoryType.CutlassWeaponL6
         elif inventory.getStackQuantity(InventoryType.CutlassWeaponL5) > 0:
@@ -571,6 +572,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.equippedWeapons[0] = InventoryType.CutlassWeaponL2
         elif inventory.getStackQuantity(InventoryType.CutlassWeaponL1) > 0:
             self.equippedWeapons[0] = InventoryType.CutlassWeaponL1
+            
         if inventory.getStackQuantity(InventoryType.PistolWeaponL6) > 0:
             self.equippedWeapons[1] = InventoryType.PistolWeaponL6
         elif inventory.getStackQuantity(InventoryType.PistolWeaponL5) > 0:
@@ -583,6 +585,14 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.equippedWeapons[1] = InventoryType.PistolWeaponL2
         elif inventory.getStackQuantity(InventoryType.PistolWeaponL1) > 0:
             self.equippedWeapons[1] = InventoryType.PistolWeaponL1
+            
+        if inventory.getStackQuantity(InventoryType.BayonetWeaponL3) > 0:
+            self.equippedWeapons[1] = InventoryType.BayonetWeaponL3
+        elif inventory.getStackQuantity(InventoryType.BayonetWeaponL2) > 0:
+            self.equippedWeapons[1] = InventoryType.BayonetWeaponL2
+        elif inventory.getStackQuantity(InventoryType.BayonetWeaponL1) > 0:   
+            self.equippedWeapons[1] = InventoryType.BayonetWeaponL1
+            
         if inventory.getStackQuantity(InventoryType.DollWeaponL6) > 0:
             self.equippedWeapons[2] = InventoryType.DollWeaponL6
         elif inventory.getStackQuantity(InventoryType.DollWeaponL5) > 0:
@@ -595,6 +605,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.equippedWeapons[2] = InventoryType.DollWeaponL2
         elif inventory.getStackQuantity(InventoryType.DollWeaponL1) > 0:
             self.equippedWeapons[2] = InventoryType.DollWeaponL1
+            
         if inventory.getStackQuantity(InventoryType.DaggerWeaponL6) > 0:
             self.equippedWeapons[3] = InventoryType.DaggerWeaponL6
         elif inventory.getStackQuantity(InventoryType.DaggerWeaponL5) > 0:
@@ -607,9 +618,10 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.equippedWeapons[3] = InventoryType.DaggerWeaponL2
         elif inventory.getStackQuantity(InventoryType.DaggerWeaponL1) > 0:
             self.equippedWeapons[3] = InventoryType.DaggerWeaponL1
-        elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL6) > 0:
+            
+        if inventory.getStackQuantity(InventoryType.GrenadeWeaponL6) > 0:
             self.equippedWeapons[4] = InventoryType.GrenadeWeaponL6
-        if inventory.getStackQuantity(InventoryType.GrenadeWeaponL5) > 0:
+        elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL5) > 0:
             self.equippedWeapons[4] = InventoryType.GrenadeWeaponL5
         elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL4) > 0:
             self.equippedWeapons[4] = InventoryType.GrenadeWeaponL4
@@ -619,6 +631,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.equippedWeapons[4] = InventoryType.GrenadeWeaponL2
         elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL1) > 0:
             self.equippedWeapons[4] = InventoryType.GrenadeWeaponL1
+            
         if inventory.getStackQuantity(InventoryType.WandWeaponL6) > 0:
             self.equippedWeapons[5] = InventoryType.WandWeaponL6
         elif inventory.getStackQuantity(InventoryType.WandWeaponL5) > 0:
@@ -631,6 +644,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.equippedWeapons[5] = InventoryType.WandWeaponL2
         elif inventory.getStackQuantity(InventoryType.WandWeaponL1) > 0:
             self.equippedWeapons[5] = InventoryType.WandWeaponL1
+
         if not self.currentWeaponId:
             self.currentWeaponId = self.equippedWeapons[0]
         self.guiMgr.setEquippedWeapons(self.equippedWeapons)
@@ -1117,11 +1131,9 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     def composeRequestTargetedSkill(self, skillId, ammoSkillId, combo=0, charge=0):
         newPos = self.cr.targetMgr.getAimHitPos(self)
         if newPos:
-            pos = [
-             newPos[0], newPos[1], newPos[2]]
+            pos = [newPos[0], newPos[1], newPos[2]]
         else:
-            pos = [
-             0, 0, 0]
+            pos = [0, 0, 0]
         if WeaponGlobals.getIsShipSkill(skillId) or ammoSkillId == InventoryType.ShipRepairKit:
             targetId = self.ship.getDoId()
             areaCenter = self.ship
@@ -1132,33 +1144,30 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
                     doId = self.getDoId()
                     if areaIdList.count(doId):
                         areaIdList.remove(doId)
-        else:
-            if WeaponGlobals.getIsDollAttackSkill(skillId):
-                targetId = 0
-                areaIdList = copy.copy(self.stickyTargets)
-                friendlySkill = WeaponGlobals.isFriendlyFire(skillId)
-                toRemove = []
-                for avId in areaIdList:
-                    av = self.cr.doId2do.get(avId)
-                    if av:
-                        if friendlySkill and TeamUtils.damageAllowed(self, av):
-                            toRemove.append(avId)
-                        elif not friendlySkill and not TeamUtils.damageAllowed(self, av):
-                            toRemove.append(avId)
-                    else:
+        elif WeaponGlobals.getIsDollAttackSkill(skillId):
+            targetId = 0
+            areaIdList = copy.copy(self.stickyTargets)
+            friendlySkill = WeaponGlobals.isFriendlyFire(skillId)
+            toRemove = []
+            for avId in areaIdList:
+                av = self.cr.doId2do.get(avId)
+                if av:
+                    if friendlySkill and TeamUtils.damageAllowed(self, av):
                         toRemove.append(avId)
-
-                for currToRemove in toRemove:
-                    areaIdList.remove(currToRemove)
-
-            else:
-                if self.currentTarget and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
-                    targetId = self.currentTarget.getDoId()
-                    areaCenter = self.currentTarget
+                    elif not friendlySkill and not TeamUtils.damageAllowed(self, av):
+                        toRemove.append(avId)
                 else:
-                    targetId = 0
-                    areaCenter = self
-                areaIdList = self.getAreaList(skillId, ammoSkillId, areaCenter, Point3(*pos), self.doId)
+                    toRemove.append(avId)
+
+            for currToRemove in toRemove:
+                areaIdList.remove(currToRemove)
+        elif self.currentTarget and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
+            targetId = self.currentTarget.getDoId()
+            areaCenter = self.currentTarget
+        else:
+            targetId = 0
+            areaCenter = self
+        areaIdList = self.getAreaList(skillId, ammoSkillId, areaCenter, Point3(*pos), self.doId)
         skillResult = self.cr.battleMgr.doAttack(self, skillId, ammoSkillId, targetId, areaIdList, Point3(*pos), combo, charge)
         if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
             messenger.send('skillFinished')
@@ -1664,13 +1673,11 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             self.b_setGameState(self.gameFSM.defaultState)
         self.setLifterDelayFrames(frames=3)
         self.cr.loadingScreen.scheduleHide(self.cr.getAllInterestsCompleteEvent())
-        self.acceptOnce(self.cr.getAllInterestsCompleteEvent(), taskMgr.doMethodLater, [
-         1, self.doFadeIn, self.taskName('irisIn')])
+        self.acceptOnce(self.cr.getAllInterestsCompleteEvent(), taskMgr.doMethodLater, [1, self.doFadeIn, self.taskName('irisIn')])
         if instanceType == PiratesGlobals.INSTANCE_PVP:
             self.setTeleportFlag(PiratesGlobals.TFInPVP)
-        else:
-            if instanceType == PiratesGlobals.INSTANCE_TUTORIAL:
-                self.setTeleportFlag(PiratesGlobals.TFInTutorial)
+        elif instanceType == PiratesGlobals.INSTANCE_TUTORIAL:
+            self.setTeleportFlag(PiratesGlobals.TFInTutorial)
 
     @report(types=['deltaStamp'], prefix='------', dConfigParam='want-teleport-report')
     def doFadeIn(self, task):
@@ -1832,13 +1839,11 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     def setCursedStatus(self, value):
         if value == 0:
             base.cr.newsManager.displayMessage(6)
-        else:
-            if value == 1:
-                base.cr.newsManager.displayMessage(5)
-                base.playSfx(self.jollySfx)
-            else:
-                if value == 2:
-                    base.cr.newsManager.displayMessage(4)
+        elif value == 1:
+            base.cr.newsManager.displayMessage(5)
+            base.playSfx(self.jollySfx)
+        elif value == 2:
+            base.cr.newsManager.displayMessage(4)
 
     def setShipBadgeIcon(self, titleId, rank):
         DistributedPlayerPirate.setShipBadgeIcon(self, titleId, rank)
