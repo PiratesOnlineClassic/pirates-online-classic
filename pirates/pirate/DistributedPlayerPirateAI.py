@@ -404,11 +404,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         healedHp = min(WeaponGlobals.getAttackSelfHP(tonicId) + self.getHp()[0], self.getMaxHp())
         restoredMojo = min(WeaponGlobals.getAttackSelfMojo(tonicId) + self.getMojo(), self.getMaxMojo())
         restoredPower = min(WeaponGlobals.getAttackSelfPower(tonicId) + self.getPower(), self.getMaxPower())
-
-        print(healedHp)
-        print(restoredMojo)
-        print(restoredPower)
-
+        
         # Apply values
         self.b_setHp(healedHp)
         self.b_setMojo(restoredMojo)
