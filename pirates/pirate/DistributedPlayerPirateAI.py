@@ -382,14 +382,14 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 if WeaponGlobals.getAttackSelfHP(tonicId) > idealAmount:
                     break
 
-        return bestTonicId   
+        return bestTonicId
 
     def useTonic(self, tonicId):
         inventory = simbase.air.inventoryManager.getInventory(self.doId)
 
         if not inventory:
             self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
-            return 
+            return
 
         amount = inventory.getStack(tonicId)
         if amount <= 0:
@@ -404,7 +404,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         healedHp = min(WeaponGlobals.getAttackSelfHP(tonicId) + self.getHp()[0], self.getMaxHp())
         restoredMojo = min(WeaponGlobals.getAttackSelfMojo(tonicId) + self.getMojo(), self.getMaxMojo())
         restoredPower = min(WeaponGlobals.getAttackSelfPower(tonicId) + self.getPower(), self.getMaxPower())
-        
+
         # Apply values
         self.b_setHp(healedHp)
         self.b_setMojo(restoredMojo)
@@ -463,14 +463,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         if targetDoId not in self.stickyTargets:
             return
 
-        targetData = self.air.battleMgr.getTargetData(targetDoId)
-
-        if targetData:
-            attackerData = targetData.getAttackerData(self.doId)
-
-            if attackerData:
-                targetData.removeAttackerData(attackerData)
-
         self.stickyTargets.remove(targetDoId)
         self.d_setStickyTargets(self.stickyTargets)
 
@@ -509,9 +501,19 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 friendly.append(target)
 
         return friendly
-  
+
     def requestRemoveStickyTargets(self, doIdList):
         for targetDoId in doIdList:
+            targetData = self.air.battleMgr.getTargetData(targetDoId)
+
+            if targetData:
+                attackerData = targetData.getAttackerData(self.doId)
+
+                if attackerData:
+                    for skillData in attackerData.skillData.values():
+                        if self.air.battleMgr.getIsVoodooDoll(skillData.skillId):
+                            attackerData.removeSkillData(skillData)
+
             self.removeStickyTarget(targetDoId)
 
     def setZombie(self, zombie):

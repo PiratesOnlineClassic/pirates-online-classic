@@ -148,8 +148,6 @@ class BattleAttackerData(object):
 
         # if the target is using a doll skill, add the target to the
         # avatar's sticky targets...
-        target = self._target.avatar
-
         if self._battleManager.getIsVoodooDoll(skillData.skillId):
             self._avatar.addStickyTarget(self._target.avatar.doId)
 
@@ -162,11 +160,9 @@ class BattleAttackerData(object):
 
         # if the target is using a doll skill, remove the sticky target from
         # the avatar's sticky targets...
-        target = self._target.avatar
-
         if self._battleManager.getIsVoodooDoll(skillData.skillId):
-            self._avatar.removeStickyTarget(target.doId)
-            self._battleManager.removeSkillEffectForTarget(target,
+            self._avatar.removeStickyTarget(self._target.avatar.doId)
+            self._battleManager.removeSkillEffectForTarget(self._target.avatar,
                 skillData.skillId)
 
         del self._skillData[skillData.skillId]
@@ -394,7 +390,7 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         if not skillId:
             return 0
 
-        effectId = 0
+        effectId = WeaponConstants.C_PAIN
 
         if self.getIsVoodooDoll(skillId):
             effectId = WeaponConstants.C_ATTUNE
@@ -402,7 +398,7 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         return effectId
 
     def addSkillEffectForTarget(self, target, avatar, skillId, duration=10):
-        target.addSkillEffect(self.getEffectIdFromSkillId(skillId), duration, avatar.doId)
+        target.addSkillEffect(skillId, duration, avatar.doId)
 
     def removeSkillEffectForTarget(self, target, skillId):
         target.removeSkillEffect(self.getEffectIdFromSkillId(skillId))
@@ -445,7 +441,7 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         obeysPirateCode = self.obeysPirateCode(avatar, target)
 
         if not obeysPirateCode:
-            print('Cannot calculate targeted skill, avatar does not obey pirate code; avatarId=%d, targetId=%d, skillId=%d' % (
+            self.notify.debug('Cannot calculate targeted skill, avatar does not obey pirate code; avatarId=%d, targetId=%d, skillId=%d' % (
                 avatar.doId, target.doId, skillId))
 
             return None
@@ -573,6 +569,10 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
                 continue
 
             skillData = attackerData.getSkillData(attackerData.currentSkillId)
+
+            if not skillData:
+                continue
+
             targetInRange = self.getTargetInRange(avatar, spawnNode.npc, skillData.skillId,
                 skillData.ammoSkillId)
 
