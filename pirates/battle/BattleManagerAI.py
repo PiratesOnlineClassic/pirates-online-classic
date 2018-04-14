@@ -482,9 +482,12 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
 
     def __targetedSkillHit(self, avatar, target, targetData, attackerData, areaIdEffects, skillData, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         reputation = self.getModifiedAttackReputation(avatar, target, skillId, ammoSkillId)
+
         skillData.reputation += reputation
         attackerData.reputation += reputation
+
         self.__applyTargetEffects(target, areaIdEffects[1])
+        self.__applyTargetEffects(avatar, areaIdEffects[0])
 
     def __targetedSkillMiss(self, avatar, target, targetData, attackerData, areaIdEffects, skillData, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         pass
