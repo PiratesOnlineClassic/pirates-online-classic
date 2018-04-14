@@ -2,10 +2,9 @@ from direct.distributed.ClockDelta import globalClockDelta
 from direct.distributed.DistributedObject import DistributedObject
 from pirates.piratesbase import TODGlobals
 from TimeOfDayManager import TimeOfDayManager
-
+from otp.ai.MagicWordGlobal import *
 
 class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
-    __module__ = __name__
     from direct.directnotify import DirectNotifyGlobal
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTimeOfDayManager')
 
@@ -33,3 +32,8 @@ class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
         self.startingTime = startingTime
         self.cycleDuration = cycleDuration
         self.enterInitState()
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, float])
+def setClouds(level, duration):
+    base.cr.timeOfDayManager.skyGroup.setCloudLevel(level) #transitionClouds(level, duration)
+    return 'Transitioning clouds to %d with a speed of %d' % (level, duration)

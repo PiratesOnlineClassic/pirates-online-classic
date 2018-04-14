@@ -27,3 +27,5 @@ want-low-end-water #t
 
 # Weapons:
 instant-skill-recharge #f
+
+want-dev #f
