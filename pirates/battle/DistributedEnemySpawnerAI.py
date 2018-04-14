@@ -21,6 +21,7 @@ import random
 
 class SpawnNodeBase:
     notify = DirectNotifyGlobal.directNotify.newCategory('SpawnNodeBase')
+    notify.setInfo(True)
 
     def __init__(self, spawner, objType, objectData, parent, objKey):
 
@@ -215,7 +216,7 @@ class SpawnNodeBase:
             npc.zoneId, locationName, npc.getPos(), npc.doId))
 
         if avatarType.getBoss():
-            print('Spawning boss %s (%s) on %s!' % (npc.getName(), self.objKey, locationName))
+            self.notify.info('Spawning boss %s (%s) on %s!' % (npc.getName(), self.objKey, locationName))
 
         return Task.done
 
