@@ -628,6 +628,7 @@ FOUNDERSFEAST = 17
 FREEITEMTHANKSGIVING = 18
 CURSEDNIGHT = 19
 JOLLYCURSEAUTO = 20
+WINTERFESTIVAL = 21
 XP_HOLIDAY_START = 1
 XP_HOLIDAY_END = 2
 BLACKJACK_FRIDAY_START = 1
@@ -667,4 +668,3 @@ ShipPVPKillShip = 1
 PrivateerBothTeamFull = 0
 PrivateerSingleTeamFull = 1
 ZombieNoBoats = 2
-# okay decompiling .\pirates\piratesbase\PiratesGlobals.pyc

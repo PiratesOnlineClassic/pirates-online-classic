@@ -21,7 +21,8 @@ holidayNames = {
     PiratesGlobals.FOUNDERSFEAST: 'FoundersFeast',
     PiratesGlobals.FREEITEMTHANKSGIVING: 'FreeItemThanksgiving',
     PiratesGlobals.CURSEDNIGHT: 'CursedNight',
-    PiratesGlobals.JOLLYCURSEAUTO: 'JollyCurseAuto'
+    PiratesGlobals.JOLLYCURSEAUTO: 'JollyCurseAuto',
+    PiratesGlobals.WINTERFESTIVAL: 'WinterFestival'
 }
 
 def getHolidayName(holidayId):
@@ -34,6 +35,9 @@ def getHolidayIdFromName(holidayName):
             found = holidayId
             break
     return found
+
+def getAllHolidayIds():
+    return holidayNames.keys()
 
 holidays = {
     PiratesGlobals.DOUBLEGOLDHOLIDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [

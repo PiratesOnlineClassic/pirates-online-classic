@@ -568,8 +568,8 @@ class ClientArea(DirectObject):
                                         lodIdx = objLODNode.getNumChildren() - 1
 
                                     for i in xrange(objLODNode.getNumChildren()):
-                                        if not gldef.children[i]:
-                                            continue
+                                        if not i in gldef.children:
+                                            i = 0
 
                                         if not holiday:
                                             tform = xform.copyTo(NodePath())
@@ -1422,7 +1422,7 @@ class ClientArea(DirectObject):
         self.findAllMatches('**/=Holiday=%s;+s' % (holidayName,)).unstash()
 
     def checkForHolidayObjects(self):
-        for holidayId in base.holidays.keys():
+        for holidayId in HolidayGlobals.getAllHolidayIds():
             if base.getHoliday(holidayId):
                 self.unstashHolidayObjects(
                     HolidayGlobals.getHolidayName(holidayId))
@@ -1431,3 +1431,7 @@ class ClientArea(DirectObject):
 
             self.stashHolidayObjects(HolidayGlobals.getHolidayName(
                 holidayId))
+
+        nodes = self.findAllMatches('**/=Holiday;+s')
+        for node in nodes:
+            print(node.getTag('Holiday'))
