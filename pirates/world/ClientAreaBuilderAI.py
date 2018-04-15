@@ -34,19 +34,21 @@ class ClientAreaBuilderAI(DirectObject):
 
         return newObj
 
-    def parentObjectToCell(self, object, zoneId=None):
+    def parentObjectToCell(self, object, zoneId=None, parent=None):
         if not object:
             self.notify.warning('Failed to parent to cell for non-existant object!')
             return
 
-        if zoneId is None:
-            zoneId = self.parent.getZoneFromXYZ(object.getPos())
+        parent = parent or self.parent
 
-        cell = GridParent.getCellOrigin(self.parent, zoneId)
+        if zoneId is None:
+            zoneId = parent.getZoneFromXYZ(object.getPos())
+
+        cell = GridParent.getCellOrigin(parent, zoneId)
         originalPos = object.getPos()
 
         object.reparentTo(cell)
-        object.setPos(self.parent, originalPos)
+        object.setPos(parent, originalPos)
 
         self.broadcastObjectPosition(object)
 
