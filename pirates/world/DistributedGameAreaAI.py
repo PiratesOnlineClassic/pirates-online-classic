@@ -71,10 +71,7 @@ class DistributedGameAreaAI(DistributedNodeAI):
         return self.name
 
     def getLocalizerName(self):
-        name = self.getName()
-        if self.getUniqueId() in PLocalizer.LocationNames:
-            name = PLocalizer.LocationNames[self.getUniqueId()]
-        return name
+        return PLocalizer.LocationNames.get(self.uniqueId, self.name)
 
     def d_addSpawnTriggers(self, triggerSpheres):
         self.sendUpdate('addSpawnTriggers', [triggerSpheres])

@@ -3,6 +3,7 @@ from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGr
 from direct.directnotify import DirectNotifyGlobal
 from pirates.battle.Teamable import Teamable
 from pirates.world.WorldGlobals import *
+from pirates.world.IslandAreaBuilderAI import IslandAreaBuilderAI
 
 class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedIslandAI')
@@ -21,13 +22,15 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.collisionSpheres = []
         self.feastFireEnabled = False
 
-    def generate(self):
-        DistributedCartesianGridAI.generate(self)
-        DistributedGameAreaAI.generate(self)
+        self.builder = IslandAreaBuilderAI(self.air, self)
 
     def announceGenerate(self):
         DistributedCartesianGridAI.announceGenerate(self)
         DistributedGameAreaAI.announceGenerate(self)
+
+    def generate(self):
+        DistributedCartesianGridAI.generate(self)
+        DistributedGameAreaAI.generate(self)
 
     def getParentingRules(self):
         return ['Island', '%d:%d:%d' % (self.startingZone, self.gridSize,
