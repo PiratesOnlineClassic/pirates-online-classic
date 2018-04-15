@@ -84,7 +84,7 @@ class NewsManagerAI(DistributedObjectAI):
                 if time <= 0:
                     self.endHoliday(holiday)
 
-    def startHoliday(self, holidayId, time):
+    def startHoliday(self, holidayId, time, quietly=False):
 
         if self.isHolidayActive(holidayId):
             return
@@ -95,6 +95,9 @@ class NewsManagerAI(DistributedObjectAI):
             messenger.send('HolidayStarted', [holidayId])
 
         self.processHolidayChange()
+
+        if not quietly:
+            self.air.netMessenger.send('uberDOGHolidayStarted', [holidayId])
 
     def endHoliday(self, holidayId):
 

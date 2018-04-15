@@ -4,6 +4,7 @@ import math
 from panda3d.core import *
 from pirates.battle.BattleManagerBase import BattleManagerBase
 from direct.directnotify import DirectNotifyGlobal
+from pirates.piratesbase import PiratesGlobals
 from pirates.battle import WeaponGlobals
 from direct.distributed.ClockDelta import globalClockDelta
 from pirates.uberdog import UberDogGlobals
@@ -630,6 +631,10 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
         goldReward = EnemyGlobals.getGoldDrop(target.getAvatarType(),
             target.getLevel())
 
+        # calculate any potential holiday based bonuses
+        if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEGOLDHOLIDAY) or self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEGOLDHOLIDAYPAID):
+            goldReward = goldReward * 2
+
         # update the avatar's inventory details.
         inventory.setGeneralRep(inventory.getGeneralRep() + attackerData.reputation)
         inventory.setGoldInPocket(inventory.getGoldInPocket() + goldReward)
@@ -654,8 +659,13 @@ class BattleManagerAI(BattleManagerBase, BattleManagerData):
             attackerData.removeSkillData(skillData)
             return
 
+        # Calculate holiday bonus
+        reputation = skillData.reputation
+        if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAY) or self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAYPAID):
+            reputation = reputation * 2
+
         inventory.setReputation(reputationType, inventory.getReputation(reputationType) + \
-            skillData.reputation)
+            reputation)
 
         # remove the skills data
         attackerData.removeSkillData(skillData)

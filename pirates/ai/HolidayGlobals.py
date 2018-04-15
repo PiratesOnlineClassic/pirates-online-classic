@@ -220,7 +220,13 @@ holidayMessages = {
         None, 
         None, 
         None, 
-        PLocalizer.CHAT_STATUS_JOLLYROGERCURSE, 'admin')
+        PLocalizer.CHAT_STATUS_JOLLYROGERCURSE, 'admin'),
+    PiratesGlobals.WINTERFESTIVAL: (
+        PLocalizer.WinterFestivalStart, 
+        PLocalizer.WinterFestivalStartChat,
+        PLocalizer.WinterFestivalEnd, 
+        PLocalizer.WinterFestivalEnd,
+        PLocalizer.CHAT_STATUS_WINTERFESTIVAL, 'admin'),
 }
 
 def getHolidayStartMsg(holidayId):
@@ -245,3 +251,46 @@ def getHolidayStatusMsg(holidayId):
 
 def getHolidayIcon(holidayId):
     return holidayMessages.get(holidayId)[5]
+
+discordHolidayNames = {
+    PiratesGlobals.DOUBLEGOLDHOLIDAY: PLocalizer.DISCORD_DOUBLE_GOLD_HOLIDAY,
+    PiratesGlobals.DOUBLEGOLDHOLIDAYPAID: PLocalizer.DISCORD_DOUBLE_GOLD_HOLIDAY_PAID,
+    PiratesGlobals.DOUBLEXPHOLIDAY: PLocalizer.DISCORD_DOUBLE_EXP_HOLIDAY,
+    PiratesGlobals.DOUBLEXPHOLIDAYPAID: PLocalizer.DISCORD_DOUBLE_EXP_HOLIDAY_PAID,
+    PiratesGlobals.FREEHATWEEK: PLocalizer.DISCORD_FREE_HAT_WEEK,
+    PiratesGlobals.SAINTPATRICKSDAY: PLocalizer.DISCORD_SAINT_PATRICKS_DAY,
+    PiratesGlobals.MOTHERSDAY: PLocalizer.DISCORD_MOTHERS_DAY,
+    PiratesGlobals.FATHERSDAY: PLocalizer.DISCORD_FATHERS_DAY,
+    PiratesGlobals.FOURTHOFJULY: PLocalizer.DISCORD_FOURTH_OF_JULY,
+    PiratesGlobals.HALFOFFCUSTOMIZATION: PLocalizer.DISCORD_HALF_OFF_CUSTOMIZATION,
+    PiratesGlobals.ALLACCESSWEEKEND: PLocalizer.DISCORD_ALL_ACCESS_WEEKEND,
+    PiratesGlobals.HALLOWEEN: PLocalizer.DISCORD_HALLOWEEN,
+    PiratesGlobals.JOLLYROGERCURSE: PLocalizer.DISCORD_JOLLY_ROGER_CURSE,
+    PiratesGlobals.FOUNDERSFEAST: PLocalizer.DISCORD_FOUNDERS_FEAST,
+    PiratesGlobals.FREEITEMTHANKSGIVING: PLocalizer.DISCORD_FREE_ITEM_THANKSGIVING,
+    PiratesGlobals.CURSEDNIGHT: PLocalizer.DISCORD_CURSED_NIGHT,
+    PiratesGlobals.JOLLYCURSEAUTO: PLocalizer.DISCORD_JOLLY_CURSE_AUTO,
+    PiratesGlobals.WINTERFESTIVAL: PLocalizer.DISCORD_WINTER_FESTIVAL
+}
+
+def getHolidayDiscordName(holidayId):
+    return discordHolidayNames.get(holidayId)
+
+discordHolidayImages = {
+
+}
+
+def getHolidayDiscordImage(holidayId):
+    return discordHolidayImages.get(holidayId, None)
+
+discordHolidayMessages = {
+    PiratesGlobals.HALLOWEEN: """
+Ahoy ye landlubbers! Jolly Roger has casted an evil spell across the Caribbean turning
+everyone into undead!
+
+Come join in on the fun! October 31st - November 3rd
+        """
+}
+
+def getHolidayDiscordMessage(holidayId):
+    return discordHolidayMessages.get(holidayId, '')

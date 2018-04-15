@@ -35,7 +35,7 @@ class NewsManager(DistributedObject.DistributedObject):
 
     def displayMessage(self, messageId):
         message = messages.get(messageId)
-        if True: #self.inNewsWorld() and not self.inTutorial(level=PiratesGlobals.TUT_GOT_COMPASS):
+        if self.inNewsWorld() and not self.inTutorial(level=PiratesGlobals.TUT_GOT_COMPASS):
             base.localAvatar.guiMgr.messageStack.addModalTextMessage(message, seconds=45, priority=0, color=PiratesGuiGlobals.TextFG14, icon=('admin',
                                                                                                                                               ''), suffix='_f')
             base.chatAssistant.receiveGameMessage(message)
@@ -45,7 +45,7 @@ class NewsManager(DistributedObject.DistributedObject):
         taskMgr.remove('showHolidayMessage-holidayId:' + str(holidayId))
         if not hasattr(base, 'localAvatar'):
             return
-        if True: #base.localAvatar.getTutorialState() == 0 or self.inNewsWorld() == None:
+        if base.localAvatar.getTutorialState() == 0 or self.inNewsWorld() == None:
             taskMgr.doMethodLater(15, self.showHolidayMessage, 'showHolidayMessage-holidayId:' + str(holidayId), extraArgs=[holidayId, msgType])
             return
         if msgType == 1:
@@ -56,7 +56,7 @@ class NewsManager(DistributedObject.DistributedObject):
             if msgType == 0:
                 message = HolidayGlobals.getHolidayEndMsg(holidayId)
                 chatMessage = HolidayGlobals.getHolidayEndChatMsg(holidayId)
-        if True: #self.inNewsWorld() and not self.inTutorial(level=PiratesGlobals.TUT_GOT_COMPASS):
+        if self.inNewsWorld() and not self.inTutorial(level=PiratesGlobals.TUT_GOT_COMPASS):
             if message:
                 base.localAvatar.guiMgr.messageStack.addModalTextMessage(message, seconds=45, priority=0, color=PiratesGuiGlobals.TextFG14, icon=(HolidayGlobals.getHolidayIcon(holidayId), ''), suffix='_f')
             if chatMessage:
@@ -82,8 +82,7 @@ class NewsManager(DistributedObject.DistributedObject):
                 if base.cr.timeOfDayManager.currentState == PiratesGlobals.TOD_FULLMOON:
                     self.displayMessage(3)
             if holidayId == PiratesGlobals.HALFOFFCUSTOMIZATION:
-                if base.cr.isPaid() == 2:
-                    self.divideAllAccessories(2)
+                self.divideAllAccessories(2)
             if holidayId == PiratesGlobals.ALLACCESSWEEKEND:
                 Freebooter.AllAccessHoliday = True
                 if localAvatar.guiMgr.prevTag:
@@ -103,8 +102,7 @@ class NewsManager(DistributedObject.DistributedObject):
             self.showHolidayMessage(holidayId, 0)
             if holidayId == PiratesGlobals.HALFOFFCUSTOMIZATION:
                 self.endHalfOffCustomizationHoliday()
-                if base.cr.isPaid() == 2:
-                    self.multiplyAllAccessories(2)
+                self.multiplyAllAccessories(2)
             if holidayId == PiratesGlobals.ALLACCESSWEEKEND:
                 Freebooter.AllAccessHoliday = False
             messenger.send('HolidayEnded', [HolidayGlobals.getHolidayName(holidayId)])
