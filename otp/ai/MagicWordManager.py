@@ -38,6 +38,10 @@ class MagicWordManager(DistributedObject.DistributedObject):
             response = spellbook.process(base.localAvatar, target, magicWord)
             if response:
                 self.sendMagicWordResponse(response)
+
+                # Log the usage to the event logger
+                self.cr.centralLogger.writeClientEvent('magic-word %s used' % magicWord, targetAvId=base.localAvatar.doId)
+
                 return
 
         self.sendUpdate('sendMagicWord', [magicWord, targetId])
