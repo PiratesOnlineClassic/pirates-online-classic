@@ -36,7 +36,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         'Port Royal': 'island-port-royal',
         'Tortuga': 'island-tortuga',
         'Cuba': 'island-cuba',
-        'Padre Del Fuego': 'island-padre-del-fuego',
+        'Padres Del Fuego': 'island-padre-del-fuego',
         'Devil\'s Anvil': 'island-devils-anvil',
         'Driftwood Island': 'island-driftwood',
         'Kingshead': 'island-kingshead',
