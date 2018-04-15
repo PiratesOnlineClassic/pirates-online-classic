@@ -568,8 +568,8 @@ class ClientArea(DirectObject):
                                         lodIdx = objLODNode.getNumChildren() - 1
 
                                     for i in xrange(objLODNode.getNumChildren()):
-                                        if not i in gldef.children:
-                                            i = 0
+                                        if not gldef.children[i]:
+                                            continue
 
                                         if not holiday:
                                             tform = xform.copyTo(NodePath())
