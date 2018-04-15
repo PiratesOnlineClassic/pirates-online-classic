@@ -26,7 +26,7 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.netMessenger.register(3, 'stopHoliday')
 
     def handleConnected(self):
-        if config.GetBool('send-hacker-test-message', True):
+        if config.GetBool('send-hacker-test-message', False):
             self.logPotentialHacker('I am a test hacker message!', field='Test', thing='this')
 
     def getAvatarIdFromSender(self):
