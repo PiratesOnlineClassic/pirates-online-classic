@@ -3,7 +3,7 @@ from otp.distributed.OtpDoGlobals import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.MsgTypes import *
 from panda3d.core import *
-from pirates.uberdog.WebhooksUD import SlackWebhook, SlackAttachment, SlackField
+from pirates.uberdog.WebhooksUD import PiratesWebhookManager
 import traceback
 import sys
 
@@ -13,6 +13,7 @@ class PiratesInternalRepository(AstronInternalRepository):
 
     def __init__(self, baseChannel, serverId=None, dcFileNames = None, dcSuffix='AI', connectMethod=None, threadedNet=None):
         AstronInternalRepository.__init__(self, baseChannel, serverId, dcFileNames, dcSuffix, connectMethod, threadedNet)
+        self.webhookManager = PiratesWebhookManager(self)
         self.__registerNetMessages()
 
     def __registerNetMessages(self):
@@ -25,7 +26,7 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.netMessenger.register(3, 'stopHoliday')
 
     def handleConnected(self):
-        if config.GetBool('send-hacker-test-message', False):
+        if config.GetBool('send-hacker-test-message', True):
             self.logPotentialHacker('I am a test hacker message!', field='Test', thing='this')
 
     def getAvatarIdFromSender(self):
@@ -90,40 +91,8 @@ class PiratesInternalRepository(AstronInternalRepository):
             accountId=accountId, 
             **kwargs)
 
-        if config.GetBool('discord-log-hacks', False):
-            hackWebhookUrl = config.GetString('discord-log-hacks-url', '')
-
-            if hackWebhookUrl:
-                districtName = 'Unknown'
-                if hasattr(self, 'distributedDistrict'):
-                    districtName = self.distributedDistrict.getName()
-
-                header = 'Detected potential hacker on %s.' % districtName
-                webhookMessage = SlackWebhook(hackWebhookUrl, message='@everyone' if config.GetBool('discord-ping-everyone', not config.GetBool('want-dev', False)) else '')
-
-                attachment = SlackAttachment(pretext=message, title=header)
-
-                for kwarg in kwargs:
-                    attachment.addField(SlackField(title=kwarg, value=kwargs[kwarg]))
-
-                avatar = self.doId2do.get(avatarId)
-                if avatar:
-                    attachment.addField(SlackField())
-                    attachment.addField(SlackField(title='Character Pos', value=str(avatar.getPos())))
-                    attachment.addField(SlackField(title='Character Name', value=avatar.getName()))
-                    #attachment.addField(SlackField(title='Island', value=avatar.getParentObj().getLocalizerName())) #TODO: Add island name to message using '08 code base
-
-                attachment.addField(SlackField())
-                attachment.addField(SlackField(title='Game Account Id', value=accountId))
-                #TODO account name?
-
-                attachment.addField(SlackField())
-                attachment.addField(SlackField(title='Dev Server', value=self.isDevServer()))
-
-                webhookMessage.addAttachment(attachment)
-                webhookMessage.send()
-            else:
-                self.notify.warning('Discord Hacker Webhook url not defined!')
+        # Log message to Discord
+        self.webhookManager.logPotentialHacker(avatarId, accountId, message, **kwargs)
 
         if kickChannel:
             self.kickChannel(kickChannel)   
@@ -131,36 +100,18 @@ class PiratesInternalRepository(AstronInternalRepository):
     def logException(self, e):
         trace = traceback.format_exc()
 
+        avatarId = self.getAvatarIdFromSender() or 0
+        accountId = self.getAccountIdFromSender() or 0
+
         self.writeServerEvent('internal-exception', 
-            avId=self.getAvatarIdFromSender(),
-            accountId=self.getAccountIdFromSender(),
+            avId=avatarId,
+            accountId=accountId,
             exception=trace)
 
         self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
         print(trace)
 
-        if config.GetBool('discord-log-exceptions', True):
-            exceptionWebhookUrl = config.GetString('discord-exception-url', '')
-
-            if exceptionWebhookUrl:
-                districtName = 'Unknown'
-                if hasattr(self, 'distributedDistrict'):
-                    districtName = self.distributedDistrict.getName()
-
-                header = 'Internal Exception occured on %s.' % districtName
-                webhookMessage = SlackWebhook(exceptionWebhookUrl, message='')
-
-                attachment = SlackAttachment(title=header)
-                attachment.addField(SlackField(title='Traceback', value=trace))
-
-                attachment.addField(SlackField())
-                attachment.addField(SlackField(title='Avatar Id', value=self.getAvatarIdFromSender()))
-                attachment.addField(SlackField(title='Account Id', value=self.getAccountIdFromSender()))
-
-                webhookMessage.addAttachment(attachment)
-                webhookMessage.send()
-            else:
-                self.notify.warning('Discord exception Webhook url not defined!')
+        self.webhookManager.logServerException(trace, )
 
         # Python 2 Vs 3 compatibility
         if not sys.version_info >= (3, 0):
