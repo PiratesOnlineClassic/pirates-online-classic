@@ -1,11 +1,6 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.leveleditor.worldData.dataToText
-import sys
-
 import direct
-
+import sys
 dataFileName = sys.argv[1]
 textFileName = sys.argv[2]
 dataModule = dataFileName.split('.py')[0]
@@ -24,4 +19,3 @@ for mainUid in objectStruct['Objects']:
 textFile = file(textFileName, 'w')
 textFile.writelines(lines)
 textFile.close()
-# okay decompiling .\pirates\leveleditor\worldData\dataToText.pyc

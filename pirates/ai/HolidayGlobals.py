@@ -1,8 +1,8 @@
 from pirates.ai.HolidayDates import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
-Month = Enum('JANUARY, FEBRUARY, MARCH, APRIL,               MAY, JUNE, JULY, AUGUST, SEPTEMBER,               OCTOBER, NOVEMBER, DECEMBER', 1)
-Day = Enum('MONDAY, TUESDAY, WEDNESDAY, THURSDAY,             FRIDAY, SATURDAY, SUNDAY')
+Month = Enum('JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER', 1)
+Day = Enum('MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY')
 holidays = {
     PiratesGlobals.DOUBLEGOLDHOLIDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [
         (2008, Month.SEPTEMBER, 13, 12, 0, 0), 
@@ -58,7 +58,16 @@ holidays = {
         (2008, Month.NOVEMBER, 2, 16, 0, 0), 
         (2008, Month.NOVEMBER, 2, 16, 30, 0), 
         (2008, Month.NOVEMBER, 2, 19, 0, 0), 
-        (2008, Month.NOVEMBER, 2, 19, 30, 0)])
+        (2008, Month.NOVEMBER, 2, 19, 30, 0)]),
+    PiratesGlobals.FOUNDERSFEAST: HolidayDates(HolidayDates.TYPE_CUSTOM, [
+        (2008, Month.NOVEMBER, 27, 3, 0, 0), (2008, Month.NOVEMBER, 30, 18, 0, 0)]),
+    PiratesGlobals.FREEITEMTHANKSGIVING: HolidayDates(HolidayDates.TYPE_CUSTOM, [
+        (2008, Month.NOVEMBER, 27, 3, 0, 0), (2008, Month.NOVEMBER, 30, 18, 0, 0)]),
+    PiratesGlobals.CURSEDNIGHT: HolidayDates(HolidayDates.TYPE_CUSTOM, [
+        (2008, Month.DECEMBER, 6, 3, 0, 0), (2008, Month.DECEMBER, 21, 3, 0, 0)]),
+    PiratesGlobals.JOLLYCURSEAUTO: HolidayDates(HolidayDates.TYPE_CUSTOM, [
+        (2008, Month.DECEMBER, 12, 12, 0, 0), (2008, Month.DECEMBER, 15, 4, 0, 0),
+        (2008, Month.DECEMBER, 19, 12, 0, 0), (2008, Month.DECEMBER, 22, 4, 0, 0)])
 }
 holidaysEnglish = {}
 holidaysJapanese = {}
@@ -69,7 +78,114 @@ def getHolidayDates(holidayId):
     return holidays.get(holidayId)
 
 
-holidayMessages = {PiratesGlobals.DOUBLEGOLDHOLIDAY: (PLocalizer.DoubleGoldStart, PLocalizer.DoubleGoldStartChat, PLocalizer.DoubleGoldEnd, PLocalizer.DoubleGoldEnd, PLocalizer.CHAT_STATUS_DOUBLEGOLD, 'admin'), PiratesGlobals.DOUBLEGOLDHOLIDAYPAID: (PLocalizer.DoubleGoldFullStart, PLocalizer.DoubleGoldFullStartChat, PLocalizer.DoubleGoldFullEnd, PLocalizer.DoubleGoldFullEnd, PLocalizer.CHAT_STATUS_DOUBLEGOLD_PAID, 'admin'), PiratesGlobals.DOUBLEXPHOLIDAY: (PLocalizer.DoubleXPStart, PLocalizer.DoubleXPStartChat, PLocalizer.DoubleXPEnd, PLocalizer.DoubleXPEnd, PLocalizer.CHAT_STATUS_DOUBLEXP, 'admin'), PiratesGlobals.DOUBLEXPHOLIDAYPAID: (PLocalizer.DoubleXPFullStart, PLocalizer.DoubleXPFullStartChat, PLocalizer.DoubleXPFullEnd, PLocalizer.DoubleXPFullEnd, PLocalizer.CHAT_STATUS_DOUBLEXP_PAID, 'admin'), PiratesGlobals.BLACKJACKFRIDAY: (PLocalizer.BlackJackFridayStart, PLocalizer.BlackJackFridayStartChat, PLocalizer.BlackJackFridayEnd, PLocalizer.BlackJackFridayEndChat, PLocalizer.CHAT_STATUS_BLACKJACK_FRIDAY, 'friends'), PiratesGlobals.FREEHATWEEK: (PLocalizer.FreeHatStartUnlimited, PLocalizer.FreeHatStartUnlimitedChat, None, None, None, 'admin'), PiratesGlobals.SAINTPATRICKSDAY: (PLocalizer.StPatricksStartUnlimited, PLocalizer.StPatricksStartUnlimitedChat, None, None, None, 'admin'), PiratesGlobals.MOTHERSDAY: (PLocalizer.MothersDayStartUnlimited, PLocalizer.MothersDayStartUnlimitedChat, None, None, PLocalizer.CHAT_STATUS_MOTHERS_DAY_PAID, 'tattoo'), PiratesGlobals.FATHERSDAY: (PLocalizer.FathersDayStart, PLocalizer.FathersDayStartChat, None, None, PLocalizer.CHAT_STATUS_FATHERS_DAY, 'admin'), PiratesGlobals.FOURTHOFJULY: (PLocalizer.FourthOfJulyStart, PLocalizer.FourthOfJulyStartChat, None, None, PLocalizer.CHAT_STATUS_FOURTHOFJULY, 'admin'), PiratesGlobals.HALFOFFCUSTOMIZATION: (PLocalizer.HalfOffCustomizationUnlimited, PLocalizer.HalfOffCustomizationUnlimited, PLocalizer.HalfOffCustomizationEnd, PLocalizer.HalfOffCustomizationEnd, PLocalizer.HalfOffCustomizationStatus, 'admin'), PiratesGlobals.ALLACCESSWEEKEND: (PLocalizer.UnlimitedAccessEventBasic, PLocalizer.UnlimitedAccessEventBasic, None, None, PLocalizer.AllAccessHolidayStart, 'admin'), PiratesGlobals.HALLOWEEN: (PLocalizer.HalloweenStart, PLocalizer.HalloweenStartChat, PLocalizer.HalloweenEnd, PLocalizer.HalloweenEnd, PLocalizer.CHAT_STATUS_HALLOWEEN, 'admin'), PiratesGlobals.JOLLYROGERCURSE: (None, None, None, None, PLocalizer.CHAT_STATUS_JOLLYROGERCURSE, 'admin')}
+holidayMessages = {
+    PiratesGlobals.DOUBLEGOLDHOLIDAY: (
+        PLocalizer.DoubleGoldStart, 
+        PLocalizer.DoubleGoldStartChat, 
+        PLocalizer.DoubleGoldEnd, 
+        PLocalizer.DoubleGoldEnd, 
+        PLocalizer.CHAT_STATUS_DOUBLEGOLD, 'admin'), 
+    PiratesGlobals.DOUBLEGOLDHOLIDAYPAID: (
+        PLocalizer.DoubleGoldFullStart, 
+        PLocalizer.DoubleGoldFullStartChat, 
+        PLocalizer.DoubleGoldFullEnd, 
+        PLocalizer.DoubleGoldFullEnd, 
+        PLocalizer.CHAT_STATUS_DOUBLEGOLD_PAID, 'admin'), 
+    PiratesGlobals.DOUBLEXPHOLIDAY: (
+        PLocalizer.DoubleXPStart, 
+        PLocalizer.DoubleXPStartChat, 
+        PLocalizer.DoubleXPEnd, 
+        PLocalizer.DoubleXPEnd,
+        PLocalizer.CHAT_STATUS_DOUBLEXP, 'admin'),
+    PiratesGlobals.DOUBLEXPHOLIDAYPAID: (
+        PLocalizer.DoubleXPFullStart, 
+        PLocalizer.DoubleXPFullStartChat, 
+        PLocalizer.DoubleXPFullEnd, 
+        PLocalizer.DoubleXPFullEnd, 
+        PLocalizer.CHAT_STATUS_DOUBLEXP_PAID, 'admin'), 
+    PiratesGlobals.BLACKJACKFRIDAY: (
+        PLocalizer.BlackJackFridayStart, 
+        PLocalizer.BlackJackFridayStartChat, 
+        PLocalizer.BlackJackFridayEnd, 
+        PLocalizer.BlackJackFridayEndChat, 
+        PLocalizer.CHAT_STATUS_BLACKJACK_FRIDAY, 'friends'), 
+    PiratesGlobals.FREEHATWEEK: (
+        PLocalizer.FreeHatStartUnlimited, 
+        PLocalizer.FreeHatStartUnlimitedChat, 
+        None, 
+        None, 
+        None, 'admin'), 
+    PiratesGlobals.SAINTPATRICKSDAY: (
+        PLocalizer.StPatricksStartUnlimited, 
+        PLocalizer.StPatricksStartUnlimitedChat, 
+        None, 
+        None, 
+        None, 'admin'), 
+    PiratesGlobals.MOTHERSDAY: (
+        PLocalizer.MothersDayStartUnlimited, 
+        PLocalizer.MothersDayStartUnlimitedChat, 
+        None, 
+        None, 
+        PLocalizer.CHAT_STATUS_MOTHERS_DAY_PAID, 'tattoo'), 
+    PiratesGlobals.FATHERSDAY: (
+        PLocalizer.FathersDayStart, 
+        PLocalizer.FathersDayStartChat, 
+        None, 
+        None, 
+        PLocalizer.CHAT_STATUS_FATHERS_DAY, 'admin'), 
+    PiratesGlobals.FOURTHOFJULY: (
+        PLocalizer.FourthOfJulyStart, 
+        PLocalizer.FourthOfJulyStartChat, 
+        None, 
+        None, 
+        PLocalizer.CHAT_STATUS_FOURTHOFJULY, 'admin'), 
+    PiratesGlobals.HALFOFFCUSTOMIZATION: (
+        PLocalizer.HalfOffCustomizationUnlimited, 
+        PLocalizer.HalfOffCustomizationUnlimited, 
+        PLocalizer.HalfOffCustomizationEnd, 
+        PLocalizer.HalfOffCustomizationEnd, 
+        PLocalizer.HalfOffCustomizationStatus, 'admin'), 
+    PiratesGlobals.ALLACCESSWEEKEND: (
+        PLocalizer.UnlimitedAccessEventBasic, 
+        PLocalizer.UnlimitedAccessEventBasic, 
+        None,
+        None,
+        PLocalizer.AllAccessHolidayStart, 'admin'), 
+    PiratesGlobals.HALLOWEEN: (
+        PLocalizer.HalloweenStart, 
+        PLocalizer.HalloweenStartChat, 
+        PLocalizer.HalloweenEnd, 
+        PLocalizer.HalloweenEnd, 
+        PLocalizer.CHAT_STATUS_HALLOWEEN, 'admin'), 
+    PiratesGlobals.JOLLYROGERCURSE: (
+        None, 
+        None, 
+        None, 
+        None, 
+        PLocalizer.CHAT_STATUS_JOLLYROGERCURSE, 'admin'),
+    PiratesGlobals.FOUNDERSFEAST: (
+        PLocalizer.FoundersFeastStart, 
+        PLocalizer.FoundersFeastStartChat,
+        PLocalizer.FoundersFeastEnd, 
+        PLocalizer.FoundersFeastEnd,
+        PLocalizer.CHAT_STATUS_FOUNDERSFEAST, 'admin'),
+    PiratesGlobals.FREEITEMTHANKSGIVING: (
+        PLocalizer.FreeBandanaStartUnlimited, 
+        PLocalizer.FreeBandanaStartUnlimitedChat,
+        PLocalizer.FreeBandanaStartBasic, 
+        PLocalizer.FreeBandanaStartBasicChat, 'hat'),
+    PiratesGlobals.CURSEDNIGHT: (
+        PLocalizer.CursedNightStart, 
+        PLocalizer.CursedNightStart,
+        PLocalizer.CursedNightEnd, 
+        PLocalizer.CursedNightEnd, 'admin'), 
+    PiratesGlobals.JOLLYCURSEAUTO: (       
+        None, 
+        None, 
+        None, 
+        None, 
+        PLocalizer.CHAT_STATUS_JOLLYROGERCURSE, 'admin')
+}
 
 def getHolidayStartMsg(holidayId):
     return holidayMessages.get(holidayId)[0]
@@ -93,4 +209,3 @@ def getHolidayStatusMsg(holidayId):
 
 def getHolidayIcon(holidayId):
     return holidayMessages.get(holidayId)[5]
-# okay decompiling .\pirates\ai\HolidayGlobals.pyc

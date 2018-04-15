@@ -28,6 +28,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
     def announceGenerate(self):
         DistributedCartesianGridAI.announceGenerate(self)
         DistributedGameAreaAI.announceGenerate(self)
+        self.d_setFeastFireEnabled(True)
 
     def getParentingRules(self):
         return ['Island', '%d:%d:%d' % (self.startingZone, self.gridSize,
@@ -128,7 +129,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.d_setFeastFireEnabled(feastFireEnabled)
 
     def getFeastFireEnabled(self):
-        return self.feastFireEnabled
+        return True #self.feastFireEnabled
 
     def delete(self):
         DistributedCartesianGridAI.delete(self)

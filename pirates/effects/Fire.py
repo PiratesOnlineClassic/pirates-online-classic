@@ -1,20 +1,16 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.Fire
-import random
-
-from direct.actor import Actor
+from panda3d.core import *
+from panda3d.physics import *
 from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
-from pandac.PandaModules import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from pirates.piratesgui.GameOptions import Options
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class Fire(PooledEffect, EffectController):
-    __module__ = __name__
     cardScale = 64.0
     burningSfx = None
 
@@ -26,7 +22,7 @@ class Fire(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleFire2')
         if not self.burningSfx:
-            self.burningSfx = base.loader.loadSfx('audio/sfx_grenade_impact_firebomb_loop.mp3')
+            self.burningSfx = base.loadSfx('audio/sfx_grenade_impact_firebomb_loop.mp3')
         if not Fire.particleDummy:
             Fire.particleDummy = base.effectsRoot.attachNewNode(ModelNode('FireParticleDummy'))
             Fire.particleDummy.setDepthWrite(0)
@@ -36,7 +32,7 @@ class Fire(PooledEffect, EffectController):
             Fire.particleDummy.setBin('fixed', 60)
         self.duration = 10.0
         self.effectScale = 1.0
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('Fire')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
         self.p0.setPoolSize(96)
@@ -80,15 +76,15 @@ class Fire(PooledEffect, EffectController):
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 15.0))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
+        self.setScale(VBase3(self.effectScale, 1, 1))
+
+    def enable(self):
+        self.f.start(self, self.particleDummy)
+
+    def disable(self):
+        self.f.disable()
 
     def createTrack(self, lod=Options.SpecialEffectsHigh):
-        self.p0.renderer.setUserAlpha(1.0)
-        self.p0.renderer.setInitialXScale(0.05 * self.cardScale * self.effectScale)
-        self.p0.renderer.setInitialYScale(0.05 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalXScale(0.03 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalYScale(0.045 * self.cardScale * self.effectScale)
-        self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 15.0 * self.effectScale))
-        self.p0.emitter.setRadius(6.0 * self.effectScale)
         if lod >= Options.SpecialEffectsHigh:
             self.p0.setPoolSize(96)
             self.p0.setLitterSize(4)
@@ -125,4 +121,3 @@ class Fire(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\Fire.pyc
