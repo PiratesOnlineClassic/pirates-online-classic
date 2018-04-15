@@ -342,14 +342,14 @@ class PiratesWebhookManager(object):
 
         baseMessage = HolidayGlobals.getHolidayDiscordMessage(holidayId)
         hookMessage = '@everyone ' + baseMessage if self.want_everyone else baseMessage
-        image_url = HolidayGlobals.getHolidayDiscordImage(holidayId)
 
         for endpoint in self.holiday_log_urls:
             webhookMessage = SlackWebhook(endpoint, message=hookMessage)
             attachment = SlackAttachment(
-                pretext=HolidayGlobals.getHolidayStartChatMsg(holidayId), 
+                pretext=HolidayGlobals.getHolidayDiscordPrefixMessage(holidayId), 
                 title=HolidayGlobals.getHolidayDiscordName(holidayId),
-                image_url=image_url
+                image_url=HolidayGlobals.getHolidayDiscordImage(holidayId),
+                footer=HolidayGlobals.getHolidayDiscordDates(holidayId)
             )
 
             webhookMessage.addAttachment(attachment)

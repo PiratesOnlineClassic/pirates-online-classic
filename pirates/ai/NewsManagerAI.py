@@ -97,7 +97,7 @@ class NewsManagerAI(DistributedObjectAI):
         self.processHolidayChange()
 
         if not quietly:
-            self.air.netMessenger.send('uberDOGHolidayStarted', [holidayId])
+            self.air.netMessenger.send('uberDOGHolidayStarted', [holidayId, quietly])
 
     def endHoliday(self, holidayId):
 
@@ -157,5 +157,5 @@ def stopHoliday(holidayId):
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
 def startHoliday(holidayId, time):
-    simbase.air.newsManager.startHoliday(holidayId, time)
+    simbase.air.newsManager.startHoliday(holidayId, time, True)
     return 'Started Holiday %d' % holidayId

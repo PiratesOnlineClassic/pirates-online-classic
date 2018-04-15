@@ -16,26 +16,27 @@ class NewsManagerUD:
         self.__broadcastedHolidays = {}
         self.__lastBroadcast = None
 
-    def handleHolidayStarted(self, holidayId):
+    def handleHolidayStarted(self, holidayId, quietly):
 
-        # Clear old broadcast checks
-        now = datetime.datetime.now()
-        for broadcast in self.__broadcastedHolidays:
-            expireTime = self.__broadcastedHolidays[broadcast]
-            if expireTime <= now:
-                self.__broadcastedHolidays.pop(broadcast)
-                continue
+        if not quietly:
+            # Clear old broadcast checks
+            now = datetime.datetime.now()
+            for broadcast in self.__broadcastedHolidays:
+                expireTime = self.__broadcastedHolidays[broadcast]
+                if expireTime <= now:
+                    self.__broadcastedHolidays.pop(broadcast)
+                    continue
 
-        # Verify we should broadcast
-        if holidayId in self.__broadcastedHolidays or self.__lastBroadcast == holidayId:
-            return
+            # Verify we should broadcast
+            if holidayId in self.__broadcastedHolidays or self.__lastBroadcast == holidayId:
+                return
 
-        success = self.air.webhookManager.logHolidayMessage(holidayId)
-        if success:
-            self.notify.info('Broadcasted holiday message to Discord')
-            expireTime = datetime.datetime.now() + datetime.timedelta(minutes=self.pastBroadcastCacheDelay)
-            self.__broadcastedHolidays[holidayId] = expireTime
-            self.__lastBroadcast = holidayId
+            success = self.air.webhookManager.logHolidayMessage(holidayId)
+            if success:
+                self.notify.info('Broadcasted holiday message to Discord')
+                expireTime = datetime.datetime.now() + datetime.timedelta(minutes=self.pastBroadcastCacheDelay)
+                self.__broadcastedHolidays[holidayId] = expireTime
+                self.__lastBroadcast = holidayId
 
     def startHoliday(self, holidayId, time):
         self.notify.info('Starting Holiday %s across the network for %s seconds' % (holidayId, time))

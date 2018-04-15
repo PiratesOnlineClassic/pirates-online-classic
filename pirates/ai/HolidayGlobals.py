@@ -1,3 +1,7 @@
+import random
+import time
+import datetime
+
 from pirates.ai.HolidayDates import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
@@ -276,21 +280,50 @@ discordHolidayNames = {
 def getHolidayDiscordName(holidayId):
     return discordHolidayNames.get(holidayId)
 
-discordHolidayImages = {
-
-}
+discordHolidayImages = {}
 
 def getHolidayDiscordImage(holidayId):
     return discordHolidayImages.get(holidayId, None)
 
 discordHolidayMessages = {
-    PiratesGlobals.HALLOWEEN: """
-Ahoy ye landlubbers! Jolly Roger has casted an evil spell across the Caribbean turning
-everyone into undead!
-
-Come join in on the fun! October 31st - November 3rd
-        """
+    PiratesGlobals.HALLOWEEN: PLocalizer.DISCORD_MESSAGE_HALLOWEEN,
+    PiratesGlobals.JOLLYROGERCURSE: PLocalizer.DISCORD_MESSAGE_HALLOWEEN,
+    PiratesGlobals.JOLLYCURSEAUTO: PLocalizer.DISCORD_MESSAGE_HALLOWEEN,
 }
 
 def getHolidayDiscordMessage(holidayId):
     return discordHolidayMessages.get(holidayId, '')
+
+discordPrefixMessages = {
+    PiratesGlobals.JOLLYROGERCURSE: PLocalizer.CursedNightStart,
+    PiratesGlobals.JOLLYCURSEAUTO: PLocalizer.CursedNightStart
+}
+
+def getHolidayDiscordPrefixMessage(holidayId):
+    return discordPrefixMessages.get(holidayId, getHolidayStartChatMsg(holidayId))
+
+def getHolidayDiscordDates(holidayId):
+    baseMessage = random.choice(PLocalizer.DISCORD_DATE_MESSAGES)
+
+    date = getHolidayDates(holidayId)
+    currentTime = time.time()
+
+    if date is None:
+        return baseMessage % ''
+
+    if isinstance(date, dict):
+        return baseMessage % ''
+
+    # Pick proper start and end for current date
+    holidayStart = date.getStartTime(0)
+    holidayEnd = date.getEndTime(len(date.endDates)-1)
+
+    # Format message
+    startDateTime = datetime.datetime.fromtimestamp(holidayStart)
+    endDateTime = datetime.datetime.fromtimestamp(holidayEnd)
+
+    startDate = startDateTime.strftime('%B %d')
+    endDate = endDateTime.strftime('%B %d')
+    dateMessage = '%s - %s' % (startDate, endDate)
+
+    return baseMessage % dateMessage
