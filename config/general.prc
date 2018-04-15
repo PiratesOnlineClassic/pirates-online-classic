@@ -94,6 +94,7 @@ want-special-effects #t
 
 # Make A Pirate:
 want-make-a-pirate #t
+want-new-avatars #t
 
 # Membership:
 want-membership #f
