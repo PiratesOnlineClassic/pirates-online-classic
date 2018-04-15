@@ -112,6 +112,7 @@ class PiratesBase(OTPBase):
         #    options.log('Recommended Game Options')
         #overwrite_options = True
         #options.verifyOptions(base.pipe, overwrite_options)
+        self.funnel = UserFunnel.UserFunnel()
         string = options.optionsToPrcData()
         loadPrcFileData('game_options', string)
         self.options = options
@@ -612,6 +613,8 @@ class PiratesBase(OTPBase):
         if self.__alreadyExiting:
             return
         self.__alreadyExiting = True
+        self.funnel.end_session()
+        self.funnel.submit_events()
         if self.cr.timeManager:
             self.cr.timeManager.setDisconnectReason(PiratesGlobals.DisconnectCloseWindow)
         if self.cr.loginFSM.getCurrentState().getName() == 'playingGame':

@@ -1,3 +1,6 @@
+# Dev:
+want-dev #f
+
 # Tutorial:
 skip-tutorial #t
 force-tutorial #t
@@ -28,4 +31,5 @@ want-low-end-water #t
 # Weapons:
 instant-skill-recharge #f
 
-want-dev #f
+# Analytics:
+dev-analyics #t

@@ -1,9 +1,11 @@
 import json
 import requests
+from panda3d.core import ConfigVariableList
+from direct.directnotify.DirectNotifyGlobal import *
 
 __all__ = [
     'WebhookException', 'WebhookBase', 'GenericWebhook', 'GithubWebhook', 'SlackWebhook',
-    'SlackAttachmentException', 'SlackAttachment', 'SlackField']
+    'SlackAttachmentException', 'SlackAttachment', 'SlackField', 'PiratesWebhookManager']
 
 class WebhookException(Exception):
     """
@@ -205,3 +207,127 @@ class SlackField(object):
         self.title = title
         self.value = value
         self.short = short
+
+class PiratesWebhookManager(object):
+
+    """
+    Manages Webhook transactions for the server
+    """
+
+    notify = directNotify.newCategory('PiratesWebhookManager')
+    notify.setInfo(True)
+
+    def __init__(self, air):
+        self.air = air
+        self.want_webhooks = config.GetBool('want-webhooks', True)
+        self.want_everyone = config.GetBool('want-at-everyone', True)
+
+        self.want_hacker_logs = config.GetBool('discord-log-hacks', True)
+        self.hacker_log_url = config.GetString('discord-hacker-url', '')
+
+        self.want_exception_logs = config.GetBool('discord-log-exceptions')
+        self.exception_log_url = config.GetString('discord-exception-url', '')
+
+        self.want_holiday_logs = config.GetBool('discord-log-holidays', True)
+        self.holiday_log_urls = ConfigVariableList('discord-holiday-urls')
+
+    def __internallyLogWebhook(self, url):
+        """
+        Internally logs the webhook transaction
+        """
+
+        self.notify.info('Sending Webhook message')
+        self.air.writeServerEvent('webhook-sent', url=url)
+
+    def __sendWebhook(self, webhook, verify):
+
+        """
+        Sends a webhook to its destination
+        """
+
+        if not self.want_webhooks and verify:
+            return
+
+        if not webhook:
+            return
+
+        self.__internallyLogWebhook(webhook.url)
+        webhook.send()
+
+    def __attemptAttachAvatarInfo(self, attachment, avatarId, accountId):
+        """
+        Attempts to attach avatar info using the avatarId
+        """
+
+        avatar = self.air.doId2do.get(avatarId)
+        if avatar:
+            attachment.addField(SlackField())
+            attachment.addField(SlackField(title='Character Pos', value=str(avatar.getPos())))
+            attachment.addField(SlackField(title='Character Name', value=avatar.getName()))
+            attachment.addField(SlackField(title='Island', value=avatar.getParentObj().getLocalizerName()))
+
+        #TODO: add account name?
+        attachment.addField(SlackField())
+        attachment.addField(SlackField(title='Dev Server', value=self.air.isDevServer()))   
+
+    def logPotentialHacker(self, avatarId, accountId, message, **kwargs):
+
+        """
+        Logs a potential hacker message to Discord
+        """
+
+        if self.want_hacker_logs and not self.hacker_log_url:
+            self.notify.warning('Failed to send hacker webhook; Hacker url not defined!')
+            return
+        
+        # Generate header message
+        districtName = self.air.distributedDistrict if hasattr(self.air, 'distributedDistrict') else None
+        if districtName:
+            headerMessage = 'Detected potential hacker on %d.' % districtName
+        else:
+            headerMessage = 'Detected potential hacker on the UberDOG'
+
+        hookMessage = '@everyone' if self.want_everyone else ''
+        webhookMessage = SlackWebhook(self.hacker_log_url, message=hookMessage)
+        attachment = SlackAttachment(pretext=message, title=headerMessage)
+
+        # Attach generic arguments
+        for kwarg in kwargs:
+            attachment.addField(SlackField(title=kwarg, value=kwargs[kwarg]))
+
+        # Attempt to attach avatar information
+        self.__attemptAttachAvatarInfo(attachment, avatarId, accountId)
+ 
+        webhookMessage.addAttachment(attachment)
+        self.__sendWebhook(webhookMessage, self.want_hacker_logs)
+
+    def logServerException(self, trace, avatarId=0, accountId=0):
+
+        """
+        Logs a server exception to Discord
+        """
+
+        if self.want_exception_logs and not self.exception_log_url:
+            self.notify.warning('Failed to send exception webhook; Exception url not defined!')
+            return
+        
+        # Generate header message
+        districtName = self.air.distributedDistrict if hasattr(self.air, 'distributedDistrict') else None
+        if districtName:
+            headerMessage = 'Internal exception occured on %d.' % districtName
+        else:
+            headerMessage = 'Internal exception occured on the UberDOG'
+
+        hookMessage = '@everyone' if self.want_everyone else ''
+        webhookMessage = SlackWebhook(self.hacker_log_url, message=hookMessage)
+        attachment = SlackAttachment(pretext=message, title=headerMessage)
+
+        attachment.addField(SlackField(titlle='Trackback', value=trace))
+
+        # Attempt to attach avatar information
+        self.__attemptAttachAvatarInfo(attachment, avatarId, accountId)
+ 
+        webhookMessage.addAttachment(attachment)
+        self.__sendWebhook(webhookMessage, self.want_exception_logs)
+
+        

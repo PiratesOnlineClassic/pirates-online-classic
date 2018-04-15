@@ -3,7 +3,7 @@ from otp.distributed.OtpDoGlobals import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.MsgTypes import *
 from panda3d.core import *
-from pirates.uberdog.WebhooksUD import SlackWebhook, SlackAttachment, SlackField
+from pirates.uberdog.WebhooksUD import PiratesWebhookManager
 import traceback
 import sys
 
@@ -13,6 +13,7 @@ class PiratesInternalRepository(AstronInternalRepository):
 
     def __init__(self, baseChannel, serverId=None, dcFileNames = None, dcSuffix='AI', connectMethod=None, threadedNet=None):
         AstronInternalRepository.__init__(self, baseChannel, serverId, dcFileNames, dcSuffix, connectMethod, threadedNet)
+        self.webhookManager = PiratesWebhookManager(self)
         self.__registerNetMessages()
 
     def __registerNetMessages(self):
@@ -23,18 +24,18 @@ class PiratesInternalRepository(AstronInternalRepository):
         # Remote Holiday Control
         self.netMessenger.register(2, 'startHoliday')
         self.netMessenger.register(3, 'stopHoliday')
-        
+
         # Remote Inventory Manager Control
         #AI
         self.netMessenger.register(4, 'hasInventory')
         self.netMessenger.register(5, 'addInventory')
         self.netMessenger.register(6, 'removeInventory')
         self.netMessenger.register(7, 'getInventory')
-        
+
         #UD
         self.netMessenger.register(8, 'hasInventoryResponse')
         self.netMessenger.register(9, 'getInventoryResponse')
-        
+
         # Remote Inventory Control
         #AI
         self.netMessenger.register(10, 'b_setAccumulators')
@@ -48,7 +49,7 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.netMessenger.register(18, 'getStackLimit')
         self.netMessenger.register(19, 'getStack')
         self.netMessenger.register(20, 'getOwnerId')
-        
+
         #UD
         self.netMessenger.register(21, 'getOwnerIdResponse')
         self.netMessenger.register(22, 'getAccumulatorsResponse')
@@ -94,9 +95,9 @@ class PiratesInternalRepository(AstronInternalRepository):
         msgDg.addUint16(10)
         msgDg.addString(message)
 
-        self.writeServerEvent('system-message', 
-            sourceChannel=self.ourChannel, 
-            message=message, 
+        self.writeServerEvent('system-message',
+            sourceChannel=self.ourChannel,
+            message=message,
             targetChannel=channel)
 
         dg = PyDatagram()
@@ -109,7 +110,7 @@ class PiratesInternalRepository(AstronInternalRepository):
         dg.addServerHeader(channel, self.ourChannel, CLIENTAGENT_EJECT)
         dg.addUint16(reason)
         dg.addString(message)
-        self.send(dg)      
+        self.send(dg)
 
     def logPotentialHacker(self, message, kickChannel=False, **kwargs):
         self.notify.warning(message)
@@ -119,63 +120,32 @@ class PiratesInternalRepository(AstronInternalRepository):
 
         # Log to event logger
         self.writeServerEvent('suspicious-event',
-            message=message, 
-            avatarId=avatarId, 
-            accountId=accountId, 
+            message=message,
+            avatarId=avatarId,
+            accountId=accountId,
             **kwargs)
 
-        self.notify.warning('Suspicious event occured; message=%s, avatarId=%d, accountId=%d' % 
-            (message, avatarId, accountId))
-
-        # Build a Discord message
-        if config.GetBool('discord-log-hacks', False):
-            hackWebhookUrl = config.GetString('discord-log-hacks-url', '')
-
-            if hackWebhookUrl:
-                districtName = 'Unknown'
-                if hasattr(self, 'distributedDistrict'):
-                    districtName = self.distributedDistrict.getName()
-
-                header = 'Detected potential hacker on %s.' % districtName
-                webhookMessage = SlackWebhook(hackWebhookUrl, message='@everyone' if config.GetBool('discord-ping-everyone', not config.GetBool('want-dev', False)) else '')
-
-                attachment = SlackAttachment(pretext=message, title=header)
-
-                for kwarg in kwargs:
-                    attachment.addField(SlackField(title=kwarg, value=kwargs[kwarg]))
-
-                avatar = self.doId2do.get(avatarId)
-                if avatar:
-                    attachment.addField(SlackField())
-                    attachment.addField(SlackField(title='Character Pos', value=str(avatar.getPos())))
-                    attachment.addField(SlackField(title='Character Name', value=avatar.getName()))
-                    attachment.addField(SlackField(title='Island', value=avatar.getParentObj().getLocalizerName()))
-
-                attachment.addField(SlackField())
-                attachment.addField(SlackField(title='Game Account Id', value=accountId))
-                #TODO account name?
-
-                attachment.addField(SlackField())
-                attachment.addField(SlackField(title='Dev Server', value=self.isDevServer()))
-
-                webhookMessage.addAttachment(attachment)
-                webhookMessage.send()
-            else:
-                self.notify.warning('Discord Hacker Webhook url not defined!')
+        # Log message to Discord
+        self.webhookManager.logPotentialHacker(avatarId, accountId, message, **kwargs)
 
         if kickChannel:
-            self.kickChannel(kickChannel)   
+            self.kickChannel(kickChannel)
 
     def logException(self, e):
         trace = traceback.format_exc()
 
-        self.writeServerEvent('internal-exception', 
-            avId=self.getAvatarIdFromSender(),
-            accountId=self.getAccountIdFromSender(),
+        avatarId = self.getAvatarIdFromSender() or 0
+        accountId = self.getAccountIdFromSender() or 0
+
+        self.writeServerEvent('internal-exception',
+            avId=avatarId,
+            accountId=accountId,
             exception=trace)
 
         self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
         print(trace)
+
+        self.webhookManager.logServerException(trace, )
 
         # Python 2 Vs 3 compatibility
         if not sys.version_info >= (3, 0):
