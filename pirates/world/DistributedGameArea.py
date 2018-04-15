@@ -25,6 +25,7 @@ from pirates.seapatch.SeaPatch import SeaPatch
 from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import IslandWaterParameters
 from pirates.swamp.Swamp import Swamp
+from pirates.ai import HolidayGlobals
 import time
 
 class DistributedGameArea(DistributedNode.DistributedNode):
@@ -48,9 +49,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         self.blockerColls = []
         self.islandWaterParameters = None
         self.swamp_water = None
-        self.entryTime = [
-            None,
-            0]
+        self.entryTime = [None, 0]
         self.timeCheck = 0
 
     def __repr__(self):
@@ -281,6 +280,10 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             self.envEffects = EnvironmentEffects.EnvironmentEffects(self, self.modelPath)
             if interior:
                 self.cr.timeOfDayManager.request('NoLighting')
+
+            for holidayId in self.cr.newsManager.holidayIdList:
+                holidayName = HolidayGlobals.getHolidayName(holidayId)
+                self.envEffects.loadHolidayEffects(holidayName)
 
     def stopCustomEffects(self):
         if self.envEffects:

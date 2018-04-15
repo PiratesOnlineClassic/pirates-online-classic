@@ -4,6 +4,7 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.battle.Teamable import Teamable
 from pirates.world.WorldGlobals import *
 from pirates.world.IslandAreaBuilderAI import IslandAreaBuilderAI
+from pirates.piratesbase import PiratesGlobals
 
 class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedIslandAI')
@@ -31,6 +32,33 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
     def generate(self):
         DistributedCartesianGridAI.generate(self)
         DistributedGameAreaAI.generate(self)
+        self.accept('HolidayStarted', self.holidayStart)
+        self.accept('HolidayEnded', self.holidayEnded)
+
+        # Process startup holidays
+        for holidayId in self.air.newsManager.holidayList:
+            self.holidayStart(holidayId)
+
+    def delete(self):
+        DistributedCartesianGridAI.delete(self)
+        DistributedGameAreaAI.delete(self)   
+
+        self.ignore('HolidayStarted')
+        self.ignore('HolidayEnded')
+
+    def holidayStart(self, holidayId):
+        if self.uniqueId == '1156207188.95dzlu' and holidayId == PiratesGlobals.FOUNDERSFEAST:
+            if self.getFeastFireEnabled():
+                return
+
+            self.b_setFeastFireEnabled(True)
+
+    def holidayEnded(self, holidayId):
+        if self.uniqueId == '1156207188.95dzlu' and holidayId == PiratesGlobals.FOUNDERSFEAST:
+            if not self.getFeastFireEnabled():
+                return
+
+            self.b_setFeastFireEnabled(False)
 
     def getParentingRules(self):
         return ['Island', '%d:%d:%d' % (self.startingZone, self.gridSize,
@@ -132,7 +160,3 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def getFeastFireEnabled(self):
         return self.feastFireEnabled
-
-    def delete(self):
-        DistributedCartesianGridAI.delete(self)
-        DistributedGameAreaAI.delete(self)

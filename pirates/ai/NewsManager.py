@@ -82,12 +82,12 @@ class NewsManager(DistributedObject.DistributedObject):
                 if base.cr.timeOfDayManager.currentState == PiratesGlobals.TOD_FULLMOON:
                     self.displayMessage(3)
             if holidayId == PiratesGlobals.HALFOFFCUSTOMIZATION:
-                if base.cr.isPaid() == 2:
-                    self.divideAllAccessories(2)
+                self.divideAllAccessories(2)
             if holidayId == PiratesGlobals.ALLACCESSWEEKEND:
                 Freebooter.AllAccessHoliday = True
                 if localAvatar.guiMgr.prevTag:
                     localAvatar.guiMgr.prevTag.hide()
+            messenger.send('HolidayStarted', [HolidayGlobals.getHolidayName(holidayId)])
 
     def endHoliday(self, holidayId):
         if holidayId in self.holidayIdList:
@@ -102,10 +102,10 @@ class NewsManager(DistributedObject.DistributedObject):
             self.showHolidayMessage(holidayId, 0)
             if holidayId == PiratesGlobals.HALFOFFCUSTOMIZATION:
                 self.endHalfOffCustomizationHoliday()
-                if base.cr.isPaid() == 2:
-                    self.multiplyAllAccessories(2)
+                self.multiplyAllAccessories(2)
             if holidayId == PiratesGlobals.ALLACCESSWEEKEND:
                 Freebooter.AllAccessHoliday = False
+            messenger.send('HolidayEnded', [HolidayGlobals.getHolidayName(holidayId)])
 
     def setHolidayIdList(self, holidayIdArray):
         holidayIdList = []

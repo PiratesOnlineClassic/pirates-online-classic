@@ -8,7 +8,6 @@ from pirates.effects.HeavySmoke import HeavySmoke
 from pirates.effects.FeastSmoke import FeastSmoke
 
 class FeastFire(NodePath):
-    __module__ = __name__
 
     def __init__(self, effectParent=None):
         NodePath.__init__(self, uniqueName('FeastFire'))

@@ -2,6 +2,7 @@ import json
 import requests
 from panda3d.core import ConfigVariableList
 from direct.directnotify.DirectNotifyGlobal import *
+from pirates.ai import HolidayGlobals
 
 __all__ = [
     'WebhookException', 'WebhookBase', 'GenericWebhook', 'GithubWebhook', 'SlackWebhook',
@@ -229,22 +230,19 @@ class PiratesWebhookManager(object):
         self.exception_log_url = config.GetString('discord-exception-url', '')
 
         self.want_holiday_logs = config.GetBool('discord-log-holidays', True)
-        self.holiday_log_urls = ConfigVariableList('discord-holiday-urls')
+        self.holiday_log_urls = ConfigVariableList('discord-holiday-url')
 
     def __internallyLogWebhook(self, url):
         """
         Internally logs the webhook transaction
         """
-
         self.notify.info('Sending Webhook message')
         self.air.writeServerEvent('webhook-sent', url=url)
 
     def __sendWebhook(self, webhook, verify):
-
         """
         Sends a webhook to its destination
         """
-
         if not self.want_webhooks and verify:
             return
 
@@ -258,7 +256,6 @@ class PiratesWebhookManager(object):
         """
         Attempts to attach avatar info using the avatarId
         """
-
         avatar = self.air.doId2do.get(avatarId)
         if avatar:
             attachment.addField(SlackField())
@@ -271,11 +268,9 @@ class PiratesWebhookManager(object):
         attachment.addField(SlackField(title='Dev Server', value=self.air.isDevServer()))   
 
     def logPotentialHacker(self, avatarId, accountId, message, **kwargs):
-
         """
         Logs a potential hacker message to Discord
         """
-
         if self.want_hacker_logs and not self.hacker_log_url:
             self.notify.warning('Failed to send hacker webhook; Hacker url not defined!')
             return
@@ -302,11 +297,9 @@ class PiratesWebhookManager(object):
         self.__sendWebhook(webhookMessage, self.want_hacker_logs)
 
     def logServerException(self, trace, avatarId=0, accountId=0):
-
         """
         Logs a server exception to Discord
         """
-
         if self.want_exception_logs and not self.exception_log_url:
             self.notify.warning('Failed to send exception webhook; Exception url not defined!')
             return
@@ -330,4 +323,34 @@ class PiratesWebhookManager(object):
         webhookMessage.addAttachment(attachment)
         self.__sendWebhook(webhookMessage, self.want_exception_logs)
 
-        
+    def logGenericMessage(self, url, message, author=None, avatar=None, verify=True):
+        """
+        Sends a basic message to Discord
+        Avatar must be a valid URL image
+        """
+        webHookMessage = GenericWebhook(url, message, author, avatar=avatar)
+        self.__sendWebhook(webHookMessage, verify)
+
+    def logHolidayMessage(self, holidayId):
+        """
+        Logs a holiday message to Discord
+        """
+
+        if self.want_holiday_logs and len(self.holiday_log_urls) == 0:
+            self.notify.warning('Failed to send holiday webhook; No holiday webhook urls defined!')
+            return
+
+        baseMessage = HolidayGlobals.getHolidayDiscordMessage(holidayId)
+        hookMessage = '@everyone ' + baseMessage if self.want_everyone else baseMessage
+
+        for endpoint in self.holiday_log_urls:
+            webhookMessage = SlackWebhook(endpoint, message=hookMessage)
+            attachment = SlackAttachment(
+                pretext=HolidayGlobals.getHolidayDiscordPrefixMessage(holidayId), 
+                title=HolidayGlobals.getHolidayDiscordName(holidayId),
+                image_url=HolidayGlobals.getHolidayDiscordImage(holidayId),
+                footer=HolidayGlobals.getHolidayDiscordDates(holidayId)
+            )
+
+            webhookMessage.addAttachment(attachment)
+            self.__sendWebhook(webhookMessage, self.want_holiday_logs)

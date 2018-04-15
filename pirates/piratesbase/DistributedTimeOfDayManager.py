@@ -33,7 +33,7 @@ class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
         self.cycleDuration = cycleDuration
         self.enterInitState()
 
-@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, float])
-def setClouds(level, duration):
-    base.cr.timeOfDayManager.skyGroup.setCloudLevel(level) #transitionClouds(level, duration)
-    return 'Transitioning clouds to %d with a speed of %d' % (level, duration)
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def setClouds(level):
+    base.cr.timeOfDayManager.skyGroup.setCloudLevel(level)
+    return 'Transitioning clouds to %d' % level

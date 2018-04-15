@@ -17,6 +17,7 @@ from pirates.effects import Grass
 from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.effects.LanternGlow import LanternGlow
 from pirates.effects.VolcanoEffect import VolcanoEffect
+from pirates.effects.FeastFire import FeastFire
 from pirates.piratesbase import PiratesGlobals, PLocalizer, TODGlobals
 from pirates.piratesgui import PiratesGuiGlobals, RadarGui
 from pirates.pvp import PVPGlobals
@@ -35,7 +36,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         'Port Royal': 'island-port-royal',
         'Tortuga': 'island-tortuga',
         'Cuba': 'island-cuba',
-        'Padre Del Fuego': 'island-padre-del-fuego',
+        'Padres Del Fuego': 'island-padre-del-fuego',
         'Devil\'s Anvil': 'island-devils-anvil',
         'Driftwood Island': 'island-driftwood',
         'Kingshead': 'island-kingshead',
@@ -95,6 +96,8 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.volcanoEffect = None
         self.lavaFlowEffect = None
         self.steamFlowEffect = None
+        self.feastFireEnabled = False
+        self.feastFireEffect = None
         self.islandMapModelPath = None
         self.mapName = None
         self.objsCached = False
@@ -278,6 +281,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
 
             self.initBlockers(self.staticGridRoot)
             self.startCustomEffects()
+            self.checkForHolidayObjects()
             self.handleEnterGameArea()
             self.addLocalInterest()
             return
@@ -858,6 +862,20 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             if self.lastZoneLevel < 2:
                 self.startVolcanoRestEffects()
 
+        if self.feastFireEffect and self.getFeastFireEnabled() and self.uniqueId == '1156207188.95dzlu':
+            if self.geom:
+                if self.lastZoneLevel <= 2:
+                    self.feastFireEffect.reparentTo(self.geom)
+                    self.feastFireEffect.setPos(-65, -238.5, 2.5)
+                    self.feastFireEffect.startMainEffects()
+                    self.feastFireEffect.stopFarEffects()
+                elif self.lastZoneLevel == 3:
+                    self.feastFireEffect.stopMainEffects()
+                    self.feastFireEffect.startFarEffects()
+                    if self.islandLowLod:
+                        self.feastFireEffect.reparentTo(self.islandLowLod)
+                        self.feastFireEffect.setPos(-65, -238.5, 20)
+
         base.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_DEFAULT)
         self.resumeSFX()
 
@@ -872,6 +890,9 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         if self.volcanoEffect:
             self.stopVolcanoSmokeEffect()
             self.stopVolcanoRestEffects()
+
+        if self.feastFireEffect:
+            self.stopFeastEffects()
 
         self.pauseSFX()
 
@@ -973,6 +994,29 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
                 lavaGeom.clearFog()
 
         taskMgr.remove(self.uniqueName('flowLava'))
+
+    def setFeastFireEnabled(self, value):
+        if self.feastFireEnabled == value:
+            return
+        self.feastFireEnabled = value
+        if self.feastFireEnabled:
+            self.startFeastEffects()
+        else:
+            self.stopFeastEffects()
+
+    def getFeastFireEnabled(self):
+        return self.feastFireEnabled
+
+    def startFeastEffects(self):
+        if not self.feastFireEffect and self.getFeastFireEnabled():
+            self.feastFireEffect = FeastFire()
+            self.feastFireEffect.setCustomSettings()
+            self.startCustomEffects()
+
+    def stopFeastEffects(self):
+        if self.feastFireEffect:
+            self.feastFireEffect.stopLoop()
+            self.feastFireEffect = None
 
     def startSteamFlow(self):
         steamGeom = self.geom.find('**/steam')
@@ -1199,6 +1243,11 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
                 self.animNode.node().copyTags(newData)
             else:
                 self.buildCacheData()
+        holidayObjects = self.findAllMatches('**/=Holiday;+s')
+        if holidayObjects.getNumPaths():
+            self.accept('HolidayStarted', self.unstashHolidayObjects)
+            self.accept('HolidayEnded', self.stashHolidayObjects)
+        holidayObjects.stash()
 
     def checkCacheValidity(self):
         if base.launcher.isDownloadComplete():

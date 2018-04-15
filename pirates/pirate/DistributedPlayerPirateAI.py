@@ -9,6 +9,7 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.quest.QuestConstants import LocationIds
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from otp.ai.MagicWordGlobal import *
@@ -33,6 +34,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.currentIsland = ''
         self.emoteId = 0
         self.zombie = 0
+        self.forcedZombie = 0
 
         self.stickyTargets = []
 
@@ -49,27 +51,41 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.weapon = DistributedWeaponAI(self.air)
         self.weapon.generateWithRequiredAndId(self.air.allocateChannel(), 0, 0)
 
+        self.accept('HolidayStarted', self.processHolidayStart)
+        self.accept('HolidayEnded', self.processHolidayEnd)
+        self.accept('timeOfDayChange', self.attemptToSetCursedZombie)
+
+    def processHolidayStart(self, holidayId):
+        self.attemptToSetCursedZombie()
+
+    def processHolidayEnd(self, holidayId):
+        self.attemptToSetCursedZombie()
+
     def setLocation(self, parentId, zoneId):
         DistributedPlayerAI.setLocation(self, parentId, zoneId)
         DistributedBattleAvatarAI.setLocation(self, parentId, zoneId)
 
         parentObj = self.getParentObj()
-
         if parentObj:
             if self.weapon:
                 self.weapon.b_setLocation(parentId, zoneId)
 
-    def setLocation(self, parentId, zoneId):
-        DistributedPlayerAI.setLocation(self, parentId, zoneId)
-        DistributedBattleAvatarAI.setLocation(self, parentId, zoneId)
-
-        parentObj = self.getParentObj()
-        if parentObj:
             if isinstance(parentObj, DistributedGameAreaAI):
                 if self.currentIsland:
-                    self.b_setReturnLocation(self.currentIsland)
+
+                    validReturns = [
+                        LocationIds.PORT_ROYAL_ISLAND,
+                        LocationIds.TORTUGA_ISLAND,
+                        LocationIds.DEL_FUEGO_PORT,
+                        LocationIds.CUBA_ISLAND
+                    ]
+
+                    if self.currentIsland in validReturns:
+                        self.b_setReturnLocation(self.currentIsland)
 
                 self.b_setCurrentIsland(parentObj.getUniqueId())
+
+            self.attemptToSetCursedZombie()
 
     def getWorld(self):
         parentObj = self.getParentObj()
@@ -442,6 +458,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.battleRandom = None
         self.weapon = None
 
+        self.ignore('HolidayStarted')
+        self.ignore('HolidayEnded')
+        self.ignore('timeOfDayChange')
+
     def setStickyTargets(self, stickyTargets):
         self.stickyTargets = stickyTargets
 
@@ -519,6 +539,27 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             self.removeStickyTarget(targetDoId)
 
+    def attemptToSetCursedZombie(self):
+        newState = False
+
+        parentObj = self.getParentObj()
+        if self.forcedZombie:
+            newState = True
+        else:
+            # We are not in PVP. Lets check if its a Cursed Moon
+            isOutside = not isinstance(parentObj, DistributedGAInteriorAI)
+            isHalloween = self.air.timeOfDayMgr.isHalloweenMoon()
+            newState = (isOutside and isHalloween and parentObj)
+
+            # Set PVP state based on new Zombie state
+            if newState:
+                self.b_setPVPTeam(PiratesGlobals.PVP_ENEMY)
+            else:
+                self.b_setPVPTeam(0)          
+
+        if newState != self.getZombie():
+            self.b_setZombie(bool(newState))
+
     def setZombie(self, zombie):
         self.zombie = zombie
 
@@ -534,31 +575,55 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def name(name):
+    """
+    Sets the targets name
+    """
+
     spellbook.getTarget().b_setName(name)
     return "Your name has been set to %s." % name
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def hp(hp):
+    """
+    Sets the targets current HP
+    """
+
     spellbook.getTarget().b_setHp(hp)
     return "Your hp has been set to %d." % hp
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def maxHp(maxHp):
+    """
+    Sets the targets max HP
+    """
+
     spellbook.getTarget().b_setMaxHp(maxHp)
     return "Your maxHp has been set to %d." % maxHp
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def mojo(mojo):
+    """
+    Sets the targets Mojo level
+    """
+
     spellbook.getTarget().b_setMojo(mojo)
     return "Your mojo has been set to %d." % mojo
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def maxMojo(maxMojo):
+    """
+    Sets the targets max Mojo
+    """
+
     spellbook.getTarget().b_setMaxMojo(maxMojo)
     return "Your maxMojo has been set to %d." % maxMojo
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def level(level):
+    """
+    Sets the invokers level
+    """
+
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
     if inventory:
@@ -571,3 +636,15 @@ def level(level):
         inventory.setGeneralRep(totalRep)
 
     return "Your level has been set to %d." % level
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def zombie(self):
+    """
+    Toggles the targets zombie state
+    """
+
+    target = spellbook.getTarget()
+    target.forcedZombie = not target.forcedZombie
+    target.attemptToSetCursedZombie()
+
+    return 'Targets Zombie state forced to %s' % target.forcedZombie

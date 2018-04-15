@@ -2,6 +2,7 @@ from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
 from panda3d.core import ConfigVariableList
+from otp.ai.MagicWordGlobal import *
 from pirates.ai import HolidayGlobals
 from pirates.ai.HolidayDates import HolidayDates
 from pirates.piratesbase import PiratesGlobals, TODGlobals
@@ -83,7 +84,7 @@ class NewsManagerAI(DistributedObjectAI):
                 if time <= 0:
                     self.endHoliday(holiday)
 
-    def startHoliday(self, holidayId, time):
+    def startHoliday(self, holidayId, time, quietly=False):
 
         if self.isHolidayActive(holidayId):
             return
@@ -91,8 +92,12 @@ class NewsManagerAI(DistributedObjectAI):
         if holidayId not in self.holidayList:
             self.holidayList[holidayId] = time
             self.notify.info('Holiday %s is starting!' % holidayId)
+            messenger.send('HolidayStarted', [holidayId])
 
         self.processHolidayChange()
+
+        if not quietly:
+            self.air.netMessenger.send('uberDOGHolidayStarted', [holidayId, quietly])
 
     def endHoliday(self, holidayId):
 
@@ -103,11 +108,11 @@ class NewsManagerAI(DistributedObjectAI):
         if holidayId in self.holidayList:
             del self.holidayList[holidayId]
             self.notify.info('Holiday %s is ending!' % holidayId)
+            messenger.send('HolidayEnded', [holidayId])
 
         self.processHolidayChange()
 
     def processHolidayChange(self):
-        self.updateTODCycle()
         self.sendHolidayList()
 
         # Tell the UberDOG about the change
@@ -124,26 +129,12 @@ class NewsManagerAI(DistributedObjectAI):
 
         self.sendUpdate('setHolidayIdList', [holidayList])
 
-    def updateTODCycle(self):
-        HolidayTODS = {
-            PiratesGlobals.HALLOWEEN: TODGlobals.TOD_HALLOWEEN_CYCLE,
-            PiratesGlobals.JOLLYROGERCURSE: TODGlobals.TOD_JOLLYCURSE_CYCLE
-        }
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def stopHoliday(holidayId):
+    simbase.air.newsManager.endHoliday(holidayId)
+    return 'Stopped Holiday %d' % holidayId
 
-        found = None
-        for holiday in HolidayTODS:
-            if holiday in self.holidayList:
-                found = holiday
-                break
-
-        # Update TOD Cycle
-        tod = self.air.timeOfDayMgr
-        if found is not None:
-            tod.changeCycleType(HolidayTODS[found])
-        else:
-            if tod.cycleType != TODGlobals.TOD_REGULAR_CYCLE:
-                tod.changeCycleType(TODGlobals.TOD_REGULAR_CYCLE)
-
-
-    
-        
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
+def startHoliday(holidayId, time):
+    simbase.air.newsManager.startHoliday(holidayId, time, True)
+    return 'Started Holiday %d' % holidayId

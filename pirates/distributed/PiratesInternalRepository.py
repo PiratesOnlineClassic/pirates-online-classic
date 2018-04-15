@@ -21,42 +21,42 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.netMessenger.register(0, 'districtStatus')
         self.netMessenger.register(1, 'queryDistrictStatus')
 
-        # Remote Holiday Control
+        # Holiday Management
         self.netMessenger.register(2, 'startHoliday')
         self.netMessenger.register(3, 'stopHoliday')
-
+        self.netMessenger.register(4, 'uberDOGHolidayStarted')
+        
         # Remote Inventory Manager Control
         #AI
-        self.netMessenger.register(4, 'hasInventory')
-        self.netMessenger.register(5, 'addInventory')
-        self.netMessenger.register(6, 'removeInventory')
-        self.netMessenger.register(7, 'getInventory')
-
+        self.netMessenger.register(5, 'hasInventory')
+        self.netMessenger.register(6, 'addInventory')
+        self.netMessenger.register(7, 'removeInventory')
+        self.netMessenger.register(8, 'getInventory')
+        
         #UD
-        self.netMessenger.register(8, 'hasInventoryResponse')
-        self.netMessenger.register(9, 'getInventoryResponse')
-
+        self.netMessenger.register(9, 'hasInventoryResponse')
+        self.netMessenger.register(10, 'getInventoryResponse')
+        
         # Remote Inventory Control
         #AI
-        self.netMessenger.register(10, 'b_setAccumulators')
-        self.netMessenger.register(11, 'b_setAccumulator')
-        self.netMessenger.register(12, 'b_setStackLimits')
-        self.netMessenger.register(13, 'b_setStacks')
-        self.netMessenger.register(14, 'b_setStack')
-        self.netMessenger.register(15, 'b_setOwnerId')
-        self.netMessenger.register(16, 'getAccumulators')
-        self.netMessenger.register(17, 'getAccumulator')
-        self.netMessenger.register(18, 'getStackLimit')
-        self.netMessenger.register(19, 'getStack')
-        self.netMessenger.register(20, 'getOwnerId')
-
+        self.netMessenger.register(11, 'b_setAccumulators')
+        self.netMessenger.register(12, 'b_setAccumulator')
+        self.netMessenger.register(13, 'b_setStackLimits')
+        self.netMessenger.register(14, 'b_setStacks')
+        self.netMessenger.register(15, 'b_setStack')
+        self.netMessenger.register(16, 'b_setOwnerId')
+        self.netMessenger.register(17, 'getAccumulators')
+        self.netMessenger.register(18, 'getAccumulator')
+        self.netMessenger.register(19, 'getStackLimit')
+        self.netMessenger.register(20, 'getStack')
+        self.netMessenger.register(21, 'getOwnerId')
+        
         #UD
-        self.netMessenger.register(21, 'getOwnerIdResponse')
-        self.netMessenger.register(22, 'getAccumulatorsResponse')
-        self.netMessenger.register(23, 'getAccumulatorResponse')
-        self.netMessenger.register(24, 'getStackLimitResponse')
-        self.netMessenger.register(25, 'getStackResponse')
-
+        self.netMessenger.register(22, 'getOwnerIdResponse')
+        self.netMessenger.register(23, 'getAccumulatorsResponse')
+        self.netMessenger.register(24, 'getAccumulatorResponse')
+        self.netMessenger.register(25, 'getStackLimitResponse')
+        self.netMessenger.register(26, 'getStackResponse')
 
     def handleConnected(self):
         if config.GetBool('send-hacker-test-message', False):
@@ -145,7 +145,7 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
         print(trace)
 
-        self.webhookManager.logServerException(trace, )
+        #self.webhookManager.logServerException(trace, avatarId, accountId)
 
         # Python 2 Vs 3 compatibility
         if not sys.version_info >= (3, 0):

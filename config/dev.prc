@@ -28,8 +28,10 @@ visualize-cartesian-grid #f
 # Water:
 want-low-end-water #t
 
+# Analytics:
+dev-analyics #t
+
 # Weapons:
 instant-skill-recharge #f
 
-# Analytics:
-dev-analyics #t
+want-dev #f

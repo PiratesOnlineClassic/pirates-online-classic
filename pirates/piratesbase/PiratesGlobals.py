@@ -467,24 +467,18 @@ def teamStr2TeamId(typeStr, defaultTeam=PLAYER_TEAM):
     team = defaultTeam
     if typeStr == NAVY_TEAM_STR:
         team = NAVY_TEAM
-    else:
-        if typeStr == UNDEAD_TEAM_STR:
-            team = UNDEAD_TEAM
-        else:
-            if typeStr == PLAYER_TEAM_STR:
-                team = PLAYER_TEAM
-            else:
-                if typeStr == VILLAGER_TEAM_STR:
-                    team = VILLAGER_TEAM
-                else:
-                    if typeStr == TUTORIAL_ENEMY_TEAM_STR:
-                        team = TUTORIAL_ENEMY_TEAM
-                    else:
-                        if typeStr == SPANISH_UNDEAD_TEAM_STR:
-                            team = SPANISH_UNDEAD_TEAM_STR
-                        else:
-                            if typeStr == FRENCH_UNDEAD_TEAM_STR:
-                                team = FRENCH_UNDEAD_TEAM_STR
+    elif typeStr == UNDEAD_TEAM_STR:
+        team = UNDEAD_TEAM
+    elif typeStr == PLAYER_TEAM_STR:
+        team = PLAYER_TEAM
+    elif typeStr == VILLAGER_TEAM_STR:
+        team = VILLAGER_TEAM
+    elif typeStr == TUTORIAL_ENEMY_TEAM_STR:
+        team = TUTORIAL_ENEMY_TEAM
+    elif typeStr == SPANISH_UNDEAD_TEAM_STR:
+        team = SPANISH_UNDEAD_TEAM_STR
+    elif typeStr == FRENCH_UNDEAD_TEAM_STR:
+        team = FRENCH_UNDEAD_TEAM_STR
     return team
 
 
@@ -630,6 +624,11 @@ HALLOWEEN = 13
 DOUBLEGOLDHOLIDAY = 14
 DOUBLEGOLDHOLIDAYPAID = 15
 JOLLYROGERCURSE = 16
+FOUNDERSFEAST = 17
+FREEITEMTHANKSGIVING = 18
+CURSEDNIGHT = 19
+JOLLYCURSEAUTO = 20
+WINTERFESTIVAL = 21
 XP_HOLIDAY_START = 1
 XP_HOLIDAY_END = 2
 BLACKJACK_FRIDAY_START = 1
@@ -669,4 +668,3 @@ ShipPVPKillShip = 1
 PrivateerBothTeamFull = 0
 PrivateerSingleTeamFull = 1
 ZombieNoBoats = 2
-# okay decompiling .\pirates\piratesbase\PiratesGlobals.pyc

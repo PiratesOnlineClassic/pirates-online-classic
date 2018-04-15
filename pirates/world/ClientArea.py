@@ -445,7 +445,7 @@ class ClientArea(DirectObject):
                             objModel = self.loadPiecesModels(modelName, altId)
                         else:
                             objModel = loader.loadModelCopy(modelName)
-
+                        
                         if objModel is None:
                             self.notify.warning('Could not load model %s, not creating object.' % modelName)
                             return None
@@ -577,6 +577,8 @@ class ClientArea(DirectObject):
                                             tform = NodePath(ModelNode('HolidayParent'))
                                             tform.setTag('Holiday', holiday)
                                             tform.setTransform(xform.getTransform())
+                                        
+                                        objModel.findAllMatches('**/=Holiday').reparentTo(tform)
 
                                         if not lowOnly:
                                             lodIdx = i
@@ -1422,7 +1424,7 @@ class ClientArea(DirectObject):
         self.findAllMatches('**/=Holiday=%s;+s' % (holidayName,)).unstash()
 
     def checkForHolidayObjects(self):
-        for holidayId in base.holidays.keys():
+        for holidayId in HolidayGlobals.getAllHolidayIds():
             if base.getHoliday(holidayId):
                 self.unstashHolidayObjects(
                     HolidayGlobals.getHolidayName(holidayId))

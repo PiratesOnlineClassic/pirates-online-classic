@@ -305,7 +305,6 @@ class QuestItems:
 QuestHistoryLen = 300
 
 class LocationIds:
-    __module__ = __name__
     RAMBLESHACK_DOCK = '1190757402.45joswilso'
     PORT_ROYAL_ISLAND = '1150922126.8dzlu'
     PORT_ROYAL_PORT = '1155695180.13sdnaik'

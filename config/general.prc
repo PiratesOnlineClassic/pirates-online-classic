@@ -94,6 +94,7 @@ want-special-effects #t
 
 # Make A Pirate:
 want-make-a-pirate #t
+want-new-avatars #t
 
 # Membership:
 want-membership #f
@@ -104,7 +105,6 @@ object-load-delay #f
 
 # Temporary:
 smooth-lag 0.4
-want-friendly-fire #f
 
 # Analytics:
 analytics-game-key 5de6a7ce0decbe613cf1cd172b319faf
