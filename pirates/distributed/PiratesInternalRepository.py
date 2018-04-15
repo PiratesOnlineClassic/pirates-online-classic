@@ -35,6 +35,27 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.netMessenger.register(8, 'hasInventoryResponse')
         self.netMessenger.register(9, 'getInventoryResponse')
         
+        # Remote Inventory Control
+        #AI
+        self.netMessenger.register(10, 'b_setAccumulators')
+        self.netMessenger.register(11, 'b_setAccumulator')
+        self.netMessenger.register(12, 'b_setStackLimits')
+        self.netMessenger.register(13, 'b_setStacks')
+        self.netMessenger.register(14, 'b_setStack')
+        self.netMessenger.register(15, 'b_setOwnerId')
+        self.netMessenger.register(16, 'getAccumulators')
+        self.netMessenger.register(17, 'getAccumulator')
+        self.netMessenger.register(18, 'getStackLimit')
+        self.netMessenger.register(19, 'getStack')
+        self.netMessenger.register(20, 'getOwnerId')
+        
+        #UD
+        self.netMessenger.register(21, 'getOwnerIdResponse')
+        self.netMessenger.register(22, 'getAccumulatorsResponse')
+        self.netMessenger.register(23, 'getAccumulatorResponse')
+        self.netMessenger.register(24, 'getStackLimitResponse')
+        self.netMessenger.register(25, 'getStackResponse')
+
 
     def handleConnected(self):
         if config.GetBool('send-hacker-test-message', False):
