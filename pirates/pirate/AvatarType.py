@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pirate.AvatarType
 import random
 
 from pirates.piratesbase import PLocalizer
 
 
 class AvatarType:
-    __module__ = __name__
     Unspecified = -1
     Any = 0
     Faction = 1
@@ -117,14 +112,12 @@ class AvatarType:
         spec = self.howSpecific()
         if spec is AvatarType.Id:
             name = PLocalizer.AvatarNames[self.faction][self.track][self.id][0]
+        elif spec is AvatarType.Track:
+            name = PLocalizer.TrackAvTypeNames[self.faction][self.track][0]
+        elif spec is AvatarType.Faction:
+            name = PLocalizer.FactionAvTypeNames[self.faction][0]
         else:
-            if spec is AvatarType.Track:
-                name = PLocalizer.TrackAvTypeNames[self.faction][self.track][0]
-            else:
-                if spec is AvatarType.Faction:
-                    name = PLocalizer.FactionAvTypeNames[self.faction][0]
-                else:
-                    name = PLocalizer.AnyAvType[0]
+            name = PLocalizer.AnyAvType[0]
         if self.boss:
             name = '%s %s' % (name, PLocalizer.Boss)
         return name
@@ -145,14 +138,12 @@ class AvatarType:
         spec = self.howSpecific()
         if spec is AvatarType.Id:
             return PLocalizer.AvatarNames[self.faction][self.track][self.id][1]
+        elif spec is AvatarType.Track:
+            return PLocalizer.TrackAvTypeNames[self.faction][self.track][1]
+        elif spec is AvatarType.Faction:
+            return PLocalizer.FactionAvTypeNames[self.faction][1]
         else:
-            if spec is AvatarType.Track:
-                return PLocalizer.TrackAvTypeNames[self.faction][self.track][1]
-            else:
-                if spec is AvatarType.Faction:
-                    return PLocalizer.FactionAvTypeNames[self.faction][1]
-                else:
-                    return PLocalizer.AnyAvType[1]
+            return PLocalizer.AnyAvType[1]
 
     def __hash__(self):
         h = hash((self.faction, self.track, self.id))
@@ -196,4 +187,3 @@ class AvatarType:
             self.__bossType = AvatarType(base=self, boss=False)
             self._setMutable(False)
         return self.__bossType
-# okay decompiling .\pirates\pirate\AvatarType.pyc

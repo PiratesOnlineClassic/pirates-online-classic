@@ -218,51 +218,47 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
     def playDialog(self, dialogStr=''):
         if dialogStr:
             self.playQuestString(dialogStr, timeout=True)
-        else:
-            if self.firstDialog == True and self.dialogFlag == 0:
-                questStr = ''
+        elif self.firstDialog == True and self.dialogFlag == 0:
+            questStr = ''
+            if self.getUniqueId() in PLocalizer.GreetingStrings:
+                questStr = PLocalizer.GreetingStrings[self.getUniqueId()].get('greeting')
+                if questStr is None or len(questStr) == 0:
+                    questStr = InteractGlobals.getNPCGreeting(self.avatarType)
+            else:
+                questStr = InteractGlobals.getNPCGreeting(self.avatarType)
+            self.playQuestString(questStr, timeout=True)
+        elif self.dialogFlag == 0:
+            questStr = ''
+            if self.getUniqueId() in PLocalizer.GreetingStrings:
+                questStr = PLocalizer.GreetingStrings[self.getUniqueId()].get('goodbye')
+                if questStr is None or len(questStr) == 0:
+                    questStr = InteractGlobals.getNPCGreeting(self.avatarType)
+            else:
+                questStr = InteractGlobals.getNPCGoodbye(self.avatarType)
+            self.playQuestString(questStr, timeout=True, useChatBubble=True)
+        elif self.dialogFlag == 1:
+            questStr = InteractGlobals.getNPCDuring(self.avatarType)
+            self.playQuestString(questStr, timeout=True, useChatBubble=True)
+        elif self.dialogFlag == 2:
+            questStr = ''
+            if self.getHelpId():
+                helpStrings = PLocalizer.townfolkHelpText.get(self.getHelpId())
+                self.clearOffer()
+                if len(helpStrings):
+                    self.playQuestString(random.choice(helpStrings), timeout=False)
+            else:
                 if self.getUniqueId() in PLocalizer.GreetingStrings:
-                    questStr = PLocalizer.GreetingStrings[self.getUniqueId()].get('greeting')
+                    questStr = PLocalizer.GreetingStrings[self.getUniqueId()].get('brushoff')
                     if questStr is None or len(questStr) == 0:
                         questStr = InteractGlobals.getNPCGreeting(self.avatarType)
                 else:
-                    questStr = InteractGlobals.getNPCGreeting(self.avatarType)
-                self.playQuestString(questStr, timeout=True)
-            else:
-                if self.dialogFlag == 0:
-                    questStr = ''
-                    if self.getUniqueId() in PLocalizer.GreetingStrings:
-                        questStr = PLocalizer.GreetingStrings[self.getUniqueId()].get('goodbye')
-                        if questStr is None or len(questStr) == 0:
-                            questStr = InteractGlobals.getNPCGreeting(self.avatarType)
-                    else:
-                        questStr = InteractGlobals.getNPCGoodbye(self.avatarType)
-                    self.playQuestString(questStr, timeout=True, useChatBubble=True)
-                else:
-                    if self.dialogFlag == 1:
-                        questStr = InteractGlobals.getNPCDuring(self.avatarType)
-                        self.playQuestString(questStr, timeout=True, useChatBubble=True)
-                    else:
-                        if self.dialogFlag == 2:
-                            questStr = ''
-                            if self.getHelpId():
-                                helpStrings = PLocalizer.townfolkHelpText.get(self.getHelpId())
-                                self.clearOffer()
-                                if len(helpStrings):
-                                    self.playQuestString(random.choice(helpStrings), timeout=False)
-                            else:
-                                if self.getUniqueId() in PLocalizer.GreetingStrings:
-                                    questStr = PLocalizer.GreetingStrings[self.getUniqueId()].get('brushoff')
-                                    if questStr is None or len(questStr) == 0:
-                                        questStr = InteractGlobals.getNPCGreeting(self.avatarType)
-                                else:
-                                    questStr = InteractGlobals.getNPCBrushoff(self.avatarType)
-                                    if not base.config.GetBool('want-privateering', True):
-                                        if self.getUniqueId() in [NPCIds.PIERRE_LE_PORC, NPCIds.GARCIA_DE_AVARCIA]:
-                                            questStr = random.choice(PLocalizer.ShipPVPLordBrushoff)
-                                self.playQuestString(questStr, timeout=True, useChatBubble=True)
-                        else:
-                            self.notify.warning('Invalid dialogFlag: %d' % self.dialogFlag)
+                    questStr = InteractGlobals.getNPCBrushoff(self.avatarType)
+                    if not base.config.GetBool('want-privateering', True):
+                        if self.getUniqueId() in [NPCIds.PIERRE_LE_PORC, NPCIds.GARCIA_DE_AVARCIA]:
+                            questStr = random.choice(PLocalizer.ShipPVPLordBrushoff)
+                self.playQuestString(questStr, timeout=True, useChatBubble=True)
+        else:
+            self.notify.warning('Invalid dialogFlag: %d' % self.dialogFlag)
         self.newDialog = False
         self.dialogFlag = 0
         return

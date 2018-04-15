@@ -24,12 +24,11 @@ class FeastSmoke(PooledEffect, EffectController):
             FeastSmoke.particleDummy.setLightOff()
         self.f = ParticleEffect.ParticleEffect('HeavySmoke')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1')
+        self.p0 = Particles.Particles('particles-1', 96)
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('DiscEmitter')
         self.f.addParticles(self.p0)
-        self.p0.setPoolSize(96)
         self.p0.setBirthRate(1.5)
         self.p0.setLitterSize(2)
         self.p0.setLitterSpread(0)
@@ -69,7 +68,6 @@ class FeastSmoke(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 1.0))
         self.p0.emitter.setRadius(10.0)
-        return
 
     def enable(self):
         self.f.start(self, self.particleDummy)

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.tutorial.DistributedPiratesTutorialWorld
 import time
 
 from direct.actor import Actor
@@ -17,7 +13,6 @@ from pirates.pirate import HumanDNA, Pirate
 from pirates.piratesbase import PiratesGlobals, TimeOfDayManager
 from pirates.quest import QuestParser
 
-
 class DistributedPiratesTutorialWorld(DistributedInstanceBase.DistributedInstanceBase):
     __module__ = __name__
     notify = directNotify.newCategory('DistributedPiratesTutorialWorld')
@@ -26,7 +21,6 @@ class DistributedPiratesTutorialWorld(DistributedInstanceBase.DistributedInstanc
         DistributedInstanceBase.DistributedInstanceBase.__init__(self, cr)
         self.tutorialHandler = None
         self.tutorialHandlerId = 0
-        return
 
     def setTutorialHandlerId(self, doId):
         self.tutorialHandlerId = doId
@@ -48,7 +42,6 @@ class DistributedPiratesTutorialWorld(DistributedInstanceBase.DistributedInstanc
         if not (area and area.gridVisContext):
             area = None
         DistributedInstanceBase.DistributedInstanceBase.removeWorldInterest(self, area)
-        return
 
     @report(types=['frameCount', 'args'], dConfigParam='want-connector-report')
     def turnOff(self, cacheIslands=[]):
@@ -59,4 +52,3 @@ class DistributedPiratesTutorialWorld(DistributedInstanceBase.DistributedInstanc
     def turnOn(self, av=None):
         DistributedInstanceBase.DistributedInstanceBase.turnOn(self, av)
         self._turnOnIslands()
-# okay decompiling .\pirates\tutorial\DistributedPiratesTutorialWorld.pyc

@@ -24,6 +24,39 @@ class PiratesInternalRepository(AstronInternalRepository):
         # Remote Holiday Control
         self.netMessenger.register(2, 'startHoliday')
         self.netMessenger.register(3, 'stopHoliday')
+        
+        # Remote Inventory Manager Control
+        #AI
+        self.netMessenger.register(4, 'hasInventory')
+        self.netMessenger.register(5, 'addInventory')
+        self.netMessenger.register(6, 'removeInventory')
+        self.netMessenger.register(7, 'getInventory')
+        
+        #UD
+        self.netMessenger.register(8, 'hasInventoryResponse')
+        self.netMessenger.register(9, 'getInventoryResponse')
+        
+        # Remote Inventory Control
+        #AI
+        self.netMessenger.register(10, 'b_setAccumulators')
+        self.netMessenger.register(11, 'b_setAccumulator')
+        self.netMessenger.register(12, 'b_setStackLimits')
+        self.netMessenger.register(13, 'b_setStacks')
+        self.netMessenger.register(14, 'b_setStack')
+        self.netMessenger.register(15, 'b_setOwnerId')
+        self.netMessenger.register(16, 'getAccumulators')
+        self.netMessenger.register(17, 'getAccumulator')
+        self.netMessenger.register(18, 'getStackLimit')
+        self.netMessenger.register(19, 'getStack')
+        self.netMessenger.register(20, 'getOwnerId')
+        
+        #UD
+        self.netMessenger.register(21, 'getOwnerIdResponse')
+        self.netMessenger.register(22, 'getAccumulatorsResponse')
+        self.netMessenger.register(23, 'getAccumulatorResponse')
+        self.netMessenger.register(24, 'getStackLimitResponse')
+        self.netMessenger.register(25, 'getStackResponse')
+
 
     def handleConnected(self):
         if config.GetBool('send-hacker-test-message', False):
@@ -85,14 +118,56 @@ class PiratesInternalRepository(AstronInternalRepository):
         avatarId = self.getAvatarIdFromSender() or 0
         accountId = self.getAccountIdFromSender() or 0
 
+        # Log to event logger
         self.writeServerEvent('suspicious-event',
             message=message, 
             avatarId=avatarId, 
             accountId=accountId, 
             **kwargs)
 
+<<<<<<< HEAD
         # Log message to Discord
         self.webhookManager.logPotentialHacker(avatarId, accountId, message, **kwargs)
+=======
+        self.notify.warning('Suspicious event occured; message=%s, avatarId=%d, accountId=%d' % 
+            (message, avatarId, accountId))
+
+        # Build a Discord message
+        if config.GetBool('discord-log-hacks', False):
+            hackWebhookUrl = config.GetString('discord-log-hacks-url', '')
+
+            if hackWebhookUrl:
+                districtName = 'Unknown'
+                if hasattr(self, 'distributedDistrict'):
+                    districtName = self.distributedDistrict.getName()
+
+                header = 'Detected potential hacker on %s.' % districtName
+                webhookMessage = SlackWebhook(hackWebhookUrl, message='@everyone' if config.GetBool('discord-ping-everyone', not config.GetBool('want-dev', False)) else '')
+
+                attachment = SlackAttachment(pretext=message, title=header)
+
+                for kwarg in kwargs:
+                    attachment.addField(SlackField(title=kwarg, value=kwargs[kwarg]))
+
+                avatar = self.doId2do.get(avatarId)
+                if avatar:
+                    attachment.addField(SlackField())
+                    attachment.addField(SlackField(title='Character Pos', value=str(avatar.getPos())))
+                    attachment.addField(SlackField(title='Character Name', value=avatar.getName()))
+                    attachment.addField(SlackField(title='Island', value=avatar.getParentObj().getLocalizerName()))
+
+                attachment.addField(SlackField())
+                attachment.addField(SlackField(title='Game Account Id', value=accountId))
+                #TODO account name?
+
+                attachment.addField(SlackField())
+                attachment.addField(SlackField(title='Dev Server', value=self.isDevServer()))
+
+                webhookMessage.addAttachment(attachment)
+                webhookMessage.send()
+            else:
+                self.notify.warning('Discord Hacker Webhook url not defined!')
+>>>>>>> 148232e94907fe4f7c75a22a32f06d27124ec563
 
         if kickChannel:
             self.kickChannel(kickChannel)   
@@ -111,8 +186,11 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
         print(trace)
 
+<<<<<<< HEAD
         self.webhookManager.logServerException(trace, )
 
+=======
+>>>>>>> 148232e94907fe4f7c75a22a32f06d27124ec563
         # Python 2 Vs 3 compatibility
         if not sys.version_info >= (3, 0):
             sys.exc_clear()

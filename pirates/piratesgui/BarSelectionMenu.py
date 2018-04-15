@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.BarSelectionMenu
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from otp.otpbase import OTPGlobals
@@ -46,7 +42,6 @@ class BarSelectionMenu(GuiPanel.GuiPanel):
         self.accept('escape', self.__handleCancel)
         self.loadWeaponButtons()
         self.hide()
-        return
 
     def loadWeaponButtons(self):
         for hotkey in self.hotkeys:
@@ -122,8 +117,6 @@ class BarSelectionMenu(GuiPanel.GuiPanel):
                     max = ReputationGlobals.getReputationNeededToLevel(category, level)
                     repMeter['range'] = max
                     repMeter['value'] = leftoverValue
-
-        return
 
     def selectPrev(self):
         if len(self.items) < 1:
@@ -203,6 +196,7 @@ class BarSelectionMenu(GuiPanel.GuiPanel):
     def destroy(self):
         if hasattr(self, 'destroyed'):
             return
+
         self.destroyed = 1
         taskMgr.remove('BarSelectHideTask' + str(self.getParent()))
         self.ignore('escape')
@@ -214,8 +208,8 @@ class BarSelectionMenu(GuiPanel.GuiPanel):
         if self.card:
             self.card.removeNode()
             self.card = None
+
         GuiPanel.GuiPanel.destroy(self)
-        return
 
     def __handleCancel(self):
         taskMgr.remove('BarSelectHideTask' + str(self.getParent()))
@@ -226,7 +220,8 @@ class BarSelectionMenu(GuiPanel.GuiPanel):
 
     def hide(self):
         if hasattr(base, 'localAvatar'):
-            if hasattr(localAvatar.guiMgr.combatTray, 'skillTray'):
-                localAvatar.guiMgr.combatTray.skillTray.show()
+            if base.localAvatar:
+                if hasattr(localAvatar.guiMgr.combatTray, 'skillTray'):
+                    localAvatar.guiMgr.combatTray.skillTray.show()
+
         GuiPanel.GuiPanel.hide(self)
-# okay decompiling .\pirates\piratesgui\BarSelectionMenu.pyc

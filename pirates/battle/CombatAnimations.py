@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.CombatAnimations
 import random
 
 import WeaponGlobals
@@ -60,6 +56,7 @@ from pirates.effects.WispSpiral import WispSpiral
 from pirates.effects.WitherCharge import WitherCharge
 from pirates.piratesbase import PLocalizer
 from pirates.uberdog.UberDogGlobals import InventoryType
+from otp.nametag.NametagConstants import *
 
 
 class CombatAnimations:
@@ -209,7 +206,7 @@ class CombatAnimations:
         return track
 
     def getDaggerViperNestInterval(self, av, skillId, ammoSkillId, charge, target):
-        numDaggers = 12.0
+        numDaggers = 12
         time = 0.7
         placeHolder = av.attachNewNode('daggerPlaceHolder')
         daggerTossIval = Parallel(Sequence(Func(self.lockInput, av), Func(av.currentWeapon.setTrailLength, 0.25), av.actorInterval('dagger_vipers_nest', startFrame=21, endFrame=35, blendInT=0, blendOutT=0.4), Func(av.currentWeapon.showWeapon), Func(av.motionFSM.on), Func(self.unlockInput, av)))

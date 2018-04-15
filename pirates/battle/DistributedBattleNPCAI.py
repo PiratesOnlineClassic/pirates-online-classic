@@ -14,6 +14,8 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         self.collisionMode = 0
         self.initZ = 0
 
+        self.spawnerNode = None
+
     def setName(self, name):
         self.name = name
 
@@ -74,3 +76,12 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def getInitZ(self):
         return self.initZ
+
+    def setSpawner(self, spawnerNode):
+        self.spawnerNode = spawnerNode
+
+    def getSpawner(self):
+        return self.spawnerNode
+
+    def requestClientAggro(self):
+        pass

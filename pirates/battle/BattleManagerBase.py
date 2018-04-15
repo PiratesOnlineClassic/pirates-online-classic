@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.BattleManagerBase
 from direct.directnotify import DirectNotifyGlobal
 from pirates.battle import EnemyGlobals, WeaponGlobals
 from pirates.battle.EnemySkills import EnemySkills
@@ -12,10 +8,18 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class BattleManagerBase:
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManager')
     PirateCodeWeapons = (
-     InventoryType.PistolWeaponL1, InventoryType.PistolWeaponL2, InventoryType.PistolWeaponL3, InventoryType.PistolWeaponL4, InventoryType.PistolWeaponL5, InventoryType.PistolWeaponL6, InventoryType.MusketWeaponL1, InventoryType.MusketWeaponL2, InventoryType.MusketWeaponL3)
+        InventoryType.PistolWeaponL1,
+        InventoryType.PistolWeaponL2,
+        InventoryType.PistolWeaponL3,
+        InventoryType.PistolWeaponL4,
+        InventoryType.PistolWeaponL5,
+        InventoryType.PistolWeaponL6,
+        InventoryType.MusketWeaponL1,
+        InventoryType.MusketWeaponL2,
+        InventoryType.MusketWeaponL3)
+
     SkillRechargeTimeConfig = config.GetFloat('skill-recharge-time', -1.0)
 
     def isPVP(self, attacker, target):
@@ -233,15 +237,15 @@ class BattleManagerBase:
                         if WeaponGlobals.C_TAKECOVER in skillEffects:
                             tHealth = 0
                             aHealth = 0
-                buff = WeaponGlobals.getSkillEffectFlag(skillId)
-                ammoBuff = WeaponGlobals.getSkillEffectFlag(ammoSkillId)
-                if target and skillId != InventoryType.UseItem and not inPVPMode:
-                    if hasattr(target, 'avatarType'):
-                        avClass = EnemyGlobals.getMonsterClass(target.avatarType)
-                        if avClass == EnemyGlobals.MONSTER and (buff == WeaponGlobals.C_UNDEAD_KILLER or ammoBuff == WeaponGlobals.C_UNDEAD_KILLER):
-                            tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
-                    elif avClass == EnemyGlobals.SKELETON and (buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER):
-                        tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
+        buff = WeaponGlobals.getSkillEffectFlag(skillId)
+        ammoBuff = WeaponGlobals.getSkillEffectFlag(ammoSkillId)
+        if target and skillId != InventoryType.UseItem and not inPVPMode:
+            if hasattr(target, 'avatarType'):
+                avClass = EnemyGlobals.getMonsterClass(target.avatarType)
+                if avClass == EnemyGlobals.MONSTER and (buff == WeaponGlobals.C_UNDEAD_KILLER or ammoBuff == WeaponGlobals.C_UNDEAD_KILLER):
+                    tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
+                elif avClass == EnemyGlobals.SKELETON and (buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER):
+                    tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
                 elif avClass == EnemyGlobals.HUMAN:
                     if buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER or buff == WeaponGlobals.C_UNDEAD_KILLER or ammoBuff == WeaponGlobals.C_UNDEAD_KILLER:
                         tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
@@ -303,8 +307,7 @@ class BattleManagerBase:
                     target.b_setHpDelta(hpDelta)
                     spDelta = WeaponGlobals.getAttackSailHP(skillId, ammoSkillId)
                     target.b_setSpDelta(spDelta)
-        return (
-         attackerEffects, targetEffects)
+        return (attackerEffects, targetEffects)
 
     def getModifiedSkillEffectsSword(self, attacker, target, skillId, ammoSkillId, charge=0, distance=0.0):
         if not target or not attacker.getWorld():
@@ -369,8 +372,15 @@ class BattleManagerBase:
                 scale = WeaponGlobals.getWeaponPvpDamageScale(attacker.currentWeaponId)
                 tDamage *= scale
         return (
-         [
-          0, 0, 0, 0, 0], [int(tDamage), targetEffects[1], targetEffects[2], targetEffects[3], targetEffects[4]])
+            [0, 0, 0, 0, 0],
+            [
+                int(tDamage),
+                targetEffects[1],
+                targetEffects[2],
+                targetEffects[3],
+                targetEffects[4]
+            ]
+        )
 
     def getModifiedShipEffects(self, skillId, ammoSkillId=0, distance=0.0):
         shipEffects = WeaponGlobals.getShipEffects(skillId, ammoSkillId)
@@ -468,7 +478,7 @@ class BattleManagerBase:
         return int(damage)
 
     def getModifiedRechargeTime(self, av, skillId, ammoSkillId=0):
-        if config.GetBool('instant-skill-recharge', 0):
+        if config.GetBool('instant-skill-recharge', False):
             return 0.0
         if self.SkillRechargeTimeConfig >= 0.0:
             return self.SkillRechargeTimeConfig
@@ -498,7 +508,7 @@ class BattleManagerBase:
         return rechargeTime
 
     def getModifiedReloadTime(self, av, skillId, ammoSkillId=0):
-        if config.GetBool('instant-skill-recharge', 0):
+        if config.GetBool('instant-skill-recharge', False):
             return 0.0
         rechargeTime = WeaponGlobals.getAttackRechargeTime(0, ammoSkillId)
         if rechargeTime:
@@ -602,4 +612,3 @@ class BattleManagerBase:
                     else:
                         color = '\x01white\x01'
         return color
-# okay decompiling .\pirates\battle\BattleManagerBase.pyc

@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.ShockwaveHit
 import random
 
 from direct.interval.IntervalGlobal import *
 from EffectController import EffectController
 from pandac.PandaModules import *
 from PooledEffect import PooledEffect
-
 
 class ShockwaveHit(PooledEffect, EffectController):
     __module__ = __name__
@@ -32,7 +27,6 @@ class ShockwaveHit(PooledEffect, EffectController):
         self.explosion.reparentTo(self)
         self.explosion.hide()
         self.card = loader.loadModelCopy('models/effects/shockwaves')
-        return
 
     def loadExplosion(self, hpr, type='Hit'):
         if self.currentType != type:
@@ -40,18 +34,15 @@ class ShockwaveHit(PooledEffect, EffectController):
             if type == 'Hit':
                 tex = self.card.find('**/effectRedShockwave').findTexture('*')
                 self.explosion.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
-            else:
-                if type == 'Dark':
-                    tex = self.card.find('**/effectDarkShockwave').findTexture('*')
-                    self.explosion.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MNone))
-                else:
-                    if type == 'Pulse':
-                        tex = self.card.find('**/effectPulseShockwave').findTexture('*')
-                        self.explosion.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MNone))
-                    else:
-                        if type == 'HitRay':
-                            tex = self.card.find('**/effectFlashRays').findTexture('*')
-                            self.explosion.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
+            elif type == 'Dark':
+                tex = self.card.find('**/effectDarkShockwave').findTexture('*')
+                self.explosion.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MNone))
+            elif type == 'Pulse':
+                tex = self.card.find('**/effectPulseShockwave').findTexture('*')
+                self.explosion.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MNone))
+            elif type == 'HitRay':
+                tex = self.card.find('**/effectFlashRays').findTexture('*')
+                self.explosion.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
             self.explosion.setTexture(tex, 1)
         self.explosion.setHpr(hpr)
 
@@ -74,5 +65,3 @@ class ShockwaveHit(PooledEffect, EffectController):
             self.card = None
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-        return
-# okay decompiling .\pirates\effects\ShockwaveHit.pyc

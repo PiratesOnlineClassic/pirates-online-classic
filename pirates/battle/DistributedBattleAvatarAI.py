@@ -3,6 +3,7 @@ from pirates.reputation. DistributedReputationAvatarAI import  DistributedReputa
 from pirates.battle.WeaponBaseAI import WeaponBaseAI
 from pirates.battle.Teamable import Teamable
 from direct.distributed.ClockDelta import globalClockDelta
+from direct.task import Task
 
 class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleAvatarAI')
@@ -11,6 +12,9 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         DistributedReputationAvatarAI.__init__(self, air)
         WeaponBaseAI.__init__(self, air)
         Teamable.__init__(self)
+
+        self.isNpc = True
+
         self.currentWeaponId = 0
         self.isWeaponDrawn = False
         self.currentAmmo = 0
@@ -39,6 +43,20 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.skillEffects = []
         self.ensaredTargetId = 0
         self.level = 0
+
+        self.skillTask = None
+
+    def announceGenerate(self):
+        DistributedReputationAvatarAI.announceGenerate(self)
+
+        self.skillTask = taskMgr.doMethodLater(1, self.__processSkills, '%s-process-skills-%s' % \
+            (self.__class__.__name__, self.doId))
+
+    def delete(self):
+        DistributedReputationAvatarAI.delete(self)
+
+        if self.skillTask:
+            taskMgr.remove(self.skillTask)
 
     def setAvatarType(self, avatarType):
         self.avatarType = avatarType
@@ -102,14 +120,14 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def getMaxHp(self):
         return self.maxHp
 
-    def setHp(self, hp, quietly):
-        self.hp = hp
+    def setHp(self, hp, quietly=False):
+        self.hp = hp if hp >= 0 else 0
         self.quietly = quietly
 
-    def d_setHp(self, hp, quietly):
+    def d_setHp(self, hp, quietly=False):
         self.sendUpdate('setHp', [hp, quietly])
 
-    def b_setHp(self, hp, quietly = False):
+    def b_setHp(self, hp, quietly=False):
         self.setHp(hp, quietly)
         self.d_setHp(hp, quietly)
 
@@ -283,6 +301,53 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def b_setSkillEffects(self, skillEffects):
         self.setSkillEffects(skillEffects)
         self.d_setSkillEffects(skillEffects)
+
+    def addSkillEffect(self, effectId, duration, attackerId):
+        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
+        found = False
+        for i in range(len(self.skillEffects)):
+            effect = self.skillEffects[i]
+            if effect[0] == effectId and effect[3] == attackerId:
+                self.skillEffects[i][1] = duration
+                self.skillEffects[i][2] = timestamp
+                found = True
+                break
+
+        if not found:
+            skillEffect = [
+                effectId,
+                duration,
+                timestamp,
+                attackerId]
+
+            self.skillEffects.append(skillEffect)
+
+        self.d_setSkillEffects(self.skillEffects)
+
+    def removeSkillEffect(self, effectId):
+        for i in range(len(self.skillEffects)):
+            effect = self.skillEffects[i]
+            if effect[0] == effectId:
+                self.skillEffects.remove(effect)
+                break
+
+        self.d_setSkillEffects(self.skillEffects)
+
+    def __processSkills(self, task):
+        if len(self.skillEffects) == 0:
+            return task.again
+
+        for i in range(len(self.skillEffects)):
+
+            if not i in self.skillEffects:
+                continue
+
+            self.skillEffects[i][1] -= 1
+
+            if self.skillEffects[i][1] <=0:
+                self.removeSkillEffect(i)
+
+        return task.again
 
     def getSkillEffects(self):
         return self.skillEffects

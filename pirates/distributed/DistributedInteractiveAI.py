@@ -19,12 +19,12 @@ class DistributedInteractiveAI(DistributedNodeAI):
         if not avatar:
             self.notify.warning('Failed to request interact for non-existant avatar!')
 
-            self.air.logPotentialHacker( 
+            self.air.logPotentialHacker(
                 message='Received requestInteraction from non-existant avatar',
-                targetAvId=avatar.doId, 
+                targetAvId=avatar.doId,
                 doId=doId,
                 interactType=interactType,
-                instant=instant)            
+                instant=instant)
             return
 
         handle = self.handleRequestInteraction(avatar, interactType, instant)
@@ -41,7 +41,9 @@ class DistributedInteractiveAI(DistributedNodeAI):
         self.sendUpdateToAvatarId(avatar.doId, 'acceptInteraction', [])
 
     def handleRequestInteraction(self, avatar, interactType, instant):
-        self.notify.warning('handleRequestInteraction not overriden by %s; Defaulting to DENY' % self.__class__.__name__)
+        self.notify.debug('handleRequestInteraction not overriden by %s; Defaulting to DENY' % \
+            self.__class__.__name__)
+
         return self.DENY
 
     def requestExit(self):
@@ -52,10 +54,10 @@ class DistributedInteractiveAI(DistributedNodeAI):
 
             self.air.logPotentialHacker(
                 message='Received requestExit from non-existant avatar',
-                targetAvId=avatar.doId, 
+                targetAvId=avatar.doId,
                 doId=doId,
                 interactType=interactType,
-                instant=instant)   
+                instant=instant)
             return
 
         handle = self.handleRequestExit(avatar)

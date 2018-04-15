@@ -26,8 +26,7 @@ class FireSplats(PooledEffect, EffectController):
         self.effectScale = 1.0
         self.f = ParticleEffect.ParticleEffect('FireSplats')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1')
-        self.p0.setPoolSize(64)
+        self.p0 = Particles.Particles('particles-1', 64)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(4)
         self.p0.setFactory('ZSpinParticleFactory')

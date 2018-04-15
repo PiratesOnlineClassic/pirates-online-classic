@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.LightSmoke
 import random
 
 from direct.actor import Actor
@@ -11,7 +7,6 @@ from EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesgui.GameOptions import Options
 from PooledEffect import PooledEffect
-
 
 class LightSmoke(PooledEffect, EffectController):
     __module__ = __name__
@@ -33,12 +28,11 @@ class LightSmoke(PooledEffect, EffectController):
         self.duration = 10.0
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1')
+        self.p0 = Particles.Particles('particles-1', 64)
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('DiscEmitter')
         self.f.addParticles(self.p0)
-        self.p0.setPoolSize(64)
         self.p0.setBirthRate(0.25)
         self.p0.setLitterSize(2)
         self.p0.setLitterSpread(0)
@@ -78,7 +72,6 @@ class LightSmoke(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 1.0))
         self.p0.emitter.setRadius(4.0)
-        return
 
     def startLoop(self, lod=None, accelerateTime=0):
         self._accelerateTime = accelerateTime
@@ -102,4 +95,3 @@ class LightSmoke(PooledEffect, EffectController):
 
     def accelerate(self, time):
         self.p0.accelerate(time, 1, 0.05)
-# okay decompiling .\pirates\effects\LightSmoke.pyc

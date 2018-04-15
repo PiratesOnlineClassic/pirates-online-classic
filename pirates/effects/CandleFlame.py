@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.CandleFlame
 import random
 
 from direct.actor import Actor
@@ -10,7 +6,6 @@ from direct.showbase.DirectObject import *
 from EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
-
 
 class CandleFlame(EffectController, NodePath):
     __module__ = __name__
@@ -40,7 +35,6 @@ class CandleFlame(EffectController, NodePath):
         self.glowHalo.setColorScale(1.0, 1.0, 1.0, 1)
         self.glowHalo.setPos(0, 0, 0.15)
         self.glowHalo.reparentTo(self)
-        return
 
     def createTrack(self):
         baseScale = Vec3(1.1, 1.1, 1.1)
@@ -84,5 +78,3 @@ class CandleFlame(EffectController, NodePath):
         if self.haloTrack:
             self.haloTrack.finish()
             self.haloTrack = None
-        return
-# okay decompiling .\pirates\effects\CandleFlame.pyc

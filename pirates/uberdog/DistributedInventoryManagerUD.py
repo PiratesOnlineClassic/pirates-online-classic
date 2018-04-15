@@ -55,6 +55,7 @@ class InventoryFSM(FSM):
 
         accumulators = [
             # Experience
+            [InventoryType.GeneralRep, 0],
             [InventoryType.CutlassRep, 0],
             [InventoryType.PistolRep, 0],
             [InventoryType.DollRep, 0],
@@ -66,13 +67,34 @@ class InventoryFSM(FSM):
         ]
 
         categoryLimits = []
-        stackLimits = []
+        stackLimits = [
+            # Skills
+            [InventoryType.CutlassHack, 1],
+            [InventoryType.CutlassSlash, 1],
+            [InventoryType.PistolShoot, 1],
+            [InventoryType.PistolLeadShot, 1],
+            [InventoryType.DollAttune, 1],
+            [InventoryType.DollPoke, 1],
+            [InventoryType.DaggerCut, 1],
+            [InventoryType.DaggerSwipe, 1],
+            [InventoryType.StaffBlast, 1],
+            [InventoryType.StaffSoulFlay, 1],
+            [InventoryType.GrenadeThrow, 1],
+
+            # Potions
+            [InventoryType.Potion1, 3],
+            [InventoryType.Potion2, 3],
+            [InventoryType.Potion3, 3],
+            [InventoryType.Potion4, 3],
+            [InventoryType.Potion5, 3],
+        ]
 
         stacks = [
             # Weapons
             [InventoryType.CutlassWeaponL1, 1],
             [InventoryType.PistolWeaponL1, 1],
-            [InventoryType.MusketWeaponL1, 1],
+            [InventoryType.MusketWeaponL1, 0],
+            [InventoryType.BayonetWeaponL1, 0],
             [InventoryType.DaggerWeaponL1, 1],
             [InventoryType.GrenadeWeaponL1, 1],
             [InventoryType.DollWeaponL1, 1],
@@ -115,9 +137,10 @@ class InventoryFSM(FSM):
         self.manager.air.sendActivate(inventoryId, self.avatarId, OTP_ZONE_ID_MANAGEMENT, dclass=\
             self.manager.air.dclassesByName['PirateInventoryUD'])
 
+        self.callback(inventoryId)
+
         del self.manager.avatar2fsm[self.avatarId]
         self.demand('Off')
-        self.callback(inventoryId)
 
     def exitLoad(self):
         pass
@@ -129,6 +152,26 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
         DistributedObjectGlobalUD.__init__(self, air)
 
         self.avatar2fsm = {}
+        
+        self.air.netMessenger.accept('hasInventoryResponse', self, self.proccessCallbackResponse)
+        self.air.netMessenger.accept('getInventoryResponse', self, self.proccessCallbackResponse)
+        
+    def announceGenerate(self):
+        DistributedObjectGlobalUD.announceGenerate(self)
+        
+    def hasInventory(self, inventoryId, callback):
+        self.air.netMessenger.send('hasInventory', [inventoryId, callback])
+        
+    def addInventory(self, inventory):
+        if inventory and inventory.doId:
+            self.air.netMessenger.send('addInventory', [inventory])
+            
+    def removeInventory(self, inventory):
+        if inventory and inventory.doId:
+            self.air.netMessenger.send('removeInventory', [inventory])
+        
+    def getInventory(self, avatarId, callback):
+        self.air.netMessenger.send('getInventory', [avatarId, callback])
 
     def initiateInventory(self, avatarId, callback):
         if not avatarId:
@@ -142,3 +185,9 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
 
         self.avatar2fsm[avatarId] = InventoryFSM(self, avatarId, callback)
         self.avatar2fsm[avatarId].request('Start')
+        
+    def proccessCallbackResponse(self, callback, *args, **kwargs):
+        if callback and callable(callback):
+            callback(*args, **kwargs)
+            return
+        self.notify.warning("No valid callback for a callback response! What was the purpose of that?")

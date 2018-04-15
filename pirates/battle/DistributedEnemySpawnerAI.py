@@ -1,5 +1,6 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
+from direct.task import Task
 from pirates.creature.DistributedAnimalAI import DistributedAnimalAI
 from pirates.npc.DistributedNPCTownfolkAI import DistributedNPCTownfolkAI
 from pirates.npc.DistributedNPCSkeletonAI import DistributedNPCSkeletonAI
@@ -18,115 +19,273 @@ from pirates.piratesbase import PLocalizer
 from pirates.battle import EnemyGlobals
 import random
 
-class DistributedEnemySpawnerAI(DistributedObjectAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedEnemySpawnerAI')
+class SpawnNodeBase:
+    notify = DirectNotifyGlobal.directNotify.newCategory('SpawnNodeBase')
     notify.setInfo(True)
 
-    def __init__(self, air):
-        DistributedObjectAI.__init__(self, air)
+    def __init__(self, spawner, objType, objectData, parent, objKey):
 
-        self.wantTownfolk = config.GetBool('want-townfolk', True)
-        self.wantEnemies = config.GetBool('want-enemies', True)
-        self.wantAnimals = config.GetBool('want-animals', True)
-        self.wantNormalBosses = config.GetBool('want-normal-bosses', True)
-        self.wantRandomBosses = config.GetBool('want-random-bosses', True)
+        self._spawner = spawner
+        self._objType = objType
+        self._objectData = objectData
+        self._parent = parent
+        self._objKey = objKey
+        self._npc = None
 
-        self.randomBosses = []
-        self.randomBossChance = config.GetInt('random-boss-spawn-change', 5)
-        self.ignoreDoubleRandom = config.GetBool('ignore-double-random-bosses', False)
+        # Spawn initial npc
+        self.__spawn()
 
-        self._enemies = {}
+    @property
+    def spawner(self):
+        return self._spawner
 
-    def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic):
-        newObj = None
+    @property
+    def objType(self):
+        return self._objType
 
-        if objType == 'Townsperson':
-            if self.wantTownfolk:
-                newObj = self.__createTownsperon(objType, objectData, parent, parentUid, objKey, dynamic)
-        elif objType == 'Spawn Node':
-            if self.wantEnemies:
-                newObj = self.__createEnemy(objType, objectData, parent, parentUid, objKey, dynamic)
-        elif objType == 'Animal':
-            if self.wantAnimals:
-                newObj = self.__createAnimal(objType, objectData, parent, parentUid, objKey, dynamic)
-        elif objType == 'Skeleton':
-            if self.wantEnemies and self.wantNormalBosses:
-                newObj = self.__createBossSkeleton(objType, objectData, parent, parentUid, objKey, dynamic)
+    @property
+    def objectData(self):
+        return self._objectData
+
+    @property
+    def parent(self):
+        return self._parent
+
+    @property
+    def objKey(self):
+        return self._objKey
+
+    @property
+    def npc(self):
+        return self._npc
+
+    def getAvatarType(self):
+        raise NotImplementedError('%s does not extend getAvatarType!' % \
+            self.__class__.__name__)
+
+    def setNPCAttributes(self, npc):
+        pass
+
+    def getNPCClass(self, avatarType):
+        raise NotImplementedError('%s does not extend getNPCClass!' % \
+            self.__class__.__name__)
+
+    def processDeath(self):
+        if not self._npc:
+            self.notify.debug('Attempted to perform death on a %s without a npc!' % \
+                self.__class__.__name__)
+
+            return
+
+        self._npc.d_setGameState('Death')
+
+        taskMgr.doMethodLater(5, self.__died, 'perform-respawn-%s' % self.objKey,
+            extraArgs=[self._npc], appendTask=True)
+
+        self._npc = None
+
+    def __died(self, npc, task):
+        if not npc:
+            return
+
+        npc.requestDelete()
+        self.__respawn()
+
+        return task.done
+
+    def __respawn(self):
+        if self._npc:
+            self.notify.debug('Attempted to respawn on a %s with an already existing npc!' % \
+                self.__class__.__name__)
+
+            return
+
+        respawns = self.objectData.get('Respawns', True)
+        if not respawns:
+            #TODO: is this the proper way of handling this?
+            self.removeSpawnNode(self.objType, self)
+            return
+
+        #TODO: Is this a constant?
+        spawnTimer = 20
+        taskMgr.doMethodLater(spawnTimer, self.__spawn, 'perform-spawn-%s' % \
+            self.objKey)
+
+    def getNPCTeam(self, avatarType):
+        if avatarType.isA(AvatarTypes.Navy):
+            return PiratesGlobals.NAVY_TEAM
+        elif avatarType.isA(AvatarTypes.TradingCo):
+            return PiratesGlobals.TRADING_CO_TEAM
+        elif avatarType.isA(AvatarTypes.Undead):
+            if avatarType.isA(AvatarTypes.French):
+                return PiratesGlobals.FRENCH_UNDEAD_TEAM
+            elif avatarType.isA(AvatarTypes.Spanish):
+                return PiratesGlobals.SPANISH_UNDEAD_TEAM
+            else:
+                return PiratesGlobals.UNDEAD_TEAM
+        elif avatarType.isA(AvatarTypes.Creature):
+            return PiratesGlobals.UNDEAD_TEAM
+        elif avatarType.isA(AvatarTypes.Townfolk):
+            return PiratesGlobals.VILLAGER_TEAM
         else:
-            self.notify.warning('Received unknown generate: %s' % objType)
+            return PiratesGlobals.PLAYER_TEAM
 
-        return newObj
+    def __spawn(self, task=None):
 
-    def __createTownsperon(self, objType, objectData, parent, parentUid, objKey, dynamic):
-        townfolk = DistributedNPCTownfolkAI(self.air)
+        # Create the npc class
+        avatarType = self.getAvatarType()
+        npcCls = self.getNPCClass(avatarType)
+        if npcCls is None:
+            self.notify.warning('No NPC class defined for AvatarType: %s' % avatarType)
+            return
 
-        townfolk.setScale(objectData.get('Scale'))
-        townfolk.setUniqueId(objKey)
-        townfolk.setPos(objectData.get('Pos', (0, 0, 0)))
-        townfolk.setHpr(objectData.get('Hpr', (0, 0, 0)))
-        townfolk.setSpawnPosHpr(townfolk.getPos(), townfolk.getHpr())
-        townfolk.setInitZ(townfolk.getZ())
+        npc = npcCls(self.spawner.air)
 
-        townfolk.setAnimSet(objectData.get('AnimSet', 'default'))
-        townfolk.setStartState(objectData.get('Start State', 'Idle'))
+        # Set NPC Node data
+        npc.setScale(self.objectData.get('Scale'))
+        npc.setUniqueId('' if avatarType.getBoss() else self.objKey)
+        npc.setPos(self.objectData.get('Pos', (0, 0, 0)))
+        npc.setHpr(self.objectData.get('Hpr', (0, 0, 0)))
+        npc.setSpawnPosHpr(npc.getPos(), npc.getHpr())
+        npc.setInitZ(npc.getZ())
+        npc.setTeam(self.getNPCTeam(avatarType))
 
-        townfolk.setLevel(int(objectData.get('Level', 0)))
-        townfolk.setAggroRadius(float(objectData.get('Aggro Radius', 0)))
+        npc.setAvatarType(avatarType)
+        npc.setAggroRadius(float(self.objectData.get('Aggro Radius', 0)))
 
-        name = PLocalizer.Unknown
-        if objKey in NPCList.NPC_LIST:
-            name = NPCList.NPC_LIST[objKey][NPCList.setName]
-        townfolk.setName(name)
+        # Load boss data if applicable
+        if avatarType.getBoss() and hasattr(npc, 'loadBossData'):
+            bossId = self.objKey if self.objType != 'Spawn Node' else npc.getUniqueId()
+            npc.loadBossData(bossId, avatarType)
 
-        townfolk.setDNAId(objKey)
-        if objectData.get('CustomModel', 'None') != 'None':
-            townfolk.setDNAId(objectData.get('CustomModel', ''))
+        # Set NPC health
+        if hasattr(npc, 'bossData'):
+            npc.setLevel(npc.bossData.get('Level', 0) or EnemyGlobals.getRandomEnemyLevel(
+                avatarType))
+        else:
+            npc.setLevel(EnemyGlobals.getRandomEnemyLevel(avatarType))
 
-        category = objectData.get('Category', '')
+        npcHp, npcMp = EnemyGlobals.getEnemyStats(avatarType, npc.getLevel())
+        if avatarType.getBoss() and hasattr(npc, 'bossData'):
+            npcHp = npcHp * npc.bossData['HpScale']
+            npcMp = npcMp * npc.bossData['MpScale']
+
+        npc.setMaxHp(npcHp)
+        npc.setHp(npc.getMaxHp(), True)
+
+        npc.setMaxMojo(npcMp)
+        npc.setMojo(npc.getMaxMojo())
+
+        # Set custom spawner based attributes
+        self.setNPCAttributes(npc)
+
+        # Set NPC DNA if applicable
+        dnaId = self.objKey
+        if dnaId and hasattr(npc, 'setDNAId'):
+            npc.setDNAId(dnaId)
+        elif self.objectData.get('CustomModel', 'None') != 'None':
+            npc.setDNAId(self.objectData.get('CustomModel', ''))
+
+        # Name the NPC
+        name = avatarType.getName()
+        if dnaId and dnaId in NPCList.NPC_LIST:
+            name = NPCList.NPC_LIST[dnaId][NPCList.setName]
+
+        if hasattr(npc, 'bossData'):
+            name = npc.bossData.get('Name', PLocalizer.Unknown)
+        elif avatarType.getBoss():
+            name = PLocalizer.BossNames[avatarType.faction][avatarType.track][avatarType.id][avatarType.boss]
+
+        npc.setName(name)
+
+        # Set starting state info
+        npc.setAnimSet(self.objectData.get('AnimSet', 'default'))
+        npc.setStartState(self.objectData.get('Start State', 'Idle'))
+
+        # Generate npc
+        self.parent.generateChildWithRequired(npc, PiratesGlobals.IslandLocalZone)
+        npc.d_setInitZ(npc.getZ())
+
+        # Save a copy of the npc and tell it about myself. This will come in handy
+        self._npc = npc
+        npc.setSpawner(self)
+
+        # Print out useful debugging information
+        locationName = self.parent.getLocalizerName()
+        self.notify.debug('Generating %s (%s) under zone %d on %s at %s with doId %d' % (npc.getName(), self.objKey,
+            npc.zoneId, locationName, npc.getPos(), npc.doId))
+
+        if avatarType.getBoss():
+            self.notify.info('Spawning boss %s (%s) on %s!' % (npc.getName(), self.objKey, locationName))
+
+        return Task.done
+
+class TownfolkSpawnNode(SpawnNodeBase):
+    notify = DirectNotifyGlobal.directNotify.newCategory('TownfolkSpawnNode')
+
+    def getAvatarType(self):
+        category = self.objectData.get('Category', '')
         if not hasattr(AvatarTypes, category):
             self.notify.warning('Failed to spawn Townfolk (%s); Unknown category %s' % (objKey, category))
             return
-        townfolk.setAvatarType(getattr(AvatarTypes, category, AvatarTypes.Commoner))
+        return getattr(AvatarTypes, category, AvatarTypes.Commoner)
 
-        shopId = objectData.get('ShopID', 'PORT_ROYAL_DEFAULTS')
+    def setNPCAttributes(self, npc):
+        shopId = self.objectData.get('ShopID', 'PORT_ROYAL_DEFAULTS')
         if not hasattr(PiratesGlobals, shopId):
             self.notify.warning('Failed to spawn Townfolk (%s); Unknown shopId: %s' % (objKey, shopid))
-        townfolk.setShopId(getattr(PiratesGlobals, shopId, 0))
+        npc.setShopId(getattr(PiratesGlobals, shopId, 0))
 
-        helpId = objectData.get('HelpID', 'NONE')
+        helpId = self.objectData.get('HelpID', 'NONE')
         if hasattr(PiratesGlobals, helpId):
-            townfolk.setHelpId(getattr(PiratesGlobals, helpId, 0))
+            npc.setHelpId(getattr(PiratesGlobals, helpId, 0))
 
-        zoneId = PiratesGlobals.IslandLocalZone
-        parent.generateChildWithRequired(townfolk, zoneId)
-        townfolk.d_setInitZ(townfolk.getZ())
+    def getNPCClass(self, avatarType):
+        return DistributedNPCTownfolkAI
 
-        townfolkName = townfolk.getName()
-        self.notify.debug('Generating %s (%s) under zone %d on %s at %s with doId %d' % (townfolk.getName(), objKey, townfolk.zoneId, parent.getLocalizerName(), townfolk.getPos(), townfolk.doId))
+class EnemySpawnNode(SpawnNodeBase):
+    notify = DirectNotifyGlobal.directNotify.newCategory('EnemySpawnNode')
 
-        return townfolk
+    def __init__(self, *args, **kwargs):
+        self.wantRandomBosses = config.GetBool('want-random-bosses', True)
+        self.randomBossChance = config.GetInt('random-boss-spawn-change', 5)
 
+        SpawnNodeBase.__init__(self, *args, **kwargs)
 
-    def __createEnemy(self, objType, objectData, parent, parentUid, objKey, dynamic):
+    def getAvatarType(self):
 
-        spawnable = objectData.get('Spawnables', '')
+        spawnable = self.objectData.get('Spawnables', '')
         if spawnable not in AvatarTypes.NPC_SPAWNABLES:
             self.notify.warning('Failed to spawn %s (%s); Not a valid spawnable.' % (spawnable, objKey))
+            return AvatarTypes.FrenchUndeadA
 
         avatarType = random.choice(AvatarTypes.NPC_SPAWNABLES[spawnable])()
         bossType = avatarType.getRandomBossType()
-        
+
+        # Attempt to pick a RNG boss type
         if bossType and self.wantRandomBosses:
             if random.randint(1, 100) <= self.randomBossChance:
-                if bossType not in self.randomBosses or self.ignoreDoubleRandom:
-                    self.randomBosses.append(bossType)
+                if bossType not in self.spawner.randomBosses:
+                    self.spawner.randomBosses.append(bossType)
                     avatarType = bossType
             elif config.GetBool('force-random-bosses', False):
-                if bossType not in self.randomBosses or self.ignoreDoubleRandom:
-                    self.randomBosses.append(bossType)
+                if bossType not in self.spawner.randomBosses:
+                    self.spawner.randomBosses.append(bossType)
                     avatarType = bossType
 
+        return avatarType
+
+    def setNPCAttributes(self, npc):
+        weapons = EnemyGlobals.getEnemyWeapons(npc.getAvatarType(), npc.getLevel()).keys()
+
+        #TODO: Better place to add this?
+        drawnAnimSets = ['attention']
+        defaultDrawn = True if self.objectData['AnimSet'] in drawnAnimSets else False
+        npc.setCurrentWeapon(random.choice(weapons), config.GetBool('want-enemy-weapons', defaultDrawn))
+
+    def getNPCClass(self, avatarType):
         enemyCls = None
+
         if avatarType.isA(AvatarTypes.Undead):
             if avatarType.getBoss():
                 enemyCls = DistributedBossSkeletonAI
@@ -144,79 +303,14 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
                 enemyCls = DistributedCreatureAI
         else:
             self.notify.warning('Received unknown AvatarType: %s' % avatarType)
-            return
 
-        if enemyCls is None:
-            self.notify.warning('No Enemy class defined for AvatarType: %s' % avatarType)
-            return
+        return enemyCls
 
-        enemy = enemyCls(self.air)
+class AnimalSpawnNode(SpawnNodeBase):
+    notify = DirectNotifyGlobal.directNotify.newCategory('AnimalSpawnNode')
 
-        enemy.setScale(objectData.get('Scale'))
-        enemy.setUniqueId(objKey)
-        enemy.setPos(objectData.get('Pos', (0, 0, 0)))
-        enemy.setHpr(objectData.get('Hpr', (0, 0, 0)))
-        enemy.setSpawnPosHpr(enemy.getPos(), enemy.getHpr())
-        enemy.setInitZ(enemy.getZ())
-
-        if avatarType.getBoss():
-            enemy.setUniqueId('')
-        else:
-            enemy.setUniqueId(objKey)
-
-        enemy.setAvatarType(avatarType)
-
-        if avatarType.getBoss() and hasattr(enemy, 'loadBossData'):
-            enemy.loadBossData(enemy.getUniqueId(), avatarType)
-
-        enemy.setLevel(EnemyGlobals.getRandomEnemyLevel(avatarType))
-
-        enemyHp, enemyMp = EnemyGlobals.getEnemyStats(avatarType, enemy.getLevel())
-
-        if avatarType.getBoss() and hasattr(enemy, 'bossData'):
-            enemyHp = enemyHp * enemy.bossData['HpScale']
-            enemyMp = enemyMp * enemy.bossData['MpScale']
-
-        enemy.setMaxHp(enemyHp)
-        enemy.setHp(enemy.getMaxHp(), True)
-
-        enemy.setMaxMojo(enemyMp)
-        enemy.setMojo(enemyMp)
-
-        weapons = EnemyGlobals.getEnemyWeapons(avatarType, enemy.getLevel()).keys()
-        enemy.setCurrentWeapon(weapons[0], False)
-        
-        dnaId = objKey
-        if dnaId and hasattr(enemy,'setDNAId'):
-            enemy.setDNAId(dnaId)
-
-        name = avatarType.getName()
-        if dnaId and dnaId in NPCList.NPC_LIST:
-            name = NPCList.NPC_LIST[dnaId][NPCList.setName]
-
-        if avatarType.getBoss():
-            name = PLocalizer.BossNames[avatarType.faction][avatarType.track][avatarType.id][0]
-        enemy.setName(name)  
-
-        enemy.setAnimSet(objectData.get('AnimSet', 'default'))
-        enemy.setStartState(objectData.get('Start State', 'Idle'))
-
-        self._enemies[objKey] = enemy
-
-        zoneId = PiratesGlobals.IslandLocalZone
-        parent.generateChildWithRequired(enemy, zoneId)
-        enemy.d_setInitZ(enemy.getZ())
-
-        locationName = parent.getLocalizerName()
-        self.notify.debug('Generating %s (%s) under zone %d on %s at %s with doId %d' % (enemy.getName(), objKey, enemy.zoneId, locationName, enemy.getPos(), enemy.doId))
-
-        if avatarType.getBoss():
-            self.notify.info('Spawning boss %s (%s) on %s!' % (enemy.getName(), objKey, locationName))
-
-        return enemy
-
-    def __createAnimal(self, objType, objectData, parent, parentUid, objKey, dynamic):
-        species = objectData.get('Species', None)
+    def getAvatarType(self):
+        species = self.objectData.get('Species', None)
         if not species:
             self.notify.warning('Failed to generate Animal %s; Species was not defined' % objKey)
             return
@@ -224,78 +318,86 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         if not hasattr(AvatarTypes, species):
             self.notify.warning('Failed to generate Animal %s; %s is not a valid species' % (objKey, species))
             return
-        avatarType = getattr(AvatarTypes, species, AvatarTypes.Chicken)
+        return getattr(AvatarTypes, species, AvatarTypes.Chicken)
 
+    def getNPCClass(self, avatarType):
         animalClass = DistributedAnimalAI
-        if species == 'Seagull':
+        if avatarType == AvatarTypes.Seagull:
             animalClass = DistributedSeagullAI
+        return animalClass
 
-        animal = animalClass(self.air)
+class BossEnemySpawnNode(EnemySpawnNode):
 
-        animal.setScale(objectData.get('Scale'))
-        animal.setUniqueId(objKey)
-        animal.setPos(objectData.get('Pos', (0, 0, 0)))
-        animal.setHpr(objectData.get('Hpr', (0, 0, 0)))
-        animal.setSpawnPosHpr(animal.getPos(), animal.getHpr())
-        animal.setInitZ(animal.getZ())
+    def getAvatarType(self):
+        avId = self.objectData.get('AvId', 1)
+        avTrack = self.objectData.get('AvTrack', 0)
 
-        animal.setAvatarType(avatarType)
+        faction = AvatarTypes.Undead.faction
+        if self.objType == 'Creature':
+            faction = AvatarTypes.Creature.faction
+        elif self.objType == 'NavySailor':
+            faction = AvatarTypes.Navy.faction
 
-        zoneId = PiratesGlobals.IslandLocalZone
-        parent.generateChildWithRequired(animal, zoneId)
-        animal.d_setInitZ(animal.getZ())
+        avatarType = AvatarType(faction=faction, track=avTrack, id=avId)
+        return avatarType.getBossType()
 
-        locationName = parent.getLocalizerName()
-        self.notify.debug('Generating %s (%s) under zone %d in %s at %s with doId %d' % (species, objKey, animal.zoneId, locationName, animal.getPos(), animal.doId))
+class DistributedEnemySpawnerAI(DistributedObjectAI):
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedEnemySpawnerAI')
+    notify.setInfo(True)
 
-        return animal
+    def __init__(self, air):
+        DistributedObjectAI.__init__(self, air)
 
-    def __createBossSkeleton(self, objType, objectData, parent, parentUid, objKey, dynamic):
-        skeleton = DistributedBossSkeletonAI(self.air)
+        self.randomBosses = []
+        self.spawnNodes = {}
 
-        skeleton.setScale(objectData.get('Scale'))
-        skeleton.setUniqueId(objKey)
-        skeleton.setPos(objectData.get('Pos', (0, 0, 0)))
-        skeleton.setHpr(objectData.get('Hpr', (0, 0, 0)))
-        skeleton.setSpawnPosHpr(skeleton.getPos(), skeleton.getHpr())
-        skeleton.setInitZ(skeleton.getZ())
+    def getSpawnNodesFromType(self, type):
+        if type not in self.spawnNodes:
+            return []
 
-        avId = objectData.get('AvId', 1)
-        avTrack = objectData.get('AvTrack', 0)
-        avatarType = AvatarType(faction=AvatarTypes.Undead.faction, track=avTrack, id=avId)
-        avatarType = avatarType.getBossType()
-        skeleton.setAvatarType(avatarType)
-        try:
-            skeleton.loadBossData(objKey, avatarType)
-        except:
-            self.notify.warning('Failed to load %s (%s); An error occured while loading boss data' % (objType, objKey))
-            return None
+        return self.spawnNodes[type]
 
-        skeleton.setName(skeleton.bossData['Name'])
-        skeleton.setLevel(skeleton.bossData['Level'] or EnemyGlobals.getRandomEnemyLevel(avatarType))
+    def getSpawnNodeFromTypeAndKey(self, type, key):
+        spawns = self.getSpawnNodesFromType(type)
+        found = None
+        for spawn in spawns:
+            if spawn.objkey == key:
+                found = spawn
+                break
 
-        enemyHp, enemyMp = EnemyGlobals.getEnemyStats(avatarType, skeleton.getLevel())
-        enemyHp = enemyHp * skeleton.bossData.get('HpScale', 1)
-        enemyMp = enemyMp * skeleton.bossData.get('MpScale', 1)
+        return found
 
-        skeleton.setMaxHp(enemyHp)
-        skeleton.setHp(skeleton.getMaxHp(), True)
+    def removeSpawnNode(self, type, spawnNode):
+        if not type in self.spawnNodes:
+            return
 
-        skeleton.setMaxMojo(enemyMp)
-        skeleton.setMojo(enemyMp)
+        self.spawnNodes[type].remove(spawnNode)
 
-        weapons = EnemyGlobals.getEnemyWeapons(avatarType, skeleton.getLevel()).keys()
-        skeleton.setCurrentWeapon(weapons[0], False)
+    def __registerSpawnNode(self, type, spawnNode):
+        if not self.getSpawnNodesFromType(type):
+            self.spawnNodes[type] = []
 
-        skeleton.setAnimSet(objectData.get('AnimSet', 'default'))
-        skeleton.setStartState(objectData.get('Start State', 'Idle'))
+        self.spawnNodes[type].append(spawnNode)
 
-        self._enemies[objKey] = skeleton
+    def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic):
+        newObj = None
 
-        zoneId = PiratesGlobals.IslandLocalZone
-        parent.generateChildWithRequired(skeleton, zoneId)
+        spawnClasses = {
+            'Townsperson': TownfolkSpawnNode,
+            'Spawn Node': EnemySpawnNode,
+            'Dormant NPC Spawn Node': EnemySpawnNode,
+            'Animal': AnimalSpawnNode,
+            'Skeleton': BossEnemySpawnNode,
+            'NavySailor': BossEnemySpawnNode,
+            'Creature': BossEnemySpawnNode
+        }
 
-        locationName = parent.getLocalizerName()
-        self.notify.debug('Generating %s (%s) under zone %d in %s at %s with doId %d' % (skeleton.getName(), objKey, skeleton.zoneId, locationName, skeleton.getPos(), skeleton.doId))
+        if objType not in spawnClasses:
+            self.notify.warning('Received unknown generate: %s' % objType)
+            return
 
-        return skeleton
+        spawnClass = spawnClasses[objType]
+        spawnNode = spawnClass(self, objType, objectData, parent, objKey)
+        self.__registerSpawnNode(objType, spawnNode)
+
+        return newObj

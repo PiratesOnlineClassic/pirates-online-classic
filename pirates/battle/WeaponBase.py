@@ -12,13 +12,13 @@ from pirates.tutorial import TutorialGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 class WeaponBase(WeaponBaseBase.WeaponBaseBase):
-    __module__ = __name__
 
     def __init__(self):
         if __builtins__.has_key('localAvatar'):
             av = localAvatar
         else:
             av = self
+
         WeaponBaseBase.WeaponBaseBase.__init__(self, av, self.cr)
         self.prop = None
         self.ammoSequence = 0
@@ -126,12 +126,11 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
             broadsideId = hitObject.getNetTag('broadsideId')
             if broadsideId:
                 self.__cannonPortHit(hitObject, broadsideId)
-        else:
-            if objType == PiratesGlobals.COLL_FORT:
-                fortId = hitObject.getNetTag('fortId')
-                if fortId:
-                    fortId = int(fortId)
-                    self.__fortHit(fortId, hitObject, entry, skillId, ammoSkillId)
+        elif objType == PiratesGlobals.COLL_FORT:
+            fortId = hitObject.getNetTag('fortId')
+            if fortId:
+                fortId = int(fortId)
+                self.__fortHit(fortId, hitObject, entry, skillId, ammoSkillId)
         ammo = entry.getFromNodePath().getNetPythonTag('ammo')
         if ammo and ammo.weaponControlled:
             ammo.projectileHitObject(entry)

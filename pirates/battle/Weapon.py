@@ -132,9 +132,11 @@ class Weapon(NodePath):
         if not model:
             base.buildAssets()
             model = self.models.get(itemId)
-        model = model.copyTo(hidden)
-        model.detachNode()
-        return model
+        if model:
+            model = model.copyTo(hidden)
+            model.detachNode()
+            return model
+        return None
 
     def getIcon(self, itemId):
         model = self.icons[itemId]

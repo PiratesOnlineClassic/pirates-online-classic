@@ -121,7 +121,8 @@ class ReputationMeterDial(DirectFrame):
                 self.lastLevel = level
             if self.lastExp == None:
                 if hasattr(base, 'localAvatar'):
-                    self.lastExp = localAvatar.getInventory().getReputation(self.category)
+                    if base.localAvatar:
+                        self.lastExp = localAvatar.getInventory().getReputation(self.category)
             if self.lastExp:
                 expChange = value - self.lastExp
                 if expChange:

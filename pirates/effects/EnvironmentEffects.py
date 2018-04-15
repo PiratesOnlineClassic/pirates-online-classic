@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.EnvironmentEffects
 import random
 
 from direct.actor import Actor
@@ -28,7 +24,6 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.GameOptions import Options
 from PooledEffect import PooledEffect
 
-
 class EnvironmentEffects:
     __module__ = __name__
     effectDict = {'effect_gypsyball': [(GypsyBallGlow, Options.SpecialEffectsLow)], 'candle_effect': [(CandleFlame, Options.SpecialEffectsLow)], 'torch_effect': [(TorchFire, Options.SpecialEffectsLow)], 'no_glow_effect': [(TorchFire, Options.SpecialEffectsLow)], 'lantern_effect': [(LanternGlow, Options.SpecialEffectsLow)], 'bonfire_effect': [(Bonfire, Options.SpecialEffectsMedium)], 'fireplace_effect': [(Fire, Options.SpecialEffectsLow)], 'watersplash_effect': [(WaterSplash, Options.SpecialEffectsMedium)], 'steam_effect': [(SteamEffect, Options.SpecialEffectsHigh)], 'darksteam_effect': [(DarkSteamEffect, Options.SpecialEffectsMedium)], 'steamcloud_effect': [(SteamCloud, Options.SpecialEffectsMedium)], 'cratersmoke_effect': [(CraterSmoke, Options.SpecialEffectsHigh)], 'lavaburst_effect': [(LavaBurst, Options.SpecialEffectsHigh)], 'blacksmoke_effect': [(BlackSmoke, Options.SpecialEffectsMedium)], 'lightsmoke_effect': [(LightSmoke, Options.SpecialEffectsMedium)], 'mysticsmoke_effect': [(MysticSmoke, Options.SpecialEffectsHigh)], 'mysticfire_effect': [(MysticFire, Options.SpecialEffectsHigh)]}
@@ -53,7 +48,6 @@ class EnvironmentEffects:
         self.loadEffects()
         self.loadSounds()
         self.loadGrass()
-        return
 
     def delete(self):
         for effect in self.effects:
@@ -88,7 +82,6 @@ class EnvironmentEffects:
             self.grass.stop()
             self.grass.destroy()
             self.grass = None
-        return
 
     def loadSingleEffect(self, nodePath):
         for effect in self.effectDict:
@@ -100,8 +93,6 @@ class EnvironmentEffects:
                     for effectName in effects:
                         glow = effectName[0](effectParent)
                         return glow
-
-        return
 
     def loadEffects(self):
         if not self.parent:
@@ -134,8 +125,6 @@ class EnvironmentEffects:
                             self.effects.append(effect)
 
                     locator.stash()
-
-        return
 
     def unloadEffects(self):
         for effect in self.effects:
@@ -319,4 +308,3 @@ class EnvironmentEffects:
                     mesh.setTexProjector(ts, joint, self.parent)
 
         return pt
-# okay decompiling .\pirates\effects\EnvironmentEffects.pyc

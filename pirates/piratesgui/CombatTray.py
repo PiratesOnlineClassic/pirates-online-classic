@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.CombatTray
 import copy
 import math
 import time
@@ -715,23 +711,28 @@ class CombatTray(GuiTray):
     def trySkill(self, skillId, ammoSkillId, combo=0, charge=0):
         if localAvatar.hp <= 0:
             return 0
+
         if not skillId:
             return 0
+
         if ammoSkillId in (InventoryType.Potion1, InventoryType.Potion2, InventoryType.Potion3, InventoryType.Potion4, InventoryType.Potion5):
-            if localAvatar.getHp() == localAvatar.getMaxHp():
-                if localAvatar.getMojo() == localAvatar.getMaxMojo():
-                    localAvatar.guiMgr.createWarning(PLocalizer.FullHealthWarning, PiratesGuiGlobals.TextFG6)
-                    return 0
-            if ammoSkillId in (InventoryType.ShipRepairKit,) and hasattr(localAvatar, 'ship') and localAvatar.ship:
-                if localAvatar.ship.getHp() == localAvatar.ship.getMaxHp() and localAvatar.ship.getSp() == localAvatar.ship.getMaxSp():
-                    localAvatar.guiMgr.createWarning(PLocalizer.FullShipHealthWarning, PiratesGuiGlobals.TextFG6)
-                    return 0
-            if WeaponGlobals.getIsShipSkill(skillId) and not WeaponGlobals.getIsShout(skillId) and not skillId == InventoryType.SailBroadsideLeft and not skillId == InventoryType.SailBroadsideRight:
-                if localAvatar.ship:
-                    localAvatar.ship.sailsReady or localAvatar.guiMgr.createWarning(PLocalizer.SailsNotReadyWarning, PiratesGuiGlobals.TextFG6)
+            if localAvatar.getHp() == localAvatar.getMaxHp() and localAvatar.getMojo() == localAvatar.getMaxMojo():
+                localAvatar.guiMgr.createWarning(PLocalizer.FullHealthWarning, PiratesGuiGlobals.TextFG6)
+                return 0
+                
+        if ammoSkillId in (InventoryType.ShipRepairKit,) and hasattr(localAvatar, 'ship') and localAvatar.ship:
+            if localAvatar.ship.getHp() == localAvatar.ship.getMaxHp() and localAvatar.ship.getSp() == localAvatar.ship.getMaxSp():
+                localAvatar.guiMgr.createWarning(PLocalizer.FullShipHealthWarning, PiratesGuiGlobals.TextFG6)
+                return 0
+
+        if WeaponGlobals.getIsShipSkill(skillId) and not WeaponGlobals.getIsShout(skillId) and not skillId == InventoryType.SailBroadsideLeft and not skillId == InventoryType.SailBroadsideRight:
+            if localAvatar.ship:
+                if not localAvatar.ship.sailsReady:
+                    localAvatar.guiMgr.createWarning(PLocalizer.SailsNotReadyWarning, PiratesGuiGlobals.TextFG6)
                     return 0
             else:
                 return 0
+
         if WeaponGlobals.getIsShipSkill(skillId):
             if localAvatar.ship:
                 if skillId == InventoryType.SailRammingSpeed and localAvatar.ship.queryGameState() in 'InBoardingPosition':
@@ -739,34 +740,42 @@ class CombatTray(GuiTray):
                     return 0
                 if localAvatar.ship.isRamming() and skillId != InventoryType.SailBroadsideLeft and skillId != InventoryType.SailBroadsideRight:
                     return 0
+        
         if skillId not in self.IGNORES_INPUT_LOCK and not WeaponGlobals.getIsShipSkill(skillId):
             if not self.isAcceptingInput:
                 return 0
+
             if not localAvatar.currentWeapon or not self.weaponId:
                 return 0
+
             if localAvatar.getGameState() != 'Battle':
                 return 0
+
             weaponVolley = WeaponGlobals.getWeaponVolley(localAvatar.currentWeaponId)
             if weaponVolley > 0 and self.volley >= weaponVolley:
                 return 0
+
             skillRepCategory = WeaponGlobals.getSkillReputationCategoryId(skillId)
             if self.rep != skillRepCategory and skillRepCategory > 0:
                 return 0
+
             if ammoSkillId:
                 ammoRepCategory = WeaponGlobals.getSkillReputationCategoryId(ammoSkillId)
                 if self.rep != ammoRepCategory and ammoRepCategory > 0:
                     return 0
+            
         skillEffects = localAvatar.getSkillEffects()
         if WeaponGlobals.C_STUN in skillEffects:
             localAvatar.guiMgr.createWarning(PLocalizer.StunWarning, PiratesGuiGlobals.TextFG6)
             return 0
+
         if not WeaponGlobals.getIsInstantSkill(skillId, ammoSkillId):
             if self.isUsingSkill:
                 if (self.weaponMode == WeaponGlobals.COMBAT or self.weaponMode == WeaponGlobals.THROWING) and skillId != EnemySkills.DOLL_UNATTUNE:
                     if not self.skillQueue and not self.weaponQueue:
-                        self.skillQueue = (
-                         skillId, ammoSkillId, combo)
+                        self.skillQueue = (skillId, ammoSkillId, combo)
                 return 0
+
         if WeaponGlobals.getNeedSight(skillId, ammoSkillId):
             inView = 0
             target = 0
@@ -1032,26 +1041,31 @@ class CombatTray(GuiTray):
             if self.weaponMode == WeaponGlobals.STAFF:
                 if self.chargeTime >= self.CHARGE_MODE_TIME_THRESHOLD:
                     localAvatar.guiMgr.createWarning(PLocalizer.AmmoChargingWarning, PiratesGuiGlobals.TextFG6)
-                    return
+                    return None
+
                 if self.skillTray.traySkillMap:
                     if skillId in self.skillTray.traySkillMap:
                         for i in range(len(self.skillTray.traySkillMap)):
                             if self.skillTray.traySkillMap[i] == skillId:
                                 if self.skillTray.origMap[i][1]:
                                     self.skillTray.tray[i + 1].toggleButton(True)
-                            elif self.skillTray.origMap[i][1]:
+
+                            if self.skillTray.origMap[i][1]:
                                 self.skillTray.tray[i + 1].toggleButton(False)
 
-            if self.weaponMode in (WeaponGlobals.FIREARM, WeaponGlobals.STAFF, WeaponGlobals.CANNON, WeaponGlobals.GRENADE):
+            if self.weaponMode in (
+            WeaponGlobals.FIREARM, WeaponGlobals.STAFF, WeaponGlobals.CANNON, WeaponGlobals.GRENADE):
                 if self.weaponMode == WeaponGlobals.CANNON:
                     self.setAmmoSkillId(skillId)
                     if self.linkedCannon:
                         self.linkedCannon.selectAmmo(self.ammoSkillId)
+
                 elif self.weaponMode == WeaponGlobals.FIREARM or self.weaponMode == WeaponGlobals.GRENADE:
                     ammoChoice = skillId
                     inv = localAvatar.getInventory()
                     if inv is None:
-                        return
+                        return None
+
                     maxQuant = WeaponGlobals.getSkillMaxQuantity(ammoChoice)
                     if not maxQuant == WeaponGlobals.INF_QUANT:
                         ammoInvId = WeaponGlobals.getSkillAmmoInventoryId(ammoChoice)
@@ -1060,63 +1074,61 @@ class CombatTray(GuiTray):
                             self.setAmmoSkillId(ammoChoice)
                             if self.weaponMode == WeaponGlobals.FIREARM:
                                 self.reloadWeapon()
-                            else:
-                                if self.weaponMode == WeaponGlobals.GRENADE:
-                                    self.changeHandheld(self.ammoSkillId)
+                            elif self.weaponMode == WeaponGlobals.GRENADE:
+                                self.changeHandheld(self.ammoSkillId)
+
                             if self.skillTray.traySkillMap:
                                 if skillId in self.skillTray.traySkillMap:
                                     for i in range(len(self.skillTray.traySkillMap)):
                                         if self.skillTray.traySkillMap[i] == skillId:
                                             if self.skillTray.origMap[i][1]:
                                                 self.skillTray.tray[i + 1].toggleButton(True)
-                                        elif self.skillTray.origMap[i][1]:
-                                            self.skillTray.tray[i + 1].toggleButton(False)
 
+                                        if self.skillTray.origMap[i][1]:
+                                            self.skillTray.tray[i + 1].toggleButton(False)
                         else:
                             localAvatar.guiMgr.createWarning(PLocalizer.OutOfAmmoWarning, PiratesGuiGlobals.TextFG6)
                     else:
                         self.setAmmoSkillId(ammoChoice)
                         if self.weaponMode == WeaponGlobals.FIREARM:
                             self.reloadWeapon()
-                        else:
-                            if self.weaponMode == WeaponGlobals.GRENADE:
-                                self.changeHandheld(self.ammoSkillId)
+                        elif self.weaponMode == WeaponGlobals.GRENADE:
+                            self.changeHandheld(self.ammoSkillId)
+
                         if self.skillTray.traySkillMap:
                             if skillId in self.skillTray.traySkillMap:
                                 for i in range(len(self.skillTray.traySkillMap)):
                                     if self.skillTray.traySkillMap[i] == skillId:
                                         if self.skillTray.origMap[i][1]:
                                             self.skillTray.tray[i + 1].toggleButton(True)
-                                    elif self.skillTray.origMap[i][1]:
-                                        self.skillTray.tray[i + 1].toggleButton(False)
 
+                                    if self.skillTray.origMap[i][1]:
+                                        self.skillTray.tray[i + 1].toggleButton(False)
                 else:
                     ammoChoice = skillId
                     self.setAmmoSkillId(ammoChoice)
-            else:
-                if self.weaponMode in (WeaponGlobals.COMBAT, WeaponGlobals.SAILING, WeaponGlobals.THROWING):
-                    self.trySkill(skillId, 0, combo)
-                else:
-                    if self.weaponMode == WeaponGlobals.VOODOO:
-                        if localAvatar.hasStickyTargets():
-                            haveFriendly = localAvatar.getFriendlyStickyTargets()
-                            haveHostile = localAvatar.getHostileStickyTargets()
-                            if haveFriendly and not haveHostile:
-                                WeaponGlobals.isFriendlyFire(skillId) or localAvatar.guiMgr.createWarning(PLocalizer.NeedHostileTarget, PiratesGuiGlobals.TextFG6)
-                            else:
-                                self.trySkill(skillId, 0, combo)
-                        elif not haveFriendly:
-                            if haveHostile:
-                                if WeaponGlobals.isFriendlyFire(skillId):
-                                    localAvatar.guiMgr.createWarning(PLocalizer.NeedFriendlyTarget, PiratesGuiGlobals.TextFG6)
-                                else:
-                                    self.trySkill(skillId, 0, combo)
-                            else:
-                                self.trySkill(skillId, 0, combo)
+            elif self.weaponMode in (WeaponGlobals.COMBAT, WeaponGlobals.SAILING, WeaponGlobals.THROWING):
+                self.trySkill(skillId, 0, combo)
+            elif self.weaponMode == WeaponGlobals.VOODOO:
+                if localAvatar.hasStickyTargets():
+                    haveFriendly = localAvatar.getFriendlyStickyTargets()
+                    haveHostile = localAvatar.getHostileStickyTargets()
+                    if haveFriendly and not haveHostile:
+                        if not WeaponGlobals.isFriendlyFire(skillId):
+                            localAvatar.guiMgr.createWarning(PLocalizer.NeedHostileTarget, PiratesGuiGlobals.TextFG6)
                         else:
-                            localAvatar.guiMgr.createWarning(PLocalizer.NotAttunedWarning, PiratesGuiGlobals.TextFG6)
+                            self.trySkill(skillId, 0, combo)
+                    elif not haveFriendly and haveHostile:
+                        if WeaponGlobals.isFriendlyFire(skillId):
+                            localAvatar.guiMgr.createWarning(PLocalizer.NeedFriendlyTarget, PiratesGuiGlobals.TextFG6)
+                        else:
+                            self.trySkill(skillId, 0, combo)
                     else:
-                        attackSelected = None
+                        self.trySkill(skillId, 0, combo)
+                else:
+                    localAvatar.guiMgr.createWarning(PLocalizer.NotAttunedWarning, PiratesGuiGlobals.TextFG6)
+            else:
+                attackSelected = None
             if attackSelected:
                 messenger.send(attackSelected)
             self.acceptInput()
@@ -1532,5 +1544,3 @@ class CombatTray(GuiTray):
     def clearQueues(self):
         self.weaponQueue = None
         self.skillQueue = None
-        return
-# okay decompiling .\pirates\piratesgui\CombatTray.pyc

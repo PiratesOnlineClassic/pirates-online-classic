@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.AttuneMenu
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from otp.otpbase import OTPGlobals
@@ -18,7 +14,6 @@ from pirates.reputation import ReputationGlobals
 
 
 class AvatarInfoButton(GuiButton):
-    __module__ = __name__
     memberImageColor = (
      Vec4(0.31, 0.3, 0.3, 1), Vec4(0.41, 0.4, 0.4, 1), Vec4(0.41, 0.4, 0.4, 1), Vec4(0.21, 0.2, 0.2, 1))
     OnlineTextColor = (1, 1, 1, 1)
@@ -31,30 +26,38 @@ class AvatarInfoButton(GuiButton):
         self.hp = 0
         self.maxHp = 0
         GuiButton.__init__(self, text='', text_scale=PiratesGuiGlobals.TextScaleSmall, text_pos=(0.025,
-                                                                                                 0.085), text_align=TextNode.ALeft, text_fg=self.OnlineTextColor, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, text_wordwrap=14, relief=None, borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameColor=(0.45,
-                                                                                                                                                                                                                                                                                                                        0.45,
-                                                                                                                                                                                                                                                                                                                        0.35,
-                                                                                                                                                                                                                                                                                                                        1.0), image_scale=(0.45,
-                                                                                                                                                                                                                                                                                                                                           1,
-                                                                                                                                                                                                                                                                                                                                           0.2), image_pos=(0.215,
-                                                                                                                                                                                                                                                                                                                                                            0.0,
-                                                                                                                                                                                                                                                                                                                                                            0.08), command=self.select)
+                                                                                                 0.085),
+                           text_align=TextNode.ALeft, text_fg=self.OnlineTextColor,
+                           text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, text_wordwrap=14, relief=None,
+                           borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameColor=(0.45,
+                                                                                       0.45,
+                                                                                       0.35,
+                                                                                       1.0), image_scale=(0.45,
+                                                                                                          1,
+                                                                                                          0.2),
+                           image_pos=(0.215,
+                                      0.0,
+                                      0.08), command=self.select)
         self.initialiseoptions(AvatarInfoButton)
         self.hpMeter = DirectWaitBar(parent=self, relief=DGG.RAISED, borderWidth=(0.004,
-                                                                                  0.004), range=50, value=20, frameColor=(0.05,
-                                                                                                                          0.35,
-                                                                                                                          0.05,
-                                                                                                                          1), barColor=(0.1,
-                                                                                                                                        0.7,
-                                                                                                                                        0.1,
-                                                                                                                                        1), pos=(0.015,
-                                                                                                                                                 0,
-                                                                                                                                                 0.06), frameSize=(0,
-                                                                                                                                                                   0.25,
-                                                                                                                                                                   0,
-                                                                                                                                                                   0.018), text='%s/%s' % (self.hp, self.maxHp), text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleMicro, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_pos=(0.256,
-                                                                                                                                                                                                                                                                                                                                                                                0,
-                                                                                                                                                                                                                                                                                                                                                                                0.005), textMayChange=1)
+                                                                                  0.004), range=50, value=20,
+                                     frameColor=(0.05,
+                                                 0.35,
+                                                 0.05,
+                                                 1), barColor=(0.1,
+                                                               0.7,
+                                                               0.1,
+                                                               1), pos=(0.015,
+                                                                        0,
+                                                                        0.06), frameSize=(0,
+                                                                                          0.25,
+                                                                                          0,
+                                                                                          0.018),
+                                     text='%s/%s' % (self.hp, self.maxHp), text_align=TextNode.ALeft,
+                                     text_scale=PiratesGuiGlobals.TextScaleMicro, text_fg=PiratesGuiGlobals.TextFG2,
+                                     text_shadow=PiratesGuiGlobals.TextShadow, text_pos=(0.256,
+                                                                                         0,
+                                                                                         0.005), textMayChange=1)
         return
 
     def destroy(self):
@@ -68,18 +71,18 @@ class AvatarInfoButton(GuiButton):
                 name = '%s\x02  %s\x01smallCaps\x01%s%s\x02\x02' % (avatar.getShortName(), color, PLocalizer.Lv, avatar.level)
             except StandardError, e:
                 self.notify.error('updateItem(%s, %s)' % (str(avatar), str(e)))
+
+            self['text'] = name
+            self.hp = avatar.hp
+            self.maxHp = avatar.maxHp
+            self.hpMeter['value'] = self.hp
+            self.hpMeter['range'] = self.maxHp
+            self.hpMeter['text'] = '%s/%s' % (self.hp, self.maxHp)
+            if avatar.getTeam() == base.localAvatar.getTeam():
+                self.setColorScale(Vec4(1, 1, 1, 1))
             else:
-                self['text'] = name
-                self.hp = avatar.hp
-                self.maxHp = avatar.maxHp
-                self.hpMeter['value'] = self.hp
-                self.hpMeter['range'] = self.maxHp
-                self.hpMeter['text'] = '%s/%s' % (self.hp, self.maxHp)
-                if avatar.getTeam() == base.localAvatar.getTeam():
-                    self.setColorScale(Vec4(1, 1, 1, 1))
-                else:
-                    self.setColorScale(Vec4(1.0, 0.7, 0.7, 1.0))
-                self.hpMeter.show()
+                self.setColorScale(Vec4(1.0, 0.7, 0.7, 1.0))
+            self.hpMeter.show()
         else:
             self['text'] = PLocalizer.UnattuneAll
             self.setColorScale(Vec4(1, 1, 1, 1))
@@ -90,7 +93,6 @@ class AvatarInfoButton(GuiButton):
 
 
 class AttuneMenu(DirectFrame):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('AttuneMenu')
     WIDTH = 0.45
     HEIGHT = 0.09
@@ -153,11 +155,10 @@ class AttuneMenu(DirectFrame):
     def select(self, avId):
         if avId < 0:
             pass
+        elif avId == 0:
+            self.unattuneAll()
         else:
-            if avId == 0:
-                self.unattuneAll()
-            else:
-                localAvatar.sendRequestRemoveStickyTargets([avId])
+            localAvatar.sendRequestRemoveStickyTargets([avId])
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
@@ -173,4 +174,4 @@ class AttuneMenu(DirectFrame):
 
     def unattuneAll(self):
         localAvatar.sendRequestRemoveStickyTargets(self.buttons.keys())
-# okay decompiling .\pirates\piratesgui\AttuneMenu.pyc
+

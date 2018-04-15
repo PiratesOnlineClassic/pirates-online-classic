@@ -24,7 +24,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 from WeaponBase import WeaponBase
 
 class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractive):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedWeapon')
 
     def __init__(self, cr):
@@ -43,7 +42,7 @@ class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractiv
     def announceGenerate(self):
         DistributedInteractive.DistributedInteractive.announceGenerate(self)
         WeaponBase.announceGenerate(self)
-        if __dev__ and base.config.GetBool('show-ai-cannon-targets', 0):
+        if __dev__ and base.config.GetBool('show-ai-cannon-targets', False):
             self.tracker = loader.loadModelCopy('models/effects/explosion_sphere')
             self.tracker.reparentTo(render)
             self.tracker.setScale(30)
@@ -52,9 +51,9 @@ class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractiv
         if self.pendingDoMovie:
             base.cr.relatedObjectMgr.abortRequest(self.pendingDoMovie)
             self.pendingDoMovie = None
+
         DistributedInteractive.DistributedInteractive.disable(self)
         WeaponBase.disable(self)
-        return
 
     def delete(self):
         DistributedInteractive.DistributedInteractive.delete(self)
@@ -79,14 +78,15 @@ class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractiv
                 self.startWeapon(av)
             elif mode == WeaponGlobals.WEAPON_MOVIE_STOP:
                 self.stopWeapon(av)
-            else:
-                if mode == WeaponGlobals.WEAPON_MOVIE_CLEAR:
-                    pass
+            elif mode == WeaponGlobals.WEAPON_MOVIE_CLEAR:
+                pass
 
         if self.pendingDoMovie:
             base.cr.relatedObjectMgr.abortRequest(self.pendingDoMovie)
             self.pendingDoMovie = None
-        self.pendingDoMovie = base.cr.relatedObjectMgr.requestObjects([avId], eachCallback=doMovie, timeout=60)
+
+        self.pendingDoMovie = base.cr.relatedObjectMgr.requestObjects([avId],
+            eachCallback=doMovie, timeout=60)
 
     def rejectInteraction(self):
         base.localAvatar.motionFSM.on()

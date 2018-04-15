@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.DaggerProjectile
 import random
 
 from direct.actor import Actor
@@ -25,19 +21,15 @@ class DaggerProjectile(PooledEffect, EffectController):
         self.knifeModel.reparentTo(self.rotDummy)
         self.knifeModel.setY(-0.6)
         self.knifeModel.setR(180)
-        self.motion_color = [
-         Vec4(0.5, 0.6, 0.8, 1.0), Vec4(0.5, 0.6, 0.8, 1.0)]
-        vertex_list = [
-         Vec4(0.0, 1.0, 0.0, 1.0), Vec4(0.0, -1.0, 0.0, 1.0)]
+        self.motion_color = [Vec4(0.5, 0.6, 0.8, 1.0), Vec4(0.5, 0.6, 0.8, 1.0)]
+        vertex_list = [Vec4(0.0, 1.0, 0.0, 1.0), Vec4(0.0, -1.0, 0.0, 1.0)]
         self.motion_trail = PolyTrail.PolyTrail(None, vertex_list, self.motion_color)
         self.motion_trail.reparentTo(self)
-        vertex_list = [
-         Vec4(0.3, 0.0, 0.0, 1.0), Vec4(-0.3, 0.0, 0.0, 1.0)]
+        vertex_list = [Vec4(0.3, 0.0, 0.0, 1.0), Vec4(-0.3, 0.0, 0.0, 1.0)]
         self.motion_trail2 = PolyTrail.PolyTrail(None, vertex_list, self.motion_color)
         self.motion_trail2.reparentTo(self)
         self.motion_trail.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.motion_trail2.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
-        return
 
     def createTrack(self, time, targetPos, motion_color, rate=1):
         throwTrack = LerpPosInterval(self, time, targetPos)
@@ -67,4 +59,3 @@ class DaggerProjectile(PooledEffect, EffectController):
         self.motion_trail2.destroy()
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\DaggerProjectile.pyc

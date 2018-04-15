@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.DualCutlass
 import random
 
 import Weapon
@@ -12,14 +8,12 @@ from pirates.effects import PolyTrail
 from pirates.piratesbase import PLocalizer
 from pirates.uberdog.UberDogGlobals import InventoryType
 
-
 class DualCutlass(Weapon.Weapon):
     __module__ = __name__
     modelTypes = {InventoryType.DualCutlassL1: ('models/handheld/cutlass_rusty_high', Vec4(1, 1, 1, 1))}
     models = {}
     icons = {}
-    vertex_list = [
-     Vec4(0.0, 0.4, 0.0, 1.0), Vec4(0.0, 2.0, 0.0, 1.0), Vec4(-0.55, 2.95, 0.0, 1.0)]
+    vertex_list = [Vec4(0.0, 0.4, 0.0, 1.0), Vec4(0.0, 2.0, 0.0, 1.0), Vec4(-0.55, 2.95, 0.0, 1.0)]
     motion_color = {InventoryType.DualCutlassL1: [Vec4(0.3, 0.4, 0.1, 0.5), Vec4(0.3, 0.3, 0.3, 0.5), Vec4(0.6, 0.6, 0.6, 0.5)]}
     walkAnim = 'dualcutlass_walk'
     runAnim = 'dualcutlass_walk'
@@ -43,7 +37,6 @@ class DualCutlass(Weapon.Weapon):
         self.removeTrail()
         Weapon.Weapon.delete(self)
         self.leftHandWeaponNP.removeNode()
-        return
 
     def getDrawIval(self, av, ammoSkillId=0, blendInT=0.1, blendOutT=0):
         track = Parallel(Func(base.playSfx, self.drawSfx, node=av), av.actorInterval('dualcutlass_draw', playRate=1, blendInT=blendInT, blendOutT=blendOutT), Sequence(Wait(0.187), Func(self.attachTo, av)))
@@ -84,7 +77,6 @@ class DualCutlass(Weapon.Weapon):
         if self.motion_trail:
             self.motion_trail.destroy()
             self.motion_trail = None
-        return
 
     def hideSpinBlur(self):
         if self.spinBlur:
@@ -106,13 +98,10 @@ class DualCutlass(Weapon.Weapon):
 
     @classmethod
     def setupSounds(cls):
-        DualCutlass.hitSfxs = (
-         loader.loadSfx('audio/sword-clashNclang.mp3'), loader.loadSfx('audio/sword-swipeNclang1.mp3'), loader.loadSfx('audio/sword-swipeNclang2.mp3'), loader.loadSfx('audio/sword-swipeNclang3.mp3'))
-        DualCutlass.missSfxs = (
-         loader.loadSfx('audio/sword-swoosh1.mp3'), loader.loadSfx('audio/sword-swoosh2.mp3'))
+        DualCutlass.hitSfxs = (loader.loadSfx('audio/sword-clashNclang.mp3'), loader.loadSfx('audio/sword-swipeNclang1.mp3'), loader.loadSfx('audio/sword-swipeNclang2.mp3'), loader.loadSfx('audio/sword-swipeNclang3.mp3'))
+        DualCutlass.missSfxs = (loader.loadSfx('audio/sword-swoosh1.mp3'), loader.loadSfx('audio/sword-swoosh2.mp3'))
         DualCutlass.drawSfx = loader.loadSfx('audio/sfx_cutlass_draw.mp3')
         DualCutlass.returnSfx = loader.loadSfx('audio/sfx_cutlass_sheathe.mp3')
-
 
 def getHitSfx():
     return DualCutlass.hitSfxs
@@ -120,4 +109,3 @@ def getHitSfx():
 
 def getMissSfx():
     return DualCutlass.missSfxs
-# okay decompiling .\pirates\battle\DualCutlass.pyc

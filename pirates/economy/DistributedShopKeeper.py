@@ -5,8 +5,7 @@ from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
 from otp.uberdog.RejectCode import RejectCode
 from pirates.distributed import InteractGlobals
-from pirates.economy import (AccessoriesStoreGUI, BarberStoreGUI, EconomyGlobals, JewelryStoreGUI, MusicianGUI,
-                             ShipStoreGUI, StoreGUI, TattooStoreGUI)
+from pirates.economy import (AccessoriesStoreGUI, BarberStoreGUI, EconomyGlobals, JewelryStoreGUI, MusicianGUI, ShipStoreGUI, StoreGUI, TattooStoreGUI)
 from pirates.economy.EconomyGlobals import *
 from pirates.leveleditor import NPCList
 from pirates.makeapirate import ClothingGlobals
@@ -259,17 +258,17 @@ class DistributedShopKeeper:
     def sendRequestAccessoriesList(self, avId=None):
         if avId is None:
             avId = localAvatar.getDoId()
-            self.sendUpdate('requestAccessoriesList', [avId])
+        self.sendUpdate('requestAccessoriesList', [avId])
 
     def sendRequestTattooList(self, avId=None):
         if avId is None:
             avId = localAvatar.getDoId()
-            self.sendUpdate('requestTattooList', [avId])
+        self.sendUpdate('requestTattooList', [avId])
 
     def sendRequestJewelryList(self, avId=None):
         if avId is None:
             avId = localAvatar.getDoId()
-            self.sendUpdate('requestJewelryList', [avId])
+        self.sendUpdate('requestJewelryList', [avId])
 
     def responseClothingList(self, avId, accessories):
         if self.storeMenuGUI and accessories:
@@ -382,7 +381,6 @@ class DistributedShopKeeper:
             if inv:
                 for shipId in inv.getShipDoIdList():
                     self.pickShipGUI.addOwnShip(shipId, self.confirmSellShip)
-
             else:
                 self.finishShopping()
 

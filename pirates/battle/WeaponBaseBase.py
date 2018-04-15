@@ -5,7 +5,6 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals, TeamUtils
 
 class WeaponBaseBase:
-    __module__ = __name__
     areaCollisionsCreated = 0
     areaCollSphere = None
     areaCollTube = None
@@ -67,8 +66,10 @@ class WeaponBaseBase:
     def __init__(self, avatar, repository):
         self.repository = repository
         self.avatar = avatar
-        if not hasattr(self.avatar, 'aimTubeNodePaths'):
-            self.avatar.aimTubeNodePaths = []
+
+        if self.avatar:
+            if not hasattr(self.avatar, 'aimTubeNodePaths'):
+                self.avatar.aimTubeNodePaths = []
 
     def delete(self):
         self.repository = None
@@ -122,14 +123,15 @@ class WeaponBaseBase:
             self.runTubeAreaCollisions(skillId, ammoSkillId, target, pos)
         elif areaShape == WeaponGlobals.AREA_CONE:
             self.runConeAreaCollisions(skillId, ammoSkillId, target, pos)
-        else:
-            if areaShape == WeaponGlobals.AREA_OFF:
-                return targets
+        elif areaShape == WeaponGlobals.AREA_OFF:
+            return targets
         numEntries = self.areaCollQueue.getNumEntries()
         if numEntries == 0:
             return targets
+
         if numEntries > WeaponGlobals.MAX_AREA_TARGETS:
             numEntries = WeaponGlobals.MAX_AREA_TARGETS
+
         avTeam = self.avatar.getTeam()
         for i in range(numEntries):
             entry = self.areaCollQueue.getEntry(i)
@@ -137,26 +139,32 @@ class WeaponBaseBase:
             if potentialTargetColl in self.avatar.aimTubeNodePaths:
                 potentialTarget = self.avatar
             else:
-                potentialTarget = self.repository.targetMgr.getObjectFromNodepath(potentialTargetColl)
+                potentialTarget = self.repository.targetMgr.getObjectFromNodepath(
+                    potentialTargetColl)
+
             if potentialTarget:
                 potentialTargetId = potentialTarget.getDoId()
                 if potentialTargetId == target.getDoId():
                     continue
+
                 if potentialTargetId in targets:
                     continue
+
                 if not TeamUtils.damageAllowed(potentialTarget, self.avatar):
                     if attackerId and potentialTargetId == attackerId:
                         if not WeaponGlobals.isAttackAreaSelfDamaging(skillId, ammoSkillId):
                             continue
                     else:
                         continue
+
                 if potentialTarget.gameFSM.state == 'Death':
                     continue
+
                 if not self.repository.battleMgr.obeysPirateCode(self.avatar, potentialTarget):
                     continue
+
                 targets.append(potentialTargetId)
             else:
                 continue
 
-        print 'getting area list of %s' % targets
         return targets

@@ -11,9 +11,20 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         self.inventories = {}
         self.inventoryTasks = {}
+        
+    def announceGenerate(self):
+        DistributedObjectGlobalAI.announceGenerate(self)
+        
+        self.air.netMessenger.accept('hasInventory', self, self.sendHasInventory)
+        self.air.netMessenger.accept('addInventory', self, self.addInventory)
+        self.air.netMessenger.accept('removeInventory', self, self.removeInventory)
+        self.air.netMessenger.accept('getInventory', self, self.sendGetInventory)
 
     def hasInventory(self, inventoryId):
         return inventoryId in self.inventories
+        
+    def sendHasInventory(self, inventoryId, callback):
+        self.air.netMessenger.send('hasInventoryResponse', [callback, self.hasInventory(inventoryId)])
 
     def addInventory(self, inventory):
         if self.hasInventory(inventory.doId):
@@ -32,11 +43,13 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
     def getInventory(self, avatarId):
         for inventory in self.inventories.values():
-
             if inventory.getOwnerId() == avatarId:
                 return inventory
 
         return None
+        
+    def sendGetInventory(self, avatarId, callback):
+        self.air.netMessenger.send('getInventoryResponse', [callback, self.getInventory(avatarId)])
 
     def requestInventory(self):
         avatarId = self.air.getAvatarIdFromSender()
@@ -124,6 +137,12 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         self.air.dbInterface.queryObject(self.air.dbId, inventoryId, callback=inventoryResponse, dclass=\
             self.air.dclassesByName['DistributedInventoryAI'])
+            
+    def proccessCallbackResponse(self, callback, *args, **kwargs):
+        if callback and callable(callback):
+            callback(*args, **kwargs)
+            return
+        self.notify.warning("No valid callback for a callback response! What was the purpose of that?")
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def maxOutSkillPoints():
@@ -144,3 +163,49 @@ def maxOutSkillPoints():
         return "Maxed out Skill Points!"
 
     return "Failed to max out Skill Points!"
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def maxWeapons():
+    invoker = spellbook.getInvoker()
+    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    if inventory:
+        # There is a rank higher, but i don't think it was even a thing in-game back then,
+        # Because i've heard alot about pirate blade being the best. Which is L5.
+        # So i think L5 was the highest available to the player at the time.
+        ## Some nice ol grammar better put together while this comment has bad grammar fix ~ Dan.
+        inventory.b_setStack(InventoryType.CutlassWeaponL5, 1)
+        inventory.b_setStack(InventoryType.PistolWeaponL5, 1)
+        inventory.b_setStack(InventoryType.BayonetWeaponL3, 0)
+        inventory.b_setStack(InventoryType.MusketWeaponL3, 0)
+        inventory.b_setStack(InventoryType.DollWeaponL5, 1)
+        inventory.b_setStack(InventoryType.DaggerWeaponL5, 1)
+        inventory.b_setStack(InventoryType.GrenadeWeaponL5, 1)
+        inventory.b_setStack(InventoryType.WandWeaponL5, 1)
+        
+        inventory.b_setStack(InventoryType.AmmoAsp, 99)
+        inventory.b_setStack(InventoryType.AmmoAdder, 99)
+        inventory.b_setStack(InventoryType.AmmoSidewinder, 99)
+        inventory.b_setStack(InventoryType.AmmoViperNest, 99)
+        
+        inventory.b_setStack(InventoryType.AmmoLeadShot, 99)
+        inventory.b_setStack(InventoryType.AmmoVenomShot, 99)
+        inventory.b_setStack(InventoryType.AmmoBaneShot, 99)
+        inventory.b_setStack(InventoryType.AmmoHexEaterShot, 99)
+        inventory.b_setStack(InventoryType.AmmoSilverShot, 99)
+        inventory.b_setStack(InventoryType.AmmoSteelShot, 99)
+        
+        inventory.b_setStack(InventoryType.AmmoScatterShot, 99)
+        inventory.b_setStack(InventoryType.AmmoCursedShot, 99)
+        inventory.b_setStack(InventoryType.AmmoCoalfireShot, 99)
+        inventory.b_setStack(InventoryType.AmmoHeavySlug, 99)
+        inventory.b_setStack(InventoryType.AmmoExploderShot, 99)
+        
+        inventory.b_setStack(InventoryType.AmmoGrenadeExplosion, 99)
+        inventory.b_setStack(InventoryType.AmmoGrenadeShockBomb, 99)
+        inventory.b_setStack(InventoryType.AmmoGrenadeFlame, 99)
+        inventory.b_setStack(InventoryType.AmmoGrenadeSmoke, 99)
+        inventory.b_setStack(InventoryType.AmmoGrenadeLandMine, 99)
+        inventory.b_setStack(InventoryType.AmmoGrenadeSiege, 99)
+        return "Maxed weapons to Rank 5!"
+
+    return "Failed to max Weapons"

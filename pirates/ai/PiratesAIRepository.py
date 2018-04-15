@@ -20,6 +20,7 @@ from pirates.distributed.TargetManagerAI import TargetManagerAI
 from pirates.battle.DistributedEnemySpawnerAI import DistributedEnemySpawnerAI
 from pirates.trades.TradeManagerAI import TradeManagerAI
 from pirates.world.WorldCreatorAI import WorldCreatorAI
+from pirates.battle.BattleManagerAI import BattleManagerAI
 
 class PiratesAIRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesAIRepository')
@@ -41,7 +42,9 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.distributedDistrict = PiratesDistrictAI(self)
         self.distributedDistrict.setName(self.districtName)
         self.distributedDistrict.setMainWorld(WorldGlobals.PiratesWorldSceneFile)
-        self.distributedDistrict.generateWithRequiredAndId(self.districtId, self.getGameDoId(), 2)
+        self.distributedDistrict.generateWithRequiredAndId(self.districtId,
+            self.getGameDoId(), 2)
+
         self.setAI(self.districtId, self.ourChannel)
 
         self.createGlobals()
@@ -105,8 +108,11 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.targetMgr = TargetManagerAI(self)
         self.targetMgr.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
-        self.spawner = DistributedEnemySpawnerAI(self)
-        self.spawner.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+        self.enemySpawner = DistributedEnemySpawnerAI(self)
+        self.enemySpawner.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+
+        self.battleMgr = BattleManagerAI(self)
+        self.battleMgr.startup()
 
         self.inventoryManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')
 

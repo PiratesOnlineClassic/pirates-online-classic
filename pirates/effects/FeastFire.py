@@ -31,7 +31,6 @@ class FeastFire(NodePath):
             self._smoke.reparentTo(self)
         if self._feastSmoke:
             self._feastSmoke.reparentTo(self)
-        return
 
     def setCustomSettings(self):
         if self._fire:
@@ -83,7 +82,6 @@ class FeastFire(NodePath):
         if self.fireSfxIval:
             self.fireSfxIval.finish()
             self.fireSfxIval = None
-        return
 
     def startFarEffects(self):
         if self._feastSmoke:
@@ -107,7 +105,6 @@ class FeastFire(NodePath):
         if self.fireSfxIval:
             self.fireSfxIval.finish()
             self.fireSfxIval = None
-        return
 
     def destroy(self):
         if self._fire:
@@ -129,5 +126,3 @@ class FeastFire(NodePath):
         del self._smoke
         del self._feastSmoke
         del self.fireSfx
-        return
-# okay decompiling FeastFire.pyc

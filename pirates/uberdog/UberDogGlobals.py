@@ -1,12 +1,11 @@
+
 class CrewStatus:
-    __module__ = __name__
     ADMIRAL = 1
     CAPTAIN = 2
     MEMBER = 3
 
 
 class GuildStatus:
-    __module__ = __name__
     INVITED = -2
     APPLICANT = -1
     NOT_IN_GUILD = 0
@@ -15,7 +14,6 @@ class GuildStatus:
 
 
 class GiftOrigin:
-    __module__ = __name__
     _BEGIN_VALUE = 0
     MAGIC_WORD = 0
     COMBAT = 1
@@ -39,7 +37,6 @@ class GiftOrigin:
 
 
 class TradeStatus:
-    __module__ = __name__
     ACTIVE = 1
     APPROVED = 2
     DISAPPROVED = 3
@@ -47,7 +44,6 @@ class TradeStatus:
 
 
 class InventoryCategory:
-    __module__ = __name__
     _BEGIN_CATEGORY = 0
     BAD_CATEGORY = 0
     MONEY = 1000
@@ -110,7 +106,6 @@ class InventoryCategory:
 
 
 class InventoryType:
-    __module__ = __name__
     begin_Money = 10000
     GoldInPocket = 10000
     GoldWagered = 10001
@@ -192,8 +187,7 @@ class InventoryType:
     Potion5 = 11204
     ShipRepairKit = 11205
     end_Consumables = ShipRepairKit + 1
-    Potions = (
-     Potion1, Potion2, Potion3, Potion4, Potion5)
+    Potions = (Potion1, Potion2, Potion3, Potion4, Potion5)
     begin_MaxPlayerAttribute = 11400
     Hp = 11400
     Mojo = 11401
@@ -356,12 +350,9 @@ class InventoryType:
     BayonetRush = 13102
     BayonetBash = 13103
     end_WeaponSkillBayonet = BayonetBash + 1
-    BackstabSkills = (
-     DaggerCut, DaggerSwipe, DaggerGouge, DaggerEviscerate)
-    StartingSkills = [
-     CutlassHack, CutlassSlash, SailBroadsideLeft, SailBroadsideRight, DaggerCut, DaggerSwipe, StaffBlast, StaffSoulFlay, GrenadeThrow, GrenadeExplosion, PistolShoot, PistolLeadShot, DollAttune, DollPoke, CannonShoot, CannonRoundShot]
-    DontResetSkills = [
-     SailPowerRecharge, CannonGrappleHook]
+    BackstabSkills = (DaggerCut, DaggerSwipe, DaggerGouge, DaggerEviscerate)
+    StartingSkills = [CutlassHack, CutlassSlash, SailBroadsideLeft, SailBroadsideRight, DaggerCut, DaggerSwipe, StaffBlast, StaffSoulFlay, GrenadeThrow, GrenadeExplosion, PistolShoot, PistolLeadShot, DollAttune, DollPoke, CannonShoot, CannonRoundShot]
+    DontResetSkills = [SailPowerRecharge, CannonGrappleHook]
     begin_NumRespec = 13200
     NumRespecCutlass = 13200
     NumRespecPistol = 13201
@@ -784,7 +775,6 @@ def getNumRespecType(weaponRep):
 
 
 class InventoryId:
-    __module__ = __name__
     CATEGORY = 1
     BOOLEAN = 2
     STACK = 4

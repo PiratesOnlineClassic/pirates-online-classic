@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 from panda3d.core import *
 from panda3d.physics import *
+=======
+import random
+
+from direct.actor import Actor
+>>>>>>> 148232e94907fe4f7c75a22a32f06d27124ec563
 from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
 from direct.particles import ParticleEffect
@@ -7,8 +13,11 @@ from direct.particles import Particles
 from direct.particles import ForceGroup
 from pirates.piratesgui.GameOptions import Options
 from PooledEffect import PooledEffect
+<<<<<<< HEAD
 from EffectController import EffectController
 import random
+=======
+>>>>>>> 148232e94907fe4f7c75a22a32f06d27124ec563
 
 class Fire(PooledEffect, EffectController):
     cardScale = 64.0
@@ -34,8 +43,7 @@ class Fire(PooledEffect, EffectController):
         self.effectScale = 1.0
         self.f = ParticleEffect.ParticleEffect('Fire')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1')
-        self.p0.setPoolSize(96)
+        self.p0 = Particles.Particles('particles-1', 96)
         self.p0.setBirthRate(0.01)
         self.p0.setLitterSize(4)
         self.p0.setFactory('ZSpinParticleFactory')

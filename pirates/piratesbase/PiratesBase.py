@@ -16,14 +16,14 @@ from otp.otpbase.OTPBase import OTPBase
 from otp.otpgui import OTPDialog
 from pandac.PandaModules import *
 from pirates.launcher import PiratesDownloadWatcher
-from pirates.piratesbase import (MusicManager, PiratesAmbientManager,
-                                 PLocalizer, UserFunnel)
+from pirates.piratesbase import (MusicManager, PiratesAmbientManager, PLocalizer, UserFunnel)
 from pirates.piratesgui import PDialog, PiratesGuiGlobals, ScreenshotViewer
 from pirates.piratesgui.GameOptions import Options
 from pirates.shipparts import TextureFlattenManager
 from otp.nametag.ChatBalloon import ChatBalloon
 from otp.nametag import NametagGlobals
 from otp.margins.MarginManager import MarginManager
+from otp.ai.MagicWordGlobal import *
 
 try:
     import embedded
@@ -75,12 +75,11 @@ class PiratesBase(OTPBase):
                        use_recommended_options = True
             elif options.state == Options.WORKING_STATE:
                 options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
+            elif options.state == Options.ATTEMPT_WORKING_STATE:
+                options.config_to_options()
+                use_recommended_options = True
             else:
-                if options.state == Options.ATTEMPT_WORKING_STATE:
-                    options.config_to_options()
-                    use_recommended_options = True
-                else:
-                    options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
+                options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
             string = options.pipeOptionsToPrcData()
             if string:
                 loadPrcFileData('game_options', string)
@@ -795,3 +794,8 @@ class PiratesBase(OTPBase):
 
     def getHoliday(self, holidayId):
         return self.holidays.get(holidayId)
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def analyze():
+    render.analyze()
+    return "Analyzed the current scenegraph under render."

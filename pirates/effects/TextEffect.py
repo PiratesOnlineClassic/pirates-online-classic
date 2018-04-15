@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.TextEffect
 import random
 import weakref
 
@@ -25,29 +21,24 @@ def genText(value, type, modType=MOD_TYPE_MULTIPLE, modifiers={}):
     if value < 0:
         finalText = '%s'
         baseVal = value
+    elif type == 4:
+        finalText = '+%s ' + PLocalizer.EXP
+        baseVal = value
+    elif type == 5:
+        finalText = PLocalizer.ChatPanelQuestCompletedMsg + '\n +%s ' + PLocalizer.EXP
+        baseVal = value
+    elif type == 7:
+        finalText = '+%s ' + PLocalizer.PVPInfamySea
+        baseVal = value
+    elif type == 8:
+        finalText = '+%s ' + PLocalizer.PVPInfamyLand
+        baseVal = value
+    elif type == 9:
+        finalText = '+%s ' + PLocalizer.PVPSalvage
+        baseVal = value
     else:
-        if type == 4:
-            finalText = '+%s ' + PLocalizer.EXP
-            baseVal = value
-        else:
-            if type == 5:
-                finalText = PLocalizer.ChatPanelQuestCompletedMsg + '\n +%s ' + PLocalizer.EXP
-                baseVal = value
-            else:
-                if type == 7:
-                    finalText = '+%s ' + PLocalizer.PVPInfamySea
-                    baseVal = value
-                else:
-                    if type == 8:
-                        finalText = '+%s ' + PLocalizer.PVPInfamyLand
-                        baseVal = value
-                    else:
-                        if type == 9:
-                            finalText = '+%s ' + PLocalizer.PVPSalvage
-                            baseVal = value
-                        else:
-                            finalText = '+%s'
-                            baseVal = value
+        finalText = '+%s'
+        baseVal = value
     mods = []
     basicPenalty = 0
     crewBonus = 0
@@ -74,9 +65,7 @@ def genText(value, type, modType=MOD_TYPE_MULTIPLE, modifiers={}):
         mods.append(TextEffect.TextEffectMod(0, doubleXPBonus, PLocalizer.DoubleRepBonus, modType))
     if holidayBonus > 0:
         mods.append(TextEffect.TextEffectMod(0, holidayBonus, PLocalizer.HolidayBonus, modType))
-    return (
-     finalText, baseVal, mods)
-
+    return (finalText, baseVal, mods)
 
 def genColor(number, type, npc):
     if type == 1:
@@ -84,79 +73,69 @@ def genColor(number, type, npc):
         g = 1.0
         b = 0
         a = 1
-    else:
-        if type == 2:
-            r = 1.0
-            g = 0.5
-            b = 0
+    elif type == 2:
+        r = 1.0
+        g = 0.5
+        b = 0
+        a = 1
+    elif type == 3:
+        if npc:
+            r = 0.3
+            g = 0.0
+            b = 1.0
             a = 1
         else:
-            if type == 3:
-                if npc:
-                    r = 0.3
-                    g = 0.0
-                    b = 1.0
-                    a = 1
-                else:
-                    r = 0.5
-                    g = 0.0
-                    b = 1.0
-                    a = 1
-            else:
-                if type == 4:
-                    r = 1.0
-                    g = 1.0
-                    b = 1.0
-                    a = 1
-                else:
-                    if type == 5:
-                        r = 0.8
-                        g = 1.0
-                        b = 0.8
-                        a = 1
-                    else:
-                        if type == 7:
-                            r = 0.8
-                            g = 0.2
-                            b = 0.0
-                            a = 1
-                        else:
-                            if type == 8:
-                                r = 1.0
-                                g = 0.4
-                                b = 0.1
-                                a = 1
-                            else:
-                                if type == 9:
-                                    r = 0.0
-                                    g = 0.9
-                                    b = 0.0
-                                    a = 1
-                                else:
-                                    if number < 0:
-                                        if npc:
-                                            r = 0.9
-                                            g = 0.1
-                                            b = 0.1
-                                            a = 1
-                                        else:
-                                            r = 0.9
-                                            g = 0.3
-                                            b = 0.1
-                                            a = 1
-                                    else:
-                                        if npc:
-                                            r = 0
-                                            g = 0.9
-                                            b = 0
-                                            a = 1
-                                        else:
-                                            r = 0.1
-                                            g = 0.9
-                                            b = 0.2
-                                            a = 1
-    return (
-     r, g, b, a)
+            r = 0.5
+            g = 0.0
+            b = 1.0
+            a = 1
+    elif type == 4:
+        r = 1.0
+        g = 1.0
+        b = 1.0
+        a = 1
+    elif type == 5:
+        r = 0.8
+        g = 1.0
+        b = 0.8
+        a = 1
+    elif type == 7:
+        r = 0.8
+        g = 0.2
+        b = 0.0
+        a = 1
+    elif type == 8:
+        r = 1.0
+        g = 0.4
+        b = 0.1
+        a = 1
+    elif type == 9:
+        r = 0.0
+        g = 0.9
+        b = 0.0
+        a = 1
+    elif number < 0:
+        if npc:
+            r = 0.9
+            g = 0.1
+            b = 0.1
+            a = 1
+        else:
+            r = 0.9
+            g = 0.3
+            b = 0.1
+            a = 1
+    elif npc:
+        r = 0
+        g = 0.9
+        b = 0
+        a = 1
+    else:
+        r = 0.1
+        g = 0.9
+        b = 0.2
+        a = 1
+    return (r, g, b, a)
 
 
 class TextEffect:
@@ -192,7 +171,6 @@ class TextEffect:
         self.hpText = None
         self.start()
         self.finishCallbackRef = weakref.ref(finishCallback)
-        return
 
     def genTextNode(self, parent, satellite=False):
         if satellite == False and self.hpText:
@@ -347,7 +325,6 @@ class TextEffect:
             finishCallback = self.finishCallbackRef()
             if finishCallback:
                 finishCallback()
-        return
 
 
 def genTextEffect(targetObj, textGenerator, number, bonus, isNpc, cleanupCallback, startPos, destPos=None, scale=1.0, modifiers={}):
@@ -360,4 +337,3 @@ def genTextEffect(targetObj, textGenerator, number, bonus, isNpc, cleanupCallbac
     color = genColor(number, bonus, isNpc)
     newEffect = TextEffect(textGenerator, bonus, targetObj, scale, startPos, duration, text, baseVal, mods, cleanupCallback, destPos, color)
     return newEffect
-# okay decompiling .\pirates\effects\TextEffect.pyc

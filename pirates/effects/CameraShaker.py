@@ -1,12 +1,7 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.CameraShaker
 import random
 
 from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
-
 
 class CameraShaker(NodePath):
     __module__ = __name__
@@ -37,7 +32,6 @@ class CameraShaker(NodePath):
     @staticmethod
     def clearTutorialInteriorScale():
         CameraShaker.TutorialInteriorScale = None
-        return
 
     def play(self, radius=10.0):
         if base.cam.getDistance(self.shakerNode) <= radius:
@@ -51,9 +45,8 @@ class CameraShaker(NodePath):
         power = self.shakePower
         if CameraShaker.CutsceneScale is not None:
             power *= CameraShaker.CutsceneScale
-        else:
-            if CameraShaker.TutorialInteriorScale is not None:
-                power *= CameraShaker.TutorialInteriorScale
+        elif CameraShaker.TutorialInteriorScale is not None:
+            power *= CameraShaker.TutorialInteriorScale
         cameraRock1 = base.cam.hprInterval(self.shakeSpeed, Point3(power, power, 0), startHpr=Point3(0, 0, 0), blendType='easeInOut')
         cameraRock2 = base.cam.hprInterval(self.shakeSpeed, Point3(-power, -power, 0), startHpr=Point3(power, power, 0), blendType='easeInOut')
         cameraRock3 = base.cam.hprInterval(self.shakeSpeed, Point3(power, power, 0), startHpr=Point3(-power, -power, 0), blendType='easeInOut')
@@ -66,18 +59,14 @@ class CameraShaker(NodePath):
         self.track.append(cameraRock4)
         self.track.append(Func(self.destroy))
         self.track.start()
-        return
 
     def finish(self):
         if self.track:
             self.track.pause()
             self.track = None
-        return
 
     def destroy(self):
         if self.track:
             self.track.finish()
             self.track = None
         self.removeNode()
-        return
-# okay decompiling .\pirates\effects\CameraShaker.pyc

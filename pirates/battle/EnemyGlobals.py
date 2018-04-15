@@ -1,11 +1,7 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.EnemyGlobals
 import copy
 import random
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import WeaponGlobals
 from pirates.battle.EnemySkills import *
 from pirates.pirate import AvatarTypes
@@ -226,18 +222,14 @@ def getEnemyScaleByType(avatarType, level, scaleMultiplier=1):
     humanScale = 1.0 * scaleMultiplier
     if avatarType.isA(AvatarTypes.Navy):
         return humanScale
+    elif avatarType.isA(AvatarTypes.Townfolk):
+        return humanScale
+    elif avatarType.isA(AvatarTypes.Pirate):
+        return humanScale
+    elif avatarType.isA(AvatarTypes.TradingCo):
+        return humanScale
     else:
-        if avatarType.isA(AvatarTypes.Townfolk):
-            return humanScale
-        else:
-            if avatarType.isA(AvatarTypes.Pirate):
-                return humanScale
-            else:
-                if avatarType.isA(AvatarTypes.TradingCo):
-                    return humanScale
-                else:
-                    return float(baseStats[SCALE_INDEX] * (modifier + (scaleMultiplier - 1)))
-    return
+        return float(baseStats[SCALE_INDEX] * (modifier + (scaleMultiplier - 1)))
 
 
 def getRandomEncounter(level):
@@ -356,64 +348,48 @@ def getNametagColor(avatarType):
 def getShipNametagColor(team):
     if team == PiratesGlobals.UNDEAD_TEAM:
         return Vec4(0.8, 0.7, 0.5, 1)
-    else:
-        if team == PiratesGlobals.NAVY_TEAM:
-            return Vec4(1, 0, 0, 1)
-        else:
-            if team == PiratesGlobals.TRADING_CO_TEAM:
-                return Vec4(0.5, 0.5, 0.5, 1)
-            else:
-                if team == PiratesGlobals.VILLAGER_TEAM:
-                    return Vec4(0.5, 1, 0.5, 1)
-                else:
-                    if team == PiratesGlobals.PLAYER_TEAM:
-                        return Vec4(0.8, 0.7, 0.5, 1)
-                    else:
-                        if team == PiratesGlobals.FRENCH_UNDEAD_TEAM:
-                            return Vec4(0.8, 0.7, 0.5, 1)
-                        else:
-                            if team == PiratesGlobals.SPANISH_UNDEAD_TEAM:
-                                return Vec4(0.8, 0.7, 0.5, 1)
+    elif team == PiratesGlobals.NAVY_TEAM:
+        return Vec4(1, 0, 0, 1)
+    elif team == PiratesGlobals.TRADING_CO_TEAM:
+        return Vec4(0.5, 0.5, 0.5, 1)
+    elif team == PiratesGlobals.VILLAGER_TEAM:
+        return Vec4(0.5, 1, 0.5, 1)
+    elif team == PiratesGlobals.PLAYER_TEAM:
+        return Vec4(0.8, 0.7, 0.5, 1)
+    elif team == PiratesGlobals.FRENCH_UNDEAD_TEAM:
+        return Vec4(0.8, 0.7, 0.5, 1)
+    elif team == PiratesGlobals.SPANISH_UNDEAD_TEAM:
+        return Vec4(0.8, 0.7, 0.5, 1)
 
 
 def getTeamIconModelPath(team):
     if team == PiratesGlobals.UNDEAD_TEAM:
         return '**/flag_undead'
+    elif team == PiratesGlobals.NAVY_TEAM:
+        return '**/flag_navy'
+    elif team == PiratesGlobals.TRADING_CO_TEAM:
+        return '**/flag_eitc'
+    elif team == PiratesGlobals.FRENCH_UNDEAD_TEAM:
+        return '**/flag_undead'
+    elif team == PiratesGlobals.SPANISH_UNDEAD_TEAM:
+        return '**/flag_undead'
     else:
-        if team == PiratesGlobals.NAVY_TEAM:
-            return '**/flag_navy'
-        else:
-            if team == PiratesGlobals.TRADING_CO_TEAM:
-                return '**/flag_eitc'
-            else:
-                if team == PiratesGlobals.FRENCH_UNDEAD_TEAM:
-                    return '**/flag_undead'
-                else:
-                    if team == PiratesGlobals.SPANISH_UNDEAD_TEAM:
-                        return '**/flag_undead'
-                    else:
-                        return
-    return
+        return
 
 
 def getFlagshipIconModelPath(team):
     if team == PiratesGlobals.UNDEAD_TEAM:
         return 'models/gui/flagship_undead'
+    elif team == PiratesGlobals.NAVY_TEAM:
+        return 'models/gui/flagship_navy'
+    elif team == PiratesGlobals.TRADING_CO_TEAM:
+        return 'models/gui/flagship_eitc'
+    elif team == PiratesGlobals.FRENCH_UNDEAD_TEAM:
+        return 'models/gui/flagship_undead'
+    elif team == PiratesGlobals.SPANISH_UNDEAD_TEAM:
+        return 'models/gui/flagship_undead'
     else:
-        if team == PiratesGlobals.NAVY_TEAM:
-            return 'models/gui/flagship_navy'
-        else:
-            if team == PiratesGlobals.TRADING_CO_TEAM:
-                return 'models/gui/flagship_eitc'
-            else:
-                if team == PiratesGlobals.FRENCH_UNDEAD_TEAM:
-                    return 'models/gui/flagship_undead'
-                else:
-                    if team == PiratesGlobals.SPANISH_UNDEAD_TEAM:
-                        return 'models/gui/flagship_undead'
-                    else:
-                        return
-    return
+        return
 
 
 def getRandomNPCByTeam(team, level):
@@ -436,84 +412,70 @@ def getRandomNPCByTeam(team, level):
             return random.choice([AvatarTypes.Officer, AvatarTypes.Veteran])
         else:
             return AvatarTypes.Officer
-    else:
-        if team == PiratesGlobals.TRADING_CO_TEAM:
-            if level < 12:
-                return AvatarTypes.Thug
-            elif level < 15:
-                return random.choice([AvatarTypes.Thug, AvatarTypes.Grunt])
-            elif level < 18:
-                return AvatarTypes.Grunt
-            elif level < 20:
-                return random.choice([AvatarTypes.Thug, AvatarTypes.Hiredgun])
-            elif level < 24:
-                return AvatarTypes.Hiredgun
-            elif level < 27:
-                return random.choice([AvatarTypes.Mercenary, AvatarTypes.Hiredgun])
-            elif level < 30:
-                return AvatarTypes.Mercenary
-            elif level < 32:
-                return random.choice([AvatarTypes.Mercenary, AvatarTypes.Assassin])
-            else:
-                return AvatarTypes.Assassin
+    elif team == PiratesGlobals.TRADING_CO_TEAM:
+        if level < 12:
+            return AvatarTypes.Thug
+        elif level < 15:
+            return random.choice([AvatarTypes.Thug, AvatarTypes.Grunt])
+        elif level < 18:
+            return AvatarTypes.Grunt
+        elif level < 20:
+            return random.choice([AvatarTypes.Thug, AvatarTypes.Hiredgun])
+        elif level < 24:
+            return AvatarTypes.Hiredgun
+        elif level < 27:
+            return random.choice([AvatarTypes.Mercenary, AvatarTypes.Hiredgun])
+        elif level < 30:
+            return AvatarTypes.Mercenary
+        elif level < 32:
+            return random.choice([AvatarTypes.Mercenary, AvatarTypes.Assassin])
         else:
-            if team == PiratesGlobals.FRENCH_UNDEAD_TEAM:
-                if level < 15:
-                    return AvatarTypes.FrenchUndeadA
-                elif level < 20:
-                    return AvatarTypes.FrenchUndeadB
-                elif level < 25:
-                    return AvatarTypes.FrenchUndeadC
-                elif level < 30:
-                    return AvatarTypes.FrenchUndeadD
-            else:
-                if team == PiratesGlobals.SPANISH_UNDEAD_TEAM:
-                    if level < 15:
-                        return AvatarTypes.SpanishUndeadA
-                    elif level < 20:
-                        return AvatarTypes.SpanishUndeadB
-                    elif level < 25:
-                        return AvatarTypes.SpanishUndeadC
-                    elif level < 30:
-                        return AvatarTypes.SpanishUndeadD
-                else:
-                    if level < 3:
-                        return AvatarTypes.Clod
-                    else:
-                        if level < 5:
-                            return random.choice([AvatarTypes.Clod, AvatarTypes.Sludge])
-                        else:
-                            if level < 7:
-                                return random.choice([AvatarTypes.Mire, AvatarTypes.Sludge])
-                            else:
-                                if level < 9:
-                                    return random.choice([AvatarTypes.Muck, AvatarTypes.Sludge])
-                                else:
-                                    if level < 11:
-                                        return AvatarTypes.Muck
-                                    else:
-                                        if level < 13:
-                                            return random.choice([AvatarTypes.Muck, AvatarTypes.Corpse])
-                                        else:
-                                            if level < 16:
-                                                return AvatarTypes.Corpse
-                                            else:
-                                                if level < 19:
-                                                    return random.choice([AvatarTypes.Carrion, AvatarTypes.Corpse])
-                                                else:
-                                                    if level < 22:
-                                                        return AvatarTypes.Carrion
-                                                    else:
-                                                        if level < 25:
-                                                            return random.choice([AvatarTypes.Carrion, AvatarTypes.Cadaver])
-                                                        else:
-                                                            if level < 27:
-                                                                return AvatarTypes.Cadaver
-                                                            else:
-                                                                if level < 30:
-                                                                    return random.choice([AvatarTypes.Cadaver, AvatarTypes.Zombie])
-                                                                else:
-                                                                    return AvatarTypes.Zombie
+            return AvatarTypes.Assassin
+    elif team == PiratesGlobals.FRENCH_UNDEAD_TEAM:
+        if level < 15:
+            return AvatarTypes.FrenchUndeadA
+        elif level < 20:
+            return AvatarTypes.FrenchUndeadB
+        elif level < 25:
+            return AvatarTypes.FrenchUndeadC
+        elif level < 30:
+            return AvatarTypes.FrenchUndeadD
+    elif team == PiratesGlobals.SPANISH_UNDEAD_TEAM:
+        if level < 15:
+            return AvatarTypes.SpanishUndeadA
+        elif level < 20:
+            return AvatarTypes.SpanishUndeadB
+        elif level < 25:
+            return AvatarTypes.SpanishUndeadC
+        elif level < 30:
+            return AvatarTypes.SpanishUndeadD
+    else:
+        if level < 3:
+            return AvatarTypes.Clod
+        elif level < 5:
+            return random.choice([AvatarTypes.Clod, AvatarTypes.Sludge])
+        elif level < 7:
+            return random.choice([AvatarTypes.Mire, AvatarTypes.Sludge])
+        elif level < 9:
+            return random.choice([AvatarTypes.Muck, AvatarTypes.Sludge])
+        elif level < 11:
+            return AvatarTypes.Muck
+        elif level < 13:
+            return random.choice([AvatarTypes.Muck, AvatarTypes.Corpse])
+        elif level < 16:
+            return AvatarTypes.Corpse
+        elif level < 19:
+            return random.choice([AvatarTypes.Carrion, AvatarTypes.Corpse])
+        elif level < 22:
+            return AvatarTypes.Carrion
+        elif level < 25:
+            return random.choice([AvatarTypes.Carrion, AvatarTypes.Cadaver])
+        elif level < 27:
+            return AvatarTypes.Cadaver
+        elif level < 30:
+            return random.choice([AvatarTypes.Cadaver, AvatarTypes.Zombie])
+        else:
+            return AvatarTypes.Zombie
 
 
 def determineAggroInfo(aggroRadius):
@@ -529,4 +491,3 @@ def determineAggroInfo(aggroRadius):
         aggroInfo[1] = INSTANT_AGGRO_RADIUS_DEFAULT
         aggroInfo[0] = AGGRO_MODE_DEFAULT
     return aggroInfo
-# okay decompiling .\pirates\battle\EnemyGlobals.pyc

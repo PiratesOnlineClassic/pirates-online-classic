@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.CaveEffects
 from direct.interval.LerpInterval import LerpScaleInterval
 from direct.interval.MetaInterval import Sequence
 from direct.task import Task
@@ -12,13 +8,10 @@ from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import Water
 from pirates.swamp.Swamp import Swamp
 
-
 class CaveEffects(EnvironmentEffects.EnvironmentEffects):
     __module__ = __name__
-    WaterCaves = [
-     'models/caves/cave_a_', 'models/caves/cave_b_', 'models/caves/cave_barbossa_']
-    LavaCaves = [
-     'models/caves/cave_d_']
+    WaterCaves = ['models/caves/cave_a_', 'models/caves/cave_b_', 'models/caves/cave_barbossa_']
+    LavaCaves = ['models/caves/cave_d_']
 
     def __init__(self, parent, modelPath):
         EnvironmentEffects.EnvironmentEffects.__init__(self, parent, modelPath)
@@ -33,7 +26,6 @@ class CaveEffects(EnvironmentEffects.EnvironmentEffects):
             self.waterfalls = self.parent.find('**/WaterfallMeshGroup')
             if not self.waterfalls.isEmpty():
                 self.waterfalls.setDepthWrite(0)
-        return
 
     def delete(self):
         del self.animActor
@@ -72,20 +64,19 @@ class CaveEffects(EnvironmentEffects.EnvironmentEffects):
                 stairBlock = self.parent.find('**/StairBlock')
                 if not stairBlock.isEmpty():
                     stairBlock.stash()
-            else:
-                if self.modelPrefix in self.LavaCaves:
-                    if base.config.GetBool('want-shaders', 1) and base.win and base.win.getGsg() and base.win.getGsg().getShaderModel() >= GraphicsStateGuardian.SM20:
-                        self.water = Swamp(self.modelPrefix + 'lava', self.parent, reflection, None, None, shader_water_color)
-                        l1 = LerpScaleInterval(self.water.seamodel, 2, Vec3(1.006, 1.006, 1.0), Vec3(1.0, 1.0, 1.0), blendType='easeInOut')
-                        l2 = LerpScaleInterval(self.water.seamodel, 2, Vec3(1.0, 1.0, 1.0), Vec3(1.006, 1.006, 1.0), blendType='easeInOut')
-                        seq = Sequence(l1, l2)
-                        seq.loop()
-                        self.water.reflection_factor = 0.3
-                        self.water.set_reflection_parameters_np()
-                    else:
-                        water = loader.loadModel(self.modelPrefix + 'lava')
-                        water.reparentTo(self.parent)
-                        water.setFogOff()
+            elif self.modelPrefix in self.LavaCaves:
+                if base.config.GetBool('want-shaders', 1) and base.win and base.win.getGsg() and base.win.getGsg().getShaderModel() >= GraphicsStateGuardian.SM20:
+                    self.water = Swamp(self.modelPrefix + 'lava', self.parent, reflection, None, None, shader_water_color)
+                    l1 = LerpScaleInterval(self.water.seamodel, 2, Vec3(1.006, 1.006, 1.0), Vec3(1.0, 1.0, 1.0), blendType='easeInOut')
+                    l2 = LerpScaleInterval(self.water.seamodel, 2, Vec3(1.0, 1.0, 1.0), Vec3(1.006, 1.006, 1.0), blendType='easeInOut')
+                    seq = Sequence(l1, l2)
+                    seq.loop()
+                    self.water.reflection_factor = 0.3
+                    self.water.set_reflection_parameters_np()
+                else:
+                    water = loader.loadModel(self.modelPrefix + 'lava')
+                    water.reparentTo(self.parent)
+                    water.setFogOff()
         base.ambientMgr.requestFadeIn('cave', duration=10, finalVolume=PiratesGlobals.DEFAULT_AMBIENT_VOLUME, priority=1)
         if self.water:
             self.water.supports_sky_only = self.supports_sky_only
@@ -93,7 +84,6 @@ class CaveEffects(EnvironmentEffects.EnvironmentEffects):
             if base.options.reflection >= 1:
                 reflection.reflectShowThroughOnly(False)
                 reflection.enable(True)
-        return
 
     def camTask(self, task):
         if self.reflection:
@@ -113,5 +103,3 @@ class CaveEffects(EnvironmentEffects.EnvironmentEffects):
             self.water = None
         taskMgr.remove('caveEffectsCamTask-' + str(id(self)))
         base.ambientMgr.requestFadeOut('cave', duration=5, priority=1)
-        return
-# okay decompiling .\pirates\effects\CaveEffects.pyc

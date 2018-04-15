@@ -5,6 +5,7 @@ from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from direct.fsm.FSM import FSM
 from pirates.instance.DistributedTeleportZoneAI import DistributedTeleportZoneAI
 from pirates.instance.DistributedTeleportHandlerAI import DistributedTeleportHandlerAI
+from otp.ai.MagicWordGlobal import *
 
 class TeleportFSM(FSM):
 
@@ -157,3 +158,10 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
     def d_teleportHasBegun(self, avatarId, instanceType, fromInstanceType, instanceName, gameType):
         self.sendUpdateToAvatarId(avatarId, 'teleportHasBegun', [instanceType, fromInstanceType, instanceName, gameType])
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
+def areaTeleport(areaUid):
+    simbase.air.teleportMgr.d_initiateTeleport(spellbook.getTarget(),
+        locationUid=areaUid)
+
+    return "Teleporting to area: %s." % areaUid

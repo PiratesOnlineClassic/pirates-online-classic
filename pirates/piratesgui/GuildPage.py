@@ -162,40 +162,38 @@ class GuildPage(SocialPage.SocialPage):
         rank = base.localAvatar.getGuildRank()
         if rank == 1:
             ranktxt = PLocalizer.GuildRankMember
+        elif rank == 2:
+            ranktxt = PLocalizer.GuildRankSubLead
+        elif rank == 3:
+            ranktxt = PLocalizer.GuildRankLeader
         else:
-            if rank == 2:
-                ranktxt = PLocalizer.GuildRankSubLead
-            else:
-                if rank == 3:
-                    ranktxt = PLocalizer.GuildRankLeader
-                else:
-                    ranktxt = None
-                if rank and ranktxt:
-                    self.rankLabel['text'] = ranktxt
-                    self.rankLabel.show()
-                elif self.rankLabel:
-                    ranktxt = PLocalizer.Loading
-                    self.rankLabel.hide()
-                if self.memberButton:
-                    self.memberButton['state'] = DGG.DISABLED
-                self.renameButton['state'] = DGG.DISABLED
-                self.createButton['state'] = DGG.DISABLED
-                self.leaveButton['state'] = DGG.DISABLED
-                self.inviteButton['state'] = DGG.DISABLED
-                self.redeemInvite['state'] = DGG.NORMAL
-                self.codeInviteOptions['state'] = DGG.DISABLED
-                if self.guildRank > 2 and (self.guildReal == '0' or self.guildReal == ''):
-                    self.renameButton['state'] = DGG.NORMAL
-                    self.redeemInvite['state'] = DGG.DISABLED
-                if self.guildRank > 1:
-                    self.inviteButton['state'] = DGG.NORMAL
-                    self.redeemInvite['state'] = DGG.DISABLED
-                    self.codeInviteOptions['state'] = DGG.NORMAL
-                if self.guildRank > 0:
-                    self.leaveButton['state'] = DGG.NORMAL
-                    self.memberButton['state'] = DGG.NORMAL
-                    self.redeemInvite['state'] = DGG.DISABLED
-                self.createButton['state'] = DGG.NORMAL
+            ranktxt = None
+            if rank and ranktxt:
+                self.rankLabel['text'] = ranktxt
+                self.rankLabel.show()
+            elif self.rankLabel:
+                ranktxt = PLocalizer.Loading
+                self.rankLabel.hide()
+            if self.memberButton:
+                self.memberButton['state'] = DGG.DISABLED
+            self.renameButton['state'] = DGG.DISABLED
+            self.createButton['state'] = DGG.DISABLED
+            self.leaveButton['state'] = DGG.DISABLED
+            self.inviteButton['state'] = DGG.DISABLED
+            self.redeemInvite['state'] = DGG.NORMAL
+            self.codeInviteOptions['state'] = DGG.DISABLED
+            if self.guildRank > 2 and (self.guildReal == '0' or self.guildReal == ''):
+                self.renameButton['state'] = DGG.NORMAL
+                self.redeemInvite['state'] = DGG.DISABLED
+            if self.guildRank > 1:
+                self.inviteButton['state'] = DGG.NORMAL
+                self.redeemInvite['state'] = DGG.DISABLED
+                self.codeInviteOptions['state'] = DGG.NORMAL
+            if self.guildRank > 0:
+                self.leaveButton['state'] = DGG.NORMAL
+                self.memberButton['state'] = DGG.NORMAL
+                self.redeemInvite['state'] = DGG.DISABLED
+            self.createButton['state'] = DGG.NORMAL
             if Freebooter.FreeGuildRestrict:
                 if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                     if self.createButton:
@@ -453,10 +451,10 @@ class GuildPage(SocialPage.SocialPage):
                                                                                                           ''))
 
     def requestPermTokenValue(self):
-        pass # TODO base.cr.guildManager.requestPermToken()
+        pass  # TODO base.cr.guildManager.requestPermToken()
 
     def requestNonPermTokenCount(self):
-        pass # TODO base.cr.guildManager.requestNonPermTokenCount()
+        pass  # TODO base.cr.guildManager.requestNonPermTokenCount()
 
     def receivePermTokenValue(self, token):
         if not token:

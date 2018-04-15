@@ -354,7 +354,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         DistributedGameArea.DistributedGameArea.handleChildArrive(self, child, zoneId)
         if child.isLocal():
             self.accept('ship_vis_change', self.shipVisibilityChanged)
-            if base.cr.config.GetBool('remove-island-barriers', False):
+            if base.cr.config.GetBool('want-island-barriers', False):
                 self.setupPlayerBarrier()
             if not base.shipsVisibleFromIsland:
                 self.parentWorld.worldGrid.stopProcessVisibility()

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.PiratesGuiGlobals
 MaxTotalRevealTime = 2.0
 ItemRevealTime = 0.35
 PageFinishWaitTime = 1.0
@@ -40,18 +36,12 @@ TextScaleMed = 0.035
 TextScaleSmall = 0.03
 TextScaleTiny = 0.025
 TextScaleMicro = 0.023
-ButtonColor1 = (
- (0.33, 0.3, 0.26, 0.8), (0.26, 0.24, 0.21, 0.8), (0.49, 0.45, 0.39, 0.8), (0.16, 0.15, 0.13, 0.8))
-ButtonColor2 = (
- (0.26, 0.24, 0.21, 0.8), (0.16, 0.15, 0.13, 0.8), (0.33, 0.3, 0.26, 0.8), (0.08, 0.075, 0.06, 0.8))
-ButtonColor3 = (
- (0.7, 0.1, 0.1, 0.9), (0.8, 0.4, 0.4, 0.9), (0.8, 0.3, 0.3, 0.9), (0.6, 0.2, 0.2, 0.9))
-ButtonColor4 = (
- (0.2, 0.5, 0.2, 0.9), (0.4, 0.6, 0.4, 0.9), (0.3, 0.6, 0.3, 0.9), (0.2, 0.4, 0.2, 0.9))
-ButtonColor5 = (
- (0.58, 0.55, 0.51, 0.8), (0.26, 0.24, 0.21, 0.8), (0.49, 0.45, 0.39, 0.8), (0.16, 0.15, 0.13, 0.8))
-ButtonColor6 = (
- (0.4, 0.95, 0.4, 1.0), (0.6, 1.0, 0.6, 1.0), (0.6, 1.0, 0.6, 1.0), (0.2, 0.5, 0.2, 1.0))
+ButtonColor1 = ((0.33, 0.3, 0.26, 0.8), (0.26, 0.24, 0.21, 0.8), (0.49, 0.45, 0.39, 0.8), (0.16, 0.15, 0.13, 0.8))
+ButtonColor2 = ((0.26, 0.24, 0.21, 0.8), (0.16, 0.15, 0.13, 0.8), (0.33, 0.3, 0.26, 0.8), (0.08, 0.075, 0.06, 0.8))
+ButtonColor3 = ((0.7, 0.1, 0.1, 0.9), (0.8, 0.4, 0.4, 0.9), (0.8, 0.3, 0.3, 0.9), (0.6, 0.2, 0.2, 0.9))
+ButtonColor4 = ((0.2, 0.5, 0.2, 0.9), (0.4, 0.6, 0.4, 0.9), (0.3, 0.6, 0.3, 0.9), (0.2, 0.4, 0.2, 0.9))
+ButtonColor5 = ((0.58, 0.55, 0.51, 0.8), (0.26, 0.24, 0.21, 0.8), (0.49, 0.45, 0.39, 0.8), (0.16, 0.15, 0.13, 0.8))
+ButtonColor6 = ((0.4, 0.95, 0.4, 1.0), (0.6, 1.0, 0.6, 1.0), (0.6, 1.0, 0.6, 1.0), (0.2, 0.5, 0.2, 1.0))
 ImageButtonColor1 = (1, 1, 1, 1)
 ScrollbarColor = (0.1, 0.1, 0.25, 0.9)
 ScrollbarSize = 0.04
@@ -171,4 +161,3 @@ def getDefaultClickSound():
     if defaultClickSound == None:
         defaultClickSound = base.loader.loadSfx('audio/sfx_gui_click_22.mp3')
     return defaultClickSound
-# okay decompiling .\pirates\piratesgui\PiratesGuiGlobals.pyc

@@ -208,4 +208,8 @@ def getHolidayStatusMsg(holidayId):
 
 
 def getHolidayIcon(holidayId):
+<<<<<<< HEAD
     return holidayMessages.get(holidayId)[5]
+=======
+    return holidayMessages.get(holidayId)[5]
+>>>>>>> 148232e94907fe4f7c75a22a32f06d27124ec563

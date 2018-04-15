@@ -1,8 +1,3 @@
-# uncompyle6 version 3.1.0
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.14 (default, Mar  9 2018, 23:57:12) 
-# [GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2)]
-# Embedded file name: pirates.ai.HolidayDates
 import time
 
 class HolidayDates:
@@ -76,4 +71,3 @@ class HolidayDates:
             return time.mktime((date[0], date[1], day + 7, t[1], t[2], t[3], 0, 0, -1))
         if self.holidayType == HolidayDates.TYPE_DAILY:
             return time.mktime((date[0], date[1], date[2] + 1, t[0], t[1], t[2], 0, 0, -1))
-# okay decompiling HolidayDates.pyc

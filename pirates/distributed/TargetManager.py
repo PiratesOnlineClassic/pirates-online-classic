@@ -25,7 +25,7 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         InventoryType.WandRep: 0,
         InventoryType.DollRep: 6}
     RETICLE_POS = Vec3(0, 0, 0.149)
-    
+
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
         TargetManagerBase.TargetManagerBase.__init__(self)
@@ -55,7 +55,7 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
     def delete(self):
         if self.cr.targetMgr == self:
             self.cr.targetMgr = None
-        
+
         self.stopFollowMouse()
         self.stopFollowAim()
         self.aimRayNodePath.removeNode()
@@ -67,14 +67,14 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         self.iRay = None
         DistributedObject.DistributedObject.delete(self)
         TargetManagerBase.TargetManagerBase.delete(self)
-    
+
     def removeTarget(self, nodePathId):
         if not localAvatar.isDisabled():
             target = self.objectDict.get(nodePathId)
             if target:
                 if localAvatar.currentMouseOver == target:
                     localAvatar.currentMouseOver = None
-                
+
                 if localAvatar.currentAimOver == target:
                     localAvatar.currentAimOver = None
                     self.reticle.setColorScale(1, 1, 1, self.reticleAlpha)
@@ -82,12 +82,12 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
                         0])
                     target.hideHpMeter(delay = 1.0)
                     target.hideEnemyTargetInfo()
-                
+
                 if localAvatar.currentSelection == target:
                     localAvatar.currentSelection = None
-        
+
         TargetManagerBase.TargetManagerBase.removeTarget(self, nodePathId)
-    
+
     def takeAim(self, av, skillId=None, ammoSkillId=None):
         self.aimTrav.traverse(render)
         numEntries = self.aimQueue.getNumEntries()

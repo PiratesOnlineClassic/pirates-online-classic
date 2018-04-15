@@ -4,7 +4,6 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesbase import PiratesGlobals
 
 class BattleRandom:
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleRandom')
 
     def __init__(self, avId):
@@ -38,6 +37,7 @@ class BattleRandom:
     def resync(self, seed=None):
         if seed is None:
             seed = self.avId
+
         self.mainRandomGen.seed(self.avId)
         self.attackRandomGen.seed(self.avId)
         self.mainCounter = 0
