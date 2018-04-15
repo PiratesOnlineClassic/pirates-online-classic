@@ -9,9 +9,9 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.quest.QuestConstants import LocationIds
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from otp.ai.MagicWordGlobal import *
-from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 from pirates.battle import WeaponGlobals
 from pirates.reputation import ReputationGlobals
 
@@ -36,7 +36,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         self.stickyTargets = []
 
-        self.weapon = None
+    def announceGenerate(self):
+        DistributedPlayerAI.announceGenerate(self)
+        DistributedBattleAvatarAI.announceGenerate(self)
 
     def generate(self):
         DistributedPlayerAI.generate(self)
@@ -44,9 +46,18 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         self.battleRandom = BattleRandom(self.doId)
 
-    def announceGenerate(self):
-        DistributedPlayerAI.announceGenerate(self)
-        DistributedBattleAvatarAI.announceGenerate(self)
+        self.weapon = DistributedWeaponAI(self.air)
+        self.weapon.generateWithRequiredAndId(self.air.allocateChannel(), 0, 0)
+
+    def setLocation(self, parentId, zoneId):
+        DistributedPlayerAI.setLocation(self, parentId, zoneId)
+        DistributedBattleAvatarAI.setLocation(self, parentId, zoneId)
+
+        parentObj = self.getParentObj()
+
+        if parentObj:
+            if self.weapon:
+                self.weapon.b_setLocation(parentId, zoneId)
 
     def setLocation(self, parentId, zoneId):
         DistributedPlayerAI.setLocation(self, parentId, zoneId)
@@ -59,9 +70,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                     self.b_setReturnLocation(self.currentIsland)
 
                 self.b_setCurrentIsland(parentObj.getUniqueId())
-
-            if self.weapon:
-                self.weapon.b_setLocation(parentId, zoneId)
 
     def getWorld(self):
         parentObj = self.getParentObj()
@@ -181,14 +189,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return self.emoteId
 
     def requestCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
-        # we need to generate the avatar a new weapon object here, this is because
-        # we cannot generate the object during the avatar's generation. Because,
-        # the avatar switches zones and is re-generated several times...
-        # so let's just check if we have a weapon yet, and if not generate it here...
         if not self.weapon:
-            self.weapon = DistributedWeaponAI(self.air)
-            self.weapon.generateWithRequiredAndId(self.air.allocateChannel(),
-                self.parentId, self.zoneId)
+            self.notify.warning('Cannot request current weapon for avatar %d, does not have a weapon object!' % \
+                self.doId)
 
             return
 
