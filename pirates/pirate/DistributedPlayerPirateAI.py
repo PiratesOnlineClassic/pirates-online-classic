@@ -67,7 +67,16 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         if parentObj:
             if isinstance(parentObj, DistributedGameAreaAI):
                 if self.currentIsland:
-                    self.b_setReturnLocation(self.currentIsland)
+
+                    validReturns = [
+                        LocationIds.PORT_ROYAL_ISLAND,
+                        LocationIds.TORTUGA_ISLAND,
+                        LocationIds.DEL_FUEGO_PORT,
+                        LocationIds.CUBA_ISLAND
+                    ]
+
+                    if self.currentIsland in validReturns:
+                        self.b_setReturnLocation(self.currentIsland)
 
                 self.b_setCurrentIsland(parentObj.getUniqueId())
 
@@ -534,31 +543,55 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def name(name):
+    """
+    Sets the targets name
+    """
+
     spellbook.getTarget().b_setName(name)
     return "Your name has been set to %s." % name
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def hp(hp):
+    """
+    Sets the targets current HP
+    """
+
     spellbook.getTarget().b_setHp(hp)
     return "Your hp has been set to %d." % hp
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def maxHp(maxHp):
+    """
+    Sets the targets max HP
+    """
+
     spellbook.getTarget().b_setMaxHp(maxHp)
     return "Your maxHp has been set to %d." % maxHp
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def mojo(mojo):
+    """
+    Sets the targets Mojo level
+    """
+
     spellbook.getTarget().b_setMojo(mojo)
     return "Your mojo has been set to %d." % mojo
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def maxMojo(maxMojo):
+    """
+    Sets the targets max Mojo
+    """
+
     spellbook.getTarget().b_setMaxMojo(maxMojo)
     return "Your maxMojo has been set to %d." % maxMojo
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def level(level):
+    """
+    Sets the invokers level
+    """
+
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
     if inventory:
@@ -571,3 +604,15 @@ def level(level):
         inventory.setGeneralRep(totalRep)
 
     return "Your level has been set to %d." % level
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def zombie():
+    """
+    Toggles the targets 'Zombie' state
+    """
+
+    target = spellbook.getTarget()
+    zombie = target.getZombie()
+    target.b_setZombie(not zombie)
+
+    return 'Targets Zombie state set to %s' % target.getZombie()
