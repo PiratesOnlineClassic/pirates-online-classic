@@ -9,6 +9,7 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.quest.QuestConstants import LocationIds
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from otp.ai.MagicWordGlobal import *
@@ -33,6 +34,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.currentIsland = ''
         self.emoteId = 0
         self.zombie = 0
+        self.forcedZombie = 0
 
         self.stickyTargets = []
 
@@ -49,22 +51,25 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.weapon = DistributedWeaponAI(self.air)
         self.weapon.generateWithRequiredAndId(self.air.allocateChannel(), 0, 0)
 
+        self.accept('HolidayStarted', self.processHolidayStart)
+        self.accept('HolidayEnded', self.processHolidayEnd)
+        self.accept('timeOfDayChange', self.attemptToSetCursedZombie)
+
+    def processHolidayStart(self, holidayId):
+        self.attemptToSetCursedZombie()
+
+    def processHolidayEnd(self, holidayId):
+        self.attemptToSetCursedZombie()
+
     def setLocation(self, parentId, zoneId):
         DistributedPlayerAI.setLocation(self, parentId, zoneId)
         DistributedBattleAvatarAI.setLocation(self, parentId, zoneId)
 
         parentObj = self.getParentObj()
-
         if parentObj:
             if self.weapon:
                 self.weapon.b_setLocation(parentId, zoneId)
 
-    def setLocation(self, parentId, zoneId):
-        DistributedPlayerAI.setLocation(self, parentId, zoneId)
-        DistributedBattleAvatarAI.setLocation(self, parentId, zoneId)
-
-        parentObj = self.getParentObj()
-        if parentObj:
             if isinstance(parentObj, DistributedGameAreaAI):
                 if self.currentIsland:
 
@@ -79,6 +84,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                         self.b_setReturnLocation(self.currentIsland)
 
                 self.b_setCurrentIsland(parentObj.getUniqueId())
+
+            self.attemptToSetCursedZombie()
 
     def getWorld(self):
         parentObj = self.getParentObj()
@@ -451,6 +458,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.battleRandom = None
         self.weapon = None
 
+        self.ignore('HolidayStarted')
+        self.ignore('HolidayEnded')
+        self.ignore('timeOfDayChange')
+
     def setStickyTargets(self, stickyTargets):
         self.stickyTargets = stickyTargets
 
@@ -527,6 +538,27 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                             attackerData.removeSkillData(skillData)
 
             self.removeStickyTarget(targetDoId)
+
+    def attemptToSetCursedZombie(self):
+        newState = False
+
+        parentObj = self.getParentObj()
+        if self.forcedZombie:
+            newState = True
+        else:
+            # We are not in PVP. Lets check if its a Cursed Moon
+            isOutside = not isinstance(parentObj, DistributedGAInteriorAI)
+            isHalloween = self.air.timeOfDayMgr.isHalloweenMoon()
+            newState = (isOutside and isHalloween and parentObj)
+
+            # Set PVP state based on new Zombie state
+            if newState:
+                self.b_setPVPTeam(PiratesGlobals.PVP_ENEMY)
+            else:
+                self.b_setPVPTeam(0)          
+
+        if newState != self.getZombie():
+            self.b_setZombie(bool(newState))
 
     def setZombie(self, zombie):
         self.zombie = zombie
@@ -606,13 +638,13 @@ def level(level):
     return "Your level has been set to %d." % level
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def zombie():
+def zombie(self):
     """
-    Toggles the targets 'Zombie' state
+    Toggles the targets zombie state
     """
 
     target = spellbook.getTarget()
-    zombie = target.getZombie()
-    target.b_setZombie(not zombie)
+    target.forcedZombie = not target.forcedZombie
+    target.attemptToSetCursedZombie()
 
-    return 'Targets Zombie state set to %s' % target.getZombie()
+    return 'Targets Zombie state forced to %s' % target.forcedZombie

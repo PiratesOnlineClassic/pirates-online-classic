@@ -113,7 +113,6 @@ class NewsManagerAI(DistributedObjectAI):
         self.processHolidayChange()
 
     def processHolidayChange(self):
-        self.updateTODCycle()
         self.sendHolidayList()
 
         # Tell the UberDOG about the change
@@ -129,26 +128,6 @@ class NewsManagerAI(DistributedObjectAI):
             holidayList.append((holiday, endTime))
 
         self.sendUpdate('setHolidayIdList', [holidayList])
-
-    def updateTODCycle(self):
-        HolidayTODS = {
-            PiratesGlobals.HALLOWEEN: TODGlobals.TOD_HALLOWEEN_CYCLE,
-            PiratesGlobals.JOLLYROGERCURSE: TODGlobals.TOD_JOLLYCURSE_CYCLE
-        }
-
-        found = None
-        for holiday in HolidayTODS:
-            if holiday in self.holidayList:
-                found = holiday
-                break
-
-        # Update TOD Cycle
-        tod = self.air.timeOfDayMgr
-        if found is not None:
-            tod.changeCycleType(HolidayTODS[found])
-        else:
-            if tod.cycleType != TODGlobals.TOD_REGULAR_CYCLE:
-                tod.changeCycleType(TODGlobals.TOD_REGULAR_CYCLE)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def stopHoliday(holidayId):

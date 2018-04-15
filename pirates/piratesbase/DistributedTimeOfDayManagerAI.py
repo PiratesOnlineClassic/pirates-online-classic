@@ -3,9 +3,6 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
 from direct.distributed.ClockDelta import globalClockDelta
 from pirates.piratesbase import TODGlobals, PiratesGlobals
-import random
-import time
-
 
 class DistributedTimeOfDayManagerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTimeOfDayManagerAI')
@@ -15,28 +12,60 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         self.cycleType = config.GetInt('tod-starting-cycle', TODGlobals.TOD_REGULAR_CYCLE)
         self.startingState = TODGlobals.getStartingState(self.cycleType)
         self.startingTime = globalClockDelta.getFrameNetworkTime(bits=32)
-        self.cycleSpeed = config.GetInt('tod-cycle-duration', int(PiratesGlobals.TOD_CYCLE_DURATION))
-        self.cycleDuration = self.cycleSpeed * TODGlobals.getStateDuration(self.cycleType, self.startingState)
-        self.cycleTask = None
+        self.cycleDuration = 60 #PiratesGlobals.TOD_CYCLE_DURATION
+        self.stateTime = 0
+        self.nextProcessStateChange = None
 
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)
-        self.cycleTask = taskMgr.doMethodLater(1, self._runCycle, self.uniqueName('runCycle'))
+
+        self.notify.debug('Starting time of day...')
+        self._processStateChange()
+
+        self.accept('HolidayStarted', self.processHolidayChanged)
+        self.accept('HolidayEnded', self.processHolidayChanged)
 
     def delete(self):
         DistributedObjectAI.delete(self)
-        if self.cycleTask:
-            taskMgr.remove(self.cycleTask)
+        if self.nextProcessStateChange:
+            taskMgr.remove(self.nextProcessStateChange)
 
-    def _runCycle(self, task):
-        self.cycleDuration -= 1
+        self.ignore('HolidayStarted')
+        self.ignore('HolidayEnded')
 
-        if self.cycleDuration <= 0:
-            nextStateId = TODGlobals.getNextStateId(self.cycleType, self.startingState)
-            self.startingState = nextStateId
-            self.cycleDuration = self.cycleSpeed * TODGlobals.getStateDuration(self.cycleType, self.startingState)
+    def _computeCurrentState(self):
+        if self.cycleDuration == 0:
+            return (self.startingState, 0.0)
+        elapsedTime = globalClockDelta.localElapsedTime(self.startingTime, bits=32)
+        remTime = elapsedTime % self.cycleDuration
+        stateId = self.startingState
+        while True:
+            stateDuration = self.cycleDuration * TODGlobals.getStateDuration(self.cycleType, stateId)
+            if remTime < stateDuration:
+                return (stateId, remTime)
+            else:
+                remTime -= stateDuration
+                stateId = TODGlobals.getNextStateId(self.cycleType, stateId)
 
-        return task.again
+    def _waitForNextState(self):
+        if self.nextProcessStateChange:
+            taskMgr.remove(self.nextProcessStateChange)
+        if self.cycleDuration == 0:
+            return 0
+        nextStateId = TODGlobals.getNextStateId(self.cycleType, self.startingState)
+        nextStateName = TODGlobals.getStateName(nextStateId)
+        stateDuration = self.cycleDuration * TODGlobals.getStateDuration(self.cycleType, self.startingState)
+        delayTime = stateDuration - self.stateTime
+        self.notify.debug('Delay until next state: %s' % delayTime)
+        self.nextProcessStateChange = taskMgr.doMethodLater(delayTime, self._processStateChange, 'tod-wait-task-%s' % self.doId, extraArgs=[])
+        return stateDuration
+
+    def _processStateChange(self):
+        self.startingState, self.stateTime = self._computeCurrentState()
+        self._waitForNextState()
+
+        messenger.send('timeOfDayChange')
+        return Task.done
    
     def sync(self, cycleType, startingState, startingTime, cycleDuration):
         self.cycleType = cycleType
@@ -55,11 +84,47 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         return [self.cycleType, self.startingState, self.startingTime, self.cycleDuration]
 
     def changeCycleType(self, cycleType):
-
         if self.cycleType == cycleType:
             return
 
+        print('TimeOfDayManager cycle changing..')
         startingState = TODGlobals.getStartingState(cycleType)
-        cycleDuration = self.cycleSpeed * TODGlobals.getStateDuration(self.cycleType, self.startingState)
+        self._processStateChange()
 
-        self.b_sync(cycleType, startingState, self.startingTime, cycleDuration)
+        self.b_sync(cycleType, startingState, self.startingTime, self.cycleDuration)
+
+    def isNight(self):
+        nightStates = [
+            PiratesGlobals.TOD_NIGHT,
+            PiratesGlobals.TOD_NIGHT2STARS,
+            PiratesGlobals.TOD_STARS,
+            PiratesGlobals.TOD_STARS2DAWN
+        ]
+        return self.startingState in nightStates
+
+    def isDay(self):
+        return not isNight()
+
+    def isHalloweenMoon(self):
+        return self.startingState == PiratesGlobals.TOD_HALLOWEEN
+
+    def processHolidayChanged(self, holidayId):
+        HolidayTODS = {
+            PiratesGlobals.HALLOWEEN: TODGlobals.TOD_HALLOWEEN_CYCLE,
+            PiratesGlobals.JOLLYROGERCURSE: TODGlobals.TOD_JOLLYCURSE_CYCLE,
+            PiratesGlobals.JOLLYCURSEAUTO: TODGlobals.TOD_JOLLYCURSE_CYCLE,
+            PiratesGlobals.CURSEDNIGHT: TODGlobals.TOD_JOLLYCURSE_CYCLE
+        }
+
+        found = None
+        for holidayId in HolidayTODS:
+            if self.air.newsManager.isHolidayActive(holidayId):
+                found = holidayId
+                break
+
+        # Update TOD Cycle
+        if found is not None:
+            self.changeCycleType(HolidayTODS[found])
+        else:
+            if self.cycleType != TODGlobals.TOD_REGULAR_CYCLE:
+                self.changeCycleType(TODGlobals.TOD_REGULAR_CYCLE)
