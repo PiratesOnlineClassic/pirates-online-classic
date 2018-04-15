@@ -223,12 +223,13 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
 
         try:
             self.localTeleportingObj.reparentTo(teleportToObj)
+            return
         except TypeError, err:
             print 'teleportToObj:', teleportToObj
             raise err
-        else:
-            teleportToObj.addObjectToGrid(self.localTeleportingObj)
-            self._localTeleportToIdDone()
+
+        teleportToObj.addObjectToGrid(self.localTeleportingObj)
+        self._localTeleportToIdDone()
 
     @report(types=['deltaStamp'], prefix='------', dConfigParam=['want-teleport-report', 'want-shipboardreport'])
     def _localTeleportToIdDone(self):
