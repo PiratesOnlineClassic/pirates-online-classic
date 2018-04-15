@@ -225,7 +225,7 @@ class PiratesWebhookManager(object):
         self.want_hacker_logs = config.GetBool('discord-log-hacks', True)
         self.hacker_log_url = config.GetString('discord-hacker-url', '')
 
-        self.want_exception_logs = config.GetBool('discord-log-exceptions')
+        self.want_exception_logs = config.GetBool('discord-log-exceptions', False)
         self.exception_log_url = config.GetString('discord-exception-url', '')
 
         self.want_holiday_logs = config.GetBool('discord-log-holidays', True)
@@ -276,6 +276,9 @@ class PiratesWebhookManager(object):
         Logs a potential hacker message to Discord
         """
 
+        if self.want_hacker_logs:
+            return
+
         if self.want_hacker_logs and not self.hacker_log_url:
             self.notify.warning('Failed to send hacker webhook; Hacker url not defined!')
             return
@@ -283,7 +286,7 @@ class PiratesWebhookManager(object):
         # Generate header message
         districtName = self.air.distributedDistrict if hasattr(self.air, 'distributedDistrict') else None
         if districtName:
-            headerMessage = 'Detected potential hacker on %d.' % districtName
+            headerMessage = 'Detected potential hacker on %s.' % districtName
         else:
             headerMessage = 'Detected potential hacker on the UberDOG'
 
@@ -306,6 +309,8 @@ class PiratesWebhookManager(object):
         """
         Logs a server exception to Discord
         """
+        if self.want_exception_logs:
+            return
 
         if self.want_exception_logs and not self.exception_log_url:
             self.notify.warning('Failed to send exception webhook; Exception url not defined!')
@@ -314,15 +319,15 @@ class PiratesWebhookManager(object):
         # Generate header message
         districtName = self.air.distributedDistrict if hasattr(self.air, 'distributedDistrict') else None
         if districtName:
-            headerMessage = 'Internal exception occured on %d.' % districtName
+            headerMessage = 'Internal exception occured on %s.' % districtName
         else:
             headerMessage = 'Internal exception occured on the UberDOG'
 
         hookMessage = '@everyone' if self.want_everyone else ''
         webhookMessage = SlackWebhook(self.hacker_log_url, message=hookMessage)
-        attachment = SlackAttachment(pretext=message, title=headerMessage)
+        attachment = SlackAttachment(title=headerMessage)
 
-        attachment.addField(SlackField(titlle='Trackback', value=trace))
+        attachment.addField(SlackField(title='Trackback', value=trace))
 
         # Attempt to attach avatar information
         self.__attemptAttachAvatarInfo(attachment, avatarId, accountId)

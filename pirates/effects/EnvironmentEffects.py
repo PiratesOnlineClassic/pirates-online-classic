@@ -2,6 +2,7 @@ import random
 
 from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import DirectObject
 from pandac.PandaModules import *
 from pirates.effects import Grass
 from pirates.effects.BlackSmoke import BlackSmoke
@@ -24,8 +25,7 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.GameOptions import Options
 from PooledEffect import PooledEffect
 
-class EnvironmentEffects:
-    __module__ = __name__
+class EnvironmentEffects(DirectObject):
     effectDict = {'effect_gypsyball': [(GypsyBallGlow, Options.SpecialEffectsLow)], 'candle_effect': [(CandleFlame, Options.SpecialEffectsLow)], 'torch_effect': [(TorchFire, Options.SpecialEffectsLow)], 'no_glow_effect': [(TorchFire, Options.SpecialEffectsLow)], 'lantern_effect': [(LanternGlow, Options.SpecialEffectsLow)], 'bonfire_effect': [(Bonfire, Options.SpecialEffectsMedium)], 'fireplace_effect': [(Fire, Options.SpecialEffectsLow)], 'watersplash_effect': [(WaterSplash, Options.SpecialEffectsMedium)], 'steam_effect': [(SteamEffect, Options.SpecialEffectsHigh)], 'darksteam_effect': [(DarkSteamEffect, Options.SpecialEffectsMedium)], 'steamcloud_effect': [(SteamCloud, Options.SpecialEffectsMedium)], 'cratersmoke_effect': [(CraterSmoke, Options.SpecialEffectsHigh)], 'lavaburst_effect': [(LavaBurst, Options.SpecialEffectsHigh)], 'blacksmoke_effect': [(BlackSmoke, Options.SpecialEffectsMedium)], 'lightsmoke_effect': [(LightSmoke, Options.SpecialEffectsMedium)], 'mysticsmoke_effect': [(MysticSmoke, Options.SpecialEffectsHigh)], 'mysticfire_effect': [(MysticFire, Options.SpecialEffectsHigh)]}
     soundDict = {'waterfall_sound': 'audio/sfx_waterfall_small.wav', 'waterfall_cave_sound': 'audio/sfx_cave_waterfall.wav'}
     particleDict = {}
@@ -44,10 +44,14 @@ class EnvironmentEffects:
         self.lights = []
         self.colorScale = None
         self.grass = None
+        self.holidayLocators = {}
+        self.holidayEffects = {}
         self.loadAnimParts()
         self.loadEffects()
         self.loadSounds()
         self.loadGrass()
+        self.accept('HolidayStarted', self.loadHolidayEffects)
+        self.accept('HolidayEnded', self.stopHolidayEffects)
 
     def delete(self):
         for effect in self.effects:
@@ -106,6 +110,15 @@ class EnvironmentEffects:
             locators = self.parent.findAllMatches('**/' + effectEntry + '*;+s') 
             for locator in locators:
                 if not locator.isEmpty():
+                    if effectEntry in self.holidayLocators:
+                        list = self.holidayLocators.get(effectEntry)
+                        list.append(locator)
+                        self.holidayLocators[effectEntry] = list
+                        continue
+                    else:
+                        if locator.getTag('Holiday') != '':
+                            self.holidayLocators[effectEntry] = [locator]
+                            continue
                     effectParent = locator.getParent()
                     locatorPos = locator.getPos()
                     locatorHpr = locator.getHpr()
@@ -125,6 +138,50 @@ class EnvironmentEffects:
                             self.effects.append(effect)
 
                     locator.stash()
+
+    def loadHolidayEffects(self, holidayName):
+        effectSetting = None
+        if not hasattr(base, 'pe'):
+            effectSetting = base.options.getSpecialEffectsSetting()
+        else:
+            effectSetting = 2
+        for effectEntry in self.holidayLocators.keys():
+            locators = self.holidayLocators.get(effectEntry)
+            for locator in locators:
+                if locator.getTag('Holiday') == holidayName:
+                    effectParent = locator.getParent()
+                    locatorPos = locator.getPos()
+                    locatorHpr = locator.getHpr()
+                    locatorScale = locator.getScale()
+                    effects = self.effectDict.get(effectEntry)
+                    for effectName, effectLevel in effects:
+                        if effectLevel <= effectSetting:
+                            if isinstance(effectName, PooledEffect):
+                                effect.reparentTo(effectParent)
+                                effect = effectName.getEffect()
+                            else:
+                                effect = effectName(effectParent)
+                            effect.setPos(locatorPos)
+                            if effectEntry != 'candle_effect':
+                                effect.setScale(locatorScale)
+                            effect.startLoop(effectSetting)
+                            if not self.holidayEffects.has_key(holidayName):
+                                self.holidayEffects[holidayName] = [
+                                 effect]
+                            else:
+                                list = self.holidayEffects.get(holidayName)
+                                list.append(effect)
+                                self.holidayEffects[holidayName] = list
+
+
+    def stopHolidayEffects(self, holidayName):
+        if not self.holidayEffects.has_key(holidayName):
+            return
+        for effect in self.holidayEffects.get(holidayName):
+            effect.stop()
+            effect = None
+
+        self.holidayEffects[holidayName] = []
 
     def unloadEffects(self):
         for effect in self.effects:

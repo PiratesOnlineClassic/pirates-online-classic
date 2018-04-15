@@ -17,6 +17,7 @@ from pirates.pirate import AvatarTypes
 from pirates.leveleditor import NPCList
 from pirates.piratesbase import PLocalizer
 from pirates.battle import EnemyGlobals
+from pirates.ai import HolidayGlobals
 import random
 
 class SpawnNodeBase:
@@ -24,7 +25,6 @@ class SpawnNodeBase:
     notify.setInfo(True)
 
     def __init__(self, spawner, objType, objectData, parent, objKey):
-
         self._spawner = spawner
         self._objType = objType
         self._objectData = objectData
@@ -33,7 +33,7 @@ class SpawnNodeBase:
         self._npc = None
 
         # Spawn initial npc
-        self.__spawn()
+        self.__attemptSpawn()
 
     @property
     def spawner(self):
@@ -84,14 +84,37 @@ class SpawnNodeBase:
 
         self._npc = None
 
-    def __died(self, npc, task):
+    def canRespawn(self):
+        holidayName = self.objectData.get('Holiday', None)
+        if holidayName:
+            holidayId = HolidayGlobals.getHolidayIdFromName(holidayName)
+            if holidayId:
+                return self.spawner.air.newsManager.isHolidayActive(holidayId)
+
+        return True
+
+    def processHolidayStart(self, holidayId):
+        if self._npc:
+            return
+
+        if self.canRespawn():
+            self.__attemptSpawn()
+
+    def processHolidayEnd(self, holidayId):
+        if not self._npc:
+            return
+
+        if not self.canRespawn():
+            self.__died(self._npc)
+
+    def __died(self, npc, task=None):
         if not npc:
             return
 
         npc.requestDelete()
         self.__respawn()
 
-        return task.done
+        return Task.done
 
     def __respawn(self):
         if self._npc:
@@ -108,7 +131,7 @@ class SpawnNodeBase:
 
         #TODO: Is this a constant?
         spawnTimer = 20
-        taskMgr.doMethodLater(spawnTimer, self.__spawn, 'perform-spawn-%s' % \
+        taskMgr.doMethodLater(spawnTimer, self.__attemptSpawn, 'perform-spawn-%s' % \
             self.objKey)
 
     def getNPCTeam(self, avatarType):
@@ -130,7 +153,16 @@ class SpawnNodeBase:
         else:
             return PiratesGlobals.PLAYER_TEAM
 
-    def __spawn(self, task=None):
+    def __attemptSpawn(self, task=None):
+
+        if not self.canRespawn():
+            return
+        
+        self.__spawn()
+
+        return Task.done
+
+    def __spawn(self):
 
         # Create the npc class
         avatarType = self.getAvatarType()
@@ -217,8 +249,6 @@ class SpawnNodeBase:
 
         if avatarType.getBoss():
             self.notify.info('Spawning boss %s (%s) on %s!' % (npc.getName(), self.objKey, locationName))
-
-        return Task.done
 
 class TownfolkSpawnNode(SpawnNodeBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('TownfolkSpawnNode')
@@ -350,6 +380,30 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
 
         self.randomBosses = []
         self.spawnNodes = {}
+
+    def announceGenerate(self):
+        DistributedObjectAI.announceGenerate(self)
+
+        self.accept('HolidayStarted', self.__processHolidayStart)
+        self.accept('HolidayEnded', self.__processHolidayEnd)
+
+    def delete(self):
+        DistributedObjectAI.delete(self)
+
+        self.ignore('HolidayStarted')
+        self.ignore('HolidayEnded')
+
+    def __processHolidayStart(self, holidayId):
+        for spawnNodeKey in self.spawnNodes:
+            spawnNodes = self.spawnNodes[spawnNodeKey]
+            for spawnNode in spawnNodes:
+                spawnNode.processHolidayStart(holidayId)
+
+    def __processHolidayEnd(self, holidayId):
+        for spawnNodeKey in self.spawnNodes:
+            spawnNodes = self.spawnNodes[spawnNodeKey]
+            for spawnNode in spawnNodes:
+                spawnNode.processHolidayEnd(holidayId)
 
     def getSpawnNodesFromType(self, type):
         if type not in self.spawnNodes:

@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 from panda3d.core import *
 from panda3d.physics import *
-=======
-import random
-
-from direct.actor import Actor
->>>>>>> 148232e94907fe4f7c75a22a32f06d27124ec563
 from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
 from direct.particles import ParticleEffect
@@ -13,11 +7,8 @@ from direct.particles import Particles
 from direct.particles import ForceGroup
 from pirates.piratesgui.GameOptions import Options
 from PooledEffect import PooledEffect
-<<<<<<< HEAD
 from EffectController import EffectController
 import random
-=======
->>>>>>> 148232e94907fe4f7c75a22a32f06d27124ec563
 
 class Fire(PooledEffect, EffectController):
     cardScale = 64.0

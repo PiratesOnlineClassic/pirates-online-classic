@@ -3,6 +3,38 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 Month = Enum('JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER', 1)
 Day = Enum('MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY')
+
+holidayNames = {
+    PiratesGlobals.DOUBLEGOLDHOLIDAY: 'DoubleGoldHolidayAll',
+    PiratesGlobals.DOUBLEGOLDHOLIDAYPAID: 'DoubleGoldHolidayPaid',
+    PiratesGlobals.DOUBLEXPHOLIDAY: 'DoubleXPHolidayAll',
+    PiratesGlobals.DOUBLEXPHOLIDAYPAID: 'DoubleXPHolidayPaid',
+    PiratesGlobals.FREEHATWEEK: 'FreeHatWeek',
+    PiratesGlobals.SAINTPATRICKSDAY: 'SaintPatricksDay',
+    PiratesGlobals.MOTHERSDAY: 'MothersDay',
+    PiratesGlobals.FATHERSDAY: 'FathersDay',
+    PiratesGlobals.FOURTHOFJULY: 'FourthOfJuly',
+    PiratesGlobals.HALFOFFCUSTOMIZATION: 'HalfOffCustomization',
+    PiratesGlobals.ALLACCESSWEEKEND: 'AllAccessWeekend',
+    PiratesGlobals.HALLOWEEN: 'Halloween',
+    PiratesGlobals.JOLLYROGERCURSE: 'JollyRogerCurse',
+    PiratesGlobals.FOUNDERSFEAST: 'FoundersFeast',
+    PiratesGlobals.FREEITEMTHANKSGIVING: 'FreeItemThanksgiving',
+    PiratesGlobals.CURSEDNIGHT: 'CursedNight',
+    PiratesGlobals.JOLLYCURSEAUTO: 'JollyCurseAuto'
+}
+
+def getHolidayName(holidayId):
+    return holidayNames.get(holidayId)
+
+def getHolidayIdFromName(holidayName):
+    found = None
+    for holidayId in holidayNames:
+        if holidayNames[holidayId] == holidayName:
+            found = holidayId
+            break
+    return found
+
 holidays = {
     PiratesGlobals.DOUBLEGOLDHOLIDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [
         (2008, Month.SEPTEMBER, 13, 12, 0, 0), 
@@ -208,8 +240,4 @@ def getHolidayStatusMsg(holidayId):
 
 
 def getHolidayIcon(holidayId):
-<<<<<<< HEAD
     return holidayMessages.get(holidayId)[5]
-=======
-    return holidayMessages.get(holidayId)[5]
->>>>>>> 148232e94907fe4f7c75a22a32f06d27124ec563

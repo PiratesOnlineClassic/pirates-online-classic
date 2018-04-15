@@ -125,49 +125,8 @@ class PiratesInternalRepository(AstronInternalRepository):
             accountId=accountId, 
             **kwargs)
 
-<<<<<<< HEAD
         # Log message to Discord
         self.webhookManager.logPotentialHacker(avatarId, accountId, message, **kwargs)
-=======
-        self.notify.warning('Suspicious event occured; message=%s, avatarId=%d, accountId=%d' % 
-            (message, avatarId, accountId))
-
-        # Build a Discord message
-        if config.GetBool('discord-log-hacks', False):
-            hackWebhookUrl = config.GetString('discord-log-hacks-url', '')
-
-            if hackWebhookUrl:
-                districtName = 'Unknown'
-                if hasattr(self, 'distributedDistrict'):
-                    districtName = self.distributedDistrict.getName()
-
-                header = 'Detected potential hacker on %s.' % districtName
-                webhookMessage = SlackWebhook(hackWebhookUrl, message='@everyone' if config.GetBool('discord-ping-everyone', not config.GetBool('want-dev', False)) else '')
-
-                attachment = SlackAttachment(pretext=message, title=header)
-
-                for kwarg in kwargs:
-                    attachment.addField(SlackField(title=kwarg, value=kwargs[kwarg]))
-
-                avatar = self.doId2do.get(avatarId)
-                if avatar:
-                    attachment.addField(SlackField())
-                    attachment.addField(SlackField(title='Character Pos', value=str(avatar.getPos())))
-                    attachment.addField(SlackField(title='Character Name', value=avatar.getName()))
-                    attachment.addField(SlackField(title='Island', value=avatar.getParentObj().getLocalizerName()))
-
-                attachment.addField(SlackField())
-                attachment.addField(SlackField(title='Game Account Id', value=accountId))
-                #TODO account name?
-
-                attachment.addField(SlackField())
-                attachment.addField(SlackField(title='Dev Server', value=self.isDevServer()))
-
-                webhookMessage.addAttachment(attachment)
-                webhookMessage.send()
-            else:
-                self.notify.warning('Discord Hacker Webhook url not defined!')
->>>>>>> 148232e94907fe4f7c75a22a32f06d27124ec563
 
         if kickChannel:
             self.kickChannel(kickChannel)   
@@ -186,11 +145,8 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
         print(trace)
 
-<<<<<<< HEAD
-        self.webhookManager.logServerException(trace, )
+        #self.webhookManager.logServerException(trace, avatarId, accountId)
 
-=======
->>>>>>> 148232e94907fe4f7c75a22a32f06d27124ec563
         # Python 2 Vs 3 compatibility
         if not sys.version_info >= (3, 0):
             sys.exc_clear()

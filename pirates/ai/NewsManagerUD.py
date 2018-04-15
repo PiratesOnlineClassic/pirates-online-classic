@@ -12,7 +12,7 @@ class NewsManagerUD:
         self.air = air
 
     def startHoliday(self, holidayId, time):
-        self.notify.info('Starting Holiday %s accross the network for %s seconds' % (holidayId, time))
+        self.notify.info('Starting Holiday %s across the network for %s seconds' % (holidayId, time))
         self.air.netMessenger.send('startHoliday', [holidayId, time])
 
     def stopHoliday(self, holidayId):

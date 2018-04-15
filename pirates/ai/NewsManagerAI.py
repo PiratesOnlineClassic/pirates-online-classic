@@ -2,6 +2,7 @@ from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
 from panda3d.core import ConfigVariableList
+from otp.ai.MagicWordGlobal import *
 from pirates.ai import HolidayGlobals
 from pirates.ai.HolidayDates import HolidayDates
 from pirates.piratesbase import PiratesGlobals, TODGlobals
@@ -91,6 +92,7 @@ class NewsManagerAI(DistributedObjectAI):
         if holidayId not in self.holidayList:
             self.holidayList[holidayId] = time
             self.notify.info('Holiday %s is starting!' % holidayId)
+            messenger.send('HolidayStarted', [holidayId])
 
         self.processHolidayChange()
 
@@ -103,6 +105,7 @@ class NewsManagerAI(DistributedObjectAI):
         if holidayId in self.holidayList:
             del self.holidayList[holidayId]
             self.notify.info('Holiday %s is ending!' % holidayId)
+            messenger.send('HolidayEnded', [holidayId])
 
         self.processHolidayChange()
 
@@ -144,6 +147,12 @@ class NewsManagerAI(DistributedObjectAI):
             if tod.cycleType != TODGlobals.TOD_REGULAR_CYCLE:
                 tod.changeCycleType(TODGlobals.TOD_REGULAR_CYCLE)
 
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def stopHoliday(holidayId):
+    simbase.air.newsManager.endHoliday(holidayId)
+    return 'Stopped Holiday %d' % holidayId
 
-    
-        
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
+def startHoliday(holidayId, time):
+    simbase.air.newsManager.startHoliday(holidayId, time)
+    return 'Started Holiday %d' % holidayId
