@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.chat.ChatInputWhiteList
 import sys
 
 from direct.directnotify import DirectNotifyGlobal
@@ -14,7 +10,6 @@ from pandac.PandaModules import *
 
 
 class ChatInputWhiteList(FSM.FSM, DirectEntry):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('ChatInputWhiteList')
     ExecNamespace = None
 
@@ -58,16 +53,14 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
     def defaultFilter(self, request, *args):
         if request == 'AllChat':
             pass
-        else:
-            if request == 'PlayerWhisper':
-                if not base.chatAssistant.checkWhisperSpeedChatPlayer(self.whisperId):
-                    messenger.send('Chat-Failed player typed chat test')
-                    return
-            else:
-                if request == 'AvatarWhisper':
-                    if not base.chatAssistant.checkWhisperSpeedChatAvatar(self.whisperId):
-                        messenger.send('Chat-Failed avatar typed chat test')
-                        return
+        elif request == 'PlayerWhisper':
+            if not base.chatAssistant.checkWhisperSpeedChatPlayer(self.whisperId):
+                messenger.send('Chat-Failed player typed chat test')
+                return None
+        elif request == 'AvatarWhisper':
+            if not base.chatAssistant.checkWhisperSpeedChatAvatar(self.whisperId):
+                messenger.send('Chat-Failed avatar typed chat test')
+                return None
         return FSM.FSM.defaultFilter(self, request, *args)
 
     def enterOff(self):
@@ -156,7 +149,7 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
                 else:
                     newwords.append('arrr')
 
-            text = (' ').join(newwords)
+            text = ' '.join(newwords)
         if text:
             self.set('')
             if text and base.config.GetBool('want-slash-commands', 1) and text[0] == '/':
@@ -178,20 +171,16 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
         messenger.send('sentRegularChat')
         if state == 'PlayerWhisper':
             base.chatAssistant.sendPlayerWhisperWLChat(text, self.whisperId)
+        elif state == 'AvatarWhisper':
+            base.chatAssistant.sendAvatarWhisperWLChat(text, self.whisperId)
+        elif state == 'GuildChat':
+            base.chatAssistant.sendAvatarGuildWLChat(text)
+        elif state == 'CrewChat':
+            base.chatAssistant.sendAvatarCrewWLChat(text)
+        elif state == 'ShipPVPChat':
+            base.chatAssistant.sendAvatarShipPVPCrewWLChat(text)
         else:
-            if state == 'AvatarWhisper':
-                base.chatAssistant.sendAvatarWhisperWLChat(text, self.whisperId)
-            else:
-                if state == 'GuildChat':
-                    base.chatAssistant.sendAvatarGuildWLChat(text)
-                else:
-                    if state == 'CrewChat':
-                        base.chatAssistant.sendAvatarCrewWLChat(text)
-                    else:
-                        if state == 'ShipPVPChat':
-                            base.chatAssistant.sendAvatarShipPVPCrewWLChat(text)
-                        else:
-                            base.chatAssistant.sendAvatarOpenWLChat(text)
+            base.chatAssistant.sendAvatarOpenWLChat(text)
 
     def sendFailed(self, text):
         self['frameColor'] = (0.9, 0.0, 0.0, 0.8)
@@ -278,4 +267,3 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
         self.guiItem.setAcceptEnabled(okayToSubmit)
         newtext = (' ').join(newwords)
         self.set(newtext)
-# okay decompiling .\otp\chat\ChatInputWhiteList.pyc

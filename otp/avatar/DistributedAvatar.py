@@ -15,7 +15,6 @@ from otp.nametag.Nametag import Nametag
 
 
 class DistributedAvatar(DistributedActor, Avatar):
-    
     HpTextGenerator = TextNode('HpTextGenerator')
     HpTextEnabled = 1
     ManagesNametagAmbientLightChanged = True
@@ -160,13 +159,11 @@ class DistributedAvatar(DistributedActor, Avatar):
             if number != 0:
                 if self.hpText:
                     self.hideHpText()
-
                 self.HpTextGenerator.setFont(OTPGlobals.getSignFont())
                 if number < 0:
                     self.HpTextGenerator.setText(str(number))
                 else:
                     self.HpTextGenerator.setText('+' + str(number))
-
                 self.HpTextGenerator.clearShadow()
                 self.HpTextGenerator.setAlign(TextNode.ACenter)
                 if bonus == 1:
@@ -174,24 +171,21 @@ class DistributedAvatar(DistributedActor, Avatar):
                     g = 1.0
                     b = 0
                     a = 1
+                elif bonus == 2:
+                    r = 1.0
+                    g = 0.5
+                    b = 0
+                    a = 1
+                elif number < 0:
+                    r = 0.9
+                    g = 0
+                    b = 0
+                    a = 1
                 else:
-                    if bonus == 2:
-                        r = 1.0
-                        g = 0.5
-                        b = 0
-                        a = 1
-                    else:
-                        if number < 0:
-                            r = 0.9
-                            g = 0
-                            b = 0
-                            a = 1
-                        else:
-                            r = 0
-                            g = 0.9
-                            b = 0
-                            a = 1
-
+                    r = 0
+                    g = 0.9
+                    b = 0
+                    a = 1
                 self.HpTextGenerator.setTextColor(r, g, b, a)
                 self.hpTextNode = self.HpTextGenerator.generate()
                 self.hpText = self.attachNewNode(self.hpTextNode)
@@ -199,9 +193,7 @@ class DistributedAvatar(DistributedActor, Avatar):
                 self.hpText.setBillboardPointEye()
                 self.hpText.setBin('fixed', 100)
                 self.hpText.setPos(0, 0, self.height / 2)
-                seq = Task.sequence(self.hpText.lerpPos(Point3(0, 0, self.height + 1.5), 1.0, blendType='easeOut'), Task.pause(0.85),
-                    self.hpText.lerpColor(Vec4(r, g, b, a), Vec4(r, g, b, 0), 0.1), Task.Task(self.hideHpTextTask))
-
+                seq = Task.sequence(self.hpText.lerpPos(Point3(0, 0, self.height + 1.5), 1.0, blendType='easeOut'), Task.pause(0.85), self.hpText.lerpColor(Vec4(r, g, b, a), Vec4(r, g, b, 0), 0.1), Task.Task(self.hideHpTextTask))
                 taskMgr.add(seq, self.uniqueName('hpText'))
 
     def showHpString(self, text, duration=0.85, scale=0.7):

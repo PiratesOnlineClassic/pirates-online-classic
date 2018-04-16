@@ -1,14 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pirate.Pirate
 import AvatarTypes
 from Human import Human
 from pirates.piratesbase import PiratesGlobals
 
 
 class Pirate(Human):
-    
 
     def __init__(self, other=None):
         Human.__init__(self, other)
@@ -16,7 +11,6 @@ class Pirate(Human):
 
 
 class PirateHeadPortrait(Human):
-    
 
     def __init__(self):
         Human.__init__(self)
@@ -40,4 +34,3 @@ class PirateHeadPortrait(Human):
         pdb.set_trace()
         self.style = other.style
         self.generateHuman(self.style.gender, base.cr.human)
-# okay decompiling .\pirates\pirate\Pirate.pyc

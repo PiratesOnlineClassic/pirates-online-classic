@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.makeapirate.HeadGUI
 import Ear
 import Eyes
 import Mouth
@@ -13,7 +9,6 @@ from direct.showbase.ShowBaseGlobal import *
 
 
 class HeadGUI(DirectObject.DirectObject):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('HeadGUI')
 
     def __init__(self, main=None):
@@ -73,4 +68,3 @@ class HeadGUI(DirectObject.DirectObject):
         self.eyes.saveDNA()
         self.nose.saveDNA()
         self.ear.saveDNA()
-# okay decompiling .\pirates\makeapirate\HeadGUI.pyc

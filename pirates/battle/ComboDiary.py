@@ -132,4 +132,4 @@ class ComboDiary:
                 s += '    %s : %s damage, timestamp=%f (s)\n' % (skillId, damage, timestamp)
 
         return s
-# okay decompiling .\pirates\battle\ComboDiary.pyc
+

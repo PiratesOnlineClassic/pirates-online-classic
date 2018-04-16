@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.map.DecoratedMapBall
 import math
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
@@ -19,7 +15,6 @@ from pirates.world import WorldGlobals
 OceanAreaOffsets = {'Brigand_Bay': [0, -1], 'Scurvy_Shallows': [0, 3], 'Blackheart_Strait': [0, 2], 'Salty_Flats': [0, -1], 'Dead_Mans_Trough': [0, 1], 'Smugglers_Run': [0, 0.5], 'Bloody_Bayou': [0, -1.5]}
 
 class DecoratedMapBall(MapBall):
-    
     notify = directNotify.newCategory('DecoratedMapBall')
     defaultModelPath = 'models/islands/bilgewater_worldmap'
 
@@ -476,4 +471,3 @@ class DecoratedMapBall(MapBall):
         if dart is not None:
             dart.toggleHelpText()
         return
-# okay decompiling .\pirates\map\DecoratedMapBall.pyc

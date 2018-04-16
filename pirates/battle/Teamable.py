@@ -1,5 +1,4 @@
 class Teamable:
-    
 
     def __init__(self, team=-1, siege=0, pvp=0):
         self._team = team

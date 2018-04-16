@@ -15,7 +15,6 @@ from pirates.world import FortBarricade
 
 
 class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMapInstance):
-    
     notify = directNotify.newCategory('TreasureMapBlackPearl')
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
@@ -527,9 +526,8 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         self.cameraState = localAvatar.cameraFSM.state
         if self.cameraState == 'Cannon':
             self.cameraSubject = localAvatar.cameraFSM.cannonCamera.cannonProp
-        else:
-            if self.cameraState == 'Orbit':
-                self.cameraSubject = localAvatar.cameraFSM.orbitCamera.subject
+        elif self.cameraState == 'Orbit':
+            self.cameraSubject = localAvatar.cameraFSM.orbitCamera.subject
         self.stageFourCutscene = True
         if localAvatar.ship.steeringAvId == localAvatar.doId:
             localAvatar.ship.stopPosHprBroadcast()

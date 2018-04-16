@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.map.SceneBuffer
 import gc
 import sys
 
@@ -10,7 +6,6 @@ from pandac.PandaModules import *
 
 
 class SceneBuffer(DirectObject):
-    
 
     def __init__(self, name, size=Vec2(512, 512) * 2.0, camAspectRatio=1.0, clearColor=Vec4(0.85, 0.85, 0.85, 1.0), sceneGraph=None):
         DirectObject.__init__(self)
@@ -73,4 +68,3 @@ class SceneBuffer(DirectObject):
     def disable(self):
         if self.__buffer:
             self.__buffer.setActive(False)
-# okay decompiling .\pirates\map\SceneBuffer.pyc

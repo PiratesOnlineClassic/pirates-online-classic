@@ -30,7 +30,7 @@ class AnimationChannel:
         return
 
     def __str__(self):
-        return '(AnimationChannel: id=%d loop=%d controlId=%04d active=%d)           downAnim(%1.2f)=%-15s    upAnim(%1.2f)=%-15s' % (self.getId(), self.isLoopChannel(), self.animSpanId, self.isActive(), self.getDownAnimWeight(), str(self.getDownAnimName()), self.getUpAnimWeight(), str(self.getUpAnimName()))
+        return '(AnimationChannel: id=%d loop=%d controlId=%04d active=%d) downAnim(%1.2f)=%-15s upAnim(%1.2f)=%-15s' % (self.getId(), self.isLoopChannel(), self.animSpanId, self.isActive(), self.getDownAnimWeight(), str(self.getDownAnimName()), self.getUpAnimWeight(), str(self.getUpAnimName()))
 
     def cleanup(self, checkInFunc):
         self._animCount = 0

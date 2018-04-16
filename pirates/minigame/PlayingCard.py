@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.minigame.PlayingCard
 import PlayingCardGlobals
 from direct.gui.DirectGui import *
 from direct.task import Task
@@ -10,7 +6,6 @@ from pirates.piratesbase import PLocalizer
 
 
 class PlayingCardBase:
-    
 
     def __init__(self, value):
         self.faceUp = 1
@@ -56,7 +51,6 @@ class PlayingCardBase:
 
 
 class PlayingCardNodePath(NodePath, PlayingCardBase):
-    
 
     def __init__(self, style, value):
         self.image = None
@@ -76,7 +70,6 @@ class PlayingCardNodePath(NodePath, PlayingCardBase):
 
 
 class PlayingCardButton(PlayingCardBase, DirectButton):
-    
 
     def __init__(self, style, value):
         PlayingCardBase.__init__(self, value)
@@ -117,4 +110,3 @@ class PlayingCardButton(PlayingCardBase, DirectButton):
     def destroy(self):
         taskMgr.remove(self.taskName('dragTask'))
         DirectButton.destroy(self)
-# okay decompiling .\pirates\minigame\PlayingCard.pyc

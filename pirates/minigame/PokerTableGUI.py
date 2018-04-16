@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.minigame.PokerTableGUI
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
@@ -17,7 +13,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class PokerStatusPanel(DirectFrame):
-    
 
     def __init__(self, maxHandCards):
         DirectFrame.__init__(self, parent=base.a2dBackground, relief=DGG.FLAT)
@@ -93,7 +88,6 @@ class PokerStatusPanel(DirectFrame):
 
 
 class PokerTellMeter(DirectFrame):
-    
 
     def __init__(self):
         DirectFrame.__init__(self, relief=None)
@@ -356,40 +350,33 @@ class PokerTableGUI(DirectFrame, TableGUI):
                         actionText = PLocalizer.PokerCall
                     else:
                         actionText = PLocalizer.PokerCheck
-                else:
-                    if action == PlayingCardGlobals.BetRaise:
-                        if oldMaxBet == 0:
-                            actionText = PLocalizer.PokerBetAmount % amount
-                        else:
-                            actionText = PLocalizer.PokerRaiseAmount % amount
+                elif action == PlayingCardGlobals.BetRaise:
+                    if oldMaxBet == 0:
+                        actionText = PLocalizer.PokerBetAmount % amount
                     else:
-                        if action == PlayingCardGlobals.Fold:
-                            actionText = PLocalizer.PokerFold
-                            for card in hand:
-                                card.hide()
+                        actionText = PLocalizer.PokerRaiseAmount % amount
+                elif action == PlayingCardGlobals.Fold:
+                    actionText = PLocalizer.PokerFold
+                    for card in hand:
+                        card.hide()
 
-                            panel.handNameLabel.hide()
-                            panel.arrow.hide()
-                        else:
-                            if action == PlayingCardGlobals.NoAction:
-                                actionText = ''
-                                panel.actionLabel.hide()
-                            else:
-                                if action == PlayingCardGlobals.SmallBlind:
-                                    amount = self.table.anteList[1]
-                                    actionText = PLocalizer.PokerSmallBlindAmount % amount
-                                else:
-                                    if action == PlayingCardGlobals.BigBlind:
-                                        amount = self.table.anteList[2]
-                                        actionText = PLocalizer.PokerBigBlindAmount % amount
-                                    else:
-                                        if action == PlayingCardGlobals.Check:
-                                            actionText = PLocalizer.PokerCheck
-                                        else:
-                                            if action == PlayingCardGlobals.AllIn:
-                                                actionText = PLocalizer.PokerAllIn
-                                            else:
-                                                self.notify.error('Unknown action: %s' % action)
+                    panel.handNameLabel.hide()
+                    panel.arrow.hide()
+                elif action == PlayingCardGlobals.NoAction:
+                    actionText = ''
+                    panel.actionLabel.hide()
+                elif action == PlayingCardGlobals.SmallBlind:
+                    amount = self.table.anteList[1]
+                    actionText = PLocalizer.PokerSmallBlindAmount % amount
+                elif action == PlayingCardGlobals.BigBlind:
+                    amount = self.table.anteList[2]
+                    actionText = PLocalizer.PokerBigBlindAmount % amount
+                elif action == PlayingCardGlobals.Check:
+                    actionText = PLocalizer.PokerCheck
+                elif action == PlayingCardGlobals.AllIn:
+                    actionText = PLocalizer.PokerAllIn
+                else:
+                    self.notify.error('Unknown action: %s' % action)
                 panel.displayAction(actionText, self.table, i)
 
     def getGuiIndex(self, seatIndex):
@@ -658,4 +645,3 @@ class PokerTableGUI(DirectFrame, TableGUI):
 
     def setBalanceAngle(self, angle):
         self.balance.setR(angle)
-# okay decompiling .\pirates\minigame\PokerTableGUI.pyc

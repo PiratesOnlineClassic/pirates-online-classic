@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.DistributedShipCannon
 import Cannon
 import DistributedPCCannon
 import DistributedWeapon
@@ -12,7 +8,6 @@ from pirates.shipparts import CannonDNA, DistributedShippart
 
 
 class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, DistributedShippart.DistributedShippart):
-    
 
     def __init__(self, cr):
         DistributedPCCannon.DistributedPCCannon.__init__(self, cr)
@@ -212,4 +207,3 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, Distributed
             self.ship.showMasts()
             self.ship.listenForFloorEvents(1)
         DistributedPCCannon.DistributedPCCannon.stopWeapon(self, av)
-# okay decompiling .\pirates\battle\DistributedShipCannon.pyc

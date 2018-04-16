@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.GrenadeProjectile
 import random
 
 from direct.directnotify import DirectNotifyGlobal
@@ -13,7 +9,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class GrenadeProjectile(ProjectileAmmo):
-    
 
     def __init__(self, cr, ammoSkillId, event):
         ProjectileAmmo.__init__(self, cr, ammoSkillId, event)
@@ -27,26 +22,21 @@ class GrenadeProjectile(ProjectileAmmo):
         if not base.config.GetBool('want-special-effects', 1):
             grenade = loader.loadModelCopy('models/ammunition/cannonball')
             grenade.setScale(0.6)
+        elif self.ammoSkillId == InventoryType.GrenadeExplosion:
+            grenade = loader.loadModelCopy('models/ammunition/cannonball')
+            grenade.setScale(0.6)
         else:
-            if self.ammoSkillId == InventoryType.GrenadeExplosion:
-                grenade = loader.loadModelCopy('models/ammunition/cannonball')
+            grenade = loader.loadModelCopy('models/ammunition/cannonball')
+            if self.ammoSkillId == InventoryType.GrenadeShockBomb:
+                grenade.setColorScale(0.2, 1, 0.2, 1)
                 grenade.setScale(0.6)
-            else:
-                grenade = loader.loadModelCopy('models/ammunition/cannonball')
-                if self.ammoSkillId == InventoryType.GrenadeShockBomb:
-                    grenade.setColorScale(0.2, 1, 0.2, 1)
-                    grenade.setScale(0.6)
-                else:
-                    if self.ammoSkillId == InventoryType.GrenadeFireBomb:
-                        grenade.setColorScale(1, 0.2, 0.2, 1)
-                        grenade.setScale(0.6)
-                    else:
-                        if self.ammoSkillId == InventoryType.GrenadeSmokeCloud:
-                            grenade.setColorScale(0.5, 0.5, 0.5, 1)
-                            grenade.setScale(0.6)
-                        else:
-                            if self.ammoSkillId == InventoryType.GrenadeSiege:
-                                grenade.setColorScale(0.2, 0.2, 1, 1)
-                                grenade.setScale(1.5)
+            elif self.ammoSkillId == InventoryType.GrenadeFireBomb:
+                grenade.setColorScale(1, 0.2, 0.2, 1)
+                grenade.setScale(0.6)
+            elif self.ammoSkillId == InventoryType.GrenadeSmokeCloud:
+                grenade.setColorScale(0.5, 0.5, 0.5, 1)
+                grenade.setScale(0.6)
+            elif self.ammoSkillId == InventoryType.GrenadeSiege:
+                grenade.setColorScale(0.2, 0.2, 1, 1)
+                grenade.setScale(1.5)
         return grenade
-# okay decompiling .\pirates\battle\GrenadeProjectile.pyc

@@ -1,13 +1,8 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.makeapirate.CharGuiBase
 from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 
 
 class CharGuiSlider(DirectSlider):
-    
 
     def __init__(self, main, parent, text, command, range=(
  -0.5, 0.5)):
@@ -20,7 +15,6 @@ class CharGuiSlider(DirectSlider):
 
 
 class CharGuiPicker(DirectFrame):
-    
 
     def __init__(self, main, parent, text, nextCommand, backCommand):
         DirectFrame.__init__(self, parent=parent, relief=None, text=text, text_fg=(1,
@@ -36,4 +30,3 @@ class CharGuiPicker(DirectFrame):
                                                                                                                                                                                                           0,
                                                                                                                                                                                                           180), pos=(-0.6, 0, 0.07), scale=0.2, command=backCommand)
         return
-# okay decompiling .\pirates\makeapirate\CharGuiBase.pyc

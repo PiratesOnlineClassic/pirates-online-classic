@@ -5,6 +5,7 @@ from pandac.PandaModules import *
 
 globalDropShadowFlag = 1
 
+
 def setGlobalDropShadowFlag(flag):
     global globalDropShadowFlag
     if flag != globalDropShadowFlag:
@@ -13,11 +14,13 @@ def setGlobalDropShadowFlag(flag):
 
 globalDropShadowGrayLevel = 0.5
 
+
 def setGlobalDropShadowGrayLevel(grayLevel):
     global globalDropShadowGrayLevel
     if grayLevel != globalDropShadowGrayLevel:
         globalDropShadowGrayLevel = grayLevel
         messenger.send('globalDropShadowGrayLevelChanged')
+
 
 class ShadowCaster:
     

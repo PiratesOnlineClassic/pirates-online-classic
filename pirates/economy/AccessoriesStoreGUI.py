@@ -190,7 +190,6 @@ class AccessoriesStoreCartList(DirectScrolledFrame):
 
 
 class AccessoriesStoreGUI(DirectFrame):
-    
     notify = directNotify.newCategory('AccessoriesStoreGUI')
     width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.5
@@ -359,24 +358,18 @@ class AccessoriesStoreGUI(DirectFrame):
                 hatColor = localAvatar.style.getHatColor()
                 if self.currentPage == ClothingGlobals.SHIRT:
                     topColors[0] = id
-                else:
-                    if self.currentPage == ClothingGlobals.VEST:
-                        topColors[1] = id
-                    else:
-                        if self.currentPage == ClothingGlobals.PANT:
-                            botColors[0] = id
-                        else:
-                            if self.currentPage == ClothingGlobals.COAT:
-                                topColors[2] = id
-                            else:
-                                if self.currentPage == ClothingGlobals.SHOE:
-                                    botColors[2] = id
-                                else:
-                                    if self.currentPage == ClothingGlobals.HAT:
-                                        hatColor = id
-                                    else:
-                                        if self.currentPage == ClothingGlobals.BELT:
-                                            botColors[1] = id
+                elif self.currentPage == ClothingGlobals.VEST:
+                    topColors[1] = id
+                elif self.currentPage == ClothingGlobals.PANT:
+                    botColors[0] = id
+                elif self.currentPage == ClothingGlobals.COAT:
+                    topColors[2] = id
+                elif self.currentPage == ClothingGlobals.SHOE:
+                    botColors[2] = id
+                elif self.currentPage == ClothingGlobals.HAT:
+                    hatColor = id
+                elif self.currentPage == ClothingGlobals.BELT:
+                    botColors[1] = id
                 self.pirate.style.setClothesTopColor(topColors[0], topColors[1], topColors[2])
                 self.pirate.style.setClothesBotColor(botColors[0], botColors[1], botColors[2])
                 self.pirate.style.setHatColor(hatColor)
@@ -640,23 +633,22 @@ class AccessoriesStoreGUI(DirectFrame):
                 self.balanceTitle['text'] = PLocalizer.Total
                 self.balanceValue['text'] = str(abs(self.balance))
                 self.commitButton['text'] = PLocalizer.GenericConfirmDone
-        if self.balance > localAvatar.getMoney() or transactions == 0:
-            if self.balance > localAvatar.getMoney():
-                self.balanceValue['text_fg'] = PiratesGuiGlobals.TextFG6
-            self.commitButton['state'] = DGG.DISABLED
-        else:
-            if self.balance < 0:
+            if self.balance > localAvatar.getMoney() or transactions == 0:
+                if self.balance > localAvatar.getMoney():
+                    self.balanceValue['text_fg'] = PiratesGuiGlobals.TextFG6
+                self.commitButton['state'] = DGG.DISABLED
+            elif self.balance < 0:
                 self.balanceValue['text_fg'] = PiratesGuiGlobals.TextFG4
                 self.commitButton['state'] = DGG.NORMAL
             else:
                 self.balanceValue['text_fg'] = PiratesGuiGlobals.TextFG2
                 self.commitButton['state'] = DGG.NORMAL
-        inventory = base.localAvatar.getInventory()
-        if inventory:
-            if inventory.getStackQuantity(InventoryType.GoldInPocket) < self.balance or self.purchaseInventory.panels == []:
-                self.commitButton['frameColor'] = PiratesGuiGlobals.ButtonColor3
-            else:
-                self.commitButton['frameColor'] = PiratesGuiGlobals.ButtonColor4
+            inventory = base.localAvatar.getInventory()
+            if inventory:
+                if inventory.getStackQuantity(InventoryType.GoldInPocket) < self.balance or self.purchaseInventory.panels == []:
+                    self.commitButton['frameColor'] = PiratesGuiGlobals.ButtonColor3
+                else:
+                    self.commitButton['frameColor'] = PiratesGuiGlobals.ButtonColor4
 
     def checkPanel(self, panel, inventory, itemId):
         purchaseQty = self.purchaseInventory.getItemQuantity(itemId)

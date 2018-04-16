@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.chat.ChatInputTyped
 import sys
 
 from direct.gui.DirectGui import *
@@ -11,7 +7,6 @@ from pandac.PandaModules import *
 
 
 class ChatInputTyped(DirectObject.DirectObject):
-    
     ExecNamespace = None
 
     def __init__(self, mainEntry=0):
@@ -184,4 +179,3 @@ class ChatInputTyped(DirectObject.DirectObject):
         self.chatEntry.set(self.history[self.historyIndex])
         self.historyIndex -= 1
         self.historyIndex %= len(self.history)
-# okay decompiling .\otp\chat\ChatInputTyped.pyc

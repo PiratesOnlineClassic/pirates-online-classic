@@ -158,12 +158,10 @@ class DistributedDinghy(DistributedInteractive):
         self.requestExit()
         if type == PiratesGlobals.PrivateerBothTeamFull:
             self.showTeamFullAcknowledge()
-        else:
-            if type == PiratesGlobals.PrivateerSingleTeamFull:
-                self.showSingleTeamFullAcknowledge()
-            else:
-                if type == PiratesGlobals.ZombieNoBoats:
-                    localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoBoats, PiratesGuiGlobals.TextFG6)
+        elif type == PiratesGlobals.PrivateerSingleTeamFull:
+            self.showSingleTeamFullAcknowledge()
+        elif type == PiratesGlobals.ZombieNoBoats:
+            localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoBoats, PiratesGuiGlobals.TextFG6)
 
     def offerOptions(self):
         self.invReq = DistributedInventoryBase.getInventory(localAvatar.getInventoryId(), self.invArrived, 10)

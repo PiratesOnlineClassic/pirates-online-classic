@@ -460,55 +460,40 @@ class JewelryStoreGUI(DirectFrame):
         dummy = self.pirate.attachNewNode('dummy')
         if cameraId == RBROW_CAMERA:
             dummy.setPos(dummy, 1, 2, self.pirate.headNode.getZ(self.pirate) + 0.5)
-        else:
-            if cameraId == LBROW_CAMERA:
-                dummy.setPos(dummy, -1, 2, self.pirate.headNode.getZ(self.pirate) + 0.5)
-            else:
-                if cameraId == LEAR_CAMERA:
-                    dummy.setPos(dummy, -2, 2, self.pirate.headNode.getZ(self.pirate) + 0.25)
-                else:
-                    if cameraId == REAR_CAMERA:
-                        dummy.setPos(dummy, 2, 2, self.pirate.headNode.getZ(self.pirate) + 0.25)
-                    else:
-                        if cameraId == NOSE_CAMERA:
-                            dummy.setPos(dummy, 0, 2, self.pirate.headNode.getZ(self.pirate) + 0.25)
-                        else:
-                            if cameraId == MOUTH_CAMERA:
-                                dummy.setPos(dummy, 0, 2, self.pirate.headNode.getZ(self.pirate))
-                            else:
-                                if cameraId == LHAND_CAMERA:
-                                    dummy.setPos(dummy, -2, 2.5, self.pirate.leftHandNode.getZ(self.pirate))
-                                else:
-                                    if cameraId == RHAND_CAMERA:
-                                        dummy.setPos(dummy, 2, 2.5, self.pirate.rightHandNode.getZ(self.pirate))
-                                    else:
-                                        dummy.setPos(dummy, 0, 0, 0)
+        elif cameraId == LBROW_CAMERA:
+            dummy.setPos(dummy, -1, 2, self.pirate.headNode.getZ(self.pirate) + 0.5)
+        elif cameraId == LEAR_CAMERA:
+            dummy.setPos(dummy, -2, 2, self.pirate.headNode.getZ(self.pirate) + 0.25)
+        elif cameraId == REAR_CAMERA:
+            dummy.setPos(dummy, 2, 2, self.pirate.headNode.getZ(self.pirate) + 0.25)
+        elif cameraId == NOSE_CAMERA:
+            dummy.setPos(dummy, 0, 2, self.pirate.headNode.getZ(self.pirate) + 0.25)
+        elif cameraId == MOUTH_CAMERA:
+            dummy.setPos(dummy, 0, 2, self.pirate.headNode.getZ(self.pirate))
+        elif cameraId == LHAND_CAMERA:
+            dummy.setPos(dummy, -2, 2.5, self.pirate.leftHandNode.getZ(self.pirate))
+        elif cameraId == RHAND_CAMERA:
+            dummy.setPos(dummy, 2, 2.5, self.pirate.rightHandNode.getZ(self.pirate))
+            dummy.setPos(dummy, 0, 0, 0)
         dummy.wrtReparentTo(render)
         if cameraId == RBROW_CAMERA:
             dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate), self.pirate.headNode.getY(self.pirate), self.pirate.headNode.getZ(self.pirate) * 1.1)
+        elif cameraId == LBROW_CAMERA:
+            dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate), self.pirate.headNode.getY(self.pirate), self.pirate.headNode.getZ(self.pirate) * 1.1)
+        elif cameraId == LEAR_CAMERA:
+            dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate), self.pirate.headNode.getY(self.pirate), self.pirate.headNode.getZ(self.pirate) * 1.1)
+        elif cameraId == REAR_CAMERA:
+            dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate), self.pirate.headNode.getY(self.pirate), self.pirate.headNode.getZ(self.pirate) * 1.1)
+        elif cameraId == NOSE_CAMERA:
+            dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate), self.pirate.headNode.getY(self.pirate), self.pirate.headNode.getZ(self.pirate) * 1.1)
+        elif cameraId == MOUTH_CAMERA:
+            dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate), self.pirate.headNode.getY(self.pirate), self.pirate.headNode.getZ(self.pirate) * 1.075)
+        elif cameraId == LHAND_CAMERA:
+            dummy.lookAt(self.pirate, self.pirate.leftHandNode.getX(self.pirate), self.pirate.leftHandNode.getY(self.pirate), self.pirate.leftHandNode.getZ(self.pirate) * 1.2)
+        elif cameraId == RHAND_CAMERA:
+            dummy.lookAt(self.pirate, self.pirate.rightHandNode.getX(self.pirate), self.pirate.rightHandNode.getY(self.pirate), self.pirate.rightHandNode.getZ(self.pirate) * 1.2)
         else:
-            if cameraId == LBROW_CAMERA:
-                dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate), self.pirate.headNode.getY(self.pirate), self.pirate.headNode.getZ(self.pirate) * 1.1)
-            else:
-                if cameraId == LEAR_CAMERA:
-                    dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate), self.pirate.headNode.getY(self.pirate), self.pirate.headNode.getZ(self.pirate) * 1.1)
-                else:
-                    if cameraId == REAR_CAMERA:
-                        dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate), self.pirate.headNode.getY(self.pirate), self.pirate.headNode.getZ(self.pirate) * 1.1)
-                    else:
-                        if cameraId == NOSE_CAMERA:
-                            dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate), self.pirate.headNode.getY(self.pirate), self.pirate.headNode.getZ(self.pirate) * 1.1)
-                        else:
-                            if cameraId == MOUTH_CAMERA:
-                                dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate), self.pirate.headNode.getY(self.pirate), self.pirate.headNode.getZ(self.pirate) * 1.075)
-                            else:
-                                if cameraId == LHAND_CAMERA:
-                                    dummy.lookAt(self.pirate, self.pirate.leftHandNode.getX(self.pirate), self.pirate.leftHandNode.getY(self.pirate), self.pirate.leftHandNode.getZ(self.pirate) * 1.2)
-                                else:
-                                    if cameraId == RHAND_CAMERA:
-                                        dummy.lookAt(self.pirate, self.pirate.rightHandNode.getX(self.pirate), self.pirate.rightHandNode.getY(self.pirate), self.pirate.rightHandNode.getZ(self.pirate) * 1.2)
-                                    else:
-                                        dummy.lookAt(0, 0, 0, 0)
+            dummy.lookAt(0, 0, 0, 0)
         dummy.setH(dummy, -17)
         dummy.setP(dummy, -12)
         camPos = dummy.getPos()
@@ -695,37 +680,30 @@ class JewelryStoreGUI(DirectFrame):
         if id == JewelryGlobals.RBROW:
             tabIcon = self.jewelerIconsB.find('**/icon_shop_tailor_brow')
             tabScale = (-0.5, 0.5, 0.5)
+        elif id == JewelryGlobals.LBROW:
+            tabIcon = self.jewelerIconsB.find('**/icon_shop_tailor_brow')
+            tabScale = (0.5, 0.5, 0.5)
+        elif id == JewelryGlobals.LEAR:
+            tabIcon = self.jewelerIconsA.find('**/chargui_ears')
+            tabScale = (1.7, 1.7, 1.7)
+        elif id == JewelryGlobals.REAR:
+            tabIcon = self.jewelerIconsA.find('**/chargui_ears')
+            tabScale = (-1.7, 1.7, 1.7)
+        elif id == JewelryGlobals.NOSE:
+            tabIcon = self.jewelerIconsA.find('**/chargui_nose')
+            tabScale = 1.7
+        elif id == JewelryGlobals.MOUTH:
+            tabIcon = self.jewelerIconsA.find('**/chargui_mouth')
+            tabScale = 1.7
+        elif id == JewelryGlobals.LHAND:
+            tabIcon = self.jewelerIconsB.find('**/icon_shop_tailor_hand')
+            tabScale = (0.5, 0.5, 0.5)
+        elif id == JewelryGlobals.RHAND:
+            tabIcon = self.jewelerIconsB.find('**/icon_shop_tailor_hand')
+            tabScale = (-0.5, 0.5, 0.5)
         else:
-            if id == JewelryGlobals.LBROW:
-                tabIcon = self.jewelerIconsB.find('**/icon_shop_tailor_brow')
-                tabScale = (0.5, 0.5, 0.5)
-            else:
-                if id == JewelryGlobals.LEAR:
-                    tabIcon = self.jewelerIconsA.find('**/chargui_ears')
-                    tabScale = (1.7, 1.7, 1.7)
-                else:
-                    if id == JewelryGlobals.REAR:
-                        tabIcon = self.jewelerIconsA.find('**/chargui_ears')
-                        tabScale = (-1.7, 1.7, 1.7)
-                    else:
-                        if id == JewelryGlobals.NOSE:
-                            tabIcon = self.jewelerIconsA.find('**/chargui_nose')
-                            tabScale = 1.7
-                        else:
-                            if id == JewelryGlobals.MOUTH:
-                                tabIcon = self.jewelerIconsA.find('**/chargui_mouth')
-                                tabScale = 1.7
-                            else:
-                                if id == JewelryGlobals.LHAND:
-                                    tabIcon = self.jewelerIconsB.find('**/icon_shop_tailor_hand')
-                                    tabScale = (0.5, 0.5, 0.5)
-                                else:
-                                    if id == JewelryGlobals.RHAND:
-                                        tabIcon = self.jewelerIconsB.find('**/icon_shop_tailor_hand')
-                                        tabScale = (-0.5, 0.5, 0.5)
-                                    else:
-                                        tabIcon = None
-                                        tabScale = 0.0
+            tabIcon = None
+            tabScale = 0.0
         tabText = PLocalizer.JewelryNames.get(id)
         newTab.nameTag = DirectLabel(parent=newTab, relief=None, state=DGG.DISABLED, pos=(0.06, 0, -0.035), text_fg=PiratesGuiGlobals.TextFG1, text_scale=0.2, image=tabIcon, image_scale=tabScale)
         self.pageNames.append(id)
@@ -762,29 +740,22 @@ class JewelryStoreGUI(DirectFrame):
         secondaryColor = item[5]
         if type == JewelryGlobals.LBROW:
             pirate.setJewelryZone3(idx, primaryColor, secondaryColor)
+        elif type == JewelryGlobals.RBROW:
+            pirate.setJewelryZone4(idx, primaryColor, secondaryColor)
+        elif type == JewelryGlobals.LEAR:
+            pirate.setJewelryZone1(idx, primaryColor, secondaryColor)
+        elif type == JewelryGlobals.REAR:
+            pirate.setJewelryZone2(idx, primaryColor, secondaryColor)
+        elif type == JewelryGlobals.NOSE:
+            pirate.setJewelryZone5(idx, primaryColor, secondaryColor)
+        elif type == JewelryGlobals.MOUTH:
+            pirate.setJewelryZone6(idx, primaryColor, secondaryColor)
+        elif type == JewelryGlobals.LHAND:
+            pirate.setJewelryZone7(idx, primaryColor, secondaryColor)
+        elif type == JewelryGlobals.RHAND:
+            pirate.setJewelryZone8(idx, primaryColor, secondaryColor)
         else:
-            if type == JewelryGlobals.RBROW:
-                pirate.setJewelryZone4(idx, primaryColor, secondaryColor)
-            else:
-                if type == JewelryGlobals.LEAR:
-                    pirate.setJewelryZone1(idx, primaryColor, secondaryColor)
-                else:
-                    if type == JewelryGlobals.REAR:
-                        pirate.setJewelryZone2(idx, primaryColor, secondaryColor)
-                    else:
-                        if type == JewelryGlobals.NOSE:
-                            pirate.setJewelryZone5(idx, primaryColor, secondaryColor)
-                        else:
-                            if type == JewelryGlobals.MOUTH:
-                                pirate.setJewelryZone6(idx, primaryColor, secondaryColor)
-                            else:
-                                if type == JewelryGlobals.LHAND:
-                                    pirate.setJewelryZone7(idx, primaryColor, secondaryColor)
-                                else:
-                                    if type == JewelryGlobals.RHAND:
-                                        pirate.setJewelryZone8(idx, primaryColor, secondaryColor)
-                                    else:
-                                        print 'Unknown type'
+            print 'Unknown type'
         pirate.model.handleJewelryHiding()
 
     def addToCart(self, button, type, uid):
@@ -953,40 +924,38 @@ class JewelryStoreGUI(DirectFrame):
     def sortItems(self, item1, item2):
         if item1[1] == True:
             return -1
-        else:
-            if item2[1] == True:
+        elif item2[1] == True:
+            return 1
+        elif self.mode == 0:
+            if item1[6] is not None:
+                return -1
+            elif item2[6] is not None:
                 return 1
+            elif item1[3] > item2[3]:
+                return 1
+            elif item1[3] < item2[3]:
+                return -1
+            elif item1[4] > item2[4]:
+                return 1
+            elif item1[4] < item2[4]:
+                return -1
+            elif item1[5] > item2[5]:
+                return 1
+            elif item1[5] < item2[5]:
+                return -1
             else:
-                if self.mode == 0:
-                    if item1[6] is not None:
-                        return -1
-                    elif item2[6] is not None:
-                        return 1
-                    elif item1[3] > item2[3]:
-                        return 1
-                    elif item1[3] < item2[3]:
-                        return -1
-                    elif item1[4] > item2[4]:
-                        return 1
-                    elif item1[4] < item2[4]:
-                        return -1
-                    elif item1[5] > item2[5]:
-                        return 1
-                    elif item1[5] < item2[5]:
-                        return -1
-                    else:
-                        return 0
-                else:
-                    if self.mode == 1:
-                        if item1[2] < item2[2]:
-                            return 1
-                        elif item1[2] > item2[2]:
-                            return -1
-                        else:
-                            return 0
+                return 0
+        elif self.mode == 1:
+            if item1[2] < item2[2]:
+                return 1
+            elif item1[2] > item2[2]:
+                return -1
+            else:
+                return 0
         return
 
     def setPage(self, pageName, startIndex=0, refreshWardrobe=True):
+        # TODO: Clean this up!
         self.tabBar.unstash()
         self.titleLabel['text'] = '\x01smallCaps\x01' + self.rootTitle + ' - ' + PLocalizer.JewelryNames.get(pageName) + '\x02'
         previousPage = self.currentPage

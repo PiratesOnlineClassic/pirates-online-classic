@@ -7,6 +7,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 hitSfxs = None
 missSfxs = None
 
+
 def getHitSfx():
     global hitSfxs
     if not hitSfxs:

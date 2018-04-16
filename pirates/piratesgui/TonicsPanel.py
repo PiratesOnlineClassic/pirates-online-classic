@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.TonicsPanel
 from direct.gui.DirectGui import *
 from direct.task.Task import Task
 from pandac.PandaModules import *
@@ -18,7 +14,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class TonicsPanel(DirectFrame):
-    
     width = PiratesGuiGlobals.InventoryInfoWidth
     height = PiratesGuiGlobals.InventoryInfoHeight
     guiLoaded = False
@@ -101,4 +96,3 @@ class TonicsPanel(DirectFrame):
                 self.skillRing.meterFaceHalf1.setColorScale(1, 1, 1, 1.0)
                 self.skillRing.meterFaceHalf2.setColorScale(1, 1, 1, 1.0)
         return Task.cont
-# okay decompiling .\pirates\piratesgui\TonicsPanel.pyc

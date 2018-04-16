@@ -1,4 +1,3 @@
-
 from direct.directnotify import DirectNotifyGlobal
 from pandac.PandaModules import *
 from pirates.creature.Creature import Creature

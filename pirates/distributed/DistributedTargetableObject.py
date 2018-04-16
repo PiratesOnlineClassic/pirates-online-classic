@@ -12,7 +12,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedTargetableObject(DistributedNode.DistributedNode):
-    
     NoPain = base.config.GetBool('no-pain', 0)
 
     def __init__(self, cr):

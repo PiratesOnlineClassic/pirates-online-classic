@@ -578,23 +578,21 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
             self.__initWeaponChange()
             self.__doDrawWeapon()
             self.__endWeaponChange()
+        elif isWeaponDrawn and self.isWeaponDrawn and currentWeaponId != self.currentWeaponId:
+            self.__initWeaponChange()
+            self.__doPutAwayWeapon()
+            self.isWeaponDrawn = isWeaponDrawn
+            self.currentWeaponId = currentWeaponId
+            self.__doDrawWeapon()
+            self.__endWeaponChange()
+        elif not isWeaponDrawn and self.isWeaponDrawn:
+            self.isWeaponDrawn = isWeaponDrawn
+            self.currentWeaponId = currentWeaponId
+            self.__initWeaponChange()
+            self.__doPutAwayWeapon()
+            self.__endWeaponChange()
         else:
-            if isWeaponDrawn and self.isWeaponDrawn and currentWeaponId != self.currentWeaponId:
-                self.__initWeaponChange()
-                self.__doPutAwayWeapon()
-                self.isWeaponDrawn = isWeaponDrawn
-                self.currentWeaponId = currentWeaponId
-                self.__doDrawWeapon()
-                self.__endWeaponChange()
-            else:
-                if not isWeaponDrawn and self.isWeaponDrawn:
-                    self.isWeaponDrawn = isWeaponDrawn
-                    self.currentWeaponId = currentWeaponId
-                    self.__initWeaponChange()
-                    self.__doPutAwayWeapon()
-                    self.__endWeaponChange()
-                else:
-                    self.currentWeaponId = currentWeaponId
+            self.currentWeaponId = currentWeaponId
 
     def __initWeaponChange(self):
         if self.isLocal():

@@ -60,7 +60,6 @@ from otp.nametag.NametagConstants import *
 
 
 class CombatAnimations:
-    
     notify = directNotify.newCategory('CombatAnimations')
     BASE_GRENADE_POWER = 0.8
 

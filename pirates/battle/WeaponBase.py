@@ -11,6 +11,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 from pirates.tutorial import TutorialGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
+
 class WeaponBase(WeaponBaseBase.WeaponBaseBase):
 
     def __init__(self):

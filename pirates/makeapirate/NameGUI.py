@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.makeapirate.NameGUI
 import random
 import string
 import types
@@ -24,6 +20,7 @@ from pirates.piratesbase import PLocalizer as PL
 from pirates.piratesgui import GuiButton, PiratesGuiGlobals
 
 MAX_NAME_WIDTH = 9
+
 
 class NameGUI(DirectFrame, StateData.StateData):
     
@@ -155,35 +152,33 @@ class NameGUI(DirectFrame, StateData.StateData):
         else:
             if self.mode == self.__MODE_PICKANAME:
                 self.enterPickAName()
-            else:
-                if self.mode == self.__MODE_TYPEANAME:
-                    self.enterTypeAName()
-        if self.savedGender:
-            if self.savedGender != self.getDNA().gender:
-                self.listsCreated = 0
-                self.reset()
-                if self.getDNA().getGender() == 'f':
-                    self.nicknameList['items'] = self.nicknamesFemale[:]
-                    self.firstList['items'] = self.firstNamesFemale[:]
-                    self.prefixList['items'] = self.lastPrefixesFemale[:]
-                    self.suffixList['items'] = self.lastSuffixesFemale[:]
-                else:
-                    self.nicknameList['items'] = self.nicknamesMale[:]
-                    self.firstList['items'] = self.firstNamesMale[:]
-                    self.prefixList['items'] = self.lastPrefixesMale[:]
-                    self.suffixList['items'] = self.lastSuffixesMale[:]
-                self.listsCreated = 1
-                if self.getDNA().gender == 'm' and self.savedMaleName:
-                    self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex = self.savedMaleName
-                    self.nicknameActive, self.firstActive, self.lastActive = self.savedMaleActiveStates
-                else:
-                    if self.getDNA().gender == 'f' and self.savedFemaleName:
+            elif self.mode == self.__MODE_TYPEANAME:
+                self.enterTypeAName()
+            if self.savedGender:
+                if self.savedGender != self.getDNA().gender:
+                    self.listsCreated = 0
+                    self.reset()
+                    if self.getDNA().getGender() == 'f':
+                        self.nicknameList['items'] = self.nicknamesFemale[:]
+                        self.firstList['items'] = self.firstNamesFemale[:]
+                        self.prefixList['items'] = self.lastPrefixesFemale[:]
+                        self.suffixList['items'] = self.lastSuffixesFemale[:]
+                    else:
+                        self.nicknameList['items'] = self.nicknamesMale[:]
+                        self.firstList['items'] = self.firstNamesMale[:]
+                        self.prefixList['items'] = self.lastPrefixesMale[:]
+                        self.suffixList['items'] = self.lastSuffixesMale[:]
+                    self.listsCreated = 1
+                    if self.getDNA().gender == 'm' and self.savedMaleName:
+                        self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex = self.savedMaleName
+                        self.nicknameActive, self.firstActive, self.lastActive = self.savedMaleActiveStates
+                    elif self.getDNA().gender == 'f' and self.savedFemaleName:
                         self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex = self.savedFemaleName
                         self.nicknameActive, self.firstActive, self.lastActive = self.savedFemaleActiveStates
                     else:
                         self.makeRandomName()
-                self._updateLists()
-                self._updateCheckBoxes()
+                    self._updateLists()
+                    self._updateCheckBoxes()
         self.fsm.request('Pay')
 
     def exit(self):
@@ -932,4 +927,3 @@ class NameGUI(DirectFrame, StateData.StateData):
             return self.main.dna
         else:
             return self.main.pirate.style
-# okay decompiling .\pirates\makeapirate\NameGUI.pyc

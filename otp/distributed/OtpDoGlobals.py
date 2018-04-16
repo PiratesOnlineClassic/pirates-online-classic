@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.distributed.OtpDoGlobals
 from direct.distributed.MsgTypes import *
 
 OTP_DO_ID_SERVER_ROOT = 4007
@@ -78,4 +74,3 @@ OTP_ZONE_ID_DISTRICTS = 3
 OTP_ZONE_ID_DISTRICTS_STATS = 4
 OTP_ZONE_ID_ELEMENTS = 5
 OTP_NET_MESSENGER_CHANNEL = (OTP_DO_ID_UBER_DOG << 32) + OTP_ZONE_ID_MANAGEMENT
-# okay decompiling .\otp\distributed\OtpDoGlobals.pyc

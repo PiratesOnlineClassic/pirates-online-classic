@@ -5,8 +5,8 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.pvp import Beacon, PVPGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
+
 class DistributedPirateBase(DistributedObject.DistributedObject, Pirate.Pirate):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPirateBase')
 
     def __init__(self, cr):

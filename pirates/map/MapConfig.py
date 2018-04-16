@@ -8,7 +8,6 @@ from pandac.PandaModules import *
 
 
 class RangeSlider(DirectFrame):
-    
 
     def __init__(self, label='', range=(0, 1), command=None, value=0.0, orientation=DGG.HORIZONTAL, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)

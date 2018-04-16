@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.chat.ChatGlobals
 import string
 
 NORMAL_CHAT = 1
@@ -42,6 +38,7 @@ OffScreen = 1
 Thought = 2
 ThoughtPrefix = '.'
 
+
 def isThought(message):
     if len(message) == 0:
         return 0
@@ -57,4 +54,3 @@ def removeThoughtPrefix(message):
         return message[len(ThoughtPrefix):]
     else:
         return message
-# okay decompiling .\otp\chat\ChatGlobals.pyc

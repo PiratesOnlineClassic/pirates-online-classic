@@ -8,7 +8,6 @@ from pirates.piratesgui.BorderFrame import BorderFrame
 
 
 class TreasureMapRulesPanel:
-    
 
     def __init__(self, panelTitle, instructions, parent=base.a2dTopCenter, duration=8.0):
         self.panelTitle = panelTitle

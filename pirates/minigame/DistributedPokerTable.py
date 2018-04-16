@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.minigame.DistributedPokerTable
 import math
 import random
 
@@ -19,7 +15,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedPokerTable(DistributedGameTable.DistributedGameTable, PokerBase.PokerBase):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPokerTable')
 
     def __init__(self, cr, evaluatorGame, numRounds):
@@ -279,42 +274,36 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable, PokerBase
             self.gui.disableAction(PLocalizer.PokerWaitingForOtherPlayers)
             callAmount = self.getCallAmount()
             self.d_clientAction(self.round, [action, self.maxBet])
+        elif action == PlayingCardGlobals.BetRaise:
+            self.gui.disableAction(PLocalizer.PokerWaitingForOtherPlayers)
+            betAmount = self.maxBet + self.getMinimumBetAmount()
+            self.d_clientAction(self.round, [action, betAmount])
+        elif action == PlayingCardGlobals.AllIn:
+            self.gui.disableAction(PLocalizer.PokerWaitingForOtherPlayers)
+            self.d_clientAction(self.round, [action, allin_amount])
+        elif action == PlayingCardGlobals.Fold:
+            self.setLocalAvatarHand([])
+            self.gui.disableAction(PLocalizer.PokerWaitingForNextGame)
+            if self.wantMeter == 2:
+                self.ignore('y')
+                self.ignore('u')
+                self.ignore('h')
+                self.ignore('n')
+                self.ignore('j')
+                self.ignore('m')
+                self.gui.balance.hide()
+                self.gui.fulcrum.hide()
+            self.d_clientAction(self.round, [action, 0])
+        elif action == PlayingCardGlobals.Leave:
+            if self.hasGui:
+                self.gui.disableAction()
+            self.requestExit()
+        elif action == PlayingCardGlobals.Cheat1:
+            self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardOneCheat, self.card_id)
+        elif action == PlayingCardGlobals.Cheat2:
+            self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardTwoCheat, self.card_id)
         else:
-            if action == PlayingCardGlobals.BetRaise:
-                self.gui.disableAction(PLocalizer.PokerWaitingForOtherPlayers)
-                betAmount = self.maxBet + self.getMinimumBetAmount()
-                self.d_clientAction(self.round, [action, betAmount])
-            else:
-                if action == PlayingCardGlobals.AllIn:
-                    self.gui.disableAction(PLocalizer.PokerWaitingForOtherPlayers)
-                    self.d_clientAction(self.round, [action, allin_amount])
-                else:
-                    if action == PlayingCardGlobals.Fold:
-                        self.setLocalAvatarHand([])
-                        self.gui.disableAction(PLocalizer.PokerWaitingForNextGame)
-                        if self.wantMeter == 2:
-                            self.ignore('y')
-                            self.ignore('u')
-                            self.ignore('h')
-                            self.ignore('n')
-                            self.ignore('j')
-                            self.ignore('m')
-                            self.gui.balance.hide()
-                            self.gui.fulcrum.hide()
-                        self.d_clientAction(self.round, [action, 0])
-                    else:
-                        if action == PlayingCardGlobals.Leave:
-                            if self.hasGui:
-                                self.gui.disableAction()
-                            self.requestExit()
-                        else:
-                            if action == PlayingCardGlobals.Cheat1:
-                                self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardOneCheat, self.card_id)
-                            else:
-                                if action == PlayingCardGlobals.Cheat2:
-                                    self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardTwoCheat, self.card_id)
-                                else:
-                                    self.notify.error('guiCallback: unknown action: %s' % action)
+            self.notify.error('guiCallback: unknown action: %s' % action)
 
     def undoCheat(self, cheatType, cheatTarget):
         pass
@@ -629,38 +618,33 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable, PokerBase
         else:
             if cheatType == PlayingCardGlobals.PeekCheatRight:
                 pass
-            else:
-                if cheatType == PlayingCardGlobals.ReplaceHoleCardOneCheat:
-                    self.setLocalAvatarHand(hand)
-                    swap = True
+            elif cheatType == PlayingCardGlobals.ReplaceHoleCardOneCheat:
+                self.setLocalAvatarHand(hand)
+                swap = True
+            elif cheatType == PlayingCardGlobals.ReplaceHoleCardTwoCheat:
+                self.setLocalAvatarHand(hand)
+                swap = True
+            elif cheatType == PlayingCardGlobals.ReplaceHoleCardSevenCheat:
+                self.setLocalAvatarHand(hand)
+                swap = True
+            elif cheatType == PlayingCardGlobals.PlayBadHandTell:
+                pass
+            elif cheatType == PlayingCardGlobals.PlayGoodHandTell:
+                pass
+            if swap:
+                if success:
+                    string = PLocalizer.PokerSwapSuccessMessage
                 else:
-                    if cheatType == PlayingCardGlobals.ReplaceHoleCardTwoCheat:
-                        self.setLocalAvatarHand(hand)
-                        swap = True
-                    else:
-                        if cheatType == PlayingCardGlobals.ReplaceHoleCardSevenCheat:
-                            self.setLocalAvatarHand(hand)
-                            swap = True
-                        else:
-                            if cheatType == PlayingCardGlobals.PlayBadHandTell:
-                                pass
-                            else:
-                                if cheatType == PlayingCardGlobals.PlayGoodHandTell:
-                                    pass
-        if swap:
-            if success:
-                string = PLocalizer.PokerSwapSuccessMessage
-            else:
-                string = PLocalizer.PokerSwapFailureMessage
-            self.swapResultDialog = PDialog.PDialog(text=string, style=OTPDialog.Acknowledge, giveMouse=False, command=self.swapResultCallback)
-            position = self.swapResultDialog.getPos()
-            position.setZ(position[2] + 0.35)
-            self.swapResultDialog.setPos(position)
-            self.setDialogBin(self.swapResultDialog)
-            if self.isLocalAvatarSeated() and self.isLocalAvatarPlaying():
-                actor = self.actors[self.localAvatarSeat]
-                if actor:
-                    actor.play('cards_cheat')
+                    string = PLocalizer.PokerSwapFailureMessage
+                self.swapResultDialog = PDialog.PDialog(text=string, style=OTPDialog.Acknowledge, giveMouse=False, command=self.swapResultCallback)
+                position = self.swapResultDialog.getPos()
+                position.setZ(position[2] + 0.35)
+                self.swapResultDialog.setPos(position)
+                self.setDialogBin(self.swapResultDialog)
+                if self.isLocalAvatarSeated() and self.isLocalAvatarPlaying():
+                    actor = self.actors[self.localAvatarSeat]
+                    if actor:
+                        actor.play('cards_cheat')
         self.updateGui()
 
     def sendTell(self, tell):
@@ -891,4 +875,3 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable, PokerBase
         if inventory:
             reputation = inventory.getStackQuantity(InventoryType.PokerGame)
         return reputation
-# okay decompiling .\pirates\minigame\DistributedPokerTable.pyc

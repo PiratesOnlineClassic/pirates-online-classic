@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pirate.BattleNPCGameFSM
 import BattleAvatarGameFSM
 from direct.fsm import FSM
 from direct.gui.DirectGui import *
@@ -13,7 +9,6 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 
 class BattleNPCGameFSM(BattleAvatarGameFSM.BattleAvatarGameFSM):
-    
 
     def __init__(self, av):
         BattleAvatarGameFSM.BattleAvatarGameFSM.__init__(self, av, 'BattleNPCFSM')
@@ -100,4 +95,3 @@ class BattleNPCGameFSM(BattleAvatarGameFSM.BattleAvatarGameFSM):
         self.fadeOutIval = Sequence(Func(self.av.setTransparency, TransparencyAttrib.MAlpha), Func(self.av.setAlphaScale, 1.0), Func(nameText.setAlphaScale, 1.0), Parallel(LerpFunctionInterval(self.av.setAlphaScale, 3.0, fromData=1.0, toData=0.0, blendType='easeInOut'), LerpFunctionInterval(nameText.setAlphaScale, 3.0, fromData=1.0, toData=0.0, blendType='easeInOut')), Func(self.av.hide), Func(nameText.hide), Func(parentGA.sendUpdate, 'requestNPCRemoval', [npcDoId]))
         self.fadeOutIval.start()
         return
-# okay decompiling .\pirates\pirate\BattleNPCGameFSM.pyc

@@ -7,7 +7,6 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class NPCSkeletonGameFSM(BattleNPCGameFSM.BattleNPCGameFSM):
-    
 
     def __init__(self, av):
         BattleNPCGameFSM.BattleNPCGameFSM.__init__(self, av)

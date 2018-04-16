@@ -218,7 +218,6 @@ class StackMessage(BorderFrame):
 
 
 class ModalStackMessage(StackMessage):
-    
 
     def __init__(self, parent=None, **kwargs):
         StackMessage.__init__(self, parent, **kwargs)

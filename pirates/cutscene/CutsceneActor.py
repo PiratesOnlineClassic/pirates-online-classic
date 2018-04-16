@@ -155,6 +155,7 @@ class CutsceneActor:
         self.fader = Sequence(self.colorScaleInterval(time / 2.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(1, 1, 1, 1)), self.colorScaleInterval(time / 2.0, Vec4(0, 0, 0, 0), startColorScale=Vec4(0, 0, 0, 1)), Func(self.clearTransparency), Func(self.hide))
         self.fader.start()
 
+
 class CutsceneShadowCaster(CutsceneActor):
     
 
@@ -165,8 +166,8 @@ class CutsceneShadowCaster(CutsceneActor):
     def cleanupShadow(self):
         self.deleteDropShadow()
 
+
 class CutCam(CutsceneActor, Actor):
-    
 
     def __init__(self, cutsceneDesc):
         self.Uid = None
@@ -249,8 +250,8 @@ class CutCam(CutsceneActor, Actor):
         if focalLength:
             base.camLens.setFocalLength(focalLength)
 
+
 class CutGenericActor(CutsceneActor, Actor):
-    
 
     def __init__(self, actorName, modelName, path, cutsceneDesc):
         self.Uid = None
@@ -289,8 +290,8 @@ class CutGenericActor(CutsceneActor, Actor):
             self.effect.destroy()
             self.effect = None
 
+
 class CutLocators(CutGenericActor):
-    
 
     def __init__(self, cutsceneDesc):
         CutGenericActor.__init__(self, 'cs', 'cs_dummy', 'models/char/', cutsceneDesc)
@@ -321,8 +322,8 @@ class CutLocators(CutGenericActor):
     def getActorKey():
         return 'Locators'
 
+
 class CutBoat(CutsceneActor, ShipModel):
-    
     Class2Locator = {ShipGlobals.STUMPY_SHIP: 'interceptor', ShipGlobals.SKEL_DEATH_OMEN: 'ghostShip', ShipGlobals.WARSHIPL3: 'warship', ShipGlobals.BLACK_PEARL: 'blackpearl'}
 
     def __init__(self, shipClass, team, offset, wantCollisions, cutsceneDesc, rootScale=1.0):
@@ -432,7 +433,6 @@ class CutBoat(CutsceneActor, ShipModel):
 
 
 class CutJackSparrow(CutsceneActor, JackSparrow):
-    
 
     def __init__(self, cutsceneDesc):
         self.Uid = None
@@ -477,8 +477,8 @@ class CutJackSparrow(CutsceneActor, JackSparrow):
     def keepDOHidden(self):
         self.Uid = None
 
+
 class CutJollyRoger(CutsceneActor, JollyRoger):
-    
 
     def __init__(self, cutsceneDesc):
         self.Uid = None
