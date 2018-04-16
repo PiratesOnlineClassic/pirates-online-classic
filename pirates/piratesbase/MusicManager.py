@@ -38,12 +38,11 @@ musicLabel2Length = {'island-driftwood': 62, 'island-cangrejos': 63, 'island-out
     'death': 16, 'performers-02': 64, 'performers-07': 68, 'performers-09': 62, 'performers-10': 65, 
     'island-cutthroat': 61, 'island-kingshead': 67, 'island-rumrunner': 59}
 
+
 class MusicManager(AmbientManagerBase.AmbientManagerBase):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('MusicManager')
 
     class MusicData:
-        
 
         def __init__(self, name, priority=0, looping=1, volume=0.8):
             self.name = name

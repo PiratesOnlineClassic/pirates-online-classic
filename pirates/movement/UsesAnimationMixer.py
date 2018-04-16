@@ -2,8 +2,8 @@ from direct.actor.Actor import Actor
 from direct.interval.IntervalGlobal import ActorInterval
 from direct.showbase.PythonUtil import report
 
+
 class UsesAnimationMixer:
-    
 
     def __init__(self, animationMixerType=None):
         if hasattr(self, 'animationMixer') and self.animationMixer:

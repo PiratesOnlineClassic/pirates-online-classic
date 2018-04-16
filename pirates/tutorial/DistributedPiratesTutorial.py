@@ -53,7 +53,6 @@ def _playHitEffect(pos, hitObject, skillId, task=None):
 
 
 class TutorialInteriorEffects:
-    
 
     def __init__(self, startFire=False, cannonDelay=None):
         self._target = render.attachNewNode('target')
@@ -114,7 +113,6 @@ class TutorialInteriorEffects:
 
 
 class PhantomCannon(Cannon):
-    
 
     def __init__(self, cr, parent, distance, height, targetNps, island):
         Cannon.__init__(self, cr)

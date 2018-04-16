@@ -332,15 +332,13 @@ class BarberStoreGUI(DirectFrame):
                 if type == BarberGlobals.BEARD:
                     current = [
                      localAvatar.style.getHairBeard(), itemColor]
+                elif type == BarberGlobals.MUSTACHE:
+                    current = [
+                     localAvatar.style.getHairMustache(), itemColor]
                 else:
-                    if type == BarberGlobals.MUSTACHE:
-                        current = [
-                         localAvatar.style.getHairMustache(), itemColor]
-                    else:
-                        current = 0
-            if current == [itemId, currentColor]:
-                self.showCurrentlyOwnedAlert()
-            else:
+                    current = 0
+                if current == [itemId, currentColor]:
+                    self.showCurrentlyOwnedAlert()
                 text = PLocalizer.BarberConfirm % (str(item[3]), str(item[4]))
                 self.confirmBox = PiratesConfirm.PiratesConfirm(PLocalizer.BarberPurchase, text, self.buyItem, barber=[uid, button, True])
                 self.confirmBox.setPos(-self.confirmBox.getWidth() / 2, 0, -self.confirmBox.getHeight() / 2)

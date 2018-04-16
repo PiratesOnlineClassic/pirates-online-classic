@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.map.ArcBall
 import math
 
 from direct.interval.IntervalGlobal import (Func, LerpFunc, Parallel, Sequence,
@@ -15,14 +11,12 @@ from pandac.PandaModules import *
 def getPerpendicularVec(vec):
     if vec[0] == 0.0:
         return Vec3(1, 0, 0)
+    elif vec[1] == 0.0:
+        return Vec3(0, 1, 0)
+    elif vec[2] == 0.0:
+        return Vec3(0, 0, 1)
     else:
-        if vec[1] == 0.0:
-            return Vec3(0, 1, 0)
-        else:
-            if vec[2] == 0.0:
-                return Vec3(0, 0, 1)
-            else:
-                return Vec3(1.0 / vec[0], -1.0 / vec[1], 0.0)
+        return Vec3(1.0 / vec[0], -1.0 / vec[1], 0.0)
 
 
 def lerp(a, b, t):
@@ -40,7 +34,6 @@ def nLerp(a, b, t):
 
 
 class ArcBall(NodePath, DirectObject):
-    
 
     def __init__(self, name, radius=1, scrollFactor=1, camera=base.cam, frame=Vec4(-1, 1, -1, 1), keepUpright=0, mouseDownEvent='mouse1', mouseUpEvent='mouse1-up', *args, **kwargs):
         NodePath.__init__(self, name, *args, **kwargs)
@@ -490,28 +483,26 @@ class ArcBall(NodePath, DirectObject):
             q = self._getPtToPtQuat(task.startPt, pt)
             self._rotateQuatByQuat(task.quat, q, 1.0)
             self._applyConstraints()
-        else:
-            if task.rMode == 1:
-                dt = globalClock.getDt()
-                pt = self.getMouseRayCollisionPt()
-                self._rotatePtToPt(pt, task.startPt, dt * self._scrollFactor * 5)
-                self._applyConstraints()
-                self.createStraightArrow(task.startPt, pt, 0.02)
-            else:
-                if task.rMode == 2:
-                    pt = self.getMouseRayCollisionPt()
-                    q, area = self._getRotateAboutAxisQuat(task.camPt, task.startPt, pt)
-                    self._rotateQuatByQuat(task.quat, q, 1.0)
-                    self.saveNorth()
-                else:
-                    if task.rMode == 3:
-                        dt = globalClock.getDt()
-                        pt = self.getMouseRayCollisionPt()
-                        q, area = self._getRotateAboutAxisQuat(task.camPt, pt, task.startPt)
-                        self._rotate(q, dt * self._scrollFactor * area * 300)
-                        self.createCurvedArrow(task.camPt, pt, task.startPt, 0.02)
-                        self.saveNorth()
+        elif task.rMode == 1:
+            dt = globalClock.getDt()
+            pt = self.getMouseRayCollisionPt()
+            self._rotatePtToPt(pt, task.startPt, dt * self._scrollFactor * 5)
+            self._applyConstraints()
+            self.createStraightArrow(task.startPt, pt, 0.02)
+        elif task.rMode == 2:
+            pt = self.getMouseRayCollisionPt()
+            q, area = self._getRotateAboutAxisQuat(task.camPt, task.startPt, pt)
+            self._rotateQuatByQuat(task.quat, q, 1.0)
+            self.saveNorth()
+        elif task.rMode == 3:
+            dt = globalClock.getDt()
+            pt = self.getMouseRayCollisionPt()
+            q, area = self._getRotateAboutAxisQuat(task.camPt, pt, task.startPt)
+            self._rotate(q, dt * self._scrollFactor * area * 300)
+            self.createCurvedArrow(task.camPt, pt, task.startPt, 0.02)
+            self.saveNorth()
         return task.cont
+
 
     def _stopRotateTask(self, *args):
         taskMgr.remove(self.getName() + '-rotateTask')

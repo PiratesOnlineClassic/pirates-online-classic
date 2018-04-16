@@ -13,6 +13,7 @@ FreeExpNerf = 0.7
 FreeNametagChange = True
 AllAccessHoliday = False
 
+
 def getPaidStatus(avId):
     av = base.cr.getDo(avId)
     if not config.GetBool('want-membership', False):
@@ -49,7 +50,6 @@ def pruneFreebooterSkills(skillTrack):
         return skillTrack
     else:
         return filter(lambda skillId: WeaponGlobals.canFreeUse(skillId), skillTrack)
-
 
 
 def allowedFreebooterWeapon(repId):

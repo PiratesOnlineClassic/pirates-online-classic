@@ -3,6 +3,7 @@ from direct.interval.IntervalGlobal import LerpFunc, Sequence
 from direct.showbase.DirectObject import DirectObject
 from pandac.PandaModules import AudioSound
 
+
 class AmbientSound:
     
     notify = DirectNotifyGlobal.directNotify.newCategory('AmbientSound')
@@ -92,8 +93,8 @@ class AmbientSound:
             self.sfx.stop()
             self.curPriority = 0
 
+
 class AmbientManagerBase(DirectObject):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('AmbientManagerBase')
 
     def __init__(self):

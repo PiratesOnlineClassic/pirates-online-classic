@@ -1,8 +1,8 @@
 import PiratesGlobals
 from direct.directnotify.DirectNotifyGlobal import giveNotify
 
+
 class PiratesPreloader(object):
-    
 
     def __init__(self):
         self.baseLoadCounter = 0
