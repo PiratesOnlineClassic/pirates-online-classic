@@ -4,15 +4,19 @@ title Pirates Online Classic - Client
 rem Server address input selection
 echo Choose your server (Default: Localhost)
 echo #1 - Localhost
-echo #2 - Custom
+echo #2 - Development
+echo #3 - Custom
 
 set INPUT=-1
 set /P INPUT=Selection: 
 
+set POC_GAMESERVER=127.0.0.1
 if %INPUT%==1 (
     set POC_GAMESERVER=127.0.0.1
+) else if %INPUT%==2 (
+    set POC_GAMESERVER=142.44.142.239
 ) else (
-    set POC_GAMESERVER=127.0.0.1
+    set /P POC_GAMESERVER=Game Server IP: 
 )
 title Pirates Online Classic - Client (%POC_GAMESERVER%)
 

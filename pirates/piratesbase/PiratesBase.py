@@ -31,9 +31,10 @@ try:
 except ImportError:
     hasEmbedded = 0
 
-
 class PiratesBase(OTPBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesBase')
+    notify.setInfo(True)
+
     lowMemoryStreamAudio = ConfigVariableBool('low-memory-stream-audio', True)
     resolution_table = [(800, 600), (1024, 768), (1280, 1024), (1600, 1200)]
     widescreen_resolution_table = [(1280, 720), (1920, 1080)]
@@ -516,6 +517,33 @@ class PiratesBase(OTPBase):
         self.downloadWatcher.cleanup()
         self.downloadWatcher = None
 
+    def run(self):
+        """
+        Custom run implementation for exception logging
+        """
+        try:
+            OTPBase.run(self)
+        except SystemExit:
+            if hasattr(__builtin__, 'base'):
+                base.destroy()
+            self.notify.info('Normal exit.')
+            raise
+        except BaseException:
+            self.notify.warning('Handling Python exception.')
+            if hasattr(__builtin__, 'base') and getattr(base, 'cr', None):
+                if base.cr.timeManager:
+                    from otp.otpbase import OTPGlobals
+                    base.cr.timeManager.setDisconnectReason(
+                        OTPGlobals.DisconnectPythonError)
+                    base.cr.timeManager.setExceptionInfo()
+                base.cr.sendDisconnect()
+            if hasattr(__builtin__, 'base'):
+                base.destroy()
+            self.notify.info('Exception exit.\n')
+            import traceback
+            traceback.print_exc()
+            sys.exit()
+
     def startShow(self, cr):
         self.cr = cr
         if self.config.GetBool('want-fifothreads', 0):
@@ -536,13 +564,12 @@ class PiratesBase(OTPBase):
         gameServer = base.config.GetString('game-server', '')
         if gameServer:
             self.notify.info('Using game-server from Configrc: %s ' % gameServer)
+        elif launcher.getGameServer():
+            gameServer = launcher.getGameServer()
+            self.notify.info('Using gameServer from launcher: %s ' % gameServer)
         else:
-            if launcher.getGameServer():
-                gameServer = launcher.getGameServer()
-                self.notify.info('Using gameServer from launcher: %s ' % gameServer)
-            else:
-                gameServer = 'localhost'
-                self.notify.info('Using gameServer localhost')
+            gameServer = '127.0.0.1'
+            self.notify.info('Using gameServer localhost')
         serverPort = base.config.GetInt('server-port', 7198)
         debugQuests = base.config.GetBool('debug-quests', True)
         self.wantTattoos = base.config.GetBool('want-tattoos', 0)
