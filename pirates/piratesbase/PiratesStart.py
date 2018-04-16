@@ -13,6 +13,8 @@ gc.enable()
 if __debug__:
     loadPrcFile('config/general.prc')
     loadPrcFile('config/dev.prc')
+    if os.path.exists('config/personal.prc'):
+        loadPrcFile('config/personal.prc')
 
 print 'PiratesStart: Starting the game.'
 
