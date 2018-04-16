@@ -1004,11 +1004,13 @@ LEVELUP_DAMAGE_MULTIPLIER = 0.25
 LOW_HEALTH_THRESHOLD = 0.25
 __buffPriority = {C_RAM: (1, 3), C_FULLSAIL: (1, 1), C_COMEABOUT: (1, 1), C_TAKECOVER: (2, 1), C_OPENFIRE: (2, 1), C_UNSTUN: (3, 2), C_STUN: (3, 1)}
 
+
 def getBuffCategory(buffId):
     val = __buffPriority.get(buffId)
     if val:
         return val[0]
     return 0
+
 
 def getBuffPriority(buffId):
     val = __buffPriority.get(buffId)
@@ -1018,6 +1020,7 @@ def getBuffPriority(buffId):
 
 __weaponVolley = {InventoryType.PistolWeaponL1: 1, InventoryType.PistolWeaponL2: 2, InventoryType.PistolWeaponL3: 3, InventoryType.PistolWeaponL4: 3, InventoryType.PistolWeaponL5: 3, InventoryType.PistolWeaponL6: 4, InventoryType.MusketWeaponL1: 1, InventoryType.MusketWeaponL2: 2, InventoryType.MusketWeaponL3: 3, InventoryType.BayonetWeaponL1: 1, InventoryType.BayonetWeaponL2: 2, InventoryType.BayonetWeaponL3: 3, InventoryType.GrenadeWeaponL1: 1, InventoryType.GrenadeWeaponL2: 1, InventoryType.GrenadeWeaponL3: 1}
 
+
 def getWeaponVolley(weaponId):
     val = __weaponVolley.get(weaponId)
     if val:
@@ -1026,8 +1029,10 @@ def getWeaponVolley(weaponId):
 
 __staffChargeSkills = {InventoryType.StaffWither: EnemySkills.STAFF_WITHER_CHARGE, InventoryType.StaffSoulFlay: EnemySkills.STAFF_SOULFLAY_CHARGE, InventoryType.StaffPestilence: EnemySkills.STAFF_PESTILENCE_CHARGE, InventoryType.StaffHellfire: EnemySkills.STAFF_HELLFIRE_CHARGE, InventoryType.StaffBanish: EnemySkills.STAFF_BANISH_CHARGE, InventoryType.StaffDesolation: EnemySkills.STAFF_DESOLATION_CHARGE}
 
+
 def getChargeSkill(skillId):
     return __staffChargeSkills.get(skillId)
+
 
 def getAIProjectileAirTime(distance):
     return max(min(distance * 0.04, 2.6), 1.2)
