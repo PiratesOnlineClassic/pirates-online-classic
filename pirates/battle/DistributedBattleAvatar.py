@@ -1806,12 +1806,24 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         return self.avatarType.isA(AvatarTypes.BossType)
 
     def getShortName(self):
+        if self.isBoss():
+            return self.getName()
         return self.avatarType.getShortName()
 
     def trackTerrain(self):
         if self.tracksTerrain == None:
             trackingCreatures = [
-             AvatarTypes.Crab, AvatarTypes.RockCrab, AvatarTypes.GiantCrab, AvatarTypes.Pig, AvatarTypes.Dog, AvatarTypes.Scorpion, AvatarTypes.DreadScorpion, AvatarTypes.Alligator, AvatarTypes.BigGator, AvatarTypes.HugeGator]
+                AvatarTypes.Crab, 
+                AvatarTypes.RockCrab, 
+                AvatarTypes.GiantCrab, 
+                AvatarTypes.Pig, 
+                AvatarTypes.Dog, 
+                AvatarTypes.Scorpion, 
+                AvatarTypes.DreadScorpion, 
+                AvatarTypes.Alligator, 
+                AvatarTypes.BigGator, 
+                AvatarTypes.HugeGator
+            ]
             if self.avatarType.getNonBossType() in trackingCreatures:
                 self.tracksTerrain = True
             else:
