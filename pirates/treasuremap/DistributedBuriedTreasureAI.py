@@ -31,7 +31,7 @@ class DistributedBuriedTreasureAI(DistributedInteractiveAI):
         self.currentUser = None
 
     def __digTask(self, task):
-        self.b_setCurrentDepth(self.getCurrentDepth() - 1)
+        self.b_setCurrentDepth(max(self.getCurrentDepth() - 1, 0))
 
         if not self.currentUser:
             return task.done
