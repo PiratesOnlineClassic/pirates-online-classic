@@ -22,7 +22,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             return
 
         if magicWord.startswith('~~'):
-            if lastClickedNametag == None:
+            if lastClickedNametag is None:
                 target = base.localAvatar
             else:
                 target = lastClickedNametag
@@ -40,7 +40,9 @@ class MagicWordManager(DistributedObject.DistributedObject):
                 self.sendMagicWordResponse(response)
 
                 # Log the usage to the event logger
-                self.cr.centralLogger.writeClientEvent('magic-word %s used' % magicWord, targetAvId=base.localAvatar.doId)
+                self.cr.centralLogger.writeClientEvent(
+                    'magic-word %s used' %
+                    magicWord, targetAvId=base.localAvatar.doId)
 
                 return
 

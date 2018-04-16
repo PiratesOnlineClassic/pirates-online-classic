@@ -62,7 +62,8 @@ class MarginCell(NodePath):
         self.debugSquare.setColor(color)
 
     def updateDebug(self):
-        if not self.debugMode: return
+        if not self.debugMode:
+            return
 
         if self.hasContent():
             self.setDebugColor(VBase4(0.0, 0.8, 0.0, 0.5))

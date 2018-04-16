@@ -9,7 +9,7 @@ from pandac.PandaModules import *
 
 
 class OTPTimer(DirectFrame):
-    
+
     ClockImage = None
     TimerId = 0
 
@@ -33,7 +33,7 @@ class OTPTimer(DirectFrame):
         self.vFontColor = vColor
 
     def getImage(self):
-        if OTPTimer.ClockImage == None:
+        if OTPTimer.ClockImage is None:
             model = loader.loadModel('phase_3.5/models/gui/clock_gui')
             OTPTimer.ClockImage = model.find('**/alarm_clock')
             model.removeNode()
@@ -60,7 +60,8 @@ class OTPTimer(DirectFrame):
         timeStrLen = len(timeStr)
         if timeStrLen == 1:
             if time <= 5:
-                self.setTimeStr(timeStr, 0.34, (-0.025, -0.125), Vec4(1, 0, 0, 1))
+                self.setTimeStr(
+                    timeStr, 0.34, (-0.025, -0.125), Vec4(1, 0, 0, 1))
             else:
                 self.setTimeStr(timeStr, 0.34, (-0.025, -0.125))
         else:

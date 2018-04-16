@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.launcher.DummyLauncherBase
 import string
 
 from direct.showbase.DirectObject import DirectObject
@@ -13,7 +9,6 @@ from pandac.PandaModules import *
 
 
 class DummyLauncherBase:
-    
 
     def __init__(self):
         self.logPrefix = ''
@@ -36,7 +31,8 @@ class DummyLauncherBase:
         if ConfigVariableBool('fake-downloads', 0).getValue():
             from direct.showbase import Loader
             Loader.phaseChecker = self.loaderPhaseChecker
-            duration = ConfigVariableDouble('fake-download-duration', 60).getValue()
+            duration = ConfigVariableDouble(
+                'fake-download-duration', 60).getValue()
             self.fakeDownload(duration)
         else:
             for phase in self.LauncherPhases:
@@ -105,11 +101,14 @@ class DummyLauncherBase:
         return
 
     def fakeDownloadPhaseTask(self, task):
-        percentComplete = min(100, int(round(task.time / float(task.timePerPhase) * 100)))
+        percentComplete = min(
+            100, int(round(task.time / float(task.timePerPhase) * 100)))
         self.setPhaseComplete(task.phase, percentComplete)
-        messenger.send('launcherPercentPhaseComplete', [task.phase, percentComplete, 0, 0])
+        messenger.send(
+            'launcherPercentPhaseComplete', [
+                task.phase, percentComplete, 0, 0])
         if percentComplete >= 100.0:
-            messenger.send('phaseComplete-' + `(task.phase)`)
+            messenger.send('phaseComplete-' + repr((task.phase)))
             return Task.done
         else:
             return Task.cont
@@ -120,11 +119,27 @@ class DummyLauncherBase:
         return Task.done
 
     def fakeDownload(self, timePerPhase):
-        self.phaseComplete = {1: 100, 2: 100, 3: 0, 3.5: 0, 4: 0, 5: 0, 5.5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0}
+        self.phaseComplete = {
+            1: 100,
+            2: 100,
+            3: 0,
+            3.5: 0,
+            4: 0,
+            5: 0,
+            5.5: 0,
+            6: 0,
+            7: 0,
+            8: 0,
+            9: 0,
+            10: 0,
+            11: 0,
+            12: 0}
         phaseTaskList = []
         firstPhaseIndex = self.LauncherPhases.index(self.firstPhase)
         for phase in self.LauncherPhases[firstPhaseIndex:]:
-            phaseTask = Task(self.fakeDownloadPhaseTask, 'phaseDownload' + str(phase))
+            phaseTask = Task(
+                self.fakeDownloadPhaseTask,
+                'phaseDownload' + str(phase))
             phaseTask.timePerPhase = timePerPhase
             phaseTask.phase = phase
             phaseTaskList.append(phaseTask)
@@ -147,7 +162,8 @@ class DummyLauncherBase:
         if path.find('phase_') != -1:
             phaseStr = path[path.find('phase_') + 6]
             if path[path.find('phase_') + 7] == '.':
-                phaseStr = path[path.find('phase_') + 6] + path[path.find('phase_') + 7] + path[path.find('phase_') + 8]
+                phaseStr = path[path.find(
+                    'phase_') + 6] + path[path.find('phase_') + 7] + path[path.find('phase_') + 8]
             phase = float(phaseStr)
             if phase in self.LauncherPhases:
                 if self.getPhaseComplete(phase):
@@ -161,4 +177,3 @@ class DummyLauncherBase:
         else:
             print 'ERROR: loaderPhaseChecker: loaded from NON phase directory: ' + path
             return 1
-# okay decompiling .\otp\launcher\DummyLauncherBase.pyc

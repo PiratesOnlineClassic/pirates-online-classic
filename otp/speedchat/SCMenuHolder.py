@@ -12,7 +12,7 @@ from SCObject import SCObject
 
 
 class SCMenuHolder(SCElement):
-    
+
     N = 0.9
     DefaultFrameColor = (0, 0, 0, 1.0 - N)
     del N
@@ -95,7 +95,8 @@ class SCMenuHolder(SCElement):
     def exitActive(self):
         SCElement.exitActive(self)
         self.hideMenu()
-        self.button.frameStyle[DGG.BUTTON_READY_STATE].setColor(*SCMenuHolder.DefaultFrameColor)
+        self.button.frameStyle[DGG.BUTTON_READY_STATE].setColor(
+            *SCMenuHolder.DefaultFrameColor)
         self.button.updateFrameStyle()
 
     def getDisplayText(self):
@@ -126,7 +127,7 @@ class SCMenuHolder(SCElement):
         width, height = SCElement.getMinDimensions(self)
         width += 1.0
         return (
-         width, height)
+            width, height)
 
     def invalidate(self):
         SCElement.invalidate(self)
@@ -148,7 +149,8 @@ class SCMenuHolder(SCElement):
             frameColor = (r, g, b, a)
         else:
             frameColor = SCMenuHolder.DefaultFrameColor
-        args = {'image': self.scArrow, 'image_pos': (self.width - 0.5, 0, -self.height * 0.5), 'frameColor': frameColor}
+        args = {'image': self.scArrow, 'image_pos': (
+            self.width - 0.5, 0, -self.height * 0.5), 'frameColor': frameColor}
         args.update(dbArgs)
         SCElement.finalize(self, dbArgs=args)
         return

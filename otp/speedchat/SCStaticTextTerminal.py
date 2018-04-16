@@ -7,12 +7,12 @@ from SCTerminal import SCTerminal
 
 SCStaticTextMsgEvent = 'SCStaticTextMsg'
 
+
 def decodeSCStaticTextMsg(textId):
     return SpeedChatStaticText.get(textId, None)
 
 
 class SCStaticTextTerminal(SCTerminal):
-    
 
     def __init__(self, textId):
         SCTerminal.__init__(self)

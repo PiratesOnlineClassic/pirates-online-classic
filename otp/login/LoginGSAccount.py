@@ -10,7 +10,6 @@ from pandac.PandaModules import *
 
 
 class LoginGSAccount(LoginBase.LoginBase):
-    
 
     def __init__(self, cr):
         LoginBase.LoginBase.__init__(self, cr)
@@ -67,16 +66,17 @@ class LoginGSAccount(LoginBase.LoginBase):
 
     def authenticateParentPassword(self, loginName, password, parentPassword):
         return (
-         password == parentPassword, None)
+            password == parentPassword, None)
 
     def supportsAuthenticateDelete(self):
         return 1
 
     def authenticateDelete(self, loginName, password):
         return (
-         password == self.cr.password, None)
+            password == self.cr.password, None)
 
-    def enableSecretFriends(self, loginName, password, parentPassword, enable=1):
+    def enableSecretFriends(self, loginName, password,
+                            parentPassword, enable=1):
         return (
-         password == parentPassword, None)
+            password == parentPassword, None)
 # okay decompiling .\otp\login\LoginGSAccount.pyc

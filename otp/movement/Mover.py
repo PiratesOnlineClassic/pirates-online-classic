@@ -11,7 +11,7 @@ from panda3d.core import *
 
 
 class Mover:
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('Mover')
     SerialNum = 0
     Profile = 0
@@ -41,7 +41,9 @@ class Mover:
 
     def removeImpulse(self, name):
         if name not in self.impulses:
-            self.notify.warning("Mover.removeImpulse: unknown impulse '%s'" % name)
+            self.notify.warning(
+                "Mover.removeImpulse: unknown impulse '%s'" %
+                name)
             return
 
         self.impulses[name]._clearMover(self)
@@ -58,7 +60,11 @@ class Mover:
                     doMove(dt, profile=1)
 
             __builtin__.func = func
-            PythonUtil.startProfile(cmd='func()', filename='profile', sorts=['cumulative'], callInfo=0)
+            PythonUtil.startProfile(
+                cmd='func()',
+                filename='profile',
+                sorts=['cumulative'],
+                callInfo=0)
             del __builtin__.func
             return
 

@@ -1,7 +1,8 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
+
 class SettingsMgrBase:
-    
+
     notify = directNotify.newCategory('SettingsMgrBase')
 
     def announceGenerate(self):
@@ -47,18 +48,21 @@ class SettingsMgrBase:
         return self._settings[settingName]
 
     def _isSettingModified(self, settingName):
-        return self._getOriginalValueRepr(settingName) != self._getCurrentValueRepr(settingName)
+        return self._getOriginalValueRepr(
+            settingName) != self._getCurrentValueRepr(settingName)
 
     def _changeSetting(self, settingName, valueStr):
         try:
             val = eval(valueStr)
-        except:
-            self.notify.warning('error evaling "%s" for setting "%s"' % (valueStr, settingName))
+        except BaseException:
+            self.notify.warning(
+                'error evaling "%s" for setting "%s"' %
+                (valueStr, settingName))
             return
         else:
             try:
                 setting = self._getSetting(settingName)
-            except:
+            except BaseException:
                 self.notify.warning('unknown setting %s' % settingName)
                 return
 

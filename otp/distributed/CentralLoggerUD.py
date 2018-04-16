@@ -2,9 +2,10 @@ from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobal
 from direct.directnotify import DirectNotifyGlobal
 import json
 
+
 class CentralLoggerUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('CentralLoggerUD')
-    
+
     def __init__(self, air):
         DistributedObjectGlobalUD.__init__(self, air)
 
@@ -33,4 +34,8 @@ class CentralLoggerUD(DistributedObjectGlobalUD):
             data = json.dumps(event)
             print(data)
 
-        self.air.writeServerEvent(category, messageType=msgType, message=message, **fields)
+        self.air.writeServerEvent(
+            category,
+            messageType=msgType,
+            message=message,
+            **fields)

@@ -1,8 +1,10 @@
 from direct.distributed.DistributedObjectUD import DistributedObjectUD
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedDistrictUD(DistributedObjectUD):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDistrictUD')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedDistrictUD')
 
     def __init__(self, air):
         DistributedObjectUD.__init__(self, air)

@@ -11,7 +11,7 @@ from pandac.PandaModules import *
 
 
 class LoginTTAccount(LoginBase.LoginBase, TTAccount.TTAccount):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('LoginTTAcct')
 
     def __init__(self, cr):

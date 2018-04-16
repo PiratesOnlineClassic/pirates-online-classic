@@ -17,7 +17,8 @@ class ChatInputTyped(DirectObject.DirectObject):
         wantHistory = 0
         if __dev__:
             wantHistory = 1
-        self.wantHistory = base.config.GetBool('want-chat-history', wantHistory)
+        self.wantHistory = base.config.GetBool(
+            'want-chat-history', wantHistory)
         self.history = ['']
         self.historySize = base.config.GetInt('chat-history-size', 10)
         self.historyIndex = 0
@@ -85,7 +86,8 @@ class ChatInputTyped(DirectObject.DirectObject):
         if self.whisperId:
             print 'have id'
             if self.toPlayer:
-                if not base.chatAssistant.checkWhisperTypedChatPlayer(self.whisperId):
+                if not base.chatAssistant.checkWhisperTypedChatPlayer(
+                        self.whisperId):
                     messenger.send('Chat-Failed player typed chat test')
                     self.deactivate()
             elif not base.chatAssistant.checkWhisperTypedChatAvatar(self.whisperId):
@@ -110,14 +112,17 @@ class ChatInputTyped(DirectObject.DirectObject):
         if text:
             if self.toPlayer:
                 if self.whisperId:
-                    base.chatAssistant.sendPlayerWhisperTypedChat(text, self.whisperId)
+                    base.chatAssistant.sendPlayerWhisperTypedChat(
+                        text, self.whisperId)
             else:
                 if self.whisperId:
-                    base.chatAssistant.sendAvatarWhisperTypedChat(text, self.whisperId)
+                    base.chatAssistant.sendAvatarWhisperTypedChat(
+                        text, self.whisperId)
                 else:
                     if base.config.GetBool('exec-chat', 0) and text[0] == '>':
                         text = self.__execMessage(text[1:])
-                        base.localAvatar.setChatAbsolute(text, CFSpeech | CFTimeout)
+                        base.localAvatar.setChatAbsolute(
+                            text, CFSpeech | CFTimeout)
                         return
                     else:
                         base.chatAssistant.sendAvatarOpenTypedChat(text)
@@ -139,7 +144,7 @@ class ChatInputTyped(DirectObject.DirectObject):
             try:
                 exec message in globals(), ChatInputTyped.ExecNamespace
                 return 'ok'
-            except:
+            except BaseException:
                 exception = sys.exc_info()[0]
                 extraInfo = sys.exc_info()[1]
                 if extraInfo:
@@ -147,7 +152,7 @@ class ChatInputTyped(DirectObject.DirectObject):
                 else:
                     return str(exception)
 
-        except:
+        except BaseException:
             exception = sys.exc_info()[0]
             extraInfo = sys.exc_info()[1]
             if extraInfo:
@@ -167,7 +172,7 @@ class ChatInputTyped(DirectObject.DirectObject):
 
     def addToHistory(self, text):
         self.history = [
-         text] + self.history[:self.historySize - 1]
+            text] + self.history[:self.historySize - 1]
         self.historyIndex = 0
 
     def getPrevHistory(self):

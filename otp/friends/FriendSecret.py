@@ -12,11 +12,13 @@ AccountSecret = 0
 AvatarSecret = 1
 BothSecrets = 2
 
+
 def showFriendSecret(secretType=AvatarSecret):
     global globalFriendSecret
     if not base.cr.isParentPasswordSet():
         chatMgr = base.localAvatar.chatMgr
-        if base.cr.productName in ['DisneyOnline-AP', 'DisneyOnline-UK', 'ES', 'Wanadoo', 'T-Online', 'JP']:
+        if base.cr.productName in [
+                'DisneyOnline-AP', 'DisneyOnline-UK', 'ES', 'Wanadoo', 'T-Online', 'JP']:
             chatMgr = base.localAvatar.chatMgr
             if not base.cr.isPaid():
                 chatMgr.fsm.request('unpaidChatWarning')
@@ -29,7 +31,8 @@ def showFriendSecret(secretType=AvatarSecret):
     else:
         if not base.cr.allowSecretChat():
             chatMgr = base.localAvatar.chatMgr
-            if base.cr.productName in ['DisneyOnline-AP', 'DisneyOnline-UK', 'ES', 'Wanadoo', 'T-Online', 'JP']:
+            if base.cr.productName in [
+                    'DisneyOnline-AP', 'DisneyOnline-UK', 'ES', 'Wanadoo', 'T-Online', 'JP']:
                 chatMgr = base.localAvatar.chatMgr
                 if not base.cr.isPaid():
                     chatMgr.fsm.request('unpaidChatWarning')
@@ -45,47 +48,58 @@ def showFriendSecret(secretType=AvatarSecret):
         else:
             openFriendSecret(secretType)
 
+
 def openFriendSecret(secretType):
     global globalFriendSecret
-    if globalFriendSecret != None:
+    if globalFriendSecret is not None:
         globalFriendSecret.unload()
     globalFriendSecret = FriendSecret(secretType)
     globalFriendSecret.enter()
 
+
 def hideFriendSecret():
-    if globalFriendSecret != None:
+    if globalFriendSecret is not None:
         globalFriendSecret.exit()
+
 
 def unloadFriendSecret():
     global globalFriendSecret
-    if globalFriendSecret != None:
+    if globalFriendSecret is not None:
         globalFriendSecret.unload()
         globalFriendSecret = None
 
+
 class FriendSecretNeedsParentLogin(StateData.StateData):
-    
-    notify = DirectNotifyGlobal.directNotify.newCategory('FriendSecretNeedsParentLogin')
+
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'FriendSecretNeedsParentLogin')
 
     def __init__(self, secretType):
-        StateData.StateData.__init__(self, 'friend-secret-needs-parent-login-done')
+        StateData.StateData.__init__(
+            self, 'friend-secret-needs-parent-login-done')
         self.dialog = None
         self.secretType = secretType
 
     def enter(self):
         StateData.StateData.enter(self)
         base.localAvatar.chatMgr.fsm.request('otherDialog')
-        if self.dialog == None:
+        if self.dialog is None:
             guiButton = loader.loadModelOnce('phase_3/models/gui/quit_button')
-            buttons = loader.loadModelOnce('phase_3/models/gui/dialog_box_buttons_gui')
-            nameBalloon = loader.loadModel('phase_3/models/props/chatbox_input')
-            optionsButtonImage = (guiButton.find('**/QuitBtn_UP'), guiButton.find('**/QuitBtn_DN'), guiButton.find('**/QuitBtn_RLVR'))
+            buttons = loader.loadModelOnce(
+                'phase_3/models/gui/dialog_box_buttons_gui')
+            nameBalloon = loader.loadModel(
+                'phase_3/models/props/chatbox_input')
+            optionsButtonImage = (
+                guiButton.find('**/QuitBtn_UP'),
+                guiButton.find('**/QuitBtn_DN'),
+                guiButton.find('**/QuitBtn_RLVR'))
             okButtonImage = (
-             buttons.find('**/ChtBx_OKBtn_UP'), buttons.find('**/ChtBx_OKBtn_DN'), buttons.find('**/ChtBx_OKBtn_Rllvr'))
+                buttons.find('**/ChtBx_OKBtn_UP'), buttons.find('**/ChtBx_OKBtn_DN'), buttons.find('**/ChtBx_OKBtn_Rllvr'))
             cancelButtonImage = (
-             buttons.find('**/CloseBtn_UP'), buttons.find('**/CloseBtn_DN'), buttons.find('**/CloseBtn_Rllvr'))
+                buttons.find('**/CloseBtn_UP'), buttons.find('**/CloseBtn_DN'), buttons.find('**/CloseBtn_Rllvr'))
             if base.cr.productName != 'Terra-DMC':
                 okPos = (
-                 -0.22, 0.0, -0.5)
+                    -0.22, 0.0, -0.5)
                 textPos = (0, 0.25)
                 okCommand = self.__handleOK
             else:
@@ -96,20 +110,74 @@ class FriendSecretNeedsParentLogin(StateData.StateData):
             self.dialog = DirectFrame(parent=aspect2dp, pos=(0.0, 0.1, 0.2), relief=None, image=DGG.getDefaultDialogGeom(), image_color=OTPGlobals.GlobalDialogColor, image_scale=(1.4,
                                                                                                                                                                                    1.0,
                                                                                                                                                                                    1.25), image_pos=(0, 0, -0.1), text=OTPLocalizer.FriendSecretNeedsParentLoginWarning, text_wordwrap=21.5, text_scale=0.055, text_pos=textPos, textMayChange=1)
-            DirectButton(self.dialog, image=okButtonImage, relief=None, text=OTPLocalizer.FriendSecretNeedsPasswordWarningOK, text_scale=0.05, text_pos=(0.0, -0.1), textMayChange=0, pos=okPos, command=okCommand)
-            DirectLabel(parent=self.dialog, relief=None, pos=(0, 0, 0.35), text=OTPLocalizer.FriendSecretNeedsPasswordWarningTitle, textMayChange=0, text_scale=0.08)
+            DirectButton(
+                self.dialog,
+                image=okButtonImage,
+                relief=None,
+                text=OTPLocalizer.FriendSecretNeedsPasswordWarningOK,
+                text_scale=0.05,
+                text_pos=(
+                    0.0,
+                    -0.1),
+                textMayChange=0,
+                pos=okPos,
+                command=okCommand)
+            DirectLabel(
+                parent=self.dialog,
+                relief=None,
+                pos=(
+                    0,
+                    0,
+                    0.35),
+                text=OTPLocalizer.FriendSecretNeedsPasswordWarningTitle,
+                textMayChange=0,
+                text_scale=0.08)
             if base.cr.productName != 'Terra-DMC':
-                self.usernameLabel = DirectLabel(parent=self.dialog, relief=None, pos=(-0.07, 0.0, -0.1), text=OTPLocalizer.ParentLogin, text_scale=0.06, text_align=TextNode.ARight, textMayChange=0)
+                self.usernameLabel = DirectLabel(
+                    parent=self.dialog,
+                    relief=None,
+                    pos=(
+                        -0.07,
+                        0.0,
+                        -0.1),
+                    text=OTPLocalizer.ParentLogin,
+                    text_scale=0.06,
+                    text_align=TextNode.ARight,
+                    textMayChange=0)
                 self.usernameEntry = DirectEntry(parent=self.dialog, relief=None, image=nameBalloon, image1_color=(0.8,
                                                                                                                    0.8,
                                                                                                                    0.8,
                                                                                                                    1.0), scale=0.064, pos=(0.0, 0.0, -0.1), width=OTPGlobals.maxLoginWidth, numLines=1, focus=1, cursorKeys=1, obscured=1, command=self.__handleUsername)
-                self.passwordLabel = DirectLabel(parent=self.dialog, relief=None, pos=(-0.07, 0.0, -0.3), text=OTPLocalizer.ParentPassword, text_scale=0.06, text_align=TextNode.ARight, textMayChange=0)
+                self.passwordLabel = DirectLabel(
+                    parent=self.dialog,
+                    relief=None,
+                    pos=(
+                        -0.07,
+                        0.0,
+                        -0.3),
+                    text=OTPLocalizer.ParentPassword,
+                    text_scale=0.06,
+                    text_align=TextNode.ARight,
+                    textMayChange=0)
                 self.passwordEntry = DirectEntry(parent=self.dialog, relief=None, image=nameBalloon, image1_color=(0.8,
                                                                                                                    0.8,
                                                                                                                    0.8,
                                                                                                                    1.0), scale=0.064, pos=(0.0, 0.0, -0.3), width=OTPGlobals.maxLoginWidth, numLines=1, focus=1, cursorKeys=1, obscured=1, command=self.__handleOK)
-                DirectButton(self.dialog, image=cancelButtonImage, relief=None, text=OTPLocalizer.FriendSecretNeedsPasswordWarningCancel, text_scale=0.05, text_pos=(0.0, -0.1), textMayChange=1, pos=(0.2, 0.0, -0.5), command=self.__handleCancel)
+                DirectButton(
+                    self.dialog,
+                    image=cancelButtonImage,
+                    relief=None,
+                    text=OTPLocalizer.FriendSecretNeedsPasswordWarningCancel,
+                    text_scale=0.05,
+                    text_pos=(
+                        0.0,
+                        -0.1),
+                    textMayChange=1,
+                    pos=(
+                        0.2,
+                        0.0,
+                        -0.5),
+                    command=self.__handleCancel)
                 self.usernameEntry['focus'] = 1
                 self.usernameEntry.enterText('')
             guiButton.removeNode()
@@ -144,14 +212,16 @@ class FriendSecretNeedsParentLogin(StateData.StateData):
         username = self.usernameEntry.get()
         password = self.passwordEntry.get()
         tt = base.cr.loginInterface
-        okflag, message = tt.authenticateParentPassword(base.cr.userName, base.cr.password, password)
+        okflag, message = tt.authenticateParentPassword(
+            base.cr.userName, base.cr.password, password)
         if okflag:
             self.exit()
             openFriendSecret(self.secretType)
         else:
             if message:
                 base.localAvatar.chatMgr.fsm.request('problemActivatingChat')
-                base.localAvatar.chatMgr.problemActivatingChat['text'] = OTPLocalizer.ProblemActivatingChat % message
+                base.localAvatar.chatMgr.problemActivatingChat[
+                    'text'] = OTPLocalizer.ProblemActivatingChat % message
             else:
                 self.dialog['text'] = OTPLocalizer.FriendSecretNeedsPasswordWarningWrongPassword
                 self.passwordEntry['focus'] = 1
@@ -160,8 +230,11 @@ class FriendSecretNeedsParentLogin(StateData.StateData):
     def __handleOK(self, *args):
         base.cr.parentUsername = self.usernameEntry.get()
         base.cr.parentPassword = self.passwordEntry.get()
-        base.cr.playerFriendsManager.sendRequestUseLimitedSecret('', base.cr.parentUsername, base.cr.parentPassword)
-        self.accept(OTPGlobals.PlayerFriendRejectUseSecretEvent, self.__handleParentLogin)
+        base.cr.playerFriendsManager.sendRequestUseLimitedSecret(
+            '', base.cr.parentUsername, base.cr.parentPassword)
+        self.accept(
+            OTPGlobals.PlayerFriendRejectUseSecretEvent,
+            self.__handleParentLogin)
         self.__handleParentLogin(0)
 
     def __handleParentLogin(self, reason):
@@ -179,15 +252,17 @@ class FriendSecretNeedsParentLogin(StateData.StateData):
                     self.passwordEntry['focus'] = 1
                     self.passwordEntry.enterText('')
                 else:
-                    base.localAvatar.chatMgr.fsm.request('problemActivatingChat')
-                    base.localAvatar.chatMgr.problemActivatingChat['text'] = OTPLocalizer.ProblemActivatingChat % message
+                    base.localAvatar.chatMgr.fsm.request(
+                        'problemActivatingChat')
+                    base.localAvatar.chatMgr.problemActivatingChat[
+                        'text'] = OTPLocalizer.ProblemActivatingChat % message
 
     def __handleCancel(self):
         self.exit()
 
 
 class FriendSecret(DirectFrame, StateData.StateData):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('FriendSecret')
 
     def __init__(self, secretType):
@@ -201,7 +276,9 @@ class FriendSecret(DirectFrame, StateData.StateData):
         self.secretType = secretType
         self.notify.debug('### secretType = %s' % self.secretType)
         self.requestedSecretType = secretType
-        self.notify.debug('### requestedSecretType = %s' % self.requestedSecretType)
+        self.notify.debug(
+            '### requestedSecretType = %s' %
+            self.requestedSecretType)
         return
 
     def unload(self):
@@ -275,8 +352,25 @@ class FriendSecret(DirectFrame, StateData.StateData):
         return
 
     def makeFriendTypeButtons(self):
-        buttons = loader.loadModelOnce('phase_3/models/gui/dialog_box_buttons_gui')
-        self.avatarButton = DirectButton(self, image=(buttons.find('**/ChtBx_OKBtn_UP'), buttons.find('**/ChtBx_OKBtn_DN'), buttons.find('**/ChtBx_OKBtn_Rllvr')), relief=None, text=OTPLocalizer.FriendSecretDetermineSecretAvatar, text_scale=0.07, text_pos=(0.0, -0.1), pos=(-0.35, 0.0, -0.05), command=self.__handleAvatar)
+        buttons = loader.loadModelOnce(
+            'phase_3/models/gui/dialog_box_buttons_gui')
+        self.avatarButton = DirectButton(
+            self,
+            image=(
+                buttons.find('**/ChtBx_OKBtn_UP'),
+                buttons.find('**/ChtBx_OKBtn_DN'),
+                buttons.find('**/ChtBx_OKBtn_Rllvr')),
+            relief=None,
+            text=OTPLocalizer.FriendSecretDetermineSecretAvatar,
+            text_scale=0.07,
+            text_pos=(
+                0.0,
+                -0.1),
+            pos=(
+                -0.35,
+                0.0,
+                -0.05),
+            command=self.__handleAvatar)
         avatarText = DirectLabel(parent=self, relief=None, pos=Vec3(0.35, 0, -0.3), text=OTPLocalizer.FriendSecretDetermineSecretAvatarRollover, text_fg=(0,
                                                                                                                                                           0,
                                                                                                                                                           0,
@@ -284,7 +378,23 @@ class FriendSecret(DirectFrame, StateData.StateData):
                                                                                                                                                                         0), text_scale=0.055, text_align=TextNode.ACenter)
         avatarText.reparentTo(self.avatarButton.stateNodePath[2])
         self.avatarButton.hide()
-        self.accountButton = DirectButton(self, image=(buttons.find('**/ChtBx_OKBtn_UP'), buttons.find('**/ChtBx_OKBtn_DN'), buttons.find('**/ChtBx_OKBtn_Rllvr')), relief=None, text=OTPLocalizer.FriendSecretDetermineSecretAccount, text_scale=0.07, text_pos=(0.0, -0.1), pos=(0.35, 0.0, -0.05), command=self.__handleAccount)
+        self.accountButton = DirectButton(
+            self,
+            image=(
+                buttons.find('**/ChtBx_OKBtn_UP'),
+                buttons.find('**/ChtBx_OKBtn_DN'),
+                buttons.find('**/ChtBx_OKBtn_Rllvr')),
+            relief=None,
+            text=OTPLocalizer.FriendSecretDetermineSecretAccount,
+            text_scale=0.07,
+            text_pos=(
+                0.0,
+                -0.1),
+            pos=(
+                0.35,
+                0.0,
+                -0.05),
+            command=self.__handleAccount)
         accountText = DirectLabel(parent=self, relief=None, pos=Vec3(-0.35, 0, -0.3), text=OTPLocalizer.FriendSecretDetermineSecretAccountRollover, text_fg=(0,
                                                                                                                                                              0,
                                                                                                                                                              0,
@@ -367,12 +477,17 @@ class FriendSecret(DirectFrame, StateData.StateData):
         else:
             if base.cr.needParentPasswordForSecretChat():
                 self.notify.info('### requestLimitedSecret')
-                base.cr.playerFriendsManager.sendRequestLimitedSecret(base.cr.parentUsername, base.cr.parentPassword)
+                base.cr.playerFriendsManager.sendRequestLimitedSecret(
+                    base.cr.parentUsername, base.cr.parentPassword)
             else:
                 base.cr.playerFriendsManager.sendRequestUnlimitedSecret()
                 self.notify.info('### requestUnlimitedSecret')
-            self.accept(OTPGlobals.PlayerFriendNewSecretEvent, self.__gotAccountSecret)
-            self.accept(OTPGlobals.PlayerFriendRejectNewSecretEvent, self.__rejectAccountSecret)
+            self.accept(
+                OTPGlobals.PlayerFriendNewSecretEvent,
+                self.__gotAccountSecret)
+            self.accept(
+                OTPGlobals.PlayerFriendRejectNewSecretEvent,
+                self.__rejectAccountSecret)
 
     def __gotAvatarSecret(self, result, secret):
         self.ignore('requestSecretResponse')
@@ -432,14 +547,20 @@ class FriendSecret(DirectFrame, StateData.StateData):
                 self.accept('submitSecretResponse', self.__enteredSecret)
                 base.cr.friendManager.up_submitSecret(secret)
             else:
-                self.accept(OTPGlobals.PlayerFriendUpdateEvent, self.__useAccountSecret)
-                self.accept(OTPGlobals.PlayerFriendRejectUseSecretEvent, self.__rejectUseAccountSecret)
+                self.accept(
+                    OTPGlobals.PlayerFriendUpdateEvent,
+                    self.__useAccountSecret)
+                self.accept(
+                    OTPGlobals.PlayerFriendRejectUseSecretEvent,
+                    self.__rejectUseAccountSecret)
                 if base.cr.needParentPasswordForSecretChat():
                     self.notify.info('### useLimitedSecret')
-                    base.cr.playerFriendsManager.sendRequestUseLimitedSecret(secret, base.cr.parentUsername, base.cr.parentPassword)
+                    base.cr.playerFriendsManager.sendRequestUseLimitedSecret(
+                        secret, base.cr.parentUsername, base.cr.parentPassword)
                 else:
                     self.notify.info('### useUnlimitedSecret')
-                    base.cr.playerFriendsManager.sendRequestUseUnlimitedSecret(secret)
+                    base.cr.playerFriendsManager.sendRequestUseUnlimitedSecret(
+                        secret)
         self.nextText['text'] = OTPLocalizer.FriendSecretTryingSecret
         self.nextText.setPos(0, 0, 0.3)
         self.nextText.show()
@@ -450,8 +571,9 @@ class FriendSecret(DirectFrame, StateData.StateData):
         self.ignore('submitSecretResponse')
         if result == 1:
             handle = base.cr.identifyAvatar(avId)
-            if handle != None:
-                self.nextText['text'] = OTPLocalizer.FriendSecretEnteredSecretSuccess % handle.getName()
+            if handle is not None:
+                self.nextText['text'] = OTPLocalizer.FriendSecretEnteredSecretSuccess % handle.getName(
+                )
             else:
                 self.accept('friendsMapComplete', self.__nowFriends, [avId])
                 ready = base.cr.fillUpFriendsMap()
@@ -464,8 +586,9 @@ class FriendSecret(DirectFrame, StateData.StateData):
             else:
                 if result == 2:
                     handle = base.cr.identifyAvatar(avId)
-                    if handle != None:
-                        self.nextText['text'] = OTPLocalizer.FriendSecretEnteredSecretFull % handle.getName()
+                    if handle is not None:
+                        self.nextText['text'] = OTPLocalizer.FriendSecretEnteredSecretFull % handle.getName(
+                        )
                     else:
                         self.nextText['text'] = OTPLocalizer.FriendSecretEnteredSecretFullNoName
                 else:
@@ -500,8 +623,9 @@ class FriendSecret(DirectFrame, StateData.StateData):
     def __nowFriends(self, avId):
         self.ignore('friendsMapComplete')
         handle = base.cr.identifyAvatar(avId)
-        if handle != None:
-            self.nextText['text'] = OTPLocalizer.FriendSecretNowFriends % handle.getName()
+        if handle is not None:
+            self.nextText['text'] = OTPLocalizer.FriendSecretNowFriends % handle.getName(
+            )
         else:
             self.nextText['text'] = OTPLocalizer.FriendSecretNowFriendsNoName
         self.nextText.show()

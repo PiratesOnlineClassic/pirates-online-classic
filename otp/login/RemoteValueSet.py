@@ -8,10 +8,11 @@ from direct.directnotify import DirectNotifyGlobal
 
 
 class RemoteValueSet:
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('RemoteValueSet')
 
-    def __init__(self, url, http, body='', expectedHeader=None, expectedFields=[], onUnexpectedResponse=None):
+    def __init__(self, url, http, body='', expectedHeader=None,
+                 expectedFields=[], onUnexpectedResponse=None):
         if onUnexpectedResponse is None:
             onUnexpectedResponse = self.__onUnexpectedResponse
         response = HTTPUtil.getHTTPResponse(url, http, body)
@@ -28,7 +29,7 @@ class RemoteValueSet:
                 continue
             try:
                 name, value = line.split('=', 1)
-            except ValueError, e:
+            except ValueError as e:
                 errMsg = 'unexpected response: %s' % response
                 self.notify.warning(errMsg)
                 onUnexpectedResponse(errMsg)
@@ -36,11 +37,12 @@ class RemoteValueSet:
             else:
                 if len(expectedFields):
                     if name not in expectedFields:
-                        self.notify.warning("received field '%s' that is not in expected field list" % name)
+                        self.notify.warning(
+                            "received field '%s' that is not in expected field list" % name)
                 self.dict[name] = value
 
         for name in expectedFields:
-            if not self.dict.has_key(name):
+            if name not in self.dict:
                 errMsg = "missing expected field '%s'" % name
                 self.notify.warning(errMsg)
                 onUnexpectedResponse(errMsg)
@@ -52,7 +54,7 @@ class RemoteValueSet:
         return 'RemoteValueSet:%s' % str(self.dict)
 
     def hasKey(self, key):
-        return self.dict.has_key(key)
+        return key in self.dict
 
     def getBool(self, name, default=None):
         return self.__getValue(name, lambda x: int(x) != 0, default)

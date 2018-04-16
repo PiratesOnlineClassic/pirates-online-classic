@@ -25,7 +25,8 @@ class MarginManager(PandaNode):
         self.reorganize()
 
     def removeVisiblePopup(self, popup):
-        if popup not in self.visiblePopups: return
+        if popup not in self.visiblePopups:
+            return
         self.visiblePopups.remove(popup)
         self.reorganize()
 

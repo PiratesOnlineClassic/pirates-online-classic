@@ -10,6 +10,7 @@ from pandac.PandaModules import TextEncoder
 
 notify = DirectNotifyGlobal.directNotify.newCategory('NameCheck')
 
+
 def filterString(str, filter):
     result = ''
     for char in str:
@@ -138,7 +139,7 @@ def checkName(name, otherCheckFuncs=[]):
             return 1
 
         i = 0
-        while 1:
+        while True:
             i = name.find('-', i, len(name))
             if i < 0:
                 return
@@ -161,7 +162,7 @@ def checkName(name, otherCheckFuncs=[]):
             return
 
         i = 0
-        while 1:
+        while True:
             i = name.find(',', i, len(name))
             if i < 0:
                 return
@@ -191,7 +192,9 @@ def checkName(name, otherCheckFuncs=[]):
                 return OTPLocalizer.NCPeriodUsage
             if numPeriods == 2:
                 if not (word[1] == '.' and word[3] == '.'):
-                    notify.info('word "%s" does not fit the J.T. pattern' % word)
+                    notify.info(
+                        'word "%s" does not fit the J.T. pattern' %
+                        word)
                     return OTPLocalizer.NCPeriodUsage
 
         return
@@ -255,7 +258,7 @@ def checkName(name, otherCheckFuncs=[]):
         return
 
     checks = [
-     longEnough, emptyName, printableChars, badCharacters, hasLetters, hasVowels, monoLetter, checkDashes, checkCommas, checkPeriods, checkApostrophes, tooManyWords, allCaps, mixedCase, repeatedChars] + otherCheckFuncs
+        longEnough, emptyName, printableChars, badCharacters, hasLetters, hasVowels, monoLetter, checkDashes, checkCommas, checkPeriods, checkApostrophes, tooManyWords, allCaps, mixedCase, repeatedChars] + otherCheckFuncs
     symmetricChecks = []
     notify.info('checking name "%s"...' % name)
     for check in checks:

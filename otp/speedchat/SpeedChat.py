@@ -10,9 +10,9 @@ from SpeedChatTypes import *
 
 
 class SpeedChat(SCMenu):
-    
 
-    def __init__(self, name='', structure=None, backgroundModelName=None, guiModelName=None):
+    def __init__(self, name='', structure=None,
+                 backgroundModelName=None, guiModelName=None):
         SCMenu.BackgroundModelName = backgroundModelName
         SCMenu.GuiModelName = guiModelName
         SCMenu.__init__(self)
@@ -53,7 +53,7 @@ class SpeedChat(SCMenu):
         if not boolEqual(self.settings.whisperMode, whisperMode):
             self.settings.whisperMode = whisperMode
             messenger.send(self.getEventName(SCWhisperModeChangeEvent), [
-             whisperMode])
+                whisperMode])
 
     def setColorScheme(self, colorScheme):
         self.settings.colorScheme = colorScheme

@@ -18,10 +18,10 @@ class SCCustomMenu(SCMenu):
 
         try:
             lt = base.localAvatar
-        except:
+        except BaseException:
             return
 
         if lt:
             for msgIndex in lt.customMessages:
-                if CustomSCStrings.has_key(msgIndex):
+                if msgIndex in CustomSCStrings:
                     self.append(SCCustomTerminal(msgIndex))

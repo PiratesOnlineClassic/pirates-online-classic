@@ -5,7 +5,6 @@
 
 
 class PickANamePattern:
-    
 
     def __init__(self, nameStr, gender):
         self._nameStr = nameStr
@@ -46,7 +45,7 @@ class PickANamePattern:
         for permutation in self._genWordListSplitPermutations(words[1:]):
             yield [words[0]] + permutation
             yield [
-             words[0] + ' ' + permutation[0]] + permutation[1:]
+                words[0] + ' ' + permutation[0]] + permutation[1:]
 
     def _genNameSplitPermutations(self, name):
         for splitName in self._genWordListSplitPermutations(name.split()):
@@ -74,18 +73,18 @@ class PickANamePattern:
         if words[wi] in nameParts[nwli]:
             if pattern is None:
                 pattern = [
-                 -1] * len(nameParts)
+                    -1] * len(nameParts)
             word2index = nameParts[nwli]
             newPattern = pattern[:]
             newPattern[nwli] = word2index[words[wi]]
-            result = self._recursiveCompute(words, nameParts, wi + 1, nwli + 1, newPattern)
+            result = self._recursiveCompute(
+                words, nameParts, wi + 1, nwli + 1, newPattern)
             if result:
                 return result
         return self._recursiveCompute(words, nameParts, wi, nwli + 1, pattern)
 
 
 class PickANamePatternTwoPartLastName(PickANamePattern):
-    
 
     def getNameString(self, pattern, gender):
         name = PickANamePattern.getNameString(self, pattern, gender)
@@ -126,7 +125,7 @@ class PickANamePatternTwoPartLastName(PickANamePattern):
                     combinedLastName += second
                 combinedNameParts[-1][combinedLastName] = k
                 combinedIndex2indices[k] = (
-                 i, j)
+                    i, j)
                 k += 1
 
         pattern = self._computeWithNameParts(nameStr, combinedNameParts)

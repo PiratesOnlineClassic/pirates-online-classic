@@ -14,8 +14,9 @@ from SCObject import SCObject
 
 
 class SCMenu(SCObject, NodePath):
-    
-    SpeedChatRolloverTolerance = config.GetFloat('speedchat-rollover-tolerance', 0.08)
+
+    SpeedChatRolloverTolerance = config.GetFloat(
+        'speedchat-rollover-tolerance', 0.08)
     WantFade = config.GetBool('want-speedchat-fade', 0)
     FadeDuration = config.GetFloat('speedchat-fade-duration', 0.2)
     SerialNum = 0
@@ -44,7 +45,8 @@ class SCMenu(SCObject, NodePath):
 
             return results
 
-        self.bgTop, self.bgBottom, self.bgLeft, self.bgRight, self.bgMiddle, self.bgTopLeft, self.bgBottomLeft, self.bgTopRight, self.bgBottomRight = findNodes([('top', 'top1'), 'bottom', 'left', 'right', 'middle', 'topLeft', 'bottomLeft', 'topRight', 'bottomRight'])
+        self.bgTop, self.bgBottom, self.bgLeft, self.bgRight, self.bgMiddle, self.bgTopLeft, self.bgBottomLeft, self.bgTopRight, self.bgBottomRight = findNodes(
+            [('top', 'top1'), 'bottom', 'left', 'right', 'middle', 'topLeft', 'bottomLeft', 'topRight', 'bottomRight'])
         self.bg.reparentTo(self, -1)
         self.__members = []
         self.activeMember = None
@@ -98,17 +100,17 @@ class SCMenu(SCObject, NodePath):
         def addChildren(menu, childList):
             for child in childList:
                 emote = None
-                if type(child) == type({}):
+                if isinstance(child, type({})):
                     item = child.keys()[0]
                     emote = child[item]
                     child = item
-                if type(child) == type(0):
+                if isinstance(child, type(0)):
                     terminal = SCStaticTextTerminal(child)
                     if emote is not None:
                         terminal.setLinkedEmote(emote)
                     menu.append(terminal)
-                elif type(child) == type([]):
-                    if type(child[0]) == type(''):
+                elif isinstance(child, type([])):
+                    if isinstance(child[0], type('')):
                         holderTitle = child[0]
                         subMenu = SCMenu()
                         subMenuChildren = child[1:]
@@ -160,7 +162,8 @@ class SCMenu(SCObject, NodePath):
                 self.fadeFunc(1.0)
             else:
                 self.stopFade()
-                self.fadeIval = LerpFunctionInterval(self.fadeFunc, fromData=0.0, toData=1.0, duration=SCMenu.FadeDuration)
+                self.fadeIval = LerpFunctionInterval(
+                    self.fadeFunc, fromData=0.0, toData=1.0, duration=SCMenu.FadeDuration)
                 self.fadeIval.play()
                 if parentMenu is not None:
                     parentMenu.childHasFaded = 1
@@ -185,7 +188,7 @@ class SCMenu(SCObject, NodePath):
         return self.holder
 
     def isTopLevel(self):
-        return self.holder == None
+        return self.holder is None
 
     def memberSelected(self, member):
         self.__cancelActiveMemberSwitch()
@@ -217,7 +220,10 @@ class SCMenu(SCObject, NodePath):
 
             minFrameRate = 1.0 / SCMenu.SpeedChatRolloverTolerance
             if globalClock.getAverageFrameRate() > minFrameRate:
-                taskMgr.doMethodLater(SCMenu.SpeedChatRolloverTolerance, doActiveMemberSwitch, self.ActiveMemberSwitchTaskName)
+                taskMgr.doMethodLater(
+                    SCMenu.SpeedChatRolloverTolerance,
+                    doActiveMemberSwitch,
+                    self.ActiveMemberSwitchTaskName)
                 self.activeCandidate = member
             else:
                 self.__setActiveMember(member)
@@ -253,7 +259,10 @@ class SCMenu(SCObject, NodePath):
             return Task.done
 
         taskMgr.remove(self.FinalizeTaskName)
-        taskMgr.add(finalizeMenu, self.FinalizeTaskName, priority=SCMenuFinalizePriority)
+        taskMgr.add(
+            finalizeMenu,
+            self.FinalizeTaskName,
+            priority=SCMenuFinalizePriority)
 
     def privCancelFinalize(self):
         taskMgr.remove(self.FinalizeTaskName)

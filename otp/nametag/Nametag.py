@@ -15,7 +15,7 @@ class Nametag(ClickablePopup):
 
     DEFAULT_CHAT_WORDWRAP = 10.0
 
-    IS_3D = False # 3D variants will set this to True.
+    IS_3D = False  # 3D variants will set this to True.
 
     def __init__(self):
         if self.IS_3D:
@@ -23,7 +23,7 @@ class Nametag(ClickablePopup):
         else:
             ClickablePopup.__init__(self)
 
-        self.contents = 0 # To be set by subclass.
+        self.contents = 0  # To be set by subclass.
 
         self.innerNP = NodePath.anyPath(self).attachNewNode('nametag_contents')
 
@@ -35,17 +35,17 @@ class Nametag(ClickablePopup):
         self.speechFont = None
         self.name = ''
         self.displayName = ''
-        self.qtColor = VBase4(1,1,1,1)
+        self.qtColor = VBase4(1, 1, 1, 1)
         self.colorCode = CCNormal
         self.avatar = None
         self.icon = PandaNode('icon')
 
         self.frame = (0, 0, 0, 0)
 
-        self.nameFg = (0,0,0,1)
-        self.nameBg = (1,1,1,1)
-        self.chatFg = (0,0,0,1)
-        self.chatBg = (1,1,1,1)
+        self.nameFg = (0, 0, 0, 1)
+        self.nameBg = (1, 1, 1, 1)
+        self.chatFg = (0, 0, 0, 1)
+        self.chatBg = (1, 1, 1, 1)
 
         self.chatString = ''
         self.chatFlags = 0
@@ -67,7 +67,7 @@ class Nametag(ClickablePopup):
         self.chatWordWrap = chatWordWrap
 
     def tick(self):
-        pass # Does nothing by default.
+        pass  # Does nothing by default.
 
     def clickStateChanged(self):
         self.update()
@@ -78,7 +78,8 @@ class Nametag(ClickablePopup):
         else:
             cc = CCNormal
 
-        self.nameFg, self.nameBg, self.chatFg, self.chatBg = NAMETAG_COLORS[cc][self.getClickState()]
+        self.nameFg, self.nameBg, self.chatFg, self.chatBg = NAMETAG_COLORS[cc][self.getClickState(
+        )]
 
         self.innerNP.node().removeAllChildren()
         if self.contents & self.CThought and self.chatFlags & CFThought:
@@ -93,7 +94,8 @@ class Nametag(ClickablePopup):
             # If no font is set, we can't display anything yet...
             return
 
-        color = self.qtColor if (self.chatFlags & CFQuicktalker) else self.chatBg
+        color = self.qtColor if (
+            self.chatFlags & CFQuicktalker) else self.chatBg
         if color[3] > self.CHAT_ALPHA:
             color = (color[0], color[1], color[2], self.CHAT_ALPHA)
 
@@ -101,8 +103,8 @@ class Nametag(ClickablePopup):
 
         balloon, frame = balloon.generate(text, self.font, textColor=self.chatFg,
                                           balloonColor=color,
-                                          wordWrap=self.chatWordWrap or \
-                                            self.DEFAULT_CHAT_WORDWRAP,
+                                          wordWrap=self.chatWordWrap or
+                                          self.DEFAULT_CHAT_WORDWRAP,
                                           reversed=reversed)
         balloon.reparentTo(self.innerNP)
         self.frame = frame

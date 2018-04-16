@@ -13,7 +13,6 @@ from pandac.PandaModules import *
 
 
 class NameTumbler(DirectFrame):
-    
 
     def __init__(self, nameList, category):
         DirectFrame.__init__(self, parent=aspect2d, relief='flat', scale=(1, 1, 1), state='disabled', frameColor=(1,
@@ -26,7 +25,7 @@ class NameTumbler(DirectFrame):
         self.category = category
         self.tumblerColor = Vec4(1, 1, 1, 1)
         self.displayList = [
-         ' '] + [' '] + self.nameList + [' '] + [' ']
+            ' '] + [' '] + self.nameList + [' '] + [' ']
         self.nameIndex = -1
         self.isActive = 1
         self.loadTumblerGUI()
@@ -37,7 +36,7 @@ class NameTumbler(DirectFrame):
         self.upArrow = 'src/maps/NameTumblerUpArrow.tif'
         self.downArrow = 'src/maps/NameTumblerDownArrow.tif'
         self.tumblerscrollList = self.makeScrollList(self.displayList, self.makeLabel, [
-         TextNode.ACenter, 'title'])
+            TextNode.ACenter, 'title'])
         self.tumblerscrollList['command'] = self.listsChanged
         self.tumblerscrollList.reparentTo(self)
         self.hilight = self.makeHighlight((0, 0, -0.15))
@@ -121,7 +120,14 @@ class NameTumbler(DirectFrame):
                 newpos = (0, 0, 0)
             else:
                 newpos = (0.2, 0, 0)
-        df = DirectFrame(state='normal', relief=None, text=te, text_scale=0.1, text_pos=newpos, text_align=alig, textMayChange=0)
+        df = DirectFrame(
+            state='normal',
+            relief=None,
+            text=te,
+            text_scale=0.1,
+            text_pos=newpos,
+            text_align=alig,
+            textMayChange=0)
         df.bind(DGG.B1PRESS, lambda x, df=df: self.nameClickedOn(index))
         return df
 

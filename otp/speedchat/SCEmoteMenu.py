@@ -17,7 +17,7 @@ class SCEmoteMenu(SCMenu):
 
         try:
             lt = base.localAvatar
-        except:
+        except BaseException:
             return
 
         if lt:

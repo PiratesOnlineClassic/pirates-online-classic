@@ -1,6 +1,7 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
 
+
 class DistributedDistrict(DistributedObject):
     notify = directNotify.newCategory('DistributedDistrict')
     neverDisable = 1
@@ -20,7 +21,7 @@ class DistributedDistrict(DistributedObject):
     def delete(self):
         if base.cr.distributedDistrict is self:
             base.cr.distributedDistrict = None
-        if self.cr.activeDistrictMap.has_key(self.doId):
+        if self.doId in self.cr.activeDistrictMap:
             del self.cr.activeDistrictMap[self.doId]
         DistributedObject.delete(self)
         messenger.send('shardInfoUpdated')

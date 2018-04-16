@@ -53,11 +53,17 @@ DisconnectCloseWindow = 2
 DisconnectPythonError = 3
 DisconnectSwitchShards = 4
 DisconnectGraphicsError = 5
-DisconnectReasons = {DisconnectUnknown: 'unknown', DisconnectBookExit: 'book exit', DisconnectCloseWindow: 'closed window', DisconnectPythonError: 'python error', DisconnectSwitchShards: 'switch shards', DisconnectGraphicsError: 'graphics error'}
+DisconnectReasons = {
+    DisconnectUnknown: 'unknown',
+    DisconnectBookExit: 'book exit',
+    DisconnectCloseWindow: 'closed window',
+    DisconnectPythonError: 'python error',
+    DisconnectSwitchShards: 'switch shards',
+    DisconnectGraphicsError: 'graphics error'}
 DatabaseDialogTimeout = 20.0
 DatabaseGiveupTimeout = 45.0
 PeriodTimerWarningTime = (
- 600, 300, 60)
+    600, 300, 60)
 WalkCutOff = 0.5
 RunCutOff = 8.0
 FloorOffset = 0.025
@@ -74,11 +80,12 @@ DialogClass = None
 GlobalDialogClass = None
 ProductPrefix = None
 
+
 def getInterfaceFont():
     global InterfaceFont
     global InterfaceFontPath
-    if InterfaceFont == None:
-        if InterfaceFontPath == None:
+    if InterfaceFont is None:
+        if InterfaceFontPath is None:
             InterfaceFont = TextNode.getDefaultFont()
         else:
             InterfaceFont = loader.loadFont(InterfaceFontPath, lineHeight=1.0)
@@ -96,8 +103,8 @@ def setInterfaceFont(path):
 def getSignFont():
     global SignFont
     global SignFontPath
-    if SignFont == None:
-        if SignFontPath == None:
+    if SignFont is None:
+        if SignFontPath is None:
             InterfaceFont = TextNode.getDefaultFont()
             SignFont = TextNode.getDefaultFont()
         else:
@@ -113,8 +120,8 @@ def setSignFont(path):
 def getFancyFont():
     global FancyFont
     global FancyFontPath
-    if FancyFont == None:
-        if FancyFontPath == None:
+    if FancyFont is None:
+        if FancyFontPath is None:
             InterfaceFont = TextNode.getDefaultFont()
             FancyFont = TextNode.getDefaultFont()
         else:
@@ -130,12 +137,13 @@ def setFancyFont(path):
 def getNametagFont(index):
     global NametagFontPaths
     global NametagFonts
-    if not NametagFonts.has_key(index) or NametagFonts[index] == None:
-        if not NametagFontPaths.has_key(index) or NametagFontPaths[index] == None:
+    if index not in NametagFonts or NametagFonts[index] is None:
+        if index not in NametagFontPaths or NametagFontPaths[index] is None:
             InterfaceFont = TextNode.getDefaultFont()
             NametagFonts[index] = TextNode.getDefaultFont()
         else:
-            NametagFonts[index] = loader.loadFont(NametagFontPaths[index], lineHeight=1.0)
+            NametagFonts[index] = loader.loadFont(
+                NametagFontPaths[index], lineHeight=1.0)
     return NametagFonts[index]
 
 
@@ -145,7 +153,7 @@ def setNametagFont(index, path):
 
 def getDialogClass():
     global DialogClass
-    if DialogClass == None:
+    if DialogClass is None:
         from otp.otpgui.OTPDialog import OTPDialog
         DialogClass = OTPDialog
     return DialogClass
@@ -153,7 +161,7 @@ def getDialogClass():
 
 def getGlobalDialogClass():
     global GlobalDialogClass
-    if DialogClass == None:
+    if DialogClass is None:
         from otp.otpgui.OTPDialog import GlobalDialog
         GlobalDialogClass = GlobalDialog
     return GlobalDialogClass
@@ -211,14 +219,75 @@ InventoryHotkeyOn = 'home'
 InventoryHotkeyOff = 'home-up'
 PrintCamPosHotkey = 'f12'
 GlobalDialogColor = (
- 1, 1, 0.75, 1)
+    1, 1, 0.75, 1)
 DefaultBackgroundColor = (
- 0.3, 0.3, 0.3, 1)
-toonBodyScales = {'mouse': 0.6, 'cat': 0.73, 'duck': 0.66, 'rabbit': 0.74, 'horse': 0.85, 'dog': 0.85, 'monkey': 0.68, 'bear': 0.85, 'pig': 0.77}
-toonHeadScales = {'mouse': Point3(1.0), 'cat': Point3(1.0), 'duck': Point3(1.0), 'rabbit': Point3(1.0), 'horse': Point3(1.0), 'dog': Point3(1.0), 'monkey': Point3(1.0), 'bear': Point3(1.0), 'pig': Point3(1.0)}
+    0.3, 0.3, 0.3, 1)
+toonBodyScales = {
+    'mouse': 0.6,
+    'cat': 0.73,
+    'duck': 0.66,
+    'rabbit': 0.74,
+    'horse': 0.85,
+    'dog': 0.85,
+    'monkey': 0.68,
+    'bear': 0.85,
+    'pig': 0.77}
+toonHeadScales = {
+    'mouse': Point3(1.0),
+    'cat': Point3(1.0),
+    'duck': Point3(1.0),
+    'rabbit': Point3(1.0),
+    'horse': Point3(1.0),
+    'dog': Point3(1.0),
+    'monkey': Point3(1.0),
+    'bear': Point3(1.0),
+    'pig': Point3(1.0)}
 legHeightDict = {'s': 1.5, 'm': 2.0, 'l': 2.75}
-torsoHeightDict = {'s': 1.5, 'm': 1.75, 'l': 2.25, 'ss': 1.5, 'ms': 1.75, 'ls': 2.25, 'sd': 1.5, 'md': 1.75, 'ld': 2.25}
-headHeightDict = {'dls': 0.75, 'dss': 0.5, 'dsl': 0.5, 'dll': 0.75, 'cls': 0.75, 'css': 0.5, 'csl': 0.5, 'cll': 0.75, 'hls': 0.75, 'hss': 0.5, 'hsl': 0.5, 'hll': 0.75, 'mls': 0.75, 'mss': 0.5, 'rls': 0.75, 'rss': 0.5, 'rsl': 0.5, 'rll': 0.75, 'fls': 0.75, 'fss': 0.5, 'fsl': 0.5, 'fll': 0.75, 'pls': 0.75, 'pss': 0.5, 'psl': 0.5, 'pll': 0.75, 'bls': 0.75, 'bss': 0.5, 'bsl': 0.5, 'bll': 0.75, 'sls': 0.75, 'sss': 0.5, 'ssl': 0.5, 'sll': 0.75}
+torsoHeightDict = {
+    's': 1.5,
+    'm': 1.75,
+    'l': 2.25,
+    'ss': 1.5,
+    'ms': 1.75,
+    'ls': 2.25,
+    'sd': 1.5,
+    'md': 1.75,
+    'ld': 2.25}
+headHeightDict = {
+    'dls': 0.75,
+    'dss': 0.5,
+    'dsl': 0.5,
+    'dll': 0.75,
+    'cls': 0.75,
+    'css': 0.5,
+    'csl': 0.5,
+    'cll': 0.75,
+    'hls': 0.75,
+    'hss': 0.5,
+    'hsl': 0.5,
+    'hll': 0.75,
+    'mls': 0.75,
+    'mss': 0.5,
+    'rls': 0.75,
+    'rss': 0.5,
+    'rsl': 0.5,
+    'rll': 0.75,
+    'fls': 0.75,
+    'fss': 0.5,
+    'fsl': 0.5,
+    'fll': 0.75,
+    'pls': 0.75,
+    'pss': 0.5,
+    'psl': 0.5,
+    'pll': 0.75,
+    'bls': 0.75,
+    'bss': 0.5,
+    'bsl': 0.5,
+    'bll': 0.75,
+    'sls': 0.75,
+    'sss': 0.5,
+    'ssl': 0.5,
+    'sll': 0.75}
 RandomButton = 'Randomize'
 TypeANameButton = 'Type Name'
 PickANameButton = 'Pick-A-Name'
@@ -231,7 +300,8 @@ NameShopPlay = 'Free Trial'
 NameShopOnlyPaid = 'Only paid users\nmay name their Toons.\nUntil you subscribe\nyour name will be\n'
 NameShopContinueSubmission = 'Continue Submission'
 NameShopChooseAnother = 'Choose Another Name'
-NameShopToonCouncil = 'The Toon Council\nwill review your\nname.  ' + 'Review may\ntake a few days.\nWhile you wait\nyour name will be\n '
+NameShopToonCouncil = 'The Toon Council\nwill review your\nname.  ' + \
+    'Review may\ntake a few days.\nWhile you wait\nyour name will be\n '
 PleaseTypeName = 'Please type your name:'
 AllNewNames = 'All new names\nmust be approved\nby the Toon Council.'
 NameShopNameRejected = 'The name you\nsubmitted has\nbeen rejected.'
@@ -241,7 +311,18 @@ PeriodOnlyAfterLetter = 'You can use a period in your name, but only after a let
 ApostropheOnlyAfterLetter = 'You can use an apostrophe in your name, but only after a letter.'
 NoNumbersInTheMiddle = 'Numeric digits may not appear in the middle of a word.'
 ThreeWordsOrLess = 'Your name must be three words or fewer.'
-CopyrightedNames = ('mickey', 'mickey mouse', 'mickeymouse', 'minnie', 'minnie mouse', 'minniemouse', 'donald', 'donald duck', 'donaldduck', 'pluto', 'goofy')
+CopyrightedNames = (
+    'mickey',
+    'mickey mouse',
+    'mickeymouse',
+    'minnie',
+    'minnie mouse',
+    'minniemouse',
+    'donald',
+    'donald duck',
+    'donaldduck',
+    'pluto',
+    'goofy')
 GuildUpdateMembersEvent = 'guildUpdateMembersEvent'
 GuildInvitationEvent = 'guildInvitationEvent'
 GuildAcceptInviteEvent = 'guildAcceptInviteEvent'

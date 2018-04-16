@@ -5,7 +5,7 @@
 
 
 class RejectCode:
-    
+
     TIMEOUT = 65535
     NO_GUILD = 10000
     MAY_NOT_JOIN_GUILD = 10001

@@ -58,7 +58,8 @@ class WhisperPopup(MarginPopup, ClickablePopup):
         text = balloon.find('**/+TextNode')
         t = text.node()
         self.left, self.right, self.bottom, self.top = t.getFrameActual()
-        center = self.innerNP.getRelativePoint(text, ((self.left + self.right) / 2., 0, (self.bottom + self.top) / 2.))
+        center = self.innerNP.getRelativePoint(
+            text, ((self.left + self.right) / 2., 0, (self.bottom + self.top) / 2.))
 
         # Next translate the balloon along the inverse.
         balloon.setPos(balloon, -center)
@@ -88,7 +89,12 @@ class WhisperPopup(MarginPopup, ClickablePopup):
     def manage(self, manager):
         MarginPopup.manage(self, manager)
 
-        taskMgr.doMethodLater(self.timeout, self.unmanage, 'whisper-timeout-%d' % id(self), [manager])
+        taskMgr.doMethodLater(
+            self.timeout,
+            self.unmanage,
+            'whisper-timeout-%d' %
+            id(self),
+            [manager])
 
     # Manually Clean up
     def unmanage(self, manager):

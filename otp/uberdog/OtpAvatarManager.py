@@ -5,8 +5,9 @@ from direct.distributed import DistributedObject
 
 notify = DirectNotifyGlobal.directNotify.newCategory('AvatarManager')
 
+
 class OtpAvatarManager(DistributedObject.DistributedObject):
-    
+
     notify = notify
     OnlineEvent = 'GlobalAvatarManagerOnline'
 
@@ -36,11 +37,15 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
         messenger.send('createdNewAvatarFailed', [result])
 
     def createAvatarResponse(self, avatarId, subId, access, founder):
-        self.notify.info('new avatarId: %s subId: %s access: %s founder: %s' % (avatarId, subId, access, founder))
+        self.notify.info(
+            'new avatarId: %s subId: %s access: %s founder: %s' %
+            (avatarId, subId, access, founder))
         messenger.send('createdNewAvatar', [avatarId, subId])
 
     def sendRequestRemoveAvatar(self, avatarId, subId, confirmPassword):
-        self.sendUpdate('requestRemoveAvatar', [0, avatarId, subId, confirmPassword])
+        self.sendUpdate(
+            'requestRemoveAvatar', [
+                0, avatarId, subId, confirmPassword])
 
     def rejectRemoveAvatar(self, reasonId):
         messenger.send('rejectRemoveAvatar', [reasonId])
@@ -73,4 +78,6 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
         messenger.send('rejectPlayAvatar', [reasonId, avatarId])
 
     def playAvatarResponse(self, avatarId, subId, access, founder):
-        messenger.send('playAvatarResponse', [avatarId, subId, access, founder])
+        messenger.send(
+            'playAvatarResponse', [
+                avatarId, subId, access, founder])

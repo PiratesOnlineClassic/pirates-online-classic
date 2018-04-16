@@ -5,6 +5,7 @@ from direct.distributed.DistributedSmoothNodeAI import DistributedSmoothNodeAI
 from direct.task import Task
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedAvatarAI(DistributedSmoothNodeAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedAvatarAI')
 
@@ -60,4 +61,6 @@ class DistributedAvatarAI(DistributedSmoothNodeAI):
         if simbase.air.doId2do[avId]:
             onShard = True
 
-        self.sendUpdateToAvatarId(senderId, 'confirmAvOnShard', [avId, onShard])
+        self.sendUpdateToAvatarId(
+            senderId, 'confirmAvOnShard', [
+                avId, onShard])

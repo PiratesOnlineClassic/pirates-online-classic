@@ -4,7 +4,7 @@ from otp.otpbase import OTPLocalizer
 
 
 class Emote:
-    
+
     EmoteClear = -1
     EmoteEnableStateChanged = 'EmoteEnableStateChanged'
 
@@ -15,7 +15,7 @@ class Emote:
     def isEnabled(self, index):
         if isinstance(index, types.StringType):
             index = OTPLocalizer.EmoteFuncDict[index]
-        if self.emoteFunc == None:
+        if self.emoteFunc is None:
             return 0
         else:
             if self.emoteFunc[index][1] == 0:

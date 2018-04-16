@@ -8,11 +8,12 @@ from pandac.PandaModules import *
 
 
 class MultiPageTextFrame(DirectFrame):
-    
+
     defWidth = 1.8
     defHeight = 0.9
 
-    def __init__(self, textList, width=defWidth, height=defHeight, wordWrap=None, hidePageNum=0, pageChangeCallback=None, parent=None, **kw):
+    def __init__(self, textList, width=defWidth, height=defHeight, wordWrap=None,
+                 hidePageNum=0, pageChangeCallback=None, parent=None, **kw):
         if not parent:
             parent = aspect2d
         self.textList = textList
@@ -23,8 +24,8 @@ class MultiPageTextFrame(DirectFrame):
         hWidth = width / 2.0
         hHeight = height / 2.0
         optiondefs = (
-         (
-          'relief', DGG.SUNKEN, None), ('frameSize', (-hWidth, hWidth, -hHeight, hHeight), None), ('frameColor', (0.85, 0.85, 0.6, 1), None), ('borderWidth', (0.01, 0.01), None), ('text', '', None), ('text_pos', (-hWidth * 0.95, hHeight * 0.93), None), ('text_scale', 0.05, None), ('text_align', TextNode.ALeft, None), ('text_wordwrap', wordWrap, None))
+            (
+                'relief', DGG.SUNKEN, None), ('frameSize', (-hWidth, hWidth, -hHeight, hHeight), None), ('frameColor', (0.85, 0.85, 0.6, 1), None), ('borderWidth', (0.01, 0.01), None), ('text', '', None), ('text_pos', (-hWidth * 0.95, hHeight * 0.93), None), ('text_scale', 0.05, None), ('text_align', TextNode.ALeft, None), ('text_wordwrap', wordWrap, None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent)
         self.initialiseoptions(MultiPageTextFrame)
@@ -66,7 +67,8 @@ class MultiPageTextFrame(DirectFrame):
                 else:
                     self.nextButton.show()
                     self.prevButton.show()
-        self.pageNum['text'] = OTPLocalizer.MultiPageTextFramePage % (self.curPage + 1, self.numPages)
+        self.pageNum['text'] = OTPLocalizer.MultiPageTextFramePage % (
+            self.curPage + 1, self.numPages)
         self['text'] = self.textList[self.curPage]
         if self.pageChangeCallback:
             self.pageChangeCallback(self.getCurPage())

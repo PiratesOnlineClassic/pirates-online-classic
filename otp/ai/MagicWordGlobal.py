@@ -80,6 +80,7 @@ class Spellbook:
 
         return r
 
+
 spellbook = Spellbook()
 
 
@@ -88,6 +89,7 @@ class MagicWordCategory:
     def __init__(self, name, access):
         self.name = name
         self.access = access
+
 
 CATEGORY_ANY = MagicWordCategory('Unrestricted commands', 0)
 CATEGORY_TESTER = MagicWordCategory('Tester commands', 200)
@@ -107,18 +109,23 @@ class MagicWord:
 
     def parseArgs(self, string):
         maxArgs = self.func.func_code.co_argcount
-        minArgs = maxArgs - (len(self.func.func_defaults) if self.func.func_defaults else 0)
+        minArgs = maxArgs - (len(self.func.func_defaults)
+                             if self.func.func_defaults else 0)
 
-        args = string.split(None, maxArgs-1)[:maxArgs]
+        args = string.split(None, maxArgs - 1)[:maxArgs]
         if len(args) < minArgs:
-            raise MagicError('Magic word %s requires at least %d arguments' % (self.name, minArgs))
+            raise MagicError(
+                'Magic word %s requires at least %d arguments' %
+                (self.name, minArgs))
 
         output = []
         for i, (type, arg) in enumerate(zip(self.types, args)):
             try:
                 targ = type(arg)
             except (TypeError, ValueError):
-                raise MagicError('Argument %d of magic word %s must be %s' % (i, self.name, type.__name__))
+                raise MagicError(
+                    'Argument %d of magic word %s must be %s' %
+                    (i, self.name, type.__name__))
 
             output.append(targ)
 
@@ -155,5 +162,6 @@ class MagicWordDecorator:
         spellbook.addWord(word)
 
         return mw
+
 
 magicWord = MagicWordDecorator

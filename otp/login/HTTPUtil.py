@@ -6,14 +6,12 @@ from pandac.PandaModules import *
 
 
 class HTTPUtilException(Exception):
-    
 
     def __init__(self, what):
         Exception.__init__(self, what)
 
 
 class ConnectionError(HTTPUtilException):
-    
 
     def __init__(self, what, statusCode):
         HTTPUtilException.__init__(self, what)
@@ -21,7 +19,6 @@ class ConnectionError(HTTPUtilException):
 
 
 class UnexpectedResponse(HTTPUtilException):
-    
 
     def __init__(self, what):
         HTTPUtilException.__init__(self, what)
@@ -33,7 +30,9 @@ def getHTTPResponse(url, http, body=''):
     else:
         hd = http.getDocument(url)
     if not hd.isValid():
-        raise ConnectionError('Unable to reach %s' % url.cStr(), hd.getStatusCode())
+        raise ConnectionError(
+            'Unable to reach %s' %
+            url.cStr(), hd.getStatusCode())
     stream = hd.openReadFile(1)
     sr = StreamReader(stream, 1)
     response = sr.readlines()

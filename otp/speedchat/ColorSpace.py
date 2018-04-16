@@ -16,7 +16,7 @@ def rgb2hsv(r, g, b):
         s = 0.0
         h = -1.0
         return (
-         h, s, v)
+            h, s, v)
     if r == _max:
         h = (g - b) / delta
     else:
@@ -33,7 +33,7 @@ def rgb2hsv(r, g, b):
 def hsv2rgb(h, s, v):
     if s == 0.0:
         return (
-         v, v, v)
+            v, v, v)
     h %= 360.0
     h /= 60.0
     i = int(math.floor(h))
@@ -57,7 +57,7 @@ def hsv2rgb(h, s, v):
                         return (t, p, v)
                     else:
                         return (
-                         v, p, q)
+                            v, p, q)
 
 
 def rgb2yuv(r, g, b):

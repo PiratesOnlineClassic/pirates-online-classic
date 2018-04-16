@@ -1,6 +1,7 @@
 from direct.distributed.DistributedObjectGlobalAI import DistributedObjectGlobalAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class CentralLoggerAI(DistributedObjectGlobalAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('CentralLoggerAI')
 
@@ -8,7 +9,9 @@ class CentralLoggerAI(DistributedObjectGlobalAI):
         DistributedObjectGlobalAI.__init__(self, air)
 
     def sendMessage(self, category, message, targetDISLid, targetAvId):
-        self.sendUpdate('sendMessage', [category, message, targetDISLid, targetAvId])
+        self.sendUpdate(
+            'sendMessage', [
+                category, message, targetDISLid, targetAvId])
 
     def logMessageLocally(self, category, message, targetDISLid, targetAvId):
         parts = message.split('|')
@@ -33,4 +36,8 @@ class CentralLoggerAI(DistributedObjectGlobalAI):
             data = json.dumps(event)
             print(data)
 
-        self.air.writeServerEvent(category, messageType=msgType, message=message, **fields)
+        self.air.writeServerEvent(
+            category,
+            messageType=msgType,
+            message=message,
+            **fields)

@@ -2,8 +2,9 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.web.SettingsMgrBase import SettingsMgrBase
 
+
 class SettingsMgr(DistributedObjectGlobal, SettingsMgrBase):
-    
+
     notify = directNotify.newCategory('SettingsMgr')
 
     def announceGenerate(self):
@@ -22,7 +23,9 @@ class SettingsMgr(DistributedObjectGlobal, SettingsMgrBase):
     def _scheduleChangedSettingRequest(self):
         if self._sracs:
             self._sracs.destroy()
-        self._sracs = FrameDelayedCall('requestAllChangedSettings', self.sendRequestAllChangedSettings)
+        self._sracs = FrameDelayedCall(
+            'requestAllChangedSettings',
+            self.sendRequestAllChangedSettings)
 
     def delete(self):
         self.ignore(self._crConnectEvent)
@@ -37,5 +40,7 @@ class SettingsMgr(DistributedObjectGlobal, SettingsMgrBase):
     def settingChange(self, settingName, valueStr):
         if valueStr == self._getCurrentValueRepr(settingName):
             return
-        self.notify.info('got setting change: %s -> %s' % (settingName, valueStr))
+        self.notify.info(
+            'got setting change: %s -> %s' %
+            (settingName, valueStr))
         self._changeSetting(settingName, valueStr)

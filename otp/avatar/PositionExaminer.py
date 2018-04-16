@@ -9,7 +9,7 @@ class PositionExaminer(DirectObject, NodePath):
         try:
             self.__initialized
             return
-        except:
+        except BaseException:
             self.__initialized = 1
 
         NodePath.__init__(self, hidden.attachNewNode('PositionExaminer'))
@@ -77,7 +77,8 @@ class PositionExaminer(DirectObject, NodePath):
         self.cRayTrav.traverse(render)
         if self.cRayQueue.getNumEntries() != 0:
             self.cRayQueue.sortEntries()
-            floorPoint = self.cRayQueue.getEntry(0).getSurfacePoint(self.cRayNodePath)
+            floorPoint = self.cRayQueue.getEntry(
+                0).getSurfacePoint(self.cRayNodePath)
             if abs(floorPoint[2]) <= 4.0:
                 pos += floorPoint
                 self.setPos(pos)

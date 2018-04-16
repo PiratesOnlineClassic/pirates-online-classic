@@ -14,7 +14,7 @@ from pandac.PandaModules import *
 
 
 class CreateAccountScreen(StateData.StateData, GuiScreen.GuiScreen):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('CreateAccountScreen')
     ActiveEntryColor = Vec4(1, 1, 1, 1)
     InactiveEntryColor = Vec4(0.8, 0.8, 0.8, 1)
@@ -27,12 +27,12 @@ class CreateAccountScreen(StateData.StateData, GuiScreen.GuiScreen):
         self.cr = cr
         self.loginInterface = self.cr.loginInterface
         self.fsm = ClassicFSM.ClassicFSM('CreateAccountScreen', [
-         State.State('off', self.enterOff, self.exitOff, [
-          'create']),
-         State.State('create', self.enterCreate, self.exitCreate, [
-          'waitForLoginResponse', 'create']),
-         State.State('waitForLoginResponse', self.enterWaitForLoginResponse, self.exitWaitForLoginResponse, [
-          'create'])], 'off', 'off')
+            State.State('off', self.enterOff, self.exitOff, [
+                'create']),
+            State.State('create', self.enterCreate, self.exitCreate, [
+                'waitForLoginResponse', 'create']),
+            State.State('waitForLoginResponse', self.enterWaitForLoginResponse, self.exitWaitForLoginResponse, [
+                'create'])], 'off', 'off')
         self.fsm.enterInitialState()
 
     def load(self):
@@ -83,7 +83,12 @@ class CreateAccountScreen(StateData.StateData, GuiScreen.GuiScreen):
         linePos -= buttonLineHeight
         self.dialogDoneEvent = 'createAccountDialogAck'
         dialogClass = OTPGlobals.getGlobalDialogClass()
-        self.dialog = dialogClass(dialogName='createAccountDialog', doneEvent=self.dialogDoneEvent, message='', style=OTPDialog.Acknowledge, sortOrder=NO_FADE_SORT_INDEX + 100)
+        self.dialog = dialogClass(
+            dialogName='createAccountDialog',
+            doneEvent=self.dialogDoneEvent,
+            message='',
+            style=OTPDialog.Acknowledge,
+            sortOrder=NO_FADE_SORT_INDEX + 100)
         self.dialog.hide()
         return
 
@@ -121,8 +126,10 @@ class CreateAccountScreen(StateData.StateData, GuiScreen.GuiScreen):
             self.nameEntry.set(self.userName)
         self.__firstTime = 0
         self.focusList = [
-         self.nameEntry, self.passwordEntry, self.passwordConfirmEntry]
-        self.startFocusMgmt(overrides={}, globalFocusHandler=self.__handleFocusChange)
+            self.nameEntry, self.passwordEntry, self.passwordConfirmEntry]
+        self.startFocusMgmt(
+            overrides={},
+            globalFocusHandler=self.__handleFocusChange)
 
     def exitCreate(self):
         self.stopFocusMgmt()
@@ -143,24 +150,33 @@ class CreateAccountScreen(StateData.StateData, GuiScreen.GuiScreen):
         minNameLength = self.cr.accountServerConstants.getInt('minNameLength')
         minPwdLength = self.cr.accountServerConstants.getInt('minPwLength')
         if self.userName == '':
-            self.dialog.setMessage(OTPLocalizer.CreateAccountScreenNoAccountName)
+            self.dialog.setMessage(
+                OTPLocalizer.CreateAccountScreenNoAccountName)
             self.dialog.show()
             self.acceptOnce(self.dialogDoneEvent, self.__handleUsernameAck)
         else:
             if len(self.userName) < minNameLength:
-                self.dialog.setMessage(OTPLocalizer.CreateAccountScreenAccountNameTooShort % minNameLength)
+                self.dialog.setMessage(
+                    OTPLocalizer.CreateAccountScreenAccountNameTooShort %
+                    minNameLength)
                 self.dialog.show()
                 self.acceptOnce(self.dialogDoneEvent, self.__handleUsernameAck)
             else:
                 if len(self.password) < minPwdLength:
-                    self.dialog.setMessage(OTPLocalizer.CreateAccountScreenPasswordTooShort % minPwdLength)
+                    self.dialog.setMessage(
+                        OTPLocalizer.CreateAccountScreenPasswordTooShort %
+                        minPwdLength)
                     self.dialog.show()
-                    self.acceptOnce(self.dialogDoneEvent, self.__handlePasswordAck)
+                    self.acceptOnce(
+                        self.dialogDoneEvent,
+                        self.__handlePasswordAck)
                 else:
                     if self.password != passwordConfirm:
-                        self.dialog.setMessage(OTPLocalizer.CreateAccountScreenPasswordMismatch)
+                        self.dialog.setMessage(
+                            OTPLocalizer.CreateAccountScreenPasswordMismatch)
                         self.dialog.show()
-                        self.acceptOnce(self.dialogDoneEvent, self.__handlePasswordAck)
+                        self.acceptOnce(
+                            self.dialogDoneEvent, self.__handlePasswordAck)
                     else:
                         self.fsm.request('waitForLoginResponse')
 
@@ -186,23 +202,30 @@ class CreateAccountScreen(StateData.StateData, GuiScreen.GuiScreen):
             referrer = launcher.getReferrerCode()
             if referrer is not None:
                 data['referrer'] = referrer
-            error = self.loginInterface.createAccount(self.userName, self.password, data)
-        except TTAccount.TTAccountException, e:
+            error = self.loginInterface.createAccount(
+                self.userName, self.password, data)
+        except TTAccount.TTAccountException as e:
             error = str(e)
             self.notify.info(error)
-            self.dialog.setMessage(error + OTPLocalizer.CreateAccountScreenConnectionErrorSuffix)
+            self.dialog.setMessage(
+                error + OTPLocalizer.CreateAccountScreenConnectionErrorSuffix)
             self.dialog.show()
-            self.acceptOnce(self.dialogDoneEvent, self.__handleConnectionErrorAck)
+            self.acceptOnce(
+                self.dialogDoneEvent,
+                self.__handleConnectionErrorAck)
             return
         else:
             if error:
                 self.notify.info(error)
                 self.dialog.setMessage(error)
                 self.dialog.show()
-                self.acceptOnce(self.dialogDoneEvent, self.__handleBadAccountAck)
+                self.acceptOnce(
+                    self.dialogDoneEvent,
+                    self.__handleBadAccountAck)
             self.cr.logAccountInfo()
             self.loginInterface.sendLoginMsg()
-            self.waitForDatabaseTimeout(requestName='CreateAccountWaitForLoginResponse')
+            self.waitForDatabaseTimeout(
+                requestName='CreateAccountWaitForLoginResponse')
 
         return
 
@@ -249,21 +272,29 @@ class CreateAccountScreen(StateData.StateData, GuiScreen.GuiScreen):
         else:
             if returnCode == 12:
                 self.notify.info('Bad password')
-                self.dialog.setMessage(OTPLocalizer.CreateAccountScreenUserNameTaken)
+                self.dialog.setMessage(
+                    OTPLocalizer.CreateAccountScreenUserNameTaken)
                 self.dialog.show()
-                self.acceptOnce(self.dialogDoneEvent, self.__handleBadPasswordAck)
+                self.acceptOnce(
+                    self.dialogDoneEvent,
+                    self.__handleBadPasswordAck)
             else:
                 if returnCode == 14:
                     self.notify.info('Bad word in user name')
-                    self.dialog.setMessage(OTPLocalizer.CreateAccountScreenInvalidUserName)
+                    self.dialog.setMessage(
+                        OTPLocalizer.CreateAccountScreenInvalidUserName)
                     self.dialog.show()
-                    self.acceptOnce(self.dialogDoneEvent, self.__handleBadWordInUserName)
+                    self.acceptOnce(
+                        self.dialogDoneEvent,
+                        self.__handleBadWordInUserName)
                 else:
                     if returnCode == 129:
                         self.notify.info('Username not found')
-                        self.dialog.setMessage(OTPLocalizer.CreateAccountScreenUserNameNotFound)
+                        self.dialog.setMessage(
+                            OTPLocalizer.CreateAccountScreenUserNameNotFound)
                         self.dialog.show()
-                        self.acceptOnce(self.dialogDoneEvent, self.__handleBadAccountAck)
+                        self.acceptOnce(
+                            self.dialogDoneEvent, self.__handleBadAccountAck)
                     else:
                         accountCode = di.getUint32()
                         errorString = di.getString()

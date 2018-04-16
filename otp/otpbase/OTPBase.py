@@ -9,14 +9,15 @@ from direct.showbase.ShowBase import ShowBase
 
 
 class OTPBase(ShowBase):
-    
 
     def __init__(self):
         ShowBase.__init__(self)
         self.wantNametags = self.config.GetBool('want-nametags', 1)
         self.slowCloseShard = self.config.GetBool('slow-close-shard', 0)
-        self.slowCloseShardDelay = self.config.GetFloat('slow-close-shard-delay', 10.0)
-        self.fillShardsToIdealPop = self.config.GetBool('fill-shards-to-ideal-pop', 1)
+        self.slowCloseShardDelay = self.config.GetFloat(
+            'slow-close-shard-delay', 10.0)
+        self.fillShardsToIdealPop = self.config.GetBool(
+            'fill-shards-to-ideal-pop', 1)
         self.wantDynamicShadows = 1
         self.gameOptionsCode = ''
         self.locationCode = ''

@@ -20,7 +20,7 @@ class Nametag3d(Nametag):
     def __init__(self):
         Nametag.__init__(self)
 
-        self.contents = self.CName|self.CSpeech|self.CThought
+        self.contents = self.CName | self.CSpeech | self.CThought
 
         self.bbOffset = self.BILLBOARD_OFFSET
         self._doBillboard()
@@ -28,12 +28,12 @@ class Nametag3d(Nametag):
     def _doBillboard(self):
         if self.SHOULD_BILLBOARD:
             self.innerNP.setEffect(BillboardEffect.make(
-                Vec3(0,0,1),
+                Vec3(0, 0, 1),
                 True,
                 False,
                 self.bbOffset,
-                NodePath(), # Empty; look at scene camera
-                Point3(0,0,0)))
+                NodePath(),  # Empty; look at scene camera
+                Point3(0, 0, 0)))
         else:
             self.bbOffset = 0.0
 
@@ -47,9 +47,10 @@ class Nametag3d(Nametag):
         else:
             # Attempt to maintain the same on-screen size.
             distance = self.innerNP.getPos(NametagGlobals.camera).length()
-            distance = max(min(distance, self.SCALING_MAXDIST), self.SCALING_MINDIST)
+            distance = max(min(distance, self.SCALING_MAXDIST),
+                           self.SCALING_MINDIST)
 
-            scale = math.sqrt(distance)*self.SCALING_FACTOR
+            scale = math.sqrt(distance) * self.SCALING_FACTOR
 
         self.innerNP.setScale(scale)
 
@@ -61,8 +62,8 @@ class Nametag3d(Nametag):
             self.stashClickRegion()
         else:
             left, right, bottom, top = self.frame
-            self.updateClickRegion(left*scale, right*scale,
-                                   bottom*scale, top*scale,
+            self.updateClickRegion(left * scale, right * scale,
+                                   bottom * scale, top * scale,
                                    self.bbOffset)
 
     def getSpeechBalloon(self):

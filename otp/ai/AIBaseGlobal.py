@@ -16,9 +16,11 @@ simbase.loader = Loader.Loader(simbase)
 __builtins__['loader'] = simbase.loader
 directNotify.setDconfigLevels()
 
+
 def inspect(anObject):
     from direct.tkpanels import Inspector
     Inspector.inspect(anObject)
+
 
 __builtins__['inspect'] = inspect
 if not __debug__ and __dev__:

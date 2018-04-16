@@ -15,8 +15,8 @@ class ChatBalloon:
     def __init__(self, model):
         self.model = model
 
-    def generate(self, text, font, textColor=(0,0,0,1), balloonColor=(1,1,1,1),
-                 wordWrap = 10.0, reversed=False):
+    def generate(self, text, font, textColor=(0, 0, 0, 1), balloonColor=(1, 1, 1, 1),
+                 wordWrap=10.0, reversed=False):
         root = NodePath('balloon')
 
         # Add balloon geometry:
@@ -43,43 +43,47 @@ class ChatBalloon:
         # so there's no risk of the bubble overwriting the text's pixels.
         t.setAttrib(DepthWriteAttrib.make(0))
         t.setPos(self.TEXT_SHIFT)
-        t.setX(t, self.TEXT_SHIFT_PROP*width)
+        t.setX(t, self.TEXT_SHIFT_PROP * width)
         t.setZ(t, height)
 
         if reversed:
             # The nametag code wants the text on the left side of the axis,
             # rather than on the right side. Therefore, we move the text to the
             # opposite side:
-            t.setX(self.TEXT_SHIFT_REVERSED - self.TEXT_SHIFT_PROP*width - width)
+            t.setX(
+                self.TEXT_SHIFT_REVERSED -
+                self.TEXT_SHIFT_PROP *
+                width -
+                width)
 
         # Set a minimum width and height for short or empty messages
         if width < self.MIN_WIDTH:
             width = self.MIN_WIDTH
             if reversed:
-                t.setX(t, -width/2.0)
+                t.setX(t, -width / 2.0)
             else:
-                t.setX(t, width/2.0)
+                t.setX(t, width / 2.0)
             t.node().setAlign(TextNode.ACenter)
 
         if height < self.MIN_HEIGHT:
             height = self.MIN_HEIGHT
-            t.setX(t, height/2.0)
+            t.setX(t, height / 2.0)
             t.node().setAlign(TextNode.ACenter)
 
         # Set the balloon's size:
-        width *= 1+self.BUBBLE_PADDING_PROP
+        width *= 1 + self.BUBBLE_PADDING_PROP
         width += self.BUBBLE_PADDING
-        balloon.setSx(width/self.NATIVE_WIDTH)
+        balloon.setSx(width / self.NATIVE_WIDTH)
         if reversed:
             balloon.setSx(-balloon.getSx())
-            balloon.setTwoSided(True) # Render the backface of the balloon
+            balloon.setTwoSided(True)  # Render the backface of the balloon
         middle.setSz(height)
-        top.setZ(top, height-1)
+        top.setZ(top, height - 1)
 
         # Calculate the frame occupied by the balloon:
         left, bottom = self.FRAME_SHIFT
         if reversed:
             left = -left - width
-        frame = (left, left+width, bottom, bottom+height+1)
+        frame = (left, left + width, bottom, bottom + height + 1)
 
         return root, frame

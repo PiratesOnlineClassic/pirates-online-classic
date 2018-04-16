@@ -12,7 +12,7 @@ from SCObject import SCObject
 
 
 class SCElement(SCObject, NodePath):
-    
+
     font = OTPGlobals.getInterfaceFont()
     SerialNum = 0
 
@@ -50,7 +50,8 @@ class SCElement(SCObject, NodePath):
         return self.parentMenu
 
     def getDisplayText(self):
-        self.notify.error('getDisplayText is pure virtual, derived class must override')
+        self.notify.error(
+            'getDisplayText is pure virtual, derived class must override')
 
     def onMouseEnter(self, event):
         if self.parentMenu is not None:
@@ -96,7 +97,7 @@ class SCElement(SCObject, NodePath):
         width = abs(bounds[1] - bounds[0]) + self.padX
         height = abs(bounds[3] - bounds[2]) + 2.0 * self.padZ
         return (
-         width, height)
+            width, height)
 
     def setDimensions(self, width, height):
         self.width = float(width)
@@ -130,7 +131,10 @@ class SCElement(SCObject, NodePath):
             return Task.done
 
         taskMgr.remove(self.FinalizeTaskName)
-        taskMgr.add(finalizeElement, self.FinalizeTaskName, priority=SCElementFinalizePriority)
+        taskMgr.add(
+            finalizeElement,
+            self.FinalizeTaskName,
+            priority=SCElementFinalizePriority)
 
     def privCancelFinalize(self):
         taskMgr.remove(self.FinalizeTaskName)
@@ -144,16 +148,35 @@ class SCElement(SCObject, NodePath):
             del self.button
         halfHeight = self.height / 2.0
         textX = 0
-        if dbArgs.has_key('text_align'):
+        if 'text_align' in dbArgs:
             if dbArgs['text_align'] == TextNode.ACenter:
                 textX = self.width / 2.0
-        args = {'text': self.getDisplayText(), 'frameColor': (0, 0, 0, 0), 'rolloverColor': self.getColorScheme().getRolloverColor() + (1, ), 'pressedColor': self.getColorScheme().getPressedColor() + (1, ), 'text_font': OTPGlobals.getInterfaceFont(), 'text_align': TextNode.ALeft, 'text_fg': self.getColorScheme().getTextColor() + (1, ), 'text_pos': (textX, -0.25 - halfHeight, 0), 'relief': DGG.FLAT, 'pressEffect': 0}
+        args = {'text': self.getDisplayText(),
+                'frameColor': (0,
+                               0,
+                               0,
+                               0),
+                'rolloverColor': self.getColorScheme().getRolloverColor() + (1,
+                                                                             ),
+                'pressedColor': self.getColorScheme().getPressedColor() + (1,
+                                                                           ),
+                'text_font': OTPGlobals.getInterfaceFont(),
+                'text_align': TextNode.ALeft,
+                'text_fg': self.getColorScheme().getTextColor() + (1,
+                                                                   ),
+                'text_pos': (textX,
+                             -0.25 - halfHeight,
+                             0),
+                'relief': DGG.FLAT,
+                'pressEffect': 0}
         args.update(dbArgs)
         rolloverColor = args['rolloverColor']
         pressedColor = args['pressedColor']
         del args['rolloverColor']
         del args['pressedColor']
-        btn = DirectButton(parent=self, frameSize=(0, self.width, -self.height, 0), **args)
+        btn = DirectButton(
+            parent=self, frameSize=(
+                0, self.width, -self.height, 0), **args)
         btn.frameStyle[DGG.BUTTON_ROLLOVER_STATE].setColor(*rolloverColor)
         btn.frameStyle[DGG.BUTTON_DEPRESSED_STATE].setColor(*pressedColor)
         btn.updateFrameStyle()

@@ -31,7 +31,7 @@ class NametagGroup:
         self.name = ''
         self.displayName = ''
         self.wordWrap = None
-        self.qtColor = VBase4(1,1,1,1)
+        self.qtColor = VBase4(1, 1, 1, 1)
         self.colorCode = CCNormal
         self.avatar = None
         self.active = True
@@ -48,9 +48,10 @@ class NametagGroup:
         self.addNametag(self.nametag2d)
         self.addNametag(self.nametag3d)
 
-        self.visible3d = True # Is a 3D nametag visible, or do we need a 2D popup?
+        self.visible3d = True  # Is a 3D nametag visible, or do we need a 2D popup?
 
-        self.tickTask = taskMgr.add(self.__tickTask, self.getUniqueId(), sort=45)
+        self.tickTask = taskMgr.add(
+            self.__tickTask, self.getUniqueId(), sort=45)
 
         self.stompTask = None
         self.stompText = None
@@ -75,7 +76,7 @@ class NametagGroup:
         return self.icon
 
     def getNumChatPages(self):
-        if not self.chatFlags & (CFSpeech|CFThought):
+        if not self.chatFlags & (CFSpeech | CFThought):
             return 0
 
         return len(self.chatPages)
@@ -115,7 +116,7 @@ class NametagGroup:
                 return NametagGlobals.pageButtons
             else:
                 return None
-        elif self.chatPage == self.getNumChatPages()-1:
+        elif self.chatPage == self.getNumChatPages() - 1:
             # Last page of a multiple-page chat. This calls for a quit button,
             # unless the game says otherwise.
             if not self.chatFlags & CFNoQuitButton:
@@ -168,7 +169,7 @@ class NametagGroup:
         self.updateTags()
 
     def setChat(self, chatString, chatFlags):
-        if not self.chatFlags&CFSpeech:
+        if not self.chatFlags & CFSpeech:
             # We aren't already displaying some chat. Therefore, we don't have
             # to stomp.
             self._setChat(chatString, chatFlags)
@@ -187,10 +188,10 @@ class NametagGroup:
         else:
             self.chatPages = []
             self.chatFlags = 0
-        self.setPageNumber(0) # Calls updateTags() for us.
+        self.setPageNumber(0)  # Calls updateTags() for us.
 
         self._stopChatTimeout()
-        if chatFlags&CFTimeout:
+        if chatFlags & CFTimeout:
             self._startChatTimeout()
 
     def __updateStomp(self, task):
@@ -211,7 +212,8 @@ class NametagGroup:
 
     def _startChatTimeout(self):
         length = len(self.getChat())
-        timeout = min(max(length*self.CHAT_TIMEOUT_PROP, self.CHAT_TIMEOUT_MIN), self.CHAT_TIMEOUT_MAX)
+        timeout = min(max(length * self.CHAT_TIMEOUT_PROP,
+                          self.CHAT_TIMEOUT_MIN), self.CHAT_TIMEOUT_MAX)
         self.chatTimeoutTask = taskMgr.doMethodLater(timeout, self.__doChatTimeout,
                                                      'ChatTimeout-' + self.getUniqueId())
 
@@ -256,14 +258,13 @@ class NametagGroup:
         # one:
         for nametag in self.nametags:
             if not isinstance(nametag, Nametag3d):
-                continue # It's not in the 3D system, disqualified.
+                continue  # It's not in the 3D system, disqualified.
 
             if nametag.isOnScreen():
                 return True
 
         # If we got here, none of the tags were a match...
         return False
-
 
     def __tickTask(self, task):
         for nametag in self.nametags:

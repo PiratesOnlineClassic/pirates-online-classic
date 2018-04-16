@@ -7,7 +7,7 @@ from direct.showbase.DirectObject import DirectObject
 
 
 class SCObject(DirectObject):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('SpeedChat')
 
     def __init__(self):

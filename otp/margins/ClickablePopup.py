@@ -18,7 +18,7 @@ class ClickablePopup(PandaNode, DirectObject):
 
         self.__cam = cam
         self.__region = MouseWatcherRegion(self.__name, 0, 0, 0, 0)
-        #self.__mwn.addRegion(self.__region)
+        # self.__mwn.addRegion(self.__region)
 
         self.__disabled = False
         self.__clicked = False
@@ -55,7 +55,7 @@ class ClickablePopup(PandaNode, DirectObject):
         return self.__clickState
 
     def clickStateChanged(self):
-        pass # Intended for subclasses.
+        pass  # Intended for subclasses.
 
     def __getEvent(self, pattern):
         return pattern.replace('%r', self.__name)
@@ -88,7 +88,8 @@ class ClickablePopup(PandaNode, DirectObject):
         else:
             state = self.CS_NORMAL
 
-        if self.__clickState == state: return
+        if self.__clickState == state:
+            return
         oldState = self.__clickState
         self.__clickState = state
 
@@ -123,9 +124,9 @@ class ClickablePopup(PandaNode, DirectObject):
 
         # Shift along the offset while in camspace, not worldspace.
         if offset:
-            mid = mat.xformPoint(Point3(0,0,0))
+            mid = mat.xformPoint(Point3(0, 0, 0))
             length = mid.length()
-            shift = mid*(length - offset)/length - mid
+            shift = mid * (length - offset) / length - mid
             cTopLeft += shift
             cBottomRight += shift
 
