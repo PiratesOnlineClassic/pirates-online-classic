@@ -12,7 +12,7 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         self.cycleType = config.GetInt('tod-starting-cycle', TODGlobals.TOD_REGULAR_CYCLE)
         self.startingState = TODGlobals.getStartingState(self.cycleType)
         self.startingTime = globalClockDelta.getFrameNetworkTime(bits=32)
-        self.cycleDuration = PiratesGlobals.TOD_CYCLE_DURATION
+        self.cycleDuration = config.GetFloat('tod-cycle-duration', PiratesGlobals.TOD_CYCLE_DURATION)
         self.stateTime = 0
         self.nextProcessStateChange = None
 
@@ -64,7 +64,7 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         self.startingState, self.stateTime = self._computeCurrentState()
         self._waitForNextState()
 
-        messenger.send('timeOfDayChange')
+        #messenger.send('timeOfDayChange')
         return Task.done
    
     def sync(self, cycleType, startingState, startingTime, cycleDuration):

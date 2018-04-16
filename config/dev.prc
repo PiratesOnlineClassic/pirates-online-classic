@@ -35,3 +35,4 @@ dev-analyics #t
 instant-skill-recharge #f
 
 want-dev #f
+always-allow-digging #t
