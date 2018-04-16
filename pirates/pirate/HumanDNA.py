@@ -318,34 +318,32 @@ class HumanDNA(AvatarDNA.AvatarDNA):
             self.clothes.coat = 0
             self.clothes.coatColor = 1
             self.clothes.belt = 5
-        else:
-            if gender == 'f':
-                self.clothes.shirt = 4
-                self.clothes.shirtTexture = 3
-                self.clothes.shirtColor = 12
-                self.clothes.pant = 0
-                self.clothes.pantColor = 20
-                self.clothes.vest = 1
-                self.clothes.belt = 5
-                self.clothes.shoe = 3
-                self.clothes.shoeColor = 4
-                self.head.hair.hair = 1
-                self.head.hair.color = 1
-                self.head.mouthLipThickness = 0.25
-                self.head.browProtruding = 0.858
-                self.head.cheekFat = 0.18
-            else:
-                if gender == 'n':
-                    self.clothes.coat = 3
-                    self.clothes.coatColor = 0
-                    self.clothes.pant = 4
-                    self.clothes.pantColor = 0
-                    self.clothes.sock = 0
-                    self.clothes.shoe = 3
-                    self.head.hair.hair = 1
-                    self.clothes.hat = 3
-                    self.clothes.hatColor = 0
-                    self.head.texture = 0
+        elif gender == 'f':
+            self.clothes.shirt = 4
+            self.clothes.shirtTexture = 3
+            self.clothes.shirtColor = 12
+            self.clothes.pant = 0
+            self.clothes.pantColor = 20
+            self.clothes.vest = 1
+            self.clothes.belt = 5
+            self.clothes.shoe = 3
+            self.clothes.shoeColor = 4
+            self.head.hair.hair = 1
+            self.head.hair.color = 1
+            self.head.mouthLipThickness = 0.25
+            self.head.browProtruding = 0.858
+            self.head.cheekFat = 0.18
+        elif gender == 'n':
+            self.clothes.coat = 3
+            self.clothes.coatColor = 0
+            self.clothes.pant = 4
+            self.clothes.pantColor = 0
+            self.clothes.sock = 0
+            self.clothes.shoe = 3
+            self.head.hair.hair = 1
+            self.clothes.hat = 3
+            self.clothes.hatColor = 0
+            self.head.texture = 0
 
         self.tattooChest = [0, 0.0, 0.0, 1, 0, 0]
         self.tattooZone2 = [0, 0.0, 0.0, 1, 0, 0]
