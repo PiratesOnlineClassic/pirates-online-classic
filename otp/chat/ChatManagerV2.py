@@ -10,8 +10,8 @@ from otp.login import (LeaveToPayDialog, PrivacyPolicyPanel, SecretFriendsInfoPa
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from pandac.PandaModules import *
 
+
 class ChatManagerV2(DirectObject.DirectObject):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('ChatManagerV2')
 
     def __init__(self):

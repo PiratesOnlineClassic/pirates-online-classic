@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.distributed.DistributedCharterableObject
 from direct.distributed import DistributedNode
 from direct.distributed.ClockDelta import *
 from direct.task import Task
@@ -9,7 +5,6 @@ from pirates.ship import ShipGlobals
 
 
 class DistributedCharterableObject(DistributedNode.DistributedNode):
-    
     notify = directNotify.newCategory('DistributedCharterableObject')
 
     def __init__(self, cr):
@@ -68,4 +63,3 @@ class DistributedCharterableObject(DistributedNode.DistributedNode):
     def getTimeLeft(self):
         timePassed = globalClock.getFrameTime() - self.timerTimestamp
         return max(0, self.timerTime - timePassed)
-# okay decompiling .\pirates\distributed\DistributedCharterableObject.pyc

@@ -1,4 +1,3 @@
-# Embedded file name: otp.chat.ChatAssistant
 import string
 import sys
 from direct.showbase import DirectObject

@@ -1,6 +1,7 @@
 from pirates.battle import WeaponGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
+
 class BattleSkillDiary:
     
     IDLE = 0

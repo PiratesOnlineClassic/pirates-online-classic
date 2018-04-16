@@ -3,7 +3,6 @@ from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.otpbase import OTPGlobals
 
 class PlayerFriendsManager(DistributedObjectGlobal):
-    
     notify = directNotify.newCategory('PlayerFriendsManager')
 
     def __init__(self, cr):

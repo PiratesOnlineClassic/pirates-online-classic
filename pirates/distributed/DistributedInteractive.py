@@ -7,7 +7,6 @@ from pirates.world import DistributedLocatableObject
 
 
 class DistributedInteractive(DistributedNode.DistributedNode, InteractiveBase.InteractiveBase, DistributedLocatableObject.DistributedLocatableObject):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInteractive')
 
     def __init__(self, cr):

@@ -18,7 +18,6 @@ from pirates.piratesgui import ChatPanel, GuiPanel, PDialog, PiratesGuiGlobals
 
 
 class PiratesChatManager(ChatManagerV2.ChatManagerV2):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesChatManager')
     execChat = base.config.GetBool('exec-chat', 0)
 

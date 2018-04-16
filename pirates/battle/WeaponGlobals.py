@@ -855,7 +855,209 @@ ANIM_TYPE = 0
 FUNC_TYPE = 1
 INTERVAL_TYPE = 2
 NONE_TYPE = 3
-__skillAnim = {InventoryType.MeleePunch: ('getBoxingPunch', Melee.getHitSfx, Melee.getMissSfx), InventoryType.MeleeJab: ('getBoxingPunch', Melee.getHitSfx, Melee.getMissSfx), InventoryType.MeleeKick: ('getKick', Melee.getHitSfx, Melee.getMissSfx), InventoryType.MeleeRoundhouse: ('getKick', Melee.getHitSfx, Melee.getMissSfx), InventoryType.MeleeHeadbutt: ('getKrazyPunch', Melee.getHitSfx, Melee.getMissSfx), InventoryType.MeleeHaymaker: ('getBoxingPunch', Melee.getHitSfx, Melee.getMissSfx), InventoryType.MeleeThrowDirt: ('getKrazyPunch', Melee.getHitSfx, Melee.getMissSfx), InventoryType.CutlassHack: ('getHack', Sword.getHitSfx, Sword.getMissSfx), InventoryType.CutlassSlash: ('getSlash', Sword.getHitSfx, Sword.getMissSfx), InventoryType.CutlassStab: ('getThrust', Sword.getHitSfx, Sword.getMissSfx), InventoryType.CutlassFlourish: ('getFlourish', Sword.getHitSfx, Sword.getMissSfx), InventoryType.CutlassCleave: ('getCleave', Sword.getHitSfx, Sword.getMissSfx), InventoryType.CutlassTaunt: ('getTaunt', Sword.getHitSfx, Sword.getMissSfx), InventoryType.CutlassBrawl: ('getBrawl', Sword.getHitSfx, Sword.getMissSfx), InventoryType.CutlassSweep: ('getSweep', Sword.getHitSfx, Sword.getMissSfx), InventoryType.CutlassBladestorm: ('getBladestorm', Sword.getHitSfx, Sword.getMissSfx), InventoryType.PistolShoot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx), InventoryType.PistolTakeAim: ('getPistolTakeAimAnim', Pistol.getHitSfx, Pistol.getMissSfx), EnemySkills.PISTOL_CHARGE: ('getPistolChargingAnim', Pistol.getAimSfx, Pistol.getAimSfx), EnemySkills.PISTOL_RELOAD: ('getPistolReloadAnim', None, None), InventoryType.PistolLeadShot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx), InventoryType.PistolBaneShot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx), InventoryType.PistolSilverShot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx), InventoryType.PistolHexEaterShot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx), InventoryType.PistolSteelShot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx), InventoryType.PistolVenomShot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx), InventoryType.MusketShoot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx), InventoryType.MusketTakeAim: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx), InventoryType.MusketDeadeye: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx), InventoryType.BayonetShoot: ('getBayonetFireAnim', Bayonet.getShootSfx, Bayonet.getShootSfx), InventoryType.BayonetStab: ('getBayonetStab', Bayonet.getHitSfx, Bayonet.getMissSfx), InventoryType.BayonetRush: ('getBayonetRush', Bayonet.getHitSfx, Bayonet.getMissSfx), InventoryType.BayonetBash: ('getBayonetBash', Bayonet.getHitSfx, Bayonet.getMissSfx), InventoryType.DaggerCut: ('getCut', Dagger.getHitSfx, Dagger.getMissSfx), InventoryType.DaggerSwipe: ('getSwipe', Dagger.getHitSfx, Dagger.getMissSfx), InventoryType.DaggerGouge: ('getGouge', Dagger.getHitSfx, Dagger.getMissSfx), InventoryType.DaggerEviscerate: ('getEviscerate', Dagger.getHitSfx, Dagger.getMissSfx), InventoryType.DaggerAsp: ('getDaggerAspInterval', Dagger.getHitSfx, Dagger.getMissSfx), InventoryType.DaggerAdder: ('getDaggerAdderInterval', Dagger.getHitSfx, Dagger.getMissSfx), InventoryType.DaggerThrowDirt: ('getDaggerThrowDirtInterval', Dagger.getHitSfx, Dagger.getMissSfx), InventoryType.DaggerSidewinder: ('getDaggerSidewinderInterval', Dagger.getHitSfx, Dagger.getMissSfx), InventoryType.DaggerViperNest: ('getDaggerViperNestInterval', Dagger.getHitSfx, Dagger.getMissSfx), EnemySkills.DAGGER_THROW_KNIFE: ('getDaggerAspInterval', Dagger.getHitSfx, Dagger.getMissSfx), EnemySkills.DAGGER_THROW_VENOMBLADE: ('getDaggerAdderInterval', Dagger.getHitSfx, Dagger.getMissSfx), EnemySkills.DAGGER_THROW_BARBED: ('getDaggerSidewinderInterval', Dagger.getHitSfx, Dagger.getMissSfx), EnemySkills.DAGGER_THROW_INTERRUPT: ('getDaggerAspInterval', Dagger.getHitSfx, Dagger.getMissSfx), InventoryType.GrenadeThrow: ('getGrenadeThrow', Grenade.getHitSfx, Grenade.getMissSfx), InventoryType.GrenadeLongVolley: ('getGrenadeLongVolley', Grenade.getHitSfx, Grenade.getMissSfx), EnemySkills.GRENADE_CHARGE: ('getGrenadeChargingAnim', Grenade.getAimSfx, Grenade.getAimSfx), EnemySkills.GRENADE_RELOAD: ('getGrenadeReloadAnim', Grenade.getReloadSfx, Grenade.getReloadSfx), InventoryType.GrenadeExplosion: ('getGrenadeThrow', Grenade.getHitSfx, Grenade.getMissSfx), InventoryType.GrenadeShockBomb: ('getGrenadeThrow', Grenade.getHitSfx, Grenade.getMissSfx), InventoryType.GrenadeFireBomb: ('getGrenadeThrow', Grenade.getHitSfx, Grenade.getMissSfx), InventoryType.GrenadeSmokeCloud: ('getGrenadeThrow', Grenade.getHitSfx, Grenade.getMissSfx), InventoryType.GrenadeSiege: ('getGrenadeThrow', Grenade.getHitSfx, Grenade.getMissSfx), InventoryType.DollAttune: ('getAttune', Doll.getAttuneSfx, Doll.getMissSfx), EnemySkills.DOLL_UNATTUNE: ('getUnattune', Doll.getUnattuneSfx, Doll.getMissSfx), EnemySkills.DOLL_POKE2: ('getPoke', Doll.getPokeSfx, Doll.getMissSfx), InventoryType.DollPoke: ('getPoke', Doll.getPokeSfx, Doll.getMissSfx), InventoryType.DollSwarm: ('getSwarm', Doll.getSwarmSfx, Doll.getMissSfx), InventoryType.DollHeal: ('getHeal', Doll.getHealSfx, Doll.getMissSfx), InventoryType.DollBurn: ('getBurn', Doll.getScorchSfx, Doll.getMissSfx), InventoryType.DollShackles: ('getShackles', Doll.getShacklesSfx, Doll.getMissSfx), InventoryType.DollCure: ('getCure', Doll.getCureSfx, Doll.getMissSfx), InventoryType.DollCurse: ('getCurse', Doll.getCurseSfx, Doll.getMissSfx), InventoryType.DollLifeDrain: ('getLifeDrain', Doll.getLifedrainSfx, Doll.getMissSfx), EnemySkills.STAFF_WITHER_CHARGE: ('getChargeWitherAnim', Wand.getWitherChargeSfx, Wand.getWitherHoldSfx), EnemySkills.STAFF_SOULFLAY_CHARGE: ('getChargeSoulflayAnim', Wand.getSoulflayChargeSfx, Wand.getSoulflayHoldSfx), EnemySkills.STAFF_PESTILENCE_CHARGE: ('getChargePestilenceAnim', Wand.getPestilenceChargeSfx, Wand.getPestilenceHoldSfx), EnemySkills.STAFF_HELLFIRE_CHARGE: ('getChargeHellfireAnim', Wand.getHellfireChargeSfx, Wand.getHellfireHoldSfx), EnemySkills.STAFF_BANISH_CHARGE: ('getChargeBanishAnim', Wand.getBanishChargeSfx, Wand.getBanishHoldSfx), EnemySkills.STAFF_DESOLATION_CHARGE: ('getChargeDesolationAnim', Wand.getDesolationChargeSfx, Wand.getDesolationHoldSfx), EnemySkills.STAFF_FIZZLE: ('getFizzleAnim', Wand.getChargeSfx, Wand.getChargeLoopSfx), InventoryType.StaffBlast: ('getCastFireAnim', Wand.getBlastFireSfx, Wand.getBlastFireSfx, Wand.getBlastHitSfx), InventoryType.StaffSoulFlay: ('getCastSoulFlayAnim', Wand.getSoulflayFireSfx, Wand.getSoulflayFireSfx, Wand.getSoulflayHitSfx), InventoryType.StaffPestilence: ('getCastPestilenceAnim', Wand.getPestilenceFireSfx, Wand.getPestilenceFireSfx, Wand.getPestilenceHitSfx), InventoryType.StaffWither: ('getCastWitherAnim', Wand.getWitherFireSfx, Wand.getWitherFireSfx, Wand.getWitherHitSfx), InventoryType.StaffHellfire: ('getCastHellfireAnim', Wand.getHellfireFireSfx, Wand.getHellfireFireSfx, Wand.getHellfireHitSfx), InventoryType.StaffBanish: ('getCastBanishAnim', Wand.getBanishFireSfx, Wand.getBanishFireSfx, Wand.getBanishHitSfx), InventoryType.StaffDesolation: ('getCastDesolationAnim', Wand.getDesolationFireSfx, Wand.getDesolationFireSfx, Wand.getDesolationHitSfx), InventoryType.UseItem: ('getDrink', Consumable.getDrinkSfx, Consumable.getMissSfx), InventoryType.Potion1: ('getDrink', Consumable.getDrinkSfx, Consumable.getMissSfx), InventoryType.Potion2: ('getDrink', Consumable.getDrinkSfx, Consumable.getMissSfx), InventoryType.Potion3: ('getDrink', Consumable.getDrinkSfx, Consumable.getMissSfx), InventoryType.Potion4: ('getDrink', Consumable.getDrinkSfx, Consumable.getMissSfx), InventoryType.Potion5: ('getDrink', Consumable.getDrinkSfx, Consumable.getMissSfx), InventoryType.ShipRepairKit: ('getShipRepair', Consumable.getShipRepairSfx, Consumable.getMissSfx), InventoryType.SailBroadsideLeft: ('getBroadsideLeft', None, None), InventoryType.SailBroadsideRight: ('getBroadsideRight', None, None), InventoryType.SailFullSail: ('getFullSail', None, None), InventoryType.SailComeAbout: ('getComeAbout', None, None), InventoryType.SailOpenFire: ('getOpenFire', None, None), InventoryType.SailRammingSpeed: ('getRammingSpeed', None, None), InventoryType.SailTakeCover: ('getTakeCover', None, None), InventoryType.SailPowerRecharge: ('getPowerRecharge', None, None), EnemySkills.CLAW_RAKE: ('getCrabAttackRight', MonsterMelee.getCrabAttackLeftSfx, MonsterMelee.getCrabAttackLeftSfx, 0), EnemySkills.CLAW_STRIKE: ('getCrabAttackLeft', MonsterMelee.getCrabAttackLeftSfx, MonsterMelee.getCrabAttackLeftSfx, 0), EnemySkills.DUAL_CLAW: ('getCrabAttackBoth', MonsterMelee.getCrabAttackBothSfx, MonsterMelee.getCrabAttackBothSfx, 0), EnemySkills.STUMP_KICK: ('getStumpKick', MonsterMelee.getMossmanAttackKickSfx, MonsterMelee.getMossmanAttackKickSfx, 0), EnemySkills.STUMP_KICK_RIGHT: ('getStumpKickRight', MonsterMelee.getMossmanAttackKickSfx, MonsterMelee.getMossmanAttackKickSfx, 0), EnemySkills.STUMP_SLAP_LEFT: ('getStumpSlapLeft', MonsterMelee.getMossmanAttackSlapSfx, MonsterMelee.getMossmanAttackSlapSfx, 0), EnemySkills.STUMP_SLAP_RIGHT: ('getStumpSlapRight', MonsterMelee.getMossmanAttackSlapSfx, MonsterMelee.getMossmanAttackSlapSfx, 0), EnemySkills.STUMP_SWAT_LEFT: ('getStumpSwatLeft', MonsterMelee.getMossmanAttackSwatSfx, MonsterMelee.getMossmanAttackSwatSfx, 0), EnemySkills.STUMP_SWAT_RIGHT: ('getStumpSwatRight', MonsterMelee.getMossmanAttackSwatSfx, MonsterMelee.getMossmanAttackSwatSfx, 0), EnemySkills.STUMP_STOMP: ('getStumpStomp', MonsterMelee.getMossmanAttackJumpSfx, MonsterMelee.getMossmanAttackJumpSfx, 0), EnemySkills.FLYTRAP_ATTACK_A: ('getFlyTrapAttackA', MonsterMelee.getFlytrapAttackASfx, MonsterMelee.getFlytrapAttackASfx, 0), EnemySkills.FLYTRAP_ATTACK_JAB: ('getFlyTrapAttackJab', MonsterMelee.getFlytrapAttackJabSfx, MonsterMelee.getFlytrapAttackJabSfx, 0), EnemySkills.FLYTRAP_LEFT_FAKE: ('getFlyTrapLeftFake', MonsterMelee.getFlytrapAttackFakeSfx, MonsterMelee.getFlytrapAttackFakeSfx, 0), EnemySkills.FLYTRAP_RIGHT_FAKE: ('getFlyTrapRightFake', MonsterMelee.getFlytrapAttackFakeSfx, MonsterMelee.getFlytrapAttackFakeSfx, 0), EnemySkills.FLYTRAP_SPIT: ('getFlyTrapSpit', MonsterMelee.getFlytrapAttackSpitSfx, MonsterMelee.getFlytrapAttackSpitSfx, 0), EnemySkills.POISON_VOMIT: ('getKrakenVomit', MonsterMelee.getEnsnareSfx, MonsterMelee.getMissSfx, 0), EnemySkills.GROUND_SLAP: ('getTentacleSlap', MonsterMelee.getSmashSfx, MonsterMelee.getMissSfx, 0), EnemySkills.ENSNARE: ('getTentacleEnsnare', MonsterMelee.getEnsnareSfx, MonsterMelee.getMissSfx, 0), EnemySkills.CONSTRICT: ('getTentacleConstrict', MonsterMelee.getHitSfx, MonsterMelee.getMissSfx, 0), EnemySkills.PILEDRIVER: ('getTentaclePiledriver', MonsterMelee.getSmashSfx, MonsterMelee.getMissSfx, 0), EnemySkills.POUND: ('getTentaclePound', MonsterMelee.getHitSfx, MonsterMelee.getMissSfx, 0), EnemySkills.SCORPION_ATTACK_LEFT: ('getScorpionAttackLeft', MonsterMelee.getScorpionAttackLeftSfx, MonsterMelee.getScorpionAttackLeftSfx, 0), EnemySkills.SCORPION_ATTACK_RIGHT: ('getScorpionAttackRight', MonsterMelee.getScorpionAttackLeftSfx, MonsterMelee.getScorpionAttackLeftSfx, 0), EnemySkills.SCORPION_ATTACK_BOTH: ('getScorpionAttackBoth', MonsterMelee.getScorpionAttackBothSfx, MonsterMelee.getScorpionAttackBothSfx, 0), EnemySkills.SCORPION_ATTACK_TAIL_STING: ('getScorpionAttackTailSting', MonsterMelee.getScorpionAttackTailStingSfx, MonsterMelee.getScorpionAttackTailStingSfx, 0), EnemySkills.SCORPION_PICK_UP_HUMAN: ('getScorpionPickUpHuman', MonsterMelee.getScorpionPickUpHumanSfx, MonsterMelee.getScorpionPickUpHumanSfx, 0), EnemySkills.SCORPION_REAR_UP: ('getScorpionRearUp', MonsterMelee.getScorpionRearUpSfx, MonsterMelee.getScorpionRearUpSfx, 0), EnemySkills.ALLIGATOR_ATTACK_LEFT: ('getAlligatorAttackLeft', MonsterMelee.getAlligatorAttackLeftSfx, MonsterMelee.getAlligatorAttackLeftSfx, 0), EnemySkills.ALLIGATOR_ATTACK_RIGHT: ('getAlligatorAttackRight', MonsterMelee.getAlligatorAttackLeftSfx, MonsterMelee.getAlligatorAttackLeftSfx, 0), EnemySkills.ALLIGATOR_ATTACK_STRAIGHT: ('getAlligatorAttackStraight', MonsterMelee.getAlligatorAttackStraightSfx, MonsterMelee.getAlligatorAttackStraightSfx, 0), EnemySkills.ALLIGATOR_CRUSH: ('getAlligatorAttackStraight', MonsterMelee.getAlligatorAttackStraightSfx, MonsterMelee.getAlligatorAttackStraightSfx, 0), EnemySkills.ALLIGATOR_MAIM: ('getAlligatorAttackRight', MonsterMelee.getAlligatorAttackLeftSfx, MonsterMelee.getAlligatorAttackLeftSfx, 0), EnemySkills.BAT_ATTACK_LEFT: ('getBatAttackLeft', MonsterMelee.getBatAttackSfx, MonsterMelee.getBatAttackSfx, 0), EnemySkills.BAT_ATTACK_RIGHT: ('getBatAttackRight', MonsterMelee.getBatAttackSfx, MonsterMelee.getBatAttackSfx, 0), EnemySkills.BAT_SHRIEK: ('getBatShriek', MonsterMelee.getBatAttackSfx, MonsterMelee.getBatAttackSfx, 0), EnemySkills.BAT_FLURRY: ('getBatFlurry', MonsterMelee.getBatAttackSfx, MonsterMelee.getBatAttackSfx, 0), EnemySkills.WASP_ATTACK: ('getWaspAttack', MonsterMelee.getWaspStingSfx, MonsterMelee.getWaspStingSfx, 0), EnemySkills.WASP_ATTACK_LEAP: ('getWaspAttackLeap', MonsterMelee.getWaspLeapStingSfx, MonsterMelee.getWaspLeapStingSfx, 0), EnemySkills.WASP_POISON_STING: ('getWaspAttackSting', MonsterMelee.getWaspStingSfx, MonsterMelee.getWaspStingSfx, 0), EnemySkills.WASP_PAIN_BITE: ('getWaspAttack', MonsterMelee.getWaspStingSfx, MonsterMelee.getWaspStingSfx, 0), EnemySkills.SERPENT_VENOM: ('getWaspAttack', MonsterMelee.getWaspStingSfx, MonsterMelee.getWaspStingSfx, 0), EnemySkills.CUTLASS_CHOP: ('getChop', Sword.getHitSfx, Sword.getMissSfx, 0), EnemySkills.CUTLASS_DOUBLESLASH: ('getDoubleSlash', Sword.getHitSfx, Sword.getMissSfx, 0), EnemySkills.CUTLASS_LUNGE: ('getLunge', Sword.getHitSfx, Sword.getMissSfx, 0), EnemySkills.CUTLASS_STAB: ('getStab', Sword.getHitSfx, Sword.getMissSfx, 0), EnemySkills.CUTLASS_ROLLTHRUST: ('getRollThrust', Sword.getHitSfx, Sword.getMissSfx, 0), EnemySkills.CUTLASS_COMBOA: ('getComboA', Sword.getHitSfx, Sword.getMissSfx, 0), EnemySkills.CUTLASS_WILDSLASH: ('getWildSlash', Sword.getHitSfx, Sword.getMissSfx, 0), EnemySkills.CUTLASS_FLURRY: ('getFlurry', Sword.getHitSfx, Sword.getMissSfx, 0), EnemySkills.CUTLASS_RIPOSTE: ('getRiposte', Sword.getHitSfx, Sword.getMissSfx, 0), EnemySkills.FOIL_FLECHE: ('getFoilFleche', Foil.getHitSfx, Foil.getMissSfx, 0), EnemySkills.FOIL_REPRISE: ('getFoilReprise', Foil.getHitSfx, Foil.getMissSfx, 0), EnemySkills.FOIL_SWIPE: ('getFoilSwipe', Foil.getHitSfx, Foil.getMissSfx, 0), EnemySkills.FOIL_IMPALE: ('getFoilImpale', Foil.getHitSfx, Foil.getMissSfx, 0), EnemySkills.FOIL_REMISE: ('getFoilRemise', Foil.getHitSfx, Foil.getMissSfx, 0), EnemySkills.FOIL_BALESTRAKICK: ('getFoilBalestraKick', Foil.getHitSfx, Foil.getMissSfx, 0), EnemySkills.FOIL_CADENCE: ('getFoilCadence', Foil.getHitSfx, Foil.getMissSfx, 0), EnemySkills.DUALCUTLASS_COMBINATION: ('getDualCutlassCombination', DualCutlass.getHitSfx, DualCutlass.getMissSfx, 0), EnemySkills.DUALCUTLASS_SPIN: ('getDualCutlassSpin', DualCutlass.getHitSfx, DualCutlass.getMissSfx, 0), EnemySkills.DUALCUTLASS_BARRAGE: ('getDualCutlassBarrage', DualCutlass.getHitSfx, DualCutlass.getMissSfx, 0), EnemySkills.DUALCUTLASS_XSLASH: ('getDualCutlassXSlash', DualCutlass.getHitSfx, DualCutlass.getMissSfx, 0), EnemySkills.DUALCUTLASS_GORE: ('getDualCutlassGore', DualCutlass.getHitSfx, DualCutlass.getMissSfx, 0)}
+__skillAnim = {InventoryType.MeleePunch: ('getBoxingPunch', Melee.getHitSfx, Melee.getMissSfx),
+               InventoryType.MeleeJab: ('getBoxingPunch', Melee.getHitSfx, Melee.getMissSfx),
+               InventoryType.MeleeKick: ('getKick', Melee.getHitSfx, Melee.getMissSfx),
+               InventoryType.MeleeRoundhouse: ('getKick', Melee.getHitSfx, Melee.getMissSfx),
+               InventoryType.MeleeHeadbutt: ('getKrazyPunch', Melee.getHitSfx, Melee.getMissSfx),
+               InventoryType.MeleeHaymaker: ('getBoxingPunch', Melee.getHitSfx, Melee.getMissSfx),
+               InventoryType.MeleeThrowDirt: ('getKrazyPunch', Melee.getHitSfx, Melee.getMissSfx),
+               InventoryType.CutlassHack: ('getHack', Sword.getHitSfx, Sword.getMissSfx),
+               InventoryType.CutlassSlash: ('getSlash', Sword.getHitSfx, Sword.getMissSfx),
+               InventoryType.CutlassStab: ('getThrust', Sword.getHitSfx, Sword.getMissSfx),
+               InventoryType.CutlassFlourish: ('getFlourish', Sword.getHitSfx, Sword.getMissSfx),
+               InventoryType.CutlassCleave: ('getCleave', Sword.getHitSfx, Sword.getMissSfx),
+               InventoryType.CutlassTaunt: ('getTaunt', Sword.getHitSfx, Sword.getMissSfx),
+               InventoryType.CutlassBrawl: ('getBrawl', Sword.getHitSfx, Sword.getMissSfx),
+               InventoryType.CutlassSweep: ('getSweep', Sword.getHitSfx, Sword.getMissSfx),
+               InventoryType.CutlassBladestorm: ('getBladestorm', Sword.getHitSfx, Sword.getMissSfx),
+               InventoryType.PistolShoot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx),
+               InventoryType.PistolTakeAim: ('getPistolTakeAimAnim', Pistol.getHitSfx, Pistol.getMissSfx),
+               EnemySkills.PISTOL_CHARGE: ('getPistolChargingAnim', Pistol.getAimSfx, Pistol.getAimSfx),
+               EnemySkills.PISTOL_RELOAD: ('getPistolReloadAnim', None, None),
+               InventoryType.PistolLeadShot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx),
+               InventoryType.PistolBaneShot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx),
+               InventoryType.PistolSilverShot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx),
+               InventoryType.PistolHexEaterShot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx),
+               InventoryType.PistolSteelShot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx),
+               InventoryType.PistolVenomShot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx),
+               InventoryType.MusketShoot: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx),
+               InventoryType.MusketTakeAim: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx),
+               InventoryType.MusketDeadeye: ('getPistolFireAnim', Pistol.getHitSfx, Pistol.getMissSfx),
+               InventoryType.BayonetShoot: ('getBayonetFireAnim', Bayonet.getShootSfx, Bayonet.getShootSfx),
+               InventoryType.BayonetStab: ('getBayonetStab', Bayonet.getHitSfx, Bayonet.getMissSfx),
+               InventoryType.BayonetRush: ('getBayonetRush', Bayonet.getHitSfx, Bayonet.getMissSfx),
+               InventoryType.BayonetBash: ('getBayonetBash', Bayonet.getHitSfx, Bayonet.getMissSfx),
+               InventoryType.DaggerCut: ('getCut', Dagger.getHitSfx, Dagger.getMissSfx),
+               InventoryType.DaggerSwipe: ('getSwipe', Dagger.getHitSfx, Dagger.getMissSfx),
+               InventoryType.DaggerGouge: ('getGouge', Dagger.getHitSfx, Dagger.getMissSfx),
+               InventoryType.DaggerEviscerate: ('getEviscerate', Dagger.getHitSfx, Dagger.getMissSfx),
+               InventoryType.DaggerAsp: ('getDaggerAspInterval', Dagger.getHitSfx, Dagger.getMissSfx),
+               InventoryType.DaggerAdder: ('getDaggerAdderInterval', Dagger.getHitSfx, Dagger.getMissSfx),
+               InventoryType.DaggerThrowDirt: ('getDaggerThrowDirtInterval', Dagger.getHitSfx, Dagger.getMissSfx),
+               InventoryType.DaggerSidewinder: ('getDaggerSidewinderInterval', Dagger.getHitSfx, Dagger.getMissSfx),
+               InventoryType.DaggerViperNest: ('getDaggerViperNestInterval', Dagger.getHitSfx, Dagger.getMissSfx),
+               EnemySkills.DAGGER_THROW_KNIFE: ('getDaggerAspInterval', Dagger.getHitSfx, Dagger.getMissSfx),
+               EnemySkills.DAGGER_THROW_VENOMBLADE: ('getDaggerAdderInterval', Dagger.getHitSfx, Dagger.getMissSfx),
+               EnemySkills.DAGGER_THROW_BARBED: ('getDaggerSidewinderInterval', Dagger.getHitSfx, Dagger.getMissSfx),
+               EnemySkills.DAGGER_THROW_INTERRUPT: ('getDaggerAspInterval', Dagger.getHitSfx, Dagger.getMissSfx),
+               InventoryType.GrenadeThrow: ('getGrenadeThrow', Grenade.getHitSfx, Grenade.getMissSfx),
+               InventoryType.GrenadeLongVolley: ('getGrenadeLongVolley', Grenade.getHitSfx, Grenade.getMissSfx),
+               EnemySkills.GRENADE_CHARGE: ('getGrenadeChargingAnim', Grenade.getAimSfx, Grenade.getAimSfx),
+               EnemySkills.GRENADE_RELOAD: ('getGrenadeReloadAnim', Grenade.getReloadSfx, Grenade.getReloadSfx),
+               InventoryType.GrenadeExplosion: ('getGrenadeThrow', Grenade.getHitSfx, Grenade.getMissSfx),
+               InventoryType.GrenadeShockBomb: ('getGrenadeThrow', Grenade.getHitSfx, Grenade.getMissSfx),
+               InventoryType.GrenadeFireBomb: ('getGrenadeThrow', Grenade.getHitSfx, Grenade.getMissSfx),
+               InventoryType.GrenadeSmokeCloud: ('getGrenadeThrow', Grenade.getHitSfx, Grenade.getMissSfx),
+               InventoryType.GrenadeSiege: ('getGrenadeThrow', Grenade.getHitSfx, Grenade.getMissSfx),
+               InventoryType.DollAttune: ('getAttune', Doll.getAttuneSfx, Doll.getMissSfx),
+               EnemySkills.DOLL_UNATTUNE: ('getUnattune', Doll.getUnattuneSfx, Doll.getMissSfx),
+               EnemySkills.DOLL_POKE2: ('getPoke', Doll.getPokeSfx, Doll.getMissSfx),
+               InventoryType.DollPoke: ('getPoke', Doll.getPokeSfx, Doll.getMissSfx),
+               InventoryType.DollSwarm: ('getSwarm', Doll.getSwarmSfx, Doll.getMissSfx),
+               InventoryType.DollHeal: ('getHeal', Doll.getHealSfx, Doll.getMissSfx),
+               InventoryType.DollBurn: ('getBurn', Doll.getScorchSfx, Doll.getMissSfx),
+               InventoryType.DollShackles: ('getShackles', Doll.getShacklesSfx, Doll.getMissSfx),
+               InventoryType.DollCure: ('getCure', Doll.getCureSfx, Doll.getMissSfx),
+               InventoryType.DollCurse: ('getCurse', Doll.getCurseSfx, Doll.getMissSfx),
+               InventoryType.DollLifeDrain: ('getLifeDrain', Doll.getLifedrainSfx, Doll.getMissSfx),
+               EnemySkills.STAFF_WITHER_CHARGE: ('getChargeWitherAnim', Wand.getWitherChargeSfx, Wand.getWitherHoldSfx),
+               EnemySkills.STAFF_SOULFLAY_CHARGE: (
+               'getChargeSoulflayAnim', Wand.getSoulflayChargeSfx, Wand.getSoulflayHoldSfx),
+               EnemySkills.STAFF_PESTILENCE_CHARGE: (
+               'getChargePestilenceAnim', Wand.getPestilenceChargeSfx, Wand.getPestilenceHoldSfx),
+               EnemySkills.STAFF_HELLFIRE_CHARGE: (
+               'getChargeHellfireAnim', Wand.getHellfireChargeSfx, Wand.getHellfireHoldSfx),
+               EnemySkills.STAFF_BANISH_CHARGE: ('getChargeBanishAnim', Wand.getBanishChargeSfx, Wand.getBanishHoldSfx),
+               EnemySkills.STAFF_DESOLATION_CHARGE: (
+               'getChargeDesolationAnim', Wand.getDesolationChargeSfx, Wand.getDesolationHoldSfx),
+               EnemySkills.STAFF_FIZZLE: ('getFizzleAnim', Wand.getChargeSfx, Wand.getChargeLoopSfx),
+               InventoryType.StaffBlast: (
+               'getCastFireAnim', Wand.getBlastFireSfx, Wand.getBlastFireSfx, Wand.getBlastHitSfx),
+               InventoryType.StaffSoulFlay: (
+               'getCastSoulFlayAnim', Wand.getSoulflayFireSfx, Wand.getSoulflayFireSfx, Wand.getSoulflayHitSfx),
+               InventoryType.StaffPestilence: (
+               'getCastPestilenceAnim', Wand.getPestilenceFireSfx, Wand.getPestilenceFireSfx, Wand.getPestilenceHitSfx),
+               InventoryType.StaffWither: (
+               'getCastWitherAnim', Wand.getWitherFireSfx, Wand.getWitherFireSfx, Wand.getWitherHitSfx),
+               InventoryType.StaffHellfire: (
+               'getCastHellfireAnim', Wand.getHellfireFireSfx, Wand.getHellfireFireSfx, Wand.getHellfireHitSfx),
+               InventoryType.StaffBanish: (
+               'getCastBanishAnim', Wand.getBanishFireSfx, Wand.getBanishFireSfx, Wand.getBanishHitSfx),
+               InventoryType.StaffDesolation: (
+               'getCastDesolationAnim', Wand.getDesolationFireSfx, Wand.getDesolationFireSfx, Wand.getDesolationHitSfx),
+               InventoryType.UseItem: ('getDrink', Consumable.getDrinkSfx, Consumable.getMissSfx),
+               InventoryType.Potion1: ('getDrink', Consumable.getDrinkSfx, Consumable.getMissSfx),
+               InventoryType.Potion2: ('getDrink', Consumable.getDrinkSfx, Consumable.getMissSfx),
+               InventoryType.Potion3: ('getDrink', Consumable.getDrinkSfx, Consumable.getMissSfx),
+               InventoryType.Potion4: ('getDrink', Consumable.getDrinkSfx, Consumable.getMissSfx),
+               InventoryType.Potion5: ('getDrink', Consumable.getDrinkSfx, Consumable.getMissSfx),
+               InventoryType.ShipRepairKit: ('getShipRepair', Consumable.getShipRepairSfx, Consumable.getMissSfx),
+               InventoryType.SailBroadsideLeft: ('getBroadsideLeft', None, None),
+               InventoryType.SailBroadsideRight: ('getBroadsideRight', None, None),
+               InventoryType.SailFullSail: ('getFullSail', None, None),
+               InventoryType.SailComeAbout: ('getComeAbout', None, None),
+               InventoryType.SailOpenFire: ('getOpenFire', None, None),
+               InventoryType.SailRammingSpeed: ('getRammingSpeed', None, None),
+               InventoryType.SailTakeCover: ('getTakeCover', None, None),
+               InventoryType.SailPowerRecharge: ('getPowerRecharge', None, None), EnemySkills.CLAW_RAKE: (
+    'getCrabAttackRight', MonsterMelee.getCrabAttackLeftSfx, MonsterMelee.getCrabAttackLeftSfx, 0),
+               EnemySkills.CLAW_STRIKE: (
+               'getCrabAttackLeft', MonsterMelee.getCrabAttackLeftSfx, MonsterMelee.getCrabAttackLeftSfx, 0),
+               EnemySkills.DUAL_CLAW: (
+               'getCrabAttackBoth', MonsterMelee.getCrabAttackBothSfx, MonsterMelee.getCrabAttackBothSfx, 0),
+               EnemySkills.STUMP_KICK: (
+               'getStumpKick', MonsterMelee.getMossmanAttackKickSfx, MonsterMelee.getMossmanAttackKickSfx, 0),
+               EnemySkills.STUMP_KICK_RIGHT: (
+               'getStumpKickRight', MonsterMelee.getMossmanAttackKickSfx, MonsterMelee.getMossmanAttackKickSfx, 0),
+               EnemySkills.STUMP_SLAP_LEFT: (
+               'getStumpSlapLeft', MonsterMelee.getMossmanAttackSlapSfx, MonsterMelee.getMossmanAttackSlapSfx, 0),
+               EnemySkills.STUMP_SLAP_RIGHT: (
+               'getStumpSlapRight', MonsterMelee.getMossmanAttackSlapSfx, MonsterMelee.getMossmanAttackSlapSfx, 0),
+               EnemySkills.STUMP_SWAT_LEFT: (
+               'getStumpSwatLeft', MonsterMelee.getMossmanAttackSwatSfx, MonsterMelee.getMossmanAttackSwatSfx, 0),
+               EnemySkills.STUMP_SWAT_RIGHT: (
+               'getStumpSwatRight', MonsterMelee.getMossmanAttackSwatSfx, MonsterMelee.getMossmanAttackSwatSfx, 0),
+               EnemySkills.STUMP_STOMP: (
+               'getStumpStomp', MonsterMelee.getMossmanAttackJumpSfx, MonsterMelee.getMossmanAttackJumpSfx, 0),
+               EnemySkills.FLYTRAP_ATTACK_A: (
+               'getFlyTrapAttackA', MonsterMelee.getFlytrapAttackASfx, MonsterMelee.getFlytrapAttackASfx, 0),
+               EnemySkills.FLYTRAP_ATTACK_JAB: (
+               'getFlyTrapAttackJab', MonsterMelee.getFlytrapAttackJabSfx, MonsterMelee.getFlytrapAttackJabSfx, 0),
+               EnemySkills.FLYTRAP_LEFT_FAKE: (
+               'getFlyTrapLeftFake', MonsterMelee.getFlytrapAttackFakeSfx, MonsterMelee.getFlytrapAttackFakeSfx, 0),
+               EnemySkills.FLYTRAP_RIGHT_FAKE: (
+               'getFlyTrapRightFake', MonsterMelee.getFlytrapAttackFakeSfx, MonsterMelee.getFlytrapAttackFakeSfx, 0),
+               EnemySkills.FLYTRAP_SPIT: (
+               'getFlyTrapSpit', MonsterMelee.getFlytrapAttackSpitSfx, MonsterMelee.getFlytrapAttackSpitSfx, 0),
+               EnemySkills.POISON_VOMIT: ('getKrakenVomit', MonsterMelee.getEnsnareSfx, MonsterMelee.getMissSfx, 0),
+               EnemySkills.GROUND_SLAP: ('getTentacleSlap', MonsterMelee.getSmashSfx, MonsterMelee.getMissSfx, 0),
+               EnemySkills.ENSNARE: ('getTentacleEnsnare', MonsterMelee.getEnsnareSfx, MonsterMelee.getMissSfx, 0),
+               EnemySkills.CONSTRICT: ('getTentacleConstrict', MonsterMelee.getHitSfx, MonsterMelee.getMissSfx, 0),
+               EnemySkills.PILEDRIVER: ('getTentaclePiledriver', MonsterMelee.getSmashSfx, MonsterMelee.getMissSfx, 0),
+               EnemySkills.POUND: ('getTentaclePound', MonsterMelee.getHitSfx, MonsterMelee.getMissSfx, 0),
+               EnemySkills.SCORPION_ATTACK_LEFT: (
+               'getScorpionAttackLeft', MonsterMelee.getScorpionAttackLeftSfx, MonsterMelee.getScorpionAttackLeftSfx,
+               0), EnemySkills.SCORPION_ATTACK_RIGHT: (
+    'getScorpionAttackRight', MonsterMelee.getScorpionAttackLeftSfx, MonsterMelee.getScorpionAttackLeftSfx, 0),
+               EnemySkills.SCORPION_ATTACK_BOTH: (
+               'getScorpionAttackBoth', MonsterMelee.getScorpionAttackBothSfx, MonsterMelee.getScorpionAttackBothSfx,
+               0), EnemySkills.SCORPION_ATTACK_TAIL_STING: (
+    'getScorpionAttackTailSting', MonsterMelee.getScorpionAttackTailStingSfx,
+    MonsterMelee.getScorpionAttackTailStingSfx, 0), EnemySkills.SCORPION_PICK_UP_HUMAN: (
+    'getScorpionPickUpHuman', MonsterMelee.getScorpionPickUpHumanSfx, MonsterMelee.getScorpionPickUpHumanSfx, 0),
+               EnemySkills.SCORPION_REAR_UP: (
+               'getScorpionRearUp', MonsterMelee.getScorpionRearUpSfx, MonsterMelee.getScorpionRearUpSfx, 0),
+               EnemySkills.ALLIGATOR_ATTACK_LEFT: (
+               'getAlligatorAttackLeft', MonsterMelee.getAlligatorAttackLeftSfx, MonsterMelee.getAlligatorAttackLeftSfx,
+               0), EnemySkills.ALLIGATOR_ATTACK_RIGHT: (
+    'getAlligatorAttackRight', MonsterMelee.getAlligatorAttackLeftSfx, MonsterMelee.getAlligatorAttackLeftSfx, 0),
+               EnemySkills.ALLIGATOR_ATTACK_STRAIGHT: (
+               'getAlligatorAttackStraight', MonsterMelee.getAlligatorAttackStraightSfx,
+               MonsterMelee.getAlligatorAttackStraightSfx, 0), EnemySkills.ALLIGATOR_CRUSH: (
+    'getAlligatorAttackStraight', MonsterMelee.getAlligatorAttackStraightSfx,
+    MonsterMelee.getAlligatorAttackStraightSfx, 0), EnemySkills.ALLIGATOR_MAIM: (
+    'getAlligatorAttackRight', MonsterMelee.getAlligatorAttackLeftSfx, MonsterMelee.getAlligatorAttackLeftSfx, 0),
+               EnemySkills.BAT_ATTACK_LEFT: (
+               'getBatAttackLeft', MonsterMelee.getBatAttackSfx, MonsterMelee.getBatAttackSfx, 0),
+               EnemySkills.BAT_ATTACK_RIGHT: (
+               'getBatAttackRight', MonsterMelee.getBatAttackSfx, MonsterMelee.getBatAttackSfx, 0),
+               EnemySkills.BAT_SHRIEK: ('getBatShriek', MonsterMelee.getBatAttackSfx, MonsterMelee.getBatAttackSfx, 0),
+               EnemySkills.BAT_FLURRY: ('getBatFlurry', MonsterMelee.getBatAttackSfx, MonsterMelee.getBatAttackSfx, 0),
+               EnemySkills.WASP_ATTACK: (
+               'getWaspAttack', MonsterMelee.getWaspStingSfx, MonsterMelee.getWaspStingSfx, 0),
+               EnemySkills.WASP_ATTACK_LEAP: (
+               'getWaspAttackLeap', MonsterMelee.getWaspLeapStingSfx, MonsterMelee.getWaspLeapStingSfx, 0),
+               EnemySkills.WASP_POISON_STING: (
+               'getWaspAttackSting', MonsterMelee.getWaspStingSfx, MonsterMelee.getWaspStingSfx, 0),
+               EnemySkills.WASP_PAIN_BITE: (
+               'getWaspAttack', MonsterMelee.getWaspStingSfx, MonsterMelee.getWaspStingSfx, 0),
+               EnemySkills.SERPENT_VENOM: (
+               'getWaspAttack', MonsterMelee.getWaspStingSfx, MonsterMelee.getWaspStingSfx, 0),
+               EnemySkills.CUTLASS_CHOP: ('getChop', Sword.getHitSfx, Sword.getMissSfx, 0),
+               EnemySkills.CUTLASS_DOUBLESLASH: ('getDoubleSlash', Sword.getHitSfx, Sword.getMissSfx, 0),
+               EnemySkills.CUTLASS_LUNGE: ('getLunge', Sword.getHitSfx, Sword.getMissSfx, 0),
+               EnemySkills.CUTLASS_STAB: ('getStab', Sword.getHitSfx, Sword.getMissSfx, 0),
+               EnemySkills.CUTLASS_ROLLTHRUST: ('getRollThrust', Sword.getHitSfx, Sword.getMissSfx, 0),
+               EnemySkills.CUTLASS_COMBOA: ('getComboA', Sword.getHitSfx, Sword.getMissSfx, 0),
+               EnemySkills.CUTLASS_WILDSLASH: ('getWildSlash', Sword.getHitSfx, Sword.getMissSfx, 0),
+               EnemySkills.CUTLASS_FLURRY: ('getFlurry', Sword.getHitSfx, Sword.getMissSfx, 0),
+               EnemySkills.CUTLASS_RIPOSTE: ('getRiposte', Sword.getHitSfx, Sword.getMissSfx, 0),
+               EnemySkills.FOIL_FLECHE: ('getFoilFleche', Foil.getHitSfx, Foil.getMissSfx, 0),
+               EnemySkills.FOIL_REPRISE: ('getFoilReprise', Foil.getHitSfx, Foil.getMissSfx, 0),
+               EnemySkills.FOIL_SWIPE: ('getFoilSwipe', Foil.getHitSfx, Foil.getMissSfx, 0),
+               EnemySkills.FOIL_IMPALE: ('getFoilImpale', Foil.getHitSfx, Foil.getMissSfx, 0),
+               EnemySkills.FOIL_REMISE: ('getFoilRemise', Foil.getHitSfx, Foil.getMissSfx, 0),
+               EnemySkills.FOIL_BALESTRAKICK: ('getFoilBalestraKick', Foil.getHitSfx, Foil.getMissSfx, 0),
+               EnemySkills.FOIL_CADENCE: ('getFoilCadence', Foil.getHitSfx, Foil.getMissSfx, 0),
+               EnemySkills.DUALCUTLASS_COMBINATION: (
+               'getDualCutlassCombination', DualCutlass.getHitSfx, DualCutlass.getMissSfx, 0),
+               EnemySkills.DUALCUTLASS_SPIN: ('getDualCutlassSpin', DualCutlass.getHitSfx, DualCutlass.getMissSfx, 0),
+               EnemySkills.DUALCUTLASS_BARRAGE: (
+               'getDualCutlassBarrage', DualCutlass.getHitSfx, DualCutlass.getMissSfx, 0),
+               EnemySkills.DUALCUTLASS_XSLASH: (
+               'getDualCutlassXSlash', DualCutlass.getHitSfx, DualCutlass.getMissSfx, 0),
+               EnemySkills.DUALCUTLASS_GORE: ('getDualCutlassGore', DualCutlass.getHitSfx, DualCutlass.getMissSfx, 0)}
 
 def getSkillAnimInfo(skillId):
     skillInfo = __skillAnim.get(skillId)

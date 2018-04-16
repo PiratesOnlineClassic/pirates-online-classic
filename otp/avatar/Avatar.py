@@ -134,39 +134,32 @@ class Avatar(Actor, ShadowCaster):
         if self == base.localAvatar:
             self.understandable = 1
             self.setPlayerType(NametagGroup.CCFreeChat)
-        else:
-            if self.playerType == NametagGroup.CCSuit:
+        elif self.playerType == NametagGroup.CCSuit:
+            self.understandable = 1
+            self.setPlayerType(NametagGroup.CCSuit)
+        elif self.playerType not in (NametagGroup.CCNormal, NametagGroup.CCFreeChat, NametagGroup.CCSpeedChat):
+            self.understandable = 1
+            self.setPlayerType(NametagGroup.CCNoChat)
+        elif self.commonChatFlags & base.localAvatar.commonChatFlags & OTPGlobals.CommonChat:
+            self.understandable = 1
+            self.setPlayerType(NametagGroup.CCFreeChat)
+        elif self.commonChatFlags & OTPGlobals.SuperChat:
+            self.understandable = 1
+            self.setPlayerType(NametagGroup.CCFreeChat)
+        elif base.localAvatar.commonChatFlags & OTPGlobals.SuperChat:
+            self.understandable = 1
+            self.setPlayerType(NametagGroup.CCFreeChat)
+        elif base.cr.getFriendFlags(self.doId) & OTPGlobals.FriendChat:
+            self.understandable = 1
+            self.setPlayerType(NametagGroup.CCFreeChat)
+        elif base.cr.playerFriendsManager.findPlayerIdFromAvId(self.doId) is not None:
+            if base.cr.playerFriendsManager.findPlayerInfoFromAvId(self.doId).openChatFriendshipYesNo:
                 self.understandable = 1
-                self.setPlayerType(NametagGroup.CCSuit)
+                self.nametag.setColorCode(NametagGroup.CCFreeChat)
             else:
-                if self.playerType not in (NametagGroup.CCNormal, NametagGroup.CCFreeChat, NametagGroup.CCSpeedChat):
-                    self.understandable = 1
-                    self.setPlayerType(NametagGroup.CCNoChat)
-                else:
-                    if self.commonChatFlags & base.localAvatar.commonChatFlags & OTPGlobals.CommonChat:
-                        self.understandable = 1
-                        self.setPlayerType(NametagGroup.CCFreeChat)
-                    else:
-                        if self.commonChatFlags & OTPGlobals.SuperChat:
-                            self.understandable = 1
-                            self.setPlayerType(NametagGroup.CCFreeChat)
-                        else:
-                            if base.localAvatar.commonChatFlags & OTPGlobals.SuperChat:
-                                self.understandable = 1
-                                self.setPlayerType(NametagGroup.CCFreeChat)
-                            else:
-                                if base.cr.getFriendFlags(self.doId) & OTPGlobals.FriendChat:
-                                    self.understandable = 1
-                                    self.setPlayerType(NametagGroup.CCFreeChat)
-                                else:
-                                    if base.cr.playerFriendsManager.findPlayerIdFromAvId(self.doId) is not None:
-                                        if base.cr.playerFriendsManager.findPlayerInfoFromAvId(self.doId).openChatFriendshipYesNo:
-                                            self.understandable = 1
-                                            self.nametag.setColorCode(NametagGroup.CCFreeChat)
-                                        else:
-                                            self.understandable = 0
-                                    else:
-                                        self.understandable = 0
+                self.understandable = 0
+        else:
+            self.understandable = 0
         self.nametag.setColorCode(self.playerType)
         return
 
@@ -267,28 +260,23 @@ class Avatar(Actor, ShadowCaster):
         searchString = chatString.lower()
         if searchString.find(OTPLocalizer.DialogSpecial) >= 0:
             type = 'special'
+        elif searchString.find(OTPLocalizer.DialogExclamation) >= 0:
+            type = 'exclamation'
+        elif searchString.find(OTPLocalizer.DialogQuestion) >= 0:
+            type = 'question'
+        elif random.randint(0, 1):
+            type = 'statementA'
         else:
-            if searchString.find(OTPLocalizer.DialogExclamation) >= 0:
-                type = 'exclamation'
-            else:
-                if searchString.find(OTPLocalizer.DialogQuestion) >= 0:
-                    type = 'question'
-                else:
-                    if random.randint(0, 1):
-                        type = 'statementA'
-                    else:
-                        type = 'statementB'
+            type = 'statementB'
         stringLength = len(chatString)
         if stringLength <= OTPLocalizer.DialogLength1:
             length = 1
+        elif stringLength <= OTPLocalizer.DialogLength2:
+            length = 2
+        elif stringLength <= OTPLocalizer.DialogLength3:
+            length = 3
         else:
-            if stringLength <= OTPLocalizer.DialogLength2:
-                length = 2
-            else:
-                if stringLength <= OTPLocalizer.DialogLength3:
-                    length = 3
-                else:
-                    length = 4
+            length = 4
         self.playDialogue(type, length)
 
     def playDialogue(self, type, length):
@@ -306,14 +294,12 @@ class Avatar(Actor, ShadowCaster):
         else:
             if type == 'question':
                 sfxIndex = 3
+            elif type == 'exclamation':
+                sfxIndex = 4
+            elif type == 'special':
+                sfxIndex = 5
             else:
-                if type == 'exclamation':
-                    sfxIndex = 4
-                else:
-                    if type == 'special':
-                        sfxIndex = 5
-                    else:
-                        notify.error('unrecognized dialogue type: ', type)
+                notify.error('unrecognized dialogue type: ', type)
         if sfxIndex != None and sfxIndex < len(dialogueArray) and dialogueArray[sfxIndex] != None:
             base.playSfx(dialogueArray[sfxIndex], node=self)
         return
@@ -334,14 +320,12 @@ class Avatar(Actor, ShadowCaster):
         else:
             if type == 'question':
                 sfxIndex = 3
+            elif type == 'exclamation':
+                sfxIndex = 4
+            elif type == 'special':
+                sfxIndex = 5
             else:
-                if type == 'exclamation':
-                    sfxIndex = 4
-                else:
-                    if type == 'special':
-                        sfxIndex = 5
-                    else:
-                        notify.error('unrecognized dialogue type: ', type)
+                notify.error('unrecognized dialogue type: ', type)
         if sfxIndex != None and sfxIndex < len(dialogueArray) and dialogueArray[sfxIndex] != None:
             retval = dialogueArray[sfxIndex]
         return retval

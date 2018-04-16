@@ -15,7 +15,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class CannonballProjectile(ProjectileAmmo):
-    
     default_motion_color = [
      Vec4(0.1, 0.2, 0.4, 1.0), Vec4(0.1, 0.2, 0.4, 1.0), Vec4(0.1, 0.2, 0.4, 1.0), Vec4(0.1, 0.2, 0.4, 1.0), Vec4(0.1, 0.2, 0.4, 1.0)]
     fire_motion_color = [

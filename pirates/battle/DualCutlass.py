@@ -103,6 +103,7 @@ class DualCutlass(Weapon.Weapon):
         DualCutlass.drawSfx = loader.loadSfx('audio/sfx_cutlass_draw.mp3')
         DualCutlass.returnSfx = loader.loadSfx('audio/sfx_cutlass_sheathe.mp3')
 
+
 def getHitSfx():
     return DualCutlass.hitSfxs
 

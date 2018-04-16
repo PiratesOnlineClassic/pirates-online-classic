@@ -7,8 +7,8 @@ from pandac.PandaModules import *
 
 notify = directNotify.newCategory('AvatarDNA')
 
+
 class AvatarDNA:
-    
 
     def __str__(self):
         return 'avatar parent class: type undefined'

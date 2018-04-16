@@ -6,6 +6,7 @@ from direct.task import Task
 from direct.showbase.DirectObject import DirectObject
 from otp.otpbase import OTPRender
 
+
 class DependencyArray:
 
     def __init__(self, createCallback):
