@@ -8,9 +8,9 @@ from pandac.PandaModules import *
 
 class Nametag3d(Nametag):
     WANT_DYNAMIC_SCALING = True
-    SCALING_FACTOR = 0.07
-    SCALING_MINDIST = 1
-    SCALING_MAXDIST = 1000
+    SCALING_FACTOR = 0.06
+    SCALING_MINDIST = 0.1
+    SCALING_MAXDIST = 100000
 
     BILLBOARD_OFFSET = 3.0
     SHOULD_BILLBOARD = True
