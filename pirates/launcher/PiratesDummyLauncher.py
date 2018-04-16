@@ -7,7 +7,6 @@ loadPrcFileData('force-offscreen', 'window-type none')
 
 
 class PiratesDummyLauncher(DummyLauncherBase, PiratesQuickLauncher):
-    
 
     def __init__(self):
         DummyLauncherBase.__init__(self)

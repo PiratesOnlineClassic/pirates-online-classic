@@ -6,9 +6,11 @@ from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
 from pirates.uberdog.UberDogGlobals import InventoryType
 
+
 def beginInterrupt(av):
     if av.isLocal():
         messenger.send('skillFinished')
+
 
 class Bayonet(Weapon.Weapon):
     
@@ -72,20 +74,26 @@ class Bayonet(Weapon.Weapon):
         Bayonet.reloadSfxs = (None, )
         Bayonet.missSfxs = (loader.loadSfx('audio/whoosh-10.mp3'), loader.loadSfx('audio/arm-Whoosh-05.mp3'))
 
+
 def getShootSfx():
     return Bayonet.hitSfxs
+
 
 def getHitSfx():
     return Bayonet.hitSfxs
 
+
 def getMissSfx():
     return Bayonet.missSfxs
+
 
 def getAimSfx():
     return Bayonet.aimSfxs
 
+
 def getReloadSfx():
     return Bayonet.reloadSfxs
+
 
 def getGunCockSfx():
     return Bayonet.gunCockSfxs

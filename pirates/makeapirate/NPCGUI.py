@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.makeapirate.NPCGUI
 import random
 
 from direct.directnotify import DirectNotifyGlobal
@@ -144,54 +140,38 @@ class NPCGUI(DirectFrame, StateData.StateData):
         choice = random.choice(cList)
         if choice == 0:
             self.handleGP1()
-        else:
-            if choice == 1:
-                self.handleGP2()
-            else:
-                if choice == 2:
-                    self.handleGP4()
-                else:
-                    if choice == 3:
-                        self.handleGP8()
-                    else:
-                        if choice == 4:
-                            self.handlecr()
-                        else:
-                            if choice == 5:
-                                self.handlejm()
-                            else:
-                                if choice == 6:
-                                    self.handleko()
-                                else:
-                                    if choice == 7:
-                                        self.handlepa()
-                                    else:
-                                        if choice == 8:
-                                            self.handletw()
-                                        else:
-                                            if choice == 9:
-                                                self.handlesp1()
-                                            else:
-                                                if choice == 10:
-                                                    self.handlesp2()
-                                                else:
-                                                    if choice == 11:
-                                                        self.handlesp3()
-                                                    else:
-                                                        if choice == 12:
-                                                            self.handlesp4()
-                                                        else:
-                                                            if choice == 13:
-                                                                self.handlefr1()
-                                                            else:
-                                                                if choice == 14:
-                                                                    self.handlefr2()
-                                                                else:
-                                                                    if choice == 15:
-                                                                        self.handlefr3()
-                                                                    else:
-                                                                        if choice == 16:
-                                                                            self.handlefr4()
+        elif choice == 1:
+            self.handleGP2()
+        elif choice == 2:
+            self.handleGP4()
+        elif choice == 3:
+            self.handleGP8()
+        elif choice == 4:
+            self.handlecr()
+        elif choice == 5:
+            self.handlejm()
+        elif choice == 6:
+            self.handleko()
+        elif choice == 7:
+            self.handlepa()
+        elif choice == 8:
+            self.handletw()
+        elif choice == 9:
+            self.handlesp1()
+        elif choice == 10:
+            self.handlesp2()
+        elif choice == 11:
+            self.handlesp3()
+        elif choice == 12:
+            self.handlesp4()
+        elif choice == 13:
+            self.handlefr1()
+        elif choice == 14:
+            self.handlefr2()
+        elif choice == 15:
+            self.handlefr3()
+        elif choice == 16:
+            self.handlefr4()
         self.avatar.randomPick()
         self.avatar.setFromDNA()
 
@@ -279,4 +259,3 @@ class NPCGUI(DirectFrame, StateData.StateData):
         self.main.loadSkeleton(16)
         self.main.placeSkeleton(16)
         self.notify.debug('clicked fr4')
-# okay decompiling .\pirates\makeapirate\NPCGUI.pyc

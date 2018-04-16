@@ -1699,35 +1699,26 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         else:
             if self.currPageTabIndex == HEADSHOP:
                 self.exitHeadShop()
-            else:
-                if self.currPageTabIndex == MOUTHSHOP:
-                    self.exitMouthShop()
-                else:
-                    if self.currPageTabIndex == EYESSHOP:
-                        self.exitEyesShop()
-                    else:
-                        if self.currPageTabIndex == NOSESHOP:
-                            self.exitNoseShop()
-                        else:
-                            if self.currPageTabIndex == EARSHOP:
-                                self.exitEarShop()
-                            else:
-                                if self.currPageTabIndex == HAIRSHOP:
-                                    self.exitHairShop()
-                                else:
-                                    if self.currPageTabIndex == CLOTHESSHOP:
-                                        self.exitClothesShop()
-                                    else:
-                                        if self.currPageTabIndex == NAMESHOP:
-                                            self.exitNameShop()
-                                        else:
-                                            if self.currPageTabIndex == TATTOOSHOP:
-                                                self.exitTattoosShop()
-                                            else:
-                                                if self.currPageTabIndex == JEWELRYSHOP:
-                                                    self.exitJewelryShop()
-        for i in range(0, len(self.pageTabs)):
-            self.pageTabs[i].hide()
+            elif self.currPageTabIndex == MOUTHSHOP:
+                self.exitMouthShop()
+            elif self.currPageTabIndex == EYESSHOP:
+                self.exitEyesShop()
+            elif self.currPageTabIndex == NOSESHOP:
+                self.exitNoseShop()
+            elif self.currPageTabIndex == EARSHOP:
+                self.exitEarShop()
+            elif self.currPageTabIndex == HAIRSHOP:
+                self.exitHairShop()
+            elif self.currPageTabIndex == CLOTHESSHOP:
+                self.exitClothesShop()
+            elif self.currPageTabIndex == NAMESHOP:
+                self.exitNameShop()
+            elif self.currPageTabIndex == TATTOOSHOP:
+                self.exitTattoosShop()
+            elif self.currPageTabIndex == JEWELRYSHOP:
+                self.exitJewelryShop()
+            for i in range(0, len(self.pageTabs)):
+                self.pageTabs[i].hide()
 
     def handleRandomAll(self):
         self.overwriteCurrentUndo()

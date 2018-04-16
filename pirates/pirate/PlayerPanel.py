@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pirate.PlayerPanel
 from direct.gui.DirectGui import *
 from direct.showbase.ShowBaseGlobal import *
 from otp.avatar import Avatar
@@ -13,7 +9,6 @@ from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 
 
 class PlayerPanel(IdentityPanel.IdentityPanel):
-    
 
     def __init__(self, pId):
         self.width = 0.5
@@ -76,4 +71,3 @@ class PlayerPanel(IdentityPanel.IdentityPanel):
 
     def closePanel(self):
         self.destroy()
-# okay decompiling .\pirates\pirate\PlayerPanel.pyc

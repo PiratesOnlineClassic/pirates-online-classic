@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.minigame.PlayingCardGlobals
 from direct.showbase.ShowBase import *
 from pandac.PandaModules import *
 from pirates.piratesbase import PLocalizer
@@ -83,6 +79,7 @@ DealDelay = 1.0
 DealCompleteDelay = 1.0
 PayOutDelay = 1.0
 
+
 def getBlackjackActionText(action):
     if action[0] == Bid:
         return PLocalizer.BlackjackActionNames[action[0]] % action[1]
@@ -113,6 +110,7 @@ _prefix = 'PC_'
 CardImages = {}
 _cardImagesInitialized = 0
 
+
 def getCardName(value):
     if value == Unknown:
         return PLocalizer.PlayingCardUnknown
@@ -129,44 +127,32 @@ def getCardEncoding(suit, rank):
     else:
         if suit == 'c':
             encoding = encoding + 26
-        else:
-            if suit == 'd':
-                encoding = encoding + 13
-    if rank == '01':
-        encoding = encoding + 12
-    else:
-        if rank == '13':
+        elif suit == 'd':
+            encoding = encoding + 13
+        if rank == '01':
+            encoding = encoding + 12
+        elif rank == '13':
             encoding = encoding + 11
-        else:
-            if rank == '12':
-                encoding = encoding + 10
-            else:
-                if rank == '11':
-                    encoding = encoding + 9
-                else:
-                    if rank == '10':
-                        encoding = encoding + 8
-                    else:
-                        if rank == '09':
-                            encoding = encoding + 7
-                        else:
-                            if rank == '08':
-                                encoding = encoding + 6
-                            else:
-                                if rank == '07':
-                                    encoding = encoding + 5
-                                else:
-                                    if rank == '06':
-                                        encoding = encoding + 4
-                                    else:
-                                        if rank == '05':
-                                            encoding = encoding + 3
-                                        else:
-                                            if rank == '04':
-                                                encoding = encoding + 2
-                                            else:
-                                                if rank == '03':
-                                                    encoding = encoding + 1
+        elif rank == '12':
+            encoding = encoding + 10
+        elif rank == '11':
+            encoding = encoding + 9
+        elif rank == '10':
+            encoding = encoding + 8
+        elif rank == '09':
+            encoding = encoding + 7
+        elif rank == '08':
+            encoding = encoding + 6
+        elif rank == '07':
+            encoding = encoding + 5
+        elif rank == '06':
+            encoding = encoding + 4
+        elif rank == '05':
+            encoding = encoding + 3
+        elif rank == '04':
+            encoding = encoding + 2
+        elif rank == '03':
+            encoding = encoding + 1
     return encoding
 
 
@@ -241,4 +227,3 @@ def getBlackjackHandValue(hand):
             handValue -= 10
 
     return handValue
-# okay decompiling .\pirates\minigame\PlayingCardGlobals.pyc

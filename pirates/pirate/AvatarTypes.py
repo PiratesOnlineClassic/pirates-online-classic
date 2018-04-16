@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pirate.AvatarTypes
 import random
 
 from pirates.pirate.AvatarType import AvatarType
@@ -55,6 +51,7 @@ AllUndead.extend(UndeadCommon)
 AllUndead.extend(UndeadUncommon)
 AllUndead.extend(UndeadRare)
 
+
 def pickUndead(minVal, maxVal, undeadType=EarthUndead):
     return undeadType[random.randint(minVal, maxVal)]
 
@@ -100,6 +97,7 @@ Leaders = tuple((AvatarType(base=Leader, id=x) for x in range(5)))
 FirstMate, Captain, Lieutenant, Admiral, Commodore = Leaders
 NavyCommon = (
  Cadet, Guard, Sergeant, Veteran, Officer)
+
 
 def randomNavy(level):
     retval = level / 4
@@ -147,6 +145,7 @@ OffA, OffB, OffC, OffD, Viceroy = Officials
 Assassins = tuple((AvatarType(base=Assassin, id=x) for x in range(5)))
 Rogue, Stalker, Cutthroat, Executioner, Professional = Assassins
 AVATAR_TYPE_IDX = 0
+
 
 def typePassthrough(type):
     return type
@@ -276,4 +275,3 @@ def buildEditorSpawnableTypes():
 
 
 buildEditorSpawnableTypes()
-# okay decompiling .\pirates\pirate\AvatarTypes.pyc

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pirate.OrbitCamera
 import math
 
 from direct.directnotify import DirectNotifyGlobal
@@ -17,7 +13,6 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('OrbitCamera')
 
     class ParamSet(ParamObj.ParamSet):
@@ -460,4 +455,3 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
             del self._hiddenGeoms[np]
             self._fadeInIvals[np] = fadeIval
             fadeIval.start()
-# okay decompiling .\pirates\pirate\OrbitCamera.pyc

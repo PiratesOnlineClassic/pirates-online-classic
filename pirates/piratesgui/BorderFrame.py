@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.BorderFrame
 import types
 
 from direct.gui.DirectGui import *
@@ -199,7 +195,7 @@ class BorderFrame(DirectFrame):
             self.resetDecorations()
 
     def getDraggableGeometry(self):
-        return [ self.guiComponents[piece] for piece in self.pieceNames[1:] ]
+        return [self.guiComponents[piece] for piece in self.pieceNames[1:]]
 
     def setBackgroundVisible(self, visible):
         if visible:
@@ -277,4 +273,3 @@ class BorderFrame(DirectFrame):
     def setBgColorScale(self):
         if self.guiComponents:
             self.guiComponents['background'].setColorScale(self['bgColorScale'])
-# okay decompiling .\pirates\piratesgui\BorderFrame.pyc

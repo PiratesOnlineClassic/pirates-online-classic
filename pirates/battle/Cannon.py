@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.Cannon
 import random
 
 import CannonGlobals
@@ -33,6 +29,7 @@ localFireSfxNames = [
  'cball_fire_1.mp3', 'cball_fire_2.mp3', 'cball_fire_3.mp3', 'cball_fire_4.mp3', 'cball_fire_5.mp3']
 distFireSfxNames = [
  'dist_cannon_01.mp3', 'dist_cannon_02.mp3', 'dist_cannon_03.mp3', 'dist_cannon_04.mp3', 'dist_cannon_05.mp3', 'dist_cannon_06.mp3', 'dist_cannon_07.mp3', 'dist_cannon_08.mp3', 'dist_cannon_09.mp3', 'dist_cannon_10.mp3']
+
 
 class Cannon(ShipPart.ShipPart, NodePath):
     
@@ -324,4 +321,4 @@ class Cannon(ShipPart.ShipPart, NodePath):
 
     def setLocalAvatarUsingWeapon(self, val):
         self.localAvatarUsingWeapon = val
-# okay decompiling .\pirates\battle\Cannon.pyc
+

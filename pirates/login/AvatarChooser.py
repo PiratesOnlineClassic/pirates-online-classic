@@ -343,25 +343,23 @@ class AvatarChooser(DirectObject, StateData):
                     text = '\x01smallCaps\x01%s\x02' % PLocalizer.AvatarChooserCreate
                     command = self.__handleCreate
                     state = DGG.NORMAL
+                elif av == OTPGlobals.AvatarPendingCreate:
+                    text = PLocalizer.AvatarChooserUnderConstruction
+                    command = None
+                    state = DGG.DISABLED
+                    imageColor = Vec4(0.7, 0.7, 0.7, 1)
+                elif av == OTPGlobals.AvatarSlotUnavailable:
+                    text = PLocalizer.AvatarChooserSlotUnavailable
+                    textFg = (0.5, 0.5, 0.5, 1)
+                    command = self.popupFeatureBrowser
+                    state = DGG.NORMAL
+                    imageColor = Vec4(0.7, 0.7, 0.7, 1)
+                    textPos = (textPos[0] + 0.034, textPos[1])
                 else:
-                    if av == OTPGlobals.AvatarPendingCreate:
-                        text = PLocalizer.AvatarChooserUnderConstruction
-                        command = None
-                        state = DGG.DISABLED
-                        imageColor = Vec4(0.7, 0.7, 0.7, 1)
-                    else:
-                        if av == OTPGlobals.AvatarSlotUnavailable:
-                            text = PLocalizer.AvatarChooserSlotUnavailable
-                            textFg = (0.5, 0.5, 0.5, 1)
-                            command = self.popupFeatureBrowser
-                            state = DGG.NORMAL
-                            imageColor = Vec4(0.7, 0.7, 0.7, 1)
-                            textPos = (textPos[0] + 0.034, textPos[1])
-                        else:
-                            avName = av.name
-                            text = avName
-                            command = self.__handleHighlight
-                            state = DGG.NORMAL
+                    avName = av.name
+                    text = avName
+                    command = self.__handleHighlight
+                    state = DGG.NORMAL
                 dib = DirectButton(relief=None, parent=subFrame, state=state, text_fg=textFg, text_scale=textScale, text_shadow=PiratesGuiGlobals.TextShadow, text=text, image=image, image_color=imageColor, image_scale=0.37, text_pos=textPos, pos=(x, 0, z), command=command, extraArgs=[subId, slot])
                 if text == PLocalizer.AvatarChooserSlotUnavailable:
                     appendMe = DirectFrame(parent=dib, relief=None, pos=(-0.28, 0, textPos[1] - 0.04), state=DGG.DISABLED, geom=subCard.find('**/subscribers_lock'), geom_scale=0.15, geom_pos=(0.06,

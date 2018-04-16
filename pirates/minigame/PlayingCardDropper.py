@@ -12,6 +12,7 @@ from pirates.piratesbase import PLocalizer
 
 chanceOfHigherCard = 50
 
+
 def dropTier0():
     chance100 = random.randrange(1, 100, 1)
     chance4 = random.randrange(1, 5, 1)
@@ -21,14 +22,12 @@ def dropTier0():
         rank = '02'
     if chance4 == 4:
         suit = 's'
+    elif chance4 == 3:
+        suit = 'c'
+    elif chance4 == 2:
+        suit = 'd'
     else:
-        if chance4 == 3:
-            suit = 'c'
-        else:
-            if chance4 == 2:
-                suit = 'd'
-            else:
-                suit = 'h'
+        suit = 'h'
     return PlayingCardGlobals.getCardEncoding(suit, rank)
 
 
@@ -37,27 +36,22 @@ def dropTier1():
     chance4 = random.randrange(1, 4, 1)
     if chance5 == 5:
         rank = '08'
+    elif chance5 == 4:
+        rank = '07'
+    elif chance5 == 3:
+        rank = '06'
     else:
-        if chance5 == 4:
-            rank = '07'
+        if chance5 == 2:
+            rank = '05'
         else:
-            if chance5 == 3:
-                rank = '06'
-            else:
-                if chance5 == 2:
-                    rank = '05'
-                else:
-                    rank = '04'
-    if chance4 == 4:
-        suit = 's'
-    else:
+            rank = '04'
+        if chance4 == 4:
+            suit = 's'
         if chance4 == 3:
             suit = 'c'
-        else:
-            if chance4 == 2:
-                suit = 'd'
-            else:
-                suit = 'h'
+        if chance4 == 2:
+            suit = 'd'
+        suit = 'h'
     return PlayingCardGlobals.getCardEncoding(suit, rank)
 
 
@@ -66,24 +60,21 @@ def dropTier2():
     chance4 = random.randrange(1, 4, 1)
     if chanceSuit4 == 4:
         rank = '12'
+    elif chanceSuit4 == 3:
+        rank = '11'
     else:
-        if chanceSuit4 == 3:
-            rank = '11'
+        if chanceSuit4 == 2:
+            rank = '10'
         else:
-            if chanceSuit4 == 2:
-                rank = '10'
-            else:
-                rank = '09'
-    if chance4 == 4:
-        suit = 's'
-    else:
-        if chance4 == 3:
-            suit = 'c'
+            rank = '09'
+        if chance4 == 4:
+            suit = 's'
         else:
+            if chance4 == 3:
+                suit = 'c'
             if chance4 == 2:
                 suit = 'd'
-            else:
-                suit = 'h'
+            suit = 'h'
     return PlayingCardGlobals.getCardEncoding(suit, rank)
 
 
@@ -96,13 +87,10 @@ def dropTier3():
         rank = '13'
     if chance4 == 4:
         suit = 's'
+    elif chance4 == 3:
+        suit = 'c'
+    elif chance4 == 2:
+        suit = 'd'
     else:
-        if chance4 == 3:
-            suit = 'c'
-        else:
-            if chance4 == 2:
-                suit = 'd'
-            else:
-                suit = 'h'
+        suit = 'h'
     return PlayingCardGlobals.getCardEncoding(suit, rank)
-# okay decompiling .\pirates\minigame\PlayingCardDropper.pyc

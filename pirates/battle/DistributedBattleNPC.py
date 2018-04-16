@@ -15,8 +15,8 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.reputation.DistributedReputationAvatar import DistributedReputationAvatar
 from pirates.uberdog.UberDogGlobals import *
 
+
 class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleNPC')
     deferrable = True
 

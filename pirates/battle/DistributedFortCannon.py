@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.battle.DistributedFortCannon
 from otp.otpbase import OTPGlobals
 from pirates.battle import DistributedIslandCannon
 from pirates.effects.Bonfire import Bonfire
@@ -9,7 +5,6 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class DistributedFortCannon(DistributedIslandCannon.DistributedIslandCannon):
-    
     notify = directNotify.newCategory('DistributedFortCannon')
 
     def __init__(self, cr):
@@ -38,4 +33,3 @@ class DistributedFortCannon(DistributedIslandCannon.DistributedIslandCannon):
                     self.bf.removeNode()
                     self.bf = None
         return
-# okay decompiling .\pirates\battle\DistributedFortCannon.pyc
