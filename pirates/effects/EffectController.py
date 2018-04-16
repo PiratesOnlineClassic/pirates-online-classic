@@ -1,7 +1,7 @@
 from pandac.PandaModules import *
 
 class EffectController:
-    __module__ = __name__
+    
     particleDummy = None
 
     def __init__(self):

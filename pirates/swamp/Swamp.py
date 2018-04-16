@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.swamp.Swamp
 import math
 import os
 
@@ -18,8 +14,7 @@ from pirates.seapatch.Water import Water
 if base.config.GetBool('want-water-panel', False):
     from pirates.seapatch.WaterPanel import *
 
-class Swamp(Water):
-    __module__ = __name__
+class Swamp(Water):  
     notify = directNotify.newCategory('Swamp')
 
     def __init__(self, swamp_model_file_path, parentNP=render, reflection=None, input_swamp_model=None, input_shader_file_path=None, input_water_color=None):
@@ -313,4 +308,3 @@ class Swamp(Water):
             self.d = 1.0
         self.update_water(task.time)
         return Task.cont
-# okay decompiling .\pirates\swamp\Swamp.pyc

@@ -8,7 +8,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class Pirate(Human):
-    __module__ = __name__
+    
 
     def __init__(self, other=None):
         Human.__init__(self, other)
@@ -16,7 +16,7 @@ class Pirate(Human):
 
 
 class PirateHeadPortrait(Human):
-    __module__ = __name__
+    
 
     def __init__(self):
         Human.__init__(self)

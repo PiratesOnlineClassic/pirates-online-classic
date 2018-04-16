@@ -12,7 +12,7 @@ from pirates.distributed import DistributedTargetableObject
 from pirates.piratesbase import PiratesGlobals
 
 class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, DistributedTargetableObject.DistributedTargetableObject):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedMovingObject')
 
     def __init__(self, cr):

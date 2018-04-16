@@ -11,7 +11,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class TextPrinter(DirectObject.DirectObject):
-    __module__ = __name__
+    
 
     def __init__(self):
         DirectObject.DirectObject.__init__(self)

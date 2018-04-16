@@ -10,7 +10,7 @@ from pirates.seapatch.Reflection import Reflection
 from pirates.swamp.Swamp import Swamp
 
 class ForestEffects(EnvironmentEffects.EnvironmentEffects):
-    __module__ = __name__
+    
     FIREFLIES_Z = 6.0
     RANDOM_SOUND_PERIOD = 6
     RANDOM_SOUND_CHANCE = 12

@@ -11,7 +11,7 @@ from pirates.shipparts.DistributedHullOV import DistributedHullOV
 
 
 class ShipPanel(DirectFrame):
-    __module__ = __name__
+    
     Width = PiratesGuiGlobals.ShipPanelWidth
     Height = PiratesGuiGlobals.ShipPanelHeight
 

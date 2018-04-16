@@ -21,7 +21,7 @@ GOLDFACTOR_HOLIDAY = 1
 REWARD_TO = 3
 
 class QuestReward(POD):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestReward')
     DataSet = {'amount': 1, 'questId': ''}
 
@@ -60,7 +60,7 @@ class QuestReward(POD):
 
 
 class GoldAmountReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         global GOLDFACTOR_HOLIDAY
@@ -86,7 +86,7 @@ class GoldAmountReward(QuestReward):
 
 
 class GoldReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         avId = av.getDoId()
@@ -112,7 +112,7 @@ class GoldReward(QuestReward):
 
 
 class PlayingCardReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         for i in range(self.amount):
@@ -129,7 +129,7 @@ class PlayingCardReward(QuestReward):
 
 
 class PlayingCardTier0Reward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         card = PlayingCardDropper.dropTier0()
@@ -141,7 +141,7 @@ class PlayingCardTier0Reward(QuestReward):
 
 
 class PlayingCardTier1Reward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         card = PlayingCardDropper.dropTier1()
@@ -153,7 +153,7 @@ class PlayingCardTier1Reward(QuestReward):
 
 
 class PlayingCardTier2Reward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         card = PlayingCardDropper.dropTier2()
@@ -165,7 +165,7 @@ class PlayingCardTier2Reward(QuestReward):
 
 
 class PlayingCardTier3Reward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         card = PlayingCardDropper.dropTier3()
@@ -177,7 +177,7 @@ class PlayingCardTier3Reward(QuestReward):
 
 
 class MaxHpReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.giveStack(InventoryType.Hp, self.amount)
@@ -187,7 +187,7 @@ class MaxHpReward(QuestReward):
 
 
 class MaxMojoReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.giveStack(InventoryType.Mojo, self.amount)
@@ -197,7 +197,7 @@ class MaxMojoReward(QuestReward):
 
 
 class LuckReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         raise 'TODO'
@@ -207,7 +207,7 @@ class LuckReward(QuestReward):
 
 
 class SwiftnessReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         raise 'TODO'
@@ -217,7 +217,7 @@ class SwiftnessReward(QuestReward):
 
 
 class CollectReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         if self.amount >= InventoryType.begin_Collections and self.amount < InventoryType.end_Collections:
@@ -232,7 +232,7 @@ class CollectReward(QuestReward):
 
 
 class TreasureMapReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.giveNewTreasureMap('DistributedTreasureMap')
@@ -242,7 +242,7 @@ class TreasureMapReward(QuestReward):
 
 
 class ShipReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         if av.constructedShipDoId:
@@ -256,7 +256,7 @@ class ShipReward(QuestReward):
 
 
 class PistolUpgradeReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         if self.amount == ItemId.PISTOL_L1:
@@ -288,7 +288,7 @@ class PistolUpgradeReward(QuestReward):
 
 
 class PistolReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.givePistolTraining()
@@ -298,7 +298,7 @@ class PistolReward(QuestReward):
 
 
 class DollReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.giveDollTraining()
@@ -309,7 +309,7 @@ class DollReward(QuestReward):
 
 
 class DaggerUpgradeReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         if self.amount == ItemId.DAGGER_L1:
@@ -341,7 +341,7 @@ class DaggerUpgradeReward(QuestReward):
 
 
 class CutlassUpgradeReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         if self.amount == ItemId.CUTLASS_L1:
@@ -373,7 +373,7 @@ class CutlassUpgradeReward(QuestReward):
 
 
 class DollUpgradeReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         if self.amount == ItemId.DOLL_L1:
@@ -405,7 +405,7 @@ class DollUpgradeReward(QuestReward):
 
 
 class WandUpgradeReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         if self.amount == ItemId.WAND_L1:
@@ -437,7 +437,7 @@ class WandUpgradeReward(QuestReward):
 
 
 class DaggerReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.giveDaggersTraining()
@@ -448,7 +448,7 @@ class DaggerReward(QuestReward):
 
 
 class GrenadeReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.giveGrenadeTraining()
@@ -460,7 +460,7 @@ class GrenadeReward(QuestReward):
 
 
 class StaffReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.giveWandTraining()
@@ -471,7 +471,7 @@ class StaffReward(QuestReward):
 
 
 class TeleportTotemReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.giveTortugaTeleportToken()
@@ -481,7 +481,7 @@ class TeleportTotemReward(QuestReward):
 
 
 class CubaTeleportReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.giveCubaTeleportToken()
@@ -491,7 +491,7 @@ class CubaTeleportReward(QuestReward):
 
 
 class PortRoyalTeleportReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.givePortRoyalTeleportToken()
@@ -501,7 +501,7 @@ class PortRoyalTeleportReward(QuestReward):
 
 
 class PadresDelFuegoTeleportReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.givePadresDelFuegoTeleportToken()
@@ -511,7 +511,7 @@ class PadresDelFuegoTeleportReward(QuestReward):
 
 
 class KingsHeadTeleportReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         trade.giveKingsheadTeleportToken()
@@ -521,7 +521,7 @@ class KingsHeadTeleportReward(QuestReward):
 
 
 class MainStoryReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         if not av.checkQuestRewardFlag(PiratesGlobals.QRFlagMainStory):
@@ -534,7 +534,7 @@ class MainStoryReward(QuestReward):
 
 
 class ReputationReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         global REPFACTOR_HOLIDAY
@@ -559,7 +559,7 @@ class ReputationReward(QuestReward):
 
 
 class SpecialQuestReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         av.acceptSpecialQuestReward(self.questId, trade)
@@ -569,7 +569,7 @@ class SpecialQuestReward(QuestReward):
 
 
 class JewelryQuestReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         gender = av.dna.getGender()
@@ -594,7 +594,7 @@ class JewelryQuestReward(QuestReward):
 
 
 class TattooQuestReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         doId = av.getDoId()
@@ -611,7 +611,7 @@ class TattooQuestReward(QuestReward):
 
 
 class ClothingQuestReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         doId = av.getDoId()
@@ -636,7 +636,7 @@ class ClothingQuestReward(QuestReward):
 
 
 class TempDoubleRepReward(QuestReward):
-    __module__ = __name__
+    
 
     def applyTo(self, trade, av):
         av.updateTempDoubleXPReward(self.amount)

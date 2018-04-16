@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.economy.TattooStoreGUI
 import random
 from math import cos, pi, sin
 
@@ -45,7 +41,6 @@ FACE_CAMERA = 3
 BODY_CAMERA = 4
 
 class TattooStoreTab(LeftTab):
-    __module__ = __name__
 
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None))
@@ -56,7 +51,6 @@ class TattooStoreTab(LeftTab):
 
 
 class TattooStoreTabBar(TabBar):
-    __module__ = __name__
 
     def refreshTabs(self):
         for x, name in enumerate(self.tabOrder):
@@ -78,7 +72,6 @@ class TattooStoreTabBar(TabBar):
 
 
 class TattooStoreCartList(DirectScrolledFrame):
-    __module__ = __name__
 
     def __init__(self, parent, width, height, itemWidth, itemHeight):
         self.width = width + PiratesGuiGlobals.ScrollbarSize
@@ -214,7 +207,7 @@ class TattooStoreCartList(DirectScrolledFrame):
 
 
 class TattooStoreGUI(DirectFrame):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('TattooStoreGUI')
     width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.5
@@ -692,27 +685,28 @@ class TattooStoreGUI(DirectFrame):
             else:
                 tabIcon = self.TattooIcons.find('**/icon_shop_tailor_chest_female')
             tabScale = 0.4
-        else:
-            if id == ZONE2:
-                tabIcon = self.TattooIcons.find('**/icon_shop_tailor_arm')
-                tabScale = 0.4
+        elif id == ZONE2:
+            tabIcon = self.TattooIcons.find('**/icon_shop_tailor_arm')
+            tabScale = 0.4
+        elif id == ZONE3:
+            tabIcon = self.TattooIcons.find('**/icon_shop_tailor_arm')
+            tabScale = (-0.4, 0.4, 0.4)
+        elif id == ZONE4:
+            if gender == 'm':
+                tabIcon = self.TattooIcons.find('**/icon_shop_tailor_face_male')
             else:
-                if id == ZONE3:
-                    tabIcon = self.TattooIcons.find('**/icon_shop_tailor_arm')
-                    tabScale = (-0.4, 0.4, 0.4)
-                else:
-                    if id == ZONE4:
-                        if gender == 'm':
-                            tabIcon = self.TattooIcons.find('**/icon_shop_tailor_face_male')
-                        else:
-                            tabIcon = self.TattooIcons.find('**/icon_shop_tailor_face_female')
-                        tabScale = 0.4
-                    else:
-                        tabIcon = None
-                        tabScale = 0.0
-        newTab.nameTag = DirectLabel(parent=newTab, relief=None, state=DGG.DISABLED, pos=(0.0,
-                                                                                          0,
-                                                                                          0.0), image=tabIcon, image_scale=tabScale)
+                tabIcon = self.TattooIcons.find('**/icon_shop_tailor_face_female')
+            tabScale = 0.4
+        else:
+            tabIcon = None
+            tabScale = 0.0
+        newTab.nameTag = DirectLabel(
+            parent=newTab, 
+            relief=None, 
+            state=DGG.DISABLED, 
+            pos=(0.0, 0, 0.0), 
+            image=tabIcon, 
+            image_scale=tabScale)
         self.pageNames.append(id)
         return
 
@@ -1321,4 +1315,3 @@ class TattooStoreGUI(DirectFrame):
                 return inventory.getStackLimit(InventoryType.GoldInPocket)
         else:
             return 0
-# okay decompiling .\pirates\economy\TattooStoreGUI.pyc

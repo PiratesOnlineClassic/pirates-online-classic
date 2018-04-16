@@ -39,7 +39,7 @@ PRELOADED_CUTSCENE_STAGE5 = [
  Cutscene2_4_b]
 
 class CutsceneDesc(POD):
-    __module__ = __name__
+    
     DataSet = {'id': None, 'components': tuple(''), 'actorFunctors': None, 'soundFile': None, 'filmSizeHorizontal': 42.667, 'focalLength': 30}
 
     def __init__(self, *args, **kwArgs):

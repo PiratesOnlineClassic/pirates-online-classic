@@ -9,7 +9,7 @@ from pandac.PandaModules import *
 
 
 class NPCPirate(DirectObject.DirectObject):
-    __module__ = __name__
+    
 
     def __init__(self, pirate, dna=None):
         self.pirate = pirate

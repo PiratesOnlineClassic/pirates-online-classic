@@ -13,7 +13,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 
 class DistributedNPCNavySailor(DistributedBattleNPC.DistributedBattleNPC, NavySailor.NavySailor):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCNavySailor')
 
     def __init__(self, cr):

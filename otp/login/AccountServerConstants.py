@@ -10,7 +10,7 @@ from RemoteValueSet import *
 
 
 class AccountServerConstants(RemoteValueSet):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('AccountServerConstants')
 
     def __init__(self, cr):

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.world.DistributedCellDoor
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import *
@@ -11,7 +7,6 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 
 class DistributedCellDoor(DistributedInteractive.DistributedInteractive):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedCellDoor')
     notify.setDebug(0)
     DSUndef = -1
@@ -161,4 +156,3 @@ class DistributedCellDoor(DistributedInteractive.DistributedInteractive):
                 self.doorShut()
             else:
                 self.doorOpen()
-# okay decompiling .\pirates\world\DistributedCellDoor.pyc

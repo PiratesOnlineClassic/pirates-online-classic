@@ -8,7 +8,7 @@ from pandac.PandaModules import *
 
 
 class MultiPageTextFrame(DirectFrame):
-    __module__ = __name__
+    
     defWidth = 1.8
     defHeight = 0.9
 

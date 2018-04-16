@@ -14,7 +14,7 @@ from pirates.piratesgui import PiratesGuiGlobals, SocialPage
 
 
 class PirateButtonChain:
-    __module__ = __name__
+    
 
     def __init__(self, width, parent, fromBottom=False):
         self.fromBottom = fromBottom

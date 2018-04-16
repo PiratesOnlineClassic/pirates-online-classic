@@ -5,7 +5,6 @@ from otp.otpbase import OTPRender
 from pandac.PandaModules import *
 
 class Water(DirectObject):
-    __module__ = __name__
     notify = directNotify.newCategory('water')
     water_array = []
 
@@ -1268,7 +1267,7 @@ class Water(DirectObject):
 
 
 class IslandWaterParameters:
-    __module__ = __name__
+    
     debug = False
     default_water_alpha_file_path = 'maps/default_inv_alpha.jpg'
     default_water_color_file_path = 'maps/ocean_color_default.jpg'

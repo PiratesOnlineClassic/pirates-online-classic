@@ -85,7 +85,7 @@ RenownIconsSea = {0: 'sail_come_about', 1: 'sail_come_about', 2: 'sail_come_abou
 RenownIconsLand = {0: 'sail_come_about', 1: 'sail_come_about', 2: 'sail_come_about', 3: 'sail_come_about', 4: 'sail_come_about', 5: 'sail_come_about', 6: 'sail_come_about', 7: 'sail_come_about', 8: 'sail_come_about', 9: 'sail_come_about', 10: 'sail_come_about'}
 
 class ShipDescription:
-    __module__ = __name__
+    
     
     def __init__(self, shipClass):
         self.shipClass = shipClass

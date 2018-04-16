@@ -2,9 +2,7 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.world import DistributedGAInterior
 
-
 class DistributedJailInterior(DistributedGAInterior.DistributedGAInterior):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedJailInterior')
 
     @report(types=['frameCount', 'args'], dConfigParam='want-jail-report')

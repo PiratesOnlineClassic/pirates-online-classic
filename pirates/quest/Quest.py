@@ -12,7 +12,7 @@ from pirates.quest.QuestDNA import QuestDNA
 
 
 class Quest(POD):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('Quest')
     DataSet = {'questId': None, 'giverId': None, 'combineOp': None, 'tasks': None, 'rewards': None, 'taskStates': []}
     SerialNum = 0

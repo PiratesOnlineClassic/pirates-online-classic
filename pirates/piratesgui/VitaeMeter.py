@@ -11,7 +11,7 @@ from pirates.piratesgui.DialMeter import DialMeter
 
 
 class VitaeMeter(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, parent, **kw):
         DirectFrame.__init__(self, parent, **kw)

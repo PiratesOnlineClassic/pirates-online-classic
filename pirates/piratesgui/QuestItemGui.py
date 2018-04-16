@@ -12,7 +12,7 @@ from pirates.uberdog import UberDogGlobals
 
 
 class QuestItemGui(InventoryItemGui):
-    __module__ = __name__
+    
     Width = PiratesGuiGlobals.InventoryPageWidth - PiratesGuiGlobals.GridSize
     Height = 0.2
 

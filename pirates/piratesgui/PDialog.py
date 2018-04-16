@@ -11,7 +11,7 @@ from pirates.piratesgui import BorderFrame, PiratesGuiGlobals
 
 
 class PDialog(DirectDialog):
-    __module__ = __name__
+    
     loadedAssets = False
     checkButton = None
     cancelButton = None
@@ -100,7 +100,7 @@ class PDialog(DirectDialog):
 
 
 class PGlobalDialog(PDialog):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('PGlobalDialog')
 
     def __init__(self, message='', doneEvent=None, style=OTPDialog.NoButtons, okButtonText=PLocalizer.DialogOK, cancelButtonText=PLocalizer.DialogCancel, **kw):

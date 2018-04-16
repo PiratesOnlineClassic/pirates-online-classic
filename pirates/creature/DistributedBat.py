@@ -7,7 +7,7 @@ from pirates.creature.DistributedCreature import DistributedCreature
 
 
 class DistributedBat(DistributedCreature):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedCreature.__init__(self, cr, Bat())

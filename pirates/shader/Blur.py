@@ -8,8 +8,7 @@ from otp.otpbase import OTPRender
 from pandac.PandaModules import *
 
 class DependencyArray:
-    __module__ = __name__
-
+    
     def __init__(self, createCallback):
         self.state = False
         self.createCallback = createCallback
@@ -52,8 +51,7 @@ class DependencyArray:
             self.array = None
 
 class RenderToTexture(DirectObject):
-    __module__ = __name__
-
+    
     def __init__(self, rtt_name, width=512, height=512, order=0, format=0, clear_color=Vec4(0.0, 0.0, 0.0, 1.0), dependency_array=None):
         self.rtt_name = rtt_name
         self.width = width
@@ -154,8 +152,7 @@ class RenderToTexture(DirectObject):
 
 
 class Glow(DirectObject):
-    __module__ = __name__
-
+    
     def createCallback(self):
         self.success = False
         glow_rtt = self.glow_rtt
@@ -270,7 +267,6 @@ class Glow(DirectObject):
 
 
 class Blur(DirectObject):
-    __module__ = __name__
 
     def createCallback(self):
         if self.luminance:

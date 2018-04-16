@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.economy.JewelryStoreGUI
 import random
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
@@ -30,8 +26,7 @@ LHAND_CAMERA = 6
 RHAND_CAMERA = 7
 
 class JewelryStoreTab(LeftTab):
-    __module__ = __name__
-
+    
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None))
         self.defineoptions(kw, optiondefs)
@@ -41,8 +36,7 @@ class JewelryStoreTab(LeftTab):
 
 
 class JewelryStoreTabBar(TabBar):
-    __module__ = __name__
-
+    
     def refreshTabs(self):
         for x, name in enumerate(self.tabOrder):
             tab = self.tabs[name]
@@ -63,8 +57,7 @@ class JewelryStoreTabBar(TabBar):
 
 
 class JewelryStoreCartList(DirectScrolledFrame):
-    __module__ = __name__
-
+    
     def __init__(self, parent, width, height, itemWidth, itemHeight):
         self.width = width + PiratesGuiGlobals.ScrollbarSize
         self.listItemHeight = itemHeight
@@ -190,7 +183,7 @@ class JewelryStoreCartList(DirectScrolledFrame):
 
 
 class JewelryStoreGUI(DirectFrame):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('JewelryStoreGUI')
     width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.5
@@ -1605,4 +1598,3 @@ class JewelryStoreGUI(DirectFrame):
             self.alertDialog.destroy()
             self.alertDialog = None
         return
-# okay decompiling .\pirates\economy\JewelryStoreGUI.pyc

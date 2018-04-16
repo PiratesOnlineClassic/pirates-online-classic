@@ -13,7 +13,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 
 class BattleNPCGameFSM(BattleAvatarGameFSM.BattleAvatarGameFSM):
-    __module__ = __name__
+    
 
     def __init__(self, av):
         BattleAvatarGameFSM.BattleAvatarGameFSM.__init__(self, av, 'BattleNPCFSM')

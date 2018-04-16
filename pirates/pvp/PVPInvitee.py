@@ -7,14 +7,14 @@ from pirates.piratesgui import GuiPanel, PDialog, PiratesGuiGlobals
 from pirates.piratesgui.RequestButton import RequestButton
 
 class PVPInviteeButton(RequestButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
         self.initialiseoptions(PVPInviteeButton)
 
 class PVPInvitee(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('PVPInvitee')
 
     def __init__(self, avId, avName):

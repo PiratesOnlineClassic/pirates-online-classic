@@ -8,7 +8,7 @@ from pandac.PandaModules import *
 
 
 class VolcanoSplats(NodePath):
-    __module__ = __name__
+    
 
     def __init__(self):
         NodePath.__init__(self, 'VolcanoSplats')

@@ -10,7 +10,6 @@ from pirates.piratesbase.PiratesGlobals import *
 
 
 class DistributedBarrel(DistributedDestructibleObject.DistributedDestructibleObject):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedBarrel')
 
     def __init__(self, cr):

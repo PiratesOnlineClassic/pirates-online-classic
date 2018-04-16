@@ -43,7 +43,7 @@ ModelDict = {'djcr': 'models/char/dj_crash', 'djjm': 'models/char/dj_jimmylegs',
 SuffixDict = {'djcr': '_dj_cr', 'djjm': '_dj_jm', 'djko': '_dj_ko', 'djpa': '_dj_pa', 'djtw': '_dj_tw', '1': '_gp', '2': '_gp', '4': '_gp', '8': '_gp', 'fr1': '_fr_gp', 'fr2': '_fr_gp', 'fr3': '_fr_gp', 'fr4': '_fr_gp', 'sp1': '_sp_gp', 'sp2': '_sp_gp', 'sp3': '_sp_gp', 'sp4': '_sp_gp'}
 
 class Skeleton(Biped.Biped):
-    __module__ = __name__
+    
     animInfo = {}
 
     def __init__(self):

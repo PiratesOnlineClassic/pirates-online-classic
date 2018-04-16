@@ -18,7 +18,7 @@ GUILDRANK_OFFICER = 2
 GUILDRANK_MEMBER = 1
 
 class PirateAvatarPanel(IdentityPanel.IdentityPanel):
-    __module__ = __name__
+    
 
     def __init__(self, avId):
         self.width = 0.5

@@ -19,7 +19,7 @@ from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 
 
 class ShipStatusDisplay(GuiTray.GuiTray):
-    __module__ = __name__
+    
 
     def __init__(self, parent, shipId, **kw):
         optiondefs = (('relief', None, None), ('pos', (-0.03, 0, -0.55), None), ('shipId', shipId, None), ('shipName', ('', 0), self.applyShipName), ('shipClass', '', self.applyShipClass), ('shipHp', (0, 0), self.applyShipHp), ('shipSp', (0, 0), self.applyShipSp), ('shipCargo', (0, 0), self.applyShipCargo), ('oldCargo', 0, None), ('shipCrew', (0, 0), self.applyShipCrew), ('oldCrew', 0, None), ('ownShip', 0, None))

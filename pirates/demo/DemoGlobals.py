@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.demo.DemoGlobals
 GAME_DURATION = 300
 GAME_COUNTDOWN = 10
 GAME_OFF = 0
@@ -45,4 +41,3 @@ TreasureSpawnPoints = [
  (-578.0, -116.233, 0), (-477.438476563, 24.8395709991, 0.0), (22.9458885193, 474.464294434, 0.0), (577.844055176, 355.778076172, 0.0), (518.774719238, -544.801452637, 0.0)]
 DemoPlayerDNAs = [
  ('sf', 'a', 'a', 'm'), ('ms', 'b', 'b', 'm'), ('tm', 'c', 'c', 'm'), ('tp', 'd', 'd', 'm')]
-# okay decompiling .\pirates\demo\DemoGlobals.pyc

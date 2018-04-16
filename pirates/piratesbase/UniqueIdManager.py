@@ -1,7 +1,7 @@
 from direct.task import Task
 
 class UniqueIdManager:
-    __module__ = __name__
+    
 
     def __init__(self, repository, instance=None):
         self.instance = instance

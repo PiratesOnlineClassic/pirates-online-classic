@@ -4,7 +4,6 @@ from direct.distributed.DistributedObject import DistributedObject
 from pirates.uberdog.UberDogGlobals import *
 
 class TradeManager(DistributedObject):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('TradeManager')
 
     def __init__(self, cr):

@@ -16,10 +16,10 @@ from pirates.pirate.OrbitCamera import OrbitCamera
 
 
 class ShipCamera(OrbitCamera):
-    __module__ = __name__
+    
 
     class ParamSet(OrbitCamera.ParamSet):
-        __module__ = __name__
+        
         Params = {}
 
     def getName(self):

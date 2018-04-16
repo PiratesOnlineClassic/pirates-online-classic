@@ -11,7 +11,7 @@ from pirates.piratesgui.ScoreboardItemGui import ScoreboardItemGui
 
 
 class Scoreboard(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, name, width, height, results, titleHeight=1.0):
         DirectFrame.__init__(self, relief=None, state=DGG.NORMAL, frameColor=PiratesGuiGlobals.FrameColor, borderWidth=PiratesGuiGlobals.BorderWidth, pos=(0, 0, -0.03))

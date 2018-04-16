@@ -1,14 +1,8 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.ship.ShipRepairSpotMgr
 from direct.fsm.StatePush import FunctionCall, StateVar
 from pirates.pvp import PVPGlobals
 from pirates.ship.ShipRepairSpotMgrBase import ShipRepairSpotMgrBase
 
-
 class ShipRepairSpotMgr(ShipRepairSpotMgrBase):
-    __module__ = __name__
 
     def __init__(self, cr, shipId):
         ShipRepairSpotMgrBase.__init__(self)
@@ -51,4 +45,3 @@ class ShipRepairSpotMgr(ShipRepairSpotMgrBase):
         if self._state.needModels.get():
             self._state.needModels.set(False)
             self._state.needModels.set(True)
-# okay decompiling .\pirates\ship\ShipRepairSpotMgr.pyc

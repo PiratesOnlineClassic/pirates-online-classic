@@ -10,8 +10,7 @@ from pirates.pirate import AvatarTypes
 from pirates.piratesbase import TimeOfDayManager, TODGlobals
 from pirates.piratesgui import PiratesGuiGlobals
 
-class Cutscene(NodePath, DirectObject):
-    __module__ = __name__
+class Cutscene(NodePath, DirectObject):  
     notify = directNotify.newCategory('Cutscene')
 
     def __init__(self, cr, cutsceneName, doneCallback=None, giverId=None):

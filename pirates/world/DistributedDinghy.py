@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.world.DistributedDinghy
 from operator import itemgetter
 
 from direct.interval.IntervalGlobal import *
@@ -16,7 +12,6 @@ from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 
 
 class DistributedDinghy(DistributedInteractive):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedDinghy')
     camPos = Point3(227.48, 222.273, 71.208)
     camHpr = VBase3(172.233, -15.2738, -0.376993)
@@ -341,4 +336,3 @@ class DistributedDinghy(DistributedInteractive):
         else:
             localAvatar.guiMgr.createWarning('Ship was not available')
         return
-# okay decompiling .\pirates\world\DistributedDinghy.pyc

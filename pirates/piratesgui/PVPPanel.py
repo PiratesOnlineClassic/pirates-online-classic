@@ -11,7 +11,7 @@ from pirates.piratesgui.ListFrame import ListFrame
 
 
 class PVPPanel(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, name, holder=None):
         w = PiratesGuiGlobals.PVPPanelWidth

@@ -12,14 +12,14 @@ from pirates.piratesgui.RequestButton import RequestButton
 from pirates.uberdog import UberDogGlobals
 
 class PVPInviterButton(RequestButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
         self.initialiseoptions(PVPInviterButton)
 
 class PVPInviter(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('PVPInviter')
 
     def __init__(self, avId, avName):

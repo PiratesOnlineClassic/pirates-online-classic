@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.economy.EconomyGlobals
 from otp.otpbase.OTPGlobals import *
 from pandac.PandaModules import *
 from pirates.ship import ShipGlobals
@@ -20,7 +16,7 @@ def getAvatarHealMojoCost(mojo):
 
 
 class ItemType:
-    __module__ = __name__
+    
     MELEE = 1
     SWORD = 2
     PISTOL = 3
@@ -61,7 +57,7 @@ class ItemType:
 
 
 class ItemTypeGroup:
-    __module__ = __name__
+    
     CUTLASS = 1
     DAGGER = 2
     PISTOL = 3
@@ -75,7 +71,7 @@ class ItemTypeGroup:
 __itemTypeList = {ItemType.DAGGER: ItemTypeGroup.DAGGER, ItemType.DAGGERAMMO: ItemTypeGroup.DAGGER, ItemType.DAGGER_POUCH: ItemTypeGroup.DAGGER, ItemType.SWORD: ItemTypeGroup.CUTLASS, ItemType.PISTOL: ItemTypeGroup.PISTOL, ItemType.PISTOLAMMO: ItemTypeGroup.PISTOL, ItemType.PISTOL_POUCH: ItemTypeGroup.PISTOL, ItemType.CANNONAMMO: ItemTypeGroup.CANNON, ItemType.CANNON_POUCH: ItemTypeGroup.CANNON, ItemType.DOLL: ItemTypeGroup.DOLL, ItemType.POTION: ItemTypeGroup.POTION, ItemType.GRENADE: ItemTypeGroup.GRENADE, ItemType.GRENADEAMMO: ItemTypeGroup.GRENADE, ItemType.GRENADE_POUCH: ItemTypeGroup.GRENADE, ItemType.WAND: ItemTypeGroup.WAND}
 
 class ItemId:
-    __module__ = __name__
+    
     GOLD = InventoryType.GoldInPocket
     COLLECT = InventoryType.Collection_Set1
     CARD = InventoryType.begin_Cards
@@ -449,4 +445,3 @@ def getInventoryBonus(itemId, index=-1):
             return amount[index]
         return amount
     return 0
-# okay decompiling .\pirates\economy\EconomyGlobals.pyc

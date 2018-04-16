@@ -19,7 +19,7 @@ except ImportError:
     hasEmbedded = 0
 
 class TrialNonPayerPanel(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, w=9.0, h=6.0, trial=False, lock=True):
         self.width = w

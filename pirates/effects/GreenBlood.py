@@ -8,7 +8,7 @@ from pandac.PandaModules import *
 from PooledEffect import PooledEffect
 
 class GreenBlood(PooledEffect, EffectController):
-    __module__ = __name__
+    
     cardScale = 64.0
     SfxNames = ('wood_impact_1.mp3', 'wood_impact_3.mp3', 'wood_impact_4.mp3')
     splashSfx = []

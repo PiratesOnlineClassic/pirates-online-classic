@@ -11,7 +11,7 @@ from pirates.piratesgui.BorderFrame import BorderFrame
 
 
 class LookoutListItem(ButtonListItem.ButtonListItem):
-    __module__ = __name__
+    
 
     def __init__(self, itemInfo, imageTexCardName, itemHeight, itemWidth, parent=None, parentList=None, textScale=None, txtColor=None, wantFrame=False, **kw):
         ButtonListItem.ButtonListItem.__init__(self, itemInfo, itemHeight, itemWidth, parent, parentList, textScale, txtColor, **kw)

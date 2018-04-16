@@ -48,7 +48,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPCCannon')
 
     def __init__(self, cr):

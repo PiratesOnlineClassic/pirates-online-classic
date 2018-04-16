@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.ship.ShipMeter
 import copy
 
 from direct.gui.DirectGui import *
@@ -22,8 +18,7 @@ HullDict = {ShipGlobals.WARSHIPL1: 'models/shipparts/warshipMeter', ShipGlobals.
 MastDict = {ShipGlobals.MAINMASTL1: 'models/shipparts/mainmast_square', ShipGlobals.MAINMASTL2: 'models/shipparts/mainmast_square', ShipGlobals.MAINMASTL3: 'models/shipparts/mainmast_square', ShipGlobals.MAINMASTL4: 'models/shipparts/mainmast_square', ShipGlobals.MAINMASTL5: 'models/shipparts/mainmast_square', ShipGlobals.TRIMASTL1: 'models/shipparts/L2mastTri', ShipGlobals.TRIMASTL2: 'models/shipparts/L2mastTri', ShipGlobals.TRIMASTL3: 'models/shipparts/L2mastTri', ShipGlobals.TRIMASTL4: 'models/shipparts/L2mastTri', ShipGlobals.TRIMASTL5: 'models/shipparts/L2mastTri', ShipGlobals.FOREMASTL1: 'models/shipparts/L1foremast', ShipGlobals.FOREMASTL2: 'models/shipparts/L2foremast', ShipGlobals.FOREMASTL3: 'models/shipparts/L2foremast', ShipGlobals.AFTMASTL1: 'models/shipparts/L2aftmast', ShipGlobals.AFTMASTL2: 'models/shipparts/L2aftmast', ShipGlobals.AFTMASTL3: 'models/shipparts/L2aftmast', ShipGlobals.SKEL_MAINMASTL1_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL2_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL3_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL4_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL5_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL1_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL2_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL3_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL4_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL5_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_TRIMASTL1: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_TRIMASTL2: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_TRIMASTL3: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_TRIMASTL4: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_TRIMASTL5: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_FOREMASTL1: 'models/shipparts/L1foremast', ShipGlobals.SKEL_FOREMASTL2: 'models/shipparts/L1foremast', ShipGlobals.SKEL_FOREMASTL3: 'models/shipparts/L1foremast', ShipGlobals.SKEL_AFTMASTL1: 'models/shipparts/L2aftmast', ShipGlobals.SKEL_AFTMASTL2: 'models/shipparts/L2aftmast', ShipGlobals.SKEL_AFTMASTL3: 'models/shipparts/L2aftmast'}
 
 class ShipMeter(DirectObject, NodePath):
-    __module__ = __name__
-
+    
     def __init__(self, shipId, shipClass=0, mastInfo=[], siegeTeam=0):
         NodePath.__init__(self, 'ShipMeter')
         self.shipId = shipId
@@ -285,15 +280,12 @@ class ShipMeter(DirectObject, NodePath):
     def getDamageColor(self, hpFraction):
         if hpFraction >= 0.5:
             return Vec4(1, 1, 1, 1)
-        else:
-            if hpFraction >= 0.25:
-                return Vec4(1, 1, 0, 1)
-            else:
-                if hpFraction > 0:
-                    return Vec4(1, 0, 0.1, 1)
-                else:
-                    if hpFraction <= 0:
-                        return Vec4(0.5, 0, 0, 1)
+        elif hpFraction >= 0.25:
+            return Vec4(1, 1, 0, 1)
+        elif hpFraction > 0:
+            return Vec4(1, 0, 0.1, 1)
+        elif hpFraction <= 0:
+            return Vec4(0.5, 0, 0, 1)
 
     def playFlash(self, target, normalColor):
         flash = Sequence(Func(target.setColor, Vec4(1, 1, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 0, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 1, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 0, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 1, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 0, 0, 1)), Wait(0.1), Func(target.setColorOff))
@@ -316,21 +308,18 @@ class ShipMeter(DirectObject, NodePath):
                         sail = sail.find('**/+GeomNode')
                         if self.team == 0:
                             sail.setColor(0.7, 0.7, 0.5, 1)
-                        else:
-                            if self.team == 1:
-                                sail.setColor(0.3, 0.3, 0.3, 1)
+                        elif self.team == 1:
+                            sail.setColor(0.3, 0.3, 0.3, 1)
+                        elif self.team == 2:
+                            if counter % 2:
+                                sail.setColor(0.6, 0, 0, 1)
                             else:
-                                if self.team == 2:
-                                    if counter % 2:
-                                        sail.setColor(0.6, 0, 0, 1)
-                                    else:
-                                        sail.setColor(0.6, 0.6, 0.6, 1)
-                                else:
-                                    if self.team == 3:
-                                        if counter % 2:
-                                            sail.setColor(0, 0, 0, 1)
-                                        else:
-                                            sail.setColor(0.6, 0.6, 0.6, 1)
+                                sail.setColor(0.6, 0.6, 0.6, 1)
+                        elif self.team == 3:
+                            if counter % 2:
+                                sail.setColor(0, 0, 0, 1)
+                            else:
+                                sail.setColor(0.6, 0.6, 0.6, 1)
                         sail.flattenStrong()
                         sail.reparentTo(whites)
                         counter += 1
@@ -353,4 +342,3 @@ class ShipMeter(DirectObject, NodePath):
 
     def setModelClass(self, mc):
         self.modelClass = mc
-# okay decompiling .\pirates\ship\ShipMeter.pyc

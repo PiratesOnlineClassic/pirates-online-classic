@@ -16,7 +16,7 @@ from pirates.treasuremap.RewardItemGui import RewardItemGui
 
 
 class PVPCompletePanel(BorderFrame):
-    __module__ = __name__
+    
     SUMMARY_PAGE = 1
     DETAILS_PAGE = 2
 

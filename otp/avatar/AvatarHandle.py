@@ -5,7 +5,7 @@
 
 
 class AvatarHandle:
-    __module__ = __name__
+    
 
     def getName(self):
         if __dev__:

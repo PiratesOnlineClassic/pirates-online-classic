@@ -16,7 +16,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class IgnoreConfirmButton(RequestButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command, width=1.0):
         RequestButton.__init__(self, text, command, width)
@@ -24,7 +24,7 @@ class IgnoreConfirmButton(RequestButton):
 
 
 class IgnoreConfirm(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('IgnoreConfirm')
 
     def __init__(self, avId, avName):

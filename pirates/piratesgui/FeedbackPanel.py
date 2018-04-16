@@ -26,7 +26,7 @@ except ImportError:
     hasEmbedded = 0
 
 class FeedbackConfirmButton(RequestButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -34,7 +34,7 @@ class FeedbackConfirmButton(RequestButton):
 
 
 class FeedbackCancelButton(RequestButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -42,7 +42,7 @@ class FeedbackCancelButton(RequestButton):
 
 
 class FeedbackAccountButton(RequestButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command, 1.85)
@@ -50,7 +50,7 @@ class FeedbackAccountButton(RequestButton):
 
 
 class FeedbackInput(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
 
     def __init__(self, commandToExe):
         currentInteraction = base.cr.interactionMgr.getCurrent()
@@ -86,7 +86,7 @@ class FeedbackInput(GuiPanel.GuiPanel):
 
 
 class FeedbackPanel(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('FeedbackPanel')
 
     def __init__(self):

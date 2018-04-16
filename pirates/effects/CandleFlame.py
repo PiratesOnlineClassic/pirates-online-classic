@@ -8,7 +8,7 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 
 class CandleFlame(EffectController, NodePath):
-    __module__ = __name__
+    
 
     def __init__(self, newParent=render, billboardOffset=1.0):
         NodePath.__init__(self, 'CandleFlame')

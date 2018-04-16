@@ -20,7 +20,7 @@ def setGlobalDropShadowGrayLevel(grayLevel):
         messenger.send('globalDropShadowGrayLevelChanged')
 
 class ShadowCaster:
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('ShadowCaster')
 
     def __init__(self, squareShadow=False):

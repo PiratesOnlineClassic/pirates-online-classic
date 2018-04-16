@@ -7,7 +7,6 @@ from pirates.uberdog.DistributedInventory import DistributedInventory
 from pirates.world import GameTypeGlobals
 
 class DistributedTreasureMap(DistributedObject.DistributedObject, DistributedInventory, QuestHolder):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('TreasureMapManager')
 
     def __init__(self, cr):

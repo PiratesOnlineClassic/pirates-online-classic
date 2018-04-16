@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.speedchat.PSpeedChatQuestMenu
 from otp.speedchat.SCMenu import SCMenu
 from otp.speedchat.SCStaticTextTerminal import SCStaticTextTerminal
 from otp.speedchat.SCTerminal import *
@@ -13,8 +9,7 @@ from pirates.speedchat.PSpeedChatQuestTerminal import *
 
 
 class PSpeedChatQuestMenu(SCMenu):
-    __module__ = __name__
-
+    
     def __init__(self):
         SCMenu.__init__(self)
         self.accept('localAvatarQuestAdded', self.__questMenuRefresh)
@@ -52,4 +47,3 @@ class PSpeedChatQuestMenu(SCMenu):
             if len(quest.getSCHowToText(0)) > 2:
                 self.append(PSpeedChatQuestTerminal(quest.getSCHowToText(i), qInt, quest.giverId, 2, i))
             i = i + 1
-# okay decompiling .\pirates\speedchat\PSpeedChatQuestMenu.pyc

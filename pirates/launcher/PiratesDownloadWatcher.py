@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.launcher.PiratesDownloadWatcher
 from direct.gui import DirectGuiGlobals as DGG
 from direct.gui.DirectLabel import DirectLabel
 from direct.gui.DirectWaitBar import DirectWaitBar
@@ -10,7 +6,6 @@ from pandac.PandaModules import Point3, TextNode
 
 
 class PiratesDownloadWatcher(DownloadWatcher.DownloadWatcher):
-    __module__ = __name__
     positions = [(Point3(1.18333, 0, -0.97333), Point3(1.02333, 0, -0.9867)), (Point3(-0.549997, 0, 0.969997), Point3(-0.71333, 0, 0.95333)), (Point3(-0.636666, 0, 0.686667), Point3(-0.793333, 0, 0.67))]
 
     def __init__(self, phaseNames):
@@ -45,4 +40,3 @@ class PiratesDownloadWatcher(DownloadWatcher.DownloadWatcher):
     def background(self):
         self.bar.reparentTo(aspect2d, 0)
         self.text.reparentTo(aspect2d, 0)
-# okay decompiling .\pirates\launcher\PiratesDownloadWatcher.pyc

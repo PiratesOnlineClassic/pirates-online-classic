@@ -1,14 +1,8 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.ship.ShipRocker
 import math
 
 from direct.showbase.PythonUtil import pivotScalar, rad90, rad270, reduceAngle
 
-
 class ShipRockerOffState:
-    __module__ = __name__
 
     def getRollAngle(self):
         return 0.0
@@ -21,7 +15,6 @@ class ShipRockerOffState:
 
 
 class ShipRockerImpactState:
-    __module__ = __name__
 
     def set(self, timebase, duration, startRoll, targetRoll):
         self.timebase = timebase
@@ -48,7 +41,6 @@ class ShipRockerImpactState:
 
 
 class ShipRockerRollState:
-    __module__ = __name__
 
     def set(self, timebase, duration, timeScale, amplitude, thetaBase):
         self.timebase = timebase
@@ -81,7 +73,7 @@ class ShipRockerRollState:
 
 
 class ShipRocker:
-    __module__ = __name__
+    
     DefMaxRoll = 15.0
     DefFakeMass = 1.0
 
@@ -149,4 +141,3 @@ class ShipRocker:
             thetaBase = rad270
         self._roll.set(timebase=curTime + impactDur, duration=rollDur, timeScale=timeScale, amplitude=amplitude, thetaBase=thetaBase)
         self._active = True
-# okay decompiling .\pirates\ship\ShipRocker.pyc

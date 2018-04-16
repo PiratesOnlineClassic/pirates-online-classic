@@ -10,7 +10,7 @@ from pirates.piratesgui import (DialogButton, GuiPanel, PiratesGuiGlobals,
 
 
 class SocialPanel(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self):
         DirectFrame.__init__(self, relief=None, state=DGG.NORMAL, frameSize=(0.0, PiratesGuiGlobals.SocialPageWidth, 0.0, PiratesGuiGlobals.SocialPageHeight - PiratesGuiGlobals.GridCell))

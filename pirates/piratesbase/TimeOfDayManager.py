@@ -11,7 +11,7 @@ from pirates.piratesbase import (AvatarShadowCaster, PiratesGlobals, SkyGroup,
 
 
 class TimeOfDayManager(FSM.FSM):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('TimeOfDayManager')
 
     def __init__(self):

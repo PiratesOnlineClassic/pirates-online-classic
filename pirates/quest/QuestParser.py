@@ -106,7 +106,7 @@ def questDefined(scriptId):
     return lineDict.has_key(scriptId)
 
 class NPCMoviePlayer(DirectObject.DirectObject):
-    __module__ = __name__
+    
 
     def __init__(self, scriptId, toon, npc):
         print 'initializing movie player'

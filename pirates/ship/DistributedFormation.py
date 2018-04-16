@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.ship.DistributedFormation
 from direct.distributed import DistributedSmoothNode
 from direct.fsm import FSM
 from direct.showbase.ShowBaseGlobal import *
@@ -9,8 +5,7 @@ from pandac.PandaModules import NodePath
 
 
 class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM):
-    __module__ = __name__
-
+    
     def __init__(self, cr):
         DistributedSmoothNode.DistributedSmoothNode.__init__(self, cr)
         FSM.FSM.__init__(self, 'DistributedFormation')
@@ -71,4 +66,3 @@ class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM)
     def setRadius(self, radius):
         if self.cSphere:
             self.cSphere.setRadius(radius)
-# okay decompiling .\pirates\ship\DistributedFormation.pyc

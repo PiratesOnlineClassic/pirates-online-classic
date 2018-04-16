@@ -17,7 +17,7 @@ if __debug__:
 print 'PiratesStart: Starting the game.'
 
 class game:
-    __module__ = __name__
+    
     name = 'pirates'
     process = 'client'
 

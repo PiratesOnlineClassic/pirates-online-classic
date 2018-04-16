@@ -1,12 +1,6 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.world.DistributedGADoor
 import DistributedGAConnector
 
-
 class DistributedGADoor(DistributedGAConnector.DistributedGAConnector):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedGADoor')
 
     def __init__(self, cr):
@@ -40,4 +34,3 @@ class DistributedGADoor(DistributedGAConnector.DistributedGAConnector):
         portalNode1.setCellOut(area0)
         base.cam.node().setCullCenter(base.camera)
         base.graphicsEngine.setPortalCull(1)
-# okay decompiling .\pirates\world\DistributedGADoor.pyc

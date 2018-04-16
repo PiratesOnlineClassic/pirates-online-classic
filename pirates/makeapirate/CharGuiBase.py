@@ -7,7 +7,7 @@ from pandac.PandaModules import *
 
 
 class CharGuiSlider(DirectSlider):
-    __module__ = __name__
+    
 
     def __init__(self, main, parent, text, command, range=(
  -0.5, 0.5)):
@@ -20,7 +20,7 @@ class CharGuiSlider(DirectSlider):
 
 
 class CharGuiPicker(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, main, parent, text, nextCommand, backCommand):
         DirectFrame.__init__(self, parent=parent, relief=None, text=text, text_fg=(1,

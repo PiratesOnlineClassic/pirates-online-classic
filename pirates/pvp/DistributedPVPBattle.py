@@ -6,7 +6,7 @@ from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.ship import DistributedShip
 
 class DistributedPVPBattle(DistributedPVPInstance):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedPVPBattle')
 
     def __init__(self, cr):

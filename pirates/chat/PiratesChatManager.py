@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.chat.PiratesChatManager
 import string
 import sys
 
@@ -22,7 +18,7 @@ from pirates.piratesgui import ChatPanel, GuiPanel, PDialog, PiratesGuiGlobals
 
 
 class PiratesChatManager(ChatManagerV2.ChatManagerV2):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesChatManager')
     execChat = base.config.GetBool('exec-chat', 0)
 
@@ -442,4 +438,3 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
         else:
             self.activateChat(self.lastPreferred)
         return
-# okay decompiling .\pirates\chat\PiratesChatManager.pyc

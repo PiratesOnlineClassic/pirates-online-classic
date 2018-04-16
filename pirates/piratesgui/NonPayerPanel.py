@@ -19,7 +19,7 @@ except ImportError:
     hasEmbedded = 0
 
 class NonPayerPanel(DirectFrame):
-    __module__ = __name__
+    
 
     def configurePanel(self):
         self.NUM_IMAGES = 10

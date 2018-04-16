@@ -52,10 +52,9 @@ class NewsManager(DistributedObject.DistributedObject):
             hours, minutes = self.getTimeRemaining(holidayId)
             message = HolidayGlobals.getHolidayStartMsg(holidayId)
             chatMessage = HolidayGlobals.getHolidayStartChatMsg(holidayId)
-        else:
-            if msgType == 0:
-                message = HolidayGlobals.getHolidayEndMsg(holidayId)
-                chatMessage = HolidayGlobals.getHolidayEndChatMsg(holidayId)
+        elif msgType == 0:
+            message = HolidayGlobals.getHolidayEndMsg(holidayId)
+            chatMessage = HolidayGlobals.getHolidayEndChatMsg(holidayId)
         if self.inNewsWorld() and not self.inTutorial(level=PiratesGlobals.TUT_GOT_COMPASS):
             if message:
                 base.localAvatar.guiMgr.messageStack.addModalTextMessage(message, seconds=45, priority=0, color=PiratesGuiGlobals.TextFG14, icon=(HolidayGlobals.getHolidayIcon(holidayId), ''), suffix='_f')

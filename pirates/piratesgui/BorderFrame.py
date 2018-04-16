@@ -11,7 +11,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class BorderFrame(DirectFrame):
-    __module__ = __name__
+    
     pieceNames = ('background', 'top', 'right', 'bottom', 'left', 'topRight', 'bottomRight',
                   'bottomLeft', 'topLeft')
     nodeNames = dict(zip(pieceNames, ('middle', 'top1', 'right', 'bottom', 'left',

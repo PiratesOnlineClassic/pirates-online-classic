@@ -23,7 +23,7 @@ buffTable = {WeaponGlobals.C_POISON: ('buff_poison', PLocalizer.BuffPoison), Wea
              WeaponGlobals.C_RECHARGE: ('sail_recharge', PLocalizer.BuffPowerRecharge)}
 
 class BuffIcon(DirectFrame):
-    __module__ = __name__
+    
     Background = None
     Card = None
 

@@ -17,7 +17,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class CrewInviterButton(RequestButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -25,7 +25,7 @@ class CrewInviterButton(RequestButton):
 
 
 class CrewInviter(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('CrewInviter')
 
     def __init__(self):

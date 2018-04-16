@@ -9,7 +9,7 @@ from pirates.piratesgui.NewTutorialPanel import NewTutorialPanel
 
 
 class DistributedTutorialShipCannon(DistributedShipCannon):
-    __module__ = __name__
+    
 
     def __init__(self, cr):
         DistributedShipCannon.__init__(self, cr)

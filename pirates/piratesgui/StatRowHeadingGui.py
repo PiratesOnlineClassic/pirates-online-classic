@@ -8,7 +8,7 @@ from pirates.piratesgui import PiratesGuiGlobals, StatRowGui
 
 
 class StatRowHeadingGui(StatRowGui.StatRowGui):
-    __module__ = __name__
+    
 
     def __init__(self, item, columnHeadings, parent=None, textScale=None, itemHeight=None, itemWidths=[], **kw):
         StatRowGui.StatRowGui.__init__(self, item, columnHeadings, parent, textScale, itemHeight, **kw)

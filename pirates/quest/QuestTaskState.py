@@ -6,10 +6,10 @@ from direct.showbase.PythonUtil import ParamObj
 
 
 class QuestTaskState(ParamObj):
-    __module__ = __name__
+    
 
     class ParamSet(ParamObj.ParamSet):
-        __module__ = __name__
+        
         Params = {'taskType': None, 'progress': 0, 'goal': 1, 'attempts': 0, 'enemyType': None, 'faction': None, 'hull': None, 'containersSearched': None}
 
     def acquire(self):

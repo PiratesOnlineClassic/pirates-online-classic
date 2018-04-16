@@ -13,8 +13,7 @@ from pirates.pirate import HumanDNA, Pirate
 from pirates.piratesbase import PiratesGlobals, TimeOfDayManager
 from pirates.quest import QuestParser
 
-class DistributedPiratesTutorialWorld(DistributedInstanceBase.DistributedInstanceBase):
-    __module__ = __name__
+class DistributedPiratesTutorialWorld(DistributedInstanceBase.DistributedInstanceBase):   
     notify = directNotify.newCategory('DistributedPiratesTutorialWorld')
 
     def __init__(self, cr):

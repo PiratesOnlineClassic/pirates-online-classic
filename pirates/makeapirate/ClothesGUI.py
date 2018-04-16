@@ -31,7 +31,7 @@ SOCK = 6
 SHOE = 7
 
 class ClothesGUI(DirectFrame, StateData.StateData):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('ClothesGUI')
 
     def __init__(self, main=None):

@@ -12,7 +12,7 @@ from pirates.quest import QuestDB, QuestLadderDB, QuestReward
 
 
 class QuestDetailBase(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, parent=aspect2d, pos=(0, 0, 0), *args, **kw):
         topGui = loader.loadModel('models/gui/toplevel_gui')
@@ -27,7 +27,7 @@ class QuestDetailBase(DirectFrame):
 
 
 class QuestDetailGUI(QuestDetailBase):
-    __module__ = __name__
+    
 
     def __init__(self, offer, callback, quest=None):
         self.width = 1

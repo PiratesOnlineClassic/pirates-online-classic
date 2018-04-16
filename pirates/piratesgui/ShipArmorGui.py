@@ -10,7 +10,7 @@ from pirates.ship import ShipGlobals
 
 
 class ShipArmorGui(GuiTray):
-    __module__ = __name__
+    
 
     def __init__(self, parent, **kw):
         optiondefs = (('relief', None, None), )

@@ -12,7 +12,7 @@ from pirates.piratesgui.DownloadBlockerPanel import DownloadBlockerPanel
 
 
 class MapPage(InventoryPage.InventoryPage):
-    __module__ = __name__
+    
 
     def __init__(self):
         InventoryPage.InventoryPage.__init__(self)

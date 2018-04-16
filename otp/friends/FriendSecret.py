@@ -63,7 +63,7 @@ def unloadFriendSecret():
         globalFriendSecret = None
 
 class FriendSecretNeedsParentLogin(StateData.StateData):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('FriendSecretNeedsParentLogin')
 
     def __init__(self, secretType):
@@ -187,7 +187,7 @@ class FriendSecretNeedsParentLogin(StateData.StateData):
 
 
 class FriendSecret(DirectFrame, StateData.StateData):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('FriendSecret')
 
     def __init__(self, secretType):

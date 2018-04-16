@@ -6,7 +6,7 @@ from pirates.interact import InteractiveBase
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 class DistributedWreck(DistributedNode.DistributedNode):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedWreck')
 
     def __init__(self, cr):

@@ -6,7 +6,7 @@ from pirates.minigame import PlayingCardGlobals
 
 
 class PokerBase:
-    __module__ = __name__
+    
     debug = False
     handCodeArray = [
      'Nothing', 'NoPair', 'OnePair', 'TwoPair', 'Trips', 'Straight', 'Flush', 'FlHouse', 'Quads', 'StFlush']

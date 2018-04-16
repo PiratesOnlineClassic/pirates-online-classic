@@ -49,7 +49,7 @@ CamZoomOutPosHprs = [
    Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)]], [[Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)]]]
 
 class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('MakeAPirate')
 
     def __init__(self, avList, doneEvent, subId=0, index=0, isPaid=0, isNPCEditor=False, piratesEditor=None):

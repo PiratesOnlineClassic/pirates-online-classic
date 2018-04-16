@@ -73,7 +73,7 @@ PlayerNames = [
  "Cap'n Bruno Cannonballs", 'Bad-run Thomas', 'Carlos Saggingsails', 'Smugglin Willy Hawkins']
 
 class MasterHuman(HumanBase.HumanBase, Biped.Biped):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('Human')
     prebuiltAnimData = {}
 

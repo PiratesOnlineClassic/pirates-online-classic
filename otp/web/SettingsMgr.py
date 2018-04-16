@@ -3,7 +3,7 @@ from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.web.SettingsMgrBase import SettingsMgrBase
 
 class SettingsMgr(DistributedObjectGlobal, SettingsMgrBase):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('SettingsMgr')
 
     def announceGenerate(self):

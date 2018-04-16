@@ -13,7 +13,7 @@ from pandac.PandaModules import *
 
 
 class NameTumbler(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, nameList, category):
         DirectFrame.__init__(self, parent=aspect2d, relief='flat', scale=(1, 1, 1), state='disabled', frameColor=(1,

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.ship.ShipModel
 import copy
 import time
 
@@ -23,7 +19,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class ShipBroadside(NodePath):
-    __module__ = __name__
 
     def __init__(self, ship):
         NodePath.__init__(self, 'shipBroadside')
@@ -35,8 +30,7 @@ class ShipBroadside(NodePath):
 
 
 class ShipModel(NodePath):
-    __module__ = __name__
-
+    
     def __init__(self, cr, shipClass, team, wantCollisions=0, fromEditor=False):
         NodePath.__init__(self, 'ShipModel')
         self.doId = 0
@@ -275,21 +269,16 @@ class ShipModel(NodePath):
                 mast.loadCollisions()
             if mast.dna.mastType >= ShipGlobals.FOREMASTL1 and mast.dna.mastType <= ShipGlobals.FOREMASTL3:
                 locator = self.locators.find('**/location_foremast;+s')
-            else:
-                if mast.dna.mastType >= ShipGlobals.SKEL_FOREMASTL1 and mast.dna.mastType <= ShipGlobals.SKEL_FOREMASTL3:
-                    locator = self.locators.find('**/location_foremast;+s')
-                else:
-                    if mast.dna.mastType >= ShipGlobals.MAINMASTL1 and mast.dna.mastType <= ShipGlobals.TRIMASTL5:
-                        locator = self.locators.find('**/location_mainmast_' + str(mast.dna.posIndex) + ';+s')
-                    else:
-                        if mast.dna.mastType >= ShipGlobals.SKEL_MAINMASTL1_A and mast.dna.mastType <= ShipGlobals.SKEL_TRIMASTL5:
-                            locator = self.locators.find('**/location_mainmast_' + str(mast.dna.posIndex) + ';+s')
-                        else:
-                            if mast.dna.mastType >= ShipGlobals.AFTMASTL1 and mast.dna.mastType <= ShipGlobals.AFTMASTL3:
-                                locator = self.locators.find('**/location_aftmast;+s')
-                            else:
-                                if mast.dna.mastType >= ShipGlobals.SKEL_AFTMASTL1 and mast.dna.mastType <= ShipGlobals.SKEL_AFTMASTL3:
-                                    locator = self.locators.find('**/location_aftmast;+s')
+            elif mast.dna.mastType >= ShipGlobals.SKEL_FOREMASTL1 and mast.dna.mastType <= ShipGlobals.SKEL_FOREMASTL3:
+                locator = self.locators.find('**/location_foremast;+s')
+            elif mast.dna.mastType >= ShipGlobals.MAINMASTL1 and mast.dna.mastType <= ShipGlobals.TRIMASTL5:
+                locator = self.locators.find('**/location_mainmast_' + str(mast.dna.posIndex) + ';+s')
+            elif mast.dna.mastType >= ShipGlobals.SKEL_MAINMASTL1_A and mast.dna.mastType <= ShipGlobals.SKEL_TRIMASTL5:
+                locator = self.locators.find('**/location_mainmast_' + str(mast.dna.posIndex) + ';+s')
+            elif mast.dna.mastType >= ShipGlobals.AFTMASTL1 and mast.dna.mastType <= ShipGlobals.AFTMASTL3:
+                locator = self.locators.find('**/location_aftmast;+s')
+            elif mast.dna.mastType >= ShipGlobals.SKEL_AFTMASTL1 and mast.dna.mastType <= ShipGlobals.SKEL_AFTMASTL3:
+                locator = self.locators.find('**/location_aftmast;+s')
             self.masts[mast.dna.posIndex] = [
              mast, 0]
             self.sails[mast.dna.posIndex] = {}
@@ -529,12 +518,10 @@ class ShipModel(NodePath):
             decorClass = DecorDNA.getDecorType(decorType)
             if decorClass == 'lantern':
                 prop = Lantern.Lantern()
-            else:
-                if decorClass == 'decoration':
-                    prop = ShipDecor.ShipDecor()
-                else:
-                    if decorClass == 'window':
-                        prop = Window.Window()
+            elif decorClass == 'decoration':
+                prop = ShipDecor.ShipDecor()
+            elif decorClass == 'window':
+                prop = Window.Window()
             decorDNA = DecorDNA.DecorDNA()
             decorDNA.baseTeam = self.dna.baseTeam
             decorDNA.posIndex = posIndex
@@ -549,12 +536,10 @@ class ShipModel(NodePath):
             decorPlacement = DecorDNA.DecorDict.get(decorType)
             if decorPlacement[1] == DecorDNA.WALL:
                 locator = self.locators.find('**/wall_decor_' + str(posIndex) + ';+s')
-            else:
-                if decorPlacement[1] == DecorDNA.FLOOR:
-                    locator = self.locators.find('**/floor_decor_' + str(posIndex) + ';+s')
-                else:
-                    if decorPlacement[1] == DecorDNA.WINDOW:
-                        locator = self.locators.find('**/window_' + str(posIndex) + ';+s')
+            elif decorPlacement[1] == DecorDNA.FLOOR:
+                locator = self.locators.find('**/floor_decor_' + str(posIndex) + ';+s')
+            elif decorPlacement[1] == DecorDNA.WINDOW:
+                locator = self.locators.find('**/window_' + str(posIndex) + ';+s')
             prop.setPos(locator.getPos(self.root))
             prop.setHpr(locator.getHpr(self.root))
             prop.setScale(locator.getScale(self.root))
@@ -626,6 +611,4 @@ class ShipModel(NodePath):
         return
 
     def getShipInfo(self):
-        return [
-         self.modelClass, [ [mast.dna.getMastType(), mast.dna.getPosIndex(), mast.dna.getSailConfig()] for mast, dMast in self.masts.itervalues() ]]
-# okay decompiling .\pirates\ship\ShipModel.pyc
+        return [self.modelClass, [ [mast.dna.getMastType(), mast.dna.getPosIndex(), mast.dna.getSailConfig()] for mast, dMast in self.masts.itervalues() ]]

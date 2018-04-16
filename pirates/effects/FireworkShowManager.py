@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.FireworkShowManager
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
 from pandac.PandaModules import *
@@ -18,14 +14,12 @@ PadresLocation = Point3(6700, -22800, 100)
 PadresH = 0.0
 
 class FireworkShowManager:
-    __module__ = __name__
 
     def __init__(self):
         self.showType = None
         self.PortRoyalShow = None
         self.TortugaShow = None
         self.PadresShow = None
-        return
 
     def beginPortRoyalShow(self, offset):
         taskMgr.remove('beginPortRoyalShow')
@@ -90,4 +84,3 @@ class FireworkShowManager:
             self.PadresShow.cleanupShow()
             self.PadresShow = None
         return
-# okay decompiling .\pirates\effects\FireworkShowManager.pyc

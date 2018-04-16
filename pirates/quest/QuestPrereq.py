@@ -6,7 +6,7 @@ from direct.showbase.PythonUtil import POD, makeTuple
 
 
 class QuestPrereq(POD):
-    __module__ = __name__
+    
 
     def giverMatters(self):
         return hasattr(self, 'giverCanGive')
@@ -19,7 +19,7 @@ class QuestPrereq(POD):
 
 
 class HpAtLeast(QuestPrereq):
-    __module__ = __name__
+    
     DataSet = {'minHp': None}
 
     def __init__(self, minHp):
@@ -30,7 +30,7 @@ class HpAtLeast(QuestPrereq):
 
 
 class SwiftnessAtLeast(QuestPrereq):
-    __module__ = __name__
+    
     DataSet = {'minSwiftness': None}
 
     def __init__(self, minSwiftness):
@@ -41,7 +41,7 @@ class SwiftnessAtLeast(QuestPrereq):
 
 
 class LuckAtLeast(QuestPrereq):
-    __module__ = __name__
+    
     DataSet = {'minLuck': None}
 
     def __init__(self, minLuck):
@@ -52,7 +52,7 @@ class LuckAtLeast(QuestPrereq):
 
 
 class MojoAtLeast(QuestPrereq):
-    __module__ = __name__
+    
     DataSet = {'minMojo': None}
 
     def __init__(self, minMojo):
@@ -63,7 +63,7 @@ class MojoAtLeast(QuestPrereq):
 
 
 class DidQuest(QuestPrereq):
-    __module__ = __name__
+    
     DataSet = {'questIds': None}
 
     def __init__(self, questIds):
@@ -81,7 +81,7 @@ class DidQuest(QuestPrereq):
 
 
 class GetFrom(QuestPrereq):
-    __module__ = __name__
+    
     DataSet = {'questGivers': None}
 
     def __init__(self, questGivers):

@@ -20,7 +20,7 @@ def HasGrass(modelPath):
     return GrassProfiles.get(modelPath)
 
 class Grass(DirectObject, NodePath):
-    __module__ = __name__
+    
 
     def __init__(self, parent):
         NodePath.__init__(self, 'grass')

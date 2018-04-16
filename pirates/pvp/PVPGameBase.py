@@ -11,7 +11,7 @@ from pirates.piratesgui.StatRowHeadingGui import StatRowHeadingGui
 from pirates.pvp import PVPGlobals
 
 class ScoreboardHolder:
-    __module__ = __name__
+    
 
     def __init__(self, gameRules):
         self.gameRules = gameRules
@@ -26,7 +26,7 @@ class ScoreboardHolder:
         return self.gameRules.createScoreboardItem(item, parent, itemType=None, columnWidths=[], color=None)
 
 class StatsHolder:
-    __module__ = __name__
+    
 
     def __init__(self, gameRules):
         self.gameRules = gameRules
@@ -50,7 +50,7 @@ class StatsHolder:
 
 
 class PVPGameBase(DistributedObject, FSM.FSM):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('PVPGameBase')
     RulesDoneEvent = 'rulesDone'
 

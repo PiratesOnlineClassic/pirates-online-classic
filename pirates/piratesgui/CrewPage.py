@@ -17,7 +17,7 @@ from pirates.uberdog.UberDogGlobals import CrewStatus
 
 
 class CrewPage(SocialPage.SocialPage):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('CrewPage')
 
     def __init__(self):

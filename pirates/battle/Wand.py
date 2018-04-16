@@ -8,7 +8,7 @@ from pirates.effects.RayGlow import RayGlow
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 class Wand(Weapon.Weapon):
-    __module__ = __name__
+    
     modelTypes = {InventoryType.WandWeaponL1: ('models/handheld/voodoo_staff_high', Vec4(1, 1, 1, 1)), InventoryType.WandWeaponL2: ('models/handheld/voodoo_staff_a_high', Vec4(1, 1, 1, 1)), InventoryType.WandWeaponL3: ('models/handheld/voodoo_staff_b_high', Vec4(1, 1, 1, 1)), InventoryType.WandWeaponL4: ('models/handheld/voodoo_staff_c_high', Vec4(1, 1, 1, 1)), InventoryType.WandWeaponL5: ('models/handheld/voodoo_staff_d_high', Vec4(1, 1, 1, 1)), InventoryType.WandWeaponL6: ('models/handheld/voodoo_staff_e_high', Vec4(1, 1, 1, 1))}
     colorAndOffset = {InventoryType.WandWeaponL1: (Vec4(0.5, 0.2, 1, 1), Vec3(0, 1.6, 0)), InventoryType.WandWeaponL2: (Vec4(0, 1, 0, 1), Vec3(0, 1.1, 0)), InventoryType.WandWeaponL3: (Vec4(1, 0, 0, 1), Vec3(0, 1.7, 0)), InventoryType.WandWeaponL4: (Vec4(0, 0, 1, 1), Vec3(0, 1.5, 0)), InventoryType.WandWeaponL5: (Vec4(0, 1, 1, 1), Vec3(0, 1.6, 0)), InventoryType.WandWeaponL6: (Vec4(1, 0.6, 0, 1), Vec3(0, 1.7, 0))}
     runAnim = 'run_with_weapon'

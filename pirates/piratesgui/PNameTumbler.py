@@ -17,7 +17,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class PNameTumbler(NameTumbler.NameTumbler):
-    __module__ = __name__
+    
 
     def __init__(self, nameList, category):
         NameTumbler.NameTumbler.__init__(self, nameList, category)

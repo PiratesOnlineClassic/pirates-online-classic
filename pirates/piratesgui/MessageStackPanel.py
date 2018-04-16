@@ -14,7 +14,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class StackMessage(BorderFrame):
-    __module__ = __name__
+    
     guiLoaded = False
     corner = None
     popupSfx = None
@@ -218,7 +218,7 @@ class StackMessage(BorderFrame):
 
 
 class ModalStackMessage(StackMessage):
-    __module__ = __name__
+    
 
     def __init__(self, parent=None, **kwargs):
         StackMessage.__init__(self, parent, **kwargs)
@@ -303,7 +303,7 @@ class ModalStackMessage(StackMessage):
 
 
 class MessageStackPanel(DirectFrame):
-    __module__ = __name__
+    
     popupSfx = None
 
     def __init__(self, parent=None, **kwargs):

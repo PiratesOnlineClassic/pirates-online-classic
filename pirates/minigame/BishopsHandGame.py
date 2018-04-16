@@ -19,7 +19,7 @@ from pirates.piratesgui import GuiTray, PiratesGuiGlobals
 
 
 class Hand(NodePath):
-    __module__ = __name__
+    
 
     def __init__(self, *args, **kwargs):
         NodePath.__init__(self, *args, **kwargs)
@@ -33,7 +33,7 @@ class Hand(NodePath):
 
 
 class Burn(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, *args, **kwargs):
         DirectFrame.__init__(self, *args, **kwargs)
@@ -103,7 +103,7 @@ class Burn(DirectFrame):
 
 
 class Burns(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, *args, **kwargs):
         DirectFrame.__init__(self, *args, **kwargs)
@@ -127,7 +127,7 @@ class Burns(DirectFrame):
 
 
 class Knife(DirectFrame):
-    __module__ = __name__
+    
     SOUNDS = {'miss': 'src/minigame/peg/m_match_drums.mp3', 'hit': 'src/minigame/peg/AA_slice_only.mp3'}
     POSHPR = {'neutral': (Vec3(0.12, 0, 1.25), Vec3(0.0, 0.0, 10.0)), 'in': (Vec3(0.03, 0, 1.13), Vec3(0.0, 0.0, 0.0)), 'out': (Vec3(0.12, 0, 1.35), Vec3(0.0, 0.0, 15.0))}
 
@@ -236,7 +236,7 @@ class Knife(DirectFrame):
 
 
 class FaceSpot(DirectFrame):
-    __module__ = __name__
+    
     NUMSTEPS = 24
 
     def __init__(self, faceId, *args, **kwargs):
@@ -290,7 +290,7 @@ class FaceSpot(DirectFrame):
 
 
 class Round(DirectObject.DirectObject):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('BishopsHandRound')
 
     def __init__(self, game, roundNum, sequence):
@@ -419,7 +419,7 @@ class Round(DirectObject.DirectObject):
 
 
 class BishopsHandGame(DirectFrame, FSM.FSM):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('BishopsHandGame')
 
     def __init__(self, gameCallback, seatPos):

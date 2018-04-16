@@ -19,7 +19,7 @@ from pirates.world import WorldGlobals
 OceanAreaOffsets = {'Brigand_Bay': [0, -1], 'Scurvy_Shallows': [0, 3], 'Blackheart_Strait': [0, 2], 'Salty_Flats': [0, -1], 'Dead_Mans_Trough': [0, 1], 'Smugglers_Run': [0, 0.5], 'Bloody_Bayou': [0, -1.5]}
 
 class DecoratedMapBall(MapBall):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DecoratedMapBall')
     defaultModelPath = 'models/islands/bilgewater_worldmap'
 

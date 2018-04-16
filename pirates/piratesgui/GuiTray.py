@@ -10,7 +10,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class GuiTray(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, parent, w=0.5, h=0.1, draggable=0, **kw):
         self.width = w

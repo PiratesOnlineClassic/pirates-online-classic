@@ -10,7 +10,7 @@ from pirates.piratesgui.GameOptions import Options
 
 
 class Bonfire(NodePath):
-    __module__ = __name__
+    
     HackCount = 0
 
     def __init__(self, parent=None):

@@ -77,6 +77,7 @@ class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
         localAvatar.setH(localAvatar, -90)
 
     def stopDigging(self, questProgress):
+        print('DONE!')
         localAvatar.guiMgr.workMeter.stopTimer()
         localAvatar.guiMgr.showQuestProgress(questProgress)
         if localAvatar.gameFSM.state == 'Digging':

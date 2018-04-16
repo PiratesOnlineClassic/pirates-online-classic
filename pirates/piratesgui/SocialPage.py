@@ -8,7 +8,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class SocialPage(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, title):
         spacer = 0.1

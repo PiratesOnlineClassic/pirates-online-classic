@@ -10,7 +10,7 @@ from pandac.PandaModules import *
 
 
 class CameraMode(DirectObject.DirectObject, FSM):
-    __module__ = __name__
+    
     Modes = Enum('NORMAL, BATTLE')
 
     def __init__(self):

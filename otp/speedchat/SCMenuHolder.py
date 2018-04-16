@@ -12,7 +12,7 @@ from SCObject import SCObject
 
 
 class SCMenuHolder(SCElement):
-    __module__ = __name__
+    
     N = 0.9
     DefaultFrameColor = (0, 0, 0, 1.0 - N)
     del N

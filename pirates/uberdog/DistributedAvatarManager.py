@@ -1,14 +1,8 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.uberdog.DistributedAvatarManager
 from otp.otpbase import OTPGlobals
 from otp.uberdog.OtpAvatarManager import OtpAvatarManager
 
-
 class DistributedAvatarManager(OtpAvatarManager):
-    __module__ = __name__
-
+    
     def sendAvIdList(self, avIds):
         pass
 
@@ -57,4 +51,3 @@ class DistributedAvatarManager(OtpAvatarManager):
             finalData[subId] = avatarData
 
         messenger.send('avatarList', [finalData])
-# okay decompiling .\pirates\uberdog\DistributedAvatarManager.pyc

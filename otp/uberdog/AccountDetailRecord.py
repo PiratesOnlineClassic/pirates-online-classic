@@ -1,7 +1,7 @@
 from otp.otpbase import OTPGlobals
 
 class SubDetailRecord:
-    __module__ = __name__
+    
 
     def __init__(self):
         self.subId = 0
@@ -29,7 +29,7 @@ class SubDetailRecord:
         return s
 
 class AccountDetailRecord:
-    __module__ = __name__
+    
 
     def __init__(self):
         self.openChatEnabled = False

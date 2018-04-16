@@ -7,7 +7,7 @@ from pandac.PandaModules import *
 from PooledEffect import PooledEffect
 
 class CeilingDebris(PooledEffect, EffectController):
-    __module__ = __name__
+    
     cardScale = 128.0
 
     def __init__(self):

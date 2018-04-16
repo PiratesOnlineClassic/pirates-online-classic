@@ -15,7 +15,7 @@ QUEST_TYPE_AVATAR = 0
 QUEST_TYPE_TM = 1
 
 class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase, Quest.Quest):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedQuest')
 
     def __init__(self, cr):

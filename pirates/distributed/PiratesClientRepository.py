@@ -61,7 +61,7 @@ want_fifothreads = base.config.GetBool('want-fifothreads', 0)
 if want_fifothreads:
 
     class ClientNetworkReader(PythonThread):
-        __module__ = __name__
+        
 
         def __init__(self, repository):
             PythonThread.__init__(self, self.run, None, 'ClientNetworkReader', 'ClientNetworkReader')

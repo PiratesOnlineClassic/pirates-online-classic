@@ -31,7 +31,6 @@ from pirates.shipparts import HullDNA
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 class CutsceneActor:
-    __module__ = __name__
     notify = directNotify.newCategory('CutsceneActor')
 
     def __init__(self, cutsceneDesc):
@@ -157,7 +156,7 @@ class CutsceneActor:
         self.fader.start()
 
 class CutsceneShadowCaster(CutsceneActor):
-    __module__ = __name__
+    
 
     def initShadow(self):
         self.initializeDropShadow()
@@ -167,7 +166,7 @@ class CutsceneShadowCaster(CutsceneActor):
         self.deleteDropShadow()
 
 class CutCam(CutsceneActor, Actor):
-    __module__ = __name__
+    
 
     def __init__(self, cutsceneDesc):
         self.Uid = None
@@ -251,7 +250,7 @@ class CutCam(CutsceneActor, Actor):
             base.camLens.setFocalLength(focalLength)
 
 class CutGenericActor(CutsceneActor, Actor):
-    __module__ = __name__
+    
 
     def __init__(self, actorName, modelName, path, cutsceneDesc):
         self.Uid = None
@@ -291,7 +290,7 @@ class CutGenericActor(CutsceneActor, Actor):
             self.effect = None
 
 class CutLocators(CutGenericActor):
-    __module__ = __name__
+    
 
     def __init__(self, cutsceneDesc):
         CutGenericActor.__init__(self, 'cs', 'cs_dummy', 'models/char/', cutsceneDesc)
@@ -323,7 +322,7 @@ class CutLocators(CutGenericActor):
         return 'Locators'
 
 class CutBoat(CutsceneActor, ShipModel):
-    __module__ = __name__
+    
     Class2Locator = {ShipGlobals.STUMPY_SHIP: 'interceptor', ShipGlobals.SKEL_DEATH_OMEN: 'ghostShip', ShipGlobals.WARSHIPL3: 'warship', ShipGlobals.BLACK_PEARL: 'blackpearl'}
 
     def __init__(self, shipClass, team, offset, wantCollisions, cutsceneDesc, rootScale=1.0):
@@ -433,7 +432,7 @@ class CutBoat(CutsceneActor, ShipModel):
 
 
 class CutJackSparrow(CutsceneActor, JackSparrow):
-    __module__ = __name__
+    
 
     def __init__(self, cutsceneDesc):
         self.Uid = None
@@ -479,7 +478,7 @@ class CutJackSparrow(CutsceneActor, JackSparrow):
         self.Uid = None
 
 class CutJollyRoger(CutsceneActor, JollyRoger):
-    __module__ = __name__
+    
 
     def __init__(self, cutsceneDesc):
         self.Uid = None
@@ -623,7 +622,7 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
         return 'JollyRoger'
 
 class CutWillTurner(CutsceneActor, WillTurner):
-    __module__ = __name__
+    
 
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
@@ -678,7 +677,7 @@ class CutWillTurner(CutsceneActor, WillTurner):
             self.modelLoaded.setH(render, self.hprFromPose[0] - 180)
 
 class CutElizabethSwan(CutsceneActor, ElizabethSwan):
-    __module__ = __name__
+    
 
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
@@ -707,7 +706,7 @@ class CutElizabethSwan(CutsceneActor, ElizabethSwan):
         return 'ElizabethSwan'
 
 class CutCaptBarbossa(CutsceneActor, CaptBarbossa):
-    __module__ = __name__
+    
 
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
@@ -753,7 +752,7 @@ class CutCaptBarbossa(CutsceneActor, CaptBarbossa):
 
 
 class CutTiaDalma(CutsceneActor, TiaDalma):
-    __module__ = __name__
+    
 
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
@@ -914,7 +913,7 @@ class CutTiaDalma(CutsceneActor, TiaDalma):
             handheld.removeNode()
 
 class CutJoshGibbs(CutsceneActor, JoshGibbs):
-    __module__ = __name__
+    
 
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
@@ -942,7 +941,7 @@ class CutJoshGibbs(CutsceneActor, JoshGibbs):
 
 
 class CutPirate(CutsceneActor, Pirate):
-    __module__ = __name__
+    
 
     def __init__(self, Uid, npcIndex, cutsceneDesc):
         self.Uid = Uid
@@ -1013,7 +1012,7 @@ class CutPirate(CutsceneActor, Pirate):
             handheld.removeNode()
 
 class CutSkeleton(CutsceneActor, Skeleton):
-    __module__ = __name__
+    
 
     def __init__(self, skeletonType, npcIndex, cutsceneDesc):
         self.Uid = None
@@ -1048,7 +1047,7 @@ class CutSkeleton(CutsceneActor, Skeleton):
         return CutSkeleton.getActorKey(self._npcIndex)
 
 class CutLocalPirate(CutsceneActor):
-    __module__ = __name__
+    
 
     def __init__(self, wantZombie, cutsceneDesc):
         self.Uid = None

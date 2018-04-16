@@ -10,7 +10,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class ButtonListItem(DirectButton):
-    __module__ = __name__
+    
 
     def __init__(self, item, itemHeight, itemWidth, parent=None, parentList=None, textScale=None, txtColor=None, **kw):
         optiondefs = (

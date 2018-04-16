@@ -13,7 +13,7 @@ from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 
 
 class PlayerPanel(IdentityPanel.IdentityPanel):
-    __module__ = __name__
+    
 
     def __init__(self, pId):
         self.width = 0.5

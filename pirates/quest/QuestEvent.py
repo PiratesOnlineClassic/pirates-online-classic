@@ -9,7 +9,7 @@ from direct.task.Task import Task
 
 
 class QuestEvent(POD):
-    __module__ = __name__
+    
     DataSet = {'location': None, 'progressResults': dict}
 
     def applyTo(self, taskState, taskDNA):
@@ -36,7 +36,7 @@ class QuestEvent(POD):
 
 
 class EnemyDefeated(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'enemyType': None, 'level': 0, 'weaponType': None}
 
     def applyTo(self, taskState, taskDNA):
@@ -44,7 +44,7 @@ class EnemyDefeated(QuestEvent):
 
 
 class ShipPVPEnemyDefeated(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'enemyClass': None, 'gameType': None, 'num': 0, 'killType': None, 'killWeapon': None}
 
     def applyTo(self, taskState, taskDNA):
@@ -52,7 +52,7 @@ class ShipPVPEnemyDefeated(QuestEvent):
 
 
 class ShipPVPShipDamage(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'enemyClass': None, 'gameType': None, 'damage': None, 'damageWeapon': None}
 
     def applyTo(self, taskState, taskDNA):
@@ -60,7 +60,7 @@ class ShipPVPShipDamage(QuestEvent):
 
 
 class ShipPVPPlayerDamage(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'enemyClass': None, 'gameType': None, 'damage': None, 'damageWeapon': None}
 
     def applyTo(self, taskState, taskDNA):
@@ -68,21 +68,21 @@ class ShipPVPPlayerDamage(QuestEvent):
 
 
 class ShipPVPSpawn(QuestEvent):
-    __module__ = __name__
+    
 
     def applyTo(self, taskState, taskDNA):
         return taskDNA.handleShipPVPSpawn(self, taskState)
 
 
 class ShipPVPSink(QuestEvent):
-    __module__ = __name__
+    
 
     def applyTo(self, taskState, taskDNA):
         return taskDNA.handleShipPVPSink(self, taskState)
 
 
 class NPCDefeated(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'npcId': None}
 
     def applyTo(self, taskState, taskDNA):
@@ -90,7 +90,7 @@ class NPCDefeated(QuestEvent):
 
 
 class PokerHandWon(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'gold': 0}
 
     def applyTo(self, taskState, taskDNA):
@@ -98,21 +98,21 @@ class PokerHandWon(QuestEvent):
 
 
 class DockedAtPort(QuestEvent):
-    __module__ = __name__
+    
 
     def applyTo(self, taskState, taskDNA):
         return taskDNA.handleDockedAtPort(self, taskState)
 
 
 class DeployedShip(QuestEvent):
-    __module__ = __name__
+    
 
     def applyTo(self, taskState, taskDNA):
         return taskDNA.handleDeployedShip(self, taskState)
 
 
 class BlackjackHandWon(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'gold': 0}
 
     def applyTo(self, taskState, taskDNA):
@@ -120,7 +120,7 @@ class BlackjackHandWon(QuestEvent):
 
 
 class TreasureChestOpened(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'treasureType': None, 'treasureId': None}
 
     def applyTo(self, taskState, taskDNA):
@@ -128,7 +128,7 @@ class TreasureChestOpened(QuestEvent):
 
 
 class ContainerSearched(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'containerId': None, 'containerType': None}
 
     def applyTo(self, taskState, taskDNA):
@@ -136,7 +136,7 @@ class ContainerSearched(QuestEvent):
 
 
 class ShipDefeated(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'faction': None, 'hull': None, 'isFlagship': False, 'level': 0}
 
     def applyTo(self, taskState, taskDNA):
@@ -144,7 +144,7 @@ class ShipDefeated(QuestEvent):
 
 
 class NPCVisited(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'npcId': None, 'avId': None}
 
     def applyTo(self, taskState, taskDNA):
@@ -155,7 +155,7 @@ class NPCVisited(QuestEvent):
 
 
 class ObjectVisited(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'objectId': None, 'avId': None}
 
     def applyTo(self, taskState, taskDNA):
@@ -166,7 +166,7 @@ class ObjectVisited(QuestEvent):
 
 
 class CutsceneWatched(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'npcId': None}
 
     def applyTo(self, taskState, taskDNA):
@@ -174,7 +174,7 @@ class CutsceneWatched(QuestEvent):
 
 
 class NPCBribed(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'npcId': None, 'gold': 0}
 
     def applyTo(self, taskState, taskDNA):
@@ -182,7 +182,7 @@ class NPCBribed(QuestEvent):
 
 
 class BossBattleCompleted(QuestEvent):
-    __module__ = __name__
+    
     DataSet = {'treasureMapId': None}
 
     def applyTo(self, taskState, taskDNA):

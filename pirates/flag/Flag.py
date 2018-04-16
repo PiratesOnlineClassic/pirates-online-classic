@@ -13,7 +13,7 @@ from pandac.PandaModules import *
 
 
 class Flag(NodePath):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('Flag')
     BgSortOffset = 10
     EmblemSortOffset = 20

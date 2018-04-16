@@ -3,14 +3,14 @@ from pandac.PandaModules import *
 from pirates.creature.Animal import Animal
 
 class Rooster(Animal):
-    __module__ = __name__
+    
     ModelInfo = ('models/char/rooster_hi', 'models/char/rooster_')
     SfxNames = dict(Animal.SfxNames)
     SfxNames.update({})
     AnimList = (('idle', 'idle'), ('walk', 'walk'), ('run', 'run'), ('fly', 'fly'), ('crow', 'crow'), ('peck', 'peck'))
 
     class AnimationMixer(Animal.AnimationMixer):
-        __module__ = __name__
+        
         notify = DirectNotifyGlobal.directNotify.newCategory('RoosterAnimationMixer')
         LOOP = Animal.AnimationMixer.LOOP
         ACTION = Animal.AnimationMixer.ACTION

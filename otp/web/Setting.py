@@ -1,7 +1,7 @@
 from direct.fsm.StatePush import StateVar
 
 class Setting:
-    __module__ = __name__
+    
 
     def __init__(self, name, value):
         self._name = name
@@ -17,7 +17,7 @@ class Setting:
         return self._value
 
 class StateVarSetting(Setting, StateVar):
-    __module__ = __name__
+    
 
     def __init__(self, name, value):
         StateVar.__init__(self, value)

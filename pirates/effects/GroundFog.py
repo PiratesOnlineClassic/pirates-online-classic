@@ -10,7 +10,7 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.GameOptions import Options
 
 class GroundFog(EffectController, NodePath):
-    __module__ = __name__
+    
     cardScale = 64.0
 
     def __init__(self):

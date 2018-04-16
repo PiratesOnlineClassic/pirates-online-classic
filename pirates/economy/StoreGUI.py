@@ -11,8 +11,7 @@ from pirates.reputation import ReputationGlobals
 from pirates.uberdog.UberDogGlobals import *
 
 class StoreTab(LeftTab):
-    __module__ = __name__
-
+    
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None))
         self.defineoptions(kw, optiondefs)
@@ -20,7 +19,6 @@ class StoreTab(LeftTab):
         self.initialiseoptions(StoreTab)
 
 class StoreTabBar(TabBar):
-    __module__ = __name__
 
     def refreshTabs(self):
         for x, name in enumerate(self.tabOrder):
@@ -41,7 +39,6 @@ class StoreTabBar(TabBar):
         return StoreTab(self, name, **kw)
 
 class StoreGUI(DirectFrame):
-    __module__ = __name__
     notify = directNotify.newCategory('StoreGUI')
     width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.35

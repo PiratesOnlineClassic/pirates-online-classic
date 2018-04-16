@@ -16,7 +16,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 LAST_BUTTON_SELECTION = 1
 
 class PiratesOffLineConfirmButton(RequestButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -24,7 +24,7 @@ class PiratesOffLineConfirmButton(RequestButton):
 
 
 class PiratesOffLineEMailButton(RequestButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -32,7 +32,7 @@ class PiratesOffLineEMailButton(RequestButton):
 
 
 class PiratesOffLineCheckBox(CheckBox):
-    __module__ = __name__
+    
 
     def __init__(self, text, command):
         CheckBox.__init__(self, text, command)
@@ -40,7 +40,7 @@ class PiratesOffLineCheckBox(CheckBox):
 
 
 class PiratesOffLineRequest(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesOffLineInvite')
 
     def __init__(self, title, message, tokenString=None, preExistPerm=0):

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.speedchat.PSpeedChatQuestTerminal
 from otp.speedchat.SCTerminal import *
 from pirates.quest import QuestDB
 
@@ -43,8 +39,7 @@ def decodeSCQuestMsgInt(questInt, msgType, taskNum):
 
 
 class PSpeedChatQuestTerminal(SCTerminal):
-    __module__ = __name__
-
+    
     def __init__(self, msg, questInt, toNpcId, msgType, taskNum):
         SCTerminal.__init__(self)
         self.msg = msg
@@ -60,4 +55,3 @@ class PSpeedChatQuestTerminal(SCTerminal):
         SCTerminal.handleSelect(self)
         messenger.send(self.getEventName(PSpeedChatQuestMsgEvent), [
          self.questInt, self.toNpcId, self.msgType, self.taskNum])
-# okay decompiling .\pirates\speedchat\PSpeedChatQuestTerminal.pyc

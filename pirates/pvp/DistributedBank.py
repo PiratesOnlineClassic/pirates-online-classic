@@ -10,7 +10,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 
 class DistributedBank(DistributedInteractive.DistributedInteractive):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBank')
 
     def __init__(self, cr):

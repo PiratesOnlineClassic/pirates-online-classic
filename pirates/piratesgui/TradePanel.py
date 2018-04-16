@@ -14,7 +14,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class TradeOfferFrame(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, avName, w, h, isLocal, tradePanel):
         DirectFrame.__init__(self, parent=tradePanel, relief=DGG.RIDGE, state=DGG.NORMAL, frameColor=PiratesGuiGlobals.FrameColor, borderWidth=PiratesGuiGlobals.BorderWidth, frameSize=(0, w, 0, h), text=avName, text_scale=PiratesGuiGlobals.TextScaleSmall, text_align=TextNode.ALeft, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_pos=(0.01, h - 0.04))
@@ -44,7 +44,7 @@ class TradeOfferFrame(DirectFrame):
 
 
 class TradePanel(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
 
     def __init__(self, trade):
         GuiPanel.GuiPanel.__init__(self, PLocalizer.TradePanelTitle, 0.8, 1)

@@ -4,7 +4,7 @@ from direct.showbase.DirectObject import DirectObject
 from pandac.PandaModules import AudioSound
 
 class AmbientSound:
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('AmbientSound')
 
     def __init__(self, path, masterAmbientVolume, loop=True, isMusic=False):
@@ -93,7 +93,7 @@ class AmbientSound:
             self.curPriority = 0
 
 class AmbientManagerBase(DirectObject):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('AmbientManagerBase')
 
     def __init__(self):

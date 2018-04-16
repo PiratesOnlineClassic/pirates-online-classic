@@ -11,7 +11,7 @@ from pirates.reputation import ReputationGlobals
 
 
 class BarSelectionMenu(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('BarSelectionMenu')
     ICON_WIDTH = 0.13
     HEIGHT = 0.15

@@ -10,7 +10,7 @@ from pirates.quest.QuestIndicatorNode import QuestIndicatorNode
 
 
 class QuestIndicatorNodeIntDoor(QuestIndicatorNode):
-    __module__ = __name__
+    
 
     def __init__(self, questStep):
         self.pendingStepObj = None

@@ -13,7 +13,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class GrenadeProjectile(ProjectileAmmo):
-    __module__ = __name__
+    
 
     def __init__(self, cr, ammoSkillId, event):
         ProjectileAmmo.__init__(self, cr, ammoSkillId, event)

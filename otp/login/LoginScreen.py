@@ -21,7 +21,7 @@ from pandac.PandaModules import *
 
 
 class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
-    __module__ = __name__
+    
     AutoLoginName = base.config.GetString('%s-auto-login%s' % (game.name, os.getenv('otp_client', '')), '')
     AutoLoginPassword = base.config.GetString('%s-auto-password%s' % (game.name, os.getenv('otp_client', '')), '')
     notify = DirectNotifyGlobal.directNotify.newCategory('LoginScreen')

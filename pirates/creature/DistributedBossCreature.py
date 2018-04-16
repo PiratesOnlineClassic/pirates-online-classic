@@ -11,7 +11,7 @@ from pirates.pirate import AvatarTypes
 CreatureTypes = {AvatarTypes.Crab: AvatarTypes.Crab, AvatarTypes.RockCrab: AvatarTypes.Crab, AvatarTypes.GiantCrab: AvatarTypes.Crab, AvatarTypes.Stump: AvatarTypes.Stump, AvatarTypes.FlyTrap: AvatarTypes.FlyTrap, AvatarTypes.Scorpion: AvatarTypes.Scorpion, AvatarTypes.DreadScorpion: AvatarTypes.Scorpion, AvatarTypes.Alligator: AvatarTypes.Alligator, AvatarTypes.BigGator: AvatarTypes.Alligator, AvatarTypes.HugeGator: AvatarTypes.Alligator, AvatarTypes.Bat: AvatarTypes.Bat, AvatarTypes.VampireBat: AvatarTypes.Bat, AvatarTypes.Wasp: AvatarTypes.Wasp, AvatarTypes.AngryWasp: AvatarTypes.Wasp}
 
 class DistributedBossCreature(DistributedCreature, Boss):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBossCreature')
 
     def __init__(self, cr):

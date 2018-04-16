@@ -15,7 +15,7 @@ from pirates.swamp.Swamp import Swamp
 
 
 class SwampEffects(EnvironmentEffects.EnvironmentEffects):
-    __module__ = __name__
+    
     GROUND_FOG_Z = 2.0
     FIREFLIES_Z = 6.0
     RANDOM_SOUND_PERIOD = 6

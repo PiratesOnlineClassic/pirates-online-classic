@@ -10,7 +10,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class ComboDiary:
-    __module__ = __name__
+    
     notify = directNotify.newCategory('ComboDiary')
     TIMESTAMP_INDEX = 0
     SKILLID_INDEX = 1

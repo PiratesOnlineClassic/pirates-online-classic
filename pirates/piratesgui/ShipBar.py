@@ -13,7 +13,7 @@ from pirates.piratesgui.TabBar import TabBar, TopTab
 
 
 class ShipTab(TopTab):
-    __module__ = __name__
+    
 
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_c', None), ('frameSize', (0, 0.205, 0.0, 0.1), None), ('borderScale', 0.135, None), ('bgBuffer', 0.14, None), ('showBackground', True, None), ('bgColorScale', VBase4(0, 0, 0, 1), None), ('flatten', 0, None), ('label', '', None), ('textMayChange', 0, None), ('textpos', (0.1, 0.025, 0), None))
@@ -32,7 +32,7 @@ class ShipTab(TopTab):
 
 
 class ShipTabBar(TabBar):
-    __module__ = __name__
+    
 
     def __init__(self, backParent, frontParent, parent, *args, **kw):
         optiondefs = (('relief', None, None), ('state', DGG.DISABLED, None), ('offset', 0.5, None))

@@ -9,7 +9,7 @@ from pirates.piratesgui import GuiButton, PiratesGuiGlobals
 
 
 class BlinkButton(GuiButton.GuiButton):
-    __module__ = __name__
+    
 
     def __init__(self, parent, **kw):
         card = loader.loadModel('models/textureCards/skillIcons')

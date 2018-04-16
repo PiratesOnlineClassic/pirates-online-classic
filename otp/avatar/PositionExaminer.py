@@ -8,7 +8,7 @@ from pandac.PandaModules import *
 
 
 class PositionExaminer(DirectObject, NodePath):
-    __module__ = __name__
+    
 
     def __init__(self):
         try:

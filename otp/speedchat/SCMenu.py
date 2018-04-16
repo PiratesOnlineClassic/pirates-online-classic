@@ -14,7 +14,7 @@ from SCObject import SCObject
 
 
 class SCMenu(SCObject, NodePath):
-    __module__ = __name__
+    
     SpeedChatRolloverTolerance = config.GetFloat('speedchat-rollover-tolerance', 0.08)
     WantFade = config.GetBool('want-speedchat-fade', 0)
     FadeDuration = config.GetFloat('speedchat-fade-duration', 0.2)

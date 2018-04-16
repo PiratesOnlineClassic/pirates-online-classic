@@ -14,7 +14,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class DarkWaterFog(EffectController, NodePath):
-    __module__ = __name__
+    
     cardScale = 64.0
 
     def __init__(self, radius=700, radiusSpread=300, lifespan=4.0):

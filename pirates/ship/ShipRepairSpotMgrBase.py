@@ -1,13 +1,7 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.ship.ShipRepairSpotMgrBase
 from direct.fsm.StatePush import AttrSetter, FunctionCall, StateVar
 from pirates.pvp import PVPGlobals
 
-
 class ShipRepairSpotMgrBase:
-    __module__ = __name__
 
     def __init__(self):
         self._state = DestructiveScratchPad(hp=StateVar(0), maxHp=StateVar(0), sp=StateVar(0), maxSp=StateVar(0), shipClass=StateVar(0), pvpTeam=StateVar(0), siegeTeam=StateVar(0), fullHealth=StateVar(False), validShipClass=StateVar(False), hasTeam=StateVar(False))
@@ -53,4 +47,3 @@ class ShipRepairSpotMgrBase:
 
     def _evalHasTeam(self, pvpTeam, siegeTeam):
         self._state.hasTeam.set(pvpTeam or siegeTeam)
-# okay decompiling .\pirates\ship\ShipRepairSpotMgrBase.pyc

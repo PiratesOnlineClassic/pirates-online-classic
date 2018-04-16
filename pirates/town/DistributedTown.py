@@ -8,7 +8,6 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.world import ClientArea, DistributedGameArea, WorldGlobals
 
 class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartesianGrid.DistributedCartesianGrid, ClientArea.ClientArea):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedTown')
 
     def __init__(self, cr):

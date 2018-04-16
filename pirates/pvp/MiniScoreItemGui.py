@@ -10,7 +10,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 
 class MiniScoreItemGui(DirectFrame):
-    __module__ = __name__
+    
     Width = PiratesGuiGlobals.PVPPanelWidth - PiratesGuiGlobals.GridSize
     Height = 0.055
 

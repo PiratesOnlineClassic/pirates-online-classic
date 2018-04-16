@@ -4,7 +4,7 @@ from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.uberdog.RejectCode import RejectCode
 
 class AvatarFriendsManager(DistributedObjectGlobal):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('AvatarFriendsManager')
 
     def __init__(self, cr):

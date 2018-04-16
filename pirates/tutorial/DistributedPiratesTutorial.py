@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.tutorial.DistributedPiratesTutorial
 import random
 import time
 
@@ -57,7 +53,7 @@ def _playHitEffect(pos, hitObject, skillId, task=None):
 
 
 class TutorialInteriorEffects:
-    __module__ = __name__
+    
 
     def __init__(self, startFire=False, cannonDelay=None):
         self._target = render.attachNewNode('target')
@@ -118,7 +114,7 @@ class TutorialInteriorEffects:
 
 
 class PhantomCannon(Cannon):
-    __module__ = __name__
+    
 
     def __init__(self, cr, parent, distance, height, targetNps, island):
         Cannon.__init__(self, cr)
@@ -174,7 +170,7 @@ class PhantomCannon(Cannon):
 
 
 class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('DistributedPiratesTutorial')
     PRELOADED_CUTSCENES = []
 
@@ -889,4 +885,3 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         UserFunnel.logSubmit(1, 'STARTGAME_DOCK')
         UserFunnel.logSubmit(0, 'STARTGAME_DOCK')
         base.cr.centralLogger.writeClientEvent('STARTGAME_DOCK')
-# okay decompiling .\pirates\tutorial\DistributedPiratesTutorial.pyc

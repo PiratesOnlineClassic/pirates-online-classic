@@ -16,7 +16,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, DistributedTargetableObject.DistributedTargetableObject, Actor.Actor):
-    __module__ = __name__
     DiskUseColor = (1, 0, 0, 1)
     DiskWaitingColor = (1, 0, 0, 1)
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInteractiveProp')

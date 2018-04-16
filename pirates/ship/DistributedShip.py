@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.ship.DistributedShip
 import re, random
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
@@ -83,8 +79,7 @@ def getRamSfx():
 
 
 class CachedShipData(CachedDOData):
-    __module__ = __name__
-
+    
     def __init__(self, optimized, broadside, hull, cabin, masts, sails, cannons, wheel, bowsprit, fullsailSfx, rammingSfx, sinkingSfx, lodRoot, highDetail, medDetail, lowDetail, highStatic, medStatic, lowStatic, modelCollisions, sailProjectors, locators):
         self.optimized = optimized
         self.broadside = broadside
@@ -139,8 +134,7 @@ class CachedShipData(CachedDOData):
 
 
 class ActorNodeMgr:
-    __module__ = __name__
-
+    
     def __init__(self, actorNode):
         self._actorNode = actorNode
         self._attached = False
@@ -178,7 +172,6 @@ class ActorNodeMgr:
 
 
 class DistributedShip(DistributedMovingObject, DistributedCharterableObject, ZoneLOD.ZoneLOD, Teamable):
-    __module__ = __name__
     deferrable = True
     notify = directNotify.newCategory('DistributedShip')
     WantWake = config.GetBool('want-wake', 1)

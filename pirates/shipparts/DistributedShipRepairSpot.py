@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.shipparts.DistributedShipRepairSpot
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.StatePush import FunctionCall, StateVar
 from pandac.PandaModules import NodePath
@@ -12,7 +8,6 @@ from pirates.pvp import PVPGlobals
 
 
 class DistributedShipRepairSpot(DistributedInteractive):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedShipRepairSpot')
 
     def __init__(self, cr):
@@ -110,4 +105,3 @@ class DistributedShipRepairSpot(DistributedInteractive):
             self.setAllowInteract(0)
         else:
             self.setAllowInteract(1)
-# okay decompiling .\pirates\shipparts\DistributedShipRepairSpot.pyc

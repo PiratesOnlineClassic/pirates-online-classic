@@ -7,7 +7,7 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 
 class DarkMaelstrom(DirectObject, NodePath):
-    __module__ = __name__
+    
 
     def __init__(self, newParent=render):
         NodePath.__init__(self, 'DarkMaelstromParent')

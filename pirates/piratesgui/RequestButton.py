@@ -11,7 +11,7 @@ from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 
 
 class RequestButton(DirectButton):
-    __module__ = __name__
+    
 
     def __init__(self, text, command, width=1.0):
         self.charGui = loader.loadModelOnce('models/gui/char_gui')

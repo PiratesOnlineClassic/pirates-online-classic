@@ -9,14 +9,14 @@ CANCEL_QUEST = -1
 MAXIMUM_MERC_WORK = 12
 
 class QuestActions:
-    __module__ = __name__
+    
     Decline = 0
     Accept = 1
     Bribe = 2
 
 
 class QuestItemNotification:
-    __module__ = __name__
+    
     AlreadyFound = 1
     ProgressMadeGoalMet = 2
     ProgressMadeGoalUnmet = 3
@@ -25,7 +25,7 @@ class QuestItemNotification:
 
 
 class QuestItems:
-    __module__ = __name__
+    
     Key = 0
     SeaChart = 1
     Earring = 2
@@ -388,7 +388,7 @@ def getLocationList(locationId):
 
 
 class PropIds:
-    __module__ = __name__
+    
     PR_CRATE_1 = '1175737088.0dxschafe'
     PR_CRATE_2 = '1175737088.0dxschafe0'
     PR_CRATE_3 = '1175737216.0dxschafe'
@@ -565,7 +565,7 @@ def getPropList(propId):
 
 
 class TreasureIds:
-    __module__ = __name__
+    
     PR_CHEST_1 = '1165018378.63Shochet'
     PR_CHEST_2 = '1165018628.69Shochet'
     PR_CHEST_3 = '1165018665.78Shochet'
@@ -662,7 +662,7 @@ def getTreasureList(treasureId):
 
 
 class ShipIds:
-    __module__ = __name__
+    
     ANY_LARGE_SHIP = 'AnyLargeShip'
     ANY_WARSHIP = 'AnyWarShip'
     ANY_EITC_CORVETTE = 'AnyEITCCorvette'
@@ -683,7 +683,7 @@ def getShipList(shipId):
 
 
 class NPCIds:
-    __module__ = __name__
+    
     DOGGEREL_DAN = '1154731709.64jubutler'
     WILL_TURNER = '1152830677.95jubutler'
     TIA_DALMA_PR = '1154497344.0jubutlerPR'
@@ -834,7 +834,7 @@ class NPCIds:
 
 
 class Bribes:
-    __module__ = __name__
+    
     SMALL = 10
     MEDIUM = 50
     LARGE = 100
@@ -842,7 +842,7 @@ class Bribes:
 
 
 class PokerPots:
-    __module__ = __name__
+    
     SMALL = 40
     MEDIUM = 80
     LARGE = 150
@@ -850,7 +850,7 @@ class PokerPots:
 
 
 class ExpRewards:
-    __module__ = __name__
+    
     TRIVIAL = 25
     SMALL = 100
     MEDIUM = 500
@@ -859,7 +859,7 @@ class ExpRewards:
 
 
 class Probability:
-    __module__ = __name__
+    
     EXTREMELY_RARE = 0.01
     VERY_RARE = 0.1
     RARE = 0.25
@@ -870,7 +870,7 @@ class Probability:
 
 
 class Attempts:
-    __module__ = __name__
+    
     VERY_RARE = 16
     RARE = 10
     INFREQUENT = 7
@@ -880,7 +880,7 @@ class Attempts:
 
 
 class DoubleRepTime:
-    __module__ = __name__
+    
     HALFHOUR = 60 * 30
     HOUR = 60 * 60
     TWOHOUR = 60 * 120

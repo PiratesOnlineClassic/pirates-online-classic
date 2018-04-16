@@ -10,7 +10,7 @@ from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 
 
 class DownloadBlockerPanel(GuiPanel.GuiPanel):
-    __module__ = __name__
+    
     Reasons = Enum('GENERIC,ISLAND,BOAT,TELEPORT,LOOKOUT')
     _Messages = {Reasons.GENERIC: PLocalizer.DownloadBlockerMsgGeneric, Reasons.ISLAND: PLocalizer.DownloadBlockerMsgIsland, Reasons.BOAT: PLocalizer.DownloadBlockerMsgBoat, Reasons.TELEPORT: PLocalizer.DownloadBlockerMsgTeleport, Reasons.LOOKOUT: PLocalizer.DownloadBlockerMsgLookout}
 

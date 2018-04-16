@@ -4,8 +4,7 @@ from pirates.shader.Blur import *
 
 
 class Hdr:
-    __module__ = __name__
-
+    
     def __init__(self, display_width=1024, display_height=1024, glow=1, glow_glitter=1, dynamic_exposure=1):
         base.hdr = None
         base.main_rtt = None

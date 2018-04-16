@@ -7,7 +7,7 @@ from pandac.PandaModules import *
 from PooledEffect import PooledEffect
 
 class AttuneEffect(PooledEffect, EffectController):
-    __module__ = __name__
+    
 
     def __init__(self, parent=None):
         PooledEffect.__init__(self)

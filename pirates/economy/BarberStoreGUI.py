@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.economy.BarberStoreGUI
 import random
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
@@ -23,8 +19,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 FACE_CAMERA = 0
 
-class BarberStoreTab(LeftTab):
-    __module__ = __name__
+class BarberStoreTab(LeftTab): 
 
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None))
@@ -35,8 +30,7 @@ class BarberStoreTab(LeftTab):
 
 
 class BarberStoreTabBar(TabBar):
-    __module__ = __name__
-
+    
     def refreshTabs(self):
         for x, name in enumerate(self.tabOrder):
             tab = self.tabs[name]
@@ -56,8 +50,7 @@ class BarberStoreTabBar(TabBar):
         return BarberStoreTab(self, name, **kw)
 
 
-class BarberStoreGUI(DirectFrame):
-    __module__ = __name__
+class BarberStoreGUI(DirectFrame): 
     notify = directNotify.newCategory('BarberStoreGUI')
     width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.5
@@ -812,4 +805,3 @@ class BarberStoreGUI(DirectFrame):
             self.alertDialog.destroy()
             self.alertDialog = None
         return
-# okay decompiling .\pirates\economy\BarberStoreGUI.pyc

@@ -18,7 +18,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class BodyGUI(DirectFrame, StateData.StateData):
-    __module__ = __name__
+    
     maleShapeButtonIcons = []
     maleShapeButtonIconsOver = []
     femaleShapeButtonIcons = []

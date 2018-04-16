@@ -8,7 +8,7 @@ from pirates.speedchat import PSCDecoders
 
 
 class DistributedBandMember(DistributedObject, PAvatarHandle):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('BandMember')
     allBandmembers = {}
     band_map = {}

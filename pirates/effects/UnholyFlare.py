@@ -7,7 +7,7 @@ from pandac.PandaModules import *
 from PooledEffect import PooledEffect
 
 class UnholyFlare(PooledEffect, EffectController):
-    __module__ = __name__
+    
     cardScale = 64.0
 
     def __init__(self):

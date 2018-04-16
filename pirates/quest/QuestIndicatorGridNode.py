@@ -8,7 +8,7 @@ from pirates.quest.QuestIndicatorNode import QuestIndicatorNode
 
 
 class QuestIndicatorGridNode(QuestIndicatorNode):
-    __module__ = __name__
+    
 
     def __init__(self, name, zoneRadii, questStep):
         self.pendingStepObj = None

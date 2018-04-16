@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.treasuremap.DistributedTreasureMapInstance
 from direct.fsm import FSM
 from direct.showbase.PythonUtil import report
 from pirates.instance import DistributedInstanceWorld
@@ -11,7 +7,6 @@ from pirates.quest.MiniQuestItemGui import MiniQuestItemGui
 
 
 class DistributedTreasureMapInstance(DistributedInstanceWorld.DistributedInstanceWorld, QuestHolder.QuestHolder, FSM.FSM):
-    __module__ = __name__
     notify = directNotify.newCategory('DistributedTreasureMapInstance')
 
     def __init__(self, cr):
@@ -128,4 +123,3 @@ class DistributedTreasureMapInstance(DistributedInstanceWorld.DistributedInstanc
     def goToShip(self, pendingObj):
         pendingObj.localAvatarBoardShip()
         self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_TM, 'mainWorld')
-# okay decompiling .\pirates\treasuremap\DistributedTreasureMapInstance.pyc

@@ -18,7 +18,7 @@ from pirates.piratesgui.ChatBar import ChatBar
 
 
 class ChatPanel(DirectFrame, FSM):
-    __module__ = __name__
+    
     NumVisible = 10
     WrapWidth = 21
     FadeTime = 0.3

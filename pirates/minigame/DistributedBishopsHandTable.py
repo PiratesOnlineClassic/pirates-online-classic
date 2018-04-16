@@ -15,7 +15,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class ResultsFrame(DirectFrame):
-    __module__ = __name__
+    
 
     def __init__(self, *args, **kwargs):
         DirectFrame.__init__(self, *args, **kwargs)
@@ -25,7 +25,7 @@ class ResultsFrame(DirectFrame):
 
 
 class DistributedBishopsHandTable(DistributedGameTable.DistributedGameTable):
-    __module__ = __name__
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBishopsHandTable')
     SeatInfo = (
      (

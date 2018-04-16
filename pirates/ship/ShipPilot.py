@@ -1,8 +1,3 @@
-# uncompyle6 version 3.1.0
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.14 (default, Mar  9 2018, 23:57:12)
-# [GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2)]
-# Embedded file name: direct.controls.ShipPilot
 import math
 
 from panda3d.core import *
@@ -12,7 +7,6 @@ from direct.task.Task import Task
 from direct.controls.PhysicsWalker import PhysicsWalker
 
 class ShipPilot(PhysicsWalker):
-    __module__ = __name__
     notify = directNotify.newCategory('ShipPilot')
     wantDebugIndicator = base.config.GetBool('want-avatar-physics-indicator', 0)
     MAX_STRAIGHT_SAIL_BONUS = 1.25
@@ -324,4 +318,3 @@ class ShipPilot(PhysicsWalker):
         taskMgr.remove(taskName)
         if self.ship:
             self.ship.worldVelocity = Vec3(0)
-# okay decompiling ShipPilot.pyc

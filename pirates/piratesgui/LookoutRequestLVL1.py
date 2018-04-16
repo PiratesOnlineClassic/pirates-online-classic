@@ -21,7 +21,7 @@ from pirates.world import GameTypeGlobals
 
 
 class LookoutRequestLVL1(InventoryPage):
-    __module__ = __name__
+    
     notify = directNotify.newCategory('LookoutRequestLVL1')
     ICON_2D_ROTATE = 0
     ICON_2D_FLASH = 1
