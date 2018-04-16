@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.WorkMeter
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
@@ -13,24 +9,36 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class WorkMeter(DirectFrame):
-    __module__ = __name__
     Card = None
 
     def __init__(self):
         if self.Card == None:
             self.Card = loader.loadModel('models/gui/ship_battle')
-        DirectFrame.__init__(self, relief=None, parent=base.a2dBottomCenter, image=self.Card.find('**/ship_battle_speed_bar*'), image_scale=(0.5,
-                                                                                                                                             1,
-                                                                                                                                             0.8), pos=(0,
-                                                                                                                                                        0,
-                                                                                                                                                        0.09))
+        DirectFrame.__init__(self, 
+            relief=None, 
+            parent=base.a2dBottomCenter, 
+            image=self.Card.find('**/ship_battle_speed_bar*'),
+            image_scale=(0.5, 1, 0.8), 
+            pos=(0, 0, 0.09))
         self.initialiseoptions(WorkMeter)
         self.setName(self.uniqueName('workMeter'))
         self.duration = 0.0
-        self.meter = DirectWaitBar(parent=self, relief=DGG.FLAT, text='', text_pos=(0,
-                                                                                    0.04), text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=0, range=1.0, value=0.0, frameColor=Vec4(0.2, 0.16, 0.1, 1), barColor=Vec4(1, 0.8, 0.5, 1), pos=(0,
-                                                                                                                                                                                                                                                                                                                                                                 0,
-                                                                                                                                                                                                                                                                                                                                                                 0), frameSize=(-0.33, 0.33, -0.0125, 0.0125))
+        self.meter = DirectWaitBar(
+            parent=self, 
+            relief=DGG.FLAT, 
+            text='', 
+            text_pos=(0, 0.04), 
+            text_scale=PiratesGuiGlobals.TextScaleLarge, 
+            text_align=TextNode.ACenter, 
+            text_fg=PiratesGuiGlobals.TextFG1, 
+            text_shadow=PiratesGuiGlobals.TextShadow, 
+            textMayChange=0, 
+            range=1.0, 
+            value=0.0, 
+            frameColor=Vec4(0.2, 0.16, 0.1, 1), 
+            barColor=Vec4(1, 0.8, 0.5, 1), 
+            pos=(0, 0, 0), 
+            frameSize=(-0.33, 0.33, -0.0125, 0.0125))
         self.flattenStrong()
         return
 
@@ -66,6 +74,5 @@ class WorkMeter(DirectFrame):
             return Task.cont
 
     def stopTimer(self):
-        taskMgr.remove(self.taskName('workMeter'))
         self.hide()
-# okay decompiling .\pirates\piratesgui\WorkMeter.pyc
+        taskMgr.remove(self.taskName('workMeter'))

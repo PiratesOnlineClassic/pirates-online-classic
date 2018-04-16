@@ -7,7 +7,6 @@ from pirates.distributed import DistributedInteractive
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
-    __module__ = __name__
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBuriedTreasure')
     UpdateDelay = 2.0
 

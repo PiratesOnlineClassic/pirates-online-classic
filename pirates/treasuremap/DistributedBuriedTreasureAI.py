@@ -1,13 +1,59 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
+from direct.task import Task
 
 class DistributedBuriedTreasureAI(DistributedInteractiveAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBuriedTreasureAI')
 
     def __init__(self, air):
         DistributedInteractiveAI.__init__(self, air)
+        self.startingDepth = 0
         self.currentDepth = 0
-        self.visZone = ''
+        self.currentUser = None
+
+    def handleRequestInteraction(self, avatar, interactType, instant):
+
+        treasureAvailable = config.GetBool('always-allow-digging', False) #TODO: input from questing
+
+        if treasureAvailable and self.currentUser is None:
+            self.currentUser = avatar
+            taskMgr.doMethodLater(1, self.__digTask, '%s-avatarDigTask-%s' % (self.doId, avatar.doId))
+
+            self.sendUpdateToAvatarId(avatar.doId, 'startDigging', [])
+            return self.ACCEPT
+
+        return self.DENY
+
+    def handleRequestExit(self, avatar):
+        if avatar != self.currentUser:
+            return
+
+        self.currentUser = None
+
+    def __digTask(self, task):
+        self.b_setCurrentDepth(self.getCurrentDepth() - 1)
+
+        if not self.currentUser:
+            return task.done
+
+        if self.currentDepth <= 0:
+
+            questProgress = 1
+            goldAmount = 0 # Appears to be deprecated code
+
+            avatarId = self.currentUser.doId
+            self.sendUpdateToAvatarId(avatarId, 'stopDigging', [questProgress])
+            self.sendUpdateToAvatarId(avatarId, 'showTreasure', [goldAmount])
+
+            taskMgr.doMethodLater(5, self.__resetTask, '%s-digResetTask' % self.doId)
+            return task.done
+
+        return task.again
+
+    def __resetTask(self, task):
+        self.currentUser = None
+        self.b_setCurrentDepth(self.getStartingDepth())
+        return task.done
 
     def setStartingDepth(self, depth):
         self.startingDepth = depth
@@ -34,19 +80,6 @@ class DistributedBuriedTreasureAI(DistributedInteractiveAI):
 
     def getCurrentDepth(self):
         return self.currentDepth
-
-    def setVisZone(self, visZone):
-        self.visZone = visZone
-
-    def d_setVisZone(self, visZone):
-        self.sendUpdate('setVisZone', [visZone])
-
-    def b_setVisZone(self, visZone):
-        self.setVisZone(visZone)
-        self.d_setVisZone(visZone)
-
-    def getVisZone(self):
-        return self.visZone
 
     def d_startDigging(self):
         self.sendUpdate('startDigging', [])
