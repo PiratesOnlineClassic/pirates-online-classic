@@ -1,5 +1,3 @@
-
-
 class EnemySkills:
     
     CLAW_RAKE = 2000
@@ -84,4 +82,3 @@ class EnemySkills:
     DUALCUTLASS_BARRAGE = 2292
     DUALCUTLASS_XSLASH = 2293
     DUALCUTLASS_GORE = 2294
-# okay decompiling .\pirates\battle\EnemySkills.pyc

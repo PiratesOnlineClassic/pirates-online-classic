@@ -1324,4 +1324,3 @@ class CombatAnimations:
     def unlockInput(self, av):
         if av.isLocal():
             messenger.send('skillFinished')
-# okay decompiling .\pirates\battle\CombatAnimations.pyc

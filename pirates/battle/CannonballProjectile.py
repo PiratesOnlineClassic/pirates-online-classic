@@ -260,4 +260,3 @@ class CannonballProjectile(ProjectileAmmo):
             self.scaleIval.pause()
             self.scaleIval = None
         return
-# okay decompiling .\pirates\battle\CannonballProjectile.pyc
