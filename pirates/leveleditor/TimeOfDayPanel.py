@@ -12,7 +12,7 @@ from direct.gui import DirectGuiGlobals as DGG
 from direct.showbase.TkGlobal import *
 from direct.tkwidgets import Dial, Floater, Slider, Valuator, VectorWidgets
 from direct.tkwidgets.AppShell import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer as PL
 from pirates.piratesbase import TODGlobals
