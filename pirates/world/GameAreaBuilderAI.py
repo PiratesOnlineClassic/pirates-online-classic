@@ -60,7 +60,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         spawnNode.setScale(objectData.get('Scale', (1, 1, 1)))
         spawnNode.setStartingDepth(int(objectData.get('startingDepth', 10)))
         spawnNode.setCurrentDepth(spawnNode.getStartingDepth())
-        spawnNode.setVisZone(objectData.get('VisZone', ''))
 
         zoneId = self.parent.getZoneFromXYZ(spawnNode.getPos())
         parent.generateChildWithRequired(spawnNode, zoneId)
