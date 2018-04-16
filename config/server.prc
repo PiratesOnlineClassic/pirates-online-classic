@@ -12,6 +12,9 @@ discord-exception-url https://discordapp.com/api/webhooks/434065950472405007/U-Q
 discord-log-holidays #f
 discord-holiday-url https://discordapp.com/api/webhooks/434190589576085504/7la3oLIYu4MzhOPLCbEwE6mrMFDAmLxAWJo7hOj6S-G6cGgSMqs_YmfNFKehFJ0zZV_w
 
+# Event Logger
+eventlog-host 127.0.0.1:7197
+
 # Notifer:
 notify-timestamp #t
 
