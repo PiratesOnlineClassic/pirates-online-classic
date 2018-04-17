@@ -223,7 +223,6 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
 
         try:
             self.localTeleportingObj.reparentTo(teleportToObj)
-            return
         except TypeError, err:
             print 'teleportToObj:', teleportToObj
             raise err
