@@ -76,3 +76,24 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
             return
 
         self.sendUpdateToChannel(channel, 'requestInitLocUDtoAI', [avatarId])
+
+    def requestTeleportToShardAItoUD(self, avatarId, shardId, instanceType, instanceName, locationUid):
+        if not avatarId:
+            return
+
+        if not shardId:
+            self.notify.warning('Cannot initialize teleport to shard for avatar %d, invalid shard!' % (
+                avatarId))
+
+            return
+
+        channel = self.getShard(shardId)
+
+        if not channel:
+            self.notify.warning('Cannot initialize loc teleport for avatar %d, unknown shard %d!' % (
+                avatarId, shardId))
+
+            return
+
+        self.sendUpdateToChannel(channel, 'requestTeleportToShardUDtoAI', [avatarId, shardId,
+            instanceType, instanceName, locationUid])

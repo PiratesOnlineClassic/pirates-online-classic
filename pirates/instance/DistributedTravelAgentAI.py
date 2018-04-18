@@ -32,6 +32,41 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
 
         self.__getAvatarArrival(avatarId, avatarArrived)
 
+    def d_requestTeleportToShardAItoUD(self, avatarId, shardId, instanceType, instanceName, locationUid):
+        if not avatarId:
+            return
+
+        if not shardId:
+            self.notify.warning('Cannot initialize teleport to shard for avatar %d, invalid shard!' % (
+                avatarId))
+
+            return
+
+        self.sendUpdate('requestTeleportToShardAItoUD', [avatarId, shardId, instanceType,
+            instanceName, locationUid])
+
+    def requestTeleportToShardUDtoAI(self, avatarId, shardId, instanceType, instanceName, locationUid):
+        if not avatarId:
+            return
+
+        if not shardId:
+            self.notify.warning('Cannot initialize teleport to shard for avatar %d, invalid shard!' % (
+                avatarId))
+
+            return
+
+        def avatarArrived(avatar):
+            if not avatar:
+                self.notify.warning('Cannot initialize teleport loc for avatar %d, invalid generate!' % (
+                    avatarId))
+
+                return
+
+            self.air.teleportMgr.d_initiateTeleport(avatar, instanceType,
+                instanceName, locationUid)
+
+        self.__getAvatarArrival(avatarId, avatarArrived)
+
     def __getAvatarArrival(self, avatarId, callback):
         if not avatarId:
             return
@@ -42,15 +77,5 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
 
             return
 
-        # check to see if the avatar we are awaiting arrival of is already arrived,
-        # if so then just run the callback; no need to switch up the avatar's location...
-        avatar = self.air.doId2do.get(avatarId)
-
-        if avatar:
-            callback(avatar)
-            return
-
-        # assume that the avatar is not present on our channel, tell the database
-        # state server to change the avatar's parent AI using our channel.
         self.acceptOnce('generate-%d' % avatarId, callback)
         self.air.setAI(avatarId, self.air.ourChannel)
