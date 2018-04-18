@@ -8,22 +8,49 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
     def __init__(self, air):
         DistributedObjectGlobalAI.__init__(self, air)
 
+    def announceGenerate(self):
+        DistributedObjectGlobalAI.announceGenerate(self)
+
+        self.sendUpdate('registerShard', [self.air.districtId])
+
     def requestInitLocUDtoAI(self, avatarId):
         if not avatarId:
-            self.notify.warning('Cannot init AI loc, unknown avatar %d!' % avatarId)
             return
 
         if avatarId in self.air.doId2do:
-            self.notify.warning('Cannot init AI loc, avatar %d, already exists!' % avatarId)
             return
 
         def avatarArrived(avatar):
             if not avatar:
-                self.notify.warning('Cannot init AI loc, avatar %d, did not arrive!' % avatarId)
+                self.notify.warning('Cannot initialize teleport loc for avatar %d, invalid generate!' % (
+                    avatarId))
+
                 return
 
             avatar.d_relayTeleportLoc(self.air.districtId, self.air.distributedDistrict.zoneId,
                 self.air.teleportMgr.doId)
 
-        self.acceptOnce('generate-%d' % avatarId, avatarArrived)
+        self.__getAvatarArrival(avatarId, avatarArrived)
+
+    def __getAvatarArrival(self, avatarId, callback):
+        if not avatarId:
+            return
+
+        if not callback:
+            self.notify.warning('Cannot get arrival event for avatar %d, invalid callback!' % (
+                avatarId))
+
+            return
+
+        # check to see if the avatar we are awaiting arrival of is already arrived,
+        # if so then just run the callback; no need to switch up the avatar's location...
+        avatar = self.air.doId2do.get(avatarId)
+
+        if avatar:
+            callback(avatar)
+            return
+
+        # assume that the avatar is not present on our channel, tell the database
+        # state server to change the avatar's parent AI using our channel.
+        self.acceptOnce('generate-%d' % avatarId, callback)
         self.air.setAI(avatarId, self.air.ourChannel)

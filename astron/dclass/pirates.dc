@@ -1205,6 +1205,7 @@ dclass DistributedTeleportMgr : DistributedObject {
 };
 
 dclass DistributedTravelAgent : DistributedObjectGlobal {
+  registerShard(uint32);
   requestInitLocUD(string, uint32) clsend;
   requestInitLocUDtoAI(DoId) airecv;
 };

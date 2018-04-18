@@ -1,3 +1,5 @@
+import random
+
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
@@ -7,14 +9,70 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
     def __init__(self, air):
         DistributedObjectGlobalUD.__init__(self, air)
 
+        self.__shards = {}
+
+    def hasShard(self, shardId):
+        return shardId in self.__shards
+
+    def addShard(self, channel, shardId):
+        if channel in self.__shards:
+            return
+
+        self.__shards[channel] = shardId
+
+    def removeShard(self, channel, shardId):
+        if channel not in self.__shards:
+            return
+
+        del self.__shards[channel]
+
+    def getShard(self, shardId):
+        for channel in self.__shards:
+            if self.__shards[channel] == shardId:
+                return channel
+
+        return None
+
+    def getRandomShard(self):
+        if not self.__shards:
+            return None
+
+        return random.choice(self.__shards.values())
+
+    def registerShard(self, shardId):
+        channel = self.air.getMsgSender()
+
+        if not channel:
+            self.notify.warning('Cannot register shard %d, invalid channel!' % (
+                shardId))
+
+            return
+
+        self.addShard(channel, shardId)
+
     def requestInitLocUD(self, unused, shardId):
         avatarId = self.air.getAvatarIdFromSender()
 
         if not avatarId:
-            self.notify.warning('Cannot init UD loc, unknown avatar %d!' % avatarId)
+            self.notify.warning('Cannot initialize loc teleport to shard %d, invalid avatar!' % (
+                shardId))
+
             return
 
+        shardId = shardId or self.getRandomShard()
+
         if not shardId:
-            self.sendUpdate('requestInitLocUDtoAI', [avatarId])
-        else:
-            self.sendUpdateToChannel(shardId, 'requestInitLocUDtoAI', [avatarId])
+            self.notify.warning('Cannot initialize loc teleport for avatar %d, no shards are available!' % (
+                avatarId))
+
+            return
+
+        channel = self.getShard(shardId)
+
+        if not channel:
+            self.notify.warning('Cannot initialize loc teleport for avatar %d, unknown shard %d!' % (
+                avatarId, shardId))
+
+            return
+
+        self.sendUpdateToChannel(channel, 'requestInitLocUDtoAI', [avatarId])
