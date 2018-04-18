@@ -209,3 +209,10 @@ def maxWeapons():
         return "Maxed weapons to Rank 5!"
 
     return "Failed to max Weapons"
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def gold(amount):
+    invoker = spellbook.getInvoker()
+    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    inventory.setGoldInPocket(inventory.getGoldInPocket() + amount)
+    return 'Received Gold Amount: %s' % amount
