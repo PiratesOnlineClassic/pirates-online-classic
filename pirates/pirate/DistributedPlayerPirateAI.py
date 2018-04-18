@@ -458,6 +458,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedPlayerAI.delete(self)
         DistributedBattleAvatarAI.delete(self)
 
+        inventory = self.getInventory()
+
+        if inventory:
+            inventory.requestDelete()
+
         if self.battleRandom:
             self.battleRandom.delete()
 
