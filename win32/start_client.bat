@@ -15,8 +15,10 @@ if %INPUT%==1 (
     set POC_GAMESERVER=127.0.0.1
 ) else if %INPUT%==2 (
     set POC_GAMESERVER=142.44.142.239
-) else (
+) else if %INPUT%==3 (
     set /P POC_GAMESERVER=Game Server IP: 
+) else (
+    set POC_GAMESERVER=127.0.0.1
 )
 title Pirates Online Classic - Client (%POC_GAMESERVER%)
 
