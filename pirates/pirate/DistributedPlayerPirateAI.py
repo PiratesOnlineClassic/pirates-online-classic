@@ -74,8 +74,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             inventory = self.getInventory()
 
             if inventory:
-                if inventory.parentId != self.air.districtId:
-                    inventory.b_setLocation(parentId, zoneId)
+                self.air.setAI(inventory.doId, self.air.ourChannel)
 
             if self.weapon:
                 self.weapon.b_setLocation(parentId, zoneId)
