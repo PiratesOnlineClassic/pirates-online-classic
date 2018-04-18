@@ -26,6 +26,13 @@ class DistributedBuriedTreasureAI(DistributedInteractiveAI):
 
     def handleRequestExit(self, avatar):
         if avatar != self.currentUser:
+            self.notify.warning('Failed to request handle exist; Avatar is not current interactor')
+
+            self.air.logPotentialHacker(
+                message='Received handleRequestExist from a different avatar then is currently digging!',
+                currentAvatarId=self.currentUser.doId,
+                requestedAvatarId=avatar.doId
+            )
             return
 
         self.currentUser = None
