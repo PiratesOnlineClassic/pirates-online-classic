@@ -67,6 +67,15 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         parentObj = self.getParentObj()
         if parentObj:
+
+            # check to see if the avatar has moved shards, and if they have
+            # move the inventory along with them so that they can use the inventory
+            # even if they aren't in the same parent as it was generated in...
+            inventory = self.getInventory()
+
+            if inventory:
+                self.air.setAI(inventory.doId, self.air.ourChannel)
+
             if self.weapon:
                 self.weapon.b_setLocation(parentId, zoneId)
 
@@ -555,7 +564,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             if newState:
                 self.b_setPVPTeam(PiratesGlobals.PVP_ENEMY)
             else:
-                self.b_setPVPTeam(0)          
+                self.b_setPVPTeam(0)
 
         if newState != self.getZombie():
             self.b_setZombie(bool(newState))

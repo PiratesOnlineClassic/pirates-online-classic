@@ -36,3 +36,8 @@ instant-skill-recharge #f
 
 want-dev #f
 always-allow-digging #t
+
+# Shards:
+show-total-population #t
+teleport-all #t
+shard-page-disable #f

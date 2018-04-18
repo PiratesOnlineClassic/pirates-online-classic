@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.ShardPanel
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from otp.distributed import OtpDoGlobals
@@ -12,7 +8,6 @@ from pirates.piratesgui import PiratesGuiGlobals
 POP_COLORS = (Vec4(0.4, 0.4, 1.0, 1.0), Vec4(0.4, 1.0, 0.4, 1.0), Vec4(1.0, 0.4, 0.4, 1.0))
 
 class ShardPanel(DirectFrame):
-    
     UPPOS = Vec3(0.55, 0, 1.52)
     DOWNPOS = Vec3(0.55, 0, 0.72)
     SHOWTIME = 0.5
@@ -42,9 +37,9 @@ class ShardPanel(DirectFrame):
         self.up = True
         self.showIval = None
         self.hideIval = None
-        self.showPop = config.GetBool('show-total-population', 0)
-        self.teleportAll = config.GetBool('teleport-all', 0)
-        self.noTeleport = config.GetBool('shard-page-disable', 0) and not self.teleportAll
+        self.showPop = config.GetBool('show-total-population', False)
+        self.teleportAll = config.GetBool('teleport-all', False)
+        self.noTeleport = config.GetBool('shard-page-disable', False) and not self.teleportAll
         self.rotationFrame = DirectFrame(parent=self, relief=None, state=DGG.DISABLED)
         if self['inverted']:
             self.rotationFrame.setR(180)
@@ -330,4 +325,3 @@ class ShardPanel(DirectFrame):
         self.handleButtonPressed()
         localAvatar.guiMgr.hideSeaChest()
         base.cr.teleportMgr.requestTeleport(PiratesGlobals.INSTANCE_MAIN, 'piratesWorld', shardId)
-# okay decompiling .\pirates\piratesgui\ShardPanel.pyc
