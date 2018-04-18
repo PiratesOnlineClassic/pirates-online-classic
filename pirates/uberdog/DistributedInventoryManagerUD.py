@@ -23,7 +23,10 @@ class InventoryFSM(FSM):
 
         def queryAvatar(dclass, fields):
             if not dclass or not fields:
-                return self.notify.warning('Failed to query avatar %d!' % self.avatarId)
+                self.notify.warning('Failed to query avatar %d!' % (
+                    self.avatarId))
+
+                return
 
             inventoryId, = fields.get('setInventoryId', (0,))
 
@@ -42,13 +45,17 @@ class InventoryFSM(FSM):
 
         def inventorySet(fields, inventoryId):
             if fields:
-                return self.notify.warning('Failed to set inventory %d for %d!' % (inventoryId, self.avatarId))
+                self.notify.warning('Failed to set inventory %d for %d!' % (
+                    inventoryId, self.avatarId))
 
             self.request('Load', inventoryId)
 
         def inventoryCreated(inventoryId):
             if not inventoryId:
-                return self.notify.warning('Failed to create inventory for %d!' % self.avatarId)
+                self.notify.warning('Failed to create inventory for %d!' % (
+                    self.avatarId))
+
+                return
 
             self.manager.air.dbInterface.updateObject(self.manager.air.dbId, self.avatarId, self.manager.air.dclassesByName['DistributedPlayerPirateUD'],
                 {'setInventoryId': (inventoryId,)}, callback=lambda fields: inventorySet(fields, inventoryId))
@@ -137,7 +144,8 @@ class InventoryFSM(FSM):
         self.manager.air.sendActivate(inventoryId, self.avatarId, OTP_ZONE_ID_MANAGEMENT, dclass=\
             self.manager.air.dclassesByName['PirateInventoryUD'])
 
-        self.callback(inventoryId)
+        if self.callback:
+            self.callback(inventoryId)
 
         del self.manager.avatar2fsm[self.avatarId]
         self.demand('Off')
@@ -173,15 +181,15 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
     def getInventory(self, avatarId, callback):
         self.air.netMessenger.send('getInventory', [avatarId, callback])
 
-    def initiateInventory(self, avatarId, callback):
+    def initiateInventory(self, avatarId, callback=None):
         if not avatarId:
-            return self.notify.warning('Failed to initiate inventory for invalid avatar!')
-
-        if not callable(callback):
-            self.notify.error('Failed to initiate inventory, callback not callable!')
+            return
 
         if avatarId in self.avatar2fsm:
-            return self.notify.warning('Failed to initiate inventory for already existing avatar %s!' % avatarId)
+            self.notify.warning('Failed to initiate inventory for already existing avatar %s!' % (
+                avatarId))
+
+            return
 
         self.avatar2fsm[avatarId] = InventoryFSM(self, avatarId, callback)
         self.avatar2fsm[avatarId].request('Start')
@@ -190,4 +198,5 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
         if callback and callable(callback):
             callback(*args, **kwargs)
             return
+
         self.notify.warning("No valid callback for a callback response! What was the purpose of that?")
