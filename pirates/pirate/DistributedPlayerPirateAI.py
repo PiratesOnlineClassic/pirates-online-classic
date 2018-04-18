@@ -455,9 +455,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.sendUpdate('levelUpMsg', [category, level, messageId])
 
     def delete(self):
-        DistributedPlayerAI.delete(self)
-        DistributedBattleAvatarAI.delete(self)
-
         inventory = self.getInventory()
 
         if inventory:
@@ -475,6 +472,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.ignore('HolidayStarted')
         self.ignore('HolidayEnded')
         self.ignore('timeOfDayChange')
+
+        DistributedPlayerAI.delete(self)
+        DistributedBattleAvatarAI.delete(self)
 
     def setStickyTargets(self, stickyTargets):
         self.stickyTargets = stickyTargets
