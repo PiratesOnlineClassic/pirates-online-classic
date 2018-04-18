@@ -90,8 +90,8 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
         channel = self.getShard(shardId)
 
         if not channel:
-            self.notify.warning('Cannot initialize loc teleport for avatar %d, unknown shard %d!' % (
-                avatarId, shardId))
+            self.notify.warning('Cannot initialize teleport to shard %d for avatar %d, unknown channel!' % (
+                shardId, avatarId))
 
             return
 
