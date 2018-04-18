@@ -32,6 +32,41 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
 
         self.__getAvatarArrival(avatarId, avatarArrived)
 
+    def d_requestTeleportToShardAItoUD(self, avatarId, shardId, instanceType, instanceName, locationUid):
+        if not avatarId:
+            return
+
+        if not shardId:
+            self.notify.warning('Cannot initialize teleport to shard for avatar %d, invalid shard!' % (
+                avatarId))
+
+            return
+
+        self.sendUpdate('requestTeleportToShardAItoUD', [avatarId, shardId, instanceType,
+            instanceName, locationUid])
+
+    def requestTeleportToShardUDtoAI(self, avatarId, shardId, instanceType, instanceName, locationUid):
+        if not avatarId:
+            return
+
+        if not shardId:
+            self.notify.warning('Cannot initialize teleport to shard for avatar %d, invalid shard!' % (
+                avatarId))
+
+            return
+
+        def avatarArrived(avatar):
+            if not avatar:
+                self.notify.warning('Cannot initialize teleport loc for avatar %d, invalid generate!' % (
+                    avatarId))
+
+                return
+
+            self.air.teleportMgr.d_initiateTeleport(avatar, instanceType,
+                instanceName, locationUid)
+
+        self.__getAvatarArrival(avatarId, avatarArrived)
+
     def __getAvatarArrival(self, avatarId, callback):
         if not avatarId:
             return

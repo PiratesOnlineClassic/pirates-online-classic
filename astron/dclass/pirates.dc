@@ -1208,6 +1208,8 @@ dclass DistributedTravelAgent : DistributedObjectGlobal {
   registerShard(uint32);
   requestInitLocUD(string, uint32) clsend;
   requestInitLocUDtoAI(DoId) airecv;
+  requestTeleportToShardUDtoAI(DoId, uint32, uint8, string, string) airecv;
+  requestTeleportToShardAItoUD(DoId, uint32, uint8, string, string);
 };
 
 dclass DistributedMatchMaker : DistributedObject {

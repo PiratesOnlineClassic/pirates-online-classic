@@ -142,7 +142,12 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
-            self.notify.warning('Cannot initiate teleport for unknown avatar!')
+            return
+
+        if shardId and shardId != self.air.districtId:
+            self.air.travelAgent.d_requestTeleportToShardAItoUD(avatar.doId, shardId, instanceType,
+                instanceName, locationUid)
+
             return
 
         self.d_initiateTeleport(avatar, instanceType, instanceName, locationUid)
@@ -157,7 +162,8 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         self.d_initiateTeleport(avatar, locationUid=locationUid)
 
     def d_teleportHasBegun(self, avatarId, instanceType, fromInstanceType, instanceName, gameType):
-        self.sendUpdateToAvatarId(avatarId, 'teleportHasBegun', [instanceType, fromInstanceType, instanceName, gameType])
+        self.sendUpdateToAvatarId(avatarId, 'teleportHasBegun', [instanceType, fromInstanceType,
+            instanceName, gameType])
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def areaTeleport(areaUid):
