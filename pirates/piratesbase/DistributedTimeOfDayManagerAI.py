@@ -61,10 +61,13 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         return stateDuration
 
     def _processStateChange(self):
+        lastState = self.startingState
         self.startingState, self.stateTime = self._computeCurrentState()
         self._waitForNextState()
 
-        #messenger.send('timeOfDayChange')
+        if self.isHalloweenMoon() or (lastState != self.startingState and lastState == PiratesGlobals.TOD_HALLOWEEN):
+            messenger.send('todHalloweenStateChange')
+
         return Task.done
    
     def sync(self, cycleType, startingState, startingTime, cycleDuration):
@@ -87,7 +90,7 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         if self.cycleType == cycleType:
             return
 
-        print('TimeOfDayManager cycle changing..')
+        self.notify.debug('TimeOfDayManager cycle changing..')
         startingState = TODGlobals.getStartingState(cycleType)
         self._processStateChange()
 

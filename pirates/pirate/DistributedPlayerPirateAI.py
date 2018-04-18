@@ -53,7 +53,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         self.accept('HolidayStarted', self.processHolidayStart)
         self.accept('HolidayEnded', self.processHolidayEnd)
-        self.accept('timeOfDayChange', self.attemptToSetCursedZombie)
+        self.accept('todHalloweenStateChange', self.attemptToSetCursedZombie)
 
     def processHolidayStart(self, holidayId):
         self.attemptToSetCursedZombie()
@@ -559,12 +559,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             isOutside = not isinstance(parentObj, DistributedGAInteriorAI)
             isHalloween = self.air.timeOfDayMgr.isHalloweenMoon()
             newState = (isOutside and isHalloween and parentObj)
-
-            # Set PVP state based on new Zombie state
-            if newState:
-                self.b_setPVPTeam(PiratesGlobals.PVP_ENEMY)
-            else:
-                self.b_setPVPTeam(0)
 
         if newState != self.getZombie():
             self.b_setZombie(bool(newState))
