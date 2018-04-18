@@ -77,15 +77,5 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
 
             return
 
-        # check to see if the avatar we are awaiting arrival of is already arrived,
-        # if so then just run the callback; no need to switch up the avatar's location...
-        avatar = self.air.doId2do.get(avatarId)
-
-        if avatar:
-            callback(avatar)
-            return
-
-        # assume that the avatar is not present on our channel, tell the database
-        # state server to change the avatar's parent AI using our channel.
         self.acceptOnce('generate-%d' % avatarId, callback)
         self.air.setAI(avatarId, self.air.ourChannel)
