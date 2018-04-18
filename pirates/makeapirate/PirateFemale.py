@@ -1472,16 +1472,45 @@ class PirateFemale(DirectObject.DirectObject):
     def generatePantSets(self):
         self.pantSets = []
         tex = self.clothesTextures.findTexture(clothes_textures['PANT'][1][0][0])
-
+ 
         def getBasicData():
-            return {'tallBoot': {'belt': {'noCoat': NodePathCollection(), 'longCoat': NodePathCollection(), 'shortCoat': NodePathCollection()}, 'lowVest': {'noCoat': NodePathCollection(), 'longCoat': NodePathCollection(), 'shortCoat': NodePathCollection()}, 'neither': {'noCoat': NodePathCollection(), 'longCoat': NodePathCollection(), 'shortCoat': NodePathCollection()}}, 'shortBoot': {'belt': {'noCoat': NodePathCollection(), 'longCoat': NodePathCollection(), 'shortCoat': NodePathCollection()}, 'lowVest': {'noCoat': NodePathCollection(), 'longCoat': NodePathCollection(), 'shortCoat': NodePathCollection()}, 'neither': {'noCoat': NodePathCollection(), 'longCoat': NodePathCollection(), 'shortCoat': NodePathCollection()}}}
-
+            return {
+                'tallBoot': {
+                    'belt': {
+                        'noCoat': NodePathCollection(),
+                        'longCoat': NodePathCollection(),
+                        'shortCoat': NodePathCollection()},
+                    'lowVest': {
+                        'noCoat': NodePathCollection(),
+                        'longCoat': NodePathCollection(),
+                        'shortCoat': NodePathCollection()},
+                    'neither': {
+                        'noCoat': NodePathCollection(),
+                        'longCoat': NodePathCollection(),
+                        'shortCoat': NodePathCollection()}},
+                'shortBoot': {
+                    'belt': {
+                        'noCoat': NodePathCollection(),
+                        'longCoat': NodePathCollection(),
+                        'shortCoat': NodePathCollection()},
+                    'lowVest': {
+                        'noCoat': NodePathCollection(),
+                        'longCoat': NodePathCollection(),
+                        'shortCoat': NodePathCollection()},
+                    'neither': {
+                        'noCoat': NodePathCollection(),
+                        'longCoat': NodePathCollection(),
+                        'shortCoat': NodePathCollection()}}}
+ 
         for pantIdx in xrange(len(self.clothingsPant)):
             pant = self.clothingsPant[pantIdx]
             texName = clothes_textures['PANT'][pantIdx][0]
             tex = self.texDict.get(texName[0])
             flattenedSet = getBasicData()
-            for lod in ['2000', '1000', '500']:
+            for lod in [
+                '2000',
+                '1000',
+                '500']:
                 pantData = getBasicData()
                 for idx in pant[0]:
                     pieceSet = self.layer1LODs[idx][lod]
@@ -1497,87 +1526,114 @@ class PirateFemale(DirectObject.DirectObject):
                         tallBoot = False
                         if name.find('interior') < 0:
                             anyCoat = True
+ 
                         if name.find('side') < 0:
-                            if name.find('longcoat') < 0:
-                                if name.find('tails') < 0:
-                                    longCoat = True
-                                if anyCoat and name.find('back') < 0:
-                                    shortCoat = True
-                            if name.find('belt') < 0:
-                                belt = True
-                                if name.find('_abs') < 0:
-                                    lowVest = True
-                            if name.find('knee') < 0 and name.find('uppercalf') < 0:
-                                tallBoot = True
-                            pantData['shortBoot']['neither']['noCoat'].addPath(piece)
+                            if name.find('longcoat') < 0 and name.find('tails') < 0:
+                                longCoat = True
+ 
+                            if anyCoat and name.find('back') < 0:
+                                shortCoat = True
+ 
+                        if name.find('belt') < 0:
+                            belt = True
+                            if name.find('_abs') < 0:
+                                lowVest = True
+ 
+                        if name.find('knee') < 0 and name.find('uppercalf') < 0:
+                            tallBoot = True
+ 
+                        pantData['shortBoot']['neither']['noCoat'].addPath(piece)
+                        if skirt:
+                            if longCoat:
+                                pantData['shortBoot']['neither']['longCoat'].addPath(piece)
+ 
+                            if shortCoat:
+                                pantData['shortBoot']['neither']['shortCoat'].addPath(piece)
+ 
+                        elif anyCoat:
+                            pantData['shortBoot']['neither']['longCoat'].addPath(piece)
+                            pantData['shortBoot']['neither']['shortCoat'].addPath(piece)
+ 
+                        if belt:
+                            pantData['shortBoot']['belt']['noCoat'].addPath(piece)
                             if skirt:
                                 if longCoat:
-                                    pantData['shortBoot']['neither']['longCoat'].addPath(piece)
-                                if shortCoat:
-                                    pantData['shortBoot']['neither']['shortCoat'].addPath(piece)
-                            else:
-                                if anyCoat:
-                                    pantData['shortBoot']['neither']['longCoat'].addPath(piece)
-                                    pantData['shortBoot']['neither']['shortCoat'].addPath(piece)
-                            if belt:
-                                pantData['shortBoot']['belt']['noCoat'].addPath(piece)
-                                if skirt:
-                                    if longCoat:
-                                        pantData['shortBoot']['belt']['longCoat'].addPath(piece)
-                                    if shortCoat:
-                                        pantData['shortBoot']['belt']['shortCoat'].addPath(piece)
-                                elif anyCoat:
                                     pantData['shortBoot']['belt']['longCoat'].addPath(piece)
+ 
+                                if shortCoat:
                                     pantData['shortBoot']['belt']['shortCoat'].addPath(piece)
-                            if lowVest:
-                                pantData['shortBoot']['lowVest']['noCoat'].addPath(piece)
-                                if skirt:
-                                    if longCoat:
-                                        pantData['shortBoot']['lowVest']['longCoat'].addPath(piece)
-                                    if shortCoat:
-                                        pantData['shortBoot']['lowVest']['shortCoat'].addPath(piece)
-                                elif anyCoat:
+ 
+                            elif anyCoat:
+                                pantData['shortBoot']['belt']['longCoat'].addPath(piece)
+                                pantData['shortBoot']['belt']['shortCoat'].addPath(piece)
+ 
+                        if lowVest:
+                            pantData['shortBoot']['lowVest']['noCoat'].addPath(piece)
+                            if skirt:
+                                if longCoat:
                                     pantData['shortBoot']['lowVest']['longCoat'].addPath(piece)
+ 
+                                if shortCoat:
                                     pantData['shortBoot']['lowVest']['shortCoat'].addPath(piece)
-                        elif tallBoot:
+ 
+                            elif anyCoat:
+                                pantData['shortBoot']['lowVest']['longCoat'].addPath(piece)
+                                pantData['shortBoot']['lowVest']['shortCoat'].addPath(piece)
+ 
+                        if tallBoot:
                             pantData['tallBoot']['neither']['noCoat'].addPath(piece)
                             if skirt:
                                 if longCoat:
                                     pantData['tallBoot']['neither']['longCoat'].addPath(piece)
+ 
                                 if shortCoat:
                                     pantData['tallBoot']['neither']['shortCoat'].addPath(piece)
-                            else:
-                                if anyCoat:
-                                    pantData['tallBoot']['neither']['longCoat'].addPath(piece)
-                                    pantData['tallBoot']['neither']['shortCoat'].addPath(piece)
+ 
+                            elif anyCoat:
+                                pantData['tallBoot']['neither']['longCoat'].addPath(piece)
+                                pantData['tallBoot']['neither']['shortCoat'].addPath(piece)
+ 
                             if belt:
                                 pantData['tallBoot']['belt']['noCoat'].addPath(piece)
                                 if skirt:
                                     if longCoat:
                                         pantData['tallBoot']['belt']['longCoat'].addPath(piece)
+ 
                                     if shortCoat:
                                         pantData['tallBoot']['belt']['shortCoat'].addPath(piece)
+ 
                                 elif anyCoat:
                                     pantData['tallBoot']['belt']['longCoat'].addPath(piece)
                                     pantData['tallBoot']['belt']['shortCoat'].addPath(piece)
+ 
                             if lowVest:
                                 pantData['tallBoot']['lowVest']['noCoat'].addPath(piece)
                                 if skirt:
                                     if longCoat:
                                         pantData['tallBoot']['lowVest']['longCoat'].addPath(piece)
+ 
                                     if shortCoat:
                                         pantData['tallBoot']['lowVest']['shortCoat'].addPath(piece)
+ 
                                 elif anyCoat:
                                     pantData['tallBoot']['lowVest']['longCoat'].addPath(piece)
                                     pantData['tallBoot']['lowVest']['shortCoat'].addPath(piece)
-
-                for style1 in ['shortBoot', 'tallBoot']:
-                    for style2 in ['belt', 'lowVest', 'neither']:
-                        for style3 in ['shortCoat', 'longCoat', 'noCoat']:
+ 
+                for style1 in [
+                    'shortBoot',
+                    'tallBoot']:
+                    for style2 in [
+                        'belt',
+                        'lowVest',
+                        'neither']:
+                        for style3 in [
+                            'shortCoat',
+                            'longCoat',
+                            'noCoat']:
                             data = pantData[style1][style2][style3]
                             geomSet = self.flattenData(data, lod, tex)
                             flattenedSet[style1][style2][style3].addPathsFrom(geomSet)
-
+ 
             self.pantSets.append(flattenedSet)
 
     def generateHatSets(self):
