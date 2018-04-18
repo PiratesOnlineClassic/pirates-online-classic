@@ -970,20 +970,18 @@ class PirateFemale(DirectObject.DirectObject):
             style2Pant = 'belt'
             style3Shirt = 'vest2'
             style1Shirt = 'belt'
+        elif vestIdx[0] == 2:
+            style2Pant = 'lowVest'
+            style3Shirt = 'vest2'
+            style1Shirt = 'belt'
+        elif vestIdx[0] == 1:
+            style2Pant = 'belt'
+            style3Shirt = 'vest1'
+            style1Shirt = 'belt'
         else:
-            if vestIdx[0] == 2:
-                style2Pant = 'lowVest'
-                style3Shirt = 'vest2'
-                style1Shirt = 'belt'
-            else:
-                if vestIdx[0] == 1:
-                    style2Pant = 'belt'
-                    style3Shirt = 'vest1'
-                    style1Shirt = 'belt'
-                else:
-                    style3Shirt = 'neither'
-                    if shirtIdx[0] > 3:
-                        style2Pant = 'belt'
+            style3Shirt = 'neither'
+            if shirtIdx[0] > 3:
+                style2Pant = 'belt'
         if coatIdx[0] > 0:
             style2Shirt = 'coat'
         else:
@@ -994,11 +992,10 @@ class PirateFemale(DirectObject.DirectObject):
             style1Pant = 'shortBoot'
         if coatIdx[0] == 1:
             style3Pant = 'longCoat'
+        elif coatIdx[0] == 2:
+            style3Pant = 'shortCoat'
         else:
-            if coatIdx[0] == 2:
-                style3Pant = 'shortCoat'
-            else:
-                style3Pant = 'noCoat'
+            style3Pant = 'noCoat'
         if pantIdx[0] == 2:
             style3Vest = 'skirt'
         else:
