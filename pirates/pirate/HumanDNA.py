@@ -34,6 +34,7 @@ clothesBotColors = [
  [
   VBase4(255 / 255.0, 255 / 255.0, 255 / 255.0, 255 / 255.0), VBase4(194 / 255.0, 210 / 255.0, 222 / 255.0, 255 / 255.0), VBase4(255 / 255.0, 233 / 255.0, 198 / 255.0, 255 / 255.0), VBase4(208 / 255.0, 213 / 255.0, 152 / 255.0, 255 / 255.0), VBase4(164 / 255.0, 99 / 255.0, 60 / 255.0, 255 / 255.0), VBase4(196 / 255.0, 144 / 255.0, 147 / 255.0, 255 / 255.0), VBase4(189 / 255.0, 181 / 255.0, 197 / 255.0, 255 / 255.0), VBase4(146 / 255.0, 177 / 255.0, 188 / 255.0, 255 / 255.0), VBase4(107 / 255.0, 107 / 255.0, 107 / 255.0, 255 / 255.0), VBase4(203 / 255.0, 177 / 255.0, 122 / 255.0, 255 / 255.0), VBase4(155 / 255.0, 159 / 255.0, 107 / 255.0, 255 / 255.0), VBase4(148 / 255.0, 112 / 255.0, 72 / 255.0, 255 / 255.0), VBase4(158 / 255.0, 75 / 255.0, 80 / 255.0, 255 / 255.0), VBase4(152 / 255.0, 145 / 255.0, 159 / 255.0, 255 / 255.0), VBase4(83 / 255.0, 108 / 255.0, 135 / 255.0, 255 / 255.0), VBase4(41 / 255.0, 50 / 255.0, 60 / 255.0, 255 / 255.0), VBase4(178 / 255.0, 147 / 255.0, 80 / 255.0, 255 / 255.0), VBase4(106 / 255.0, 121 / 255.0, 96 / 255.0, 255 / 255.0), VBase4(101 / 255.0, 68 / 255.0, 32 / 255.0, 255 / 255.0), VBase4(110 / 255.0, 43 / 255.0, 47 / 255.0, 255 / 255.0), VBase4(115 / 255.0, 105 / 255.0, 126 / 255.0, 255 / 255.0), VBase4(220 / 255.0, 111 / 255.0, 45 / 255.0, 255 / 255.0), VBase4(250 / 255.0, 208 / 255.0, 117 / 255.0, 255 / 255.0), VBase4(59 / 255.0, 178 / 255.0, 220 / 255.0, 255 / 255.0), VBase4(158 / 255.0, 113 / 255.0, 207 / 255.0, 255 / 255.0), VBase4(87 / 255.0, 141 / 255.0, 88 / 255.0, 255 / 255.0), VBase4(190 / 255.0, 67 / 255.0, 128 / 255.0, 255 / 255.0), VBase4(46 / 255.0, 190 / 255.0, 68 / 255.0, 255 / 255.0), VBase4(70 / 255.0, 126 / 255.0, 219 / 255.0, 255 / 255.0), VBase4(201 / 255.0, 14 / 255.0, 14 / 255.0, 255 / 255.0), VBase4(21 / 255.0, 22 / 255.0, 24 / 255.0, 255 / 255.0)], [VBase4(255 / 255.0, 255 / 255.0, 255 / 255.0, 255 / 255.0), VBase4(194 / 255.0, 210 / 255.0, 222 / 255.0, 255 / 255.0), VBase4(255 / 255.0, 233 / 255.0, 198 / 255.0, 255 / 255.0), VBase4(206 / 255.0, 231 / 255.0, 153 / 255.0, 255 / 255.0), VBase4(252 / 255.0, 190 / 255.0, 171 / 255.0, 255 / 255.0), VBase4(196 / 255.0, 144 / 255.0, 147 / 255.0, 255 / 255.0), VBase4(226 / 255.0, 203 / 255.0, 249 / 255.0, 255 / 255.0), VBase4(167 / 255.0, 167 / 255.0, 167 / 255.0, 255 / 255.0), VBase4(133 / 255.0, 208 / 255.0, 222 / 255.0, 255 / 255.0), VBase4(203 / 255.0, 177 / 255.0, 122 / 255.0, 255 / 255.0), VBase4(150 / 255.0, 173 / 255.0, 100 / 255.0, 255 / 255.0), VBase4(237 / 255.0, 188 / 255.0, 216 / 255.0, 255 / 255.0), VBase4(158 / 255.0, 75 / 255.0, 80 / 255.0, 255 / 255.0), VBase4(185 / 255.0, 167 / 255.0, 203 / 255.0, 255 / 255.0), VBase4(94 / 255.0, 94 / 255.0, 94 / 255.0, 255 / 255.0), VBase4(72 / 255.0, 146 / 255.0, 159 / 255.0, 255 / 255.0), VBase4(101 / 255.0, 68 / 255.0, 32 / 255.0, 255 / 255.0), VBase4(106 / 255.0, 121 / 255.0, 96 / 255.0, 255 / 255.0), VBase4(195 / 255.0, 100 / 255.0, 154 / 255.0, 255 / 255.0), VBase4(110 / 255.0, 43 / 255.0, 47 / 255.0, 255 / 255.0), VBase4(148 / 255.0, 127 / 255.0, 171 / 255.0, 255 / 255.0), VBase4(220 / 255.0, 111 / 255.0, 45 / 255.0, 255 / 255.0), VBase4(250 / 255.0, 208 / 255.0, 117 / 255.0, 255 / 255.0), VBase4(59 / 255.0, 178 / 255.0, 220 / 255.0, 255 / 255.0), VBase4(158 / 255.0, 113 / 255.0, 207 / 255.0, 255 / 255.0), VBase4(87 / 255.0, 141 / 255.0, 88 / 255.0, 255 / 255.0), VBase4(190 / 255.0, 67 / 255.0, 128 / 255.0, 255 / 255.0), VBase4(46 / 255.0, 190 / 255.0, 68 / 255.0, 255 / 255.0), VBase4(70 / 255.0, 126 / 255.0, 219 / 255.0, 255 / 255.0), VBase4(201 / 255.0, 14 / 255.0, 14 / 255.0, 255 / 255.0), VBase4(21 / 255.0, 22 / 255.0, 24 / 255.0, 255 / 255.0)]]
 
+
 def printColors():
     print '** Skin Colors:'
     for color in skinColors:
@@ -216,7 +217,6 @@ class PirateHead:
 
 
 class PirateBody:
-    
 
     def __init__(self, shape=0, height=0.0, color=0):
         self.shape = shape
@@ -238,7 +238,6 @@ class PirateBody:
 
 
 class PirateClothes:
-    
 
     def __init__(self, top=0, bot=0, shoe=0, color=0):
         self.shirt = top
@@ -696,42 +695,36 @@ class HumanDNA(AvatarDNA.AvatarDNA):
             self.clothes.hatTexture = val2
             if val3 >= 0:
                 self.clothes.hatColor = val3
-        else:
-            if type == 'SHIRT':
-                self.clothes.shirt = val1
-                self.clothes.shirtTexture = val2
-                if val3 >= 0:
-                    self.clothes.shirtColor = val3
-            else:
-                if type == 'VEST':
-                    self.clothes.vest = val1
-                    self.clothes.vestTexture = val2
-                    if val3 >= 0:
-                        self.clothes.vestColor = val3
-                else:
-                    if type == 'COAT':
-                        self.clothes.coat = val1
-                        self.clothes.coatTexture = val2
-                        if val3 >= 0:
-                            self.clothes.coatColor = val3
-                    else:
-                        if type == 'PANT':
-                            self.clothes.pant = val1
-                            self.clothes.pantTexture = val2
-                            if val3 >= 0:
-                                self.clothes.pantColor = val3
-                        else:
-                            if type == 'BELT':
-                                self.clothes.belt = val1
-                                self.clothes.beltTexture = val2
-                                if val3 >= 0:
-                                    self.clothes.sashColor = val3
-                            else:
-                                if type == 'SHOE':
-                                    self.clothes.shoe = val1
-                                    self.clothes.shoeTexture = val2
-                                    if val3 >= 0:
-                                        self.clothes.shoeColor = val3
+        elif type == 'SHIRT':
+            self.clothes.shirt = val1
+            self.clothes.shirtTexture = val2
+            if val3 >= 0:
+                self.clothes.shirtColor = val3
+        elif type == 'VEST':
+            self.clothes.vest = val1
+            self.clothes.vestTexture = val2
+            if val3 >= 0:
+                self.clothes.vestColor = val3
+        elif type == 'COAT':
+            self.clothes.coat = val1
+            self.clothes.coatTexture = val2
+            if val3 >= 0:
+                self.clothes.coatColor = val3
+        elif type == 'PANT':
+            self.clothes.pant = val1
+            self.clothes.pantTexture = val2
+            if val3 >= 0:
+                self.clothes.pantColor = val3
+        elif type == 'BELT':
+            self.clothes.belt = val1
+            self.clothes.beltTexture = val2
+            if val3 >= 0:
+                self.clothes.sashColor = val3
+        elif type == 'SHOE':
+            self.clothes.shoe = val1
+            self.clothes.shoeTexture = val2
+            if val3 >= 0:
+                self.clothes.shoeColor = val3
 
     def setClothesShirt(self, val1, val2=0):
         self.clothes.shirt = val1
@@ -989,12 +982,11 @@ class HumanDNA(AvatarDNA.AvatarDNA):
         if (
          self.gender, type, modelId, texId) in ClothingGlobals.quickConfirmSet:
             return [modelId, texId]
+        elif self.gender == 'm' or self.gender == 'f':
+            return [0, 0]
         else:
-            if self.gender == 'm' or self.gender == 'f':
-                return [0, 0]
-            else:
-                return [
-                 modelId, texId]
+            return [
+             modelId, texId]
 
     def getClothesShirt(self):
         return self.verifyClothing('SHIRT', self.clothes.shirt, self.clothes.shirtTexture)
@@ -1046,20 +1038,16 @@ class HumanDNA(AvatarDNA.AvatarDNA):
     def getBuild(self):
         if self.model[0] == 'sf':
             return 'short fat'
+        elif self.model[0] == 'ms':
+            return 'medium skinny'
+        elif self.model[0] == 'mi':
+            return 'medium ideal'
+        elif self.model[0] == 'tp':
+            return 'tall pear'
+        elif self.model[0] == 'tm':
+            return 'tall muscular'
         else:
-            if self.model[0] == 'ms':
-                return 'medium skinny'
-            else:
-                if self.model[0] == 'mi':
-                    return 'medium ideal'
-                else:
-                    if self.model[0] == 'tp':
-                        return 'tall pear'
-                    else:
-                        if self.model[0] == 'tm':
-                            return 'tall muscular'
-                        else:
-                            notify.error('unknown modelStyle: ', self.model[0])
+            notify.error('unknown modelStyle: ', self.model[0])
 
     def getGender(self):
         return self.gender
