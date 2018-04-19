@@ -7,7 +7,6 @@ from direct.interval.ActorInterval import ActorInterval
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import lerp, report
 
-
 class AnimationChannel:
 
     notify = DirectNotifyGlobal.directNotify.newCategory('AnimationChannel')
@@ -27,7 +26,6 @@ class AnimationChannel:
         self.savedDownAnimWeight = 0.0
         self._animCount = 0
         self.animSpanId = 0
-        return
 
     def __str__(self):
         return '(AnimationChannel: id=%d loop=%d controlId=%04d active=%d) downAnim(%1.2f)=%-15s upAnim(%1.2f)=%-15s' % (self.getId(), self.isLoopChannel(), self.animSpanId, self.isActive(), self.getDownAnimWeight(), str(self.getDownAnimName()), self.getUpAnimWeight(), str(self.getUpAnimName()))
@@ -55,7 +53,6 @@ class AnimationChannel:
     def clearUpAnim(self, animSpanId):
         self.setUpAnimName(None, animSpanId)
         self.setUpAnimWeight(0.0, animSpanId)
-        return
 
     def clearDownAnim(self, animSpanId):
         if self.actor and self.animSpanId == animSpanId and self.getDownAnimName():
@@ -63,7 +60,6 @@ class AnimationChannel:
             Actor.stop(self.actor, self.getDownAnimName(), self.partName)
         self.setDownAnimName(None, animSpanId)
         self.setDownAnimWeight(0.0, animSpanId)
-        return
 
     def getId(self):
         return self.chanId
@@ -204,9 +200,7 @@ class AnimationChannel:
     def distributeWeight(self, channelWeight):
         return channelWeight - self.distributeWeightToChannel(channelWeight)
 
-
 class PartMixer:
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('PartMixer')
 
     def __init__(self, mixer, channelCount, actor, partNameList):
@@ -240,7 +234,6 @@ class PartMixer:
 
         if len(outIval):
             return outIval
-        return
 
     def getPlayIval(self, chanId, animName, animTime, blendInT, blendOutT, blendInto):
         return self.channels[chanId].getPlayIval(animName, animTime, blendInT, blendOutT, blendInto)
@@ -257,8 +250,6 @@ class PartMixer:
         self.actor = None
         self.partNameList = None
         self.channels = []
-        return
-
 
 class AnimationMixer:
     
@@ -268,8 +259,7 @@ class AnimationMixer:
     ACTION_INDEX = 1
     LOOP = {'NA': NA_INDEX, 'LOOP': LOOP_INDEX}
     ACTION = {'NA': NA_INDEX, 'ACTION': ACTION_INDEX}
-    sectionNames = [
-     None]
+    sectionNames = [None]
     sectionNameIds = dict(zip(sectionNames, range(len(sectionNames))))
     partNameLists = dict(zip(sectionNames, []))
     AnimRankings = {}
@@ -278,8 +268,7 @@ class AnimationMixer:
     def __init__(self, actor):
         self.actor = actor
         channelCount = len([ x for x in self.LOOP.values() + self.ACTION.values() if x is not self.NA_INDEX ])
-        self.partMixers = dict(zip(self.sectionNames, [ PartMixer(self, channelCount, actor, self.getPartsNameList(part))
-         for part in self.sectionNames ]))
+        self.partMixers = dict(zip(self.sectionNames, [ PartMixer(self, channelCount, actor, self.getPartsNameList(part)) for part in self.sectionNames ]))
         self.ownedIvals = []
 
     def __str__(self):
@@ -297,15 +286,12 @@ class AnimationMixer:
         outList = []
         if sectionName is None or set(sectionName) == set(self.sectionNames):
             return
+        elif isinstance(sectionName, types.StringType):
+            sectionNames = [sectionName]
+        elif isinstance(sectionName, types.ListType):
+            sectionNames = sectionName
         else:
-            if isinstance(sectionName, types.StringType):
-                sectionNames = [
-                 sectionName]
-            else:
-                if isinstance(sectionName, types.ListType):
-                    sectionNames = sectionName
-                else:
-                    sectionNames = []
+            sectionNames = []
         for section in sectionNames:
             partList = self.partNameLists.get(section)
             if partList:
@@ -351,7 +337,6 @@ class AnimationMixer:
 
             if len(ival):
                 return ival
-        return
 
     def __getPlayIval(self, newAnim, partName=None, fromFrame=None, toFrame=None, blendInT=defaultBlendT, blendOutT=defaultBlendT, duration=0.0, blendInto=None):
         sectionNames = self.getSectionList(partName)
@@ -379,7 +364,6 @@ class AnimationMixer:
 
             if len(ival):
                 return ival
-        return
 
     def __getPoseIval(self, newAnim, partName=None, frame=0, blendT=defaultBlendT):
         sectionNames = self.getSectionList(partName)
@@ -403,7 +387,6 @@ class AnimationMixer:
 
             if len(ival):
                 return ival
-        return
 
     def __processActorInterval(self, actorInterval, partName, blendInT, blendOutT, blendInto):
         if not isinstance(actorInterval, ActorInterval) or self.actor is not actorInterval.actor or hasattr(actorInterval, 'animMixed'):
@@ -495,4 +478,3 @@ class AnimationMixer:
 
         self.actor = None
         self.partMixers = {}
-        return

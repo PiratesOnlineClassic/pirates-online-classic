@@ -1013,6 +1013,9 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         # of race conditions.
         self.connection2fsm = {}
         self.account2fsm = {}
+        
+        # Temporary HMAC key:
+        self.key = 'bG9sLndlLmNoYW5nZS50aGlzLnRvby5tdWNo'
 
         # Instantiate our account DB interface:
         if accountDBType == 'developer':
@@ -1068,10 +1071,18 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         self.account2fsm[sender] = fsmtype(self, sender)
         self.account2fsm[sender].request('Start', *args)
 
-    def login(self, cookie):
+    def login(self, cookie, authKey):
         self.notify.debug('Received login cookie %r from %d' % (cookie, self.air.getMsgSender()))
 
         sender = self.air.getMsgSender()
+        
+        # Time to check this login to see if its authentic
+        digest_maker = hmac.new(self.key)
+        digest_maker.update(cookie)
+        serverKey = digest_maker.hexdigest()
+        if serverKey != authKey:
+            # This login is not authentic.
+            self.killConnection(sender, ' ')
 
         if sender >> 32:
             self.killConnection(sender, 'Client is already logged in.', 100)

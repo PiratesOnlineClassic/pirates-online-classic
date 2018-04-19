@@ -1,3 +1,4 @@
+import hmac
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.distributed.PotentialAvatar import PotentialAvatar
@@ -9,7 +10,14 @@ class ClientServicesManager(DistributedObjectGlobal):
 
     def performLogin(self, doneEvent):
         self.doneEvent = doneEvent
-        self.sendUpdate('login', [self.cr.playToken or 'dev'])
+        token = self.cr.playToken or 'dev'
+        
+        key = 'bG9sLndlLmNoYW5nZS50aGlzLnRvby5tdWNo'
+        digest_maker = hmac.new(key)
+        digest_maker.update(token)
+        clientKey = digest_maker.hexdigest()
+        
+        self.sendUpdate('login', [token, clientKey])
 
     def acceptLogin(self):
         messenger.send(self.doneEvent, [{'mode': 'success'}])
