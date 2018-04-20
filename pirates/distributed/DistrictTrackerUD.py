@@ -2,6 +2,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 
 class DistrictTrackerUD:
     notify = directNotify.newCategory('DistrictTrackerUD')
+    notify.setInfo(True)
 
     def __init__(self, air):
         self.air = air

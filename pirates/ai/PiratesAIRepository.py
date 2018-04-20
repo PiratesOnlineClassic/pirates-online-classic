@@ -21,7 +21,6 @@ from pirates.battle.DistributedEnemySpawnerAI import DistributedEnemySpawnerAI
 from pirates.trades.TradeManagerAI import TradeManagerAI
 from pirates.world.WorldCreatorAI import WorldCreatorAI
 from pirates.battle.BattleManagerAI import BattleManagerAI
-from pirates.weather.DistributedWeatherManagerAI import DistributedWeatherManagerAI
 
 class PiratesAIRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesAIRepository')
@@ -124,9 +123,6 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.tradeMgr.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
         self.guildManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_GUILD_MANAGER, 'PCGuildManager')
-
-        self.weatherManager = DistributedWeatherManagerAI(self)
-        self.weatherManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
         self.districtTracker = DistrictTrackerAI(self)
 

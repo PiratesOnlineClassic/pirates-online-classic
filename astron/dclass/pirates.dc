@@ -173,7 +173,6 @@ from pirates.npc import DistributedBossSkeleton/AI
 from pirates.pvp import SiegeAnnouncer/AI
 from pirates.holiday import DistributedHolidayBonfire/AI
 from pirates.holiday import DistributedHolidayPig/AI
-from pirates.weather import DistributedWeatherManager/AI
 
 typedef uint32 DoId;
 
@@ -2192,7 +2191,3 @@ dclass DistributedHolidayPig : DistributedHolidayObject {
   setPigRoasting(bool) required broadcast ram;
   makeTradeResponse(uint32) ownrecv;
 };
-
-dclass DistributedWeatherManager : DistributedObject {
-  setWeatherState(uint32) required broadcast ram;
-}

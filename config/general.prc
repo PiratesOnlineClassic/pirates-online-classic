@@ -110,6 +110,3 @@ smooth-lag 0.4
 analytics-game-key 5de6a7ce0decbe613cf1cd172b319faf
 analytics-secret-key eb6753270d979378bb301d4b82f27a36d1bcc3bb
 want-analytics #t
-
-# Weather:
-advanced-weather #t
