@@ -14,49 +14,56 @@ class PiratesInternalRepository(AstronInternalRepository):
     def __init__(self, baseChannel, serverId=None, dcFileNames = None, dcSuffix='AI', connectMethod=None, threadedNet=None):
         AstronInternalRepository.__init__(self, baseChannel, serverId, dcFileNames, dcSuffix, connectMethod, threadedNet)
         self.webhookManager = PiratesWebhookManager(self)
+
+        self._netMessageCounter = 0
         self.__registerNetMessages()
+
+
+    def __registerInternalNetMessage(self, message):
+        self.netMessenger.register(self._netMessageCounter, message)
+        self._netMessageCounter += 1
 
     def __registerNetMessages(self):
         # District Status
-        self.netMessenger.register(0, 'districtStatus')
-        self.netMessenger.register(1, 'queryDistrictStatus')
+        self.__registerInternalNetMessage('districtStatus')
+        self.__registerInternalNetMessage('queryDistrictStatus')
 
         # Holiday Management
-        self.netMessenger.register(2, 'startHoliday')
-        self.netMessenger.register(3, 'stopHoliday')
-        self.netMessenger.register(4, 'uberDOGHolidayStarted')
+        self.__registerInternalNetMessage('startHoliday')
+        self.__registerInternalNetMessage('stopHoliday')
+        self.__registerInternalNetMessage('uberDOGHolidayStarted')
         
         # Remote Inventory Manager Control
         #AI
-        self.netMessenger.register(5, 'hasInventory')
-        self.netMessenger.register(6, 'addInventory')
-        self.netMessenger.register(7, 'removeInventory')
-        self.netMessenger.register(8, 'getInventory')
+        self.__registerInternalNetMessage('hasInventory')
+        self.__registerInternalNetMessage('addInventory')
+        self.__registerInternalNetMessage('removeInventory')
+        self.__registerInternalNetMessage('getInventory')
         
         #UD
-        self.netMessenger.register(9, 'hasInventoryResponse')
-        self.netMessenger.register(10, 'getInventoryResponse')
+        self.__registerInternalNetMessage('hasInventoryResponse')
+        self.__registerInternalNetMessage('getInventoryResponse')
         
         # Remote Inventory Control
         #AI
-        self.netMessenger.register(11, 'b_setAccumulators')
-        self.netMessenger.register(12, 'b_setAccumulator')
-        self.netMessenger.register(13, 'b_setStackLimits')
-        self.netMessenger.register(14, 'b_setStacks')
-        self.netMessenger.register(15, 'b_setStack')
-        self.netMessenger.register(16, 'b_setOwnerId')
-        self.netMessenger.register(17, 'getAccumulators')
-        self.netMessenger.register(18, 'getAccumulator')
-        self.netMessenger.register(19, 'getStackLimit')
-        self.netMessenger.register(20, 'getStack')
-        self.netMessenger.register(21, 'getOwnerId')
+        self.__registerInternalNetMessage('b_setAccumulators')
+        self.__registerInternalNetMessage('b_setAccumulator')
+        self.__registerInternalNetMessage('b_setStackLimits')
+        self.__registerInternalNetMessage('b_setStacks')
+        self.__registerInternalNetMessage('b_setStack')
+        self.__registerInternalNetMessage('b_setOwnerId')
+        self.__registerInternalNetMessage('getAccumulators')
+        self.__registerInternalNetMessage('getAccumulator')
+        self.__registerInternalNetMessage('getStackLimit')
+        self.__registerInternalNetMessage('getStack')
+        self.__registerInternalNetMessage('getOwnerId')
         
         #UD
-        self.netMessenger.register(22, 'getOwnerIdResponse')
-        self.netMessenger.register(23, 'getAccumulatorsResponse')
-        self.netMessenger.register(24, 'getAccumulatorResponse')
-        self.netMessenger.register(25, 'getStackLimitResponse')
-        self.netMessenger.register(26, 'getStackResponse')
+        self.__registerInternalNetMessage('getOwnerIdResponse')
+        self.__registerInternalNetMessage('getAccumulatorsResponse')
+        self.__registerInternalNetMessage('getAccumulatorResponse')
+        self.__registerInternalNetMessage('getStackLimitResponse')
+        self.__registerInternalNetMessage('getStackResponse')
 
     def getAvatarIdFromSender(self):
         return self.getMsgSender() & 0xFFFFFFFF
