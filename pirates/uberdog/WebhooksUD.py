@@ -312,7 +312,7 @@ class PiratesWebhookManager(object):
         # Generate header message
         districtName = self.air.distributedDistrict if hasattr(self.air, 'distributedDistrict') else None
         if districtName:
-            headerMessage = 'Internal exception occured on %d.' % districtName
+            headerMessage = 'Internal exception occured on %s.' % districtName
         else:
             if self.air.dcSuffix == 'AI':
                 headerMessage = 'Internal exception occured on the AI'
