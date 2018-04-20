@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.instance.DistributedWelcomeWorld
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase.PythonUtil import report
 from pirates.instance import DistributedInstanceBase
@@ -32,7 +28,6 @@ class DistributedWelcomeWorld(DistributedInstanceBase.DistributedInstanceBase):
         if not (area and area.gridVisContext):
             area = None
         DistributedInstanceBase.DistributedInstanceBase.removeWorldInterest(self, area)
-        return
 
     def turnOff(self, cacheIslands=[]):
         DistributedInstanceBase.DistributedInstanceBase.turnOff(self, cacheIslands)
@@ -41,7 +36,6 @@ class DistributedWelcomeWorld(DistributedInstanceBase.DistributedInstanceBase):
         DistributedInstanceBase.DistributedInstanceBase.turnOn(self, None)
         self._turnOnIslands()
         base.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_DEFAULT)
-        return
 
     def getWorldPos(self, node):
         if not node.isEmpty() and self.isOn():
@@ -54,4 +48,3 @@ class DistributedWelcomeWorld(DistributedInstanceBase.DistributedInstanceBase):
     def localAvEnterDeath(self, av):
         DistributedInstanceBase.DistributedInstanceBase.localAvEnterDeath(self, av)
         self.d_localAvatarDied()
-# okay decompiling .\pirates\instance\DistributedWelcomeWorld.pyc

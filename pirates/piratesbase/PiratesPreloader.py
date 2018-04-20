@@ -1,7 +1,6 @@
 import PiratesGlobals
 from direct.directnotify.DirectNotifyGlobal import giveNotify
 
-
 class PiratesPreloader(object):
 
     def __init__(self):
@@ -18,6 +17,5 @@ class PiratesPreloader(object):
         self.preloadPool.append(model)
         self.baseLoadCounter += 1
         self.doLoad()
-
 
 giveNotify(PiratesPreloader)

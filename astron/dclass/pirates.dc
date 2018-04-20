@@ -407,7 +407,7 @@ struct PotentialPirate {
 };
 
 dclass ClientServicesManager : DistributedObjectGlobal {
-  login(string cookie) clsend;
+  login(string cookie, char authKey [0-256]) clsend;
   acceptLogin();
   requestAvatars() clsend;
   setAvatars(PotentialPirate avatars[]);
@@ -427,15 +427,15 @@ dclass ClientServicesManager : DistributedObjectGlobal {
 };
 
 dclass DistributedAvatarManager : OtpAvatarManager {
-  requestCreateAvatar(uint32, uint32) airecv clsend;
-  requestPopulateAvatar(uint32, uint32, HumanDNA, bool, uint16, uint16, uint16, uint16) airecv clsend;
-  populateAvatarResponse(bool);
-  requestPatternName(uint32, uint32, uint16, uint16, uint16, uint16) airecv clsend;
-  patternNameResponse(bool);
-  requestFinalize(uint32, uint32) airecv clsend;
-  sendAvIdList(uint32 []);
-  avatarListResponse(AccountInfo [], uint16);
-  requestAwardableAvatars(uint32, uint32);
+  requestCreateAvatar(uint32, uint32 subId) airecv clsend;
+  requestPopulateAvatar(uint32, uint32 avId, HumanDNA dna, bool usePattern, uint16 nicknameIndex, uint16 firstIndex, uint16 prefixIndex, uint16 suffixIndex) airecv clsend;
+  populateAvatarResponse(bool success);
+  requestPatternName(uint32, uint32 avId, uint16 nicknameIndex, uint16 firstIndex, uint16 prefixIndex, uint16 suffixIndex) airecv clsend;
+  patternNameResponse(bool success);
+  requestFinalize(uint32, uint32 avId) airecv clsend;
+  sendAvIdList(uint32 avIdList[]);
+  avatarListResponse(AccountInfo accounts[], uint16 numInventoryManagers);
+  requestAwardableAvatars(uint32, uint32); 
   requestAvatarGender(uint32, uint32);
 };
 

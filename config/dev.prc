@@ -34,8 +34,12 @@ dev-analyics #t
 # Weapons:
 instant-skill-recharge #f
 
+# Development:
 want-dev #f
+
+# Manual Overrides:
 always-allow-digging #t
+always-allow-searching #t
 
 # Shards:
 show-total-population #t

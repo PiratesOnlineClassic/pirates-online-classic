@@ -58,6 +58,11 @@ try:
 except SystemExit:
     raise
 except Exception:
-    info = traceback.format_exc()
-    simbase.air.writeServerEvent('uberdog-exception', avId=simbase.air.getAvatarIdFromSender(), accId=simbase.air.getAccountIdFromSender(), info=info)
-    raise
+    if simbase.air:
+        simbase.air.logException(e)
+    else:
+        info = traceback.format_exc()
+        simbase.air.writeServerEvent('uberdog-exception', avId=simbase.air.getAvatarIdFromSender(), accId=simbase.air.getAccountIdFromSender(), info=info)
+
+    if config.GetBool('crash-on-server-error', False):
+        raise

@@ -84,16 +84,15 @@ class PiratesGravityWalker(GravityWalker):
 
                 taskMgr.hasTaskNamed('jumpWait') or taskMgr.doMethodLater(0.2, doJump, 'jumpWait')
                 messenger.send('jumpStart')
-        else:
-            if self.isAirborne and self.predicting:
-                futureHeight, futureVel = predictHeightAndVelocity(2)
-                if futureHeight <= 0.0:
-                    self.isAirborne = 0
-                    self.predicting = 0
-                    sendLandMessage(futureVel)
-            elif self.getAirborneHeight() > 2.0:
-                self.isAirborne = 1
-                self.predicting = 1
+        elif self.isAirborne and self.predicting:
+            futureHeight, futureVel = predictHeightAndVelocity(2)
+            if futureHeight <= 0.0:
+                self.isAirborne = 0
+                self.predicting = 0
+                sendLandMessage(futureVel)
+        elif self.getAirborneHeight() > 2.0:
+            self.isAirborne = 1
+            self.predicting = 1
 
         self.__oldPosDelta = self.avatarNodePath.getPosDelta(render)
         self.__oldDt = ClockObject.getGlobalClock().getDt()

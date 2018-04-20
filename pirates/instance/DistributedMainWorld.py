@@ -15,7 +15,6 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
     def __init__(self, cr):
         DistributedInstanceBase.DistributedInstanceBase.__init__(self, cr)
         self.pvpRespawnCall = None
-        return
 
     def announceGenerate(self):
         DistributedInstanceBase.DistributedInstanceBase.announceGenerate(self)
@@ -31,7 +30,6 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
             self.pvpRespawnCall.destroy()
             self.pvpRespawnCall = None
         DistributedInstanceBase.DistributedInstanceBase.disable(self)
-        return
 
     def delete(self):
         self.ignore('sendingLocalAvatarToJail')
@@ -46,7 +44,6 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
         if not (area and area.gridVisContext):
             area = None
         DistributedInstanceBase.DistributedInstanceBase.removeWorldInterest(self, area)
-        return
 
     def turnOff(self, cacheIslands=[]):
         self.disableFireworkShow()
@@ -58,7 +55,6 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
             self.worldGrid.turnOn(av)
         self._turnOnIslands()
         base.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_DEFAULT)
-        return
 
     @report(types=['frameCount'], dConfigParam='want-jail-report')
     def localAvEnterDeath(self, av):

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.pirate.PirateAvatarPanel
 from direct.gui.DirectGui import *
 from direct.showbase.ShowBaseGlobal import *
 from otp.avatar import Avatar
@@ -18,7 +14,6 @@ GUILDRANK_OFFICER = 2
 GUILDRANK_MEMBER = 1
 
 class PirateAvatarPanel(IdentityPanel.IdentityPanel):
-    
 
     def __init__(self, avId):
         self.width = 0.5
@@ -35,9 +30,8 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
         if self.pId:
             info = base.cr.playerFriendsManager.getFriendInfo(self.pId)
             self.avName = self.avName + '\n\n' + info.playerName
-        else:
-            if av:
-                self.pId = av.DISLid
+        elif av:
+            self.pId = av.DISLid
         IdentityPanel.IdentityPanel.__init__(self, avId, self.avName, self.width, 0.2)
         self.initialiseoptions(PirateAvatarPanel)
         self.avDisableName = 'disable-%s' % self.avId
@@ -62,7 +56,6 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
             else:
                 self.titleLabel['text_fg'] = (0.5, 0.5, 0.5, 1)
         self.accept('guildMemberUpdated', self.handleGuildMemberUpdated)
-        return
 
     def load(self):
         IdentityPanel.IdentityPanel.load(self)
@@ -84,7 +77,6 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
         self.x = gui.find('**/generic_x')
         xLabel = DirectLabel(parent=self.closeButton, relief=None, image=self.x, image_scale=0.35, image_color=PiratesGuiGlobals.ButtonColor3[0])
         xLabel.setPos(-0.09, 0.0, 0.036)
-        return
 
     def destroy(self):
         if self.TC:
@@ -92,7 +84,6 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
             self.TC = None
         self.ignoreAll()
         IdentityPanel.IdentityPanel.destroy(self)
-        return
 
     def __handleShowPlayer(self):
         if self.pId:
@@ -113,7 +104,6 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
             self.TC = None
         self.TC = TeleportConfirm.TeleportConfirm(self.avId, self.avName)
         self.TC.setPos(-0.75, 0, -0.3)
-        return
 
     def __handleTrade(self):
         base.localAvatar.guiMgr.handleTradeInvite(self.avId, self.avName)
@@ -231,9 +221,8 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
     def checkGuildRank(self, onlyDisable=False):
         if not base.localAvatar.getGuildId() or base.localAvatar.getGuildRank() < GUILDRANK_OFFICER:
             self.guildButton['state'] = DGG.DISABLED
-        else:
-            if not onlyDisable:
-                self.guildButton['state'] = DGG.NORMAL
+        elif not onlyDisable:
+            self.guildButton['state'] = DGG.NORMAL
 
     def handleGuildMemberUpdated(self, avId):
         self.checkGuildRank()
@@ -246,4 +235,3 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
         x = max(min(pos[0], base.a2dRight - width), base.a2dLeft)
         z = max(min(pos[2], base.a2dTop - height), base.a2dBottom + cHeight)
         return self.setPos(aspect2d, x, 0, z)
-# okay decompiling .\pirates\pirate\PirateAvatarPanel.pyc
