@@ -62,7 +62,7 @@ except SystemExit:
     raise
 except Exception as e:
     if simbase.air:
-        simebase.air.logException(e)
+        simbase.air.logException(e)
     else:
         info = traceback.format_exc()
         simbase.air.writeServerEvent('ai-exception', avId=simbase.air.getAvatarIdFromSender(), accId=simbase.air.getAccountIdFromSender(), exception=info)
