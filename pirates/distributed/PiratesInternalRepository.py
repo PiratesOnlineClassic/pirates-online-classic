@@ -158,7 +158,7 @@ class PiratesInternalRepository(AstronInternalRepository):
             raise
         except Exception as e:
 
-            if config.GetBool('boot-on-error', False):
+            if config.GetBool('boot-on-error', True):
                 avatar = self.doId2do.get(self.getAvatarIdFromSender(), None)
 
                 if avatar:
