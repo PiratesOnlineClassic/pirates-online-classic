@@ -120,9 +120,7 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
                     localAvatar.guiMgr.showPirateCode()
                     continue
                 return target
-            else:
-                continue
-        return
+            continue
 
     def getAimHitPos(self, av):
         self.aimTrav.traverse(render)
@@ -149,10 +147,7 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
                             continue
                 pos = entry.getSurfacePoint(target)
                 return pos
-            else:
-                continue
-
-        return
+            continue
 
     def setTargetNodePath(self, nodePath):
         self.targetNodePath = nodePath
@@ -164,8 +159,7 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         np = nodePath.findNetTag('targetableObject')
         if np.isEmpty():
             return None
-        else:
-            return self.objectDict.get(np.id(), None)
+        return self.objectDict.get(np.id(), None)
 
     def pickObject(self):
         entry = self.iRay.pickBitMask(bitMask=PiratesGlobals.BattleAimBitmask, targetNodePath=self.targetNodePath,
@@ -179,8 +173,7 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
             entry = self.iRay.findNextCollisionEntry(skipFlags=SKIP_CAMERA)
 
     def startFollowMouse(self, av):
-        taskMgr.add(self.mouseOverTargetTask, 'mouseOverTarget', extraArgs=[
-            av])
+        taskMgr.add(self.mouseOverTargetTask, 'mouseOverTarget', extraArgs=[av])
 
     def mouseOverTargetTask(self, av):
         target = self.pickObject()
@@ -189,13 +182,11 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
             return Task.cont
 
         if oldTarget != None:
-            messenger.send(oldTarget.uniqueName('mouseOver'), [
-                0])
+            messenger.send(oldTarget.uniqueName('mouseOver'), [0])
             av.currentMouseOver = None
 
         if target != None:
-            messenger.send(target.uniqueName('mouseOver'), [
-                1])
+            messenger.send(target.uniqueName('mouseOver'), [1])
             av.currentMouseOver = target
             return Task.cont
         elif target == None:
@@ -306,8 +297,6 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
 
                     if distance <= range + tolerance:
                         self.reticle.setColorScale(1, 0, 0, self.reticleAlpha)
-
-
             else:
                 self.reticle.setColorScale(0, 0, 1, self.reticleAlpha)
         else:
@@ -317,14 +306,11 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
             return Task.cont
 
         if oldTarget != None:
-            messenger.send(oldTarget.uniqueName('aimOver'), [
-                0])
+            messenger.send(oldTarget.uniqueName('aimOver'), [0])
             base.localAvatar.currentAimOver = None
             oldTarget.hideEnemyTargetInfo()
-
         if oldTarget != None and not target:
             oldTarget.hideHpMeter(delay=8.0)
-
         if target:
             target.showHpMeter()
             if TeamUtils.damageAllowed(target, localAvatar):
@@ -332,8 +318,7 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
                 messenger.send('pistolAimedTarget')
             else:
                 target.showFriendlyTargetInfo()
-            messenger.send(target.uniqueName('aimOver'), [
-                1])
+            messenger.send(target.uniqueName('aimOver'), [1])
             base.localAvatar.currentAimOver = target
         else:
             base.localAvatar.currentAimOver = None
@@ -356,8 +341,7 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         origin = target.getPos(camera)
         if origin[1] != 0.0:
             return origin * (base.camLens.getNear() / origin[1])
-        else:
-            return Point3(0, base.camLens.getNear(), 0)
+        return Point3(0, base.camLens.getNear(), 0)
 
     def getTargetScreenXY(self, target):
         tNodePath = target.attachNewNode('temp')
