@@ -1879,19 +1879,12 @@ class OTPClientRepository(ClientRepositoryBase):
 
         if not interest or not interest.events:
             # This object can be generated straight away:
-            return self.__doGenerate(
-                doId, parentId, zoneId, classId, di, other)
+            return self.__doGenerate(doId, parentId, zoneId, classId, di, other)
 
         # This object must be generated when the operation completes:
         pending = self.__pendingGenerates.setdefault(handle, [])
-        pending.append(
-            (doId,
-             parentId,
-             zoneId,
-             classId,
-             Datagram(
-                 di.getDatagram()),
-                other))
+        dgData = di.getDatagram().getMessage()
+        pending.append((doId,parentId, zoneId, classId, Datagram(dgData), other))
         self.__doId2pendingInterest[doId] = handle
 
     def __playBackGenerates(self, handle):
