@@ -199,22 +199,22 @@ dclass MagicWordManager : DistributedObject {
 dclass OtpAvatarManager : DistributedObject {
   online();
   requestAvatarList(uint32) airecv clsend;
-  rejectAvatarList(uint32);
-  avatarListResponse(blob);
-  requestAvatarSlot(uint32, uint32, uint8) clsend airecv;
-  rejectAvatarSlot(uint32, uint32, uint8);
-  avatarSlotResponse(uint32, uint8);
-  requestPlayAvatar(uint32, uint32, uint32) clsend airecv;
-  rejectPlayAvatar(uint32, uint32);
-  playAvatarResponse(uint32, uint32, uint8, uint8);
-  rejectCreateAvatar(uint32);
-  createAvatarResponse(uint32, uint32, uint8, uint8);
-  requestRemoveAvatar(uint32, uint32, uint32, string) airecv clsend;
-  rejectRemoveAvatar(uint32);
-  removeAvatarResponse(uint32, uint32);
-  requestShareAvatar(uint32, uint32, uint32, uint8) airecv clsend;
-  rejectShareAvatar(uint32);
-  shareAvatarResponse(uint32, uint32, uint8);
+  rejectAvatarList(uint32 result);
+  avatarListResponse(blob pickleData);
+  requestAvatarSlot(uint32, uint32 subId, uint8 slot) clsend airecv;
+  rejectAvatarSlot(uint32, uint32 subId, uint8 slot);
+  avatarSlotResponse(uint32 subId, uint8 slot);
+  requestPlayAvatar(uint32, uint32 avatarId, uint32 subId) clsend airecv;
+  rejectPlayAvatar(uint32 reasonId, uint32 avatarId);
+  playAvatarResponse(uint32 avatarId, uint32 subId, uint8 access, uint8 founder);
+  rejectCreateAvatar(uint32 result);
+  createAvatarResponse(uint32 avatarId, uint32 subId, uint8 access, uint8 founder);
+  requestRemoveAvatar(uint32, uint32 avatarId, uint32 subId, string confirmPassword) airecv clsend;
+  rejectRemoveAvatar(uint32 reasonId);
+  removeAvatarResponse(uint32 avatarId, uint32 subId);
+  requestShareAvatar(uint32, uint32 avatarId, uint32 subId, uint8 shared) airecv clsend;
+  rejectShareAvatar(uint32 reasonId);
+  shareAvatarResponse(uint32 avatarId, uint32 subId, uint8 shared);
 };
 
 dclass DistributedChatManager : DistributedObject {
