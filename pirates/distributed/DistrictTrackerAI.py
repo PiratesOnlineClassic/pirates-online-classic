@@ -2,7 +2,6 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 
 class DistrictTrackerAI:
     notify = directNotify.newCategory('DistrictTrackerAI')
-    notify.setInfo(True)
 
     def __init__(self, air):
         self.air = air
@@ -11,6 +10,7 @@ class DistrictTrackerAI:
         self.populationTracker = self.air.populationTracker
         self.district = self.air.distributedDistrict
         self.newsManager = self.air.newsManager
+        self.weatherManager = self.air.weatherManager
 
         # Handle incoming District status queries so that the 
         # UberDog is able to report them to the internal services
@@ -26,7 +26,8 @@ class DistrictTrackerAI:
             'districtName': self.district.getName(),
             'population': self.populationTracker.getPopulation(),
             'populationLimits': self.populationTracker.getPopLimits(),
-            'holidays': self.newsManager.holidayList.keys()
+            'holidays': self.newsManager.holidayList.keys(),
+            'weather': self.weatherManager.getCurrentWeather()
         }
 
         self.notify.info('Sending District update status to UberDOG')
