@@ -1,5 +1,6 @@
 import json
 import requests
+import traceback
 from panda3d.core import ConfigVariableList
 from direct.directnotify.DirectNotifyGlobal import *
 from pirates.ai import HolidayGlobals
@@ -228,6 +229,7 @@ class PiratesWebhookManager(object):
 
         self.want_exception_logs = config.GetBool('discord-log-exceptions')
         self.exception_log_url = config.GetString('discord-exception-url', '')
+        self.discord_except_backlog = config.GetInt('discord-exception-backlog', 10)
 
         self.want_holiday_logs = config.GetBool('discord-log-holidays', True)
         self.holiday_log_urls = ConfigVariableList('discord-holiday-url')
@@ -280,7 +282,10 @@ class PiratesWebhookManager(object):
         if districtName:
             headerMessage = 'Detected potential hacker on %d.' % districtName
         else:
-            headerMessage = 'Detected potential hacker on the UberDOG'
+            if self.air.dcSuffix == 'AI':
+                headerMessage = 'Detected potential hacker on the AI'
+            else:
+                headerMessage = 'Detected potential hacker on the UberDOG'
 
         hookMessage = '@everyone' if self.want_everyone else ''
         webhookMessage = SlackWebhook(self.hacker_log_url, message=hookMessage)
@@ -296,7 +301,7 @@ class PiratesWebhookManager(object):
         webhookMessage.addAttachment(attachment)
         self.__sendWebhook(webhookMessage, self.want_hacker_logs)
 
-    def logServerException(self, trace, avatarId=0, accountId=0):
+    def logServerException(self, exception, avatarId=0, accountId=0):
         """
         Logs a server exception to Discord
         """
@@ -309,13 +314,26 @@ class PiratesWebhookManager(object):
         if districtName:
             headerMessage = 'Internal exception occured on %d.' % districtName
         else:
-            headerMessage = 'Internal exception occured on the UberDOG'
+            if self.air.dcSuffix == 'AI':
+                headerMessage = 'Internal exception occured on the AI'
+            else:
+                headerMessage = 'Internal exception occured on the UberDOG'
+
+        trace = traceback.format_exc()
+        discordStack = trace.split('\n')
+        backlog = self.discord_except_backlog
+        if backlog > len(discordStack):
+            backlog = len(discordStack)
+        discordStack = discordStack[-backlog:]
+        discordStacktrace = '%s\n' % str(exception)
+        for stack in discordStack:
+            discordStacktrace += '%s\n' % stack
 
         hookMessage = '@everyone' if self.want_everyone else ''
-        webhookMessage = SlackWebhook(self.hacker_log_url, message=hookMessage)
-        attachment = SlackAttachment(pretext=message, title=headerMessage)
+        webhookMessage = SlackWebhook(self.exception_log_url, message=hookMessage)
+        attachment = SlackAttachment(title=headerMessage)
 
-        attachment.addField(SlackField(titlle='Trackback', value=trace))
+        attachment.addField(SlackField(title='Trackback', value=discordStacktrace))
 
         # Attempt to attach avatar information
         self.__attemptAttachAvatarInfo(attachment, avatarId, accountId)

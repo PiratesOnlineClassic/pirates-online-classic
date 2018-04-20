@@ -58,10 +58,6 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.netMessenger.register(25, 'getStackLimitResponse')
         self.netMessenger.register(26, 'getStackResponse')
 
-    def handleConnected(self):
-        if config.GetBool('send-hacker-test-message', False):
-            self.logPotentialHacker('I am a test hacker message!', field='Test', thing='this')
-
     def getAvatarIdFromSender(self):
         return self.getMsgSender() & 0xFFFFFFFF
 
@@ -138,6 +134,7 @@ class PiratesInternalRepository(AstronInternalRepository):
         accountId = self.getAccountIdFromSender() or 0
 
         self.writeServerEvent('internal-exception',
+            serverSuffix=self.dcSuffix,
             avId=avatarId,
             accountId=accountId,
             exception=trace)
@@ -145,7 +142,7 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
         print(trace)
 
-        #self.webhookManager.logServerException(trace, avatarId, accountId)
+        self.webhookManager.logServerException(e, avatarId, accountId)
 
         # Python 2 Vs 3 compatibility
         if not sys.version_info >= (3, 0):
