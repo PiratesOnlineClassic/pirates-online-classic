@@ -900,6 +900,7 @@ class LoadAvatarFSM(AvatarOperationFSM):
         datagram.addString(datagramCleanup.getMessage())
         self.csm.air.send(datagram)
 
+        # Activate the avatar on the DBSS:
         adminAccess = self.account.get('ACCESS_LEVEL', 0)
         adminAccess = adminAccess - adminAccess % 100
         self.csm.air.sendActivate(self.avId, 0, 0, self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
@@ -911,11 +912,6 @@ class LoadAvatarFSM(AvatarOperationFSM):
 
     def inventorySetup(self, inventoryId):
         channel = self.csm.GetAccountConnectionChannel(self.target)
-
-        # Activate the avatar on the DBSS:
-        self.csm.air.sendActivate(
-            self.avId, 0, 0, self.csm.air.dclassesByName['DistributedPlayerPirateUD'], {
-                'setInventoryId': (inventoryId,)})
 
         # Next, add them to the avatar channel:
         datagram = PyDatagram()
@@ -938,10 +934,10 @@ class LoadAvatarFSM(AvatarOperationFSM):
         # Claim ownership of the avatar's inventory
         datagram = PyDatagram()
         datagram.addServerHeader(
-            self.avId,
+            inventoryId,
             self.csm.air.ourChannel,
             STATESERVER_OBJECT_SET_OWNER)
-        datagram.addChannel(inventoryId)
+        datagram.addChannel(self.avId)
         self.csm.air.send(datagram)
 
         # Eliminate race conditions.
