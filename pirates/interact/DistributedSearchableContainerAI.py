@@ -8,9 +8,46 @@ class DistributedSearchableContainerAI(DistributedInteractiveAI):
         DistributedInteractiveAI.__init__(self, air)
         self.color = [1.0, 1.0, 1.0, 1.0]
         self.scale = [1, 1, 1]
+        self.searchTime = 0.0
+        self.currentUser = None
 
-    def handleRequestInteraction(self, avatar, interactType, instance):
+    def handleRequestInteraction(self, avatar, interactType, instant):
+        searchAvailable = config.GetBool('always-allow-searching', False) #TODO: input from questing
+
+        if searchAvailable and self.currentUser is None:
+            self.currentUser = avatar
+            taskMgr.doMethodLater(self.searchTime, self.__searchTask, '%s-avatarSearchTask-%s' % 
+                (self.doId, avatar.doId))
+
+            self.sendUpdateToAvatarId(avatar.doId, 'startSearching', [])
+            return self.ACCEPT
+
         return self.DENY
+
+    def handleRequestExit(self, avatar):
+        if avatar != self.currentUser:
+            self.notify.warning('Failed to request handle exist; Avatar is not current interactor')
+
+            self.air.logPotentialHacker(
+                message='Received handleRequestExist from a different avatar then is currently digging!',
+                currentAvatarId=self.currentUser.doId,
+                requestedAvatarId=avatar.doId
+            )
+            return
+
+        self.currentUser = None
+
+    def __searchTask(self, task):
+
+        if not self.currentUser:
+            return task.done
+
+        questProgress = 1 #TODO: add proper quest value
+
+        self.sendUpdateToAvatarId(self.currentUser.doId, 'stopSearching', [questProgress])
+        self.currentUser = None
+
+        return task.done
 
     def setSearchTime(self, searchTime):
         self.searchTime = searchTime
