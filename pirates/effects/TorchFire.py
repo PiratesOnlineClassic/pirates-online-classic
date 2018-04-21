@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.TorchFire
 import random
 
 from direct.actor import Actor
@@ -10,7 +6,6 @@ from direct.particles import ForceGroup, ParticleEffect, Particles
 from EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesgui.GameOptions import Options
-
 
 class TorchFire(EffectController, NodePath):
     
@@ -78,7 +73,7 @@ class TorchFire(EffectController, NodePath):
         lifespan = 0.25 + 0.05 * lod
         self.p0.setPoolSize(poolsize)
         self.p0.factory.setLifespanBase(lifespan)
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.06), Func(self.p0.setPoolSize, poolsize), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.06), Func(self.setPoolSize, int(poolsize)), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
