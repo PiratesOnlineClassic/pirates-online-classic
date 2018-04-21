@@ -41,7 +41,6 @@ class Fire(PooledEffect, EffectController):
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('DiscEmitter')
         self.f.addParticles(self.p0)
-        self.p0.setPoolSize(96)
         self.p0.setBirthRate(0.01)
         self.p0.setLitterSize(4)
         self.p0.setLitterSpread(0)
@@ -85,7 +84,6 @@ class Fire(PooledEffect, EffectController):
 
     def createTrack(self, lod=Options.SpecialEffectsHigh):
         if lod >= Options.SpecialEffectsHigh:
-            self.p0.setPoolSize(96)
             self.p0.setLitterSize(4)
             self.p0.factory.enableAngularVelocity(1)
             self.p0.factory.setAngularVelocity(0.0)

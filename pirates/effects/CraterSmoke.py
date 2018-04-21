@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.CraterSmoke
 import random
 
 from direct.interval.IntervalGlobal import *
@@ -10,9 +6,7 @@ from EffectController import EffectController
 from pandac.PandaModules import *
 from PooledEffect import PooledEffect
 
-
 class CraterSmoke(PooledEffect, EffectController):
-    
     cardScale = 64.0
 
     def __init__(self, parent=None):
@@ -26,20 +20,18 @@ class CraterSmoke(PooledEffect, EffectController):
         self.f.reparentTo(self)
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleWhiteSmoke')
-        self.p0 = Particles.Particles('particles-1')
+        self.p0 = Particles.Particles('particles-1', 8)
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('RectangleEmitter')
         self.f.addParticles(self.p0)
-        self.p1 = Particles.Particles('particles-2')
+        self.p1 = Particles.Particles('particles-2', 16)
         self.p1.setFactory('PointParticleFactory')
         self.p1.setRenderer('SpriteParticleRenderer')
         self.p1.setEmitter('RectangleEmitter')
         self.f.addParticles(self.p1)
-        return
 
     def createTrack(self, lod=None):
-        self.p0.setPoolSize(8)
         self.p0.setBirthRate(0.75)
         self.p0.setLitterSize(1)
         self.p0.setLitterSpread(1)
@@ -75,7 +67,6 @@ class CraterSmoke(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setMinBound(Point2(-5.0, -5.0))
         self.p0.emitter.setMaxBound(Point2(5.0, 5.0))
-        self.p1.setPoolSize(16)
         self.p1.setBirthRate(1.0)
         self.p1.setLitterSize(4)
         self.p1.setLitterSpread(1)
@@ -123,4 +114,3 @@ class CraterSmoke(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\CraterSmoke.pyc

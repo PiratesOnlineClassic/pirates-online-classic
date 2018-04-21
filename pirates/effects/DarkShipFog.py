@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.DarkShipFog
 import random
 
 from direct.actor import Actor
@@ -13,9 +9,7 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from PooledEffect import PooledEffect
 
-
 class DarkShipFog(PooledEffect, EffectController):
-    
     cardScale = 64.0
 
     def __init__(self):
@@ -31,12 +25,11 @@ class DarkShipFog(PooledEffect, EffectController):
             DarkShipFog.particleDummy.setBin('fixed', 15)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1')
+        self.p0 = Particles.Particles('particles-1', 128)
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereVolumeEmitter')
         self.f.addParticles(self.p0)
-        self.p0.setPoolSize(128)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(10)
         self.p0.setLitterSpread(0)
@@ -85,4 +78,3 @@ class DarkShipFog(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\DarkShipFog.pyc

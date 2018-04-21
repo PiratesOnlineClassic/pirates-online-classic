@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.DarkStar
 import random
 
 from direct.interval.IntervalGlobal import *
@@ -9,7 +5,6 @@ from direct.particles import ForceGroup, ParticleEffect, Particles
 from EffectController import EffectController
 from pandac.PandaModules import *
 from PooledEffect import PooledEffect
-
 
 class DarkStar(PooledEffect, EffectController):
     
@@ -27,12 +22,11 @@ class DarkStar(PooledEffect, EffectController):
         self.effectColor = Vec4(1, 1, 1, 1)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1')
+        self.p0 = Particles.Particles('particles-1', 64)
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereSurfaceEmitter')
         self.f.addParticles(self.p0)
-        self.p0.setPoolSize(64)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(4)
         self.p0.setLitterSpread(0)
@@ -75,8 +69,8 @@ class DarkStar(PooledEffect, EffectController):
         self.p0.emitter.setRadius(0.01)
 
     def createTrack(self, lod=None):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.setPoolSize, 64.0), Func(self.p0.clearToInitial), Func(self.f.start, self, self), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.p0.setPoolSize, 0.0), Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(0.3), self.endEffect)
 
     def setEffectColor(self, color):
