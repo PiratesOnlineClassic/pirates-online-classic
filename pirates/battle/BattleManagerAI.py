@@ -90,12 +90,26 @@ class BattleManagerAI(BattleManagerBase):
         if attackRange == WeaponGlobals.INF_RANGE:
             return False
 
-        distance = attacker.getDistance(target)
+        distance = self.getRelativePosition(attacker, target)
 
         if distance <= attackRange + tolerance:
             return True
 
         return True
+
+    def getRelativePosition(self, attacker, target):
+        targetParent = target.getParentObj()
+
+        if not targetParent:
+            return 0
+
+        targetNP = NodePath('psuedo-target-%d' % target.doId)
+        targetNP.setPosHpr(targetParent, target.getPos(), target.getHpr())
+
+        attackerNP = NodePath('psuedo-attacker-%d' % attacker.doId)
+        attackerNP.setPosHpr(targetParent, attacker.getPos(), attacker.getHpr())
+
+        return attackerNP.getDistance(targetNP)
 
     def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         if not avatar:
@@ -135,7 +149,7 @@ class BattleManagerAI(BattleManagerBase):
             return None
 
         skillResult = self.willWeaponHit(avatar, target, skillId, ammoSkillId, charge)
-        distance = avatar.getDistance(target)
+        distance = self.getRelativePosition(avatar, target)
         timestamp = globalClockDelta.getRealNetworkTime(bits=32)
 
         # check to see if our dictionary of target to attacker data contains this attacker,
