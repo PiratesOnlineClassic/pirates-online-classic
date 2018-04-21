@@ -35,6 +35,10 @@ uberdogs:
       id: 4701
       anonymous: false
 
+    - class: DistributedMatchMaker
+      id: 4700
+      anonymous: false
+
 roles:
     - type: clientagent
       bind: 0.0.0.0:7198
