@@ -47,6 +47,10 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
             island.parentId, island.zoneId])
 
         self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
+
+        # send the avatar under the island cartesian grid object, then
+        # set relative position to that of the island's node...
+        self.avatar.reparentTo(island)
         self.avatar.b_setLocation(island.doId, PiratesGlobals.IslandLocalZone)
 
     def teleportToInstanceFinal(self, avatarId):

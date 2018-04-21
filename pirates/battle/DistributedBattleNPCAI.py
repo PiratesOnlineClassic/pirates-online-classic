@@ -16,6 +16,11 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
         self.spawnerNode = None
 
+    def generate(self):
+        DistributedBattleAvatarAI.generate(self)
+
+        self.air.battleMgr.addTarget(self)
+
     def setName(self, name):
         self.name = name
 
@@ -85,3 +90,8 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def requestClientAggro(self):
         pass
+
+    def delete(self):
+        self.air.battleMgr.removeTarget(self)
+
+        DistributedBattleAvatarAI.delete(self)

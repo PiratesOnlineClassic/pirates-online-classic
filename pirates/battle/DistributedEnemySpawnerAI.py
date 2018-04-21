@@ -79,7 +79,7 @@ class SpawnNodeBase:
 
         self._npc.d_setGameState('Death')
 
-        taskMgr.doMethodLater(5, self.__died, 'perform-respawn-%s' % self.objKey,
+        taskMgr.doMethodLater(2.5, self.__died, 'perform-respawn-%s' % self.objKey,
             extraArgs=[self._npc], appendTask=True)
 
         self._npc = None
@@ -157,7 +157,7 @@ class SpawnNodeBase:
 
         if not self.canRespawn():
             return
-        
+
         self.__spawn()
 
         return Task.done

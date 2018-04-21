@@ -15,23 +15,27 @@ class WeaponBaseAI(WeaponBaseBase):
             return
 
         target = self.air.doId2do.get(targetId)
-        if not target:
-            self.__useSpecialTargetedSkill(avatar, target, skillId, ammoSkillId, clientResult,
-                areaIdList, timestamp, pos, charge)
-        else:
-            self.__useTargetedSkill(avatar, target, skillId, ammoSkillId, clientResult,
-                areaIdList, timestamp, pos, charge)
 
+        # this will handle the attackers targeted skill request, however we will not check if the target
+        # specified in this update is valid. Because, if their is no target then the client is
+        # just requesting targeted skill for no target...
+        self.__useTargetedSkill(avatar, target, skillId, ammoSkillId, clientResult,
+            areaIdList, timestamp, pos, charge)
+
+        # this will handle the targeted skill for any targets in the range of the attacker,
+        # for example if an attacker uses a skill that effects enemies around it...
         for targetId in areaIdList:
 
+            # ignore the avatar if it is in the area list,
+            # no reason to handle it here...
             if targetId == avatar.doId:
                 continue
 
             target = self.air.doId2do.get(targetId)
 
             if not target:
-                self.notify.debug('Cannot request targeted skill, unknown areaId target; avatarId=%d!' % (
-                    avatar.doId))
+                self.notify.debug('Cannot request targeted skill, unknown areaId target; avatarId=%d skillId=%d!' % (
+                    avatar.doId, skillId))
 
                 continue
 
@@ -43,24 +47,12 @@ class WeaponBaseAI(WeaponBaseBase):
             clientResult, areaIdList, timestamp, pos, charge)
 
         if not targetResult:
-            self.notify.debug('Cannot get targeted skill, no valid result was given; avatarId=%d, targetId=%d, skillId=%d!' % (
-                avatar.doId, target.doId, skillId))
-
-            return
-
-        self.d_useTargetedSkill(*targetResult)
-
-    def __useSpecialTargetedSkill(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
-        specialResult = self.air.battleMgr.getSpecialTargetedSkillResult(avatar, target, skillId, ammoSkillId,
-            clientResult, areaIdList, timestamp, pos, charge)
-
-        if not specialResult:
-            self.notify.debug('Cannot get special targeted skill, no valid result was given; avatarId=%d, skillId=%d!' % (
+            self.notify.debug('Cannot get targeted skill, no valid result was given; avatarId=%d, skillId=%d!' % (
                 avatar.doId, skillId))
 
             return
 
-        self.d_useTargetedSkill(*specialResult)
+        self.d_useTargetedSkill(*targetResult)
 
     def d_useTargetedSkill(self, skillId, ammoSkillId, skillResult, targetDoId, areaIdList, attackerEffects, targetEffects, areaIdEffects, timestamp, pos, charge):
         self.sendUpdate('useTargetedSkill', [skillId, ammoSkillId, skillResult, targetDoId, areaIdList, attackerEffects,
