@@ -35,6 +35,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.emoteId = 0
         self.zombie = 0
         self.forcedZombie = 0
+        self.gmNameTagAllowed = False
 
         self.stickyTargets = []
 
@@ -580,6 +581,54 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def getZombie(self):
         return self.zombie
+
+    def setAllowGMNameTag(self, gmNameTagAllowed):
+        self.gmNameTagAllowed = gmNameTagAllowed
+
+    def d_setAllowGMNameTag(self, gmNameTagAllowed):
+        self.sendUpdate('setAllowGMNameTag', gmNameTagAllowed)
+
+    def getAllowGMNameTag(self):
+        return self.gmNameTagAllowed
+
+    def updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
+        self.gmNameTagState = gmNameTagState
+        self.gmNameTagColor = gmNameTagColor
+        self.gmNameTagString = gmNameTagString
+
+    def d_updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
+        self.sendUpdate('updateGMNameTag', [gmNameTagState, gmNameTagColor, gmNameTagString])
+
+    def b_updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
+        self.d_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
+        self.updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
+
+@magicWord(category=CATEGORY_MODERATION, types=[int, str, str])
+def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
+    """
+    Sets your GM nametag properties
+    """
+
+    #TODO: associate tag with rank in the CSM and revoke command properties?
+    validColors = ['gold', 'red', 'green', 'blue', 'white']
+    if gmNameTagColor not in validColors:
+        return "Invalid color specified!"
+
+    if gmNameTagState < 0 or gmNameTagState > 1:
+        return "Invalid state!"
+
+    spellbook.getInvoker().b_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
+    return "Nametag set"
+
+@magicWord(category=CATEGORY_MODERATION, types=[str, str, str])
+def toggleGM():
+    """
+    Toggles your GM name tag
+    """
+    invoker = spellbook.getInvoker()
+    invoker.b_updateGMNameTag(not invoker.gmNameTagState, invoker.gmNameTagColor, invoker.gmNameTagString)
+
+    return "Nametag toggled to: %s" % str(invoker.gmNameTagState)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def name(name):
