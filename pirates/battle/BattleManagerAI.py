@@ -78,10 +78,7 @@ class BattleManagerAI(BattleManagerBase):
         if attackerId not in self.__targets[targetId]:
             return
 
-        # clear the avatar's skill diary since they've been given their
-        # reward in full...
         attacker.battleSkillDiary.reset()
-
         self.__targets[targetId].remove(attackerId)
 
     def getAttackers(self, targetId):
@@ -340,8 +337,9 @@ class BattleManagerAI(BattleManagerBase):
             overallReputation += reputation
             inventory.setReputation(reputationCategoryId, inventory.getReputation(reputationCategoryId) + reputation)
 
-        # remove the attacker from the target's aggro info dictionary...
-        self.removeAttacker(attacker, target)
+        # clear the avatar's skill diary since they've been given their
+        # reward in full...
+        attacker.battleSkillDiary.reset()
 
         # update the avatar's overall reputation based on all the skills they
         # used to kill the target
