@@ -278,7 +278,7 @@ class PiratesWebhookManager(object):
             return
         
         # Generate header message
-        districtName = self.air.distributedDistrict if hasattr(self.air, 'distributedDistrict') else None
+        districtName = self.air.distributedDistrict.getName() if hasattr(self.air, 'distributedDistrict') else None
         if districtName:
             headerMessage = 'Detected potential hacker on %d.' % districtName
         else:
@@ -310,7 +310,7 @@ class PiratesWebhookManager(object):
             return
         
         # Generate header message
-        districtName = self.air.distributedDistrict if hasattr(self.air, 'distributedDistrict') else None
+        districtName = self.air.distributedDistrict.getName() if hasattr(self.air, 'distributedDistrict') else None
         if districtName:
             headerMessage = 'Internal exception occured on %s.' % districtName
         else:
