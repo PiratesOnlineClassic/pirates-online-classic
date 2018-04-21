@@ -1,7 +1,6 @@
 from pandac.PandaModules import *
 
 class EffectController:
-    
     particleDummy = None
 
     def __init__(self):
@@ -10,6 +9,7 @@ class EffectController:
         self.endEffect = None
         self.f = None
         self.p0 = None
+        
 
     def createTrack(self):
         pass
@@ -27,6 +27,10 @@ class EffectController:
         if self.f:
             self.f.disable()
         self.detachNode()
+        
+    def setPoolSize(self, size):
+        if self.p0:
+            self.p0.setPoolSize(int(size))
 
     def reallyCleanUpEffect(self):
         self.cleanUpEffect()

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.effects.SparkBurst
 import random
 
 from direct.interval.IntervalGlobal import *
@@ -10,9 +6,7 @@ from EffectController import EffectController
 from pandac.PandaModules import *
 from PooledEffect import PooledEffect
 
-
-class SparkBurst(PooledEffect, EffectController):
-    
+class SparkBurst(PooledEffect, EffectController): 
     darkCardScale = 128.0
     blueCardScale = 128.0
     cardScale = 128.0
@@ -32,7 +26,7 @@ class SparkBurst(PooledEffect, EffectController):
         self.effectColor = Vec4(1, 1, 1, 1)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1')
+        self.p0 = Particles.Particles('particles-1', 32)
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereVolumeEmitter')
@@ -41,7 +35,6 @@ class SparkBurst(PooledEffect, EffectController):
         self.f.addForceGroup(f0)
 
     def createTrack(self, color='Yellow'):
-        self.p0.setPoolSize(32)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(10)
         self.p0.setLitterSpread(0)
@@ -91,8 +84,8 @@ class SparkBurst(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(0.1, 0.0, 100.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.5)
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.setPoolSize, 32.0), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.p0.setPoolSize, 0.0), Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.setPoolSize, 32.0), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.setPoolSize, 0.0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(0.2), self.endEffect)
 
     def play(self, color='Yellow'):
