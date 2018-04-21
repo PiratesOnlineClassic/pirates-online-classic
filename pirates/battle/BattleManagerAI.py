@@ -78,6 +78,10 @@ class BattleManagerAI(BattleManagerBase):
         if attackerId not in self.__targets[targetId]:
             return
 
+        # clear the avatar's skill diary since they've been given their
+        # reward in full...
+        attacker.battleSkillDiary.reset()
+
         self.__targets[targetId].remove(attackerId)
 
     def getAttackers(self, targetId):
@@ -88,14 +92,14 @@ class BattleManagerAI(BattleManagerBase):
         attackRange = self.getModifiedAttackRange(attacker, skillId, ammoSkillId)
 
         if attackRange == WeaponGlobals.INF_RANGE:
-            return False
+            return True
 
         distance = self.getRelativePosition(attacker, target)
 
         if distance <= attackRange + tolerance:
             return True
 
-        return True
+        return False
 
     def getRelativePosition(self, attacker, target):
         targetParent = target.getParentObj()
@@ -304,8 +308,9 @@ class BattleManagerAI(BattleManagerBase):
 
             # give the attacker a chance to return to battle in order to get their
             # experience and reward values from previous skills used...
-            self.__removingAttackers[attacker.doId] = taskMgr.doMethodLater(5.0, self.__removeAttacker, '%s-removing-attacker-%d' % (
-                self.__class__.__name__, attacker.doId), extraArgs=[attacker, target], appendTask=True)
+            self.__removingAttackers[attacker.doId] = taskMgr.doMethodLater(5.0, self.__removeAttacker,
+                '%s-removing-attacker-%d' % (self.__class__.__name__, attacker.doId),
+                extraArgs=[attacker, target], appendTask=True)
 
     def __removeAttacker(self, attacker, target, task):
 
@@ -335,9 +340,8 @@ class BattleManagerAI(BattleManagerBase):
             overallReputation += reputation
             inventory.setReputation(reputationCategoryId, inventory.getReputation(reputationCategoryId) + reputation)
 
-        # clear the avatar's skill diary since they've been given their
-        # reward in full...
-        attacker.battleSkillDiary.reset()
+        # remove the attacker from the target's aggro info dictionary...
+        self.removeAttacker(attacker, target)
 
         # update the avatar's overall reputation based on all the skills they
         # used to kill the target
