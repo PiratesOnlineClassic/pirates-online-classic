@@ -15,6 +15,7 @@ from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from otp.ai.MagicWordGlobal import *
 from pirates.battle import WeaponGlobals
 from pirates.reputation import ReputationGlobals
+from pirates.battle.BattleSkillDiaryAI import BattleSkillDiaryAI
 
 class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNA):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
@@ -48,6 +49,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedBattleAvatarAI.generate(self)
 
         self.battleRandom = BattleRandom(self.doId)
+        self.battleSkillDiary = BattleSkillDiaryAI(self.air, self)
 
         self.weapon = DistributedWeaponAI(self.air)
         self.weapon.generateWithRequiredAndId(self.air.allocateChannel(), 0, 0)
