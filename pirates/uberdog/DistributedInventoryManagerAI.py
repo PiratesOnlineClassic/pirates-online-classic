@@ -11,10 +11,10 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         self.inventories = {}
         self.inventoryTasks = {}
-        
+
     def announceGenerate(self):
         DistributedObjectGlobalAI.announceGenerate(self)
-        
+
         self.air.netMessenger.accept('hasInventory', self, self.sendHasInventory)
         self.air.netMessenger.accept('addInventory', self, self.addInventory)
         self.air.netMessenger.accept('removeInventory', self, self.removeInventory)
@@ -22,7 +22,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
     def hasInventory(self, inventoryId):
         return inventoryId in self.inventories
-        
+
     def sendHasInventory(self, inventoryId, callback):
         self.air.netMessenger.send('hasInventoryResponse', [callback, self.hasInventory(inventoryId)])
 
@@ -47,7 +47,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
                 return inventory
 
         return None
-        
+
     def sendGetInventory(self, avatarId, callback):
         self.air.netMessenger.send('getInventoryResponse', [callback, self.getInventory(avatarId)])
 
@@ -128,7 +128,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
             for accumulator in accumulators:
                 inventory.b_setAccumulator(*accumulator)
 
-            inventory.b_setStackLimits(stackLimits)
+            for stackLimit in stackLimits:
+                inventory.b_setStackLimit(*stackLimit)
 
             for stack in stacks:
                 inventory.b_setStack(*stack)
@@ -137,7 +138,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         self.air.dbInterface.queryObject(self.air.dbId, inventoryId, callback=inventoryResponse, dclass=\
             self.air.dclassesByName['DistributedInventoryAI'])
-            
+
     def proccessCallbackResponse(self, callback, *args, **kwargs):
         if callback and callable(callback):
             callback(*args, **kwargs)
@@ -181,25 +182,25 @@ def maxWeapons():
         inventory.b_setStack(InventoryType.DaggerWeaponL5, 1)
         inventory.b_setStack(InventoryType.GrenadeWeaponL5, 1)
         inventory.b_setStack(InventoryType.WandWeaponL5, 1)
-        
+
         inventory.b_setStack(InventoryType.AmmoAsp, 99)
         inventory.b_setStack(InventoryType.AmmoAdder, 99)
         inventory.b_setStack(InventoryType.AmmoSidewinder, 99)
         inventory.b_setStack(InventoryType.AmmoViperNest, 99)
-        
+
         inventory.b_setStack(InventoryType.AmmoLeadShot, 99)
         inventory.b_setStack(InventoryType.AmmoVenomShot, 99)
         inventory.b_setStack(InventoryType.AmmoBaneShot, 99)
         inventory.b_setStack(InventoryType.AmmoHexEaterShot, 99)
         inventory.b_setStack(InventoryType.AmmoSilverShot, 99)
         inventory.b_setStack(InventoryType.AmmoSteelShot, 99)
-        
+
         inventory.b_setStack(InventoryType.AmmoScatterShot, 99)
         inventory.b_setStack(InventoryType.AmmoCursedShot, 99)
         inventory.b_setStack(InventoryType.AmmoCoalfireShot, 99)
         inventory.b_setStack(InventoryType.AmmoHeavySlug, 99)
         inventory.b_setStack(InventoryType.AmmoExploderShot, 99)
-        
+
         inventory.b_setStack(InventoryType.AmmoGrenadeExplosion, 99)
         inventory.b_setStack(InventoryType.AmmoGrenadeShockBomb, 99)
         inventory.b_setStack(InventoryType.AmmoGrenadeFlame, 99)
