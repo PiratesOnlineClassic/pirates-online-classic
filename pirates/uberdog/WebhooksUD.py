@@ -96,7 +96,7 @@ class GithubWebhook(WebhookBase):
         Called prior to posting to the url. Returns a formatted message
         """
 
-        return NotImplemented   
+        return NotImplemented
 
 class SlackWebhook(WebhookBase):
 
@@ -135,7 +135,7 @@ class SlackWebhook(WebhookBase):
         if self.avatar:
             data['icon_url'] = self.avatar
 
-        data['attachments'] = [] 
+        data['attachments'] = []
         for attachment in self.attachments:
             att = {}
             att['author_name'] = attachment.author_name
@@ -175,7 +175,7 @@ class SlackAttachment(object):
     """
     Represents a attachment for the SlackWebhook object
     """
-    
+
     def __init__(self, author_name='', author_icon='', color='', pretext='', title='', title_link='', image_url='', footer='', footer_icon='', ts=0, fields=[]):
         self.author_name = author_name
         self.author_icon = author_icon
@@ -200,7 +200,7 @@ class SlackAttachment(object):
             raise SlackAttachmentException('Unable to add field; %s is not an instance of %s' % (field.__class__.__name__, SlackField.__name__))
 
 class SlackField(object):
-    
+
     """
     Represents a SlackAttachment field
     """
@@ -259,15 +259,17 @@ class PiratesWebhookManager(object):
         Attempts to attach avatar info using the avatarId
         """
         avatar = self.air.doId2do.get(avatarId)
-        if avatar:
+        parentObj = avatar.getParentObj()
+
+        if avatar and parentObj:
             attachment.addField(SlackField())
             attachment.addField(SlackField(title='Character Pos', value=str(avatar.getPos())))
             attachment.addField(SlackField(title='Character Name', value=avatar.getName()))
-            attachment.addField(SlackField(title='Island', value=avatar.getParentObj().getLocalizerName()))
+            attachment.addField(SlackField(title='Island', value=parentObj.getLocalizerName()))
 
         #TODO: add account name?
         attachment.addField(SlackField())
-        attachment.addField(SlackField(title='Dev Server', value=self.air.isDevServer()))   
+        attachment.addField(SlackField(title='Dev Server', value=self.air.isDevServer()))
 
     def logPotentialHacker(self, avatarId, accountId, message, **kwargs):
         """
@@ -276,7 +278,7 @@ class PiratesWebhookManager(object):
         if self.want_hacker_logs and not self.hacker_log_url:
             self.notify.warning('Failed to send hacker webhook; Hacker url not defined!')
             return
-        
+
         # Generate header message
         districtName = self.air.distributedDistrict.getName() if hasattr(self.air, 'distributedDistrict') else None
         if districtName:
@@ -297,7 +299,7 @@ class PiratesWebhookManager(object):
 
         # Attempt to attach avatar information
         self.__attemptAttachAvatarInfo(attachment, avatarId, accountId)
- 
+
         webhookMessage.addAttachment(attachment)
         self.__sendWebhook(webhookMessage, self.want_hacker_logs)
 
@@ -308,7 +310,7 @@ class PiratesWebhookManager(object):
         if self.want_exception_logs and not self.exception_log_url:
             self.notify.warning('Failed to send exception webhook; Exception url not defined!')
             return
-        
+
         # Generate header message
         districtName = self.air.distributedDistrict.getName() if hasattr(self.air, 'distributedDistrict') else None
         if districtName:
@@ -337,7 +339,7 @@ class PiratesWebhookManager(object):
 
         # Attempt to attach avatar information
         self.__attemptAttachAvatarInfo(attachment, avatarId, accountId)
- 
+
         webhookMessage.addAttachment(attachment)
         self.__sendWebhook(webhookMessage, self.want_exception_logs)
 
@@ -364,7 +366,7 @@ class PiratesWebhookManager(object):
         for endpoint in self.holiday_log_urls:
             webhookMessage = SlackWebhook(endpoint, message=hookMessage)
             attachment = SlackAttachment(
-                pretext=HolidayGlobals.getHolidayDiscordPrefixMessage(holidayId), 
+                pretext=HolidayGlobals.getHolidayDiscordPrefixMessage(holidayId),
                 title=HolidayGlobals.getHolidayDiscordName(holidayId),
                 image_url=HolidayGlobals.getHolidayDiscordImage(holidayId),
                 footer=HolidayGlobals.getHolidayDiscordDates(holidayId)
