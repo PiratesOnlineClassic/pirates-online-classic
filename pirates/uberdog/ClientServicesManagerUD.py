@@ -866,7 +866,7 @@ class LoadAvatarFSM(AvatarOperationFSM):
         self.avatar = fields
         self.demand('SetAvatar')
 
-    def enterSetAvatarTask(self, channel, task):
+    def enterSetAvatarTask(self, channel, inventoryId, task):
         # Finally, grant ownership and shut down.
         datagram = PyDatagram()
         datagram.addServerHeader(
@@ -874,6 +874,15 @@ class LoadAvatarFSM(AvatarOperationFSM):
             self.csm.air.ourChannel,
             STATESERVER_OBJECT_SET_OWNER)
         datagram.addChannel(self.target << 32 | self.avId)
+        self.csm.air.send(datagram)
+
+        # Claim ownership of the avatar's inventory
+        datagram = PyDatagram()
+        datagram.addServerHeader(
+            inventoryId,
+            self.csm.air.ourChannel,
+            STATESERVER_OBJECT_SET_OWNER)
+        datagram.addChannel(self.avId)
         self.csm.air.send(datagram)
 
         self.csm.air.writeServerEvent('avatarChosen', avId=self.avId, target=self.target)
@@ -900,18 +909,19 @@ class LoadAvatarFSM(AvatarOperationFSM):
         datagram.addString(datagramCleanup.getMessage())
         self.csm.air.send(datagram)
 
-        # Activate the avatar on the DBSS:
-        adminAccess = self.account.get('ACCESS_LEVEL', 0)
-        adminAccess = adminAccess - adminAccess % 100
-        self.csm.air.sendActivate(self.avId, 0, 0, self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
-                                           {'setAdminAccess': [adminAccess]})
-
         # setup the avatar's inventory.
         self.csm.air.inventoryManager.initiateInventory(self.avId,
             self.inventorySetup)
 
     def inventorySetup(self, inventoryId):
         channel = self.csm.GetAccountConnectionChannel(self.target)
+
+        # Activate the avatar on the DBSS:
+        adminAccess = self.account.get('ACCESS_LEVEL', 0)
+        adminAccess = adminAccess - adminAccess % 100
+
+        self.csm.air.sendActivate(self.avId, 0, 0, self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
+            {'setAdminAccess': (adminAccess,), 'setInventoryId': (inventoryId,)})
 
         # Next, add them to the avatar channel:
         datagram = PyDatagram()
@@ -931,19 +941,9 @@ class LoadAvatarFSM(AvatarOperationFSM):
         datagram.addChannel(self.target << 32 | self.avId)
         self.csm.air.send(datagram)
 
-        # Claim ownership of the avatar's inventory
-        datagram = PyDatagram()
-        datagram.addServerHeader(
-            inventoryId,
-            self.csm.air.ourChannel,
-            STATESERVER_OBJECT_SET_OWNER)
-        datagram.addChannel(self.avId)
-        self.csm.air.send(datagram)
-
         # Eliminate race conditions.
-        taskMgr.doMethodLater(0.2, self.enterSetAvatarTask,
-                              'avatarTask-%s' % self.avId, extraArgs=[channel],
-                              appendTask=True)
+        taskMgr.doMethodLater(0.2, self.enterSetAvatarTask, 'avatarTask-%s' % self.avId,
+            extraArgs=[channel, inventoryId], appendTask=True)
 
 class UnloadAvatarFSM(OperationFSM):
     notify = directNotify.newCategory('UnloadAvatarFSM')
@@ -1009,7 +1009,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         # of race conditions.
         self.connection2fsm = {}
         self.account2fsm = {}
-        
+
         # Temporary HMAC key:
         self.key = 'bG9sLndlLmNoYW5nZS50aGlzLnRvby5tdWNo'
 
@@ -1071,7 +1071,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         self.notify.debug('Received login cookie %r from %d' % (cookie, self.air.getMsgSender()))
 
         sender = self.air.getMsgSender()
-        
+
         # Time to check this login to see if its authentic
         digest_maker = hmac.new(self.key)
         digest_maker.update(cookie)
