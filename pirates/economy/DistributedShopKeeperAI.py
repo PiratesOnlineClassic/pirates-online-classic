@@ -44,7 +44,12 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
                 continue
 
-            currentStack = inventory.getStack(itemId)[1]
+            currentStack = inventory.getStack(itemId)
+            if not currentStack:
+                currentStack = 0
+            else:
+                currentStack = currentStack[1]
+            
             inventory.b_setStack(itemId, currentStack + itemQuantity)
             inventory.setGoldInPocket(currentGold - itemPrice)
 
@@ -52,6 +57,10 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         for sell in selling:
             itemId, itemQuantity = sell
             currentStack = inventory.getStack(itemId)
+            if not currentStack:
+                currentStack = 0
+            else:
+                currentStack = currentStack[1]
 
             if currentStack < itemQuantity:
                 self.air.logPotentialHacker(
