@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.GameOptionsGui
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui import DirectGuiGlobals as DGG
 from otp.otpgui import OTPDialog
@@ -19,6 +15,7 @@ try:
     import embedded
 except:
     pass
+
 
 class GameOptionsGui(DirectFrame):
     
@@ -832,29 +829,26 @@ class GameOptionsGui(DirectFrame):
                 self.shaderLevelCheck['value'] = False
             self.renderedShadowsCheck['value'] = False
             handleAggressiveMemoryCheck()
-        else:
-            if self.videoVar[0] == 1:
-                self.characterDetailRadios[1].check()
-                self.terrainDetailRadios[1].check()
-                self.reflectionRadios[1].check()
-                self.specialEffectsRadios[1].check()
-                self.textureDetailRadios[1].check()
-                self.compressedTextureCheck['value'] = True
-                if self.shaderLevelCheck:
-                    self.shaderLevelCheck['value'] = True
-                self.renderedShadowsCheck['value'] = False
-                handleAggressiveMemoryCheck()
-            else:
-                if self.videoVar[0] == 2:
-                    self.characterDetailRadios[2].check()
-                    self.terrainDetailRadios[2].check()
-                    self.reflectionRadios[2].check()
-                    self.specialEffectsRadios[2].check()
-                    self.textureDetailRadios[2].check()
-                    self.compressedTextureCheck['value'] = True
-                    if self.shaderLevelCheck:
-                        self.shaderLevelCheck['value'] = True
-                    self.renderedShadowsCheck['value'] = True
-                    handleAggressiveMemoryCheck()
+        elif self.videoVar[0] == 1:
+            self.characterDetailRadios[1].check()
+            self.terrainDetailRadios[1].check()
+            self.reflectionRadios[1].check()
+            self.specialEffectsRadios[1].check()
+            self.textureDetailRadios[1].check()
+            self.compressedTextureCheck['value'] = True
+            if self.shaderLevelCheck:
+                self.shaderLevelCheck['value'] = True
+            self.renderedShadowsCheck['value'] = False
+            handleAggressiveMemoryCheck()
+        elif self.videoVar[0] == 2:
+            self.characterDetailRadios[2].check()
+            self.terrainDetailRadios[2].check()
+            self.reflectionRadios[2].check()
+            self.specialEffectsRadios[2].check()
+            self.textureDetailRadios[2].check()
+            self.compressedTextureCheck['value'] = True
+            if self.shaderLevelCheck:
+                self.shaderLevelCheck['value'] = True
+            self.renderedShadowsCheck['value'] = True
+            handleAggressiveMemoryCheck()
         return
-# okay decompiling .\pirates\piratesgui\GameOptionsGui.pyc
