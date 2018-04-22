@@ -198,7 +198,7 @@ class BattleManagerAI(BattleManagerBase):
             skillData = avatar.battleSkillDiary.getSkill(skillId)
 
             if not skillData:
-                return
+                return None
 
             skillData[2] += self.getModifiedAttackReputation(avatar, target,
                 skillId, ammoSkillId)

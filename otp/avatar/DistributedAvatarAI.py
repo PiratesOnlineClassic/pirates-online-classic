@@ -61,6 +61,5 @@ class DistributedAvatarAI(DistributedSmoothNodeAI):
         if simbase.air.doId2do[avId]:
             onShard = True
 
-        self.sendUpdateToAvatarId(
-            senderId, 'confirmAvOnShard', [
-                avId, onShard])
+        self.sendUpdateToAvatarId(senderId, 'confirmAvOnShard', [
+            avId, onShard])

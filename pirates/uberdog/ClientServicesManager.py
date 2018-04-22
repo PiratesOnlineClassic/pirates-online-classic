@@ -4,6 +4,7 @@ from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.distributed.PotentialAvatar import PotentialAvatar
 from otp.otpbase import OTPGlobals
 from pirates.pirate.HumanDNA import HumanDNA
+from pirates.piratesgui import PiratesGuiGlobals
 
 class ClientServicesManager(DistributedObjectGlobal):
     notify = directNotify.newCategory('ClientServicesManager')
@@ -11,12 +12,12 @@ class ClientServicesManager(DistributedObjectGlobal):
     def performLogin(self, doneEvent):
         self.doneEvent = doneEvent
         token = self.cr.playToken or 'dev'
-        
+
         key = 'bG9sLndlLmNoYW5nZS50aGlzLnRvby5tdWNo'
         digest_maker = hmac.new(key)
         digest_maker.update(token)
         clientKey = digest_maker.hexdigest()
-        
+
         self.sendUpdate('login', [token, clientKey])
 
     def acceptLogin(self):
@@ -87,3 +88,9 @@ class ClientServicesManager(DistributedObjectGlobal):
 
     def sendChooseAvatar(self, avId):
         self.sendUpdate('chooseAvatar', [avId])
+
+    def systemMessage(self, message):
+        base.localAvatar.guiMgr.messageStack.addModalTextMessage(message, seconds=15, priority=0,
+            color=PiratesGuiGlobals.TextFG14, icon=('admin', ''), suffix='_f')
+
+        base.chatAssistant.receiveGameMessage(message)

@@ -14,7 +14,15 @@ from pirates.makeapirate import (BarberGlobals, ClothingGlobals,
 from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 
-messages = {0: PLocalizer.FullMoonWarning1, 1: PLocalizer.FullMoonWarning2, 2: PLocalizer.JollyRogerCurseComing, 3: PLocalizer.JollyRogerCurseActive, 4: PLocalizer.JollyRogerCurseIndoors, 5: PLocalizer.JollyRogerCurseOutdoors, 6: PLocalizer.JollyRogerCurseJail, 7: PLocalizer.JollyRogerCurseEnd}
+messages = {
+    0: PLocalizer.FullMoonWarning1,
+    1: PLocalizer.FullMoonWarning2,
+    2: PLocalizer.JollyRogerCurseComing,
+    3: PLocalizer.JollyRogerCurseActive,
+    4: PLocalizer.JollyRogerCurseIndoors,
+    5: PLocalizer.JollyRogerCurseOutdoors,
+    6: PLocalizer.JollyRogerCurseJail,
+    7: PLocalizer.JollyRogerCurseEnd}
 
 class NewsManager(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('NewsManager')
@@ -36,8 +44,9 @@ class NewsManager(DistributedObject.DistributedObject):
     def displayMessage(self, messageId):
         message = messages.get(messageId)
         if self.inNewsWorld() and not self.inTutorial(level=PiratesGlobals.TUT_GOT_COMPASS):
-            base.localAvatar.guiMgr.messageStack.addModalTextMessage(message, seconds=45, priority=0, color=PiratesGuiGlobals.TextFG14, icon=('admin',
-                                                                                                                                              ''), suffix='_f')
+            base.localAvatar.guiMgr.messageStack.addModalTextMessage(message, seconds=45, priority=0,
+                color=PiratesGuiGlobals.TextFG14, icon=('admin', ''), suffix='_f')
+
             base.chatAssistant.receiveGameMessage(message)
 
     def showHolidayMessage(self, holidayId, msgType):
