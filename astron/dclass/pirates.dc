@@ -435,7 +435,7 @@ dclass DistributedAvatarManager : OtpAvatarManager {
   requestFinalize(uint32, uint32 avId) airecv clsend;
   sendAvIdList(uint32 avIdList[]);
   avatarListResponse(AccountInfo accounts[], uint16 numInventoryManagers);
-  requestAwardableAvatars(uint32, uint32); 
+  requestAwardableAvatars(uint32, uint32);
   requestAvatarGender(uint32, uint32);
 };
 
@@ -766,11 +766,11 @@ struct AvatarType {
 
 struct QuestId {
   string id;
-}
+};
 
 struct QuestGiverId {
   string giverId;
-}
+};
 
 struct QuestTaskState {
   uint16 attempts;
@@ -1821,7 +1821,7 @@ dclass DistributedLiarsDice : DistributedDiceGame {
 
 struct PlayingCard {
   uint8(0-255) card;
-}
+};
 
 typedef PlayingCard CardHand[];
 
