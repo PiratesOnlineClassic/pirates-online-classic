@@ -166,7 +166,7 @@ class PiratesInternalRepository(AstronInternalRepository):
                 avatar = self.doId2do.get(self.getAvatarIdFromSender(), None)
 
                 if avatar:
-                    self.kickChannel(self.getMsgSender())
+                    self.kickChannel(self.getMsgSender(), reason=153)
 
             self.logException(e)
 
