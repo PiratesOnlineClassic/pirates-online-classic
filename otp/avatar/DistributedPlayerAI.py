@@ -129,8 +129,4 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.Pl
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def system(message):
-    dclass = simbase.air.dclassesByName['ClientServicesManager']
-    dg = dclass.aiFormatUpdate('systemMessage', OtpDoGlobals.OTP_DO_ID_CLIENT_SERVICES_MANAGER,
-        10, 1000000, [message])
-
-    simbase.air.send(dg)
+    simbase.air.systemMessage(message)

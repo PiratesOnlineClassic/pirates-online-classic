@@ -88,9 +88,3 @@ class ClientServicesManager(DistributedObjectGlobal):
 
     def sendChooseAvatar(self, avId):
         self.sendUpdate('chooseAvatar', [avId])
-
-    def systemMessage(self, message):
-        base.localAvatar.guiMgr.messageStack.addModalTextMessage(message, seconds=15, priority=0,
-            color=PiratesGuiGlobals.TextFG14, icon=('admin', ''), suffix='_f')
-
-        base.chatAssistant.receiveGameMessage(message)

@@ -422,7 +422,6 @@ dclass ClientServicesManager : DistributedObjectGlobal {
   deleteAvatar(uint32 avId) clsend;
   acknowledgeDeleteAvatarResp(uint32 avId, bool status);
   chooseAvatar(uint32 avId) clsend;
-  systemMessage(string message);
   reportPlayer(uint32 avId, uint8 category) clsend;
 };
 
