@@ -38,9 +38,9 @@ class NewsManagerUD:
                 self.__broadcastedHolidays[holidayId] = expireTime
                 self.__lastBroadcast = holidayId
 
-    def startHoliday(self, holidayId, time):
+    def startHoliday(self, holidayId, time, quietly=False):
         self.notify.info('Starting Holiday %s across the network for %s seconds' % (holidayId, time))
-        self.air.netMessenger.send('startHoliday', [holidayId, time])
+        self.air.netMessenger.send('startHoliday', [holidayId, time, quietly])
 
     def stopHoliday(self, holidayId):
         self.notify.info('Telling all AIs to stop holiday %s!' % holidayId)

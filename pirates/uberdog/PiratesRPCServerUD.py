@@ -136,7 +136,7 @@ class PiratesRPCServerUD(Thread):
 
         return self.formatCallback(holidays=str(set(holidays)))
 
-    def startHoliday(self, holidayId, time):
+    def startHoliday(self, holidayId, time, announce=False):
         """
         Summary:
             Tells all NewsManagers in the cluster to start a specific holiday id for a 
@@ -144,9 +144,10 @@ class PiratesRPCServerUD(Thread):
         Parameters:
             [int holidayId] = The holiday id to start
             [int time] = The time in seconds for the holiday to run
+            [bool announce] = Broadcasts to Discord that the holiday started
         """
 
-        self.air.newsManager.startHoliday(int(holidayId), int(time))
+        self.air.newsManager.startHoliday(int(holidayId), int(time), quietly=not announce)
 
         return self.formatCallback()
 

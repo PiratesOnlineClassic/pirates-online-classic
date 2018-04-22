@@ -1,5 +1,5 @@
 # Webhooks:
-want-webhooks #f
+want-webhooks #t
 want-at-everyone #f
 
 discord-log-hacks #t
