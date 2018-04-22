@@ -2,7 +2,6 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 
 class DistrictTrackerAI:
     notify = directNotify.newCategory('DistrictTrackerAI')
-    notify.setInfo(True)
 
     def __init__(self, air):
         self.air = air
