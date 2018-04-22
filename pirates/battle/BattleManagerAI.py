@@ -117,6 +117,18 @@ class BattleManagerAI(BattleManagerBase):
             self.notify.warning('Cannot get targeted skill result for an unknown avatar!')
             return None
 
+        # this is just the client requesting an action for the skill used,
+        # they are not actually attacking any kind of target...
+        if not target:
+            return self.__otherSkillResult(avatar, target, skillId, ammoSkillId, clientResult, areaIdList,
+                timestamp, pos, charge)
+
+        # the client requested a valid skill result, attempt to calculate
+        # the result for the client and send the result back...
+        return self.__skillResult(avatar, target, skillId, ammoSkillId, clientResult, areaIdList,
+            timestamp, pos, charge)
+
+    def __skillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
 
         # ensure the avatar that has sent this skill request actually
@@ -127,18 +139,6 @@ class BattleManagerAI(BattleManagerBase):
 
             return None
 
-        # this is just the client requesting an action for the skill used,
-        # they are not actually attacking any kind of target...
-        if not target:
-            return self.__otherSkillResult(avatar, target, currentWeaponId, skillId, ammoSkillId, clientResult, areaIdList,
-                timestamp, pos, charge)
-
-        # the client requested a valid skill result, attempt to calculate
-        # the result for the client and send the result back...
-        return self.__skillResult(avatar, target, currentWeaponId, skillId, ammoSkillId, clientResult, areaIdList,
-            timestamp, pos, charge)
-
-    def __skillResult(self, avatar, target, currentWeaponId, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         obeysPirateCode = self.obeysPirateCode(avatar, target)
 
         # ensure the avatar that has sent this skill request obeys
@@ -220,15 +220,7 @@ class BattleManagerAI(BattleManagerBase):
         return [skillId, ammoSkillId, skillResult, target.doId, areaIdList, attackerEffects, targetEffects,
             areaIdEffects, timestamp, pos, charge]
 
-    def __otherSkillResult(self, avatar, target, currentWeaponId, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
-        # check to see if the skill that was requested can be used in air,
-        # assuming this skill is being used without a target...
-        if not WeaponGlobals.getUsableInAir(skillId, ammoSkillId):
-            self.notify.debug('Cannot get skill result for avatar %d, skill %d not usable in air!' % (
-                avatar.doId, skillId))
-
-            return None
-
+    def __otherSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         # since this skill doesn't have a target we cannot set an effect for it,
         # just send some "place holder" data to satisfy the dc field...
         attackerEffects = [
@@ -249,6 +241,20 @@ class BattleManagerAI(BattleManagerBase):
             attackerEffects,
             targetEffects
         ]
+
+        if skillId == InventoryType.UseItem:
+            if ammoSkillId in UberDogGlobals.InventoryType.Potions:
+                avatar.useTonic(ammoSkillId)
+        else:
+            currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
+
+            # ensure the avatar that has sent this skill request actually
+            # has their weapon drawn...
+            if not isWeaponDrawn:
+                self.notify.debug('Cannot get other skill result for avatar %d, weapon %d was now drawn!' % (
+                    avatar.doId, currentWeaponId))
+
+                return None
 
         return [skillId, ammoSkillId, WeaponGlobals.RESULT_HIT, 0, areaIdList, attackerEffects, targetEffects,
             areaIdEffects, timestamp, pos, charge]
@@ -305,15 +311,12 @@ class BattleManagerAI(BattleManagerBase):
 
             # give the attacker a chance to return to battle in order to get their
             # experience and reward values from previous skills used...
-            self.__removingAttackers[attacker.doId] = taskMgr.doMethodLater(5.0, self.__removeAttacker,
-                '%s-removing-attacker-%d' % (self.__class__.__name__, attacker.doId),
-                extraArgs=[attacker, target], appendTask=True)
+            self.__removingAttackers[attacker.doId] = taskMgr.doMethodLater(5.0, self.__removeAttacker, '%s-removing-attacker-%d' % (
+                self.__class__.__name__, attacker.doId), extraArgs=[attacker, target], appendTask=True)
 
     def __removeAttacker(self, attacker, target, task):
-
         self.removeAttacker(attacker, target)
         del self.__removingAttackers[attacker.doId]
-
         return task.done
 
     def __rewardAttacker(self, attacker, target):
