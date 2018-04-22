@@ -245,7 +245,10 @@ class PiratesWebhookManager(object):
         """
         Sends a webhook to its destination
         """
-        if not self.want_webhooks and verify:
+        if not self.want_webhooks:
+            return
+
+        if not verify:
             return
 
         if not webhook:
