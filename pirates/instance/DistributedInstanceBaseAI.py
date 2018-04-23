@@ -15,7 +15,7 @@ class DistributedInstanceBaseAI(DistributedObjectAI):
         self.uniqueId = ''
         self.name = ''
         self.fileName = ''
-        self.type = PiratesGlobals.INSTANCE_GENERIC
+        self.type = PiratesGlobals.INSTANCE_NONE
         self.spawnPts = {}
 
         self.uidMgr = UniqueIdManager(self.air, self)

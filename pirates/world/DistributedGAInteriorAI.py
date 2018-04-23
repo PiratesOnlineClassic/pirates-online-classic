@@ -14,6 +14,11 @@ class DistributedGAInteriorAI(DistributedGameAreaAI, DistributedCartesianGridAI)
 
         self.connectorId = 0
 
+        self.exteriorFrontDoor = None
+        self.exteriorBackDoor = None
+        self.interiorFrontDoor = None
+        self.interiorBackDoor = None
+
         self.builder = InteriorAreaBuilderAI(air, self)
 
     def setConnectorId(self, connectorId):
@@ -28,6 +33,30 @@ class DistributedGAInteriorAI(DistributedGameAreaAI, DistributedCartesianGridAI)
 
     def getConnectorId(self):
         return self.connectorId
+
+    def setExteriorFrontDoor(self, exteriorFrontDoor):
+        self.exteriorFrontDoor = exteriorFrontDoor
+
+    def getExteriorFrontDoor(self):
+        return self.exteriorFrontDoor
+
+    def setExteriorBackDoor(self, exteriorBackDoor):
+        self.exteriorBackDoor = exteriorBackDoor
+
+    def getExteriorBackDoor(self):
+        return self.exteriorBackDoor
+
+    def setInteriorFrontDoor(self, interiorFrontDoor):
+        self.interiorFrontDoor = interiorFrontDoor
+
+    def getInteriorFrontDoor(self):
+        return self.interiorFrontDoor
+
+    def setInteriorBackDoor(self, interiorBackDoor):
+        self.interiorBackDoor = interiorBackDoor
+
+    def getInteriorBackDoor(self):
+        return self.interiorBackDoor
 
     def delete(self):
         self.air.deallocateZone(self.zoneId)

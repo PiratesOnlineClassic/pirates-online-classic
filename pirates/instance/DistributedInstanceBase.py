@@ -208,7 +208,9 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
     def turnOn(self, av=None):
         self.unstash()
         self._onOffState = True
-        self.worldGrid.turnOn(av)
+
+        if self.worldGrid:
+            self.worldGrid.turnOn(av)
 
     def _turnOffIslands(self, cacheIslands=[]):
         for island in self.islands.values():
@@ -247,6 +249,7 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
             parentDoId = base.cr.uidMgr.getDoId(parentUid)
             areaParent = base.cr.doId2do[parentDoId]
             locationInfo = areaParent.getLocationInfo(uniqueId)
+            # TODO: FIXME!
             #f locationInfo:
             #    localAvatar.sendUpdate('enterAreaSphere', [uniqueId, parentUid])
 
@@ -273,6 +276,7 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
             parentDoId = base.cr.uidMgr.getDoId(parentUid)
             areaParent = base.cr.doId2do[parentDoId]
             locationInfo = areaParent.getLocationInfo(uniqueId)
+            # TODO: FIXME!
             #if locationInfo:
             #    print 'left area %s' % locationInfo[2]
             #    localAvatar.sendUpdate('leaveAreaSphere', [uniqueId, parentUid])

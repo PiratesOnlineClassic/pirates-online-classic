@@ -13,16 +13,15 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
         DistributedDoorBase.DistributedDoorBase.__init__(self, cr, 'DistributedBuildingDoor')
         self.areaRequest = None
         self.privateInteriorId = 0
-        return
 
     def disable(self):
         self.notify.debug('%s DistributedBuildingDoor.disable' % self.doId)
         if self.areaRequest:
             self.cr.relatedObjectMgr.abortRequest(self.areaRequest)
             self.areaRequest = None
+
         self.privateInteriorId = 0
         DistributedDoorBase.DistributedDoorBase.disable(self)
-        return
 
     def delete(self):
         self.notify.debug('%s DistributedBuildingDoor.delete' % self.doId)
@@ -81,8 +80,7 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
             return
 
         self.areaRequest = self.cr.relatedObjectMgr.requestObjects([interiorId], eachCallback=areaFinishedCallback)
-        localAvatar.setInterest(worldId, worldZoneId, [
-         'instanceInterest-Door'])
+        localAvatar.setInterest(worldId, worldZoneId, ['instanceInterest-Door'])
 
     def loadInteriorAreaFinished(self, interior, autoFadeIn):
         oldParent = self.getParentObj()
@@ -96,10 +94,10 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
         interior.reparentTo(render)
         interior.setAutoFadeInOnEnter(autoFadeIn)
         interior.enterInteriorFromDoor(self.doorIndex)
-        return
 
     def requestInteraction(self, avId, interactType=0):
         if avId == localAvatar.doId and localAvatar.zombie and self.buildingUid != '1189479168.0sdnaik':
             localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoDoors, PiratesGuiGlobals.TextFG6)
             return
+
         DistributedDoorBase.DistributedDoorBase.requestInteraction(self, avId, interactType)

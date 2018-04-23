@@ -22,7 +22,6 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         self.fadeInTrack = None
         self.autoFadeIn = True
         self.musicName = None
-        return
 
     def announceGenerate(self):
         self.notify.debug('AnnounceGenerate')
@@ -33,7 +32,6 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         self.loadModel()
         self.setupLODs()
         self.enableFloors()
-        self.startProcessVisibility(base.localAvatar)
         self.cr.distributedDistrict.worldCreator.loadObjectsByUid(self, self.uniqueId, dynamic=0)
         self.loadZoneObjects(-1)
         self.enableFloors()
@@ -56,7 +54,6 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         DistributedGameArea.DistributedGameArea.disable(self)
         DistributedCartesianGrid.DistributedCartesianGrid.disable(self)
         del self.closeSfx
-        return
 
     def delete(self):
         self.notify.debug('delete')
@@ -105,7 +102,7 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         self.notify.debug('enableFloors')
         floorName = 'floor_interior'
         self.uniqueFloorName = self.uniqueName(floorName)
-        collNodes = self.findAllMatches('**/+CollisionNode') 
+        collNodes = self.findAllMatches('**/+CollisionNode')
         for collNode in collNodes:
             curMask = collNode.node().getIntoCollideMask()
             if curMask.hasBitsInCommon(PiratesGlobals.FloorBitmask):
@@ -153,7 +150,6 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
             return
         self.notify.debug('%s handleExitGameArea - doing something' % self.doId)
         self.removeObjectFromGrid(localAvatar)
-        self.stopProcessVisibility()
         localAvatar.interior = None
         localAvatar.guiMgr.radarGui.unloadMap()
         for x in range(self.locatorNodes.getNumPaths()):
@@ -161,7 +157,6 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
 
         self.fadeOutAmbientSound()
         DistributedGameArea.DistributedGameArea.handleExitGameArea(self, collEntry)
-        return
 
     def fadeOutAmbientSound(self):
         if hasattr(self, 'ambientName') and not (self.ambientName == 'jungle' or self.ambientName == 'cave' or self.ambientName == 'swamp'):
@@ -169,7 +164,6 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         if self.musicName:
             base.musicMgr.requestFadeOut(self.musicName)
             self.musicName = None
-        return
 
     def loadModelParts(self):
         modelBaseName = self.modelPath.split('_zero')[0]
@@ -213,7 +207,7 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         locatorNodes = self.geom.findAllMatches('**/portal_interior_*')
         locatorNodes.wrtReparentTo(self)
         self.locatorNodes = locatorNodes
-        self.portalNodes = self.geom.findAllMatches('**/portal_[0-9]') 
+        self.portalNodes = self.geom.findAllMatches('**/portal_[0-9]')
         self.initBlockers(self.geom)
 
     def setName(self, name):
@@ -274,7 +268,6 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
             sf = Sequence(Func(localAvatar.gameFSM.request, 'DoorInteract'), fadeInFunc, self.openDoorIval, self.closeDoorIval, playerStateFunc)
         self.fadeInTrack = sf
         self.fadeInTrack.start()
-        return
 
     @report(types=['frameCount'], dConfigParam='want-connector-report')
     def handleChildArrive(self, childObj, zoneId):
@@ -320,12 +313,13 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         self.unstash()
         DistributedGameArea.DistributedGameArea.turnOn(self, av=None)
         DistributedCartesianGrid.DistributedCartesianGrid.turnOn(self, av=None)
-        return
+        self.startProcessVisibility(base.localAvatar)
 
     def turnOff(self):
         DistributedGameArea.DistributedGameArea.turnOn(self)
         DistributedCartesianGrid.DistributedCartesianGrid.turnOn(self)
         self.stash()
+        self.stopProcessVisibility()
 
     def getLevel(self):
         return 1

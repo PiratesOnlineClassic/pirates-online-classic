@@ -13,6 +13,26 @@ class DistributedBuildingDoorAI(DistributedDoorBaseAI):
         self.interiorWorldParentId = 0
         self.interiorWorldZoneId = 0
 
+    def handleRequestInteraction(self, avatar, interactType, instant):
+        interior = self.air.doId2do.get(self.interiorDoId)
+
+        if not interior:
+            self.notify.warning('Cannot set private interior instance for door %d, interior %d not found!' % (
+                self.doId, self.interiorDoId))
+
+            return self.DENY
+
+        interiorDoor = interior.getInteriorFrontDoor()
+
+        if not interiorDoor:
+            self.notify.warning('Cannot set private interior instance for door %d, interior door not found!' % (
+                self.doId))
+
+            return self.DENY
+
+        avatar.b_setLocation(interior.doId, interiorDoor.zoneId)
+        return self.ACCEPT
+
     def setInteriorId(self, interiorDoId, interiorUid, interiorWorldParentId, interiorWorldZoneId):
         self.interiorDoId = interiorDoId
         self.interiorUid = interiorUid

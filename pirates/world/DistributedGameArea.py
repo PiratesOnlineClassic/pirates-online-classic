@@ -1,3 +1,5 @@
+import time
+
 from pandac.PandaModules import *
 from direct.distributed import DistributedNode
 from direct.distributed import DistributedObject
@@ -26,7 +28,7 @@ from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import IslandWaterParameters
 from pirates.swamp.Swamp import Swamp
 from pirates.ai import HolidayGlobals
-import time
+from otp.ai.MagicWordGlobal import *
 
 class DistributedGameArea(DistributedNode.DistributedNode):
     notify = directNotify.newCategory('DistributedGameArea')
@@ -621,3 +623,17 @@ class DistributedGameArea(DistributedNode.DistributedNode):
 
     def getLevel(self):
         return 1
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def visualizeGrid():
+    """
+    Enables visualize grid zones within a cartesian grid
+    """
+
+    parent = spellbook.getTarget().getParentObj()
+
+    if not parent or not isinstance(parent, DistributedGameArea):
+        return "You are not located under an cartesian grid object!"
+
+    parent.visualizeGrid()
+    return "Toggled visualize grid zones."

@@ -62,11 +62,19 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
             return
 
+        modelPath = self.air.worldCreator.getModelPathFromFile(interiorFile)
+
+        if not modelPath:
+            self.notify.warning('Cannot create building exterior %s, no model path found for file %s!' % (
+                objKey, interiorFile))
+
+            return
+
         interiorClass = DistributedJailInteriorAI if 'Jail' in interiorFile else DistributedGAInteriorAI
         interior = interiorClass(self.air)
         interior.setUniqueId(exteriorUid)
         interior.setName(PLocalizer.LocationNames.get(objKey, ''))
-        interior.setModelPath(objectData['Visual'].get('Interior') or objectData['Visual'].get('Model'))
+        interior.setModelPath(modelPath)
         interior.setPos(objectData.get('Pos', (0, 0, 0)))
         interior.setHpr(objectData.get('Hpr', (0, 0, 0)))
         interior.setScale(objectData.get('Scale', (1, 1, 1)))
@@ -103,8 +111,14 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         doorLocatorNode.setPos(objectData.get('Pos', (0, 0, 0)))
         doorLocatorNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
         doorLocatorNode.setScale(objectData.get('Scale', (1, 1, 1)))
+        doorLocatorNode.setBuildingUid(parentUid)
         doorLocatorNode.setInteriorId(interior.doId, interior.getUniqueId(),
             interior.parentId, interior.zoneId)
+
+        if not interior.getExteriorFrontDoor():
+            interior.setExteriorFrontDoor(doorLocatorNode)
+        else:
+            interior.setExteriorBackDoor(doorLocatorNode)
 
         self.setObjectTruePosHpr(doorLocatorNode, objKey, parentUid, objectData)
 

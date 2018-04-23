@@ -190,5 +190,9 @@ class ClientAreaBuilderAI(DirectObject):
         object.d_setY(object.getY())
         object.d_setZ(object.getZ())
 
+        object.d_setH(object.getH())
+        object.d_setP(object.getP())
+        object.d_setR(object.getR())
+
         #object.d_setPos(*object.getPos())
         #object.d_setHpr(*object.getHpr())

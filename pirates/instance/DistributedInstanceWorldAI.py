@@ -11,7 +11,7 @@ class DistributedInstanceWorldAI(DistributedInstanceBaseAI):
         DistributedInstanceBaseAI.__init__(self, air)
 
         self.fileName = WorldGlobals.PiratesWorldSceneFileBase
-        self.type = PiratesGlobals.INSTANCE_NONE
+        self.type = PiratesGlobals.INSTANCE_GENERIC
 
     def generate(self):
         DistributedInstanceBaseAI.generate(self)

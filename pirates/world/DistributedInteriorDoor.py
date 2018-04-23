@@ -15,14 +15,16 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         DistributedDoorBase.DistributedDoorBase.__init__(self, cr, 'DistributedInteriorDoor')
         self.islandRequest = None
         self.doorDisableDialog = None
-        return
+
+    def generate(self):
+        DistributedDoorBase.DistributedDoorBase.generate(self)
 
     def delete(self):
         if self.islandRequest:
             self.cr.relatedObjectMgr.abortRequest(self.islandRequest)
             self.islandRequest = None
+
         DistributedDoorBase.DistributedDoorBase.delete(self)
-        return
 
     def disable(self):
         self.cleanupDoorDisableDialog()
@@ -52,33 +54,35 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         return building
 
     def loadOtherSide(self):
-        localAvatar.setInterest(self.exteriorWorldParentId, self.exteriorWorldZoneId, [
-         'instanceInterest-Door'])
+        localAvatar.setInterest(self.exteriorWorldParentId, self.exteriorWorldZoneId, ['instanceInterest-Door'])
 
         def extFinishedCallback(ext):
             self.islandRequest = None
             self.loadExteriorFinished()
-            return
 
-        self.islandRequest = self.cr.relatedObjectMgr.requestObjects([self.exteriorDoId], eachCallback=extFinishedCallback)
+        self.islandRequest = self.cr.relatedObjectMgr.requestObjects([self.exteriorDoId],
+            eachCallback=extFinishedCallback)
 
     def cleanupDoorDisableDialog(self, extraArgs=None):
         if self.doorDisableDialog:
             self.doorDisableDialog.destroy()
             self.doorDisableDialog = None
-        return
 
     def requestInteraction(self, avId, interactType=0):
         if not base.launcher.getPhaseComplete(3):
             if not self.doorDisableDialog:
-                self.doorDisableDialog = PDialog.PDialog(text=PLocalizer.NoRambleshack, style=OTPDialog.Acknowledge, command=self.cleanupDoorDisableDialog)
+                self.doorDisableDialog = PDialog.PDialog(text=PLocalizer.NoRambleshack, style=OTPDialog.Acknowledge,
+                    command=self.cleanupDoorDisableDialog)
+
             return
+
         if self.buildingUid == LocationIds.PARLOR_BUILDING:
             if avId == base.localAvatar.doId:
                 base.transitions.fadeOut(self.tOpen)
                 self.openDoorIval.start()
                 self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
                 return
+
         DistributedDoorBase.DistributedDoorBase.requestInteraction(self, avId, interactType)
 
     def loadExteriorFinished(self):
@@ -97,6 +101,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
             doorLocator = building.find(self.doorLeftStr)
             if doorLocator.isEmpty():
                 doorLocator = building.find(self.doorRightStr)
+
         localAvatar.reparentTo(doorLocator)
         localAvatar.setPos(0, 10, 0)
         localAvatar.setHpr(0, 0, 0)
@@ -107,7 +112,6 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         self.fadeIn()
         locationUid = island.getUniqueId()
         localAvatar.guiMgr.radarGui.showLocation(locationUid)
-        return
 
     def handleEnterProximity(self, collEntry):
         DistributedDoorBase.DistributedDoorBase.handleEnterProximity(self, collEntry)

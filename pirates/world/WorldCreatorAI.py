@@ -40,6 +40,10 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
             if objects:
                 self.rFindFile(objects)
 
+    def getModelPathFromFile(self, file):
+        fileDict = self.openFile(file + '.py')
+        return fileDict['Objects'].values()[0]['Visual']['Model']
+
     def loadObjectsFromFile(self, filename, parent=None, zoneLevel=0, startTime=None, parentIsObj=False):
         # load the object data recursive into the file dictionary,
         # so we have the file data and files before any object is created...

@@ -1709,16 +1709,19 @@ dclass DistributedDoorBase : DistributedInteractive {
   setBuildingUid(string) required broadcast ram;
   setMovie(uint8, uint32, int16) broadcast;
   setLocked(uint8) required broadcast ram;
+
+  setX(int16/10) required broadcast ram;
+  setY(int16/10) required broadcast ram;
+  setZ(int16/10) required broadcast ram;
+  setH(int16%360/10) required broadcast ram;
+  setP(int16%360/10) required broadcast ram;
+  setR(int16%360/10) required broadcast ram;
 };
 
 dclass DistributedBuildingDoor : DistributedDoorBase {
   setInteriorId(uint32, string, uint32, uint32) required broadcast ram;
   requestPrivateInteriorInstance() airecv clsend;
   setPrivateInteriorInstance(uint32, uint32, uint32, bool);
-
-  setX(int16/10) required broadcast ram;
-  setY(int16/10) required broadcast ram;
-  setZ(int16/10) required broadcast ram;
 };
 
 dclass DistributedInteriorDoor : DistributedDoorBase {

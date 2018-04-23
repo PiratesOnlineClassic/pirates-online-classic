@@ -4,7 +4,6 @@ from pirates.piratesbase import PLocalizer
 from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from pirates.piratesbase import PLocalizer
-from otp.ai.MagicWordGlobal import *
 
 class DistributedGameAreaAI(DistributedNodeAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGameAreaAI')
@@ -82,17 +81,3 @@ class DistributedGameAreaAI(DistributedNodeAI):
 
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
         do.generateWithRequiredAndId(self.air.allocateChannel(), self.doId, zoneId, optionalFields)
-
-@magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def visualizeGrid():
-    """
-    Enables visualize grid zones within a cartesian grid
-    """
-
-    parent = spellbook.getTarget().getParentObj()
-
-    if not parent or not isinstance(parent, DistributedGameAreaAI):
-        return "You are not located on a cartesian grid object!"
-
-    parent.visualizeGrid()
-    return "Toggled visualize grid zones."
