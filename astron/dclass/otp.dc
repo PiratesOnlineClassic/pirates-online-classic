@@ -144,8 +144,8 @@ dclass DistributedSmoothNode : DistributedNode {
   setSmPosHpr : setComponentX, setComponentY, setComponentZ, setComponentH, setComponentP, setComponentR, setComponentT;
   setSmPosHprL : setComponentL, setComponentX, setComponentY, setComponentZ, setComponentH, setComponentP, setComponentR, setComponentT;
   clearSmoothing(int8) broadcast ownsend;
-  suggestResync(uint32, int16, int16, int32, uint16, uint16/100) airecv clsend;
-  returnResync(uint32, int16, int32, uint16, uint16/100) airecv clsend;
+  suggestResync(uint32, int16, int16, int32, uint16, uint16/100) ownrecv clsend;
+  returnResync(uint32, int16, int32, uint16, uint16/100) ownrecv clsend;
 };
 
 dclass DistributedCartesianGrid : DistributedNode {
