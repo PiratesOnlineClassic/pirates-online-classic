@@ -14,6 +14,8 @@ class DistributedDoorBaseAI(DistributedInteractiveAI):
         self.buildingUid = ''
         self.locked = 0
 
+        self.otherDoor = None
+
     def handleRequestInteraction(self, avatar, interactType, instant):
         return self.ACCEPT
 
@@ -61,3 +63,9 @@ class DistributedDoorBaseAI(DistributedInteractiveAI):
 
     def getLocked(self):
         return self.locked
+
+    def setOtherDoor(self, otherDoor):
+        self.otherDoor = otherDoor
+
+    def getOtherDoor(self):
+        return self.otherDoor

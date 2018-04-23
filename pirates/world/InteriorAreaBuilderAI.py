@@ -58,12 +58,14 @@ class InteriorAreaBuilderAI(ClientAreaBuilderAI):
             return
 
         doorLocatorNode.setBuildingUid(exteriorDoor.getBuildingUid())
-        doorLocatorNode.setExteriorDoor(exteriorDoor)
+        doorLocatorNode.setOtherDoor(exteriorDoor)
         doorLocatorNode.setExteriorId(exterior.doId, exteriorWorld.doId, exterior.zoneId)
 
         zoneId = self.parent.getZoneFromXYZ(doorLocatorNode.getPos())
         self.parent.generateChildWithRequired(doorLocatorNode, zoneId)
         self.parentObjectToCell(doorLocatorNode, zoneId)
+
+        exteriorDoor.setOtherDoor(doorLocatorNode)
 
         self.addObject(doorLocatorNode)
         self.broadcastObjectPosition(doorLocatorNode)

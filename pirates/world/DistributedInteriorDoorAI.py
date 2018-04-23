@@ -16,8 +16,6 @@ class DistributedInteriorDoorAI(DistributedDoorBaseAI):
         self.exteriorWorldParentId = 0
         self.exteriorWorldZoneId = 0
 
-        self.exteriorDoor = None
-
         self.buildingDoorId = 0
 
     def handleRequestInteraction(self, avatar, interactType, instant):
@@ -29,13 +27,13 @@ class DistributedInteriorDoorAI(DistributedDoorBaseAI):
 
             return self.DENY
 
-        if not self.exteriorDoor:
+        if not self.otherDoor:
             self.notify.warning('Cannot find exterior door for interior door %d when trying to interact with %d!' % (
                 self.doId, avatar.doId))
 
             return self.DENY
 
-        avatar.b_setLocation(exterior.doId, self.exteriorDoor.zoneId)
+        avatar.b_setLocation(exterior.doId, self.otherDoor.zoneId)
         return self.ACCEPT
 
     def setInteriorId(self, interiorDoId, interiorParentId, interiorZoneId):
@@ -67,12 +65,6 @@ class DistributedInteriorDoorAI(DistributedDoorBaseAI):
 
     def getExteriorId(self):
         return [self.exteriorDoId, self.exteriorWorldParentId, self.exteriorWorldZoneId]
-
-    def setExteriorDoor(self, exteriorDoor):
-        self.exteriorDoor = exteriorDoor
-
-    def getExteriorDoor(self):
-        return self.exteriorDoor
 
     def setBuildingDoorId(self, buildingDoorId):
         self.buildingDoorId = buildingDoorId
