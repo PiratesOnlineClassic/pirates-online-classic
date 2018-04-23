@@ -1715,6 +1715,10 @@ dclass DistributedBuildingDoor : DistributedDoorBase {
   setInteriorId(uint32, string, uint32, uint32) required broadcast ram;
   requestPrivateInteriorInstance() airecv clsend;
   setPrivateInteriorInstance(uint32, uint32, uint32, bool);
+
+  setX(int16/10) required broadcast ram;
+  setY(int16/10) required broadcast ram;
+  setZ(int16/10) required broadcast ram;
 };
 
 dclass DistributedInteriorDoor : DistributedDoorBase {

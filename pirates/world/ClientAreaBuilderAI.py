@@ -22,20 +22,15 @@ class ClientAreaBuilderAI(DirectObject):
         elif objType == ObjectList.AREA_TYPE_ISLAND_REGION:
             newObj = self.__createGameArea(objectData, parent, parentUid,
                 objKey, dynamic)
-        elif objType == ObjectList.AREA_TYPE_BUILDING_INTERIOR:
-            newObj = self.__createInterior(objectData, parent, parentUid,
-                objKey, dynamic)
         else:
             if not parent or not hasattr(parent, 'builder'):
-                areaParent = self.air.worldCreator.world.uidMgr.justGetMeMeObject(
+                parent = self.air.worldCreator.world.uidMgr.justGetMeMeObject(
                     parentUid)
 
-                if not areaParent:
+                if not parent:
                     return newObj
-            else:
-                areaParent = parent
 
-            newObj = areaParent.builder.createObject(objType, objectData, parent,
+            newObj = parent.builder.createObject(objType, objectData, parent,
                 parentUid, objKey, dynamic)
 
         return newObj
@@ -57,6 +52,53 @@ class ClientAreaBuilderAI(DirectObject):
         object.setPos(parent, originalPos)
 
         self.broadcastObjectPosition(object)
+
+    def isChildObject(self, objKey, parentUid):
+        return self.air.worldCreator.getObjectParentUid(objKey) != parentUid
+
+    def setObjectTruePosHpr(self, object, objKey, parentUid, objectData):
+        objectPos = objectData.get('Pos', Point3(0, 0, 0))
+        objectHpr = objectData.get('Hpr', Point3(0, 0, 0))
+
+        if not self.isChildObject(objKey, parentUid):
+            object.setPos(objectPos)
+            object.setHpr(objectHpr)
+            return object
+
+        parentData = self.air.worldCreator.getObjectDataByUid(parentUid)
+
+        if parentData['Type'] == 'Island':
+            object.setPos(objectPos)
+            object.setHpr(objectHpr)
+            return object
+
+        parentObject = NodePath('psuedo-%s' % parentUid)
+        parentObject.setPos(parentData.get('Pos', Point3(0, 0, 0)))
+        parentObject.setHpr(parentData.get('Hpr', Point3(0, 0, 0)))
+
+        object.setPos(parentObject, objectPos)
+        object.setHpr(parentObject, objectHpr)
+
+        return object
+
+    def getObjectTruePosAndParent(self, objKey, parentUid, objectData):
+        if self.isChildObject(objKey, parentUid):
+            parentData = self.air.worldCreator.getObjectDataByUid(parentUid)
+
+            if parentData['Type'] == 'Island':
+                return objectData.get('Pos'), NodePath('')
+
+            parentObject = NodePath('psuedo-%s' % parentUid)
+
+            if not 'GridPos' in objectData:
+                parentObject.setPos(parentData.get('Pos', Point3(0, 0, 0)))
+
+            parentObject.setHpr(parentData.get('Hpr', Point3(0, 0, 0)))
+
+            objectPos = objectData.get('GridPos', objectData.get('Pos', Point3(0, 0, 0)))
+            return objectPos, parentObject
+
+        return objectData.get('Pos'), NodePath('')
 
     def __createIsland(self, objectData, parent, parentUid, objKey, dynamic):
         from pirates.world.DistributedIslandAI import DistributedIslandAI
@@ -97,22 +139,6 @@ class ClientAreaBuilderAI(DirectObject):
         self.addObject(gameArea)
 
         return gameArea
-
-    def __createInterior(self, objectData, parent, parentUid, objKey, dynamic):
-        from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
-
-        interior = DistributedGAInteriorAI(self.air)
-        interior.setUniqueId(objKey)
-        interior.setName(PLocalizer.LocationNames.get(objKey, ''))
-        interior.setModelPath(objectData['Visual']['Model'])
-        interior.setPos(objectData.get('Pos', (0, 0, 0)))
-        interior.setHpr(objectData.get('Hpr', (0, 0, 0)))
-        interior.setScale(objectData.get('Scale', (1, 1, 1)))
-
-        self.parent.generateChildWithRequired(interior, self.air.allocateZone())
-        self.addObject(interior)
-
-        return interior
 
     def addObject(self, object, uniqueId=None):
         if not object:
@@ -160,5 +186,9 @@ class ClientAreaBuilderAI(DirectObject):
             self.notify.warning('Failed to broadcast position for non-existant object!')
             return
 
-        object.d_setPos(*object.getPos())
-        object.d_setHpr(*object.getHpr())
+        object.d_setX(object.getX())
+        object.d_setY(object.getY())
+        object.d_setZ(object.getZ())
+
+        #object.d_setPos(*object.getPos())
+        #object.d_setHpr(*object.getHpr())

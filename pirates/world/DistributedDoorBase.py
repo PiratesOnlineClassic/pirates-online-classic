@@ -7,7 +7,7 @@ from pirates.distributed import DistributedInteractive
 from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
 from pirates.quest.QuestConstants import LocationIds
 
-class DistributedDoorBase(DistributedInteractive.DistributedInteractive): 
+class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
     notify = directNotify.newCategory('DistributedDoorBase')
     notify.setDebug(0)
 

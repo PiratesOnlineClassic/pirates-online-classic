@@ -13,6 +13,7 @@ class DistributedGAInteriorAI(DistributedGameAreaAI, DistributedCartesianGridAI)
             GAME_AREA_INTERIOR_GRID_RADIUS, GAME_AREA_INTERIOR_CELL_SIZE)
 
         self.connectorId = 0
+
         self.builder = InteriorAreaBuilderAI(air, self)
 
     def setConnectorId(self, connectorId):
