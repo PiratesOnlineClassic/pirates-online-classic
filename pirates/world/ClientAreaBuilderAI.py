@@ -19,6 +19,12 @@ class ClientAreaBuilderAI(DirectObject):
         if objType == ObjectList.AREA_TYPE_ISLAND:
             newObj = self.__createIsland(objectData, parent, parentUid,
                 objKey, dynamic)
+        elif objType == ObjectList.AREA_TYPE_ISLAND_REGION:
+            newObj = self.__createGameArea(objectData, parent, parentUid,
+                objKey, dynamic)
+        elif objType == ObjectList.AREA_TYPE_BUILDING_INTERIOR:
+            newObj = self.__createInterior(objectData, parent, parentUid,
+                objKey, dynamic)
         else:
             if not parent or not hasattr(parent, 'builder'):
                 areaParent = self.air.worldCreator.world.uidMgr.justGetMeMeObject(
@@ -63,7 +69,7 @@ class ClientAreaBuilderAI(DirectObject):
         island.setModelPath(worldIsland['Visual']['Model'])
         island.setPos(worldIsland.get('Pos', (0, 0, 0)))
         island.setHpr(worldIsland.get('Hpr', (0, 0, 0)))
-        island.setScale(objectData.get('Scale', 1))
+        island.setScale(objectData.get('Scale', (1, 1, 1)))
         island.setUndockable(objectData.get('Undockable', False))
 
         if 'Objects' in worldIsland:
@@ -75,6 +81,38 @@ class ClientAreaBuilderAI(DirectObject):
         self.addObject(island)
 
         return island
+
+    def __createGameArea(self, objectData, parent, parentUid, objKey, dynamic):
+        from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
+
+        gameArea = DistributedGAInteriorAI(self.air)
+        gameArea.setUniqueId(objKey)
+        gameArea.setName(PLocalizer.LocationNames.get(objKey, ''))
+        gameArea.setModelPath(objectData['Visual']['Model'])
+        gameArea.setPos(objectData.get('Pos', (0, 0, 0)))
+        gameArea.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        gameArea.setScale(objectData.get('Scale', (1, 1, 1)))
+
+        self.parent.generateChildWithRequired(gameArea, self.air.allocateZone())
+        self.addObject(gameArea)
+
+        return gameArea
+
+    def __createInterior(self, objectData, parent, parentUid, objKey, dynamic):
+        from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
+
+        interior = DistributedGAInteriorAI(self.air)
+        interior.setUniqueId(objKey)
+        interior.setName(PLocalizer.LocationNames.get(objKey, ''))
+        interior.setModelPath(objectData['Visual']['Model'])
+        interior.setPos(objectData.get('Pos', (0, 0, 0)))
+        interior.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        interior.setScale(objectData.get('Scale', (1, 1, 1)))
+
+        self.parent.generateChildWithRequired(interior, self.air.allocateZone())
+        self.addObject(interior)
+
+        return interior
 
     def addObject(self, object, uniqueId=None):
         if not object:
