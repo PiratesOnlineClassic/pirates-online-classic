@@ -105,8 +105,9 @@ want-membership #f
 want-island-barriers #t
 object-load-delay #f
 
-# Temporary:
+# Smoothing:
 smooth-lag 0.4
+smooth-prediction-lag 0.2
 
 # Analytics:
 analytics-game-key 5de6a7ce0decbe613cf1cd172b319faf
