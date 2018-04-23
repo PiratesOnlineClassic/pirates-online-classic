@@ -46,7 +46,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
             return
 
-        exteriorUid = objectData.get('ExtUid', None)
+        exteriorUid = objectData.get('ExtUid')
 
         if not exteriorUid:
             self.notify.warning('Cannot create building exterior %s, no exterior uid found!' % (
@@ -54,7 +54,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
             return
 
-        interiorFile = objectData.get('File', None)
+        interiorFile = objectData.get('File')
 
         if not interiorFile:
             self.notify.debug('Cannot create building exterior %s, no interior file found!' % (
