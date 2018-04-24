@@ -106,7 +106,7 @@ want-island-barriers #t
 object-load-delay #f
 
 # Smoothing:
-smooth-lag 0.4
+smooth-lag 0.2
 smooth-prediction-lag 0.2
 
 # Analytics:
