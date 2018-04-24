@@ -279,10 +279,6 @@ class BattleManagerAI(BattleManagerBase):
 
             self.__checkAttacker(attacker, target)
 
-        if target.getHp()[0] <= 0:
-            target.spawnerNode.processDeath()
-            return
-
     def __checkAttacker(self, attacker, target):
         # check the current weapon skill and determine if the avatar is still in
         # range that they may still be able to use that weapon in battle...
