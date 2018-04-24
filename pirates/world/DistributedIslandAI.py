@@ -41,7 +41,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def delete(self):
         DistributedCartesianGridAI.delete(self)
-        DistributedGameAreaAI.delete(self)   
+        DistributedGameAreaAI.delete(self)
 
         self.ignore('HolidayStarted')
         self.ignore('HolidayEnded')
