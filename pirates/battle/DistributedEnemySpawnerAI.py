@@ -78,11 +78,7 @@ class SpawnNodeBase:
             return
 
         self._npc.d_setGameState('Death')
-
-        taskMgr.doMethodLater(2.5, self.__died, 'perform-respawn-%s' % self.objKey,
-            extraArgs=[self._npc], appendTask=True)
-
-        self._npc = None
+        taskMgr.doMethodLater(5, self.__respawn, 'perform-respawn-%s' % self.objKey)
 
     def canRespawn(self):
         holidayName = self.objectData.get('Holiday', None)
@@ -107,32 +103,27 @@ class SpawnNodeBase:
         if not self.canRespawn():
             self.__died(self._npc)
 
-    def __died(self, npc, task=None):
-        if not npc:
-            return
-
-        npc.requestDelete()
-        self.__respawn()
-
-        return Task.done
-
-    def __respawn(self):
-        if self._npc:
-            self.notify.debug('Attempted to respawn on a %s with an already existing npc!' % \
+    def __respawn(self, task):
+        if not self._npc:
+            self.notify.warning('Attempted to perform respawn on a %s without a npc!' % \
                 self.__class__.__name__)
 
             return
 
+        self._npc.requestDelete()
+        self._npc = None
+
         respawns = self.objectData.get('Respawns', True)
         if not respawns:
             #TODO: is this the proper way of handling this?
-            self.removeSpawnNode(self.objType, self)
+            removeSpawnNode(self.objType, self)
             return
 
         #TODO: Is this a constant?
         spawnTimer = 20
-        taskMgr.doMethodLater(spawnTimer, self.__attemptSpawn, 'perform-spawn-%s' % \
-            self.objKey)
+        taskMgr.doMethodLater(spawnTimer, self.__spawn, 'perform-spawn-%s' % self.objKey)
+
+        return task.done
 
     def getNPCTeam(self, avatarType):
         if avatarType.isA(AvatarTypes.Navy):

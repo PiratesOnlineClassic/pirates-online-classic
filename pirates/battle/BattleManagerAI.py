@@ -46,14 +46,6 @@ class BattleManagerAI(BattleManagerBase):
         if target.doId not in self.__targets:
             return
 
-        for attackerId in self.__targets[target.doId]:
-            attacker = self.air.doId2do.get(attackerId)
-
-            if not attacker:
-                continue
-
-            self.__rewardAttacker(attacker, target)
-
         del self.__targets[target.doId]
 
     def hasAttacker(self, attackerId, targetId):
@@ -318,6 +310,18 @@ class BattleManagerAI(BattleManagerBase):
         self.removeAttacker(attacker, target)
         del self.__removingAttackers[attacker.doId]
         return task.done
+
+    def rewardAttackers(self, target):
+        if target.getHp()[0] > 0:
+            return
+
+        for attackerId in self.__targets[target.doId]:
+            attacker = self.air.doId2do.get(attackerId)
+
+            if not attacker:
+                continue
+
+            self.__rewardAttacker(attacker, target)
 
     def __rewardAttacker(self, attacker, target):
         inventory = self.air.inventoryManager.getInventory(attacker.doId)
