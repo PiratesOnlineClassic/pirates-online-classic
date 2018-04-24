@@ -1090,6 +1090,7 @@ class ClientArea(DirectObject):
         collNode.setCollideMask(mask)
         collNode.setTag('objType', str(PiratesGlobals.COLL_BLDG))
 
+    @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def loadZoneObjects(self, zoneLevel):
         if zoneLevel == -1:
             zonesToLoad = [
@@ -1178,11 +1179,6 @@ class ClientArea(DirectObject):
 
         self.cr.distributedDistrict.worldCreator.processPostLoadCalls()
         self.findAllMatches('**/HolidayParent').stash()
-
-    loadZoneObjects = report(types=[
-        'frameCount',
-        'deltaStamp',
-        'args'], dConfigParam='want-blackpearl-report')(loadZoneObjects)
 
     def unloadZoneObjects(self):
         self.areaInitialLoad = self.AREA_NOT_LOADED
