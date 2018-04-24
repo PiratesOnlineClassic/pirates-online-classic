@@ -183,7 +183,7 @@ class SpawnNodeBase:
         npc.setTeam(self.getNPCTeam(avatarType))
 
         npc.setAvatarType(avatarType)
-        npc.setAggroRadius(float(self.objectData.get('Aggro Radius', 0)))
+        npc.setAggroRadius(float(self.objectData.get('Aggro Radius', 0.0)))
 
         # Load boss data if applicable
         if avatarType.getBoss() and hasattr(npc, 'loadBossData'):
@@ -239,7 +239,9 @@ class SpawnNodeBase:
         zoneId = self.parent.getZoneFromXYZ(npc.getPos())
         self.parent.generateChildWithRequired(npc, zoneId)
         self.parent.builder.parentObjectToCell(npc, zoneId)
+
         npc.d_setInitZ(npc.getZ())
+        npc.d_setSpawnIn()
 
         # Save a copy of the npc and tell it about myself. This will come in handy
         self._npc = npc

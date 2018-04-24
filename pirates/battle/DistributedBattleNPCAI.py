@@ -1,5 +1,6 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
+from direct.distributed.ClockDelta import globalClockDelta
 
 class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleNPCAI')
@@ -90,6 +91,9 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def requestClientAggro(self):
         pass
+
+    def d_setSpawnIn(self):
+        self.sendUpdate('setSpawnIn', [globalClockDelta.getRealNetworkTime(bits=32)])
 
     def delete(self):
         self.air.battleMgr.removeTarget(self)
