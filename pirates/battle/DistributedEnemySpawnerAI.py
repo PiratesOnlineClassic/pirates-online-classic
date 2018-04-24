@@ -153,7 +153,7 @@ class SpawnNodeBase:
 
         return Task.done
 
-    def __spawn(self):
+    def __spawn(self, task=None):
 
         # Create the npc class
         avatarType = self.getAvatarType()
@@ -245,6 +245,8 @@ class SpawnNodeBase:
 
         if avatarType.getBoss():
             self.notify.info('Spawning boss %s (%s) on %s!' % (npc.getName(), self.objKey, locationName))
+
+        return Task.done
 
 class TownfolkSpawnNode(SpawnNodeBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('TownfolkSpawnNode')
