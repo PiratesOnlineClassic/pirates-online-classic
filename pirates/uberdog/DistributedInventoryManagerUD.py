@@ -163,6 +163,16 @@ class InventoryFSM(FSM):
             [InventoryType.GrenadeExplosion, 6],
 
             # Ammo
+            [InventoryType.AmmoAsp, 100], 
+            [InventoryType.AmmoAdder, 50], 
+            [InventoryType.AmmoSidewinder, 50], 
+            [InventoryType.AmmoViperNest, 25],
+            [InventoryType.AmmoLeadShot, 6], 
+            [InventoryType.AmmoBaneShot, 100], 
+            [InventoryType.AmmoSilverShot, 100], 
+            [InventoryType.AmmoHexEaterShot, 100], 
+            [InventoryType.AmmoSteelShot, 100], 
+            [InventoryType.AmmoVenomShot, 100],
             [InventoryType.AmmoRoundShot, 1], 
             [InventoryType.AmmoChainShot, 100], 
             [InventoryType.AmmoExplosive, 3], 
@@ -171,6 +181,10 @@ class InventoryFSM(FSM):
             [InventoryType.AmmoThunderbolt, 50], 
             [InventoryType.AmmoFury, 50], 
             [InventoryType.AmmoGrappleHook, 100], 
+            [InventoryType.AmmoAsp, 100], 
+            [InventoryType.AmmoAdder, 50], 
+            [InventoryType.AmmoSidewinder, 50], 
+            [InventoryType.AmmoViperNest, 25], 
 
             # Potions
             [InventoryType.Potion1, 3],
@@ -332,7 +346,7 @@ class InventoryFSM(FSM):
                 [InventoryType.MusketToken, 1],
                 [InventoryType.DaggerToken, 1],
                 [InventoryType.GrenadeToken, 1],
-                #[InventoryType.WandToken, 1], TODO: Causes weird issue presumably with tia dalma quest stuff
+                [InventoryType.WandToken, 1], 
                 [InventoryType.DollToken, 1],
                 [InventoryType.KettleToken, 1]
             ]
