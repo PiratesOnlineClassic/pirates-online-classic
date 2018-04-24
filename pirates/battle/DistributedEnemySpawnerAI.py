@@ -235,7 +235,9 @@ class SpawnNodeBase:
         npc.setStartState(self.objectData.get('Start State', 'Idle'))
 
         # Generate npc
-        self.parent.generateChildWithRequired(npc, PiratesGlobals.IslandLocalZone)
+        zoneId = self.parent.getZoneFromXYZ(npc.getPos())
+        self.parent.generateChildWithRequired(npc, zoneId)
+        self.parent.builder.parentObjectToCell(npc, zoneId)
         npc.d_setInitZ(npc.getZ())
 
         # Save a copy of the npc and tell it about myself. This will come in handy

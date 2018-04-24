@@ -73,6 +73,9 @@ class DistributedGameAreaAI(DistributedNodeAI):
     def getLocalizerName(self):
         return PLocalizer.LocationNames.get(self.uniqueId, self.name)
 
+    def isInterior(self):
+        return 'interior' in self.modelPath
+
     def d_addSpawnTriggers(self, triggerSpheres):
         self.sendUpdate('addSpawnTriggers', [triggerSpheres])
 

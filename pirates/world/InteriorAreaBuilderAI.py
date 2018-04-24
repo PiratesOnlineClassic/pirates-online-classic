@@ -1,12 +1,12 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from pirates.world.ClientAreaBuilderAI import ClientAreaBuilderAI
+from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from pirates.leveleditor import ObjectList
 
-class InteriorAreaBuilderAI(ClientAreaBuilderAI):
+class InteriorAreaBuilderAI(GameAreaBuilderAI):
     notify = directNotify.newCategory('InteriorAreaBuilderAI')
 
     def __init__(self, air, parent):
-        ClientAreaBuilderAI.__init__(self, air, parent)
+        GameAreaBuilderAI.__init__(self, air, parent)
 
         self.wantDoorLocatorNodes = config.GetBool('want-door-locator-nodes', True)
 
@@ -15,6 +15,9 @@ class InteriorAreaBuilderAI(ClientAreaBuilderAI):
 
         if objType == ObjectList.DOOR_LOCATOR_NODE and self.wantDoorLocatorNodes:
             newObj = self.__createDoorLocatorNode(parent, parentUid, objKey, objectData)
+        else:
+            newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj, fileName, actualParentObj)
+
 
         return newObj
 
