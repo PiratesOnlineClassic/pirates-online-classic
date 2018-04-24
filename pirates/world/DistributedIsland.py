@@ -91,7 +91,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.nametag = None
         self.nametag3d = None
         self.grass = None
-        self.localInterest = None
         self.blackSmokeEffect = None
         self.volcanoEffect = None
         self.lavaFlowEffect = None
@@ -132,7 +131,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.placeOnMap()
 
     def disable(self):
-        self.clearLocalInterest()
         self.removeFromMap()
         self.turnOff()
         ZoneLOD.ZoneLOD.cleanup(self)
@@ -196,8 +194,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             if not self.hasTunnelsOnRadar:
                 self.handleTunnelsOnRadar(True)
 
-            self.addLocalInterest()
-
         if base.shipsVisibleFromIsland:
             self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
 
@@ -250,16 +246,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         musicName = self.MusicNames.get(islandName, self.MusicDefault)
         return musicName
 
-    def addLocalInterest(self):
-        if not self.localInterest:
-            self.localInterest = self.cr.addTaggedInterest(self.doId, PiratesGlobals.IslandLocalZone,
-                self.cr.ITAG_GAME, 'IslandLocal')
-
-    def clearLocalInterest(self):
-        if self.localInterest:
-            self.cr.removeTaggedInterest(self.localInterest)
-            self.localInterest = None
-
     @report(types=['frameCount', 'args'], dConfigParam=['want-connector-report', 'want-jail-report', 'want-island-report'])
     def loadZoneLevel(self, level):
         if level == 0:
@@ -283,7 +269,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.startCustomEffects()
             self.checkForHolidayObjects()
             self.handleEnterGameArea()
-            self.addLocalInterest()
             return
         elif level == 1:
             localAvatar.setInterest(self.doId, PiratesGlobals.IslandShipDeployerZone, ['ShipDeployer'])
@@ -319,7 +304,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.handleExitGameArea()
             self.unloadConnectors()
             self.cleanupIslandData()
-            self.clearLocalInterest()
             self.stopListenForLocationSphere()
             self.removeIslandGridSphere()
             self.stopCustomEffects()

@@ -147,9 +147,6 @@ class PiratesClientRepository(OTPClientRepository):
         del A
         self.preloadedCutscenes = {}
 
-        self.__tagsToInterests = {}
-        self.__interestsToTags = {}
-
         if want_fifothreads:
             taskMgr.doYield = self.taskManagerDoYieldCall
 
@@ -377,64 +374,6 @@ class PiratesClientRepository(OTPClientRepository):
             zoneId = di.getUint32()
             dclassId = di.getUint16()
             self.handleAvatarResponseMsg(doId, di)
-
-    @report(types=['args', 'deltaStamp'], dConfigParam='dteleport')
-    def addTaggedInterest(self, parentId, zoneId, mainTag, desc, otherTags=[], event=None):
-        tags = set([mainTag] + otherTags)
-        description = '%s | %6s' % (desc, ' '.join(tags))
-        handle = self.addInterest(parentId, zoneId, description, event)
-        if handle:
-            for tag in tags:
-                self.__tagsToInterests.setdefault(tag, []).append(handle)
-
-            self.__interestsToTags[handle.asInt()] = tags
-
-        return handle
-
-    @report(types=['args', 'deltaStamp'], dConfigParam='dteleport')
-    def removeTaggedInterest(self, interestHandle, event=None):
-        tags = self.__interestsToTags.pop(interestHandle.asInt(), [])
-        if tags:
-            for tag in tags:
-                handles = self.__tagsToInterests.get(tag)
-                handles.remove(interestHandle)
-                if not handles:
-                    self.__tagsToInterests.pop(tag)
-
-            self.removeInterest(interestHandle, event)
-
-        return tags
-
-    @report(types=['args', 'deltaStamp'], dConfigParam='dteleport')
-    def removeInterestTag(self, tag, event=None):
-        handles = self.__tagsToInterests.get(tag, [])[:]
-        if event:
-            if not handles:
-                messenger.send(event)
-                return
-
-            def subInterestClosed(handle, handles=handles):
-                handles.remove(handle)
-                if not handles:
-                    messenger.send(event)
-
-            for x, handle in enumerate(handles):
-                subEvent = '%s-%s' % (event, x)
-                self.acceptOnce(subEvent, subInterestClosed, extraArgs=[handle])
-                tags = self.removeTaggedInterest(handle, event=subEvent)
-        else:
-            for x, handle in enumerate(handles):
-                tags = self.removeTaggedInterest(handle)
-
-        return handles
-
-    @report(types=['args', 'deltaStamp'], dConfigParam='dteleport')
-    def getInterestTags(self, interestHandle):
-        return self.__interestsToTags.get(interestHandle.asInt(), [])
-
-    @report(types=['args', 'deltaStamp'], dConfigParam='dteleport')
-    def getInterestHandles(self, tag):
-        return self.__tagsToInterests.get(tag, set())
 
     def enterWaitForDeleteAvatarResponse(self, potentialAvatar):
         raise StandardError, 'This should be handled within AvatarChooser.py'

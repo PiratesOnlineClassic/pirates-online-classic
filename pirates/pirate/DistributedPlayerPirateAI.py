@@ -39,6 +39,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.gmNameTagAllowed = False
 
         self.stickyTargets = []
+        self.concentricZones = []
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -604,6 +605,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def b_updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
         self.d_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
         self.updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
+
+    def setConcentricZones(self, concentricZones):
+        self.concentricZones = concentricZones
+
+    def getConcentricZones(self):
+        return self.concentricZones
 
 @magicWord(category=CATEGORY_MODERATION, types=[int, str, str])
 def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
