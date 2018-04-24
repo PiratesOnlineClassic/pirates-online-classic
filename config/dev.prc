@@ -45,3 +45,6 @@ always-allow-searching #t
 show-total-population #t
 teleport-all #t
 shard-page-disable #f
+
+# Inventory:
+want-all-weapons #t
