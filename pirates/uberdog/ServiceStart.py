@@ -57,7 +57,7 @@ try:
     simbase.run()
 except SystemExit:
     raise
-except Exception:
+except Exception as e:
     if simbase.air:
         simbase.air.logException(e)
     else:
