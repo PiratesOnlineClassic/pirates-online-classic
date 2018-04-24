@@ -262,6 +262,8 @@ class PiratesWebhookManager(object):
         Attempts to attach avatar info using the avatarId
         """
         avatar = self.air.doId2do.get(avatarId)
+        if not avatar:
+            return
         parentObj = avatar.getParentObj()
 
         if avatar and parentObj:
@@ -271,6 +273,11 @@ class PiratesWebhookManager(object):
             attachment.addField(SlackField(title='Island', value=parentObj.getLocalizerName()))
 
         #TODO: add account name?
+
+    def __logServerInfo(self, attachment):
+        """
+        Attaches info about the server
+        """
         attachment.addField(SlackField())
         attachment.addField(SlackField(title='Dev Server', value=self.air.isDevServer()))
 
@@ -300,8 +307,9 @@ class PiratesWebhookManager(object):
         for kwarg in kwargs:
             attachment.addField(SlackField(title=kwarg, value=kwargs[kwarg]))
 
-        # Attempt to attach avatar information
+        # Attempt to attach additional information
         self.__attemptAttachAvatarInfo(attachment, avatarId, accountId)
+        self.__logServerInfo(attachment)
 
         webhookMessage.addAttachment(attachment)
         self.__sendWebhook(webhookMessage, self.want_hacker_logs)
@@ -340,8 +348,9 @@ class PiratesWebhookManager(object):
 
         attachment.addField(SlackField(title='Trackback', value=discordStacktrace))
 
-        # Attempt to attach avatar information
+        # Attempt to attach additional information
         self.__attemptAttachAvatarInfo(attachment, avatarId, accountId)
+        self.__logServerInfo(attachment)
 
         webhookMessage.addAttachment(attachment)
         self.__sendWebhook(webhookMessage, self.want_exception_logs)
