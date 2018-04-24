@@ -32,6 +32,7 @@ class InteriorAreaBuilderAI(ClientAreaBuilderAI):
             self.parent.setInteriorFrontDoor(doorLocatorNode)
             exteriorDoor = self.parent.getExteriorFrontDoor()
         else:
+            doorLocatorNode.setDoorIndex(1)
             self.parent.setInteriorBackDoor(doorLocatorNode)
             exteriorDoor = self.parent.getExteriorBackDoor()
 

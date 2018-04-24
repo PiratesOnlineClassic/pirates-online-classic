@@ -118,6 +118,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         if not interior.getExteriorFrontDoor():
             interior.setExteriorFrontDoor(doorLocatorNode)
         else:
+            doorLocatorNode.setDoorIndex(1)
             interior.setExteriorBackDoor(doorLocatorNode)
 
         self.setObjectTruePosHpr(doorLocatorNode, objKey, parentUid, objectData)
