@@ -213,10 +213,11 @@ class SpawnNodeBase:
 
         # Set NPC DNA if applicable
         dnaId = self.objKey
-        if dnaId and hasattr(npc, 'setDNAId'):
-            npc.setDNAId(dnaId)
-        elif self.objectData.get('CustomModel', 'None') != 'None':
-            npc.setDNAId(self.objectData.get('CustomModel', ''))
+        if hasattr(npc, 'setDNAId'):
+            if self.objectData.get('CustomModel', 'None') != 'None':
+                npc.setDNAId(self.objectData.get('CustomModel', ''))
+            elif dnaId:
+                npc.setDNAId(dnaId)
 
         # Name the NPC
         name = avatarType.getName()
