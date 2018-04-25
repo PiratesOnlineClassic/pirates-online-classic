@@ -1,9 +1,6 @@
-from direct.directnotify import DirectNotifyGlobal
 import time
 import sys
 import os
-
-notify = DirectNotifyGlobal.directNotify.newCategory('ClassicLogger')
 
 ltime = time.localtime()
 prefix = 'poc-'  # define the prefix
@@ -42,7 +39,6 @@ class LogAndOutput:
     def flush(self):
         self.file.flush()
         self.out.flush()
-
 
 file = open(LOGFILE, 'wb')
 sys.stdout = LogAndOutput(sys.stdout, file)
