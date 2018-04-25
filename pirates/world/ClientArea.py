@@ -367,9 +367,9 @@ class ClientArea(DirectObject):
     def addChildObj(self, objData, uid, childType=AREA_CHILD_TYPE_PROP, objRef=None, zoneLevel=0, startTime=None,
                     altParent=None, nodeName=None, actualParentObj=None):
 
-        if objData['Type'] == 'Animated Avatar - Skeleton' and objData['Type'] == 'Animated Avatar - Navy' 
-                and objData['Type'] == 'Animated Avatar - Townfolk' or objData['Type'] == 'Animated Avatar':
-                
+        if objData['Type'] == 'Animated Avatar - Skeleton' and objData['Type'] == 'Animated Avatar - Navy' \
+            and objData['Type'] == 'Animated Avatar - Townfolk' or objData['Type'] == 'Animated Avatar':
+
             return self.createPropAvatar(objData['Type'], objData, self, uid)
 
         objStolen = False
@@ -434,7 +434,7 @@ class ClientArea(DirectObject):
                             objModel = self.loadPiecesModels(modelName, altId)
                         else:
                             objModel = loader.loadModelCopy(modelName)
-                        
+
                         if objModel is None:
                             self.notify.warning('Could not load model %s, not creating object.' % modelName)
                             return None
@@ -566,7 +566,7 @@ class ClientArea(DirectObject):
                                             tform = NodePath(ModelNode('HolidayParent'))
                                             tform.setTag('Holiday', holiday)
                                             tform.setTransform(xform.getTransform())
-                                        
+
                                         objModel.findAllMatches('**/=Holiday').reparentTo(tform)
 
                                         if not lowOnly:
