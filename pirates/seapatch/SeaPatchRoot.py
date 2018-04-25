@@ -1,6 +1,7 @@
-from panda3d.core import Vec2, VBase2, VBase4, Vec4, PerlinNoise3
-from direct.directnotify.DirectNotifyGlobal import directNotify
 import math
+
+from panda3d.core import *
+from direct.directnotify.DirectNotifyGlobal import directNotify
 
 
 class SeaPatchRoot(object):
@@ -51,7 +52,7 @@ class SeaPatchRoot(object):
     def assignEnviormentFrom(self, todo1):
         pass
 
-    def resetProperties(self):  
+    def resetProperties(self):
         self.seaLevel = 0.0
         self.center = NodePath('center')
         self.anchor = NodePath('anchor')
@@ -168,7 +169,7 @@ class SeaPatchRoot(object):
 
     def getLowColor(self):
         return self.low
-        
+
     def clampColor(self, color):
         pass
 

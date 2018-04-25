@@ -22,14 +22,16 @@ class ClientAreaBuilderAI(DirectObject):
         elif objType == ObjectList.AREA_TYPE_ISLAND_REGION:
             newObj = self.__createGameArea(objectData, parent, parentUid,
                 objKey, dynamic)
-        elif not parent or not hasattr(parent, 'builder'):
-            parent = self.air.worldCreator.world.uidMgr.justGetMeMeObject(
-                parentUid)
+        else:
+            if not parent or not hasattr(parent, 'builder'):
+                parent = self.air.worldCreator.world.uidMgr.justGetMeMeObject(
+                    parentUid)
 
-            if not parent:
-                return newObj
+                if not parent:
+                    return newObj
 
-        newObj = parent.builder.createObject(objType, objectData, parent, parentUid, objKey, dynamic)
+            newObj = parent.builder.createObject(objType, objectData, parent,
+                parentUid, objKey, dynamic)
 
         return newObj
 

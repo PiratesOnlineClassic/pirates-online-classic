@@ -2,9 +2,13 @@ from pirates.uberdog.DistributedInventoryAI import DistributedInventoryAI
 from direct.directnotify import DirectNotifyGlobal
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
 from pirates.reputation import ReputationGlobals
+from pirates.battle import WeaponGlobals
 
 class PirateInventoryAI(DistributedInventoryAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PirateInventoryAI')
+
+    def getStackQuantity(self, skillId):
+        return self.getItem(self.getStack, WeaponGlobals.getSkillReputationCategoryId(skillId))
 
     def setReputation(self, repType, quantity, repAccType=None):
         avatar = self.air.doId2do.get(self.ownerId)
