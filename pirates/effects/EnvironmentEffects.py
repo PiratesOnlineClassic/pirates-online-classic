@@ -89,7 +89,7 @@ class EnvironmentEffects(DirectObject):
 
     def loadSingleEffect(self, nodePath):
         for effect in self.effectDict:
-            locators = nodePath.findAllMatches('**/' + effect + '*;+s') 
+            locators = nodePath.findAllMatches('**/' + effect + '*;+s')
             for locator in locators:
                 if not locator.isEmpty():
                     effectParent = locator.getParent()
@@ -107,7 +107,7 @@ class EnvironmentEffects(DirectObject):
         else:
             effectSetting = 2
         for effectEntry in self.effectDict:
-            locators = self.parent.findAllMatches('**/' + effectEntry + '*;+s') 
+            locators = self.parent.findAllMatches('**/' + effectEntry + '*;+s')
             for locator in locators:
                 if not locator.isEmpty():
                     if effectEntry in self.holidayLocators:
@@ -194,7 +194,7 @@ class EnvironmentEffects(DirectObject):
     def loadParticles(self):
         if self.parent:
             for effect in self.particleDict:
-                locators = self.parent.findAllMatches('**/' + effect + '*;+s') 
+                locators = self.parent.findAllMatches('**/' + effect + '*;+s')
                 for locator in locators:
                     if not locator.isEmpty():
                         effectParent = locator.getParent()
@@ -215,7 +215,7 @@ class EnvironmentEffects(DirectObject):
     def loadSounds(self):
         if self.parent:
             for effect in self.soundDict:
-                locators = self.parent.findAllMatches('**/' + effect + '*;+s') 
+                locators = self.parent.findAllMatches('**/' + effect + '*;+s')
                 sfx = loader.loadSfx(self.soundDict.get(effect))
                 for locator in locators:
                     if not locator.isEmpty():
@@ -235,7 +235,7 @@ class EnvironmentEffects(DirectObject):
     def loadAnimParts(self):
         if self.parent:
             for part in self.animPartsDict:
-                foundParts = self.parent.findAllMatches('**/' + part + '*;+s') 
+                foundParts = self.parent.findAllMatches('**/' + part + '*;+s')
                 for myPart in foundParts:
                     if not myPart.isEmpty():
                         effects = self.animPartsDict.get(part)
@@ -286,7 +286,7 @@ class EnvironmentEffects(DirectObject):
 
     def loadPolylights(self):
         if self.parent:
-            polyLights = self.parent.findAllMatches('**/polylight*') 
+            polyLights = self.parent.findAllMatches('**/polylight*')
             for i in range(len(polyLights)):
                 light = polyLights[i]
                 plNode = light.node()
@@ -349,19 +349,20 @@ class EnvironmentEffects(DirectObject):
                     ts = tc
                     mesh.setTexProjector(ts, joint, self.parent)
             mesh = pt.findAllMatches('**/WaterMeshGroup')
-            mesh = mesh.isEmpty() or mesh[0]
-            mesh.flattenStrong()
-            tc = mesh.findAllTextureStages()
-            for k in range(0, tc.getNumTextureStages()):
-                if tc[k].getName().find('dummy') != -1:
-                    continue
-                if tc[k].getTexcoordName().getName().find('Top') != -1:
-                    joint = pt.findAllMatches('**/uvj_WaterTopTexture')[0]
-                    ts = tc[k]
-                    mesh.setTexProjector(ts, joint, render)
-                if tc[k].getTexcoordName().getName().find('Bottom') != -1:
-                    joint = pt.findAllMatches('**/uvj_WaterBottomTexture')[0]
-                    ts = tc[k]
-                    mesh.setTexProjector(ts, joint, self.parent)
+            if not mesh.isEmpty():
+                mesh = mesh[0]
+                mesh.flattenStrong()
+                tc = mesh.findAllTextureStages()
+                for k in range(0, tc.getNumTextureStages()):
+                    if tc[k].getName().find('dummy') != -1:
+                        continue
+                    if tc[k].getTexcoordName().getName().find('Top') != -1:
+                        joint = pt.findAllMatches('**/uvj_WaterTopTexture')[0]
+                        ts = tc[k]
+                        mesh.setTexProjector(ts, joint, render)
+                    if tc[k].getTexcoordName().getName().find('Bottom') != -1:
+                        joint = pt.findAllMatches('**/uvj_WaterBottomTexture')[0]
+                        ts = tc[k]
+                        mesh.setTexProjector(ts, joint, self.parent)
 
         return pt
