@@ -48,7 +48,7 @@ class StoreGUI(DirectFrame):
     SkillIcons = None
 
     def __init__(self, inventory, name, **kw):
-        optiondefs = (('relief', None, None), ('framSize', (0, self.width, 0, self.height), None), ('sortOrder', 20, None))
+        optiondefs = (('relief', None, None), ('frameSize', (0, self.width, 0, self.height), None), ('sortOrder', 20, None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, None, **kw)
         self.initialiseoptions(StoreGUI)

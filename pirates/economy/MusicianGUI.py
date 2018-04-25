@@ -22,7 +22,7 @@ class MusicianGUI(DirectFrame):
     def __init__(self, inventory, name, **kw):
         optiondefs = (
          ('relief', None, None), 
-         ('framSize', (0, self.width, 0, self.height), None), 
+         ('frameSize', (0, self.width, 0, self.height), None), 
          ('sortOrder', 20, None)
         )
         self.defineoptions(kw, optiondefs)
