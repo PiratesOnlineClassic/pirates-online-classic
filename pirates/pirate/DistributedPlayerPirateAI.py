@@ -115,7 +115,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return None
 
     def getInventory(self):
-        self.air.inventoryManager.getInventory(self.doId)
+        return self.air.inventoryManager.getInventory(self.doId)
 
     def setDNAString(self, dnaString):
         self.dnaString = dnaString
