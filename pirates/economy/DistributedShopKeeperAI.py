@@ -15,6 +15,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             self.notify.warning('Failed to process make sale for non-existant avatar %d!' %
                 avatar.doId) 
 
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
 
         inventory = self.air.inventoryManager.getInventory(avatar.doId)
@@ -22,8 +23,8 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             self.notify.debug('Cannot process sale for avatar %d, unknown inventory!' % 
                 avatar.doId)
 
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
-
         currentGold = inventory.getGoldInPocket()
 
         # Buy items
@@ -42,6 +43,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
                     itemPrice=itemPrice
                 )
 
+                self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
                 continue
 
             currentStack = inventory.getStack(itemId)
@@ -52,6 +54,8 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             
             inventory.b_setStack(itemId, currentStack + itemQuantity)
             inventory.setGoldInPocket(currentGold - itemPrice)
+
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [2])
 
         # Sell Items
         for sell in selling:
@@ -70,14 +74,50 @@ class DistributedShopKeeperAI(DistributedObjectAI):
                     currentStack=currentStack
                 )       
 
+                self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
                 continue
 
-            itemPrice = EconomyGlobals.getItemCost(itemId)[1]
+            itemPrice = EconomyGlobals.getItemCost(itemId)
             inventory.b_setStack(itemId, currentStack - itemQuantity)
             inventory.setGoldInPocket(currentGold + itemPrice)                   
-        
+
+
     def requestMusic(self, songId):
-        pass
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            self.notify.warning('Failed to process make sale for non-existant avatar %d!' %
+                avatar.doId) 
+
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
+            return
+
+        inventory = self.air.inventoryManager.getInventory(avatar.doId)
+        if not inventory:
+            self.notify.debug('Cannot process sale for avatar %d, unknown inventory!' % 
+                avatar.doId)
+
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
+            return
+
+        currentGold = inventory.getGoldInPocket()
+
+        # Verify price
+        itemPrice = 5
+        if itemPrice > currentGold:
+
+            self.air.logPotentialHacker(
+                message='Received requestMusic for a song the avatar can not afford!',
+                currentGold=currentGold,
+                songId=songId,
+                itemPrice=itemPrice
+            )
+
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
+            return
+
+        inventory.setGoldInPocket(currentGold - itemPrice)
+        self.sendUpdate('playMusic', [songId])
+        self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [2])
         
     def requestAccessories(self, purchases, selling):
         pass

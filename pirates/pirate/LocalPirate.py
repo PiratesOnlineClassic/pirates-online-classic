@@ -1785,7 +1785,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
 
     def gotWeaponReward(self, rewardType):
         self.playRewardAnimation = PLocalizer.WeaponReceiveToEmoteCmds[rewardType]
-        print 'received Weapon %s' % self.playRewardAnimation
+        self.notify.debug('received Weapon %s' % self.playRewardAnimation)
 
     def addLocalProjectile(self, projectile):
         self.localProjectiles.append(projectile)
