@@ -19,6 +19,9 @@ class NewsManagerAI(DistributedObjectAI):
 
         self.holidayList = {}
 
+        self.holidayCheckTask = None
+        self.holdayTimerTask = None
+
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)
 
@@ -44,8 +47,11 @@ class NewsManagerAI(DistributedObjectAI):
     def delete(self):
         DistributedObjectAI.delete(self) 
 
-        taskMgr.remove(self.holidayCheckTask)
-        taskMgr.remove(self.holidayTimerTask)
+        if self.holidayCheckTask:
+            taskMgr.remove(self.holidayCheckTask)
+
+        if self.holdayTimerTask:
+            taskMgr.remove(self.holidayTimerTask)
 
     def isHolidayActive(self, holidayId):
         return holidayId in self.holidayList 
