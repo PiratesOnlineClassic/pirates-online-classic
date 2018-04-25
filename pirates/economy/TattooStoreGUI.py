@@ -216,7 +216,7 @@ class TattooStoreGUI(DirectFrame):
 
     def __init__(self, npc, shopId, **kw):
         optiondefs = (
-         ('relief', None, None), ('framSize', (0, self.width, 0, self.height), None), ('sortOrder', 20, None))
+         ('relief', None, None), ('frameSize', (0, self.width, 0, self.height), None), ('sortOrder', 20, None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, None, **kw)
         self.initialiseoptions(TattooStoreGUI)

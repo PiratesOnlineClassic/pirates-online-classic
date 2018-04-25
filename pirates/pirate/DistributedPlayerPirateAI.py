@@ -564,6 +564,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         if self.forcedZombie:
             newState = True
         else:
+            # Sanity check for weird conditions
+            if not self.air:
+                self.notify.warning('Failed to process attemptToSetcursedZombie; Air is NoneType')
+                return
+
             # We are not in PVP. Lets check if its a Cursed Moon
             isOutside = not isinstance(parentObj, DistributedGAInteriorAI)
             isHalloween = self.air.timeOfDayMgr.isHalloweenMoon()
