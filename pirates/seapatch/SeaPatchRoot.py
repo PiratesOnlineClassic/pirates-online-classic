@@ -13,19 +13,22 @@ class SeaPatchRoot(object):
     WFNoise = PerlinNoise3()
 
     def __init__(self):
-        self.seaLevel = 0
-        self.center = 0
-        self.anchor = None
-        self.overallSpeed = 0
+        self.seaLevel = 0.0
+        self.waves = []
+        self.center = NodePath('center')
+        self.anchor = NodePath('anchor')
+        self.overallSpeed = 0.0
         self.uvSpeed = Vec2(0, 0)
         self.passiveMove = Vec2(0.0001, 0.0001)
-        self.thresfold = 0
-        self.radius = 0
-        self.uvScale = VBase2(0, 0)
+        self.thresfold = 80
+        self.radius = 100
+        self.uvScale = VBase2(36.0, 36.0)
         self.waveEnabled = 0
-        self.high = VBase4(0, 0, 0, 0)
-        self.mid = VBase4(0, 0, 0, 0)
-        self.low = VBase4(0, 0, 0, 0)
+        self.normalDamper = 1.0
+        self.heightDamper = 0.5
+        self.high = VBase4(0.2, 0.40000001, 0.60000002, 1.0)
+        self.mid = VBase4(0.2, 0.40000001, 0.60000002, 1.0)
+        self.low = VBase4(0.2, 0.40000001, 0.60000002, 1.0)
 
     def enable(self):
         self.waveEnabled = 1
@@ -48,19 +51,22 @@ class SeaPatchRoot(object):
     def assignEnviormentFrom(self, todo1):
         pass
 
-    def resetProperties(self):
-        self.seaLevel = 0
-        self.center = 0
-        self.anchor = None
-        self.overallSpeed = 0
+    def resetProperties(self):  
+        self.seaLevel = 0.0
+        self.center = NodePath('center')
+        self.anchor = NodePath('anchor')
+        self.overallSpeed = 0.0
         self.uvSpeed = Vec2(0, 0)
-        self.threshold = 0
-        self.radius = 0
-        self.uvScale = VBase2(0, 0)
+        self.passiveMove = Vec2(0.0001, 0.0001)
+        self.thresfold = 80
+        self.radius = 100
+        self.uvScale = VBase2(36.0, 36.0)
         self.waveEnabled = 0
-        self.high = Vec4(0, 0, 0, 0)
-        self.mid = VBase4(0, 0, 0, 0)
-        self.low = Vec4(0, 0, 0, 0)
+        self.normalDamper = 1.0
+        self.heightDamper = 0.5
+        self.high = VBase4(0.2, 0.40000001, 0.60000002, 1.0)
+        self.mid = VBase4(0.2, 0.40000001, 0.60000002, 1.0)
+        self.low = VBase4(0.2, 0.40000001, 0.60000002, 1.0)
 
     def assignPropertiesFrom(self, wave):
         pass
@@ -148,26 +154,23 @@ class SeaPatchRoot(object):
 
     def setHighColor(self, high):
         self.high = high
+        self.mid = (self.low + self.high) * 0.5
 
     def getHighColor(self):
         return self.high
 
-    def calcMidColor(self):
-        self.mid = VBase4(self.high.getY() * self.low.getZ() - self.high.getZ() * self.low.getY(), self.high.getZ() * \
-            self.low.getX() - self.high.getX() * self.low.getZ(), self.high.getX() * self.low.getY() - self.high.getY() * \
-                self.low.getX(), 0)
-
     def getMidColor(self):
-        if self.mid == VBase4(0, 0, 0, 0):
-            self.calcMidColor()
-
         return self.mid
 
     def setLowColor(self, low):
         self.low = low
+        self.mid = (self.low + self.high) * 0.5
 
     def getLowColor(self):
         return self.low
+        
+    def clampColor(self, color):
+        pass
 
     def setNormalDamper(self, todo1):
         pass

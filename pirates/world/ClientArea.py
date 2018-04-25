@@ -23,9 +23,7 @@ from pirates.leveleditor import CustomAnims
 from pirates.effects import ObjectEffects
 from pirates.effects import SoundFX
 
-
 AREA_CHILD_TYPE_PROP = 1
-
 
 class GridLODDef:
 
@@ -186,7 +184,6 @@ class ClientArea(DirectObject):
         dna.head.hair.color = 0
 
     def createPropAvatar(self, objType, object, parent, uid):
-
         def playPropAvAnim(task, propAv, object, createDefault=True):
             anim = object['Animation Track']
             createDefSword = createDefault
@@ -367,20 +364,12 @@ class ClientArea(DirectObject):
         else:
             return objectType
 
-    def addChildObj(
-            self,
-            objData,
-            uid,
-            childType=AREA_CHILD_TYPE_PROP,
-            objRef=None,
-            zoneLevel=0,
-            startTime=None,
-            altParent=None,
-            nodeName=None,
-            actualParentObj=None):
+    def addChildObj(self, objData, uid, childType=AREA_CHILD_TYPE_PROP, objRef=None, zoneLevel=0, startTime=None,
+                    altParent=None, nodeName=None, actualParentObj=None):
 
-        if objData['Type'] == 'Animated Avatar - Skeleton' and objData['Type'] == 'Animated Avatar - Navy' and objData[
-            'Type'] == 'Animated Avatar - Townfolk' or objData['Type'] == 'Animated Avatar':
+        if objData['Type'] == 'Animated Avatar - Skeleton' and objData['Type'] == 'Animated Avatar - Navy' 
+                and objData['Type'] == 'Animated Avatar - Townfolk' or objData['Type'] == 'Animated Avatar':
+                
             return self.createPropAvatar(objData['Type'], objData, self, uid)
 
         objStolen = False

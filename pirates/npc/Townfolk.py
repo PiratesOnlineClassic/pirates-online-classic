@@ -1,22 +1,15 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.npc.Townfolk
 from pandac.PandaModules import *
 from pirates.pirate import AvatarTypes, Biped, Human
 from pirates.piratesbase import PiratesGlobals
 
 AnimDict = {}
-
 class Townfolk(Human.Human):
     
-
     def __init__(self):
         Human.Human.__init__(self)
         self.avatarType = AvatarTypes.Townfolk
         self.castDnaId = None
         self.animDict = {}
-        return
 
     def loadCast(self, dnaId):
         if not self.loaded:
@@ -66,10 +59,8 @@ class Townfolk(Human.Human):
             self.castDnaId = None
             self.flush()
             self.loaded = 0
-        else:
-            if self.loaded:
-                self.cleanupHuman()
-        return
+        elif self.loaded:
+            self.cleanupHuman()
 
     def forceLOD(self, level):
         lodNode = self.find('**/+LODNode')
@@ -80,4 +71,3 @@ class Townfolk(Human.Human):
         lodNode = self.find('**/+LODNode')
         if not lodNode.isEmpty():
             lodNode.node().clearForceSwitch()
-# okay decompiling .\pirates\npc\Townfolk.pyc

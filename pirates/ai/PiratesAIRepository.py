@@ -32,6 +32,7 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.districtName = districtName
         self.zoneAllocator = UniqueIdAllocator(PiratesGlobals.DynamicZonesBegin, PiratesGlobals.DynamicZonesEnd)
         self.zoneId2owner = {}
+        self.disconnectReasons = {}
         self.uidMgr = UniqueIdManager(self)
 
         self.districtTracker = None

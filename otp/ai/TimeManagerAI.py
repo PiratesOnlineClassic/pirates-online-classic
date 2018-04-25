@@ -8,22 +8,18 @@ class TimeManagerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory("TimeManagerAI")
 
     def requestServerTime(self, context):
-        self.sendUpdateToAvatarId(self.air.getAvatarIdFromSender(), 'serverTime', [context,
-                                                                                   globalClockDelta.getRealNetworkTime(
-                                                                                       bits=32),
-                                                                                   int(time.time())])
+        self.sendUpdateToAvatarId(self.air.getAvatarIdFromSender(), 'serverTime', [context, globalClockDelta.getRealNetworkTime(bits=32), int(time.time())])
 
     def setDisconnectReason(self, reason):
         avId = self.air.getAvatarIdFromSender()
-        self.air.writeServerEvent(
-            'disconnect-reason', avId=avId, reason=reason)
+        self.air.writeServerEvent('disconnect-reason', avId, reason)
+        self.air.disconnectReasons[avId] = reason;
 
     def setExceptionInfo(self, exception):
         avId = self.air.getAvatarIdFromSender()
-        self.air.writeServerEvent(
-            'client-exception',
-            avId=avId,
-            exception=exception)
+        self.air.writeServerEvent('client-exception', avId, exception)
+        self.notify.warning("Got exception from %d!\n %s" % (avId, str(exception)))
+        del exception
 
     def setSignature(self, signature, hash, pyc):
         pass

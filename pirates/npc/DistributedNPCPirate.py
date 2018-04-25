@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.npc.DistributedNPCPirate
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
@@ -9,9 +5,7 @@ from pirates.battle import DistributedBattleNPC
 from pirates.pirate import DistributedPirateBase
 from pirates.piratesbase import PiratesGlobals
 
-
 class DistributedNPCPirate(DistributedBattleNPC.DistributedBattleNPC, DistributedPirateBase.DistributedPirateBase):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCPirate')
 
     def __init__(self, cr):
@@ -27,16 +21,17 @@ class DistributedNPCPirate(DistributedBattleNPC.DistributedBattleNPC, Distribute
     def delete(self):
         try:
             self.DistributedNPCPirate_deleted
+            return
         except:
             self.DistributedNPCPirate_deleted = 1
-            DistributedBattleNPC.DistributedBattleNPC.delete(self)
-            DistributedPirateBase.DistributedPirateBase.delete(self)
+            
+        DistributedBattleNPC.DistributedBattleNPC.delete(self)
+        DistributedPirateBase.DistributedPirateBase.delete(self)
 
     def generate(self):
         DistributedBattleNPC.DistributedBattleNPC.generate(self)
         DistributedPirateBase.DistributedPirateBase.generate(self)
         self.setInteractOptions(proximityText=None, allowInteract=False)
-        return
 
     def announceGenerate(self):
         DistributedBattleNPC.DistributedBattleNPC.announceGenerate(self)
@@ -63,4 +58,3 @@ class DistributedNPCPirate(DistributedBattleNPC.DistributedBattleNPC, Distribute
 
     def stop(self, *args, **kwArgs):
         Pirate.Pirate.stop(self, *args, **kwArgs)
-# okay decompiling .\pirates\npc\DistributedNPCPirate.pyc
