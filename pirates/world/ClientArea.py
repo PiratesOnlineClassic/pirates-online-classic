@@ -367,7 +367,7 @@ class ClientArea(DirectObject):
     def addChildObj(self, objData, uid, childType=AREA_CHILD_TYPE_PROP, objRef=None, zoneLevel=0, startTime=None,
                     altParent=None, nodeName=None, actualParentObj=None):
 
-        if objData['Type'] == 'Animated Avatar - Skeleton' and objData['Type'] == 'Animated Avatar - Navy' 
+        if objData['Type'] == 'Animated Avatar - Skeleton' and objData['Type'] == 'Animated Avatar - Navy' \
                 and objData['Type'] == 'Animated Avatar - Townfolk' or objData['Type'] == 'Animated Avatar':
                 
             return self.createPropAvatar(objData['Type'], objData, self, uid)
