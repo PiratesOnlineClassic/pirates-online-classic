@@ -78,7 +78,7 @@ class TattooStoreCartList(DirectScrolledFrame):
         self.listItemHeight = itemHeight
         self.listItemWidth = itemWidth
         self.height = height
-        self.parent = parent
+        self._parent = parent
         self.pvpMode = parent.pvpMode
         charGui = loader.loadModel('models/gui/char_gui')
         DirectScrolledFrame.__init__(self, relief=None, state=DGG.NORMAL, manageScrollBars=0, autoHideScrollBars=1, frameSize=(0, self.width, 0, self.height), canvasSize=(0, self.width - 0.05, 0.025, self.height - 0.025), verticalScroll_relief=None, verticalScroll_image=charGui.find('**/chargui_slider_small'), verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0, self.height), verticalScroll_image_scale=(self.height + 0.05, 1, 0.75), verticalScroll_image_hpr=(0,
@@ -126,7 +126,7 @@ class TattooStoreCartList(DirectScrolledFrame):
         tattooId = data[2]
         tattoo = TattooGlobals.tattoos.get(uid)
         if tattoo is not None:
-            if self.parent.mode == 1:
+            if self._parent.mode == 1:
                 itemCost = int(tattoo[4] * 0.25)
             else:
                 itemCost = tattoo[4]
@@ -137,10 +137,10 @@ class TattooStoreCartList(DirectScrolledFrame):
         isDisabled = 0
         panel = DirectButton(parent=self, relief=None, text=itemText[:maxLength], text_fg=self.itemColor, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleMed, text_shadow=PiratesGuiGlobals.TextShadow, text_pos=(0.06,
                                                                                                                                                                                                                                     0.0), command=self.removePanel, extraArgs=[data])
-        if self.parent.pvpMode:
-            cImage = self.parent.RenownImage
+        if self._parent.pvpMode:
+            cImage = self._parent.RenownImage
         else:
-            cImage = self.parent.CoinImage
+            cImage = self._parent.CoinImage
         panel.costLabel = DirectLabel(parent=panel, relief=None, text=str(itemCost), text_fg=self.itemColor, text_align=TextNode.ARight, text_scale=PiratesGuiGlobals.TextScaleMed, text_shadow=PiratesGuiGlobals.TextShadow, text_pos=(0.45,
                                                                                                                                                                                                                                         0.0), image=cImage, image_scale=0.15, image_pos=(0.48,
                                                                                                                                                                                                                                                                                          0.0,
@@ -167,13 +167,13 @@ class TattooStoreCartList(DirectScrolledFrame):
     def removePanel(self, data, repack=1):
         for panel in self.panels:
             if panel.data == data:
-                self.parent.updateButton(data, 1)
+                self._parent.updateButton(data, 1)
                 self.panels.remove(panel)
                 self.purchases.remove(data)
                 panel.destroy()
                 if repack:
                     self.repackPanels()
-                self.parent.updateBalance()
+                self._parent.updateBalance()
                 return
 
     def hasPanel(self, data):
@@ -207,7 +207,7 @@ class TattooStoreCartList(DirectScrolledFrame):
 
 
 class TattooStoreGUI(DirectFrame):
-    
+
     notify = directNotify.newCategory('TattooStoreGUI')
     width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.5
@@ -701,11 +701,11 @@ class TattooStoreGUI(DirectFrame):
             tabIcon = None
             tabScale = 0.0
         newTab.nameTag = DirectLabel(
-            parent=newTab, 
-            relief=None, 
-            state=DGG.DISABLED, 
-            pos=(0.0, 0, 0.0), 
-            image=tabIcon, 
+            parent=newTab,
+            relief=None,
+            state=DGG.DISABLED,
+            pos=(0.0, 0, 0.0),
+            image=tabIcon,
             image_scale=tabScale)
         self.pageNames.append(id)
         return

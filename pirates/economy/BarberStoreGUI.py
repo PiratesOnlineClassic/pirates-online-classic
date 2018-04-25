@@ -20,7 +20,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 FACE_CAMERA = 0
 
 
-class BarberStoreTab(LeftTab): 
+class BarberStoreTab(LeftTab):
 
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None))
@@ -31,7 +31,7 @@ class BarberStoreTab(LeftTab):
 
 
 class BarberStoreTabBar(TabBar):
-    
+
     def refreshTabs(self):
         for x, name in enumerate(self.tabOrder):
             tab = self.tabs[name]
@@ -51,7 +51,7 @@ class BarberStoreTabBar(TabBar):
         return BarberStoreTab(self, name, **kw)
 
 
-class BarberStoreGUI(DirectFrame): 
+class BarberStoreGUI(DirectFrame):
     notify = directNotify.newCategory('BarberStoreGUI')
     width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.5
@@ -390,7 +390,9 @@ class BarberStoreGUI(DirectFrame):
         self.setPage(self.currentPage, self.buttonIndex)
 
     def initTabs(self):
-        self.tabBar = BarberStoreTabBar(parent=self, backParent=self.backTabParent, frontParent=self.frontTabParent, offset=0)
+        self.tabBar = BarberStoreTabBar(parent=self, backParent=self.backTabParent,
+            frontParent=self.frontTabParent, offset=0)
+
         self.pageNames = []
         self.createTabs()
         if len(self.pageNames) > 0:
@@ -402,7 +404,8 @@ class BarberStoreGUI(DirectFrame):
             if gender == 'f':
                 if id in [BarberGlobals.BEARD, BarberGlobals.MUSTACHE]:
                     continue
-                self.isPageAdded(id) or self.addTab(id)
+
+            self.isPageAdded(id) or self.addTab(id)
 
     def addTab(self, id):
         newTab = self.tabBar.addTab(id, command=self.setPage, extraArgs=[id])
@@ -418,10 +421,12 @@ class BarberStoreGUI(DirectFrame):
         else:
             tabIcon = None
             tabScale = 0.0
+
         tabText = PLocalizer.barberNames.get(id)
-        newTab.nameTag = DirectLabel(parent=newTab, relief=None, state=DGG.DISABLED, pos=(0.06, 0, -0.035), text_fg=PiratesGuiGlobals.TextFG1, text_scale=0.2, image=tabIcon, image_scale=tabScale)
+        newTab.nameTag = DirectLabel(parent=newTab, relief=None, state=DGG.DISABLED, pos=(0.06, 0, -0.035),
+            text_fg=PiratesGuiGlobals.TextFG1, text_scale=0.2, image=tabIcon, image_scale=tabScale)
+
         self.pageNames.append(id)
-        return
 
     def isPageAdded(self, pageName):
         return self.pageNames.count(pageName) > 0
@@ -471,15 +476,17 @@ class BarberStoreGUI(DirectFrame):
             return -1
         else:
             return 0
-        return
 
     def setPage(self, pageName, startIndex=0):
         self.tabBar.unstash()
-        self.titleLabel['text'] = '\x01smallCaps\x01' + self.rootTitle + ' - ' + PLocalizer.barberNames.get(pageName) + '\x02'
+        self.titleLabel['text'] = '\x01smallCaps\x01' + self.rootTitle + ' - ' + \
+            PLocalizer.barberNames.get(pageName) + '\x02'
+
         if localAvatar.style.getGender() == 'm':
             GENDER = 'MALE'
         else:
             GENDER = 'FEMALE'
+
         self.currentPage = pageName
         startPos = Vec3(0.63, 0.0, 1.1)
         buttonScale = Vec3(0.8, 0.8, 0.8)
@@ -500,14 +507,14 @@ class BarberStoreGUI(DirectFrame):
                 startRange = BarberGlobals.MALE_BEARD
             elif pageName == BarberGlobals.MUSTACHE:
                 startRange = BarberGlobals.MALE_MUSTACHE
-        else:
-            if GENDER == 'FEMALE':
-                if pageName == BarberGlobals.HAIR:
-                    startRange = BarberGlobals.FEMALE_HAIR
-                elif pageName == BarberGlobals.BEARD:
-                    startRange = BarberGlobals.FEMALE_BEARD
-                elif pageName == BarberGlobals.MUSTACHE:
-                    startRange = BarberGlobals.FEMALE_MUSTACHE
+        elif GENDER == 'FEMALE':
+            if pageName == BarberGlobals.HAIR:
+                startRange = BarberGlobals.FEMALE_HAIR
+            elif pageName == BarberGlobals.BEARD:
+                startRange = BarberGlobals.FEMALE_BEARD
+            elif pageName == BarberGlobals.MUSTACHE:
+                startRange = BarberGlobals.FEMALE_MUSTACHE
+
         currentHair = localAvatar.style.getHairHair()
         currentBeard = localAvatar.style.getHairBeard()
         currentMustache = localAvatar.style.getHairMustache()
@@ -516,6 +523,7 @@ class BarberStoreGUI(DirectFrame):
         set = BarberGlobals.stores.get(store)
         if set is None:
             return
+
         for index in range(startRange, startRange + 9999):
             if index in set:
                 item = BarberGlobals.barber_id.get(index)
@@ -536,6 +544,7 @@ class BarberStoreGUI(DirectFrame):
                             if type == BarberGlobals.MUSTACHE:
                                 if itemId == currentMustache:
                                     owned = True
+
                     if holiday is not None:
                         if holiday in AccessoriesStoreGUI.holidayIdList:
                             choices.append([index, owned, cost, holiday])
@@ -565,6 +574,7 @@ class BarberStoreGUI(DirectFrame):
                         item.hide()
 
                     return
+
             if self.itemAmount - startIndex < self.buttonsPerPage and self.itemAmount >= startIndex:
                 itemButton = GuiButton.GuiButton(command=self.applyItem, parent=self.panel, state=DGG.NORMAL, text=text, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(-0.04, 0.07), text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, pos=startPos, image_scale=buttonScale, helpText=helpText, helpDelay=0, helpPos=(0.0, 0.0, -0.12), helpLeftAlign=True, sortOrder=1)
                 itemButton['extraArgs'] = [
@@ -696,7 +706,6 @@ class BarberStoreGUI(DirectFrame):
             item.removeNode()
 
         self.clothCameraNPs = []
-        return
 
     def createDisplayRegions(self):
         startRegion = Vec4(0.526, 0.596, 0.62, 0.69)
@@ -779,7 +788,6 @@ class BarberStoreGUI(DirectFrame):
                     self.clothRenders[self.buttonsPerPage - 1 - y].hide()
 
         self.aspectRatioChange()
-        return
 
     def showCurrentlyOwnedAlert(self):
         self.removeAlertDialog()
@@ -791,4 +799,3 @@ class BarberStoreGUI(DirectFrame):
         if self.alertDialog:
             self.alertDialog.destroy()
             self.alertDialog = None
-        return
