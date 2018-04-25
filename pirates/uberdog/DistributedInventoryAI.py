@@ -142,6 +142,11 @@ class DistributedInventoryAI(DistributedObjectAI):
                 return stackLimit
 
         return None
+
+    def hasStackSpace(self, stackType, amount=0):
+        limits = self.getStackLimit(stackType)
+        stored = self.getStack(stackType)
+        return limit > (stored + amount)
         
     def sendStackLimit(self, stackType, callback):
         self.air.netMessenger.send('getStackLimitResponse', [callback, self.getStackLimit(stackType)])

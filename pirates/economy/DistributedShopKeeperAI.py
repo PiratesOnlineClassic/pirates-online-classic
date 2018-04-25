@@ -1,5 +1,6 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
+from otp.uberdog.RejectCode import RejectCode
 from pirates.economy import EconomyGlobals
 
 class DistributedShopKeeperAI(DistributedObjectAI):
@@ -7,7 +8,65 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
+
+    def __purchaseItem(self, avatar, inventory, itemId):
         
+        # Verify price
+        currentGold = inventory.getGoldInPocket()
+        itemPrice = EconomyGlobals.getItemCost(itemId)
+        if itemPrice > currentGold:
+
+            self.air.logPotentialHacker(
+                message='Received makeSale buy for an item the avatar can not afford!',
+                currentGold=currentGold,
+                itemId=itemId,
+                itemQuantity=itemQuantity,
+                itemPrice=itemPrice
+            )
+
+            return RejectCode.TIMEOUT
+
+        currentStack = inventory.getStack(itemId)
+        if not currentStack:
+            currentStack = 0
+        else:
+            currentStack = currentStack[1]
+
+        if not inventory.hasStackSpace(itemId, amount=itemQuantity):
+            return RejectCode.OVERFLOW
+            
+        inventory.b_setStack(itemId, currentStack + itemQuantity)
+        inventory.setGoldInPocket(currentGold - itemPrice) 
+
+        # Process stack limit changes
+        stackBonus = EconomyGlobals.getInventoryBonus(itemId)
+        if stackBonus:
+            pass #TODO: write me!
+
+        return 2   
+
+    def __sellItem(self, avatar, inventory, item):
+        itemId, itemQuantity = item
+        currentStack = inventory.getStack(itemId)
+        if not currentStack:
+            currentStack = 0
+        else:
+            currentStack = currentStack[1]
+
+        if currentStack < itemQuantity:
+            self.air.logPotentialHacker(
+                message='Received makeSale sell for an item the avatar does not have!',
+                itemId=itemId,
+                itemQuantity=itemQuantity,
+                 currentStack=currentStack
+            )       
+
+            return RejectCode.TIMEOUT
+
+        itemPrice = EconomyGlobals.getItemCost(itemId)
+        inventory.b_setStack(itemId, currentStack - itemQuantity)
+        inventory.setGoldInPocket(currentGold + itemPrice)   
+
     def requestMakeSale(self, buying, selling, names):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
@@ -25,62 +84,28 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
             self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
-        currentGold = inventory.getGoldInPocket()
+
+        response = 2
 
         # Buy items
         for purchase in buying:
-            itemId, itemQuantity = purchase
-
-            # Verify price
-            itemPrice = EconomyGlobals.getItemCost(itemId)
-            if itemPrice > currentGold:
-
-                self.air.logPotentialHacker(
-                    message='Received makeSale buy for an item the avatar can not afford!',
-                    currentGold=currentGold,
-                    itemId=itemId,
-                    itemQuantity=itemQuantity,
-                    itemPrice=itemPrice
-                )
-
-                self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
-                continue
-
-            currentStack = inventory.getStack(itemId)
-            if not currentStack:
-                currentStack = 0
-            else:
-                currentStack = currentStack[1]
             
-            inventory.b_setStack(itemId, currentStack + itemQuantity)
-            inventory.setGoldInPocket(currentGold - itemPrice)
+            # Verify this is still a valid transaction
+            if response != 2:
+                break
 
-            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [2])
+            response = self.__purchaseItem(avatar, inventory, purchase)
 
         # Sell Items
         for sell in selling:
-            itemId, itemQuantity = sell
-            currentStack = inventory.getStack(itemId)
-            if not currentStack:
-                currentStack = 0
-            else:
-                currentStack = currentStack[1]
 
-            if currentStack < itemQuantity:
-                self.air.logPotentialHacker(
-                    message='Received makeSale sell for an item the avatar does not have!',
-                    itemId=itemId,
-                    itemQuantity=itemQuantity,
-                    currentStack=currentStack
-                )       
+            # Verify this is still a valid transaction
+            if response != 2:
+                break
 
-                self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
-                continue
+            response = self.__sellItem(avatar, inventory, sell)
 
-            itemPrice = EconomyGlobals.getItemCost(itemId)
-            inventory.b_setStack(itemId, currentStack - itemQuantity)
-            inventory.setGoldInPocket(currentGold + itemPrice)                   
-
+        self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [response])                 
 
     def requestMusic(self, songId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
