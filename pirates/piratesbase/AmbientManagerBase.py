@@ -5,7 +5,6 @@ from pandac.PandaModules import AudioSound
 
 
 class AmbientSound:
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('AmbientSound')
 
     def __init__(self, path, masterAmbientVolume, loop=True, isMusic=False):
@@ -14,6 +13,7 @@ class AmbientSound:
             self.sfx = loader.loadMusic(path)
         else:
             self.sfx = loader.loadSfx(path)
+
         self.path = path
         self.setLoop(loop)
         self.setVolume(0)
@@ -28,6 +28,7 @@ class AmbientSound:
     def unload(self):
         if self.activeInterval:
             self.activeInterval.pause()
+
         del self.activeInterval
         self.sfx.stop()
         del self.sfx
@@ -53,6 +54,7 @@ class AmbientSound:
     def requestChangeVolume(self, duration, finalVolume, priority):
         if priority < self.curPriority:
             return
+
         self.curPriority = priority
         if not self.sfx.getActive():
             if self.reloadAttempt < 1:
@@ -61,13 +63,17 @@ class AmbientSound:
                     self.sfx = loader.loadMusic(self.path)
                 else:
                     self.sfx = loader.loadSfx(self.path)
+
         self.duration = duration
         self.startVolume = self.getVolume()
         self.finalVolume = finalVolume
         if self.activeInterval:
             self.activeInterval.pause()
             del self.activeInterval
-        self.activeInterval = Sequence(LerpFunc(self.changeVolumeTask, fromData=self.startVolume, toData=self.finalVolume, duration=self.duration))
+
+        self.activeInterval = Sequence(LerpFunc(self.changeVolumeTask, fromData=self.startVolume,
+            toData=self.finalVolume, duration=self.duration))
+
         self.activeInterval.start()
 
     def changeMasterAmbientVolume(self, newMasterAmbientVolume):
@@ -84,11 +90,14 @@ class AmbientSound:
         self.sfx.setVolume(curVolume)
         if not hasattr(self, 'reportCounter'):
             self.reportCounter = 0
+
         self.reportCounter += 1
         if self.reportCounter % 10 == 0:
             pass
+
         if curVolume > 0 and self.sfx.status() == 1:
             self.sfx.play()
+
         if curVolume <= 0 and self.sfx.status() == 2:
             self.sfx.stop()
             self.curPriority = 0
