@@ -346,7 +346,7 @@ class BattleManagerAI(BattleManagerBase):
 
         # update the avatar's overall reputation based on all the skills they
         # used to kill the target
-        inventory.setGeneralRep(inventory.getGeneralRep() + overallReputation)
+        inventory.setOverallRep(inventory.getOverallRep() + overallReputation)
         inventory.setGoldInPocket(inventory.getGoldInPocket() + goldReward)
 
     def destroy(self):

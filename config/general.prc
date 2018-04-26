@@ -8,6 +8,7 @@ win-size 800 600
 audio-library-name p3fmod_audio
 audio-output-rate 44100
 audio-preload-threshold 1024
+audio-music-active #t
 
 # Models:
 model-path ../resources
