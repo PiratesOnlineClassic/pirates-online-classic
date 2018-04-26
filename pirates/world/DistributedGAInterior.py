@@ -167,31 +167,31 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
 
     def loadModelParts(self):
         modelBaseName = self.modelPath.split('_zero')[0]
-        terrainModel = loader.loadModelCopy(modelBaseName + '_terrain')
+        terrainModel = loader.loadModel(modelBaseName + '_terrain', okMissing=True)
         if terrainModel:
             self.geom = terrainModel
         else:
             self.geom = loader.loadModelCopy(self.modelPath)
             return
-        terrainDetailModel = loader.loadModelCopy(modelBaseName + '_terrain_detail')
+        terrainDetailModel = loader.loadModel(modelBaseName + '_terrain_detail', okMissing=True)
         if terrainDetailModel:
             terrainDetailModel.getChild(0).reparentTo(self.geom)
-        pierModel = loader.loadModelCopy(modelBaseName + 'pier')
+        pierModel = loader.loadModel(modelBaseName + 'pier', okMissing=True)
         if pierModel:
             pierModel.getChild(0).reparentTo(self.geom)
-        fortModel = loader.loadModelCopy(modelBaseName + '_fort')
+        fortModel = loader.loadModel(modelBaseName + '_fort', okMissing=True)
         if fortModel:
             fortModel.getChild(0).reparentTo(self.geom)
-        logModel = loader.loadModelCopy(modelBaseName + '_logs')
+        logModel = loader.loadModel(modelBaseName + '_logs', okMissing=True)
         if logModel:
             logModel.getChild(0).reparentTo(self.geom)
-        vegeWallModel = loader.loadModelCopy(modelBaseName + '_nat_wall')
+        vegeWallModel = loader.loadModel(modelBaseName + '_nat_wall', okMissing=True)
         if vegeWallModel:
             vegeWallModel.getChild(0).reparentTo(self.geom)
-        vegModel = loader.loadModelCopy(modelBaseName + '_veg')
+        vegModel = loader.loadModel(modelBaseName + '_veg', okMissing=True)
         if vegModel:
             vegModel.getChild(0).reparentTo(self.geom)
-        rockModel = loader.loadModelCopy(modelBaseName + '_rocks')
+        rockModel = loader.loadModel(modelBaseName + '_rocks', okMissing=True)
         if rockModel:
             rockModel.getChild(0).reparentTo(self.geom)
 
