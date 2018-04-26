@@ -37,7 +37,7 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
             self.notify.warning('Cannot setup player spawn point for %r!' % parent)
             return None
 
-        x, y, z = objectData.get('Pos', objectData.get('GridPos', (0, 0, 0)))
+        (x, y, z), objectParent = self.getObjectTruePosAndParent(objKey, parentUid, objectData)
         h, p, r = objectData.get('Hpr', (0, 0, 0))
 
         parent.addSpawnPt(self.parent.getUniqueId(), (x, y, z, h))
