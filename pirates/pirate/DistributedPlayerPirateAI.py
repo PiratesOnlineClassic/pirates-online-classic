@@ -130,6 +130,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getDNAString(self):
         return self.dnaString
 
+    def d_setFounder(self, founder):
+        self.sendUpdate('setFounder', [founder])
+
     def setInventoryId(self, inventoryId):
         self.inventoryId = inventoryId
 
@@ -633,6 +636,15 @@ def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
 
     spellbook.getInvoker().b_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
     return "Nametag set"
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def setFounder(state):
+    """
+    Sets your founder state
+    """
+    
+    spellbook.getInvoker().d_setFounder(state)
+    return 'Founder set to: %s' % state
 
 @magicWord(category=CATEGORY_MODERATION, types=[str, str, str])
 def toggleGM():
