@@ -704,7 +704,7 @@ def level(level):
             totalRep += ReputationGlobals.getReputationNeededToLevel(
                 InventoryType.OverallRep, levelIndex)
 
-        inventory.setGeneralRep(totalRep)
+        inventory.setOverallRep(totalRep)
 
     return "Your level has been set to %d." % level
 

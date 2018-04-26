@@ -10,39 +10,46 @@ class PirateInventoryAI(DistributedInventoryAI):
     def getStackQuantity(self, skillId):
         return self.getItem(self.getStack, WeaponGlobals.getSkillReputationCategoryId(skillId))
 
-    def setReputation(self, repType, quantity, repAccType=None):
+    def setReputation(self, repType, quantity):
         avatar = self.air.doId2do.get(self.ownerId)
 
         if not avatar:
-            self.notify.debug('Failed to set general rep for avatar %d, not found!' % (
-                avatar.doId))
+            self.notify.debug('Failed to set reputation type %d for unknown avatar %d!' % (
+                repType, avatar.doId))
 
             return
 
         oldLevel, oldReputation = ReputationGlobals.getLevelFromTotalReputation(
-            repType, self.getReputation(repAccType or repType))
+            repType, self.getReputation(repType))
 
         newLevel, newReputation = ReputationGlobals.getLevelFromTotalReputation(
             repType, quantity)
 
-        if repType == InventoryType.OverallRep and repAccType == InventoryType.GeneralRep:
-            if newLevel > oldLevel and newLevel > avatar.getLevel():
-                avatar.b_setLevel(newLevel)
-                avatar.d_levelUpMsg(repType, avatar.getLevel(), 0)
-        else:
-            if newLevel > oldLevel:
-                avatar.d_levelUpMsg(repType, newLevel, 0)
+        # only play the level up message for the avatar if their new reputation
+        # is greater than their previous reputation...
+        if newLevel > oldLevel:
 
-        self.b_setAccumulator(repAccType or repType, quantity)
+            # check to see if the type of reputation we're giving the avatar is
+            # their overall reputation/level, then set their level...
+            if repType == InventoryType.OverallRep:
+                avatar.b_setLevel(newLevel)
+
+            avatar.d_levelUpMsg(repType, newLevel, 0)
+
+        self.b_setAccumulator(repType, quantity)
 
     def getReputation(self, repType):
         return self.getItem(self.getAccumulator, repType)
 
-    def setGeneralRep(self, quantity):
-        self.setReputation(InventoryType.OverallRep, quantity, InventoryType.GeneralRep)
+    def setOverallRep(self, quantity):
+        self.setReputation(InventoryType.OverallRep, quantity)
 
-    def getGeneralRep(self):
-        return self.getReputation(InventoryType.GeneralRep)
+        # since the client still makes use of the general reputation type,
+        # let's just set the value as well...
+        self.b_setAccumulator(InventoryType.GeneralRep, quantity)
+
+    def getOverallRep(self):
+        return self.getReputation(InventoryType.OverallRep)
 
     def setGoldInPocket(self, quantity):
         self.b_setStack(InventoryType.GoldInPocket, quantity)
