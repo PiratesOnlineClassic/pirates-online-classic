@@ -33,7 +33,7 @@ class DistributedInteriorDoorAI(DistributedDoorBaseAI):
 
             return self.DENY
 
-        avatar.b_setLocation(exterior.doId, self.otherDoor.zoneId)
+        avatar.b_setLocation(exterior.doId, PiratesGlobals.IslandLocalZone)
         return self.ACCEPT
 
     def setInteriorId(self, interiorDoId, interiorParentId, interiorZoneId):
