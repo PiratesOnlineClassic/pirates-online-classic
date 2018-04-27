@@ -28,7 +28,7 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
             return self.DENY
 
         if not self.avatarId:
-            self.request('Open', avatar.doId)
+            self.request('Opened', avatar.doId)
 
         return self.ACCEPT
 
@@ -59,14 +59,14 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
         pass
 
     def __open(self, avatarId, task):
-        self.request('Open', avatarId)
+        self.request('Opened', avatarId)
         return task.done
 
-    def enterOpen(self, avatarId):
+    def enterOpened(self, avatarId):
         self.b_setDoorState(PiratesGlobals.DOOR_OPEN, avatarId)
         self.doorTask = taskMgr.doMethodLater(2.0, self.__close, self.uniqueName('door-opened'))
 
-    def exitOpen(self):
+    def exitOpened(self):
         if self.doorTask:
             taskMgr.remove(self.doorTask)
             self.doorTask = None
