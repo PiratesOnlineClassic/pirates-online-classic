@@ -2,6 +2,7 @@ from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from otp.uberdog.RejectCode import RejectCode
 from pirates.economy import EconomyGlobals
+from pirates.makeapirate import BarberGlobals
 
 class DistributedShopKeeperAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShopKeeperAI')
@@ -196,7 +197,71 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         pass
         
     def requestBarber(self, idx, color):
-        pass
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            self.notify.warning('Failed to process make sale for non-existant avatar %d!' %
+                avatar.doId) 
+
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
+            return
+
+        inventory = self.air.inventoryManager.getInventory(avatar.doId)
+        if not inventory:
+            self.notify.debug('Cannot process sale for avatar %d, unknown inventory!' % 
+                avatar.doId)
+
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
+            return
+
+        currentGold = inventory.getGoldInPocket()
+        item = BarberGlobals.barber_id.get(idx, None)
+        if item is None:
+            self.notify.warning('Unknown barber id: %s!' % idx)
+
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
+            return
+    
+        itemId = item[0]
+        itemPrice = item[4]
+        itemType = item[1]
+        if itemPrice > currentGold:
+
+            self.air.logPotentialHacker(
+                message='Received requestMusic for a song the avatar can not afford!',
+                currentGold=currentGold,
+                songId=songId,
+                itemPrice=itemPrice
+            )
+
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
+            return
+
+        inventory.setGoldInPocket(currentGold - itemPrice)
+
+        # Modify the players DNA
+        if itemType == BarberGlobals.HAIR:
+            avatar.setHairHair(itemId)
+        elif itemType == BarberGlobals.BEARD:
+            avatar.setHairBeard(itemId)
+        elif itemType == BarberGlobals.MUSTACHE:
+            avatar.setHairMustache(itemId)
+        else:
+            self.notify.warning('Received invalid barber hair type: %s!' % itemType)
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
+            return
+        
+        avatar.setHairColor(color)
+        avatar.sendDNAUpdate()
+
+        # Log transaction for analytics and GM purposes
+        self.air.writeServerEvent('shopkeep-transaction', 
+            type='requestBarber',
+            idx=idx,
+            color=color,
+            price=itemPrice,
+            purchaser=avatar.doId)
+
+        self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [2])
         
     def requestPurchaseRepair(self, shipId):
         pass
