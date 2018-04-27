@@ -164,13 +164,7 @@ class ClientArea(DirectObject):
         dna.gender = 'n'
         dna.body.color = 0
         dna.body.shape = 3
-        dna.body.height = random.choice([
-            0.8,
-            0.9,
-            1,
-            1.1,
-            1.2])
-
+        dna.body.height = random.choice([0.8, 0.9, 1, 1.1, 1.2])
         dna.clothes.shirt = 0
         dna.clothes.vest = 0
         dna.clothes.coat = 3
@@ -191,8 +185,7 @@ class ClientArea(DirectObject):
                 ivals = []
                 randWait = random.random() * 4.0
                 ival = Sequence(
-                    ActorInterval(
-                        propAv, 'sword_slash'), ActorInterval(
+                    ActorInterval(propAv, 'sword_slash'), ActorInterval(
                         propAv, 'sword_thrust', duration=1), ActorInterval(
                         propAv, 'sword_idle'), ActorInterval(
                         propAv, 'sword_slash'), ActorInterval(
@@ -344,7 +337,6 @@ class ClientArea(DirectObject):
                         tgtLoc.removeNode()
                         moveIval.loop()
                         propAv.moveIval = moveIval
-                        return
 
     def checkSanityOnType(self, objData):
         objectType = objData['Type']
