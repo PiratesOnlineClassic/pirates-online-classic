@@ -1,6 +1,8 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import globalClockDelta
 from pirates.world.DistributedDoorBaseAI import DistributedDoorBaseAI
+from pirates.piratesbase import PiratesGlobals
 
 class DistributedBuildingDoorAI(DistributedDoorBaseAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBuildingDoorAI')
@@ -30,6 +32,7 @@ class DistributedBuildingDoorAI(DistributedDoorBaseAI):
 
             return self.DENY
 
+        self.d_setMovie(PiratesGlobals.DOOR_OPEN, avatar.doId, globalClockDelta.getFrameNetworkTime(bits=32))
         avatar.b_setLocation(interior.doId, interiorDoor.zoneId)
         return self.ACCEPT
 
