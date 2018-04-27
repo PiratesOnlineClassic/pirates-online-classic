@@ -163,12 +163,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             type='requestMusic',
             songId=songId,
             price=5,
-<<<<<<< HEAD
             purchaser=avatar.doId)
-=======
-            purchaser=avatar.doId,
-            seller=self.doId)
->>>>>>> b9f715b448e42a256ec01dda5a45612391d70906
 
         self.sendUpdate('playMusic', [songId])
         self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [2])
