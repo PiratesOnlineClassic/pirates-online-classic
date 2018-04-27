@@ -193,11 +193,11 @@ class BattleManagerAI(BattleManagerBase):
             # recent attacks are measured within a certain time frame...
             totalCombo, totalDamage, numAttackers = avatar.comboDiary.getCombo()
 
-            if totalCombo and numAttackers:
+            if totalCombo and numAttackers > 1:
                 # apply the combo damage including the combo bonus damage to the
                 # target, then broadcast the combo info to all targets with interest...
                 targetEffects[0] = totalDamage + WeaponGlobals.getComboBonus(numAttackers)
-                avatar.b_setCombo(totalCombo, numAttackers > 1, targetEffects[0], avatar.doId)
+                target.b_setCombo(totalCombo, numAttackers, targetEffects[0], avatar.doId)
 
             # update the avatar's combo diary so we can determine if any other attacks
             # made by avatars attacking the avatar's current target is a combo...
