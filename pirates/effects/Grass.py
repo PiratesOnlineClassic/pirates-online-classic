@@ -36,11 +36,10 @@ class Grass(DirectObject, NodePath):
             todMgr = base.cr.timeOfDayManager
         except:
             todMgr = None
-        else:
-            if todMgr:
-                self.setLightOff()
-                self.setLight(todMgr.grassLight)
-                self.setLight(todMgr.alight)
+        elif todMgr:
+            self.setLightOff()
+            self.setLight(todMgr.grassLight)
+            self.setLight(todMgr.alight)
 
     def destroy(self):
         print 'deleting grass'

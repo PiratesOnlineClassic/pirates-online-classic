@@ -114,7 +114,6 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
             self.fireworkShowMgr = None
 
     if __dev__:
-
         def printIslands(self):
             for doId, island in self.islands.iteritems():
                 print doId, `island`
