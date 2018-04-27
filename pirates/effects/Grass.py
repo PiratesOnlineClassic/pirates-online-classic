@@ -36,7 +36,7 @@ class Grass(DirectObject, NodePath):
             todMgr = base.cr.timeOfDayManager
         except:
             todMgr = None
-        elif todMgr:
+        if todMgr:
             self.setLightOff()
             self.setLight(todMgr.grassLight)
             self.setLight(todMgr.alight)
