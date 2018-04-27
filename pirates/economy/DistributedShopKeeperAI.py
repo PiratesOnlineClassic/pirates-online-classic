@@ -119,8 +119,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             type='requestMakeSale',
             buying=log_buying,
             selling=log_selling,
-            purchaser=avatar.doId,
-            seller=self.doId)
+            purchaser=avatar.doId)
 
         self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [response])                 
 
@@ -163,9 +162,8 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         self.air.writeServerEvent('shopkeep-transaction', 
             type='requestMusic',
             songId=songId,
-            price=5
-            purchaser=avatar.doId,
-            seller=self.doId)
+            price=5,
+            purchaser=avatar.doId)
 
         self.sendUpdate('playMusic', [songId])
         self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [2])
