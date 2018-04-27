@@ -8,9 +8,7 @@ from pirates.effects.JRSpawnEffect import JRSpawnEffect
 from pirates.npc import Skeleton
 from pirates.piratesbase import PiratesGlobals
 
-
 class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC, Skeleton.Skeleton):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCSkeleton')
 
     def __init__(self, cr):
