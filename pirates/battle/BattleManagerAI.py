@@ -194,7 +194,7 @@ class BattleManagerAI(BattleManagerBase):
             # recent attacks are measured within a certain time frame...
             totalCombo, totalDamage, numAttackers = avatar.comboDiary.getCombo()
 
-            if totalCombo:
+            if numAttackers:
                 # apply the combo damage including the combo bonus damage to the
                 # target, then broadcast the combo info to all targets with interest...
                 targetEffects[0] = totalDamage + WeaponGlobals.getComboBonus(numAttackers)
@@ -202,7 +202,13 @@ class BattleManagerAI(BattleManagerBase):
 
             # update the avatar's combo diary so we can determine if any other attacks
             # made by avatars attacking the avatar's current target is a combo...
-            avatar.comboDiary.recordAttack(avatar.doId, skillId, targetEffects[0])
+            for attackerDoId in self.getAttackers(target.doId):
+                attacker = self.air.doId2do.get(attackerDoId)
+
+                if not attacker:
+                    continue
+
+                attacker.comboDiary.recordAttack(avatar.doId, skillId, targetEffects[0])
 
             # check to see if the skill used by the avatar was either a hurting effect,
             # or a healing effect like the doll heal, cure skills...
