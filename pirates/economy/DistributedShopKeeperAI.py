@@ -163,7 +163,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         self.air.writeServerEvent('shopkeep-transaction', 
             type='requestMusic',
             songId=songId,
-            price=5
+            price=5,
             purchaser=avatar.doId,
             seller=self.doId)
 
