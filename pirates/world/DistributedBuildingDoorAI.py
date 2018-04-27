@@ -32,7 +32,7 @@ class DistributedBuildingDoorAI(DistributedDoorBaseAI):
 
             return self.DENY
 
-        self.d_setMovie(PiratesGlobals.DOOR_OPEN, avatar.doId, globalClockDelta.getFrameNetworkTime(bits=32))
+        self.d_setMovie(PiratesGlobals.DOOR_OPEN, avatar.doId, globalClockDelta.getFrameNetworkTime(bits=16))
         avatar.b_setLocation(interior.doId, interiorDoor.zoneId)
         return self.ACCEPT
 
