@@ -48,7 +48,7 @@ from otp.nametag.NametagGroup import NametagGroup
 
 class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, DistributedBattleAvatar, DistributedQuestAvatar, PAvatarHandle):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPirate')
-    wantBattle = base.config.GetBool('want-battle', 1)
+    wantBattle = base.config.GetBool('want-battle', True)
     deferrable = True
     GoldFounderIcon = None
     SilverFounderIcon = None

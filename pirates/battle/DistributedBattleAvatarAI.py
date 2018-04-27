@@ -132,7 +132,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.d_setHp(hp, quietly)
 
     def getHp(self):
-        return (self.hp, self.quietly)
+        return [self.hp, self.quietly]
 
     def setLuck(self, luck):
         self.luck = luck

@@ -18,7 +18,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class BattleAvatarGameFSM(FSM.FSM):
-    
     notify = directNotify.newCategory('BattleAvatarGameFSM')
     diggingSfx = None
 

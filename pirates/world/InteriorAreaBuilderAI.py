@@ -1,6 +1,7 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from pirates.leveleditor import ObjectList
+from pirates.world.DistributedCellDoorAI import DistributedCellDoorAI
 
 class InteriorAreaBuilderAI(GameAreaBuilderAI):
     notify = directNotify.newCategory('InteriorAreaBuilderAI')
@@ -9,15 +10,18 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         GameAreaBuilderAI.__init__(self, air, parent)
 
         self.wantDoorLocatorNodes = config.GetBool('want-door-locator-nodes', True)
+        self.wantJailCellDoors = config.GetBool('want-jail-cell-doors', True)
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
 
         if objType == ObjectList.DOOR_LOCATOR_NODE and self.wantDoorLocatorNodes:
             newObj = self.__createDoorLocatorNode(parent, parentUid, objKey, objectData)
+        elif objType == 'Jail Cell Door' and self.wantJailCellDoors:
+            newObj = self.__createCellDoor(parent, parentUid, objKey, objectData)
         else:
-            newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj, fileName, actualParentObj)
-
+            newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey,
+                dynamic, parentIsObj, fileName, actualParentObj)
 
         return newObj
 
@@ -75,3 +79,22 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         self.broadcastObjectPosition(doorLocatorNode)
 
         return doorLocatorNode
+
+    def __createCellDoor(self, parent, parentUid, objKey, objectData):
+        cellDoor = DistributedCellDoorAI(self.air)
+        cellDoor.setUniqueId(objKey)
+        cellDoor.setPos(objectData.get('Pos', (0, 0, 0)))
+        cellDoor.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        cellDoor.setScale(objectData.get('Scale', (1, 1, 1)))
+        cellDoor.setCellIndex(objectData.get('Cell Index', 0))
+
+        self.setObjectTruePosHpr(cellDoor, objKey, parentUid, objectData)
+
+        zoneId = self.parent.getZoneFromXYZ(cellDoor.getPos())
+        self.parent.generateChildWithRequired(cellDoor, zoneId)
+        self.parentObjectToCell(cellDoor, zoneId)
+
+        self.addObject(cellDoor)
+        self.broadcastObjectPosition(cellDoor)
+
+        return cellDoor
