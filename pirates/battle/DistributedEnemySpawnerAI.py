@@ -231,7 +231,6 @@ class SpawnNodeBase:
         self.parent.generateChildWithRequired(npc, zoneId)
         self.parent.builder.parentObjectToCell(npc, zoneId)
 
-        npc.b_setLocation(self.parent.doId, PiratesGlobals.IslandLocalZone)
         npc.d_setInitZ(npc.getZ())
         npc.d_setSpawnIn()
 
