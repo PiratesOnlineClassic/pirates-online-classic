@@ -105,6 +105,23 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
             response = self.__sellItem(avatar, inventory, sell)
 
+        # Create logging dictionaries
+        log_buying = {}
+        for itemId in buying:
+            log_buying[buying] = EconomyGlobals.getItemCost(itemId)
+
+        log_selling = {}
+        for itemId in buying:
+            log_selling[buying] = EconomyGlobals.getItemCost(itemId)      
+
+        # Log transaction for analytics and GM purposes
+        self.air.writeServerEvent('shopkeep-transaction', 
+            type='requestMakeSale',
+            buying=log_buying,
+            selling=log_selling,
+            purchaser=avatar.doId,
+            seller=self.doId)
+
         self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [response])                 
 
     def requestMusic(self, songId):
@@ -141,6 +158,15 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             return
 
         inventory.setGoldInPocket(currentGold - itemPrice)
+
+        # Log transaction for analytics and GM purposes
+        self.air.writeServerEvent('shopkeep-transaction', 
+            type='requestMusic',
+            songId=songId,
+            price=5
+            purchaser=avatar.doId,
+            seller=self.doId)
+
         self.sendUpdate('playMusic', [songId])
         self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [2])
         
