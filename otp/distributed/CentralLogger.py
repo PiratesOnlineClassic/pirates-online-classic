@@ -23,5 +23,4 @@ class CentralLogger(DistributedObjectGlobal):
         return True
 
     def writeClientEvent(self, eventString, targetDISLId=0, targetAvId=0):
-        print('WRITTING CLIENT EVENT!')
         self.sendUpdate('sendMessage', ['ClientEvent', eventString, targetDISLId, targetAvId])
