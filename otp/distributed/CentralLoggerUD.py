@@ -10,7 +10,7 @@ class CentralLoggerUD(DistributedObjectGlobalUD):
         DistributedObjectGlobalUD.__init__(self, air)
 
     def sendMessage(self, category, message, targetDISLid, targetAvId):
-        self.notify.debug('Received Message from Client')
+        self.notify.debug('Received message from client')
 
         parts = message.split('|')
         msgType = parts[0]
