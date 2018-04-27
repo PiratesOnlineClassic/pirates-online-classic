@@ -78,7 +78,7 @@ class BattleManagerAI(BattleManagerBase):
         self.__targets[targetId].remove(attackerId)
 
     def getAttackers(self, targetId):
-        return self.__targets.get(targetId)
+        return self.__targets.get(targetId, {})
 
     def targetInRange(self, attacker, target, skillId, ammoSkillId):
         tolerance = 0
