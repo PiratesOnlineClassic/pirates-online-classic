@@ -1131,16 +1131,19 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         self.maxSwiftness = maxSwiftness
 
     def getCombo(self):
-        return (
-         self.combo, self.isTeamCombo, self.comboDamage)
+        return (self.combo, self.isTeamCombo, self.comboDamage)
 
     def setCombo(self, combo, teamCombo, comboDamage, attackerId=0):
-        DistributedReputationAvatar.setCombo(self, combo, teamCombo, comboDamage, attackerId=attackerId)
+        DistributedReputationAvatar.setCombo(self, combo, teamCombo, comboDamage,
+            attackerId=attackerId)
+
         if attackerId == base.localAvatar.getDoId():
             return
+
         self.combo = combo
         if teamCombo:
             self.isTeamCombo = teamCombo
+
         self.comboDamage = comboDamage
         if base.localAvatar.currentTarget == self:
             messenger.send('trackCombo', [self.combo, self.isTeamCombo, self.comboDamage])
@@ -1155,6 +1158,7 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         if self.getInventory() is None:
             self.notify.warning('Inventory not created yet!')
             return {}
+
         return self.getInventory().getSkills(weaponId)
 
     def setSkillEffects(self, buffs):
@@ -1813,15 +1817,15 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
     def trackTerrain(self):
         if self.tracksTerrain == None:
             trackingCreatures = [
-                AvatarTypes.Crab, 
-                AvatarTypes.RockCrab, 
-                AvatarTypes.GiantCrab, 
-                AvatarTypes.Pig, 
-                AvatarTypes.Dog, 
-                AvatarTypes.Scorpion, 
-                AvatarTypes.DreadScorpion, 
-                AvatarTypes.Alligator, 
-                AvatarTypes.BigGator, 
+                AvatarTypes.Crab,
+                AvatarTypes.RockCrab,
+                AvatarTypes.GiantCrab,
+                AvatarTypes.Pig,
+                AvatarTypes.Dog,
+                AvatarTypes.Scorpion,
+                AvatarTypes.DreadScorpion,
+                AvatarTypes.Alligator,
+                AvatarTypes.BigGator,
                 AvatarTypes.HugeGator
             ]
             if self.avatarType.getNonBossType() in trackingCreatures:

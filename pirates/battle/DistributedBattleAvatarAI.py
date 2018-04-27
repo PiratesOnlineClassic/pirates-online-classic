@@ -286,11 +286,17 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.sendUpdate('setCombo', [combo, teamCombo, comboDamage, attackerId])
 
     def b_setCombo(self, combo, teamCombo, comboDamage, attackerId):
-        self.setCombo(self, combo, teamCombo, comboDamage, attackerId)
-        self.d_setCombo(self, combo, teamCombo, comboDamage, attackerId)
+        self.setCombo(combo, teamCombo, comboDamage, attackerId)
+        self.d_setCombo(combo, teamCombo, comboDamage, attackerId)
 
     def getCombo(self):
         return [self.combo, self.teamCombo, self.comboDamage, self.attackerId]
+
+    def resetComboLevel(self):
+        self.combo = 0
+        self.teamCombo = 0
+        self.comboDamage = 0
+        self.attackerId = 0
 
     def setSkillEffects(self, skillEffects):
         self.skillEffects = skillEffects

@@ -13,6 +13,10 @@ class DistributedMovingObjectAI(DistributedSmoothNodeAI, DistributedTargetableOb
         self.aggroRadius = 0
         self.aggroMode = 0
 
+    def generate(self):
+        DistributedSmoothNodeAI.generate(self)
+        DistributedTargetableObjectAI.generate(self)
+
     def setMaxSpeed(self, maxSpeed):
         self.maxSpeed = maxSpeed
 
