@@ -37,7 +37,6 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
             self.removeObjectFromGrid(base.localAvatar)
         self.shipBarrierNP.removeNode()
         self.ignore('enter' + self.cName)
-        return
 
     def delete(self):
         self.water.delete()

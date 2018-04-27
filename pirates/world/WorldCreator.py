@@ -265,21 +265,13 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
             pass
         elif category == 'DockWall':
             pass
-        elif category in [
-            'Spawning',
-            'Staging']:
+        elif category in ['Spawning', 'Staging']:
             return None
 
         newEventSphereNode.addSolid(newEventSphere)
         newEventSphereNodePath = objParent.collisions.attachNewNode(newEventSphereNode)
-        self.cr.activeWorld.accept('enter' + newEventSphereName, self.cr.activeWorld.enteredSphere, extraArgs = [
-            [
-                msgName,
-                extraParam]])
-        self.cr.activeWorld.accept('exit' + newEventSphereName, self.cr.activeWorld.exitedSphere, extraArgs = [
-            [
-                msgName,
-                extraParam]])
+        self.cr.activeWorld.accept('enter' + newEventSphereName, self.cr.activeWorld.enteredSphere, extraArgs = [[msgName, extraParam]])
+        self.cr.activeWorld.accept('exit' + newEventSphereName, self.cr.activeWorld.exitedSphere, extraArgs = [[msgName, extraParam]])
         return newEventSphereNodePath
 
     def addLocationSphere(self, uid, objData, objParent):
@@ -308,8 +300,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
 
     def createJackSparrowStandin(self, object, uid, parent):
         self.notify.debug('creating Jack')
-        jack = Actor.Actor(object['Visual']['Model'], {
-            'idle': 'models/char/js_idle',
+        jack = Actor.Actor(object['Visual']['Model'], {'idle': 'models/char/js_idle',
             'walk': 'models/char/js_walk',
             'run': 'models/char/js_run' })
         jack.loop('idle')
