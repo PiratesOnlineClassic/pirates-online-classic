@@ -65,7 +65,7 @@ class ComboDiary:
         for attackerId in self.timers:
             comboLength = len(self.timers[attackerId])
             if not comboLength:
-                return 1
+                return 0
 
             lastEntry = self.timers[attackerId][comboLength - 1]
             lastSkillId = lastEntry[self.SKILLID_INDEX]

@@ -157,8 +157,7 @@ class BattleManagerAI(BattleManagerBase):
         # add the skill info to the attackers battle skill diary to track
         # what skills they have used and when...
         if not avatar.battleSkillDiary.hasSkill(skillId):
-            avatar.battleSkillDiary.addSkill(globalClockDelta.getRealNetworkTime(bits=32),
-                skillId, ammoSkillId)
+            avatar.battleSkillDiary.addSkill(timestamp, skillId, ammoSkillId)
 
         # calculate the moddified skill result for this skill, add this including
         # the attack data according to which ever weapon the avatar is using...
