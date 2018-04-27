@@ -1173,7 +1173,7 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   spentSkillPoint(SkillId) ownrecv;
   requestActivity(uint32, int32, resultPair [], uint32 []) airecv clsend;
   setEmote(int32) required broadcast ram airecv ownsend;
-  playEmote(int32) broadcast;
+  playEmote(int32) broadcast ownrecv ownsend;
   setTempDoubleXPReward(uint32=0) required db ram broadcast;
   setCrewHUDUpdate(uint8, HUDIcons []) ownrecv;
   setAllowGMNameTag(bool) required ram broadcast airecv;

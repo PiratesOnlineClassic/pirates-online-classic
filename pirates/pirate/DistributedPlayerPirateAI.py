@@ -218,7 +218,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             return
 
         self.emoteId = emoteId
-        self.sendUpdateToAvatarId(self.doId, 'playEmote', [emoteId])
         self.sendUpdate('playEmote', [emoteId])
 
     def getEmote(self):
@@ -646,7 +645,7 @@ def setFounder(state):
     """
     Sets your founder state
     """
-    
+
     spellbook.getInvoker().d_setFounder(state)
     return 'Founder set to: %s' % state
 
