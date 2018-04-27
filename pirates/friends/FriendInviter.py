@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.friends.FriendInviter
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State
 from direct.gui.DirectGui import *
@@ -15,17 +11,12 @@ from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.CheckBox import CheckBox
 from pirates.piratesgui.RequestButton import RequestButton
 
-
 class FriendInviterButton(RequestButton):
-    
-
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
         self.initialiseoptions(FriendInviterButton)
 
-
 class FriendInviter(GuiPanel.GuiPanel):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('FriendInviter')
 
     def __init__(self, avId, avName, isPlayerInvite, quickYesNo=True):
@@ -63,9 +54,9 @@ class FriendInviter(GuiPanel.GuiPanel):
          State.State('maybe', self.enterMaybe, self.exitMaybe),
          State.State('down', self.enterDown, self.exitDown),
          State.State('cancel', self.enterCancel, self.exitCancel)], 'off', 'off')
-        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.25,
-                                                                                                                                                                                                                                                    0,
-                                                                                                                                                                                                                                                    0.35), textMayChange=1)
+        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, 
+                                   text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, 
+                                   pos=(0.25, 0, 0.35), textMayChange=1)
         self.context = None
         self.bOk = FriendInviterButton(text=OTPLocalizer.FriendInviterOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
@@ -92,7 +83,6 @@ class FriendInviter(GuiPanel.GuiPanel):
             self.fsm.request('getNewFriend')
         else:
             self.fsm.request('begin')
-        return
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
@@ -128,30 +118,27 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.accept(self.avDisableName, self.__handleDisableAvatar)
         if self.avId == myId:
             self.fsm.request('self')
-        else:
-            if self.isPlayerInvite:
-                print 'isPlayerFriend: %s' % base.cr.playerFriendsManager.isPlayerFriend(self.avId)
-                print 'isavatarofplayerfriend: %s' % base.cr.playerFriendsManager.findPlayerIdFromAvId(self.avId)
-                if base.cr.playerFriendsManager.isAvatarOwnerPlayerFriend(self.avId):
-                    self.fsm.request('alreadyFriends')
-                elif len(base.cr.playerFriendsManager.playerFriendsList) >= OTPGlobals.MaxFriends:
-                    self.fsm.request('tooMany')
-                elif self.skipYesNo == True:
-                    self.fsm.request('checkAvailability')
-                else:
-                    self.fsm.request('notYet')
+        elif self.isPlayerInvite:
+            #print 'isPlayerFriend: %s' % base.cr.playerFriendsManager.isPlayerFriend(self.avId)
+            #print 'isavatarofplayerfriend: %s' % base.cr.playerFriendsManager.findPlayerIdFromAvId(self.avId)
+            if base.cr.playerFriendsManager.isAvatarOwnerPlayerFriend(self.avId):
+                self.fsm.request('alreadyFriends')
+            elif len(base.cr.playerFriendsManager.playerFriendsList) >= OTPGlobals.MaxFriends:
+                self.fsm.request('tooMany')
+            elif self.skipYesNo == True:
+                self.fsm.request('checkAvailability')
             else:
-                if base.cr.avatarFriendsManager.isFriend(self.avId):
-                    self.fsm.request('alreadyFriends')
-                else:
-                    tooMany = len(base.cr.avatarFriendsManager.avatarFriendsList) >= OTPGlobals.MaxFriends
-                    if tooMany:
-                        self.fsm.request('tooMany')
-                    else:
-                        if self.skipYesNo == True:
-                            self.fsm.request('checkAvailability')
-                        else:
-                            self.fsm.request('notYet')
+                self.fsm.request('notYet')
+        elif base.cr.avatarFriendsManager.isFriend(self.avId):
+            self.fsm.request('alreadyFriends')
+        else:
+            tooMany = len(base.cr.avatarFriendsManager.avatarFriendsList) >= OTPGlobals.MaxFriends
+            if tooMany:
+                self.fsm.request('tooMany')
+            elif self.skipYesNo == True:
+                self.fsm.request('checkAvailability')
+            else:
+                self.fsm.request('notYet')
 
     def exitBegin(self):
         self.ignore(self.avDisableName)
@@ -201,9 +188,8 @@ class FriendInviter(GuiPanel.GuiPanel):
             if self.avId == info.avatarId:
                 self.info = info
                 self.fsm.request('yes')
-        else:
-            if self.avId == avId:
-                self.fsm.request('yes')
+        elif self.avId == avId:
+            self.fsm.request('yes')
 
     def exitCheckAvailability(self):
         self.ignore(self.avDisableName)
@@ -219,7 +205,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.FriendInviterNotAvailable % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitNotAvailable(self):
         self.bOk.hide()
@@ -228,7 +213,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.FriendInviterNotOpen % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitNotOpen(self):
         self.bOk.hide()
@@ -237,7 +221,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.FriendInviterFriendSaidNoNewFriends % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitNotAcceptingFriends(self):
         self.bOk.hide()
@@ -247,7 +230,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         if self.context != None:
             self.context = None
         self.bOk.show()
-        return
 
     def exitWentAway(self):
         self.bOk.hide()
@@ -258,7 +240,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.context = None
         self.bStop.show()
         self.bCancel.show()
-        return
 
     def exitAlreadyFriends(self):
         self.message['text'] = ''
@@ -272,7 +253,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.context = None
         self.bStop.show()
         self.bCancel.show()
-        return
 
     def exitAlreadyInvited(self):
         self.message['text'] = ''
@@ -298,14 +278,13 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.context = None
         self.bYes.show()
         self.bNo.show()
-        return
 
     def exitEndFriendship(self):
         self.bYes.hide()
         self.bNo.hide()
 
     def enterFriendsNoMore(self):
-        print 'enterFriendsNoMore %s %s' % (self.isPlayerInvite, self.avId)
+        #print 'enterFriendsNoMore %s %s' % (self.isPlayerInvite, self.avId)
         if self.isPlayerInvite:
             pId = base.cr.playerFriendsManager.findPlayerIdFromAvId(self.avId)
             if pId:
@@ -324,7 +303,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.FriendInviterSelf
         self.context = None
         self.bOk.show()
-        return
 
     def exitSelf(self):
         self.bOk.hide()
@@ -333,7 +311,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.FriendInviterIgnored % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitIgnored(self):
         self.bOk.hide()
@@ -360,14 +337,12 @@ class FriendInviter(GuiPanel.GuiPanel):
     def enterYes(self):
         if self.skipCongrats:
             self.destroy()
+        elif self.isPlayerInvite:
+            self.message['text'] = OTPLocalizer.FriendInviterPlayerFriendSaidYes % (self.avName, self.info.playerName)
         else:
-            if self.isPlayerInvite:
-                self.message['text'] = OTPLocalizer.FriendInviterPlayerFriendSaidYes % (self.avName, self.info.playerName)
-            else:
-                self.message['text'] = OTPLocalizer.FriendInviterFriendSaidYes % self.avName
-            self.context = None
-            self.bOk.show()
-        return
+            self.message['text'] = OTPLocalizer.FriendInviterFriendSaidYes % self.avName
+        self.context = None
+        self.bOk.show()
 
     def exitYes(self):
         self.bOk.hide()
@@ -376,7 +351,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.FriendInviterFriendSaidNo % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitNo(self):
         self.bOk.hide()
@@ -385,7 +359,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.FriendInviterOtherTooMany % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitOtherTooMany(self):
         self.bOk.hide()
@@ -394,7 +367,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.FriendInviterMaybe % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitMaybe(self):
         self.bOk.hide()
@@ -403,7 +375,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.FriendInviterDown
         self.context = None
         self.bOk.show()
-        return
 
     def exitDown(self):
         self.bOk.hide()
@@ -412,7 +383,6 @@ class FriendInviter(GuiPanel.GuiPanel):
         if self.context != None:
             self.context = None
         self.fsm.request('off')
-        return
 
     def exitCancel(self):
         pass
@@ -429,11 +399,10 @@ class FriendInviter(GuiPanel.GuiPanel):
     def __handleYes(self):
         if self.fsm.getCurrentState().getName() == 'notYet':
             self.fsm.request('checkAvailability')
+        elif self.fsm.getCurrentState().getName() == 'endFriendship':
+            self.fsm.request('friendsNoMore')
         else:
-            if self.fsm.getCurrentState().getName() == 'endFriendship':
-                self.fsm.request('friendsNoMore')
-            else:
-                self.destroy()
+            self.destroy()
 
     def __handleNo(self):
         self.destroy()
@@ -445,61 +414,46 @@ class FriendInviter(GuiPanel.GuiPanel):
         if yesNoAlready == 1:
             self.context = context
             self.fsm.request('asking')
+        elif yesNoAlready == 0:
+            self.fsm.request('notAvailable')
+        elif yesNoAlready == 2:
+            self.fsm.request('alreadyFriends')
+        elif yesNoAlready == 3:
+            self.fsm.request('self')
+        elif yesNoAlready == 4:
+            self.fsm.request('ignored')
+        elif yesNoAlready == 6:
+            self.fsm.request('notAcceptingFriends')
+        elif yesNoAlready == 10:
+            self.fsm.request('no')
+        elif yesNoAlready == 13:
+            self.fsm.request('otherTooMany')
         else:
-            if yesNoAlready == 0:
-                self.fsm.request('notAvailable')
-            else:
-                if yesNoAlready == 2:
-                    self.fsm.request('alreadyFriends')
-                else:
-                    if yesNoAlready == 3:
-                        self.fsm.request('self')
-                    else:
-                        if yesNoAlready == 4:
-                            self.fsm.request('ignored')
-                        else:
-                            if yesNoAlready == 6:
-                                self.fsm.request('notAcceptingFriends')
-                            else:
-                                if yesNoAlready == 10:
-                                    self.fsm.request('no')
-                                else:
-                                    if yesNoAlready == 13:
-                                        self.fsm.request('otherTooMany')
-                                    else:
-                                        self.notify.warning('Got unexpected response to friendConsidering: %s' % yesNoAlready)
-                                        self.fsm.request('maybe')
+            self.notify.warning('Got unexpected response to friendConsidering: %s' % yesNoAlready)
+            self.fsm.request('maybe')
 
     def __friendRejectInvite(self, avId, reason):
         if reason == RejectCode.NO_FRIENDS_LIST:
             pass
+        elif reason == RejectCode.FRIENDS_LIST_NOT_HANDY:
+            pass
+        elif reason == RejectCode.INVITEE_NOT_ONLINE:
+            self.fsm.request('notAvailable')
+        elif reason == RejectCode.ALREADY_INVITED:
+            self.fsm.request('alreadyInvited')
+        elif reason == RejectCode.ALREADY_YOUR_FRIEND:
+            self.fsm.request('alreadyFriends')
+        elif reason == RejectCode.FRIENDS_LIST_FULL:
+            self.fsm.request('tooMany')
+        elif reason == RejectCode.OTHER_FRIENDS_LIST_FULL:
+            self.fsm.request('otherTooMany')
+        elif reason == RejectCode.INVITATION_DECLINED:
+            self.fsm.request('no')
+        elif reason == RejectCode.MAY_NOT_OPEN_INVITE:
+            self.notify.warning('May Not Open Invite, switchboard confused %s.' % avId)
+            self.fsm.request('notOpen')
         else:
-            if reason == RejectCode.FRIENDS_LIST_NOT_HANDY:
-                pass
-            else:
-                if reason == RejectCode.INVITEE_NOT_ONLINE:
-                    self.fsm.request('notAvailable')
-                else:
-                    if reason == RejectCode.ALREADY_INVITED:
-                        self.fsm.request('alreadyInvited')
-                    else:
-                        if reason == RejectCode.ALREADY_YOUR_FRIEND:
-                            self.fsm.request('alreadyFriends')
-                        else:
-                            if reason == RejectCode.FRIENDS_LIST_FULL:
-                                self.fsm.request('tooMany')
-                            else:
-                                if reason == RejectCode.OTHER_FRIENDS_LIST_FULL:
-                                    self.fsm.request('otherTooMany')
-                                else:
-                                    if reason == RejectCode.INVITATION_DECLINED:
-                                        self.fsm.request('no')
-                                    else:
-                                        if reason == RejectCode.MAY_NOT_OPEN_INVITE:
-                                            self.notify.warning('May Not Open Invite, switchboard confused %s.' % avId)
-                                            self.fsm.request('notOpen')
-                                        else:
-                                            self.notify.warning('friendRejectInvite: %s unknown reason: %s.' % (avId, reason))
+            self.notify.warning('friendRejectInvite: %s unknown reason: %s.' % (avId, reason))
 
     def __friendResponse(self, yesNoMaybe, context):
         if self.context != context:
@@ -507,16 +461,13 @@ class FriendInviter(GuiPanel.GuiPanel):
             self.context = context
         if yesNoMaybe == 1:
             self.fsm.request('yes')
+        elif yesNoMaybe == 0:
+            self.fsm.request('no')
+        elif yesNoMaybe == 3:
+            self.fsm.request('otherTooMany')
         else:
-            if yesNoMaybe == 0:
-                self.fsm.request('no')
-            else:
-                if yesNoMaybe == 3:
-                    self.fsm.request('otherTooMany')
-                else:
-                    self.notify.warning('Got unexpected response to friendResponse: %s' % yesNoMaybe)
-                    self.fsm.request('maybe')
+            self.notify.warning('Got unexpected response to friendResponse: %s' % yesNoMaybe)
+            self.fsm.request('maybe')
 
     def __handleDisableAvatar(self):
         self.fsm.request('wentAway')
-# okay decompiling .\pirates\friends\FriendInviter.pyc

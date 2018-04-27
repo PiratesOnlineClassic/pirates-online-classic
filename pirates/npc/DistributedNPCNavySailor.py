@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.npc.DistributedNPCNavySailor
 import NavySailor
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
@@ -11,9 +7,7 @@ from pirates.leveleditor import NPCList
 from pirates.pirate import AvatarTypes, DistributedPirateBase, HumanDNA
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
-
 class DistributedNPCNavySailor(DistributedBattleNPC.DistributedBattleNPC, NavySailor.NavySailor):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCNavySailor')
 
     def __init__(self, cr):
@@ -58,7 +52,6 @@ class DistributedNPCNavySailor(DistributedBattleNPC.DistributedBattleNPC, NavySa
                 self.style.makeNPCIndiaNavySailor()
             else:
                 self.style.makeNPCNavySailor()
-        return
 
     def play(self, *args, **kwArgs):
         NavySailor.NavySailor.play(self, *args, **kwArgs)
@@ -74,4 +67,3 @@ class DistributedNPCNavySailor(DistributedBattleNPC.DistributedBattleNPC, NavySa
 
     def stop(self, *args, **kwArgs):
         NavySailor.NavySailor.stop(self, *args, **kwArgs)
-# okay decompiling .\pirates\npc\DistributedNPCNavySailor.pyc
