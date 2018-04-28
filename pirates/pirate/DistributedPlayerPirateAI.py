@@ -724,7 +724,7 @@ def level(level):
     return 'Your level has been set to %d.' % level
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def zombie(self):
+def zombie():
     """
     Toggles the targets zombie state
     """
@@ -736,7 +736,7 @@ def zombie(self):
     return 'Targets Zombie state forced to %s' % target.forcedZombie
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def turbo(self):
+def turbo():
     """
     Toggles turbo on the target
     """
@@ -747,7 +747,7 @@ def turbo(self):
     return 'Toggled mario.'
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def mario(self):
+def mario():
     """
     Toggles mario on the target
     """
