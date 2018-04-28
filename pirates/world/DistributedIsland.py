@@ -1181,7 +1181,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
 
     def retrieveIslandTerrain(self):
         islandGeomCache = self.getIslandCache()
-        if not islandGeomCache.hasData() or not base.config.GetBool('want-disk-cache', 0):
+        if not base.config.GetBool('want-disk-cache', 0) or not islandGeomCache.hasData():
             self.buildIslandTerrain()
         else:
             data = islandGeomCache.getData()
@@ -1255,20 +1255,30 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.geom = None
 
     def getCoreCache(self):
-        return base.bamCache.lookup(Filename('/%s_%s_core_%s_%s' % (self.name, self.uniqueId, base.launcher.ServerVersion, base.gridDetail)), '')
+        if base.bamCache:
+            return base.bamCache.lookup(Filename('/%s_%s_core_%s_%s' % (self.name, self.uniqueId, base.launcher.ServerVersion, base.gridDetail)), '')
+        return None
 
     def getGridCache(self):
-        return base.bamCache.lookup(Filename('/%s_%s_grid_%s' % (self.name, self.uniqueId, base.gridDetail)), '')
+        if base.bamCache:
+            return base.bamCache.lookup(Filename('/%s_%s_grid_%s' % (self.name, self.uniqueId, base.gridDetail)), '')
+        return None
 
     def getAnimCache(self):
-        return base.bamCache.lookup(Filename('/%s_%s_anims_%s' % (self.name, self.uniqueId, base.gridDetail)), '')
+        if base.bamCache:
+            return base.bamCache.lookup(Filename('/%s_%s_anims_%s' % (self.name, self.uniqueId, base.gridDetail)), '')
+        return None
 
     def getLargeObjectsCache(self):
-        return base.bamCache.lookup(Filename('/%s_large_%s' % (self.name, base.gridDetail)), '')
+        if base.bamCache:
+            return base.bamCache.lookup(Filename('/%s_large_%s' % (self.name, base.gridDetail)), '')
+        return None
 
     def getIslandCache(self):
-        return base.bamCache.lookup(Filename('/%s_%s_island_%s_%s' % (self.name, self.uniqueId, base.launcher.ServerVersion, base.gridDetail)), '')
-
+        if base.bamCache:
+            return base.bamCache.lookup(Filename('/%s_%s_island_%s_%s' % (self.name, self.uniqueId, base.launcher.ServerVersion, base.gridDetail)), '')
+        return None
+            
     def getSiegeTeam(self):
         return base.cr.distributedDistrict.worldCreator.getPvpIslandTeam(self.uniqueId)
 
@@ -1278,16 +1288,14 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     def shipVisibilityChanged(self, value):
         if value == 0:
             self.parentWorld.worldGrid.stopProcessVisibility()
-        else:
-            if value == 1:
-                self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
-                base.showShipFlats = True
-                messenger.send('far-ships')
-            else:
-                if value == 2:
-                    self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
-                    base.showShipFlats = False
-                    messenger.send('normal-ships')
+        elif value == 1:
+            self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
+            base.showShipFlats = True
+            messenger.send('far-ships')
+        elif value == 2:
+            self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
+            base.showShipFlats = False
+            messenger.send('normal-ships')
 
     def handleTunnelsOnRadar(self, show=True):
         self.hasTunnelsOnRadar = show
