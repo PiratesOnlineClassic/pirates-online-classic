@@ -312,11 +312,10 @@ class BattleManagerAI(BattleManagerBase):
             if attacker.comboDiary.checkComboExpired(attacker.doId, skillId):
                 attacker.comboDiary.removeCombo(attacker.doId, skillId)
 
-                # check to see if the avatar doesn't have anymore combos
-                # that are not expired, if so clear the combo diary...
-                if len(combos) == 1:
-                    attacker.comboDiary.clear()
-                    break
+        # check to see if the avatar doesn't have anymore combos
+        # that are not expired, if so clear the combo diary...
+        if not len(combos):
+            attacker.comboDiary.clear()
 
         # check the current weapon skill and determine if the avatar is still in
         # range that they may still be able to use that weapon in battle...
