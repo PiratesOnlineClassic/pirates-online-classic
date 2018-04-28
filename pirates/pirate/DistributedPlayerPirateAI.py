@@ -10,7 +10,6 @@ from pirates.quest.QuestConstants import LocationIds
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
-from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from otp.ai.MagicWordGlobal import *
 from pirates.battle import WeaponGlobals
@@ -39,7 +38,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.gmNameTagAllowed = False
 
         self.stickyTargets = []
-        self.concentricZones = []
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -51,9 +49,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         self.battleRandom = BattleRandom(self.doId)
         self.battleSkillDiary = BattleSkillDiaryAI(self.air, self)
-
-        self.weapon = DistributedWeaponAI(self.air)
-        self.weapon.generateWithRequiredAndId(self.air.allocateChannel(), 0, 0)
 
         self.accept('HolidayStarted', self.processHolidayStart)
         self.accept('HolidayEnded', self.processHolidayEnd)
@@ -79,9 +74,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             if inventory:
                 self.air.setAI(inventory.doId, self.air.ourChannel)
-
-            if self.weapon:
-                self.weapon.b_setLocation(parentId, zoneId)
 
             if isinstance(parentObj, DistributedGameAreaAI):
                 if self.currentIsland:
@@ -225,7 +217,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def requestCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
         if not self.weapon:
-            self.notify.warning('Cannot request current weapon for avatar %d, does not have a weapon object!' % \
+            self.notify.debug('Cannot request current weapon for avatar %d, does not have a weapon object!' % \
                 self.doId)
 
             return
@@ -473,11 +465,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         if self.battleRandom:
             self.battleRandom.delete()
 
-        if self.weapon:
-            self.weapon.requestDelete()
-
         self.battleRandom = None
-        self.weapon = None
 
         self.ignore('HolidayStarted')
         self.ignore('HolidayEnded')
@@ -616,12 +604,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def b_updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
         self.d_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
         self.updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
-
-    def setConcentricZones(self, concentricZones):
-        self.concentricZones = concentricZones
-
-    def getConcentricZones(self):
-        return self.concentricZones
 
 @magicWord(category=CATEGORY_MODERATION, types=[int, str, str])
 def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
