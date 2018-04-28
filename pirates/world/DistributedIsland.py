@@ -472,7 +472,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     def loadIslandLowLod(self):
         flatName = self.modelPath.split('_zero')
         if not self.islandLowLod:
-            self.islandLowLod = loader.loadModelCopy(flatName[0] + '_low')
+            self.islandLowLod = loader.loadModel(flatName[0] + '_low', okMissing=True)
 
         if self.islandLowLod and not self.islandLowLod.isEmpty():
             self.islandLowLod.reparentTo(self)
@@ -517,10 +517,10 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             lowend = '_lowend'
 
         islandBaseName = self.modelPath.split('_zero')[0]
-        waveModel = loader.loadModelCopy(islandBaseName + lowend + '_wave_none')
+        waveModel = loader.loadModel(islandBaseName + lowend + '_wave_none', okMissing=True)
         if lowend != '' and not waveModel:
             lowend = ''
-            waveModel = loader.loadModelCopy(islandBaseName + lowend + '_wave_none')
+            waveModel = loader.loadModel(islandBaseName + lowend + '_wave_none', okMissing=True)
 
         if waveModel:
             self.islandShoreWave = Actor.Actor(waveModel)
@@ -565,11 +565,11 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         if base.options.terrain_detail_level == 0:
             lowend = '_lowend'
 
-        terrainModel = loader.loadModelCopy(islandBaseName + '_terrain', loaderOptions)
+        terrainModel = loader.loadModel(islandBaseName + '_terrain', loaderOptions, okMissing=True)
         if terrainModel:
             self.geom = terrainModel
         else:
-            self.geom = loader.loadModelCopy(islandBaseName)
+            self.geom = loader.loadModel(islandBaseName)
             return
 
         collNode = self.geom.find('**/cannoncol*')
@@ -577,51 +577,51 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             collNode.node().setIntoCollideMask(collNode.node().getIntoCollideMask() | PiratesGlobals.TargetBitmask)
             collNode.setTag('objType', str(PiratesGlobals.COLL_BLOCKER))
 
-        terrainDetailModel = loader.loadModelCopy(islandBaseName + lowend + '_terrain_detail', loaderOptions)
+        terrainDetailModel = loader.loadModel(islandBaseName + lowend + '_terrain_detail', loaderOptions, okMissing=True)
         if lowend != '' and not terrainDetailModel:
-            terrainDetailModel = loader.loadModelCopy(islandBaseName + '_terrain_detail', loaderOptions)
+            terrainDetailModel = loader.loadModel(islandBaseName + '_terrain_detail', loaderOptions, okMissing=True)
 
         if terrainDetailModel:
             terrainDetailModel.getChild(0).reparentTo(self.geom)
 
-        pierModel = loader.loadModelCopy(islandBaseName + lowend + '_pier', loaderOptions)
+        pierModel = loader.loadModel(islandBaseName + lowend + '_pier', loaderOptions, okMissing=True)
         if lowend != '' and not pierModel:
-            pierModel = loader.loadModelCopy(islandBaseName + '_pier', loaderOptions)
+            pierModel = loader.loadModel(islandBaseName + '_pier', loaderOptions, okMissing=True)
 
         if pierModel:
             pierModel.getChild(0).reparentTo(self.geom)
 
-        vegeWallModel = loader.loadModelCopy(islandBaseName + lowend + '_nat_wall', loaderOptions)
+        vegeWallModel = loader.loadModel(islandBaseName + lowend + '_nat_wall', loaderOptions, okMissing=True)
         if lowend != '' and not vegeWallModel:
-            vegeWallModel = loader.loadModelCopy(islandBaseName + '_nat_wall', loaderOptions)
+            vegeWallModel = loader.loadModel(islandBaseName + '_nat_wall', loaderOptions, okMissing=True)
 
         if vegeWallModel:
             vegeWallModel.getChild(0).reparentTo(self.geom)
 
-        fortModel = loader.loadModelCopy(islandBaseName + lowend + '_fort', loaderOptions)
+        fortModel = loader.loadModel(islandBaseName + lowend + '_fort', loaderOptions, okMissing=True)
         if lowend != '' and not fortModel:
-            fortModel = loader.loadModelCopy(islandBaseName + '_fort', loaderOptions)
+            fortModel = loader.loadModel(islandBaseName + '_fort', loaderOptions, okMissing=True)
 
         if fortModel:
             fortModel.getChild(0).reparentTo(self.geom)
 
-        tunnelModel = loader.loadModelCopy(islandBaseName + lowend + '_tunnel', loaderOptions)
+        tunnelModel = loader.loadModel(islandBaseName + lowend + '_tunnel', loaderOptions, okMissing=True)
         if lowend != '' and not tunnelModel:
-            tunnelModel = loader.loadModelCopy(islandBaseName + '_tunnel', loaderOptions)
+            tunnelModel = loader.loadModel(islandBaseName + '_tunnel', loaderOptions, okMissing=True)
 
         if tunnelModel:
             tunnelModel.getChild(0).reparentTo(self.geom)
 
-        rocksModel = loader.loadModelCopy(islandBaseName + lowend + '_rocks', loaderOptions)
+        rocksModel = loader.loadModel(islandBaseName + lowend + '_rocks', loaderOptions, okMissing=True)
         if lowend != '' and not rocksModel:
-            rocksModel = loader.loadModelCopy(islandBaseName + '_rocks', loaderOptions)
+            rocksModel = loader.loadModel(islandBaseName + '_rocks', loaderOptions, okMissing=True)
 
         if rocksModel:
             rocksModel.getChild(0).reparentTo(self.geom)
 
-        logsModel = loader.loadModelCopy(islandBaseName + lowend + '_logs', loaderOptions)
+        logsModel = loader.loadModel(islandBaseName + lowend + '_logs', loaderOptions, okMissing=True)
         if lowend != '' and not logsModel:
-            logsModel = loader.loadModelCopy(islandBaseName + '_logs', loaderOptions)
+            logsModel = loader.loadModel(islandBaseName + '_logs', loaderOptions, okMissing=True)
 
         if logsModel:
             logsModel.getChild(0).reparentTo(self.geom)

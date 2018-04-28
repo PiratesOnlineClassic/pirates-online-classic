@@ -171,7 +171,7 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         if terrainModel:
             self.geom = terrainModel
         else:
-            self.geom = loader.loadModelCopy(self.modelPath)
+            self.geom = loader.loadModel(self.modelPath)
             return
         terrainDetailModel = loader.loadModel(modelBaseName + '_terrain_detail', okMissing=True)
         if terrainDetailModel:
