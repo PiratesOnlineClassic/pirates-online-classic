@@ -4,6 +4,8 @@ from pirates.battle.WeaponBaseAI import WeaponBaseAI
 from pirates.battle.Teamable import Teamable
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.task import Task
+from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 
 class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleAvatarAI')
@@ -45,6 +47,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.level = 0
 
         self.skillTask = None
+        self.weapon = None
 
     def announceGenerate(self):
         DistributedReputationAvatarAI.announceGenerate(self)
@@ -52,11 +55,22 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.skillTask = taskMgr.doMethodLater(1, self.__processSkills, '%s-process-skills-%s' % \
             (self.__class__.__name__, self.doId))
 
-    def delete(self):
-        DistributedReputationAvatarAI.delete(self)
+    def generate(self):
+        DistributedReputationAvatarAI.generate(self)
 
-        if self.skillTask:
-            taskMgr.remove(self.skillTask)
+    def setLocation(self, parentId, zoneId):
+        DistributedReputationAvatarAI.setLocation(self, parentId, zoneId)
+
+        parentObj = self.getParentObj()
+        if parentObj:
+            if isinstance(parentObj, DistributedGameAreaAI):
+                if not self.weapon:
+                    self.weapon = DistributedWeaponAI(self.air)
+                    self.weapon.generateWithRequiredAndId(self.air.allocateChannel(),
+                        self.parentId, self.zoneId)
+
+                if self.weapon:
+                    self.weapon.b_setLocation(parentId, zoneId)
 
     def setAvatarType(self, avatarType):
         self.avatarType = avatarType
@@ -386,3 +400,14 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
     def getLevel(self):
         return self.level
+
+    def delete(self):
+        if self.skillTask:
+            taskMgr.remove(self.skillTask)
+
+        if self.weapon:
+            self.weapon.requestDelete()
+
+        self.weapon = None
+
+        DistributedReputationAvatarAI.delete(self)
