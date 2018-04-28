@@ -271,7 +271,9 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.handleEnterGameArea()
             return
         elif level == 1:
-            localAvatar.setInterest(self.doId, PiratesGlobals.IslandShipDeployerZone, ['ShipDeployer'])
+            self.cr.addTaggedInterest(self.doId, PiratesGlobals.IslandShipDeployerZone, [
+                'ShipDeployer'])
+
             self.startVolcanoRestEffects()
             self.adjustSmokeParentAndPos(self.geom, Vec3(-40.0, 75.0, 600.0))
             self.showName()
@@ -314,7 +316,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             base.musicMgr.requestFadeOut(self.getMusicName())
             return
         elif level == 1:
-            localAvatar.clearInterestNamed(None, ['ShipDeployer'])
+            self.cr.clearTaggedInterestNamed(None, ['ShipDeployer'])
             self.stopVolcanoRestEffects()
             localAvatar.clearPort(self.doId)
             return
@@ -1278,7 +1280,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         if base.bamCache:
             return base.bamCache.lookup(Filename('/%s_%s_island_%s_%s' % (self.name, self.uniqueId, base.launcher.ServerVersion, base.gridDetail)), '')
         return None
-            
+
     def getSiegeTeam(self):
         return base.cr.distributedDistrict.worldCreator.getPvpIslandTeam(self.uniqueId)
 

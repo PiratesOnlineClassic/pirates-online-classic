@@ -85,8 +85,8 @@ class DistributedTeleportHandler(DistributedObject):
         s = MiniLogSentry(self.miniLog, 'teleportingObjAtDest', destParentId, destZoneId, callback.__name__, clearInterest)
         if clearInterest:
             leaveEvent = self.getRemoveInterestEventName()
-            numInterests = localAvatar.clearInterestNamed(leaveEvent, ['instanceInterest', 'worldInterest'])
-            localAvatar.clearInterestNamed(leaveEvent + 'Door', ['instanceInterest-Door'])
+            numInterests = self.cr.clearTaggedInterestNamed(leaveEvent, ['instanceInterest', 'worldInterest'])
+            self.cr.clearTaggedInterestNamed(leaveEvent + 'Door', ['instanceInterest-Door'])
             self.numInterestsCleared = 0
             if numInterests == 0:
                 callback(destZoneId, numInterests)
@@ -124,7 +124,7 @@ class DistributedTeleportHandler(DistributedObject):
         if self.instanceWorldName:
             base.cr.distributedDistrict.worldCreator.loadObjectsFromFile(self.instanceWorldName, base.cr.distributedDistrict)
 
-        localAvatar.setInterest(instanceParent, instanceZone, ['worldInterest'])
+        self.cr.addTaggedInterest(instanceParent, instanceZone, ['worldInterest'])
 
         def worldArrived(worldObj):
             s = MiniLogSentry(self.miniLog, 'worldArrived', worldObj)
@@ -145,7 +145,7 @@ class DistributedTeleportHandler(DistributedObject):
             instance.removeWorldInterest()
 
         self.acceptOnce(addEvent, self.teleportAddInterestDestComplete, extraArgs=[spawnDoId, spawnWorldGridDoId, worldName])
-        localAvatar.setInterest(spawnParent, spawnZone, ['instanceInterest'], addEvent)
+        self.cr.addTaggedInterest(spawnParent, spawnZone, ['instanceInterest'], addEvent)
 
     @report(types=['deltaStamp', 'args', 'printInterests'], prefix='------', dConfigParam='want-teleport-report')
     def teleportAddInterestDestComplete(self, spawnDoId, spawnWorldGridDoId, worldName):
@@ -184,7 +184,9 @@ class DistributedTeleportHandler(DistributedObject):
     def teleportToInstanceCleanup(self):
         s = MiniLogSentry(self.miniLog, 'teleportToInstanceCleanup')
         if self.destInstance == None or self.destInstance.spawnInfo == None:
-            self.notify.warning('no local destInstance reference for %s %s %s %s %s' % (localAvatar.doId, self.doId, self.getLocation(), self.spawnWorldName, self.instanceWorldName))
+            self.notify.warning('no local destInstance reference for %s %s %s %s %s' % (localAvatar.doId,
+                self.doId, self.getLocation(), self.spawnWorldName, self.instanceWorldName))
+
             self.sendAvatarLeft()
             self.abortTeleport()
             return
@@ -221,7 +223,7 @@ class DistributedTeleportHandler(DistributedObject):
 
     def clearTZInterest(self):
         s = MiniLogSentry(self.miniLog, 'clearTZInterest')
-        localAvatar.clearInterestNamed(None, ['TZInterest'])
+        self.cr.clearTaggedInterestNamed(None, ['TZInterest'])
         if self.doneCallback:
             self.doneCallback(self.destInstance)
             self.doneCallback = None

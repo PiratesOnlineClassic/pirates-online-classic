@@ -274,7 +274,10 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
                 allowInteract = False
             else:
                 allowInteract = True
-            self.setInteractOptions(proximityText='', mouseOver=0, mouseClick=0, isTarget=1, allowInteract=allowInteract)
+
+            self.setInteractOptions(proximityText='', mouseOver=0, mouseClick=0, isTarget=1,
+                allowInteract=allowInteract)
+
         self.setPlayerType(NametagGroup.CCNormal)
 
     def setTeam(self, team):
@@ -285,6 +288,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
             localAvatar.guiMgr.crewPage.deactivateCrewHUDButton()
         else:
             localAvatar.guiMgr.crewPage.activateCrewHUDButton()
+
         if not self.isLocal():
             if self.getTeam() == localAvatar.getTeam():
                 self.setAllowInteract(False)
@@ -299,6 +303,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         if self.isLocal():
             localAvatar.guiMgr.showPVPTeamIcon(team)
             return
+
         self.showBeacon(team)
 
     def createGameFSM(self):
@@ -778,10 +783,10 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         return avIdList
 
     def setTutorialHandlerZone(self, zoneId):
-        localAvatar.setInterest(base.cr.distributedDistrict.doId, zoneId, ['tutorialHandlerInterest'])
+        self.cr.addTaggedInterest(base.cr.distributedDistrict.doId, zoneId, ['tutorialHandlerInterest'])
 
     def clearTutorialHandlerZone(self):
-        localAvatar.clearInterestNamed(None, ['tutorialHandlerInterest'])
+        self.cr.clearTaggedInterestNamed(None, ['tutorialHandlerInterest'])
 
     def sendClothingMessage(self, clothingId, colorId):
         localAvatar.guiMgr.messageStack.showLoot([], gold=0, collect=0, card=0, cloth=clothingId, color=colorId)
