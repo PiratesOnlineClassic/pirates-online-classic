@@ -49,6 +49,7 @@ from pirates.ship import DistributedShip, ShipGlobals
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from pirates.world import DistributedGameArea, OceanZone
+from otp.ai.MagicWordGlobal import *
 
 globalClock = ClockObject.getGlobalClock()
 if base.config.GetBool('want-custom-keys', False):
@@ -79,7 +80,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         self.cameraFSM = CameraFSM(self)
         self.guiMgr = GuiManager.GuiManager(self)
         self.interestHandles = []
-        if base.config.GetBool('debug-local-animMixer', 0):
+        if base.config.GetBool('debug-local-animMixer', False):
             self.animMixer.setVerbose(True)
 
         self.currentMouseOver = None
@@ -139,7 +140,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         self.gmNameTagColorLocal = ''
         self.rocketOn = 0
         if self.gmNameTagAllowed:
-            if base.config.GetInt('gm-nametag-enabled', 0):
+            if base.config.GetInt('gm-nametag-enabled', False):
                 self.gmNameTagEnabledLocal = 1
 
         if base.config.GetString('gm-nametag-string', '') != '':
@@ -1929,3 +1930,25 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
 
     def __destroyedGuildDialog(self):
         self.guildPopupDialog = None
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def turbo():
+    """
+    Toggles turbo on the target
+    """
+
+    target = spellbook.getTarget()
+    target.toggleMario()
+
+    return 'Toggled mario.'
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def mario():
+    """
+    Toggles mario on the target
+    """
+
+    target = spellbook.getTarget()
+    target.toggleTurbo()
+
+    return 'Toggled turbo.'

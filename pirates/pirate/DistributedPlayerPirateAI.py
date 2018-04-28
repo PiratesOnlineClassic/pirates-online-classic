@@ -734,25 +734,3 @@ def zombie():
     target.attemptToSetCursedZombie()
 
     return 'Targets Zombie state forced to %s' % target.forcedZombie
-
-@magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def turbo():
-    """
-    Toggles turbo on the target
-    """
-
-    target = spellbook.getTarget()
-    target.toggleMario()
-
-    return 'Toggled mario.'
-
-@magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def mario():
-    """
-    Toggles mario on the target
-    """
-
-    target = spellbook.getTarget()
-    target.toggleTurbo()
-
-    return 'Toggled turbo.'
