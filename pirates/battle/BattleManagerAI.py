@@ -314,7 +314,7 @@ class BattleManagerAI(BattleManagerBase):
 
         # check to see if the avatar doesn't have anymore combos
         # that are not expired, if so clear the combo diary...
-        if not len(combos)
+        if not len(combos):
             attacker.comboDiary.clear()
 
         # check the current weapon skill and determine if the avatar is still in
