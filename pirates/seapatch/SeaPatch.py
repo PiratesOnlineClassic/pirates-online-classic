@@ -17,7 +17,7 @@ from pirates.seapatch.SeaPatchRoot import SeaPatchRoot
 from pirates.seapatch.SeaPatchNode import SeaPatchNode
 
 class SeaPatch(Water):
-    
+
     notify = directNotify.newCategory('SeaPatch')
 
     def __init__(self, parentNP=render, reflection=None, todMgr=None, saintPatricksDay=False):
@@ -470,7 +470,7 @@ class SeaPatch(Water):
         if not isinstance(filename, Filename):
             filename = Filename.fromOsSpecific(filename)
         spfSearchPath = DSearchPath()
-        if __dev__:
+        if __debug__:
             spfSearchPath.appendDirectory(Filename('../resources/phase_2/etc'))
         else:
             spfSearchPath.appendDirectory(Filename('phase_2/etc'))
