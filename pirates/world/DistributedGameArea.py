@@ -232,7 +232,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         if int(self.timeCheck) + 1 == int(timeSpent) or int(self.timeCheck) - 1 == int(timeSpent) or int(self.timeCheck) == int(timeSpent):
             pass
         else:
-            base.cr.centralLogger.writeClientEvent('EXITING_AREA|%s|%d' % (displayName, timeSpent))
+            self.cr.centralLogger.writeClientEvent('EXITING_AREA|%s|%d' % (displayName, timeSpent))
             self.timeCheck = timeSpent
 
     def displayGameAreaName(self, displayName):
@@ -275,7 +275,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             water.loadSeaPatchFile('out.spf')
             self.water = water
             self.initializeIslandWaterParameters()
-            base.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_DEFAULT)
+            self.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_DEFAULT)
         else:
             self.envEffects = EnvironmentEffects.EnvironmentEffects(self, self.modelPath)
             if interior:

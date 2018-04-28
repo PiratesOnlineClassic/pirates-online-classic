@@ -49,7 +49,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         return self.interior
 
     def getOtherSideParentModel(self):
-        island = base.cr.doId2do.get(self.exteriorDoId)
+        island = self.cr.doId2do.get(self.exteriorDoId)
         building = island.find('**/=uid=%s' % self.buildingUid)
         return building
 

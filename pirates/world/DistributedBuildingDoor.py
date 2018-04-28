@@ -80,7 +80,7 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
             return
 
         self.areaRequest = self.cr.relatedObjectMgr.requestObjects([interiorId], eachCallback=areaFinishedCallback)
-        base.cr.addTaggedInterest(worldId, worldZoneId, ['instanceInterest-Door'])
+        self.cr.addTaggedInterest(worldId, worldZoneId, ['instanceInterest-Door'])
 
     def loadInteriorAreaFinished(self, interior, autoFadeIn):
         oldParent = self.getParentObj()

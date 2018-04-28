@@ -24,7 +24,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         self.areaUid = [None, None]
         self.areaWorldZone = [None, None]
         self.areaNode = [None, None]
-        self.areaLookupDict = [base.cr.doId2do, base.cr.doId2do]
+        self.areaLookupDict = [self.cr.doId2do, self.cr.doId2do]
         self.__connectorLoaded = 0
         self.__loadedArea = None
         self.areaIndexLoading = None
@@ -177,7 +177,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
     def getAreaObject(self, index):
         areaUid = self.areaUid[index]
         areaLookupDict = self.areaLookupDict[index]
-        area = areaLookupDict.get(base.cr.uidMgr.getDoId(areaUid))
+        area = areaLookupDict.get(self.cr.uidMgr.getDoId(areaUid))
         return area
 
     def setupConnectorNodes(self):
@@ -244,10 +244,10 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
     @report(types=['frameCount', 'args'], dConfigParam='want-connector-report')
     def loadArea(self, areaIndex, showLoadingScreen=False):
         if showLoadingScreen:
-            base.cr.loadingScreen.show(waitForLocation=True)
+            self.cr.loadingScreen.show(waitForLocation=True)
         locationUid = self.areaUid[areaIndex]
-        base.cr.loadingScreen.showTarget(locationUid)
-        base.cr.loadingScreen.showHint(locationUid)
+        self.cr.loadingScreen.showTarget(locationUid)
+        self.cr.loadingScreen.showHint(locationUid)
         localAvatar.guiMgr.radarGui.showLocation(locationUid)
         self.notify.debug('%s loadArea %s' % (self.doId, areaIndex))
         worldId, worldZoneId = self.areaWorldZone[areaIndex]
@@ -258,14 +258,14 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         else:
             self.notify.debug('%s Loading game area %s' % (self.doId, areaIndex))
             areaDoId = self.areaId[areaIndex]
-            area = base.cr.doId2do.get(areaDoId)
+            area = self.cr.doId2do.get(areaDoId)
             if area and not self.pendingAreaUnload:
                 self.loadAreaFinished(area)
             else:
                 areaUid = self.areaUid[areaIndex]
-                aDoId = base.cr.uidMgr.getDoId(areaUid)
+                aDoId = self.cr.uidMgr.getDoId(areaUid)
                 if aDoId:
-                    area = base.cr.doId2do.get(aDoId)
+                    area = self.cr.doId2do.get(aDoId)
                 if not area and not self.pendingAreaLoad:
                     self.areaIndexLoading = areaIndex
                     self.requestPrivateArea(areaDoId)

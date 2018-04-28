@@ -7,7 +7,7 @@ from pirates.world import ClientArea
 
 
 class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientArea.ClientArea):
-    
+
     notify = directNotify.newCategory('DistributedGATunnel')
 
     def __init__(self, cr):
@@ -162,7 +162,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
                 self.sendUpdate('sendLeaveTunnelDone')
             self.fadeInAmbient(self.floorIndex)
 
-        base.cr.setAllInterestsCompleteCallback(leaveTunnel)
+        self.cr.setAllInterestsCompleteCallback(leaveTunnel)
         transform = localAvatar.getTransform(self)
         DistributedGAConnector.DistributedGAConnector.loadAreaFinished(self, area, autoFadeIn)
         self.lastFloorTime = globalClock.getFrameTime()
@@ -215,7 +215,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
             self.notify.debug('Assuming self.ambientNames[1] = %s' % self.ambientNames[1])
 
     def quickLoadOtherSide(self):
-        base.cr.loadingScreen.show(waitForLocation=True)
+        self.cr.loadingScreen.show(waitForLocation=True)
         if self.floorIndex != -1:
             self.__handleOnFloor(self.floorIndex, None)
         return

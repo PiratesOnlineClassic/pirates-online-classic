@@ -176,7 +176,7 @@ class DistributedShipDeployer(DistributedNode):
     def handleShipEnterSoftBarrier(self, colEntry):
         shipId = colEntry.getFromNodePath().getNetTag('shipId')
         shipId = int(shipId)
-        ship = base.cr.doId2do.get(shipId)
+        ship = self.cr.doId2do.get(shipId)
         if ship and not ship.getRespectDeployBarriers():
             self.enableDeploySpheres(True)
 
@@ -184,7 +184,7 @@ class DistributedShipDeployer(DistributedNode):
     def handleShipExitSoftBarrier(self, colEntry):
         shipId = colEntry.getFromNodePath().getNetTag('shipId')
         shipId = int(shipId)
-        ship = base.cr.doId2do.get(shipId)
+        ship = self.cr.doId2do.get(shipId)
         if ship and not ship.getRespectDeployBarriers():
             self.enableDeploySpheres(False)
             self.d_shipExitedBarrier(shipId)
