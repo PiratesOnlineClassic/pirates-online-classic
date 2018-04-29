@@ -165,6 +165,9 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         self.sendUpdateToAvatarId(avatarId, 'teleportHasBegun', [instanceType, fromInstanceType,
             instanceName, gameType])
 
+    def d_localTeleportToIdResponse(self, avatarId, parentId, doId):
+        self.sendUpdateToAvatarId(avatarId, '_localTeleportToIdResponse', [parentId, doId])
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def areaTeleport(areaUid):
     simbase.air.teleportMgr.d_initiateTeleport(spellbook.getTarget(),
