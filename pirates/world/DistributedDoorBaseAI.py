@@ -30,6 +30,17 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
         if not self.avatarId:
             self.request('Opened', avatar.doId)
 
+        avatarParentObj = avatar.getParentObj()
+
+        if not avatarParentObj:
+            self.notify.warning('Cannot handle interaction for avatar %d, doesn\'t have an valid parent object!' % (
+                avatar.doId))
+
+            return self.DENY
+
+        if self.getParentObj().doId == avatarParentObj.doId:
+            self.otherDoor.handleRequestInteraction(avatar, interactType, instant)
+
         return self.ACCEPT
 
     def handleRequestExit(self, avatar):

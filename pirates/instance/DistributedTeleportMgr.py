@@ -68,8 +68,10 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         currParent = localAvatar.getParentObj()
         if isinstance(currParent, ZoneLOD.ZoneLOD):
             localAvatar.leaveZoneLOD(currParent)
+
         if parent == None:
             parent = self.cr.activeWorld.worldGrid
+
         messenger.send('islandPlayerBarrier', [0])
         teleportZone = parent.getZoneFromXYZ(teleportPosHpr[:3])
         localAvatar.reparentTo(parent)
@@ -80,12 +82,12 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         currParent = localAvatar.getParentObj()
         if isinstance(currParent, ZoneLOD.ZoneLOD):
             localAvatar.enterZoneLOD(currParent)
+
         parent.processVisibility(None)
         if base.cr._completeEventCount.num > 0:
             self.acceptOnce(base.cr.getAllInterestsCompleteEvent(), localAvatar.b_setGameState, extraArgs=['TeleportIn'])
         else:
             localAvatar.b_setGameState('TeleportIn')
-        return
 
     @report(types=['deltaStamp', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def localTeleport(self, locationName=None):
@@ -145,7 +147,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
     def _localTeleportToIdResponse(self, parentId, zoneId):
         if parentId != 0 and zoneId != 0:
             if self.cr.doId2do.get(parentId):
-                localAvatar.setInterest(parentId, zoneId, ['localTeleportToId'], 'localTeleportToIdInterestAddComplete')
+                self.cr.addTaggedInterest(parentId, zoneId, ['localTeleportToId'], 'localTeleportToIdInterestAddComplete')
                 self.acceptOnce('localTeleportToIdInterestAddComplete', self._localTeleportToIdInterestComplete)
                 self.notify.debug('parent %s of destination object found, setting up interest' % parentId)
             else:
@@ -233,7 +235,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
     @report(types=['deltaStamp'], prefix='------', dConfigParam=['want-teleport-report', 'want-shipboardreport'])
     def _localTeleportToIdDone(self):
         self.cr.loadingScreen.scheduleHide(base.cr.getAllInterestsCompleteEvent())
-        localAvatar.clearInterestNamed('localTeleportToIdInterestRemoveComplete', ['localTeleportToId'])
+        self.cr.clearTaggedInterestNamed('localTeleportToIdInterestRemoveComplete', ['localTeleportToId'])
 
         curParent = localAvatar.getParentObj()
         if isinstance(curParent, ZoneLOD.ZoneLOD):
@@ -565,7 +567,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         s = MiniLogSentry(self.miniLog, 'teleportAddInterestTZ', instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone)
         addEvent = self.getAddInterestEventName()
         self.accept(addEvent, self.teleportAddInterestCompleteTZ, extraArgs=[tzDoId, thDoId, worldGridDoId])
-        localAvatar.setInterest(tzParent, tzZone, ['TZInterest'], addEvent)
+        self.cr.addTaggedInterest(tzParent, tzZone, ['TZInterest'], addEvent)
         self.instanceName = instanceName
 
     @report(types=['deltaStamp'], prefix='------', dConfigParam='want-teleport-report')

@@ -48,6 +48,7 @@ class PiratesBase(OTPBase):
         self.saintPatricksDay = base.config.GetBool('test-saint-patricks-day', False)
         self.fourthOfJuly = base.config.GetBool('test-fourth-of-july', False)
         self.wantEnviroDR = base.config.GetBool('want-enviro-dr', False)
+        self.bamCache = None
         if self.hasEmbedded:
             self.inAdFrame = embedded.isMainWindowVisible()
         else:
@@ -71,8 +72,8 @@ class PiratesBase(OTPBase):
                     options = working_options
                     working_options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_WORKING_STATE)
                 else:
-                       options.config_to_options()
-                       use_recommended_options = True
+                   options.config_to_options()
+                   use_recommended_options = True
             elif options.state == Options.WORKING_STATE:
                 options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
             elif options.state == Options.ATTEMPT_WORKING_STATE:
@@ -209,7 +210,7 @@ class PiratesBase(OTPBase):
         Dog.Dog.setupAssets()
         CullBinManager.getGlobalPtr().addBin('ShipRigging', CullBinEnums.BTBackToFront, 100)
         self.bamCache = BamCache()
-        if base.config.GetBool('want-dev', 0):
+        if base.config.GetBool('want-dev', False):
             self.bamCache.setRoot(Filename('/c/cache'))
         self.bamCache.setRoot(Filename('./cache'))
         self.textureFlattenMgr = TextureFlattenManager.TextureFlattenManager()

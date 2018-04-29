@@ -19,7 +19,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 BODY_CAMERA = 0
 
 class AccessoriesStoreTab(LeftTab):
-    
+
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None))
         self.defineoptions(kw, optiondefs)
@@ -29,7 +29,7 @@ class AccessoriesStoreTab(LeftTab):
 
 
 class AccessoriesStoreTabBar(TabBar):
-    
+
     def refreshTabs(self):
         for x, name in enumerate(self.tabOrder):
             tab = self.tabs[name]
@@ -50,13 +50,13 @@ class AccessoriesStoreTabBar(TabBar):
 
 
 class AccessoriesStoreCartList(DirectScrolledFrame):
-    
+
     def __init__(self, parent, width, height, itemWidth, itemHeight):
         self.width = width + PiratesGuiGlobals.ScrollbarSize
         self.listItemHeight = itemHeight
         self.listItemWidth = itemWidth
         self.height = height
-        self.parent = parent
+        self._parent = parent
         charGui = loader.loadModelOnce('models/gui/char_gui')
         DirectScrolledFrame.__init__(self, relief=None, state=DGG.NORMAL, manageScrollBars=0, autoHideScrollBars=1, frameSize=(0, self.width, 0, self.height), canvasSize=(0, self.width - 0.05, 0.025, self.height - 0.025), verticalScroll_relief=None, verticalScroll_image=charGui.find('**/chargui_slider_small'), verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0, self.height), verticalScroll_image_scale=(self.height + 0.05, 1, 0.75), verticalScroll_image_hpr=(0,
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            0,
@@ -74,7 +74,6 @@ class AccessoriesStoreCartList(DirectScrolledFrame):
         self.purchases = []
         self.itemColor = Vec4(0.2, 0.2, 0.2, 1.0)
         charGui.removeNode()
-        return
 
     def destroy(self):
         self.ignoreAll()
@@ -111,7 +110,7 @@ class AccessoriesStoreCartList(DirectScrolledFrame):
             return
         isDisabled = 0
         categoryId = ClothingGlobals.CLOTHING_NUMBER[itemType]
-        text = self.parent.categoryText[categoryId][0]
+        text = self._parent.categoryText[categoryId][0]
         colorText = PLocalizer.TailorColorStrings.get(itemColor)
         if itemUID in ClothingGlobals.quest_items:
             text = item[7]
@@ -125,7 +124,7 @@ class AccessoriesStoreCartList(DirectScrolledFrame):
         panel = DirectButton(parent=self, relief=None, text=text[:maxLength], text_fg=self.itemColor, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleMed, text_shadow=PiratesGuiGlobals.TextShadow, text_pos=(0.06,
                                                                                                                                                                                                                                 0.0), command=self.removePanel, extraArgs=[data])
         panel.costLabel = DirectLabel(parent=panel, relief=None, text=strCost, text_fg=self.itemColor, text_align=TextNode.ARight, text_scale=PiratesGuiGlobals.TextScaleMed, text_shadow=PiratesGuiGlobals.TextShadow, text_pos=(0.45,
-                                                                                                                                                                                                                                  0.0), image=self.parent.CoinImage, image_scale=0.15, image_pos=(0.48,
+                                                                                                                                                                                                                                  0.0), image=self._parent.CoinImage, image_scale=0.15, image_pos=(0.48,
                                                                                                                                                                                                                                                                                                   0.0,
                                                                                                                                                                                                                                                                                                   0.014))
         panel.bind(DGG.ENTER, self.highlightStart, extraArgs=[panel])
@@ -150,13 +149,13 @@ class AccessoriesStoreCartList(DirectScrolledFrame):
     def removePanel(self, data, repack=1):
         for panel in self.panels:
             if panel.data == data:
-                self.parent.updateButton(data, 1)
+                self._parent.updateButton(data, 1)
                 self.panels.remove(panel)
                 self.purchases.remove(data)
                 panel.destroy()
                 if repack:
                     self.repackPanels()
-                self.parent.updateBalance()
+                self._parent.updateBalance()
                 return
 
     def hasPanel(self, data):

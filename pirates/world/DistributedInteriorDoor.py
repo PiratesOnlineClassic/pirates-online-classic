@@ -49,12 +49,13 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         return self.interior
 
     def getOtherSideParentModel(self):
-        island = base.cr.doId2do.get(self.exteriorDoId)
+        island = self.cr.doId2do.get(self.exteriorDoId)
         building = island.find('**/=uid=%s' % self.buildingUid)
         return building
 
     def loadOtherSide(self):
-        localAvatar.setInterest(self.exteriorWorldParentId, self.exteriorWorldZoneId, ['instanceInterest-Door'])
+        self.cr.addTaggedInterest(self.exteriorWorldParentId, self.exteriorWorldZoneId, [
+            'instanceInterest-Door'])
 
         def extFinishedCallback(ext):
             self.islandRequest = None
@@ -90,8 +91,8 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         self.interior.disableFloors()
         world = self.interior.getParentObj()
         world.removeWorldInterest()
-        localAvatar.clearInterestNamed(None, ['instanceInterest'])
-        localAvatar.replaceInterestTag('instanceInterest-Door', 'instanceInterest')
+        self.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
+        self.cr.replaceTaggedInterestTag('instanceInterest-Door', 'instanceInterest')
         island = self.cr.doId2do.get(self.exteriorDoId)
         areaParentWorld = island.getParentObj()
         areaParentWorld.addWorldInterest(island)
