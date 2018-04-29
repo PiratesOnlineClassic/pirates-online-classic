@@ -144,8 +144,8 @@ class DistributedInventoryAI(DistributedObjectAI):
         return None
 
     def hasStackSpace(self, stackType, amount=0):
-        limits = self.getStackLimit(stackType)
-        stored = self.getStack(stackType)
+        limit = self.getStackLimit(stackType)
+        _, stored = self.getStack(stackType) or (stackType, 0)
         return limit > (stored + amount)
         
     def sendStackLimit(self, stackType, callback):

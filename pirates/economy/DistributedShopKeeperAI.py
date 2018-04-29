@@ -107,22 +107,6 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
             response = self.__sellItem(avatar, inventory, sell)
 
-        # Create logging dictionaries
-        log_buying = {}
-        for itemId in buying:
-            log_buying[buying] = EconomyGlobals.getItemCost(itemId)
-
-        log_selling = {}
-        for itemId in buying:
-            log_selling[buying] = EconomyGlobals.getItemCost(itemId)      
-
-        # Log transaction for analytics and GM purposes
-        self.air.writeServerEvent('shopkeep-transaction', 
-            type='requestMakeSale',
-            buying=log_buying,
-            selling=log_selling,
-            purchaser=avatar.doId)
-
         self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [response])                 
 
     def requestMusic(self, songId):
@@ -228,9 +212,10 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         if itemPrice > currentGold:
 
             self.air.logPotentialHacker(
-                message='Received requestMusic for a song the avatar can not afford!',
+                message='Received requestBarber for a style the avatar can not afford!',
                 currentGold=currentGold,
-                songId=songId,
+                itemId=itemId,
+                itemType=itemType,
                 itemPrice=itemPrice
             )
 
