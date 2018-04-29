@@ -165,8 +165,8 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         self.sendUpdateToAvatarId(avatarId, 'teleportHasBegun', [instanceType, fromInstanceType,
             instanceName, gameType])
 
-    def d_localTeleportToIdResponse(self, avatarId, parentId, doId):
-        self.sendUpdateToAvatarId(avatarId, '_localTeleportToIdResponse', [parentId, doId])
+    def d_localTeleportToIdResponse(self, avatarId, parentId, zoneId):
+        self.sendUpdateToAvatarId(avatarId, '_localTeleportToIdResponse', [parentId, zoneId])
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def areaTeleport(areaUid):
