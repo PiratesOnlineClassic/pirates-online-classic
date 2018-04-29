@@ -146,5 +146,3 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
         if self.doorTask:
             taskMgr.remove(self.doorTask)
             self.doorTask = None
-
-        DistributedDoorBaseAI.delete(self)
