@@ -14,7 +14,7 @@ set POC_GAMESERVER=127.0.0.1
 if %INPUT%==1 (
     set POC_GAMESERVER=127.0.0.1
 ) else if %INPUT%==2 (
-    set POC_GAMESERVER=142.44.142.239
+    set POC_GAMESERVER=47.133.210.240
 ) else if %INPUT%==3 (
     set /P POC_GAMESERVER=Game Server IP: 
 ) else (

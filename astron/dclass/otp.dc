@@ -436,8 +436,9 @@ dclass SnapshotRenderer : DistributedObject {
   requestRender(uint32, uint32, string);
 };
 
-dclass CentralLogger : DistributedObject {
+dclass CentralLogger : DistributedObjectGlobal {
   sendMessage(string, string, uint32, uint32) clsend;
+  reportException(string, string, bool) airecv;
 };
 
 dclass SettingsMgr : DistributedObject {

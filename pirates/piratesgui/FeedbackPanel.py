@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.FeedbackPanel
 import os
 import sys
 
@@ -73,15 +69,23 @@ class FeedbackInput(GuiPanel.GuiPanel):
         GuiPanel.GuiPanel.destroy(self)
 
     def generateFeedbackPanel(self, commandToExe):
-        self.feedbackInput = DirectEntry(parent=self, relief=DGG.GROOVE, scale=0.051, pos=(0.007,
-                                                                                           0,
-                                                                                           0.42), borderWidth=PiratesGuiGlobals.BorderWidth, frameColor=(0,
-                                                                                                                                                         0.0,
-                                                                                                                                                         0.0,
-                                                                                                                                                         0.5), text_align=TextNode.ALeft, width=14, numLines=9, focus=1, cursorKeys=1, text_fg=(1,
-                                                                                                                                                                                                                                                1,
-                                                                                                                                                                                                                                                1,
-                                                                                                                                                                                                                                                1), command=self.commandToExe, suppressKeys=1, suppressMouse=1, autoCapitalize=0)
+        self.feedbackInput = DirectEntry(
+            parent=self, 
+            relief=DGG.GROOVE, 
+            scale=0.051, 
+            pos=(0.007, 0, 0.42), 
+            borderWidth=PiratesGuiGlobals.BorderWidth, 
+            frameColor=(0, 0.0, 0.0, 0.5), 
+            text_align=TextNode.ALeft, 
+            width=14, 
+            numLines=9, 
+            focus=1, 
+            cursorKeys=1, 
+            text_fg=(1, 1,1, 1), 
+            command=self.commandToExe, 
+            suppressKeys=1, 
+            suppressMouse=1, 
+            autoCapitalize=0)
         return self.feedbackInput
 
 
@@ -108,9 +112,17 @@ class FeedbackPanel(GuiPanel.GuiPanel):
         self.initialiseoptions(FeedbackPanel)
         self.charGui = loader.loadModel('models/gui/char_gui')
         message = PLocalizer.FeedbackFormMessage
-        self.message = DirectLabel(parent=self, relief=None, text=message, text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=10, pos=(0.2225,
-                                                                                                                                                                                                                                                         0,
-                                                                                                                                                                                                                                                         0.93), textMayChange=1)
+        self.message = DirectLabel(
+            parent=self, 
+            relief=None, 
+            text=message, 
+            text_scale=PiratesGuiGlobals.TextScaleLarge, 
+            text_align=TextNode.ACenter, 
+            text_fg=PiratesGuiGlobals.TextFG1, 
+            text_shadow=PiratesGuiGlobals.TextShadow, 
+            text_wordwrap=10, 
+            pos=(0.2225, 0, 0.93), 
+            textMayChange=1)
         self.categoryItems = PLocalizer.FeedbackFormCatItems
         self.categoryItems.sort()
         self.tumbler = PNameTumbler.PNameTumbler(self.categoryItems, '')
@@ -167,4 +179,3 @@ class FeedbackPanel(GuiPanel.GuiPanel):
 
     def _catSelect(self, item):
         print 'Item Selected is %s' % item
-# okay decompiling .\pirates\piratesgui\FeedbackPanel.pyc

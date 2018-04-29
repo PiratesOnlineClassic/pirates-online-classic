@@ -24,7 +24,7 @@ class DistributedPopulationTrackerAI(DistributedObjectAI):
         return self.shardId
 
     def setPopulation(self, population):
-        self.population = population
+        self.population = population if population >= 0 else 0
         self.air.districtTracker.sendDistrictStatusQuery()
 
     def d_setPopulation(self, population):

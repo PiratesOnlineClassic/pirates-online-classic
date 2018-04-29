@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.friends.GuildInviter
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State
 from direct.gui.DirectGui import *
@@ -14,17 +10,12 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.RequestButton import RequestButton
 
-
 class GuildInviterButton(RequestButton):
-    
-
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
         self.initialiseoptions(GuildInviterButton)
 
-
 class GuildInviter(GuiPanel.GuiPanel):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('GuildInviter')
 
     def __init__(self, avId, avName):
@@ -60,9 +51,9 @@ class GuildInviter(GuiPanel.GuiPanel):
          State.State('maybe', self.enterMaybe, self.exitMaybe),
          State.State('down', self.enterDown, self.exitDown),
          State.State('cancel', self.enterCancel, self.exitCancel)], 'off', 'off')
-        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.25,
-                                                                                                                                                                                                                                                    0,
-                                                                                                                                                                                                                                                    0.35), textMayChange=1)
+        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, 
+                                   text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, 
+                                   pos=(0.25, 0, 0.35), textMayChange=1)
         self.context = None
         self.bOk = GuildInviterButton(text=OTPLocalizer.GuildInviterOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
@@ -85,7 +76,6 @@ class GuildInviter(GuiPanel.GuiPanel):
             self.fsm.request('getStarted')
         else:
             self.fsm.request('begin')
-        return
 
     def destroy(self):
         self.ignoreAll()
@@ -177,7 +167,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.GuildInviterNotAvailable % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitNotAvailable(self):
         self.bOk.hide()
@@ -186,7 +175,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.GuildInviterGuildSaidNo % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitNotAcceptingGuilds(self):
         self.bOk.hide()
@@ -196,7 +184,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         if self.context != None:
             self.context = None
         self.bOk.show()
-        return
 
     def exitWentAway(self):
         self.bOk.hide()
@@ -206,7 +193,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self['text_pos'] = (0.0, 0.2)
         self.context = None
         self.bCancel.show()
-        return
 
     def exitGuildFull(self):
         self.message['text'] = ''
@@ -218,7 +204,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self['text_pos'] = (0.0, 0.2)
         self.context = None
         self.bCancel.show()
-        return
 
     def exitBusy(self):
         self.message['text'] = ''
@@ -230,7 +215,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self['text_pos'] = (0.0, 0.2)
         self.context = None
         self.bCancel.show()
-        return
 
     def exitAlreadyInGuild(self):
         self.message['text'] = ''
@@ -242,7 +226,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self['text_pos'] = (0.0, 0.2)
         self.context = None
         self.bCancel.show()
-        return
 
     def exitAlreadyInvited(self):
         self.message['text'] = ''
@@ -267,7 +250,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.context = None
         self.bYes.show()
         self.bNo.show()
-        return
 
     def exitEndGuildship(self):
         self.bYes.hide()
@@ -287,7 +269,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.GuildInviterSelf
         self.context = None
         self.bOk.show()
-        return
 
     def exitSelf(self):
         self.bOk.hide()
@@ -296,7 +277,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.GuildInviterIgnored % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitIgnored(self):
         self.bOk.hide()
@@ -319,7 +299,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         messenger.send('AvatarChange')
         self.context = None
         self.bOk.show()
-        return
 
     def exitYes(self):
         self.bOk.hide()
@@ -330,7 +309,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.bCancel.hide()
         self.bOk.setPos(0.2, 0, 0.05)
         self.bOk.show()
-        return
 
     def exitNo(self):
         self.bOk.hide()
@@ -339,7 +317,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.GuildInviterTooMany % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitOtherTooMany(self):
         self.bOk.hide()
@@ -348,7 +325,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.GuildInviterMaybe % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitMaybe(self):
         self.bOk.hide()
@@ -357,7 +333,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.GuildInviterDown
         self.context = None
         self.bOk.show()
-        return
 
     def exitDown(self):
         self.bOk.hide()
@@ -366,7 +341,6 @@ class GuildInviter(GuiPanel.GuiPanel):
         if self.context != None:
             self.context = None
         self.fsm.request('off')
-        return
 
     def exitCancel(self):
         pass
@@ -380,11 +354,10 @@ class GuildInviter(GuiPanel.GuiPanel):
     def __handleYes(self):
         if self.fsm.getCurrentState().getName() == 'notYet':
             self.fsm.request('checkAvailability')
+        elif self.fsm.getCurrentState().getName() == 'endGuildship':
+            self.fsm.request('guildNoMore')
         else:
-            if self.fsm.getCurrentState().getName() == 'endGuildship':
-                self.fsm.request('guildNoMore')
-            else:
-                self.destroy()
+            self.destroy()
 
     def __handleNo(self):
         self.destroy()
@@ -396,30 +369,23 @@ class GuildInviter(GuiPanel.GuiPanel):
         if yesNoAlready == 1:
             self.context = context
             self.fsm.request('asking')
+        elif yesNoAlready == 0:
+            self.fsm.request('notAvailable')
+        elif yesNoAlready == 2:
+            self.fsm.request('alreadyInGuild')
+        elif yesNoAlready == 3:
+            self.fsm.request('self')
+        elif yesNoAlready == 4:
+            self.fsm.request('ignored')
+        elif yesNoAlready == 6:
+            self.fsm.request('notAcceptingGuilds')
+        elif yesNoAlready == 10:
+            self.fsm.request('no')
+        elif yesNoAlready == 13:
+            self.fsm.request('otherTooMany')
         else:
-            if yesNoAlready == 0:
-                self.fsm.request('notAvailable')
-            else:
-                if yesNoAlready == 2:
-                    self.fsm.request('alreadyInGuild')
-                else:
-                    if yesNoAlready == 3:
-                        self.fsm.request('self')
-                    else:
-                        if yesNoAlready == 4:
-                            self.fsm.request('ignored')
-                        else:
-                            if yesNoAlready == 6:
-                                self.fsm.request('notAcceptingGuilds')
-                            else:
-                                if yesNoAlready == 10:
-                                    self.fsm.request('no')
-                                else:
-                                    if yesNoAlready == 13:
-                                        self.fsm.request('otherTooMany')
-                                    else:
-                                        self.notify.warning('Got unexpected response to friendConsidering: %s' % yesNoAlready)
-                                        self.fsm.request('maybe')
+            self.notify.warning('Got unexpected response to friendConsidering: %s' % yesNoAlready)
+            self.fsm.request('maybe')
 
     def __handleGuildAcceptInvite(self, avId):
         print 'Received accept invite event on inviter'
@@ -428,21 +394,16 @@ class GuildInviter(GuiPanel.GuiPanel):
     def __handleGuildRejectInvite(self, avId, reason):
         if reason == RejectCode.INVITEE_NOT_ONLINE:
             self.fsm.request('notAvailable')
+        elif reason == RejectCode.BUSY:
+            self.fsm.request('busy')
+        elif reason == RejectCode.ALREADY_IN_GUILD:
+            self.fsm.request('alreadyInGuild')
+        elif reason == RejectCode.GUILD_FULL:
+            self.fsm.request('guildFull')
+        elif reason == RejectCode.NO_GUILD:
+            self.fsm.request('no')
         else:
-            if reason == RejectCode.BUSY:
-                self.fsm.request('busy')
-            else:
-                if reason == RejectCode.ALREADY_IN_GUILD:
-                    self.fsm.request('alreadyInGuild')
-                else:
-                    if reason == RejectCode.GUILD_FULL:
-                        self.fsm.request('guildFull')
-                    else:
-                        if reason == RejectCode.NO_GUILD:
-                            self.fsm.request('no')
-                        else:
-                            self.notify.warning('guildRejectInvite: %s unknown reason: %s.' % (avId, reason))
+            self.notify.warning('guildRejectInvite: %s unknown reason: %s.' % (avId, reason))
 
     def __handleDisableAvatar(self):
         self.fsm.request('wentAway')
-# okay decompiling .\pirates\friends\GuildInviter.pyc

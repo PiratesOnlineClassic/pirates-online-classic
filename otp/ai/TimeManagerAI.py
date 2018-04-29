@@ -17,16 +17,16 @@ class TimeManagerAI(DistributedObjectAI):
 
     def setExceptionInfo(self, exception):
         avId = self.air.getAvatarIdFromSender()
-        self.air.writeServerEvent('client-exception', avId, exception)
         self.notify.warning("Got exception from %d!\n %s" % (avId, str(exception)))
+        self.air.centralLogger.reportException('game-client', exception, True)
         del exception
 
     def setSignature(self, signature, hash, pyc):
-        pass
+        pass #TODO: Log me?
 
     def setFrameRate(self, fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId,
                      processMemory, pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed, numCpuCores, numLogicalCpus, apiName):
-        pass
+        pass #TODO: Log me!
 
     def setCpuInfo(self, info, cachestatus):
         pass

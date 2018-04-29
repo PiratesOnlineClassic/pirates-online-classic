@@ -135,12 +135,12 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         pass
 
     def showDeathLoadingScreen(self, av):
-        base.cr.loadingScreen.showHint()
-        base.cr.loadingScreen.showTarget(jail=True)
-        base.cr.loadingScreen.show()
+        self.cr.loadingScreen.showHint()
+        self.cr.loadingScreen.showTarget(jail=True)
+        self.cr.loadingScreen.show()
 
     def hideDeathLoadingScreen(self, av):
-        base.cr.loadingScreen.hide()
+        self.cr.loadingScreen.hide()
 
     def updateShipProximityText(self, ship):
         pass
@@ -246,8 +246,8 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
             displayName = PLocalizer.LocationNames.get(uniqueId, '')
             base.localAvatar.guiMgr.createTitle(displayName, PiratesGuiGlobals.TextFG2)
             parentUid = sphere.getTag('parentUid')
-            parentDoId = base.cr.uidMgr.getDoId(parentUid)
-            areaParent = base.cr.doId2do[parentDoId]
+            parentDoId = self.cr.uidMgr.getDoId(parentUid)
+            areaParent = self.cr.doId2do[parentDoId]
             locationInfo = areaParent.getLocationInfo(uniqueId)
             # TODO: FIXME!
             #f locationInfo:
@@ -273,8 +273,8 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
 
         if msgName == PiratesGlobals.LOCATION_SPHERE:
             parentUid = sphere.getTag('parentUid')
-            parentDoId = base.cr.uidMgr.getDoId(parentUid)
-            areaParent = base.cr.doId2do[parentDoId]
+            parentDoId = self.cr.uidMgr.getDoId(parentUid)
+            areaParent = self.cr.doId2do[parentDoId]
             locationInfo = areaParent.getLocationInfo(uniqueId)
             # TODO: FIXME!
             #if locationInfo:
@@ -297,12 +297,12 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
             else:
                 currentArea = None
 
-            alreadyHere = parentObj is base.cr.doId2do.get(jailDoId)
+            alreadyHere = parentObj is self.cr.doId2do.get(jailDoId)
 
             @report(types=['frameCount'], dConfigParam='want-jail-report')
             def loadJailWorld():
-                localAvatar.setInterest(jailWorldParentId, jailWorldZone, [
-                 'instanceInterest-Jail'])
+                self.cr.addTaggedInterest(jailWorldParentId, jailWorldZone, [
+                    'instanceInterest-Jail'])
 
                 if self.pendingJail:
                     self.cr.relatedObjectMgr.abortRequest(self.pendingJail)
@@ -315,8 +315,8 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
                 self.pendingJail = None
                 if isinstance(currentWorld, DistributedInstanceBase):
                     currentWorld.removeWorldInterest()
-                    localAvatar.clearInterestNamed(None, ['instanceInterest'])
-                    localAvatar.replaceInterestTag('instanceInterest-Jail', 'instanceInterest')
+                    localAvatar.clearTaggedInterestNamed(None, ['instanceInterest'])
+                    localAvatar.replaceTaggedInterestTag('instanceInterest-Jail', 'instanceInterest')
 
                 world = jailArea.getParentObj()
                 world.addWorldInterest(jailArea)

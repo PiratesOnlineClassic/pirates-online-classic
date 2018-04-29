@@ -1094,8 +1094,8 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   setDinghyId(uint32) required broadcast ram;
   setBandId(uint32, uint32) required broadcast ram ownrecv;
   requestLookoutInvite(uint32, string, uint32, uint32, resultPair []);
-  setGuildId(uint32=0) required airecv broadcast ram;
-  setGuildName(string="Null") required broadcast ram;
+  setGuildId(uint32=0) required broadcast ram ownrecv ownsend db;
+  setGuildName(string="Null") required broadcast ram ownrecv ownsend db;
   setMaxHp(int16=250) required broadcast db;
   setHp(int16=250, uint8=0) required broadcast db ownrecv;
   setEpicQuests(uint32=0) required broadcast db;
@@ -1108,7 +1108,6 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   setCustomMessages(uint16[] = []) ownrecv required db;
   setSCEmote(uint16) broadcast ownsend airecv;
   setSpeedChatQuest(uint16, uint16, uint16) broadcast ownsend airecv;
-  setSpeedChatStyleIndex(uint8) required ownsend broadcast db;
   setGameState(string, int16) broadcast ram ownsend airecv;
   levelUpMsg(uint32, uint32, uint32) broadcast airecv;
   addQuestMsg(string, uint8) broadcast airecv;
@@ -1133,13 +1132,13 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   sendRenownMessage(uint32, uint16, uint16) ownrecv;
   sendSalvageMessage(uint32, uint16) ownrecv;
   setLuck(int16) required broadcast;
-  setMaxLuck(int16=0) required broadcast db;
+  setMaxLuck(int16=1) required broadcast db;
   setMojo(int16) required broadcast;
   setMaxMojo(int16=50) required broadcast db;
   setSwiftness(int16) required broadcast;
-  setMaxSwiftness(int16=0) required broadcast db;
+  setMaxSwiftness(int16=1) required broadcast db;
   setPower(int16) required broadcast;
-  setMaxPower(int16=0) required broadcast db;
+  setMaxPower(int16=1) required broadcast db;
   setQuestRewardFlags(uint32=0) required ownrecv db;
   setTeleportFlags(uint32) airecv ownsend ram;
   teleportQuery(uint32, uint32, uint32, uint32, uint32) clsend ownrecv;
@@ -1165,7 +1164,6 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   setPvp(uint8) required broadcast ram ownrecv;
   setZombie(uint8) required broadcast ram ownrecv;
   setCurseStatus(uint8) ownrecv;
-  setPopulated(uint8=0) db ram;
   spendSkillPoint(SkillId) airecv clsend;
   resetSkillPoints(SkillId) airecv clsend;
   useTonic(uint16) airecv ownsend;
@@ -1173,7 +1171,7 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   spentSkillPoint(SkillId) ownrecv;
   requestActivity(uint32, int32, resultPair [], uint32 []) airecv clsend;
   setEmote(int32) required broadcast ram airecv ownsend;
-  playEmote(int32) broadcast;
+  playEmote(int32) broadcast ownrecv ownsend;
   setTempDoubleXPReward(uint32=0) required db ram broadcast;
   setCrewHUDUpdate(uint8, HUDIcons []) ownrecv;
   setAllowGMNameTag(bool) required ram broadcast airecv;
@@ -1710,6 +1708,7 @@ dclass DistributedDoorBase : DistributedInteractive {
   setMovie(uint8, uint32, int16) broadcast;
   setLocked(uint8) required broadcast ram;
 
+  // TODO: FIXME!
   setX(int16/10) required broadcast ram;
   setY(int16/10) required broadcast ram;
   setZ(int16/10) required broadcast ram;

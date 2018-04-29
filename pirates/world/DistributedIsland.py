@@ -271,7 +271,9 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.handleEnterGameArea()
             return
         elif level == 1:
-            localAvatar.setInterest(self.doId, PiratesGlobals.IslandShipDeployerZone, ['ShipDeployer'])
+            self.cr.addTaggedInterest(self.doId, PiratesGlobals.IslandShipDeployerZone, [
+                'ShipDeployer'])
+
             self.startVolcanoRestEffects()
             self.adjustSmokeParentAndPos(self.geom, Vec3(-40.0, 75.0, 600.0))
             self.showName()
@@ -314,7 +316,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             base.musicMgr.requestFadeOut(self.getMusicName())
             return
         elif level == 1:
-            localAvatar.clearInterestNamed(None, ['ShipDeployer'])
+            self.cr.clearTaggedInterestNamed(None, ['ShipDeployer'])
             self.stopVolcanoRestEffects()
             localAvatar.clearPort(self.doId)
             return
@@ -470,7 +472,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     def loadIslandLowLod(self):
         flatName = self.modelPath.split('_zero')
         if not self.islandLowLod:
-            self.islandLowLod = loader.loadModelCopy(flatName[0] + '_low')
+            self.islandLowLod = loader.loadModel(flatName[0] + '_low', okMissing=True)
 
         if self.islandLowLod and not self.islandLowLod.isEmpty():
             self.islandLowLod.reparentTo(self)
@@ -515,10 +517,10 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             lowend = '_lowend'
 
         islandBaseName = self.modelPath.split('_zero')[0]
-        waveModel = loader.loadModelCopy(islandBaseName + lowend + '_wave_none')
+        waveModel = loader.loadModel(islandBaseName + lowend + '_wave_none', okMissing=True)
         if lowend != '' and not waveModel:
             lowend = ''
-            waveModel = loader.loadModelCopy(islandBaseName + lowend + '_wave_none')
+            waveModel = loader.loadModel(islandBaseName + lowend + '_wave_none', okMissing=True)
 
         if waveModel:
             self.islandShoreWave = Actor.Actor(waveModel)
@@ -563,11 +565,11 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         if base.options.terrain_detail_level == 0:
             lowend = '_lowend'
 
-        terrainModel = loader.loadModelCopy(islandBaseName + '_terrain', loaderOptions)
+        terrainModel = loader.loadModel(islandBaseName + '_terrain', loaderOptions, okMissing=True)
         if terrainModel:
             self.geom = terrainModel
         else:
-            self.geom = loader.loadModelCopy(islandBaseName)
+            self.geom = loader.loadModel(islandBaseName)
             return
 
         collNode = self.geom.find('**/cannoncol*')
@@ -575,51 +577,51 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             collNode.node().setIntoCollideMask(collNode.node().getIntoCollideMask() | PiratesGlobals.TargetBitmask)
             collNode.setTag('objType', str(PiratesGlobals.COLL_BLOCKER))
 
-        terrainDetailModel = loader.loadModelCopy(islandBaseName + lowend + '_terrain_detail', loaderOptions)
+        terrainDetailModel = loader.loadModel(islandBaseName + lowend + '_terrain_detail', loaderOptions, okMissing=True)
         if lowend != '' and not terrainDetailModel:
-            terrainDetailModel = loader.loadModelCopy(islandBaseName + '_terrain_detail', loaderOptions)
+            terrainDetailModel = loader.loadModel(islandBaseName + '_terrain_detail', loaderOptions, okMissing=True)
 
         if terrainDetailModel:
             terrainDetailModel.getChild(0).reparentTo(self.geom)
 
-        pierModel = loader.loadModelCopy(islandBaseName + lowend + '_pier', loaderOptions)
+        pierModel = loader.loadModel(islandBaseName + lowend + '_pier', loaderOptions, okMissing=True)
         if lowend != '' and not pierModel:
-            pierModel = loader.loadModelCopy(islandBaseName + '_pier', loaderOptions)
+            pierModel = loader.loadModel(islandBaseName + '_pier', loaderOptions, okMissing=True)
 
         if pierModel:
             pierModel.getChild(0).reparentTo(self.geom)
 
-        vegeWallModel = loader.loadModelCopy(islandBaseName + lowend + '_nat_wall', loaderOptions)
+        vegeWallModel = loader.loadModel(islandBaseName + lowend + '_nat_wall', loaderOptions, okMissing=True)
         if lowend != '' and not vegeWallModel:
-            vegeWallModel = loader.loadModelCopy(islandBaseName + '_nat_wall', loaderOptions)
+            vegeWallModel = loader.loadModel(islandBaseName + '_nat_wall', loaderOptions, okMissing=True)
 
         if vegeWallModel:
             vegeWallModel.getChild(0).reparentTo(self.geom)
 
-        fortModel = loader.loadModelCopy(islandBaseName + lowend + '_fort', loaderOptions)
+        fortModel = loader.loadModel(islandBaseName + lowend + '_fort', loaderOptions, okMissing=True)
         if lowend != '' and not fortModel:
-            fortModel = loader.loadModelCopy(islandBaseName + '_fort', loaderOptions)
+            fortModel = loader.loadModel(islandBaseName + '_fort', loaderOptions, okMissing=True)
 
         if fortModel:
             fortModel.getChild(0).reparentTo(self.geom)
 
-        tunnelModel = loader.loadModelCopy(islandBaseName + lowend + '_tunnel', loaderOptions)
+        tunnelModel = loader.loadModel(islandBaseName + lowend + '_tunnel', loaderOptions, okMissing=True)
         if lowend != '' and not tunnelModel:
-            tunnelModel = loader.loadModelCopy(islandBaseName + '_tunnel', loaderOptions)
+            tunnelModel = loader.loadModel(islandBaseName + '_tunnel', loaderOptions, okMissing=True)
 
         if tunnelModel:
             tunnelModel.getChild(0).reparentTo(self.geom)
 
-        rocksModel = loader.loadModelCopy(islandBaseName + lowend + '_rocks', loaderOptions)
+        rocksModel = loader.loadModel(islandBaseName + lowend + '_rocks', loaderOptions, okMissing=True)
         if lowend != '' and not rocksModel:
-            rocksModel = loader.loadModelCopy(islandBaseName + '_rocks', loaderOptions)
+            rocksModel = loader.loadModel(islandBaseName + '_rocks', loaderOptions, okMissing=True)
 
         if rocksModel:
             rocksModel.getChild(0).reparentTo(self.geom)
 
-        logsModel = loader.loadModelCopy(islandBaseName + lowend + '_logs', loaderOptions)
+        logsModel = loader.loadModel(islandBaseName + lowend + '_logs', loaderOptions, okMissing=True)
         if lowend != '' and not logsModel:
-            logsModel = loader.loadModelCopy(islandBaseName + '_logs', loaderOptions)
+            logsModel = loader.loadModel(islandBaseName + '_logs', loaderOptions, okMissing=True)
 
         if logsModel:
             logsModel.getChild(0).reparentTo(self.geom)
@@ -1181,7 +1183,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
 
     def retrieveIslandTerrain(self):
         islandGeomCache = self.getIslandCache()
-        if not islandGeomCache.hasData() or not base.config.GetBool('want-disk-cache', 0):
+        if not base.config.GetBool('want-disk-cache', 0) or not islandGeomCache.hasData():
             self.buildIslandTerrain()
         else:
             data = islandGeomCache.getData()
@@ -1255,19 +1257,29 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.geom = None
 
     def getCoreCache(self):
-        return base.bamCache.lookup(Filename('/%s_%s_core_%s_%s' % (self.name, self.uniqueId, base.launcher.ServerVersion, base.gridDetail)), '')
+        if base.bamCache:
+            return base.bamCache.lookup(Filename('/%s_%s_core_%s_%s' % (self.name, self.uniqueId, base.launcher.ServerVersion, base.gridDetail)), '')
+        return None
 
     def getGridCache(self):
-        return base.bamCache.lookup(Filename('/%s_%s_grid_%s' % (self.name, self.uniqueId, base.gridDetail)), '')
+        if base.bamCache:
+            return base.bamCache.lookup(Filename('/%s_%s_grid_%s' % (self.name, self.uniqueId, base.gridDetail)), '')
+        return None
 
     def getAnimCache(self):
-        return base.bamCache.lookup(Filename('/%s_%s_anims_%s' % (self.name, self.uniqueId, base.gridDetail)), '')
+        if base.bamCache:
+            return base.bamCache.lookup(Filename('/%s_%s_anims_%s' % (self.name, self.uniqueId, base.gridDetail)), '')
+        return None
 
     def getLargeObjectsCache(self):
-        return base.bamCache.lookup(Filename('/%s_large_%s' % (self.name, base.gridDetail)), '')
+        if base.bamCache:
+            return base.bamCache.lookup(Filename('/%s_large_%s' % (self.name, base.gridDetail)), '')
+        return None
 
     def getIslandCache(self):
-        return base.bamCache.lookup(Filename('/%s_%s_island_%s_%s' % (self.name, self.uniqueId, base.launcher.ServerVersion, base.gridDetail)), '')
+        if base.bamCache:
+            return base.bamCache.lookup(Filename('/%s_%s_island_%s_%s' % (self.name, self.uniqueId, base.launcher.ServerVersion, base.gridDetail)), '')
+        return None
 
     def getSiegeTeam(self):
         return base.cr.distributedDistrict.worldCreator.getPvpIslandTeam(self.uniqueId)
@@ -1278,16 +1290,14 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     def shipVisibilityChanged(self, value):
         if value == 0:
             self.parentWorld.worldGrid.stopProcessVisibility()
-        else:
-            if value == 1:
-                self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
-                base.showShipFlats = True
-                messenger.send('far-ships')
-            else:
-                if value == 2:
-                    self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
-                    base.showShipFlats = False
-                    messenger.send('normal-ships')
+        elif value == 1:
+            self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
+            base.showShipFlats = True
+            messenger.send('far-ships')
+        elif value == 2:
+            self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
+            base.showShipFlats = False
+            messenger.send('normal-ships')
 
     def handleTunnelsOnRadar(self, show=True):
         self.hasTunnelsOnRadar = show

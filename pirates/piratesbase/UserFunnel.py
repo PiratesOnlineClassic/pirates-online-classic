@@ -17,7 +17,6 @@ from direct.task import Task
 
 class UserFunnel:
     notify = directNotify.newCategory('UserFunnel')
-    notify.setDebug(True)
 
     def __init__(self):
         self.platform = self.__get_platform()

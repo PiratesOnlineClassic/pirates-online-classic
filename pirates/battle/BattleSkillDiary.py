@@ -1,9 +1,10 @@
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from pirates.battle import WeaponGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class BattleSkillDiary:
-    
+    notify = directNotify.newCategory('BattleSkillDiary')
     IDLE = 0
     CHARGING = 1
 
@@ -15,16 +16,18 @@ class BattleSkillDiary:
     def startRecharging(self, skillId, ammoSkillId):
         if self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId, ammoSkillId) == 0.0:
             return
-        self.__timers[skillId] = [
-         self.CHARGING, 0.0, globalClock.getFrameTime(), ammoSkillId]
+
+        self.__timers[skillId] = [self.CHARGING, 0.0, globalClock.getFrameTime(), ammoSkillId]
 
     def pauseRecharging(self, skillId):
         details = self.__timers.get(skillId)
         if not details or details[0] == self.IDLE:
             return
+
         ammoSkillId = details[3]
         if self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId, ammoSkillId) == 0.0:
             return
+
         details[0] = self.IDLE
         curTime = globalClock.getFrameTime()
         lastTime = details[2]
@@ -36,9 +39,11 @@ class BattleSkillDiary:
         details = self.__timers.get(skillId)
         if not details:
             return
+
         ammoSkillId = details[3]
         if self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId, ammoSkillId) == 0.0:
             return
+
         if details[0] != self.CHARGING:
             details[0] = self.CHARGING
             details[2] = globalClock.getFrameTime()
@@ -51,22 +56,26 @@ class BattleSkillDiary:
         details = self.__timers.get(skillId)
         if not details:
             return
+
         t = details[1]
         if details[0] == self.CHARGING:
             curTime = globalClock.getFrameTime()
             lastTime = details[2]
             dt = curTime - lastTime
             t += dt
+
         return t
 
     def getTimeRemaining(self, skillId):
         details = self.__timers.get(skillId)
         if not details:
             return
+
         ammoSkillId = details[3]
         timeRequired = self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId, ammoSkillId)
         if timeRequired == 0.0:
             return 0.0
+
         timeSpent = self.getTimeSpentRecharging(skillId)
         if timeSpent is None:
             return 0.0
@@ -79,6 +88,7 @@ class BattleSkillDiary:
         timeRequired = self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId, ammoSkillId)
         if timeRequired == 0.0:
             return 1
+
         timeSpent = self.getTimeSpentRecharging(skillId)
         if timeSpent is None:
             return 1
@@ -99,4 +109,5 @@ class BattleSkillDiary:
             dt = details[1]
             timeStamp = details[2]
             remaining = self.getTimeRemaining(skillId)
-            s += ' %s (%s): %s, dt=%f, t=%f, remaining=%f (s)\n' % (skillName, skillId, state, dt, timeStamp, remaining)
+            s += ' %s (%s): %s, dt=%f, t=%f, remaining=%f (s)\n' % (skillName, skillId,
+                state, dt, timeStamp, remaining)

@@ -65,7 +65,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
         objectInfo = self.getObjectDataByUid(parentUid, fileDict)
         if not objectInfo:
             if len(parent.links):
-                tunnel = base.cr.doId2do.get(parent.links[0][0])
+                tunnel = self.cr.doId2do.get(parent.links[0][0])
                 self.notify.error('Data file not found for area. connecting tunnel uid = %s' % tunnel.uniqueId)
 
             self.notify.error('Data file not found for area being loaded: %s, make sure worldCreator.loadObjectsFromFile is being called.' % parentUid)
@@ -107,9 +107,9 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
 
         newObj = None
         objParent = None
-        parentDoId = base.cr.uidMgr.getDoId(parentUid)
+        parentDoId = self.cr.uidMgr.getDoId(parentUid)
         if parentDoId:
-            objParent = base.cr.doId2do.get(parentDoId)
+            objParent = self.cr.doId2do.get(parentDoId)
             if objParent == None:
                 self.notify.warning('Parent %s not found for %s' % (parentUid, objKey))
 
@@ -121,7 +121,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                 if objType == 'Light - Dynamic':
                     light = self.createDynamicLight(object, objParent)
                     if light:
-                        base.cr.uidMgr.uid2obj[objKey] = light
+                        self.cr.uidMgr.uid2obj[objKey] = light
                         objParent.addLight(light)
 
                     OTPRender.renderReflection(False, light, 'p_light', None)
@@ -136,7 +136,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                     self.propNum += 1
                     newObj = objParent.addChildObj(object, objKey, zoneLevel = zoneLevel, startTime = startTime, altParent = actualParentObj, actualParentObj = actualParentObj)
                     if newObj:
-                        base.cr.uidMgr.uid2obj[objKey] = newObj
+                        self.cr.uidMgr.uid2obj[objKey] = newObj
                         if objType in ('Pier', 'Dinghy'):
                             OTPRender.renderReflection(True, newObj, 'p_pier', None)
 
@@ -211,7 +211,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
             if newObj == None:
 
                 callback = lambda param0 = 0, param1 = objDict, param2 = objKey, param3 = dynamic, param4 = -1: self.loadObjectDictDelayed(param0, param1, param2, param3, param4)
-                base.cr.uidMgr.addUidCallback(objKey, callback)
+                self.cr.uidMgr.addUidCallback(objKey, callback)
             else:
                 parentObj = newObj
                 newParentUid = objKey
@@ -265,21 +265,13 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
             pass
         elif category == 'DockWall':
             pass
-        elif category in [
-            'Spawning',
-            'Staging']:
+        elif category in ['Spawning', 'Staging']:
             return None
 
         newEventSphereNode.addSolid(newEventSphere)
         newEventSphereNodePath = objParent.collisions.attachNewNode(newEventSphereNode)
-        self.cr.activeWorld.accept('enter' + newEventSphereName, self.cr.activeWorld.enteredSphere, extraArgs = [
-            [
-                msgName,
-                extraParam]])
-        self.cr.activeWorld.accept('exit' + newEventSphereName, self.cr.activeWorld.exitedSphere, extraArgs = [
-            [
-                msgName,
-                extraParam]])
+        self.cr.activeWorld.accept('enter' + newEventSphereName, self.cr.activeWorld.enteredSphere, extraArgs = [[msgName, extraParam]])
+        self.cr.activeWorld.accept('exit' + newEventSphereName, self.cr.activeWorld.exitedSphere, extraArgs = [[msgName, extraParam]])
         return newEventSphereNodePath
 
     def addLocationSphere(self, uid, objData, objParent):
@@ -308,8 +300,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
 
     def createJackSparrowStandin(self, object, uid, parent):
         self.notify.debug('creating Jack')
-        jack = Actor.Actor(object['Visual']['Model'], {
-            'idle': 'models/char/js_idle',
+        jack = Actor.Actor(object['Visual']['Model'], {'idle': 'models/char/js_idle',
             'walk': 'models/char/js_walk',
             'run': 'models/char/js_run' })
         jack.loop('idle')

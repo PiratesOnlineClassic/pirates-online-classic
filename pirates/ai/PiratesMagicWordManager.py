@@ -31,7 +31,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesMagicWordManager')
     neverDisable = 1
     GameAvatarClass = DistributedPlayerPirate.DistributedPlayerPirate
-    
+
     def __init__(self, cr):
         MagicWordManager.MagicWordManager.__init__(self, cr)
         self.pendingCameraReparent = None
@@ -44,20 +44,20 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         self.rainSplashes2 = None
         self.stormEye = None
         self.stormRing = None
-    
+
     def generate(self):
         MagicWordManager.MagicWordManager.generate(self)
         self.accept('magicWord', self.b_setMagicWord)
         self.accept('requestServerTime', self.d_requestServerTime)
-    
+
     def doLoginMagicWords(self):
         MagicWordManager.MagicWordManager.doLoginMagicWords(self)
         if base.config.GetBool('want-chat', 0):
             self.d_setMagicWord('~chat', localAvatar.doId, 0)
-        
+
         if base.config.GetBool('want-run', 0) or base.config.GetBool('want-pirates-run', 0):
             self.toggleRun()
-        
+
         if base.config.GetBool('immortal-mode', 0):
             self.d_setMagicWord('~immortal', localAvatar.doId, 0)
 
@@ -71,13 +71,13 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             self.pendingCameraReparent = None
 
     def doMagicWord(self, word, avId, zoneId):
-        
+
         def wordIs(w, word=word):
             return word[:len(w) + 1] == '%s ' % w or word == w
 
         if MagicWordManager.MagicWordManager.doMagicWord(self, word, avId, zoneId) == 1:
             pass
-        
+
         if word == '~walk':
             localAvatar.b_setGameState('LandRoam')
             localAvatar.motionFSM.on()
@@ -120,7 +120,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             localAvatar.toggleMario()
         elif wordIs('~islandShips'):
             args = word.split()
-            
+
             try:
                 if args[1] == '1':
                     localAvatar.getParentObj().setOceanVisEnabled(1)
@@ -141,12 +141,12 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 if self.fireflies:
                     self.fireflies.reparentTo(localAvatar)
                     self.fireflies.startLoop()
-                
+
                 self.groundFog = GroundFog()
                 if self.groundFog:
                     self.groundFog.reparentTo(localAvatar)
                     self.groundFog.startLoop()
-                
+
         elif wordIs('~darkfog'):
             if self.groundFog:
                 self.groundFog.destroy()
@@ -156,20 +156,20 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 if self.groundFog:
                     self.groundFog.reparentTo(localAvatar)
                     self.groundFog.startLoop()
-                
+
         elif wordIs('~dust'):
             effect = CeilingDust.getEffect()
             if effect:
                 effect.reparentTo(localAvatar)
                 effect.setPos(0, 0, 10)
                 effect.play()
-            
+
             effect = CeilingDebris.getEffect()
             if effect:
                 effect.reparentTo(localAvatar)
                 effect.setPos(0, 0, 20)
                 effect.play()
-            
+
             cameraShakerEffect = CameraShaker()
             cameraShakerEffect.reparentTo(localAvatar)
             cameraShakerEffect.setPos(0, 0, 0)
@@ -185,15 +185,15 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 if self.rainMist:
                     self.rainMist.stopLoop()
                     self.rainMist = None
-                
+
                 if self.rainSplashes:
                     self.rainSplashes.stopLoop()
                     self.rainSplashes = None
-                
+
                 if self.rainSplashes2:
                     self.rainSplashes2.stopLoop()
                     self.rainSplashes2 = None
-                
+
             else:
                 from pirates.effects.RainDrops import RainDrops
                 self.rainDrops = RainDrops(base.camera)
@@ -216,7 +216,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             if len(args) >= 2:
                 level = int(args[1])
                 base.cr.timeOfDayManager.skyGroup.transitionClouds(level).start()
-            
+
         elif wordIs('~storm'):
             if self.stormEye:
                 self.stormEye.stopLoop()
@@ -224,13 +224,13 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 if self.stormRing:
                     self.stormRing.stopLoop()
                     self.stormRing = None
-                
+
             else:
                 args = word.split()
                 grid = 0
                 if len(args) > 1:
                     grid = int(args[1])
-                
+
                 pos = Vec3(base.cr.doId2do[201100017].getZoneCellOrigin(grid)[0], base.cr.doId2do[201100017].getZoneCellOrigin(grid)[1], base.cr.doId2do[201100017].getZoneCellOrigin(grid)[2])
                 from pirates.effects.StormEye import StormEye
                 self.stormEye = StormEye()
@@ -246,25 +246,25 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             if len(args) > 3:
                 color = Vec4(float(args[1]), float(args[2]), float(args[3]), 1)
                 base.cr.timeOfDayManager.alight.node().setColor(color)
-            
+
         elif wordIs('~dlight'):
             args = word.split()
             if len(args) > 3:
                 color = Vec4(float(args[1]), float(args[2]), float(args[3]), 1)
                 base.cr.timeOfDayManager.dlight.node().setColor(color)
-            
+
         elif wordIs('~fog'):
             args = word.split()
             if len(args) > 3:
                 color = Vec4(float(args[1]), float(args[2]), float(args[3]), 1)
                 base.cr.timeOfDayManager.fog.setColor(color)
-            
+
             if len(args) > 4:
                 base.cr.timeOfDayManager.fog.setExpDensity(float(args[4]))
-            
+
             if len(args) == 2:
                 base.cr.timeOfDayManager.fog.setExpDensity(float(args[1]))
-            
+
         elif __dev__ and wordIs('~turbo'):
             localAvatar.toggleTurbo()
         elif __dev__ and wordIs('~joincrew'):
@@ -331,35 +331,35 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             args = word.split()
             if len(args) == 1:
                 self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_TM, 'BlackpearlWorld')
-            
+
         elif wordIs('~fireworks'):
             showType = FireworkShowType.FourthOfJuly
             timestamp = 0.0
             args = word.split()
             if len(args) >= 2:
                 showType = float(args[1])
-            
+
             if len(args) >= 3:
                 timestamp = float(args[2])
-            
+
             if base.cr.activeWorld:
                 if not (base.cr.activeWorld.fireworkShowMgr):
                     base.cr.activeWorld.enableFireworkShow(timestamp, showType)
                 else:
                     base.cr.activeWorld.disableFireworkShow()
-            
+
         elif wordIs('~te'):
             if localAvatar.gameFSM.getCurrentOrNextState() == 'LandRoam':
                 localAvatar.b_setGameState('TeleportOut')
             elif localAvatar.gameFSM.getCurrentOrNextState() == 'TeleportOut':
                 localAvatar.b_setGameState('LandRoam')
-            
+
         elif wordIs('~shipModel'):
             args = word.split()
             shipClass = 23
             team = 0
             wantCollisions = 1
-            
+
             try:
                 shipClass = args[1]
                 team = args[2]
@@ -375,10 +375,10 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         elif wordIs('~deployShip'):
             if not localAvatar.getInventory():
                 return None
-            
+
             if not localAvatar.getInventory().getShipDoIdList():
                 return None
-            
+
             if localAvatar.getActiveShipId():
                 shipId = localAvatar.getActiveShipId()
                 localAvatar.d_requestReturnShip(shipId)
@@ -387,7 +387,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 shipIndex = 0
                 if len(args) >= 2:
                     shipIndex = int(args[1])
-                
+
                 shipId = localAvatar.getInventory().getShipDoIdList()[shipIndex]
                 localAvatar.d_requestDeployShip(shipId)
         elif wordIs('~lfa'):
@@ -395,7 +395,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             activityName = None
             if len(args) >= 2:
                 activityName = args[1]
-            
+
             if activityName == 'blackjack':
                 localAvatar.requestActivity(PiratesGlobals.GAME_STYLE_BLACKJACK)
             elif activityName == 'poker':
@@ -408,7 +408,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 localAvatar.requestActivity(PiratesGlobals.GAME_TYPE_HSA)
             elif activityName == 'mmp':
                 self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
-            
+
         elif wordIs('~term') or wordIs('terminator'):
             localAvatar.setEquippedWeapons([
                 10103,
@@ -425,7 +425,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 if command == 'resync':
                     localAvatar.battleRandom.resync()
                     self.notify.info('Client Battle random resynced, counter=0')
-                
+
             else:
                 counter = localAvatar.battleRandom.counter
                 self.notify.info('Client Battle random counter=%s' % counter)
@@ -438,10 +438,10 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 csId = base.config.GetString('default-cutscene', '0')
             if int(csId) >= len(CutsceneData.CutsceneNames):
                 return None
-            
+
             name = CutsceneData.CutsceneNames[int(csId)]
             cs = PythonUtil.ScratchPad()
-            
+
             def destroyCutscene(cs = cs):
                 cs.cutscene.destroy()
 
@@ -452,7 +452,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         elif wordIs('~forceLod'):
             for n in render.findAllMatches('**/+LODNode'):
                 n.node().forceSwitch(n.node().getHighestSwitch())
-            
+
         elif wordIs('~wave'):
             args = word.split()
             patch = base.cr.activeWorld.water.patch
@@ -467,7 +467,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                             response = '%s\n%s NON-SINE-WAVE' % (response, num)
                         else:
                             response = '%s\n%s amp=%s len=%s spd=%s' % (response, num, patch.getWaveAmplitude(num), patch.getWaveLength(num), patch.getWaveSpeed(num))
-                    
+
                     num += 1
             else:
                 num = int(args[1])
@@ -491,7 +491,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 response = 'not on a ship'
             elif len(args) > 2:
                 localAvatar.ship._rocker.setFakeMass(float(args[2]))
-            
+
             localAvatar.ship.addRoll(float(args[1]))
             response = 'rolling!'
             self.setMagicWordResponse(response)
@@ -514,19 +514,19 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         elif wordIs('~pvpmoney') or wordIs('~pvpinfamy'):
             if localAvatar.ship and localAvatar.ship.renownDisplay:
                 taskMgr.doMethodLater(2.0, localAvatar.ship.renownDisplay.loadRank, 'pvp-infamy-display', [])
-            
+
             if localAvatar.guiMgr and localAvatar.guiMgr.pvpPanel and hasattr(localAvatar.guiMgr.pvpPanel, 'renownDisplay') and localAvatar.guiMgr.pvpPanel.renownDisplay:
                 taskMgr.doMethodLater(2.0, localAvatar.guiMgr.pvpPanel.renownDisplay.loadRank, 'pvp-infamy-display', [])
-            
+
             if localAvatar.guiMgr and localAvatar.guiMgr.titlesPage:
                 taskMgr.doMethodLater(2.0, localAvatar.guiMgr.titlesPage.refresh, 'titles-refresh', [])
-            
+
         elif wordIs('~gmNameTag'):
             args = word.split()
             if len(args) < 2 and localAvatar.gmNameTagAllowed:
                 response = PLocalizer.MAGICWORD_GMNAMETAG
                 self.setMagicWordResponse(response)
-            
+
             if len(args) >= 2 and localAvatar.gmNameTagAllowed:
                 if args[1] == 'enable':
                     localAvatar.setGMNameTagState(1)
@@ -538,10 +538,10 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                     for i in args:
                         if xCount < 2:
                             pass
-                        
+
                         stringToSet = '%s %s' % (stringToSet, args[xCount])
                         xCount += 1
-                    
+
                     localAvatar.setGMNameTagString(stringToSet)
                 elif args[1] == 'setColor':
                     localAvatar.setGMNameTagColor(args[2])
@@ -556,7 +556,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             lodNodes = render.findAllMatches('**/+LODNode')
             for i in xrange(0, lodNodes.getNumPaths()):
                 lodNodes[i].node().forceSwitch(lodNodes[i].node().getHighestSwitch())
-            
+
             localAvatar.clearInterestNamed(None, [
                 'liveCam'])
             localAvatar.getParentObj().setOceanVisEnabled(0)
@@ -747,7 +747,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                     camParent.setHpr(camData[1])
                     camParent.setScale(10)
                     camModel.instanceTo(camParent)
-                
+
             else:
                 for camNum in range(3, 7):
                     camData = LiveCamTransforms[str(camNum)]
@@ -756,7 +756,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                     camParent.setHpr(camData[1])
                     camParent.setScale(10)
                     camModel.instanceTo(camParent)
-                
+
         elif wordIs('~hideCams'):
             render.findAllMatches('**/liveCamParent*').detach()
         elif wordIs('~dropBlockers'):
@@ -776,20 +776,20 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         localAvatar.setPos(0, 0, 0)
         localAvatar.setHpr(render, targetObj.getHpr(render))
         localAvatar.stash()
-    
+
     def cameraReparent(self, targetId, targetParentId, zoneId):
         if self.originalLocation == None:
             self.originalLocation = [
                 localAvatar.getLocation(),
                 localAvatar.getPos()]
-        
+
         if not base.cr.doId2do.has_key(targetParentId):
             self.notify.debug('Parent of target object to reparent avatar/camera to does not yet exist, skipping reparent request')
             return None
-        
+
         if isinstance(base.cr.doId2do[targetParentId], DistributedCartesianGrid.DistributedCartesianGrid):
             base.cr.doId2do[targetParentId].visAvatar = localAvatar
-        
+
         localAvatar.b_setLocation(targetParentId, zoneId, teleport = 1)
         if base.cr.doId2do.has_key(targetId):
             self.cameraFollowTgt(base.cr.doId2do[targetId], targetParentId)
@@ -811,4 +811,3 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
 
     def recvServerTime(self, sinceEpoch):
         base.chatAssistant.receiveGameMessage(PLocalizer.getServerTimeString(sinceEpoch))
-

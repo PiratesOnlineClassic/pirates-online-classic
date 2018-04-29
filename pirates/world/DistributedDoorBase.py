@@ -209,7 +209,7 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
 
     def showProximityStuff(self):
         DistributedInteractive.DistributedInteractive.showProximityStuff(self)
-        base.cr.interactionMgr.useLifter(self.disk)
+        self.cr.interactionMgr.useLifter(self.disk)
 
     def turnOn(self):
         pass

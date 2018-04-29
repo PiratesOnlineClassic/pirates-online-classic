@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.friends.RelationshipChooser
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State
 from direct.gui.DirectGui import *
@@ -14,9 +10,7 @@ from pirates.friends import PirateFriendSecret
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiPanel, PirateButtonChain, PiratesGuiGlobals
 
-
 class RelationshipChooser(GuiPanel.GuiPanel):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('FriendInviter')
 
     def __init__(self, avId, avName, pId=None):
@@ -90,4 +84,3 @@ class RelationshipChooser(GuiPanel.GuiPanel):
                 self.plFriendButton['state'] = DGG.NORMAL
             if isAvatarFriend:
                 self.avFriendButton['state'] = DGG.NORMAL
-# okay decompiling .\pirates\friends\RelationshipChooser.pyc

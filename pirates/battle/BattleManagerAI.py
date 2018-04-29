@@ -11,6 +11,7 @@ from pirates.battle import WeaponConstants
 from direct.distributed.ClockDelta import globalClockDelta
 from pirates.uberdog import UberDogGlobals
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
+from pirates.battle.ComboDiaryAI import ComboDiaryAI
 
 class BattleManagerAI(BattleManagerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
@@ -21,7 +22,6 @@ class BattleManagerAI(BattleManagerBase):
 
         self.__updateTask = None
         self.__targets = {}
-        self.__removingAttackers = {}
 
     def startup(self):
         self.__updateTask = taskMgr.add(self.__update, '%s-update-task-%s' % (
@@ -70,11 +70,15 @@ class BattleManagerAI(BattleManagerBase):
         if attackerId not in self.__targets[targetId]:
             return
 
-        attacker.battleSkillDiary.reset()
+        # clear the avatar's skill diaries since the target it
+        # previously attacked is now gone...
+        attacker.battleSkillDiary.clear()
+        attacker.comboDiary.clear()
+
         self.__targets[targetId].remove(attackerId)
 
     def getAttackers(self, targetId):
-        return self.__targets.get(targetId)
+        return self.__targets.get(targetId, {})
 
     def targetInRange(self, attacker, target, skillId, ammoSkillId):
         tolerance = 0
@@ -153,7 +157,7 @@ class BattleManagerAI(BattleManagerBase):
         # add the skill info to the attackers battle skill diary to track
         # what skills they have used and when...
         if not avatar.battleSkillDiary.hasSkill(skillId):
-            avatar.battleSkillDiary.addSkill(skillId, ammoSkillId)
+            avatar.battleSkillDiary.addSkill(timestamp, skillId, ammoSkillId)
 
         # calculate the moddified skill result for this skill, add this including
         # the attack data according to which ever weapon the avatar is using...
@@ -175,16 +179,6 @@ class BattleManagerAI(BattleManagerBase):
 
             return None
         elif skillResult == WeaponGlobals.RESULT_HIT:
-
-            # check to see if the skill used by the avatar was either a hurting effect,
-            # or a healing effect like the doll heal, cure skills...
-            if WeaponGlobals.isHealingSkill(skillId):
-                self.__healTarget(target, targetEffects)
-                self.__healTarget(avatar, attackerEffects)
-            else:
-                self.__hurtTarget(target, targetEffects)
-                self.__hurtTarget(avatar, attackerEffects)
-
             # update this skills current reputation, this will eventually add up
             # and all skills used will be rewarded reputation...
             skillData = avatar.battleSkillDiary.getSkill(skillId)
@@ -195,6 +189,34 @@ class BattleManagerAI(BattleManagerBase):
             skillData[2] += self.getModifiedAttackReputation(avatar, target,
                 skillId, ammoSkillId)
 
+            # check to see if the avatar knows of any skills that are valid combos,
+            # recent attacks are measured within a certain time frame...
+            totalCombo, totalDamage, numAttackers = avatar.comboDiary.getCombo()
+
+            if totalCombo and numAttackers > 1:
+                # apply the combo damage including the combo bonus damage to the
+                # target, then broadcast the combo info to all targets with interest...
+                targetEffects[0] = totalDamage + WeaponGlobals.getComboBonus(numAttackers)
+                target.b_setCombo(totalCombo, numAttackers, targetEffects[0], avatar.doId)
+
+            # update the avatar's combo diary so we can determine if any other attacks
+            # made by avatars attacking the avatar's current target is a combo...
+            for attackerDoId in self.getAttackers(target.doId):
+                attacker = self.air.doId2do.get(attackerDoId)
+
+                if not attacker:
+                    continue
+
+                attacker.comboDiary.recordAttack(avatar.doId, skillId, targetEffects[0])
+
+            # check to see if the skill used by the avatar was either a hurting effect,
+            # or a healing effect like the doll heal, cure skills...
+            if WeaponGlobals.isHealingSkill(skillId):
+                self.__healTarget(target, targetEffects)
+                self.__healTarget(avatar, attackerEffects)
+            else:
+                self.__hurtTarget(target, targetEffects)
+                self.__hurtTarget(avatar, attackerEffects)
         elif skillResult == WeaponGlobals.RESULT_MISS:
             pass
         elif skillResult == WeaponGlobals.RESULT_DODGE:
@@ -280,6 +302,21 @@ class BattleManagerAI(BattleManagerBase):
             self.__checkAttacker(attacker, target)
 
     def __checkAttacker(self, attacker, target):
+        # check to see if the avatar's recent recorded combos are expired,
+        # if they are removed them from the combo diary...
+        combos = attacker.comboDiary.getCombos(attacker.doId)
+
+        for combo in combos:
+            skillId = combo[ComboDiaryAI.SKILLID_INDEX]
+
+            if attacker.comboDiary.checkComboExpired(attacker.doId, skillId):
+                attacker.comboDiary.removeCombo(attacker.doId, skillId)
+
+        # check to see if the avatar doesn't have anymore combos
+        # that are not expired, if so clear the combo diary...
+        if not len(combos):
+            attacker.comboDiary.clear()
+
         # check the current weapon skill and determine if the avatar is still in
         # range that they may still be able to use that weapon in battle...
         skillId = attacker.battleSkillDiary.getCurrentSkill()
@@ -289,28 +326,15 @@ class BattleManagerAI(BattleManagerBase):
 
         ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)
 
-        # now that we have the avatar's current skill, check the range of that specific weapon...
+        # now that we have the avatar's current skill, check the range of,
+        # that specific weapon...
         if not self.targetInRange(attacker, target, skillId, ammoSkillId):
             self.notify.debug('Attacker %d has gone out of range of target %d with skill %d!' % (
                 attacker.doId, target.doId, skillId))
 
-            if attacker.doId in self.__removingAttackers:
-                return
-
-            # give the attacker a chance to return to battle in order to get their
-            # experience and reward values from previous skills used...
-            self.__removingAttackers[attacker.doId] = taskMgr.doMethodLater(5.0, self.__removeAttacker, '%s-removing-attacker-%d' % (
-                self.__class__.__name__, attacker.doId), extraArgs=[attacker, target], appendTask=True)
-
-    def __removeAttacker(self, attacker, target, task):
-        self.removeAttacker(attacker, target)
-        del self.__removingAttackers[attacker.doId]
-        return task.done
+            self.removeAttacker(attacker, target)
 
     def rewardAttackers(self, target):
-        if target.getHp()[0] > 0:
-            return
-
         for attackerId in self.__targets[target.doId]:
             attacker = self.air.doId2do.get(attackerId)
 
@@ -320,7 +344,7 @@ class BattleManagerAI(BattleManagerBase):
             self.__rewardAttacker(attacker, target)
 
     def __rewardAttacker(self, attacker, target):
-        inventory = self.air.inventoryManager.getInventory(attacker.doId)
+        inventory = attacker.getInventory()
 
         if not inventory:
             self.notify.debug('Cannot reward avatar %d for killing %d, unknown inventory!' % (
@@ -338,11 +362,13 @@ class BattleManagerAI(BattleManagerBase):
             # update the avatar's skill reputation for each skill it used to kill the target,
             # adding onto the overall reputation rewarded
             overallReputation += reputation
-            inventory.setReputation(reputationCategoryId, inventory.getReputation(reputationCategoryId) + reputation)
+            inventory.setReputation(reputationCategoryId, inventory.getReputation(
+                reputationCategoryId) + reputation)
 
         # clear the avatar's skill diary since they've been given their
         # reward in full...
-        attacker.battleSkillDiary.reset()
+        attacker.battleSkillDiary.clear()
+        attacker.comboDiary.clear()
 
         # update the avatar's overall reputation based on all the skills they
         # used to kill the target

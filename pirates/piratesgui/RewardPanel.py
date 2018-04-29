@@ -43,10 +43,7 @@ TextDict = {
 class RewardPanel(PDialog):
     
     def __init__(self, parent=None, type=PiratesGlobals.RewardBlackPearl, doneCallback=None, **kw):
-        optiondefs = (
-            ('pad', (0.55, 0.475), 
-            self.resetFrameSize),
-        )
+        optiondefs = (('pad', (0.55, 0.475), self.resetFrameSize),)
         self.defineoptions(kw, optiondefs)
         PDialog.__init__(self, parent)
         self.type = type
@@ -60,7 +57,7 @@ class RewardPanel(PDialog):
         isWeapon = TextDict[type][4]
         if isWeapon:
             background = skillIcons.find('**/box_base_over')
-            background.setTransparency(0.5)
+            background.setTransparency(1) #background.setTransparency(0.5)
         else:
             background = skillIcons.find('**/base_over')
         icon.reparentTo(background)
@@ -242,7 +239,6 @@ class RewardPanel(PDialog):
             self.showWeaponsTrack.append(Sequence(Func(self.stayTunedText.show), Wait(1)))
         self.showWeaponsTrack.append(Func(self.nextButton.show))
         self.showWeaponsTrack.start()
-        return
 
     def setupCustomReward(self):
         self.nextButton['text'] = PLocalizer.lNext

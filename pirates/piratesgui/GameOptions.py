@@ -1820,9 +1820,7 @@ class GameOptions(BorderFrame):
         from pirates.piratesgui import FeedbackPanel
         guiQMark = loader.loadModel('models/gui/toplevel_gui')
         questionMark = guiQMark.find('**/generic_question*')
-        button = DirectButton(parent=parent, relief=0, pos=(1.345, 0, -0.2), scale=3.2, geom=questionMark, geom_scale=0.18, geom_pos=(0.06,
-                                                                                                                                      0,
-                                                                                                                                      0.087), text='', textMayChange=1, command=self.__loadFeedbackPanel)
+        button = DirectButton(parent=parent, relief=0, pos=(1.345, 0, -0.2), scale=3.2, geom=questionMark, geom_scale=0.18, geom_pos=(0.06, 0, 0.087), text='', textMayChange=1, command=self.__loadFeedbackPanel)
         button.setColor(0.8, 0.7, 0.5, 1)
         self.selected_color = 1.0
         self.not_selected_color = 0.5

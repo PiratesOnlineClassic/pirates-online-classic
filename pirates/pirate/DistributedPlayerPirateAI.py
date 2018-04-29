@@ -10,7 +10,6 @@ from pirates.quest.QuestConstants import LocationIds
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
-from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from otp.ai.MagicWordGlobal import *
 from pirates.battle import WeaponGlobals
@@ -30,6 +29,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         self.dnaString = ''
         self.inventoryId = 0
+        self.guildId = 0
+        self.guildName = 'Null'
         self.jailCellIndex = 0
         self.returnLocation = ''
         self.currentIsland = ''
@@ -39,7 +40,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.gmNameTagAllowed = False
 
         self.stickyTargets = []
-        self.concentricZones = []
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -51,9 +51,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         self.battleRandom = BattleRandom(self.doId)
         self.battleSkillDiary = BattleSkillDiaryAI(self.air, self)
-
-        self.weapon = DistributedWeaponAI(self.air)
-        self.weapon.generateWithRequiredAndId(self.air.allocateChannel(), 0, 0)
 
         self.accept('HolidayStarted', self.processHolidayStart)
         self.accept('HolidayEnded', self.processHolidayEnd)
@@ -71,21 +68,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         parentObj = self.getParentObj()
         if parentObj:
-
-            # check to see if the avatar has moved shards, and if they have
-            # move the inventory along with them so that they can use the inventory
-            # even if they aren't in the same parent as it was generated in...
-            inventory = self.getInventory()
-
-            if inventory:
-                self.air.setAI(inventory.doId, self.air.ourChannel)
-
-            if self.weapon:
-                self.weapon.b_setLocation(parentId, zoneId)
-
             if isinstance(parentObj, DistributedGameAreaAI):
                 if self.currentIsland:
-
                     validReturns = [
                         LocationIds.PORT_ROYAL_ISLAND,
                         LocationIds.TORTUGA_ISLAND,
@@ -119,6 +103,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def setDNAString(self, dnaString):
         self.dnaString = dnaString
+        self.makeFromNetString(dnaString)
 
     def d_setDNAString(self, dnaString):
         self.sendUpdate('setDNAString', [dnaString])
@@ -129,6 +114,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def getDNAString(self):
         return self.dnaString
+
+    def sendDNAUpdate(self):
+        self.d_setDNAString(self.makeNetString())
+
+    def d_setFounder(self, founder):
+        self.sendUpdate('setFounder', [founder])
 
     def setInventoryId(self, inventoryId):
         self.inventoryId = inventoryId
@@ -142,6 +133,32 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def getInventoryId(self):
         return self.inventoryId
+
+    def setGuildId(self, guildId):
+        self.guildId = guildId
+
+    def d_setGuildId(self, guildId):
+        self.sendUpdate('setGuildId', [guildId])
+
+    def b_setGuildId(self, guildId):
+        self.setGuildId(guildId)
+        self.d_setGuildId(guildId)
+
+    def getGuildId(self):
+        return self.guildId
+
+    def setGuildName(self, guildName):
+        self.guildName = guildName
+
+    def d_setGuildName(self, guildName):
+        self.sendUpdate('setGuildName', [guildName])
+
+    def b_setGuildName(self, guildName):
+        self.setGuildName(guildName)
+        self.d_setGuildName(guildName)
+
+    def getGuildName(self):
+        return self.guildName
 
     def d_relayTeleportLoc(self, shardId, zoneId, teleportMgrDoId):
         self.sendUpdateToAvatarId(self.doId, 'relayTeleportLoc', [shardId, zoneId,
@@ -211,7 +228,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             return
 
         self.emoteId = emoteId
-        self.sendUpdateToAvatarId(self.doId, 'playEmote', [emoteId])
         self.sendUpdate('playEmote', [emoteId])
 
     def getEmote(self):
@@ -219,7 +235,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def requestCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
         if not self.weapon:
-            self.notify.warning('Cannot request current weapon for avatar %d, does not have a weapon object!' % \
+            self.notify.debug('Cannot request current weapon for avatar %d, does not have a weapon object!' % \
                 self.doId)
 
             return
@@ -467,11 +483,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         if self.battleRandom:
             self.battleRandom.delete()
 
-        if self.weapon:
-            self.weapon.requestDelete()
-
         self.battleRandom = None
-        self.weapon = None
 
         self.ignore('HolidayStarted')
         self.ignore('HolidayEnded')
@@ -611,12 +623,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.d_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
         self.updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
 
-    def setConcentricZones(self, concentricZones):
-        self.concentricZones = concentricZones
-
-    def getConcentricZones(self):
-        return self.concentricZones
-
 @magicWord(category=CATEGORY_MODERATION, types=[int, str, str])
 def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
     """
@@ -626,13 +632,22 @@ def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
     #TODO: associate tag with rank in the CSM and revoke command properties?
     validColors = ['gold', 'red', 'green', 'blue', 'white']
     if gmNameTagColor not in validColors:
-        return "Invalid color specified!"
+        return 'Invalid color specified!'
 
     if gmNameTagState < 0 or gmNameTagState > 1:
-        return "Invalid state!"
+        return 'Invalid state!'
 
     spellbook.getInvoker().b_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
-    return "Nametag set"
+    return 'Nametag set.'
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def setFounder(state):
+    """
+    Sets your founder state
+    """
+
+    spellbook.getInvoker().d_setFounder(state)
+    return 'Founder set to: %s' % state
 
 @magicWord(category=CATEGORY_MODERATION, types=[str, str, str])
 def toggleGM():
@@ -642,7 +657,7 @@ def toggleGM():
     invoker = spellbook.getInvoker()
     invoker.b_updateGMNameTag(not invoker.gmNameTagState, invoker.gmNameTagColor, invoker.gmNameTagString)
 
-    return "Nametag toggled to: %s" % str(invoker.gmNameTagState)
+    return 'Nametag toggled to: %s' % str(invoker.gmNameTagState)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def name(name):
@@ -651,7 +666,7 @@ def name(name):
     """
 
     spellbook.getTarget().b_setName(name)
-    return "Your name has been set to %s." % name
+    return 'Your name has been set to %s.' % name
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def hp(hp):
@@ -660,7 +675,7 @@ def hp(hp):
     """
 
     spellbook.getTarget().b_setHp(hp)
-    return "Your hp has been set to %d." % hp
+    return 'Your hp has been set to %d.' % hp
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def maxHp(maxHp):
@@ -669,7 +684,7 @@ def maxHp(maxHp):
     """
 
     spellbook.getTarget().b_setMaxHp(maxHp)
-    return "Your maxHp has been set to %d." % maxHp
+    return 'Your maxHp has been set to %d.' % maxHp
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def mojo(mojo):
@@ -678,7 +693,7 @@ def mojo(mojo):
     """
 
     spellbook.getTarget().b_setMojo(mojo)
-    return "Your mojo has been set to %d." % mojo
+    return 'Your mojo has been set to %d.' % mojo
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def maxMojo(maxMojo):
@@ -687,7 +702,7 @@ def maxMojo(maxMojo):
     """
 
     spellbook.getTarget().b_setMaxMojo(maxMojo)
-    return "Your maxMojo has been set to %d." % maxMojo
+    return 'Your maxMojo has been set to %d.' % maxMojo
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def level(level):
@@ -706,10 +721,10 @@ def level(level):
 
         inventory.setOverallRep(totalRep)
 
-    return "Your level has been set to %d." % level
+    return 'Your level has been set to %d.' % level
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def zombie(self):
+def zombie():
     """
     Toggles the targets zombie state
     """

@@ -48,6 +48,7 @@ class PiratesBase(OTPBase):
         self.saintPatricksDay = base.config.GetBool('test-saint-patricks-day', False)
         self.fourthOfJuly = base.config.GetBool('test-fourth-of-july', False)
         self.wantEnviroDR = base.config.GetBool('want-enviro-dr', False)
+        self.bamCache = None
         if self.hasEmbedded:
             self.inAdFrame = embedded.isMainWindowVisible()
         else:
@@ -71,8 +72,8 @@ class PiratesBase(OTPBase):
                     options = working_options
                     working_options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_WORKING_STATE)
                 else:
-                       options.config_to_options()
-                       use_recommended_options = True
+                   options.config_to_options()
+                   use_recommended_options = True
             elif options.state == Options.WORKING_STATE:
                 options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
             elif options.state == Options.ATTEMPT_WORKING_STATE:
@@ -209,7 +210,7 @@ class PiratesBase(OTPBase):
         Dog.Dog.setupAssets()
         CullBinManager.getGlobalPtr().addBin('ShipRigging', CullBinEnums.BTBackToFront, 100)
         self.bamCache = BamCache()
-        if base.config.GetBool('want-dev', 0):
+        if base.config.GetBool('want-dev', False):
             self.bamCache.setRoot(Filename('/c/cache'))
         self.bamCache.setRoot(Filename('./cache'))
         self.textureFlattenMgr = TextureFlattenManager.TextureFlattenManager()
@@ -420,14 +421,12 @@ class PiratesBase(OTPBase):
         self.gridDetail = gridDetail
         if gridDetail == 'high':
             self.farCull.setPos(0, 10000, 0)
+        elif gridDetail == 'med':
+            self.farCull.setPos(0, 5000, 0)
+        elif gridDetail == 'low':
+            self.farCull.setPos(0, 200, 0)
         else:
-            if gridDetail == 'med':
-                self.farCull.setPos(0, 5000, 0)
-            else:
-                if gridDetail == 'low':
-                    self.farCull.setPos(0, 200, 0)
-                else:
-                    raise StandardError, 'Invalid grid-detail: %s' % gridDetail
+            raise StandardError, 'Invalid grid-detail: %s' % gridDetail
 
     def setLowMemory(self, lowMemory):
         self.lowMemory = lowMemory
@@ -465,9 +464,8 @@ class PiratesBase(OTPBase):
         maxSteps = base.config.GetInt('avatar-physics-maxsteps', 5)
         if not freq:
             self.avatarPhysicsMgr.doPhysics(dt)
-        else:
-            if not hasattr(state, 'dtRollover'):
-                state.dtRollover = 0
+        elif not hasattr(state, 'dtRollover'):
+            state.dtRollover = 0
             maxDt = 1.0 / freq
             dt += state.dtRollover
             steps = int(dt / maxDt)
@@ -713,24 +711,22 @@ class PiratesBase(OTPBase):
                 elif self.cr.avCreate:
                     self.cr.avCreate.marketingOn()
             self.marketingViewerOn = True
-        else:
-            if self.cr:
-                if self.cr.tutorialObject and self.cr.tutorialObject.map:
-                    self.cr.tutorialObject.map.marketingOff()
-                elif self.cr.avCreate:
-                    self.cr.avCreate.marketingOff()
-            self.marketingViewerOn = False
+        elif self.cr:
+            if self.cr.tutorialObject and self.cr.tutorialObject.map:
+                self.cr.tutorialObject.map.marketingOff()
+            elif self.cr.avCreate:
+                self.cr.avCreate.marketingOff()
+        self.marketingViewerOn = False
 
     def setOverrideShipVisibility(self, value):
         self.overrideShipVisibility = value
         if value:
             self.shipsVisibleFromIsland = 2
+        elif localAvatar.guiMgr.gameOptions:
+            localAvatar.guiMgr.gameOptions.updateShipVisibility()
         else:
-            if localAvatar.guiMgr.gameOptions:
-                localAvatar.guiMgr.gameOptions.updateShipVisibility()
-            else:
-                self.shipsVisibleFromIsland = self.options.ocean_visibility
-                messenger.send('ship_vis_change', [self.options.ocean_visibility])
+            self.shipsVisibleFromIsland = self.options.ocean_visibility
+            messenger.send('ship_vis_change', [self.options.ocean_visibility])
 
     def getVelvetDisplayResolutions(self, bits_per_pixel, pipe):
         self.getDisplayResolutions(bits_per_pixel, pipe)
@@ -750,15 +746,13 @@ class PiratesBase(OTPBase):
                 if di.getDisplayModeBitsPerPixel(index) == bits_per_pixel:
                     if di.getDisplayModeFullscreenOnly(index) == False:
                         if di.getDisplayModeWidth(index) >= self.MinimumHorizontalResolution and di.getDisplayModeHeight(index) >= self.MinimumVerticalResolution:
-                            resolution = (
-                             di.getDisplayModeWidth(index), di.getDisplayModeHeight(index))
+                            resolution = (di.getDisplayModeWidth(index), di.getDisplayModeHeight(index))
                             if resolution not in resolution_table:
                                 if di.getDisplayModeWidth(index) <= di.getMaximumWindowWidth() and di.getDisplayModeHeight(index) <= di.getMaximumWindowHeight():
                                     resolution_table = resolution_table + [resolution]
                 index += 1
 
-            widescreen_resolution_table = [
-             (1280, 720), (1920, 1080)]
+            widescreen_resolution_table = [(1280, 720), (1920, 1080)]
             index = 0
             while index < len(widescreen_resolution_table):
                 resolution = widescreen_resolution_table[index]

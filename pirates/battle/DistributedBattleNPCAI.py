@@ -36,12 +36,11 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         return self.name
 
     def setHp(self, hp, quietly):
-        DistributedBattleAvatarAI.setHp(self, hp, quietly)
-
-        if self.getHp()[0] <= 0:
+        if hp <= 0 and self.hp > 0:
             self.air.battleMgr.rewardAttackers(self)
             self.spawnerNode.processDeath()
-            return
+
+        DistributedBattleAvatarAI.setHp(self, hp, quietly)
 
     def setSpawnPosHpr(self, (x, y, z), (h, p, r)):
         self.spawnPos = [x, y, z, h, p, r]

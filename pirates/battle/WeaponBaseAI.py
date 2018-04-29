@@ -11,7 +11,6 @@ class WeaponBaseAI(WeaponBaseBase):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
-            self.notify.warning('Cannot request targeted skill, unknown avatar!')
             return
 
         target = self.air.doId2do.get(targetId)

@@ -1,6 +1,8 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import globalClockDelta
 from pirates.world.DistributedDoorBaseAI import DistributedDoorBaseAI
+from pirates.piratesbase import PiratesGlobals
 
 class DistributedBuildingDoorAI(DistributedDoorBaseAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBuildingDoorAI')
@@ -14,19 +16,25 @@ class DistributedBuildingDoorAI(DistributedDoorBaseAI):
         self.interiorWorldZoneId = 0
 
     def handleRequestInteraction(self, avatar, interactType, instant):
+        result = DistributedDoorBaseAI.handleRequestInteraction(self, avatar,
+            interactType, instant)
+
+        if not result:
+            return self.DENY
+
         interior = self.air.doId2do.get(self.interiorDoId)
 
         if not interior:
-            self.notify.warning('Cannot set private interior instance for door %d, interior %d not found!' % (
-                self.doId, self.interiorDoId))
+            self.notify.warning('Cannot handle avatar %d interact for door %d, interior %d not found!' % (
+                avatar.doId, self.doId, self.interiorDoId))
 
             return self.DENY
 
         interiorDoor = interior.getInteriorFrontDoor()
 
         if not interiorDoor:
-            self.notify.warning('Cannot set private interior instance for door %d, interior door not found!' % (
-                self.doId))
+            self.notify.warning('Cannot handle avatar %d interact for door %d, interior door not found!' % (
+                avatar.doId, self.doId))
 
             return self.DENY
 

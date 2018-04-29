@@ -147,7 +147,7 @@ class DistributedDinghy(DistributedInteractive):
                 localAvatar.b_setGameState(self.avGameState)
                 if self.avGameState in ['WaterRoam', 'BattleWaterRoam']:
                     localAvatar.motionFSM.setWaterState(True, True)
-                    base.cr.interactionMgr.start()
+                    self.cr.interactionMgr.start()
             self.avGameState = None
         if self.invReq:
             DistributedInventoryBase.cancelGetInventory(localAvatar.getInventoryId())
@@ -191,7 +191,7 @@ class DistributedDinghy(DistributedInteractive):
                 localAvatar.b_setGameState(self.avGameState)
                 if self.avGameState in ['WaterRoam', 'BattleWaterRoam']:
                     localAvatar.motionFSM.setWaterState(True, True)
-                    base.cr.interactionMgr.start()
+                    self.cr.interactionMgr.start()
             self.avGameState = None
         if self.camIval:
             self.camIval.pause()
@@ -235,7 +235,7 @@ class DistributedDinghy(DistributedInteractive):
 
     def ownShipSelected(self, shipId, teamSpec=0):
         if localAvatar.getWorld().getParentObj().shardType == PiratesGlobals.SHARD_WELCOME:
-            base.cr.teleportMgr.initiateCrossShardDeploy(0, localAvatar.getParentObj().uniqueId, shipId, doEffect=False)
+            self.cr.teleportMgr.initiateCrossShardDeploy(0, localAvatar.getParentObj().uniqueId, shipId, doEffect=False)
             self.selectionMade()
             return
         if shipId >= 0:

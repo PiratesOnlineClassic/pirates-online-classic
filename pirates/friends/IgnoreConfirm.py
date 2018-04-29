@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.friends.IgnoreConfirm
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State
 from direct.gui.DirectGui import *
@@ -14,17 +10,12 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.RequestButton import RequestButton
 
-
 class IgnoreConfirmButton(RequestButton):
-    
-
     def __init__(self, text, command, width=1.0):
         RequestButton.__init__(self, text, command, width)
         self.initialiseoptions(IgnoreConfirmButton)
 
-
 class IgnoreConfirm(GuiPanel.GuiPanel):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('IgnoreConfirm')
 
     def __init__(self, avId, avName):
@@ -42,9 +33,9 @@ class IgnoreConfirm(GuiPanel.GuiPanel):
          State.State('startIgnore', self.enterStartIgnore, self.exitStartIgnore),
          State.State('endIgnore', self.enterEndIgnore, self.exitEndIgnore),
          State.State('cancel', self.enterCancel, self.exitCancel)], 'off', 'off')
-        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.25,
-                                                                                                                                                                                                                                                    0,
-                                                                                                                                                                                                                                                    0.35), textMayChange=1)
+        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, 
+                                   text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, 
+                                   pos=(0.25, 0, 0.35), textMayChange=1)
         self.context = None
         self.bOk = IgnoreConfirmButton(text=OTPLocalizer.FriendInviterOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
@@ -71,7 +62,6 @@ class IgnoreConfirm(GuiPanel.GuiPanel):
             self.fsm.request('getNewFriend')
         else:
             self.fsm.request('begin')
-        return
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
@@ -91,11 +81,10 @@ class IgnoreConfirm(GuiPanel.GuiPanel):
         myId = base.localAvatar.doId
         if self.avId == myId:
             self.fsm.request('self')
+        elif base.cr.avatarFriendsManager.checkIgnored(self.avId):
+            self.fsm.request('alreadyIgnored')
         else:
-            if base.cr.avatarFriendsManager.checkIgnored(self.avId):
-                self.fsm.request('alreadyIgnored')
-            else:
-                self.fsm.request('notYet')
+            self.fsm.request('notYet')
 
     def exitBegin(self):
         pass
@@ -115,7 +104,6 @@ class IgnoreConfirm(GuiPanel.GuiPanel):
         self.context = None
         self.bStop.show()
         self.bCancel.show()
-        return
 
     def exitAlreadyIgnored(self):
         self.message['text'] = ''
@@ -127,7 +115,6 @@ class IgnoreConfirm(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.IgnoreConfirmSelf
         self.context = None
         self.bOk.show()
-        return
 
     def exitSelf(self):
         self.bOk.hide()
@@ -136,7 +123,6 @@ class IgnoreConfirm(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.IgnoreConfirmNewIgnore % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitStartIgnore(self):
         self.bOk.hide()
@@ -145,7 +131,6 @@ class IgnoreConfirm(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.IgnoreConfirmEndIgnore % self.avName
         self.context = None
         self.bOk.show()
-        return
 
     def exitEndIgnore(self):
         self.bOk.hide()
@@ -154,7 +139,6 @@ class IgnoreConfirm(GuiPanel.GuiPanel):
         if self.context != None:
             self.context = None
         self.fsm.request('off')
-        return
 
     def exitCancel(self):
         pass
@@ -180,4 +164,3 @@ class IgnoreConfirm(GuiPanel.GuiPanel):
 
     def __handleList(self):
         messenger.send('openFriendsList')
-# okay decompiling .\pirates\friends\IgnoreConfirm.pyc

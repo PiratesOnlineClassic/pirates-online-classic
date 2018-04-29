@@ -105,7 +105,7 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
 
     def setupCollisions(self):
         self.notify.debug('setupCollisions')
-        self.island = base.cr.doId2do.get(self.islandId)
+        self.island = self.cr.doId2do.get(self.islandId)
         if not self.island:
             self.notify.warning("Couldn't find island %d" % self.islandId)
             return

@@ -329,34 +329,31 @@ class BarberStoreGUI(DirectFrame):
             if type == BarberGlobals.HAIR:
                 current = [
                  localAvatar.style.getHairHair(), itemColor]
+            elif type == BarberGlobals.BEARD:
+                current = [
+                    localAvatar.style.getHairBeard(), itemColor]
+            elif type == BarberGlobals.MUSTACHE:
+                current = [
+                    localAvatar.style.getHairMustache(), itemColor]
             else:
-                if type == BarberGlobals.BEARD:
-                    current = [
-                     localAvatar.style.getHairBeard(), itemColor]
-                elif type == BarberGlobals.MUSTACHE:
-                    current = [
-                     localAvatar.style.getHairMustache(), itemColor]
-                else:
-                    current = 0
-                if current == [itemId, currentColor]:
-                    self.showCurrentlyOwnedAlert()
-                text = PLocalizer.BarberConfirm % (str(item[3]), str(item[4]))
-                self.confirmBox = PiratesConfirm.PiratesConfirm(PLocalizer.BarberPurchase, text, self.buyItem, barber=[uid, button, True])
-                self.confirmBox.setPos(-self.confirmBox.getWidth() / 2, 0, -self.confirmBox.getHeight() / 2)
-        return
+                current = 0
+            if current == [itemId, currentColor]:
+                self.showCurrentlyOwnedAlert()
+            text = PLocalizer.BarberConfirm % (str(item[3]), str(item[4]))
+            self.confirmBox = PiratesConfirm.PiratesConfirm(PLocalizer.BarberPurchase, text, self.buyItem, barber=[uid, button, True])
+            self.confirmBox.setPos(-self.confirmBox.getWidth() / 2, 0, -self.confirmBox.getHeight() / 2)
 
     def applyItem(self, pirate, type, uid, button=None):
         if not hasattr(pirate, 'style'):
             return
         if type == BarberGlobals.HAIR:
             pirate.style.setHairHair(uid)
-        else:
-            if type == BarberGlobals.BEARD:
-                pirate.style.setHairBeard(uid)
-            elif type == BarberGlobals.MUSTACHE:
-                pirate.style.setHairMustache(uid)
-            if button:
-                pirate.style.setHairColor(button.color)
+        elif type == BarberGlobals.BEARD:
+            pirate.style.setHairBeard(uid)
+        elif type == BarberGlobals.MUSTACHE:
+            pirate.style.setHairMustache(uid)
+        if button:
+            pirate.style.setHairColor(button.color)
         pirate.model.handleHeadHiding()
 
     def barberPurchase(self, uid, color):
@@ -536,14 +533,12 @@ class BarberStoreGUI(DirectFrame):
                     if type == BarberGlobals.HAIR:
                         if itemId == currentHair:
                             owned = True
-                    else:
-                        if type == BarberGlobals.BEARD:
-                            if itemId == currentBeard:
-                                owned = True
-                        else:
-                            if type == BarberGlobals.MUSTACHE:
-                                if itemId == currentMustache:
-                                    owned = True
+                    elif type == BarberGlobals.BEARD:
+                        if itemId == currentBeard:
+                            owned = True
+                    elif type == BarberGlobals.MUSTACHE:
+                        if itemId == currentMustache:
+                            owned = True
 
                     if holiday is not None:
                         if holiday in AccessoriesStoreGUI.holidayIdList:
@@ -737,55 +732,53 @@ class BarberStoreGUI(DirectFrame):
         bodyShape = localAvatar.style.getBodyShape()
         if bodyShape == 0:
             bodyOffset = 1
-        else:
-            if bodyShape == 1:
-                bodyOffset = 0
-            else:
-                if bodyShape == 2:
-                    bodyOffset = 0.5
-                elif bodyShape == 3:
-                    bodyOffset = 1
-                elif bodyShape == 4:
-                    bodyOffset = 0.5
-                x = 0
-                m = Mat4(Mat4.identMat())
-                headPos = None
-                source = localAvatar
-                gender = source.style.gender
-                source.pose('idle', 1)
-                source.update()
-                offsetY = 2.0
-                offsetH = 200
-                x = 0
-                for x in range(len(regionData)):
-                    if headPos is None:
-                        source.getLOD('2000').getChild(0).node().findJoint('def_head01').getNetTransform(m)
-                        headPos = TransformState.makeMat(m).getPos().getZ()
-                    if pageName == BarberGlobals.HAIR:
-                        if gender == 'f':
-                            offsetZ = -headPos * 1.04
-                        else:
-                            offsetZ = -headPos * 1.07
-                    elif pageName == BarberGlobals.BEARD:
-                        offsetZ = -headPos * 1.0
-                    elif pageName == BarberGlobals.MUSTACHE:
-                        offsetZ = -headPos * 1.03
-                        offsetY = 1.5
-                    self.clothHumans[x].setY(offsetY)
-                    self.clothHumans[x].setZ(offsetZ)
-                    self.clothHumans[x].setH(offsetH)
-                    self.reloadPirateDNA(self.clothHumans[x])
-                    type = regionData[x][0]
-                    uid = regionData[x][1]
-                    item = BarberGlobals.barber_id.get(uid)
-                    itemId = item[0]
-                    self.applyItem(self.clothHumans[x], type, itemId)
-                    self.clothRenders[x].show()
+        elif bodyShape == 1:
+            bodyOffset = 0
+        elif bodyShape == 2:
+            bodyOffset = 0.5
+        elif bodyShape == 3:
+            bodyOffset = 1
+        elif bodyShape == 4:
+            bodyOffset = 0.5
+        x = 0
+        m = Mat4(Mat4.identMat())
+        headPos = None
+        source = localAvatar
+        gender = source.style.gender
+        source.pose('idle', 1)
+        source.update()
+        offsetY = 2.0
+        offsetH = 200
+        x = 0
+        for x in range(len(regionData)):
+            if headPos is None:
+                source.getLOD('2000').getChild(0).node().findJoint('def_head01').getNetTransform(m)
+                headPos = TransformState.makeMat(m).getPos().getZ()
+            if pageName == BarberGlobals.HAIR:
+                if gender == 'f':
+                    offsetZ = -headPos * 1.04
+                else:
+                    offsetZ = -headPos * 1.07
+            elif pageName == BarberGlobals.BEARD:
+                offsetZ = -headPos * 1.0
+            elif pageName == BarberGlobals.MUSTACHE:
+                offsetZ = -headPos * 1.03
+                offsetY = 1.5
+            self.clothHumans[x].setY(offsetY)
+            self.clothHumans[x].setZ(offsetZ)
+            self.clothHumans[x].setH(offsetH)
+            self.reloadPirateDNA(self.clothHumans[x])
+            type = regionData[x][0]
+            uid = regionData[x][1]
+            item = BarberGlobals.barber_id.get(uid)
+            itemId = item[0]
+            self.applyItem(self.clothHumans[x], type, itemId)
+            self.clothRenders[x].show()
 
-            x = len(regionData)
-            if x < self.buttonsPerPage:
-                for y in range(self.buttonsPerPage - x):
-                    self.clothRenders[self.buttonsPerPage - 1 - y].hide()
+        x = len(regionData)
+        if x < self.buttonsPerPage:
+            for y in range(self.buttonsPerPage - x):
+                self.clothRenders[self.buttonsPerPage - 1 - y].hide()
 
         self.aspectRatioChange()
 

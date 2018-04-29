@@ -1,16 +1,10 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.friends.PCAvatarFriendsManager
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.friends.AvatarFriendsManager import AvatarFriendsManager
 from otp.otpbase import OTPGlobals
 from pirates.friends.PCFriendInfo import PCFriendInfo
 
-
 class PCAvatarFriendsManager(AvatarFriendsManager):
-    
     notify = directNotify.newCategory('PCAvatarFriendsManager')
 
     def __init__(self, cr):
@@ -30,7 +24,6 @@ class PCAvatarFriendsManager(AvatarFriendsManager):
         if shipId:
             self.shipId2ShipState.pop(avId, None)
         self.avatarId2ShipId.pop(avId, None)
-        return
 
     def setShipState(self, avatarId, onShip, shipId):
         if not hasattr(base, 'localAvatar'):
@@ -59,4 +52,3 @@ class PCAvatarFriendsManager(AvatarFriendsManager):
         info = self.avatarId2Info.get(avatarId)
         if info:
             return info.getBandId()
-# okay decompiling .\pirates\friends\PCAvatarFriendsManager.pyc

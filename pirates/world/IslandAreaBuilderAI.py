@@ -46,7 +46,6 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
 
     def __createDinghy(self, parent, parentUid, objKey, objectData):
         dinghy = DistributedDinghyAI(self.air)
-
         dinghy.setPos(objectData.get('Pos', (0, 0, 0)))
         dinghy.setHpr(objectData.get('Hpr', (0, 0, 0)))
         dinghy.setInteractRadius(float(objectData.get('Aggro Radius', 25)))
