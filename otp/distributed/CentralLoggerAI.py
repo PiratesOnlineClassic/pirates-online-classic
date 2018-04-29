@@ -9,7 +9,7 @@ class CentralLoggerAI(DistributedObjectGlobalAI):
         DistributedObjectGlobalAI.__init__(self, air)
 
     def sendMessage(self, category, message, targetDISLid, targetAvId):
-        self.sendUpdate('sendMessage', [category, message, targetDISLid, targetAvId])
-
-    def sendMessage(self, category, message, targetDISLid, targetAvId):
         self.notify.debug('Received message from client')
+
+    def reportException(self, sender, exception, isClient=False):
+        self.sendUpdate('reportException', [sender, exception, isClient])
