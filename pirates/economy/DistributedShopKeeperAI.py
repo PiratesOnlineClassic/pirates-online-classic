@@ -10,8 +10,9 @@ class DistributedShopKeeperAI(DistributedObjectAI):
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
 
-    def __purchaseItem(self, avatar, inventory, itemId):
-        
+    def __purchaseItem(self, avatar, inventory, item):
+        itemId, itemQuantity = item
+
         # Verify price
         currentGold = inventory.getGoldInPocket()
         itemPrice = EconomyGlobals.getItemCost(itemId)
