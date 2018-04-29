@@ -1,6 +1,6 @@
 from direct.interval.IntervalGlobal import *
 from pirates.effects.EffectController import EffectController
-from panda3d.core import *
+from pandac.PandaModules import *
 
 class FadingCard(EffectController, NodePath):
     

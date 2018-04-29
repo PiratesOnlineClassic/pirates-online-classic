@@ -1,6 +1,6 @@
 from direct.showbase import Pool
 from direct.showbase.DirectObject import DirectObject
-from panda3d.core import *
+from pandac.PandaModules import *
 
 class PooledEffect(DirectObject, NodePath):
     pool = None

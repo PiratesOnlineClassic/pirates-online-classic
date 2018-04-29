@@ -3,11 +3,11 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.WaterShadow
 from otp.otpbase import OTPRender
-from panda3d.core import *
+from pandac.PandaModules import *
 
 
 class WaterShadow(NodePath):
-    
+
 
     def __init__(self, name, shadow_model, parent, use_water_bin=True, bin_number=7):
         self.name = name

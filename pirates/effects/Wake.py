@@ -9,7 +9,7 @@ from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
 from direct.task import Task
 from otp.otpbase import OTPRender
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects.WaterShadow import WaterShadow
 from pirates.piratesbase import PiratesGlobals
 from pirates.ship import ShipGlobals
@@ -17,7 +17,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class Wake(PooledEffect):
-    
+
     MinWakeVelocity = 6.0
     FadeOutVelocity = 10.0
     WakeFactor = 0.025

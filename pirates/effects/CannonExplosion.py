@@ -8,12 +8,11 @@ from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
 from pirates.effects.EffectController import EffectController
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
 
 class CannonExplosion(PooledEffect, EffectController):
-    
     splashSfx = []
     splashSfxNames = ('explo_wood_1.mp3', 'explo_wood_2.mp3')
 

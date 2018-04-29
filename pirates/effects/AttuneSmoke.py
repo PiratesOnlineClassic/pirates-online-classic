@@ -1,11 +1,11 @@
 from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
 from pirates.effects.EffectController import EffectController
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
 class AttuneSmoke(PooledEffect, EffectController):
-    
+
     cardScale = 64.0
 
     def __init__(self):

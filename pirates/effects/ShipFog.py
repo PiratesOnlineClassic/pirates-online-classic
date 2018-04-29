@@ -9,7 +9,7 @@ from direct.actor import Actor
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect
-from panda3d.core import *
+from pandac.PandaModules import *
 
 
 class ShipFog(NodePath):

@@ -6,7 +6,7 @@ from direct.showbase.DirectObject import *
 from direct.showbase.PythonUtil import *
 from direct.task import Task
 from pirates.effects.EffectController import EffectController
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects import PolyTrail
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect

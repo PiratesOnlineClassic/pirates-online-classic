@@ -6,13 +6,13 @@ import random
 
 from direct.interval.IntervalGlobal import (Func, Parallel, Sequence,
                                             SoundInterval, Wait)
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects.VolcanoSmoke import VolcanoSmoke
 from pirates.effects.VolcanoSplats import VolcanoSplats
 
 
 class VolcanoEffect(NodePath):
-    
+
     eruptionSfx = None
 
     def __init__(self):

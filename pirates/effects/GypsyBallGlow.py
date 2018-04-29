@@ -1,6 +1,6 @@
 from direct.interval.IntervalGlobal import *
 from pirates.effects.EffectController import EffectController
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.GameOptions import Options
 from pirates.effects.PooledEffect import PooledEffect

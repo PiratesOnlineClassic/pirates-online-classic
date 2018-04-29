@@ -1,10 +1,10 @@
 import random
 
 from direct.interval.IntervalGlobal import *
-from panda3d.core import *
+from pandac.PandaModules import *
 
 class CameraShaker(NodePath):
-    
+
     CutsceneScale = None
     TutorialInteriorScale = None
 

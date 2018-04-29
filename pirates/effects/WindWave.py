@@ -2,11 +2,11 @@ import random
 
 from direct.interval.IntervalGlobal import *
 from pirates.effects.EffectController import EffectController
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
 class WindWave(PooledEffect, EffectController):
-    
+
 
     def __init__(self):
         PooledEffect.__init__(self)

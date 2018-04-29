@@ -7,7 +7,7 @@ import random
 from direct.distributed import DistributedObject
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects.DustCloud import DustCloud
 from pirates.effects.SmallSplash import SmallSplash
 from pirates.piratesbase import PiratesGlobals

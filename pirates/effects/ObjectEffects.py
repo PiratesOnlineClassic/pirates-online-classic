@@ -1,4 +1,4 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 
 def Defaults(objectNode):
     objectNode.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MNone))

@@ -1,7 +1,7 @@
 import random
 
 from direct.motiontrail.MotionTrail import *
-from panda3d.core import *
+from pandac.PandaModules import *
 
 class PolyTrail(NodePath):
     

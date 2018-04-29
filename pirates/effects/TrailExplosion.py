@@ -2,14 +2,14 @@ import random
 
 from direct.interval.IntervalGlobal import *
 from pirates.effects.EffectController import EffectController
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects.SparksTrailLong import SparksTrailLong
 from pirates.effects.PooledEffect import PooledEffect
 
 class TrailExplosion(PooledEffect, EffectController):
-    
-    trailsVel = [[Vec3(150, -50, 100), Vec3(-150, -50, 100), Vec3(0, 150, 100)], [Vec3(120, 120, 100), 
-                  Vec3(120, -120, 100), Vec3(-120, 120, 100), Vec3(-120, -120, 100)], [Vec3(0, 150, 100), 
+
+    trailsVel = [[Vec3(150, -50, 100), Vec3(-150, -50, 100), Vec3(0, 150, 100)], [Vec3(120, 120, 100),
+                  Vec3(120, -120, 100), Vec3(-120, 120, 100), Vec3(-120, -120, 100)], [Vec3(0, 150, 100),
                   Vec3(140, 30, 100), Vec3(-140, 30, 100), Vec3(30, -60, 100), Vec3(-30, -60, 100)]]
 
     def __init__(self):

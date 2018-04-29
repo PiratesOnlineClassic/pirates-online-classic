@@ -3,7 +3,7 @@ import random
 from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import DirectObject
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects import Grass
 from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.effects.Bonfire import Bonfire

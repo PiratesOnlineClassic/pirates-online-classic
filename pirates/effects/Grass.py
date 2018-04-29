@@ -8,7 +8,7 @@ from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
 from direct.task import Task
 from otp.otpbase import OTPGlobals
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.creature import Creature
 from pirates.pirate import AvatarTypes
 from pirates.piratesbase import PiratesGlobals

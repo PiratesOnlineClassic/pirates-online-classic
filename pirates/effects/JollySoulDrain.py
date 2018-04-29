@@ -6,7 +6,7 @@ from direct.particles import ParticleEffect, Particles
 from direct.showbase.DirectObject import *
 from pirates.effects.EffectController import EffectController
 from otp.otpbase import OTPRender
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects import PolyTrail
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect

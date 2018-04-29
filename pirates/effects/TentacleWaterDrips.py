@@ -6,7 +6,7 @@ from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect, Particles
 from pirates.effects.EffectController import EffectController
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
 

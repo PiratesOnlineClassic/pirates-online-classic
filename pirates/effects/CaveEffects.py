@@ -1,7 +1,7 @@
 from direct.interval.LerpInterval import LerpScaleInterval
 from direct.interval.MetaInterval import Sequence
 from direct.task import Task
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects import EnvironmentEffects
 from pirates.piratesbase import PiratesGlobals, TimeOfDayManager, TODGlobals
 from pirates.seapatch.Reflection import Reflection
@@ -9,7 +9,7 @@ from pirates.seapatch.Water import Water
 from pirates.swamp.Swamp import Swamp
 
 class CaveEffects(EnvironmentEffects.EnvironmentEffects):
-    
+
     WaterCaves = ['models/caves/cave_a_', 'models/caves/cave_b_', 'models/caves/cave_barbossa_']
     LavaCaves = ['models/caves/cave_d_']
 

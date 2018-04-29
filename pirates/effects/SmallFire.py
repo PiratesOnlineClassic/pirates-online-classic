@@ -3,7 +3,7 @@
 # Decompiled from: Python 2.7.14 (default, Mar  9 2018, 23:57:12) 
 # [GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2)]
 # Embedded file name: pirates.effects.SmallFire
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
 from direct.particles import ParticleEffect
