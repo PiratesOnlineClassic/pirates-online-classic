@@ -63,9 +63,4 @@ except SystemExit:
 except Exception as e:
     if simbase.air:
         simbase.air.logException(e)
-    else:
-        info = traceback.format_exc()
-        simbase.air.writeServerEvent('ai-exception', avId=simbase.air.getAvatarIdFromSender(), accId=simbase.air.getAccountIdFromSender(), exception=info)
-
-    if config.GetBool('crash-on-server-error', False):
-        raise
+        

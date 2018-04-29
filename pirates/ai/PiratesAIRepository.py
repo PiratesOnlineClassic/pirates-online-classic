@@ -51,6 +51,8 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.createGlobals()
         self.createWorlds()
 
+        raise Exception("WOAH!")
+
         self.distributedDistrict.b_setAvailable(1)
         self.notify.info('District (%s) is now ready.' % self.districtName)
         messenger.send('district-ready')

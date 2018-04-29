@@ -18,7 +18,6 @@ class PiratesInternalRepository(AstronInternalRepository):
         self._netMessageCounter = 0
         self.__registerNetMessages()
 
-
     def __registerInternalNetMessage(self, message):
         self.netMessenger.register(self._netMessageCounter, message)
         self._netMessageCounter += 1
@@ -140,12 +139,13 @@ class PiratesInternalRepository(AstronInternalRepository):
         avatarId = self.getAvatarIdFromSender() or 0
         accountId = self.getAccountIdFromSender() or 0
 
-        self.writeServerEvent('internal-exception',
-            serverSuffix=self.dcSuffix,
-            avId=avatarId,
-            accountId=accountId,
-            exception=trace)
-
+        senderName =  districtName = self.distributedDistrict.getName() if hasattr(self, 'distributedDistrict') else None
+        if not senderName:
+            if self.dcSuffix == 'AI':
+                senderName = 'AI'
+            else:
+                senderName = 'UberDOG'
+        self.centralLogger.reportException(senderName, trace, False)
         self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
         print(trace)
 
