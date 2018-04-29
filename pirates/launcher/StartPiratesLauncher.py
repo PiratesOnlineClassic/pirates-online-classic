@@ -1,7 +1,6 @@
 import sys
-
-import Phase1
-from pirates.launcher.PiratesQuickLauncher import PiratesQuickLauncher
+from pirates.launcher.PiratesQuickLauncher import \
+    PiratesQuickLauncher
 
 sys.path = ['']
 launcher = PiratesQuickLauncher()

@@ -1,6 +1,6 @@
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.creature import Creature
 from pirates.creature.Alligator import Alligator
 from pirates.creature.Bat import Bat
@@ -16,7 +16,6 @@ from pirates.creature.Seagull import Seagull
 from pirates.creature.Stump import Stump
 from pirates.creature.Wasp import Wasp
 from pirates.effects import DynamicLight, SoundFX
-from pirates.mockup import PythonNodePath
 from pirates.pirate import AvatarTypes
 from pirates.ship import ShipGlobals
 

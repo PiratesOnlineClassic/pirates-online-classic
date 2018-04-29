@@ -1,3 +1,6 @@
+import datetime
+import time
+
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
@@ -6,8 +9,6 @@ from otp.ai.MagicWordGlobal import *
 from pirates.ai import HolidayGlobals
 from pirates.ai.HolidayDates import HolidayDates
 from pirates.piratesbase import PiratesGlobals, TODGlobals
-import datetime
-import time
 
 class NewsManagerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('NewsManagerAI')
@@ -45,7 +46,7 @@ class NewsManagerAI(DistributedObjectAI):
                 self.startHoliday(holidayId, time=endTime)
 
     def delete(self):
-        DistributedObjectAI.delete(self) 
+        DistributedObjectAI.delete(self)
 
         if self.holidayCheckTask:
             taskMgr.remove(self.holidayCheckTask)
@@ -54,7 +55,7 @@ class NewsManagerAI(DistributedObjectAI):
             taskMgr.remove(self.holidayTimerTask)
 
     def isHolidayActive(self, holidayId):
-        return holidayId in self.holidayList 
+        return holidayId in self.holidayList
 
     def __checkHolidays(self, task=None):
         holidays = HolidayGlobals.holidays
@@ -65,7 +66,7 @@ class NewsManagerAI(DistributedObjectAI):
 
             if date is None:
                 continue
-            
+
             if isinstance(date, dict):
                 continue
 
@@ -77,7 +78,7 @@ class NewsManagerAI(DistributedObjectAI):
                     remaining = end - currentTime
                     self.startHoliday(holidayId, time=remaining)
 
-        return Task.again     
+        return Task.again
 
     def __runHolidayTimer(self, task=None):
 
@@ -94,7 +95,7 @@ class NewsManagerAI(DistributedObjectAI):
 
         if self.isHolidayActive(holidayId):
             return
-        
+
         if holidayId not in self.holidayList:
             self.holidayList[holidayId] = time
             self.notify.info('Holiday %s is starting!' % holidayId)

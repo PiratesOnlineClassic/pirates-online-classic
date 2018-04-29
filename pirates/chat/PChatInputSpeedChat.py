@@ -1,6 +1,7 @@
 import random
 import string
 
+from panda3d.core import *
 from direct.fsm import ClassicFSM, State
 from direct.gui.DirectGui import *
 from direct.showbase import DirectObject
@@ -9,7 +10,6 @@ from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.speedchat import SpeedChatGlobals
 from otp.speedchat.SpeedChat import SpeedChat
 from otp.speedchat.SpeedChatTypes import *
-from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.speedchat import PSpeedChatGlobals
 from pirates.speedchat.PSpeedChatQuestMenu import PSpeedChatQuestMenu
@@ -20,7 +20,7 @@ scStructure = [
   OTPLocalizer.PSCMenuExpressions, [OTPLocalizer.PSCMenuGreetings, 50700, 50701, 50702, 50703, 50704], [OTPLocalizer.PSCMenuGoodbyes, 50800, 50801, 50802], [OTPLocalizer.PSCMenuFriendly, 50900], [OTPLocalizer.PSCMenuHappy, 51000], [OTPLocalizer.PSCMenuSad, 51100], [OTPLocalizer.PSCMenuSorry, 51200, 51201, 51202, 51203, 51204], 50105, 50100, 50101, 50102, 50103, 50104], [OTPLocalizer.PSCMenuCombat, 51300, 51301, 51302, 51303, 51304, 51305, 51306, 51307, 51308], [OTPLocalizer.PSCMenuSeaCombat, 51400, 51401, 51402, 51403, 51404, 51405, 51406, 51407, 51408, 51409, 51410, 51411, 51412, 51413, 51414, 51415, 51416, 51417, 51418, 51419, 51420, 51421], [OTPLocalizer.PSCMenuPlaces, [OTPLocalizer.PSCMenuLetsSail, 51500, 51501, 51502, 51503, 51504, 51505, 51506, 51507, 51508, 51509, 51510, 51511, 51512], [OTPLocalizer.PSCMenuLetsHeadTo, [OTPLocalizer.PSCMenuHeadToPortRoyal, 51800, 51801], 51600, 51601, 51602], [OTPLocalizer.PSCMenuWhereIs, 52500], 50400, 50401], [OTPLocalizer.PSCMenuDirections, 51700, 51701, 51702, 51703, 51704, 51705, 51706, 51707], [OTPLocalizer.PSCMenuInsults, 50200, 50201, 50202, 50203, 50204, 50205], [OTPLocalizer.PSCMenuCompliments, 50300, 50301, 50302, 50303, 50304, 50305, 50306], [OTPLocalizer.PSCMenuCardGames, [OTPLocalizer.PSCMenuPoker, 51900, 51901, 51902, 51903, 51904], [OTPLocalizer.PSCMenuBlackjack, 52600, 52601], 52400, 52401, 52402], [OTPLocalizer.PSCMenuInvitations, [OTPLocalizer.PSCMenuVersusPlayer, 52300, 52301, 52302, 52303, 52304], [OTPLocalizer.PSCMenuHunting, 52200, 52201], 52100, 52101], [PSpeedChatQuestMenu, OTPLocalizer.PSCMenuQuests], 50005, 50001, 50002, 50003, 50004]
 
 class PChatInputSpeedChat(DirectObject.DirectObject):
-    
+
     DefaultSCColorScheme = SCColorScheme(arrowColor=(1, 1, 1), rolloverColor=(1, 1,
                                                                               1))
     holidayIdList = []

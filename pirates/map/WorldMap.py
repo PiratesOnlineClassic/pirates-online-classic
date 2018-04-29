@@ -4,7 +4,7 @@ from direct.gui.DirectGui import DGG, DirectButton, DirectFrame
 from direct.interval.IntervalGlobal import (Func, LerpFunc, Parallel, Sequence,
                                             Wait)
 from direct.showbase.PythonUtil import clampScalar, lerp, report
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.map.DecoratedMapBall import DecoratedMapBall
 from pirates.map.MapConfig import MapConfig
 from pirates.map.SceneBuffer import SceneBuffer

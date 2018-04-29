@@ -7,7 +7,7 @@ from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
 from direct.showbase import PythonUtil
 from direct.task.Task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.minigame import (BishopsHandGame, BishopsHandGlobals,
                               DistributedGameTable)
 from pirates.pirate import HumanDNA

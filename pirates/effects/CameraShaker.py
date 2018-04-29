@@ -1,7 +1,7 @@
 import random
 
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 
 class CameraShaker(NodePath):
     

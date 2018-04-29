@@ -1,4 +1,4 @@
-import NPCSkeletonGameFSM
+from pirates.npc import NPCSkeletonGameFSM
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *

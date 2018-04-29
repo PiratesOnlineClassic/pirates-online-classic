@@ -8,10 +8,10 @@ from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
 from direct.showbase.DirectObject import *
-from EffectController import EffectController
-from pandac.PandaModules import *
+from pirates.effects.EffectController import EffectController
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
-from PooledEffect import PooledEffect
+from pirates.effects.PooledEffect import PooledEffect
 
 
 class MusketFlame(PooledEffect, EffectController):

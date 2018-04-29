@@ -3,7 +3,7 @@ import random
 from direct.distributed.ClockDelta import *
 from direct.fsm.FSM import FSM
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.instance.DistributedInstanceWorld import DistributedInstanceWorld
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals

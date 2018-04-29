@@ -7,7 +7,7 @@ from direct.gui.DirectGui import *
 from direct.task.Task import Task
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class GuiScreen:

@@ -1,17 +1,17 @@
 import random
 from math import cos, pi, sin
 
-import PirateFemale
-import PirateMale
-import TattooGlobals
-from CharGuiBase import CharGuiPicker, CharGuiSlider
+from pirates.makeapirate import PirateFemale
+from pirates.makeapirate import PirateMale
+from pirates.makeapirate import TattooGlobals
+from pirates.makeapirate.CharGuiBase import CharGuiPicker, CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 from direct.showbase import DirectObject
 from direct.showbase.ShowBaseGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.pirate import HumanDNA
 from pirates.piratesbase import PLocalizer
 
@@ -39,7 +39,7 @@ ROTATE = 4
 COLOR = 5
 
 class TattooGUI(DirectFrame, StateData.StateData):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('TattooGUI')
 
     def __init__(self, main=None):

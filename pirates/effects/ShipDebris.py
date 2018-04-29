@@ -7,11 +7,11 @@ import random
 from direct.distributed import DistributedObject
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects.DustRing import DustRing
 from pirates.effects.SmallSplash import SmallSplash
 from pirates.piratesbase import PiratesGlobals
-from PooledEffect import PooledEffect
+from pirates.effects.PooledEffect import PooledEffect
 
 DebrisDict = {'0': 'models/props/testBoard', '1': 'models/props/testBoard'}
 

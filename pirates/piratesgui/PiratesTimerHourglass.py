@@ -8,7 +8,7 @@ from direct.gui.DirectGui import *
 from direct.showbase.ShowBaseGlobal import *
 from direct.task import Task
 from otp.otpbase import OTPTimer
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiButton, PiratesGuiGlobals
 

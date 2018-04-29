@@ -3,7 +3,7 @@ import random
 
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.creature.DistributedCreature import DistributedCreature
 from pirates.kraken.Grabber import Grabber
 from pirates.kraken.GrabberGameFSM import GrabberGameFSM

@@ -5,7 +5,7 @@ import time
 from direct.distributed.ClockDelta import *
 from direct.distributed.DistributedNode import DistributedNode
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.kraken.DoomTentacle import DoomTentacle
 from pirates.ship import ShipGlobals
 

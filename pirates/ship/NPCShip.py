@@ -1,11 +1,11 @@
-import ShipBalance
+from pirates.ship import ShipBalance
 from otp.otpbase import OTPGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.ship.DistributedShip import DistributedShip
 
 
 class NPCShip(DistributedShip):
-    
+
     def __init__(self, cr):
         DistributedShip.__init__(self, cr)
         self.isNpc = 1

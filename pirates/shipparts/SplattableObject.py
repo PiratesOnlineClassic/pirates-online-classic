@@ -1,7 +1,7 @@
 import random
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.PythonUtil import report
 from pirates.piratesbase.PiratesGlobals import *
 from pirates.piratesbase import PiratesGlobals

@@ -5,7 +5,7 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
 from otp.namepanel import NameCheck
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.economy import EconomyGlobals
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import (DialogButton, GuiButton, GuiPanel,

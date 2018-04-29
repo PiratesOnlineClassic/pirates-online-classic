@@ -1,15 +1,14 @@
 import random
 
-import Weapon
-import WeaponGlobals
+from pirates.battle import Weapon
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects import PolyTrail
 from pirates.piratesbase import PLocalizer
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 class DualCutlass(Weapon.Weapon):
-    
+
     modelTypes = {InventoryType.DualCutlassL1: ('models/handheld/cutlass_rusty_high', Vec4(1, 1, 1, 1))}
     models = {}
     icons = {}

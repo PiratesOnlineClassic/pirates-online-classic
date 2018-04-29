@@ -1,6 +1,6 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.cutscene import Cutscene, CutsceneActor, CutsceneData
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import NewTutorialPanel, PiratesGuiGlobals, RadarGui

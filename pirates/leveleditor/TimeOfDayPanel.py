@@ -5,8 +5,8 @@
 import pprint
 import tkColorChooser
 from Tkinter import *
-
 import Pmw
+
 from direct.directtools.DirectUtil import getTkColorString
 from direct.gui import DirectGuiGlobals as DGG
 from direct.showbase.TkGlobal import *
@@ -19,7 +19,7 @@ from pirates.piratesbase import TODGlobals
 
 
 class TimeOfDayPanel(AppShell):
-    
+
     appname = 'Time Of Day Panel'
     appversion = '1.0'
     copyright = 'Copyright 2006 Walt Disney Internet Group.' + ' All Rights Reserved'

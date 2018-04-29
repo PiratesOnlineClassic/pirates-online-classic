@@ -3,8 +3,8 @@ import random
 from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
-from pandac.PandaModules import *
+from pirates.effects.EffectController import EffectController
+from panda3d.core import *
 from pirates.piratesgui.GameOptions import Options
 
 class TorchFire(EffectController, NodePath):

@@ -1,7 +1,7 @@
 import random
 
-from MarginCell import MarginCell
-from pandac.PandaModules import *
+from otp.margins.MarginCell import MarginCell
+from panda3d.core import *
 
 
 class MarginManager(PandaNode):

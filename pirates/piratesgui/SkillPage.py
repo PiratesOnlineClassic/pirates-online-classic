@@ -5,7 +5,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
 from pirates.piratesgui import (InventoryPage, PDialog, PiratesGuiGlobals,

@@ -1,5 +1,7 @@
 import string
 import sys
+import time
+
 from direct.showbase import DirectObject
 from otp.otpbase import OTPLocalizer
 from direct.directnotify import DirectNotifyGlobal
@@ -9,7 +11,6 @@ from panda3d.core import *
 from otp.chat.ChatGlobals import *
 from otp.chat.ChatMessage import ChatMessage
 from otp.nametag.NametagConstants import CFSpeech, CFTimeout, CFThought
-import time
 
 
 def isThought(message):

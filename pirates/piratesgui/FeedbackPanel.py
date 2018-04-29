@@ -5,7 +5,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectCheckBox import DirectCheckBox
 from direct.gui.DirectGui import *
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.band import BandConstance
 from pirates.distributed import InteractGlobals
 from pirates.piratesbase import PiratesGlobals, PLocalizer

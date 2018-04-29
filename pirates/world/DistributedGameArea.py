@@ -1,6 +1,6 @@
 import time
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed import DistributedNode
 from direct.distributed import DistributedObject
 from direct.showbase.PythonUtil import Functor, report
@@ -22,7 +22,6 @@ from pandac.PandaModules import CollisionSphere
 from pandac.PandaModules import CollisionNode
 from pandac.PandaModules import CollisionHandlerEvent
 from pirates.quest.QuestConstants import LocationIds
-from pirates.chat.PiratesChatManager import PiratesChatManager
 from pirates.seapatch.SeaPatch import SeaPatch
 from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import IslandWaterParameters

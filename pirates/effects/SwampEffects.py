@@ -5,7 +5,7 @@
 import random
 
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects import EnvironmentEffects
 from pirates.effects.Fireflies import Fireflies
 from pirates.effects.GroundFog import GroundFog

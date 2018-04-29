@@ -32,8 +32,8 @@ from otp.login.LoginWebPlayTokenAccount import LoginWebPlayTokenAccount
 from otp.otpbase import OTPGlobals, OTPLauncherGlobals, OTPLocalizer
 from otp.otpgui import OTPDialog
 from otp.uberdog import OtpAvatarManager
-from pandac.PandaModules import *
-from PotentialAvatar import PotentialAvatar
+from panda3d.core import *
+from otp.distributed.PotentialAvatar import PotentialAvatar
 
 
 class OTPClientRepository(ClientRepositoryBase):

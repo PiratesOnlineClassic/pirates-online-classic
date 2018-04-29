@@ -5,7 +5,7 @@ from direct.distributed.ClockDelta import globalClockDelta
 from direct.fsm import FSM
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import (AvatarShadowCaster, PiratesGlobals, SkyGroup,
                                  TODGlobals)
 

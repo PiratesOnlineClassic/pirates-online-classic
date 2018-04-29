@@ -4,7 +4,7 @@
 # Embedded file name: pirates.piratesgui.ChestPanel
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.BorderFrame import BorderFrame

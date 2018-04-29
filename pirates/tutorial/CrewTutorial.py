@@ -2,7 +2,7 @@ import random
 import time
 
 from direct.showbase import DirectObject
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui import NewTutorialPanel
 from pirates.tutorial import TutorialGlobals

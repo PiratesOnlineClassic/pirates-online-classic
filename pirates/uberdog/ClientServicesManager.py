@@ -1,4 +1,5 @@
 import hmac
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.distributed.PotentialAvatar import PotentialAvatar

@@ -4,7 +4,7 @@
 # Embedded file name: pirates.effects.VolcanoSplats
 from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class VolcanoSplats(NodePath):

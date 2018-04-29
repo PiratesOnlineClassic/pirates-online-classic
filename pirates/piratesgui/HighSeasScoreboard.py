@@ -6,7 +6,7 @@ import time
 
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.economy import EconomyGlobals
 from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
 from pirates.piratesgui import (DialogButton, GuiPanel, PiratesGuiGlobals,

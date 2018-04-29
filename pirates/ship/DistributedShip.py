@@ -1,7 +1,10 @@
-import re, random
+import re
+import random
+import math
+
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.OnscreenText import OnscreenText
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase.PythonUtil import Functor, ScratchPad, report, lerp, quickProfile, safeRepr
@@ -63,9 +66,9 @@ from pirates.effects.ShipDestruction import ShipDestruction
 from pirates.band.DistributedBandMember import DistributedBandMember
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPRender
-import ShipGlobals, ShipBalance
+from pirates.ship import ShipGlobals, ShipBalance
 from direct.fsm.StatePush import FunctionCall, AttrSetter
-import random, math
+
 STOP = 0
 FWD = 1
 BACK = -1
@@ -79,7 +82,7 @@ def getRamSfx():
 
 
 class CachedShipData(CachedDOData):
-    
+
     def __init__(self, optimized, broadside, hull, cabin, masts, sails, cannons, wheel, bowsprit, fullsailSfx, rammingSfx, sinkingSfx, lodRoot, highDetail, medDetail, lowDetail, highStatic, medStatic, lowStatic, modelCollisions, sailProjectors, locators):
         self.optimized = optimized
         self.broadside = broadside
@@ -134,7 +137,7 @@ class CachedShipData(CachedDOData):
 
 
 class ActorNodeMgr:
-    
+
     def __init__(self, actorNode):
         self._actorNode = actorNode
         self._attached = False
@@ -1319,7 +1322,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.accept(self.exitWorldEvent, self.handleOutOfRange)
             self.enableShipControls()
             self.setupRammingCollisions()
-            collNPs = self.findAllMatches('**/+CollisionNode') 
+            collNPs = self.findAllMatches('**/+CollisionNode')
             self.disabledCollisionBits = {}
             for np in collNPs:
                 cMask = np.node().getIntoCollideMask()
@@ -3355,14 +3358,14 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def getRandomBoardingPos(self):
-        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s') 
+        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s')
         if not allBoardingSpots:
             return
         return random.choice(allBoardingSpots).getPos()
 
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def getClosestBoardingPos(self):
-        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s') 
+        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s')
         if not allBoardingSpots:
             return
         closestBoardingSpot = allBoardingSpots[0]
@@ -3376,7 +3379,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def getClosestBoardingPosH(self):
-        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s') 
+        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s')
         if not allBoardingSpots:
             return
         closestBoardingSpot = allBoardingSpots[0]

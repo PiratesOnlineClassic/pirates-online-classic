@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from pirates.pirate.HumanDNA import HumanDNA
 from pirates.piratesbase import PLocalizer
+
 NPC_FUNC_IDX = 0
 NPC_VAL_IDX = 1
 

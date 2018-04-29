@@ -1,6 +1,6 @@
 from direct.showbase.DirectObject import DirectObject
 from otp.nametag import NametagGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class ClickablePopup(PandaNode, DirectObject):

@@ -4,12 +4,12 @@
 # Embedded file name: otp.login.TTAccount
 import copy
 
-import HTTPUtil
-import RemoteValueSet
+from otp.login import HTTPUtil
+from otp.login import RemoteValueSet
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import PythonUtil
 from otp.otpbase import OTPLocalizer
-from pandac.PandaModules import *
+from panda3d.core import *
 
 accountServer = ''
 accountServer = launcher.getAccountServer()

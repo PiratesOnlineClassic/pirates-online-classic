@@ -4,11 +4,11 @@
 # Embedded file name: pirates.piratesgui.RadialMenu
 import math
 
-import PiratesGuiGlobals
+from pirates.piratesgui import PiratesGuiGlobals
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
 from pirates.piratesgui.ReputationMeter import ReputationMeter
@@ -438,7 +438,7 @@ def ExactRingMatch(maxSlot, xc, yc):
 
 
 class RadialMenu:
-    
+
     SkillIcons = None
 
     def __init__(self, rep, weaponMode):
@@ -636,7 +636,7 @@ class RadialMenu:
 
 
 class SkillTray:
-    
+
     SkillIcons = None
     MeterFrame = None
 

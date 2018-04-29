@@ -3,7 +3,7 @@ from panda3d.physics import *
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect
 from direct.particles import Particles
-from EffectController import EffectController
+from pirates.effects.EffectController import EffectController
 import random
 
 class RainMist(EffectController, NodePath):

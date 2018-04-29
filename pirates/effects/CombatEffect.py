@@ -3,7 +3,7 @@ import random
 from direct.actor import Actor
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import WeaponGlobals
 from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.effects.CameraShaker import CameraShaker

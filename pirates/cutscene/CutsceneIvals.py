@@ -1,6 +1,6 @@
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import ScratchPad
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.cutscene import CutsceneActor, CutsceneData
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui.Subtitler import Subtitler

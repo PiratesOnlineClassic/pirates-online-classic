@@ -1,9 +1,9 @@
 import math
 
-import CannonGlobals
-import WeaponGlobals
+from pirates.battle import CannonGlobals
+from pirates.battle import WeaponGlobals
 from direct.distributed.ClockDelta import globalClockDelta
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import WeaponBaseBase
 from pirates.effects.ProjectileEffect import ProjectileEffect
 from pirates.piratesbase import PiratesGlobals, PLocalizer, TeamUtils

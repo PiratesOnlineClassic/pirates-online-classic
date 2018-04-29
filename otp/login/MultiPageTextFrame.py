@@ -4,7 +4,7 @@
 # Embedded file name: otp.login.MultiPageTextFrame
 from direct.gui.DirectGui import *
 from otp.otpbase import OTPLocalizer
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class MultiPageTextFrame(DirectFrame):

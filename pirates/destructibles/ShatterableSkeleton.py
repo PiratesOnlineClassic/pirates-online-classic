@@ -2,7 +2,7 @@ import random
 
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.destructibles import ShatterableObject
 from pirates.effects.ProjectileArc import ProjectileArc
 

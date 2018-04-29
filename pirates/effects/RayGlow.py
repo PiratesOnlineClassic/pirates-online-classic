@@ -2,9 +2,9 @@ import random
 
 from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
-from pandac.PandaModules import *
-from PooledEffect import PooledEffect
+from pirates.effects.EffectController import EffectController
+from panda3d.core import *
+from pirates.effects.PooledEffect import PooledEffect
 
 class RayGlow(PooledEffect, EffectController):
     

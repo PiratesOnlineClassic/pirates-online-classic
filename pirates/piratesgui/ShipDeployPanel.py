@@ -4,7 +4,7 @@
 # Embedded file name: pirates.piratesgui.ShipDeployPanel
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.band.DistributedBandMember import DistributedBandMember
 from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals

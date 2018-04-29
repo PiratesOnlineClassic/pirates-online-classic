@@ -10,7 +10,7 @@ from direct.gui.DirectGui import *
 from direct.task import Task
 from otp.namepanel import NameCheck
 from otp.otpbase import OTPLocalizer as OL
-from pandac.PandaModules import *
+from panda3d.core import *
 from pandac.PandaModules import TextEncoder
 from pirates.leveleditor import NPCList
 from pirates.makeapirate.PCPickANamePattern import PCPickANamePattern

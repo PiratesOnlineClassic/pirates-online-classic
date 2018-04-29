@@ -5,7 +5,7 @@ from direct.fsm import StateData
 from direct.gui.DirectGui import *
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.uberdog import RejectCode
-from pandac.PandaModules import *
+from panda3d.core import *
 
 globalFriendSecret = None
 AccountSecret = 0

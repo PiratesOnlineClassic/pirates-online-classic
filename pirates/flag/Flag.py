@@ -1,15 +1,16 @@
 if __name__ == '__main__':
     from direct.directbase import DirectStart
-import FlagGlobals
+
+from panda3d.core import *
+from pirates.flag import FlagGlobals
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import *
-from FlagDNA import FlagDNA
-from pandac.PandaModules import *
+from pirates.flag.FlagDNA import FlagDNA
 
 
 class Flag(NodePath):
-    
+
     notify = directNotify.newCategory('Flag')
     BgSortOffset = 10
     EmblemSortOffset = 20
@@ -88,7 +89,7 @@ class Flag(NodePath):
         self.__activateEmblems()
 
     def __activateEmblems(self):
-        oldEmblemNps = self.findAllMatches('**/emblem-*') 
+        oldEmblemNps = self.findAllMatches('**/emblem-*')
         for np in oldEmblemNps:
             np.detachNode()
             np.removeNode()
@@ -155,7 +156,7 @@ class Flag(NodePath):
         self.__setBgVFlip()
 
     def __setBgStyle(self):
-        oldBgNps = self.findAllMatches('**/bg-*') 
+        oldBgNps = self.findAllMatches('**/bg-*')
         for np in oldBgNps:
             np.detachNode()
             np.removeNode()
@@ -203,7 +204,7 @@ class Flag(NodePath):
 
     def __setBgHFlip(self):
         val = self.getBgHFlip()
-        bgNpCol = self.findAllMatches('**/bg-*') 
+        bgNpCol = self.findAllMatches('**/bg-*')
         scale = [
          1.0, 1.0]
         if val:
@@ -223,7 +224,7 @@ class Flag(NodePath):
 
     def __setBgVFlip(self):
         val = self.getBgVFlip()
-        bgNpCol = self.findAllMatches('**/bg-*') 
+        bgNpCol = self.findAllMatches('**/bg-*')
         scale = [
          1.0, 1.0]
         bgTexTransform = bgNpCol[0].getTexTransform(TextureStage.getDefault())
@@ -469,4 +470,3 @@ if __name__ == '__main__':
     print `f`
     base.mouseInterface.node().setPos(0, 3, 0)
     run()
-

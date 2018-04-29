@@ -5,7 +5,7 @@ from direct.interval.IntervalGlobal import (Func, LerpFunc, Parallel, Sequence,
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase.PythonUtil import clampScalar
 from direct.task.Task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 def getPerpendicularVec(vec):

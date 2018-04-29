@@ -2,7 +2,7 @@ import string
 
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.distributed import DistributedInteractive
 from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
 from pirates.quest.QuestConstants import LocationIds

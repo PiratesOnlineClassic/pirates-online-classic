@@ -5,7 +5,7 @@
 import types
 
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 from pandac.PandaModules import ConfigVariable
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals

@@ -3,7 +3,7 @@ import types
 
 from direct.distributed import DistributedNode
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import ClientComboDiary, WeaponGlobals
 from pirates.effects import CombatEffect
 from pirates.effects.AttuneSmoke import AttuneSmoke

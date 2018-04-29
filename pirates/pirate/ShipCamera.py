@@ -11,7 +11,7 @@ from direct.showbase.InputStateGlobal import inputState
 from direct.showbase.PythonUtil import (Functor, clampScalar, fitSrcAngle2Dest,
                                         lerp, reduceAngle)
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.pirate.OrbitCamera import OrbitCamera
 
 

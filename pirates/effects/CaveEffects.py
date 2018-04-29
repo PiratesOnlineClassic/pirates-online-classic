@@ -1,7 +1,7 @@
 from direct.interval.LerpInterval import LerpScaleInterval
 from direct.interval.MetaInterval import Sequence
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects import EnvironmentEffects
 from pirates.piratesbase import PiratesGlobals, TimeOfDayManager, TODGlobals
 from pirates.seapatch.Reflection import Reflection

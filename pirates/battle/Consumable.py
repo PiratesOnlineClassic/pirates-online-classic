@@ -1,7 +1,6 @@
-import Weapon
-import WeaponGlobals
+from pirates.battle import Weapon
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 __modelTypes = {InventoryType.Potion1: ('models/props/largejug_B', Vec4(1, 1, 1, 1)),

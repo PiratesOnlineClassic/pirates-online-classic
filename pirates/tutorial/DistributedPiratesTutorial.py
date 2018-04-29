@@ -1,14 +1,14 @@
 import random
 import time
 
-import ShipWreck
+from pirates.tutorial import ShipWreck
 from direct.actor import Actor
 from direct.distributed import DistributedObject
 from direct.fsm import FSM
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import DelayedCall
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle.Cannon import Cannon, distFireSfxNames
 from pirates.cutscene import CutsceneData
 from pirates.effects.CameraShaker import CameraShaker
@@ -168,7 +168,7 @@ class PhantomCannon(Cannon):
 
 
 class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
-    
+
     notify = directNotify.newCategory('DistributedPiratesTutorial')
     PRELOADED_CUTSCENES = []
 
@@ -360,7 +360,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             self.preloadCutscene(CutsceneData.PRELOADED_CUTSCENE_STAGE3)
             self._stopTutorialInteriorEffects()
             self.island.setZoneLevel(0)
-            self._targetNps = self.island.findAllMatches('**/TorchFire') 
+            self._targetNps = self.island.findAllMatches('**/TorchFire')
             self._phantomCannon = PhantomCannon(self.cr, self.island, CannonDistance, 50, self._targetNps, self.island)
             self._phantomCannon.start()
 

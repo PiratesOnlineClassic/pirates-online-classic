@@ -6,7 +6,7 @@ from direct.showbase.ShowBaseGlobal import *
 from otp.avatar import Avatar
 from otp.otpgui import OTPDialog
 from otp.nametag.NametagConstants import CFSpeech, CFThought, CFTimeout, CFPageButton, CFNoQuitButton, CFQuitButton
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.distributed import InteractGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import BlackPearlCrew, PDialog, RewardPanel

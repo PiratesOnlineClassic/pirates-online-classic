@@ -5,10 +5,10 @@
 import types
 
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
-from SCElement import SCElement
-from SCMenu import SCMenu
-from SCObject import SCObject
+from panda3d.core import *
+from otp.speedchat.SCElement import SCElement
+from otp.speedchat.SCMenu import SCMenu
+from otp.speedchat.SCObject import SCObject
 
 
 class SCMenuHolder(SCElement):

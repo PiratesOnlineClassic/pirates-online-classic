@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.pirate import AvatarTypes, Biped, Human
 from pirates.piratesbase import PiratesGlobals
 

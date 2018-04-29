@@ -11,7 +11,7 @@ from direct.interval.IntervalGlobal import *
 from otp.chat.ChatGlobals import *
 from otp.otpbase import OTPLocalizer
 from otp.speedchat import SCDecoders
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.ChatBar import ChatBar

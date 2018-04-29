@@ -5,8 +5,8 @@
 import os
 import time
 
-import GuiScreen
-import TTAccount
+from otp.login import GuiScreen
+from otp.login import TTAccount
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.MsgTypes import *
 from direct.fsm import ClassicFSM, State, StateData
@@ -17,7 +17,7 @@ from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.otpgui import OTPDialog
 from otp.uberdog.AccountDetailRecord import (AccountDetailRecord,
                                              SubDetailRecord)
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):

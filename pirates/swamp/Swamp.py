@@ -6,7 +6,7 @@ from direct.gui.DirectGui import *
 from direct.showbase.DirectObject import DirectObject
 from direct.task import Task
 from otp.otpbase import OTPRender
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import Water

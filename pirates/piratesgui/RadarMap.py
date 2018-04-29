@@ -4,7 +4,7 @@
 # Embedded file name: pirates.piratesgui.RadarMap
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import Func, LerpFunc, Parallel, Sequence
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.map.MapConfig import RangeSlider
 
 MapData = {'jungle_a_terrain.egg': [{'name': 'radar_jungle_a_0', 'pos': (-20, 32), 'scale': 480}], 'rum_runner_terrain.egg': [{'name': 'radar_rumrunner_0', 'pos': (-30, 155), 'scale': 825}], 'port_royal_terrain.egg': [{'name': 'radar_port_royal_0', 'pos': (48, -1407), 'scale': 1228}, {'name': 'radar_port_royal_1', 'pos': (100, -1380), 'scale': 495}, {'name': 'radar_port_royal_town_0', 'pos': (-76, -1724), 'scale': 253}, {'name': 'radar_port_royal_mansion_0', 'pos': (179, -1009), 'scale': 504}, {'name': 'radar_port_royal_mansion_1', 'pos': (173, -1043), 'scale': 166}]}

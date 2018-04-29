@@ -1,7 +1,8 @@
+import os
+
 from otp.launcher.DummyLauncherBase import DummyLauncherBase
 from pandac.PandaModules import loadPrcFileData
 from pirates.launcher.PiratesQuickLauncher import PiratesQuickLauncher
-import os
 
 loadPrcFileData('force-offscreen', 'window-type none')
 

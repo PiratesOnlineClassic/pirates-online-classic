@@ -6,7 +6,7 @@ from direct.gui.DirectCheckBox import DirectCheckBox
 from direct.gui.DirectGui import *
 from direct.task.Task import Task
 from otp.otpbase import OTPGlobals, OTPLocalizer
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 

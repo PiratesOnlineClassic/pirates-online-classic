@@ -4,7 +4,7 @@
 # Embedded file name: pirates.piratesgui.WeaponPanel
 from direct.gui.DirectGui import *
 from direct.task.Task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import CannonGlobals, WeaponGlobals
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *

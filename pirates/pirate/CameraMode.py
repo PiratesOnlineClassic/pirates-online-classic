@@ -6,7 +6,7 @@ from direct.fsm.FSM import FSM
 from direct.showbase import DirectObject
 from direct.showbase.PythonUtil import Enum
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class CameraMode(DirectObject.DirectObject, FSM):

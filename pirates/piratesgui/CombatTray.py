@@ -10,7 +10,7 @@ from direct.interval.IntervalGlobal import *
 from direct.task import Task
 from GuiButton import GuiButton
 from GuiTray import GuiTray
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import Wand, WeaponGlobals
 from pirates.battle.EnemySkills import *
 from pirates.economy import EconomyGlobals

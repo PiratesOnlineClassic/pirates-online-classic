@@ -5,7 +5,7 @@
 import math
 import types
 
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class PyVec3:

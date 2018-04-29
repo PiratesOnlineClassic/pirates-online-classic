@@ -1,6 +1,6 @@
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects.FireworkGlobals import *
 from pirates.effects.FireworkShow import FireworkShow
 

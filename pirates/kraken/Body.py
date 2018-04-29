@@ -1,5 +1,5 @@
 from direct.directnotify import DirectNotifyGlobal
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.creature.Creature import Creature
 from pirates.pirate import AvatarTypes
 

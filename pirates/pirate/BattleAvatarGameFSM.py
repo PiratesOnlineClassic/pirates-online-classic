@@ -5,7 +5,7 @@ from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import lerp
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import WeaponGlobals
 from pirates.destructibles import ShatterableSkeleton
 from pirates.effects.SmallSplash import SmallSplash

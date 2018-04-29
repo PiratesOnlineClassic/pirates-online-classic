@@ -5,7 +5,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import ScratchPad
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects.Explosion import Explosion
 from pirates.effects.JollySoulDrain import JollySoulDrain
 from pirates.effects.JRSpawnEffect import JRSpawnEffect

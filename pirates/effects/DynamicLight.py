@@ -1,7 +1,7 @@
 import random
 
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 
 DYN_LIGHT_AMBIENT = 0
 DYN_LIGHT_DIRECTIONAL = 1

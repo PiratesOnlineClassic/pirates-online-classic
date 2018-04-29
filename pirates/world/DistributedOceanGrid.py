@@ -2,7 +2,7 @@ from direct.distributed.DistributedCartesianGrid import \
     DistributedCartesianGrid
 from direct.showbase.PythonUtil import report
 from OceanGridBase import OceanGridBase
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.SeaPatch import SeaPatch

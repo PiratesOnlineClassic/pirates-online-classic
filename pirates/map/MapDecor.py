@@ -3,7 +3,7 @@ from direct.gui.DirectGui import DirectButton
 from direct.gui.OnscreenText import OnscreenText
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import Enum
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.BorderFrame import BorderFrame

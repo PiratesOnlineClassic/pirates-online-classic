@@ -1,9 +1,8 @@
 import random
 
-import Weapon
-import WeaponGlobals
+from pirates.battle import Weapon
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
@@ -13,14 +12,14 @@ def beginInterrupt(av):
 
 
 class Bayonet(Weapon.Weapon):
-    
-    modelTypes = {InventoryType.BayonetWeaponL1: ('models/handheld/musket_bayonet', Vec4(1, 1, 1, 1)), 
-                  InventoryType.BayonetWeaponL2: ('models/handheld/musket_bayonet', Vec4(0.6, 0.6, 1, 1)), 
+
+    modelTypes = {InventoryType.BayonetWeaponL1: ('models/handheld/musket_bayonet', Vec4(1, 1, 1, 1)),
+                  InventoryType.BayonetWeaponL2: ('models/handheld/musket_bayonet', Vec4(0.6, 0.6, 1, 1)),
                   InventoryType.BayonetWeaponL3: ('models/handheld/musket_bayonet', Vec4(1, 0.6, 0.6, 1)),
                   InventoryType.MusketWeaponL1: ('models/handheld/musket_bayonet', Vec4(1, 1, 1, 1)),
                   InventoryType.MusketWeaponL2: ('models/handheld/musket_bayonet', Vec4(0.6, 0.6, 1, 1)),
                   InventoryType.MusketWeaponL3: ('models/handheld/musket_bayonet', Vec4(1, 0.6, 0.6, 1))}
-     
+
     walkAnim = 'bayonet_attack_walk'
     runAnim = 'bayonet_run'
     neutralAnim = 'bayonet_attack_idle'

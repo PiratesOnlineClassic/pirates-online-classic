@@ -6,7 +6,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.minigame import PlayingCard, PlayingCardGlobals
 from pirates.minigame.TableGUI import TableGUI
 from pirates.piratesbase import PLocalizer

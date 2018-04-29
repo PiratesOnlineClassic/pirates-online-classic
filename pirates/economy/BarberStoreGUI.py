@@ -6,7 +6,7 @@ from direct.interval.IntervalGlobal import *
 from direct.task import Task
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.makeapirate import BarberGlobals
 from pirates.pirate import DynamicHuman
 from pirates.pirate.HumanDNA import availableHairColors, hairColors

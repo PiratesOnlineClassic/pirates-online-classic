@@ -3,7 +3,7 @@ import os
 import sys
 import time
 
-import PiratesGlobals
+from pirates.piratesbase import PiratesGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
@@ -14,7 +14,8 @@ from direct.task import Task
 from otp.otpbase import OTPGlobals, OTPLocalizer, OTPRender
 from otp.otpbase.OTPBase import OTPBase
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
+from panda3d.physics import *
 from pirates.launcher import PiratesDownloadWatcher
 from pirates.piratesbase import (MusicManager, PiratesAmbientManager, PLocalizer, UserFunnel)
 from pirates.piratesgui import PDialog, PiratesGuiGlobals, ScreenshotViewer

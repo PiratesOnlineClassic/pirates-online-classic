@@ -1,6 +1,6 @@
 import string
 
-import PlayerPirateGameFSM
+from pirates.pirate import PlayerPirateGameFSM
 from panda3d.core import *
 from direct.actor import Actor
 from direct.directnotify import DirectNotifyGlobal

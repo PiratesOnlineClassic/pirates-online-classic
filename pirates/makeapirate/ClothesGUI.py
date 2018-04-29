@@ -1,6 +1,6 @@
 import random
 
-from CharGuiBase import CharGuiPicker, CharGuiSlider
+from pirates.makeapirate.CharGuiBase import CharGuiPicker, CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
@@ -9,7 +9,7 @@ from direct.showbase import DirectObject
 from direct.showbase.PythonUtil import Functor
 from direct.showbase.ShowBaseGlobal import *
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.makeapirate import ClothingGlobals
 from pirates.pirate import HumanDNA
 from pirates.piratesbase import PLocalizer

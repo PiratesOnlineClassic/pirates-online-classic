@@ -1,11 +1,11 @@
 import os
 
+from panda3d.core import *
 from otp.chat.WhiteList import WhiteList
-from pandac.PandaModules import *
 
 
 class PWhiteList(WhiteList):
-    
+
 
     def __init__(self):
         vfs = VirtualFileSystem.getGlobalPtr()

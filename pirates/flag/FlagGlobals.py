@@ -1,7 +1,7 @@
 import math
 
 from direct.showbase.PythonUtil import *
-from pandac.PandaModules import *
+from panda3d.core import *
 
 Shapes = Enum('Default,Square,Cut,TwoCut,LongTaper,LongTaperCut,ShortTaper,ShortTaperCut')
 ShapeCount = len(Shapes)

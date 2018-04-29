@@ -1,8 +1,9 @@
-if __name__ == '__main__':
-    from direct.showbase import ShowBase
 import random
 
-import FlagGlobals
+if __name__ == '__main__':
+    from direct.showbase import ShowBase
+
+from pirates.flag import FlagGlobals
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from direct.showbase import PythonUtil
@@ -10,7 +11,7 @@ from otp.avatar import AvatarDNA
 
 
 class FlagDNA(AvatarDNA.AvatarDNA):
-    
+
     DefaultShapeData = 0
     DefaultBackgroundData = [0, 1, 0, 0, 0, 0, 0]
     DefaultLayoutData = [0, 128, 128, 0, 2]

@@ -3,7 +3,7 @@ import math
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase.PythonUtil import clampScalar, report
 from direct.task.Task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.map.MapBall import MapBall
 from pirates.map.MapDecor import DecorClasses, DecorTypes
 from pirates.piratesbase import PiratesGlobals

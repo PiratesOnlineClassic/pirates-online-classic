@@ -6,7 +6,7 @@ from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import getShortestRotation, lerp, report
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import WeaponGlobals
 from pirates.effects.Twister import Twister
 from pirates.interact import InteractiveBase

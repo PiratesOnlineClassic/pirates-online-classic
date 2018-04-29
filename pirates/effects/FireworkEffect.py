@@ -5,7 +5,7 @@
 import random
 
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects.BlastEffect import BlastEffect
 from pirates.effects.CircleBurst import CircleBurst
 from pirates.effects.FireworkGlobals import *

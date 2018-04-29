@@ -23,7 +23,6 @@ class ShipPilot(PhysicsWalker):
         self.pusher = None
         self.straightHeading = 0
         self.cNodePath = None
-        return
 
     def setWalkSpeed(self, forward, jump, reverse, rotate):
         PhysicsWalker.setWalkSpeed(self, forward, 0, reverse, rotate)

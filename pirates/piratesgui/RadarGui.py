@@ -6,8 +6,8 @@ from direct.fsm.FSM import FSM
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from GuiTray import GuiTray
-from pandac.PandaModules import *
+from pirates.piratesgui.GuiTray import GuiTray
+from panda3d.core import *
 from pirates.band.DistributedBandMember import DistributedBandMember
 from pirates.piratesbase import PiratesGlobals, PLocalizer, TeamUtils
 from pirates.world import OceanZone
@@ -21,7 +21,7 @@ RADAR_OBJ_TYPE_EXIT = 4
 RADAR_OBJ_TYPE_TUTORIAL = 5
 
 class RadarZoomFSM(FSM):
-    
+
     notify = directNotify.newCategory('RadarZoomFSM')
 
     def __init__(self, radarGui):
@@ -64,7 +64,7 @@ class RadarZoomFSM(FSM):
 
 
 class RadarGui(GuiTray, FSM):
-    
+
     notify = directNotify.newCategory('RadarGui')
 
     def __init__(self, parent, av, radius=200.0, **kw):

@@ -14,7 +14,7 @@ from direct.showbase.PythonUtil import quickProfile
 from direct.task.Task import Task
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.makeapirate import NameGUI
 from pirates.pirate import Human, HumanDNA, Pirate
 from pirates.piratesbase import (PiratesGlobals, PLocalizer, TimeOfDayManager,

@@ -4,8 +4,9 @@ import sys
 import random
 import gc
 import time
-import PiratesPreloader
-import ClassicLogger
+
+from pirates.piratesbase import PiratesPreloader
+from pirates.piratesbase import ClassicLogger
 from panda3d.core import *
 
 gc.enable()
@@ -19,7 +20,7 @@ if __debug__:
 print 'PiratesStart: Starting the game.'
 
 class game:
-    
+
     name = 'pirates'
     process = 'client'
 
@@ -34,10 +35,10 @@ except:
     __builtin__.launcher = launcher
 
 from direct.gui import DirectGuiGlobals
-import PiratesGlobals
+from pirates.piratesbase import PiratesGlobals
 DirectGuiGlobals.setDefaultFontFunc(PiratesGlobals.getInterfaceFont)
 launcher.setPandaErrorCode(7)
-import PiratesBase
+from pirates.piratesbase import PiratesBase
 PiratesBase.PiratesBase()
 from direct.showbase.ShowBaseGlobal import *
 

@@ -5,7 +5,7 @@
 import random
 
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class SoundFX(NodePath):

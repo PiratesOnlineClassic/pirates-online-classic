@@ -3,7 +3,7 @@ import random
 from direct.distributed import DistributedCartesianGrid, DistributedObject
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import report
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals, RadarGui
 from pirates.world import (ClientArea, DistributedGameArea, DistributedIsland,

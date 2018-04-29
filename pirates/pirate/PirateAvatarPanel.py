@@ -2,7 +2,7 @@ from direct.gui.DirectGui import *
 from direct.showbase.ShowBaseGlobal import *
 from otp.avatar import Avatar
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.band import DistributedBandMember
 from pirates.friends import PirateFriendSecret
 from pirates.pirate import IdentityPanel

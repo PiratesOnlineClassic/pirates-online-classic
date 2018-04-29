@@ -2,7 +2,7 @@ from direct.showbase.DirectObject import DirectObject
 from direct.task import Task
 from otp.avatar import ShadowCaster
 from otp.otpbase import OTPRender
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import TODGlobals
 
 

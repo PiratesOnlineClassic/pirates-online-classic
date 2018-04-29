@@ -9,7 +9,7 @@ from direct.gui.DirectGui import *
 from direct.motiontrail.MotionTrail import MotionTrail
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
 from pirates.piratesgui import GameOptionsMatrix, PDialog, PiratesGuiGlobals
 from pirates.piratesgui.BorderFrame import BorderFrame

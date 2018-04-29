@@ -4,9 +4,9 @@
 # Embedded file name: otp.speedchat.SpeedChat
 from direct.showbase.PythonUtil import boolEqual
 from otp.otpbase import OTPLocalizer
-from SCSettings import SCSettings
-from SCTerminal import SCWhisperModeChangeEvent
-from SpeedChatTypes import *
+from otp.speedchat.SCSettings import SCSettings
+from otp.speedchat.SCTerminal import SCWhisperModeChangeEvent
+from otp.speedchat.SpeedChatTypes import *
 
 
 class SpeedChat(SCMenu):

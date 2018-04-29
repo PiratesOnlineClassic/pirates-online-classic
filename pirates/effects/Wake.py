@@ -9,11 +9,11 @@ from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
 from direct.task import Task
 from otp.otpbase import OTPRender
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects.WaterShadow import WaterShadow
 from pirates.piratesbase import PiratesGlobals
 from pirates.ship import ShipGlobals
-from PooledEffect import PooledEffect
+from pirates.effects.PooledEffect import PooledEffect
 
 
 class Wake(PooledEffect):

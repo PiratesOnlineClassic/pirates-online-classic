@@ -1,7 +1,11 @@
+import string
+import sys
+import os
+import random
+from bisect import bisect_left
+
 from panda3d.core import *
 from otp.otpbase import OTPLocalizer
-from bisect import bisect_left
-import string, sys, os, random
 
 wordList = ['']
 
@@ -9,7 +13,7 @@ def cleanText(text):
     text = text.strip('.,?!')
     text = text.lower()
     return text
-    
+
 def isWord(self, text):
     try:
         text = cleanText(text)
@@ -28,11 +32,11 @@ def test(message):
         if word and not isWord(word):
             modifications.append((offset, offset+len(word)-1))
         offset += len(word) + 1
-        
+
     if len(modifications) > 0:
         return True
     return False
-    
+
 def garbleSingle(message):
     newMessage = ''
     numWords = 1
@@ -44,7 +48,7 @@ def garbleSingle(message):
             newMessage = newMessage + ' '
 
     return newMessage
-    
+
 def scrubTalk(message, mods):
     scrubbed = 0
     text = copy.copy(message)
@@ -70,7 +74,7 @@ def scrubTalk(message, mods):
 
     newText = ' '.join(newwords)
     return (newText, scrubbed)
-    
+
 def replaceBadWords(text):
     words = text.split(' ')
     newwords = []
@@ -86,7 +90,7 @@ def replaceBadWords(text):
 
     newText = ' '.join(newwords)
     return newText
-    
+
 def scrub(message):
     modifications = []
     words = message.split(' ')
@@ -99,6 +103,6 @@ def scrub(message):
     cleanMessage = message
     for modStart, modStop in modifications:
         cleanMessage = cleanMessage[:modStart] + '*'*(modStop-modStart+1) + cleanMessage[modStop+1:]
-    
+
     message, scrubbed = scrubTalk(cleanMessage, modifications)
     return message

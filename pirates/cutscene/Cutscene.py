@@ -3,7 +3,7 @@ from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase.PythonUtil import DelayedCall, makeList
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.cutscene import CutsceneActor, CutsceneData, CutsceneIvals
 from pirates.effects.CameraShaker import CameraShaker
 from pirates.pirate import AvatarTypes

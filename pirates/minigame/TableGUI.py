@@ -1,7 +1,7 @@
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.minigame import PlayingCard, PlayingCardGlobals
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiTray, PDialog, PiratesGuiGlobals

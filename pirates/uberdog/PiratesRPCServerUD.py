@@ -1,11 +1,12 @@
-from direct.directnotify.DirectNotifyGlobal import *
-from direct.task import Task
-from SimpleXMLRPCServer import SimpleXMLRPCServer
-from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
-from threading import Thread
 import traceback
 import json
 import sys
+from SimpleXMLRPCServer import SimpleXMLRPCServer
+from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
+from threading import Thread
+
+from direct.directnotify.DirectNotifyGlobal import *
+from direct.task import Task
 
 
 class PiratesRPCHandler(SimpleXMLRPCRequestHandler):
@@ -123,7 +124,7 @@ class PiratesRPCServerUD(Thread):
 
     def getHolidays(self):
         """
-        Summary: 
+        Summary:
             Retrieves a list of all holidays happening on the cluster
         Returns:
             holidays: List containing all unique holidays
@@ -139,7 +140,7 @@ class PiratesRPCServerUD(Thread):
     def startHoliday(self, holidayId, time, announce=False):
         """
         Summary:
-            Tells all NewsManagers in the cluster to start a specific holiday id for a 
+            Tells all NewsManagers in the cluster to start a specific holiday id for a
             set amount of time.
         Parameters:
             [int holidayId] = The holiday id to start

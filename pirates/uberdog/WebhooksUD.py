@@ -1,7 +1,8 @@
 import json
 import requests
 import traceback
-from panda3d.core import ConfigVariableList
+
+from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import *
 from pirates.ai import HolidayGlobals
 

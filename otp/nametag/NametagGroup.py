@@ -1,7 +1,7 @@
-from Nametag2d import *
-from Nametag3d import *
-from NametagConstants import *
-from pandac.PandaModules import *
+from otp.nametag.Nametag2d import *
+from otp.nametag.Nametag3d import *
+from otp.nametag.NametagConstants import *
+from panda3d.core import *
 
 
 class NametagGroup:

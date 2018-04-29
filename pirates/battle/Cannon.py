@@ -1,6 +1,7 @@
 import random
 
-import CannonGlobals
+from panda3d.core import *
+from pirates.battle import CannonGlobals
 from direct.actor import Actor
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
@@ -8,7 +9,6 @@ from direct.interval.IntervalGlobal import *
 from direct.interval.ProjectileInterval import *
 from direct.showutil import Rope
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
 from pirates.battle import WeaponConstants, WeaponGlobals
 from pirates.battle.CannonballProjectile import CannonballProjectile
 from pirates.battle.WeaponGlobals import *
@@ -32,7 +32,7 @@ distFireSfxNames = [
 
 
 class Cannon(ShipPart.ShipPart, NodePath):
-    
+
     notify = directNotify.newCategory('Cannon')
     localFireSfx = None
     distFireSfx = None
@@ -321,4 +321,3 @@ class Cannon(ShipPart.ShipPart, NodePath):
 
     def setLocalAvatarUsingWeapon(self, val):
         self.localAvatarUsingWeapon = val
-

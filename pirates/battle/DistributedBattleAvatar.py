@@ -14,7 +14,7 @@ from direct.showbase.PythonUtil import clampScalar, lerp, report
 from direct.showutil import Rope
 from direct.task import Task
 from otp.otpbase import OTPGlobals, OTPRender
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import BattleRandom, EnemyGlobals, Pistol, WeaponGlobals
 from pirates.battle.Teamable import Teamable
 from pirates.battle.WeaponBase import WeaponBase

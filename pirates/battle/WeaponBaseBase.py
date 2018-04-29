@@ -1,7 +1,7 @@
 import math
 
-import WeaponGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
+from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals, TeamUtils
 
 class WeaponBaseBase:

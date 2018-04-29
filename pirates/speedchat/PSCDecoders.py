@@ -1,2 +1,3 @@
 from otp.speedchat.SCDecoders import *
-from PSpeedChatQuestTerminal import decodeSCQuestMsg, decodeSCQuestMsgInt
+from pirates.speedchat.PSpeedChatQuestTerminal import decodeSCQuestMsg, \
+    decodeSCQuestMsgInt

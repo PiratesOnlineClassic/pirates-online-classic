@@ -8,7 +8,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.showbase import DirectObject
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.distributed import DistributedInteractive
 from pirates.npc import Townfolk
 from pirates.pirate import HumanDNA

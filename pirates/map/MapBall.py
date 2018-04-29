@@ -1,7 +1,7 @@
 import math
 
 from direct.showbase.PythonUtil import clampScalar
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.map.ArcBall import ArcBall
 
 

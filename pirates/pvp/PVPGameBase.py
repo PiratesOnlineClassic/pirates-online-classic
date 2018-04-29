@@ -1,6 +1,6 @@
 import random
 
-import PVPRulesPanel
+from pirates.pvp import PVPRulesPanel
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.distributed.DistributedObject import DistributedObject
 from direct.fsm import FSM
@@ -11,7 +11,7 @@ from pirates.piratesgui.StatRowHeadingGui import StatRowHeadingGui
 from pirates.pvp import PVPGlobals
 
 class ScoreboardHolder:
-    
+
 
     def __init__(self, gameRules):
         self.gameRules = gameRules
@@ -26,7 +26,7 @@ class ScoreboardHolder:
         return self.gameRules.createScoreboardItem(item, parent, itemType=None, columnWidths=[], color=None)
 
 class StatsHolder:
-    
+
 
     def __init__(self, gameRules):
         self.gameRules = gameRules
@@ -50,7 +50,7 @@ class StatsHolder:
 
 
 class PVPGameBase(DistributedObject, FSM.FSM):
-    
+
     notify = directNotify.newCategory('PVPGameBase')
     RulesDoneEvent = 'rulesDone'
 

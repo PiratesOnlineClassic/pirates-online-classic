@@ -2,7 +2,7 @@ import math
 
 from direct.distributed.DistributedNode import DistributedNode
 from direct.showbase.PythonUtil import report
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 

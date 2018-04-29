@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from pirates.piratesgui.GameOptions import Options
 from pirates.effects.Fire import Fire

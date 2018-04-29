@@ -3,7 +3,7 @@ import random
 from direct.fsm import FSM
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import report
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects.Explosion import Explosion
 from pirates.effects.FlamingDebris import FlamingDebris
 from pirates.effects.ShipSplintersA import ShipSplintersA

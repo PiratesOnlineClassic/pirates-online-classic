@@ -1,7 +1,7 @@
 import random
 
 from direct.showbase import DirectObject
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class NPCPirate(DirectObject.DirectObject):

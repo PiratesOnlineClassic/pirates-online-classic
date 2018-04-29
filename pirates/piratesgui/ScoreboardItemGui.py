@@ -4,7 +4,7 @@
 # Embedded file name: pirates.piratesgui.ScoreboardItemGui
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import ItemId
 from pirates.piratesbase import PiratesGlobals, PLocalizer

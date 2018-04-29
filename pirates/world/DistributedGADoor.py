@@ -1,12 +1,11 @@
-import DistributedGAConnector
+from pirates.world import DistributedGAConnector
 
 class DistributedGADoor(DistributedGAConnector.DistributedGAConnector):
     notify = directNotify.newCategory('DistributedGADoor')
 
     def __init__(self, cr):
         DistributedGAConnector.DistributedGAConnector.__init__(self, cr)
-        self.connectorNodes = [
-         'portal_A', 'portal_B']
+        self.connectorNodes = ['portal_A', 'portal_B']
 
     def generate(self):
         DistributedGAConnector.DistributedGAConnector.generate(self)

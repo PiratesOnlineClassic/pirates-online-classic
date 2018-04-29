@@ -8,7 +8,7 @@ from direct.showbase.PythonUtil import (ParamObj, clampScalar,
                                         reduceAngle)
 from direct.task import Task
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.pirate import CameraMode
 from pirates.piratesbase import PiratesGlobals
 

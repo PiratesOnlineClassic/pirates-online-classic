@@ -4,7 +4,7 @@ from pirates.ship import ShipPilot
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import report
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.cutscene import Cutscene, CutsceneData
 from pirates.effects.DarkWaterFog import DarkWaterFog
 from pirates.piratesbase import (PiratesGlobals, PLocalizer, TimeOfDayManager, TODGlobals)

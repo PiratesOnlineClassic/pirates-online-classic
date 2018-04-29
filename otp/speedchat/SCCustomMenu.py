@@ -1,6 +1,6 @@
 from otp.otpbase.OTPLocalizer import CustomSCStrings
-from SCCustomTerminal import SCCustomTerminal
-from SCMenu import SCMenu
+from otp.speedchat.SCCustomTerminal import SCCustomTerminal
+from otp.speedchat.SCMenu import SCMenu
 
 
 class SCCustomMenu(SCMenu):

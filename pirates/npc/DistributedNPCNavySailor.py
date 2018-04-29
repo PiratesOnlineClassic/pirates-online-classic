@@ -1,4 +1,4 @@
-import NavySailor
+from pirates.npc import NavySailor
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *

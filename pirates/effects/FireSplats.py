@@ -1,10 +1,10 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect
 from direct.particles import Particles
 from direct.particles import ForceGroup
-from PooledEffect import PooledEffect
-from EffectController import EffectController
+from pirates.effects.PooledEffect import PooledEffect
+from pirates.effects.EffectController import EffectController
 
 class FireSplats(PooledEffect, EffectController):
     cardScale = 128.0

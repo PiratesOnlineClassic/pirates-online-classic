@@ -2,7 +2,7 @@ import random
 import re
 import types
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task.Task import Task
 from direct.actor import *
 from direct.showbase.DirectObject import DirectObject

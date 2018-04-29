@@ -1,8 +1,8 @@
 import math
 import random
 
-import CannonGlobals
-import WeaponGlobals
+from pirates.battle import CannonGlobals
+from pirates.battle import WeaponGlobals
 from CannonballProjectile import CannonballProjectile
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.ClockDelta import *
@@ -13,7 +13,7 @@ from direct.showbase.DirectObject import *
 from direct.showbase.PythonUtil import quickProfile
 from direct.task import Task
 from DistributedWeapon import DistributedWeapon
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle.EnemySkills import EnemySkills
 from pirates.battle.WeaponGlobals import *
 from pirates.effects.CannonBlastSmoke import CannonBlastSmoke
@@ -35,7 +35,7 @@ distFireSfxNames = [
  'dist_cannon_01.mp3', 'dist_cannon_02.mp3', 'dist_cannon_03.mp3', 'dist_cannon_04.mp3', 'dist_cannon_05.mp3', 'dist_cannon_06.mp3', 'dist_cannon_07.mp3', 'dist_cannon_08.mp3', 'dist_cannon_09.mp3', 'dist_cannon_10.mp3']
 
 class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
-    
+
     notify = directNotify.newCategory('DistributedShipBroadside')
     localFireSfx = []
     distFireSfx = []

@@ -8,7 +8,7 @@ from direct.gui.DirectButton import DirectButton
 from direct.gui.DirectGui import *
 from direct.gui.OnscreenImage import OnscreenImage
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.PDialog import PDialog
 

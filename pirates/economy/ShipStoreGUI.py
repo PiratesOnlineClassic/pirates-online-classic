@@ -1,6 +1,6 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *
 from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer

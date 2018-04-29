@@ -5,7 +5,7 @@
 import types
 
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui import ButtonListItem, PiratesGuiGlobals
 from pirates.piratesgui.BorderFrame import BorderFrame
 
