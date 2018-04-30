@@ -128,7 +128,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         self.parentObjectToCell(doorLocatorNode, zoneId)
 
         self.addObject(doorLocatorNode)
-        self.broadcastObjectPosition(doorLocatorNode)
 
         return doorLocatorNode
 
@@ -151,7 +150,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         self.parentObjectToCell(container, zoneId)
 
         self.addObject(container)
-        self.broadcastObjectPosition(container)
 
         return container
 
@@ -172,6 +170,5 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         self.parentObjectToCell(spawnNode, zoneId)
 
         self.addObject(spawnNode)
-        self.broadcastObjectPosition(spawnNode)
 
         return spawnNode

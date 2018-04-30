@@ -1,5 +1,6 @@
 from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
+from pirates.piratesbase import PiratesGlobals
 from pirates.interact.DistributedSearchableContainerAI import DistributedSearchableContainerAI
 from pirates.world.DistributedDinghyAI import DistributedDinghyAI
 from pirates.treasuremap.DistributedBuriedTreasureAI import DistributedBuriedTreasureAI
@@ -12,6 +13,10 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         GameAreaBuilderAI.__init__(self, air, parent)
 
         self.wantDinghys = config.GetBool('want-dinghys', True)
+
+    def parentObjectToCell(self, object, zoneId=None, parent=None):
+        parent = GameAreaBuilderAI.parentObjectToCell(self, object, zoneId, parent)
+        object.b_setLocation(parent.doId, PiratesGlobals.IslandLocalZone)
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         if objType == 'Player Spawn Node':
@@ -55,6 +60,5 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         self.parentObjectToCell(dinghy, zoneId)
 
         self.addObject(dinghy)
-        self.broadcastObjectPosition(dinghy)
 
         return dinghy
