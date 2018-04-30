@@ -31,7 +31,7 @@ class MotionAnimFSM(FSM):
         self.idleJumpIval = None
         self.lastMoveSpeed = 0
         self.zeroSpeedTimer = 0
-        self.motionFSMLag = base.config.GetBool('motionfsm-lag', 1)
+        self.motionFSMLag = base.config.GetBool('motionfsm-lag', True)
 
     def cleanup(self):
         if not self.isInTransition():
@@ -132,25 +132,25 @@ class MotionAnimFSM(FSM):
                 state = 'StrafeLeft'
             else:
                 state = 'WalkForward'
-        else:
-            if forwardSpeed >= NPC_RUN_CUTOFF:
-                state = 'Run'
-                animScaleAdjust = True
-            elif forwardSpeed > NPC_WALK_CUTOFF:
-                state = 'WalkForward'
-                animScaleAdjust = True
-            elif rotateSpeed > 0.0:
-                if self.av.getAnimFilename('spin_left'):
-                    state = 'SpinLeft'
-                else:
-                    state = 'WalkForward'
-            elif rotateSpeed < 0.0:
-                if self.av.getAnimFilename('spin_right'):
-                    state = 'SpinRight'
-                else:
-                    state = 'WalkForward'
+        elif forwardSpeed >= NPC_RUN_CUTOFF:
+            state = 'Run'
+            animScaleAdjust = True
+        elif forwardSpeed > NPC_WALK_CUTOFF:
+            state = 'WalkForward'
+            animScaleAdjust = True
+        elif rotateSpeed > 0.0:
+            if self.av.getAnimFilename('spin_left'):
+                state = 'SpinLeft'
             else:
-                state = 'Idle'
+                state = 'WalkForward'
+        elif rotateSpeed < 0.0:
+            if self.av.getAnimFilename('spin_right'):
+                state = 'SpinRight'
+            else:
+                state = 'WalkForward'
+        else:
+            state = 'Idle'
+
         zeroSpeedLimit = 0.1
         if globalClock.getFrameTime() - self.zeroSpeedTimer < zeroSpeedLimit and self.motionFSMLag:
             if state != self.state and self.state != 'Idle':
@@ -196,15 +196,16 @@ class MotionAnimFSM(FSM):
             state = 'SpinRight'
         else:
             state = 'Idle'
+
         if self.state != state:
-            if self.av.doId < 300000000:
-                pass
             if self.isInTransition():
                 self.demand(state)
             else:
                 self.request(state)
+
             if self.av.isLocal() and self.av.getGameState() == 'Emote':
                 messenger.send('localAvatarExitEmote')
+
             if not self.av.isLocal() and self.av.getGameState() == 'Emote':
                 self.av.playEmote(self.av.emoteId)
 
@@ -215,7 +216,7 @@ class MotionAnimFSM(FSM):
     def handleAirborneEvent(self, event):
         if event == 'Jump':
             self.av.b_playMotionAnim('jump')
-        if event == 'Land':
+        elif event == 'Land':
             self.av.b_playMotionAnim('land')
 
     @report(types=['args', 'deltaStamp'], dConfigParam=['want-jump-report'])

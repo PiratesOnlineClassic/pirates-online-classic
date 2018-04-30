@@ -516,7 +516,7 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             self.animPropType = propType
         else:
             self.notify.warning('could not load prop %s to be used with DistInteractiveProp' % propPath)
-        
+
     def clearAnimProp(self):
         if self.animProp:
             self.animProp.removeNode()

@@ -106,6 +106,9 @@ want-membership #f
 want-island-barriers #t
 object-load-delay #f
 
+# Motion:
+motionfsm-lag #f
+
 # Smoothing:
 smooth-lag 0.2
 smooth-prediction-lag 0.2
