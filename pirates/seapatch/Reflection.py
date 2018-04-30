@@ -2,7 +2,6 @@ from direct.showbase.DirectObject import DirectObject
 from otp.otpbase import OTPRender
 from panda3d.core import *
 
-
 class Reflection(DirectObject):
     global_reflection = None
 
@@ -24,7 +23,6 @@ class Reflection(DirectObject):
             buffer_height = 512
             Reflection.global_reflection = Reflection('reflection', buffer_width, buffer_height, parent, Plane(Vec3(0, 0, 1), Point3(0, 0, 0)))
             Reflection.global_reflection.lock = True
-        return
 
     @classmethod
     def uninitialize(self):
@@ -33,8 +31,7 @@ class Reflection(DirectObject):
             reflection.lock = False
             reflection.delete()
         Reflection.global_reflection = None
-        return
-
+        
     def __init__(self, name, width, height, parent, plane=Plane(Vec3(0, 0, 1), Point3(0, 0, 0))):
         DirectObject.__init__(self)
         self.lock = False
@@ -76,14 +73,12 @@ class Reflection(DirectObject):
         self.__createBuffer()
         self.accept('close_main_window', self.__destroyBuffer)
         self.accept('open_main_window', self.__createBuffer)
-        return
 
     def __destroyBuffer(self):
         if self.reflection_buffer:
             base.graphicsEngine.removeWindow(self.reflection_buffer)
             self.reflection_buffer = None
-        return
-
+            
     def __createBuffer(self):
         self.__destroyBuffer()
         self.reflection_buffer = base.win.makeTextureBuffer('reflection_buffer' + self.name, self.width, self.height, tex=self.reflection_texture)
@@ -99,8 +94,7 @@ class Reflection(DirectObject):
         else:
             self.display_region = None
             self.enable(False)
-        return
-
+            
     def createCard(self, bin_name, bin_priority):
         if self.card_created == False:
             reflection_card = CardMaker('reflection_card')
@@ -184,7 +178,6 @@ class Reflection(DirectObject):
                     reflection_card_node_path.reparentTo(render2d)
                 self.reflection_card_node_path = reflection_card_node_path
                 self.card_created = True
-        return
 
     def setCardReflectionFactor(self, scale):
         pass
@@ -208,13 +201,12 @@ class Reflection(DirectObject):
             if self.reflection_card_node_path:
                 self.reflection_card_node_path.show()
             self.reflection_state = True
-        else:
-            if self.reflection_buffer != None:
-                self.reflection_buffer.setActive(False)
-            if self.reflection_card_node_path:
-                self.reflection_card_node_path.hide()
-            self.reflection_state = False
-        return
+            return
+        if self.reflection_buffer != None:
+            self.reflection_buffer.setActive(False)
+        if self.reflection_card_node_path:
+            self.reflection_card_node_path.hide()
+        self.reflection_state = False
 
     def update_reflection(self, lens, reference_node, supports_sky_only=True, sky_only=False):
         if True:
@@ -262,7 +254,6 @@ class Reflection(DirectObject):
             self.__destroyBuffer()
             self.ignore('close_main_window')
             self.ignore('open_main_window')
-        return
 
     def reflectShowThroughOnly(self, reflect_show_through_only):
         if reflect_show_through_only:

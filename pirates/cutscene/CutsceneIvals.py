@@ -9,45 +9,36 @@ from pirates.ship import ShipGlobals
 from pirates.tutorial import TutorialGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
-
 def Nothing():
     pass
-
 
 def WaitFrames(frames):
     return WaitInterval(frames / 24.0)
 
-
 def HideAllNametags():
     render.findAllMatches('**/nametag3d*').hide()
-
 
 def ShowAllNametags():
     render.findAllMatches('**/nametag3d*').show()
 
-
 def playAudio(sound, ivalToAppendTo, seqDuration):
     si = SoundInterval(sound, duration=seqDuration)
     si.start()
-
 
 def placeObject(object, wrt, pos, hpr):
     object.reparentTo(render)
     object.setPos(wrt, pos)
     object.setHpr(wrt, hpr)
 
-
 def reparentObject(object, wrt, pos, hpr):
     object.reparentTo(wrt)
     object.setPos(pos)
     object.setHpr(hpr)
 
-
 def SetTimeOfDay(tod, time=0):
     if 'localAvatar' in __builtins__:
         return Func(base.cr.timeOfDayManager.request, base.cr.timeOfDayManager.getStateName(tod), 0)
     return Wait(0.001)
-
 
 def setObjectVisibleByUid(uid, hide=True):
     existingObjectId = base.cr.uidMgr.getDoId(uid)
@@ -69,7 +60,6 @@ def setObjectVisibleByUid(uid, hide=True):
         hideObjectFunc = Func(dummyFunc)
     return hideObjectFunc
 
-
 def forceLowLODOnAvatars():
     if 'localAvatar' not in __builtins__:
         return
@@ -82,7 +72,6 @@ def forceLowLODOnAvatars():
             for i in range(len(do.AIPlayers)):
                 if do.AIPlayers[i]:
                     do.AIPlayers[i].forceLOD(0)
-
 
 def resetLODOnAvatars():
     if 'localAvatar' not in __builtins__:
@@ -97,7 +86,6 @@ def resetLODOnAvatars():
                 if do.AIPlayers[i]:
                     do.AIPlayers[i].resetLOD()
 
-
 def forceInteract(objUid, doorIndex=None):
     def _forceInteractCallback(objDoId):
         objRef = base.cr.doId2do.get(objDoId)
@@ -111,20 +99,16 @@ def forceInteract(objUid, doorIndex=None):
                 doorObj.handleUseKey()
         else:
             objRef.handleUseKey()
-        return
 
     if 'localAvatar' in __builtins__:
         base.cr.uidMgr.addUidCallback(objUid, _forceInteractCallback)
 
-
 def Cutscene1_1_1ivals(cutscene):
     av = cutscene.getActor(CutsceneActor.CutLocalPirate.getActorKey())
     subs, clearSubs = subtitleSequence(cutscene.cutsceneName)
-    return (
-        Parallel(Sequence(Func(base.transitions.fadeIn, 7.0)),
+    return (Parallel(Sequence(Func(base.transitions.fadeIn, 7.0)),
                  Sequence(WaitFrames(288), Func(base.transitions.fadeOut)), subs),
         Parallel(Func(base.transitions.fadeIn), clearSubs))
-
 
 def Cutscene1_1_2ivals(cutscene):
     av = cutscene.getActor(CutsceneActor.CutLocalPirate.getActorKey())
@@ -138,7 +122,6 @@ def Cutscene1_1_2ivals(cutscene):
                      Sequence(WaitFrames(KickFrame), SoundInterval(cballHitTrack, volume=0.6)),
                      Sequence(WaitFrames(CannonStartFrame), Func(messenger.send, 'startTutorialCannons')), subs),
             Parallel(Func(av.closeJailDoor), clearSubs))
-
 
 def Cutscene1_1_5_aivals(cutscene):
     av = cutscene.getActor(CutsceneActor.CutLocalPirate.getActorKey())
@@ -170,18 +153,9 @@ def Cutscene1_1_5_aivals(cutscene):
                      Sequence(WaitFrames(215), Func(Nell.detachHandheld, mugLeft, True)),
                      Sequence(WaitFrames(216), Func(Nell.detachHandheld, mugRight, True)),
                      Sequence(WaitFrames(719), Func(Dan.attachHandheld, seachestDan, True)),
-                     Sequence(WaitFrames(754), Func(Dan.detachHandheld, seachestDan, True)), Sequence(WaitFrames(754),
-                                                                                                      Func(
-                                                                                                          reparentObject,
-                                                                                                          seachestTable,
-                                                                                                          render,
-                                                                                                          VBase3(9.53,
-                                                                                                                 33.22,
-                                                                                                                 5.11),
-                                                                                                          VBase3(180, 0,
-                                                                                                                 90))),
-                     subs), Parallel(endFunc, clearSubs))
-
+                     Sequence(WaitFrames(754), Func(Dan.detachHandheld, seachestDan, True)), 
+                     Sequence(WaitFrames(754), Func(reparentObject, seachestTable, render,
+                     VBase3(9.53, 33.22, 5.11), VBase3(180, 0, 90))), subs), Parallel(endFunc, clearSubs))
 
 def Cutscene1_1_5_bivals(cutscene):
     cutcam = cutscene.getActor(CutsceneActor.CutCam.getActorKey())

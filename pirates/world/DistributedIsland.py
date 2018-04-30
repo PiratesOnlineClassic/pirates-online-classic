@@ -174,11 +174,10 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.stopCustomEffects()
         if not cache:
             self.setZoneLevelOuter()
-        else:
-            if self.lastZoneLevel == 0:
-                self.removeIslandGridSphere()
-                if self.hasTunnelsOnRadar:
-                    self.handleTunnelsOnRadar(False)
+        elif self.lastZoneLevel == 0:
+            self.removeIslandGridSphere()
+            if self.hasTunnelsOnRadar:
+                self.handleTunnelsOnRadar(False)
 
         DistributedGameArea.DistributedGameArea.turnOff(self)
         DistributedCartesianGrid.DistributedCartesianGrid.turnOff(self)
@@ -1104,7 +1103,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.ignore('exit' + self.locationSphereName)
 
     def buildCacheData(self):
-        coreCache = self.getCoreCache()
         dependencies = self.cr.distributedDistrict.worldCreator.getFilelistByUid(self.uniqueId)
         if self.playerBarrierNP:
             self.playerBarrierNP.detachNode()
@@ -1112,23 +1110,29 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         if self.geom:
             self.geom.detachNode()
 
-        gridGeomCache = self.getGridCache()
-        largeGeomCache = self.getLargeObjectsCache()
-        animCache = self.getAnimCache()
         self.loadZoneObjects(-1)
         avatarParent = localAvatar.getParent()
         localAvatar.detachNode()
         largeObjectsLOD = self.largeObjectsHigh.getParent()
-        largeGeomCache.setData(largeObjectsLOD.node(), 0)
-        base.bamCache.store(largeGeomCache)
+        largeGeomCache = self.getLargeObjectsCache()
+        if largeGeomCache:
+            largeGeomCache.setData(largeObjectsLOD.node(), 0)
+            if base.bamCache:
+                base.bamCache.store(largeGeomCache)
         objectsHighParent = self.largeObjectsHigh.getParent()
         self.largeObjectsHigh.detachNode()
         objectsLowParent = self.largeObjectsLow.getParent()
         self.largeObjectsLow.detachNode()
-        gridGeomCache.setData(self.staticGridRoot.node(), 0)
-        base.bamCache.store(gridGeomCache)
-        animCache.setData(self.animNode.node(), 0)
-        base.bamCache.store(animCache)
+        gridGeomCache = self.getGridCache()
+        if gridGeomCache:
+            gridGeomCache.setData(self.staticGridRoot.node(), 0)
+            if base.bamCache:
+                base.bamCache.store(gridGeomCache)
+        animCache = self.getAnimCache()
+        if animCache:
+            animCache.setData(self.animNode.node(), 0)
+            if base.bamCache:
+                base.bamCache.store(animCache)
         allDetailsParent = self.allDetails.getParent()
         self.allDetails.detachNode()
         for sphere in self.zoneSphere:
@@ -1147,8 +1151,10 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         if not shipDeployer.isEmpty():
             shipDeployer.detachNode()
 
-        coreCache.setData(self.node(), 0)
-        base.bamCache.store(coreCache)
+        coreCache = self.getCoreCache()
+        if coreCache:
+            coreCache.setData(self.node(), 0)
+            base.bamCache.store(coreCache)
         if not shipDeployer.isEmpty():
             shipDeployer.reparentTo(self)
 
@@ -1172,22 +1178,24 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.playerBarrierNP.reparentTo(self)
 
     def buildIslandTerrain(self):
-        islandGeomCache = self.getIslandCache()
         self.loadIslandParts()
         if self.geom:
             flat = self.geom.find('**/island_flat_lod')
             if not flat.isEmpty():
                 flat.removeNode()
 
-            islandGeomCache.setData(self.geom.node(), 0)
-            base.bamCache.store(islandGeomCache)
+            islandGeomCache = self.getIslandCache()
+            if islandGeomCache:
+                islandGeomCache.setData(self.geom.node(), 0)
+            if base.bamCache:
+                base.bamCache.store(islandGeomCache)
         else:
             self.geom = NodePath('bad island')
             self.notify.warning('Island %s,%s terrain failed to load!' % (self.doId, self.name))
 
     def retrieveIslandTerrain(self):
         islandGeomCache = self.getIslandCache()
-        if not base.config.GetBool('want-disk-cache', 0) or not islandGeomCache.hasData():
+        if not base.config.GetBool('want-disk-cache', False) or not islandGeomCache.hasData():
             self.buildIslandTerrain()
         else:
             data = islandGeomCache.getData()
@@ -1198,7 +1206,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     @report(types=['frameCount', 'args'], dConfigParam=['want-island-report'])
     def retrieveCacheData(self):
         coreCache = self.getCoreCache()
-        if not coreCache.hasData() or not base.config.GetBool('want-disk-cache', 0):
+        if not base.config.GetBool('want-disk-cache', False) or not coreCache.hasData():
             self.buildCacheData()
         else:
             gridGeomCache = self.getGridCache()
