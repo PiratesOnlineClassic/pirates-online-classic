@@ -210,10 +210,12 @@ class PiratesBase(OTPBase):
         from pirates.ship import ShipGlobals
         Dog.Dog.setupAssets()
         CullBinManager.getGlobalPtr().addBin('ShipRigging', CullBinEnums.BTBackToFront, 100)
-        self.bamCache = BamCache()
-        if base.config.GetBool('want-dev', False):
-            self.bamCache.setRoot(Filename('/c/cache'))
-        self.bamCache.setRoot(Filename('./cache'))
+        self.bamCache = None
+        if base.config.GetBool('want-disk-cache', False):
+            self.bamCache = BamCache()
+            if base.config.GetBool('want-dev', False):
+                self.bamCache.setRoot(Filename('/c/cache'))
+            self.bamCache.setRoot(Filename('./cache'))
         self.textureFlattenMgr = TextureFlattenManager.TextureFlattenManager()
         self.showShipFlats = False
         self.hideShipNametags = False
