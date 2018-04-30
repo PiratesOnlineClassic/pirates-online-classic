@@ -116,6 +116,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             interior.parentId, interior.zoneId)
 
         if not interior.getExteriorFrontDoor():
+            doorLocatorNode.setDoorIndex(0)
             interior.setExteriorFrontDoor(doorLocatorNode)
         else:
             doorLocatorNode.setDoorIndex(1)
