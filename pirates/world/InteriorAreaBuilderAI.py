@@ -3,6 +3,12 @@ from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from pirates.leveleditor import ObjectList
 from pirates.piratesbase import PiratesGlobals
 from pirates.world.DistributedCellDoorAI import DistributedCellDoorAI
+from pirates.minigame.DistributedPokerTableAI import DistributedPokerTableAI
+from pirates.minigame.DistributedHoldemTableAI import DistributedHoldemTableAI
+from pirates.minigame.DistributedBlackjackTableAI import DistributedBlackjackTableAI
+from pirates.minigame.Distributed7StudTableAI import Distributed7StudTableAI
+from pirates.minigame.DistributedBishopsHandTableAI import DistributedBishopsHandTableAI
+from pirates.minigame.DistributedLiarsDiceAI import DistributedLiarsDiceAI
 
 class InteriorAreaBuilderAI(GameAreaBuilderAI):
     notify = directNotify.newCategory('InteriorAreaBuilderAI')
@@ -12,6 +18,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
 
         self.wantDoorLocatorNodes = config.GetBool('want-door-locator-nodes', True)
         self.wantJailCellDoors = config.GetBool('want-jail-cell-doors', True)
+        self.wantParlorGames = config.GetBool('want-parlor-games', True)
 
     def parentObjectToCell(self, object, zoneId=None, parent=None):
         parent = GameAreaBuilderAI.parentObjectToCell(self, object, zoneId, parent)
@@ -24,6 +31,8 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
             newObj = self.__createDoorLocatorNode(parent, parentUid, objKey, objectData)
         elif objType == 'Jail Cell Door' and self.wantJailCellDoors:
             newObj = self.__createCellDoor(parent, parentUid, objKey, objectData)
+        elif objType == 'Parlor Game' and self.wantParlorGames:
+            newObj = self.__createParlorTable(objectData, parent, parentUid, objKey)
         else:
             newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey,
                 dynamic, parentIsObj, fileName, actualParentObj)
@@ -42,7 +51,6 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
             self.parent.zoneId)
 
         if not self.parent.getInteriorFrontDoor():
-            doorLocatorNode.setDoorIndex(0)
             self.parent.setInteriorFrontDoor(doorLocatorNode)
             exteriorDoor = self.parent.getExteriorFrontDoor()
         else:
@@ -103,3 +111,42 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         self.addObject(cellDoor)
 
         return cellDoor
+
+    def __createParlorTable(self, objectData, parent, parentUid, objKey):
+
+        tableCls = None
+        gameType = objectData.get('Category', 'Unknown')
+
+        if gameType == 'Holdem':
+            tableCls = DistributedHoldemTableAI
+        elif gameType == 'Blackjack':
+            tableCls = DistributedBlackjackTableAI
+        elif gameType == '7Stud':
+            tableCls = Distributed7StudTableAI
+        elif gameType == 'Bishops':
+            tableCls = DistributedBishopsHandTableAI
+        elif gameTable == 'LiarsDice':
+            tableCls = DistributedLiarsDiceAI
+        else:
+            self.notify.warning('Failed to generate Parlor Table %s; %s is not a valid game type' % (objKey, gameType))
+            return
+
+        gameTable = tableCls(self.air)
+        gameTable.setUniqueId(objKey)
+        gameTable.setPos(objectData.get('Pos', (0, 0, 0)))
+        gameTable.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        gameTable.setScale(objectData.get('Scale', 1))
+
+        if hasattr(gameTable, 'setGameType'):
+            gameTable.setGameType(gameType)
+
+        if hasattr(gameTable, 'setBetMultiplier'):
+            gameTable.setBetMultiplier(int(objectData.get('BetMultiplier', '1')))
+
+        zoneId = self.parent.getZoneFromXYZ(gameTable.getPos())
+        self.parent.generateChildWithRequired(gameTable, zoneId)
+        self.parentObjectToCell(gameTable, zoneId)
+        
+        self.addObject(gameTable)
+
+        return gameTable
