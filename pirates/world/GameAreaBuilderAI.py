@@ -18,10 +18,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         self.wantSearchables = config.GetBool('want-searchables', True)
         self.wantSpawnNodes = config.GetBool('want-spawn-nodes', True)
 
-    def parentObjectToCell(self, object, zoneId=None, parent=None):
-        parent = ClientAreaBuilderAI.parentObjectToCell(self, object, zoneId, parent)
-        object.b_setLocation(parent.doId, PiratesGlobals.IslandLocalZone)
-
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
 
