@@ -14,10 +14,6 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
 
         self.wantDinghys = config.GetBool('want-dinghys', True)
 
-    def parentObjectToCell(self, object, zoneId=None, parent=None):
-        parent = GameAreaBuilderAI.parentObjectToCell(self, object, zoneId, parent)
-        object.b_setLocation(parent.doId, PiratesGlobals.IslandLocalZone)
-
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         if objType == 'Player Spawn Node':
             newObj = self.__createPlayerSpawnNode(objectData, parent, parentUid, objKey, dynamic)
