@@ -64,7 +64,7 @@ class BattleNPCGameFSM(BattleAvatarGameFSM.BattleAvatarGameFSM):
     def filterBreakCombat(self, request, args=[]):
         if request == 'advance':
             return 'LandRoam'
-        if request == 'Battle':
+        elif request == 'Battle':
             return
         return self.defaultFilter(request, args)
 

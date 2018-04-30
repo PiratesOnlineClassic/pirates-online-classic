@@ -4,6 +4,7 @@ from pirates.battle.WeaponBaseAI import WeaponBaseAI
 from pirates.battle.Teamable import Teamable
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.task import Task
+from pirates.pirate.BattleAvatarGameFSMAI import BattleAvatarGameFSMAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 
@@ -15,6 +16,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         WeaponBaseAI.__init__(self, air)
         Teamable.__init__(self)
 
+        self.gameFSM = BattleAvatarGameFSMAI(self.air, self)
         self.isNpc = True
 
         self.currentWeaponId = 0
@@ -135,6 +137,9 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         return self.maxHp
 
     def setHp(self, hp, quietly=False):
+        if hp <= 0 and self.hp > 0:
+            self.gameFSM.request('Death')
+
         self.hp = hp if hp >= 0 else 0
         self.quietly = quietly
 

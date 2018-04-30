@@ -3,6 +3,7 @@ from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.HumanDNA import HumanDNA
 from pirates.battle.BattleRandom import BattleRandom
+from pirates.pirate.PlayerPirateGameFSMAI import PlayerPirateGameFSMAI
 from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
 from pirates.piratesbase import PLocalizer
 from pirates.piratesbase import PiratesGlobals
@@ -24,6 +25,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedBattleAvatarAI.__init__(self, air)
         HumanDNA.__init__(self)
 
+        self.gameFSM = PlayerPirateGameFSMAI(self.air, self)
         self.isNpc = False
         self.battleRandom = None
 
@@ -235,9 +237,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def requestCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
         if not self.weapon:
-            self.notify.debug('Cannot request current weapon for avatar %d, does not have a weapon object!' % \
-                self.doId)
-
             return
 
         self.weapon.d_setMovie(WeaponGlobals.WEAPON_MOVIE_START if isWeaponDrawn else \

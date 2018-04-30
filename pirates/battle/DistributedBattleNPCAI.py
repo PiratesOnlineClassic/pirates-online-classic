@@ -1,12 +1,15 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from direct.distributed.ClockDelta import globalClockDelta
+from pirates.pirate.BattleNPCGameFSMAI import BattleNPCGameFSMAI
 
 class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleNPCAI')
 
     def __init__(self, air):
         DistributedBattleAvatarAI.__init__(self, air)
+
+        self.gameFSM = BattleNPCGameFSMAI(self.air, self)
 
         self.name = ''
         self.spawnPos = [0, 0, 0, 0, 0, 0]
@@ -34,13 +37,6 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def getName(self):
         return self.name
-
-    def setHp(self, hp, quietly):
-        if hp <= 0 and self.hp > 0:
-            self.air.battleMgr.rewardAttackers(self)
-            self.spawnerNode.processDeath()
-
-        DistributedBattleAvatarAI.setHp(self, hp, quietly)
 
     def setSpawnPosHpr(self, (x, y, z), (h, p, r)):
         self.spawnPos = [x, y, z, h, p, r]
