@@ -1,8 +1,8 @@
-import PLocalizer
+from pirates.piratesbase import PLocalizer
 from direct.gui import DirectButton, DirectFrame
 from otp.otpbase import OTPLocalizer as OL
 from otp.otpbase.OTPGlobals import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PLocalizer as PL
 from pirates.piratesgui import PDialog
 from pirates.uberdog.UberDogGlobals import *
@@ -72,7 +72,7 @@ IslandAvailableZoneEnd = 499
 IslandConnectorZoneStart = 100
 IslandConnectorZoneEnd = 200
 IslandShipDeployerZone = 101
-IslandLocalZone = 101
+IslandLocalZone = 102
 InteriorDoorZone = 100
 TargetBitmask = BitMask32.bit(5)
 GoldBitmask = BitMask32.bit(6)

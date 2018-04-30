@@ -10,7 +10,7 @@ from direct.showbase import PythonUtil
 from direct.showbase.DirectObject import *
 from direct.task import Task
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class TimeManager(DistributedObject.DistributedObject):

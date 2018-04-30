@@ -1,5 +1,5 @@
 from otp.otpbase.OTPGlobals import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import *
 from pirates.uberdog.UberDogGlobals import InventoryType

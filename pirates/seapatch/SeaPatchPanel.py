@@ -5,7 +5,7 @@ from tkSimpleDialog import askstring
 from direct.showbase.TkGlobal import *
 from direct.tkwidgets import Dial, Floater, Slider, VectorWidgets
 from direct.tkwidgets.AppShell import *
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class SeaPatchPanel(AppShell):

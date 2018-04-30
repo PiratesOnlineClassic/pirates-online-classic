@@ -1,5 +1,5 @@
-from SCEmoteTerminal import SCEmoteTerminal
-from SCMenu import SCMenu
+from otp.speedchat.SCEmoteTerminal import SCEmoteTerminal
+from otp.speedchat.SCMenu import SCMenu
 
 
 class SCEmoteMenu(SCMenu):

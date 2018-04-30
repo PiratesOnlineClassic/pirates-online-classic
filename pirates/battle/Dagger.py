@@ -1,15 +1,14 @@
 import random
 
-import Weapon
-import WeaponGlobals
+from pirates.battle import Weapon
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects import PolyTrail
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class Dagger(Weapon.Weapon):
-    
+
     modelTypes = {InventoryType.DaggerWeaponL1: ('models/handheld/dagger_high', Vec4(1, 1, 1, 1)), InventoryType.DaggerWeaponL2: ('models/handheld/dagger_dirk_high', Vec4(1, 1, 1, 1)), InventoryType.DaggerWeaponL3: ('models/handheld/dagger_gauche_high', Vec4(1, 1, 1, 1)), InventoryType.DaggerWeaponL4: ('models/handheld/dagger_coltello_high', Vec4(1, 1, 1, 1)), InventoryType.DaggerWeaponL5: ('models/handheld/dagger_bloodletter_high', Vec4(1, 1, 1, 1)), InventoryType.DaggerWeaponL6: ('models/handheld/dagger_slicer_high', Vec4(1, 1, 1, 1))}
     models = {}
     icons = {}

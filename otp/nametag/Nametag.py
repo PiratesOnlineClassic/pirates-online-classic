@@ -1,8 +1,8 @@
-import NametagGlobals
-from NametagConstants import *
+from otp.nametag import NametagGlobals
+from otp.nametag.NametagConstants import *
 from otp.margins.ClickablePopup import ClickablePopup
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class Nametag(ClickablePopup):

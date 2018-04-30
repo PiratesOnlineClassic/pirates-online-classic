@@ -2,12 +2,12 @@ import math
 import string
 from tkFileDialog import askopenfilename
 from Tkinter import *
-
 import Pmw
+
 from direct.gui.DirectGui import *
 from direct.tkwidgets import Slider
 from direct.tkwidgets.AppShell import *
-from pandac.PandaModules import *
+from panda3d.core import *
 
 class WaterPanel(AppShell):
     appversion = '1.0'
@@ -759,7 +759,7 @@ class WaterPanel(AppShell):
 
 
 class BaseTen:
-    
+
 
     def __init__(self, value):
         original_value = value

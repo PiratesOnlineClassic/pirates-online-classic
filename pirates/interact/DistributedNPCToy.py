@@ -3,7 +3,7 @@ import re
 import types
 
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.distributed import DistributedInteractive
 from pirates.piratesbase import PiratesGlobals
 from pirates.world import WorldGlobals

@@ -7,7 +7,7 @@ from direct.gui.DirectGui import *
 from direct.showbase.ShowBaseGlobal import *
 from otp.friends import FriendSecret
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType

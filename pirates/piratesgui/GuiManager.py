@@ -8,7 +8,7 @@ from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase import DirectObject
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.band import BandConstance
 from pirates.battle import WeaponGlobals
 from pirates.economy import EconomyGlobals

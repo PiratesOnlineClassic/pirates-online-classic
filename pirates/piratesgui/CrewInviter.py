@@ -8,7 +8,7 @@ from direct.gui.DirectGui import *
 from direct.task.Task import Task
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.uberdog.RejectCode import RejectCode
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.band import BandConstance, DistributedBandMember
 from pirates.battle.DistributedBattleNPC import DistributedBattleNPC
 from pirates.piratesbase import PiratesGlobals, PLocalizer

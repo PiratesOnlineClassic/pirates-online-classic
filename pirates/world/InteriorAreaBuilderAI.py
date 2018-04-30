@@ -1,6 +1,7 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from pirates.leveleditor import ObjectList
+from pirates.piratesbase import PiratesGlobals
 from pirates.world.DistributedCellDoorAI import DistributedCellDoorAI
 
 class InteriorAreaBuilderAI(GameAreaBuilderAI):
@@ -11,6 +12,10 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
 
         self.wantDoorLocatorNodes = config.GetBool('want-door-locator-nodes', True)
         self.wantJailCellDoors = config.GetBool('want-jail-cell-doors', True)
+
+    def parentObjectToCell(self, object, zoneId=None, parent=None):
+        parent = GameAreaBuilderAI.parentObjectToCell(self, object, zoneId, parent)
+        object.b_setLocation(parent.doId, PiratesGlobals.InteriorDoorZone)
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
@@ -33,7 +38,8 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         doorLocatorNode.setPos(objectData.get('Pos', (0, 0, 0)))
         doorLocatorNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
         doorLocatorNode.setScale(objectData.get('Scale', (1, 1, 1)))
-        doorLocatorNode.setInteriorId(self.parent.doId, self.parent.parentId, self.parent.zoneId)
+        doorLocatorNode.setInteriorId(self.parent.doId, self.parent.parentId,
+            self.parent.zoneId)
 
         if not self.parent.getInteriorFrontDoor():
             self.parent.setInteriorFrontDoor(doorLocatorNode)
@@ -76,7 +82,6 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         exteriorDoor.setOtherDoor(doorLocatorNode)
 
         self.addObject(doorLocatorNode)
-        self.broadcastObjectPosition(doorLocatorNode)
 
         return doorLocatorNode
 
@@ -95,6 +100,5 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         self.parentObjectToCell(cellDoor, zoneId)
 
         self.addObject(cellDoor)
-        self.broadcastObjectPosition(cellDoor)
 
         return cellDoor

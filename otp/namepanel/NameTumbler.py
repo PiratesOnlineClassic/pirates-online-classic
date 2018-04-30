@@ -9,7 +9,7 @@ from direct.gui import OnscreenText
 from direct.gui.DirectGui import *
 from direct.showbase import DirectObject
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class NameTumbler(DirectFrame):

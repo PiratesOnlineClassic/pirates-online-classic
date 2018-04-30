@@ -5,7 +5,7 @@ from direct.actor import Actor
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.interval.IntervalGlobal import ActorInterval
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import WeaponGlobals
 from pirates.distributed import (DistributedInteractive, DistributedTargetableObject)
 from pirates.interact import InteractiveBase

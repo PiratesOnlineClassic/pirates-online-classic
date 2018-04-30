@@ -8,9 +8,9 @@ from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import makeTuple
 from direct.task import Task
-from pandac.PandaModules import *
-from SCConstants import *
-from SCObject import SCObject
+from panda3d.core import *
+from otp.speedchat.SCConstants import *
+from otp.speedchat.SCObject import SCObject
 
 
 class SCMenu(SCObject, NodePath):

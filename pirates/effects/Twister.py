@@ -5,10 +5,10 @@ from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, Particles
 from direct.particles.ParticleEffect import *
 from pandac.PandaModules import *
-from PooledEffect import PooledEffect
+from pirates.effects.PooledEffect import PooledEffect
 
 class Twister(PooledEffect):
-    
+
     particleDummy = None
 
     def __init__(self):

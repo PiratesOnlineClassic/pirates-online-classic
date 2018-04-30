@@ -7,7 +7,7 @@ from pandac.PandaModules import *
 
 
 class WaterShadow(NodePath):
-    
+
 
     def __init__(self, name, shadow_model, parent, use_water_bin=True, bin_number=7):
         self.name = name

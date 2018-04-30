@@ -2,7 +2,7 @@ import gc
 import random
 import types
 
-import PlayGame
+from pirates.distributed import PlayGame
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed import DistributedSmoothNode, DoInterestManager
 from direct.distributed.ClientRepositoryBase import ClientRepositoryBase
@@ -25,7 +25,8 @@ from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
 from otp.uberdog.AccountDetailRecord import (AccountDetailRecord,
                                              SubDetailRecord)
-from pandac.PandaModules import *
+from panda3d.core import *
+from panda3d.direct import *
 from pirates.ai import NewsManager
 from pirates.band import DistributedBandMember
 from pirates.battle import (BattleManager, CombatAnimations,
@@ -50,10 +51,10 @@ from pirates.reputation import ReputationGlobals
 from pirates.ship import DistributedShip
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.world import WorldGlobals
-from PiratesMsgTypes import *
+from otp.distributed.OtpDoGlobals import *
 from otp.nametag import NametagGlobals
 
-want_fifothreads = base.config.GetBool('want-fifothreads', 0)
+want_fifothreads = base.config.GetBool('want-fifothreads', False)
 if want_fifothreads:
 
     class ClientNetworkReader(PythonThread):

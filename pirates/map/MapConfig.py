@@ -4,7 +4,7 @@ from direct.gui.DirectGui import (DGG, DirectButton, DirectEntry, DirectFrame,
                                   DirectLabel, DirectSlider)
 from direct.gui.OnscreenText import OnscreenText
 from direct.showbase.PythonUtil import clampScalar, lerp
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class RangeSlider(DirectFrame):

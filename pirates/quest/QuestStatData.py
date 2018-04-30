@@ -5,7 +5,6 @@
 
 
 class QuestStatData:
-    
     EnemyDefeatTime = 0.00833333
     ShipDefeatTime = 0.05
     VoyageTime = 0.11666666

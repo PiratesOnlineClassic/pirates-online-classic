@@ -6,7 +6,7 @@ from direct.gui.DirectGui import *
 from direct.task import Task
 from otp.chat.ChatInputTyped import ChatInputTyped
 from otp.otpbase import OTPGlobals, OTPLocalizer
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class ChatInputWhiteList(FSM.FSM, DirectEntry):
@@ -280,7 +280,7 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
     def __execMessage(self, message):
         if not ChatInputTyped.ExecNamespace:
             ChatInputTyped.ExecNamespace = {}
-            exec 'from pandac.PandaModules import *' in globals(), self.ExecNamespace
+            exec 'from panda3d.core import *' in globals(), self.ExecNamespace
             self.importExecNamespace()
         try:
             return str(eval(message, globals(), ChatInputTyped.ExecNamespace))

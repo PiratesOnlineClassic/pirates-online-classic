@@ -1,9 +1,9 @@
-import Cannon
-import DistributedPCCannon
-import DistributedWeapon
+from pirates.battle import Cannon
+from pirates.battle import DistributedPCCannon
+from pirates.battle import DistributedWeapon
 from direct.showbase.PythonUtil import quickProfile
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.shipparts import CannonDNA, DistributedShippart
 
 

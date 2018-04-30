@@ -1,9 +1,10 @@
-from panda3d.core import *
-from direct.showbase import PythonUtil
 import traceback
 import __builtin__
 import os
 import argparse
+
+from panda3d.core import *
+from direct.showbase import PythonUtil
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--base-channel', help='The base channel that the server may use.')

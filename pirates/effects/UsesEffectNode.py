@@ -6,7 +6,7 @@ from pandac.PandaModules import *
 
 
 class UsesEffectNode(NodePath):
-    
+
 
     def __init__(self, offset=3.0):
         self.billboardNode = self.attachNewNode('billboardNode')

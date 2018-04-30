@@ -9,7 +9,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.distributed.PyDatagram import *
 from direct.fsm.FSM import FSM
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.distributed import OtpDoGlobals
 from pirates.pirate.HumanDNA import HumanDNA
 

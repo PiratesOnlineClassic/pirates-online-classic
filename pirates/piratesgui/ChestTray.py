@@ -4,7 +4,7 @@
 # Embedded file name: pirates.piratesgui.ChestTray
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiTray, PiratesGuiGlobals, QuestPage
 from pirates.piratesgui.GuiButton import GuiButton

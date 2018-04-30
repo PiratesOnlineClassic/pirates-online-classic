@@ -6,9 +6,9 @@ from direct.gui.DirectGui import *
 from direct.showbase.PythonUtil import boolEqual
 from direct.task import Task
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
-from SCConstants import *
-from SCObject import SCObject
+from panda3d.core import *
+from otp.speedchat.SCConstants import *
+from otp.speedchat.SCObject import SCObject
 
 
 class SCElement(SCObject, NodePath):

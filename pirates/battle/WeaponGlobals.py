@@ -5,29 +5,29 @@ import os
 import random
 import zlib
 
-import Bayonet
-import Consumable
-import Dagger
-import Doll
-import DualCutlass
-import Foil
-import Grenade
-import Melee
-import MonsterMelee
-import Pistol
-import Sword
-import Wand
-import Weapon
+from panda3d.core import *
+from pirates.battle import Bayonet
+from pirates.battle import Consumable
+from pirates.battle import Dagger
+from pirates.battle import Doll
+from pirates.battle import DualCutlass
+from pirates.battle import Foil
+from pirates.battle import Grenade
+from pirates.battle import Melee
+from pirates.battle import MonsterMelee
+from pirates.battle import Pistol
+from pirates.battle import Sword
+from pirates.battle import Wand
+from pirates.battle import Weapon
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import *
-from pandac.PandaModules import *
 from pirates.battle import CannonGlobals
 from pirates.battle.EnemySkills import *
 from pirates.economy import EconomyGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.reputation import RepChart
 from pirates.uberdog.UberDogGlobals import InventoryType
-from WeaponConstants import *
+from pirates.battle.WeaponConstants import *
 
 __defensiveBuffs = [C_TAKECOVER, C_OPENFIRE, C_ATTUNE, C_HASTEN, C_REGEN]
 

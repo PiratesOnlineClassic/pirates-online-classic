@@ -4,7 +4,7 @@ from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.destructibles import ShatterableObject
 from pirates.effects.LanternGlow import LanternGlow
 from pirates.shipparts import DecorDNA

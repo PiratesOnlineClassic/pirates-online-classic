@@ -1,6 +1,6 @@
 from direct.interval.IntervalGlobal import *
 from otp.otpbase import OTPRender
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 
 class SkyGroup(NodePath):

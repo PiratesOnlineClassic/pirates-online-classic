@@ -5,23 +5,23 @@
 import math
 import random
 
-import BlackjackTableGUI
-import DistributedGameTable
-import PlayingCard
-import PlayingCardGlobals
+from pirates.minigame import BlackjackTableGUI
+from pirates.minigame import DistributedGameTable
+from pirates.minigame import PlayingCard
+from pirates.minigame import PlayingCardGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PDialog, PiratesGuiGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBlackjackTable')
 
     def __init__(self, cr):

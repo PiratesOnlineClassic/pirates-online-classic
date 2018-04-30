@@ -3,7 +3,7 @@ from direct.fsm import FSM
 from direct.gui.DirectGui import *
 from otp.distributed import CentralLogger
 from otp.otpbase import OTPGlobals, OTPLocalizer
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiButton, GuiPanel, PiratesGuiGlobals
 

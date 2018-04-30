@@ -1,10 +1,11 @@
+import string
+
 from direct.showbase.ShowBaseGlobal import *
 from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
 from otp.avatar import Avatar
 from otp.chat import ChatManager
-import string
 from direct.showbase import PythonUtil
 from otp.otpbase import OTPGlobals
 from direct.distributed.ClockDelta import *

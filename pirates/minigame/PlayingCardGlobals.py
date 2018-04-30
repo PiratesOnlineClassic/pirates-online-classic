@@ -1,5 +1,5 @@
 from direct.showbase.ShowBase import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PLocalizer
 from pirates.uberdog.UberDogGlobals import InventoryType
 

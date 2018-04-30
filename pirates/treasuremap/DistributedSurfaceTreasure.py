@@ -1,6 +1,6 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.distributed import DistributedInteractive
 from pirates.interact import InteractiveBase
 from pirates.piratesbase import PiratesGlobals, PLocalizer

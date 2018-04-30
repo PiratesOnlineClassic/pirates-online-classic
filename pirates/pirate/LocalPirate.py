@@ -3,8 +3,8 @@ import math
 import random
 import types
 
-import LocalPirateGameFSM
-import Pirate
+from pirates.pirate import LocalPirateGameFSM
+from pirates.pirate import Pirate
 from direct.actor import Actor
 from direct.controls import BattleWalker, ControlManager
 from direct.controls.ControlManager import ControlManager
@@ -28,7 +28,7 @@ from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
 from otp.speedchat import SCDecoders
 from otp.nametag.NametagConstants import CFQuicktalker, CFPageButton, CFQuitButton, CFSpeech, CFThought, CFTimeout
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import (BattleSkillDiary, DistributedBattleAvatar, RangeDetector, WeaponGlobals)
 from pirates.chat.PChatAssistant import PChatAssistant
 from pirates.chat.PiratesChatManager import PiratesChatManager

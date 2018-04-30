@@ -1,4 +1,5 @@
 import random
+
 UNCHARTED_WATERS = 0
 BRIGAND_BAY = 1
 BLOODY_BAYOU = 2

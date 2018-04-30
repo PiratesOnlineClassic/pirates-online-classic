@@ -30,7 +30,7 @@ class ShipBroadside(NodePath):
 
 
 class ShipModel(NodePath):
-    
+
     def __init__(self, cr, shipClass, team, wantCollisions=0, fromEditor=False):
         NodePath.__init__(self, 'ShipModel')
         self.doId = 0

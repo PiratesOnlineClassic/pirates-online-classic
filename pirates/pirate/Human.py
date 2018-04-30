@@ -9,7 +9,7 @@ from direct.interval.IntervalGlobal import *
 from direct.showbase import ShadowPlacer
 from direct.showbase.PythonUtil import quickProfile
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import WeaponGlobals
 from pirates.makeapirate import PirateFemale, PirateMale
 from pirates.pirate import Biped, HumanBase, HumanDNA

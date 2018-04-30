@@ -5,7 +5,7 @@ from direct.gui.OnscreenText import OnscreenText
 from direct.interval.IntervalGlobal import *
 from otp.avatar import Avatar
 from otp.otpbase import OTPGlobals, OTPRender
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import EnemyGlobals
 from pirates.effects.JRDeathEffect import JRDeathEffect
 from pirates.effects.JRSpiritEffect import JRSpiritEffect

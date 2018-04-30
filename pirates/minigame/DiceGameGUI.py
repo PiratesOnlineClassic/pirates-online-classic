@@ -9,7 +9,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.minigame import DiceGlobals, PlayingCard
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import GuiTray, PiratesGuiGlobals

@@ -1,6 +1,6 @@
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import DirectObject
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import EnemyGlobals
 from pirates.effects.BossAura import BossAura
 from pirates.effects.BossEffect import BossEffect

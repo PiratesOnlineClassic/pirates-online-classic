@@ -3,7 +3,7 @@ import random
 
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import CannonGlobals, WeaponGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals

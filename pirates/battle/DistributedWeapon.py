@@ -1,9 +1,9 @@
-import WeaponGlobals
+from pirates.battle import WeaponGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import ClockDelta
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.distributed import DistributedInteractive
 from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.effects.CameraShaker import CameraShaker
@@ -21,7 +21,7 @@ from pirates.effects.SmokeCloud import SmokeCloud
 from pirates.piratesbase import PiratesGlobals
 from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-from WeaponBase import WeaponBase
+from pirates.battle.WeaponBase import WeaponBase
 
 class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractive):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedWeapon')

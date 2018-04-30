@@ -3,11 +3,11 @@ import random
 from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from EffectController import EffectController
+from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects import PolyTrail
 from pirates.piratesbase import PiratesGlobals
-from PooledEffect import PooledEffect
+from pirates.effects.PooledEffect import PooledEffect
 
 
 class DaggerProjectile(PooledEffect, EffectController):

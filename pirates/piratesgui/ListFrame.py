@@ -5,7 +5,7 @@
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import DirectObject
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import Freebooter, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 

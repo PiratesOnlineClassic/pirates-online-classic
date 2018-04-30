@@ -3,7 +3,7 @@ import random
 
 from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPRender
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.creature.Creature import Creature
 from pirates.kraken.TentacleUtils import TentacleUtils
 from pirates.pirate import AvatarTypes

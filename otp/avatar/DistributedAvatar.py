@@ -1,8 +1,8 @@
 import string
 import time
 
-import AvatarDNA
-from Avatar import Avatar
+from otp.avatar import AvatarDNA
+from otp.avatar.Avatar import Avatar
 from panda3d.core import *
 from direct.actor.DistributedActor import DistributedActor
 from direct.distributed import DistributedNode

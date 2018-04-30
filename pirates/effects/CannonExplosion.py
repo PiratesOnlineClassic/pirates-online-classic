@@ -7,13 +7,12 @@ import random
 from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
+from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
-from PooledEffect import PooledEffect
+from pirates.effects.PooledEffect import PooledEffect
 
 
 class CannonExplosion(PooledEffect, EffectController):
-    
     splashSfx = []
     splashSfxNames = ('explo_wood_1.mp3', 'explo_wood_2.mp3')
 

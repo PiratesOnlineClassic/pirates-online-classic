@@ -3,7 +3,7 @@ import os
 import re
 import types
 
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.world import WorldGlobals
 

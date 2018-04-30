@@ -7,13 +7,13 @@ import random
 from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
+from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
-from PooledEffect import PooledEffect
+from pirates.effects.PooledEffect import PooledEffect
 
 
 class WakeMist(PooledEffect, EffectController):
-    
+
     cardScale = 64.0
     splashSfxNames = ('wtrsplash_1.mp3', 'wtrsplash_2.mp3', 'wtrsplash_3.mp3', 'wtrsplash_4.mp3')
     splashSfx = []

@@ -1,7 +1,7 @@
 import random
 import re
 
-import Townfolk
+from pirates.npc import Townfolk
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
@@ -9,7 +9,7 @@ from direct.showbase.PythonUtil import report
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
 from otp.nametag.NametagConstants import CFSpeech, CFThought, CFTimeout, CFPageButton, CFNoQuitButton, CFQuitButton
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import (DistributedBattleAvatar, DistributedBattleNPC,
                             EnemyGlobals, WeaponGlobals)
 from pirates.distributed import InteractGlobals
@@ -27,7 +27,7 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, DistributedShopKeeper.DistributedShopKeeper, Townfolk.Townfolk):
-    
+
     DiskWaitingColor = (0, 0, 1, 0.5)
     DiskUseColor = None
     HelpTextIconTexture = None

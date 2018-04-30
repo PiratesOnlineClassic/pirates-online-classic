@@ -1,13 +1,12 @@
-import WeaponGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects.SmokeCloud import SmokeCloud
 
 class Weapon(NodePath):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('Weapon')
     models = {}
     icons = {}

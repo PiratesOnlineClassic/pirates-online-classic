@@ -1,7 +1,7 @@
-import PlayingCardGlobals
+from pirates.minigame import PlayingCardGlobals
 from direct.gui.DirectGui import *
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PLocalizer
 
 

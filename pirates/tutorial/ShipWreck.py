@@ -1,7 +1,7 @@
 from direct.actor import Actor
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import CannonGlobals, WeaponGlobals
 from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.effects.ExplosionFlip import ExplosionFlip

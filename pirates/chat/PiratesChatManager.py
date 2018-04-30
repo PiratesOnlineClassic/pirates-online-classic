@@ -1,7 +1,7 @@
 import string
 import sys
 
-import PChatInputSpeedChat
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.showbase import DirectObject
@@ -10,9 +10,9 @@ from otp.chat import ChatManager, ChatManagerV2
 from otp.chat.ChatGlobals import *
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
-from PChatInputTyped import PChatInputTyped
-from PChatInputWhiteList import PChatInputWhiteList
+from pirates.chat.PChatInputSpeedChat import PChatInputSpeedChat
+from pirates.chat.PChatInputTyped import PChatInputTyped
+from pirates.chat.PChatInputWhiteList import PChatInputWhiteList
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import ChatPanel, GuiPanel, PDialog, PiratesGuiGlobals
 
@@ -40,7 +40,7 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
         else:
             self.chatEntry = PChatInputTyped()
             self.whiteListEntry = PChatInputWhiteList()
-        self.speedEntry = PChatInputSpeedChat.PChatInputSpeedChat()
+        self.speedEntry = PChatInputSpeedChat()
         self.chatPanel = ChatPanel.ChatPanel(self, self.chatEntry, self.whiteListEntry, self.speedEntry)
         if self.whiteListEnabled and not self.openChatEnabled:
             self.whiteListActive = True

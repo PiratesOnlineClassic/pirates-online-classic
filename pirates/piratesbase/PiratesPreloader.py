@@ -1,4 +1,4 @@
-import PiratesGlobals
+from pirates.piratesbase import PiratesGlobals
 from direct.directnotify.DirectNotifyGlobal import giveNotify
 
 class PiratesPreloader(object):

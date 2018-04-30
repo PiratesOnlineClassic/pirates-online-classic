@@ -1,10 +1,10 @@
 import copy
 
-import TattooGlobals
+from pirates.makeapirate import TattooGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import DirectObject
 from otp.otpbase import OTPRender
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.makeapirate import ClothingGlobals
 from pirates.pirate import HumanDNA
 
@@ -86,7 +86,7 @@ SliderNames = [
 ControlShapes = {'headWidth': [[['def_trs_left_forehead', TX, 0.198, 0, 0, 0], ['def_trs_right_forehead', TX, -0.198, 0, 0, 0]], [['def_trs_left_forehead', TX, 0.198, 0, 0, 0], ['def_trs_right_forehead', TX, -0.198, 0, 0, 0]]], 'headHeight': [[['def_trs_forehead', TZ, 0.566, 0, 0, 0], ['def_trs_left_forehead', TZ, 0.47, 0, 0, 0], ['def_trs_right_forehead', TZ, 0.47, 0, 0, 0]], [['def_trs_forehead', TZ, 0.566, 0, 0, 0], ['def_trs_left_forehead', TZ, 0.47, 0, 0, 0], ['def_trs_right_forehead', TZ, 0.47, 0, 0, 0]]], 'headRoundness': [[['def_trs_left_jaw1', TX, 0.108, 0, 0, 0], ['def_trs_left_jaw1', TZ, -0.095, 0, 0, 0], ['def_trs_right_jaw1', TX, -0.108, 0, 0, 0], ['def_trs_right_jaw1', TZ, -0.095, 0, 0, 0]]], 'jawWidth': [[['def_trs_left_jaw2', TX, 0.185, 0, 0, 0], ['def_trs_right_jaw2', TX, -0.185, 0, 0, 0]], [['def_trs_left_jaw2', TX, 0.185, 0, 0, 0], ['def_trs_right_jaw2', TX, -0.185, 0, 0, 0]]], 'jawLength': [[['trs_face_bottom', TZ, -0.008, 0, 0, 0]], [['trs_face_bottom', TZ, -0.008, 0, 0, 0]]], 'jawChinAngle': [[['def_trs_left_jaw1', TY, -0.17, 0, 0, 0], ['def_trs_right_jaw1', TY, -0.17, 0, 0, 0], ['def_trs_mid_jaw', TY, -0.244, 0, 0, 0]], [['def_trs_left_jaw1', TY, -0.17, 0, 0, 0], ['def_trs_right_jaw1', TY, -0.17, 0, 0, 0], ['def_trs_mid_jaw', TY, -0.244, 0, 0, 0]]], 'jawChinSize': [[['def_trs_left_jaw1', TZ, -0.1, 0, 0, 0], ['def_trs_right_jaw1', TZ, -0.1, 0, 0, 0], ['def_trs_mid_jaw', TZ, -0.1, 0, 0, 0]], [['def_trs_left_jaw1', TZ, -0.1, 0, 0, 0], ['def_trs_right_jaw1', TZ, -0.1, 0, 0, 0], ['def_trs_mid_jaw', TZ, -0.1, 0, 0, 0]]], 'mouthWidth': [[['trs_lips_top', SX, 1.2, 0, 0, 0], ['trs_lips_bot', SX, 1.2, 0, 0, 0]]], 'mouthLipThickness': [[['trs_lips_top', SZ, 1.25, 0, 0, 0], ['trs_lips_bot', SZ, 1.25, 0, 0, 0]], [['trs_lips_top', SZ, 1.25, 0, 0, 0], ['trs_lips_bot', SZ, 1.25, 0, 0, 0]]], 'cheekFat': [[['def_trs_left_cheek', TX, 0.156, 0, 0, 0], ['def_trs_right_cheek', TX, -0.156, 0, 0, 0]], [['def_trs_left_cheek', TX, 0.156, 0, 0, 0], ['def_trs_right_cheek', TX, -0.156, 0, 0, 0]]], 'browProtruding': [[['trs_left_eyebrow', TY, -0.02, 0, 0, 0], ['trs_right_eyebrow', TY, -0.02, 0, 0, 0]]], 'eyeCorner': [[['trs_left_eyesocket', RZ, 45 - 10, 0, 0, 0], ['trs_right_eyesocket', RZ, -(45 - 10), 0, 0, 0]], [['trs_left_eyesocket', RZ, 45 - 10, 0, 0, 0], ['trs_right_eyesocket', RZ, -(45 - 10), 0, 0, 0]]], 'eyeOpeningSize': [[['trs_left_eyesocket', SX, 1.025, 0, 0, 0], ['trs_left_eyesocket', SZ, 1.025, 0, 0, 0], ['trs_right_eyesocket', SX, 1.025, 0, 0, 0], ['trs_right_eyesocket', SZ, 1.025, 0, 0, 0]], [['trs_left_eyesocket', SX, 1.025, 0, 0, 0], ['trs_left_eyesocket', SZ, 1.025, 0, 0, 0], ['trs_right_eyesocket', SX, 1.025, 0, 0, 0], ['trs_right_eyesocket', SZ, 1.025, 0, 0, 0]]], 'eyeSpacing': [[['trs_left_eyesocket', TX, 0.006, 0, 0, 0], ['trs_right_eyesocket', TX, -0.006, 0, 0, 0]], [['trs_left_eyesocket', TX, 0.006, 0, 0, 0], ['trs_right_eyesocket', TX, -0.006, 0, 0, 0]]], 'noseBridgeWidth': [[['def_trs_mid_nose_top', SX, 1.5, 0, 0, 0]], [['def_trs_mid_nose_top', SX, 1.5, 0, 0, 0]]], 'noseNostrilWidth': [[['def_trs_mid_nose_bot', SX, 1.5, 0, 0, 0]], [['def_trs_mid_nose_bot', SX, 1.5, 0, 0, 0]]], 'noseLength': [[['def_trs_mid_nose_bot', TZ, 0.057, 0, 0, 0]], [['def_trs_mid_nose_bot', TZ, 0.057, 0, 0, 0]]], 'noseBump': [[['def_trs_mid_nose_top', TZ, 0.179, 0, 0, 0], ['def_trs_mid_nose_top', TY, -0.301, 0, 0, 0]], [['def_trs_mid_nose_top', TZ, 0.179, 0, 0, 0], ['def_trs_mid_nose_top', TY, -0.301, 0, 0, 0]]], 'noseBridgeBroke': [[['def_trs_mid_nose_top', TX, 0.015, 0, 0, 0]], [['def_trs_mid_nose_top', TX, 0.015, 0, 0, 0]]], 'noseNostrilHeight': [[['def_trs_mid_nose_bot', SY, 1.25, 0, 0, 0]], [['def_trs_mid_nose_bot', SY, 1.25, 0, 0, 0]]], 'noseNostrilAngle': [[['def_trs_mid_nose_bot', RY, 12, 0, 0, 0]], [['def_trs_mid_nose_bot', RY, 12, 0, 0, 0]]], 'noseNostrilBroke': [[['def_trs_mid_nose_bot', TX, 0.015, 0, 0, 0]], [['def_trs_mid_nose_bot', TX, 0.015, 0, 0, 0]]], 'earScale': [[['def_trs_left_ear', SZ, 1.1, 0, 0, 0], ['def_trs_right_ear', SZ, 1.1, 0, 0, 0], ['def_trs_left_ear', SX, 1.1, 0, 0, 0], ['def_trs_right_ear', SX, 1.1, 0, 0, 0]], [['def_trs_left_ear', SZ, 1.1, 0, 0, 0], ['def_trs_right_ear', SZ, 1.1, 0, 0, 0], ['def_trs_left_ear', SX, 1.1, 0, 0, 0], ['def_trs_right_ear', SX, 1.1, 0, 0, 0]]], 'earFlap': [[['def_trs_left_ear', RX, -20, 0, 0, 0], ['def_trs_right_ear', RX, 20, 0, 0, 0]], [['def_trs_left_ear', RX, -20, 0, 0, 0], ['def_trs_right_ear', RX, 20, 0, 0, 0]]], 'earPosition': [[['def_trs_left_ear', TZ, 0.145, 0, 0, 0], ['def_trs_right_ear', TZ, 0.145, 0, 0, 0]], [['def_trs_left_ear', TZ, 0.145, 0, 0, 0], ['def_trs_right_ear', TZ, 0.145, 0, 0, 0]]]}
 
 class PirateFemale(DirectObject.DirectObject):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('PirateFemale')
 
     def __init__(self, pirate, dna):
@@ -1472,7 +1472,7 @@ class PirateFemale(DirectObject.DirectObject):
     def generatePantSets(self):
         self.pantSets = []
         tex = self.clothesTextures.findTexture(clothes_textures['PANT'][1][0][0])
- 
+
         def getBasicData():
             return {
                 'tallBoot': {
@@ -1501,7 +1501,7 @@ class PirateFemale(DirectObject.DirectObject):
                         'noCoat': NodePathCollection(),
                         'longCoat': NodePathCollection(),
                         'shortCoat': NodePathCollection()}}}
- 
+
         for pantIdx in xrange(len(self.clothingsPant)):
             pant = self.clothingsPant[pantIdx]
             texName = clothes_textures['PANT'][pantIdx][0]
@@ -1526,99 +1526,99 @@ class PirateFemale(DirectObject.DirectObject):
                         tallBoot = False
                         if name.find('interior') < 0:
                             anyCoat = True
- 
+
                         if name.find('side') < 0:
                             if name.find('longcoat') < 0 and name.find('tails') < 0:
                                 longCoat = True
- 
+
                             if anyCoat and name.find('back') < 0:
                                 shortCoat = True
- 
+
                         if name.find('belt') < 0:
                             belt = True
                             if name.find('_abs') < 0:
                                 lowVest = True
- 
+
                         if name.find('knee') < 0 and name.find('uppercalf') < 0:
                             tallBoot = True
- 
+
                         pantData['shortBoot']['neither']['noCoat'].addPath(piece)
                         if skirt:
                             if longCoat:
                                 pantData['shortBoot']['neither']['longCoat'].addPath(piece)
- 
+
                             if shortCoat:
                                 pantData['shortBoot']['neither']['shortCoat'].addPath(piece)
- 
+
                         elif anyCoat:
                             pantData['shortBoot']['neither']['longCoat'].addPath(piece)
                             pantData['shortBoot']['neither']['shortCoat'].addPath(piece)
- 
+
                         if belt:
                             pantData['shortBoot']['belt']['noCoat'].addPath(piece)
                             if skirt:
                                 if longCoat:
                                     pantData['shortBoot']['belt']['longCoat'].addPath(piece)
- 
+
                                 if shortCoat:
                                     pantData['shortBoot']['belt']['shortCoat'].addPath(piece)
- 
+
                             elif anyCoat:
                                 pantData['shortBoot']['belt']['longCoat'].addPath(piece)
                                 pantData['shortBoot']['belt']['shortCoat'].addPath(piece)
- 
+
                         if lowVest:
                             pantData['shortBoot']['lowVest']['noCoat'].addPath(piece)
                             if skirt:
                                 if longCoat:
                                     pantData['shortBoot']['lowVest']['longCoat'].addPath(piece)
- 
+
                                 if shortCoat:
                                     pantData['shortBoot']['lowVest']['shortCoat'].addPath(piece)
- 
+
                             elif anyCoat:
                                 pantData['shortBoot']['lowVest']['longCoat'].addPath(piece)
                                 pantData['shortBoot']['lowVest']['shortCoat'].addPath(piece)
- 
+
                         if tallBoot:
                             pantData['tallBoot']['neither']['noCoat'].addPath(piece)
                             if skirt:
                                 if longCoat:
                                     pantData['tallBoot']['neither']['longCoat'].addPath(piece)
- 
+
                                 if shortCoat:
                                     pantData['tallBoot']['neither']['shortCoat'].addPath(piece)
- 
+
                             elif anyCoat:
                                 pantData['tallBoot']['neither']['longCoat'].addPath(piece)
                                 pantData['tallBoot']['neither']['shortCoat'].addPath(piece)
- 
+
                             if belt:
                                 pantData['tallBoot']['belt']['noCoat'].addPath(piece)
                                 if skirt:
                                     if longCoat:
                                         pantData['tallBoot']['belt']['longCoat'].addPath(piece)
- 
+
                                     if shortCoat:
                                         pantData['tallBoot']['belt']['shortCoat'].addPath(piece)
- 
+
                                 elif anyCoat:
                                     pantData['tallBoot']['belt']['longCoat'].addPath(piece)
                                     pantData['tallBoot']['belt']['shortCoat'].addPath(piece)
- 
+
                             if lowVest:
                                 pantData['tallBoot']['lowVest']['noCoat'].addPath(piece)
                                 if skirt:
                                     if longCoat:
                                         pantData['tallBoot']['lowVest']['longCoat'].addPath(piece)
- 
+
                                     if shortCoat:
                                         pantData['tallBoot']['lowVest']['shortCoat'].addPath(piece)
- 
+
                                 elif anyCoat:
                                     pantData['tallBoot']['lowVest']['longCoat'].addPath(piece)
                                     pantData['tallBoot']['lowVest']['shortCoat'].addPath(piece)
- 
+
                 for style1 in [
                     'shortBoot',
                     'tallBoot']:
@@ -1633,7 +1633,7 @@ class PirateFemale(DirectObject.DirectObject):
                             data = pantData[style1][style2][style3]
                             geomSet = self.flattenData(data, lod, tex)
                             flattenedSet[style1][style2][style3].addPathsFrom(geomSet)
- 
+
             self.pantSets.append(flattenedSet)
 
     def generateHatSets(self):

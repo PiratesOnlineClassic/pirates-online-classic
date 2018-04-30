@@ -7,7 +7,7 @@ from direct.interval.IntervalGlobal import *
 from direct.showbase import ShadowPlacer
 from direct.showbase.DirectObject import *
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import EnemyGlobals
 from pirates.effects.DarkAura import DarkAura
 from pirates.effects.JRDeathEffect import JRDeathEffect

@@ -4,7 +4,7 @@ from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
 
 class CameraShaker(NodePath):
-    
+
     CutsceneScale = None
     TutorialInteriorScale = None
 

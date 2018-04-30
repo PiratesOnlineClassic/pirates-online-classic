@@ -1,6 +1,6 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import WeaponGlobals
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *

@@ -1,4 +1,4 @@
-from Nametag3d import *
+from otp.nametag.Nametag3d import *
 
 
 class NametagFloat2d(Nametag3d):

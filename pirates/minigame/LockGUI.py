@@ -7,7 +7,7 @@ import random
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.minigame import LockGlobals, PlayingCard, PlayingCardGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import GuiTray, PiratesGuiGlobals, PiratesTimer

@@ -1,11 +1,12 @@
+import traceback
+import sys
+
+from panda3d.core import *
 from direct.distributed.AstronInternalRepository import AstronInternalRepository
 from otp.distributed.OtpDoGlobals import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.MsgTypes import *
-from panda3d.core import *
 from pirates.uberdog.WebhooksUD import PiratesWebhookManager
-import traceback
-import sys
 
 class PiratesInternalRepository(AstronInternalRepository):
     GameGlobalsId = OTP_DO_ID_PIRATES
@@ -31,18 +32,18 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.__registerInternalNetMessage('startHoliday')
         self.__registerInternalNetMessage('stopHoliday')
         self.__registerInternalNetMessage('uberDOGHolidayStarted')
-        
+
         # Remote Inventory Manager Control
         #AI
         self.__registerInternalNetMessage('hasInventory')
         self.__registerInternalNetMessage('addInventory')
         self.__registerInternalNetMessage('removeInventory')
         self.__registerInternalNetMessage('getInventory')
-        
+
         #UD
         self.__registerInternalNetMessage('hasInventoryResponse')
         self.__registerInternalNetMessage('getInventoryResponse')
-        
+
         # Remote Inventory Control
         #AI
         self.__registerInternalNetMessage('b_setAccumulators')
@@ -56,7 +57,7 @@ class PiratesInternalRepository(AstronInternalRepository):
         self.__registerInternalNetMessage('getStackLimit')
         self.__registerInternalNetMessage('getStack')
         self.__registerInternalNetMessage('getOwnerId')
-        
+
         #UD
         self.__registerInternalNetMessage('getOwnerIdResponse')
         self.__registerInternalNetMessage('getAccumulatorsResponse')

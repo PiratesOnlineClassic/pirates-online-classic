@@ -2,10 +2,10 @@ import copy
 import math
 import random
 
-import Cannon
-import CannonGlobals
-import DistributedWeapon
-import WeaponGlobals
+from pirates.battle import Cannon
+from pirates.battle import CannonGlobals
+from pirates.battle import DistributedWeapon
+from pirates.battle import WeaponGlobals
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 from direct.fsm import ClassicFSM, State
@@ -15,7 +15,7 @@ from direct.showbase.DirectObject import *
 from direct.showutil import Rope
 from direct.task import Task
 from otp.otpbase import OTPGlobals, OTPRender
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import CannonGUI
 from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.effects.CameraShaker import CameraShaker
@@ -44,7 +44,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPCCannon')
 
     def __init__(self, cr):

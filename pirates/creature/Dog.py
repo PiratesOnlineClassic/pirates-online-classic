@@ -5,7 +5,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.DistancePhasedNode import BufferedDistancePhasedNode
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.creature.Animal import Animal
 
 

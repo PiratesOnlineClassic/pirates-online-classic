@@ -1,17 +1,17 @@
 import random
 
-import BodyGUI
-import ClothesGUI
-import GenderGUI
-import HairGUI
-import HeadGUI
-import JewelryGUI
-import NameGUI
-import NPCGUI
-import PirateFemale
-import PirateMale
-import TattooGUI
-from CharGuiBase import CharGuiSlider
+from pirates.makeapirate import BodyGUI
+from pirates.makeapirate import ClothesGUI
+from pirates.makeapirate import GenderGUI
+from pirates.makeapirate import HairGUI
+from pirates.makeapirate import HeadGUI
+from pirates.makeapirate import JewelryGUI
+from pirates.makeapirate import NameGUI
+from pirates.makeapirate import NPCGUI
+from pirates.makeapirate import PirateFemale
+from pirates.makeapirate import PirateMale
+from pirates.makeapirate import TattooGUI
+from pirates.makeapirate.CharGuiBase import CharGuiSlider
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import PyDatagram
 from direct.fsm import FSM, StateData
@@ -26,7 +26,7 @@ from MakeAPirateGlobals import *
 from otp.distributed import PotentialAvatar
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects import DynamicLight
 from pirates.npc import Skeleton
 from pirates.pirate import DynamicHuman, Human, HumanDNA, LocalPirate, Pirate
@@ -49,7 +49,7 @@ CamZoomOutPosHprs = [
    Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)]], [[Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)]]]
 
 class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('MakeAPirate')
 
     def __init__(self, avList, doneEvent, subId=0, index=0, isPaid=0, isNPCEditor=False, piratesEditor=None):

@@ -6,7 +6,7 @@ from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 from direct.showbase import DirectObject
 from direct.showbase.ShowBaseGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.pirate import HumanDNA
 from pirates.piratesbase import PLocalizer
 

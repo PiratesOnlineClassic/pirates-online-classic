@@ -11,7 +11,7 @@ from direct.showbase import DirectObject
 from direct.showbase.ShowBaseGlobal import *
 from direct.task import Task
 from otp.namepanel import NameTumbler
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 

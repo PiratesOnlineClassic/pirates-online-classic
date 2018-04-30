@@ -5,7 +5,7 @@ from direct.showbase.EventManagerGlobal import *
 from direct.showbase.MessengerGlobal import *
 from direct.task.Task import Task
 from direct.task.TaskManagerGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class DummyLauncherBase:

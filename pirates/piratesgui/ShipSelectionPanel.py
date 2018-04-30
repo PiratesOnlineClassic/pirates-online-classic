@@ -4,7 +4,7 @@
 # Embedded file name: pirates.piratesgui.ShipSelectionPanel
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiButton, GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.BorderFrame import BorderFrame

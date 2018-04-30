@@ -1,9 +1,9 @@
-import BattleAvatarGameFSM
+from pirates.pirate import BattleAvatarGameFSM
 from direct.fsm import FSM
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 

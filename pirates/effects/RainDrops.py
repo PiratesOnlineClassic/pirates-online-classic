@@ -1,6 +1,6 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
-from EffectController import EffectController
+from pirates.effects.EffectController import EffectController
 import random
 
 class RainDrops(EffectController, NodePath):

@@ -1,7 +1,7 @@
 # Embedded file name: pirates.piratesgui.GuildPage
 from direct.showbase.ShowBaseGlobal import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.fsm import StateData
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPLocalizer

@@ -13,11 +13,11 @@ from pandac.PandaModules import *
 from pirates.effects.WaterShadow import WaterShadow
 from pirates.piratesbase import PiratesGlobals
 from pirates.ship import ShipGlobals
-from PooledEffect import PooledEffect
+from pirates.effects.PooledEffect import PooledEffect
 
 
 class Wake(PooledEffect):
-    
+
     MinWakeVelocity = 6.0
     FadeOutVelocity = 10.0
     WakeFactor = 0.025

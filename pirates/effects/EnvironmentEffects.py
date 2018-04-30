@@ -23,7 +23,7 @@ from pirates.effects.TorchFire import TorchFire
 from pirates.effects.WaterSplash import WaterSplash
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.GameOptions import Options
-from PooledEffect import PooledEffect
+from pirates.effects.PooledEffect import PooledEffect
 
 class EnvironmentEffects(DirectObject):
     effectDict = {'effect_gypsyball': [(GypsyBallGlow, Options.SpecialEffectsLow)], 'candle_effect': [(CandleFlame, Options.SpecialEffectsLow)], 'torch_effect': [(TorchFire, Options.SpecialEffectsLow)], 'no_glow_effect': [(TorchFire, Options.SpecialEffectsLow)], 'lantern_effect': [(LanternGlow, Options.SpecialEffectsLow)], 'bonfire_effect': [(Bonfire, Options.SpecialEffectsMedium)], 'fireplace_effect': [(Fire, Options.SpecialEffectsLow)], 'watersplash_effect': [(WaterSplash, Options.SpecialEffectsMedium)], 'steam_effect': [(SteamEffect, Options.SpecialEffectsHigh)], 'darksteam_effect': [(DarkSteamEffect, Options.SpecialEffectsMedium)], 'steamcloud_effect': [(SteamCloud, Options.SpecialEffectsMedium)], 'cratersmoke_effect': [(CraterSmoke, Options.SpecialEffectsHigh)], 'lavaburst_effect': [(LavaBurst, Options.SpecialEffectsHigh)], 'blacksmoke_effect': [(BlackSmoke, Options.SpecialEffectsMedium)], 'lightsmoke_effect': [(LightSmoke, Options.SpecialEffectsMedium)], 'mysticsmoke_effect': [(MysticSmoke, Options.SpecialEffectsHigh)], 'mysticfire_effect': [(MysticFire, Options.SpecialEffectsHigh)]}

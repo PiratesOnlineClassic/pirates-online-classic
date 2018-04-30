@@ -1,8 +1,8 @@
-import Ear
-import Eyes
-import Mouth
-import Nose
-import Shape
+from pirates.makeapirate import Ear
+from pirates.makeapirate import Eyes
+from pirates.makeapirate import Mouth
+from pirates.makeapirate import Nose
+from pirates.makeapirate import Shape
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import DirectObject
 from direct.showbase.ShowBaseGlobal import *

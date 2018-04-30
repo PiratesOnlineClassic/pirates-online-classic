@@ -10,7 +10,7 @@ from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import report
 from direct.task import Task
 from otp.otpbase import OTPGlobals, OTPRender
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle.Teamable import Teamable
 from pirates.distributed import DistributedInteractive
 from pirates.effects import Grass
@@ -249,6 +249,9 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     @report(types=['frameCount', 'args'], dConfigParam=['want-connector-report', 'want-jail-report', 'want-island-report'])
     def loadZoneLevel(self, level):
         if level == 0:
+            self.cr.addTaggedInterest(self.doId, PiratesGlobals.IslandLocalZone, [
+                'IslandLocalInterest'])
+
             self.islandObjectsLoaded = True
             self.retrieveCacheData()
             self.playAnims()
@@ -302,6 +305,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     @report(types=['frameCount', 'args'], dConfigParam=['want-connector-report', 'want-jail-report', 'want-island-report'])
     def unloadZoneLevel(self, level):
         if level == 0:
+            self.cr.clearTaggedInterestNamed(None, ['IslandLocalInterest'])
             self.islandObjectsLoaded = False
             self.handleExitGameArea()
             self.unloadConnectors()

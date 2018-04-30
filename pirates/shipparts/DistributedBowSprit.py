@@ -5,7 +5,7 @@ from direct.distributed.ClockDelta import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.ship import ShipGlobals
 from pirates.battle import CannonGlobals
 from pirates.battle import WeaponGlobals

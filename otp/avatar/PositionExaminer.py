@@ -1,6 +1,6 @@
 from direct.showbase.DirectObject import DirectObject
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class PositionExaminer(DirectObject, NodePath):

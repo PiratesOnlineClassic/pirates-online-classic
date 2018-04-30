@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import *
 import random
 from direct.distributed.PyDatagram import PyDatagram
@@ -7,6 +7,7 @@ from otp.avatar import AvatarDNA
 from otp.speedchat import ColorSpace
 from pirates.ship import ShipGlobals
 from pirates.piratesbase import PiratesGlobals
+
 notify = directNotify.newCategory('SailDNA')
 SailTextureDict = {
     1: 'ship_sail',
@@ -24,7 +25,7 @@ SailColors = [
 
 
 class SailDNA(AvatarDNA.AvatarDNA):
-    
+
     def __init__(self):
         self.baseTeam = PiratesGlobals.INVALID_TEAM
         self.mastType = 0
@@ -53,10 +54,10 @@ class SailDNA(AvatarDNA.AvatarDNA):
 
     def setBaseTeam(self, val):
         self.baseTeam = val
-    
+
     def setMastType(self, val):
         self.mastType = val
-    
+
     def setMastPosIndex(self, val):
         self.mastPosIndex = val
 
@@ -86,17 +87,15 @@ class SailDNA(AvatarDNA.AvatarDNA):
 
     def getSailType(self):
         return self.sailType
-    
+
     def getPosIndex(self):
         return self.posIndex
-    
+
     def getTextureIndex(self):
         return self.textureIndex
-    
+
     def getColorIndex(self):
         return self.colorIndex
 
     def getLogoIndex(self):
         return self.logoIndex
-
-

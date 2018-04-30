@@ -1,3 +1,4 @@
+
 class PotentialShard:
 
     def __init__(self, id):
@@ -7,4 +8,3 @@ class PotentialShard:
         self.welcomeValleyPopulation = 0
         self.active = 1
         self.available = 1
-        return

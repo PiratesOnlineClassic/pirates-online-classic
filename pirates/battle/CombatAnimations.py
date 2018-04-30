@@ -1,11 +1,11 @@
 import random
 
-import WeaponGlobals
+from pirates.battle import WeaponGlobals
 from direct.actor import Actor
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.interval.IntervalGlobal import *
 from GrenadeProjectile import GrenadeProjectile
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects.AttuneSmoke import AttuneSmoke
 from pirates.effects.BeamEffect import BeamEffect
 from pirates.effects.CameraShaker import CameraShaker

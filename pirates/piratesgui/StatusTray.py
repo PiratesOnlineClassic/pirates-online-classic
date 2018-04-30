@@ -1,3 +1,5 @@
+import copy
+
 from direct.gui.DirectGui import *
 from panda3d.core import *
 from direct.task import Task
@@ -13,7 +15,6 @@ from pirates.battle.EnemySkills import *
 from pirates.battle import EnemyGlobals
 from pirates.battle import WeaponGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-import copy
 
 
 class StatusTray(GuiTray.GuiTray):

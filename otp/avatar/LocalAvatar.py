@@ -2,9 +2,9 @@ import math
 import random
 import string
 
-import Avatar
-import DistributedAvatar
-import PositionExaminer
+from otp.avatar import Avatar
+from otp.avatar import DistributedAvatar
+from otp.avatar import PositionExaminer
 from panda3d.core import *
 from direct.controls import ControlManager
 from direct.controls.GhostWalker import GhostWalker

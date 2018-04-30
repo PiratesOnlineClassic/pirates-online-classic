@@ -2,11 +2,11 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.QuestPage
-import GuiButton
+from pirates.piratesgui import GuiButton
 from direct.gui.DirectGui import *
 from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import (BlackPearlCrew, BorderFrame, InventoryPage,
                                 PDialog, PiratesGuiGlobals, QuestItemGui,
@@ -36,7 +36,7 @@ questComplete.setGlyphScale(0.8)
 tpMgr.setProperties('questComplete', questComplete)
 
 class QuestPage(InventoryPage.InventoryPage):
-    
+
     notify = directNotify.newCategory('QuestPage')
 
     def __init__(self):

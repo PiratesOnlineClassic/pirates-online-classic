@@ -1,7 +1,8 @@
+import time
+
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.distributed.ClockDelta import globalClockDelta
-import time
 
 
 class TimeManagerAI(DistributedObjectAI):

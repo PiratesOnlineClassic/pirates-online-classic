@@ -11,7 +11,7 @@ from pandac.PandaModules import *
 from pirates.effects.DustCloud import DustCloud
 from pirates.effects.SmallSplash import SmallSplash
 from pirates.piratesbase import PiratesGlobals
-from PooledEffect import PooledEffect
+from pirates.effects.PooledEffect import PooledEffect
 
 DebrisDict = {'0': 'models/props/rock_1_floor', '1': 'models/props/rock_2_floor', '2': 'models/props/rock_3_floor', '3': 'models/props/rock_4_floor'}
 

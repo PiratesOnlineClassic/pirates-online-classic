@@ -10,7 +10,7 @@ from otp.login import (
     PrivacyPolicyPanel,
     SecretFriendsInfoPanel)
 from otp.otpbase import OTPGlobals, OTPLocalizer
-from pandac.PandaModules import *
+from panda3d.core import *
 
 ChatEvent = 'ChatEvent'
 NormalChatEvent = 'NormalChatEvent'

@@ -5,7 +5,7 @@
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task.Task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui import PiratesGuiGlobals
 
 

@@ -4,7 +4,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.ai import HolidayGlobals
 from pirates.chat.PChatInputSpeedChat import PChatInputSpeedChat
 from pirates.economy import (AccessoriesStoreGUI, BarberStoreGUI,

@@ -1,10 +1,10 @@
-import FlagGlobals
+from panda3d.core import *
 from direct.distributed.DistributedObject import DistributedObject
-from Flag import Flag
-from pandac.PandaModules import *
+from pirates.flag import FlagGlobals
+from pirates.flag.Flag import Flag
 
 class DistributedFlag(DistributedObject, Flag):
-    
+
     notify = directNotify.newCategory('DistributedFlag')
 
     def __init__(self, cr):

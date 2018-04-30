@@ -1,7 +1,6 @@
 from otp.speedchat.SCMenu import SCMenu
 from otp.speedchat.SCStaticTextTerminal import SCStaticTextTerminal
 from otp.speedchat.SCTerminal import *
-from pirates.pirate.LocalPirate import *
 from pirates.quest.Quest import Quest
 from pirates.quest.QuestDNA import *
 from pirates.quest.QuestStatus import *
@@ -9,7 +8,7 @@ from pirates.speedchat.PSpeedChatQuestTerminal import *
 
 
 class PSpeedChatQuestMenu(SCMenu):
-    
+
     def __init__(self):
         SCMenu.__init__(self)
         self.accept('localAvatarQuestAdded', self.__questMenuRefresh)

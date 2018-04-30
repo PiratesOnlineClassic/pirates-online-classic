@@ -2,7 +2,7 @@ import random
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.actor import Actor
 from direct.fsm import FSM
 from direct.fsm import State

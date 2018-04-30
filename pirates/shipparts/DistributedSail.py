@@ -7,7 +7,7 @@ from direct.fsm import FSM, State
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import quickProfile
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import CannonGlobals, WeaponGlobals
 from pirates.destructibles import DistributedDestructibleObject
 from pirates.piratesbase import PiratesGlobals, PLocalizer

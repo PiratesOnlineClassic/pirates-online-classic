@@ -1,4 +1,4 @@
-import ReputationGlobals
+from pirates.reputation import ReputationGlobals
 from direct.directnotify import DirectNotifyGlobal
 from otp.avatar import DistributedAvatar
 from pirates.battle import WeaponGlobals

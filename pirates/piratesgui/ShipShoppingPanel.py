@@ -4,7 +4,7 @@
 # Embedded file name: pirates.piratesgui.ShipShoppingPanel
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.band.DistributedBandMember import DistributedBandMember
 from pirates.distributed import InteractGlobals
 from pirates.piratesbase import PiratesGlobals, PLocalizer

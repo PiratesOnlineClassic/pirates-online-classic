@@ -3,7 +3,7 @@ from direct.gui.OnscreenText import OnscreenText
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import Functor, report
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.minigame import PlayingCardGlobals
 from pirates.piratesbase import CollectionMap, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals

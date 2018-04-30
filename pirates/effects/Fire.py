@@ -1,4 +1,4 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 from panda3d.physics import *
 from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
@@ -6,8 +6,8 @@ from direct.particles import ParticleEffect
 from direct.particles import Particles
 from direct.particles import ForceGroup
 from pirates.piratesgui.GameOptions import Options
-from PooledEffect import PooledEffect
-from EffectController import EffectController
+from pirates.effects.PooledEffect import PooledEffect
+from pirates.effects.EffectController import EffectController
 import random
 
 class Fire(PooledEffect, EffectController):

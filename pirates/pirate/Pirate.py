@@ -1,4 +1,4 @@
-import AvatarTypes
+from pirates.pirate import AvatarTypes
 from Human import Human
 from pirates.piratesbase import PiratesGlobals
 

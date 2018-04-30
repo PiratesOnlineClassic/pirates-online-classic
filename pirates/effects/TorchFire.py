@@ -1,14 +1,14 @@
 import random
 
+from pandac.PandaModules import *
 from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
-from pandac.PandaModules import *
+from pirates.effects.EffectController import EffectController
 from pirates.piratesgui.GameOptions import Options
 
 class TorchFire(EffectController, NodePath):
-    
+
     cardScale = 64.0
 
     def __init__(self, newParent=None):

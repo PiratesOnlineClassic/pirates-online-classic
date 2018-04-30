@@ -3,7 +3,7 @@
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.minigame.BishopsHandGlobals
 from direct.showbase import PythonUtil
-from pandac.PandaModules import *
+from panda3d.core import *
 
 TARGET_POS = {4: Vec3(0.85, 0, 0.0), 3: Vec3(0.6, 0, 0.42), 2: Vec3(0.27, 0, 0.6), 1: Vec3(-0.08, 0, 0.63), 0: Vec3(-0.59, 0, 0.29)}
 FACES = PythonUtil.Enum('DEALER,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN')

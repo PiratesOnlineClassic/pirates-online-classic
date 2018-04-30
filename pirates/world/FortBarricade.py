@@ -1,7 +1,7 @@
-from pandac.PandaModules import NodePath, Point3
-from direct.directnotify import DirectNotifyGlobal
-from pandac.PandaModules import rad2Deg, Vec3, GeomVertexFormat, GeomVertexData, GeomVertexWriter, Geom, GeomTriangles, GeomNode, CollisionNode, CollisionPolygon
 import math
+
+from panda3d.core import *
+from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesbase import PiratesGlobals
 
 class FortBarricade:

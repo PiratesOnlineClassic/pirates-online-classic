@@ -1,3 +1,4 @@
+
 class PotentialAvatar:
 
     def __init__(self, id, names, dna, position, allowedName, creator=1, shared=1,

@@ -4,13 +4,13 @@
 # Embedded file name: pirates.effects.WaterMist
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
+from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
-from PooledEffect import PooledEffect
+from pirates.effects.PooledEffect import PooledEffect
 
 
 class WaterMist(PooledEffect, EffectController):
-    
+
 
     def __init__(self, parent=None):
         PooledEffect.__init__(self)

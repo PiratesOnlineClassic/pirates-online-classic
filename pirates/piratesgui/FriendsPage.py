@@ -2,7 +2,7 @@
 # Python bytecode 2.4 (62061)
 # Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.piratesgui.FriendsPage
-import GuiButton
+from pirates.piratesgui import GuiButton
 from direct.fsm import StateData
 from direct.gui.DirectGui import *
 from direct.showbase.ShowBaseGlobal import *
@@ -10,13 +10,13 @@ from direct.task import Task
 from otp.friends import FriendSecret
 from otp.friends.FriendInfo import FriendInfo
 from otp.otpbase import OTPGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PirateMemberList, PiratesGuiGlobals, SocialPage
 
 
 class FriendsPage(SocialPage.SocialPage):
-    
+
     NumVisible = 6
 
     def __init__(self):

@@ -3,7 +3,7 @@ import random
 from direct.directnotify.DirectNotifyGlobal import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
-from pandac.PandaModules import *
+from panda3d.core import *
 
 notify = directNotify.newCategory('AvatarDNA')
 

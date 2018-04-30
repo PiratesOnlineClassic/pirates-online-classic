@@ -6,7 +6,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task.Task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.distributed import DistributedInteractive
 from pirates.interact import InteractionManager, InteractiveBase
 from pirates.minigame import LockGlobals, LockGUI

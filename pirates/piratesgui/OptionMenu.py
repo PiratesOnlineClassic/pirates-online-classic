@@ -6,7 +6,7 @@ from direct.gui import DirectGuiGlobals as DGG
 from direct.gui.DirectButton import *
 from direct.gui.DirectFrame import *
 from direct.gui.DirectOptionMenu import *
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class OptionMenu(DirectOptionMenu):

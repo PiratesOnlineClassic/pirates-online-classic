@@ -6,7 +6,7 @@ from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
 from otp.otpgui import OTPDialog
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.minigame import (DistributedGameTable, PlayingCard,
                               PlayingCardGlobals, PokerBase, PokerTableGUI)
 from pirates.piratesbase import PLocalizer

@@ -12,7 +12,7 @@ from direct.showbase.MessengerGlobal import *
 from direct.task.Task import Task
 from direct.task.TaskManagerGlobal import *
 from otp.launcher.LauncherBase import LauncherBase
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PLocalizer
 
 

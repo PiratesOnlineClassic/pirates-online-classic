@@ -1,10 +1,10 @@
 import sys
 
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import FSM
 from direct.gui.DirectGui import *
 from otp.otpbase import OTPGlobals, OTPLocalizer
-from pandac.PandaModules import *
 
 
 class PChatInputTyped(FSM.FSM, DirectEntry):
@@ -280,7 +280,7 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
     def __execMessage(self, message):
         if not PChatInputTyped.ExecNamespace:
             PChatInputTyped.ExecNamespace = {}
-            exec 'from pandac.PandaModules import *' in globals(), self.ExecNamespace
+            exec 'from panda3d.core import *' in globals(), self.ExecNamespace
             self.importExecNamespace()
         try:
             return str(eval(message, globals(), PChatInputTyped.ExecNamespace))

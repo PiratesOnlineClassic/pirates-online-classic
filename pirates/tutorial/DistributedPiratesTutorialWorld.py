@@ -4,7 +4,7 @@ from direct.actor import Actor
 from direct.fsm import FSM
 from direct.showbase.PythonUtil import report
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.cutscene import CutsceneData
 from pirates.instance import DistributedInstanceBase
 from pirates.makeapirate import MakeAPirate
