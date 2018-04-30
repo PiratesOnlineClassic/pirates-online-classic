@@ -19,7 +19,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         self.wantSpawnNodes = config.GetBool('want-spawn-nodes', True)
 
     def parentObjectToCell(self, object, zoneId=None, parent=None):
-        parent = GameAreaBuilderAI.parentObjectToCell(self, object, zoneId, parent)
+        parent = ClientAreaBuilderAI.parentObjectToCell(self, object, zoneId, parent)
         object.b_setLocation(parent.doId, PiratesGlobals.IslandLocalZone)
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
