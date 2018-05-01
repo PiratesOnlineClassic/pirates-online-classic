@@ -21,7 +21,9 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
 
-        if objType == 'Building Exterior' and self.wantBuildingExteriors:
+        if objType == 'Player Spawn Node':
+            newObj = self.__createPlayerSpawnNode(objectData, parent, parentUid, objKey, dynamic)
+        elif objType == 'Building Exterior' and self.wantBuildingExteriors:
             newObj = self.__createBuildingExterior(parent, parentUid, objKey, objectData)
         elif objType == ObjectList.DOOR_LOCATOR_NODE and self.wantDoorLocatorNodes:
             newObj = self.__createDoorLocatorNode(parent, parentUid, objKey, objectData)
@@ -33,6 +35,26 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             newObj = self.__createObjectSpawnNode(parent, parentUid, objKey, objectData)
 
         return newObj
+
+    def __createPlayerSpawnNode(self, objectData, parent, parentUid, objKey, dynamic):
+        from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
+        from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+
+        parent = self.parent.getParentObj()
+
+        if isinstance(parent, DistributedGameAreaAI):
+            parent = parent.getParentObj()
+
+        if not parent or not isinstance(parent, DistributedInstanceBaseAI):
+            self.notify.warning('Cannot setup player spawn point for %r!' % parent)
+            return None
+
+        (x, y, z), objectParent = self.getObjectTruePosAndParent(objKey, parentUid, objectData)
+        h, p, r = objectData.get('Hpr', (0, 0, 0))
+
+        parent.addSpawnPt(self.parent.getUniqueId(), (x, y, z, h))
+
+        return None
 
     def __createBuildingExterior(self, parent, parentUid, objKey, objectData):
         from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
@@ -70,8 +92,13 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
             return
 
-        interiorClass = DistributedJailInteriorAI if 'Jail' in interiorFile else DistributedGAInteriorAI
-        interior = interiorClass(self.air)
+        isJail = 'jail' in objectData['Visual']['Model']
+
+        if isJail:
+            interior = DistributedJailInteriorAI(self.air)
+        else:
+            interior = DistributedGAInteriorAI(self.air)
+
         interior.setUniqueId(exteriorUid)
         interior.setName(PLocalizer.LocationNames.get(objKey, ''))
         interior.setModelPath(modelPath)
@@ -81,6 +108,9 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
         parent.generateChildWithRequired(interior, self.air.allocateZone())
         parent.builder.addObject(interior, uniqueId=objKey)
+
+        if isJail:
+            self.parent.setJailInterior(interior)
 
         self.air.worldCreator.loadObjectDict(objectData.get('Objects', {}), self.parent, objKey, True)
         self.air.worldCreator.loadObjectsFromFile(interiorFile + '.py', interior)

@@ -480,20 +480,22 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
     def deleteBattleCollisions(self):
         if not self.battleTubeNodePaths:
             return
+
         if self.battleTube:
             self.battleTube = None
+
         for np in self.battleTubeNodePaths:
             np.removeNode()
 
         self.battleTubeNodePaths = []
         if self.isBattleable():
             for np in self.aimTubeNodePaths:
-                if hasattr(self.cr, 'targetMgr'):
+                if hasattr(self.cr, 'targetMgr') and self.cr.targetMgr:
                     self.cr.targetMgr.removeTarget(np.get_key())
+
                 np.removeNode()
 
             self.aimTubeNodePaths = []
-        return
 
     def stashBattleCollisions(self):
         for tube in self.battleTubeNodePaths:
@@ -514,7 +516,8 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         explosion.setScale(0.4)
         explosion.setColorScale(0, 1, 1, 1)
         explosion.setBillboardPointWorld()
-        return Sequence(Func(explosion.reparentTo, parent), Func(explosion.setPos, explosionPoint), Wait(0.6), Func(explosion.detachNode))
+        return Sequence(Func(explosion.reparentTo, parent), Func(explosion.setPos, explosionPoint),
+            Wait(0.6), Func(explosion.detachNode))
 
     def isBattleable(self):
         return 1
@@ -526,30 +529,35 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         if self.isLocal():
             self.notify.warning('We are hearing our own requestInteraction bounced back to us')
             return
+
         DistributedReputationAvatar.requestInteraction(self, avId, interactType)
         if not self.isBattleable():
             return
+
         if not self.canAggro():
             return
+
         skillEffects = self.getSkillEffects()
         if WeaponGlobals.C_SPAWN in skillEffects:
             return
+
         base.localAvatar.setCurrentTarget(self.doId)
 
     def requestExit(self):
         if self.isLocal():
             self.notify.warning('We are hearing our own requestExit bounced back to us')
             return
+
         DistributedReputationAvatar.requestExit(self)
 
     def setCurrentTarget(self, targetId):
         if self.currentTarget:
             if targetId == None:
                 self.currentTarget.resetComboLevel()
+
         self.currentTarget = self.cr.doId2do.get(targetId)
         if hasattr(self, 'undead') and self.undead:
             self.skeleton.currentTarget = self.currentTarget
-        return
 
     def setLocalTarget(self, on):
         DistributedReputationAvatar.setLocalTarget(self, on)

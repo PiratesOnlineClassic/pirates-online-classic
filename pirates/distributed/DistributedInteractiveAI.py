@@ -83,14 +83,14 @@ class DistributedInteractiveAI(DistributedNodeAI):
     def handleRequestExit(self, avatar):
         return self.DENY
 
-    def d_rejectInteraction(self, doId):
-        self.sendUpdateToAvatarId(doId, 'rejectInteraction', [])
+    def d_rejectInteraction(self, avatarId):
+        self.sendUpdateToAvatarId(avatarId, 'rejectInteraction', [])
 
-    def d_rejectExit(self, doId):
-        self.sendUpdateToAvatarId(doId, 'rejectExit', [])
+    def d_rejectExit(self, avatarId):
+        self.sendUpdateToAvatarId(avatarId, 'rejectExit', [])
 
-    def d_offerOptions(self, doId, optionIds, statusCodes):
-        self.sendUpdateToAvatarId(doId, 'offerOptions', [optionIds, statusCodes])
+    def d_offerOptions(self, avatarId, optionIds, statusCodes):
+        self.sendUpdateToAvatarId(avatarId, 'offerOptions', [optionIds, statusCodes])
 
     def selectOption(self, optionId):
         pass

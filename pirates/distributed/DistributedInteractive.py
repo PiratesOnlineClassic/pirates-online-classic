@@ -13,11 +13,11 @@ class DistributedInteractive(DistributedNode.DistributedNode, InteractiveBase.In
         DistributedNode.DistributedNode.__init__(self, cr)
         InteractiveBase.InteractiveBase.__init__(self)
         DistributedLocatableObject.DistributedLocatableObject.__init__(self, cr)
+
         self.interactGUI = None
         self.hideHpMeterFlag = 0
         self.userId = 0
         self.uniqueId = None
-        return
 
     def delete(self):
         DistributedNode.DistributedNode.delete(self)
@@ -85,10 +85,10 @@ class DistributedInteractive(DistributedNode.DistributedNode, InteractiveBase.In
             self.notify.warning('offerOptions: old interact GUI still around')
             self.interactGUI.destroy()
             self.interactGUI = None
+
         self.interactGUI = InteractGUI.InteractGUI()
         title = self.getMenuTitle()
         self.interactGUI.setOptions(title, optionIds, statusCodes, self.b_selectOption)
-        return
 
     def b_selectOption(self, optionId):
         self.d_selectOption(optionId)
@@ -101,7 +101,6 @@ class DistributedInteractive(DistributedNode.DistributedNode, InteractiveBase.In
         if self.interactGUI:
             self.interactGUI.destroy()
             self.interactGUI = None
-        return
 
     def getMenuTitle(self):
         return ''
@@ -115,6 +114,7 @@ class DistributedInteractive(DistributedNode.DistributedNode, InteractiveBase.In
     def setUniqueId(self, uid):
         if self.uniqueId != '' and uid != self.uniqueId:
             base.cr.uidMgr.removeUid(self.uniqueId)
+
         self.uniqueId = uid
         base.cr.uidMgr.addUid(self.uniqueId, self.getDoId())
 

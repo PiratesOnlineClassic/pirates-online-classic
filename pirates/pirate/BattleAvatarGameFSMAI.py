@@ -27,3 +27,9 @@ class BattleAvatarGameFSMAI(FSM):
 
     def exitDeath(self):
         pass
+
+    def enterThrownInJail(self):
+        pass
+
+    def exitThrownInJail(self):
+        pass

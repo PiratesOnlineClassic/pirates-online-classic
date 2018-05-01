@@ -85,14 +85,16 @@ class DistributedInstanceBaseAI(DistributedObjectAI):
         if area not in self.spawnPts:
             return (0, 0, 0, 0)
 
-        return self.spawnPts[area][index] if index else random.choice(
-            self.spawnPts[area])
+        return self.spawnPts[area][index] if index else random.choice(self.spawnPts[area])
 
     def avatarDied(self):
         pass
 
     def setCanBePrivate(self, instance):
         pass
+
+    def d_sendLocalAvatarToJail(self, avatarId, jailDoId, jailWorldParentId, jailWorldZone):
+        self.sendUpdateToAvatarId(avatarId, 'sendLocalAvatarToJail', [jailDoId, jailWorldParentId, jailWorldZone])
 
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
         do.generateWithRequiredAndId(self.air.allocateChannel(), self.doId, zoneId, optionalFields)

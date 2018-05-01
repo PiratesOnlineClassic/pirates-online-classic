@@ -9,6 +9,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 class DistributedCellDoor(DistributedInteractive.DistributedInteractive):
     notify = directNotify.newCategory('DistributedCellDoor')
     notify.setDebug(False)
+
     DSUndef = -1
     DSOpen = 0
     DSShut = 1

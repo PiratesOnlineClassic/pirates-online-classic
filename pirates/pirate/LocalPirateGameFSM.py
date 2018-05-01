@@ -902,7 +902,9 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
             spawnInfo = self.av.cr.activeWorld.spawnInfo
             parent = self.av.getParentObj()
             if not isinstance(parent, NodePath):
-                logBlock(4, 'Player(%s) in jail, but parentObj is %s' % (self.av.doId, parent))
+                logBlock(4, 'Player(%s) in jail, but parentObj is %s' % (
+                    self.av.doId, parent))
+
                 return
 
             self.av.setPosHpr(self.av.getParentObj(), *spawnInfo[0])
@@ -918,7 +920,8 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
 
         self.spawnPtEvent = self.av.cr.activeWorld.uniqueName('spawnInfoReceived')
         self.acceptOnce(self.spawnPtEvent, receivedSpawnPt)
-        #self.acceptOnce('localAvatar-setLocation', lambda *args, **kwargs: self.av.getParentObj().handleAvatarSetLocation(*args, **kwargs))
+        self.acceptOnce('localAvatar-setLocation', lambda *args, **kwargs: self.av.getParentObj().\
+            handleAvatarSetLocation(*args, **kwargs))
 
     @report(types=['frameCount'], dConfigParam='want-jail-report')
     def exitThrownInJail(self):

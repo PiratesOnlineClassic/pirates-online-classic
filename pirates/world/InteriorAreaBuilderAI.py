@@ -102,18 +102,14 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         cellDoor.setScale(objectData.get('Scale', (1, 1, 1)))
         cellDoor.setCellIndex(objectData.get('Cell Index', 0))
 
-        self.setObjectTruePosHpr(cellDoor, objKey, parentUid, objectData)
-
-        zoneId = self.parent.getZoneFromXYZ(cellDoor.getPos())
-        self.parent.generateChildWithRequired(cellDoor, zoneId)
-        self.parentObjectToCell(cellDoor, zoneId)
+        self.parent.generateChildWithRequired(cellDoor, PiratesGlobals.InteriorDoorZone)
 
         self.addObject(cellDoor)
+        self.parent.addCellDoor(cellDoor)
 
         return cellDoor
 
     def __createParlorTable(self, objectData, parent, parentUid, objKey):
-
         tableCls = None
         gameType = objectData.get('Category', 'Unknown')
 
@@ -146,7 +142,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         zoneId = self.parent.getZoneFromXYZ(gameTable.getPos())
         self.parent.generateChildWithRequired(gameTable, zoneId)
         self.parentObjectToCell(gameTable, zoneId)
-        
+
         self.addObject(gameTable)
 
         return gameTable

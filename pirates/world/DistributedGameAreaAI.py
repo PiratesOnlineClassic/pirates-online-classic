@@ -14,37 +14,10 @@ class DistributedGameAreaAI(DistributedNodeAI):
         self.links = []
         self.uniqueId = ''
         self.name = PLocalizer.Unknown
+        self.jailInterior = None
 
         self.uidMgr = UniqueIdManager(self.air)
         self.builder = GameAreaBuilderAI(self.air, self)
-
-    def handleAvatarZoneChange(self, av, useZoneId=-1):
-        pos = av.getPos(self)
-        zoneId = self.getZoneFromXYZ(pos)
-
-        def resetConcentricZones():
-            avatar.setConcentricZones(self.getConcentricZones(zoneId,
-                self.gridRadius))
-
-        # if the avatar doesn't already have a set of concentric zones
-        # calculated, calculate a new set of zones...
-        if not avatar.getConcentricZones():
-            resetConcentricZones()
-
-        for concentricZoneId in avatar.getConcentricZones():
-
-            # check to see if the avatar has gone out of range of the available
-            # concentric zones
-            if zoneId < concentricZoneId or zoneId > concentricZoneId:
-
-                # set the grid parent of the avatar to the new zone which is out
-                # of range of the concentric zones
-                avatar.b_setLocation(self.doId, zoneId)
-
-                # the avatar has gone past it's previous set of concentric zones,
-                # calculate a new set of zones...
-                resetConcentricZones()
-                break
 
     def setModelPath(self, modelPath):
         self.modelPath = modelPath
@@ -109,6 +82,12 @@ class DistributedGameAreaAI(DistributedNodeAI):
 
     def spawnNPC(self, spawnPtId, doId):
         pass
+
+    def setJailInterior(self, jailInterior):
+        self.jailInterior = jailInterior
+
+    def getJailInterior(self):
+        return self.jailInterior
 
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
         do.generateWithRequiredAndId(self.air.allocateChannel(), self.doId, zoneId, optionalFields)

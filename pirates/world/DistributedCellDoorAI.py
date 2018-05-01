@@ -1,3 +1,5 @@
+import random
+
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from direct.directnotify import DirectNotifyGlobal
 
@@ -46,4 +48,11 @@ class DistributedCellDoorAI(DistributedInteractiveAI):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
+            return
+
+        damage = random.random() * 100
+        self.b_setHealth(max(0, min(self.getHealth() - damage, 100)))
+
+        if self.health <= 0:
+            self.d_rejectInteraction(avatar.doId)
             return

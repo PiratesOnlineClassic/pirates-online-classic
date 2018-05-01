@@ -315,8 +315,8 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
                 self.pendingJail = None
                 if isinstance(currentWorld, DistributedInstanceBase):
                     currentWorld.removeWorldInterest()
-                    localAvatar.clearTaggedInterestNamed(None, ['instanceInterest'])
-                    localAvatar.replaceTaggedInterestTag('instanceInterest-Jail', 'instanceInterest')
+                    self.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
+                    self.cr.replaceTaggedInterestTag('instanceInterest-Jail', 'instanceInterest')
 
                 world = jailArea.getParentObj()
                 world.addWorldInterest(jailArea)

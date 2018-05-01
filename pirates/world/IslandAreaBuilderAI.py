@@ -19,35 +19,13 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         object.b_setLocation(parent.doId, PiratesGlobals.IslandLocalZone)
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
-        if objType == 'Player Spawn Node':
-            newObj = self.__createPlayerSpawnNode(objectData, parent, parentUid, objKey, dynamic)
-        elif objType == 'Dinghy' and self.wantDinghys:
+        if objType == 'Dinghy' and self.wantDinghys:
             newObj = self.__createDinghy(parent, parentUid, objKey, objectData)
         else:
             newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey,
                 dynamic, parentIsObj, fileName, actualParentObj)
 
         return newObj
-
-    def __createPlayerSpawnNode(self, objectData, parent, parentUid, objKey, dynamic):
-        from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
-        from pirates.world.DistributedIslandAI import DistributedIslandAI
-
-        parent = self.parent.getParentObj()
-
-        if isinstance(parent, DistributedIslandAI):
-            parent = parent.getParentObj()
-
-        if not parent or not isinstance(parent, DistributedInstanceBaseAI):
-            self.notify.warning('Cannot setup player spawn point for %r!' % parent)
-            return None
-
-        (x, y, z), objectParent = self.getObjectTruePosAndParent(objKey, parentUid, objectData)
-        h, p, r = objectData.get('Hpr', (0, 0, 0))
-
-        parent.addSpawnPt(self.parent.getUniqueId(), (x, y, z, h))
-
-        return None
 
     def __createDinghy(self, parent, parentUid, objKey, objectData):
         dinghy = DistributedDinghyAI(self.air)

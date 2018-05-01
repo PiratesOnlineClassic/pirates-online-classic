@@ -14,4 +14,5 @@ class DistributedJailInterior(DistributedGAInterior.DistributedGAInterior):
     @report(types=['frameCount', 'args'], dConfigParam='want-jail-report')
     def handleAvatarSetLocation(self, parentId, zoneId):
         if parentId != self.doId:
-            logBlock(4, 'jailed avatar is leaving before ThrownInJail is complete.\nGoing to %s (%s,%s)' % (self.cr.doId2do.get(parentId), parentId, zoneId))
+            logBlock(4, 'jailed avatar is leaving before ThrownInJail is complete.\nGoing to %s (%s,%s)' % (self.cr.doId2do.get(
+                parentId), parentId, zoneId))
