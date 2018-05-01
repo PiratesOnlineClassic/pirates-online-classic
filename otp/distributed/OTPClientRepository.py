@@ -1767,12 +1767,10 @@ class OTPClientRepository(ClientRepositoryBase):
             di2 = DatagramIterator(dg, di.getCurrentIndex())
             doId = di2.getUint32()
             if doId in self.deferredDoIds:
-                self.deferredDoIds[doId][3].append(
-                    (CLIENT_OBJECT_LOCATION, (dg, di)))
+                self.deferredDoIds[doId][3].append((CLIENT_OBJECT_LOCATION, (dg, di)))
             else:
                 self.handleObjectLocation(di)
-        else:
-            self.handleObjectLocation(di)
+        self.handleObjectLocation(di)
 
     def sendWishName(self, avId, name):
         datagram = PyDatagram()
