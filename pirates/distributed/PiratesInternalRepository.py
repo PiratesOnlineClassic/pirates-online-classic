@@ -1,3 +1,5 @@
+import traceback
+
 from panda3d.core import *
 from otp.distributed.OtpDoGlobals import *
 from otp.distributed.OTPInternalRepository import OTPInternalRepository
@@ -53,7 +55,7 @@ class PiratesInternalRepository(OTPInternalRepository):
         self._registerInternalNetMessage('getAccumulatorResponse')
         self._registerInternalNetMessage('getStackLimitResponse')
         self._registerInternalNetMessage('getStackResponse')
-        
+
     def logPotentialHacker(self, message, kickChannel=False, **kwargs):
         self.notify.warning(message)
 
@@ -94,4 +96,3 @@ class PiratesInternalRepository(OTPInternalRepository):
         # Python 2 Vs 3 compatibility
         if not sys.version_info >= (3, 0):
             sys.exc_clear()
-
