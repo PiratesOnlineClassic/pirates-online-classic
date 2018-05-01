@@ -80,8 +80,18 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def getAvatarType(self):
         return self.avatarType
 
+    def setGameState(self, gameState, timestamp=0):
+        self.gameFSM.request(gameState)
+
     def d_setGameState(self, gameState):
         self.sendUpdate('setGameState', [gameState, globalClockDelta.getRealNetworkTime(bits=16)])
+
+    def b_setGameState(self, gameState):
+        self.setGameState(gameState)
+        self.d_setGameState(gameState)
+
+    def getGameState(self):
+        return self.gameFsm.getCurrentOrNextState()
 
     def setCurrentWeapon(self, currentWeapon, isWeaponDrawn):
         self.currentWeaponId = currentWeapon
@@ -138,7 +148,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
     def setHp(self, hp, quietly=False):
         if hp <= 0 and self.hp > 0:
-            self.gameFSM.request('Death')
+            self.b_setGameState('Death')
 
         self.hp = hp if hp >= 0 else 0
         self.quietly = quietly

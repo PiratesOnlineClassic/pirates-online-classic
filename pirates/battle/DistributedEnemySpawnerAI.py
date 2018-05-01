@@ -77,7 +77,6 @@ class SpawnNodeBase:
 
             return
 
-        self._npc.d_setGameState('Death')
         taskMgr.doMethodLater(5, self.__respawn, 'perform-respawn-%s' % self.objKey)
 
     def canRespawn(self):
