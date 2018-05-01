@@ -5,6 +5,7 @@ from pirates.battle.Teamable import Teamable
 from pirates.world.WorldGlobals import *
 from pirates.world.IslandAreaBuilderAI import IslandAreaBuilderAI
 from pirates.piratesbase import PiratesGlobals
+from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 
 class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedIslandAI')
@@ -32,6 +33,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
     def generate(self):
         DistributedCartesianGridAI.generate(self)
         DistributedGameAreaAI.generate(self)
+
         self.accept('HolidayStarted', self.holidayStart)
         self.accept('HolidayEnded', self.holidayEnded)
 
@@ -39,12 +41,14 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         for holidayId in self.air.newsManager.holidayList:
             self.holidayStart(holidayId)
 
-    def delete(self):
-        DistributedCartesianGridAI.delete(self)
-        DistributedGameAreaAI.delete(self)
+    def handleChildArrive(self, childObj, zoneId):
+        if isinstance(childObj, DistributedPlayerPirateAI) and not childObj.isNpc:
+            pass
+        else:
+            childObj.b_setLocation(self.doId, PiratesGlobals.IslandLocalZone)
 
-        self.ignore('HolidayStarted')
-        self.ignore('HolidayEnded')
+        DistributedCartesianGridAI.handleChildArrive(self, childObj, zoneId)
+        DistributedGameAreaAI.handleChildArrive(self, childObj, zoneId)
 
     def holidayStart(self, holidayId):
         if self.uniqueId == '1156207188.95dzlu' and holidayId == PiratesGlobals.FOUNDERSFEAST:
@@ -160,3 +164,10 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def getFeastFireEnabled(self):
         return self.feastFireEnabled
+
+    def delete(self):
+        self.ignore('HolidayStarted')
+        self.ignore('HolidayEnded')
+
+        DistributedCartesianGridAI.delete(self)
+        DistributedGameAreaAI.delete(self)

@@ -20,10 +20,6 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         self.wantJailCellDoors = config.GetBool('want-jail-cell-doors', True)
         self.wantParlorGames = config.GetBool('want-parlor-games', True)
 
-    def parentObjectToCell(self, object, zoneId=None, parent=None):
-        parent = GameAreaBuilderAI.parentObjectToCell(self, object, zoneId, parent)
-        object.b_setLocation(parent.doId, PiratesGlobals.InteriorDoorZone)
-
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
 

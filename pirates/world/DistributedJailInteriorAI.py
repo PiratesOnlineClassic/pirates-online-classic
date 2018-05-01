@@ -2,6 +2,7 @@ import random
 
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from direct.directnotify import DirectNotifyGlobal
+from pirates.piratesbase import PiratesGlobals
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 
 class DistributedJailInteriorAI(DistributedGAInteriorAI):
@@ -16,11 +17,13 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
         if isinstance(childObj, DistributedPlayerPirateAI):
             if childObj.getJailCellIndex() < 100:
                 childObj.b_setGameState('ThrownInJail')
+        else:
+            childObj.b_setLocation(self.doId, PiratesGlobals.InteriorDoorZone)
 
         DistributedGAInteriorAI.handleChildArrive(self, childObj, zoneId)
 
     def handleChildLeave(self, childObj, zoneId):
-        if isinstance(childObj, DistributedPlayerPirateAI):
+        if isinstance(childObj, DistributedPlayerPirateAI) and not childObj.isNpc:
             if childObj.getJailCellIndex() < 100:
                 cellDoor = self.getCellDoor(avatarId=childObj.doId)
 
