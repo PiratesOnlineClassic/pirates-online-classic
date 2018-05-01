@@ -953,7 +953,7 @@ dclass DistributedBattleAvatar : DistributedReputationAvatar, WeaponBase, Teamab
   battleRandomSync();
 };
 
-dclass DistributedBattleNPC : DistributedAvatar, DistributedBattleAvatar {
+dclass DistributedBattleNPC : DistributedBattleAvatar {
   setName(string) required broadcast ram;
   setSpawnPosHpr(int16/10, int16/10, int16/10, int16%360/10, int16%360/10, int16%360/10) required broadcast ram;
   setAmbush(uint8) broadcast ram;
