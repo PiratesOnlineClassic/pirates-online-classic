@@ -63,7 +63,7 @@ class InteractiveBase(FSM.FSM):
             self.useLabel = None
         FSM.FSM.cleanup(self)
         if self.__isTarget:
-            if hasattr(base.cr, 'targetMgr') and self.proximityCollisionId:
+            if hasattr(base.cr, 'targetMgr') and base.cr.targetMgr and self.proximityCollisionId:
                 base.cr.targetMgr.removeTarget(self.proximityCollisionId)
             self.__isTarget = 0
         if hasattr(base, 'localAvatar') and localAvatar.currentTarget is self:

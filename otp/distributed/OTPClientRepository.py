@@ -1797,39 +1797,32 @@ class OTPClientRepository(ClientRepositoryBase):
             rejectedName = di.getString()
         if approvedName:
             name = approvedName
+        elif pendingName:
+            name = pendingName
+        elif rejectedName:
+            name = rejectedName
         else:
-            if pendingName:
-                name = pendingName
-            else:
-                if rejectedName:
-                    name = rejectedName
-                else:
-                    name = ''
+            name = ''
         WNR = self.WishNameResult
         if returnCode:
             result = WNR.Failure
-        else:
-            if rejectedName:
-                result = WNR.Rejected
-            else:
-                if pendingName:
-                    result = WNR.PendingApproval
-                else:
-                    if approvedName:
-                        result = WNR.Approved
+        elif rejectedName:
+            result = WNR.Rejected
+        elif pendingName:
+            result = WNR.PendingApproval
+        elif approvedName:
+            result = WNR.Approved
         messenger.send(self.getWishNameResultMsg(), [result, avId, name])
 
     def replayDeferredGenerate(self, msgType, extra):
         if msgType == CLIENT_DONE_INTEREST_RESP:
             dg, di = extra
             self.handleInterestDoneMessage(di)
+        elif msgType == CLIENT_OBJECT_LOCATION:
+            dg, di = extra
+            self.handleObjectLocation(di)
         else:
-            if msgType == CLIENT_OBJECT_LOCATION:
-                dg, di = extra
-                self.handleObjectLocation(di)
-            else:
-                ClientRepositoryBase.replayDeferredGenerate(
-                    self, msgType, extra)
+            ClientRepositoryBase.replayDeferredGenerate(self, msgType, extra)
 
     @exceptionLogged(append=False)
     def handleDatagram(self, di):
