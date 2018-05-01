@@ -117,6 +117,7 @@ class PiratesClientRepository(OTPClientRepository):
         self.activeWorld = None
         self.oldWorld = None
         self.teleportMgr = None
+        self.targetMgr = None
         self.treasureMap = None
         self.distributedDistrict = None
         self.district = None
