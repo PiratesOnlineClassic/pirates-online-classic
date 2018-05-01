@@ -91,6 +91,9 @@ class DistributedInstanceBaseAI(DistributedObjectAI):
         if not index:
             index = random.choice(self.spawnPts[area].keys())
 
+        if index not in self.spawnPts[area]:
+            return (0, 0, 0, 0)
+
         return self.spawnPts[area][index]
 
     def avatarDied(self):
