@@ -70,47 +70,6 @@ class OTPInternalRepository(AstronInternalRepository):
         dg.addString(message)
         self.send(dg)
 
-    def logPotentialHacker(self, message, kickChannel=False, **kwargs):
-        self.notify.warning(message)
-
-        avatarId = self.getAvatarIdFromSender() or 0
-        accountId = self.getAccountIdFromSender() or 0
-
-        # Log to event logger
-        self.writeServerEvent('suspicious-event',
-            message=message,
-            avatarId=avatarId,
-            accountId=accountId,
-            **kwargs)
-
-        # Log message to Discord
-        self.webhookManager.logPotentialHacker(avatarId, accountId, message, **kwargs)
-
-        if kickChannel:
-            self.kickChannel(kickChannel)
-
-    def logException(self, e):
-        trace = traceback.format_exc()
-
-        avatarId = self.getAvatarIdFromSender() or 0
-        accountId = self.getAccountIdFromSender() or 0
-
-        senderName =  districtName = self.distributedDistrict.getName() if hasattr(self, 'distributedDistrict') else None
-        if not senderName:
-            if self.dcSuffix == 'AI':
-                senderName = 'AI'
-            else:
-                senderName = 'UberDOG'
-        self.centralLogger.reportException(senderName, trace, False)
-        self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
-        print(trace)
-
-        self.webhookManager.logServerException(e, avatarId, accountId)
-
-        # Python 2 Vs 3 compatibility
-        if not sys.version_info >= (3, 0):
-            sys.exc_clear()
-
     def readerPollOnce(self):
         try:
             return AstronInternalRepository.readerPollOnce(self)
