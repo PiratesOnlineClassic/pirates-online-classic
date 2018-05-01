@@ -71,21 +71,27 @@ class DistributedInstanceBaseAI(DistributedObjectAI):
     def d_setSpawnInfo(self, avatarId, xPos, yPos, zPos, h, spawnZone, parents):
         self.sendUpdateToAvatarId(avatarId, 'setSpawnInfo', [xPos, yPos, zPos, h, spawnZone, parents])
 
-    def addSpawnPt(self, area, spawnPt):
-        self.spawnPts[area] = self.spawnPts.setdefault(area, [])
-        self.spawnPts[area].append(spawnPt)
+    def addSpawnPt(self, area, spawnPt, index=None):
+        self.spawnPts[area] = self.spawnPts.setdefault(area, {})
+        self.spawnPts[area][index or len(self.spawnPts[area])] = spawnPt
 
-    def removeSpawnPt(self, area, spawnPt):
+    def removeSpawnPt(self, area, index):
         if area not in self.spawnPts:
             return
 
-        del self.spawnPts[area]
+        if index not in self.spawnPts[area]:
+            return
+
+        del self.spawnPts[area][index]
 
     def getSpawnPt(self, area, index=None):
         if area not in self.spawnPts:
             return (0, 0, 0, 0)
 
-        return self.spawnPts[area][index] if index else random.choice(self.spawnPts[area])
+        if not index:
+            index = random.choice(self.spawnPts[area].keys())
+
+        return self.spawnPts[area][index]
 
     def avatarDied(self):
         pass

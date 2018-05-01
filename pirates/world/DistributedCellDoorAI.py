@@ -10,7 +10,9 @@ class DistributedCellDoorAI(DistributedInteractiveAI):
         DistributedInteractiveAI.__init__(self, air)
 
         self.cellIndex = 0
+        self.maxHealth = 100
         self.health = 100
+        self.avatarId = 0
 
     def handleRequestInteraction(self, avatar, interactType, instant):
         return self.ACCEPT
@@ -31,6 +33,12 @@ class DistributedCellDoorAI(DistributedInteractiveAI):
     def getCellIndex(self):
         return self.cellIndex
 
+    def setMaxHealth(self, maxHealth):
+        self.maxHealth = maxHealth
+
+    def getMaxHealth(self):
+        return self.maxHealth
+
     def setHealth(self, health):
         self.health = health
 
@@ -44,15 +52,25 @@ class DistributedCellDoorAI(DistributedInteractiveAI):
     def getHealth(self):
         return self.health
 
+    def setAvatarId(self, avatarId):
+        self.avatarId = avatarId
+
+    def getAvatarId(self):
+        return self.avatarId
+
     def doorKicked(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
             return
 
-        damage = random.random() * 100
-        self.b_setHealth(max(0, min(self.getHealth() - damage, 100)))
+        if self.avatarId:
+            return
+
+        self.b_setHealth(max(0, min(self.getHealth() - (random.random() * \
+            self.getMaxHealth()), 100)))
 
         if self.health <= 0:
+            self.setAvatarId(avatar.doId)
             self.d_rejectInteraction(avatar.doId)
             return

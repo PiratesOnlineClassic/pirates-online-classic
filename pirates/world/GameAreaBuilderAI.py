@@ -49,10 +49,17 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             self.notify.warning('Cannot setup player spawn point for %r!' % parent)
             return None
 
+        index = objectData.get('Index')
+
+        # the index value is a string by default for some reason,
+        # so we'll have to change the value type...
+        if index:
+            index = int(index)
+
         (x, y, z), objectParent = self.getObjectTruePosAndParent(objKey, parentUid, objectData)
         h, p, r = objectData.get('Hpr', (0, 0, 0))
 
-        parent.addSpawnPt(self.parent.getUniqueId(), (x, y, z, h))
+        parent.addSpawnPt(self.parent.getUniqueId(), (x, y, z, h), index)
 
         return None
 

@@ -87,8 +87,6 @@ class ClientAreaBuilderAI(DirectObject):
 
         self.broadcastObjectPosition(object)
 
-        return parent
-
     def isChildObject(self, objKey, parentUid):
         return self.air.worldCreator.getObjectParentUid(objKey) != parentUid
 
