@@ -54,7 +54,7 @@ dclass DistributedObject {
 };
 
 dclass DistributedObjectGlobal : DistributedObject {
-}
+};
 
 dclass DistributedTestObject : DistributedObject {
   uint32 AutoInterest[];
@@ -164,7 +164,7 @@ dclass DistributedAvatar : DistributedSmoothNode {
 struct FriendEntry {
   uint32 friendId;
   uint8 friendType;
-}
+};
 
 dclass DistributedPlayer : DistributedAvatar {
   arrivedOnDistrict(uint32) ownrecv ram;
