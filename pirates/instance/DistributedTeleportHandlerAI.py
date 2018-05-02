@@ -47,6 +47,9 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
             island.parentId, island.zoneId])
 
         self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
+
+        # set the avatar's location under the island object so the island
+        # will load and the avatar will be present on the cartesian grid.
         self.avatar.b_setLocation(island.doId, PiratesGlobals.IslandLocalZone)
 
     def teleportToInstanceFinal(self, avatarId):
@@ -55,4 +58,10 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         if not avatar:
             return
 
+        # the avatar has arrived at the location and is now finished
+        # teleporting, let's set their game state so they spawn in correctly.
+        self.avatar.b_setGameState('Spawn')
+
+        # remove the teleport fsm object from the teleport manager so
+        # the avatar can teleport elsewhere in the future.
         self.teleportFsm.request('Stop')
