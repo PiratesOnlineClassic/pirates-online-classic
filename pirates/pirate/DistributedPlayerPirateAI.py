@@ -665,8 +665,10 @@ def hp(hp):
     """
     Sets the targets current HP
     """
+    target = spellbook.getTarget()
 
-    spellbook.getTarget().b_setHp(hp)
+    hp = max(0, min(hp, target.getMaxHp()))
+    target.b_setHp(hp)
     return 'Your hp has been set to %d.' % hp
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
@@ -684,7 +686,11 @@ def mojo(mojo):
     Sets the targets Mojo level
     """
 
-    spellbook.getTarget().b_setMojo(mojo)
+
+    target = spellbook.getTarget()
+
+    mojo = max(0, min(mojo, target.getMaxMojo()))
+    target.b_setMojo(mojo)
     return 'Your mojo has been set to %d.' % mojo
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
