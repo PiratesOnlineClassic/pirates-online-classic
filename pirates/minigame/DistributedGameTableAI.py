@@ -18,6 +18,15 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         DistributedInteractiveAI.announceGenerate(self)
         self.generatePlayers()
 
+    def handleRequestInteraction(self, avatar, interactType, instant):
+        result = DistributedInteractiveAI.handleRequestInteraction(self, avatar,
+            interactType, instant)
+
+        if not result:
+            return self.DENY
+
+        return self.ACCEPT
+
     @property
     def availableSeats(self):
         return self._availableSeats
@@ -95,8 +104,9 @@ class DistributedGameTableAI(DistributedInteractiveAI):
             self._aiPlayers = 5
 
         for i in range(0, self._aiPlayers):
-            aiType = random.randint(0, 1)
+            aiType = random.randint(0, 10)
+            aiType = 1 if aiType > 0 else 0
             players[i] = aiType
 
         randomGen.shuffle(players)
-        self.setAIList(players)
+        self.b_setAIList(players)

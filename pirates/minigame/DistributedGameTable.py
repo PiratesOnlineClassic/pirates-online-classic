@@ -250,8 +250,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
         topCard.reparentTo(self.dealer.leftHandNode)
 
     def createAIPlayers(self, AIList):
-        self.AIPlayers = [
-         0] * self.NumSeats
+        self.AIPlayers = [0] * self.NumSeats
         for i in range(len(AIList)):
             if AIList[i] == 0:
                 pass

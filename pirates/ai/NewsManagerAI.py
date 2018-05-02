@@ -20,15 +20,12 @@ class NewsManagerAI(DistributedObjectAI):
 
         self.holidayList = {}
 
-        self.holidayCheckTask = None
-        self.holdayTimerTask = None
-
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)
 
         self.__checkHolidays()
-        self.holidayCheckTask = taskMgr.doMethodLater(15, self.__checkHolidays, 'checkHolidays')
-        self.holdayTimerTask = taskMgr.doMethodLater(15, self.__runHolidayTimer, 'holidayTimerTask')
+        taskMgr.doMethodLater(15, self.__checkHolidays, 'checkHolidays')
+        taskMgr.doMethodLater(15, self.__runHolidayTimer, 'holidayTimerTask')
 
         # Accept remote networked start and stop of holidays from the UberDOG
         self.air.netMessenger.accept('startHoliday', self, self.startHoliday)
@@ -48,11 +45,8 @@ class NewsManagerAI(DistributedObjectAI):
     def delete(self):
         DistributedObjectAI.delete(self)
 
-        if self.holidayCheckTask:
-            taskMgr.remove(self.holidayCheckTask)
-
-        if self.holdayTimerTask:
-            taskMgr.remove(self.holidayTimerTask)
+        taskMgr.remove('checkHolidays')
+        taskMgr.remove('holidayTimerTask')
 
     def isHolidayActive(self, holidayId):
         return holidayId in self.holidayList

@@ -1,4 +1,5 @@
 import traceback
+import sys
 
 from panda3d.core import *
 from otp.distributed.OtpDoGlobals import *
