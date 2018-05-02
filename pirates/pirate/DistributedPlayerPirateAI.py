@@ -554,18 +554,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         return friendly
 
+    def hasStickyTarget(self, avId):
+        return avId in self.stickyTargets
+
     def requestRemoveStickyTargets(self, doIdList):
         for targetDoId in doIdList:
-            targetData = self.air.battleMgr.getTargetData(targetDoId)
-
-            if targetData:
-                attackerData = targetData.getAttackerData(self.doId)
-
-                if attackerData:
-                    for skillData in attackerData.skillData.values():
-                        if self.air.battleMgr.getIsVoodooDoll(skillData.skillId):
-                            attackerData.removeSkillData(skillData)
-
             self.removeStickyTarget(targetDoId)
 
     def attemptToSetCursedZombie(self):

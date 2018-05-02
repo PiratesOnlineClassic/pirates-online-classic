@@ -49,3 +49,23 @@ class BattleSkillDiaryAI:
         self.__skills = {}
         self.__lastSkill = 0
         self.__currentSkill = 0
+
+    def __checkSkillEffects(self, task):
+        # process the targets current skill effects and damage
+        # associated with them
+        skillEffects = target.getSkillEffects()
+        if len(skillEffects) > 0:
+            print(task.time)
+            # process a targets skill effects here
+            for index in range(len(skillEffects)):
+                skillEffects[index][1] -= 1
+
+                if skillEffects[index][1] <= 0:
+                    del skillEffects[index]
+
+            # Update the active skill effects
+            target.b_setSkillEffects(skillEffects)
+
+            #TODO: Process skill effect damage
+
+        return task.again

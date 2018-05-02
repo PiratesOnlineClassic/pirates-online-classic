@@ -217,6 +217,15 @@ class BattleManagerAI(BattleManagerBase):
             else:
                 self.__hurtTarget(target, targetEffects)
                 self.__hurtTarget(avatar, attackerEffects)
+
+            # add skill effects for both attacker and target
+            self.__applySkillEffect(target, targetEffects, avatar, skillId, ammoSkillId)
+            self.__applySkillEffect(avatar, attackerEffects, avatar, skillId, ammoSkillId)
+
+            # check to see if the skill used by the avatar was the doll attuning effect
+            if skillId == WeaponGlobals.C_ATTUNE:
+                self.avatar.addStickyTarget(target.doId)
+
         elif skillResult == WeaponGlobals.RESULT_MISS:
             pass
         elif skillResult == WeaponGlobals.RESULT_DODGE:
@@ -287,11 +296,61 @@ class BattleManagerAI(BattleManagerBase):
         target.b_setMojo(max(0, min(target.getMojo() + targetEffects[3], target.getMaxMojo())))
         target.b_setSwiftness(max(0, min(target.getSwiftness() + targetEffects[4], target.getMaxSwiftness())))
 
+    def __applySkillEffect(self, target, targetEffects, attacker, skillId, ammoSkillId):
+        targetEffectId = targetEffects[2]
+        if targetEffectId:
+            targetEffectDuration = WeaponGlobals.getAttackDuration(skillId, ammoSkillId)
+            maxEffectStack = WeaponGlobals.getBuffStackNumber(targetEffectId)
+
+            if target.getSkillEffectCount(targetEffectId) <= maxEffectStack:
+                target.addSkillEffect(targetEffectId, targetEffectDuration, attacker.doId)
+
     def __checkTarget(self, targetId, attackers):
         target = self.air.doId2do.get(targetId)
 
         if not target:
             return
+
+        # process the targets current skill effects and damage
+        # associated with them
+        skillEffects = target.getSkillEffects()
+        if len(skillEffects) > 0:
+
+            # process a targets skill effects here
+            currentTime = globalClockDelta.getFrameNetworkTime()
+            for index in range(len(skillEffects)):
+
+                # verify skilleffect index
+                if index >= len(skillEffects):
+                    continue
+
+                try:
+                    duration = (skillEffects[index][1] * 100) + 16
+                    expireTime = skillEffects[index][2] + duration
+                    difference = expireTime - currentTime
+
+                    if difference % 5:
+                        skillEffectId = skillEffects[index][0]
+                        skillEffect = WeaponGlobals.getEffects(skillEffectId)
+
+                        # process the skill effect damage
+                        if skillEffect:
+                            self.__hurtTarget(target, skillEffect)
+
+                            # record damage for attacker
+                            attacker = self.air.doId2do.get(skillEffect[index][3])
+                            if attacker:
+                                attacker.comboDiary.recordAttack(avatar.doId, skillId,  skillEffect[0])
+
+                    # expire the skill effect
+                    if currentTime > expireTime:
+                        del skillEffects[index]
+                except:
+                    # catch weird cases where the index vanishes midway through calculations
+                    pass
+
+            # Update the active skill effects
+            target.b_setSkillEffects(skillEffects)
 
         for attackerId in attackers:
             attacker = self.air.doId2do.get(attackerId)
@@ -334,6 +393,10 @@ class BattleManagerAI(BattleManagerBase):
 
             self.removeAttacker(attacker, target)
 
+            # Remove the doll attuning when out of range.
+            if attacker.hasStickyTarget(target.doId):
+                atacker.requestRemoveStickyTargets([target.doId])
+
     def rewardAttackers(self, target):
         for attackerId in self.__targets[target.doId]:
             attacker = self.air.doId2do.get(attackerId)
@@ -369,6 +432,10 @@ class BattleManagerAI(BattleManagerBase):
         # reward in full...
         attacker.battleSkillDiary.clear()
         attacker.comboDiary.clear()
+        
+        # clear the avatars sticky target if present
+        if attacker.hasStickyTarget(target.doId):
+            attacker.requestRemoveStickyTargets([target.doId])
 
         # update the avatar's overall reputation based on all the skills they
         # used to kill the target

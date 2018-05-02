@@ -54,9 +54,6 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def announceGenerate(self):
         DistributedReputationAvatarAI.announceGenerate(self)
 
-        self.skillTask = taskMgr.doMethodLater(1, self.__processSkills, '%s-process-skills-%s' % \
-            (self.__class__.__name__, self.doId))
-
     def generate(self):
         DistributedReputationAvatarAI.generate(self)
 
@@ -339,50 +336,31 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
     def addSkillEffect(self, effectId, duration, attackerId):
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
-        found = False
-        for i in range(len(self.skillEffects)):
-            effect = self.skillEffects[i]
-            if effect[0] == effectId and effect[3] == attackerId:
-                self.skillEffects[i][1] = duration
-                self.skillEffects[i][2] = timestamp
-                found = True
-                break
+        skillEffect = [
+            effectId,
+            duration,
+            timestamp,
+            attackerId]
 
-        if not found:
-            skillEffect = [
-                effectId,
-                duration,
-                timestamp,
-                attackerId]
-
-            self.skillEffects.append(skillEffect)
-
+        self.skillEffects.append(skillEffect)
         self.d_setSkillEffects(self.skillEffects)
 
     def removeSkillEffect(self, effectId):
-        for i in range(len(self.skillEffects)):
-            effect = self.skillEffects[i]
+        for index in range(len(self.skillEffects)):
+            effect = self.skillEffects[index]
             if effect[0] == effectId:
-                self.skillEffects.remove(effect)
+                self.skillEffects.remove(index)
                 break
 
         self.d_setSkillEffects(self.skillEffects)
 
-    def __processSkills(self, task):
-        if len(self.skillEffects) == 0:
-            return task.again
-
-        for i in range(len(self.skillEffects)):
-
-            if not i in self.skillEffects:
-                continue
-
-            self.skillEffects[i][1] -= 1
-
-            if self.skillEffects[i][1] <=0:
-                self.removeSkillEffect(i)
-
-        return task.again
+    def getSkillEffectCount(self, effectId):
+        found = 0
+        for index in range(len(self.skillEffects)):
+            effect = self.skillEffects[index]
+            if effect[0] == effectId:
+                found += 1
+        return found    
 
     def getSkillEffects(self):
         return self.skillEffects
