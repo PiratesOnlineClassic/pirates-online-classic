@@ -56,3 +56,15 @@ class PirateInventoryAI(DistributedInventoryAI):
 
     def getGoldInPocket(self):
         return self.getItem(self.getStack, InventoryType.GoldInPocket)
+
+    def setVitaeLevel(self, quantity):
+        self.b_setStack(InventoryType.Vitae_Level, quantity)
+
+    def getVitaeLevel(self):
+        return self.getItem(self.getStack, InventoryType.Vitae_Level)
+
+    def setVitaeLeft(self, quantity):
+        self.b_setStack(InventoryType.Vitae_Left, quantity)
+
+    def getVitaeLeft(self):
+        return self.getItem(self.getStack, InventoryType.Vitae_Left)

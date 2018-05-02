@@ -66,16 +66,14 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         if not inventory:
             return task.again
 
-        vitaeLevel = inventory.getStack(InventoryType.Vitae_Level)[1]
+        vitaeLevel = inventory.getVitaeLevel()
         if vitaeLevel:
-
             # increment down the Vitae
-            amount = max(inventory.getStack(InventoryType.Vitae_Left)[1] - 1, 0)
-            inventory.b_setStack(InventoryType.Vitae_Left, amount)
+            inventory.setVitaeLeft(max(inventory.getVitaeLeft() - 1, 0))
 
             # check if the groggy state has expired
             if amount <= 0:
-                inventory.b_setStack(InventoryType.Vitae_Level, 0)
+                inventory.setVitaeLevel(0)
 
         return task.again
 
