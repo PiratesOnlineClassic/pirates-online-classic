@@ -1,4 +1,5 @@
 from pirates.pirate.BattleAvatarGameFSMAI import BattleAvatarGameFSMAI
+from pirates.uberdog.UberDogGlobals import InventoryType
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from pirates.piratesbase import PiratesGlobals
 
@@ -60,6 +61,23 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
             # properly before we update their game state...
             instance.d_sendLocalAvatarToJail(self.avatar.doId, interior.doId,
                 interior.parentId, interior.zoneId)
+
+            # set the avatars groggy state
+            inventory = self.avatar.getInventory()
+            if not inventory:
+                self.notify.warning('Cannot set groggy state for avatar %d, no inventory was found!' %
+                    self.avatar.doId)
+
+                return task.done
+            
+            inventory.b_setStack(InventoryType.Vitae_Level, 1)
+
+            vitaeCost = (10 * 60) * 60
+            inventory.b_setStack(InventoryType.Vitae_Cost, vitaeCost)
+            inventory.b_setStack(InventoryType.Vitae_Left, vitaeCost)
+
+            # Set the avatars health to the minimal amounts
+            self.avatar.b_setHp(1)
 
             return task.done
 

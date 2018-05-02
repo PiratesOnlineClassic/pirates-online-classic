@@ -58,6 +58,27 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.accept('HolidayEnded', self.processHolidayEnd)
         self.accept('todHalloweenStateChange', self.attemptToSetCursedZombie)
 
+        taskMgr.doMethodLater(0.05, self.__processGroggy, '%s-process-groggy-%s' % (
+                self.__class__.__name__, self.doId))
+
+    def __processGroggy(self, task):
+        inventory = self.getInventory()
+        if not inventory:
+            return task.again
+
+        vitaeLevel = inventory.getStack(InventoryType.Vitae_Level)[1]
+        if vitaeLevel:
+
+            # increment down the Vitae
+            amount = max(inventory.getStack(InventoryType.Vitae_Left)[1] - 1, 0)
+            inventory.b_setStack(InventoryType.Vitae_Left, amount)
+
+            # check if the groggy state has expired
+            if amount <= 0:
+                inventory.b_setStack(InventoryType.Vitae_Level, 0)
+
+        return task.again
+
     def processHolidayStart(self, holidayId):
         self.attemptToSetCursedZombie()
 
@@ -438,7 +459,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
             return
 
-        amount = inventory.getStack(tonicId)
+        amount = inventory.getStack(tonicId)[1]
         if amount <= 0:
             # This should never happen. Log it
             self.air.logPotentialHacker(
@@ -490,6 +511,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         DistributedPlayerAI.delete(self)
         DistributedBattleAvatarAI.delete(self)
+
+        taskMgr.remove('%s-process-groggy-%s' % (self.__class__.__name__, self.doId))
 
     def setStickyTargets(self, stickyTargets):
         self.stickyTargets = stickyTargets
