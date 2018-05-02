@@ -327,20 +327,6 @@ class BattleManagerAI(BattleManagerBase):
                 try:
                     duration = (skillEffects[index][1] * 100) + 16
                     expireTime = skillEffects[index][2] + duration
-                    difference = expireTime - currentTime
-
-                    if difference % 5:
-                        skillEffectId = skillEffects[index][0]
-                        skillEffect = WeaponGlobals.getEffects(skillEffectId)
-
-                        # process the skill effect damage
-                        if skillEffect:
-                            self.__hurtTarget(target, skillEffect)
-
-                            # record damage for attacker
-                            attacker = self.air.doId2do.get(skillEffect[index][3])
-                            if attacker:
-                                attacker.comboDiary.recordAttack(avatar.doId, skillId,  skillEffect[0])
 
                     # expire the skill effect
                     if currentTime > expireTime:
@@ -396,6 +382,7 @@ class BattleManagerAI(BattleManagerBase):
             # Remove the doll attuning when out of range.
             if attacker.hasStickyTarget(target.doId):
                 atacker.requestRemoveStickyTargets([target.doId])
+                attacker.removeSkillEffect(WeaponGlobals.C_ATTUNE)
 
     def rewardAttackers(self, target):
         for attackerId in self.__targets[target.doId]:
