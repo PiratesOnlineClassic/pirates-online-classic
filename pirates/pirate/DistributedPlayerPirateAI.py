@@ -69,7 +69,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         vitaeLevel = inventory.getVitaeLevel()
         if vitaeLevel:
             # increment down the Vitae
-            inventory.setVitaeLeft(max(inventory.getVitaeLeft() - 1, 0))
+            amount = max(inventory.getVitaeLeft() - 1, 0)
+            inventory.setVitaeLeft(amount)
 
             # check if the groggy state has expired
             if amount <= 0:
