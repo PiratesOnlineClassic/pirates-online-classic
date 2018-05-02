@@ -130,7 +130,7 @@ class BattleManagerAI(BattleManagerBase):
         # ensure the avatar that has sent this skill request actually
         # has their weapon drawn...
         if not isWeaponDrawn:
-            self.notify.debug('Cannot get skill result for avatar %d, weapon %d was now drawn!' % (
+            self.notify.debug('Cannot get skill result for avatar %d, weapon %d was never drawn!' % (
                 avatar.doId, currentWeaponId))
 
             return None
@@ -274,7 +274,7 @@ class BattleManagerAI(BattleManagerBase):
             # ensure the avatar that has sent this skill request actually
             # has their weapon drawn...
             if not isWeaponDrawn:
-                self.notify.debug('Cannot get other skill result for avatar %d, weapon %d was now drawn!' % (
+                self.notify.debug('Cannot get other skill result for avatar %d, weapon %d was never drawn!' % (
                     avatar.doId, currentWeaponId))
 
                 return None
@@ -315,11 +315,9 @@ class BattleManagerAI(BattleManagerBase):
         # associated with them
         skillEffects = target.getSkillEffects()
         if len(skillEffects) > 0:
-
             # process a targets skill effects here
             currentTime = globalClockDelta.getFrameNetworkTime()
             for index in range(len(skillEffects)):
-
                 # verify skilleffect index
                 if index >= len(skillEffects):
                     continue
@@ -377,12 +375,12 @@ class BattleManagerAI(BattleManagerBase):
             self.notify.debug('Attacker %d has gone out of range of target %d with skill %d!' % (
                 attacker.doId, target.doId, skillId))
 
-            self.removeAttacker(attacker, target)
-
             # Remove the doll attuning when out of range.
             if attacker.hasStickyTarget(target.doId):
-                atacker.requestRemoveStickyTargets([target.doId])
+                atacker.removeStickyTarget(target.doId)
                 attacker.removeSkillEffect(WeaponGlobals.C_ATTUNE)
+
+            self.removeAttacker(attacker, target)
 
     def rewardAttackers(self, target):
         for attackerId in self.__targets[target.doId]:
@@ -419,7 +417,7 @@ class BattleManagerAI(BattleManagerBase):
         # reward in full...
         attacker.battleSkillDiary.clear()
         attacker.comboDiary.clear()
-        
+
         # clear the avatars sticky target if present
         if attacker.hasStickyTarget(target.doId):
             attacker.requestRemoveStickyTargets([target.doId])
