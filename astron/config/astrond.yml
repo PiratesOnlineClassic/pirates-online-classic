@@ -46,6 +46,7 @@ roles:
       client:
        relocate: true
        add_interest: enabled
+       heartbeat_timeout: 30000
       channels:
         min: 1000000000
         max: 1009999999
