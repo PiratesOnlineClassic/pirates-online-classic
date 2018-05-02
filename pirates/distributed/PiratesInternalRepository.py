@@ -1,3 +1,4 @@
+import sys
 import traceback
 import sys
 
@@ -88,6 +89,7 @@ class PiratesInternalRepository(OTPInternalRepository):
                 senderName = 'AI'
             else:
                 senderName = 'UberDOG'
+
         self.centralLogger.reportException(senderName, trace, False)
         self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
         print(trace)
