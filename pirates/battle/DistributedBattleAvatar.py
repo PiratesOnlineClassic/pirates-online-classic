@@ -68,8 +68,8 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
     DiskUseColor = (1, 0, 0, 1)
     DiskWaitingColor = (1, 0, 0, 1)
     notify = directNotify.newCategory('DistributedBattleAvatar')
-    PlayersInvulnerable = base.config.GetBool('players-invulnerable', 0)
-    ShowUnderstandable = base.config.GetBool('show-understandable', 0)
+    PlayersInvulnerable = base.config.GetBool('players-invulnerable', False)
+    ShowUnderstandable = base.config.GetBool('show-understandable', False)
 
     def __init__(self, cr):
         DistributedReputationAvatar.__init__(self, cr)
@@ -167,7 +167,7 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         self.createGameFSM()
         self.motionFSM = MotionFSM.MotionFSM(self)
         self.battleRandom = BattleRandom.BattleRandom(self.doId)
-        self.accept(('').join(['trackBackstab-', str(self.doId)]), self.newBackstab)
+        self.accept('trackBackstab-%d' % self.doId, self.newBackstab)
 
     def announceGenerate(self):
         yieldThread('battle av start')
@@ -180,6 +180,7 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         if not self.isLocal() and self.canMove:
             self.showDebugName()
             self.startSmooth()
+
         yieldThread('smoothing')
         self.setCurrentWeapon(self.currentWeaponId, self.isWeaponDrawn)
         yieldThread('current weapon')
@@ -189,15 +190,6 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
             self.ambientFx = SoundInterval(self.ambientSfx, node=self)
             self.ambientFx.loop()
             yieldThread('sound')
-
-    def setLocation(self, parentId, zoneId, teleport=0):
-        DistributedReputationAvatar.setLocation(self, parentId, zoneId)
-
-        # TODO: FIXME!
-        try:
-            self.wrtReparentTo(self.getParentObj())
-        except:
-            pass
 
     def disable(self):
         self.ignoreAll()
