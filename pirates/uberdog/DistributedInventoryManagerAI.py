@@ -180,7 +180,6 @@ def maxWeapons():
         inventory.b_setStack(InventoryType.MusketWeaponL3, 0)
         inventory.b_setStack(InventoryType.DollWeaponL5, 1)
         inventory.b_setStack(InventoryType.DaggerWeaponL5, 1)
-        inventory.b_setStack(InventoryType.GrenadeWeaponL5, 1)
         inventory.b_setStack(InventoryType.WandWeaponL5, 1)
 
         inventory.b_setStack(InventoryType.AmmoAsp, 99)
