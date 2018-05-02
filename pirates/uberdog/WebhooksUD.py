@@ -267,7 +267,7 @@ class PiratesWebhookManager(object):
             return
         parentObj = avatar.getParentObj()
 
-        if avatar and parentObj:
+        if avatar and parentObj and hasattr(avatar, 'getPos'):
             attachment.addField(SlackField())
             attachment.addField(SlackField(title='Character Pos', value=str(avatar.getPos())))
             attachment.addField(SlackField(title='Character Name', value=avatar.getName()))
