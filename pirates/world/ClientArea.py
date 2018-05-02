@@ -348,7 +348,7 @@ class ClientArea(DirectObject):
         try:
             file = objData['File']
             bTrueBuilding = file != ''
-        except BaseException:
+        except:
             return objectType
 
         if not bTrueBuilding:
@@ -1290,7 +1290,7 @@ class ClientArea(DirectObject):
 
                     try:
                         radius = bounds.getRadius()
-                    except BaseException:
+                    except:
                         radius = (bounds.getMax() - bounds.getMin()).length() / 2
 
                 node = lod.node()
