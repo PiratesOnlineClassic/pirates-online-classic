@@ -1,11 +1,7 @@
 import copy
-
 from pirates.pirate.HumanDNA import HumanDNA
 
-
 class HumanBase:
-    
-
     def setDNA(self, dna=None):
         self.setDNAString(dna)
 

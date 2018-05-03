@@ -1,6 +1,5 @@
 from pirates.pirate.AvatarType import AvatarType
 
-
 class AvatarTypeSet(AvatarType):
 
     def __init__(self, strings, *avatarTypes):

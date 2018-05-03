@@ -27,26 +27,22 @@ SY = 7
 SZ = 8
 AnimDict = {}
 AnimListDict = {'sf': Biped.DefaultAnimList, 'ms': Biped.DefaultAnimList, 'mi': Biped.DefaultAnimList, 'tp': Biped.DefaultAnimList, 'tm': Biped.DefaultAnimList}
-CustomAnimDict = {'msf': Biped.msfCustomAnimList, 'mms': Biped.mmsCustomAnimList, 'mmi': Biped.mmiCustomAnimList, 'mtp': Biped.mtpCustomAnimList, 'mtm': Biped.mtmCustomAnimList, 'fsf': Biped.fsfCustomAnimList, 'fms': Biped.fmsCustomAnimList, 'fmi': Biped.fmiCustomAnimList, 'ftp': Biped.ftpCustomAnimList, 'ftm': Biped.ftmCustomAnimList}
-CastAnimDict = {'models/char/js': Biped.jsCustomAnimList, 'models/char/wt': Biped.wtCustomAnimList, 'models/char/es': Biped.esCustomAnimList, 'models/char/td': Biped.tdCustomAnimList, 'models/char/cb': Biped.cbCustomAnimList, 'models/char/jg': Biped.jgCustomAnimList, 'models/char/jr': Biped.jrCustomAnimList, 'models/char/plf': Biped.plfCustomAnimList, 'models/char/pls': Biped.plsCustomAnimList}
+CustomAnimDict = {'msf': Biped.msfCustomAnimList, 'mms': Biped.mmsCustomAnimList, 'mmi': Biped.mmiCustomAnimList, 'mtp': Biped.mtpCustomAnimList, 
+                  'mtm': Biped.mtmCustomAnimList, 'fsf': Biped.fsfCustomAnimList, 'fms': Biped.fmsCustomAnimList, 'fmi': Biped.fmiCustomAnimList, 
+                  'ftp': Biped.ftpCustomAnimList, 'ftm': Biped.ftmCustomAnimList}
+CastAnimDict = {'models/char/js': Biped.jsCustomAnimList, 'models/char/wt': Biped.wtCustomAnimList, 'models/char/es': Biped.esCustomAnimList, 
+                'models/char/td': Biped.tdCustomAnimList, 'models/char/cb': Biped.cbCustomAnimList, 'models/char/jg': Biped.jgCustomAnimList, 
+                'models/char/jr': Biped.jrCustomAnimList, 'models/char/plf': Biped.plfCustomAnimList, 'models/char/pls': Biped.plsCustomAnimList}
 NewModelDict = {'sf': 'sf', 'ms': 'ms', 'mi': 'mi', 'tp': 'tp', 'tm': 'tm'}
-TempDict = [
- 'sf', 'ms', 'mi', 'tp', 'tm']
+TempDict = ['sf', 'ms', 'mi', 'tp', 'tm']
 PrebuiltAnimDict = {}
-HeadPositions = [
- [
-  VBase3(0.0, 0.0, 0.0), VBase3(0.0, 0.0, -0.08), VBase3(0.0, 0.0, 0.0), VBase3(0.0, 0.0, -0.08), VBase3(0.0, 0.0, 0.0)], [VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0)]]
-HeadScales = [
- [
-  1.05, 0.8, 0.85, 0.82, 0.88], [1.1, 0.9, 0.95, 0.97, 0.95]]
-BodyScales = [
- [
-  0.87, 0.98, 1.0, 0.98, 1.05], [0.88, 0.9, 1.02, 1.07, 0.98]]
-PlayerNames = [
- "Cap'n Bruno Cannonballs", 'Bad-run Thomas', 'Carlos Saggingsails', 'Smugglin Willy Hawkins']
+HeadPositions = [[VBase3(0.0, 0.0, 0.0), VBase3(0.0, 0.0, -0.08), VBase3(0.0, 0.0, 0.0), VBase3(0.0, 0.0, -0.08), VBase3(0.0, 0.0, 0.0)], 
+                 [VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0)]]
+HeadScales = [[1.05, 0.8, 0.85, 0.82, 0.88], [1.1, 0.9, 0.95, 0.97, 0.95]]
+BodyScales = [[ 0.87, 0.98, 1.0, 0.98, 1.05], [0.88, 0.9, 1.02, 1.07, 0.98]]
+PlayerNames = ["Cap'n Bruno Cannonballs", 'Bad-run Thomas', 'Carlos Saggingsails', 'Smugglin Willy Hawkins']
 
 class Human(HumanBase.HumanBase, Biped.Biped):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('Human')
     prebuiltAnimData = {}
 
@@ -72,16 +68,10 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         self.headFudgeHpr = Vec3(0, 0, 0)
         self.randGen = random.Random()
         self.randGen.seed(random.random())
-        self.eyeFSM = ClassicFSM('eyeFSM', [
-         State('off', self.enterEyeFSMOff, self.exitEyeFSMOff, [
-            'open', 'closed']),
-
-         State('open', self.enterEyeFSMOpen, self.exitEyeFSMOpen, [
-            'closed', 'off']),
-
-         State('closed', self.enterEyeFSMClosed, self.exitEyeFSMClosed, [
-            'open', 'off'])], 'off', 'off')
-
+        self.eyeFSM = ClassicFSM('eyeFSM', [State('off', self.enterEyeFSMOff, self.exitEyeFSMOff, ['open', 'closed']),
+                                            State('open', self.enterEyeFSMOpen, self.exitEyeFSMOpen, ['closed', 'off']),
+                                            State('closed', self.enterEyeFSMClosed, self.exitEyeFSMClosed, ['open', 'off'])], 
+                                            'off', 'off')
         self.eyeFSM.enterInitialState()
         if other != None:
             self.copyHuman(other)
@@ -104,7 +94,6 @@ class Human(HumanBase.HumanBase, Biped.Biped):
     def __doneFlattenHuman(self, models):
         self.flattenPending = None
         self.getWeaponJoints()
-        return
 
     def copyHuman(self, other):
         self.gender = other.gender
@@ -116,21 +105,22 @@ class Human(HumanBase.HumanBase, Biped.Biped):
     def delete(self):
         try:
             self.Human_deleted
+            return
         except:
             self.Human_deleted = 1
-            taskMgr.remove(self.__blinkName)
-            if self.dropShadow and not self.dropShadow.isEmpty():
-                self.deleteDropShadow()
-            del self.eyeFSM
-            self.controlShapes = None
-            self.sliderNames = None
-            Biped.Biped.delete(self)
+            
+        taskMgr.remove(self.__blinkName)
+        if self.dropShadow and not self.dropShadow.isEmpty():
+            self.deleteDropShadow()
+        del self.eyeFSM
+        self.controlShapes = None
+        self.sliderNames = None
+        Biped.Biped.delete(self)
 
     def isDeleted(self):
         try:
             self.Human_deleted
-            if self.Human_deleted == 1:
-                return True
+            return True
         except:
             return False
 
