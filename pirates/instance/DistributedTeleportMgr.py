@@ -200,13 +200,11 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             localAvatar.leaveZoneLOD(curParent)
 
         if isinstance(teleportToObj, DistributedShip.DistributedShip):
-            if teleportToObj.gameFSM.getCurrentOrNextState() in ('PutAway', 'Sunk',
-                                                                 'Sinking', 'Off'):
+            if teleportToObj.gameFSM.getCurrentOrNextState() in ('PutAway', 'Sunk', 'Sinking', 'Off'):
                 self.failTeleport(0, 0, PLocalizer.TeleportToGoneShipFailMessage)
                 return
             else:
-                if teleportToObj.gameFSM.getCurrentOrNextState() in ('InBoardingPosition',
-                                                                     'OtherShipBoarded'):
+                if teleportToObj.gameFSM.getCurrentOrNextState() in ('InBoardingPosition', 'OtherShipBoarded'):
                     self.failTeleport(0, 0, PLocalizer.TeleportToBoardingShipFailMessage)
                     return
 
@@ -217,11 +215,11 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             base.setLocationCode('Ship')
 
         self.notify.debug('teleporting obj position is %s' % self.localTeleportingObj.getPos())
-        if not self.localTeleportDestPos or self.localTeleportDestPos == (0, 0, 0,
-                                                                          0, 0, 0):
+        if not self.localTeleportDestPos or self.localTeleportDestPos == (0, 0, 0, 0, 0, 0):
             self.localTeleportDestPos = teleportToObj.getTeleportDestPosH()
 
-        self.localTeleportingObj.setPosHpr(self.localTeleportDestPos[0], self.localTeleportDestPos[1], self.localTeleportDestPos[2], self.localTeleportDestPos[3], 0, 0)
+        self.localTeleportingObj.setPosHpr(self.localTeleportDestPos[0], self.localTeleportDestPos[1],
+            self.localTeleportDestPos[2], self.localTeleportDestPos[3], 0, 0)
 
         try:
             self.localTeleportingObj.reparentTo(teleportToObj)

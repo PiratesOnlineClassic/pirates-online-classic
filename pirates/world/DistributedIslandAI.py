@@ -2,7 +2,7 @@ from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGridAI
 from direct.directnotify import DirectNotifyGlobal
 from pirates.battle.Teamable import Teamable
-from pirates.world.WorldGlobals import *
+from pirates.world import WorldGlobals
 from pirates.world.IslandAreaBuilderAI import IslandAreaBuilderAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
@@ -11,8 +11,13 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedIslandAI')
 
     def __init__(self, air):
-        DistributedCartesianGridAI.__init__(self, air, ISLAND_GRID_STARTING_ZONE, LARGE_ISLAND_GRID_SIZE,
-            LARGE_ISLAND_GRID_SIZE, ISLAND_CELL_SIZE)
+        startingZone = WorldGlobals.ISLAND_GRID_STARTING_ZONE
+        gridSize = WorldGlobals.LARGE_ISLAND_GRID_SIZE + startingZone
+        gridRadius = gridSize / WorldGlobals.ISLAND_GRID_RADIUS
+        cellWidth = WorldGlobals.ISLAND_CELL_SIZE + gridSize
+
+        DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize,
+            gridRadius, cellWidth)
 
         DistributedGameAreaAI.__init__(self, air)
         Teamable.__init__(self)
@@ -41,15 +46,6 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         for holidayId in self.air.newsManager.holidayList:
             self.holidayStart(holidayId)
 
-    def handleChildArrive(self, childObj, zoneId):
-        if isinstance(childObj, DistributedPlayerPirateAI) and not childObj.isNpc:
-            pass
-        else:
-            childObj.b_setLocation(self.doId, PiratesGlobals.IslandLocalZone)
-
-        DistributedCartesianGridAI.handleChildArrive(self, childObj, zoneId)
-        DistributedGameAreaAI.handleChildArrive(self, childObj, zoneId)
-
     def holidayStart(self, holidayId):
         if self.uniqueId == '1156207188.95dzlu' and holidayId == PiratesGlobals.FOUNDERSFEAST:
             if self.getFeastFireEnabled():
@@ -63,10 +59,6 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
                 return
 
             self.b_setFeastFireEnabled(False)
-
-    def getParentingRules(self):
-        return ['Island', '%d:%d:%d' % (self.startingZone, self.gridSize,
-            self.gridRadius)]
 
     def setIslandTransform(self, x, y, z, h):
         self.setXYZH(x, y, z, h)

@@ -30,9 +30,6 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         if not self.cr.activeWorld.worldGrid:
             self.cr.activeWorld.setWorldGrid(self)
 
-        self.cr.addTaggedInterest(self.doId, PiratesGlobals.InteriorDoorZone, [
-            'InteriorLocalInterest'])
-
         self.loadModel()
         self.setupLODs()
         self.enableFloors()
@@ -64,7 +61,6 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
 
     def delete(self):
         self.notify.debug('delete')
-        self.cr.clearTaggedInterestNamed(None, ['InteriorLocalInterest'])
         del self.coll
         self.geom.removeNode()
         for node in self.GridLOD.values():

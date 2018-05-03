@@ -1,3 +1,4 @@
+from panda3d.core import *
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesbase import PiratesGlobals
@@ -48,9 +49,21 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
 
         self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
 
-        # set the avatar's location under the island object so the island
-        # will load and the avatar will be present on the cartesian grid.
-        self.avatar.b_setLocation(island.doId, PiratesGlobals.IslandLocalZone)
+        # get the cell origin zone relative to the spawn island's spawn position,
+        # that was retrieved from the instance world.
+        zoneId = island.getZoneFromXYZ((xPos, yPos, zPos))
+
+        # ensure the zoneId we've just calculated is indeed valid,
+        # and not some random zone outside the cartesian grid...
+        if not island.isValidZone(zoneId):
+            self.notify.warning('Cannot finish teleport for avatar %d, invalid spawn zone %d!' % (
+                avatar.doId, zoneId))
+
+            return
+
+        # set the avatar's location relative to the spawn point's cell,
+        # this way the avatar will be visible within the cartesian grid.
+        self.avatar.b_setLocation(island.doId, zoneId)
 
     def teleportToInstanceFinal(self, avatarId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())

@@ -72,7 +72,6 @@ IslandAvailableZoneEnd = 499
 IslandConnectorZoneStart = 100
 IslandConnectorZoneEnd = 200
 IslandShipDeployerZone = 101
-IslandLocalZone = 102
 InteriorDoorZone = 100
 TargetBitmask = BitMask32.bit(5)
 GoldBitmask = BitMask32.bit(6)
