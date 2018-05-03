@@ -316,11 +316,10 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         if confirmed:
             islandDoId = self.cr.uidMgr.getDoId(islandUid)
             island = self.cr.getDo(islandDoId)
-            # TODO FIXME: Why would you teleport locally?????
-            #if island and island.getParentObj() is self.cr.activeWorld:
-            #    self.localTeleport(locationName=island.getName())
-            #else:
-            self.sendUpdate('requestTeleportToIsland', [islandUid])
+            if island and island.getParentObj() is self.cr.activeWorld:
+                self.localTeleport(locationName=island.getName())
+            else:
+                self.sendUpdate('requestTeleportToIsland', [islandUid])
 
             base.cr.loadingScreen.showTarget(islandUid)
             base.cr.loadingScreen.showHint(islandUid)
@@ -328,7 +327,8 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
     @report(types=['deltaStamp'], prefix='------', dConfigParam=['want-teleport-report'])
     def teleportToIslandResponse(self, instanceDoId, islandDoId):
         if instanceDoId and islandDoId:
-            self.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, '', self.cr.distributedDistrict.doId, '', instanceDoId, friendAreaDoId=islandDoId)
+            self.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, '', self.cr.distributedDistrict.doId, '', instanceDoId,
+                friendAreaDoId=islandDoId)
 
     @report(types=['deltaStamp', 'args'], dConfigParam=['want-teleport-report'])
     def queryAvatarForTeleport(self, avId):
