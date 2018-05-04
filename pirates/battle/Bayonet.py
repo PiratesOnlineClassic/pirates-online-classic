@@ -20,9 +20,9 @@ class Bayonet(Weapon.Weapon):
                   InventoryType.MusketWeaponL2: ('models/handheld/musket_bayonet', Vec4(0.6, 0.6, 1, 1)),
                   InventoryType.MusketWeaponL3: ('models/handheld/musket_bayonet', Vec4(1, 0.6, 0.6, 1))}
 
-    walkAnim = 'bayonet_attack_walk'
+    walkAnim = 'bayonet_walk'
     runAnim = 'bayonet_run'
-    neutralAnim = 'bayonet_attack_idle'
+    neutralAnim = 'bayonet_idle'
     strafeLeftAnim = 'strafe_left'
     strafeRightAnim = 'strafe_right'
     painAnim = 'boxing_hit_head_right'
@@ -46,7 +46,7 @@ class Bayonet(Weapon.Weapon):
         av.setWalkForWeapon()
 
     def getAmmoModel():
-        bullet = loader.loadModelCopy('models/props/cannonball-trail-lod')
+        bullet = loader.loadModel('models/props/cannonball-trail-lod')
         bullet.setScale(0.3)
         return bullet
 

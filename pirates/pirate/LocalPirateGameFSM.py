@@ -17,7 +17,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 from PlayerPirateGameFSM import PlayerPirateGameFSM
 from otp.nametag import NametagGlobals
 
-
 class LocalPirateGameFSM(PlayerPirateGameFSM):
     notify = directNotify.newCategory('LocalPirateGameFSM')
 
@@ -92,10 +91,9 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
             if request not in ('Off', 'ThrownInJail', 'Unconcious', 'TeleportIn', 'LandRoam',
                                'PVPWait'):
                 return
-        else:
-            if self.state == 'TeleportOut':
-                if request in ('NPCInteract', 'DinghyInteract', 'DoorInteract'):
-                    return
+        elif self.state == 'TeleportOut':
+            if request in ('NPCInteract', 'DinghyInteract', 'DoorInteract'):
+                return
 
         return PlayerPirateGameFSM.defaultFilter(self, request, args)
 
@@ -380,9 +378,8 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
 
             self.teleportTrack.setDoneEvent(doneEvent)
             self.teleportTrack.start(timeOffset)
-        else:
-            if doneEvent:
-                messenger.send(doneEvent)
+        elif doneEvent:
+            messenger.send(doneEvent)
 
     def exitTeleportOut(self):
         self.notify.debug('exitTeleportOut() for avId: %d' % self.av.getDoId())
