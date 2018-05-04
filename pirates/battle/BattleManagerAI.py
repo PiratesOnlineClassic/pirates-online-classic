@@ -287,20 +287,24 @@ class BattleManagerAI(BattleManagerBase):
             areaIdEffects, timestamp, pos, charge]
 
     def __healTarget(self, target, targetEffects):
-        if target.getDamagable():
-            target.b_setHp(max(0, min(target.getHp()[0] - targetEffects[0], target.getMaxHp())))
-            target.b_setPower(max(0, min(target.getPower() - targetEffects[1], target.getMaxPower())))
-            target.b_setLuck(max(0, min(target.getLuck() - targetEffects[2], target.getMaxLuck())))
-            target.b_setMojo(max(0, min(target.getMojo() - targetEffects[3], target.getMaxMojo())))
-            target.b_setSwiftness(max(0, min(target.getSwiftness() - targetEffects[4], target.getMaxSwiftness())))
+        if not target.getDamagable():
+            return
+
+        target.b_setHp(max(0, min(target.getHp()[0] - targetEffects[0], target.getMaxHp())))
+        target.b_setPower(max(0, min(target.getPower() - targetEffects[1], target.getMaxPower())))
+        target.b_setLuck(max(0, min(target.getLuck() - targetEffects[2], target.getMaxLuck())))
+        target.b_setMojo(max(0, min(target.getMojo() - targetEffects[3], target.getMaxMojo())))
+        target.b_setSwiftness(max(0, min(target.getSwiftness() - targetEffects[4], target.getMaxSwiftness())))
 
     def __hurtTarget(self, target, targetEffects):
-        if target.getDamagable():
-            target.b_setHp(max(0, min(target.getHp()[0] + targetEffects[0], target.getMaxHp())))
-            target.b_setPower(max(0, min(target.getPower() + targetEffects[1], target.getMaxPower())))
-            target.b_setLuck(max(0, min(target.getLuck() + targetEffects[2], target.getMaxLuck())))
-            target.b_setMojo(max(0, min(target.getMojo() + targetEffects[3], target.getMaxMojo())))
-            target.b_setSwiftness(max(0, min(target.getSwiftness() + targetEffects[4], target.getMaxSwiftness())))
+        if not target.getDamagable():
+            return
+
+        target.b_setHp(max(0, min(target.getHp()[0] + targetEffects[0], target.getMaxHp())))
+        target.b_setPower(max(0, min(target.getPower() + targetEffects[1], target.getMaxPower())))
+        target.b_setLuck(max(0, min(target.getLuck() + targetEffects[2], target.getMaxLuck())))
+        target.b_setMojo(max(0, min(target.getMojo() + targetEffects[3], target.getMaxMojo())))
+        target.b_setSwiftness(max(0, min(target.getSwiftness() + targetEffects[4], target.getMaxSwiftness())))
 
     def __applySkillEffect(self, target, targetEffects, attacker, skillId, ammoSkillId):
         targetEffectId = targetEffects[2]
