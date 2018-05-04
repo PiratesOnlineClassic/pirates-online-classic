@@ -1114,4 +1114,3 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
                         fdict2[sliderJoint[1]](sliderJoint[5])
 
             self.find(jointName).setPosHprScale(posDelta, hprDelta, sclDelta)
-# okay decompiling .\pirates\pirate\DynamicHuman.pyc
