@@ -4,6 +4,7 @@ from pirates.leveleditor import ObjectList
 from pirates.piratesbase import PLocalizer
 from pirates.piratesbase import PiratesGlobals
 from pirates.interact.DistributedSearchableContainerAI import DistributedSearchableContainerAI
+from pirates.interact.DistributedInteractivePropAI import DistributedInteractivePropAI
 from pirates.treasuremap.DistributedBuriedTreasureAI import DistributedBuriedTreasureAI
 from pirates.treasuremap.DistributedSurfaceTreasureAI import DistributedSurfaceTreasureAI
 
@@ -17,6 +18,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         self.wantDoorLocatorNodes = config.GetBool('want-door-locator-nodes', True)
         self.wantSearchables = config.GetBool('want-searchables', True)
         self.wantSpawnNodes = config.GetBool('want-spawn-nodes', True)
+        self.wantInteractives = config.GetBool('want-interactive-props', True)
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
@@ -33,7 +35,9 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             newObj = self.air.enemySpawner.createObject(objType, objectData, parent, parentUid, objKey, dynamic)
         elif objType == 'Object Spawn Node' and self.wantSpawnNodes:
             newObj = self.__createObjectSpawnNode(parent, parentUid, objKey, objectData)
-
+        elif objType == 'Interactive Prop' and self.wantInteractives:
+            newObj = self.__createInteractiveProp(parent, parentUid, objKey, objectData)
+            
         return newObj
 
     def __createPlayerSpawnNode(self, objectData, parent, parentUid, objKey, dynamic):
@@ -210,3 +214,24 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         self.addObject(spawnNode)
 
         return spawnNode
+
+    
+    def __createInteractiveProp(self, parent, parentUid, objKey, objectData):
+        prop = DistributedInteractivePropAI(self.air)
+        prop.setUniqueId(objKey)
+        prop.setPos(objectData.get('Pos', (0, 0, 0)))
+        prop.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        prop.setScale(objectData.get('Scale', (1, 1, 1)))
+
+        prop.setModelPath(objectData['Visual']['Model'])
+        prop.setInteractAble(objectData.get('interactAble', 'npc'))
+        prop.setInteractType(objectData.get('interactType', 'stockade'))
+        prop.setParentObjId(parent.doId)
+
+        zoneId = self.parent.getZoneFromXYZ(prop.getPos())
+        parent.generateChildWithRequired(prop, zoneId)
+        self.parentObjectToCell(prop, zoneId)
+
+        self.addObject(prop)
+
+        return prop

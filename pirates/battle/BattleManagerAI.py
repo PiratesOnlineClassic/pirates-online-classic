@@ -226,6 +226,10 @@ class BattleManagerAI(BattleManagerBase):
             if skillId == WeaponGlobals.C_ATTUNE:
                 self.avatar.addStickyTarget(target.doId)
 
+            # Handle interactive props
+            if hasattr(target, 'd_propSlashed'):
+                target.d_propSlashed()
+
         elif skillResult == WeaponGlobals.RESULT_MISS:
             pass
         elif skillResult == WeaponGlobals.RESULT_DODGE:
@@ -283,18 +287,20 @@ class BattleManagerAI(BattleManagerBase):
             areaIdEffects, timestamp, pos, charge]
 
     def __healTarget(self, target, targetEffects):
-        target.b_setHp(max(0, min(target.getHp()[0] - targetEffects[0], target.getMaxHp())))
-        target.b_setPower(max(0, min(target.getPower() - targetEffects[1], target.getMaxPower())))
-        target.b_setLuck(max(0, min(target.getLuck() - targetEffects[2], target.getMaxLuck())))
-        target.b_setMojo(max(0, min(target.getMojo() - targetEffects[3], target.getMaxMojo())))
-        target.b_setSwiftness(max(0, min(target.getSwiftness() - targetEffects[4], target.getMaxSwiftness())))
+        if target.getDamagable():
+            target.b_setHp(max(0, min(target.getHp()[0] - targetEffects[0], target.getMaxHp())))
+            target.b_setPower(max(0, min(target.getPower() - targetEffects[1], target.getMaxPower())))
+            target.b_setLuck(max(0, min(target.getLuck() - targetEffects[2], target.getMaxLuck())))
+            target.b_setMojo(max(0, min(target.getMojo() - targetEffects[3], target.getMaxMojo())))
+            target.b_setSwiftness(max(0, min(target.getSwiftness() - targetEffects[4], target.getMaxSwiftness())))
 
     def __hurtTarget(self, target, targetEffects):
-        target.b_setHp(max(0, min(target.getHp()[0] + targetEffects[0], target.getMaxHp())))
-        target.b_setPower(max(0, min(target.getPower() + targetEffects[1], target.getMaxPower())))
-        target.b_setLuck(max(0, min(target.getLuck() + targetEffects[2], target.getMaxLuck())))
-        target.b_setMojo(max(0, min(target.getMojo() + targetEffects[3], target.getMaxMojo())))
-        target.b_setSwiftness(max(0, min(target.getSwiftness() + targetEffects[4], target.getMaxSwiftness())))
+        if target.getDamagable():
+            target.b_setHp(max(0, min(target.getHp()[0] + targetEffects[0], target.getMaxHp())))
+            target.b_setPower(max(0, min(target.getPower() + targetEffects[1], target.getMaxPower())))
+            target.b_setLuck(max(0, min(target.getLuck() + targetEffects[2], target.getMaxLuck())))
+            target.b_setMojo(max(0, min(target.getMojo() + targetEffects[3], target.getMaxMojo())))
+            target.b_setSwiftness(max(0, min(target.getSwiftness() + targetEffects[4], target.getMaxSwiftness())))
 
     def __applySkillEffect(self, target, targetEffects, attacker, skillId, ammoSkillId):
         targetEffectId = targetEffects[2]
@@ -302,7 +308,7 @@ class BattleManagerAI(BattleManagerBase):
             targetEffectDuration = WeaponGlobals.getAttackDuration(skillId, ammoSkillId)
             maxEffectStack = WeaponGlobals.getBuffStackNumber(targetEffectId)
 
-            if target.getSkillEffectCount(targetEffectId) <= maxEffectStack:
+            if target.getDamagable() and target.getSkillEffectCount(targetEffectId) <= maxEffectStack:
                 target.addSkillEffect(targetEffectId, targetEffectDuration, attacker.doId)
 
     def __checkTarget(self, targetId, attackers):

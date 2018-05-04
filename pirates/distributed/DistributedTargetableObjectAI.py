@@ -1,6 +1,7 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from pirates.battle.ComboDiaryAI import ComboDiaryAI
+from pirates.piratesbase import PiratesGlobals
 
 class DistributedTargetableObjectAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTargetableObjectAI')
@@ -12,3 +13,12 @@ class DistributedTargetableObjectAI(DistributedObjectAI):
         DistributedObjectAI.generate(self)
 
         self.comboDiary = ComboDiaryAI(self.air, self)
+
+    def getTeam(self):
+        return PiratesGlobals.TUTORIAL_ENEMY_TEAM
+
+    def getLevel(self):
+        return 1
+
+    def getDamagable(self):
+        return True
