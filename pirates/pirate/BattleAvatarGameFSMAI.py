@@ -2,7 +2,7 @@ from direct.fsm.FSM import FSM
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
 class BattleAvatarGameFSMAI(FSM):
-    notify = directNotify.newCategory('BattleAvatarGameFSM')
+    notify = directNotify.newCategory('BattleAvatarGameFSMAI')
 
     def __init__(self, air, avatar):
         FSM.__init__(self, self.__class__.__name__)
