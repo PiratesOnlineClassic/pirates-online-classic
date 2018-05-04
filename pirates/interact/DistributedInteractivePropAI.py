@@ -75,3 +75,9 @@ class DistributedInteractivePropAI(DistributedInteractiveAI, DistributedTargetab
 
     def getDamagable(self):
         return False
+
+    def getTeam(self):
+        return PiratesGlobals.TUTORIAL_ENEMY_TEAM
+
+    def getLevel(self):
+        return 1

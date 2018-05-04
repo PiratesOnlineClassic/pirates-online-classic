@@ -14,11 +14,5 @@ class DistributedTargetableObjectAI(DistributedObjectAI):
 
         self.comboDiary = ComboDiaryAI(self.air, self)
 
-    def getTeam(self):
-        return PiratesGlobals.TUTORIAL_ENEMY_TEAM
-
-    def getLevel(self):
-        return 1
-
     def getDamagable(self):
         return True
