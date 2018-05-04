@@ -24,7 +24,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         newObj = None
 
         if objType == 'Player Spawn Node':
-            newObj = self.__createPlayerSpawnNode(objectData, parent, parentUid, objKey, dynamic)
+            newObj = self.__createPlayerSpawnNode(parent, parentUid, objKey, objectData)
         elif objType == 'Building Exterior' and self.wantBuildingExteriors:
             newObj = self.__createBuildingExterior(parent, parentUid, objKey, objectData)
         elif objType == ObjectList.DOOR_LOCATOR_NODE and self.wantDoorLocatorNodes:
@@ -37,10 +37,10 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             newObj = self.__createObjectSpawnNode(parent, parentUid, objKey, objectData)
         elif objType == 'Interactive Prop' and self.wantInteractives:
             newObj = self.__createInteractiveProp(parent, parentUid, objKey, objectData)
-            
+
         return newObj
 
-    def __createPlayerSpawnNode(self, objectData, parent, parentUid, objKey, dynamic):
+    def __createPlayerSpawnNode(self, parent, parentUid, objKey, objectData):
         from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
         from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 
@@ -215,7 +215,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
         return spawnNode
 
-    
+
     def __createInteractiveProp(self, parent, parentUid, objKey, objectData):
         prop = DistributedInteractivePropAI(self.air)
         prop.setUniqueId(objKey)

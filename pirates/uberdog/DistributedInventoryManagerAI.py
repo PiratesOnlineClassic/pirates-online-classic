@@ -165,6 +165,7 @@ def maxOutSkillPoints():
 
     return "Failed to max out Skill Points!"
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def maxWeapons():
     invoker = spellbook.getInvoker()
@@ -209,6 +210,7 @@ def maxWeapons():
         return "Maxed weapons to Rank 5!"
 
     return "Failed to max Weapons"
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def gold(amount):
