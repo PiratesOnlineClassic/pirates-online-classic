@@ -56,10 +56,5 @@ class DistributedAvatarAI(DistributedSmoothNodeAI):
         return OTPGlobals.AvatarDefaultRadius
 
     def checkAvOnShard(self, avId):
-        senderId = self.air.getAvatarIdFromSender()
-        onShard = False
-        if simbase.air.doId2do[avId]:
-            onShard = True
-
-        self.sendUpdateToAvatarId(senderId, 'confirmAvOnShard', [
-            avId, onShard])
+        self.sendUpdateToAvatarId(self.air.getAvatarIdFromSender(), 'confirmAvOnShard', [
+            avId, avId in self.air.doId2do])
