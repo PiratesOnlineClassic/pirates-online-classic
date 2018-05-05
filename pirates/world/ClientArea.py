@@ -432,35 +432,35 @@ class ClientArea(DirectObject):
                             self.notify.warning('Could not load model %s, not creating object.' % modelName)
                             return None
 
-                if 'DisableCollision' in objData and objData['DisableCollision']:
-                    collisionNodes = objModel.findAllMatches('**/+CollisionNode')
-                    for collisionNode in collisionNodes:
-                        collisionNode.removeNode()
+                    if 'DisableCollision' in objData and objData['DisableCollision']:
+                        collisionNodes = objModel.findAllMatches('**/+CollisionNode')
+                        for collisionNode in collisionNodes:
+                            collisionNode.removeNode()
 
-                if objData['Type'] == 'Collision Barrier':
-                    geomNodes = objModel.findAllMatches('**/+GeomNode')
-                    for geomNode in geomNodes:
-                        geomNode.removeNode()
-
-                if objData['Type'] == 'Special':
-                    if 'Visual' in objData and 'Model' in objData['Visual'] and objData['Visual']['Model'] == 'models/misc/smiley':
+                    if objData['Type'] == 'Collision Barrier':
                         geomNodes = objModel.findAllMatches('**/+GeomNode')
                         for geomNode in geomNodes:
                             geomNode.removeNode()
 
-                if objData['Type'] == 'SFX Node':
-                    objNode = self.loadSFXNode(objData, self, uid)
-                    objModel = objNode
-                    bObjAnimated = True
+                    if objData['Type'] == 'Special':
+                        if 'Visual' in objData and 'Model' in objData['Visual'] and objData['Visual']['Model'] == 'models/misc/smiley':
+                            geomNodes = objModel.findAllMatches('**/+GeomNode')
+                            for geomNode in geomNodes:
+                                geomNode.removeNode()
 
-                if objectType == 'Animated Prop':
-                    objNode = self.loadAnimatedProp(objData, self)
-                    objModel = objNode
-                    bObjAnimated = True
-                    flaggedToSkip = True
+                    if objData['Type'] == 'SFX Node':
+                        objNode = self.loadSFXNode(objData, self, uid)
+                        objModel = objNode
+                        bObjAnimated = True
 
-                if objectType == 'Dinghy':
-                    flaggedToSkip = True
+                    if objectType == 'Animated Prop':
+                        objNode = self.loadAnimatedProp(objData, self)
+                        objModel = objNode
+                        bObjAnimated = True
+                        flaggedToSkip = True
+
+                    if objectType == 'Dinghy':
+                        flaggedToSkip = True
 
                 if self.isGridLod and objectType not in self.LARGE_OBJECTS_HIGH and flaggedToSkip == False:
                     objPos = objData.get('Pos')

@@ -60,8 +60,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.accept('HolidayEnded', self.processHolidayEnd)
         self.accept('todHalloweenStateChange', self.attemptToSetCursedZombie)
 
-        taskMgr.doMethodLater(0.05, self.__processGroggy, '%s-process-groggy-%s' % (
-                self.__class__.__name__, self.doId))
+        taskMgr.doMethodLater(0.05, self.__processGroggy, self.uniqueName('process-groggy'))
 
     def __processGroggy(self, task):
         inventory = self.getInventory()
@@ -495,6 +494,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def d_levelUpMsg(self, category, level, messageId):
         self.sendUpdate('levelUpMsg', [category, level, messageId])
 
+    def disable(self):
+        DistributedPlayerAI.disable(self)
+        DistributedBattleAvatarAI.disable(self)
+
     def delete(self):
         inventory = self.getInventory()
 
@@ -510,10 +513,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.ignore('HolidayEnded')
         self.ignore('timeOfDayChange')
 
+        taskMgr.remove(self.uniqueName('process-groggy'))
+
         DistributedPlayerAI.delete(self)
         DistributedBattleAvatarAI.delete(self)
-
-        taskMgr.remove('%s-process-groggy-%s' % (self.__class__.__name__, self.doId))
 
     def setStickyTargets(self, stickyTargets):
         self.stickyTargets = stickyTargets
