@@ -9,7 +9,7 @@ from pirates.uberdog import DistributedInventoryBase
 
 
 class QuestStatus:
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestStatus')
 
     def __init__(self, av):

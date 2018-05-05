@@ -763,14 +763,6 @@ struct AvatarType {
   uint8 boss;
 };
 
-struct QuestId {
-  string id;
-};
-
-struct QuestGiverId {
-  string giverId;
-};
-
 struct QuestTaskState {
   uint16 attempts;
   AvatarType enemyType;
@@ -782,13 +774,13 @@ struct QuestTaskState {
 struct QuestRewardStruct {
   uint16 rewardType;
   uint16 amount;
-  QuestId questId;
+  string questId;
 };
 
 dclass DistributedQuest : DistributedObject {
   string DcObjectType;
-  setQuestId(QuestId) required broadcast db;
-  setGiverId(QuestGiverId) required broadcast db;
+  setQuestId(string) required broadcast db;
+  setGiverId(string) required broadcast db;
   announceNewQuest() broadcast ram;
   setCombineOp(uint8) required broadcast db;
   setTaskStates(QuestTaskState []) required broadcast db;
@@ -801,13 +793,13 @@ dclass DistributedQuest : DistributedObject {
 };
 
 struct QuestOffer {
-  QuestId questId;
+  string questId;
   QuestTaskState initialTaskStates[];
   QuestRewardStruct rewardStructs[];
 };
 
 struct QuestLadderOffer {
-  QuestId questId;
+  string questId;
   QuestRewardStruct rewardStructs[];
 };
 
@@ -823,22 +815,22 @@ dclass DistributedQuestGiver {
   setQuestOffer(QuestOffer []);
   setQuestLadderOffer(QuestLadderOffer [], int8);
   setOfferResponse(int8, int8) airecv clsend;
-  setQuestsCompleted(int8, QuestId [], QuestId [], QuestId [], uint32 []);
+  setQuestsCompleted(int8, string [], string [], string [], uint32 []);
   playDialogMovie(string);
   dialogMovieComplete() airecv clsend;
 };
 
 dclass DistributedQuestAvatar {
-  setActiveQuest(QuestId) ownrecv required db;
-  setQuestHistory(uint16 []) ownrecv required db;
-  setQuestLadderHistory(uint16 []) ownrecv required db;
-  setCurrentQuestChoiceContainers(uint16 []) ownrecv required db;
+  setActiveQuest(string="") ownrecv required db;
+  setQuestHistory(uint16 [] = []) ownrecv required db;
+  setQuestLadderHistory(uint16 [] = []) ownrecv required db;
+  setCurrentQuestChoiceContainers(uint16 [] = []) ownrecv required db;
   setQuestStep(QuestStep) ownrecv;
-  requestActiveQuest(QuestId) airecv ownsend;
-  requestDropQuest(QuestId) airecv ownsend;
-  requestShareQuest(QuestId) airecv ownsend;
-  requestQuestStep(QuestId) airecv ownsend;
-  popupProgressBlocker(QuestId);
+  requestActiveQuest(string) airecv ownsend;
+  requestDropQuest(string) airecv ownsend;
+  requestShareQuest(string) airecv ownsend;
+  requestQuestStep(string) airecv ownsend;
+  popupProgressBlocker(string);
 };
 
 struct ItemNameHolder {

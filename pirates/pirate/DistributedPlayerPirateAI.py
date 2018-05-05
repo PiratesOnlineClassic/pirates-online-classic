@@ -2,6 +2,7 @@ from direct.directnotify import DirectNotifyGlobal
 from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.HumanDNA import HumanDNA
+from pirates.quest.DistributedQuestAvatarAI import DistributedQuestAvatarAI
 from pirates.battle.BattleRandom import BattleRandom
 from pirates.pirate.PlayerPirateGameFSMAI import PlayerPirateGameFSMAI
 from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
@@ -17,13 +18,14 @@ from pirates.battle import WeaponGlobals
 from pirates.reputation import ReputationGlobals
 from pirates.battle.BattleSkillDiaryAI import BattleSkillDiaryAI
 
-class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNA):
+class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNA, DistributedQuestAvatarAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
 
     def __init__(self, air):
         DistributedPlayerAI.__init__(self, air)
         DistributedBattleAvatarAI.__init__(self, air)
         HumanDNA.__init__(self)
+        DistributedQuestAvatarAI.__init__(self, air)
 
         self.gameFSM = PlayerPirateGameFSMAI(self.air, self)
         self.isNpc = False
