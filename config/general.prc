@@ -31,14 +31,6 @@ exclude-texture-scale vr_*
 exclude-texture-scale general_frame_*
 exclude-texture-scale drop-shadow
 
-# Culling:
-cull-bin gui-popup 60 unsorted
-cull-bin shadow 15 fixed
-cull-bin ground 14 fixed
-cull-bin sky 28 fixed
-cull-bin water 28 fixed
-cull-bin gui-fixed 55 fixed
-
 # Stencil:
 stencil-bits 8
 

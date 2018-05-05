@@ -127,12 +127,13 @@ class SkyGroup(NodePath):
         self.moonOverlay.setColorScale(1, 1, 1, 0.25)
         self.moonOverlay.stash()
         self.moonOverlayIval = None
-        self.lightSettings = {PiratesGlobals.TOD_DAWN: self.dirLightSun,
-                              PiratesGlobals.TOD_DAY: self.dirLightSun,
-                              PiratesGlobals.TOD_DUSK: self.dirLightSun,
-                              PiratesGlobals.TOD_NIGHT: self.dirLightMoon,
-                              PiratesGlobals.TOD_STARS: self.dirLightMoon,
-                              PiratesGlobals.TOD_HALLOWEEN: self.dirLightMoon}
+        self.lightSettings = {
+            PiratesGlobals.TOD_DAWN: self.dirLightSun,
+            PiratesGlobals.TOD_DAY: self.dirLightSun,
+            PiratesGlobals.TOD_DUSK: self.dirLightSun,
+            PiratesGlobals.TOD_NIGHT: self.dirLightMoon,
+            PiratesGlobals.TOD_STARS: self.dirLightMoon,
+            PiratesGlobals.TOD_HALLOWEEN: self.dirLightMoon}
 
         render.setLight(self.ambLight)
         render.setLight(self.dirLightSun)
@@ -142,7 +143,7 @@ class SkyGroup(NodePath):
             areg = AttribNodeRegistry.getGlobalPtr()
         except:
             areg = None
- 
+
         if areg:
             areg.addNode(self.ambLight)
             areg.addNode(self.dirLightSun)
