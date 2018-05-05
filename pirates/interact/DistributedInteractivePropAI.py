@@ -1,4 +1,5 @@
 from direct.directnotify import DirectNotifyGlobal
+from pirates.piratesbase import PiratesGlobals
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from pirates.distributed.DistributedTargetableObjectAI import DistributedTargetableObjectAI
 
