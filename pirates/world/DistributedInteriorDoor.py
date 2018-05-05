@@ -21,7 +21,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
 
     def delete(self):
         if self.islandRequest:
-            self.cr.relatedObjectMgr.abortRequest(self.islandRequest)
+            base.cr.relatedObjectMgr.abortRequest(self.islandRequest)
             self.islandRequest = None
 
         DistributedDoorBase.DistributedDoorBase.delete(self)
@@ -35,7 +35,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         self.interiorDoId = interiorDoId
         self.interiorParentId = interiorParentId
         self.interiorZoneId = interiorZoneId
-        self.interior = self.cr.doId2do[self.interiorDoId]
+        self.interior = base.cr.doId2do[self.interiorDoId]
 
     def setExteriorId(self, exteriorDoId, exteriorWorldParentId, exteriorWorldZoneId):
         self.exteriorDoId = exteriorDoId
@@ -49,21 +49,20 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         return self.interior
 
     def getOtherSideParentModel(self):
-        island = self.cr.doId2do.get(self.exteriorDoId)
+        island = base.cr.doId2do.get(self.exteriorDoId)
         building = island.find('**/=uid=%s' % self.buildingUid)
         return building
 
     def loadOtherSide(self):
-        if self.cr:
-            self.cr.addTaggedInterest(self.exteriorWorldParentId, self.exteriorWorldZoneId, ['instanceInterest-Door'])
+        base.cr.addTaggedInterest(self.exteriorWorldParentId, self.exteriorWorldZoneId, [
+            'instanceInterest-Door'])
 
-            def extFinishedCallback(ext):
-                self.islandRequest = None
-                self.loadExteriorFinished()
+        def extFinishedCallback(ext):
+            self.islandRequest = None
+            self.loadExteriorFinished()
 
-            self.islandRequest = self.cr.relatedObjectMgr.requestObjects([self.exteriorDoId], eachCallback=extFinishedCallback)
-            return
-        self.notify.warning("self.cr was None! Failed to load exterior door!")
+        self.islandRequest = base.cr.relatedObjectMgr.requestObjects([self.exteriorDoId],
+            eachCallback=extFinishedCallback)
 
     def cleanupDoorDisableDialog(self, extraArgs=None):
         if self.doorDisableDialog:
@@ -82,7 +81,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
             if avId == base.localAvatar.doId:
                 base.transitions.fadeOut(self.tOpen)
                 self.openDoorIval.start()
-                self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
+                base.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
                 return
 
         DistributedDoorBase.DistributedDoorBase.requestInteraction(self, avId, interactType)
@@ -92,9 +91,9 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         self.interior.disableFloors()
         world = self.interior.getParentObj()
         world.removeWorldInterest()
-        self.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
-        self.cr.replaceTaggedInterestTag('instanceInterest-Door', 'instanceInterest')
-        island = self.cr.doId2do.get(self.exteriorDoId)
+        base.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
+        base.cr.replaceTaggedInterestTag('instanceInterest-Door', 'instanceInterest')
+        island = base.cr.doId2do.get(self.exteriorDoId)
         areaParentWorld = island.getParentObj()
         areaParentWorld.addWorldInterest(island)
         building = self.getOtherSideParentModel()

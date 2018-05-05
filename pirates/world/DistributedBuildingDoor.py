@@ -17,7 +17,7 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
     def disable(self):
         self.notify.debug('%s DistributedBuildingDoor.disable' % self.doId)
         if self.areaRequest:
-            self.cr.relatedObjectMgr.abortRequest(self.areaRequest)
+            base.cr.relatedObjectMgr.abortRequest(self.areaRequest)
             self.areaRequest = None
 
         self.privateInteriorId = 0
@@ -45,6 +45,7 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
         buildingName = self.getBuildingName()
         if buildingName:
             return PLocalizer.InteractEnterNamedBuilding % buildingName
+
         return PLocalizer.InteractOpenDoor
 
     def getParentModel(self):
@@ -52,9 +53,9 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
 
     def getOtherSideParentModel(self):
         if not self.privateInteriorId:
-            return self.cr.doId2do[self.interiorDoId]
+            return base.cr.doId2do[self.interiorDoId]
         else:
-            return self.cr.doId2do[self.privateInteriorId]
+            return base.cr.doId2do[self.privateInteriorId]
 
     def loadOtherSide(self):
         self.requestPrivateInteriorInstance()
@@ -70,6 +71,7 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
             self.privateInteriorId = 0
         else:
             self.privateInteriorId = interiorId
+
         self.loadInstanceWorld(worldId, worldZoneId, interiorId, autoFadeIn)
 
     def loadInstanceWorld(self, worldId, worldZoneId, interiorId, autoFadeIn):
@@ -79,15 +81,17 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
             self.loadInteriorAreaFinished(interior, autoFadeIn)
             return
 
-        self.areaRequest = self.cr.relatedObjectMgr.requestObjects([interiorId], eachCallback=areaFinishedCallback)
-        self.cr.addTaggedInterest(worldId, worldZoneId, ['instanceInterest-Door'])
+        self.areaRequest = base.cr.relatedObjectMgr.requestObjects([interiorId],
+            eachCallback=areaFinishedCallback)
+
+        base.cr.addTaggedInterest(worldId, worldZoneId, ['instanceInterest-Door'])
 
     def loadInteriorAreaFinished(self, interior, autoFadeIn):
         oldParent = self.getParentObj()
         oldWorld = oldParent.getParentObj()
         oldWorld.removeWorldInterest(oldParent)
-        self.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
-        self.cr.replaceTaggedInterestTag('instanceInterest-Door', 'instanceInterest')
+        base.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
+        base.cr.replaceTaggedInterestTag('instanceInterest-Door', 'instanceInterest')
         world = interior.getParentObj()
         world.addWorldInterest(interior)
         self.setupOtherSideDoors()
