@@ -54,15 +54,16 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         return building
 
     def loadOtherSide(self):
-        self.cr.addTaggedInterest(self.exteriorWorldParentId, self.exteriorWorldZoneId, [
-            'instanceInterest-Door'])
+        if self.cr:
+            self.cr.addTaggedInterest(self.exteriorWorldParentId, self.exteriorWorldZoneId, ['instanceInterest-Door'])
 
-        def extFinishedCallback(ext):
-            self.islandRequest = None
-            self.loadExteriorFinished()
+            def extFinishedCallback(ext):
+                self.islandRequest = None
+                self.loadExteriorFinished()
 
-        self.islandRequest = self.cr.relatedObjectMgr.requestObjects([self.exteriorDoId],
-            eachCallback=extFinishedCallback)
+            self.islandRequest = self.cr.relatedObjectMgr.requestObjects([self.exteriorDoId], eachCallback=extFinishedCallback)
+            return
+        self.notify.warning("self.cr was None! Failed to load exterior door!")
 
     def cleanupDoorDisableDialog(self, extraArgs=None):
         if self.doorDisableDialog:
