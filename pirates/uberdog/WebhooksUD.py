@@ -293,7 +293,7 @@ class PiratesWebhookManager(object):
         # Generate header message
         districtName = self.air.distributedDistrict.getName() if hasattr(self.air, 'distributedDistrict') else None
         if districtName:
-            headerMessage = 'Detected potential hacker on %d.' % districtName
+            headerMessage = 'Detected potential hacker on %s.' % districtName
         else:
             if self.air.dcSuffix == 'AI':
                 headerMessage = 'Detected potential hacker on the AI'

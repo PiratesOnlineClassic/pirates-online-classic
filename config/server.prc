@@ -1,3 +1,6 @@
+# Hacking Checks
+want-treasurechest-inactive-log #f
+
 # Webhooks:
 want-webhooks #t
 want-at-everyone #f

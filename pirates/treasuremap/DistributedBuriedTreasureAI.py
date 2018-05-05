@@ -10,12 +10,17 @@ class DistributedBuriedTreasureAI(DistributedInteractiveAI):
         self.startingDepth = 0
         self.currentDepth = 0
         self.currentUser = None
+        self.treasureAvailable = None
+        
+    def delete(self):
+        self.treasureAvailable = False
+        self.currentUser = None
+        DistributedInteractiveAI.delete(self)
 
     def handleRequestInteraction(self, avatar, interactType, instant):
-
-        treasureAvailable = config.GetBool('always-allow-digging', False) #TODO: input from questing
-
-        if treasureAvailable and self.currentUser is None:
+        if self.treasureAvailable == None:
+            self.treasureAvailable = config.GetBool('always-allow-digging', False) #TODO: input from questing
+        if self.treasureAvailable and self.currentUser is None:
             self.currentUser = avatar
             taskMgr.doMethodLater(1, self.__digTask, '%s-avatarDigTask-%s' % (self.doId, avatar.doId))
 
@@ -25,9 +30,19 @@ class DistributedBuriedTreasureAI(DistributedInteractiveAI):
         return self.DENY
 
     def handleRequestExit(self, avatar):
-        if avatar != self.currentUser:
+        if not self.currentUser:
+            # We'll log this if the config variable is true. This will help clear up clutter.
+            if config.GetBool('want-treasurechest-inactive-log', False):
+                self.notify.debug("Failed to request handle exist; Currently \"Digging\" Avatar is not present or was deleted..?")
+                self.air.logPotentialHacker(
+                    message='Received handleRequestExist from a avatar while buried treasure was inactive!',
+                    currentAvatarId=0,
+                    requestedAvatarId=avatar.doId
+                )
+            return
+        elif avatar != self.currentUser:
             self.notify.warning('Failed to request handle exist; Avatar is not current interactor')
-
+            
             self.air.logPotentialHacker(
                 message='Received handleRequestExist from a different avatar then is currently digging!',
                 currentAvatarId=self.currentUser.doId,
