@@ -178,6 +178,7 @@ class ClientArea(DirectObject):
         dna.head.hair.color = 0
 
     def createPropAvatar(self, objType, object, parent, uid):
+
         def playPropAvAnim(task, propAv, object, createDefault=True):
             anim = object['Animation Track']
             createDefSword = createDefault
@@ -431,170 +432,170 @@ class ClientArea(DirectObject):
                             self.notify.warning('Could not load model %s, not creating object.' % modelName)
                             return None
 
-                        if 'DisableCollision' in objData and objData['DisableCollision']:
-                            collisionNodes = objModel.findAllMatches('**/+CollisionNode')
-                            for collisionNode in collisionNodes:
-                                collisionNode.removeNode()
+                if 'DisableCollision' in objData and objData['DisableCollision']:
+                    collisionNodes = objModel.findAllMatches('**/+CollisionNode')
+                    for collisionNode in collisionNodes:
+                        collisionNode.removeNode()
 
-                        if objData['Type'] == 'Collision Barrier':
-                            geomNodes = objModel.findAllMatches('**/+GeomNode')
-                            for geomNode in geomNodes:
-                                geomNode.removeNode()
+                if objData['Type'] == 'Collision Barrier':
+                    geomNodes = objModel.findAllMatches('**/+GeomNode')
+                    for geomNode in geomNodes:
+                        geomNode.removeNode()
 
-                        if objData['Type'] == 'Special':
-                            if 'Visual' in objData and 'Model' in objData['Visual'] and objData['Visual']['Model'] == 'models/misc/smiley':
-                                geomNodes = objModel.findAllMatches('**/+GeomNode')
-                                for geomNode in geomNodes:
-                                    geomNode.removeNode()
+                if objData['Type'] == 'Special':
+                    if 'Visual' in objData and 'Model' in objData['Visual'] and objData['Visual']['Model'] == 'models/misc/smiley':
+                        geomNodes = objModel.findAllMatches('**/+GeomNode')
+                        for geomNode in geomNodes:
+                            geomNode.removeNode()
 
-                        if objData['Type'] == 'SFX Node':
-                            objNode = self.loadSFXNode(objData, self, uid)
-                            objModel = objNode
-                            bObjAnimated = True
+                if objData['Type'] == 'SFX Node':
+                    objNode = self.loadSFXNode(objData, self, uid)
+                    objModel = objNode
+                    bObjAnimated = True
 
-                        if objectType == 'Animated Prop':
-                            objNode = self.loadAnimatedProp(objData, self)
-                            objModel = objNode
-                            bObjAnimated = True
-                            flaggedToSkip = True
+                if objectType == 'Animated Prop':
+                    objNode = self.loadAnimatedProp(objData, self)
+                    objModel = objNode
+                    bObjAnimated = True
+                    flaggedToSkip = True
 
-                        if objectType == 'Dinghy':
-                            flaggedToSkip = True
+                if objectType == 'Dinghy':
+                    flaggedToSkip = True
 
-                        if self.isGridLod and objectType not in self.LARGE_OBJECTS_HIGH and flaggedToSkip == False:
-                            objPos = objData.get('Pos')
-                            if hasattr(self, 'fakeZoneId'):
-                                zoneId = self.fakeZoneId
+                if self.isGridLod and objectType not in self.LARGE_OBJECTS_HIGH and flaggedToSkip == False:
+                    objPos = objData.get('Pos')
+                    if hasattr(self, 'fakeZoneId'):
+                        zoneId = self.fakeZoneId
+                    else:
+                        zoneId = self.getZoneFromXYZ(objPos)
+
+                    objLOD = objModel.find('**/+LODNode')
+                    if hasattr(self, 'GridLOD'):
+                        xform = NodePath('tform')
+                        xform.setPos(objPos)
+                        xform.setHpr(objData['Hpr'])
+                        if actualParentObj:
+                            xform.reparentTo(actualParentObj)
+                            relHpr = xform.getHpr(self)
+                            xform.setHpr(relHpr)
+                            relPos = xform.getPos(self)
+                            xform.setPos(relPos)
+                            objPos = relPos
+                            zoneId = self.getZoneFromXYZ(objPos)
+
+                        if 'Scale' in objData:
+                            xform.setScale(objData['Scale'])
+
+                        if objectType == 'Light_Fixtures' or objectType == 'Tunnel Cap':
+                            effects = objModel.findAllMatches('**/*_effect_*')
+
+                            if not effects.isEmpty():
+                                for i in xrange(effects.getNumPaths()):
+                                    effect = effects[i]
+                                    lform = NodePath('fooEffect')
+                                    lform.setPos(objPos)
+                                    lform.setHpr(objData['Hpr'])
+                                    lform.setScale(objData['Scale'])
+                                    effect.reparentTo(lform)
+                                    lform.flattenLight()
+                                    node = lform.getChild(0)
+                                    node.reparentTo(self.staticGridRoot)
+                                    if 'Holiday' in objData:
+                                        node.setTag('Holiday', objData['Holiday'])
+                                        continue
+
+                        if 'Color' in objData['Visual']:
+                            xform.setColorScale(*objData['Visual']['Color'])
+
+                        if zoneId not in self.GridLOD:
+                            self.GridLOD[zoneId] = GridLODDef(self, zoneId)
+
+                        gldef = self.GridLOD[zoneId]
+                        gridNode = gldef.gridNode
+                        lodNode = gldef.lodNode
+                        highLODNode = gldef.highLodNode
+                        holiday = objData.get('Holiday')
+                        if holiday:
+                            self.accept('HolidayStarted', self.unstashHolidayObjects)
+                            self.accept('HolidayEnded', self.stashHolidayObjects)
+
+                        cNodes = objModel.findAllMatches('**/+CollisionNode')
+
+                        if not cNodes.isEmpty():
+                            tform = xform.copyTo(NodePath())
+                            if holiday:
+                                for cNode in cNodes:
+                                    cNode.setTag('Holiday', holiday)
+
+                            cNodes.reparentTo(tform)
+                            tform.wrtReparentTo(gridNode)
+
+                        if objLOD.isEmpty():
+                            tform = xform.copyTo(NodePath())
+                            objModel.findAllMatches('**/+GeomNode').reparentTo(tform)
+
+                            if not holiday:
+                                parent = highLODNode
                             else:
-                                zoneId = self.getZoneFromXYZ(objPos)
+                                parent = highLODNode.attachNewNode(ModelNode('HolidayParent'))
+                                parent.setTag('Holiday', holiday)
 
-                            objLOD = objModel.find('**/+LODNode')
-                            if hasattr(self, 'GridLOD'):
-                                xform = NodePath('tform')
-                                xform.setPos(objPos)
-                                xform.setHpr(objData['Hpr'])
-                                if actualParentObj:
-                                    xform.reparentTo(actualParentObj)
-                                    relHpr = xform.getHpr(self)
-                                    xform.setHpr(relHpr)
-                                    relPos = xform.getPos(self)
-                                    xform.setPos(relPos)
-                                    objPos = relPos
-                                    zoneId = self.getZoneFromXYZ(objPos)
+                            tform.wrtReparentTo(parent)
+                        else:
+                            objLODNode = objLOD.node()
+                            lodIdx = 0
+                            lowOnly = False
+                            if base.gridDetail == 'low' and objectType in self.MED_OBJECTS_LOW:
+                                lowOnly = True
+                                lodIdx = objLODNode.getNumChildren() - 1
 
-                                if 'Scale' in objData:
-                                    xform.setScale(objData['Scale'])
+                            for i in xrange(objLODNode.getNumChildren()):
+                                if not gldef.children[i]:
+                                    continue
 
-                                if objectType == 'Light_Fixtures' or objectType == 'Tunnel Cap':
-                                    effects = objModel.findAllMatches('**/*_effect_*')
-
-                                    if not effects.isEmpty():
-                                        for i in xrange(effects.getNumPaths()):
-                                            effect = effects[i]
-                                            lform = NodePath('fooEffect')
-                                            lform.setPos(objPos)
-                                            lform.setHpr(objData['Hpr'])
-                                            lform.setScale(objData['Scale'])
-                                            effect.reparentTo(lform)
-                                            lform.flattenLight()
-                                            node = lform.getChild(0)
-                                            node.reparentTo(self.staticGridRoot)
-                                            if 'Holiday' in objData:
-                                                node.setTag('Holiday', objData['Holiday'])
-                                                continue
-
-                                if 'Color' in objData['Visual']:
-                                    xform.setColorScale(*objData['Visual']['Color'])
-
-                                if zoneId not in self.GridLOD:
-                                    self.GridLOD[zoneId] = GridLODDef(self, zoneId)
-
-                                gldef = self.GridLOD[zoneId]
-                                gridNode = gldef.gridNode
-                                lodNode = gldef.lodNode
-                                highLODNode = gldef.highLodNode
-                                holiday = objData.get('Holiday')
-                                if holiday:
-                                    self.accept('HolidayStarted', self.unstashHolidayObjects)
-                                    self.accept('HolidayEnded', self.stashHolidayObjects)
-
-                                cNodes = objModel.findAllMatches('**/+CollisionNode')
-
-                                if not cNodes.isEmpty():
+                                if not holiday:
                                     tform = xform.copyTo(NodePath())
-                                    if holiday:
-                                        for cNode in cNodes:
-                                            cNode.setTag('Holiday', holiday)
-
-                                    cNodes.reparentTo(tform)
-                                    tform.wrtReparentTo(gridNode)
-
-                                if objLOD.isEmpty():
-                                    tform = xform.copyTo(NodePath())
-                                    objModel.findAllMatches('**/+GeomNode').reparentTo(tform)
-
-                                    if not holiday:
-                                        parent = highLODNode
-                                    else:
-                                        parent = highLODNode.attachNewNode(ModelNode('HolidayParent'))
-                                        parent.setTag('Holiday', holiday)
-
-                                    tform.wrtReparentTo(parent)
                                 else:
-                                    objLODNode = objLOD.node()
-                                    lodIdx = 0
-                                    lowOnly = False
-                                    if base.gridDetail == 'low' and objectType in self.MED_OBJECTS_LOW:
-                                        lowOnly = True
-                                        lodIdx = objLODNode.getNumChildren() - 1
+                                    tform = NodePath(ModelNode('HolidayParent'))
+                                    tform.setTag('Holiday', holiday)
+                                    tform.setTransform(xform.getTransform())
 
-                                    for i in xrange(objLODNode.getNumChildren()):
-                                        if not gldef.children[i]:
-                                            continue
+                                objModel.findAllMatches('**/=Holiday').reparentTo(tform)
 
-                                        if not holiday:
-                                            tform = xform.copyTo(NodePath())
-                                        else:
-                                            tform = NodePath(ModelNode('HolidayParent'))
-                                            tform.setTag('Holiday', holiday)
-                                            tform.setTransform(xform.getTransform())
-
-                                        objModel.findAllMatches('**/=Holiday').reparentTo(tform)
-
-                                        if not lowOnly:
-                                            lodIdx = i
-                                            tform.node().stealChildren(objLODNode.getChild(lodIdx))
-                                        elif lodIdx != i:
-                                            tform.node().copyChildren(objLODNode.getChild(lodIdx))
-                                        else:
-                                            tform.node().stealChildren(objLODNode.getChild(lodIdx))
-
-                                        if objLODNode.getChild(lodIdx).isGeomNode():
-                                            tform.node().addChild(objLODNode.getChild(lodIdx))
-
-                                        tform.wrtReparentTo(gldef.children[i])
-
-                                    objLODNode.removeAllChildren()
-                                    objLOD.removeNode()
-
-                                if objectType == 'PropBuildingExterior':
-                                    specialGeo = objModel.findAllMatches('**/+GeomNode')
-                                    if not specialGeo.isEmpty():
-                                        tform = xform.copyTo(NodePath())
-                                        for i in xrange(specialGeo.getNumPaths()):
-                                            specialGeo[i].setPos(specialGeo[i].getParent().getPos())
-                                            specialGeo[i].setHpr(specialGeo[i].getParent().getHpr())
-                                            specialGeo[i].setScale(specialGeo[i].getParent().getScale())
-                                            specialGeo[i].reparentTo(tform)
-
-                                        tform.wrtReparentTo(highLODNode)
-
-                                if bObjAnimated:
-                                    pass
+                                if not lowOnly:
+                                    lodIdx = i
+                                    tform.node().stealChildren(objLODNode.getChild(lodIdx))
+                                elif lodIdx != i:
+                                    tform.node().copyChildren(objLODNode.getChild(lodIdx))
                                 else:
-                                    objModel.removeNode()
-                                    objStolen = True
-                                    xform.removeNode()
+                                    tform.node().stealChildren(objLODNode.getChild(lodIdx))
+
+                                if objLODNode.getChild(lodIdx).isGeomNode():
+                                    tform.node().addChild(objLODNode.getChild(lodIdx))
+
+                                tform.wrtReparentTo(gldef.children[i])
+
+                            objLODNode.removeAllChildren()
+                            objLOD.removeNode()
+
+                        if objectType == 'PropBuildingExterior':
+                            specialGeo = objModel.findAllMatches('**/+GeomNode')
+                            if not specialGeo.isEmpty():
+                                tform = xform.copyTo(NodePath())
+                                for i in xrange(specialGeo.getNumPaths()):
+                                    specialGeo[i].setPos(specialGeo[i].getParent().getPos())
+                                    specialGeo[i].setHpr(specialGeo[i].getParent().getHpr())
+                                    specialGeo[i].setScale(specialGeo[i].getParent().getScale())
+                                    specialGeo[i].reparentTo(tform)
+
+                                tform.wrtReparentTo(highLODNode)
+
+                        if bObjAnimated:
+                            pass
+                        else:
+                            objModel.removeNode()
+                            objStolen = True
+                            xform.removeNode()
 
             elif zoneToLoadIn not in self.toBeLoaded:
                 self.toBeLoaded[zoneToLoadIn] = {}
@@ -1201,7 +1202,7 @@ class ClientArea(DirectObject):
             sfxNode.removeNode()
 
         self.sfxNodes = []
-        if base.config.GetBool('want-model-texture-cleanup', 1):
+        if base.config.GetBool('want-model-texture-cleanup', True):
             ModelPool.garbageCollect()
             TexturePool.garbageCollect()
 
