@@ -107,31 +107,24 @@ class DistributedBishopsHandTable(DistributedGameTable.DistributedGameTable):
         if action == BishopsHandGlobals.PLAYER_ACTIONS.JoinGame:
             self.d_clientAction([action, 0])
             self.game.request('SeatedJoined')
+        elif action == BishopsHandGlobals.PLAYER_ACTIONS.UnjoinGame:
+            self.d_clientAction([action, 0])
+            self.game.request('SeatedUnjoined')
+        elif action == BishopsHandGlobals.PLAYER_ACTIONS.RejoinGame:
+            self.d_clientAction([action, 0])
+        elif action == BishopsHandGlobals.PLAYER_ACTIONS.Continue:
+            self.d_clientAction([action, 0])
+        elif action == BishopsHandGlobals.PLAYER_ACTIONS.Resign:
+            self.d_clientAction([action, 0])
+        elif action == BishopsHandGlobals.PLAYER_ACTIONS.Leave:
+            self.d_clientAction([action, 0])
+        elif action == BishopsHandGlobals.PLAYER_ACTIONS.Progress:
+            progress = args[0]
+            self.d_sendProgress(progress)
+        elif action == -1:
+            self.requestExit()
         else:
-            if action == BishopsHandGlobals.PLAYER_ACTIONS.UnjoinGame:
-                self.d_clientAction([action, 0])
-                self.game.request('SeatedUnjoined')
-            else:
-                if action == BishopsHandGlobals.PLAYER_ACTIONS.RejoinGame:
-                    self.d_clientAction([action, 0])
-                else:
-                    if action == BishopsHandGlobals.PLAYER_ACTIONS.Continue:
-                        self.d_clientAction([action, 0])
-                    else:
-                        if action == BishopsHandGlobals.PLAYER_ACTIONS.Resign:
-                            self.d_clientAction([action, 0])
-                        else:
-                            if action == BishopsHandGlobals.PLAYER_ACTIONS.Leave:
-                                self.d_clientAction([action, 0])
-                            else:
-                                if action == BishopsHandGlobals.PLAYER_ACTIONS.Progress:
-                                    progress = args[0]
-                                    self.d_sendProgress(progress)
-                                else:
-                                    if action == -1:
-                                        self.requestExit()
-                                    else:
-                                        self.notify.error('gameCallback: unknown action: %s' % action)
+            self.notify.error('gameCallback: unknown action: %s' % action)
 
     def d_clientAction(self, action):
         self.sendUpdate('clientAction', [action])

@@ -128,6 +128,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         gameTable.setPos(objectData.get('Pos', (0, 0, 0)))
         gameTable.setHpr(objectData.get('Hpr', (0, 0, 0)))
         gameTable.setScale(objectData.get('Scale', 1))
+        gameTable.generatePlayers()
 
         if hasattr(gameTable, 'setGameType'):
             gameTable.setGameType(gameType)

@@ -1175,18 +1175,18 @@ class HumanDNA(AvatarDNA.AvatarDNA):
             randomGen = random
 
         self.gender = 'm'
-        self.body.shape = 3
-        self.body.color = 7
+        self.body.shape = randomGen.choice([0, 1, 2, 3, 4])
+        self.body.color = randomGen.choice([0, 7])
         self.clothes.shirt = 6
         self.clothes.vest = 0
         self.clothes.pant = 1
         self.clothes.sock = 0
         self.clothes.shoe = 2
         self.clothes.belt = 1
-        self.head.hair.hair = 5
-        self.head.hair.beard = 5
-        self.head.hair.mustache = 1
-        self.head.hair.color = 2
+        self.head.hair.hair = randomGen.choice([1, 2, 3, 4, 5, 6])
+        self.head.hair.beard = randomGen.choice(range(11))
+        self.head.hair.mustache = randomGen.choice([0, 1, 2, 4])
+        self.head.hair.color = randomGen.choice(range(5))
 
     def makeNPCNavySailor(self, seed=None, gender='m'):
         if seed:

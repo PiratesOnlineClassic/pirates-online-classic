@@ -65,17 +65,14 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
         print 'DistributedLock:guiCallback'
         if action == LockGlobals.LGUI_EXIT:
             self.d_requestExit()
+        elif action == LockGlobals.LGUI_MECHLEFT:
+            self.gui.adjustMechanism(-1)
+        elif action == LockGlobals.LGUI_MECHRIGHT:
+            self.gui.adjustMechanism(1)
+        elif action == LockGlobals.LGUI_TRYLOCK:
+            self.gui.tryLock()
         else:
-            if action == LockGlobals.LGUI_MECHLEFT:
-                self.gui.adjustMechanism(-1)
-            else:
-                if action == LockGlobals.LGUI_MECHRIGHT:
-                    self.gui.adjustMechanism(1)
-                else:
-                    if action == LockGlobals.LGUI_TRYLOCK:
-                        self.gui.tryLock()
-                    else:
-                        self.notify.error('guiCallback: unknown action: %s' % action)
+            self.notify.error('guiCallback: unknown action: %s' % action)
 
     def localAvatarSatDown(self, avId, difficulty):
         print 'DistributedLock:localAvatarSatDown'

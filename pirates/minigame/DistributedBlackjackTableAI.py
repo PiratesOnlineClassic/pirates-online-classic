@@ -5,7 +5,7 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBlackjackTableAI')
 
     def __init__(self, air):
-        DistributedGameTableAI.__init__(self, air)
+        DistributedGameTableAI.__init__(self, air, numberAI=0)
         self.pendingStakes = 0
         self.activeStakes = 0
         self.runningStakes = 0

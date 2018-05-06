@@ -4,27 +4,30 @@ import random
 
 class DistributedGameTableAI(DistributedInteractiveAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGameTableAI')
+    MULTIUSE = True
 
-    def __init__(self, air, availableSeats=7, aiPlayers=3):
+    def __init__(self, air, availableSeats=7, numberAI=3):
         DistributedInteractiveAI.__init__(self, air)
         self._availableSeats = availableSeats
-        self._aiPlayers = aiPlayers
+        self._numberAI = numberAI
         self.dealerType = 1
         self.tableType = 1
         self.dealerName = 'Dealer'
-        self.aiList = []
+
+        self.seats = [None] * self._availableSeats
+        self._generatedAI = False
 
     def announceGenerate(self):
         DistributedInteractiveAI.announceGenerate(self)
-        self.generatePlayers()
 
     def handleRequestInteraction(self, avatar, interactType, instant):
-        result = DistributedInteractiveAI.handleRequestInteraction(self, avatar,
-            interactType, instant)
-
-        if not result:
+        availableSeatIndex = self.getRandomOpenSeat()
+        if self.getOpenSeatCount == 0:
+            self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [3, 0])
             return self.DENY
 
+        self.avatarSit(avatar, availableSeatIndex)
+        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [1, availableSeatIndex])
         return self.ACCEPT
 
     @property
@@ -32,8 +35,58 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         return self._availableSeats
 
     @property
-    def aiPlayers(self):
-        return self._aiPlayers
+    def numberAI(self):
+        return self._numberAI
+
+    def getAIPlayers(self):
+        ai = []
+        for seatIndex in range(len(self.seats)):
+            seat = self.seats[seatIndex]
+            if seat == 1:
+                ai.append(seat)
+        return ai
+
+    def getAvatarSeatIndex(self, avatar):
+        for seatIndex in range(len(self.seats)):
+            seat = self.seats[seatIndex]
+            if seat == avatar:
+                return seatIndex
+        return None
+
+    def getAvailableSeatIndexes(self):
+        available = []
+        for seatIndex in range(len(self.seats)):
+            seat = self.seats[seatIndex]
+            if seat == None:
+                available.append(seatIndex)
+        return available
+
+    def getRandomOpenSeat(self):
+        seats = self.getAvailableSeatIndexes()
+        if len(seats) == 0:
+            return None
+        return random.choice(seats)
+
+    def getOpenSeatCount(self):
+        return len(self.getAvailableSeatIndex)
+
+    def avatarSit(self, avatar, seatIndex):
+        currentSeat = self.seats[seatIndex]
+        if currentSeat:
+            self.notify.warning('Failed to seat avatar; Seat %d is already occupied!' % seatIndex)
+            return
+
+        self.seats[seatIndex] = avatar
+        self.sendUpdate('avatarSit', [avatar.doId, seatIndex])
+
+    def avatarStand(self, avatar, seatIndex):
+        currentSeat = self.seats[seatIndex]
+        if currentSeat != avatar:
+            self.notify.warning('Failed to stand avatar; Seat %d is not occupied by avatar!' % seatIndex)
+            return
+
+        self.seats[seatIndex] = None
+        self.sendUpdate('avatarStand', [avatar.doId, seatIndex])    
 
     def setTableType(self, type):
         self.tableType = type
@@ -80,33 +133,30 @@ class DistributedGameTableAI(DistributedInteractiveAI):
     def getDealerType(self):
         return self.dealerType
 
-    def setAIList(self, list):
-        self.aiList = list
-
-    def d_setAIList(self, list):
-        self.sendUpdate('setAIList', [list])
-
-    def b_setAIList(self, list):
-        self.setAIList(list)
-        self.d_setAIList(list)
-
     def getAIList(self):
-        return self.aiList
+        aiList = [0] * self._availableSeats
+        aiPlayers = self.getAIPlayers()
+        for seatIndex in range(len(aiPlayers)):
+            ai = aiPlayers[seatIndex]
+            aiList[seatIndex] = ai
+        return aiList
 
     def generatePlayers(self):
-        players = [0] * self.availableSeats
+        if self._generatedAI:
+            self.notify.warning('Failed to generate table AI; AI players already generated!')
+            return
+        self._genratedAI = True
 
         randomGen = random.Random()
         randomGen.seed(self.getUniqueId()) 
 
-        if (self._aiPlayers > self.availableSeats):
+        if self._numberAI > self._availableSeats:
             self.notify.warning("Cannot have more ai then seats! reducing to 5")
-            self._aiPlayers = 5
+            self._numberAI = 5
 
-        for i in range(0, self._aiPlayers):
+        for i in range(self._numberAI):
             aiType = random.randint(0, 10)
             aiType = 1 if aiType > 0 else 0
-            players[i] = aiType
+            self.seats[i] = aiType
 
-        randomGen.shuffle(players)
-        self.b_setAIList(players)
+        randomGen.shuffle(self.seats)

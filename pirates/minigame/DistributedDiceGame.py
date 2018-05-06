@@ -82,17 +82,14 @@ class DistributedDiceGame(DistributedGameTable.DistributedGameTable):
         self.gui.disableAction()
         if action == 'roll':
             self.gui.rollDice()
+        elif action == PlayingCardGlobals.Fold:
+            self.d_clientAction(self.round, [action, 0])
+        elif action == -1:
+            self.requestExit()
+        elif self.extraGuiCallback(action):
+            pass
         else:
-            if action == PlayingCardGlobals.Fold:
-                self.d_clientAction(self.round, [action, 0])
-            else:
-                if action == -1:
-                    self.requestExit()
-                else:
-                    if self.extraGuiCallback(action):
-                        pass
-                    else:
-                        self.notify.error('guiCallback: unknown action: %s' % action)
+            self.notify.error('guiCallback: unknown action: %s' % action)
 
     def localAvatarSatDown(self, seatIndex):
         DistributedGameTable.DistributedGameTable.localAvatarSatDown(self, seatIndex)

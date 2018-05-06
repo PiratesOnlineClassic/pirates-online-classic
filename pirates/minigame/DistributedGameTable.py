@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.minigame.DistributedGameTable
 import random
 
 from direct.directnotify import DirectNotifyGlobal
@@ -226,7 +222,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
         if type == 1:
             dna = HumanDNA.HumanDNA()
             dna.makeNPCTownfolk(seed=self.doId)
-            name = 'Dealer'
+            name = self.dealerName
             dna.setName(name)
             dna.clothes.coat = 0
             dna.clothes.vest = 2
@@ -295,24 +291,21 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
         if answer == 1:
             self.localAvatarSatDown(seatIndex)
             localAvatar.b_setGameState('ParlorGame')
+        elif answer == 2:
+            self.localAvatarGotUp(seatIndex)
+        elif answer == 3:
+            self.deleteRequestDialogs()
+            self.requestDialog = PDialog.PDialog(text=PLocalizer.TableIsFullMessage, style=OTPDialog.Acknowledge, command=self.requestCommand)
+            self.setDialogBin(self.requestDialog)
+            localAvatar.motionFSM.on()
+            self.cr.interactionMgr.start()
+        elif answer == 5:
+            localAvatar.guiMgr.showNonPayer(quest='Game_Table', focus=6)
+            localAvatar.motionFSM.on()
+            self.cr.interactionMgr.start()
         else:
-            if answer == 2:
-                self.localAvatarGotUp(seatIndex)
-            else:
-                if answer == 3:
-                    self.deleteRequestDialogs()
-                    self.requestDialog = PDialog.PDialog(text=PLocalizer.TableIsFullMessage, style=OTPDialog.Acknowledge, command=self.requestCommand)
-                    self.setDialogBin(self.requestDialog)
-                    localAvatar.motionFSM.on()
-                    self.cr.interactionMgr.start()
-                else:
-                    if answer == 5:
-                        localAvatar.guiMgr.showNonPayer(quest='Game_Table', focus=6)
-                        localAvatar.motionFSM.on()
-                        self.cr.interactionMgr.start()
-                    else:
-                        localAvatar.motionFSM.on()
-                        self.cr.interactionMgr.start()
+            localAvatar.motionFSM.on()
+            self.cr.interactionMgr.start()
 
     def localAvatarSatDown(self, seatIndex):
         self.actors[seatIndex] = localAvatar

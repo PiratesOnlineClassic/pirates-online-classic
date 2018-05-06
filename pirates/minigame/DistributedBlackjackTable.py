@@ -174,40 +174,32 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
             self.d_clientAction([guiAction, amount])
             self.initialPlayerBid = amount
             self.cheat = False
-        else:
-            if guiAction == PlayingCardGlobals.Stay:
-                self.d_clientAction([guiAction, 0])
+        elif guiAction == PlayingCardGlobals.Stay:
+            self.d_clientAction([guiAction, 0])
+        elif guiAction == PlayingCardGlobals.Hit:
+            self.d_clientAction([guiAction, 0])
+        elif guiAction == PlayingCardGlobals.Split:
+            if self.initialPlayerBid > 0:
+                amount = self.getPlayerBidAmount()
             else:
-                if guiAction == PlayingCardGlobals.Hit:
-                    self.d_clientAction([guiAction, 0])
-                else:
-                    if guiAction == PlayingCardGlobals.Split:
-                        if self.initialPlayerBid > 0:
-                            amount = self.getPlayerBidAmount()
-                        else:
-                            amount = 0
-                        self.d_clientAction([guiAction, amount])
-                    else:
-                        if guiAction == PlayingCardGlobals.DoubleDown:
-                            if self.initialPlayerBid > 0:
-                                amount = self.getPlayerBidAmount()
-                            else:
-                                amount = 0
-                            self.d_clientAction([guiAction, amount])
-                        else:
-                            if guiAction == PlayingCardGlobals.Cheat1:
-                                self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardOneCheat, self.card_id)
-                            else:
-                                if guiAction == PlayingCardGlobals.Cheat2:
-                                    self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardTwoCheat, self.card_id)
-                                else:
-                                    if guiAction == PlayingCardGlobals.AutoStay:
-                                        self.d_clientAction([guiAction, 0])
-                                    else:
-                                        if guiAction == PlayingCardGlobals.Leave:
-                                            self.requestExit()
-                                        else:
-                                            self.notify.error('guiCallback: unknown action: %s' % guiAction)
+                amount = 0
+            self.d_clientAction([guiAction, amount])
+        elif guiAction == PlayingCardGlobals.DoubleDown:
+            if self.initialPlayerBid > 0:
+                amount = self.getPlayerBidAmount()
+            else:
+                amount = 0
+            self.d_clientAction([guiAction, amount])
+        elif guiAction == PlayingCardGlobals.Cheat1:
+            self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardOneCheat, self.card_id)
+        elif guiAction == PlayingCardGlobals.Cheat2:
+            self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardTwoCheat, self.card_id)
+        elif guiAction == PlayingCardGlobals.AutoStay:
+            self.d_clientAction([guiAction, 0])
+        elif guiAction == PlayingCardGlobals.Leave:
+            self.requestExit()
+        else:
+            self.notify.error('guiCallback: unknown action: %s' % guiAction)
 
     def getAudio(self):
         audio = None
