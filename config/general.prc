@@ -52,6 +52,8 @@ notify-level-pgraph error
 notify-level-collide error
 notify-level-abs error
 notify-level-Actor error
+notify-level-AnimationMixer error
+notify-level-UsesAnimationMixer warning
 notify-level-DisplayOptions debug
 notify-timestamp 1
 

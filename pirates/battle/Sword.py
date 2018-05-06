@@ -8,7 +8,6 @@ from pirates.piratesbase import PLocalizer
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 class Sword(Weapon.Weapon):
-
     modelTypes = {InventoryType.CutlassWeaponL1: ('models/handheld/cutlass_rusty_high', Vec4(1, 1, 1, 1)), InventoryType.CutlassWeaponL2: ('models/handheld/cutlass_iron_high', Vec4(1, 1, 1, 1)), InventoryType.CutlassWeaponL3: ('models/handheld/cutlass_steel_high', Vec4(1, 1, 1, 1)), InventoryType.CutlassWeaponL4: ('models/handheld/cutlass_fine_high', Vec4(1, 1, 1, 1)), InventoryType.CutlassWeaponL5: ('models/handheld/cutlass_pirateblade_high', Vec4(1, 1, 1, 1)), InventoryType.CutlassWeaponL6: ('models/handheld/cutlass_dark_high', Vec4(1, 1, 1, 1))}
     models = {}
     icons = {}

@@ -8,7 +8,6 @@ from pirates.piratesbase import PLocalizer
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 class DualCutlass(Weapon.Weapon):
-
     modelTypes = {InventoryType.DualCutlassL1: ('models/handheld/cutlass_rusty_high', Vec4(1, 1, 1, 1))}
     models = {}
     icons = {}
@@ -102,10 +101,8 @@ class DualCutlass(Weapon.Weapon):
         DualCutlass.drawSfx = loader.loadSfx('audio/sfx_cutlass_draw.mp3')
         DualCutlass.returnSfx = loader.loadSfx('audio/sfx_cutlass_sheathe.mp3')
 
-
 def getHitSfx():
     return DualCutlass.hitSfxs
-
 
 def getMissSfx():
     return DualCutlass.missSfxs

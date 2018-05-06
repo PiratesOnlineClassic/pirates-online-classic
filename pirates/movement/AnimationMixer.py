@@ -8,7 +8,6 @@ from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import lerp, report
 
 class AnimationChannel:
-
     notify = DirectNotifyGlobal.directNotify.newCategory('AnimationChannel')
 
     def __init__(self, chanId, loop, actor, partName, checkInFunc):
@@ -48,7 +47,6 @@ class AnimationChannel:
         self.actor = None
         self.partName = None
         self.checkInFunc = None
-        return
 
     def clearUpAnim(self, animSpanId):
         self.setUpAnimName(None, animSpanId)
@@ -252,7 +250,6 @@ class PartMixer:
         self.channels = []
 
 class AnimationMixer:
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('AnimationMixer')
     NA_INDEX = -1
     LOOP_INDEX = 0
@@ -337,6 +334,8 @@ class AnimationMixer:
 
             if len(ival):
                 return ival
+        self.notify.warning("__getLoopIval: Failed to get animation ranking and setup ival!")
+        return None
 
     def __getPlayIval(self, newAnim, partName=None, fromFrame=None, toFrame=None, blendInT=defaultBlendT, blendOutT=defaultBlendT, duration=0.0, blendInto=None):
         sectionNames = self.getSectionList(partName)
@@ -364,6 +363,8 @@ class AnimationMixer:
 
             if len(ival):
                 return ival
+        self.notify.warning("__getPlayIval: Failed to get animation ranking and setup ival!")
+        return None
 
     def __getPoseIval(self, newAnim, partName=None, frame=0, blendT=defaultBlendT):
         sectionNames = self.getSectionList(partName)
@@ -387,6 +388,8 @@ class AnimationMixer:
 
             if len(ival):
                 return ival
+        self.notify.warning("__getPoseIval: Failed to get animation ranking and setup ival!")
+        return None
 
     def __processActorInterval(self, actorInterval, partName, blendInT, blendOutT, blendInto):
         if not isinstance(actorInterval, ActorInterval) or self.actor is not actorInterval.actor or hasattr(actorInterval, 'animMixed'):
@@ -415,6 +418,8 @@ class AnimationMixer:
             ival.start()
             ival.setT(0.01)
             self.addIvalToOwnedList(ival)
+            return
+        self.notify.warning("loop: Failed to loop new animation %s at rate of %s!" % (newAnim, str(rate)))
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-animmixer-report')
     def play(self, newAnim, partName=None, fromFrame=None, toFrame=None, blendInT=defaultBlendT, blendOutT=defaultBlendT, blendInto=None):
@@ -426,6 +431,8 @@ class AnimationMixer:
             ival.start()
             ival.setT(0.01)
             self.addIvalToOwnedList(ival)
+            return
+        self.notify.warning("play: Failed to play new animation %s!" % (newAnim))
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-animmixer-report')
     def pingpong(self, newAnim, rate=1.0, partName=None, fromFrame=None, toFrame=None, blendT=defaultBlendT):
@@ -438,6 +445,8 @@ class AnimationMixer:
             ival.start()
             ival.setT(0.01)
             self.addIvalToOwnedList(ival)
+            return
+        self.notify.warning("pingpong: Failed to pingpong new animation %s at rate of %s!" % (newAnim, str(rate)))
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-animmixer-report')
     def pose(self, newAnim, frame, partName=None, blendT=defaultBlendT):
@@ -449,6 +458,8 @@ class AnimationMixer:
             ival.start()
             ival.setT(0.01)
             self.addIvalToOwnedList(ival)
+            return
+        self.notify.warning("pose: Failed to play new animation %s!" % (newAnim))
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-animmixer-report')
     def actorInterval(self, actorInterval, partName, blendInT=defaultBlendT, blendOutT=defaultBlendT, blendInto=None):
@@ -456,6 +467,7 @@ class AnimationMixer:
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-animmixer-report')
     def stop(self, animName=None, partName=None):
+        self.notify.debug("stop: Stopping current animation!")
         Actor.stop(self.actor, animName, partName)
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-animmixer-report')
@@ -469,7 +481,6 @@ class AnimationMixer:
 
         Actor.stop(self.actor)
         Actor.setControlEffect(self.actor, None, 0.0)
-        return
 
     def delete(self):
         self.cleanup()

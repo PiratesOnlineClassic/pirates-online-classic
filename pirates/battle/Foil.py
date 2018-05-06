@@ -7,9 +7,7 @@ from pirates.effects import PolyTrail
 from pirates.piratesbase import PLocalizer
 from pirates.uberdog.UberDogGlobals import InventoryType
 
-
 class Foil(Weapon.Weapon):
-
     modelTypes = {InventoryType.FoilL1: ('models/handheld/cutlass_rusty_high', Vec4(1, 1, 1, 1))}
     models = {}
     icons = {}
@@ -37,7 +35,6 @@ class Foil(Weapon.Weapon):
         self.endAttack(None)
         self.removeTrail()
         Weapon.Weapon.delete(self)
-        return
 
     def getDrawIval(self, av, ammoSkillId=0, blendInT=0.1, blendOutT=0):
         track = Parallel(Func(base.playSfx, self.drawSfx, node=av), av.actorInterval('sword_draw', playRate=1.5, endFrame=15, blendInT=blendInT, blendOutT=blendOutT), Sequence(Wait(0.187), Func(self.attachTo, av)))
@@ -74,7 +71,6 @@ class Foil(Weapon.Weapon):
         if self.motion_trail:
             self.motion_trail.destroy()
             self.motion_trail = None
-        return
 
     def hideSpinBlur(self):
         if self.spinBlur:
@@ -103,10 +99,8 @@ class Foil(Weapon.Weapon):
         Foil.drawSfx = loader.loadSfx('audio/sfx_cutlass_draw.mp3')
         Foil.returnSfx = loader.loadSfx('audio/sfx_cutlass_sheathe.mp3')
 
-
 def getHitSfx():
     return Foil.hitSfxs
-
 
 def getMissSfx():
     return Foil.missSfxs

@@ -1,7 +1,5 @@
 import random
-
 from pirates.piratesbase import PLocalizer
-
 
 class AvatarType:
     Unspecified = -1
@@ -32,7 +30,6 @@ class AvatarType:
             self.boss = boss
         self.__bossType = None
         self._setMutable(False)
-        return
 
     def _setMutable(self, mutable):
         self.__mutable = mutable

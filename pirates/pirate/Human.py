@@ -397,7 +397,6 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         pass
 
     def enterEyeFSMClosed(self):
-        return
         for lodName in self.getLODNames():
             self.eyeLids[lodName].show()
             self.eyeBalls[lodName].hide()

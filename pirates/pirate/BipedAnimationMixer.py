@@ -1,9 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.movement.AnimationMixer import AnimationMixer
 
-
 class BipedAnimationMixer(AnimationMixer):
-
     NA_INDEX = -1
     IDLE_INDEX = 0
     INPLACE_INDEX_0 = 1
@@ -14,22 +12,17 @@ class BipedAnimationMixer(AnimationMixer):
     INMOTION_INDEX_2 = 6
     MOVIE_INDEX = 7
     LOOP = {'NA': NA_INDEX, 'IDLE': IDLE_INDEX, 'MOTION': MOTION_INDEX}
-    ACTION = {
-        'NA': NA_INDEX,
-        'INPLACE_0': INPLACE_INDEX_0,
-        'INPLACE_1': INPLACE_INDEX_1,
-        'INMOTION_0': INMOTION_INDEX_0,
-        'INMOTION_1': INMOTION_INDEX_1,
-        'INMOTION_2': INMOTION_INDEX_2,
-        'MOVIE': MOVIE_INDEX,
-        }
-    notify = \
-        DirectNotifyGlobal.directNotify.newCategory('BipedAnimationMixer'
-            )
+    ACTION = {'NA': NA_INDEX,
+              'INPLACE_0': INPLACE_INDEX_0,
+              'INPLACE_1': INPLACE_INDEX_1,
+              'INMOTION_0': INMOTION_INDEX_0,
+              'INMOTION_1': INMOTION_INDEX_1,
+              'INMOTION_2': INMOTION_INDEX_2,
+              'MOVIE': MOVIE_INDEX}
+    notify = DirectNotifyGlobal.directNotify.newCategory('BipedAnimationMixer')
     sectionNames = ['legs', 'torso', 'head']
     sectionNameIds = dict(zip(sectionNames, range(len(sectionNames))))
-    partNameLists = dict(zip(sectionNames, [['legs'], ['torso'], ['head'
-                         ]]))
+    partNameLists = dict(zip(sectionNames, [['legs'], ['torso'], ['head']]))
     AnimRankings = {
         'idle': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE']),
         'idle_centered': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE']),
@@ -47,17 +40,13 @@ class BipedAnimationMixer(AnimationMixer):
         'idle_head_scratch_side': (ACTION['INPLACE_1'],
                                    ACTION['INPLACE_1'],
                                    ACTION['INPLACE_1']),
-        'kraken_struggle_idle': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE'
-                                 ]),
-        'kraken_fight_idle': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE'
-                              ]),
+        'kraken_struggle_idle': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE']),
+        'kraken_fight_idle': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE']),
         'map_head_into_look_left': (ACTION['INPLACE_1'],
                                     ACTION['INPLACE_1'],
                                     ACTION['INPLACE_1']),
-        'map_head_outof_look_left': (ACTION['INPLACE_1'],
-                ACTION['INPLACE_1'], ACTION['INPLACE_1']),
-        'map_head_look_left_idle': (LOOP['IDLE'], LOOP['IDLE'],
-                                    LOOP['IDLE']),
+        'map_head_outof_look_left': (ACTION['INPLACE_1'], ACTION['INPLACE_1'], ACTION['INPLACE_1']),
+        'map_head_look_left_idle': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE']),
         'map_look_arm_right': (ACTION['INPLACE_1'], ACTION['INPLACE_1'
                                ], ACTION['INPLACE_1']),
         'map_look_arm_left': (ACTION['INPLACE_1'], ACTION['INPLACE_1'],
@@ -411,15 +400,12 @@ class BipedAnimationMixer(AnimationMixer):
                             ACTION['INMOTION_2']),
         'bayonet_attackC': (ACTION['INPLACE_1'], ACTION['INMOTION_2'],
                             ACTION['INMOTION_2']),
-        'bayonet_idle_to_fight_idle': (ACTION['INPLACE_1'],
-                ACTION['INMOTION_2'], ACTION['INMOTION_2']),
-        'bayonet_attack_idle': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE'
-                                ]),
+        'bayonet_idle_to_fight_idle': (ACTION['INPLACE_1'], ACTION['INMOTION_2'], 
+                                       ACTION['INMOTION_2']),
+        'bayonet_attack_idle': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE']),
         'bayonet_idle': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE']),
-        'bayonet_run': (LOOP['MOTION'], LOOP['MOTION'], LOOP['MOTION'
-                        ]),
-        'bayonet_walk': (LOOP['MOTION'], LOOP['MOTION'], LOOP['MOTION'
-                         ]),
+        'bayonet_run': (LOOP['MOTION'], LOOP['MOTION'], LOOP['MOTION']),
+        'bayonet_walk': (LOOP['MOTION'], LOOP['MOTION'], LOOP['MOTION']),
         'bayonet_attack_walk': (LOOP['MOTION'], LOOP['MOTION'],
                                 LOOP['MOTION']),
         'sword_idle': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE']),
