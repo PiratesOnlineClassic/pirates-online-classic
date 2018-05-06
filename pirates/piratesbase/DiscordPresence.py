@@ -49,8 +49,8 @@ class DiscordPresence:
         elif sys.platform == 'win32':
             ipc_path = r'\\?\pipe\discord-ipc-' + str(pipe)
         return ipc_path
-        
-    def start(self):  
+
+    def start(self):
 
         # Check to see if we are already running
         if self.running:
@@ -69,7 +69,7 @@ class DiscordPresence:
     def __connect(self):
         ipc_path = self.__get_ipc_path()
         if sys.platform == 'linux' or sys.platform == 'darwin':
-            self._pipe = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self._pipe = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             self._pipe.connect(ipc_path)
         else:
             self._pipe = open(ipc_path, 'r+b')
@@ -87,7 +87,7 @@ class DiscordPresence:
 
     def __handshake(self):
         return self.__send(0, {"v": self._version, "client_id": self._clientId})
-   
+
     def __read(self):
         response = None
         try:
@@ -112,7 +112,7 @@ class DiscordPresence:
                 while packet_remaining_size:
                     encoded_data += self._pipe.read(packet_remaining_size)
                     packet_remaining_size -= len(encoded_data)
-                
+
                 response = json.loads(encoded_data.decode('utf-8'))
                 self._pipe.seek(0, 2)
         except Exception as e:
