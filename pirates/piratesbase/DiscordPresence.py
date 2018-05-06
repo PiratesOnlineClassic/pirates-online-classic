@@ -181,15 +181,17 @@ class DiscordPresence:
             self._pipe = open(ipc_path, 'r+b')
 
     def disconnect(self, clean=True):
-        if clean:
+        if clean and self._pipe:
             self.__send(2, {})
 
-        if sys.platform == 'linux' or sys.platform == 'darwin':
-            self._pipe.shutdown(socket.SHUT_RDWR)
+        if self._pipe:
 
-        self._pipe.close()
-        self._pipe = None
-        self.notify.info('Disconnected from Discord')
+            if sys.platform == 'linux' or sys.platform == 'darwin':
+                self._pipe.shutdown(socket.SHUT_RDWR)
+
+            self._pipe.close()
+            self._pipe = None
+            self.notify.info('Disconnected from Discord')
 
     def __handshake(self):
         return self.__send(0, {"v": self._version, "client_id": self._clientId})
