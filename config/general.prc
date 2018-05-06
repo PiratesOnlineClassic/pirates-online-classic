@@ -112,5 +112,8 @@ want-analytics #t
 
 # Discord:
 discord-client-id 442413702428229632
+discord-rpc-version 1
 want-discord-rich-presence #t
 discord-want-elapsed #t
+discord-development-message #f
+allow-teleport-from-discord #f

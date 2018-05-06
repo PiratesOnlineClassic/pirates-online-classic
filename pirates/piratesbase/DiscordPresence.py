@@ -10,6 +10,7 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PLocalizer, PiratesGlobals
 from pirates.world import WorldGlobals
+from otp.ai.MagicWordGlobal import *
 
 class PresenceActions:
     Landroam = 1
@@ -22,6 +23,7 @@ class PresenceActions:
 
 class DiscordPresence:
     notify = DirectNotifyGlobal.directNotify.newCategory('DiscordPresence')
+    notify.setInfo(True)
 
     discordLocations = {
         '1164135492.81dzlu': 'ga_devils_anvil',
@@ -122,6 +124,8 @@ class DiscordPresence:
     def __init__(self):
         self._clientId = config.GetString('discord-client-id', '')
         self._version = config.GetInt('discord-rpc-version', 1)
+        self._allowTeleportFromDiscord = config.GetBool('allow-teleport-from-discord', False)
+        self._wantDevelopmentMessage = config.GetBool('discord-development-message', False)
         self._changeTime = None
         self._pipe = None
 
@@ -137,12 +141,19 @@ class DiscordPresence:
 
         self._currentCountdown = None
 
+        self._currentCrew = (0, 0)
+        self._canJoin = True
+
         self._afk = False
         self._cursed = False
 
     @property
     def running(self):
         return self._pipe != None
+
+    @property
+    def allowTeleportFromDiscord(self):
+        return self._allowTeleportFromDiscord
 
     def __get_ipc_path(self, pipe=0):
         ipc_path = None
@@ -283,7 +294,7 @@ class DiscordPresence:
         if config.GetBool('discord-want-elapsed', False):
             self._changeTime = time.time()
 
-        if not start:
+        if not start and not self._currentCountdown:
             start=self._changeTime
 
         payload = {
@@ -320,9 +331,15 @@ class DiscordPresence:
         payload = self.__remove_none(payload)
         response = self.__send(1, payload)
 
+        self.notify.info('Updated Discord Rich Presence state')
+        if self.notify.getDebug() or \
+            (config.GetBool('discord-print-response', False) and __debug__):
+            print(response)
         return response
 
     def __getOceanName(self):
+        if not base.localAvatar:
+            return None
         avatarPos = base.localAvatar.getPos()
         oceanId = WorldGlobals.getOceanZone(avatarPos.x, avatarPos.y)
         return PLocalizer.OceanZoneNames.get(oceanId, None)
@@ -337,6 +354,12 @@ class DiscordPresence:
         
         if self._stateOverride:
             state = self._stateOverride
+        elif self._wantDevelopmentMessage and __debug__:
+            messages = [
+                'Developing the game',
+                'Working on source code'
+            ]
+            state = random.choice(messages)
         elif district:
             state = '%s: %s' % (PLocalizer.Ocean, district)
 
@@ -344,7 +367,18 @@ class DiscordPresence:
         if self._detailsOverride:
             details = self._detailsOverride
         elif self._afk:
-            details = 'AFK'
+            messages = [
+                'Currently AFK', 
+                'Asleep on the Job',
+                'Away from Keyboard']
+
+            if self._currentAction == PresenceActions.Sailing:
+                if self._currentWeapon == 'wheel':
+                    messages += [
+                        'Fallen asleep at the wheel'
+                    ]
+            
+            details = random.choice(messages)
         elif self._cursed and self._currentAction != PresenceActions.PVP:
             details = 'Cursed by Jolly Roger'
         elif self._currentAction == PresenceActions.PVP:
@@ -380,9 +414,20 @@ class DiscordPresence:
             else:
                 details = 'Currently on %s' % locationName
         elif self._currentAction == PresenceActions.Digging:
-            details = 'Digging for treasure'
+            messages = [
+                'Digging for buried treasure',
+                'Digging for treasure',
+                'Digging for lost treasure'
+            ]
+            details = random.choice(messages)
         elif self._currentAction == PresenceActions.Searching:
-            details = 'Searching for treasure'
+            messages = [
+                'Searching for gold!',
+                'Searching for treasure',
+                'Searching for lost treasure',
+                'Searching for lost goods'
+            ]
+            details = random.choice(messages)
         else:
             self.notify.warning('Failed to choose the correct details; Lets just enjoy the Caribbean...')
             details = 'Enjoying the Caribbean'
@@ -394,7 +439,7 @@ class DiscordPresence:
         text = None
     
         if self._currentAction == PresenceActions.Sailing:
-            image = 'sc_sailing'
+            image = 'ga_ocean'
             text = PLocalizer.LoadingScreen_Ocean
         elif self._currentLocation:
             image = self.discordLocations.get(self._currentLocation, None)
@@ -504,6 +549,16 @@ class DiscordPresence:
             self._currentWeapon = weapon
             self.refreshPresence()
 
+    def setCurrentCrew(self, crewSize=0, crewMax=0):
+        if self._currentCrew != (crewSize, crewMax):
+            self._currentCrew = (crewSize, crewMax)
+            self.refreshPresence()
+
+    def setCanJoin(self, join):
+        if self._canJoin != join:
+            self._canJoin = join
+            self.refreshPresence()
+
     def refreshPresence(self):
         state, details = self.__getMessage()
         large_image, large_text = self.__getLargeDetails()
@@ -514,6 +569,18 @@ class DiscordPresence:
             if self._currentCountdown < self._changeTime:
                 self._currentCountdown = None
 
+        partySize = None
+        crewSize, crewMax = self._currentCrew
+        if crewSize > 0 or crewMax > 0:
+            partySize = (crewSize, crewMax)
+
+        join = None
+        if self._allowTeleportFromDiscord and self._canJoin:
+            try:
+                join = str(base.localAvatar.doId)
+            except:
+                pass
+
         response = self.update(
             state=state,
             details=details,
@@ -522,6 +589,151 @@ class DiscordPresence:
             small_image=small_image,
             small_text=small_text,
             start=self._changeTime,
+            party_id='POC-CREW', #TODO: Pull from actual party/crew data?
+            party_size=partySize,
+            join=join,
             end=self._currentCountdown)
 
         return response
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def discordCountdown(countdown):
+    """
+    Sets your discord countdown value
+    """
+    base.richPresence.setCountdown(countdown)
+    return 'Countdown set to %d!' % countdown
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str, int])
+def discordLocation(locationUid, interior):
+    """
+    Sets your discord location and interior state
+    """
+
+    base.richPresence.setLocation(locationUid, interior=interior)
+    return 'Location set to %s!' % locationUid
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
+def discordAction(state):
+    """
+    Forces a Discord Rich Presence Action
+    """
+    states = {
+        'landroam': PresenceActions.Landroam,
+        'sailing': PresenceActions.Sailing,
+        'poker': PresenceActions.Poker,
+        'battle': PresenceActions.Battle,
+        'pvp': PresenceActions.PVP,
+        'searching': PresenceActions.Searching,
+        'digging': PresenceActions.Digging
+    }
+
+    # Verify the state is valid
+    if state not in states:
+        return 'Invalid state: %s; Valid: (%s)' % (state, ','.join(states.keys()))
+
+    stateId = states[state]
+    base.richPresence.setCurrentAction(stateId)
+    return 'Action set to %s (%d)' % (state, stateId)
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def lastDiscordAction():
+    """
+    Reverts your Rich Presence state to the last action
+    """
+    base.richPresence.setLastAction()
+    return 'Action set to last'
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def testDiscordPVP():
+    """
+    Sets your state to the test PVP state
+    """
+    import datetime
+    base.richPresence.setPVP()
+
+    now = datetime.datetime.now()
+    ahead = now + datetime.timedelta(minutes = 20)
+    base.richPresence.setCountdown(time.mktime(ahead.timetuple()))
+    return 'Test PVP State set!'
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def testDiscordSailing():
+    """
+    Sets your state to the test sailing state
+    """
+    base.richPresence.setSailing()
+    base.richPresence.setCurrentWeapon('wheel')
+    return 'Test Sailing State set!'
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def testDiscordPoker():
+    """
+    Sets your state to the test parlor games state
+    """
+    base.richPresence.setParlorGame()
+    return 'Test Parlor Game state set!'
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
+def discordState(state):
+    """
+    Forces your discord state
+    """
+    base.richPresence.setStateOverride(state)
+    return 'State set to "%s"!' % state
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def resetDiscordState():
+    """
+    Resets your discord state
+    """
+    base.richPresence.setStateOverride(None)
+    return 'State reset!'    
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
+def discordDetails(details):
+    """
+    Forces your discord details
+    """
+    base.richPresence.setDetailsOverride(details)
+    return 'Details set to "%s"!' % details
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def resetDiscordDetails():
+    """
+    Resets your discord details
+    """
+    base.richPresence.setDetailsOverride(None)
+    return 'Details reset!'
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
+def discordCrew(current, max):
+    """
+    Sets your Discord crew size info
+    """
+    base.richPresence.setCurrentCrew(current, max)
+    return 'Crew size set to: (%d, %d)' % (current, max) 
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def discordAllowJoin(join):
+    """
+    Allows you to be teleported to from Discord
+    """
+    base.richPresence.setCanJoin(join)
+    return 'CanJoin state set to: %s' % join
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
+def discordCurrentWeapon(weapon):
+    """
+    Sets your current Discord weapon
+    """
+    words = [
+        'wheel',
+        'cannon'
+    ]
+
+    if weapon not in words:
+        weapon = int(weapon)
+
+    base.richPresence.setCurrentWeapon(weapon)
+    return 'Current Weapon set to: %s' % weapon
