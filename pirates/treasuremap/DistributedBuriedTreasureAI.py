@@ -73,7 +73,8 @@ class DistributedBuriedTreasureAI(DistributedInteractiveAI):
         return task.again
 
     def __resetTask(self, task):
-        self.currentUser = None
+        if self.currentUser:
+            self.currentUser = None
         self.b_setCurrentDepth(self.getStartingDepth())
         return task.done
 

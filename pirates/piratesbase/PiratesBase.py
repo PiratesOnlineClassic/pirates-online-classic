@@ -555,7 +555,6 @@ class PiratesBase(OTPBase):
         if self.config.GetBool('want-fifothreads', 0):
             __builtin__.yieldThread = self.cr.yieldThread
         else:
-
             def nullYield(comment=''):
                 pass
 
