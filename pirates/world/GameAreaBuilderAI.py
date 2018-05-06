@@ -215,7 +215,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
         return spawnNode
 
-
     def __createInteractiveProp(self, parent, parentUid, objKey, objectData):
         prop = DistributedInteractivePropAI(self.air)
         prop.setUniqueId(objKey)
