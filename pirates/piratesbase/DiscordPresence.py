@@ -23,24 +23,24 @@ class PresenceActions:
 class DiscordPresence:
     notify = DirectNotifyGlobal.directNotify.newCategory('DiscordPresence')
 
-    #TODO: finish location mapping
     discordLocations = {
         '1164135492.81dzlu': 'ga_devils_anvil',
         '1156359855.24bbathen': 'ga_cangrejos',
         '1160614528.73sdnaik': 'ga_cuba',
-        '1173382404.64sdnaik': None,
+        '1173382404.64sdnaik': 'ga_cutthroat',
         '1142018473.22dxschafe': 'ga_padres_del_fuego',
-        '1164763706.66sdnaik': None,
-        '1164157132.99dzlu': None,
+        '1164763706.66sdnaik': 'ga_driftwood',
+        '1164157132.99dzlu': 'ga_perdida',
         '1159933206.48sdnaik': 'ga_kings_head',
-        '1173381952.2sdnaik': None,
+        '1173381952.2sdnaik': 'ga_outcast',
         '1150922126.8dzlu': 'ga_port_royal',
-        '1161282725.84kmuller': None,
-        '1164150392.42dzlu': None,
+        '1161282725.84kmuller': 'ga_rumrunners',
+        '1164150392.42dzlu': 'ga_tormenta',
         '1156207188.95dzlu': 'ga_tortuga',
         '1172209006.11sdnaik': 'ga_barbosas_cave',
         '1196970035.53sdnaik': 'ga_spanish_pvp',
         '1196970080.56sdnaik': 'ga_french_pvp',
+        #TODO: Add images for interiors
     }
 
     largeImages = [
@@ -49,11 +49,18 @@ class DiscordPresence:
         'ga_cave',
         'ga_cave_lava',
         'ga_cave2',
-        'ga_devils_anvi',
+        'ga_cutthroat',
+        'ga_devils_anvil',
+        'ga_driftwood',
+        'ga_french_pvp',
         'ga_ocean',
+        'ga_outcast',
         'ga_padres_del_fuego',
+        'ga_perdida',
         'ga_port_royal',
+        'ga_rumrunners',
         'ga_spanish_pvp',
+        'ga_tormenta',
         'ga_tortuga',
         'game_logo',
         'sc_sailing'
@@ -260,12 +267,12 @@ class DiscordPresence:
         if not large_image:
             large_image = 'game_logo'
 
-        if large_image not in self.largeImages:
+        if large_image not in self.largeImages and large_image != None:
             self.notify.warning('Failed to set Large Image; %s is not a registered image!' % large_image)
             large_image = None
             large_text = None
 
-        if small_image not in self.smallImages:
+        if small_image not in self.smallImages and small_image != None:
             self.notify.warning('Failed to set Small Image; %s is not a registered image' % small_image)
             small_image = None
             small_text = None

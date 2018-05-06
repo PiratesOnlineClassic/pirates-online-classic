@@ -112,3 +112,5 @@ want-analytics #t
 
 # Discord:
 discord-client-id 442413702428229632
+want-discord-rich-presence #t
+discord-want-elapsed #t
