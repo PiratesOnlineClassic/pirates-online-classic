@@ -8,7 +8,6 @@ class UsesAnimationMixer:
         if hasattr(self, 'animationMixer') and self.animationMixer:
             if not isinstance(self.animationMixer, animationMixerType):
                 pass
-            return
         if animationMixerType:
             self.animationMixer = animationMixerType(self)
             self.mixingEnabled = True
@@ -34,8 +33,10 @@ class UsesAnimationMixer:
             defaultBlendT = 0
         blendT = kwargs.pop('blendT', defaultBlendT)
         blendDelay = kwargs.pop('blendDelay', 0)
+        kwargs['blendT'] = blendT
+        kwargs['blendDelay'] = blendDelay
         if self.mixingEnabled:
-            self.animationMixer.loop(blendT=blendT, blendDelay=blendDelay, *args, **kwargs)
+            self.animationMixer.loop(*args, **kwargs)
         else:
             Actor.loop(self, *args, **kwargs)
 
@@ -49,8 +50,11 @@ class UsesAnimationMixer:
         blendInT = kwargs.pop('blendInT', defaultBlendT)
         blendOutT = kwargs.pop('blendOutT', defaultBlendT)
         blendInto = kwargs.pop('blendInto', None)
+        kwargs['blendInT'] = blendInT
+        kwargs['blendOutT'] = blendOutT
+        kwargs['blendInto'] = blendInto
         if self.mixingEnabled:
-            self.animationMixer.play(blendInT=blendInT, blendOutT=blendOutT, blendInto=blendInto, *args, **kwargs)
+            self.animationMixer.play(*args, **kwargs)
         else:
             Actor.play(self, *args, **kwargs)
 
@@ -62,8 +66,9 @@ class UsesAnimationMixer:
         else:
             defaultBlendT = 0
         blendT = kwargs.pop('blendT', defaultBlendT)
+        kwargs['blendT'] = blendT
         if self.mixingEnabled:
-            self.animationMixer.pingpong(blendT=blendT, *args, **kwargs)
+            self.animationMixer.pingpong(*args, **kwargs)
         else:
             Actor.pingpong(self, *args, **kwargs)
 
@@ -75,8 +80,9 @@ class UsesAnimationMixer:
         else:
             defaultBlendT = 0
         blendT = kwargs.pop('blendT', defaultBlendT)
+        kwargs['blendT'] = blendT
         if self.mixingEnabled:
-            self.animationMixer.pose(blendT=blendT, *args, **kwargs)
+            self.animationMixer.pose(*args, **kwargs)
         else:
             Actor.pose(self, *args, **kwargs)
 
