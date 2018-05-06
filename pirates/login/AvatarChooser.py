@@ -179,6 +179,7 @@ class AvatarChooser(DirectObject, StateData):
         self.water = SeaPatch(render, Reflection.getGlobalReflection(), todMgr=self.todManager, saintPatricksDay=saintPatricksDay)
         self.water.loadSeaPatchFile('out.spf')
         self.ship = None
+        base.richPresence.update(details='Choosing a Pirate')
         if base.launcher.getPhaseComplete(3):
             if base.config.GetBool('want-ships', 1):
                 from pirates.ship import ShipGlobals

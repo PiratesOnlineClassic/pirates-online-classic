@@ -21,6 +21,7 @@ from pirates.piratesbase import (MusicManager, PiratesAmbientManager, PLocalizer
 from pirates.piratesgui import PDialog, PiratesGuiGlobals, ScreenshotViewer
 from pirates.piratesgui.GameOptions import Options
 from pirates.shipparts import TextureFlattenManager
+from pirates.piratesbase.DiscordPresence import DiscordPresence
 from otp.nametag.ChatBalloon import ChatBalloon
 from otp.nametag import NametagGlobals
 from otp.margins.MarginManager import MarginManager
@@ -229,6 +230,8 @@ class PiratesBase(OTPBase):
         self.displayCpuFrequencyDialog = False
         self.taskMgr.doMethodLater(120.0, self.memoryMonitorTask, 'memory-monitor-task')
         self.supportAlphaFb = self.win.getFbProperties().getAlphaBits()
+        self.richPresence = DiscordPresence()
+        self.richPresence.start()
 
     def deleteDialogs(self):
         if self.cpuSpeedDialog:
@@ -650,6 +653,7 @@ class PiratesBase(OTPBase):
             requestResult = self.cr.gameFSM.request('closeShard', ['shutdown'])
         else:
             requestResult = self.cr.loginFSM.request('shutdown')
+        self.richPresence.disconnect()
         if not requestResult:
             self.notify.warning('Could not request shutdown; exiting anyway.')
             self.exitShow()

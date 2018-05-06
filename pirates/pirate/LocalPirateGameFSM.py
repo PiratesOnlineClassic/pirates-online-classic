@@ -422,6 +422,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.accept(WeaponGlobals.LocalAvatarUseItem, self.av.composeRequestTargetedSkill)
         self.accept(WeaponGlobals.LocalAvatarUseShipSkill, self.av.composeRequestShipSkill)
         self._usingRepairKit = False
+        base.richPresence.updateState(sailing=1)
         if localAvatar.getSiegeTeam():
             self.accept(self.av.cr.distributedDistrict.siegeManager.getUseRepairKitEvent(), self._handleUseRepairKit)
             self._handleUseRepairKit(self.av.cr.distributedDistrict.siegeManager.getUseRepairKit())
@@ -452,6 +453,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.ignore(WeaponGlobals.LocalAvatarUseItem)
         self.ignore(WeaponGlobals.LocalAvatarUseTargetedSkill)
         self.ignore(WeaponGlobals.LocalAvatarUseProjectileSkill)
+        base.richPresence.updateState(sailing=3)
         PlayerPirateGameFSM.exitShipPilot(self)
 
     def enterDigging(self, extraArgs=[]):
@@ -748,12 +750,14 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.guiMgr.combatTray.hideSkills()
         self.av.guiMgr.combatTray.disableTray()
         NametagGlobals.setMasterNametagsActive(0)
+        base.richPresence.updateState(sailing=2)
         self.av.stopAutoRun()
 
     def exitCannon(self):
         self.notify.debug('exitCannon for avId: %d' % self.av.getDoId())
         PlayerPirateGameFSM.exitCannon(self)
         base.cr.interactionMgr.start()
+        base.richPresence.updateState(sailing=2)
         NametagGlobals.setMasterNametagsActive(1)
 
     def enterEnsnared(self, extraArgs=[]):
@@ -987,12 +991,14 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.cameraFSM.request('Control')
         self.av.hideName()
         self.av.b_setTeleportFlag(PiratesGlobals.TFParlorGame)
+        base.richPresence.updateState(cards=True)
         PlayerPirateGameFSM.enterParlorGame(self)
         self.av.stopAutoRun()
 
     def exitParlorGame(self):
         self.av.showName()
         self.av.b_clearTeleportFlag(PiratesGlobals.TFParlorGame)
+        base.richPresence.updateState(cards=False)
         PlayerPirateGameFSM.exitParlorGame(self)
 
     def enterMakeAPirate(self, extraArgs=[]):

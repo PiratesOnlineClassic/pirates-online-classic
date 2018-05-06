@@ -109,3 +109,6 @@ smooth-prediction-lag 0.2
 analytics-game-key 5de6a7ce0decbe613cf1cd172b319faf
 analytics-secret-key eb6753270d979378bb301d4b82f27a36d1bcc3bb
 want-analytics #t
+
+# Discord:
+discord-client-id 442413702428229632

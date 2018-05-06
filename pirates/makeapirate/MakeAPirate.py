@@ -190,6 +190,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
 
         taskMgr.add(self.zoomTask, 'avCreate-ZoomTask')
         self._waitForServerDlg = None
+        base.richPresence.update(details='Creating a Pirate')
         self.bookModel.show()
         self.lowBookModel.show()
         self.guiBottomBar.show()

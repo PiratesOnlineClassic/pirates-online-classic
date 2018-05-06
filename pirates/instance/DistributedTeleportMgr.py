@@ -52,6 +52,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             localAvatar.guiMgr.radarGui.showLocation(locationUid)
             base.cr.loadingScreen.showTarget(locationUid)
             base.cr.loadingScreen.showHint(locationUid)
+            base.richPresence.updateState(locationUid)
         self.requestData = None
         return
 
@@ -288,6 +289,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             localAvatar.guiMgr.radarGui.showLocation(locationUid)
             base.cr.loadingScreen.showTarget(locationUid)
             base.cr.loadingScreen.showHint(locationUid)
+            base.richPresence.updateState(locationUid)
 
         self.requestData = None
 
@@ -323,6 +325,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
 
             base.cr.loadingScreen.showTarget(islandUid)
             base.cr.loadingScreen.showHint(islandUid)
+            base.richPresence.updateState(islandUid)
 
     @report(types=['deltaStamp'], prefix='------', dConfigParam=['want-teleport-report'])
     def teleportToIslandResponse(self, instanceDoId, islandDoId):
