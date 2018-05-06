@@ -265,11 +265,10 @@ class PiratesClientRepository(OTPClientRepository):
         if done == 'cancel':
             self.avCreate.exit()
             self.loginFSM.request('chooseAvatar', [self.avList])
+        elif done == 'created':
+            self.handleAvatarCreated(self.avCreate.newPotAv, self.avCreate.avId, self.avCreate.subId)
         else:
-            if done == 'created':
-                self.handleAvatarCreated(self.avCreate.newPotAv, self.avCreate.avId, self.avCreate.subId)
-            else:
-                self.notify.error('Invalid doneStatus from MakeAPirate: ' + str(done))
+            self.notify.error('Invalid doneStatus from MakeAPirate: ' + str(done))
 
     def exitCreateAvatar(self):
         if self.skipTutorial:
@@ -316,11 +315,7 @@ class PiratesClientRepository(OTPClientRepository):
                 elif av == OTPGlobals.AvatarPendingCreate:
                     data.append(OTPGlobals.AvatarPendingCreate)
                 else:
-                    avNames = [
-                     av['name'],
-                     av['wishName'],
-                     '',
-                     '']
+                    avNames = [av['name'], av['wishName'], '', '']
 
                     aName = 0
                     pa = PotentialAvatar(av['id'], avNames, av['dna'], av['slot'], aName, av['creator'], av['shared'],
@@ -558,8 +553,7 @@ class PiratesClientRepository(OTPClientRepository):
         info = self.identifyFriend(doId)
         if info:
             return info.isOnline()
-        else:
-            return False
+        return False
 
     def identifyFriend(self, doId):
         pfm = self.playerFriendsManager
@@ -664,19 +658,18 @@ class PiratesClientRepository(OTPClientRepository):
         if selectedObj and self.currCamParent is None:
             self.currCamParent = selectedObj.getDoId()
             self.setViewpoint(selectedObj)
-        else:
-            if self.currCamParent is not None:
-                if selectedObj is None or selectedObj.compareTo(camera.getParent()) is 0:
-                    camera.reparentTo(base.localAvatar)
-                    self.currCamParent = None
-                    try:
-                        if base.oobeMode is 1:
-                            base.oobe()
-                    except:
-                        pass
+        elif self.currCamParent is not None:
+            if selectedObj is None or selectedObj.compareTo(camera.getParent()) is 0:
+                camera.reparentTo(base.localAvatar)
+                self.currCamParent = None
+                try:
+                    if base.oobeMode is 1:
+                        base.oobe()
+                except:
+                    pass
 
-                else:
-                    self.setViewpoint(selectedObj)
+            else:
+                self.setViewpoint(selectedObj)
 
     def handleDelete(self, di):
         doId = di.getUint32()
@@ -820,14 +813,8 @@ class PiratesClientRepository(OTPClientRepository):
         else:
             if self.fakeMSP is None:
                 from pirates.piratesgui.MessageStackPanel import MessageStackPanel
-                self.fakeMSP = MessageStackPanel(parent=base.a2dBottomLeft, relief=None, pos=(1.75,
-                                                                                              0,
-                                                                                              1.3))
-            self.fakeMSP.addTextMessage(message, seconds=20, priority=0, color=(0.5,
-                                                                                0,
-                                                                                0,
-                                                                                1), icon=('admin',
-                                                                                          ''))
+                self.fakeMSP = MessageStackPanel(parent=base.a2dBottomLeft, relief=None, pos=(1.75, 0, 1.3))
+            self.fakeMSP.addTextMessage(message, seconds=20, priority=0, color=(0.5, 0, 0, 1), icon=('admin', ''))
 
             def cleanupFakeMSP(task):
                 if self.fakeMSP is not None:
