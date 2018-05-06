@@ -197,7 +197,7 @@ class DiscordPresence:
 
         return response
 
-    def updateState(self, targetId=None, pvp=False, cards=False, sailing=0):
+    def updateState(self, targetId=None, pvp=False, cards=False, sailing=0, afk=False):
 
         if targetId is None:
             targetId = self._lastLocation
@@ -212,7 +212,9 @@ class DiscordPresence:
             state = 'Ocean: %s' % district
 
         locationName = PLocalizer.LocationNames.get(targetId, 'Unknown')
-        if pvp:
+        if afk:
+            details = 'AFK on %s' % locationName
+        elif pvp:
             details = 'Currently in PVP'
         elif sailing:
             details = 'Sailing the Caribbean'

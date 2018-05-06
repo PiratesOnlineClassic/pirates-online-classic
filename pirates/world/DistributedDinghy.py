@@ -329,6 +329,7 @@ class DistributedDinghy(DistributedInteractive):
             self.cr.loadingScreen.showTarget(ocean=True)
             self.cr.loadingScreen.showHint(ocean=True)
             self.cr.loadingScreen.show()
+            base.richPresence.updateState(sailing=3)
             self.cr.teleportMgr.localTeleportToId(shipId, localAvatar, showLoadingScreen=False)
             self.ownShipSelection = None
         else:

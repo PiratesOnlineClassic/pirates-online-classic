@@ -1741,6 +1741,7 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
 
     def toggleAFK(self):
         self.b_setAFK(not self.isAFK)
+        base.richPresence.updateState(afk=self.isAFK)
         if self.isAFK and self.getGameState() != 'Emote':
             self.requestEmote(PLocalizer.EMOTE_SLEEP)
         if not self.isAFK and self.getGameState() == 'Emote':
