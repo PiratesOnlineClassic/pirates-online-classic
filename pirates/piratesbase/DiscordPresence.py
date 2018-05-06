@@ -279,6 +279,13 @@ class DiscordPresence:
             small_image = None
             small_text = None
 
+        # Do we want the since last change timer?
+        if config.GetBool('discord-want-elapsed', False):
+            self._changeTime = time.time()
+
+        if not start:
+            start=self._changeTime
+
         payload = {
             "cmd": "SET_ACTIVITY",
             "args": {
@@ -501,10 +508,6 @@ class DiscordPresence:
         state, details = self.__getMessage()
         large_image, large_text = self.__getLargeDetails()
         small_image, small_text = self.__getSmallDetails()
-
-        # Do we want the since last change timer?
-        if config.GetBool('discord-want-elapsed', False):
-            self._changeTime = time.time()
 
         # Check if the countdown expired
         if self._currentCountdown:
