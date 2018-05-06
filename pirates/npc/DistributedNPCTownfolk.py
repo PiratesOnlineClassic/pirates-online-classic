@@ -560,7 +560,6 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
         DistributedBattleNPC.DistributedBattleNPC.setHp(self, hitPoints, quietly)
 
     def drawWeapon(self):
-        #print 'draw weapon'
         ival = self.pullOutCurrentWeapon()
         ival.start()
 

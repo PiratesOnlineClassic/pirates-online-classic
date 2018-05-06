@@ -84,6 +84,11 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
                 base.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
                 return
 
+        #buildingUid = None
+        #exterior = base.cr.doId2do.get(self.exteriorDoId)
+        #if exterior:
+        #    buildingUid = exterior.getUniqueId()
+        #base.richPresence.setLocation(buildingUid)
         DistributedDoorBase.DistributedDoorBase.requestInteraction(self, avId, interactType)
 
     def loadExteriorFinished(self):

@@ -116,8 +116,7 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
     def setType(self, type):
         self.type = type
 
-    @report(types=['deltaStamp', 'args'], prefix='------', dConfigParam=('want-jail-report',
-                                                                         'want-teleport-report'))
+    @report(types=['deltaStamp', 'args'], prefix='------', dConfigParam=('want-jail-report', 'want-teleport-report'))
     def setSpawnInfo(self, xPos, yPos, zPos, h, spawnZone, parents):
         self.spawnInfo = [(xPos, yPos, zPos, h, 0, 0), spawnZone, parents]
         messenger.send(self.uniqueName('spawnInfoReceived'))
@@ -249,9 +248,8 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
             parentDoId = self.cr.uidMgr.getDoId(parentUid)
             areaParent = self.cr.doId2do[parentDoId]
             locationInfo = areaParent.getLocationInfo(uniqueId)
-            # TODO: FIXME!
-            #f locationInfo:
-            #    localAvatar.sendUpdate('enterAreaSphere', [uniqueId, parentUid])
+            if locationInfo:
+                localAvatar.sendUpdate('enterAreaSphere', [uniqueId, parentUid])
 
     def exitedSphere(self, params, collEntry):
         msgName = params[0]
@@ -276,10 +274,9 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
             parentDoId = self.cr.uidMgr.getDoId(parentUid)
             areaParent = self.cr.doId2do[parentDoId]
             locationInfo = areaParent.getLocationInfo(uniqueId)
-            # TODO: FIXME!
-            #if locationInfo:
-            #    print 'left area %s' % locationInfo[2]
-            #    localAvatar.sendUpdate('leaveAreaSphere', [uniqueId, parentUid])
+            if locationInfo:
+                print 'left area %s' % locationInfo[2]
+                localAvatar.sendUpdate('leaveAreaSphere', [uniqueId, parentUid])
 
     def d_localAvatarDied(self):
         self.sendUpdate('avatarDied')

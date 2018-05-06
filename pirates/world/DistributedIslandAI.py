@@ -12,9 +12,9 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def __init__(self, air):
         startingZone = WorldGlobals.ISLAND_GRID_STARTING_ZONE
-        cellWidth = WorldGlobals.ISLAND_CELL_SIZE * WorldGlobals.ISLAND_GRID_SIZE
-        gridSize = WorldGlobals.LARGE_ISLAND_GRID_SIZE + cellWidth + startingZone
-        gridRadius = (gridSize + cellWidth) / WorldGlobals.ISLAND_GRID_RADIUS
+        gridSize = WorldGlobals.LARGE_ISLAND_GRID_SIZE + startingZone
+        cellWidth = WorldGlobals.ISLAND_CELL_SIZE + gridSize
+        gridRadius = gridSize / WorldGlobals.ISLAND_GRID_RADIUS
 
         DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize,
             gridRadius, cellWidth)
@@ -22,6 +22,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         DistributedGameAreaAI.__init__(self, air)
         Teamable.__init__(self)
 
+        self.islandTransform = [0, 0, 0, 0]
         self.sphereRadii = [0, 0, 0]
         self.sphereCenter = [0, 0]
         self.islandModel = ''
@@ -61,7 +62,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
             self.b_setFeastFireEnabled(False)
 
     def setIslandTransform(self, x, y, z, h):
-        self.setXYZH(x, y, z, h)
+        self.islandTransform = [x, y, z, h]
 
     def d_setIslandTransform(self, x, y, z, h):
         self.sendUpdate('setIslandTransform', [x, y, z, h])
@@ -71,7 +72,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.d_setIslandTransform(x, y, z, h)
 
     def getIslandTransform(self):
-        return [self.getX(), self.getY(), self.getZ(), self.getH()]
+        return self.islandTransform
 
     def setZoneSphereSize(self, rad0, rad1, rad2):
         self.sphereRadii = [rad0, rad1, rad2]

@@ -104,4 +104,5 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
             localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoDoors, PiratesGuiGlobals.TextFG6)
             return
 
+        base.richPresence.setLocation(self.interiorUid, interior=True)
         DistributedDoorBase.DistributedDoorBase.requestInteraction(self, avId, interactType)

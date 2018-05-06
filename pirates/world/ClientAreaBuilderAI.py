@@ -161,12 +161,14 @@ class ClientAreaBuilderAI(DirectObject):
 
         worldIsland = self.air.worldCreator.getIslandWorldDataByUid(objKey)
 
+        (x, y, z) = worldIsland.get('Pos', (0, 0, 0))
+        (h, p, r) = worldIsland.get('Hpr', (0, 0, 0))
+
         island = DistributedIslandAI(self.air)
         island.setUniqueId(objKey)
         island.setName(PLocalizer.LocationNames.get(objKey, ''))
+        island.setIslandTransform(x, y, z, h)
         island.setModelPath(worldIsland['Visual']['Model'])
-        island.setPos(worldIsland.get('Pos', (0, 0, 0)))
-        island.setHpr(worldIsland.get('Hpr', (0, 0, 0)))
         island.setScale(objectData.get('Scale', (1, 1, 1)))
         island.setUndockable(objectData.get('Undockable', False))
 
@@ -187,8 +189,6 @@ class ClientAreaBuilderAI(DirectObject):
         gameArea.setUniqueId(objKey)
         gameArea.setName(PLocalizer.LocationNames.get(objKey, ''))
         gameArea.setModelPath(objectData['Visual']['Model'])
-        gameArea.setPos(objectData.get('Pos', (0, 0, 0)))
-        gameArea.setHpr(objectData.get('Hpr', (0, 0, 0)))
         gameArea.setScale(objectData.get('Scale', (1, 1, 1)))
 
         self.parent.generateChildWithRequired(gameArea, self.air.allocateZone())

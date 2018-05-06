@@ -952,6 +952,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
             return
 
         self.zombie = value
+        base.richPresence.setCursed(value)
         self.changeBodyType()
 
     def isUndead(self):
