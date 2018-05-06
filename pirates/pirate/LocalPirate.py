@@ -233,6 +233,7 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         DistributedPlayerPirate.playSkillMovie(self, skillId, ammoSkillId, skillResult, charge, targetId)
 
     def toggleWeapon(self, newWeaponId, fromWheel=0):
+        base.richPresence.setCurrentWeapon(newWeaponId)
         if newWeaponId != self.currentWeaponId and self.isWeaponDrawn:
             self.d_requestCurrentWeapon(newWeaponId, 1)
             self.l_setCurrentWeapon(newWeaponId, 1)
@@ -1741,7 +1742,7 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
 
     def toggleAFK(self):
         self.b_setAFK(not self.isAFK)
-        base.richPresence.updateState(afk=self.isAFK)
+        base.richPresence.setAFK(self.isAFK)
         if self.isAFK and self.getGameState() != 'Emote':
             self.requestEmote(PLocalizer.EMOTE_SLEEP)
         if not self.isAFK and self.getGameState() == 'Emote':

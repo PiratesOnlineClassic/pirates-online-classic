@@ -364,7 +364,7 @@ class PiratesClientRepository(OTPClientRepository):
         if locUID:
             self.loadingScreen.showTarget(locUID)
             self.loadingScreen.showHint(locUID)
-            base.richPresence.updateState(locUID)
+            base.richPresence.setLocation(locUID)
         else:
             locUID = '1150922126.8dzlu'
             localAvatar.setReturnLocation(locUID)

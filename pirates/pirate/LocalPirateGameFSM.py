@@ -220,6 +220,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.hideName()
         self.av.cameraFSM.request('FPS')
         self.av.cameraFSM.fpsCamera.avFaceCamera()
+        base.richPresence.setBattle()
         self.accept(WeaponGlobals.LocalAvatarUseTargetedSkill, self.av.composeRequestTargetedSkill)
         self.accept(WeaponGlobals.LocalAvatarUseProjectileSkill, self.av.composeRequestProjectileSkill)
         self.accept(WeaponGlobals.LocalAvatarUseItem, self.av.composeRequestTargetedSkill)
@@ -247,6 +248,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.d_requestCurrentWeapon(self.av.currentWeaponId, 0)
         self.av.setAimMod(0)
         self.av.stopLookAtTarget()
+        base.richPresence.setLastAction()
         self.ignore(WeaponGlobals.LocalAvatarUseTargetedSkill)
         self.ignore(WeaponGlobals.LocalAvatarUseProjectileSkill)
         self.ignore(WeaponGlobals.LocalAvatarUseItem)
@@ -422,7 +424,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.accept(WeaponGlobals.LocalAvatarUseItem, self.av.composeRequestTargetedSkill)
         self.accept(WeaponGlobals.LocalAvatarUseShipSkill, self.av.composeRequestShipSkill)
         self._usingRepairKit = False
-        base.richPresence.updateState(sailing=1)
+        base.richPresence.setCurrentWeapon('wheel')
         if localAvatar.getSiegeTeam():
             self.accept(self.av.cr.distributedDistrict.siegeManager.getUseRepairKitEvent(), self._handleUseRepairKit)
             self._handleUseRepairKit(self.av.cr.distributedDistrict.siegeManager.getUseRepairKit())
@@ -453,7 +455,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.ignore(WeaponGlobals.LocalAvatarUseItem)
         self.ignore(WeaponGlobals.LocalAvatarUseTargetedSkill)
         self.ignore(WeaponGlobals.LocalAvatarUseProjectileSkill)
-        base.richPresence.updateState(sailing=3)
+        base.richPresence.setSailing(None)
         PlayerPirateGameFSM.exitShipPilot(self)
 
     def enterDigging(self, extraArgs=[]):
@@ -462,6 +464,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.guiMgr.request('Interface')
         self.av.cameraFSM.request('FPS')
         base.transitions.letterboxOn()
+        base.richPresence.setDigging()
         self.av.stopAutoRun()
         self.accept('wheel_up', self.av.guiMgr.combatTray.togglePrevWeapon)
         self.accept('wheel_down', self.av.guiMgr.combatTray.toggleNextWeapon)
@@ -470,6 +473,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         PlayerPirateGameFSM.exitDigging(self)
         base.musicMgr.requestFadeOut('searching')
         base.transitions.letterboxOff()
+        base.richPresence.setLastAction()
         self.ignore('wheel_up')
         self.ignore('wheel_down')
 
@@ -479,6 +483,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.guiMgr.request('Interface')
         self.av.cameraFSM.request('FPS')
         base.transitions.letterboxOn()
+        base.richPresence.setSearching()
         self.av.stopAutoRun()
         self.accept('wheel_up', self.av.guiMgr.combatTray.togglePrevWeapon)
         self.accept('wheel_down', self.av.guiMgr.combatTray.toggleNextWeapon)
@@ -487,6 +492,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         PlayerPirateGameFSM.exitSearching(self)
         base.musicMgr.requestFadeOut('searching')
         base.transitions.letterboxOff()
+        base.richPresence.setLastAction()
         self.ignore('wheel_up')
         self.ignore('wheel_down')
 
@@ -750,14 +756,14 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.guiMgr.combatTray.hideSkills()
         self.av.guiMgr.combatTray.disableTray()
         NametagGlobals.setMasterNametagsActive(0)
-        base.richPresence.updateState(sailing=2)
+        base.richPresence.setCurrentWeapon('cannon')
         self.av.stopAutoRun()
 
     def exitCannon(self):
         self.notify.debug('exitCannon for avId: %d' % self.av.getDoId())
         PlayerPirateGameFSM.exitCannon(self)
         base.cr.interactionMgr.start()
-        base.richPresence.updateState(sailing=2)
+        base.richPresence.setCurrentWeapon(None)
         NametagGlobals.setMasterNametagsActive(1)
 
     def enterEnsnared(self, extraArgs=[]):
@@ -991,14 +997,14 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.cameraFSM.request('Control')
         self.av.hideName()
         self.av.b_setTeleportFlag(PiratesGlobals.TFParlorGame)
-        base.richPresence.updateState(cards=True)
+        base.richPresence.setParlorGame()
         PlayerPirateGameFSM.enterParlorGame(self)
         self.av.stopAutoRun()
 
     def exitParlorGame(self):
         self.av.showName()
         self.av.b_clearTeleportFlag(PiratesGlobals.TFParlorGame)
-        base.richPresence.updateState(cards=False)
+        base.richPresence.setLastAction()
         PlayerPirateGameFSM.exitParlorGame(self)
 
     def enterMakeAPirate(self, extraArgs=[]):

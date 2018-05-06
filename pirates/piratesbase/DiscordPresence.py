@@ -6,7 +6,18 @@ import sys
 import os
 
 from direct.directnotify import DirectNotifyGlobal
+from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PLocalizer, PiratesGlobals
+from pirates.world import WorldGlobals
+
+class PresenceActions:
+    Landroam = 1
+    Sailing = 2
+    Poker = 3
+    Battle = 4
+    PVP = 5
+    Searching = 6
+    Digging = 7
 
 class DiscordPresence:
     notify = DirectNotifyGlobal.directNotify.newCategory('DiscordPresence')
@@ -31,12 +42,68 @@ class DiscordPresence:
         '1196970080.56sdnaik': 'ga_french_pvp',
     }
 
+    WEAPON_TYPE_IMAGE = 'image'
+    WEAPON_TYPE_MESSAGE = 'message'
+
+    weaponTypes = {
+        'wheel': {
+            WEAPON_TYPE_IMAGE: 'skill_wheel',
+            WEAPON_TYPE_MESSAGE: 'Sailing'
+        },
+        'cannon': {
+            WEAPON_TYPE_IMAGE: 'skill_cannon',
+            WEAPON_TYPE_MESSAGE: PLocalizer.ShipCannonShort
+        },
+        WeaponGlobals.MELEE: {
+            WEAPON_TYPE_IMAGE: 'skill_wheel',
+            WEAPON_TYPE_MESSAGE: 'Sword'
+        },
+        WeaponGlobals.FIREARM: {
+            WEAPON_TYPE_IMAGE: 'skill_wheel',
+            WEAPON_TYPE_MESSAGE: 'Gun'
+        },
+        WeaponGlobals.GRENADE: {
+            WEAPON_TYPE_IMAGE: 'skill_wheel',
+            WEAPON_TYPE_MESSAGE: PLocalizer.GrenadeShort
+        },
+        WeaponGlobals.VOODOO: {
+            WEAPON_TYPE_IMAGE: 'skill_wheel',
+            WEAPON_TYPE_MESSAGE: 'Voodoo Doll'
+        },
+        WeaponGlobals.STAFF: {
+            WEAPON_TYPE_IMAGE: 'skill_wheel',
+            WEAPON_TYPE_MESSAGE: 'Voodoo Staff'
+        },
+        WeaponGlobals.MELEE: {
+            WEAPON_TYPE_IMAGE: 'skill_wheel',
+            WEAPON_TYPE_MESSAGE: 'THEIR BARE HANDS'
+        },
+        WeaponGlobals.THROWING: {
+            WEAPON_TYPE_IMAGE: 'skill_wheel',
+            WEAPON_TYPE_MESSAGE: 'Daggers'
+        }
+    }
+
     def __init__(self):
         self._clientId = config.GetString('discord-client-id', '')
         self._version = config.GetInt('discord-rpc-version', 1)
+        self._changeTime = None
         self._pipe = None
-        self._pendingMessage = None
-        self._lastLocation = None
+
+        self._currentLocation = None
+        self._locationInterior = False
+        self._currentWeapon = None
+
+        self._lastAction = None
+        self._currentAction = PresenceActions.Landroam
+
+        self._stateOverride = None
+        self._detailsOverride = None
+
+        self._currentCountdown = None
+
+        self._afk = False
+        self._cursed = False
 
     @property
     def running(self):
@@ -51,6 +118,10 @@ class DiscordPresence:
         return ipc_path
         
     def start(self):  
+
+        # Verify we want Discord rich presence
+        if not config.GetBool('want-discord-rich-presence', True):
+            return
 
         # Check to see if we are already running
         if self.running:
@@ -197,60 +268,189 @@ class DiscordPresence:
 
         return response
 
-    def updateState(self, targetId=None, pvp=False, cards=False, sailing=0, afk=False):
+    def __getOceanName(self):
+        avatarPos = base.localAvatar.getPos()
+        oceanId = WorldGlobals.getOceanZone(avatarPos.x, avatarPos.y)
+        return PLocalizer.OceanZoneNames.get(oceanId, None)
 
-        if targetId is None:
-            targetId = self._lastLocation
-        elif targetId != self._lastLocation:
-            self._lastLocation = targetId
-
+    def __getMessage(self):
         state = None
+        details = None
+
         district = None
         if base.cr.distributedDistrict:
             district = base.cr.distributedDistrict.getName()
-        if district:
-            state = 'Ocean: %s' % district
+        
+        if self._stateOverride:
+            state = self._stateOverride
+        elif district:
+            state = '%s: %s' % (PLocalizer.Ocean, district)
 
-        locationName = PLocalizer.LocationNames.get(targetId, 'Unknown')
-        if afk:
-            details = 'AFK on %s' % locationName
-        elif pvp:
-            details = 'Currently in PVP'
-        elif sailing:
-            details = 'Sailing the Caribbean'
-        elif cards:
-            detail = 'Playing Cards on %s' % locationName
+        locationName = PLocalizer.LocationNames.get(self._currentLocation, None)
+        if self._detailsOverride:
+            details = self._detailsOverride
+        elif self._afk:
+            details = 'AFK'
+        elif self._cursed and self._currentAction != PresenceActions.PVP:
+            details = 'Cursed by Jolly Roger'
+        elif self._currentAction == PresenceActions.PVP:
+            details = 'Battling Cursed Pirates'
+        elif self._currentAction == PresenceActions.Sailing:
+            oceanName = self.__getOceanName()
+            if not oceanName:
+                details = 'Sailing the Caribbean'
+            else:
+                details = 'Sailing in %s' % oceanName
+        elif self._currentAction == PresenceActions.Poker:
+            details = 'Playing Cards on %s' % locationName
+        elif self._currentAction == PresenceActions.Battle:
+            details = 'Battling enemies'
+        elif self._currentAction == PresenceActions.Landroam and locationName:
+            if self._locationInterior:
+                details = 'Currently in %s' % locationName
+            else:
+                details = 'Currently on %s' % locationName
+        elif self._currentAction == PresenceActions.Digging:
+            details = 'Digging for treasure'
+        elif self._currentAction == PresenceActions.Searching:
+            details = 'Searching for treasure'
         else:
-            details = 'Currently on %s' % locationName
+            self.notify.warning('Failed to choose the correct details; Lets just enjoy the Caribbean...')
+            details = 'Enjoying the Caribbean'
 
-        large_image = self.discordLocations.get(targetId, None)
-        if sailing:
-            large_image = 'ga_ocean'
+        return (state, details)
 
-        small_image = None
-        if pvp:
+    def __getLargeDetails(self):
+        image = None
+        text = None
+    
+        if self._currentAction == PresenceActions.Sailing:
+            image = 'sc_sailing'
+            text = PLocalizer.LoadingScreen_Ocean
+        elif self._currentLocation:
+            image = self.discordLocations.get(self._currentLocation, None)
+            if image:
+                text = locationName = PLocalizer.LocationNames.get(self._currentLocation, None)
+            else:
+                self.notify.warning('Failed to locate image key for location: %s' % self._currentLocation)
+
+        return (image, text)
+
+    def __getSmallDetails(self):
+        image = None
+        text = None
+
+        if self._cursed:
+            image = 'halfmoon'
+            text = 'Cursed'
+        elif self._currentAction == PresenceActions.PVP:
             team = base.localAvatar.getPVPTeam()
             if team == PiratesGlobals.PVP_FRIEND:
-                small_image = 'coin_green'
+                image = 'coin_green'
+                text = 'Green Team'
             elif team == PiratesGlobals.PVP_ENEMY:
-                small_image = 'coin_red'
+                image = 'coin_red'
+                text = 'Red Team'
             else:
-                small_image = 'coin_white'
-        elif cards:
-            pass #TODO: add cards icon
-        elif sailing:
-            if sailing == 1:
-                small_image = 'skill_wheel'
-            elif sailing == 2:
-                small_image = 'skill_cannon'
+                image = 'coin_white'
+        elif self._currentWeapon:
+            data = {}
+            weaponCategory = WeaponGlobals.getWeaponCategory(self._currentWeapon)
+            if self._currentWeapon in self.weaponTypes:
+                data = self.weaponTypes[self._currentWeapon]
+            elif weaponCategory in self.weaponTypes:
+                data = self.weaponTypes[weaponCategory]
+                
+            image = data.get(self.WEAPON_TYPE_IMAGE, None)
+            text = data.get(self.WEAPON_TYPE_MESSAGE, None)
+
+        return (image, text)
+
+    def setAFK(self, afk):
+        if self._afk != afk:
+            self._afk = afk
+            self.refreshPresence()
+
+    def setCursed(self, cursed):
+        if self._cursed != cursed:
+            self._cursed = cursed
+            self.refreshPresence()
+
+    def setCountdown(self, timestamp):
+        if self._currentCountdown != timestamp:
+            self._currentCountdown = timestamp
+            self.refreshPresence()
+
+    def setLocation(self, locationUid, interior=False):
+        if self._currentLocation != locationUid or self._locationInterior != interior:
+            self._currentLocation = locationUid
+            self._locationInterior = interior
+            self.refreshPresence()
+
+    def setStateOverride(self, state=None):
+        if self._stateOverride != state:
+            self._stateOverride = state
+            self.refreshPresence()
+
+    def setDetailsOverride(self, details=None):
+        if self._detailsOverride != details:
+            self._detailsOverride = details
+            self.refreshPresence()
+
+    def setCurrentAction(self, action):
+        if self._currentAction != action:
+            self._lastAction = self._currentAction
+            self._currentAction = action
+            self.refreshPresence()
+
+    def setLastAction(self):
+        self.setCurrentAction(self._lastAction)
+
+    def setLandRoam(self):
+        self.setCurrentAction(PresenceActions.Landroam)
+
+    def setSailing(self):
+        self.setCurrentAction(PresenceActions.Sailing)
+
+    def setPVP(self):
+        self.setCurrentAction(PresenceActions.PVP)
+
+    def setBattle(self):
+        self.setCurrentAction(PresenceActions.Battle)
+
+    def setParlorGames(self):
+        self.setCurrentAction(PresenceActions.Poker)
+
+    def setDigging(self):
+        self.setCurrentAction(PresenceActions.Digging)
+
+    def setSearching(self):
+        self.setCurrentAction(PresenceActions.Searching)
+
+    def setCurrentWeapon(self, weapon):
+        if self._currentWeapon != weapon:
+            self._currentWeapon = weapon
+            self.refreshPresence()
+
+    def refreshPresence(self):
+        state, details = self.__getMessage()
+        large_image, large_text = self.__getLargeDetails()
+        small_image, small_text = self.__getSmallDetails()
+        self._changeTime = time.time()
+
+        # Check if the countdown expired
+        if self._currentCountdown:
+            if self._currentCountdown < self._changeTime:
+                self._currentCountdown = None
 
         response = self.update(
             state=state,
             details=details,
             large_image=large_image,
-            large_text=locationName,
-            small_image=small_image)
-
-        print(response)
+            large_text=large_text,
+            small_image=small_image,
+            small_text=small_text,
+            start=self._changeTime,
+            end=self._currentCountdown)
 
         return response
