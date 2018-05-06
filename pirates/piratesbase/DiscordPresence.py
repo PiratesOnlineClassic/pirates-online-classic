@@ -2,6 +2,7 @@ import struct
 import json
 import time
 import socket
+import random
 import sys
 import os
 
@@ -41,6 +42,33 @@ class DiscordPresence:
         '1196970035.53sdnaik': 'ga_spanish_pvp',
         '1196970080.56sdnaik': 'ga_french_pvp',
     }
+
+    largeImages = [
+        'ga_barbosas_cave',
+        'ga_cangrejos',
+        'ga_cave',
+        'ga_cave_lava',
+        'ga_cave2',
+        'ga_devils_anvi',
+        'ga_ocean',
+        'ga_padres_del_fuego',
+        'ga_port_royal',
+        'ga_spanish_pvp',
+        'ga_tortuga',
+        'game_logo',
+        'sc_sailing'
+    ]
+
+    smallImages = [
+        'coin_green',
+        'coin_red',
+        'coin_white',
+        'halfmoon',
+        'jollymoon',
+        'moon',
+        'poker',
+        'skill_wheel'
+    ]
 
     WEAPON_TYPE_IMAGE = 'image'
     WEAPON_TYPE_MESSAGE = 'message'
@@ -232,6 +260,16 @@ class DiscordPresence:
         if not large_image:
             large_image = 'game_logo'
 
+        if large_image not in self.largeImages:
+            self.notify.warning('Failed to set Large Image; %s is not a registered image!' % large_image)
+            large_image = None
+            large_text = None
+
+        if small_image not in self.smallImages:
+            self.notify.warning('Failed to set Small Image; %s is not a registered image' % small_image)
+            small_image = None
+            small_text = None
+
         payload = {
             "cmd": "SET_ACTIVITY",
             "args": {
@@ -294,15 +332,30 @@ class DiscordPresence:
         elif self._cursed and self._currentAction != PresenceActions.PVP:
             details = 'Cursed by Jolly Roger'
         elif self._currentAction == PresenceActions.PVP:
-            details = 'Battling Cursed Pirates'
+            messages = [
+                'Battling Cursed Pirates',
+                'Battling Their Fellow Pirates'
+            ]
+            details = random.choice(messages)
         elif self._currentAction == PresenceActions.Sailing:
             oceanName = self.__getOceanName()
+            messages = [
+                'Sailing the Caribbean',
+                'Sailing the Seven Seas'
+            ]
             if not oceanName:
-                details = 'Sailing the Caribbean'
+                details = random.choice(messages)
             else:
                 details = 'Sailing in %s' % oceanName
         elif self._currentAction == PresenceActions.Poker:
-            details = 'Playing Cards on %s' % locationName
+            messages = [
+                'Playing Card Games', 
+                'Playing Cards',
+                'Playing Parlor Games',
+                'Cheating The Dealer',
+                'Cheating their Way to Victory'
+            ]
+            details = random.choice(messages)
         elif self._currentAction == PresenceActions.Battle:
             details = 'Battling enemies'
         elif self._currentAction == PresenceActions.Landroam and locationName:
@@ -353,6 +406,9 @@ class DiscordPresence:
                 text = 'Red Team'
             else:
                 image = 'coin_white'
+        elif self._currentAction == PresenceActions.Poker:
+            image= 'poker'
+            text = 'Parlor Games' #TODO: Display name of current parlor game?
         elif self._currentWeapon:
             data = {}
             weaponCategory = WeaponGlobals.getWeaponCategory(self._currentWeapon)
@@ -418,7 +474,7 @@ class DiscordPresence:
     def setBattle(self):
         self.setCurrentAction(PresenceActions.Battle)
 
-    def setParlorGames(self):
+    def setParlorGame(self):
         self.setCurrentAction(PresenceActions.Poker)
 
     def setDigging(self):
@@ -436,7 +492,10 @@ class DiscordPresence:
         state, details = self.__getMessage()
         large_image, large_text = self.__getLargeDetails()
         small_image, small_text = self.__getSmallDetails()
-        self._changeTime = time.time()
+
+        # Do we want the since last change timer?
+        if config.GetBool('discord-want-elapsed', False):
+            self._changeTime = time.time()
 
         # Check if the countdown expired
         if self._currentCountdown:
