@@ -72,6 +72,38 @@ base.initNametagGlobals()
 base.startShow(cr)
 from otp.distributed import OtpDoGlobals
 from pirates.piratesbase import UserFunnel
+
+if __debug__ and base.config.GetBool('want-debug-injector', False):
+    def openInjector_wx():
+        import wx
+        from direct.stdpy import threading, thread
+
+        def __inject_wx(_):
+            code = textbox.GetValue()
+            exec (code, globals())
+
+        app = wx.App(redirect = False)
+
+        frame = wx.Frame(None, title = "POC Injector", size=(640, 420), style=wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.MINIMIZE_BOX)
+        panel = wx.Panel(frame)
+        button = wx.Button(parent = panel, id = -1, label = "Inject", size = (50, 20), pos = (295, 0))
+        global textbox
+        textbox = wx.TextCtrl(parent = panel, id = -1, pos = (20, 22), size = (600, 340), style = wx.TE_MULTILINE)
+        frame.Bind(wx.EVT_BUTTON, __inject_wx, button)
+
+        frame.Show()
+        app.SetTopWindow(frame)
+
+        textbox.AppendText("# Welcome to the Pirates Online Classic Debug Injector! #")
+
+        __builtin__.injectorThread = threading.Thread(target = app.MainLoop)
+        __builtin__.injectorThread.start()
+    
+    openInjector_wx()
+    __builtin__.devInjectorOpen = True
+    UserFunnel.logSubmit(1, 'DEV_INJECTOR_OPENS')
+    UserFunnel.logSubmit(0, 'DEV_INJECTOR_OPENS')
+
 UserFunnel.logSubmit(1, 'CLIENT_OPENS')
 UserFunnel.logSubmit(0, 'CLIENT_OPENS')
 
