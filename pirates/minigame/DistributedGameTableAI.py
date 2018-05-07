@@ -145,7 +145,7 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         if self._generatedAI:
             self.notify.warning('Failed to generate table AI; AI players already generated!')
             return
-        self._genratedAI = True
+        self._generatedAI = True
 
         randomGen = random.Random()
         randomGen.seed(self.getUniqueId()) 
@@ -160,3 +160,4 @@ class DistributedGameTableAI(DistributedInteractiveAI):
             self.seats[i] = aiType
 
         randomGen.shuffle(self.seats)
+
