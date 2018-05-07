@@ -208,10 +208,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             if self.entryTime[1] == 0:
                 self.entryTime[1] = time
             return
-        else:
-            self.entryTime = [
-                loc,
-                time]
+        self.entryTime = [loc, time]
 
     def readLocationTime(self):
         return self.entryTime[1]
@@ -221,7 +218,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         self.displayGameAreaName(displayName)
         localAvatar.guiMgr.radarGui.showLocation(self.uniqueId)
 
-    @report(types = ['frameCount', 'args'], dConfigParam = [ 'want-jail-report', 'want-teleport-report'])
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
     def handleExitGameArea(self, collEntry = None):
         UserFunnel.logSubmit(0, 'EXITING_' + str(self.funnelDisplayName))
         UserFunnel.logSubmit(1, 'EXITING_' + str(self.funnelDisplayName))
@@ -229,10 +226,9 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         displayName = str(self.funnelDisplayName)
         timeSpent = int(time.time()) - int(self.readLocationTime())
         if int(self.timeCheck) + 1 == int(timeSpent) or int(self.timeCheck) - 1 == int(timeSpent) or int(self.timeCheck) == int(timeSpent):
-            pass
-        else:
-            self.cr.centralLogger.writeClientEvent('EXITING_AREA|%s|%d' % (displayName, timeSpent))
-            self.timeCheck = timeSpent
+            return
+        self.cr.centralLogger.writeClientEvent('EXITING_AREA|%s|%d' % (displayName, timeSpent))
+        self.timeCheck = timeSpent
 
     def displayGameAreaName(self, displayName):
         self.funnelDisplayName = displayName
@@ -317,17 +313,14 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             objectSphereNode.addSolid(objectSphere)
             objectSphereNode.setIntoCollideMask(PiratesGlobals.WallBitmask)
             objectSphereNodePath = self.attachNewNode(objectSphereNode)
-            self.accept('enter' + objectName, self.handleEnterSphere, extraArgs = [
-                spawnPtId])
+            self.accept('enter' + objectName, self.handleEnterSphere, extraArgs = [spawnPtId])
             self.spawnTriggers.append(objectSphereNodePath)
 
     def handleEnterSphere(self, spawnPtId, entry):
         if base.localAvatar:
             if hasattr(base.localAvatar, 'getDoId'):
                 doId = base.localAvatar.getDoId()
-                self.sendUpdate('spawnNPC', [
-                    spawnPtId,
-                    doId])
+                self.sendUpdate('spawnNPC', [spawnPtId, doId])
 
     def initBlockers(self, geom):
         self.disableBlockers = False
@@ -384,7 +377,6 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             self.stashSpecificBlocker('blocker_0')
             if entry.getIntoNodePath().getName() != 'blocker_0':
                 localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.QuestStrings[questId]['blockerMessage'])
-
         else:
             self.stashAllBlockers()
 

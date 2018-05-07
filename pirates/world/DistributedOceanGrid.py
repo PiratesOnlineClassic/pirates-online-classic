@@ -1,13 +1,11 @@
-from direct.distributed.DistributedCartesianGrid import \
-    DistributedCartesianGrid
-from direct.showbase.PythonUtil import report
-from OceanGridBase import OceanGridBase
 from panda3d.core import *
+from direct.distributed.DistributedCartesianGrid import DistributedCartesianGrid
+from direct.showbase.PythonUtil import report
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.SeaPatch import SeaPatch
+from pirates.world.OceanGridBase import OceanGridBase
 from pirates.world import WorldGlobals
-
 
 class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
 
@@ -42,7 +40,6 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
         self.water.delete()
         self.water = None
         DistributedCartesianGrid.delete(self)
-        return
 
     def setupShipBarrier(self):
         worldRadius = WorldGlobals.OCEAN_GRID_SIZE * WorldGlobals.OCEAN_CELL_SIZE / 2.0 - 50
@@ -77,8 +74,7 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
             pos1, pos2 = self.oceanAreas[name][0:2]
             ul = Point3(min(ul.getX(), pos1.getX()), max(ul.getY(), pos1.getY()), 0)
             lr = Point3(max(lr.getX(), pos2.getX()), min(lr.getY(), pos2.getY()), 0)
-        self.oceanAreas[name] = [
-         ul, lr, uid]
+        self.oceanAreas[name] = [ul, lr, uid]
 
     def addOceanAreasToMap(self):
         mapPage = base.localAvatar.guiMgr.mapPage

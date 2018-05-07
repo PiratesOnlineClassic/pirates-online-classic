@@ -51,7 +51,6 @@ class DistributedShipDeployer(DistributedNode):
         self.maxSphereHard = None
         self.deploySpheres = []
         DistributedNode.disable(self)
-        return
 
     def delete(self):
         DistributedNode.delete(self)
