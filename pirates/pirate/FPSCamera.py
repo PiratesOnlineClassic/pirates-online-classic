@@ -181,9 +181,8 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
         currH = fitSrcAngle2Dest(hNode.getH(), 180)
         if currH < self.minH:
             hNode.setH(reduceAngle(self.minH))
-        else:
-            if currH > self.maxH:
-                hNode.setH(reduceAngle(self.maxH))
+        elif currH > self.maxH:
+            hNode.setH(reduceAngle(self.maxH))
 
     def acceptWheel(self):
         self.accept('wheel_up', self._handleWheelUp)
@@ -246,16 +245,13 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self._collSolid = CollisionSegment(0, 0, 0, 0, -(self._maxDistance + 1.0), 0)
         collSolidNode = CollisionNode('FPSCam.CollSolid')
         collSolidNode.addSolid(self._collSolid)
-        collSolidNode.setFromCollideMask(OTPGlobals.CameraBitmask | OTPGlobals.CameraTransparentBitmask | \
-            OTPGlobals.FloorBitmask)
-
+        collSolidNode.setFromCollideMask(OTPGlobals.CameraBitmask | OTPGlobals.CameraTransparentBitmask | OTPGlobals.FloorBitmask)
         collSolidNode.setIntoCollideMask(BitMask32.allOff())
         self._collSolidNp = self.attachNewNode(collSolidNode)
         self._cHandlerQueue = CollisionHandlerQueue()
         self._cTrav = CollisionTraverser('FPSCam.cTrav')
         self._cTrav.addCollider(self._collSolidNp, self._cHandlerQueue)
-        taskMgr.add(self._collisionCheckTask, FPSCamera.CollisionCheckTaskName,
-            priority=45)
+        taskMgr.add(self._collisionCheckTask, FPSCamera.CollisionCheckTaskName, priority=45)
 
     def _collisionCheckTask(self, task=None):
         if hasattr(base, 'oobeMode'):
@@ -278,13 +274,11 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
                 self.subject.getGeomNode().hide()
             else:
                 self.subject.getGeomNode().show()
-        else:
-            if self.forceMaxDistance:
-                camera.setPos(self.camOffset)
-                camera.setZ(0)
+        elif self.forceMaxDistance:
+            camera.setPos(self.camOffset)
+            camera.setZ(0)
 
-            self.subject.getGeomNode().show()
-
+        self.subject.getGeomNode().show()
         return Task.cont
 
     def _stopCollisionCheck(self):

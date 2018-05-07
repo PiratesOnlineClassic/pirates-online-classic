@@ -5,7 +5,6 @@ from otp.otpbase import OTPGlobals
 from pirates.friends.PCFriendInfo import PCFriendInfo
 
 class PCPlayerFriendsManager(PlayerFriendsManager):
-    
     notify = directNotify.newCategory('PCPlayerFriendsManager')
 
     def __init__(self, cr):
@@ -25,7 +24,6 @@ class PCPlayerFriendsManager(PlayerFriendsManager):
         if shipId:
             self.shipId2ShipState.pop(id, None)
         self.playerId2ShipId.pop(id, None)
-        return
 
     def setShipState(self, playerId, onShip, shipId):
         self.playerId2ShipState[playerId] = onShip
