@@ -53,7 +53,6 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         self.optimizeLOD = base.config.GetBool('optimize-avatar-lod', 1)
         self.loaded = 0
         self.playingRate = None
-        self.animDict = {}
         self.shadowFileName = 'models/misc/drop_shadow'
         self.setFont(PiratesGlobals.getInterfaceFont())
         self.__blinkName = 'blink-' + str(self.this)
