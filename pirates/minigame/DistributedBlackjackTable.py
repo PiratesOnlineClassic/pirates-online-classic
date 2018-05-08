@@ -21,7 +21,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
-
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBlackjackTable')
 
     def __init__(self, cr):
@@ -38,7 +37,6 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
         self.chipsCount = []
         self.radarState = None
         self.betMultiplier = 1
-        return
 
     def generate(self):
         DistributedGameTable.DistributedGameTable.generate(self)

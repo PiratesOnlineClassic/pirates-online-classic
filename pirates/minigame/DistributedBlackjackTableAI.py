@@ -51,7 +51,7 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         self.d_setTableState(hands, chipsCount)
 
     def getTableState(self):
-        return (self.hands, self.chipsCount)
+        return [self.hands, self.chipsCount]
 
     def setBetMultiplier(self, multiplier):
         self.betMultiplier = multiplier

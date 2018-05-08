@@ -1,8 +1,8 @@
-from direct.distributed.DistributedObjectAI import DistributedObjectAI
+from pirates.minigame.DistributedGameTableAI import DistributedGameTableAI
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedLiarsDiceAI(DistributedObjectAI):
+class DistributedLiarsDiceAI(DistributedGameTableAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLiarsDiceAI')
 
     def __init__(self, air):
-        DistributedObjectAI.__init__(self, air)
+        DistributedGameTableAI.__init__(self, air)

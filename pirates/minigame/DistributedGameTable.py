@@ -13,7 +13,7 @@ from pirates.piratesgui import PDialog
 
 
 class DistributedGameTable(DistributedInteractive.DistributedInteractive):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGameTable')
 
     def __init__(self, cr):
@@ -24,7 +24,6 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
         self.requestDialog = None
         self.seatLodNodeArray = []
         self.avId2ivals = {}
-        return
 
     def generate(self):
         DistributedInteractive.DistributedInteractive.generate(self)
