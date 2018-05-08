@@ -11,7 +11,7 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
 
     def __init__(self, air):
         DistributedInteractiveAI.__init__(self, air)
-        FSM.__init__(self, 'DistributedDoorBaseAI')
+        FSM.__init__(self, self.__class__.__name__)
 
         self.doorIndex = 0
         self.buildingUid = ''
