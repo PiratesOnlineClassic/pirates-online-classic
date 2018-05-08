@@ -102,6 +102,7 @@ object-load-delay #f
 
 # Motion:
 motionfsm-lag #f
+avatar-physics-freq 2.0
 
 # Smoothing:
 smooth-lag 0.2
