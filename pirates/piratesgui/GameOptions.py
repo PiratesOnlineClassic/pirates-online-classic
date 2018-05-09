@@ -17,6 +17,7 @@ from pirates.piratesgui.DialogButton import DialogButton
 from pirates.piratesgui.GameOptionsGui import *
 from pirates.piratesgui.GuiButton import GuiButton
 from pirates.seapatch.Water import Water
+from otp.nametag import NametagGlobals
 
 try:
     import embedded
