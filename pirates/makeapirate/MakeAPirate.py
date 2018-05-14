@@ -960,18 +960,20 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             del self.confirmInvalidName
 
         self.nameGui._checkTypeANameAsPickAName()
-        if hasattr(base, 'pe') and base.pe or self.nameGui.cr is None:
-            self._handleNameOK()
-        else:
-            if self.nameGui.hasCustomName():
-                if self._waitForServerDlg:
-                    self._waitForServerDlg.destroy()
-                    self._waitForServerDlg = None
 
-                self._waitForServerDlg = PDialog.PDialog(text=PLocalizer.MakeAPirateWait, style=OTPDialog.NoButtons)
-                self.nameGui.getTypeANameProblem(self._handleNameProblem)
-            else:
-                self._handleNameOK()
+        if hasattr(base, 'cr') and base.cr or self.nameGui.cr is None:
+            self._handleNameOK()
+
+        elif self.nameGui.hasCustomName():
+            if self._waitForServerDlg:
+                self._waitForServerDlg.destroy()
+                self._waitForServerDlg = None
+
+            self._waitForServerDlg = PDialog.PDialog(text=PLocalizer.MakeAPirateWait, style=OTPDialog.NoButtons)
+            self.nameGui.getTypeANameProblem(self._handleNameProblem)
+
+        else:
+            self._handleNameOK()
 
     def _handleNameProblem(self, problemStr):
         if self._waitForServerDlg:

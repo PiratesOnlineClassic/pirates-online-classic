@@ -6,6 +6,7 @@ __levelUpStats = {InventoryType.OverallRep: (25, 3), InventoryType.CutlassRep: (
                   InventoryType.WandRep: (4, 6), InventoryType.CannonRep: (5, 0), 
                   InventoryType.SailingRep: (5, 0)}
 
+
 def getLevelUpQuest(rep, level):
     retQuests = []
     if rep == InventoryType.OverallRep:
@@ -218,6 +219,7 @@ __levelUpSkills = {InventoryType.MeleeRep: {0: ([], [InventoryType.MeleePunch]),
                                               25: ([InventoryType.UnspentSailing], []), 26: ([InventoryType.UnspentSailing], []), 27: ([InventoryType.UnspentSailing], []), 
                                               28: ([InventoryType.UnspentSailing], []), 29: ([InventoryType.UnspentSailing], []), 30: ([InventoryType.UnspentSailing], [])}}
 
+
 def getLevelUpSkills(rep, level):
     repChart = __levelUpSkills.get(rep)
     if repChart:
@@ -235,6 +237,7 @@ for repData in __levelUpSkills.values():
                 if InventoryType.begin_Unspent <= skillId <= InventoryType.end_Unspent:
                     continue
                 __skill2Level[skillId] = level
+
 
 def getSkillUnlockLevel(skillId):
     return __skill2Level.get(skillId, -1)

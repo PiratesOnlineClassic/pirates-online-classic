@@ -6,7 +6,6 @@ from pirates.piratesbase.PiratesGlobals import (femaleNames,
 
 
 class PCPickANamePattern(PickANamePatternTwoPartLastName):
-    
     NameParts = None
 
     def _getNameParts(self, gender):

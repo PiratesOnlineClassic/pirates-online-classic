@@ -6,8 +6,10 @@ __categories = (InventoryType.GeneralRep, InventoryType.MeleeRep, InventoryType.
                 InventoryType.WandRep, InventoryType.KettleRep, InventoryType.CannonRep, InventoryType.SailingRep,
                 InventoryType.LockpickRep)
 
+
 def getReputationCategories():
     return __categories
+
 
 def getUnspentCategories():
     start = InventoryType.begin_Unspent
@@ -29,6 +31,7 @@ GlobalLevelCap = 40
 TotalReputationAtLevel = []
 GlobalReputationAtLevel = []
 
+
 def __buildTotalReputationList():
     TotalReputationAtLevel.append(0)
     runningTotal = 0
@@ -44,6 +47,7 @@ def __buildTotalReputationList():
 
 __buildTotalReputationList()
 
+
 def addReputation(category, origLevel, origValue, deltaValue):
     neededToLevel = getReputationNeededToLevel(category, origLevel)
     newLevel = origLevel
@@ -57,6 +61,7 @@ def addReputation(category, origLevel, origValue, deltaValue):
         return (LevelCap, 0)
     return (newLevel, newValue)
 
+
 def getTotalReputation(category, level, value=0):
     if level >= LevelCap:
         return TotalReputationAtLevel[LevelCap]
@@ -67,6 +72,7 @@ def getTotalGlobalReputation(category, level, value=0):
     if level >= LevelCap:
         return GlobalReputationAtLevel[LevelCap]
     return GlobalReputationAtLevel[level] + value
+
 
 def getLevelFromTotalReputation(category, totalRep):
     if category == InventoryType.OverallRep:
@@ -94,6 +100,7 @@ def getLevelFromTotalReputation(category, totalRep):
     level = LevelCap
     value = 0
     return (level, value)
+
 
 def getReputationNeededToLevel(category, level):
     if category == InventoryType.OverallRep:

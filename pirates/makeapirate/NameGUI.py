@@ -1,29 +1,28 @@
 import random
-import string
 import types
-
-from direct.distributed import PyDatagram
-from direct.distributed.MsgTypes import *
-from direct.fsm import ClassicFSM, State, StateData
+import string
+from direct.fsm import StateData
+from direct.fsm import ClassicFSM
+from direct.fsm import State
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 from direct.task import Task
+from panda3d.core import TextEncoder, TextNode
 from otp.namepanel import NameCheck
 from otp.otpbase import OTPLocalizer as OL
-from panda3d.core import *
-from pandac.PandaModules import TextEncoder
-from pirates.leveleditor import NPCList
-from pirates.makeapirate.PCPickANamePattern import PCPickANamePattern
+from pirates.piratesbase import PLocalizer as PL
 from pirates.pirate import HumanDNA
 from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import PLocalizer as PL
-from pirates.piratesgui import GuiButton, PiratesGuiGlobals
+from pirates.piratesgui import GuiButton
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.leveleditor import NPCList
+from pirates.makeapirate.PCPickANamePattern import PCPickANamePattern
+from direct.distributed.MsgTypes import *
+from direct.distributed import PyDatagram
 
 MAX_NAME_WIDTH = 9
 
-
 class NameGUI(DirectFrame, StateData.StateData):
-    
     NICKNAME = 'Nickname'
     FIRST = 'First'
     PREFIX = 'Prefix'
@@ -220,13 +219,12 @@ class NameGUI(DirectFrame, StateData.StateData):
             problem = NameCheck.checkName(self.nameEntry.get(), [self._checkNpcNames])
             if problem:
                 callback(problem)
-            else:
-                if self.cr:
-                    self.ignore(self.cr.getWishNameResultMsg())
-                    self.acceptOnce(self.cr.getWishNameResultMsg(), self._handleSetWishnameResult)
-                    self._nameCheckCallback = callback
-                    self._sendSetWishname(justCheck=True)
-                    return
+            elif self.cr:
+                self.ignore(self.cr.getWishNameResultMsg())
+                self.acceptOnce(self.cr.getWishNameResultMsg(), self._handleSetWishnameResult)
+                self._nameCheckCallback = callback
+                self._sendSetWishname(justCheck=True)
+                return
         return
 
     def _checkTypeANameAsPickAName(self):
@@ -450,14 +448,12 @@ class NameGUI(DirectFrame, StateData.StateData):
     def _nameClickedOn(self, listType, index):
         if listType == self.NICKNAME:
             self.nicknameIndex = index
+        elif listType == self.FIRST:
+            self.firstIndex = index
+        elif listType == self.PREFIX:
+            self.prefixIndex = index
         else:
-            if listType == self.FIRST:
-                self.firstIndex = index
-            else:
-                if listType == self.PREFIX:
-                    self.prefixIndex = index
-                else:
-                    self.suffixIndex = index
+            self.suffixIndex = index
         self._updateLists()
 
     def _listsChanged(self, extraArgs):
@@ -472,39 +468,36 @@ class NameGUI(DirectFrame, StateData.StateData):
                     self.names[0] = ''
                     self.nicknameHigh.hide()
                 self.nicknameIndex = self.nicknameList.index + 2
-            else:
-                if extraArgs == 1:
-                    if self.firstActive:
-                        self.enableList(self.firstList)
-                        self.names[1] = self.firstList['items'][self.firstList.index + 2]['text']
-                        self.firstHigh.show()
-                    else:
-                        self.disableList(self.firstList)
-                        self.names[1] = ''
-                        self.firstHigh.hide()
-                    self.firstIndex = self.firstList.index + 2
+            elif extraArgs == 1:
+                if self.firstActive:
+                    self.enableList(self.firstList)
+                    self.names[1] = self.firstList['items'][self.firstList.index + 2]['text']
+                    self.firstHigh.show()
                 else:
-                    if extraArgs == 2:
-                        if self.lastActive:
-                            self.enableList(self.prefixList)
-                            self.names[2] = self.prefixList['items'][self.prefixList.index + 2]['text']
-                            self.prefixHigh.show()
-                        else:
-                            self.disableList(self.prefixList)
-                            self.names[2] = ''
-                            self.prefixHigh.hide()
-                        self.prefixIndex = self.prefixList.index + 2
-                    else:
-                        if extraArgs == 3:
-                            if self.lastActive:
-                                self.enableList(self.suffixList)
-                                self.names[3] = self.suffixList['items'][self.suffixList.index + 2]['text']
-                                self.suffixHigh.show()
-                            else:
-                                self.disableList(self.suffixList)
-                                self.names[3] = ''
-                                self.suffixHigh.hide()
-                            self.suffixIndex = self.suffixList.index + 2
+                    self.disableList(self.firstList)
+                    self.names[1] = ''
+                    self.firstHigh.hide()
+                self.firstIndex = self.firstList.index + 2
+            elif extraArgs == 2:
+                if self.lastActive:
+                    self.enableList(self.prefixList)
+                    self.names[2] = self.prefixList['items'][self.prefixList.index + 2]['text']
+                    self.prefixHigh.show()
+                else:
+                    self.disableList(self.prefixList)
+                    self.names[2] = ''
+                    self.prefixHigh.hide()
+                self.prefixIndex = self.prefixList.index + 2
+            elif extraArgs == 3:
+                if self.lastActive:
+                    self.enableList(self.suffixList)
+                    self.names[3] = self.suffixList['items'][self.suffixList.index + 2]['text']
+                    self.suffixHigh.show()
+                else:
+                    self.disableList(self.suffixList)
+                    self.names[3] = ''
+                    self.suffixHigh.hide()
+                self.suffixIndex = self.suffixList.index + 2
             if len(self.names[0] + self.names[1] + self.names[2] + self.names[3]) > 0:
                 self.updateName()
 
@@ -562,12 +555,11 @@ class NameGUI(DirectFrame, StateData.StateData):
         self.nicknameList.destroy()
         if self.independent:
             self.mainFrame.destroy()
-        else:
-            if self.nameEntry:
-                self.nameEntry.destroy()
-                self.nameEntryGuidelines.destroy()
-                if self.cr:
-                    self.nameEntryGuidelinesURL.destroy()
+        elif self.nameEntry:
+            self.nameEntry.destroy()
+            self.nameEntryGuidelines.destroy()
+            if self.cr:
+                self.nameEntryGuidelinesURL.destroy()
         del self.main
         del self._parent
         del self.avatar
@@ -656,31 +648,29 @@ class NameGUI(DirectFrame, StateData.StateData):
             if not (nameInFirst or nameInLast):
                 self.__assignNameToTyped(name)
                 return
-        else:
-            if len(nameParts) == 2:
-                if self.__checkForNameInNicknameList(nameParts[0]):
-                    nameInFirst = self.__checkForNameInFirstList(nameParts[1])
-                    nameInLast = self.__checkForNameInLastList(nameParts[1])
-                    if not (nameInFirst or nameInLast):
-                        self.__assignNameToTyped(name)
-                        return
-                else:
-                    nameInFirst = self.__checkForNameInFirstList(nameParts[0])
-                    nameInLast = self.__checkForNameInLastList(nameParts[1])
-                    if not (nameInFirst and nameInLast):
-                        self.__assignNameToTyped(name)
-                        return
-            else:
-                if len(nameParts) == 3:
-                    nameInNick = self.__checkForNameInNicknameList(nameParts[0])
-                    nameInFirst = self.__checkForNameInFirstList(nameParts[1])
-                    nameInLast = self.__checkForNameInLastList(nameParts[2])
-                    if not (nameInNick and nameInFirst and nameInLast):
-                        self.__assignNameToTyped(name)
-                        return
-                else:
+        elif len(nameParts) == 2:
+            if self.__checkForNameInNicknameList(nameParts[0]):
+                nameInFirst = self.__checkForNameInFirstList(nameParts[1])
+                nameInLast = self.__checkForNameInLastList(nameParts[1])
+                if not (nameInFirst or nameInLast):
                     self.__assignNameToTyped(name)
                     return
+            else:
+                nameInFirst = self.__checkForNameInFirstList(nameParts[0])
+                nameInLast = self.__checkForNameInLastList(nameParts[1])
+                if not (nameInFirst and nameInLast):
+                    self.__assignNameToTyped(name)
+                    return
+        elif len(nameParts) == 3:
+            nameInNick = self.__checkForNameInNicknameList(nameParts[0])
+            nameInFirst = self.__checkForNameInFirstList(nameParts[1])
+            nameInLast = self.__checkForNameInLastList(nameParts[2])
+            if not (nameInNick and nameInFirst and nameInLast):
+                self.__assignNameToTyped(name)
+                return
+        else:
+            self.__assignNameToTyped(name)
+            return
         self.mode = self.__MODE_PICKANAME
         self._updateLists()
         self._updateCheckBoxes()
@@ -857,12 +847,11 @@ class NameGUI(DirectFrame, StateData.StateData):
              self.nicknameActive, self.firstActive, self.lastActive)
             self.savedMaleName = [self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex]
             self.savedGender = 'm'
-        else:
-            if self.getDNA().gender == 'f':
-                self.savedFemaleName = [
-                 self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex]
-                self.savedFemaleActiveStates = (self.nicknameActive, self.firstActive, self.lastActive)
-                self.savedGender = 'f'
+        elif self.getDNA().gender == 'f':
+            self.savedFemaleName = [
+             self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex]
+            self.savedFemaleActiveStates = (self.nicknameActive, self.firstActive, self.lastActive)
+            self.savedGender = 'f'
 
     def exitDone(self):
         pass
