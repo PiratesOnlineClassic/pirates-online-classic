@@ -1125,7 +1125,7 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   sendSalvageMessage(uint32, uint16) ownrecv;
   setLuck(int16) required broadcast;
   setMaxLuck(int16=1) required broadcast db;
-  setMojo(int16) required broadcast;
+  setMojo(int16) required broadcast db;
   setMaxMojo(int16=50) required broadcast db;
   setSwiftness(int16) required broadcast;
   setMaxSwiftness(int16=1) required broadcast db;
