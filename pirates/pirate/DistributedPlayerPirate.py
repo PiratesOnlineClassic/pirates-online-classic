@@ -44,6 +44,7 @@ from pirates.uberdog.UberDogGlobals import *
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.world.DistributedGameArea import DistributedGameArea
 from otp.nametag.NametagGroup import NametagGroup
+from otp.ai.MagicWordGlobal import *
 
 
 class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, DistributedBattleAvatar, DistributedQuestAvatar, PAvatarHandle):
@@ -1598,3 +1599,10 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
             return
         if not quiet:
             base.chatAssistant.receiveGMOpenTypedChat(chatString, chatFlags, self.doId)
+
+    @magicWord(CATEGORY_SYSTEM_ADMIN, types=[int])
+    def bodyType(val):
+        target = spellbook.getTarget()
+        base.localAvatar.setBodyShape(val)
+        base.localAvatar.changeBodyType()
+        return 'Body type switched to %s' % val
