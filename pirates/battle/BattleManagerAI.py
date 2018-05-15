@@ -387,7 +387,7 @@ class BattleManagerAI(BattleManagerBase):
 
             # Remove the doll attuning when out of range.
             if attacker.hasStickyTarget(target.doId):
-                atacker.removeStickyTarget(target.doId)
+                attacker.removeStickyTarget(target.doId)
                 attacker.removeSkillEffect(WeaponGlobals.C_ATTUNE)
 
             self.removeAttacker(attacker, target)

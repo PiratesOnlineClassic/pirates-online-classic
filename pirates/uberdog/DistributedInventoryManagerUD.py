@@ -385,6 +385,7 @@ class InventoryFSM(FSM):
     def exitLoad(self):
         pass
 
+
 class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryManagerUD')
 
