@@ -388,7 +388,7 @@ class BattleManagerAI(BattleManagerBase):
                 attacker.removeStickyTarget(target.doId)
                 attacker.removeSkillEffect(WeaponGlobals.C_ATTUNE)
 
-            self.removeAttacker(attacker, target)
+            self.removeAttacker(attacker.doId, target.doId)
 
     def rewardAttackers(self, target):
         for attackerId in self.__targets[target.doId]:
