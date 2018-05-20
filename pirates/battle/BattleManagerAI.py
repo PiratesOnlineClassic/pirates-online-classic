@@ -51,20 +51,26 @@ class BattleManagerAI(BattleManagerBase):
 
         return attackerId in self.__targets[targetId]
 
-    def addAttacker(self, attackerId, targetId):
-        if targetId not in self.__targets:
+    def addAttacker(self, attacker, target):
+        if not attacker or not target:
             return
 
-        if attackerId in self.__targets[targetId]:
+        if target.doId not in self.__targets:
             return
 
-        self.__targets[targetId].append(attackerId)
-
-    def removeAttacker(self, attackerId, targetId):
-        if targetId not in self.__targets:
+        if attacker.doId in self.__targets[target.doId]:
             return
 
-        if attackerId not in self.__targets[targetId]:
+        self.__targets[target.doId].append(attacker.doId)
+
+    def removeAttacker(self, attacker, target):
+        if not attacker or not target:
+            return
+
+        if target.doId not in self.__targets:
+            return
+
+        if attacker.doId not in self.__targets[target.doId]:
             return
 
         # clear the avatar's skill diaries since the target it
@@ -72,7 +78,7 @@ class BattleManagerAI(BattleManagerBase):
         attacker.battleSkillDiary.clear()
         attacker.comboDiary.clear()
 
-        self.__targets[targetId].remove(attackerId)
+        self.__targets[target.doId].remove(attacker.doId)
 
     def getAttackers(self, targetId):
         return self.__targets.get(targetId, {})
@@ -148,7 +154,7 @@ class BattleManagerAI(BattleManagerBase):
         # check to see if our dictionary of target to attacker data contains this attacker,
         # if not we will assume this is a new attacker to the target and assign them accordingly...
         if not self.hasAttacker(avatar.doId, target.doId):
-            self.addAttacker(avatar.doId, target.doId)
+            self.addAttacker(avatar, target)
 
         # add the skill info to the attackers battle skill diary to track
         # what skills they have used and when...
@@ -388,7 +394,7 @@ class BattleManagerAI(BattleManagerBase):
                 attacker.removeStickyTarget(target.doId)
                 attacker.removeSkillEffect(WeaponGlobals.C_ATTUNE)
 
-            self.removeAttacker(attacker.doId, target.doId)
+            self.removeAttacker(attacker, target)
 
     def rewardAttackers(self, target):
         for attackerId in self.__targets[target.doId]:
