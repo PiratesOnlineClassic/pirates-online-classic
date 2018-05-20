@@ -3,6 +3,7 @@ from direct.directnotify import DirectNotifyGlobal
 from otp.ai.MagicWordGlobal import *
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
 
+
 class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryManagerAI')
 
@@ -24,18 +25,23 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         return inventoryId in self.inventories
 
     def sendHasInventory(self, inventoryId, callback):
-        self.air.netMessenger.send('hasInventoryResponse', [callback, self.hasInventory(inventoryId)])
+        self.air.netMessenger.send('hasInventoryResponse', [callback,
+            self.hasInventory(inventoryId)])
 
     def addInventory(self, inventory):
         if self.hasInventory(inventory.doId):
-            self.notify.debug('Tried to add an already existing inventory %d!' % inventory.doId)
+            self.notify.debug('Tried to add an already existing inventory %d!' % (
+                inventory.doId))
+
             return
 
         self.inventories[inventory.doId] = inventory
 
     def removeInventory(self, inventory):
         if not self.hasInventory(inventory.doId):
-            self.notify.debug('Tried to remove a non-existant inventory %d!' % inventory.doId)
+            self.notify.debug('Tried to remove a non-existant inventory %d!' % (
+                inventory.doId))
+
             return
 
         del self.inventories[inventory.doId]
@@ -49,7 +55,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         return None
 
     def sendGetInventory(self, avatarId, callback):
-        self.air.netMessenger.send('getInventoryResponse', [callback, self.getInventory(avatarId)])
+        self.air.netMessenger.send('getInventoryResponse', [callback,
+            self.getInventory(avatarId)])
 
     def requestInventory(self):
         avatarId = self.air.getAvatarIdFromSender()
@@ -77,7 +84,10 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         inventory = self.inventories.get(inventoryId)
 
         if not inventory:
-            return task.again
+            self.notify.warning('Failed to retrieve inventory %d for avatar %d!' % (
+                inventoryId, avatarId))
+
+            return task.done
 
         self.__sendInventory(avatarId, inventory.doId)
         return task.done
@@ -92,8 +102,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
     def __sendInventory(self, avatarId, inventoryId):
         inventory = self.inventories.get(inventoryId)
 
-        self.acceptOnce('distObjDelete-%d' % (avatarId), lambda: \
-            self.__cleanupWaitForInventory(avatarId))
+        self.acceptOnce('distObjDelete-%d' % (avatarId), lambda: self.__cleanupWaitForInventory(avatarId))
 
         if not inventory:
             if avatarId in self.inventoryTasks:
@@ -102,15 +111,15 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
                 return
 
-            self.inventoryTasks[avatarId] = taskMgr.doMethodLater(1.0, self.__waitForInventory, 'waitForInventory-%d-%s' % (
-                avatarId, id(self)), appendTask=True, extraArgs=[avatarId, inventoryId])
+            self.inventoryTasks[avatarId] = taskMgr.doMethodLater(5.0, self.__waitForInventory,
+                self.uniqueName('waitForInventory-%d' % avatarId), appendTask=True, extraArgs=[
+                    avatarId, inventoryId])
 
             return
 
         avatar = self.air.doId2do.get(avatarId)
 
         if not avatar:
-            self.notify.debug('Cannot send inventory, unknown avatar!')
             return
 
         inventory.b_setStackLimit(InventoryType.Hp, avatar.getMaxHp())
@@ -118,7 +127,9 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         def inventoryResponse(dclass, fields):
             if not dclass or not fields:
-                self.notify.debug('Failed to query inventory %d!' % avatarId)
+                self.notify.debug('Failed to query inventory %d!' % (
+                    avatarId))
+
                 return
 
             accumulators, = fields.get('setAccumulators', [])
@@ -143,6 +154,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         if callback and callable(callback):
             callback(*args, **kwargs)
             return
+
         self.notify.warning("No valid callback for a callback response! What was the purpose of that?")
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
@@ -164,7 +176,6 @@ def maxOutSkillPoints():
         return "Maxed out Skill Points!"
 
     return "Failed to max out Skill Points!"
-
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def maxWeapons():
@@ -210,7 +221,6 @@ def maxWeapons():
         return "Maxed weapons to Rank 5!"
 
     return "Failed to max Weapons"
-
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def gold(amount):
