@@ -1,6 +1,3 @@
-import random
-import math
-
 from panda3d.core import *
 from pirates.battle.BattleManagerBase import BattleManagerBase
 from direct.directnotify import DirectNotifyGlobal
@@ -110,7 +107,6 @@ class BattleManagerAI(BattleManagerBase):
 
     def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         if not avatar:
-            self.notify.warning('Cannot get targeted skill result for an unknown avatar!')
             return None
 
         # this is just the client requesting an action for the skill used,
@@ -308,12 +304,18 @@ class BattleManagerAI(BattleManagerBase):
 
     def __applySkillEffect(self, target, targetEffects, attacker, skillId, ammoSkillId):
         targetEffectId = targetEffects[2]
-        if targetEffectId:
-            targetEffectDuration = WeaponGlobals.getAttackDuration(skillId, ammoSkillId)
-            maxEffectStack = WeaponGlobals.getBuffStackNumber(targetEffectId)
 
-            if target.getDamagable() and target.getSkillEffectCount(targetEffectId) <= maxEffectStack:
-                target.addSkillEffect(targetEffectId, targetEffectDuration, attacker.doId)
+        if not targetEffectId:
+            return
+
+        targetEffectDuration = WeaponGlobals.getAttackDuration(skillId, ammoSkillId)
+        maxEffectStack = WeaponGlobals.getBuffStackNumber(targetEffectId)
+
+        if not target.getDamagable():
+            return
+
+        if target.getSkillEffectCount(targetEffectId) <= maxEffectStack:
+            target.addSkillEffect(targetEffectId, targetEffectDuration, attacker.doId)
 
     def __checkTarget(self, targetId, attackers):
         target = self.air.doId2do.get(targetId)
@@ -332,16 +334,12 @@ class BattleManagerAI(BattleManagerBase):
                 if index >= len(skillEffects):
                     continue
 
-                try:
-                    duration = (skillEffects[index][1] * 100) + 16
-                    expireTime = skillEffects[index][2] + duration
+                duration = (skillEffects[index][1] * 100) + 16
+                expireTime = skillEffects[index][2] + duration
 
-                    # expire the skill effect
-                    if currentTime > expireTime:
-                        del skillEffects[index]
-                except:
-                    # catch weird cases where the index vanishes midway through calculations
-                    pass
+                # expire the skill effect
+                if currentTime > expireTime:
+                    del skillEffects[index]
 
             # Update the active skill effects
             target.b_setSkillEffects(skillEffects)
