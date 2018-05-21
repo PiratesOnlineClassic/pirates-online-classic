@@ -16,4 +16,7 @@ class DistributedOceanGridAI(DistributedCartesianGridAI, OceanGridBase):
         self.uidMgr = UniqueIdManager(self.air)
 
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
-        do.generateWithRequiredAndId(self.air.allocateChannel(), self.doId, zoneId, optionalFields)
+        self.generateChildWithRequiredAndId(do, self.air.allocateChannel(), self.doId, zoneId, optionalFields)
+
+    def generateChildWithRequiredAndId(self, do, doId, parentId, zoneId, optionalFields=[]):
+        do.generateWithRequiredAndId(doId, parentId, zoneId, optionalFields)
