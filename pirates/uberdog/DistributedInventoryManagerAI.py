@@ -64,15 +64,23 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         if not avatarId:
             return
 
+        self.initiateInventory(avatarId)
+
+    def initiateInventory(self, avatarId):
+
         def queryResponse(dclass, fields):
             if not dclass or not fields:
-                self.notify.debug('Failed to query avatar %d!' % avatarId)
+                self.notify.debug('Failed to query avatar %d!' % (
+                    avatarId))
+
                 return
 
             inventoryId, = fields.get('setInventoryId', (0,))
 
             if not inventoryId:
-                self.notify.debug('Invalid inventory found for avatar %d!' % avatarId)
+                self.notify.debug('Invalid inventory found for avatar %d!' % (
+                    avatarId))
+
                 return
 
             self.__sendInventory(avatarId, inventoryId)
@@ -84,7 +92,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         inventory = self.inventories.get(inventoryId)
 
         if not inventory:
-            self.notify.warning('Failed to retrieve inventory %d for avatar %d!' % (
+            self.notify.debug('Failed to retrieve inventory %d for avatar %d!' % (
                 inventoryId, avatarId))
 
             return task.done

@@ -54,9 +54,6 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
         avatarId = self.air.getAvatarIdFromSender()
 
         if not avatarId:
-            self.notify.warning('Cannot initialize loc teleport to shard %d, invalid avatar!' % (
-                shardId))
-
             return
 
         shardId = shardId or self.getRandomShard()

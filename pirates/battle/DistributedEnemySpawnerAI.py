@@ -1,3 +1,5 @@
+import random
+
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
@@ -18,7 +20,7 @@ from pirates.leveleditor import NPCList
 from pirates.piratesbase import PLocalizer
 from pirates.battle import EnemyGlobals
 from pirates.ai import HolidayGlobals
-import random
+
 
 class SpawnNodeBase:
     notify = DirectNotifyGlobal.directNotify.newCategory('SpawnNodeBase')
