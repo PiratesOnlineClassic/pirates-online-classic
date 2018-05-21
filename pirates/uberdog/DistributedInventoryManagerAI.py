@@ -64,9 +64,9 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         if not avatarId:
             return
 
-        self.initiateInventory(avatarId)
+        self.getInventory(avatarId)
 
-    def initiateInventory(self, avatarId):
+    def getInventory(self, avatarId):
 
         def queryResponse(dclass, fields):
             if not dclass or not fields:
