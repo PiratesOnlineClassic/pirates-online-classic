@@ -92,5 +92,8 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
 
             return
 
-        self.sendUpdateToChannel(channel, 'requestTeleportToShardUDtoAI', [avatarId, shardId,
-            instanceType, instanceName, locationUid])
+        def inventoryArrived(inventoryId):
+            self.sendUpdateToChannel(channel, 'requestTeleportToShardUDtoAI', [avatarId, shardId,
+                instanceType, instanceName, locationUid])
+
+        self.air.inventoryManager.initiateInventory(avatarId, callback=inventoryArrived)

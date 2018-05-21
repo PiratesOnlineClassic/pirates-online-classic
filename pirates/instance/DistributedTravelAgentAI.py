@@ -62,15 +62,8 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
 
                 return
 
-            # since the avatar was deleted when we moved their AI channel,
-            # we need to re-initiate their inventory on our AI channel so they
-            # will have their inventory on our AI...
-            self.air.inventoryManager.initiateInventory(avatar.doId)
-
-            # tell the teleport manager to send the avatar to the requested location
-            # this is the location in which the avatar was last located at before they
-            # tried to move to another AI...
-            self.air.teleportMgr.d_initiateTeleport(avatar, instanceType, instanceName, locationUid)
+            self.air.teleportMgr.d_initiateTeleport(avatar, instanceType,
+                instanceName, locationUid)
 
         self.__getAvatarArrival(avatarId, avatarArrived)
 

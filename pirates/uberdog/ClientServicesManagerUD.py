@@ -876,15 +876,6 @@ class LoadAvatarFSM(AvatarOperationFSM):
         datagram.addChannel(self.target << 32 | self.avId)
         self.csm.air.send(datagram)
 
-        # Claim ownership of the avatar's inventory
-        datagram = PyDatagram()
-        datagram.addServerHeader(
-            inventoryId,
-            self.csm.air.ourChannel,
-            STATESERVER_OBJECT_SET_OWNER)
-        datagram.addChannel(self.avId)
-        self.csm.air.send(datagram)
-
         self.csm.air.writeServerEvent('avatarChosen', avId=self.avId, target=self.target)
         self.demand('Off')
         return task.done
