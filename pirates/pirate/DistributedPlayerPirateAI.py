@@ -494,30 +494,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def d_levelUpMsg(self, category, level, messageId):
         self.sendUpdate('levelUpMsg', [category, level, messageId])
 
-    def disable(self):
-        DistributedPlayerAI.disable(self)
-        DistributedBattleAvatarAI.disable(self)
-
-    def delete(self):
-        inventory = self.getInventory()
-
-        if inventory:
-            inventory.requestDelete()
-
-        if self.battleRandom:
-            self.battleRandom.delete()
-
-        self.battleRandom = None
-
-        self.ignore('HolidayStarted')
-        self.ignore('HolidayEnded')
-        self.ignore('timeOfDayChange')
-
-        taskMgr.remove(self.uniqueName('process-groggy'))
-
-        DistributedPlayerAI.delete(self)
-        DistributedBattleAvatarAI.delete(self)
-
     def setStickyTargets(self, stickyTargets):
         self.stickyTargets = stickyTargets
 
@@ -641,6 +617,30 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def b_updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
         self.d_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
         self.updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
+
+    def disable(self):
+        DistributedPlayerAI.disable(self)
+        DistributedBattleAvatarAI.disable(self)
+
+    def delete(self):
+        inventory = self.getInventory()
+
+        if inventory:
+            self.air.inventoryManager.removeInventory(inventory)
+
+        if self.battleRandom:
+            self.battleRandom.delete()
+
+        self.battleRandom = None
+
+        self.ignore('HolidayStarted')
+        self.ignore('HolidayEnded')
+        self.ignore('timeOfDayChange')
+
+        taskMgr.remove(self.uniqueName('process-groggy'))
+
+        DistributedPlayerAI.delete(self)
+        DistributedBattleAvatarAI.delete(self)
 
 @magicWord(category=CATEGORY_MODERATION, types=[int, str, str])
 def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
