@@ -355,7 +355,7 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         if self.guiMgr:
             if self.guiMgr.mapPage:
                 self.guiMgr.mapPage.setCurrentIsland(islandUid)
-           
+
             self.guiMgr.radarGui.showLocation(islandUid)
 
     def setJailCellIndex(self, index):
@@ -366,25 +366,25 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         target = self.cr.doId2do.get(targetId)
         if target == self.currentTarget:
             return
-        
+
         if self.currentTarget:
             self.currentTarget.setLocalTarget(0)
             if self.currentTarget.state == 'Use':
                 self.currentTarget.request('Idle')
-       
+
         self.currentTarget = target
         if target:
             if (not hasattr(target, 'currentDialogMovie') or target.currentDialogMovie == None) and target.hideHpMeterFlag == 0:
                 target.showHpMeter()
-            
+
             if self.gameFSM.state == 'Battle':
                 self.startLookAtTarget()
-            
+
             target.setLocalTarget(1)
             target.request('Use')
         else:
             self.stopLookAtTarget()
-        
+
         self.cr.interactionMgr.start()
         DistributedPlayerPirate.setCurrentTarget(self, targetId)
 
@@ -410,17 +410,17 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         if self.cloudScudEffect:
             self.cloudScudEffect.stopLoop()
             self.cloudScudEffect = None
-        
+
         self.questStatus.delete()
         del self.questStatus
         self.__cleanupGuildDialog()
         self.__cleanupMoraleDialog()
         DistributedPlayerPirate.delete(self)
         LocalAvatar.delete(self)
-        del base.localAvatar
         base.localAvatar = None
-        del __builtins__['localAvatar']
         __builtins__['localAvatar'] = None
+        del base.localAvatar
+        del __builtins__['localAvatar']
 
     def targetMgrCreated(self):
         self.startLookAroundTask()
@@ -503,11 +503,11 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         self.accept('exitWater', self.handleWaterOut)
         if self.style.getTutorial() < PiratesGlobals.TUT_GOT_COMPASS and not base.config.GetBool('teleport-all', 0):
             self.b_setTeleportFlag(PiratesGlobals.TFNoCompass)
-        
+
         if not base.launcher.getPhaseComplete(5):
             self.b_setTeleportFlag(PiratesGlobals.TFPhaseIncomplete)
             self.accept('phaseComplete-5', self.handlePhaseComplete, extraArgs=[5])
-        
+
         self.accept('InputState-forward', self.checkInputState)
         self.accept('InputState-reverse', self.checkInputState)
         self.accept('InputState-turnLeft', self.checkInputState)
@@ -531,7 +531,7 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         if self.arrowPlacer:
             self.arrowPlacer.delete()
             self.arrowPlacer = None
-        
+
         self.clearBattleTeleportFlag(send=False)
         self.shipList = []
         self.nametag.unmanage(base.marginManager)
@@ -539,7 +539,7 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         if self.openJailDoorTrack:
             self.openJailDoorTrack.pause()
             self.openJailDoorTrack = None
-        
+
         taskMgr.remove(self.uniqueName('monitorStickyTargets'))
         taskMgr.remove('localAvLookAtTarget')
         base.chatAssistant.clearHistory()
