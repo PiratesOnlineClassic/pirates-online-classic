@@ -14,9 +14,6 @@ class PirateInventoryAI(DistributedInventoryAI):
         avatar = self.air.doId2do.get(self.ownerId)
 
         if not avatar:
-            self.notify.debug('Failed to set reputation type %d for unknown avatar %d!' % (
-                repType, avatar.doId))
-
             return
 
         oldLevel, oldReputation = ReputationGlobals.getLevelFromTotalReputation(
@@ -24,18 +21,18 @@ class PirateInventoryAI(DistributedInventoryAI):
 
         newLevel, newReputation = ReputationGlobals.getLevelFromTotalReputation(
             repType, quantity)
+        
+        # check to see if the type of reputation we're giving the avatar is
+        # their overall reputation/level, then set their level...
+        if repType == InventoryType.OverallRep and newLevel > avatar.getLevel():
+            avatar.b_setLevel(newLevel)
+        else:
+            # only play the level up message for the avatar if their new reputation
+            # is greater than their previous reputation...
+            if newLevel <= oldLevel:
+                return
 
-        # only play the level up message for the avatar if their new reputation
-        # is greater than their previous reputation...
-        if newLevel > oldLevel:
-
-            # check to see if the type of reputation we're giving the avatar is
-            # their overall reputation/level, then set their level...
-            if repType == InventoryType.OverallRep:
-                avatar.b_setLevel(newLevel)
-
-            avatar.d_levelUpMsg(repType, newLevel, 0)
-
+        avatar.d_levelUpMsg(repType, newLevel, 0)
         self.b_setAccumulator(repType, quantity)
 
     def getReputation(self, repType):
