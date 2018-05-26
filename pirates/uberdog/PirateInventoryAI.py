@@ -26,13 +26,13 @@ class PirateInventoryAI(DistributedInventoryAI):
         # their overall reputation/level, then set their level...
         if repType == InventoryType.OverallRep and newLevel > avatar.getLevel():
             avatar.b_setLevel(newLevel)
+            avatar.d_levelUpMsg(repType, avatar.getLevel(), 0)
         else:
             # only play the level up message for the avatar if their new reputation
             # is greater than their previous reputation...
-            if newLevel <= oldLevel:
-                return
-
-        avatar.d_levelUpMsg(repType, newLevel, 0)
+            if newLevel > oldLevel:
+                avatar.d_levelUpMsg(repType, newLevel, 0)
+        
         self.b_setAccumulator(repType, quantity)
 
     def getReputation(self, repType):
