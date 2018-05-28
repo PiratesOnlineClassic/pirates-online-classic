@@ -439,13 +439,9 @@ class PiratesBase(OTPBase):
         if lowMemory:
             GeomVertexArrayData.getIndependentLru().setMaxSize(5242880)
             VertexDataPage.getGlobalLru(VertexDataPage.RCResident).setMaxSize(5242880)
-            if self.lowMemoryStreamAudio.getValue():
-                ConfigVariableInt('miles-audio-preload-threshold').setValue(0)
         else:
             GeomVertexArrayData.getIndependentLru().setMaxSize(4294967295L)
             VertexDataPage.getGlobalLru(VertexDataPage.RCResident).setMaxSize(4294967295L)
-            if self.lowMemoryStreamAudio.getValue():
-                ConfigVariableInt('miles-audio-preload-threshold').setValue(-1)
 
     def setupRender2d(self):
         OTPBase.setupRender2d(self)
