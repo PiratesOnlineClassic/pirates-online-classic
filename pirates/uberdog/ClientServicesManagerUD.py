@@ -1105,7 +1105,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         currentAvId = self.air.getAvatarIdFromSender()
         accountId = self.air.getAccountIdFromSender()
         if currentAvId and avId:
-            self.killAccount(accountId, 'A Toon is already chosen!')
+            self.killAccount(accountId, 'A Pirate is already chosen!')
             return
         elif not currentAvId and not avId:
             return
