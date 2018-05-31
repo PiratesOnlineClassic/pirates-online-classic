@@ -160,6 +160,8 @@ class Options(OptionSpace):
                 self.write_string(output_file, 'special_effects ')
                 self.write_integer(output_file, self.special_effects)
                 self.write_string(output_file, 'texture_scale ')
+                self.write_string(output_file, 'frame_rate ')
+                self.write_integer(output_file, self.frame_rate)
                 if self.texture_scale <= 0.0:
                     self.texture_scale = 1.0
                 self.write_float(output_file, self.texture_scale)
@@ -275,6 +277,7 @@ class Options(OptionSpace):
             self.terrain_detail_level = self.validate(int, 'terrain_detail_level', 2)
             self.memory = self.validate(int, 'memory', 0)
             self.mouse_look = self.validate(int, 'mouse_look', 0, [0, 1])
+            self.frame_rate = self.validate(int, 'frame_rate', 0, [0, 1])
             self.gamma = self.validate(float, 'gamma', 0.0)
             self.gamma += self.gamma_save_offset
             self.gamma_enable = self.validate(int, 'gamma_enable', 0, [0, 1])
@@ -417,6 +420,7 @@ class Options(OptionSpace):
     def setRuntimeOptions(self):
         base.enableSoundEffects(self.sound)
         base.enableMusic(self.music)
+        base.setFrameRateMeter(self.frame_rate)
         if base.sfxManagerList:
             index = 0
             length = len(base.sfxManagerList)
@@ -481,6 +485,7 @@ class Options(OptionSpace):
         self.terrain_detail_level = Options.option_high
         self.memory = 0
         self.mouse_look = 0
+        self.frame_rate = 0
         self.gamma = self.gamma_save_offset
         self.gamma_enable = 0
         self.cpu_frequency_warning = 1
@@ -1026,6 +1031,7 @@ class Options(OptionSpace):
         self.output('terrain_detail_level ', self.terrain_detail_level)
         self.output('memory ', self.memory)
         self.output('mouse_look ', self.mouse_look)
+        self.output('frame_rate', self.frame_rate)
         self.output('gamma ', self.gamma - self.gamma_save_offset)
         self.output('gamma_enable ', self.gamma_enable)
         self.output('cpu_frequency_warning ', self.cpu_frequency_warning)

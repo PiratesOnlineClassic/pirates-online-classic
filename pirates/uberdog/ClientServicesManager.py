@@ -7,6 +7,7 @@ from otp.otpbase import OTPGlobals
 from pirates.pirate.HumanDNA import HumanDNA
 from pirates.piratesgui import PiratesGuiGlobals
 
+
 class ClientServicesManager(DistributedObjectGlobal):
     notify = directNotify.newCategory('ClientServicesManager')
 
@@ -36,11 +37,11 @@ class ClientServicesManager(DistributedObjectGlobal):
         for avNum, avName, avDNA, avPosition, nameState in avatars:
             nameOpen = int(nameState == 1)
             names = [avName, '', '', '']
-            if nameState == 2: # PENDING
+            if nameState == 2:  # PENDING
                 names[1] = avName
-            elif nameState == 3: # APPROVED
+            elif nameState == 3:  # APPROVED
                 names[2] = avName
-            elif nameState == 4: # REJECTED
+            elif nameState == 4:  # REJECTED
                 names[3] = avName
 
             dna = HumanDNA()

@@ -204,6 +204,7 @@ def maxWeapons():
         inventory.b_setStack(InventoryType.DaggerWeaponL1, 0)
         inventory.b_setStack(InventoryType.WandWeaponL1, 0)
 
+        # Set new weapon stacks
         inventory.b_setStack(InventoryType.CutlassWeaponL5, 1)
         inventory.b_setStack(InventoryType.PistolWeaponL5, 1)
         inventory.b_setStack(InventoryType.BayonetWeaponL3, 0)
@@ -212,6 +213,7 @@ def maxWeapons():
         inventory.b_setStack(InventoryType.DaggerWeaponL5, 1)
         inventory.b_setStack(InventoryType.WandWeaponL5, 1)
 
+        # Set Ammo
         inventory.b_setStack(InventoryType.AmmoAsp, 99)
         inventory.b_setStack(InventoryType.AmmoAdder, 99)
         inventory.b_setStack(InventoryType.AmmoSidewinder, 99)

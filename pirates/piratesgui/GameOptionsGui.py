@@ -365,6 +365,11 @@ class GameOptionsGui(DirectFrame):
         text = PLocalizer.GameOptionsIntensity
         self.create_label(x + 0.2, y, text, parent, sl * 0.8)
 
+        if base.config.GetBool('enable-frame-rate-counter', False):
+            text = PLocalizer.GameOptionsFrameRate
+            self.create_label(x, y - 0.1, text, parent, sl)
+            self.frameRateCheck = CheckButton(parent=parent, relief=None, scale=sc, pos=(x + 0.37, 0, y + -0.085), command=self.frameRateCheckCB)
+
         def gamma_update_function(value):
             if self.gameOptions:
                 self.gameOptions.options.gamma = value
@@ -571,6 +576,8 @@ class GameOptionsGui(DirectFrame):
         self.musicCheck['value'] = self.gameOptions.options.music
         self.music_volume_slider['value'] = self.gameOptions.options.music_volume
         self.invertMouseCheck['value'] = self.gameOptions.options.mouse_look
+        if hasattr(self, 'frameRateCheck'):
+            self.frameRateCheck['value'] = self.gameOptions.options.frame_rate
         self.gui_scale_slider['value'] = self.gameOptions.options.gui_scale
         if self.cpuFrequencyWarningCheck:
             self.cpuFrequencyWarningCheck['value'] = self.gameOptions.options.cpu_frequency_warning
@@ -580,6 +587,14 @@ class GameOptionsGui(DirectFrame):
             self.hdrCheck['value'] = self.gameOptions.options.hdr
         self.update()
         return
+
+    def frameRateCheckCB(self, val):
+        if self.gameOptions is None:
+            return None
+
+        self.gameOptions.options.frame_rate = val
+        base.setFrameRateMeter(val)
+        self.update()
 
     def callShowUpsell(self, val):
         self.fullScreenCheck.setQuiet(False)
