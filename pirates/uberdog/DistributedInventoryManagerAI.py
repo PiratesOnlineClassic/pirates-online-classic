@@ -165,6 +165,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         self.notify.warning("No valid callback for a callback response! What was the purpose of that?")
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def maxOutSkillPoints():
     invoker = spellbook.getInvoker()
@@ -185,6 +186,7 @@ def maxOutSkillPoints():
 
     return "Failed to max out Skill Points!"
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def maxWeapons():
     invoker = spellbook.getInvoker()
@@ -194,6 +196,14 @@ def maxWeapons():
         # Because i've heard alot about pirate blade being the best. Which is L5.
         # So i think L5 was the highest available to the player at the time.
         ## Some nice ol grammar better put together while this comment has bad grammar fix ~ Dan.
+
+        # Remove the original items from your inventory stacks...
+        inventory.b_setStack(InventoryType.CutlassWeaponL1, 0)
+        inventory.b_setStack(InventoryType.PistolWeaponL1, 0)
+        inventory.b_setStack(InventoryType.DollWeaponL1, 0)
+        inventory.b_setStack(InventoryType.DaggerWeaponL1, 0)
+        inventory.b_setStack(InventoryType.WandWeaponL1, 0)
+
         inventory.b_setStack(InventoryType.CutlassWeaponL5, 1)
         inventory.b_setStack(InventoryType.PistolWeaponL5, 1)
         inventory.b_setStack(InventoryType.BayonetWeaponL3, 0)
@@ -229,6 +239,7 @@ def maxWeapons():
         return "Maxed weapons to Rank 5!"
 
     return "Failed to max Weapons"
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def gold(amount):
