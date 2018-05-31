@@ -252,36 +252,48 @@ class Biped(UsesAnimationMixer, Avatar, UsesEffectNode):
         UsesEffectNode.delete(self)
 
     def actorInterval(self, *args, **kwargs):
+        if config.GetBool('want-smooth-anims', False):
+            self.setBlend(frameBlend=True)
         if hasattr(self, 'undead') and self.undead:
             return UsesAnimationMixer.actorInterval(self.skeleton, *args, **kwargs)
         bodyIval = UsesAnimationMixer.actorInterval(self, *args, **kwargs)
         return bodyIval
 
     def play(self, *args, **kwArgs):
+        if config.GetBool('want-smooth-anims', False):
+            self.setBlend(frameBlend=True)
         if hasattr(self, 'undead') and self.undead:
             UsesAnimationMixer.play(self.skeleton, *args, **kwArgs)
             return
         UsesAnimationMixer.play(self, *args, **kwArgs)
 
     def loop(self, *args, **kwArgs):
+        if config.GetBool('want-smooth-anims', False):
+            self.setBlend(frameBlend=True)
         if hasattr(self, 'undead') and self.undead:
             UsesAnimationMixer.loop(self.skeleton, *args, **kwArgs)
             return
         UsesAnimationMixer.loop(self, *args, **kwArgs)
 
     def stop(self, *args, **kwArgs):
+        if config.GetBool('want-smooth-anims', False):
+            self.setBlend(frameBlend=True)
         if hasattr(self, 'undead') and self.undead:
             UsesAnimationMixer.stop(self.skeleton, *args, **kwArgs)
             return
         UsesAnimationMixer.stop(self, *args, **kwArgs)
 
     def pose(self, *args, **kwArgs):
+        if config.GetBool('want-smooth-anims', False):
+            self.setBlend(frameBlend=True)
         if hasattr(self, 'undead') and self.undead:
             UsesAnimationMixer.pose(self.skeleton, *args, **kwArgs)
             return
         UsesAnimationMixer.pose(self, *args, **kwArgs)
 
     def pingpong(self, *args, **kwArgs):
+        if config.GetBool('want-smooth-anims', False):
+            self.setBlend(frameBlend=True)
         if hasattr(self, 'undead') and self.undead:
             UsesAnimationMixer.pingpong(self.skeleton, *args, **kwArgs)
             return

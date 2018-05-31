@@ -79,6 +79,7 @@ lock-to-one-cpu #f
 lock-to-one-core #f
 
 # Animations:
+want-smooth-anims #t
 anim-blend-type normalized_linear
 interpolate-frames #t
 
