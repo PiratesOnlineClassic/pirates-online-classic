@@ -1,10 +1,11 @@
 from direct.directnotify import DirectNotifyGlobal
-from pirates.battle import EnemyGlobals, WeaponGlobals
-from pirates.battle.EnemySkills import EnemySkills
+from pirates.battle import WeaponGlobals
 from pirates.pirate import AvatarTypes
-from pirates.piratesbase import PiratesGlobals
-from pirates.reputation import ReputationGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.battle import EnemyGlobals
+from pirates.battle.EnemySkills import EnemySkills
+from pirates.reputation import ReputationGlobals
+from pirates.piratesbase import PiratesGlobals
 
 
 class BattleManagerBase:
