@@ -57,6 +57,9 @@ notify-level-UsesAnimationMixer warning
 notify-level-DisplayOptions debug
 notify-timestamp 1
 
+# Options:
+enable-frame-rate-counter #t
+
 # Buffer:
 framebuffer-hardware #t
 framebuffer-software #f
