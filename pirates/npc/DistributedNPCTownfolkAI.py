@@ -3,6 +3,8 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.battle.DistributedBattleNPCAI import DistributedBattleNPCAI
 from pirates.economy.DistributedShopKeeperAI import DistributedShopKeeperAI
 from pirates.piratesbase import PiratesGlobals
+from pirates.distributed import InteractGlobals
+from pirates.economy import EconomyGlobals
 
 class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCTownfolkAI')
@@ -27,9 +29,41 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
     def handleRequestExit(self, avatar):
         return self.ACCEPT
 
-    def selectOption(self, optionId):
-        if optionId == 0:
-            self.requestExit()
+    def selectOption(self, option):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+
+        inventory = self.air.inventoryManager.getInventory(avatar.doId)
+        if not inventory:
+            return
+
+        if option == InteractGlobals.HEAL_HP:
+            hp = avatar.hp
+            maxHp = avatar.getMaxHp()
+
+            if hp == maxHp:
+                return
+
+            cost = EconomyGlobals.getAvatarHealHpCost(maxHp)
+
+            if cost > inventory.getGoldInPocket():
+                return
+
+            inventory.setGoldInPocket(inventory.getGoldInPocket() - cost)
+            avatar.b_setHp(maxHp)
+        elif option == InteractGlobals.HEAL_MOJO:
+            mojo = avatar.getMojo()
+            maxMojo = avatar.getMaxMojo()
+
+            if mojo == maxMojo:
+                return
+
+            cost = EconomyGlobals.getAvatarHealMojoCost(maxMojo - mojo)
+
+            if cost > inventory.getGoldInPocket():
+                return
+
+            inventory.setGoldInPocket(inventory.getGoldInPocket() - cost)
+            avatar.b_setMojo(maxMojo)
 
     def setDNAId(self, dnaId):
         self.dnaId = dnaId
