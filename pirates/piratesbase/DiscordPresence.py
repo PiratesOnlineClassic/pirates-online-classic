@@ -164,7 +164,6 @@ class DiscordPresence:
         return ipc_path
 
     def start(self):
-
         # Verify we want Discord rich presence
         if not config.GetBool('want-discord-rich-presence', True):
             return
@@ -179,17 +178,25 @@ class DiscordPresence:
             return
 
         self.notify.info('Connecting to Discord...')
-
         self.__connect()
-        self.__handshake()
 
     def __connect(self):
         ipc_path = self.__get_ipc_path()
         if sys.platform == 'linux' or sys.platform == 'darwin':
             self._pipe = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-            self._pipe.connect(ipc_path)
+            try:
+                self._pipe.connect(ipc_path)
+            except socket.error:
+                self.notify.warning('Failed to start Discord Rich Presence; could not connect!')
+                return
         else:
-            self._pipe = open(ipc_path, 'r+b')
+            try:
+                self._pipe = open(ipc_path, 'r+b')
+            except IOError:
+                self.notify.warning('Failed to start Discord Rich Presence; could not open file!')
+                return
+
+        self.__handshake()
 
     def disconnect(self, clean=True):
         if clean and self._pipe:
@@ -351,7 +358,7 @@ class DiscordPresence:
         district = None
         if base.cr.distributedDistrict:
             district = base.cr.distributedDistrict.getName()
-        
+
         if self._stateOverride:
             state = self._stateOverride
         elif self._wantDevelopmentMessage and __debug__:
@@ -368,7 +375,7 @@ class DiscordPresence:
             details = self._detailsOverride
         elif self._afk:
             messages = [
-                'Currently AFK', 
+                'Currently AFK',
                 'Asleep on the Job',
                 'Away from Keyboard']
 
@@ -377,7 +384,7 @@ class DiscordPresence:
                     messages += [
                         'Fallen asleep at the wheel'
                     ]
-            
+
             details = random.choice(messages)
         elif self._cursed and self._currentAction != PresenceActions.PVP:
             details = 'Cursed by Jolly Roger'
@@ -399,7 +406,7 @@ class DiscordPresence:
                 details = 'Sailing in %s' % oceanName
         elif self._currentAction == PresenceActions.Poker:
             messages = [
-                'Playing Card Games', 
+                'Playing Card Games',
                 'Playing Cards',
                 'Playing Parlor Games',
                 'Cheating The Dealer',
@@ -437,7 +444,7 @@ class DiscordPresence:
     def __getLargeDetails(self):
         image = None
         text = None
-    
+
         if self._currentAction == PresenceActions.Sailing:
             image = 'ga_ocean'
             text = PLocalizer.LoadingScreen_Ocean
@@ -477,7 +484,7 @@ class DiscordPresence:
                 data = self.weaponTypes[self._currentWeapon]
             elif weaponCategory in self.weaponTypes:
                 data = self.weaponTypes[weaponCategory]
-                
+
             image = data.get(self.WEAPON_TYPE_IMAGE, None)
             text = data.get(self.WEAPON_TYPE_MESSAGE, None)
 
@@ -688,7 +695,7 @@ def resetDiscordState():
     Resets your discord state
     """
     base.richPresence.setStateOverride(None)
-    return 'State reset!'    
+    return 'State reset!'
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def discordDetails(details):
@@ -712,7 +719,7 @@ def discordCrew(current, max):
     Sets your Discord crew size info
     """
     base.richPresence.setCurrentCrew(current, max)
-    return 'Crew size set to: (%d, %d)' % (current, max) 
+    return 'Crew size set to: (%d, %d)' % (current, max)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def discordAllowJoin(join):
