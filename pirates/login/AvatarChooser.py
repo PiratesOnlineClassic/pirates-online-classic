@@ -297,10 +297,8 @@ class AvatarChooser(DirectObject, StateData):
         self.shardPanelBottom.setPos(0.42, 0, 0.095)
         self.shardPanelBottom.setScale(0.273)
         self.shardPanelBottom.reparentTo(base.a2dBottomLeft)
-        self.logo = loader.loadModel('models/gui/potcLogo')
-        self.logo.reparentTo(self.avatarListFrame)
-        self.logo.setPos(0, 0, 0.1)
-        self.logo.setScale(0.66)
+        self.logo = OnscreenImage(image='../phase_2/maps/POC_LOGO.png', pos=(0, 0, 0.08), scale=(0.6, 0.10, 0.40), parent=self.avatarListFrame)
+        self.logo.setTransparency(TransparencyAttrib.MAlpha)
         charGui.removeNode()
         return
 
