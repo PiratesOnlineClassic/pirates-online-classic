@@ -385,7 +385,7 @@ class BattleManagerAI(BattleManagerBase):
 
         # now that we have the avatar's current skill, check the range of,
         # that specific weapon...
-        if not self.getgetTargetInRange(attacker, target, skillId, ammoSkillId):
+        if not self.getTargetInRange(attacker, target, skillId, ammoSkillId):
             self.notify.debug('Attacker %d has gone out of range of target %d with skill %d!' % (
                 attacker.doId, target.doId, skillId))
 
