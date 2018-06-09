@@ -1090,7 +1090,6 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   setGuildName(string="Null") required broadcast ram ownrecv ownsend db;
   setMaxHp(int16=250) required broadcast db;
   setHp(int16=250, uint8=0) required broadcast db ownrecv;
-  setEpicQuests(uint32=0) required broadcast db;
   setStickyTargets(DoIdList) required broadcast ram;
   requestRemoveStickyTargets(DoIdList) ownsend airecv;
   flagFirstDeath() clsend airecv;
