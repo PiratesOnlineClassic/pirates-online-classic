@@ -220,18 +220,23 @@ class BattleManagerAI(BattleManagerBase):
                 self.__hurtTarget(target, targetEffects)
                 self.__hurtTarget(avatar, attackerEffects)
 
-            # add skill effects for both attacker and target
+            # add skill effects for both attacker and target, this will also
+            # check to see if the attacker or target can be damaged...
             self.__applySkillEffect(target, targetEffects, avatar, skillId, ammoSkillId)
             self.__applySkillEffect(avatar, attackerEffects, avatar, skillId, ammoSkillId)
 
-            # check to see if the skill used by the avatar was the doll attuning effect
-            if skillId == WeaponGlobals.C_ATTUNE:
-                self.avatar.addStickyTarget(target.doId)
+            # check to see if the skill used by the avatar was the doll attuning effect,
+            # and that the avatar's current weapon is infact an doll weapon...
+            if WeaponGlobals.isVoodooWeapon(currentWeaponId) and skillId == InventoryType.DollAttune:
+                avatar.addStickyTarget(target.doId)
 
-            # Handle interactive props
+                # set the target's skill effect so that the attuning effect is
+                # present, this will also set the avatar's local attune list...
+                target.addSkillEffect(WeaponGlobals.C_ATTUNE, 0, avatar.doId)
+
+            # handle interactive props
             if hasattr(target, 'd_propSlashed'):
                 target.d_propSlashed()
-
         elif skillResult == WeaponGlobals.RESULT_MISS:
             pass
         elif skillResult == WeaponGlobals.RESULT_DODGE:
@@ -336,18 +341,21 @@ class BattleManagerAI(BattleManagerBase):
             # process a targets skill effects here
             currentTime = globalClockDelta.getFrameNetworkTime()
             for index in range(len(skillEffects)):
-                # verify skilleffect index
+                # verify skill effect index
                 if index >= len(skillEffects):
                     continue
 
-                duration = (skillEffects[index][1] * 100) + 16
-                expireTime = skillEffects[index][2] + duration
+                skillEffect = skillEffects[index]
+                duration = (skillEffect[1] * 100) + 16
+                expireTime = skillEffect[2] + duration
 
-                # expire the skill effect
-                if currentTime > expireTime:
+                # check to see if the skill effect has expired and remove it,
+                # if the skill effect is an doll attune effect; we don't remove
+                # it because it does not have a duration...
+                if currentTime > expireTime and skillEffect[0] != WeaponGlobals.C_ATTUNE:
                     del skillEffects[index]
 
-            # Update the active skill effects
+            # update the active skill effects
             target.b_setSkillEffects(skillEffects)
 
         for attackerId in attackers:
@@ -389,10 +397,10 @@ class BattleManagerAI(BattleManagerBase):
             self.notify.debug('Attacker %d has gone out of range of target %d with skill %d!' % (
                 attacker.doId, target.doId, skillId))
 
-            # Remove the doll attuning when out of range.
+            # remove the doll attuning when out of range.
             if attacker.hasStickyTarget(target.doId):
-                attacker.removeStickyTarget(target.doId)
                 attacker.removeSkillEffect(WeaponGlobals.C_ATTUNE)
+                attacker.removeStickyTarget(target.doId)
 
             self.removeAttacker(attacker, target)
 
