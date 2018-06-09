@@ -157,13 +157,15 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
     def deleteBattleCollisions(self):
         if self.battleTube:
             self.battleTube = None
+
         for np in self.battleTubeNodePaths:
             np.removeNode()
 
         self.battleTubeNodePaths = []
         for np in self.aimTubeNodePaths:
-            if hasattr(self.cr, 'targetMgr'):
+            if hasattr(self.cr, 'targetMgr') and self.cr.targetMgr:
                 self.cr.targetMgr.removeTarget(np.get_key())
+
             np.removeNode()
 
         self.aimTubeNodePaths = []
@@ -175,7 +177,9 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
         return self.level
 
     def targetedWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, attacker, pos, charge=0, delay=None, multihit=0):
-        DistributedTargetableObject.DistributedTargetableObject.targetedWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, attacker, pos, charge, delay, multihit)
+        DistributedTargetableObject.DistributedTargetableObject.targetedWeaponHit(self, skillId, ammoSkillId, skillResult,
+            targetEffects, attacker, pos, charge, delay, multihit)
+
         if skillResult == WeaponGlobals.RESULT_HIT and (skillId == InventoryType.CutlassSlash or skillId == InventoryType.CutlassSweep):
             self.gameFSM.request('Death')
 
