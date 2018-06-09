@@ -83,7 +83,7 @@ class BattleManagerAI(BattleManagerBase):
     def getAttackers(self, targetId):
         return self.__targets.get(targetId, {})
 
-    def targetInRange(self, attacker, target, skillId, ammoSkillId):
+    def getTargetInRange(self, attacker, target, skillId, ammoSkillId):
         tolerance = 0
         attackRange = self.getModifiedAttackRange(attacker, skillId, ammoSkillId)
 
@@ -385,7 +385,7 @@ class BattleManagerAI(BattleManagerBase):
 
         # now that we have the avatar's current skill, check the range of,
         # that specific weapon...
-        if not self.targetInRange(attacker, target, skillId, ammoSkillId):
+        if not self.getgetTargetInRange(attacker, target, skillId, ammoSkillId):
             self.notify.debug('Attacker %d has gone out of range of target %d with skill %d!' % (
                 attacker.doId, target.doId, skillId))
 
