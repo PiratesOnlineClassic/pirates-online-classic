@@ -129,6 +129,7 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
     def b_requestActiveQuest(self, questId):
         if not questId == self.activeQuestId:
             self.d_requestActiveQuest(questId)
+
         self.l_requestActiveQuest(questId)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')

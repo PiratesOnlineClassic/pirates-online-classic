@@ -6,16 +6,17 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import NewTutorialPanel, PiratesGuiGlobals, RadarGui
 from pirates.quest import (Quest, QuestBase, QuestConstants, QuestDB, QuestTaskDNA)
 
-QuestPopupDict = {'c2_visit_will_turner': ['showBlacksmith', 'closeShowBlacksmith'], 'c2.2defeatSkeletons': ['showSkeleton', 'closeShowSkeleton'], 
-                  'c2_visit_tia_dalma': ['showJungleTia', 'closeShowJungleTia'], 'c2.4recoverOrders': ['showNavy', 'closeShowNavy'], 
-                  'c2.5deliverOrders': ['showGovMansion', 'closeShowGovMansion'], 'c2.9visitDarby': ['showDarby', 'closeShowDarby'], 
-                  'c2.10visitDockworker': ['showDinghy', 'closeShowDinghy'], 'c2.11visitBarbossa': ['showBarbossa', 'closeShowbarbossa'], 
-                  'c3visitJack': ['showTortugaJack', 'closeShowTortugaJack']}
+QuestPopupDict = {
+    'c2_visit_will_turner': ['showBlacksmith', 'closeShowBlacksmith'], 'c2.2defeatSkeletons': ['showSkeleton', 'closeShowSkeleton'],
+    'c2_visit_tia_dalma': ['showJungleTia', 'closeShowJungleTia'], 'c2.4recoverOrders': ['showNavy', 'closeShowNavy'],
+    'c2.5deliverOrders': ['showGovMansion', 'closeShowGovMansion'], 'c2.9visitDarby': ['showDarby', 'closeShowDarby'],
+    'c2.10visitDockworker': ['showDinghy', 'closeShowDinghy'], 'c2.11visitBarbossa': ['showBarbossa', 'closeShowbarbossa'],
+    'c3visitJack': ['showTortugaJack', 'closeShowTortugaJack']}
+
 QUEST_TYPE_AVATAR = 0
 QUEST_TYPE_TM = 1
 
 class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase, Quest.Quest):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedQuest')
 
     def __init__(self, cr):

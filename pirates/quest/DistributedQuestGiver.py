@@ -17,7 +17,6 @@ from pirates.reputation.ReputationGlobals import getLevelFromTotalReputation
 
 
 class DistributedQuestGiver(Avatar.Avatar):
-    
     notify = directNotify.newCategory('DistributedQuestGiver')
     NoOffer = 0
     LadderOffer = 1
@@ -49,14 +48,12 @@ class DistributedQuestGiver(Avatar.Avatar):
         self.nametagIconGlow = None
         self.containerId = None
         self.rewardPanel = None
-        return
 
     def generate(self):
         DistributedQuestGiver.notify.debug('generate(%s)' % self.doId)
         self.questMenuGUI = None
         self.questDetailGUI = None
         self.questDetailCamera = None
-        return
 
     def announceGenerate(self):
         DistributedQuestGiver.notify.debug('announceGenerate(%s)' % self.doId)
@@ -66,6 +63,7 @@ class DistributedQuestGiver(Avatar.Avatar):
         if self.npcMoviePlayer:
             self.npcMoviePlayer.cleanup()
             self.npcMoviePlayer = None
+
         self.cleanUpQuestMenu()
         self.cleanUpQuestDetails()
         self.questMenuGUI = None
@@ -73,14 +71,13 @@ class DistributedQuestGiver(Avatar.Avatar):
         if self.rewardPanel:
             self.rewardPanel.cleanup()
             self.rewardPanel = None
+
         self.ignore('lastSubtitlePage')
-        return
 
     def cleanUpQuestMenu(self):
         if self.questMenuGUI:
             self.questMenuGUI.destroy()
             self.questMenuGUI = None
-        return
 
     def cleanUpQuestDetails(self, hide=False):
         if self.questDetailGUI:
@@ -88,11 +85,12 @@ class DistributedQuestGiver(Avatar.Avatar):
                 self.questDetailGUI.hidePanelAndDestroy()
             else:
                 self.questDetailGUI.destroy()
+
             self.questDetailGUI = None
+
         if not hide and self.questDetailCamera:
             self.questDetailCamera.finish()
             self.questDetailCamera = None
-        return
 
     def delete(self):
         DistributedQuestGiver.notify.debug('delete(%s)' % self.doId)
@@ -267,7 +265,6 @@ class DistributedQuestGiver(Avatar.Avatar):
         localAvatar.guiMgr.subtitler.setPageChat('', options=[PLocalizer.Accept], callback=handleOption)
         base.questdet = self.questDetailGUI
         self.ignore('doneChatPage')
-        return
 
     def adjustNPCCamera(self, direction):
         dummy = NodePath('dummy')
@@ -295,7 +292,6 @@ class DistributedQuestGiver(Avatar.Avatar):
         self.sendUpdate('setOfferResponse', [index, ladder])
         self.offers = None
         self.clearOffer()
-        return
 
     def b_setPageNumber(self, paragraph, pageNumber):
         self.setPageNumber(paragraph, pageNumber)

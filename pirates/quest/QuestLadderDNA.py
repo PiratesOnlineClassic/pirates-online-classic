@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.quest.QuestLadderDNA
 import random
 
 from direct.directnotify import DirectNotifyGlobal
@@ -15,7 +11,6 @@ from pirates.quest.QuestTaskDNA import VisitTaskDNA
 
 
 class QuestContainerDNA(POD):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestContainerDNA')
     Counter = 1102
     DataSet = {'name': None, 'questInt': -1, 'title': '', 'description': '', 'giverId': None, 'firstQuestId': None, 'containers': None, 'rewards': tuple(), 'completeCount': QuestChoice.CompleteAll, 'dialogBefore': '', 'dialogDuring': '', 'dialogAfter': '', 'dialogBrushoff': '', 'droppable': False}
@@ -136,22 +131,16 @@ class QuestContainerDNA(POD):
 
 
 class QuestChoiceDNA(QuestContainerDNA):
-    
 
     def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
         return QuestChoice(name, title, av, questInt, parent, giverId, rewards, description, completeCount)
 
-
 class QuestChoiceSingleDNA(QuestContainerDNA):
-    
 
     def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
         return QuestChoiceSingle(name, title, av, questInt, parent, giverId, rewards, firstQuestId, description)
 
-
 class QuestLadderDNA(QuestContainerDNA):
-    
 
     def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
         return QuestLadder(name, title, av, questInt, parent, giverId, rewards, firstQuestId, description)
-# okay decompiling .\pirates\quest\QuestLadderDNA.pyc
