@@ -1807,9 +1807,7 @@ dclass DistributedLiarsDice : DistributedDiceGame {
   displayChallenge(uint8, uint8, uint8, uint8, string) broadcast;
 };
 
-struct PlayingCard {
-  uint8(0-255) card;
-};
+typedef uint8 PlayingCard;
 
 typedef PlayingCard CardHand[];
 
