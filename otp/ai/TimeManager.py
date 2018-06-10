@@ -2,7 +2,7 @@ import os
 import sys
 import re
 import time
-
+from otp.nametag.NametagConstants import CFSpeech, CFTimeout
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
 from direct.distributed.ClockDelta import *
