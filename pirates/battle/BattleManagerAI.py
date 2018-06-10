@@ -424,6 +424,8 @@ class BattleManagerAI(BattleManagerBase):
 
         overallReputation = 0
         goldReward = EnemyGlobals.getGoldDrop(target.getAvatarType(), target.getLevel())
+        if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEGOLDHOLIDAY):
+            goldReward = goldReward * 2
 
         for skillId in attacker.battleSkillDiary.getSkills():
             ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)

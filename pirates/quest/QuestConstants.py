@@ -882,4 +882,3 @@ class DoubleRepTime:
     HOUR = 60 * 60
     TWOHOUR = 60 * 120
     THREEHOUR = 60 * 180
-# okay decompiling .\pirates\quest\QuestConstants.pyc
