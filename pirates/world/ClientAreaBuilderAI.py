@@ -175,7 +175,9 @@ class ClientAreaBuilderAI(DirectObject):
         if 'Objects' in worldIsland:
             for obj in worldIsland['Objects'].values():
                 if obj['Type'] == 'LOD Sphere':
+                    sphereCenter = obj['Pos']
                     island.setZoneSphereSize(*obj['Radi'])
+                    island.setZoneSphereCenter(sphereCenter[0], sphereCenter[1])
 
         self.parent.generateChildWithRequired(island, PiratesGlobals.IslandAvailableZoneStart)
         self.addObject(island)
