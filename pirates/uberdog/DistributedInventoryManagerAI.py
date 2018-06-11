@@ -247,5 +247,11 @@ def maxWeapons():
 def gold(amount):
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+
+    if inventory.getGoldInPocket() == 65000:
+        # Let's check if the avatars gold cap is met, which in 2008 was 65,000
+        # If it's met lets prevent it from giving us anymore gold.
+        return 'Cannot add more gold! Gold cap met!'
+
     inventory.setGoldInPocket(inventory.getGoldInPocket() + amount)
     return 'Received Gold Amount: %s' % amount

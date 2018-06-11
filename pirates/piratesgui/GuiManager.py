@@ -2037,4 +2037,3 @@ class GuiManager(FSM.FSM):
 
     def setIgnoreAllKeys(self, ignore):
         self.ignoreAllKeys = ignore
-# okay decompiling .\pirates\piratesgui\GuiManager.pyc
