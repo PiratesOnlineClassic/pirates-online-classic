@@ -759,3 +759,14 @@ def zombie():
     target.attemptToSetCursedZombie()
 
     return 'Targets Zombie state forced to %s' % target.forcedZombie
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def removeGroggy():
+    """
+    Removes the invokers groggy effect
+    """
+
+    invoker = spellbook.getInvoker()
+    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    inventory.setVitaeLevel(0)
+    return "Removed active groggy effect!"

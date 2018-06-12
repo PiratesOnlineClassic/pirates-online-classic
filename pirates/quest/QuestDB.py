@@ -1,6 +1,3 @@
-# Source Generated with Decompyle++
-# File: QuestDB.pyc (Python 2.4)
-
 import random
 
 from direct.directnotify import DirectNotifyGlobal
@@ -1431,7 +1428,7 @@ if __dev__:
         questDNA.check()
     
 
-questIntDict = { }
+questIntDict = {}
 for (questId, questDNA) in QuestDict.items():
     questIntDict[questDNA.questInt] = questId
 
