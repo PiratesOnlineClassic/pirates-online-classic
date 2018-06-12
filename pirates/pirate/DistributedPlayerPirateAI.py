@@ -762,6 +762,10 @@ def zombie():
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def removeGroggy():
+    """
+    Removes the invokers groggy effect
+    """
+
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
     inventory.setVitaeLevel(0)
