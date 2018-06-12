@@ -449,12 +449,6 @@ class BattleManagerAI(BattleManagerBase):
         # update the avatar's overall reputation based on all the skills they
         # used to kill the target
         inventory.setOverallRep(inventory.getOverallRep() + overallReputation)
-
-        if inventory.getGoldInPocket() == 65000:
-            # Let's check if the avatars gold cap is met, which in 2008 was 65,000
-            # If it's met lets prevent it from giving us anymore gold.
-            return
-
         inventory.setGoldInPocket(inventory.getGoldInPocket() + goldReward)
 
     def destroy(self):
