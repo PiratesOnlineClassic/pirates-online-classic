@@ -89,12 +89,6 @@ class WeaponBaseAI(WeaponBaseBase):
         # this will handle the targeted skill for any targets in the range of the attacker,
         # for example if an attacker uses a skill that effects enemies around it...
         for targetId in areaIdList:
-
-            # ignore the avatar if it is in the area list,
-            # no reason to handle it here...
-            if targetId == avatar.doId:
-                continue
-
             target = self.air.doId2do.get(targetId)
 
             if not target:
