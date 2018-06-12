@@ -98,7 +98,9 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         cellDoor.setScale(objectData.get('Scale', (1, 1, 1)))
         cellDoor.setCellIndex(objectData.get('Cell Index', 0))
 
-        self.parent.generateChildWithRequired(cellDoor, PiratesGlobals.InteriorDoorZone)
+        zoneId = self.parent.getZoneFromXYZ(cellDoor.getPos())
+        self.parent.generateChildWithRequired(cellDoor, zoneId)
+        #self.parentObjectToCell(cellDoor, zoneId)
 
         self.addObject(cellDoor)
         self.parent.addCellDoor(cellDoor)

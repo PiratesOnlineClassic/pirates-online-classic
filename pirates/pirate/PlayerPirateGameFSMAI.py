@@ -69,7 +69,7 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
                     self.avatar.doId)
 
                 return task.done
-            
+
             inventory.b_setStack(InventoryType.Vitae_Level, 1)
 
             vitaeCost = (10 * 60) * 60
@@ -106,10 +106,6 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
                 self.avatar.doId))
 
             return
-
-        # set the new location of the avatar to be located in the same interests,
-        # as all other objects in the jail...
-        self.avatar.b_setLocation(area.doId, PiratesGlobals.InteriorDoorZone)
 
         def teleportToJailFinish(task):
             # retrieve the spawn position of the avatar's current cell index,
