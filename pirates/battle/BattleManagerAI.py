@@ -188,8 +188,13 @@ class BattleManagerAI(BattleManagerBase):
             if not skillData:
                 return None
 
-            skillData[2] += self.getModifiedAttackReputation(avatar, target,
+            experience = self.getModifiedAttackReputation(avatar, target,
                 skillId, ammoSkillId)
+
+            if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAY):
+                experience *= 2
+
+            skillData[2] += experience
 
             # check to see if the avatar knows of any skills that are valid combos,
             # recent attacks are measured within a certain time frame...
@@ -425,7 +430,7 @@ class BattleManagerAI(BattleManagerBase):
         overallReputation = 0
         goldReward = EnemyGlobals.getGoldDrop(target.getAvatarType(), target.getLevel())
         if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEGOLDHOLIDAY):
-            goldReward = goldReward * 2
+            goldReward *= 2
 
         for skillId in attacker.battleSkillDiary.getSkills():
             ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)
