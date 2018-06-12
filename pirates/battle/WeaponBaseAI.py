@@ -1,4 +1,5 @@
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import globalClockDelta
 from pirates.battle.WeaponBaseBase import WeaponBaseBase
 from otp.avatar.DistributedAvatarAI import DistributedAvatarAI
 
@@ -42,6 +43,23 @@ class WeaponBaseAI(WeaponBaseBase):
             self.__useTargetedSkill(avatar, target, skillId, ammoSkillId, clientResult,
                 areaIdList, timestamp, pos, charge)
 
+    def requestProjectileSkill(self, skillId, ammoSkillId, posHpr, power, timestamp):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+
+        if not avatar:
+            return
+
+        if self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
+            self.notify.warning('Avatar %d tried to request projectile skill for already used skill; skillId=%d ammoSkillId=%d!' % (
+                avatar.doId, skillId, ammoSkillId))
+
+            return
+
+        # TODO FIXME: calculate the air time of the projectile and store the current,
+        # timestamp so we know when the projectile request expires...
+        timestamp = globalClockDelta.getRealNetworkTime(bits=32)
+        self.air.targetMgr.addProjectile(avatar.doId, skillId, ammoSkillId, timestamp)
+
     def suggestProjectileSkillResult(self, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
@@ -51,6 +69,16 @@ class WeaponBaseAI(WeaponBaseBase):
         target = self.air.doId2do.get(targetId)
         if not isinstance(target, DistributedAvatarAI):
             target = None
+
+        if not self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
+            self.notify.warning('Avatar %d tried to request projectile skill for skill never used; skillId=%d ammoSkillId=%d!' % (
+                avatar.doId, skillId, ammoSkillId))
+
+            return
+
+        # the projectile has been successfully used, remove the projectile
+        # from the target manager so the avatar can use the skill again...
+        self.air.targetMgr.removeProjectile(avatar.doId, skillId, ammoSkillId)
 
         # this will handle the attackers projectile targeted skill request, however we will not check if the target
         # specified in this update is valid. because, if their is no target then the client is
