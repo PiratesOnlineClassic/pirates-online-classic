@@ -1,7 +1,9 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import globalClockDelta
 from pirates.battle.WeaponBaseBase import WeaponBaseBase
+from pirates.piratesbase import PiratesGlobals
 from otp.avatar.DistributedAvatarAI import DistributedAvatarAI
+from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 
 class WeaponBaseAI(WeaponBaseBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('WeaponBaseAI')
@@ -60,6 +62,10 @@ class WeaponBaseAI(WeaponBaseBase):
         timestamp = globalClockDelta.getRealNetworkTime(bits=32)
         self.air.targetMgr.addProjectile(avatar.doId, skillId, ammoSkillId, timestamp)
 
+        # send the projectile skill update so everyone in the same zone
+        # will see the projectile...
+        self.sendUpdate('useProjectileSkill', [skillId, ammoSkillId, posHpr, timestamp, power])
+
     def suggestProjectileSkillResult(self, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
@@ -76,14 +82,10 @@ class WeaponBaseAI(WeaponBaseBase):
 
             return
 
-        # the projectile has been successfully used, remove the projectile
-        # from the target manager so the avatar can use the skill again...
-        self.air.targetMgr.removeProjectile(avatar.doId, skillId, ammoSkillId)
-
         # this will handle the attackers projectile targeted skill request, however we will not check if the target
         # specified in this update is valid. because, if their is no target then the client is
         # just requesting targeted skill for no target...
-        self.__useProjectileSkill(avatar, target, skillId, ammoSkillId, result,
+        self.__useProjectileSkill(avatar, target, skillId, ammoSkillId, result, targetId,
             areaIdList, pos, normal, codes, timestamp)
 
         # this will handle the targeted skill for any targets in the range of the attacker,
@@ -97,8 +99,12 @@ class WeaponBaseAI(WeaponBaseBase):
 
                 continue
 
-            self.__useProjectileSkill(avatar, target, skillId, ammoSkillId, result,
+            self.__useProjectileSkill(avatar, target, skillId, ammoSkillId, result, targetId,
                 areaIdList, pos, normal, codes, timestamp)
+
+        # the projectile has been successfully used, remove the projectile
+        # from the target manager so the avatar can use the skill again...
+        self.air.targetMgr.removeProjectile(avatar.doId, skillId, ammoSkillId)
 
     def __useTargetedSkill(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId,
@@ -112,7 +118,7 @@ class WeaponBaseAI(WeaponBaseBase):
 
         self.sendUpdate('useTargetedSkill', targetResult)
 
-    def __useProjectileSkill(self, avatar, target, skillId, ammoSkillId, result, areaIdList, pos, normal, codes, timestamp):
+    def __useProjectileSkill(self, avatar, target, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp):
         targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId,
             result, areaIdList, timestamp, pos)
 
@@ -125,5 +131,5 @@ class WeaponBaseAI(WeaponBaseBase):
         skillId, ammoSkillId, skillResult, targetDoId, areaIdList, attackerEffects, targetEffects, \
             areaIdEffects, timestamp, pos, charge = targetResult
 
-        self.sendUpdate('setProjectileSkillResult', [skillId, ammoSkillId, skillResult, 0 if not target else target.doId,
+        self.sendUpdate('setProjectileSkillResult', [skillId, ammoSkillId, skillResult, targetId if not target else target.doId,
             areaIdList, attackerEffects, targetEffects, areaIdEffects, pos, normal, codes, avatar.doId, timestamp])
