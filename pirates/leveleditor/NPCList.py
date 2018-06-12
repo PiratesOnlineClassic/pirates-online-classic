@@ -1,5 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 from pirates.pirate.HumanDNA import HumanDNA
 from pirates.piratesbase import PLocalizer
 

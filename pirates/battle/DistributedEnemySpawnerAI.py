@@ -20,6 +20,7 @@ from pirates.leveleditor import NPCList
 from pirates.piratesbase import PLocalizer
 from pirates.battle import EnemyGlobals
 from pirates.ai import HolidayGlobals
+from pirates.quest.QuestConstants import NPCIds
 
 
 class SpawnNodeBase:
@@ -215,6 +216,8 @@ class SpawnNodeBase:
         name = avatarType.getName()
         if dnaId and dnaId in NPCList.NPC_LIST:
             name = NPCList.NPC_LIST[dnaId][NPCList.setName]
+        if dnaId == NPCIds.ELIZABETH:
+            name = 'Elizabeth Swann'
 
         if hasattr(npc, 'bossData'):
             name = npc.bossData.get('Name', PLocalizer.Unknown)
