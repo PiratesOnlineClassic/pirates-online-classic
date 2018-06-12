@@ -170,11 +170,11 @@ class DiscordPresence:
 
         # Check to see if we are already running
         if self.running:
-            self.notify.warning('Attempting to start an already started DiscordPresence')
+            self.notify.debug('Attempting to start an already started DiscordPresence')
             return
 
         if not self._clientId or self._clientId == '':
-            self.notify.warning('Failed to start Discord Rich Presence; ClientId not specified')
+            self.notify.debug('Failed to start Discord Rich Presence; ClientId not specified')
             return
 
         self.notify.info('Connecting to Discord...')
@@ -242,7 +242,7 @@ class DiscordPresence:
                 response = json.loads(encoded_data.decode('utf-8'))
                 self._pipe.seek(0, 2)
         except Exception as e:
-            self.notify.warning('Failed to read data from Discord')
+            self.notify.debug('Failed to read data from Discord')
             self.disconnect()
         finally:
             self.notify.debug('Received Rich Presence response: %s' % str(response))
@@ -263,7 +263,7 @@ class DiscordPresence:
                 self._pipe.write(encoded_data)
                 self._pipe.flush()
         except Exception as e:
-            self.notify.warning('Failed to send update to Discord')
+            self.notify.debug('Failed to send update to Discord')
             self.disconnect(clean=False)
         finally:
             return self.__read()
