@@ -17,7 +17,7 @@ class WeaponBaseAI(WeaponBaseBase):
         target = self.air.doId2do.get(targetId)
 
         # this will handle the attackers targeted skill request, however we will not check if the target
-        # specified in this update is valid. Because, if their is no target then the client is
+        # specified in this update is valid. because, if their is no target then the client is
         # just requesting targeted skill for no target...
         self.__useTargetedSkill(avatar, target, skillId, ammoSkillId, clientResult,
             areaIdList, timestamp, pos, charge)
@@ -52,20 +52,31 @@ class WeaponBaseAI(WeaponBaseBase):
         if not isinstance(target, DistributedAvatarAI):
             target = None
 
-        targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId,
-            result, areaIdList, timestamp, pos)
+        # this will handle the attackers projectile targeted skill request, however we will not check if the target
+        # specified in this update is valid. because, if their is no target then the client is
+        # just requesting targeted skill for no target...
+        self.__useProjectileSkill(avatar, target, skillId, ammoSkillId, result,
+            areaIdList, pos, normal, codes, timestamp)
 
-        if not targetResult:
-            self.notify.debug('Cannot get projectile targeted skill, no valid result was given; avatarId=%d, skillId=%d!' % (
-                avatar.doId, skillId))
+        # this will handle the targeted skill for any targets in the range of the attacker,
+        # for example if an attacker uses a skill that effects enemies around it...
+        for targetId in areaIdList:
 
-            return
+            # ignore the avatar if it is in the area list,
+            # no reason to handle it here...
+            if targetId == avatar.doId:
+                continue
 
-        skillId, ammoSkillId, skillResult, targetDoId, areaIdList, attackerEffects, targetEffects, \
-            areaIdEffects, timestamp, pos, charge = targetResult
+            target = self.air.doId2do.get(targetId)
 
-        self.sendUpdate('setProjectileSkillResult', [skillId, ammoSkillId, skillResult, targetId, areaIdList, attackerEffects,
-            targetEffects, areaIdEffects, pos, normal, codes, avatar.doId, timestamp])
+            if not target:
+                self.notify.debug('Cannot request projectil skill, unknown areaId target; avatarId=%d skillId=%d!' % (
+                    avatar.doId, skillId))
+
+                continue
+
+            self.__useProjectileSkill(avatar, target, skillId, ammoSkillId, result,
+                areaIdList, pos, normal, codes, timestamp)
 
     def __useTargetedSkill(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
         targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId,
@@ -78,3 +89,19 @@ class WeaponBaseAI(WeaponBaseBase):
             return
 
         self.sendUpdate('useTargetedSkill', targetResult)
+
+    def __useProjectileSkill(self, avatar, target, skillId, ammoSkillId, result, areaIdList, pos, normal, codes, timestamp):
+        targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId,
+            result, areaIdList, timestamp, pos)
+
+        if not targetResult:
+            self.notify.debug('Cannot get projectile targeted skill, no valid result was given; avatarId=%d, skillId=%d!' % (
+                avatar.doId, skillId))
+
+            return
+
+        skillId, ammoSkillId, skillResult, targetDoId, areaIdList, attackerEffects, targetEffects, \
+            areaIdEffects, timestamp, pos, charge = targetResult
+
+        self.sendUpdate('setProjectileSkillResult', [skillId, ammoSkillId, skillResult, 0 if not target else target.doId,
+            areaIdList, attackerEffects, targetEffects, areaIdEffects, pos, normal, codes, avatar.doId, timestamp])
