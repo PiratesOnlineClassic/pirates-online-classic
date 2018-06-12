@@ -49,7 +49,7 @@ class PirateInventoryAI(DistributedInventoryAI):
         return self.getReputation(InventoryType.OverallRep)
 
     def setGoldInPocket(self, quantity):
-        self.b_setStack(InventoryType.GoldInPocket, quantity)
+        self.b_setStack(InventoryType.GoldInPocket, min(quantity, 65000))
 
     def getGoldInPocket(self):
         return self.getItem(self.getStack, InventoryType.GoldInPocket)
