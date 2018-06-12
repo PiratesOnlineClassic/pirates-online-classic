@@ -52,7 +52,7 @@ class WeaponBaseAI(WeaponBaseBase):
             return
 
         if self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
-            self.notify.warning('Avatar %d tried to request projectile skill for already used skill; skillId=%d ammoSkillId=%d!' % (
+            self.notify.debug('Avatar %d tried to request projectile skill for already used skill; skillId=%d ammoSkillId=%d!' % (
                 avatar.doId, skillId, ammoSkillId))
 
             return
@@ -77,7 +77,7 @@ class WeaponBaseAI(WeaponBaseBase):
             target = None
 
         if not self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
-            self.notify.warning('Avatar %d tried to request projectile skill for skill never used; skillId=%d ammoSkillId=%d!' % (
+            self.notify.debug('Avatar %d tried to request projectile skill for skill never used; skillId=%d ammoSkillId=%d!' % (
                 avatar.doId, skillId, ammoSkillId))
 
             return
