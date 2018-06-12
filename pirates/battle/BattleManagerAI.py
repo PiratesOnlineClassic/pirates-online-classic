@@ -111,7 +111,7 @@ class BattleManagerAI(BattleManagerBase):
 
         return attackerNP.getDistance(targetNP)
 
-    def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+    def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge=0):
         if not avatar:
             return None
 
