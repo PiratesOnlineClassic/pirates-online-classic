@@ -15,11 +15,12 @@ class ClientAreaBuilderAI(DirectObject):
 
     def addObject(self, object, uniqueId=None):
         if not object:
-            self.notify.warning('Cannot add an invalid object!')
             return
 
         if object.doId in self.objectList:
-            self.notify.warning('Cannot add an already existing object %d!' % object.doId)
+            self.notify.warning('Cannot add an already existing object %d!' % (
+                object.doId))
+
             return
 
         self.parent.uidMgr.addUid(uniqueId or object.getUniqueId(), object.doId)
@@ -27,11 +28,12 @@ class ClientAreaBuilderAI(DirectObject):
 
     def removeObject(self, object, uniqueId=None):
         if not object:
-            self.notify.warning('Cannot remove an invalid object!')
             return
 
         if object.doId not in self.objectList:
-            self.notify.warning('Cannot remove a non-existant object %d!' % object.doId)
+            self.notify.warning('Cannot remove a non-existant object %d!' % (
+                object.doId))
+
             return
 
         self.parent.uidMgr.removeUid(uniqueId or object.getUniqueId())
@@ -48,7 +50,6 @@ class ClientAreaBuilderAI(DirectObject):
         object = self.objectList.get(doId)
 
         if not object:
-            self.notify.warning('Cannot delete an invalid object!')
             return
 
         self.removeObject(object)
@@ -56,7 +57,6 @@ class ClientAreaBuilderAI(DirectObject):
 
     def broadcastObjectPosition(self, object):
         if not object:
-            self.notify.warning('Failed to broadcast position for non-existant object!')
             return
 
         object.d_setX(object.getX())
