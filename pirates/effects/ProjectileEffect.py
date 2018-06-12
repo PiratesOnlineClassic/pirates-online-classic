@@ -677,4 +677,3 @@ class ProjectileEffect:
 
     def fortHitEffect(self, hitObject, pos, skillId, ammoSkillId):
         self.basicHitEffect(hitObject, pos, skillId, ammoSkillId)
-# okay decompiling .\pirates\effects\ProjectileEffect.pyc
