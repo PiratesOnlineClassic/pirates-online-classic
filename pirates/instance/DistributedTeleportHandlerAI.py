@@ -64,6 +64,7 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         # set the avatar's location relative to the spawn point's cell,
         # this way the avatar will be visible within the cartesian grid.
         self.avatar.b_setLocation(island.doId, zoneId)
+        self.avatar.reparentTo(island)
 
     def teleportToInstanceFinal(self, avatarId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())

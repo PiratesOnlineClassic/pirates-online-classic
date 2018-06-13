@@ -16,7 +16,7 @@ class OTPInternalRepository(AstronInternalRepository):
     def _registerInternalNetMessage(self, message):
         self.netMessenger.register(self._netMessageCounter, message)
         self._netMessageCounter += 1
-        
+
     def _registerNetMessages(self):
         pass # Override me!
 

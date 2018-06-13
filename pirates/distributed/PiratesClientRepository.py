@@ -374,6 +374,8 @@ class PiratesClientRepository(OTPClientRepository):
             zoneId = di.getUint32()
             dclassId = di.getUint16()
             self.handleAvatarResponseMsg(doId, di)
+        else:
+            OTPClientRepository.handleGenerateWithRequiredOtherOwner(self, di)
 
     def enterWaitForDeleteAvatarResponse(self, potentialAvatar):
         raise StandardError, 'This should be handled within AvatarChooser.py'
@@ -473,20 +475,16 @@ class PiratesClientRepository(OTPClientRepository):
         self.__requestTutorial(hoodId, zoneId, avId)
 
     def handleTutorialQuestion(self, msgType, di):
-        if msgType == CLIENT_CREATE_OBJECT_REQUIRED:
+        if msgType == CLIENT_ENTER_OBJECT_REQUIRED:
             self.handleGenerateWithRequired(di)
         elif msgType == CLIENT_CREATE_OBJECT_REQUIRED_OTHER:
-            self.handleGenerateWithRequiredOther(di)
-        elif msgType == CLIENT_OBJECT_UPDATE_FIELD:
+            self.handleGenerateWithRequired(di, other=True)
+        elif msgType == CLIENT_OBJECT_SET_FIELD:
             self.handleUpdateField(di)
-        elif msgType == CLIENT_OBJECT_DISABLE:
+        elif msgType == CLIENT_OBJECT_LEAVING:
             self.handleDisable(di)
-        elif msgType == CLIENT_OBJECT_DISABLE_OWNER:
-            self.handleDisableOwner(di)
-        elif msgType == CLIENT_OBJECT_DELETE_RESP:
-            self.handleDelete(di)
-        elif msgType == CLIENT_GET_AVATAR_DETAILS_RESP:
-            self.handleGetAvatarDetailsResp(di)
+        elif msgType == CLIENT_OBJECT_LEAVING_OWNER:
+            self.handleDisable(di, ownerView=True)
         else:
             self.handleUnexpectedMsgType(msgType, di)
 
@@ -666,12 +664,17 @@ class PiratesClientRepository(OTPClientRepository):
                         base.oobe()
                 except:
                     pass
-
             else:
                 self.setViewpoint(selectedObj)
 
     def handleDelete(self, di):
         doId = di.getUint32()
+
+        # we view the client's avatar as an OwnerView object,
+        # so we must not delete it on usual terms...
+        if base.localAvatar.doId == doId:
+            return
+
         self.deleteObject(doId)
 
     def deleteObject(self, doId, ownerView = False):

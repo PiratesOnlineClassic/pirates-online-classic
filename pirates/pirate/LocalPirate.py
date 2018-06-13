@@ -426,14 +426,27 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         self.startLookAroundTask()
 
     def generate(self):
+        try:
+            self.LocalPirate_generated
+            return
+        except:
+            self.LocalPirate_generated = 1
+
         base.localAvatar = self
         __builtins__['localAvatar'] = self
         DistributedPlayerPirate.generate(self)
 
     def announceGenerate(self):
+        try:
+            self.LocalPirate_announceGenerated
+            return
+        except:
+            self.LocalPirate_announceGenerated = 1
+
         self.invInterest = self.addInterest(2, 'localAvatar-inventory')
         if self.guildId:
             self.cr.guildManager.addInterest(self.guildId, self.uniqueName('guild'))
+
         self.nametag.manage(base.marginManager)
         self.controlManager.setTag('avId', str(self.getDoId()))
         pe = PolylightEffect.make()
@@ -881,9 +894,10 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         if self.gameFSM.state == 'LandRoam':
             self.b_setGameState('Battle')
             return
-        if self.gameFSM.state == 'Battle':
+        elif self.gameFSM.state == 'Battle':
             self.notify.debug('You are already in battle!')
             return
+
         self.notify.debug('You cannot use weapons now.')
 
     def requestExitBattle(self):
@@ -892,6 +906,7 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
                 self.b_setGameState('LandRoam')
             else:
                 self.b_setGameState(self.gameFSM.defaultState)
+
         messenger.send('weaponSheathed')
 
     def autoBoardStopMove(self, task=None):
@@ -1624,6 +1639,7 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         for x in self.cr.activeWorld.islands.itervalues():
             if reset:
                 x.setZoneLevel(min(3, x.lastZoneLevel))
+
             print x.lastZoneLevel, x.getName(), x.doId
 
     def addStatusEffect(self, effectId, attackerId, duration):
