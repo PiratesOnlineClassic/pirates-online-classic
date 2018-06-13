@@ -111,7 +111,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             interior = DistributedGAInteriorAI(self.air)
 
         interior.setUniqueId(exteriorUid)
-        interior.setName(PLocalizer.LocationNames.get(objKey, ''))
+        interior.setName(interiorFile)
         interior.setModelPath(modelPath)
         interior.setPos(objectData.get('Pos', (0, 0, 0)))
         interior.setHpr(objectData.get('Hpr', (0, 0, 0)))
@@ -123,12 +123,22 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         if isJail:
             self.parent.setJailInterior(interior)
 
-        self.air.worldCreator.loadObjectDict(objectData.get('Objects', {}), self.parent, objKey, True)
+        objectList = objectData.get('Objects', {})
+
+        if not objectList:
+            exteriorLocatorNode = self.__createDoorLocatorNode(self.parent, objKey,
+                exteriorUid, objectData, wantTruePosHpr=False)
+
+            interiorLocatorNode = interior.builder._InteriorAreaBuilderAI__createDoorLocatorNode(
+                self.parent, objKey, objKey, objectData)
+        else:
+            self.air.worldCreator.loadObjectDict(objectList, self.parent, objKey, True)
+
         self.air.worldCreator.loadObjectsFromFile(interiorFile + '.py', interior)
 
         return interior
 
-    def __createDoorLocatorNode(self, parent, parentUid, objKey, objectData):
+    def __createDoorLocatorNode(self, parent, parentUid, objKey, objectData, wantTruePosHpr=True):
         from pirates.world.DistributedBuildingDoorAI import DistributedBuildingDoorAI
 
         parent = parent.getParentObj()
@@ -163,12 +173,12 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             doorLocatorNode.setDoorIndex(1)
             interior.setExteriorBackDoor(doorLocatorNode)
 
-        self.setObjectTruePosHpr(doorLocatorNode, objKey, parentUid, objectData)
+        if wantTruePosHpr:
+            self.setObjectTruePosHpr(doorLocatorNode, objKey, parentUid, objectData)
 
         zoneId = self.parent.getZoneFromXYZ(doorLocatorNode.getPos())
         self.parent.generateChildWithRequired(doorLocatorNode, zoneId)
         self.parentObjectToCell(doorLocatorNode, zoneId)
-
         self.addObject(doorLocatorNode)
 
         return doorLocatorNode
