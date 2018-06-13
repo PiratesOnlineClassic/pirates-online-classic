@@ -1722,8 +1722,10 @@ class OTPClientRepository(ClientRepositoryBase):
             self.handleGenerateWithRequired(di)
         elif msgType == CLIENT_ENTER_OBJECT_REQUIRED_OTHER:
             self.handleGenerateWithRequired(di, other=True)
+        elif msgType == CLIENT_ENTER_OBJECT_REQUIRED_OWNER:
+            self.handleGenerateWithRequiredOwner(di)
         elif msgType == CLIENT_ENTER_OBJECT_REQUIRED_OTHER_OWNER:
-            self.handleGenerateWithRequiredOtherOwner(di)
+            self.handleGenerateWithRequiredOwner(di, other=True)
         elif msgType == CLIENT_OBJECT_SET_FIELD:
             self.handleUpdateField(di)
         elif msgType == CLIENT_OBJECT_LEAVING:
@@ -1945,15 +1947,52 @@ class OTPClientRepository(ClientRepositoryBase):
                 dclass, doId, di, parentId, zoneId)
         dclass.stopGenerate()
 
-    def handleGenerateWithRequiredOtherOwner(self, di):
+    def handleGenerateWithRequiredOwner(self, di, other=False):
         doId = di.getUint32()
         parentId = di.getUint32()
         zoneId = di.getUint32()
         classId = di.getUint16()
+
         dclass = self.dclassesByNumber[classId]
         dclass.startGenerate()
-        distObj = self.generateWithRequiredOtherFieldsOwner(dclass, doId, di)
+
+        if other:
+            distObj = self.generateWithRequiredOtherFieldsOwner(dclass, doId, di)
+        else:
+            distObj = self.generateWithRequiredFieldsOwner(dclass, doId, di)
+
         dclass.stopGenerate()
+
+    def generateWithRequiredFieldsOwner(self, dclass, doId, di):
+        if doId in self.doId2ownerView:
+            self.notify.error('Duplicate owner generate for %s (%s)' % (
+                doId, dclass.getName()))
+
+            distObj = self.doId2ownerView[doId]
+            assert distObj.dclass == dclass
+            distObj.generate()
+            distObj.updateRequiredFields(dclass, di)
+        elif self.cacheOwner.contains(doId):
+            distObj = self.cacheOwner.retrieve(doId)
+            assert distObj.dclass == dclass
+            self.doId2ownerView[doId] = distObj
+            distObj.generate()
+            distObj.updateRequiredFields(dclass, di)
+        else:
+            classDef = dclass.getOwnerClassDef()
+            if not classDef:
+                self.notify.error("Could not create an undefined %s object. Have you created an owner view?" % (
+                    dclass.getName()))
+
+            distObj = classDef(self)
+            distObj.dclass = dclass
+            distObj.doId = doId
+            self.doId2ownerView[doId] = distObj
+            distObj.generateInit()
+            distObj.generate()
+            distObj.updateRequiredFields(dclass, di)
+
+        return distObj
 
     def handleQuietZoneGenerateWithRequired(self, di):
         doId = di.getUint32()

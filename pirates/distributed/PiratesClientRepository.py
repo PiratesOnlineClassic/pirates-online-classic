@@ -368,15 +368,11 @@ class PiratesClientRepository(OTPClientRepository):
 
         self.loginFSM.request('playingGame')
 
-    def handleGenerateWithRequiredOtherOwner(self, di):
+    def generateWithRequiredOtherFieldsOwner(self, dclass, doId, di):
         if self.loginFSM.getCurrentState().getName() == 'waitForSetAvatarResponse':
-            doId = di.getUint32()
-            parentId = di.getUint32()
-            zoneId = di.getUint32()
-            classId = di.getUint16()
             self.handleAvatarResponseMsg(doId, di)
         else:
-            OTPClientRepository.handleGenerateWithRequiredOtherOwner(self, di)
+            OTPClientRepository.generateWithRequiredOtherFieldsOwner(self, dclass, doId, di)
 
     def enterWaitForDeleteAvatarResponse(self, potentialAvatar):
         raise StandardError, 'This should be handled within AvatarChooser.py'
