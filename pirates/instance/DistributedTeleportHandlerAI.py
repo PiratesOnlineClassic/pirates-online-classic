@@ -44,11 +44,6 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         island = self.teleportFsm.island
         xPos, yPos, zPos, h = self.teleportFsm.spawnPt
 
-        world.d_setSpawnInfo(self.avatar.doId, xPos, yPos, zPos, h, 0, [island.doId,
-            island.parentId, island.zoneId])
-
-        self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
-
         # get the cell origin zone relative to the spawn island's spawn position,
         # that was retrieved from the instance world.
         zoneId = island.getZoneFromXYZ((xPos, yPos, zPos))
@@ -61,10 +56,10 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
 
             return
 
-        # set the avatar's location relative to the spawn point's cell,
-        # this way the avatar will be visible within the cartesian grid.
-        self.avatar.b_setLocation(island.doId, zoneId)
-        self.avatar.reparentTo(island)
+        world.d_setSpawnInfo(self.avatar.doId, xPos, yPos, zPos, h, 0, [island.doId,
+            island.parentId, island.zoneId])
+
+        self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
 
     def teleportToInstanceFinal(self, avatarId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
