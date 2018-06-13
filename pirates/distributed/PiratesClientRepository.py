@@ -348,6 +348,7 @@ class PiratesClientRepository(OTPClientRepository):
         localAvatar.doId = avatarId
         self.localAvatarDoId = avatarId
         self.doId2do[avatarId] = localAvatar
+        self.doId2ownerView[avatarId] = localAvatar
         parentId = None
         zoneId = None
         localAvatar.generateInit()
@@ -624,7 +625,6 @@ class PiratesClientRepository(OTPClientRepository):
     def handleObjDelete(self, obj):
         if self.currCamParent == obj.getDoId():
             self.currCamParent = None
-        return
 
     def toggleAutoCamReparent(self, word):
         if taskMgr.hasTaskNamed(self.getCycleCamTaskName()):
@@ -670,9 +670,7 @@ class PiratesClientRepository(OTPClientRepository):
     def handleDelete(self, di):
         doId = di.getUint32()
 
-        # we view the client's avatar as an OwnerView object,
-        # so we must not delete it on usual terms...
-        if base.localAvatar.doId == doId:
+        if doId in self.doId2ownerView:
             return
 
         self.deleteObject(doId)
