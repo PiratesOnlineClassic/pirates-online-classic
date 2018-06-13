@@ -31,7 +31,6 @@ class NametagGroup:
         self.name = ''
         self.displayName = ''
         self.wordWrap = None
-        self.nameWordwrap = None
         self.qtColor = VBase4(1, 1, 1, 1)
         self.colorCode = CCNormal
         self.avatar = None
@@ -153,10 +152,6 @@ class NametagGroup:
         self.wordWrap = wrap
         self.updateTags()
 
-    def setNameWordwrap(self, nameWordwrap):
-        self.nameWordwrap = nameWordwrap
-        self.updateTags()
-
     def setColorCode(self, cc):
         self.colorCode = cc
         self.updateTags()
@@ -244,7 +239,6 @@ class NametagGroup:
         tag.speechFont = self.speechFont
         tag.name = self.name
         tag.wordWrap = self.wordWrap or DEFAULT_WORDWRAPS[self.colorCode]
-        tag.nameWordwrap = self.nameWordwrap
         tag.displayName = self.displayName or self.name
         tag.qtColor = self.qtColor
         tag.colorCode = self.colorCode

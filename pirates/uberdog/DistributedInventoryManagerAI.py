@@ -140,12 +140,9 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
                 return
 
-            categoryLimits, = fields.get('setCategoryLimits', [])
             accumulators, = fields.get('setAccumulators', [])
             stackLimits, = fields.get('setStackLimits', [])
             stacks, = fields.get('setStacks', [])
-
-            inventory.b_setCategoryLimits(categoryLimits)
 
             for accumulator in accumulators:
                 inventory.b_setAccumulator(*accumulator)

@@ -28,8 +28,7 @@ class Nametag(ClickablePopup):
         self.innerNP = NodePath.anyPath(self).attachNewNode('nametag_contents')
 
         self.wordWrap = 7.5
-        self.nameWordwrap = None
-        self.chatWordwrap = None
+        self.chatWordWrap = None
 
         self.font = None
         self.active = False
@@ -64,8 +63,8 @@ class Nametag(ClickablePopup):
     def setActive(self, active):
         self.active = active
 
-    def setChatWordwrap(self, chatWordwrap):
-        self.chatWordwrap = chatWordwrap
+    def setChatWordwrap(self, chatWordWrap):
+        self.chatWordWrap = chatWordWrap
 
     def tick(self):
         pass  # Does nothing by default.
@@ -104,7 +103,7 @@ class Nametag(ClickablePopup):
 
         balloon, frame = balloon.generate(text, self.font, textColor=self.chatFg,
                                           balloonColor=color,
-                                          wordWrap=self.chatWordwrap or
+                                          wordWrap=self.chatWordWrap or
                                           self.DEFAULT_CHAT_WORDWRAP,
                                           reversed=reversed)
         balloon.reparentTo(self.innerNP)

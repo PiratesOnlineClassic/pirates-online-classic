@@ -14,10 +14,10 @@ from pirates.effects.WaterShadow import WaterShadow
 from pirates.piratesbase import PiratesGlobals
 from pirates.ship import ShipGlobals
 from pirates.effects.PooledEffect import PooledEffect
-from pirates.seapatch.SeaPatchNode import SeaPatchNode
 
 
 class Wake(PooledEffect):
+
     MinWakeVelocity = 6.0
     FadeOutVelocity = 10.0
     WakeFactor = 0.025
@@ -41,7 +41,6 @@ class Wake(PooledEffect):
             spn = SeaPatchNode('spn', base.pe.seaPatch.patch)
         else:
             spn = SeaPatchNode('spn', base.cr.activeWorld.getWater().patch)
-
         spn.setWantColor(0)
         spn.setWantUv(0)
         spn.setWantNormal(0)
@@ -61,24 +60,21 @@ class Wake(PooledEffect):
             self.wake.setBin('ground', -7)
             self.bowWave.setBin('fixed', 0)
             self.spNP.setBin('ground', -5)
-
         if self.use_depth_offset:
             pass
         else:
             self.spNP.setDepthTest(0)
-
         self.wake.setAttrib(ColorWriteAttrib.make(ColorWriteAttrib.CRed | ColorWriteAttrib.CGreen | ColorWriteAttrib.CBlue))
         if hasattr(base, 'pe'):
             spn.setEffect(CompassEffect.make(base.pe.seaPatch.patchNP, CompassEffect.PZ))
         else:
             spn.setEffect(CompassEffect.make(base.cr.activeWorld.getWater().patchNP, CompassEffect.PZ))
-
         if self.use_water_bin:
             mask = 4294967295L
             stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
             self.spNP.setAttrib(stencil)
-
         self.shadow = None
+        return
 
     def attachToShip(self, ship):
         self.taskName = ship.taskName('wake')

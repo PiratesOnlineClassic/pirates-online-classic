@@ -124,11 +124,6 @@ class InventoryFSM(FSM):
             [InventoryCategory.CANNON_POUCHES, 10],
             [InventoryCategory.SONGS, 100],
         ]
-
-        categoriesAndDoIds = [
-
-        ]
-
         stackLimits = [
             # Skills
             [InventoryType.MeleePunch, 6],
@@ -347,6 +342,7 @@ class InventoryFSM(FSM):
         ]
 
         if config.GetBool('want-all-weapons', False):
+
             weaponTokens = [
                 [InventoryType.PistolToken, 1],
                 [InventoryType.MusketToken, 1],
@@ -363,7 +359,6 @@ class InventoryFSM(FSM):
             'setOwnerId': (self.avatarId,),
             'setInventoryVersion': (0,),
             'setCategoryLimits': (categoryLimits,),
-            'setDoIds': (categoriesAndDoIds,),
             'setAccumulators': (accumulators,),
             'setStackLimits': (stackLimits,),
             'setStacks': (stacks,)

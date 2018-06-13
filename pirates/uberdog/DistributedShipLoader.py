@@ -7,6 +7,7 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class DistributedShipLoader(DistributedObject.DistributedObject):
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipLoader')
 
     def __init__(self, cr):
@@ -19,3 +20,4 @@ class DistributedShipLoader(DistributedObject.DistributedObject):
         self.notify.warning('ShipLoader going offline')
         self.cr.shipLoader = None
         DistributedObject.DistributedObject.delete(self)
+        return

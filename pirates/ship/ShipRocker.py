@@ -69,17 +69,17 @@ class ShipRockerRollState:
         target = self.amplitude * (1.0 - self.getT() / self.duration)
         if self.getRollVelocity() < 0.0:
             target = -target
-
         return target
 
 
 class ShipRocker:
+    
     DefMaxRoll = 15.0
     DefFakeMass = 1.0
 
     def __init__(self, maxRoll=None, fakeMass=None):
-        self._maxRoll = maxRoll if maxRoll else ShipRocker.DefMaxRoll
-        self._fakeMass = fakeMass if fakeMass else ShipRocker.DefFakeMass
+        self._maxRoll = notNone(maxRoll, ShipRocker.DefMaxRoll)
+        self._fakeMass = notNone(fakeMass, ShipRocker.DefFakeMass)
         self._off = ShipRockerOffState()
         self._impact = ShipRockerImpactState()
         self._roll = ShipRockerRollState()
@@ -139,8 +139,5 @@ class ShipRocker:
             thetaBase = rad90
         else:
             thetaBase = rad270
-
-        self._roll.set(timebase=curTime + impactDur, duration=rollDur, timeScale=timeScale,
-            amplitude=amplitude, thetaBase=thetaBase)
-
+        self._roll.set(timebase=curTime + impactDur, duration=rollDur, timeScale=timeScale, amplitude=amplitude, thetaBase=thetaBase)
         self._active = True

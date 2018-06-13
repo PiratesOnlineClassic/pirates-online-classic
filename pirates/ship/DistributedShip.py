@@ -5,7 +5,6 @@ import math
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
 from panda3d.core import *
-from panda3d.physics import *
 from direct.gui.OnscreenText import OnscreenText
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase.PythonUtil import Functor, ScratchPad, report, lerp, quickProfile, safeRepr
@@ -69,8 +68,6 @@ from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPRender
 from pirates.ship import ShipGlobals, ShipBalance
 from direct.fsm.StatePush import FunctionCall, AttrSetter
-from otp.nametag.NametagGroup import NametagGroup
-from otp.nametag.Nametag import Nametag
 
 STOP = 0
 FWD = 1
@@ -486,12 +483,10 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.setupBoardingSphere(bitmask=PiratesGlobals.WallBitmask | PiratesGlobals.SelectBitmask | PiratesGlobals.RadarShipBitmask)
         else:
             self.setupBoardingSphere()
-
         DistributedMovingObject.announceGenerate(self)
         self.setLodCollideMask(self.getLodCollideMask() | PiratesGlobals.ShipCollideBitmask)
         if not self.zoneSphere:
             self.setZoneRadii(self.sphereRadii)
-
         self.deckName = self.uniqueName('deck')
         self.railingName = self.uniqueName('railing')
         self.loadInterface()
@@ -504,7 +499,6 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         self.setName(self.name)
         if self.initializeNametag3d():
             self.addActive()
-
         self.understandable = 1
         self.setPlayerType(NametagGroup.CCNormal)
         self.setFlagDNAString(self.getFlagDNAString())
@@ -516,7 +510,6 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         self._samplePoints = self.attachNewNode('samplePoints')
         if showSamplePoints:
             axis = loader.loadModel('models/misc/xyzAxis')
-
         gx, gy = ShipGlobals.SamplePointOffsets[self.modelClass][0]
         for sp in ShipGlobals.SamplePoints:
             np = self._samplePoints.attachNewNode(ShipGlobals.SamplePoints.getString(sp))
@@ -528,42 +521,38 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
         self._maxSampleDistance = abs(self._sampleNPs[ShipGlobals.SamplePoints.C].getY() - self._sampleNPs[ShipGlobals.SamplePoints.F].getY())
         self.zoneSilhouette = self.cr.addInterest(self.getDoId(), PiratesGlobals.ShipZoneSilhouette, self.uniqueName('silhouette'), event=self.mainBuiltEvent)
-        #self.registerMainBuiltFunction(self.computeDimensions)
-        #self.registerMainBuiltFunction(self.loadFlat)
-        #self.registerBuildCompleteFunction(self.disableOnDeckInteractions)
-        if __dev__ and base.config.GetBool('show-aggro-radius', False):
+        self.registerMainBuiltFunction(self.computeDimensions)
+        self.registerMainBuiltFunction(self.loadFlat)
+        self.registerBuildCompleteFunction(self.disableOnDeckInteractions)
+        if __dev__ and base.config.GetBool('show-aggro-radius', 0):
             size = self.getAggroSphereSize()
             sphere = loader.loadModel('models/effects/explosion_sphere')
             sphere.reparentTo(self)
             sphere.setTransparency(1)
             sphere.setAlphaScale(0.3)
             sphere.setScale(render, size)
-
         currentState = self.gameFSM.getCurrentOrNextState()
         if currentState == 'Sunk' or currentState == 'Sinking':
             self.transNode.stash()
         else:
             self.transNode.unstash()
-
         self.disabledCollisionBits = {}
         if self.lastZoneLevel == 4 and self.flat:
             self.flat.unstash()
             self.root.stash()
-
         if base.showShipFlats:
             self.onlyShowFlat()
         else:
             self.showNormalShip()
-
         if base.hideShipNametags:
             self.hideNametag()
         else:
             self.showNametag()
-
         self.gameFSM.createGrappleProximitySphere()
         self.setupKrakenLocators()
         self.speedUpdate = FunctionCall(self.setBaseSpeedMod, ShipBalance.SpeedModifier)
         self.setupSmoothing()
+        return
 
     def getAggroSphereSize(self):
         if base.localAvatar.ship:
@@ -597,7 +586,6 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         reset = __dev__ and debug
         if self.dimensionsComputed and not reset:
             return
-
         if reset:
             self.bow.removeNode()
             self.port.removeNode()
@@ -607,7 +595,6 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.peak.removeNode()
             self.center.removeNode()
             self.hullCenter.removeNode()
-
         tb = self.root.getTightBounds()
         self.bow = self.transNode.attachNewNode('bowPos')
         self.port = self.transNode.attachNewNode('portPos')
@@ -617,17 +604,17 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         self.peak = self.transNode.attachNewNode('peak')
         self.center = self.transNode.attachNewNode('center')
         self.hullCenter = self.transNode.attachNewNode('hullCenter')
-        #self.stern.setPos(Point3(0, tb[1][1], 0))
-        #self.bow.setPos(Point3(0, tb[0][1], 0))
-        #self.starboard.setPos(Point3(tb[1][0], 0, 0))
-        #self.port.setPos(Point3(tb[0][0], 0, 0))
-        #self.keel.setPos(Point3(0, 0, tb[0][2]))
-        #self.peak.setPos(Point3(0, 0, tb[1][2]))
-        #self.center.setPos((tb[0] + tb[1]) / 2.0)
-        #self.dimensions = tb[1] - tb[0]
-        #hb = self.hull[0].geom_High.getTightBounds()
-        #self.hullCenter.setPos((hb[0] + hb[1]) / 2.0)
-        #self.hullDimensions = hb[1] - hb[0]
+        self.stern.setPos(Point3(0, tb[1][1], 0))
+        self.bow.setPos(Point3(0, tb[0][1], 0))
+        self.starboard.setPos(Point3(tb[1][0], 0, 0))
+        self.port.setPos(Point3(tb[0][0], 0, 0))
+        self.keel.setPos(Point3(0, 0, tb[0][2]))
+        self.peak.setPos(Point3(0, 0, tb[1][2]))
+        self.center.setPos((tb[0] + tb[1]) / 2.0)
+        self.dimensions = tb[1] - tb[0]
+        hb = self.hull[0].geom_High.getTightBounds()
+        self.hullCenter.setPos((hb[0] + hb[1]) / 2.0)
+        self.hullDimensions = hb[1] - hb[0]
         if debug:
             axis = loader.loadModel('models/misc/xyzAxis')
             axis.instanceTo(self.stern)
@@ -636,12 +623,12 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             axis.instanceTo(self.port)
             axis.instanceTo(self.keel)
             axis.instanceTo(self.peak)
-
         self.dimensionsComputed = True
 
     def getFlagDNAString(self):
         if hasattr(self, 'flagDNAString'):
             return self.flagDNAString
+        return
 
     def setFlagDNAString(self, dnaStr):
         if dnaStr:
@@ -879,21 +866,18 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam=['want-shipboard-report', 'want-shipsink-report'])
     def setGameState(self, stateName, avId, timeStamp):
-        if not stateName:
-            return
-
         if stateName == 'ClientSteering':
             s = MiniLogSentry(self.miniLog, 'setGameState', stateName, avId, timeStamp)
             self.requestGameState(stateName, avId)
-        elif stateName == 'AISteering':
-            self.requestGameState(stateName, avId)
         else:
-            self.requestGameState(stateName)
+            if stateName == 'AISteering':
+                self.requestGameState(stateName, avId)
+            else:
+                self.requestGameState(stateName)
 
     def setUniqueId(self, uid):
         if self.uniqueId != '' and uid != self.uniqueId:
             base.cr.uidMgr.removeUid(self.uniqueId)
-
         self.uniqueId = uid
         base.cr.uidMgr.addUid(self.uniqueId, self.getDoId())
 
@@ -1934,10 +1918,10 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         else:
             if level == 1:
                 self.zoneDetails = self.cr.addInterest(self.getDoId(), PiratesGlobals.ShipZoneDetails, self.uniqueName('details'))
-                #self.setupFloatTask()
+                self.setupFloatTask()
             else:
                 if level == 2:
-                    #self.createWake()
+                    self.createWake()
                     self.zoneDistance = self.cr.addInterest(self.getDoId(), PiratesGlobals.ShipZoneDistance, self.uniqueName('distance'), event=self.fullBuiltEvent)
                     base.localAvatar.shipList.append(self.doId)
                 else:
@@ -2052,19 +2036,17 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             left, rear, right = self.hull[1].getArmorStatus()
         else:
             left = rear = right = 1.0
-
         if self.shipStatusDisplay:
             self.shipStatusDisplay.setArmorStatus(ShipGlobals.ARMOR_LEFT, left)
             self.shipStatusDisplay.setArmorStatus(ShipGlobals.ARMOR_RIGHT, right)
             self.shipStatusDisplay.setArmorStatus(ShipGlobals.ARMOR_REAR, rear)
-
         if self.shipTargetPanel:
             self.shipTargetPanel.setArmorStatus(ShipGlobals.ARMOR_LEFT, left)
             self.shipTargetPanel.setArmorStatus(ShipGlobals.ARMOR_RIGHT, right)
             self.shipTargetPanel.setArmorStatus(ShipGlobals.ARMOR_REAR, rear)
 
     def startShipRocking(self, startOffset=0, wantRocking=1):
-        if config.GetBool('use-old-ship-controls', False):
+        if config.GetBool('use-old-ship-controls', 0):
             self.rockSpeedMult = 0.75
             self.currRockSpeed = self.rockSpeedMult
             self.currentTime = startOffset
@@ -2095,7 +2077,6 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         world, water = self.cr.getActiveWorld(), None
         if world:
             water = world.getWater()
-
         if water:
             for sp, node in self._sampleNPs.items():
                 height = water.calcFilteredHeight(minWaveLength=3.0 * self._maxSampleDistance, node=node)
@@ -2115,7 +2096,6 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             b = (avgFBheight[1] - avgFBheight[0]) / 3.0
             fbAvg = (a + b) / 2.0
             lrAngle, fbAngle = self.debugFunc(lrAvg, fbAvg, lrDist, fbDist)
-
         maxSpd = 40.0
         velVec = self.actorNode.getPhysicsObject().getVelocity()
         speed = velVec.length()
@@ -2128,13 +2108,11 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         tiltMult = lerp(0.9, 0.4, normSpeed)
         if not hasattr(base, 'localAvatar') or base.localAvatar.ship == self and self.steeringAvId != localAvatar.doId:
             tiltMult *= 0.1
-
         if self.kraken:
             rollAngle = self.kraken.getRollAngle()
             tiltMult *= 1 - self.kraken.getDampenAmount()
         else:
             rollAngle = self._rocker.getRollAngle()
-
         rollAngle += leanValue
         self.transNode.setP(tiltMult * (fbAngle + math.sin(fbTheta) * 0.5))
         self.transNode.setR(tiltMult * (lrAngle + math.sin(lrTheta) + rollAngle))
@@ -2143,7 +2121,8 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     @exceptionLogged()
     def debugFunc(self, lrAvg, fbAvg, lrDist, fbDist):
-        return (math.atan(lrAvg / lrDist) * 180.0 / math.pi, -math.atan(fbAvg / fbDist) * 180.0 / math.pi)
+        return (
+         math.atan(lrAvg / lrDist) * 180.0 / math.pi, -math.atan(fbAvg / fbDist) * 180.0 / math.pi)
 
     def calcSmootherTurn(self):
         self.smoother.getSmoothRotationalVelocity()
@@ -2328,7 +2307,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         self.__nameVisible = bool
         if bool:
             self.showName()
-        else:
+        if not bool:
             self.hideName()
 
     def hideName(self):
@@ -2339,21 +2318,18 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def showName(self):
         if not self.nametag:
             return
-
         if self.__nameVisible:
             self.nametag.getNametag3d().setContents(Nametag.CName | Nametag.CSpeech | Nametag.CThought)
 
     def hideNametag2d(self):
         if not self.nametag:
             return
-
         self.nametag2dContents = 0
         self.nametag.getNametag2d().setContents(self.nametag2dContents & self.nametag2dDist)
 
     def showNametag2d(self):
         if not self.nametag:
             return
-
         self.nametag2dContents = self.nametag2dNormalContents
         self.nametag2dContents = Nametag.CSpeech
         self.nametag.getNametag2d().setContents(self.nametag2dContents & self.nametag2dDist)
@@ -2365,7 +2341,6 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def showNametag3d(self):
         if not self.nametag:
             return
-
         if self.__nameVisible:
             self.nametag.getNametag3d().setContents(Nametag.CName | Nametag.CSpeech | Nametag.CThought)
         else:
@@ -2387,22 +2362,18 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def initializeNametag3d(self):
         if not self.nametag:
             return 0
-
         self.deleteNametag3d()
-        nametagNode = self.nametag.getNametag3d()
+        nametagNode = self.nametag.getNametag3d().upcastToPandaNode()
         self.nametag3d.attachNewNode(nametagNode)
         self.nametag3d.setLightOff()
         self.iconNodePath = self.nametag.getNameIcon()
         if self.iconNodePath.isEmpty():
             self.notify.warning('empty iconNodePath in initializeNametag3d')
             return 0
-
         if self.nameText:
             self.nameText.reparentTo(self.iconNodePath)
-
         if self.classNameText:
             self.classNameText.reparentTo(self.iconNodePath)
-
         if self.isFlagship:
             modelPath = EnemyGlobals.getFlagshipIconModelPath(self.getBaseTeam())
             if modelPath:
@@ -2411,7 +2382,6 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                 flagshipIcon.setScale(1.5)
                 flagshipIcon.reparentTo(self.iconNodePath)
                 flagshipIcon.flattenLight()
-
         return 1
 
     def deleteNametag3d(self):

@@ -374,12 +374,6 @@ class PiratesClientRepository(OTPClientRepository):
             zoneId = di.getUint32()
             dclassId = di.getUint16()
             self.handleAvatarResponseMsg(doId, di)
-        else:
-            doId = di.getUint32()
-            parentId = di.getUint32()
-            zoneId = di.getUint32()
-            dclassId = di.getUint16()
-            print ('handleGenerateWithRequiredOtherOwner', doId, parentId, zoneId, dclassId)
 
     def enterWaitForDeleteAvatarResponse(self, potentialAvatar):
         raise StandardError, 'This should be handled within AvatarChooser.py'
