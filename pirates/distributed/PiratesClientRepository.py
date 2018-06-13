@@ -352,7 +352,7 @@ class PiratesClientRepository(OTPClientRepository):
         zoneId = None
         localAvatar.generateInit()
         localAvatar.generate()
-        localAvatar.dclass.receiveUpdateBroadcastRequiredOwner(localAvatar, di)
+        dclass.receiveUpdateBroadcastRequiredOwner(localAvatar, di)
         localAvatar.announceGenerate()
         localAvatar.postGenerateMessage()
         locUID = localAvatar.getReturnLocation()
@@ -372,7 +372,7 @@ class PiratesClientRepository(OTPClientRepository):
             doId = di.getUint32()
             parentId = di.getUint32()
             zoneId = di.getUint32()
-            dclassId = di.getUint16()
+            classId = di.getUint16()
             self.handleAvatarResponseMsg(doId, di)
         else:
             OTPClientRepository.handleGenerateWithRequiredOtherOwner(self, di)
