@@ -1,8 +1,8 @@
-from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
+from direct.distributed.DistributedObjectUD import DistributedObjectUD
 from direct.directnotify import DirectNotifyGlobal
 
-class PlayerShipUD(DistributedObjectGlobalUD):
+class PlayerShipUD(DistributedObjectUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('PlayerShipUD')
 
     def __init__(self, air):
-        DistributedObjectGlobalUD.__init__(self, air)
+        DistributedObjectUD.__init__(self, air)

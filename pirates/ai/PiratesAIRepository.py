@@ -127,6 +127,8 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.districtTracker = DistrictTrackerAI(self)
 
+        self.shipLoader = self.generateGlobalObject(OTP_DO_ID_PIRATES_SHIP_MANAGER, 'DistributedShipLoader')
+
     def createWorlds(self):
         """
         Create "worlds" objects, e.g. DistributedInstanceBase, DistributedOceanGrid et al.

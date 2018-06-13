@@ -19,6 +19,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.gameFSM = BattleAvatarGameFSMAI(self.air, self)
         self.isNpc = True
 
+        self.shipId = 0
         self.currentWeaponId = 0
         self.isWeaponDrawn = False
         self.currentAmmo = 0
@@ -89,6 +90,19 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
     def getGameState(self):
         return self.gameFsm.getCurrentOrNextState()
+
+    def setShipId(self, shipId):
+        self.shipId = shipId
+
+    def d_setShipId(self, shipId):
+        self.sendUpdate('setShipId', [shipId])
+
+    def b_setShipId(self, shipId):
+        self.setShipId(shipId)
+        self.d_setShipId(shipId)
+
+    def getShipId(self):
+        return self.shipId
 
     def setCurrentWeapon(self, currentWeapon, isWeaponDrawn):
         self.currentWeaponId = currentWeapon

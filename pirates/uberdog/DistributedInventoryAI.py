@@ -8,6 +8,8 @@ class DistributedInventoryAI(DistributedObjectAI):
         DistributedObjectAI.__init__(self, air)
 
         self.ownerId = 0
+        self.categoryLimits = []
+        self.categoriesAndDoIds = []
         self.accumulators = []
         self.stackLimits = []
         self.stacks = []
@@ -16,10 +18,10 @@ class DistributedInventoryAI(DistributedObjectAI):
         self.air.inventoryManager.addInventory(self)
 
         DistributedObjectAI.generate(self)
-        
+
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)
-        
+
         self.air.netMessenger.accept('b_setAccumulators', self, self.b_setAccumulators)
         self.air.netMessenger.accept('b_setAccumulator', self, self.b_setAccumulator)
         self.air.netMessenger.accept('b_setStackLimits', self, self.b_setStackLimits)
@@ -44,9 +46,35 @@ class DistributedInventoryAI(DistributedObjectAI):
 
     def getOwnerId(self):
         return self.ownerId
-        
+
     def sendOwnerId(self, callback):
         self.air.netMessenger.send('getOwnerIdResponse', [callback, self.ownerId])
+
+    def setCategoryLimits(self, categoryLimits):
+        self.categoryLimits = categoryLimits
+
+    def d_setCategoryLimits(self, categoryLimits):
+        self.sendUpdate('setCategoryLimits', [categoryLimits])
+
+    def b_setCategoryLimits(self, categoryLimits):
+        self.setCategoryLimits(categoryLimits)
+        self.d_setCategoryLimits(categoryLimits)
+
+    def getCategoryLimits(self):
+        return self.categoryLimits
+
+    def setDoIds(self, categoriesAndDoIds):
+        self.categoriesAndDoIds = categoriesAndDoIds
+
+    def d_setDoIds(self, categoriesAndDoIds):
+        self.sendUpdate('setDoIds', [categoriesAndDoIds])
+
+    def b_setDoIds(self, categoriesAndDoIds):
+        self.setDoIds(categoriesAndDoIds)
+        self.d_setDoIds(categoriesAndDoIds)
+
+    def getDoIds(self):
+        return self.categoriesAndDoIds
 
     def setAccumulators(self, accumulators):
         self.accumulators = accumulators
@@ -60,7 +88,7 @@ class DistributedInventoryAI(DistributedObjectAI):
 
     def getAccumulators(self):
         return self.accumulators
-        
+
     def sendAccumulators(self, callback):
         self.air.netMessenger.send('getAccumulatorsResponse', [callback, self.accumulators])
 
@@ -90,6 +118,43 @@ class DistributedInventoryAI(DistributedObjectAI):
     def getStacks(self):
         return self.stacks
 
+    def getCategoryLimit(self, category):
+        for categoryLimit in self.categoryLimits:
+
+            if categoryLimit[0] == category:
+                return categoryLimit[1]
+
+        return 0
+
+    def setCategoryAndDoId(self, category, doId):
+        categoryDoIds = self.getCategoryDoIds(category)
+        categoryLimit = self.getCategoryLimit(category)
+
+        if len(categoryDoIds) >= categoryLimit:
+            self.notify.warning('Cannot add category %d, number of categories and doIds exceed the maximum allowed %d!' % (
+                category, categoryLimit))
+
+            return
+
+        self.categoriesAndDoIds.append([category, doId])
+
+    def d_setCategoryAndDoId(self, category, doId):
+        self.d_setDoIds(self.categoriesAndDoIds)
+
+    def b_setCategoryAndDoId(self, category, doId):
+        self.setCategoryAndDoId(category, doId)
+        self.d_setCategoryAndDoId(category, doId)
+
+    def getCategoryDoIds(self, category):
+        categoryDoIds = []
+
+        for categoryAndDoId in self.categoriesAndDoIds:
+
+            if categoryAndDoId[0] == category:
+                categoryDoIds.append(categoryAndDoId[1])
+
+        return categoryDoIds
+
     def setAccumulator(self, accumulatorType, quantity):
         accumulator = self.getAccumulator(accumulatorType)
 
@@ -114,7 +179,7 @@ class DistributedInventoryAI(DistributedObjectAI):
                 return accumulator
 
         return None
-        
+
     def sendAccumulator(self, accumulatorType, callback):
         self.air.netMessenger.send('getAccumulatorResponse', [callback, self.getAccumulator(accumulatorType)])
 
@@ -147,7 +212,7 @@ class DistributedInventoryAI(DistributedObjectAI):
         limit = self.getStackLimit(stackType)
         _, stored = self.getStack(stackType) or (stackType, 0)
         return limit > (stored + amount)
-        
+
     def sendStackLimit(self, stackType, callback):
         self.air.netMessenger.send('getStackLimitResponse', [callback, self.getStackLimit(stackType)])
 
@@ -175,7 +240,7 @@ class DistributedInventoryAI(DistributedObjectAI):
                 return stack
 
         return None
-        
+
     def sendStack(self, stackType, callback):
         self.air.netMessenger.send('getStackResponse', [callback, self.getStack(stackType)])
 
@@ -221,4 +286,6 @@ class DistributedInventoryAI(DistributedObjectAI):
         if callback and callable(callback):
             callback(*args, **kwargs)
             return
-        self.notify.warning("No valid callback for a callback response! What was the purpose of that?")
+
+        self.notify.warning('No valid callback for a callback response!'
+            'What was the purpose of that?')

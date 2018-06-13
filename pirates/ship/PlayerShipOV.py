@@ -25,7 +25,6 @@ class PlayerShipOV(DistributedObjectOV.DistributedObjectOV):
         self.state = None
         self.timerTime = 0
         self.timerTimestamp = 0
-        return
 
     def announceGenerate(self):
         DistributedObjectOV.DistributedObjectOV.announceGenerate(self)
@@ -106,6 +105,7 @@ class PlayerShipOV(DistributedObjectOV.DistributedObjectOV):
     def setCrew(self, crewArray):
         if self.crew != crewArray:
             messenger.send('setShipCrew-%s' % self.getDoId(), [crewArray, self.maxCrew])
+
         self.crew = crewArray
         self.crewCount = len(self.crew)
 

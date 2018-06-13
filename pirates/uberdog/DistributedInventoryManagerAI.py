@@ -140,9 +140,16 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
                 return
 
+            categoryLimits, = fields.get('setCategoryLimits', [])
+            categoriesAndDoIds, = fields.get('setDoIds', [])
             accumulators, = fields.get('setAccumulators', [])
             stackLimits, = fields.get('setStackLimits', [])
             stacks, = fields.get('setStacks', [])
+
+            inventory.b_setCategoryLimits(categoryLimits)
+
+            for categoryAndDoId in categoriesAndDoIds:
+                inventory.b_setCategoryAndDoId(*categoryAndDoId)
 
             for accumulator in accumulators:
                 inventory.b_setAccumulator(*accumulator)
@@ -153,6 +160,13 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
             for stack in stacks:
                 inventory.b_setStack(*stack)
 
+            # tell the ship loader to load up the avatar's ship objects
+            # from the database and activate them so that the ship's
+            # OwnerView object is present for the client...
+            self.air.shipLoader.loadShips(avatar)
+
+            # the inventory has finished loading, tell the client
+            # we're done...
             inventory.d_requestInventoryComplete()
 
         self.air.dbInterface.queryObject(self.air.dbId, inventoryId, callback=inventoryResponse, dclass=\
@@ -247,11 +261,6 @@ def maxWeapons():
 def gold(amount):
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
-
-    if inventory.getGoldInPocket() == 65000:
-        # Don't send a spellbook message if our gold is max.
-        return
-
     inventory.setGoldInPocket(inventory.getGoldInPocket() + amount)
     return 'Received Gold Amount: %s' % amount
 

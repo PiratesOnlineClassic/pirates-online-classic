@@ -102,6 +102,9 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.Pl
     def setDISLid(self, id):
         self.DISLid = id
 
+    def getDISLid(self):
+        return self.DISLid
+
     def d_setFriendsList(self, friendsList):
         self.sendUpdate('setFriendsList', [friendsList])
 

@@ -105,6 +105,7 @@ class DistributedShipOV(DistributedObjectOV.DistributedObjectOV):
     def setCrew(self, crewArray):
         if self.crew != crewArray:
             messenger.send('setShipCrew-%s' % self.getDoId(), [crewArray, self.maxCrew])
+
         self.crew = crewArray
         self.crewCount = len(self.crew)
 

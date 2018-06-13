@@ -21,7 +21,7 @@ class PirateInventoryAI(DistributedInventoryAI):
 
         newLevel, newReputation = ReputationGlobals.getLevelFromTotalReputation(
             repType, quantity)
-        
+
         # check to see if the type of reputation we're giving the avatar is
         # their overall reputation/level, then set their level...
         if repType == InventoryType.OverallRep and newLevel > avatar.getLevel():
@@ -32,7 +32,7 @@ class PirateInventoryAI(DistributedInventoryAI):
             # is greater than their previous reputation...
             if newLevel > oldLevel:
                 avatar.d_levelUpMsg(repType, newLevel, 0)
-        
+
         self.b_setAccumulator(repType, quantity)
 
     def getReputation(self, repType):
@@ -65,3 +65,6 @@ class PirateInventoryAI(DistributedInventoryAI):
 
     def getVitaeLeft(self):
         return self.getItem(self.getStack, InventoryType.Vitae_Left)
+
+    def getShipList(self):
+        return self.getCategoryDoIds(InventoryCategory.SHIPS)
