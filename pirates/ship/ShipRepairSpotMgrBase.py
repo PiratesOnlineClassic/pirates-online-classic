@@ -1,10 +1,14 @@
 from direct.fsm.StatePush import AttrSetter, FunctionCall, StateVar
 from pirates.pvp import PVPGlobals
+from direct.showbase.PythonUtil import DestructiveScratchPad
 
 class ShipRepairSpotMgrBase:
 
     def __init__(self):
-        self._state = DestructiveScratchPad(hp=StateVar(0), maxHp=StateVar(0), sp=StateVar(0), maxSp=StateVar(0), shipClass=StateVar(0), pvpTeam=StateVar(0), siegeTeam=StateVar(0), fullHealth=StateVar(False), validShipClass=StateVar(False), hasTeam=StateVar(False))
+        self._state = DestructiveScratchPad(hp=StateVar(0), maxHp=StateVar(0), sp=StateVar(0),
+            maxSp=StateVar(0), shipClass=StateVar(0), pvpTeam=StateVar(0), siegeTeam=StateVar(0),
+            fullHealth=StateVar(False), validShipClass=StateVar(False), hasTeam=StateVar(False))
+
         self._statePushes = []
 
     def destroy(self):
@@ -16,7 +20,9 @@ class ShipRepairSpotMgrBase:
 
     def _onShipReady(self):
         self._statePushes.extend([
-         FunctionCall(self._evalFullHealth, self._state.hp, self._state.maxHp, self._state.sp, self._state.maxSp), FunctionCall(self._evalValidShipClass, self._state.shipClass), FunctionCall(self._evalHasTeam, self._state.pvpTeam, self._state.siegeTeam)])
+         FunctionCall(self._evalFullHealth, self._state.hp, self._state.maxHp, self._state.sp,
+            self._state.maxSp), FunctionCall(self._evalValidShipClass, self._state.shipClass),
+            FunctionCall(self._evalHasTeam, self._state.pvpTeam, self._state.siegeTeam)])
 
     def updateHp(self, hp):
         self._state.hp.set(hp)

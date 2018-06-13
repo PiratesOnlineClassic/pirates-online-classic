@@ -25,13 +25,15 @@ class PlayerShipOV(DistributedObjectOV.DistributedObjectOV):
         self.state = None
         self.timerTime = 0
         self.timerTimestamp = 0
-        return
+        print ('PlayerShipOV', 'initialize')
 
     def announceGenerate(self):
         DistributedObjectOV.DistributedObjectOV.announceGenerate(self)
         messenger.send('DistributedShipOV-announceGenerate', sentArgs=[self.doId])
         if self.state not in ('Off', 'Sunk'):
             localAvatar.b_setActiveShipId(self.doId)
+
+        print ('PlayerShipOV', 'announceGenerate')
 
     def delete(self):
         DistributedObjectOV.DistributedObjectOV.delete(self)

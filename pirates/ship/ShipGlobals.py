@@ -477,8 +477,7 @@ def getShipConfig(shipClass):
     newData['setHp'] = partStats['maxHp']
     newData['setMaxCrew'] = partStats['maxCrew']
     for i in newData:
-        newData[i] = [
-         newData[i]]
+        newData[i] = [newData[i]]
 
     return newData
 

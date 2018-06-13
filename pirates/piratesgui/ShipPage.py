@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.ShipPage
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from panda3d.core import *
@@ -14,7 +10,6 @@ from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 
 
 class ShipPage(InventoryPage):
-    
     BottleFrame = None
 
     def __init__(self):
@@ -22,6 +17,7 @@ class ShipPage(InventoryPage):
             gui = loader.loadModel('models/gui/gui_ship_window')
             ShipPage.BottleFrame = gui.find('**/ship_bottle').copyTo(NodePath(''))
             ShipPage.BottleFrame.flattenStrong()
+
         InventoryPage.__init__(self)
         self.initialiseoptions(ShipPage)
         self.panels = {}
@@ -30,7 +26,6 @@ class ShipPage(InventoryPage):
         self.tabBar = None
         self.accept('DistributedShipOV-announceGenerate', self.shipOVArrived)
         self.accept('DistributedShipOV-delete', self.shipOVRemoved)
-        return
 
     def destroy(self):
         self.ignoreAll()
@@ -38,6 +33,7 @@ class ShipPage(InventoryPage):
         if self.tabBar:
             self.tabBar.destroy()
             self.tabBar = None
+
         for panel in self.panels.itervalues():
             panel.destroy()
 
@@ -45,8 +41,8 @@ class ShipPage(InventoryPage):
         if self.pendingRequestInventory:
             base.cr.relatedObjectMgr.abortRequest(self.pendingRequestInventory)
             self.pendingRequestInventory = None
+
         DirectFrame.destroy(self)
-        return
 
     def show(self):
         InventoryPage.show(self)
@@ -77,7 +73,6 @@ class ShipPage(InventoryPage):
         panel = self.panels.pop(shipId, None)
         if panel:
             panel.destroy()
-        return
 
     def shipOVArrived(self, shipId):
         self.addPanel(shipId)
@@ -97,6 +92,7 @@ class ShipPage(InventoryPage):
     def clearTabs(self):
         if self.tabBar:
             self.tabBar.destroy()
+
         self.tabBar = localAvatar.guiMgr.chestPanel.makeTabBar()
 
     def makeTab(self, shipId):
@@ -144,8 +140,10 @@ class ShipPage(InventoryPage):
     def needRefresh(self):
         if not self.tabBar:
             return True
+
         if set(self.tabBar.getOrder()) == set(self.panels):
             return False
+
         return True
 
     def refreshList(self):
@@ -173,6 +171,7 @@ class ShipPage(InventoryPage):
             else:
                 self.tabBar.selectTab(self.getCurrentPanel())
                 self.showPanel(self.getCurrentPanel())
+
             if self.isHidden():
                 self.tabBar.stash()
 
@@ -185,8 +184,9 @@ class ShipPage(InventoryPage):
         if self.pendingRequestInventory:
             base.cr.relatedObjectMgr.abortRequest(self.pendingRequestInventory)
             self.pendingRequestInventory = None
-        self.pendingRequestInventory = base.cr.relatedObjectMgr.requestObjects([localAvatar.getInventoryId()], eachCallback=doReadyCheck)
-        return
+
+        self.pendingRequestInventory = base.cr.relatedObjectMgr.requestObjects([
+            localAvatar.getInventoryId()], eachCallback=doReadyCheck)
 
     def showPanel(self, shipId):
         for panel in self.panels.itervalues():
@@ -206,8 +206,8 @@ class ShipPage(InventoryPage):
                     self.currentPanel = 0
         else:
             self.currentPanel = 0
+
         return self.currentPanel
 
     def slideOpenPrecall(self):
         self.show()
-# okay decompiling .\pirates\piratesgui\ShipPage.pyc

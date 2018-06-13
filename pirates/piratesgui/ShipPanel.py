@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.ShipPanel
 from direct.gui.DirectGui import *
 from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
@@ -11,7 +7,6 @@ from pirates.shipparts.DistributedHullOV import DistributedHullOV
 
 
 class ShipPanel(DirectFrame):
-    
     Width = PiratesGuiGlobals.ShipPanelWidth
     Height = PiratesGuiGlobals.ShipPanelHeight
 
@@ -27,7 +22,7 @@ class ShipPanel(DirectFrame):
         DirectFrame.__init__(self, **kwargs)
         self.initialiseoptions(ShipPanel)
         gui = loader.loadModel('models/gui/toplevel_gui')
-        chestIcon = gui.findAllMatches('**/topgui_icon_ship_chest01') 
+        chestIcon = gui.findAllMatches('**/topgui_icon_ship_chest01')
         cannonIcon = gui.find('**/topgui_icon_ship_cannon_single')
         broadsideIcon = gui.find('**/topgui_icon_ship_cannon_multiple')
         self.bottleFrame = ShipFrameBottle(parent=self, shipId=shipId, relief=None, state=DGG.DISABLED, pos=(0.075,
@@ -197,6 +192,7 @@ class ShipPanel(DirectFrame):
             self.setShipSp(shipOV.Sp, shipOV.maxSp)
             self.setShipCrew(shipOV.crew, shipOV.maxCrew)
             self.setShipCargo([], shipOV.maxCargo)
+
         hullOVs = base.cr.getOwnerViewDoList(DistributedHullOV)
         hullOVs = [ ov for ov in hullOVs if ov.shipId == self.shipId ]
         for hullOV in hullOVs:
@@ -214,9 +210,6 @@ class ShipPanel(DirectFrame):
         self.accept('setHullCannonConfig-%s' % self.shipId, self.setShipMaxCannons)
         self.accept('setHullLeftBroadsideConfig-%s' % self.shipId, self.setShipMaxLeftBroadside)
         self.accept('setHullRightBroadsideConfig-%s' % self.shipId, self.setShipMaxRightBroadside)
-        if base.config.GetBool('want-deploy-button', 0):
-            pass
-        return
 
     def destroy(self):
         self.ignoreAll()
@@ -295,4 +288,3 @@ class ShipPanel(DirectFrame):
     def setShipMaxRightBroadside(self, broadsideConfig):
         self.rBroadsideLimit = len(broadsideConfig)
         self.broadsideRightLimit['text'] = '%d' % (self.rBroadsideLimit - broadsideConfig.count(0))
-# okay decompiling .\pirates\piratesgui\ShipPanel.pyc
