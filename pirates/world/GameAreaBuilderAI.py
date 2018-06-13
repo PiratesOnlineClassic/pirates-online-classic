@@ -113,8 +113,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         interior.setUniqueId(exteriorUid)
         interior.setName(interiorFile)
         interior.setModelPath(modelPath)
-        interior.setPos(objectData.get('Pos', (0, 0, 0)))
-        interior.setHpr(objectData.get('Hpr', (0, 0, 0)))
         interior.setScale(objectData.get('Scale', (1, 1, 1)))
 
         parent.generateChildWithRequired(interior, self.air.allocateZone())
