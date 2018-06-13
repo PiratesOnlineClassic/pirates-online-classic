@@ -14,6 +14,11 @@ class ShipFSM(FSM):
         self.avatar = avatar
         self.callback = callback
 
+    def cleanup(self):
+        # we're done.
+        del self.manager.avatar2fsm[self.avatar.doId]
+        self.demand('Off')
+
     def enterOff(self):
         pass
 
@@ -27,8 +32,7 @@ class ShipFSM(FSM):
         pass
 
     def enterStop(self):
-        del self.manager.avatar2fsm[self.avatar.doId]
-        self.demand('Off')
+        pass
 
     def exitStop(self):
         pass
@@ -36,7 +40,7 @@ class ShipFSM(FSM):
 
 class CreateShipFSM(ShipFSM):
 
-    def enterStart(self, shipType):
+    def enterStart(self, shipClass):
 
         def shipCreatedCallback(shipId):
             inventory = self.avatar.getInventory()
@@ -50,9 +54,10 @@ class CreateShipFSM(ShipFSM):
             inventory.b_setCategoryAndDoId(UberDogGlobals.\
                 InventoryCategory.SHIPS, shipId)
 
-            self.request('Stop')
+            self.cleanup()
 
-        shipConfig = ShipGlobals.getShipConfig(shipType)
+        shipConfig = ShipGlobals.getShipConfig(shipClass)
+        hullConfig = ShipGlobals.getHullConfig(shipClass)
 
         fields = {
             'setBaseTeam': (0,),
@@ -62,10 +67,10 @@ class CreateShipFSM(ShipFSM):
             'setIsFlagship': (0,),
             'setMaxHp': (shipConfig['setMaxHp'][0],),
             'setHp': (shipConfig['setHp'][0],),
-            'setMaxSp': (0,),
-            'setSp': (0,),
-            'setHullCondition': (0,),
-            'setMaxCargo': (0,),
+            'setMaxSp': (hullConfig['setMaxSp'][0],),
+            'setSp': (hullConfig['setSp'][0],),
+            'setHullCondition': (1 << 7,),
+            'setMaxCargo': (hullConfig['setMaxCargo'][0],),
             'setCargo': ([],),
             'setMaxCrew': (shipConfig['setMaxCrew'][0],),
             'setWishName': ('',),
@@ -100,8 +105,11 @@ class LoadShipsFSM(ShipFSM):
 
         self.pendingShips = inventory.getShipList()
 
-        for shipId in self.pendingShips:
-            self.__loadShip(shipId)
+        if not self.pendingShips:
+            self.cleanup()
+        else:
+            for shipId in self.pendingShips:
+                self.__loadShip(shipId)
 
     def __loadShip(self, shipId):
 
@@ -116,7 +124,7 @@ class LoadShipsFSM(ShipFSM):
             self.manager.air.setOwner(shipId, target)
 
             if not self.pendingShips:
-                self.request('Stop')
+                self.cleanup()
 
         self.manager.air.dbInterface.queryObject(self.manager.air.dbId,
             shipId,
@@ -145,8 +153,8 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
         self.avatar2fsm[avatar.doId] = fsmType(self, avatar)
         self.avatar2fsm[avatar.doId].request('Start', *args)
 
-    def createShip(self, avatar, shipType):
-        self.runShipFSM(CreateShipFSM, avatar, shipType)
+    def createShip(self, avatar, shipClass):
+        self.runShipFSM(CreateShipFSM, avatar, shipClass)
 
     def loadShips(self, avatar):
         self.runShipFSM(LoadShipsFSM, avatar)
