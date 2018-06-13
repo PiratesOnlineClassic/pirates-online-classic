@@ -785,3 +785,13 @@ def removeGroggy():
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
     inventory.setVitaeLevel(0)
     return "Removed active groggy effect!"
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def location():
+    """
+    Returns the avatar's current parentId and zoneId
+    """
+
+    invoker = spellbook.getInvoker()
+    return "avatarId: %d, parentId: %d, zoneId: %d" % (invoker.doId,
+        invoker.parentId, invoker.zoneId)
