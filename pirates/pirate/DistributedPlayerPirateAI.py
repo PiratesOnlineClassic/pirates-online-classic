@@ -35,6 +35,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.inventoryId = 0
         self.guildId = 0
         self.guildName = 'Null'
+        self.teleportFlags = None
         self.jailCellIndex = 0
         self.returnLocation = ''
         self.currentIsland = ''
@@ -182,6 +183,20 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def getGuildName(self):
         return self.guildName
+
+    def setTeleportFlags(self, teleportFlags):
+        self.teleportFlags = teleportFlags
+
+    def d_setTeleportFlags(self, teleportFlags):
+        self.sendUpdate('setTeleportFlags', [PiratesGlobals.encodeTeleportFlag(
+            teleportFlags)])
+
+    def b_setTeleportFlag(self, teleportFlags):
+        self.setTeleportFlag(teleportFlags)
+        self.d_setTeleportFlags(teleportFlags)
+
+    def getTeleportFlags(self):
+        return self.teleportFlags
 
     def d_relayTeleportLoc(self, shardId, zoneId, teleportMgrDoId):
         self.sendUpdateToAvatarId(self.doId, 'relayTeleportLoc', [shardId, zoneId,

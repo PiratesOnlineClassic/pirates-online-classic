@@ -71,6 +71,8 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         if not avatar:
             return
 
+        avatar.b_setTeleportFlag(PiratesGlobals.TFIgnore)
+
         # the avatar has arrived at the location and is now finished
         # teleporting, let's set their game state so they spawn in correctly.
         self.avatar.b_setGameState('Spawn')

@@ -1,6 +1,7 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from pirates.quest.QuestConstants import LocationIds
+from pirates.piratesbase import PiratesGlobals
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from direct.fsm.FSM import FSM
 from pirates.instance.DistributedTeleportZoneAI import DistributedTeleportZoneAI
@@ -43,6 +44,8 @@ class TeleportFSM(FSM):
 
             self.avatar.d_forceTeleportStart(self.world.getFileName(), self.teleportZone.doId, self.teleportHandler.doId, 0,
                 self.teleportZone.parentId, self.teleportZone.zoneId)
+
+            self.avatar.b_setTeleportFlag(PiratesGlobals.TFInInitTeleport | PiratesGlobals.TFInTeleport)
 
         teleportHandlerDoId = self.teleportMgr.air.allocateChannel()
         self.acceptOnce('generate-%d' % teleportHandlerDoId, teleportHandlerReady)
