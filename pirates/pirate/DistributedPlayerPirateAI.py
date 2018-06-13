@@ -192,7 +192,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             teleportFlags)])
 
     def b_setTeleportFlag(self, teleportFlags):
-        self.setTeleportFlag(teleportFlags)
+        self.setTeleportFlags(teleportFlags)
         self.d_setTeleportFlags(teleportFlags)
 
     def getTeleportFlags(self):
