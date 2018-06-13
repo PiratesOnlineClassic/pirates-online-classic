@@ -380,15 +380,6 @@ class InventoryFSM(FSM):
         if self.callback:
             self.callback(inventoryId)
 
-        # Claim ownership of the avatar's inventory
-        datagram = PyDatagram()
-        datagram.addServerHeader(
-            inventoryId,
-            self.manager.air.ourChannel,
-            STATESERVER_OBJECT_SET_OWNER)
-        datagram.addChannel(self.avatarId)
-        self.manager.air.send(datagram)
-
         del self.manager.avatar2fsm[self.avatarId]
         self.demand('Off')
 
