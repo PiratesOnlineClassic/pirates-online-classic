@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.BarChart
 from direct.gui.DirectGui import *
 from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
@@ -15,14 +11,14 @@ class BarChart(DirectFrame):
         self.width = width
         self.height = height
         self.barHeight = self.height / len(data) * 0.666
-        self.name = name
+        self._name = name
         self.titleColor = titleColor
         self.maxValue = maxValue
         self.data = data
         DirectFrame.__init__(self, relief=None, state=DGG.NORMAL)
         self.initialiseoptions(BarChart)
         self.statBars = []
-        self.title = DirectFrame(parent=self, relief=None, text=self.name, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.03,
+        self.title = DirectFrame(parent=self, relief=None, text=self._name, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.03,
                                                                                                                                                              0.01), text_fg=self.titleColor, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0, 0, self.height + 0.02))
         self.loadStatBars(self.data)
         return
