@@ -1479,6 +1479,8 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
             self.guiMgr.messageStack.addTextMessage(PLocalizer.LookoutInviteFail % numFailed, icon=('lookout', None))
 
     def getTutorialState(self):
+        if config.GetBool('force-tutorial-complete', False):
+            return PiratesGlobals.TUT_FINISHED
         return self.tutorialState
 
     def updateClientTutorialStatus(self, val):

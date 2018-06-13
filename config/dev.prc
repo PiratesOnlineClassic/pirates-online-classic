@@ -2,6 +2,7 @@
 want-dev #f
 
 # Tutorial:
+force-tutorial-complete #t
 skip-tutorial #t
 force-tutorial #t
 
