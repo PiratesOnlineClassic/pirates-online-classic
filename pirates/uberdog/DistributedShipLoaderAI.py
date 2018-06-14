@@ -60,6 +60,10 @@ class CreateShipFSM(ShipFSM):
 
             self.cleanup()
 
+            # we've just created a ship object, now attempt to
+            # load it on the state server...
+            self.manager.loadShips(self.avatar, shipList=[shipId])
+
         shipConfig = ShipGlobals.getShipConfig(shipClass)
         hullConfig = ShipGlobals.getHullConfig(shipClass)
 
@@ -97,7 +101,7 @@ class LoadShipsFSM(ShipFSM):
 
         self.pendingShips = []
 
-    def enterStart(self):
+    def enterStart(self, shipList):
         inventory = self.avatar.getInventory()
 
         if not inventory:
@@ -107,7 +111,7 @@ class LoadShipsFSM(ShipFSM):
             self.demand('Stop')
             return
 
-        self.pendingShips = inventory.getShipDoIdList()
+        self.pendingShips = shipList or inventory.getShipDoIdList()
 
         if not self.pendingShips:
             self.cleanup()
@@ -179,5 +183,5 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
     def createShip(self, avatar, shipClass):
         self.runShipFSM(CreateShipFSM, avatar, shipClass)
 
-    def loadShips(self, avatar):
-        self.runShipFSM(LoadShipsFSM, avatar)
+    def loadShips(self, avatar, shipList=[]):
+        self.runShipFSM(LoadShipsFSM, avatar, shipList)
