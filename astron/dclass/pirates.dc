@@ -499,13 +499,13 @@ struct TradeSlot {
 dclass DistributedInventory : DistributedObject {
   uint32 AutoInterest[];
   setParentingRules(string, string) broadcast ram;
-  setInventoryVersion(uint8) airecv db required;
-  setOwnerId(uint32) required broadcast airecv db;
-  setCategoryLimits(InventoryCategoryLimit []) airecv db required broadcast;
-  setDoIds(InventoryDoIdSlot []) airecv db required broadcast;
-  setAccumulators(InventoryAccumulatorSlot []) airecv db required;
-  setStackLimits(InventoryTypeLimit []) airecv db required;
-  setStacks(InventoryStackableSlot []) airecv db required ownrecv;
+  setInventoryVersion(uint8) required broadcast db;
+  setOwnerId(uint32) required broadcast db;
+  setCategoryLimits(InventoryCategoryLimit []) required broadcast db;
+  setDoIds(InventoryDoIdSlot []) required broadcast db;
+  setAccumulators(InventoryAccumulatorSlot []) required broadcast db;
+  setStackLimits(InventoryTypeLimit []) required broadcast db;
+  setStacks(InventoryStackableSlot []) required broadcast db;
   accumulator(uint16, uint32);
   stackLimit(uint16, uint16);
   stack(uint16, uint16);
