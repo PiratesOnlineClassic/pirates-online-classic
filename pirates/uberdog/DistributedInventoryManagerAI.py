@@ -149,8 +149,13 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
             for categoryAndLimit in categoriesAndLimits:
                 inventory.b_setCategoryLimit(*categoryAndLimit)
 
-            for categoryAndDoIds in categoriesAndDoIds:
-                inventory.b_setDoIdListCategory(*categoryAndDoIds)
+            doIdsInCategory = {}
+            for catagory, doId in categoriesAndDoIds:
+                catagoryAndDoIds = doIdsInCategory.setdefault(catagory, [])
+                catagoryAndDoIds.append(doId)
+
+            for catagoryAndDoIds in doIdsInCategory.items():
+                inventory.b_setDoIdListCategory(*catagoryAndDoIds)
 
             for accumulatorTypeAndQuantity in accumulatorTypesAndQuantities:
                 inventory.b_setAccumulator(*accumulatorTypeAndQuantity)
@@ -178,7 +183,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
             callback(*args, **kwargs)
             return
 
-        self.notify.warning("No valid callback for a callback response! What was the purpose of that?")
+        self.notify.warning('No valid callback for a callback response!'
+            'What was the purpose of that?')
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)

@@ -46,7 +46,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setDoIds(self.getDoIds())
 
     def getDoIds(self):
-        return [[category, doId] for doId, category in self.doIds]
+        return [[category, doId] for doId, category in self.doIds.items()]
 
     def setAccumulators(self, accumulatorTypesAndQuantities):
         for accumulatorType, quantity in accumulatorTypesAndQuantities:
@@ -140,7 +140,9 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
     def setDoIdListCategory(self, category, doIdList):
         self.doIdsInCategory[category] = doIdList
-        self.setDoIds([[category, doId] for doId in doIdList])
+
+        for doId in doIdList:
+            self.doIds[doId] = category
 
     def d_setDoIdListCategory(self, category, doIdList):
         self.d_setDoIds(self.getDoIds())
@@ -151,7 +153,6 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
     def setCategoryLimit(self, category, limit):
         self.categoryLimits[category] = limit
-        self.d_setCategoryLimits(self.getCategoryLimits())
 
     def d_setCategoryLimit(self, category, limit):
         self.d_setCategoryLimits(self.getCategoryLimits())

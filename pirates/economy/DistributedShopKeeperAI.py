@@ -31,7 +31,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
         # TODO FIXME: properly check to see what inventory type this
         # item they are trying to buy fits under...
-        currentStack = inventory.getStack(itemId)
+        currentStack = inventory.getStackQuantity(itemId)
         if not currentStack:
             if itemId in EconomyGlobals.SHIP_SHELF:
                 self.air.shipLoader.createShip(avatar, itemId)
@@ -40,7 +40,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
                 return RejectCode.OVERFLOW
 
             currentStack = currentStack[1]
-            inventory.b_setStack(itemId, currentStack + itemQuantity)
+            inventory.b_setStackQuantity(itemId, currentStack + itemQuantity)
 
         inventory.setGoldInPocket(currentGold - itemPrice)
 
@@ -53,7 +53,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
     def __sellItem(self, avatar, inventory, item):
         itemId, itemQuantity = item
-        currentStack = inventory.getStack(itemId)
+        currentStack = inventory.getStackQuantity(itemId)
         if not currentStack:
             currentStack = 0
         else:
@@ -70,7 +70,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             return RejectCode.TIMEOUT
 
         itemPrice = EconomyGlobals.getItemCost(itemId)
-        inventory.b_setStack(itemId, currentStack - itemQuantity)
+        inventory.b_setStackQuantity(itemId, currentStack - itemQuantity)
         inventory.setGoldInPocket(currentGold + itemPrice)
 
     def requestMakeSale(self, buying, selling, names):

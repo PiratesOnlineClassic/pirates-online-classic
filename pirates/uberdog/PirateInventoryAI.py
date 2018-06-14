@@ -59,3 +59,6 @@ class PirateInventoryAI(DistributedInventoryAI):
 
     def getVitaeLeft(self):
         return self.getStackQuantity(InventoryType.Vitae_Left)
+
+    def setShipList(self, shipList):
+        return self.b_setDoIdListCategory(InventoryCategory.SHIPS, shipList)

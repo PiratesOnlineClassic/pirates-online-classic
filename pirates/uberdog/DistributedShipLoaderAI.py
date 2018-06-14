@@ -51,8 +51,11 @@ class CreateShipFSM(ShipFSM):
 
                 return
 
-            inventory.b_setCategoryAndDoId(UberDogGlobals.\
-                InventoryCategory.SHIPS, shipId)
+            # update the players inventory ship list array,
+            # this is how the inventory knows the player has a ship...
+            shipList = inventory.getShipDoIdList()
+            shipList.append(shipId)
+            inventory.setShipList(shipList)
 
             self.cleanup()
 
@@ -103,7 +106,7 @@ class LoadShipsFSM(ShipFSM):
             self.demand('Stop')
             return
 
-        self.pendingShips = inventory.getShipList()
+        self.pendingShips = inventory.getShipDoIdList()
 
         if not self.pendingShips:
             self.cleanup()
@@ -120,6 +123,8 @@ class LoadShipsFSM(ShipFSM):
                 0,
                 dclass=dclass)
 
+            # TODO FIXME: find a cleaner way to get the avatar's
+            # connection channel id...
             target = self.avatar.getDISLid() << 32 | self.avatar.doId
             self.manager.air.setOwner(shipId, target)
 

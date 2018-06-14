@@ -613,7 +613,9 @@ def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
     if gmNameTagState < 0 or gmNameTagState > 1:
         return 'Invalid state!'
 
-    spellbook.getInvoker().b_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
+    spellbook.getInvoker().b_updateGMNameTag(gmNameTagState,
+        gmNameTagColor, gmNameTagString)
+
     return 'Nametag set.'
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
@@ -631,7 +633,8 @@ def toggleGM():
     Toggles your GM name tag
     """
     invoker = spellbook.getInvoker()
-    invoker.b_updateGMNameTag(not invoker.gmNameTagState, invoker.gmNameTagColor, invoker.gmNameTagString)
+    invoker.b_updateGMNameTag(not invoker.gmNameTagState, invoker.gmNameTagColor,
+        invoker.gmNameTagString)
 
     return 'Nametag toggled to: %s' % str(invoker.gmNameTagState)
 
@@ -672,7 +675,6 @@ def mojo(mojo):
 
 
     target = spellbook.getTarget()
-
     mojo = max(0, min(mojo, target.getMaxMojo()))
     target.b_setMojo(mojo)
     return 'Your mojo has been set to %d.' % mojo
