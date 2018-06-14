@@ -1532,18 +1532,17 @@ dclass DistributedDestructibleArray : DistributedDestructibleObject {
   setArrayHp(int16[]) required broadcast ram db;
 };
 
-dclass DistributedHull : DistributedHullDNA, DistributedShippart, DistributedDestructibleArray {
+dclass DistributedHull : DistributedShippart, DistributedDestructibleArray, DistributedHullDNA {
   setMaxSp(int16) required broadcast ram db;
   setSp(int16) required broadcast ram db;
   setMaxCargo(uint8) required broadcast ram db;
 };
 
-dclass DistributedMast : DistributedMastDNA, DistributedShippart, DistributedDestructibleArray {
-  d_setBreakAnim(uint8, uint8) airecv clsend;
+dclass DistributedMast : DistributedShippart, DistributedDestructibleArray, DistributedMastDNA {
   setBreakAnim(uint8, uint8) broadcast;
 };
 
-dclass DistributedSail : DistributedSailDNA, DistributedShippart, DistributedDestructibleObject {
+dclass DistributedSail : DistributedShippart, DistributedDestructibleObject, DistributedSailDNA {
   setMaxHp(int16) required broadcast ram db;
   setHp(int16) required broadcast ram db;
   setMaxSp(int16) required broadcast ram db;
@@ -1552,18 +1551,18 @@ dclass DistributedSail : DistributedSailDNA, DistributedShippart, DistributedDes
   setAnimState(string) required broadcast ram airecv;
 };
 
-dclass DistributedBowSprit : DistributedBowSpritDNA, DistributedShippart, DistributedDestructibleObject {
+dclass DistributedBowSprit : DistributedShippart, DistributedDestructibleObject, DistributedBowSpritDNA {
   setMaxHp(int16) required broadcast ram db;
   setHp(int16) required broadcast ram db;
 };
 
-dclass DistributedCabin : DistributedCabinDNA, DistributedShippart, DistributedDestructibleObject {
+dclass DistributedCabin : DistributedShippart, DistributedDestructibleObject, DistributedCabinDNA {
   setMaxHp(int16) required broadcast ram db;
   setHp(int16) required broadcast ram db;
   setMaxCargo(uint8) required broadcast ram db;
 };
 
-dclass DistributedShipDecor : DistributedDecorDNA, DistributedShippart, DistributedDestructibleObject {
+dclass DistributedShipDecor : DistributedShippart, DistributedDestructibleObject, DistributedDecorDNA {
   setMaxHp(int16) required broadcast ram db;
   setHp(int16) required broadcast ram db;
 };
@@ -1584,7 +1583,7 @@ dclass DistributedPCCannon : DistributedWeapon {
   gainSkill(uint32) airecv clsend;
 };
 
-dclass DistributedShipCannon : DistributedCannonDNA, DistributedPCCannon, DistributedShippart {
+dclass DistributedShipCannon : DistributedPCCannon, DistributedShippart, DistributedCannonDNA {
   setCannonIndex(uint8) required broadcast ram db;
 };
 

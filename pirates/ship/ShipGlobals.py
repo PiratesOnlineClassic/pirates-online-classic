@@ -405,8 +405,7 @@ def getBaseShipConfig(hullId):
 def getMastInfo(hullId):
     hullInfo = getBaseShipConfig(hullId)
     mastNames = ['setMastConfig1', 'setMastConfig2', 'setMastConfig3', 'setForemastConfig', 'setAftmastConfig']
-    sailNames = [
-     'setSailConfig1', 'setSailConfig2', 'setSailConfig3', 'setForesailConfig', 'setAftsailConfig']
+    sailNames = ['setSailConfig1', 'setSailConfig2', 'setSailConfig3', 'setForesailConfig', 'setAftsailConfig']
     mastInfo = []
     for x, (mastName, sailName) in enumerate(zip(mastNames, sailNames)):
         mastType = hullInfo[mastName]

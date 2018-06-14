@@ -1,6 +1,7 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
-from DistributedShippartAI import DistributedShippartAI
+from pirates.piratesbase import PiratesGlobals
+from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 from pirates.destructibles.DistributedDestructibleArrayAI import DistributedDestructibleArrayAI
 
 class DistributedCabinDNA:
@@ -238,7 +239,7 @@ class DistributedCabinAI(DistributedShippartAI, DistributedCabinDNA, Distributed
 
     def __init__(self, air):
         DistributedShippartAI.__init__(self, air)
-        DistributedHullDNA.__init__(self)
+        DistributedCabinDNA.__init__(self)
         DistributedDestructibleArrayAI.__init__(self, air)
 
         self.maxHp = 0

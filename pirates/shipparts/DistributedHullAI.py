@@ -6,7 +6,7 @@ from pirates.ship import ShipGlobals
 class DistributedHullDNA:
 
     def __init__(self):
-        self.shipClass = ShipGlobals.INTERCEPTORL1
+        self.shipClass = 0
         self.baseTeam = 0
 
         self.hullTextureIndex = []

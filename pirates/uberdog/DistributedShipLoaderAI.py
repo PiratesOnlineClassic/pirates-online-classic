@@ -133,6 +133,12 @@ class LoadShipsFSM(ShipFSM):
             channel = self.avatar.getDISLid() << 32 | self.avatar.doId
             self.manager.air.setOwner(shipId, channel)
 
+            def shipGeneratedCallback(ship):
+                ship.setOwnerId(self.avatar.doId)
+                ship.loadParts()
+
+            self.accept('generate-%d' % shipId, shipGeneratedCallback)
+
             # set a post remove for the ship object so that if the client
             # disconnects, their ships will be deleted...
             datagramCleanup = PyDatagram()
