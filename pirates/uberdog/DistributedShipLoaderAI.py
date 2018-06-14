@@ -3,7 +3,8 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.FSM import FSM
 from pirates.ship import ShipGlobals
 from pirates.uberdog import UberDogGlobals
-
+from direct.distributed.MsgTypes import *
+from direct.distributed.PyDatagram import PyDatagram
 
 class ShipFSM(FSM):
 
@@ -119,14 +120,31 @@ class LoadShipsFSM(ShipFSM):
         def shipLoadedCallback(dclass, fields):
             self.pendingShips.remove(shipId)
             self.manager.air.sendActivate(shipId,
+                self.manager.air.districtId,
                 0,
-                0,
-                dclass=dclass)
+                dclass=self.manager.air.dclassesByName['PlayerShipAI'])
 
             # TODO FIXME: find a cleaner way to get the avatar's
             # connection channel id...
-            target = self.avatar.getDISLid() << 32 | self.avatar.doId
-            self.manager.air.setOwner(shipId, target)
+            channel = self.avatar.getDISLid() << 32 | self.avatar.doId
+            self.manager.air.setOwner(shipId, channel)
+
+            # set a post remove for the ship object so that if the client
+            # disconnects, their ships will be deleted...
+            datagramCleanup = PyDatagram()
+            datagramCleanup.addServerHeader(
+                shipId,
+                channel,
+                STATESERVER_OBJECT_DELETE_RAM)
+            datagramCleanup.addUint32(shipId)
+
+            datagram = PyDatagram()
+            datagram.addServerHeader(
+                channel,
+                self.manager.air.ourChannel,
+                CLIENTAGENT_ADD_POST_REMOVE)
+            datagram.addString(datagramCleanup.getMessage())
+            self.manager.air.send(datagram)
 
             if not self.pendingShips:
                 self.cleanup()
