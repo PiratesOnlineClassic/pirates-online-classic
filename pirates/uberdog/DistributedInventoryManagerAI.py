@@ -106,11 +106,13 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         taskMgr.remove(self.inventoryTasks[avatarId])
         del self.inventoryTasks[avatarId]
+        self.ignore('distObjDelete-%d' % avatarId)
 
     def __sendInventory(self, avatarId, inventoryId):
         inventory = self.inventories.get(inventoryId)
 
-        self.acceptOnce('distObjDelete-%d' % (avatarId), lambda: self.__cleanupWaitForInventory(avatarId))
+        self.acceptOnce('distObjDelete-%d' % avatarId, lambda: \
+            self.__cleanupWaitForInventory(avatarId))
 
         if not inventory:
             if avatarId in self.inventoryTasks:
@@ -120,8 +122,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
                 return
 
             self.inventoryTasks[avatarId] = taskMgr.doMethodLater(5.0, self.__waitForInventory,
-                self.uniqueName('waitForInventory-%d' % avatarId), appendTask=True, extraArgs=[
-                    avatarId, inventoryId])
+                self.uniqueName('waitForInventory-%d' % avatarId), appendTask=True,
+                extraArgs=[avatarId, inventoryId])
 
             return
 
