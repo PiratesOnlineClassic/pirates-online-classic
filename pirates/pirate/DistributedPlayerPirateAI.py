@@ -348,6 +348,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             updateStack(InventoryType.UnspentDagger)
         elif skillId >= InventoryType.begin_WeaponSkillGrenade and skillId < InventoryType.end_WeaponSkillGrenade:
             updateStack(InventoryType.UnspentGrenade)
+        elif skillId >= InventoryType.begin_SkillSailing and skillId < InventoryType.end_SkillSailing:
+            updateStack(InventoryType.UnspentSailing)
+        elif skillId >= InventoryType.begin_WeaponSkillCannon and skillId < InventoryType.end_WeaponSkillCannon:
+            updateStack(InventoryType.UnspentCannon)
         elif skillId >= InventoryType.begin_WeaponSkillDoll and skillId < InventoryType.end_WeaponSkillDoll:
             updateStack(InventoryType.UnspentDoll)
         elif skillId >= InventoryType.begin_WeaponSkillWand and skillId < InventoryType.end_WeaponSkillWand:
