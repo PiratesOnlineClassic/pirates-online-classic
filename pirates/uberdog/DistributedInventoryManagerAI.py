@@ -182,7 +182,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def maxOutSkillPoints():
+def maxSP():
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
     if inventory:
@@ -253,6 +253,13 @@ def maxWeapons():
         inventory.b_setStackQuantity(InventoryType.AmmoGrenadeSmoke, 99)
         inventory.b_setStackQuantity(InventoryType.AmmoGrenadeLandMine, 99)
         inventory.b_setStackQuantity(InventoryType.AmmoGrenadeSiege, 99)
+
+        inventory.b_setStackQuantity(InventoryType.AmmoChainShot, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoGrapeShot, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoFirebrand, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoThunderbolt, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoExplosive, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoFury, 99)
         return "Maxed weapons to Rank 5!"
 
     return "Failed to max Weapons"

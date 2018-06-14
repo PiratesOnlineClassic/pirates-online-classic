@@ -155,4 +155,3 @@ class NamePanelGui(GuiPanel.GuiPanel):
         index0 = PLocalizer.PirateShipPrefix.get(self.tumblerList[0].getName())
         index1 = PLocalizer.PirateShipSuffix.get(self.tumblerList[1].getName())
         self.nameIndices = [index0, index1]
-# okay decompiling .\pirates\piratesgui\NamePanelGui.pyc
