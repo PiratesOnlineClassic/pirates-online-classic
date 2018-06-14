@@ -151,6 +151,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
     def setCategoryLimit(self, category, limit):
         self.categoryLimits[category] = limit
+        self.d_setCategoryLimits(self.getCategoryLimits())
 
     def d_setCategoryLimit(self, category, limit):
         self.d_setCategoryLimits(self.getCategoryLimits())
