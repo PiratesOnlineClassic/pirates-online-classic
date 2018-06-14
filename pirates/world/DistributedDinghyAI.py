@@ -56,3 +56,25 @@ class DistributedDinghyAI(DistributedInteractiveAI):
 
     def getSiegeTeam(self):
         return self.siegeTeam
+
+    def selectOwnShip(self, shipId, teamSpec):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+
+        if not avatar:
+            return
+
+        inventory = avatar.getInventory()
+
+        if not inventory:
+            self.notify.warning('Failed to select ship %d, avatar %d has no inventory!' % (
+                shipId, avatar.doId))
+
+            return
+
+        #if shipId not in inventory.getShipDoIdList():
+        #    self.notify.warning('Failed to select ship %d, avatar %d doesn\'t own that ship!' % (
+        #        shipId, avatar.doId))
+        #
+        #    return
+
+        self.sendUpdateToAvatarId(avatar.doId, 'sendAvatarToShip', [shipId])
