@@ -149,13 +149,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
             for categoryAndLimit in categoriesAndLimits:
                 inventory.b_setCategoryLimit(*categoryAndLimit)
 
-            doIdsInCategory = {}
-            for catagory, doId in categoriesAndDoIds:
-                catagoryAndDoIds = doIdsInCategory.setdefault(catagory, [])
-                catagoryAndDoIds.append(doId)
-
-            for catagoryAndDoIds in doIdsInCategory.items():
-                inventory.b_setDoIdListCategory(*catagoryAndDoIds)
+            inventory.b_setDoIds(categoriesAndDoIds)
 
             for accumulatorTypeAndQuantity in accumulatorTypesAndQuantities:
                 inventory.b_setAccumulator(*accumulatorTypeAndQuantity)
