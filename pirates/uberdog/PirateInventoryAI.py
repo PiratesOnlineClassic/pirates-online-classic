@@ -7,9 +7,6 @@ from pirates.battle import WeaponGlobals
 class PirateInventoryAI(DistributedInventoryAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PirateInventoryAI')
 
-    def getStackQuantity(self, skillId):
-        return self.getItem(self.getStack, WeaponGlobals.getSkillReputationCategoryId(skillId))
-
     def setReputation(self, repType, quantity):
         avatar = self.air.doId2do.get(self.ownerId)
 
@@ -36,7 +33,7 @@ class PirateInventoryAI(DistributedInventoryAI):
         self.b_setAccumulator(repType, quantity)
 
     def getReputation(self, repType):
-        return self.getItem(self.getAccumulator, repType)
+        return self.getAccumulator(repType)
 
     def setOverallRep(self, quantity):
         self.setReputation(InventoryType.OverallRep, quantity)
@@ -49,22 +46,16 @@ class PirateInventoryAI(DistributedInventoryAI):
         return self.getReputation(InventoryType.OverallRep)
 
     def setGoldInPocket(self, quantity):
-        self.b_setStack(InventoryType.GoldInPocket, min(quantity, 65000))
-
-    def getGoldInPocket(self):
-        return self.getItem(self.getStack, InventoryType.GoldInPocket)
+        self.b_setStackQuantity(InventoryType.GoldInPocket, min(quantity, 65000))
 
     def setVitaeLevel(self, quantity):
-        self.b_setStack(InventoryType.Vitae_Level, quantity)
+        self.b_setStackQuantity(InventoryType.Vitae_Level, quantity)
 
     def getVitaeLevel(self):
-        return self.getItem(self.getStack, InventoryType.Vitae_Level)
+        return self.getStackQuantity(InventoryType.Vitae_Level)
 
     def setVitaeLeft(self, quantity):
-        self.b_setStack(InventoryType.Vitae_Left, quantity)
+        self.b_setStackQuantity(InventoryType.Vitae_Left, quantity)
 
     def getVitaeLeft(self):
-        return self.getItem(self.getStack, InventoryType.Vitae_Left)
-
-    def getShipList(self):
-        return self.getCategoryDoIds(InventoryCategory.SHIPS)
+        return self.getStackQuantity(InventoryType.Vitae_Left)

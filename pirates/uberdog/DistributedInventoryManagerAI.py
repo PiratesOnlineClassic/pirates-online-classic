@@ -140,25 +140,26 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
                 return
 
-            categoryLimits, = fields.get('setCategoryLimits', [])
+            categoriesAndLimits, = fields.get('setCategoryLimits', [])
             categoriesAndDoIds, = fields.get('setDoIds', [])
-            accumulators, = fields.get('setAccumulators', [])
-            stackLimits, = fields.get('setStackLimits', [])
-            stacks, = fields.get('setStacks', [])
+            accumulatorTypesAndQuantities, = fields.get('setAccumulators', [])
+            stackTypesAndLimits, = fields.get('setStackLimits', [])
+            stackTypesAndQuantities, = fields.get('setStacks', [])
 
-            inventory.b_setCategoryLimits(categoryLimits)
+            for categoryAndLimit in categoriesAndLimits:
+                inventory.b_setCategoryLimit(*categoryAndLimit)
 
-            for categoryAndDoId in categoriesAndDoIds:
-                inventory.b_setCategoryAndDoId(*categoryAndDoId)
+            for categoryAndDoIds in categoriesAndDoIds:
+                inventory.b_setDoIdListCategory(*categoryAndDoIds)
 
-            for accumulator in accumulators:
-                inventory.b_setAccumulator(*accumulator)
+            for accumulatorTypeAndQuantity in accumulatorTypesAndQuantities:
+                inventory.b_setAccumulator(*accumulatorTypeAndQuantity)
 
-            for stackLimit in stackLimits:
-                inventory.b_setStackLimit(*stackLimit)
+            for stackTypeAndLimit in stackTypesAndLimits:
+                inventory.b_setStackLimit(*stackTypeAndLimit)
 
-            for stack in stacks:
-                inventory.b_setStack(*stack)
+            for stackTypeAndQuantity in stackTypesAndQuantities:
+                inventory.b_setStackQuantity(*stackTypeAndQuantity)
 
             # tell the ship loader to load up the avatar's ship objects
             # from the database and activate them so that the ship's
@@ -185,17 +186,17 @@ def maxOutSkillPoints():
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
     if inventory:
-        inventory.b_setStack(InventoryType.UnspentMelee, 255)
-        inventory.b_setStack(InventoryType.UnspentCutlass, 255)
-        inventory.b_setStack(InventoryType.UnspentPistol, 255)
-        inventory.b_setStack(InventoryType.UnspentMusket, 255)
-        inventory.b_setStack(InventoryType.UnspentDagger, 255)
-        inventory.b_setStack(InventoryType.UnspentGrenade, 255)
-        inventory.b_setStack(InventoryType.UnspentWand, 255)
-        inventory.b_setStack(InventoryType.UnspentDoll, 255)
-        inventory.b_setStack(InventoryType.UnspentKettle, 255)
-        inventory.b_setStack(InventoryType.UnspentCannon, 255)
-        inventory.b_setStack(InventoryType.UnspentSailing, 255)
+        inventory.b_setStackQuantity(InventoryType.UnspentMelee, 255)
+        inventory.b_setStackQuantity(InventoryType.UnspentCutlass, 255)
+        inventory.b_setStackQuantity(InventoryType.UnspentPistol, 255)
+        inventory.b_setStackQuantity(InventoryType.UnspentMusket, 255)
+        inventory.b_setStackQuantity(InventoryType.UnspentDagger, 255)
+        inventory.b_setStackQuantity(InventoryType.UnspentGrenade, 255)
+        inventory.b_setStackQuantity(InventoryType.UnspentWand, 255)
+        inventory.b_setStackQuantity(InventoryType.UnspentDoll, 255)
+        inventory.b_setStackQuantity(InventoryType.UnspentKettle, 255)
+        inventory.b_setStackQuantity(InventoryType.UnspentCannon, 255)
+        inventory.b_setStackQuantity(InventoryType.UnspentSailing, 255)
         return "Maxed out Skill Points!"
 
     return "Failed to max out Skill Points!"
@@ -212,46 +213,46 @@ def maxWeapons():
         ## Some nice ol grammar better put together while this comment has bad grammar fix ~ Dan.
 
         # Remove the original items from your inventory stacks...
-        inventory.b_setStack(InventoryType.CutlassWeaponL1, 0)
-        inventory.b_setStack(InventoryType.PistolWeaponL1, 0)
-        inventory.b_setStack(InventoryType.DollWeaponL1, 0)
-        inventory.b_setStack(InventoryType.DaggerWeaponL1, 0)
-        inventory.b_setStack(InventoryType.WandWeaponL1, 0)
+        inventory.b_setStackQuantity(InventoryType.CutlassWeaponL1, 0)
+        inventory.b_setStackQuantity(InventoryType.PistolWeaponL1, 0)
+        inventory.b_setStackQuantity(InventoryType.DollWeaponL1, 0)
+        inventory.b_setStackQuantity(InventoryType.DaggerWeaponL1, 0)
+        inventory.b_setStackQuantity(InventoryType.WandWeaponL1, 0)
 
         # Set new weapon stacks
-        inventory.b_setStack(InventoryType.CutlassWeaponL5, 1)
-        inventory.b_setStack(InventoryType.PistolWeaponL5, 1)
-        inventory.b_setStack(InventoryType.BayonetWeaponL3, 0)
-        inventory.b_setStack(InventoryType.MusketWeaponL3, 0)
-        inventory.b_setStack(InventoryType.DollWeaponL5, 1)
-        inventory.b_setStack(InventoryType.DaggerWeaponL5, 1)
-        inventory.b_setStack(InventoryType.WandWeaponL5, 1)
+        inventory.b_setStackQuantity(InventoryType.CutlassWeaponL5, 1)
+        inventory.b_setStackQuantity(InventoryType.PistolWeaponL5, 1)
+        inventory.b_setStackQuantity(InventoryType.BayonetWeaponL3, 0)
+        inventory.b_setStackQuantity(InventoryType.MusketWeaponL3, 0)
+        inventory.b_setStackQuantity(InventoryType.DollWeaponL5, 1)
+        inventory.b_setStackQuantity(InventoryType.DaggerWeaponL5, 1)
+        inventory.b_setStackQuantity(InventoryType.WandWeaponL5, 1)
 
         # Set Ammo
-        inventory.b_setStack(InventoryType.AmmoAsp, 99)
-        inventory.b_setStack(InventoryType.AmmoAdder, 99)
-        inventory.b_setStack(InventoryType.AmmoSidewinder, 99)
-        inventory.b_setStack(InventoryType.AmmoViperNest, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoAsp, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoAdder, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoSidewinder, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoViperNest, 99)
 
-        inventory.b_setStack(InventoryType.AmmoLeadShot, 99)
-        inventory.b_setStack(InventoryType.AmmoVenomShot, 99)
-        inventory.b_setStack(InventoryType.AmmoBaneShot, 99)
-        inventory.b_setStack(InventoryType.AmmoHexEaterShot, 99)
-        inventory.b_setStack(InventoryType.AmmoSilverShot, 99)
-        inventory.b_setStack(InventoryType.AmmoSteelShot, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoLeadShot, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoVenomShot, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoBaneShot, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoHexEaterShot, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoSilverShot, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoSteelShot, 99)
 
-        inventory.b_setStack(InventoryType.AmmoScatterShot, 99)
-        inventory.b_setStack(InventoryType.AmmoCursedShot, 99)
-        inventory.b_setStack(InventoryType.AmmoCoalfireShot, 99)
-        inventory.b_setStack(InventoryType.AmmoHeavySlug, 99)
-        inventory.b_setStack(InventoryType.AmmoExploderShot, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoScatterShot, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoCursedShot, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoCoalfireShot, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoHeavySlug, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoExploderShot, 99)
 
-        inventory.b_setStack(InventoryType.AmmoGrenadeExplosion, 99)
-        inventory.b_setStack(InventoryType.AmmoGrenadeShockBomb, 99)
-        inventory.b_setStack(InventoryType.AmmoGrenadeFlame, 99)
-        inventory.b_setStack(InventoryType.AmmoGrenadeSmoke, 99)
-        inventory.b_setStack(InventoryType.AmmoGrenadeLandMine, 99)
-        inventory.b_setStack(InventoryType.AmmoGrenadeSiege, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoGrenadeExplosion, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoGrenadeShockBomb, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoGrenadeFlame, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoGrenadeSmoke, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoGrenadeLandMine, 99)
+        inventory.b_setStackQuantity(InventoryType.AmmoGrenadeSiege, 99)
         return "Maxed weapons to Rank 5!"
 
     return "Failed to max Weapons"
@@ -268,6 +269,5 @@ def gold(amount):
 def removeGold(amount):
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
-
     inventory.setGoldInPocket(inventory.getGoldInPocket() - amount)
     return 'Removed Gold Amount: %s' % amount

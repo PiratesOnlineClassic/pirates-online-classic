@@ -70,11 +70,10 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
 
                 return task.done
 
-            inventory.b_setStack(InventoryType.Vitae_Level, 1)
-
             vitaeCost = (10 * 60) * 60
-            inventory.b_setStack(InventoryType.Vitae_Cost, vitaeCost)
-            inventory.b_setStack(InventoryType.Vitae_Left, vitaeCost)
+            inventory.b_setStackQuantity(InventoryType.Vitae_Level, 1)
+            inventory.b_setStackQuantity(InventoryType.Vitae_Cost, vitaeCost)
+            inventory.b_setStackQuantity(InventoryType.Vitae_Left, vitaeCost)
 
             # Set the avatars health to the minimal amounts
             self.avatar.b_setHp(1)

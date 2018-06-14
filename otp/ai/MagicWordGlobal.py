@@ -1,5 +1,5 @@
 MINIMUM_MAGICWORD_ACCESS = 200
-from direct.showbase.PythonUtil import *
+from direct.showbase.PythonUtil import describeException
 
 
 class MagicError(Exception):

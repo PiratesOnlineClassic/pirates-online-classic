@@ -3,7 +3,7 @@ from pirates.battle import WeaponGlobals
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *
 from pirates.uberdog.UberDogGlobals import (InventoryCategory, InventoryId,
-                                            InventoryType, getSkillCategory)
+    InventoryType, getSkillCategory)
 
 
 class DistributedInventoryBase:
@@ -29,7 +29,6 @@ class DistributedInventoryBase:
         self.sentReadyMessage = False
         self.useTemporaryInventory = False
         self.temporaryInventory = {}
-        return
 
     def delete(self):
         self.ignoreAll()

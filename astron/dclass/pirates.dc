@@ -503,18 +503,17 @@ dclass DistributedInventory : DistributedObject {
   setOwnerId(uint32) required broadcast airecv db;
   setCategoryLimits(InventoryCategoryLimit []) airecv db required broadcast;
   setDoIds(InventoryDoIdSlot []) airecv db required broadcast;
-  accumulator(uint16, uint32);
   setAccumulators(InventoryAccumulatorSlot []) airecv db required;
-  stackLimit(uint16, uint16);
-  stack(uint16, uint16);
   setStackLimits(InventoryTypeLimit []) airecv db required;
   setStacks(InventoryStackableSlot []) airecv db required ownrecv;
+  accumulator(uint16, uint32);
+  stackLimit(uint16, uint16);
+  stack(uint16, uint16);
   setTemporaryInventory(bool);
   setTemporaryStack(uint16, uint16);
   sendMaxHp(uint16, uint32) airecv clsend;
   sendMaxMojo(uint16, uint32) airecv clsend;
   requestInventoryComplete();
-  approvedTradeResponse(uint32) airecv db;
 };
 
 dclass PirateInventory : DistributedInventory {
