@@ -269,4 +269,3 @@ class DistributedSail(DistributedShippart.DistributedShippart, DistributedDestru
                 if team == 2:
                     self.prop.setLogo(211)
         return
-

@@ -1,8 +1,11 @@
-from direct.distributed.DistributedObjectAI import DistributedObjectAI
+from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from direct.directnotify import DirectNotifyGlobal
+from pirates.ship.DistributedShippartAI import DistributedShippartAI
 
-class DistributedSteeringWheelAI(DistributedObjectAI):
+
+class DistributedSteeringWheelAI(DistributedInteractiveAI, DistributedShippartAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSteeringWheelAI')
 
     def __init__(self, air):
-        DistributedObjectAI.__init__(self, air)
+        DistributedInteractiveAI.__init__(self, air)
+        DistributedShippartAI.__init__(self, air)

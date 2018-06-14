@@ -677,7 +677,6 @@ dclass DistributedShip : DistributedMovingObject, DistributedCharterableObject, 
   setMaxCargo(uint8) required broadcast ram db ownrecv;
   setCargo(uint8[]) required broadcast ram db ownrecv;
   setMaxCrew(uint8) required broadcast ram db ownrecv;
-  setWorldKey(uint32) required broadcast ram;
   setCrew(uint32[]) required broadcast ram ownrecv;
   setBandId(uint32, uint32) broadcast ram;
   setGuildId(uint32) broadcast ram;
@@ -730,10 +729,10 @@ dclass NPCShip : DistributedShip {
 dclass PlayerShip : DistributedShip {
   attacked() broadcast;
   setSiegeBounty(uint16) broadcast ram;
-  setAllowCrewState(bool) airecv required broadcast ram ownsend;
-  setAllowFriendState(bool) airecv required broadcast ram ownsend;
-  setAllowGuildState(bool) airecv required broadcast ram ownsend;
-  setAllowPublicState(bool) airecv required broadcast ram ownsend;
+  setAllowCrewState(bool) required broadcast ram airecv ownsend;
+  setAllowFriendState(bool) required broadcast ram airecv ownsend;
+  setAllowGuildState(bool) required broadcast ram airecv ownsend;
+  setAllowPublicState(bool) required broadcast ram airecv ownsend;
 };
 
 dclass BlackPearlShip : DistributedShip {

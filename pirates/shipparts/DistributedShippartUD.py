@@ -1,6 +1,7 @@
 from direct.distributed.DistributedObjectUD import DistributedObjectUD
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedShippartUD(DistributedObjectUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShippartUD')
 
