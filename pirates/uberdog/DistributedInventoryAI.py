@@ -95,6 +95,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
     def setAccumulator(self, accumulatorType, quantity):
         self.accumulators[accumulatorType] = quantity
+        self.d_setAccumulators(self.getAccumulators())
 
     def d_setAccumulator(self, accumulatorType, quantity):
         self.sendUpdateToAvatarId(self.ownerId, 'accumulator', [accumulatorType, quantity])
@@ -105,6 +106,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
     def setStackLimit(self, stackType, limit):
         self.stackLimits[stackType] = limit
+        self.d_setStackLimits(self.getStackLimits())
 
     def d_setStackLimit(self, stackType, limit):
         self.sendUpdateToAvatarId(self.ownerId, 'stackLimit', [stackType, limit])
@@ -115,6 +117,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
     def setStackQuantity(self, stackType, quantity):
         self.stacks[stackType] = quantity
+        self.d_setStacks(self.getStacks())
 
     def d_setStackQuantity(self, stackType, quantity):
         self.sendUpdateToAvatarId(self.ownerId, 'stack', [stackType, quantity])
