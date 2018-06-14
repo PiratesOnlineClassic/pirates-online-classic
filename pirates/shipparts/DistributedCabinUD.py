@@ -1,8 +1,8 @@
-from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
+from direct.distributed.DistributedObjectUD import DistributedObjectUD
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedCabinUD(DistributedObjectGlobalUD):
+class DistributedCabinUD(DistributedObjectUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCabinUD')
 
     def __init__(self, air):
-        DistributedObjectGlobalUD.__init__(self, air)
+        DistributedObjectUD.__init__(self, air)

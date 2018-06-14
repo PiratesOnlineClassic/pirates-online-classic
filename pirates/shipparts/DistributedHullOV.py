@@ -4,7 +4,7 @@ from pirates.ship import ShipGlobals
 
 class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedHullOV')
-    
+
     def __init__(self, cr):
         DistributedObjectOV.DistributedObjectOV.__init__(self, cr)
         self.shipId = 0
@@ -44,7 +44,7 @@ class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
         DistributedObjectOV.DistributedObjectOV.disable(self)
 
     def __repr__(self):
-        return `self.doId`
+        return repr(self.doId)
 
     def setShipId(self, val):
         self.shipId = val
@@ -56,7 +56,7 @@ class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
 
     def setBaseTeam(self, val):
         pass
-    
+
     def setHullTextureIndex(self, val):
         pass
 
@@ -86,28 +86,24 @@ class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
 
     def setAftsailConfig(self, val):
         pass
-    
+
     def setProwType(self, val):
         pass
-    
+
     def setRamType(self, val):
         pass
-    
+
     def setCabinType(self, val):
         pass
 
     def setCannonConfig(self, val):
         self.cannonConfig = val
-        messenger.send('setHullCannonConfig-%s' % self.shipId, [
-            val])
+        messenger.send('setHullCannonConfig-%s' % self.shipId, [val])
 
     def setLeftBroadsideConfig(self, val):
         self.lBroadsideConfig = val
-        messenger.send('setHullLeftBroadsideConfig-%s' % self.shipId, [
-            val])
+        messenger.send('setHullLeftBroadsideConfig-%s' % self.shipId, [val])
 
     def setRightBroadsideConfig(self, val):
         self.rBroadsideConfig = val
-        messenger.send('setHullRightBroadsideConfig-%s' % self.shipId, [
-            val])
-
+        messenger.send('setHullRightBroadsideConfig-%s' % self.shipId, [val])
