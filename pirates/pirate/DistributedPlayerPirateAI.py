@@ -621,6 +621,7 @@ def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
 
     invoker = spellbook.getInvoker()
     invoker.b_setAllowGMNameTag(True)
+    invoker.d_setFounder(True)
     invoker.b_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
 
     return 'Nametag set.'
@@ -641,9 +642,10 @@ def toggleGM():
     """
 
     invoker = spellbook.getInvoker()
+    invoker.d_setFounder(True)
     invoker.b_setAllowGMNameTag(not invoker.getAllowGMNameTag())
-    invoker.b_updateGMNameTag(not invoker.gmNameTagState, invoker.gmNameTagColor,
-        invoker.gmNameTagString)
+    invoker.b_updateGMNameTag(not invoker.gmNameTagState, 'red',
+        'Game Master')
 
     return 'Nametag toggled to: %s' % str(invoker.gmNameTagState)
 
