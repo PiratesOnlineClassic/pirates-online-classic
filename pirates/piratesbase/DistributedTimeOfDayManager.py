@@ -36,12 +36,21 @@ class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def setClouds(level):
+    """
+    Sets the timeOfDayManager cloud state
+    """
+
     base.cr.timeOfDayManager.skyGroup.setCloudLevel(level)
     return 'Transitioning clouds to %d.' % level
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def fireworks(showType=FireworkShowType.FourthOfJuly):
-    timestamp = globalClockDelta.getFrameNetworkTime(bits=16)
+    """
+    Enables or disables Fourth of July fireworks
+    """
+
+    timestamp = globalClockDelta.localElapsedTime(base.cr.\
+        timeOfDayManager.startingTime, bits=32)
 
     if base.cr.activeWorld:
         if not base.cr.activeWorld.fireworkShowMgr:
