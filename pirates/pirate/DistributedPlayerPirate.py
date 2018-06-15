@@ -1592,6 +1592,9 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
     def setAllowGMNameTag(self, state):
         self.gmNameTagAllowed = state
 
+    def getAllowGMNameTag(self):
+        return self.gmNameTagAllowed
+
     def getShortName(self):
         return self.getName()
 

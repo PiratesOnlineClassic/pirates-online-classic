@@ -1163,7 +1163,7 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   playEmote(int32) broadcast ownrecv ownsend;
   setTempDoubleXPReward(uint32=0) required db ram broadcast;
   setCrewHUDUpdate(uint8, HUDIcons []) ownrecv;
-  setAllowGMNameTag(bool) required ram broadcast airecv;
+  setAllowGMNameTag(bool) required broadcast ram ownrecv;
   updateGMNameTag(uint8, string, string) required ram broadcast ownsend;
 };
 

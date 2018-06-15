@@ -560,7 +560,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.gmNameTagAllowed = gmNameTagAllowed
 
     def d_setAllowGMNameTag(self, gmNameTagAllowed):
-        self.sendUpdate('setAllowGMNameTag', gmNameTagAllowed)
+        self.sendUpdate('setAllowGMNameTag', [gmNameTagAllowed])
+
+    def b_setAllowGMNameTag(self, gmNameTagAllowed):
+        self.setAllowGMNameTag(gmNameTagAllowed)
+        self.d_setAllowGMNameTag(gmNameTagAllowed)
 
     def getAllowGMNameTag(self):
         return self.gmNameTagAllowed
@@ -615,7 +619,9 @@ def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
     if gmNameTagState < 0 or gmNameTagState > 1:
         return 'Invalid state!'
 
-    spellbook.getInvoker().b_updateGMNameTag(gmNameTagState,
+    invoker = spellbook.getInvoker()
+    invoker.b_setAllowGMNameTag(True)
+    invoker.b_updateGMNameTag(gmNameTagState,
         gmNameTagColor, gmNameTagString)
 
     return 'Nametag set.'
@@ -634,7 +640,9 @@ def toggleGM():
     """
     Toggles your GM name tag
     """
+
     invoker = spellbook.getInvoker()
+    invoker.b_setAllowGMNameTag(True)
     invoker.b_updateGMNameTag(not invoker.gmNameTagState, invoker.gmNameTagColor,
         invoker.gmNameTagString)
 
