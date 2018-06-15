@@ -36,11 +36,6 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
         for category, doId in categoriesAndDoIds:
             category = self.doIdsInCategory.setdefault(category, [])
-
-            # TODO FIXME: why is the shipId list sent more times than once????
-            if doId in category:
-                continue
-
             category.append(doId)
 
     def d_setDoIds(self, categoriesAndDoIds):
