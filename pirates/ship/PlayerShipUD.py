@@ -1,4 +1,4 @@
-from pirate.ship.DistributedShipUD import DistributedShipUD
+from pirates.ship.DistributedShipUD import DistributedShipUD
 from direct.directnotify import DirectNotifyGlobal
 
 class PlayerShipUD(DistributedShipUD):

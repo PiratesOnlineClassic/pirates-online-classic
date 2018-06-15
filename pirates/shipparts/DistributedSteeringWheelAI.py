@@ -1,6 +1,6 @@
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from direct.directnotify import DirectNotifyGlobal
-from pirates.ship.DistributedShippartAI import DistributedShippartAI
+from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 
 
 class DistributedSteeringWheelAI(DistributedInteractiveAI, DistributedShippartAI):

@@ -1,4 +1,4 @@
-from direct.distributed.DistributedShipAI import DistributedShipAI
+from pirates.ship.DistributedShipAI import DistributedShipAI
 from direct.directnotify import DirectNotifyGlobal
 
 class NPCShipAI(DistributedShipAI):

@@ -1,6 +1,6 @@
 from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 from direct.directnotify import DirectNotifyGlobal
-from pirates.ship.SailDNA import SailDNA
+from pirates.shipparts.SailDNA import SailDNA
 from pirates.destructibles.DistributedDestructibleArrayAI import DistributedDestructibleArrayAI
 
 

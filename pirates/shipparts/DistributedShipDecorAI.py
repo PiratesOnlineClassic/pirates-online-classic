@@ -1,6 +1,6 @@
 from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 from direct.directnotify import DirectNotifyGlobal
-from pirates.ship.DecorDNA import DecorDNA
+from pirates.shipparts.DecorDNA import DecorDNA
 from pirates.destructibles.DistributedDestructibleArrayAI import DistributedDestructibleArrayAI
 
 
@@ -9,7 +9,7 @@ class DistributedDecorDNA(DecorDNA):
     def __init__(self):
         DecorDNA.__init__(self)
 
-class DistributedShipDecorAI(DistributedShippartAI, DistributedDestructibleArrayAI, DistributedSailDNA):
+class DistributedShipDecorAI(DistributedShippartAI, DistributedDestructibleArrayAI, DistributedDecorDNA):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipDecorAI')
 
     def __init__(self, air):

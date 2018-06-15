@@ -1,6 +1,6 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
-from pirates.ship.CabinDNA import CabinDNA
+from pirates.shipparts.CabinDNA import CabinDNA
 from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 from pirates.destructibles.DistributedDestructibleArrayAI import DistributedDestructibleArrayAI
 
