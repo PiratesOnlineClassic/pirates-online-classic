@@ -9,7 +9,7 @@ from pirates.effects.FireworkGlobals import *
 from pirates.effects.FireworkShowManager import FireworkShowManager
 
 class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
-    
+
     notify = directNotify.newCategory('DistributedMainWorld')
 
     def __init__(self, cr):
@@ -116,4 +116,4 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
     if __dev__:
         def printIslands(self):
             for doId, island in self.islands.iteritems():
-                print doId, `island`
+                print doId, repr(island)

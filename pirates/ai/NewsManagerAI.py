@@ -75,7 +75,6 @@ class NewsManagerAI(DistributedObjectAI):
         return Task.again
 
     def __runHolidayTimer(self, task=None):
-
         if len(self.holidayList) > 0:
             for holiday in self.holidayList:
                 time = self.holidayList[holiday]
@@ -86,7 +85,6 @@ class NewsManagerAI(DistributedObjectAI):
                     self.endHoliday(holiday)
 
     def startHoliday(self, holidayId, time, quietly=False):
-
         if self.isHolidayActive(holidayId):
             return
 
@@ -101,7 +99,6 @@ class NewsManagerAI(DistributedObjectAI):
             self.air.netMessenger.send('uberDOGHolidayStarted', [holidayId, quietly])
 
     def endHoliday(self, holidayId):
-
         if not self.isHolidayActive(holidayId):
             self.notify.warning('Attempted to stop inactive holiday %d!' % holidayId)
             return
