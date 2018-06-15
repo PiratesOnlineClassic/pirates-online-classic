@@ -69,7 +69,7 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
             messenger.send('todHalloweenStateChange')
 
         return Task.done
-   
+
     def sync(self, cycleType, startingState, startingTime, cycleDuration):
         self.cycleType = cycleType
         self.startingState = startingState

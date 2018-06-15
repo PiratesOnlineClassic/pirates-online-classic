@@ -2,6 +2,7 @@ from direct.distributed.ClockDelta import globalClockDelta
 from direct.distributed.DistributedObject import DistributedObject
 from pirates.piratesbase import TODGlobals
 from pirates.piratesbase.TimeOfDayManager import TimeOfDayManager
+from pirates.effects.FireworkGlobals import *
 from otp.ai.MagicWordGlobal import *
 
 class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
@@ -36,4 +37,16 @@ class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def setClouds(level):
     base.cr.timeOfDayManager.skyGroup.setCloudLevel(level)
-    return 'Transitioning clouds to %d' % level
+    return 'Transitioning clouds to %d.' % level
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def fireworks(showType=FireworkShowType.FourthOfJuly):
+    timestamp = globalClockDelta.getFrameNetworkTime(bits=16)
+
+    if base.cr.activeWorld:
+        if not base.cr.activeWorld.fireworkShowMgr:
+            base.cr.activeWorld.enableFireworkShow(timestamp, showType)
+        else:
+            base.cr.activeWorld.disableFireworkShow()
+
+    return "Toggled fireworks show with type %d." % showType
