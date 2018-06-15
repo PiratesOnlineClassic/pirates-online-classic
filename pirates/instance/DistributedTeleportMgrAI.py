@@ -45,8 +45,6 @@ class TeleportFSM(FSM):
             self.avatar.d_forceTeleportStart(self.world.getFileName(), self.teleportZone.doId, self.teleportHandler.doId, 0,
                 self.teleportZone.parentId, self.teleportZone.zoneId)
 
-            self.avatar.b_setTeleportFlag(PiratesGlobals.TFInInitTeleport | PiratesGlobals.TFInTeleport)
-
         teleportHandlerDoId = self.teleportMgr.air.allocateChannel()
         self.acceptOnce('generate-%d' % teleportHandlerDoId, teleportHandlerReady)
 
