@@ -331,7 +331,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         def updateStack(stackType):
             unspentStack = inventory.getStackQuantity(stackType)
             if not unspentStack:
-                self.notify.warning('Cannot update stack %d, player has no skill points!' % (
+                self.notify.debug('Cannot update stack %d, player has no skill points!' % (
                     stackType))
 
                 return
