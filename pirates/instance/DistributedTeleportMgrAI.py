@@ -43,8 +43,8 @@ class TeleportFSM(FSM):
 
     def __teleportHandlerCreatedCallback(self, teleportHandler):
         if not teleportHandler:
-            self.notify.warning('Failed to generate teleportHandler %d, for avatar %d, while trying to teleport!' % (
-                self.teleportHandler.doId, self.avatar.doId))
+            self.notify.warning('Failed to generate teleportHandler for avatar %d, while trying to teleport!' % (
+                self.avatar.doId))
 
             self.cleanup()
             return
