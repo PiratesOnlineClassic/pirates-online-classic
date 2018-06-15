@@ -163,7 +163,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
     def hasStackSpace(self, stackType, amount=0):
         limit = self.getStackLimit(stackType)
-        _, stored = self.getStack(stackType) or (stackType, 0)
+        _, stored = self.getStackQuantity(stackType) or (stackType, 0)
         return limit > (stored + amount)
 
     def d_setTemporaryInventory(self, temporaryInventory):
