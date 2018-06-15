@@ -8,6 +8,7 @@ from pirates.pirate.PlayerPirateGameFSMAI import PlayerPirateGameFSMAI
 from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
 from pirates.piratesbase import PLocalizer
 from pirates.piratesbase import PiratesGlobals
+from pirates.pirate import AvatarTypes
 from pirates.quest.QuestConstants import LocationIds
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
@@ -31,6 +32,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.isNpc = False
         self.battleRandom = None
 
+        self.avatarType = AvatarTypes.Pirate
         self.dnaString = ''
         self.inventoryId = 0
         self.guildId = 0

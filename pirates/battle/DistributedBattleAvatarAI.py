@@ -2,6 +2,7 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.reputation. DistributedReputationAvatarAI import  DistributedReputationAvatarAI
 from pirates.battle.WeaponBaseAI import WeaponBaseAI
 from pirates.battle.Teamable import Teamable
+from pirates.pirate import AvatarTypes
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.task import Task
 from pirates.pirate.BattleAvatarGameFSMAI import BattleAvatarGameFSMAI
@@ -19,6 +20,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.gameFSM = BattleAvatarGameFSMAI(self.air, self)
         self.isNpc = True
 
+        self.avatarType = AvatarTypes.AnyAvatar
         self.shipId = 0
         self.currentWeaponId = 0
         self.isWeaponDrawn = False
@@ -74,6 +76,13 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
     def setAvatarType(self, avatarType):
         self.avatarType = avatarType
+
+    def d_setAvatarType(self, avatarType):
+        self.sendUpdate('setAvatarType', [avatarType])
+
+    def b_setAvatarType(self, avatarType):
+        self.setAvatarType(avatarType)
+        self.d_setAvatarType(avatarType)
 
     def getAvatarType(self):
         return self.avatarType
