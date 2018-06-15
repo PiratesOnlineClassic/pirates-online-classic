@@ -1608,7 +1608,46 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
 
 @magicWord(CATEGORY_SYSTEM_ADMIN, types=[int])
 def bodyType(val):
-    target = spellbook.getTarget()
+    """
+    Changes the player's body type
+    """
+
     base.localAvatar.setBodyShape(val)
     base.localAvatar.changeBodyType()
-    return 'Body type switched to %s' % val
+    return 'Body type switched to %s.' % val
+
+@magicWord(CATEGORY_SYSTEM_ADMIN)
+def collisionsOn():
+    """
+    Toggles the player's collisions on
+    """
+
+    base.localAvatar.collisionsOn()
+    return 'Toggled collisions on.'
+
+@magicWord(CATEGORY_SYSTEM_ADMIN)
+def collisionsOff():
+    """
+    Toggles the player's collisions off
+    """
+
+    base.localAvatar.collisionsOff()
+    return 'Toggled collisions off.'
+
+@magicWord(CATEGORY_SYSTEM_ADMIN)
+def mario():
+    """
+    Enables the mario effect on the player
+    """
+
+    base.localAvatar.toggleMario()
+    return 'Toggled mario.'
+
+@magicWord(CATEGORY_SYSTEM_ADMIN)
+def turbo():
+    """
+    Enables the turbo effect on the player
+    """
+
+    base.localAvatar.toggleTurbo()
+    return 'Toggled turbo.'
