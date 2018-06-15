@@ -331,12 +331,19 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         def updateStack(stackType):
             unspentStack = inventory.getStackQuantity(stackType)
             if not unspentStack:
-                self.notify.debug('Cannot update stack %d, player has no skill points!' % (
+                self.notify.warning('Cannot update stack %d, player has no skill points!' % (
                     stackType))
 
                 return
 
+            stack = inventory.getStackQuantity(skillId)
+            if not stack:
+                inventory.b_setStackQuantity(skillId, 1)
+            else:
+                inventory.b_setStackQuantity(skillId, stack + 1)
+
             inventory.b_setStackQuantity(stackType, unspentStack - 1)
+            self.spentSkillPoint(skillId)
 
         if skillId >= InventoryType.begin_WeaponSkillMelee and skillId < InventoryType.end_WeaponSkillMelee:
             updateStack(InventoryType.UnspentMelee)
@@ -359,24 +366,16 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         elif skillId >= InventoryType.begin_WeaponSkillWand and skillId < InventoryType.end_WeaponSkillWand:
             updateStack(InventoryType.UnspentWand)
         else:
-            self.notify.debug('SkillId %d has no unspent category!' % (
-                skillId))
+            self.notify.debug('Cannot spend skill point for skill %d,'
+                'has no unspent category!' % skillId)
 
             return
 
-        stack = inventory.getStackQuantity(skillId)
-        if not stack:
-            inventory.b_setStackQuantity(skillId, 1)
-        else:
-            inventory.b_setStackQuantity(skillId, stack + 1)
-
-        self.spentSkillPoint(skillId)
-
     def spentSkillPoint(self, category):
-        self.sendUpdate("spentSkillPoint", [category])
+        self.sendUpdate('spentSkillPoint', [category])
 
     def resetSkillPoints(self, skillId):
-        self.sendUpdate("resetSkillPoints", [skillId])
+        self.sendUpdate('resetSkillPoints', [skillId])
 
     def getHighestTonic(self):
         inventory = simbase.air.inventoryManager.getInventory(self.doId)
