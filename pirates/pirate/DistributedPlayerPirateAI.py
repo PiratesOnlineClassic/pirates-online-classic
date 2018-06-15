@@ -706,7 +706,7 @@ def level(level):
     """
 
     invoker = spellbook.getInvoker()
-    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    inventory = invoker.getInventory()
     if inventory:
         totalRep = 0
 
