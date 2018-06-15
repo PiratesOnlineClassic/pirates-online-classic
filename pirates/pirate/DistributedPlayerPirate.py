@@ -1602,12 +1602,13 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         if not self.gmNameTagAllowed:
             DistributedPlayer.setChatAbsolute(self, chatString, chatFlags, dialogue, interrupt, quiet)
             return
+
         if not quiet:
             base.chatAssistant.receiveGMOpenTypedChat(chatString, chatFlags, self.doId)
 
-    @magicWord(CATEGORY_SYSTEM_ADMIN, types=[int])
-    def bodyType(val):
-        target = spellbook.getTarget()
-        base.localAvatar.setBodyShape(val)
-        base.localAvatar.changeBodyType()
-        return 'Body type switched to %s' % val
+@magicWord(CATEGORY_SYSTEM_ADMIN, types=[int])
+def bodyType(val):
+    target = spellbook.getTarget()
+    base.localAvatar.setBodyShape(val)
+    base.localAvatar.changeBodyType()
+    return 'Body type switched to %s' % val
