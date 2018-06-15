@@ -214,6 +214,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             teleportToObj.registerBuildCompleteFunction(teleportToObj.enableOnDeckInteractions)
             self.acceptOnce(teleportToObj.getParentObj().uniqueName('visibility'), self._localTeleportToIdDone)
             base.setLocationCode('Ship')
+            return
 
         self.notify.debug('teleporting obj position is %s' % self.localTeleportingObj.getPos())
         if not self.localTeleportDestPos or self.localTeleportDestPos == (0, 0, 0, 0, 0, 0):
