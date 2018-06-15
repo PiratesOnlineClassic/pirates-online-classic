@@ -3,6 +3,7 @@ from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesbase import PiratesGlobals
 
+
 class DistributedTeleportHandlerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTeleportHandlerAI')
 
@@ -17,6 +18,7 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
+            self.teleportFsm.cleanup()
             return
 
         self.sendUpdateToAvatarId(self.avatar.doId, 'waitInTZ', [[], 0])
@@ -25,19 +27,21 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
+            self.teleportFsm.cleanup()
             return
 
         world = self.teleportFsm.world
         island = self.teleportFsm.island
 
         self.sendUpdateToAvatarId(self.avatar.doId, 'continueTeleportToInstance', [world.parentId,
-            world.zoneId, world.doId, world.getFileName(),
-            world.doId, island.zoneId, island.doId, world.getFileName(), world.oceanGrid.doId])
+            world.zoneId, world.doId, world.getFileName(), world.doId, island.zoneId,
+            island.doId, world.getFileName(), world.oceanGrid.doId])
 
     def readyToFinishTeleport(self, instanceDoId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
+            self.teleportFsm.cleanup()
             return
 
         world = self.teleportFsm.world
@@ -54,6 +58,7 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
             self.notify.warning('Cannot finish teleport for avatar %d, invalid spawn zone %d!' % (
                 avatar.doId, zoneId))
 
+            self.teleportFsm.cleanup()
             return
 
         world.d_setSpawnInfo(self.avatar.doId, xPos, yPos, zPos, h, 0, [island.doId,
@@ -65,12 +70,8 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
+            self.teleportFsm.cleanup()
             return
 
-        # the avatar has arrived at the location and is now finished
-        # teleporting, let's set their game state so they spawn in correctly.
         self.avatar.b_setGameState('Spawn')
-
-        # remove the teleport fsm object from the teleport manager so
-        # the avatar can teleport elsewhere in the future.
-        self.teleportFsm.request('Stop')
+        self.teleportFsm.cleanup()
