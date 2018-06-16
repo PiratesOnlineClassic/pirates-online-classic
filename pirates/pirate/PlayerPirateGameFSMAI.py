@@ -12,6 +12,12 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
         self.jailTeleportingTask = None
         self.jailTeleportingFinishTask = None
 
+    def enterLandRoam(self):
+        self.avatar.startToonUp()
+
+    def exitLandRoam(self):
+        self.avatar.stopToonUp()
+
     def enterDeath(self):
         area = self.avatar.getParentObj()
 

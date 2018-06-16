@@ -45,8 +45,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.zombie = 0
         self.forcedZombie = 0
         self.gmNameTagAllowed = False
-
         self.stickyTargets = []
+
+        self.toonUpTask = None
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -579,6 +580,27 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def b_updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
         self.d_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
         self.updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
+
+    def startToonUp(self):
+        self.toonUpTask = taskMgr.doMethodLater(3.0, self.toonUp,
+            self.uniqueName('toonUp'))
+
+    def toonUp(self, task):
+        if self.getHp()[0] >= self.getMaxHp() and self.getMojo() >= self.getMaxMojo():
+            return task.done
+
+        if self.getHp()[0] < self.getMaxHp():
+            self.b_setHp(self.getHp()[0] + 1)
+
+        if self.getMojo() < self.getMaxMojo():
+            self.b_setMojo(self.getMojo() + 1)
+
+        return task.again
+
+    def stopToonUp(self):
+        if self.toonUpTask:
+            taskMgr.remove(self.toonUpTask)
+            self.toonUpTask = None
 
     def disable(self):
         DistributedPlayerAI.disable(self)
