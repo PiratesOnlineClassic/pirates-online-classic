@@ -115,6 +115,7 @@ StackLimits = {
     InventoryType.CannonPouchL1: 1,
     InventoryType.CannonPouchL2: 1,
     InventoryType.CannonPouchL3: 1,
+    InventoryType.UnspentMelee: 50,
     InventoryType.UnspentCutlass: 50,
     InventoryType.UnspentDagger: 50,
     InventoryType.UnspentGrenade: 50,
