@@ -229,6 +229,9 @@ def maxWeapons():
         inventory.b_setStackQuantity(InventoryType.DaggerWeaponL5, 1)
         inventory.b_setStackQuantity(InventoryType.WandWeaponL5, 1)
 
+        # There is only one true rank for grenade weapons. Not sure why disney added more
+        inventory.b_setStackQuantity(InventoryType.GrenadeWeaponL1, 1)
+
         # Set Ammo
         inventory.b_setStackQuantity(InventoryType.AmmoAsp, 99)
         inventory.b_setStackQuantity(InventoryType.AmmoAdder, 99)
