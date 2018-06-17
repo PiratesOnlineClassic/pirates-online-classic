@@ -67,7 +67,7 @@ holidays = {
         (Month.MAY, 12, 0, 0, 0)]), 
     PiratesGlobals.FATHERSDAY: HolidayDates(HolidayDates.TYPE_YEARLY, [
         (Month.JUNE, 13, 0, 0, 0), 
-        (Month.JUNE, 16, 0, 0, 0)]), 
+        (Month.JUNE, 18, 0, 0, 0)]),
     PiratesGlobals.FOURTHOFJULY: HolidayDates(HolidayDates.TYPE_YEARLY, [
         (Month.JULY, 3, 18, 0, 0), 
         (Month.JULY, 7, 0, 0, 0)]), 
