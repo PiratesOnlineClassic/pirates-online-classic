@@ -2,6 +2,7 @@ from panda3d.core import *
 
 
 class MarginPopup:
+
     def __init__(self):
         self.__manager = None
         self.__visible = False

@@ -134,6 +134,7 @@ class PiratesBase(OTPBase):
             wp.setSize(options.getWidth(), options.getHeight())
             wp.setFullscreen(options.getFullscreen())
             self.openDefaultWindow(props=wp)
+
         options.options_to_config()
         options.setRuntimeOptions()
         base.cam.node().setCameraMask(OTPRender.MainCameraBitmask)
@@ -147,9 +148,10 @@ class PiratesBase(OTPBase):
             self.accept(key, self.takeScreenShot)
 
         self.screenshotViewer = None
-        if base.config.GetBool('want-screenshot-viewer', 0):
+        if base.config.GetBool('want-screenshot-viewer', False):
             self.accept(PiratesGlobals.ScreenshotViewerHotkey, self.showScreenshots)
-        self.wantMarketingViewer = base.config.GetBool('want-marketing-viewer', 0)
+
+        self.wantMarketingViewer = base.config.GetBool('want-marketing-viewer', False)
         self.marketingViewerOn = False
         if self.wantMarketingViewer:
             for key in PiratesGlobals.MarketingHotkeyList:
@@ -166,9 +168,10 @@ class PiratesBase(OTPBase):
         self.positionFarCull()
         globalClockMaxDt = base.config.GetFloat('pirates-max-dt', 0.2)
         globalClock.setMaxDt(globalClockMaxDt)
-        if self.config.GetBool('want-particles', 1):
+        if self.config.GetBool('want-particles', True):
             self.notify.debug('Enabling particles')
             self.enableParticles()
+
         self.notify.debug('Enabling new ship controls')
         self.avatarPhysicsMgr = PhysicsManager()
         integrator = LinearEulerIntegrator()
@@ -199,14 +202,17 @@ class PiratesBase(OTPBase):
             self.buildShips()
         else:
             base.acceptOnce('phaseComplete-3', self.buildShips)
+
         if launcher.getPhaseComplete(4):
             self.buildAssets()
         else:
             base.acceptOnce('phaseComplete-4', self.buildAssets)
+
         if launcher.getPhaseComplete(5):
             self.buildPhase5Ships()
         else:
             base.acceptOnce('phaseComplete-5', self.buildPhase5Ships)
+
         from pirates.creature import Dog
         from pirates.ship import ShipGlobals
         Dog.Dog.setupAssets()
@@ -216,7 +222,9 @@ class PiratesBase(OTPBase):
             self.bamCache = BamCache()
             if base.config.GetBool('want-dev', False):
                 self.bamCache.setRoot(Filename('/c/cache'))
+
             self.bamCache.setRoot(Filename('./cache'))
+
         self.textureFlattenMgr = TextureFlattenManager.TextureFlattenManager()
         self.showShipFlats = False
         self.hideShipNametags = False
@@ -285,14 +293,14 @@ class PiratesBase(OTPBase):
                     self.notify.info(string)
                     string = 'page_faults:     %d' % di.getPageFaultCount()
                     self.notify.info(string)
-                if base.config.GetBool('want-cpu-frequency-warning', 0):
+                if base.config.GetBool('want-cpu-frequency-warning', False):
                     processor_number = 0
                     di.updateCpuFrequency(processor_number)
                     maximum = di.getMaximumCpuFrequency()
                     if maximum > 0:
                         current = di.getCurrentCpuFrequency()
                         if current > 0:
-                            if base.config.GetInt('test-cpu-frequency-warning', 0):
+                            if base.config.GetInt('test-cpu-frequency-warning', False):
                                 current = maximum - 1000000
                             change = False
                             if current != self.currentCpuFrequency:
@@ -318,7 +326,7 @@ class PiratesBase(OTPBase):
         from pirates.battle import WeaponGlobals
         from pirates.battle import Pistol, Sword, Dagger, Doll, Wand, Grenade, Bayonet, Melee, DualCutlass, Foil
         from pirates.creature import Alligator, Bat, Chicken, Crab, FlyTrap, Monkey, Pig, Rooster, Scorpion, Seagull, Stump, Wasp
-        if base.config.GetBool('want-seamonsters', 0):
+        if base.config.GetBool('want-seamonsters', False):
             from pirates.creature import SeaSerpent
         Pistol.Pistol.setupAssets()
         Sword.Sword.setupAssets()
@@ -342,7 +350,7 @@ class PiratesBase(OTPBase):
         Seagull.Seagull.setupAssets()
         Stump.Stump.setupAssets()
         Wasp.Wasp.setupAssets()
-        if base.config.GetBool('want-seamonsters', 0):
+        if base.config.GetBool('want-seamonsters', False):
             SeaSerpent.SeaSerpent.setupAssets()
 
     def buildShips(self):
@@ -362,11 +370,16 @@ class PiratesBase(OTPBase):
             self.win.setSort(500)
             if hasattr(self.win, 'setChildSort'):
                 self.win.setChildSort(10)
+
+            NametagGlobals.setCamera(base.cam)
+            NametagGlobals.setMouseWatcher(base.mouseWatcherNode)
+
         return success
 
     def showEmbeddedFrame(self):
         if not self.hasEmbedded:
             return False
+
         embedded.showMainWindow()
         self.inAdFrame = True
         self.options.fullscreen_runtime = 0
@@ -548,7 +561,7 @@ class PiratesBase(OTPBase):
 
     def startShow(self, cr):
         self.cr = cr
-        if self.config.GetBool('want-fifothreads', 0):
+        if self.config.GetBool('want-fifothreads', False):
             __builtin__.yieldThread = self.cr.yieldThread
         else:
             def nullYield(comment=''):
@@ -573,9 +586,9 @@ class PiratesBase(OTPBase):
             self.notify.info('Using gameServer localhost')
         serverPort = base.config.GetInt('server-port', 7198)
         debugQuests = base.config.GetBool('debug-quests', True)
-        self.wantTattoos = base.config.GetBool('want-tattoos', 0)
-        self.wantSocks = base.config.GetBool('want-socks', 0)
-        self.wantJewelry = base.config.GetBool('want-jewelry', 0)
+        self.wantTattoos = base.config.GetBool('want-tattoos', False)
+        self.wantSocks = base.config.GetBool('want-socks', False)
+        self.wantJewelry = base.config.GetBool('want-jewelry', False)
         serverList = []
         for name in gameServer.split(';'):
             url = URLSpec(name, 1)
@@ -677,6 +690,7 @@ class PiratesBase(OTPBase):
         NametagGlobals.setNametagCard(card, VBase4(-1, 1, -1, 1))
         if self.mouseWatcherNode:
             NametagGlobals.setMouseWatcher(self.mouseWatcherNode)
+
         NametagGlobals.setSpeechBalloon3d(speech3d)
         NametagGlobals.setThoughtBalloon3d(thought3d)
         NametagGlobals.setSpeechBalloon2d(speech2d)
@@ -695,11 +709,21 @@ class PiratesBase(OTPBase):
         self.marginManager = MarginManager()
         self.margins = self.aspect2d.attachNewNode(self.marginManager, DirectGuiGlobals.MIDGROUND_SORT_INDEX + 1)
         mm = self.marginManager
-        self.leftCells = [mm.addGridCell(0, 1.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop), mm.addGridCell(0, 2.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop), mm.addGridCell(0, 3.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)]
+        self.leftCells = [
+            mm.addGridCell(0, 1.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 2.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 3.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)]
+
         self.bottomCells = [
-         mm.addGridCell(0.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop), mm.addGridCell(1.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop), mm.addGridCell(2.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop), mm.addGridCell(3.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop), mm.addGridCell(4.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)]
+            mm.addGridCell(0.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(1.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(2.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(3.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(4.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)]
+
         self.rightCells = [
-         mm.addGridCell(5, 2.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop), mm.addGridCell(5, 1.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)]
+            mm.addGridCell(5, 2.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(5, 1.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)]
 
     def getShardPopLimits(self):
         low = self.config.GetInt('shard-pop-limit-low', 100)
@@ -818,8 +842,3 @@ class PiratesBase(OTPBase):
 
     def getHoliday(self, holidayId):
         return self.holidays.get(holidayId)
-
-@magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def analyze():
-    render.analyze()
-    return "Analyzed the current scenegraph under render."

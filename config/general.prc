@@ -124,3 +124,8 @@ want-discord-rich-presence #t
 discord-want-elapsed #t
 discord-development-message #f
 allow-teleport-from-discord #f
+
+# Other:
+test-saint-patricks-day #f
+test-fourth-of-july #f
+want-enviro-dr #f
