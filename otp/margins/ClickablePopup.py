@@ -1,7 +1,6 @@
+from panda3d.core import *
 from direct.showbase.DirectObject import DirectObject
 from otp.nametag import NametagGlobals
-from panda3d.core import *
-
 
 class ClickablePopup(PandaNode, DirectObject):
     CS_NORMAL = 0
@@ -61,7 +60,7 @@ class ClickablePopup(PandaNode, DirectObject):
         return self.__clickState
 
     def clickStateChanged(self):
-        pass  # Intended for subclasses.
+        pass # Intended for subclasses.
 
     def __getEvent(self, pattern):
         return pattern.replace('%r', self.__name)
@@ -96,6 +95,7 @@ class ClickablePopup(PandaNode, DirectObject):
 
         if self.__clickState == state:
             return
+
         oldState = self.__clickState
         self.__clickState = state
 
@@ -130,9 +130,9 @@ class ClickablePopup(PandaNode, DirectObject):
 
         # Shift along the offset while in camspace, not worldspace.
         if offset:
-            mid = mat.xformPoint(Point3(0, 0, 0))
+            mid = mat.xformPoint(Point3(0,0,0))
             length = mid.length()
-            shift = mid * (length - offset) / length - mid
+            shift = mid*(length - offset)/length - mid
             cTopLeft += shift
             cBottomRight += shift
 
