@@ -370,10 +370,6 @@ class PiratesBase(OTPBase):
             self.win.setSort(500)
             if hasattr(self.win, 'setChildSort'):
                 self.win.setChildSort(10)
-
-            NametagGlobals.setCamera(base.cam)
-            NametagGlobals.setMouseWatcher(base.mouseWatcherNode)
-
         return success
 
     def showEmbeddedFrame(self):
