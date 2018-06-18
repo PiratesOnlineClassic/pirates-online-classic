@@ -13,12 +13,13 @@ class ClickablePopup(PandaNode, DirectObject):
         PandaNode.__init__(self, 'popup')
         DirectObject.__init__(self)
 
+        NametagGlobals.setMouseWatcher(base.mouseWatcherNode)
         self.__mwn = NametagGlobals.mouseWatcher
         self.__name = 'clickregion-%d' % id(self)
 
         self.__cam = cam
         self.__region = MouseWatcherRegion(self.__name, 0, 0, 0, 0)
-        # self.__mwn.addRegion(self.__region)
+        self.__mwn.addRegion(self.__region)
 
         self.__disabled = False
         self.__clicked = False
@@ -29,10 +30,15 @@ class ClickablePopup(PandaNode, DirectObject):
 
         self.__clickEvent = ''
 
-        #self.accept(self.__getEvent(self.__mwn.getEnterPattern()), self.__mouseEnter)
-        #self.accept(self.__getEvent(self.__mwn.getLeavePattern()), self.__mouseLeave)
-        #self.accept(self.__getEvent(self.__mwn.getButtonDownPattern()), self.__buttonDown)
-        #self.accept(self.__getEvent(self.__mwn.getButtonUpPattern()), self.__buttonUp)
+        self.accept(self.__getEvent(self.__mwn.getEnterPattern()), self.__mouseEnter)
+        self.accept(self.__getEvent(self.__mwn.getLeavePattern()), self.__mouseLeave)
+        self.accept(self.__getEvent(self.__mwn.getButtonDownPattern()), self.__buttonDown)
+        self.accept(self.__getEvent(self.__mwn.getButtonUpPattern()), self.__buttonUp)
+        
+        self.__mwn.setEnterPattern('mouse-enter-%r')
+        self.__mwn.setLeavePattern('mouse-leave-%r')
+        self.__mwn.setButtonDownPattern('button-down-%r')
+        self.__mwn.setButtonUpPattern('button-up-%r')
 
     def destroy(self):
         self.__mwn.removeRegion(self.__region)

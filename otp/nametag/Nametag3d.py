@@ -43,28 +43,18 @@ class Nametag3d(Nametag):
 
     def tick(self):
         if not self.WANT_DYNAMIC_SCALING:
-            scale = self.SCALING_FACTOR
-        else:
-            # Attempt to maintain the same on-screen size.
-            distance = self.innerNP.getPos(NametagGlobals.camera).length()
-            distance = max(min(distance, self.SCALING_MAXDIST),
-                           self.SCALING_MINDIST)
+            self.innerNP.setScale(self.SCALING_FACTOR)
+            return
 
-            scale = math.sqrt(distance) * self.SCALING_FACTOR
+        # Attempt to maintain the same on-screen size.
+        distance = self.innerNP.getPos(NametagGlobals.camera).length()
+        distance = max(min(distance, self.SCALING_MAXDIST), self.SCALING_MINDIST)
 
-        self.innerNP.setScale(scale)
+        self.innerNP.setScale(math.sqrt(distance) * self.SCALING_FACTOR)
 
         # As 3D nametags can move around on their own, we need to update the
         # click frame constantly:
-        path = NodePath.anyPath(self)
-        if path.isHidden() or (path.getTop() != NametagGlobals.camera.getTop() and
-                               path.getTop() != render2d):
-            self.stashClickRegion()
-        else:
-            left, right, bottom, top = self.frame
-            self.updateClickRegion(left * scale, right * scale,
-                                   bottom * scale, top * scale,
-                                   self.bbOffset)
+        self.updateClickRegion(-1.25, 1.25, -1, 1)
 
     def getSpeechBalloon(self):
         return NametagGlobals.speechBalloon3d
