@@ -13,7 +13,6 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
         self.name = ''
         self.spawnPos = [0, 0, 0, 0, 0, 0]
-        self.actorAnims = ['', '', '', '']
         self.animSet = ''
         self.collisionMode = 0
         self.initZ = 0

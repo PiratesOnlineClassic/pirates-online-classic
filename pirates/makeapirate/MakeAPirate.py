@@ -1952,4 +1952,3 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
     def toggleGUI(self):
         render2d.toggleVis()
         self.pirate.findAllMatches('**/drop*').getPath(1).toggleVis()
-# okay decompiling .\pirates\makeapirate\MakeAPirate.pyc

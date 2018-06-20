@@ -1334,21 +1334,21 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
                 self.voodooSmokeEffect.reparentTo(self)
                 self.voodooSmokeEffect.setPos(0, 0, 0.2)
                 self.voodooSmokeEffect.startLoop()
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
-                    effect = GroundDirt.getEffect()
-                    if effect:
-                        effect.effectScale = avatarScale
-                        effect.setScale(avatarScale)
-                        effect.reparentTo(self)
-                        effect.play()
-                    cameraShakerEffect = CameraShaker()
-                    cameraShakerEffect.reparentTo(self)
-                    cameraShakerEffect.setPos(0, 0, 0)
-                    cameraShakerEffect.shakeSpeed = 0.08
-                    cameraShakerEffect.shakePower = 1.5
-                    cameraShakerEffect.numShakes = 2
-                    cameraShakerEffect.scalePower = 1
-                    cameraShakerEffect.play(100.0)
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
+                effect = GroundDirt.getEffect()
+                if effect:
+                    effect.effectScale = avatarScale
+                    effect.setScale(avatarScale)
+                    effect.reparentTo(self)
+                    effect.play()
+                cameraShakerEffect = CameraShaker()
+                cameraShakerEffect.reparentTo(self)
+                cameraShakerEffect.setPos(0, 0, 0)
+                cameraShakerEffect.shakeSpeed = 0.08
+                cameraShakerEffect.shakePower = 1.5
+                cameraShakerEffect.numShakes = 2
+                cameraShakerEffect.scalePower = 1
+                cameraShakerEffect.play(100.0)
         elif effectId == WeaponGlobals.C_ATTUNE:
             self.checkAttuneBuffEffect()
             if attacker and attacker.isLocal():
@@ -1356,6 +1356,8 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         elif effectId == WeaponGlobals.C_VOODOO_STUN:
             self.showVoodooDollUnattuned()
             self.showEffectString(PLocalizer.AttackUnattune)
+        elif effectId == WeaponGlobals.C_VOODOO_HEX_STUN:
+            self.showVoodooDollUnattuned()
         elif effectId == WeaponGlobals.C_INTERRUPTED:
             self.showEffectString(PLocalizer.AttackInterrupt)
         elif effectId == WeaponGlobals.C_OPENFIRE and self.doId == localAvatar.doId:
@@ -1432,8 +1434,14 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
             if self.shacklesEffect:
                 self.shacklesEffect.stopLoop()
                 self.shacklesEffect = None
-        elif effectId == WeaponGlobals.C_VOODOO_STUN and self.currentTarget:
-            self.showVoodooDollAttuned()
+            elif effectId == WeaponGlobals.C_VOODOO_STUN and self.currentTarget:
+                if self.findAllBuffCopyKeys(WeaponGlobals.C_VOODOO_HEX_STUN):
+                    return
+                self.showVoodooDollAttuned()
+            elif effectId == WeaponGlobals.C_VOODOO_HEX_STUN and self.currentTarget:
+                if self.findAllBuffCopyKeys(WeaponGlobals.C_VOODOO_STUN):
+                    return
+                self.showVoodooDollAttuned()
         elif effectId == WeaponGlobals.C_OPENFIRE:
             if self.crewBuffDisplay:
                 self.crewBuffDisplay.stop()
