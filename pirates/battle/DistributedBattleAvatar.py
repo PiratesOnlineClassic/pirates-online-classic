@@ -1434,14 +1434,14 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
             if self.shacklesEffect:
                 self.shacklesEffect.stopLoop()
                 self.shacklesEffect = None
-            elif effectId == WeaponGlobals.C_VOODOO_STUN and self.currentTarget:
-                if self.findAllBuffCopyKeys(WeaponGlobals.C_VOODOO_HEX_STUN):
-                    return
-                self.showVoodooDollAttuned()
-            elif effectId == WeaponGlobals.C_VOODOO_HEX_STUN and self.currentTarget:
-                if self.findAllBuffCopyKeys(WeaponGlobals.C_VOODOO_STUN):
-                    return
-                self.showVoodooDollAttuned()
+        elif effectId == WeaponGlobals.C_VOODOO_STUN and self.currentTarget:
+            if self.findAllBuffCopyKeys(WeaponGlobals.C_VOODOO_HEX_STUN):
+                return
+            self.showVoodooDollAttuned()
+        elif effectId == WeaponGlobals.C_VOODOO_HEX_STUN and self.currentTarget:
+            if self.findAllBuffCopyKeys(WeaponGlobals.C_VOODOO_STUN):
+                return
+            self.showVoodooDollAttuned()
         elif effectId == WeaponGlobals.C_OPENFIRE:
             if self.crewBuffDisplay:
                 self.crewBuffDisplay.stop()
