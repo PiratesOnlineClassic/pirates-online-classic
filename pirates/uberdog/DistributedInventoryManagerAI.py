@@ -274,11 +274,12 @@ def gold(amount):
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
     inventory.setGoldInPocket(inventory.getGoldInPocket() + amount)
-    return 'Received Gold Amount: %s' % amount
+    return 'Received Gold Amount %s | Current Gold Amount: %s' % (min(amount, 65000), inventory.getGoldInPocket())
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def removeGold(amount):
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
-    inventory.setGoldInPocket(inventory.getGoldInPocket() - amount)
+    inventory.setGoldInPocket(inventory.getGoldInPocket() - min(amount, 65000))
     return 'Removed Gold Amount: %s' % amount
