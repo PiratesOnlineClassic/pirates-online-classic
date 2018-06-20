@@ -1,6 +1,7 @@
 from pirates.seapatch import SeaPatchRoot
 
-class LerpSeaPatchInterval():    
+
+class LerpSeaPatchInterval:
     lerpNum = 1
 
     def __init__(self, name, duration, blendType, patch, initial, target):
