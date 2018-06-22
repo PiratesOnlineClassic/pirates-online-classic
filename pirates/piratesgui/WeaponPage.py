@@ -1,24 +1,22 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.WeaponPage
 from direct.gui.DirectGui import *
 from direct.task import Task
-from panda3d.core import *
-from pirates.battle import WeaponGlobals
+from pandac.PandaModules import *
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesgui import InventoryPage
+from pirates.piratesgui import WeaponPanel
+from pirates.piratesgui.SkillButton import SkillButton
+from pirates.piratesgui import InventoryItemGui
+from pirates.piratesgui import InventoryItemList
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.piratesgui.CombatTray import WeaponButton
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.piratesgui import (InventoryItemGui, InventoryItemList,
-                                InventoryPage, PiratesGuiGlobals, WeaponPanel)
-from pirates.piratesgui.CombatTray import WeaponButton
-from pirates.piratesgui.SkillButton import SkillButton
+from pirates.battle import WeaponGlobals
 from pirates.reputation import ReputationGlobals
 
 
 class WeaponPage(InventoryPage.InventoryPage):
-    
-
     def __init__(self):
         InventoryPage.InventoryPage.__init__(self)
         self.initialiseoptions(WeaponPage)
@@ -58,7 +56,7 @@ class WeaponPage(InventoryPage.InventoryPage):
                 self.weaponPanels[repCat] = panel
 
         items = inventory.getConsumables()
-        for i in range(len(InventoryType.Potions)):
+        for i in range(len(InventoryType.Potions) - 1):
             tonicId = InventoryType.Potions[i]
             if items.get(tonicId):
                 button = SkillButton(tonicId, self.tonicCallback, items.get(tonicId), showQuantity=True, showHelp=True, showRing=True)
@@ -94,10 +92,9 @@ class WeaponPage(InventoryPage.InventoryPage):
         if not inv:
             return
         items = inv.getConsumables()
-        for i in range(len(InventoryType.Potions)):
+        for i in range(len(InventoryType.Potions) - 1):
             tonicId = InventoryType.Potions[i]
             tonicAmt = inv.getStackQuantity(tonicId)
             if self.tonicButtons.has_key(tonicId):
                 self.tonicButtons[tonicId].updateQuantity(tonicAmt)
                 self.tonicButtons[tonicId].checkAmount()
-# okay decompiling .\pirates\piratesgui\WeaponPage.pyc

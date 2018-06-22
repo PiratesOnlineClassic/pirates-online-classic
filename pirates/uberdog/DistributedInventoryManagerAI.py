@@ -283,3 +283,11 @@ def removeGold(amount):
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
     inventory.setGoldInPocket(inventory.getGoldInPocket() - min(amount, 65000))
     return 'Removed Gold Amount: %s' % amount
+
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def givePork():
+    invoker = spellbook.getInvoker()
+    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    inventory.b_setStackQuantity(InventoryType.PorkChunk, 3)
+    return 'Pork Chunks Given!'

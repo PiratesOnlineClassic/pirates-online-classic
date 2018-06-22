@@ -31,4 +31,3 @@ class DistrictTrackerAI:
         self.notify.info('Sending District update status to UberDOG')
         self.air.netMessenger.send('districtStatus', [self.air.ourChannel, status])
 
-    

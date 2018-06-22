@@ -88,6 +88,7 @@ class StackMessage(BorderFrame):
         StackMessage.RoyalChestTex = card.find('**/topgui_icon_ship_chest03*')
         StackMessage.HatTex = card.find('**/icon_bandana')
         StackMessage.SkillIcons = loader.loadModel('models/textureCards/skillIcons')
+        StackMessage.PorkChunkTex = StackMessage.SkillIcons.find('**/pir_t_gui_pot_porkTonic')
         StackMessage.TreasureGui = loader.loadModel('models/gui/treasure_gui')
         StackMessage.WeaponIcons = loader.loadModel('models/textureCards/weapon_icons')
         StackMessage.guiLoaded = True

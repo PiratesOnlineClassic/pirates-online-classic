@@ -418,7 +418,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
             return
 
-        amount = inventory.getStackQuantity(tonicId)[1]
+        amount = inventory.getStackQuantity(tonicId)
+
         if amount <= 0:
             # This should never happen. Log it
             self.air.logPotentialHacker(
@@ -437,7 +438,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.b_setMojo(restoredMojo)
         self.b_setPower(restoredPower)
 
-        inventory.b_setStackQuantity(tonicId, inventory.getStackQuantity(tonicId)[1] - 1)
+        inventory.b_setStackQuantity(tonicId, inventory.getStackQuantity(tonicId) - 1)
 
     def useBestTonic(self):
         tonicId = self.getBestTonic()

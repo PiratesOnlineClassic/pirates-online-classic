@@ -12,6 +12,7 @@ from pirates.piratesbase import PLocalizer, PiratesGlobals
 from pirates.world import WorldGlobals
 from otp.ai.MagicWordGlobal import *
 
+
 class PresenceActions:
     Landroam = 1
     Sailing = 2
@@ -20,6 +21,7 @@ class PresenceActions:
     PVP = 5
     Searching = 6
     Digging = 7
+
 
 class DiscordPresence:
     notify = DirectNotifyGlobal.directNotify.newCategory('DiscordPresence')
@@ -42,7 +44,7 @@ class DiscordPresence:
         '1172209006.11sdnaik': 'ga_barbosas_cave',
         '1196970035.53sdnaik': 'ga_spanish_pvp',
         '1196970080.56sdnaik': 'ga_french_pvp',
-        #TODO: Add images for interiors
+        # TODO: Add images for interiors
     }
 
     largeImages = [
@@ -476,7 +478,7 @@ class DiscordPresence:
                 image = 'coin_white'
         elif self._currentAction == PresenceActions.Poker:
             image= 'poker'
-            text = 'Parlor Games' #TODO: Display name of current parlor game?
+            text = 'Parlor Games'  # TODO: Display name of current parlor game?
         elif self._currentWeapon:
             data = {}
             weaponCategory = WeaponGlobals.getWeaponCategory(self._currentWeapon)

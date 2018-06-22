@@ -40,6 +40,8 @@ class LogAndOutput:
         self.file.flush()
         self.out.flush()
 
+
 file = open(LOGFILE, 'wb')
 sys.stdout = LogAndOutput(sys.stdout, file)
 sys.stderr = LogAndOutput(sys.stderr, file)
+

@@ -220,6 +220,9 @@ class TonicButton(SkillButton):
         inv = localAvatar.getInventory()
         if inv and inv.isReady():
             tonics = inv.getTonics()
+            if tonics.get(InventoryType.PorkChunk) > 0:
+                return InventoryType.PorkChunk
+
             idealAmount = max(0, localAvatar.getMaxHp() * 0.8 - localAvatar.getHp())
             bestTonicId = InventoryType.Potion1
             for tonicId, count in sorted(tonics.iteritems()):

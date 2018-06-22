@@ -186,8 +186,10 @@ class InventoryType:
     Potion4 = 11203
     Potion5 = 11204
     ShipRepairKit = 11205
-    end_Consumables = ShipRepairKit + 1
-    Potions = (Potion1, Potion2, Potion3, Potion4, Potion5)
+    PorkChunk = 11206
+    end_Consumables = PorkChunk + 1
+    Potions = (
+     Potion1, Potion2, Potion3, Potion4, Potion5, PorkChunk)
     begin_MaxPlayerAttribute = 11400
     Hp = 11400
     Mojo = 11401
