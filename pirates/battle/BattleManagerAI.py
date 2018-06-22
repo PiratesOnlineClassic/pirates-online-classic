@@ -9,6 +9,7 @@ from direct.distributed.ClockDelta import globalClockDelta
 from pirates.uberdog import UberDogGlobals
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
 from pirates.battle.ComboDiaryAI import ComboDiaryAI
+from pirates.piratesbase import Freebooter
 
 class BattleManagerAI(BattleManagerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
@@ -435,6 +436,10 @@ class BattleManagerAI(BattleManagerBase):
         for skillId in attacker.battleSkillDiary.getSkills():
             ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)
             reputationCategoryId = WeaponGlobals.getSkillReputationCategoryId(skillId)
+            avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+
+            if config.GetBool('want-membership', False) and avatar.getLevel() == Freebooter.FreeOverallLevelCap:
+                return
 
             # update the avatar's skill reputation for each skill it used to kill the target,
             # adding onto the overall reputation rewarded
