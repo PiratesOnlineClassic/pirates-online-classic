@@ -289,5 +289,5 @@ def removeGold(amount):
 def givePork():
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
-    inventory.b_setStackQuantity(InventoryType.PorkChunk, 3)
+    inventory.b_setStackQuantity(InventoryType.PorkChunk, 10)
     return 'Pork Chunks Given!'
