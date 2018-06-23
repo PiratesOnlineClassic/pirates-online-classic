@@ -583,7 +583,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
 
     def startToonUp(self):
-        self.toonUpTask = taskMgr.doMethodLater(3.0, self.toonUp,
+        self.toonUpTask = taskMgr.doMethodLater(2.0, self.toonUp,
             self.uniqueName('toonUp'))
 
     def toonUp(self, task):
@@ -591,10 +591,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             return task.done
 
         if self.getHp()[0] < self.getMaxHp():
-            self.b_setHp(self.getHp()[0] + 1)
+            self.b_setHp(min(self.getMaxHp(), self.getHp()[0] + 8 * self.getLevel() / 2.47))
 
         if self.getMojo() < self.getMaxMojo():
-            self.b_setMojo(self.getMojo() + 1)
+            self.b_setMojo(min(self.getMaxMojo(), self.getMojo() + 6 * self.getLevel() / 2.35))
 
         return task.again
 
@@ -626,6 +626,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         DistributedPlayerAI.delete(self)
         DistributedBattleAvatarAI.delete(self)
+
 
 @magicWord(category=CATEGORY_MODERATION, types=[int, str, str])
 def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
