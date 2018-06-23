@@ -33,7 +33,8 @@ class GiftOrigin:
     CANNON = 15
     FLAG_SHOP = 16
     SEARCHABLE_CONTAINER = 17
-    _END_VALUE = SEARCHABLE_CONTAINER + 1
+    HOLIDAY_OBJECT = 18
+    _END_VALUE = HOLIDAY_OBJECT + 1
 
 
 class TradeStatus:
@@ -352,9 +353,12 @@ class InventoryType:
     BayonetRush = 13102
     BayonetBash = 13103
     end_WeaponSkillBayonet = BayonetBash + 1
-    BackstabSkills = (DaggerCut, DaggerSwipe, DaggerGouge, DaggerEviscerate)
-    StartingSkills = [CutlassHack, CutlassSlash, SailBroadsideLeft, SailBroadsideRight, DaggerCut, DaggerSwipe, StaffBlast, StaffSoulFlay, GrenadeThrow, GrenadeExplosion, PistolShoot, PistolLeadShot, DollAttune, DollPoke, CannonShoot, CannonRoundShot]
-    DontResetSkills = [SailPowerRecharge, CannonGrappleHook]
+    BackstabSkills = (
+     DaggerCut, DaggerSwipe, DaggerGouge, DaggerEviscerate)
+    StartingSkills = [
+     CutlassHack, CutlassSlash, SailBroadsideLeft, SailBroadsideRight, DaggerCut, DaggerSwipe, StaffBlast, StaffSoulFlay, GrenadeThrow, GrenadeExplosion, PistolShoot, PistolLeadShot, DollAttune, DollPoke, CannonShoot, CannonRoundShot]
+    DontResetSkills = [
+     SailPowerRecharge, CannonGrappleHook]
     begin_NumRespec = 13200
     NumRespecCutlass = 13200
     NumRespecPistol = 13201
@@ -390,7 +394,7 @@ class InventoryType:
     PadresDelFuegoTeleportToken = 13503
     CubaTeleportToken = 13504
     end_TeleportToken = CubaTeleportToken + 1
-    __islandToTeleportTokenMap = {'1156207188.95dzlu': TortugaTeleportToken, '1150922126.8dzlu': PortRoyalTeleportToken, '1159933206.48sdnaik': KingsheadTeleportToken, '1142018473.22dxschafe': PadresDelFuegoTeleportToken, '1160614528.73sdnaik': CubaTeleportToken}
+    __islandToTeleportTokenMap = {'1156207188.95dzlu': TortugaTeleportToken,'1150922126.8dzlu': PortRoyalTeleportToken,'1159933206.48sdnaik': KingsheadTeleportToken,'1142018473.22dxschafe': PadresDelFuegoTeleportToken,'1160614528.73sdnaik': CubaTeleportToken}
 
     @classmethod
     def getIslandTeleportToken(cls, islandUid):
@@ -764,13 +768,13 @@ class InventoryType:
     end_InventoryTypeOrCategory = 32768
 
 
-__weaponId2SkillCategory = {InventoryType.MeleeWeaponL1: InventoryCategory.WEAPON_SKILL_MELEE, InventoryType.MeleeWeaponL2: InventoryCategory.WEAPON_SKILL_MELEE, InventoryType.MeleeWeaponL3: InventoryCategory.WEAPON_SKILL_MELEE, InventoryType.MeleeWeaponL4: InventoryCategory.WEAPON_SKILL_MELEE, InventoryType.MeleeWeaponL5: InventoryCategory.WEAPON_SKILL_MELEE, InventoryType.MeleeWeaponL6: InventoryCategory.WEAPON_SKILL_MELEE, InventoryType.CutlassWeaponL1: InventoryCategory.WEAPON_SKILL_CUTLASS, InventoryType.CutlassWeaponL2: InventoryCategory.WEAPON_SKILL_CUTLASS, InventoryType.CutlassWeaponL3: InventoryCategory.WEAPON_SKILL_CUTLASS, InventoryType.CutlassWeaponL4: InventoryCategory.WEAPON_SKILL_CUTLASS, InventoryType.CutlassWeaponL5: InventoryCategory.WEAPON_SKILL_CUTLASS, InventoryType.CutlassWeaponL6: InventoryCategory.WEAPON_SKILL_CUTLASS, InventoryType.PistolWeaponL1: InventoryCategory.WEAPON_SKILL_PISTOL, InventoryType.PistolWeaponL2: InventoryCategory.WEAPON_SKILL_PISTOL, InventoryType.PistolWeaponL3: InventoryCategory.WEAPON_SKILL_PISTOL, InventoryType.PistolWeaponL4: InventoryCategory.WEAPON_SKILL_PISTOL, InventoryType.PistolWeaponL5: InventoryCategory.WEAPON_SKILL_PISTOL, InventoryType.PistolWeaponL6: InventoryCategory.WEAPON_SKILL_PISTOL, InventoryType.MusketWeaponL1: InventoryCategory.WEAPON_SKILL_MUSKET, InventoryType.MusketWeaponL2: InventoryCategory.WEAPON_SKILL_MUSKET, InventoryType.MusketWeaponL3: InventoryCategory.WEAPON_SKILL_MUSKET, InventoryType.BayonetWeaponL1: InventoryCategory.WEAPON_SKILL_MUSKET, InventoryType.BayonetWeaponL2: InventoryCategory.WEAPON_SKILL_MUSKET, InventoryType.BayonetWeaponL3: InventoryCategory.WEAPON_SKILL_MUSKET, InventoryType.DaggerWeaponL1: InventoryCategory.WEAPON_SKILL_DAGGER, InventoryType.DaggerWeaponL2: InventoryCategory.WEAPON_SKILL_DAGGER, InventoryType.DaggerWeaponL3: InventoryCategory.WEAPON_SKILL_DAGGER, InventoryType.DaggerWeaponL4: InventoryCategory.WEAPON_SKILL_DAGGER, InventoryType.DaggerWeaponL5: InventoryCategory.WEAPON_SKILL_DAGGER, InventoryType.DaggerWeaponL6: InventoryCategory.WEAPON_SKILL_DAGGER, InventoryType.GrenadeWeaponL1: InventoryCategory.WEAPON_SKILL_GRENADE, InventoryType.GrenadeWeaponL2: InventoryCategory.WEAPON_SKILL_GRENADE, InventoryType.GrenadeWeaponL3: InventoryCategory.WEAPON_SKILL_GRENADE, InventoryType.GrenadeWeaponL4: InventoryCategory.WEAPON_SKILL_GRENADE, InventoryType.GrenadeWeaponL5: InventoryCategory.WEAPON_SKILL_GRENADE, InventoryType.GrenadeWeaponL6: InventoryCategory.WEAPON_SKILL_GRENADE, InventoryType.WandWeaponL1: InventoryCategory.WEAPON_SKILL_WAND, InventoryType.WandWeaponL2: InventoryCategory.WEAPON_SKILL_WAND, InventoryType.WandWeaponL3: InventoryCategory.WEAPON_SKILL_WAND, InventoryType.WandWeaponL4: InventoryCategory.WEAPON_SKILL_WAND, InventoryType.WandWeaponL5: InventoryCategory.WEAPON_SKILL_WAND, InventoryType.WandWeaponL6: InventoryCategory.WEAPON_SKILL_WAND, InventoryType.DollWeaponL1: InventoryCategory.WEAPON_SKILL_DOLL, InventoryType.DollWeaponL2: InventoryCategory.WEAPON_SKILL_DOLL, InventoryType.DollWeaponL3: InventoryCategory.WEAPON_SKILL_DOLL, InventoryType.DollWeaponL4: InventoryCategory.WEAPON_SKILL_DOLL, InventoryType.DollWeaponL5: InventoryCategory.WEAPON_SKILL_DOLL, InventoryType.DollWeaponL6: InventoryCategory.WEAPON_SKILL_DOLL, InventoryType.KettleWeaponL1: InventoryCategory.WEAPON_SKILL_KETTLE, InventoryType.KettleWeaponL2: InventoryCategory.WEAPON_SKILL_KETTLE, InventoryType.KettleWeaponL3: InventoryCategory.WEAPON_SKILL_KETTLE}
+__weaponId2SkillCategory = {InventoryType.MeleeWeaponL1: InventoryCategory.WEAPON_SKILL_MELEE,InventoryType.MeleeWeaponL2: InventoryCategory.WEAPON_SKILL_MELEE,InventoryType.MeleeWeaponL3: InventoryCategory.WEAPON_SKILL_MELEE,InventoryType.MeleeWeaponL4: InventoryCategory.WEAPON_SKILL_MELEE,InventoryType.MeleeWeaponL5: InventoryCategory.WEAPON_SKILL_MELEE,InventoryType.MeleeWeaponL6: InventoryCategory.WEAPON_SKILL_MELEE,InventoryType.CutlassWeaponL1: InventoryCategory.WEAPON_SKILL_CUTLASS,InventoryType.CutlassWeaponL2: InventoryCategory.WEAPON_SKILL_CUTLASS,InventoryType.CutlassWeaponL3: InventoryCategory.WEAPON_SKILL_CUTLASS,InventoryType.CutlassWeaponL4: InventoryCategory.WEAPON_SKILL_CUTLASS,InventoryType.CutlassWeaponL5: InventoryCategory.WEAPON_SKILL_CUTLASS,InventoryType.CutlassWeaponL6: InventoryCategory.WEAPON_SKILL_CUTLASS,InventoryType.PistolWeaponL1: InventoryCategory.WEAPON_SKILL_PISTOL,InventoryType.PistolWeaponL2: InventoryCategory.WEAPON_SKILL_PISTOL,InventoryType.PistolWeaponL3: InventoryCategory.WEAPON_SKILL_PISTOL,InventoryType.PistolWeaponL4: InventoryCategory.WEAPON_SKILL_PISTOL,InventoryType.PistolWeaponL5: InventoryCategory.WEAPON_SKILL_PISTOL,InventoryType.PistolWeaponL6: InventoryCategory.WEAPON_SKILL_PISTOL,InventoryType.MusketWeaponL1: InventoryCategory.WEAPON_SKILL_MUSKET,InventoryType.MusketWeaponL2: InventoryCategory.WEAPON_SKILL_MUSKET,InventoryType.MusketWeaponL3: InventoryCategory.WEAPON_SKILL_MUSKET,InventoryType.BayonetWeaponL1: InventoryCategory.WEAPON_SKILL_MUSKET,InventoryType.BayonetWeaponL2: InventoryCategory.WEAPON_SKILL_MUSKET,InventoryType.BayonetWeaponL3: InventoryCategory.WEAPON_SKILL_MUSKET,InventoryType.DaggerWeaponL1: InventoryCategory.WEAPON_SKILL_DAGGER,InventoryType.DaggerWeaponL2: InventoryCategory.WEAPON_SKILL_DAGGER,InventoryType.DaggerWeaponL3: InventoryCategory.WEAPON_SKILL_DAGGER,InventoryType.DaggerWeaponL4: InventoryCategory.WEAPON_SKILL_DAGGER,InventoryType.DaggerWeaponL5: InventoryCategory.WEAPON_SKILL_DAGGER,InventoryType.DaggerWeaponL6: InventoryCategory.WEAPON_SKILL_DAGGER,InventoryType.GrenadeWeaponL1: InventoryCategory.WEAPON_SKILL_GRENADE,InventoryType.GrenadeWeaponL2: InventoryCategory.WEAPON_SKILL_GRENADE,InventoryType.GrenadeWeaponL3: InventoryCategory.WEAPON_SKILL_GRENADE,InventoryType.GrenadeWeaponL4: InventoryCategory.WEAPON_SKILL_GRENADE,InventoryType.GrenadeWeaponL5: InventoryCategory.WEAPON_SKILL_GRENADE,InventoryType.GrenadeWeaponL6: InventoryCategory.WEAPON_SKILL_GRENADE,InventoryType.WandWeaponL1: InventoryCategory.WEAPON_SKILL_WAND,InventoryType.WandWeaponL2: InventoryCategory.WEAPON_SKILL_WAND,InventoryType.WandWeaponL3: InventoryCategory.WEAPON_SKILL_WAND,InventoryType.WandWeaponL4: InventoryCategory.WEAPON_SKILL_WAND,InventoryType.WandWeaponL5: InventoryCategory.WEAPON_SKILL_WAND,InventoryType.WandWeaponL6: InventoryCategory.WEAPON_SKILL_WAND,InventoryType.DollWeaponL1: InventoryCategory.WEAPON_SKILL_DOLL,InventoryType.DollWeaponL2: InventoryCategory.WEAPON_SKILL_DOLL,InventoryType.DollWeaponL3: InventoryCategory.WEAPON_SKILL_DOLL,InventoryType.DollWeaponL4: InventoryCategory.WEAPON_SKILL_DOLL,InventoryType.DollWeaponL5: InventoryCategory.WEAPON_SKILL_DOLL,InventoryType.DollWeaponL6: InventoryCategory.WEAPON_SKILL_DOLL,InventoryType.KettleWeaponL1: InventoryCategory.WEAPON_SKILL_KETTLE,InventoryType.KettleWeaponL2: InventoryCategory.WEAPON_SKILL_KETTLE,InventoryType.KettleWeaponL3: InventoryCategory.WEAPON_SKILL_KETTLE}
 
 def getSkillCategory(weaponId):
     return __weaponId2SkillCategory.get(weaponId)
 
 
-__skillRepToNumRespec = {InventoryType.CutlassRep: InventoryType.NumRespecCutlass, InventoryType.PistolRep: InventoryType.NumRespecPistol, InventoryType.DollRep: InventoryType.NumRespecDoll, InventoryType.DaggerRep: InventoryType.NumRespecDagger, InventoryType.GrenadeRep: InventoryType.NumRespecGrenade, InventoryType.WandRep: InventoryType.NumRespecStaff, InventoryType.CannonRep: InventoryType.NumRespecCannon, InventoryType.SailingRep: InventoryType.NumRespecSailing}
+__skillRepToNumRespec = {InventoryType.CutlassRep: InventoryType.NumRespecCutlass,InventoryType.PistolRep: InventoryType.NumRespecPistol,InventoryType.DollRep: InventoryType.NumRespecDoll,InventoryType.DaggerRep: InventoryType.NumRespecDagger,InventoryType.GrenadeRep: InventoryType.NumRespecGrenade,InventoryType.WandRep: InventoryType.NumRespecStaff,InventoryType.CannonRep: InventoryType.NumRespecCannon,InventoryType.SailingRep: InventoryType.NumRespecSailing}
 
 def getNumRespecType(weaponRep):
     return __skillRepToNumRespec.get(weaponRep)
@@ -1017,17 +1021,20 @@ class InventoryId:
 
     idFlags[InventoryCategory.CLOTHING] = (0, FREE_TAKE_CATEGORY)
     idFlags[InventoryType.Clothing] = (0, FREE_TAKE_CATEGORY)
-    idFlags[InventoryCategory.CARDS] = (0, FREE_TAKE_CATEGORY)
+    idFlags[InventoryCategory.CARDS] = (
+     0, FREE_TAKE_CATEGORY)
     CardsStack = (InventoryCategory.CARDS, FREE_TAKE_STACK)
     for i in range(InventoryType.begin_Cards, InventoryType.end_Cards):
         idFlags[i] = CardsStack
 
-    idFlags[InventoryCategory.SONGS] = (0, FREE_TAKE_CATEGORY)
+    idFlags[InventoryCategory.SONGS] = (
+     0, FREE_TAKE_CATEGORY)
     SongsStack = (InventoryCategory.SONGS, FREE_TAKE_STACK)
     for i in range(InventoryType.begin_Songs, InventoryType.end_Songs):
         idFlags[i] = SongsStack
 
-    idFlags[InventoryCategory.CLOTHING] = (0, AUTO_LOCATION_DO_ID)
+    idFlags[InventoryCategory.CLOTHING] = (
+     0, AUTO_LOCATION_DO_ID)
     idFlags[InventoryCategory.FURNITURE] = (0, AUTO_LOCATION_DO_ID)
     idFlags[InventoryCategory.TREASURE_MAPS] = (0, AUTO_LOCATION_DO_ID)
     idFlags[InventoryCategory.SHIP_MAINPARTS] = (0, AUTO_LOCATION_DO_ID)
@@ -1035,10 +1042,12 @@ class InventoryId:
     idFlags[InventoryCategory.QUESTS] = (0, AUTO_LOCATION_DO_ID)
     idFlags[InventoryCategory.SHIP_ACCESSORIES] = (0, AUTO_LOCATION_DO_ID)
     idFlags[InventoryCategory.FLAGS] = (0, AUTO_LOCATION_DO_ID)
-    idFlags[InventoryCategory.SHIPS] = (0, AUTO_OWNER_DO_ID)
+    idFlags[InventoryCategory.SHIPS] = (
+     0, AUTO_OWNER_DO_ID)
     idFlags[InventoryCategory.PETS] = (0, AUTO_OWNER_DO_ID)
     idFlags[InventoryCategory.WAGERS] = (0, AUTO_OWNER_DO_ID)
-    idFlags[InventoryCategory.TRASH] = (0, SPECIAL)
+    idFlags[InventoryCategory.TRASH] = (
+     0, SPECIAL)
     idFlags[InventoryType.UberDogRev] = (InventoryCategory.PLAYER_RANKING, FREE_TAKE_STACK)
 
     @staticmethod

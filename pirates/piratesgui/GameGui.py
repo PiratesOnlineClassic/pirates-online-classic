@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.GameGui
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from panda3d.core import *
@@ -13,7 +9,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class GameGui(DirectFrame):
-    
 
     def __init__(self, parent, **kw):
         gui = loader.loadModel('models/gui/toplevel_gui')
@@ -185,4 +180,3 @@ class GameGui(DirectFrame):
 
     def hideClamps(self):
         self.clamps.hide()
-# okay decompiling .\pirates\piratesgui\GameGui.pyc
