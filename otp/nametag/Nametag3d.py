@@ -1,9 +1,10 @@
 import math
 
+from panda3d.core import *
+
 from otp.nametag import NametagGlobals
 from otp.nametag.Nametag import *
 from otp.nametag.NametagConstants import *
-from panda3d.core import *
 
 
 class Nametag3d(Nametag):
@@ -14,6 +15,11 @@ class Nametag3d(Nametag):
 
     BILLBOARD_OFFSET = 3.0
     SHOULD_BILLBOARD = True
+
+    CLICK_REGION_LEFT = -1.5
+    CLICK_REGION_RIGHT = 1.5
+    CLICK_REGION_BOTTOM = -0.2
+    CLICK_REGION_TOP = 0.2
 
     IS_3D = True
 
@@ -50,11 +56,18 @@ class Nametag3d(Nametag):
         distance = self.innerNP.getPos(NametagGlobals.camera).length()
         distance = max(min(distance, self.SCALING_MAXDIST), self.SCALING_MINDIST)
 
-        self.innerNP.setScale(math.sqrt(distance) * self.SCALING_FACTOR)
+        scale = math.sqrt(distance) * self.SCALING_FACTOR
+        self.innerNP.setScale(scale)
 
         # As 3D nametags can move around on their own, we need to update the
         # click frame constantly:
-        self.updateClickRegion(-1.25, 1.25, -1, 1)
+        path = NodePath.anyPath(self)
+        if path.isHidden() or (path.getTop() != NametagGlobals.camera.getTop() and
+                               path.getTop() != render2d):
+            self.stashClickRegion()
+        else:
+            self.updateClickRegion(self.CLICK_REGION_LEFT * scale, self.CLICK_REGION_RIGHT * scale,
+                self.CLICK_REGION_BOTTOM * distance, self.CLICK_REGION_TOP)
 
     def getSpeechBalloon(self):
         return NametagGlobals.speechBalloon3d

@@ -29,15 +29,15 @@ class ClickablePopup(PandaNode, DirectObject):
 
         self.__clickEvent = ''
 
-        self.accept(self.__getEvent(self.__mwn.getEnterPattern()), self.__mouseEnter)
-        self.accept(self.__getEvent(self.__mwn.getLeavePattern()), self.__mouseLeave)
-        self.accept(self.__getEvent(self.__mwn.getButtonDownPattern()), self.__buttonDown)
-        self.accept(self.__getEvent(self.__mwn.getButtonUpPattern()), self.__buttonUp)
-        
         self.__mwn.setEnterPattern('mouse-enter-%r')
         self.__mwn.setLeavePattern('mouse-leave-%r')
         self.__mwn.setButtonDownPattern('button-down-%r')
         self.__mwn.setButtonUpPattern('button-up-%r')
+
+        self.accept(self.__getEvent(self.__mwn.getEnterPattern()), self.__mouseEnter)
+        self.accept(self.__getEvent(self.__mwn.getLeavePattern()), self.__mouseLeave)
+        self.accept(self.__getEvent(self.__mwn.getButtonDownPattern()), self.__buttonDown)
+        self.accept(self.__getEvent(self.__mwn.getButtonUpPattern()), self.__buttonUp)
 
     def destroy(self):
         self.__mwn.removeRegion(self.__region)

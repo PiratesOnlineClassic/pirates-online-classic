@@ -23,9 +23,8 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
         self.TC = None
         member = None
         info = None
-        handle = base.cr.identifyAvatar(avId)
         av = base.cr.doId2do.get(avId)
-        self.avName = handle.getName()
+        self.avName = av.getName()
         self.pId = base.cr.playerFriendsManager.findPlayerIdFromAvId(self.avId)
         if self.pId:
             info = base.cr.playerFriendsManager.getFriendInfo(self.pId)

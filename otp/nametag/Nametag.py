@@ -78,8 +78,8 @@ class Nametag(ClickablePopup):
         else:
             cc = CCNormal
 
-        self.nameFg, self.nameBg, self.chatFg, self.chatBg = NAMETAG_COLORS[cc][self.getClickState(
-        )]
+        self.nameFg, self.nameBg, self.chatFg, self.chatBg = \
+            NAMETAG_COLORS[cc][self.getClickState()]
 
         self.innerNP.node().removeAllChildren()
         if self.contents & self.CThought and self.chatFlags & CFThought:

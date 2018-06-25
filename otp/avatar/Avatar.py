@@ -576,10 +576,10 @@ class Avatar(Actor, ShadowCaster):
                 Avatar.ActiveAvatars.remove(self)
             except ValueError:
                 pass
-            else:
-                Avatar.ActiveAvatars.append(self)
-                self.nametag.manage(base.marginManager)
-                self.accept(self.nametag.getUniqueId(), self.clickedNametag)
+
+            Avatar.ActiveAvatars.append(self)
+            self.nametag.manage(base.marginManager)
+            self.accept(self.nametag.getUniqueId(), self.clickedNametag)
 
     def removeActive(self):
         if base.wantNametags:
@@ -587,9 +587,9 @@ class Avatar(Actor, ShadowCaster):
                 Avatar.ActiveAvatars.remove(self)
             except ValueError:
                 pass
-            else:
-                self.nametag.unmanage(base.marginManager)
-                self.ignore(self.nametag.getUniqueId())
+
+            self.nametag.unmanage(base.marginManager)
+            self.ignore(self.nametag.getUniqueId())
 
     def loop(self, animName, restart=1, partName=None,
              fromFrame=None, toFrame=None):
