@@ -227,7 +227,7 @@ class SpawnNodeBase:
         npc.setName(name)
 
         # Set starting state info
-        npc.setAnimSet(self.objectData.get('AnimSet', 'default'))
+        npc.setAnimSet(npc.getAnimSet()) # TODO: This isn't proper but it'll force them into an idle state instead of them t-posing
         npc.setStartState(self.objectData.get('Start State', 'Idle'))
 
         # Generate npc
