@@ -16,10 +16,10 @@ class Nametag3d(Nametag):
     BILLBOARD_OFFSET = 3.0
     SHOULD_BILLBOARD = True
 
-    CLICK_REGION_LEFT = -1.5
-    CLICK_REGION_RIGHT = 1.5
-    CLICK_REGION_BOTTOM = -0.2
-    CLICK_REGION_TOP = 0.2
+    CLICK_REGION_LEFT = -0.4
+    CLICK_REGION_RIGHT = 0.4
+    CLICK_REGION_BOTTOM = -1.2
+    CLICK_REGION_TOP = 0.8
 
     IS_3D = True
 
@@ -52,10 +52,12 @@ class Nametag3d(Nametag):
             self.innerNP.setScale(self.SCALING_FACTOR)
             return
 
-        # Attempt to maintain the same on-screen size.
+        # attempt to maintain the same on-screen size.
         distance = self.innerNP.getPos(NametagGlobals.camera).length()
         distance = max(min(distance, self.SCALING_MAXDIST), self.SCALING_MINDIST)
 
+        # calculate the scale factor of the nametag based on the
+        # distance from the nametag node to the camera node.
         scale = math.sqrt(distance) * self.SCALING_FACTOR
         self.innerNP.setScale(scale)
 
@@ -63,12 +65,25 @@ class Nametag3d(Nametag):
         # click frame constantly:
         path = NodePath.anyPath(self)
         if path.isHidden() or (path.getTop() != NametagGlobals.camera.getTop() and path.getTop() != render2d) or \
-            hasattr(self.avatar, 'isLocal') and self.avatar.isLocal():
+            not self.avatar or hasattr(self.avatar, 'isLocal') and self.avatar.isLocal():
 
             self.stashClickRegion()
         else:
-            self.updateClickRegion(self.CLICK_REGION_LEFT * scale, self.CLICK_REGION_RIGHT * scale,
-                self.CLICK_REGION_BOTTOM * distance, self.CLICK_REGION_TOP)
+            # get the bounding sphere of the avatar so we can get
+            # the avatar radius to base the nametag click margins...
+            bounds = self.avatar.getBounds()
+
+            # check to see if the bounding sphere is infinite.
+            if bounds.isInfinite():
+                return
+
+            scaleFactor = bounds.getRadius()
+
+            # update the click region based on the static click region values,
+            # the bounding sphere of the avatar and the distance from the nametag
+            # to the local camera node...
+            self.updateClickRegion((self.CLICK_REGION_LEFT * scaleFactor) * scale, (self.CLICK_REGION_RIGHT * scaleFactor) * scale,
+                (self.CLICK_REGION_BOTTOM * scaleFactor) * scale, self.CLICK_REGION_TOP * scale)
 
     def getSpeechBalloon(self):
         return NametagGlobals.speechBalloon3d
