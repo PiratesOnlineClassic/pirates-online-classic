@@ -42,8 +42,7 @@ class Mover:
     def removeImpulse(self, name):
         if name not in self.impulses:
             self.notify.warning(
-                "Mover.removeImpulse: unknown impulse '%s'" %
-                name)
+                "Mover.removeImpulse: unknown impulse '%s'" % name)
             return
 
         self.impulses[name]._clearMover(self)
@@ -84,4 +83,6 @@ class Mover:
 
         if self.Pstats:
             self.pscInt.stop()
+
+
 # okay decompiling .\otp\movement\Mover.pyc

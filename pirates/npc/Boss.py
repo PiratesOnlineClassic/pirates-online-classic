@@ -9,7 +9,6 @@ from pirates.pirate import AvatarTypes
 
 
 class Boss(BossBase):
-    
 
     def __init__(self, cr):
         BossBase.__init__(self, cr)
@@ -37,7 +36,7 @@ class Boss(BossBase):
                 geom = geom.getChild(0)
         else:
             geom = root.getGeomNode().find('**/*actorGeom*')
-            
+
         parent = root.getGeomNode()
         self.geometryNode = parent.attachNewNode('GeometryNode')
         self.instanceNode = parent.attachNewNode('InstanceNode')
@@ -47,14 +46,23 @@ class Boss(BossBase):
 
         mask = 255
         ref = isUndead * 2 + 2
-        stencil_A = StencilAttrib.make(1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOReplace, 6, mask, mask)
-        stencil_B = StencilAttrib.make(1, StencilAttrib.SCFGreaterThan, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOReplace, ref, mask, mask)
-        stencil_C = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, ref, mask, mask)
+        stencil_A = StencilAttrib.make(
+            1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep,
+            StencilAttrib.SOKeep, StencilAttrib.SOReplace, 6, mask, mask)
+        stencil_B = StencilAttrib.make(
+            1, StencilAttrib.SCFGreaterThan, StencilAttrib.SOKeep,
+            StencilAttrib.SOKeep, StencilAttrib.SOReplace, ref, mask, mask)
+        stencil_C = StencilAttrib.make(
+            1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep,
+            StencilAttrib.SOKeep, StencilAttrib.SOKeep, ref, mask, mask)
         self.geometryNode.setAttrib(stencil_A)
         self.instanceNode.setAttrib(stencil_B)
         self.effectsNode.setAttrib(stencil_C)
 
-        self.instanceNode.setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+        self.instanceNode.setAttrib(
+            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                  ColorBlendAttrib.OIncomingAlpha,
+                                  ColorBlendAttrib.OOne))
         self.instanceNode.setTransparency(1, 1)
         self.instanceNode.setDepthWrite(0)
         self.instanceNode.setTextureOff(10000)
@@ -66,8 +74,9 @@ class Boss(BossBase):
         t = Texture()
         t.load(image)
         self.instanceNode.setTexture(ts, t)
-        self.instanceNode.getState().getAttrib(TextureAttrib.getClassType()).addOnStage(ts, t)
-    
+        self.instanceNode.getState().getAttrib(
+            TextureAttrib.getClassType()).addOnStage(ts, t)
+
     def _getBossModelScale(self):
         return self.bossData['ModelScale']
 
@@ -83,7 +92,11 @@ class Boss(BossBase):
             color = Vec4(1.0, 1.0, 0.0, 1.0)
         startScale = Vec3(1.025, 1.025, 1.01)
         endScale = Vec3(1.15, 1.1, 1.01)
-        self.effectIval = Sequence(LerpScaleInterval(self.instanceNode, 0.5, endScale, startScale=startScale), LerpScaleInterval(self.instanceNode, 0.5, startScale, startScale=endScale))
+        self.effectIval = Sequence(
+            LerpScaleInterval(
+                self.instanceNode, 0.5, endScale, startScale=startScale),
+            LerpScaleInterval(
+                self.instanceNode, 0.5, startScale, startScale=endScale))
         self.effectIval.loop()
         if not isUndead:
             return
@@ -105,7 +118,9 @@ class Boss(BossBase):
             offset = EffectModifiers[avType][1]
             if not headNode.isEmpty():
                 self.auraEffect.reparentTo(headNode)
-                stencil = StencilAttrib.make(1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 4, 255, 255)
+                stencil = StencilAttrib.make(
+                    1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep,
+                    StencilAttrib.SOKeep, StencilAttrib.SOKeep, 4, 255, 255)
                 self.auraEffect.setAttrib(stencil, 1)
                 self.auraEffect.setScale(scale * mult)
                 self.auraEffect.setEffectColor(color)
@@ -126,4 +141,14 @@ class Boss(BossBase):
         return
 
 
-EffectModifiers = {AvatarTypes.Undead: [1.0, Point3(-1.3, 0, 0)], AvatarTypes.Navy: [1.0, Point3(-1.3, 0, 0)], AvatarTypes.Alligator: [0.75, Point3(0.75, 0, 0)], AvatarTypes.Bat: [0.6, Point3(0, 0, 0)], AvatarTypes.Crab: [1.0, Point3(0, 0, 0)], AvatarTypes.FlyTrap: [2.5, Point3(2.5, 0, 0)], AvatarTypes.Scorpion: [0.3, Point3(0, 0, 0)], AvatarTypes.Stump: [1.25, Point3(0, 0, 0)], AvatarTypes.Wasp: [0.25, Point3(-0.1, 0, 0)]}
+EffectModifiers = {
+    AvatarTypes.Undead: [1.0, Point3(-1.3, 0, 0)],
+    AvatarTypes.Navy: [1.0, Point3(-1.3, 0, 0)],
+    AvatarTypes.Alligator: [0.75, Point3(0.75, 0, 0)],
+    AvatarTypes.Bat: [0.6, Point3(0, 0, 0)],
+    AvatarTypes.Crab: [1.0, Point3(0, 0, 0)],
+    AvatarTypes.FlyTrap: [2.5, Point3(2.5, 0, 0)],
+    AvatarTypes.Scorpion: [0.3, Point3(0, 0, 0)],
+    AvatarTypes.Stump: [1.25, Point3(0, 0, 0)],
+    AvatarTypes.Wasp: [0.25, Point3(-0.1, 0, 0)]
+}

@@ -14,7 +14,6 @@ from pirates.world.ZoneLOD import ZoneLOD
 
 
 class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
-    
 
     def __init__(self, name, zoneRadii, questStep):
         zoneRadii += [1000000]
@@ -35,14 +34,17 @@ class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
             return
 
         if self.questStep.getOriginDoId():
-            self.pendingOriginObj = base.cr.relatedObjectMgr.requestObjects([self.questStep.getOriginDoId()], eachCallback=originObjHere)
+            self.pendingOriginObj = base.cr.relatedObjectMgr.requestObjects(
+                [self.questStep.getOriginDoId()], eachCallback=originObjHere)
         else:
             originObjHere(None)
         self._selfRefreshTask = None
         self._refreshTargetZone = None
         return
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def delete(self):
         self.stopTargetRefresh()
         if self.pendingOriginObj:
@@ -58,7 +60,9 @@ class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
     def cleanup(self):
         pass
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def __cleanup(self):
         ZoneLOD.cleanup(self)
         FSM.cleanup(self)
@@ -66,7 +70,9 @@ class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
     def __uniqueName(self, idString):
         return '%s-QuestNodeIndicator-%s' % (idString, id(self.questStep))
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def placeInWorld(self):
         pass
 
@@ -81,28 +87,41 @@ class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
             return FSM.defaultFilter(self, request, args)
         return
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def exitOff(self):
         if hasattr(localAvatar, 'guiMgr') and localAvatar.guiMgr:
             absPos = self.getPos(render)
-            localAvatar.guiMgr.radarGui.addRadarObjectAtLoc(absPos, objType=RADAR_OBJ_TYPE_QUEST, targetObjId=self.questStep.getStepDoId(), enableUnconvert=True)
+            localAvatar.guiMgr.radarGui.addRadarObjectAtLoc(
+                absPos,
+                objType=RADAR_OBJ_TYPE_QUEST,
+                targetObjId=self.questStep.getStepDoId(),
+                enableUnconvert=True)
         localAvatar.enableQuestArrow(self)
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def enterOff(self):
         localAvatar.disableQuestArrow()
         if self.farEffect:
             self.farEffect.reallyCleanUpEffect()
             self.farEffect = None
         if hasattr(localAvatar, 'guiMgr') and localAvatar.guiMgr:
-            localAvatar.guiMgr.radarGui.restoreRadarObject(self.questStep.getStepDoId())
+            localAvatar.guiMgr.radarGui.restoreRadarObject(
+                self.questStep.getStepDoId())
         return
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def enterFar(self):
         self.startFarEffect()
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def exitFar(self):
         self.stopFarEffect()
 
@@ -118,7 +137,9 @@ class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
     def exitAt(self):
         pass
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def startFarEffect(self):
         if self.farEffect:
             self.farEffect.reallyCleanUpEffect()
@@ -130,7 +151,9 @@ class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
         if self.muted:
             self.hideEffect()
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def stopFarEffect(self):
         if self.farEffect:
             self.farEffect.stopLoop()
@@ -158,7 +181,8 @@ class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
                 self._refreshTargetZone = avLoc
             return task.again
 
-        self._selfRefreshTask = taskMgr.doMethodLater(10, tryRefresh, 'indicatorNodeRefresh-%s' % localAvatar.doId)
+        self._selfRefreshTask = taskMgr.doMethodLater(
+            10, tryRefresh, 'indicatorNodeRefresh-%s' % localAvatar.doId)
 
     def stopTargetRefresh(self):
         if self._selfRefreshTask:
@@ -166,4 +190,6 @@ class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
             self._selfRefreshTask = None
             self._refreshTargetZone = None
         return
+
+
 # okay decompiling .\pirates\quest\QuestIndicatorNode.pyc

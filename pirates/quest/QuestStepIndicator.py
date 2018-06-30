@@ -15,8 +15,17 @@ from pirates.quest.QuestPath import QuestStep
 
 
 class QuestStepIndicator:
-    
-    TypeMap = {QuestStep.STNPC: QuestIndicatorNodeNPC, QuestStep.STItem: QuestIndicatorNodeItem, QuestStep.STArea: QuestIndicatorNodeArea, QuestStep.STTunnel: QuestIndicatorNodeTunnel, QuestStep.STExteriorDoor: QuestIndicatorNodeExtDoor, QuestStep.STInteriorDoor: QuestIndicatorNodeIntDoor, QuestStep.STQuestNode: QuestIndicatorNodeQuestNode, QuestStep.STShip: QuestIndicatorNodeShip}
+
+    TypeMap = {
+        QuestStep.STNPC: QuestIndicatorNodeNPC,
+        QuestStep.STItem: QuestIndicatorNodeItem,
+        QuestStep.STArea: QuestIndicatorNodeArea,
+        QuestStep.STTunnel: QuestIndicatorNodeTunnel,
+        QuestStep.STExteriorDoor: QuestIndicatorNodeExtDoor,
+        QuestStep.STInteriorDoor: QuestIndicatorNodeIntDoor,
+        QuestStep.STQuestNode: QuestIndicatorNodeQuestNode,
+        QuestStep.STShip: QuestIndicatorNodeShip
+    }
 
     def __init__(self):
         self.questStep = None
@@ -30,7 +39,9 @@ class QuestStepIndicator:
         self.questStep = None
         return
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def showQuestStep(self, questStep):
         if self.questStep != questStep:
             self.hideQuestStep()
@@ -43,7 +54,9 @@ class QuestStepIndicator:
                     if self.muted:
                         self.hideEffect()
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def hideQuestStep(self):
         if self.indicatorNode:
             self.indicatorNode.delete()
@@ -60,4 +73,6 @@ class QuestStepIndicator:
         self.muted = True
         if self.indicatorNode:
             self.indicatorNode.hideEffect()
+
+
 # okay decompiling .\pirates\quest\QuestStepIndicator.pyc

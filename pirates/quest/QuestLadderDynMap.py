@@ -7,7 +7,6 @@ from pirates.quest import QuestDB, QuestLadder, QuestLadderDB
 
 
 class QuestLadderDynMap:
-    
 
     def __init__(self):
         self.QuestIDLadderDynMap = {}
@@ -30,13 +29,13 @@ class QuestLadderDynMap:
     def getMappingFromContainer(self, container, ladderId, ladderInt):
         for containerChild in container.getContainers():
             if containerChild.isContainer():
-                self.getMappingFromContainer(containerChild, ladderId, ladderInt)
+                self.getMappingFromContainer(containerChild, ladderId,
+                                             ladderInt)
             else:
                 self.addMapping(containerChild.questId, ladderId, ladderInt)
 
     def addMapping(self, questId, ladderId, ladderInt):
-        ladder = (
-         ladderId, ladderInt)
+        ladder = (ladderId, ladderInt)
         self.QuestIDLadderDynMap[questId] = ladder
 
     def findQuestLadderId(self, questId):
@@ -57,4 +56,6 @@ class QuestLadderDynMap:
 
     def getCompleteMapping(self):
         return self.QuestIDLadderDynMap
+
+
 # okay decompiling .\pirates\quest\QuestLadderDynMap.pyc

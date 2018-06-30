@@ -23,30 +23,65 @@ class WorldCreatorBase:
 
         self.worldType = None
 
-    def loadObjectsFromFile(self, filename, parent, zoneLevel=0, startTime=None, parentIsObj=False):
+    def loadObjectsFromFile(self,
+                            filename,
+                            parent,
+                            zoneLevel=0,
+                            startTime=None,
+                            parentIsObj=False):
         fileDict = self.openFile(filename)
         objDict = fileDict.get('Objects')
         parentUid = None
         if hasattr(parent, 'getUniqueId'):
             parentUid = parent.getUniqueId()
 
-        objects = self.loadObjectDict(objDict, parent, parentUid, dynamic=0, zoneLevel=zoneLevel, startTime=startTime,
-            parentIsObj=parentIsObj, fileName=re.sub('.py', '', filename))
+        objects = self.loadObjectDict(
+            objDict,
+            parent,
+            parentUid,
+            dynamic=0,
+            zoneLevel=zoneLevel,
+            startTime=startTime,
+            parentIsObj=parentIsObj,
+            fileName=re.sub('.py', '', filename))
 
         return [fileDict, objects]
 
-    def loadObjectDict(self, objDict, parent, parentUid, dynamic, zoneLevel=0, startTime=None, parentIsObj=False, fileName=None, actualParentObj=None):
+    def loadObjectDict(self,
+                       objDict,
+                       parent,
+                       parentUid,
+                       dynamic,
+                       zoneLevel=0,
+                       startTime=None,
+                       parentIsObj=False,
+                       fileName=None,
+                       actualParentObj=None):
         objects = []
         for objKey in objDict.keys():
-            newObj = self.loadObject(objDict[objKey], parent, parentUid, objKey, dynamic, zoneLevel=zoneLevel, startTime=startTime,
-                parentIsObj=parentIsObj, fileName=fileName, actualParentObj=actualParentObj)
+            newObj = self.loadObject(
+                objDict[objKey],
+                parent,
+                parentUid,
+                objKey,
+                dynamic,
+                zoneLevel=zoneLevel,
+                startTime=startTime,
+                parentIsObj=parentIsObj,
+                fileName=fileName,
+                actualParentObj=actualParentObj)
 
             if newObj:
                 objects.append(newObj)
 
         return objects
 
-    def loadInstancedObject(self, object, parent, parentUid, objKey, instanceParams=[]):
+    def loadInstancedObject(self,
+                            object,
+                            parent,
+                            parentUid,
+                            objKey,
+                            instanceParams=[]):
         self.creatingInstance = True
         self.creatingInstanceParams = instanceParams
         newObj = self.loadObject(object, parent, parentUid, objKey, False)
@@ -54,13 +89,32 @@ class WorldCreatorBase:
         self.creatingInstanceParams = None
         return newObj
 
-    def loadObject(self, object, parent, parentUid, objKey, dynamic, zoneLevel=0, startTime=None, parentIsObj=False, fileName=None, actualParentObj=None):
+    def loadObject(self,
+                   object,
+                   parent,
+                   parentUid,
+                   objKey,
+                   dynamic,
+                   zoneLevel=0,
+                   startTime=None,
+                   parentIsObj=False,
+                   fileName=None,
+                   actualParentObj=None):
         if not self.isObjectInCurrentGamePhase(object):
             return
 
         prevWorld = self.world
-        newObjInfo = self.createObject(object, parent, parentUid, objKey, dynamic, zoneLevel=zoneLevel, startTime=startTime, parentIsObj=parentIsObj,
-            fileName=fileName, actualParentObj=actualParentObj)
+        newObjInfo = self.createObject(
+            object,
+            parent,
+            parentUid,
+            objKey,
+            dynamic,
+            zoneLevel=zoneLevel,
+            startTime=startTime,
+            parentIsObj=parentIsObj,
+            fileName=fileName,
+            actualParentObj=actualParentObj)
 
         if newObjInfo:
             newObj, newActualParent = newObjInfo
@@ -78,8 +132,15 @@ class WorldCreatorBase:
                 if hasattr(newObj, 'getUniqueId'):
                     objKey = newObj.getUniqueId()
 
-            self.loadObjectDict(objDict, newObj, objKey, dynamic, zoneLevel=zoneLevel, startTime=startTime,
-                fileName=fileName, actualParentObj=newActualParent)
+            self.loadObjectDict(
+                objDict,
+                newObj,
+                objKey,
+                dynamic,
+                zoneLevel=zoneLevel,
+                startTime=startTime,
+                fileName=fileName,
+                actualParentObj=newActualParent)
 
         self._restoreWorld(prevWorld)
         return newObj
@@ -95,7 +156,17 @@ class WorldCreatorBase:
         else:
             self.world = prevWorld
 
-    def createObject(self, object, parent, parentUid, objKey, dynamic, zoneLevel=0, startTime=None, parentIsObj=False, fileName=None, actualParentObj=None):
+    def createObject(self,
+                     object,
+                     parent,
+                     parentUid,
+                     objKey,
+                     dynamic,
+                     zoneLevel=0,
+                     startTime=None,
+                     parentIsObj=False,
+                     fileName=None,
+                     actualParentObj=None):
         objType = object.get('Type')
         self.notify.debug('createObject: type = %s' % objType)
         if dynamic and object.get('ExtUid'):
@@ -103,7 +174,11 @@ class WorldCreatorBase:
 
         childFilename = object.get('File')
         if childFilename and object['Type'] != 'Building Exterior' and object['Type'] != 'Island Game Area':
-            self.loadObjectsFromFile(childFilename + '.py', parent, zoneLevel=zoneLevel, startTime=startTime)
+            self.loadObjectsFromFile(
+                childFilename + '.py',
+                parent,
+                zoneLevel=zoneLevel,
+                startTime=startTime)
             return
 
         return objType
@@ -116,7 +191,7 @@ class WorldCreatorBase:
             obj = __import__('pirates.leveleditor.worldData.%s' % moduleName)
         except ImportError:
             obj = None
-        except ValueError, e:
+        except ValueError as e:
             self.notify.error('%s when loading %s' % (e, filename))
 
         for symbol in ['leveleditor', 'worldData', moduleName, 'objectStruct']:
@@ -135,12 +210,12 @@ class WorldCreatorBase:
         objectInfo = None
         for name in fileDict:
             fileData = fileDict[name]
-            if not fileData['ObjectIds'].has_key(uid):
+            if uid not in fileData['ObjectIds']:
                 continue
 
             getSyntax = 'objectInfo = fileData' + fileData['ObjectIds'][uid]
             exec getSyntax
-            if not objectInfo.has_key('File') or objectInfo.get('File') == '':
+            if 'File' not in objectInfo or objectInfo.get('File') == '':
                 break
 
         return objectInfo
@@ -158,7 +233,7 @@ class WorldCreatorBase:
 
         return objectInfo
 
-    def getFilelistByUid(self, uid, fileDict = None):
+    def getFilelistByUid(self, uid, fileDict=None):
         objectInfo = None
         if not fileDict:
             fileDict = self.fileDicts
@@ -166,7 +241,7 @@ class WorldCreatorBase:
         fileList = set()
         for name in fileDict:
             fileData = fileDict[name]
-            if not fileData['ObjectIds'].has_key(uid):
+            if uid not in fileData['ObjectIds']:
                 continue
 
             getSyntax = 'objectInfo = fileData' + fileData['ObjectIds'][uid]
@@ -194,7 +269,7 @@ class WorldCreatorBase:
                         if model:
                             fileList.add(model + '.bam')
 
-            if not objectInfo.has_key('File') or objectInfo.get('File') == '':
+            if 'File' not in objectInfo or objectInfo.get('File') == '':
                 break
                 continue
 
@@ -211,19 +286,20 @@ class WorldCreatorBase:
             curFile = None
             for name in fileDict:
                 fileData = fileDict[name]
-                if not fileData['ObjectIds'].has_key(str(curUid)):
+                if str(curUid) not in fileData['ObjectIds']:
                     continue
 
-                if fileData['Objects'].has_key(str(curUid)):
+                if str(curUid) in fileData['Objects']:
                     if fileData['Objects'][str(curUid)].get('Type') == 'Island':
                         return (str(curUid), isPrivate)
 
                     continue
 
                 objData = fileData['Objects'].values()[0]['Objects']
-                if objData.has_key(str(curUid)):
+                if str(curUid) in objData:
                     if curUid == objUid:
-                        if objData[str(curUid)].get('Private Status') == 'Private Only':
+                        if objData[str(curUid)].get(
+                                'Private Status') == 'Private Only':
                             isPrivate = True
                     if objData[str(curUid)].get('Type') == 'Island':
                         return (str(curUid), isPrivate)
@@ -241,7 +317,7 @@ class WorldCreatorBase:
     def isObjectDefined(self, objUid, fileName):
         fileDict = self.fileDicts
         fileData = fileDict.get(fileName)
-        if fileData and fileData['ObjectIds'].has_key(objUid):
+        if fileData and objUid in fileData['ObjectIds']:
             return True
         else:
             return False

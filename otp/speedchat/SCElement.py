@@ -96,8 +96,7 @@ class SCElement(SCObject, NodePath):
         bounds = text.getCardActual()
         width = abs(bounds[1] - bounds[0]) + self.padX
         height = abs(bounds[3] - bounds[2]) + 2.0 * self.padZ
-        return (
-            width, height)
+        return (width, height)
 
     def setDimensions(self, width, height):
         self.width = float(width)
@@ -151,32 +150,25 @@ class SCElement(SCObject, NodePath):
         if 'text_align' in dbArgs:
             if dbArgs['text_align'] == TextNode.ACenter:
                 textX = self.width / 2.0
-        args = {'text': self.getDisplayText(),
-                'frameColor': (0,
-                               0,
-                               0,
-                               0),
-                'rolloverColor': self.getColorScheme().getRolloverColor() + (1,
-                                                                             ),
-                'pressedColor': self.getColorScheme().getPressedColor() + (1,
-                                                                           ),
-                'text_font': OTPGlobals.getInterfaceFont(),
-                'text_align': TextNode.ALeft,
-                'text_fg': self.getColorScheme().getTextColor() + (1,
-                                                                   ),
-                'text_pos': (textX,
-                             -0.25 - halfHeight,
-                             0),
-                'relief': DGG.FLAT,
-                'pressEffect': 0}
+        args = {
+            'text': self.getDisplayText(),
+            'frameColor': (0, 0, 0, 0),
+            'rolloverColor': self.getColorScheme().getRolloverColor() + (1,),
+            'pressedColor': self.getColorScheme().getPressedColor() + (1,),
+            'text_font': OTPGlobals.getInterfaceFont(),
+            'text_align': TextNode.ALeft,
+            'text_fg': self.getColorScheme().getTextColor() + (1,),
+            'text_pos': (textX, -0.25 - halfHeight, 0),
+            'relief': DGG.FLAT,
+            'pressEffect': 0
+        }
         args.update(dbArgs)
         rolloverColor = args['rolloverColor']
         pressedColor = args['pressedColor']
         del args['rolloverColor']
         del args['pressedColor']
         btn = DirectButton(
-            parent=self, frameSize=(
-                0, self.width, -self.height, 0), **args)
+            parent=self, frameSize=(0, self.width, -self.height, 0), **args)
         btn.frameStyle[DGG.BUTTON_ROLLOVER_STATE].setColor(*rolloverColor)
         btn.frameStyle[DGG.BUTTON_DEPRESSED_STATE].setColor(*pressedColor)
         btn.updateFrameStyle()
@@ -190,4 +182,6 @@ class SCElement(SCObject, NodePath):
 
     def __str__(self):
         return '%s: %s' % (self.__class__.__name__, self.getDisplayText())
+
+
 # okay decompiling .\otp\speedchat\SCElement.pyc

@@ -2,6 +2,7 @@ from direct.showbase.DirectObject import DirectObject
 from otp.otpbase import OTPRender
 from panda3d.core import *
 
+
 class Reflection(DirectObject):
     global_reflection = None
 
@@ -14,14 +15,17 @@ class Reflection(DirectObject):
         try:
             return base.options.reflection == 1
         except:
-            return base.config.GetBool('want-water-reflection-show-through-only', False)
+            return base.config.GetBool(
+                'want-water-reflection-show-through-only', False)
 
     @classmethod
     def initialize(self, parent):
         if Reflection.global_reflection == None:
             buffer_width = 512
             buffer_height = 512
-            Reflection.global_reflection = Reflection('reflection', buffer_width, buffer_height, parent, Plane(Vec3(0, 0, 1), Point3(0, 0, 0)))
+            Reflection.global_reflection = Reflection(
+                'reflection', buffer_width, buffer_height, parent,
+                Plane(Vec3(0, 0, 1), Point3(0, 0, 0)))
             Reflection.global_reflection.lock = True
 
     @classmethod
@@ -31,8 +35,13 @@ class Reflection(DirectObject):
             reflection.lock = False
             reflection.delete()
         Reflection.global_reflection = None
-        
-    def __init__(self, name, width, height, parent, plane=Plane(Vec3(0, 0, 1), Point3(0, 0, 0))):
+
+    def __init__(self,
+                 name,
+                 width,
+                 height,
+                 parent,
+                 plane=Plane(Vec3(0, 0, 1), Point3(0, 0, 0))):
         DirectObject.__init__(self)
         self.lock = False
         self.parent = parent
@@ -61,12 +70,19 @@ class Reflection(DirectObject):
         self.clip_plane = plane
         self.clip_plane_node = PlaneNode('clip_plane_' + self.name)
         self.clip_plane_node.setPlane(self.clip_plane)
-        self.reflection_root = parent.attachNewNode('reflection_root_' + self.name)
-        self.reflection_plane_node_path = self.reflection_root.attachNewNode(self.plane_node)
-        self.clip_plane_node_path = self.reflection_root.attachNewNode(self.clip_plane_node)
+        self.reflection_root = parent.attachNewNode('reflection_root_' +
+                                                    self.name)
+        self.reflection_plane_node_path = self.reflection_root.attachNewNode(
+            self.plane_node)
+        self.clip_plane_node_path = self.reflection_root.attachNewNode(
+            self.clip_plane_node)
         self.reflection_camera = Camera('reflection_camera_' + self.name)
-        self.reflection_camera.setInitialState(RenderState.make(CullFaceAttrib.makeReverse(), ClipPlaneAttrib.make().addOnPlane(self.clip_plane_node_path)))
-        self.reflection_camera_node_path = self.reflection_plane_node_path.attachNewNode(self.reflection_camera)
+        self.reflection_camera.setInitialState(
+            RenderState.make(
+                CullFaceAttrib.makeReverse(),
+                ClipPlaneAttrib.make().addOnPlane(self.clip_plane_node_path)))
+        self.reflection_camera_node_path = self.reflection_plane_node_path.attachNewNode(
+            self.reflection_camera)
         self.reflection_camera.setCameraMask(OTPRender.ReflectionCameraBitmask)
         self.reflectShowThroughOnly(False)
         self.reflection_buffer = None
@@ -78,10 +94,14 @@ class Reflection(DirectObject):
         if self.reflection_buffer:
             base.graphicsEngine.removeWindow(self.reflection_buffer)
             self.reflection_buffer = None
-            
+
     def __createBuffer(self):
         self.__destroyBuffer()
-        self.reflection_buffer = base.win.makeTextureBuffer('reflection_buffer' + self.name, self.width, self.height, tex=self.reflection_texture)
+        self.reflection_buffer = base.win.makeTextureBuffer(
+            'reflection_buffer' + self.name,
+            self.width,
+            self.height,
+            tex=self.reflection_texture)
         if self.reflection_buffer:
             self.reflection_buffer.setSort(40)
             self.reflection_buffer.setClearColor(self.black_clear_color)
@@ -94,7 +114,7 @@ class Reflection(DirectObject):
         else:
             self.display_region = None
             self.enable(False)
-            
+
     def createCard(self, bin_name, bin_priority):
         if self.card_created == False:
             reflection_card = CardMaker('reflection_card')
@@ -106,13 +126,17 @@ class Reflection(DirectObject):
                     reflection_card.setHasUvs(True)
                     geom_node = GeomNode('reflection_card')
                     array = GeomVertexArrayFormat()
-                    array.addColumn(InternalName.getVertex(), 4, Geom.NTFloat32, Geom.CClipPoint)
-                    array.addColumn(InternalName.getColor(), 4, Geom.NTFloat32, Geom.CColor)
-                    array.addColumn(InternalName.getTexcoord(), 2, Geom.NTFloat32, Geom.CTexcoord)
+                    array.addColumn(InternalName.getVertex(), 4, Geom.NTFloat32,
+                                    Geom.CClipPoint)
+                    array.addColumn(InternalName.getColor(), 4, Geom.NTFloat32,
+                                    Geom.CColor)
+                    array.addColumn(InternalName.getTexcoord(), 2,
+                                    Geom.NTFloat32, Geom.CTexcoord)
                     format = GeomVertexFormat()
                     format.addArray(array)
                     self.format = GeomVertexFormat.registerFormat(format)
-                    vertex_data = GeomVertexData('reflection_card', self.format, Geom.UHStatic)
+                    vertex_data = GeomVertexData('reflection_card', self.format,
+                                                 Geom.UHStatic)
                     vertex_writer = GeomVertexWriter(vertex_data, 'vertex')
                     color_writer = GeomVertexWriter(vertex_data, 'color')
                     texture_writer = GeomVertexWriter(vertex_data, 'texcoord')
@@ -158,20 +182,25 @@ class Reflection(DirectObject):
                     geometry.addPrimitive(triangles)
                     geom_node.addGeom(geometry)
                     geometry_node = geom_node
-                    reflection_card.setSourceGeometry(geometry_node, Vec4(-1.0, 1.0, -1.0, 1.0))
+                    reflection_card.setSourceGeometry(
+                        geometry_node, Vec4(-1.0, 1.0, -1.0, 1.0))
                 reflection_card_node_path = NodePath(reflection_card.generate())
                 reflection_card_node_path.setTexture(self.reflection_texture, 1)
-                reflection_card_node_path.setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
+                reflection_card_node_path.setAttrib(
+                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
                 reflection_card_node_path.setDepthTest(0)
                 reflection_card_node_path.setDepthWrite(0)
                 reflection_card_node_path.setLightOff()
                 reflection_card_node_path.node().setBounds(OmniBoundingVolume())
                 reflection_card_node_path.node().setFinal(1)
-                mask = 4294967295L
-                stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
+                mask = 4294967295
+                stencil = StencilAttrib.make(
+                    1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep,
+                    StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
                 reflection_card_node_path.setAttrib(stencil)
                 reflection_card_node_path.setBin(bin_name, bin_priority)
-                OTPRender.renderReflection(False, reflection_card_node_path, 'reflection_card', None)
+                OTPRender.renderReflection(False, reflection_card_node_path,
+                                           'reflection_card', None)
                 if use_render:
                     reflection_card_node_path.reparentTo(render)
                 else:
@@ -208,7 +237,11 @@ class Reflection(DirectObject):
             self.reflection_card_node_path.hide()
         self.reflection_state = False
 
-    def update_reflection(self, lens, reference_node, supports_sky_only=True, sky_only=False):
+    def update_reflection(self,
+                          lens,
+                          reference_node,
+                          supports_sky_only=True,
+                          sky_only=False):
         if True:
             self.reflection_camera_node_path.node().setLens(lens)
         else:
@@ -228,7 +261,8 @@ class Reflection(DirectObject):
         if supports_sky_only == False:
             self.enable(state)
         self.reflection_state = state
-        reference_matrix = reference_node.getMat(self.reflection_plane_node_path)
+        reference_matrix = reference_node.getMat(
+            self.reflection_plane_node_path)
         reflection_matrix = self.plane.getReflectionMat()
         matrix = reference_matrix * reflection_matrix
         self.reflection_camera_node_path.setMat(matrix)
@@ -257,9 +291,13 @@ class Reflection(DirectObject):
 
     def reflectShowThroughOnly(self, reflect_show_through_only):
         if reflect_show_through_only:
-            self.reflection_camera.setCameraMask(OTPRender.SkyReflectionCameraBitmask)
-            render.hide(OTPRender.ReflectionCameraBitmask | OTPRender.SkyReflectionCameraBitmask)
+            self.reflection_camera.setCameraMask(
+                OTPRender.SkyReflectionCameraBitmask)
+            render.hide(OTPRender.ReflectionCameraBitmask |
+                        OTPRender.SkyReflectionCameraBitmask)
         else:
-            self.reflection_camera.setCameraMask(OTPRender.ReflectionCameraBitmask)
-            render.show(OTPRender.ReflectionCameraBitmask | OTPRender.SkyReflectionCameraBitmask)
+            self.reflection_camera.setCameraMask(
+                OTPRender.ReflectionCameraBitmask)
+            render.show(OTPRender.ReflectionCameraBitmask |
+                        OTPRender.SkyReflectionCameraBitmask)
         self.reflect_show_through_only = reflect_show_through_only

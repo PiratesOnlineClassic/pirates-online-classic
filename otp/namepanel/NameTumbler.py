@@ -11,17 +11,19 @@ from panda3d.core import *
 class NameTumbler(DirectFrame):
 
     def __init__(self, nameList, category):
-        DirectFrame.__init__(self, parent=aspect2d, relief='flat', scale=(1, 1, 1), state='disabled', frameColor=(1,
-                                                                                                                  1,
-                                                                                                                  1,
-                                                                                                                  0))
+        DirectFrame.__init__(
+            self,
+            parent=aspect2d,
+            relief='flat',
+            scale=(1, 1, 1),
+            state='disabled',
+            frameColor=(1, 1, 1, 0))
         self.initialiseoptions(NameTumbler)
         self.nameList = nameList
         self.nameList.sort()
         self.category = category
         self.tumblerColor = Vec4(1, 1, 1, 1)
-        self.displayList = [
-            ' '] + [' '] + self.nameList + [' '] + [' ']
+        self.displayList = [' '] + [' '] + self.nameList + [' '] + [' ']
         self.nameIndex = -1
         self.isActive = 1
         self.loadTumblerGUI()
@@ -31,16 +33,16 @@ class NameTumbler(DirectFrame):
         self.background = 'src/maps/NameTumbler.tif'
         self.upArrow = 'src/maps/NameTumblerUpArrow.tif'
         self.downArrow = 'src/maps/NameTumblerDownArrow.tif'
-        self.tumblerscrollList = self.makeScrollList(self.displayList, self.makeLabel, [
-            TextNode.ACenter, 'title'])
+        self.tumblerscrollList = self.makeScrollList(
+            self.displayList, self.makeLabel, [TextNode.ACenter, 'title'])
         self.tumblerscrollList['command'] = self.listsChanged
         self.tumblerscrollList.reparentTo(self)
         self.hilight = self.makeHighlight((0, 0, -0.15))
         self.hilight.reparentTo(self.tumblerscrollList)
         if self.category != '':
-            self.check = self.makeCheckBox((-0.617, 0, 0.374), self.category, (0, 0.25,
-                                                                               0.5,
-                                                                               1), self.toggleTumbler)
+            self.check = self.makeCheckBox((-0.617, 0, 0.374), self.category,
+                                           (0, 0.25, 0.5, 1),
+                                           self.toggleTumbler)
             self.check.reparentTo(self)
         self.getRandomResult()
 
@@ -129,36 +131,67 @@ class NameTumbler(DirectFrame):
 
     def makeScrollList(self, nitems, nitemMakeFunction, nitemMakeExtraArgs):
         it = nitems[:]
-        ds = DirectScrolledList(items=it, itemMakeFunction=nitemMakeFunction, itemMakeExtraArgs=nitemMakeExtraArgs, parent=aspect2d, relief=None, command=None, scale=0.6, pad=(0.1,
-                                                                                                                                                                                0.1), incButton_image=(self.downArrow, self.upArrow, self.circle, self.downArrow), incButton_relief=None, incButton_scale=(0.2,
-                                                                                                                                                                                                                                                                                                           0.05,
-                                                                                                                                                                                                                                                                                                           0.05), incButton_pos=(0, 0, -0.58), decButton_image=(self.upArrow, self.downArrow, self.circle, self.upArrow), decButton_relief=None, decButton_scale=(0.2,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                  0.05,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                  0.05), decButton_pos=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        0.23), itemFrame_pos=(-0.2,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              0.028), itemFrame_scale=1.0, itemFrame_relief=None, itemFrame_image=self.background, itemFrame_image_scale=(0.38,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          0.33), itemFrame_image_pos=(0.2, 0, -0.2), itemFrame_frameSize=(-0.05, 0.48, -0.5, 0.1), itemFrame_borderWidth=(0.01,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          0.01), numItemsVisible=5)
+        ds = DirectScrolledList(
+            items=it,
+            itemMakeFunction=nitemMakeFunction,
+            itemMakeExtraArgs=nitemMakeExtraArgs,
+            parent=aspect2d,
+            relief=None,
+            command=None,
+            scale=0.6,
+            pad=(0.1, 0.1),
+            incButton_image=(self.downArrow, self.upArrow, self.circle,
+                             self.downArrow),
+            incButton_relief=None,
+            incButton_scale=(0.2, 0.05, 0.05),
+            incButton_pos=(0, 0, -0.58),
+            decButton_image=(self.upArrow, self.downArrow, self.circle,
+                             self.upArrow),
+            decButton_relief=None,
+            decButton_scale=(0.2, 0.05, 0.05),
+            decButton_pos=(0, 0, 0.23),
+            itemFrame_pos=(-0.2, 0, 0.028),
+            itemFrame_scale=1.0,
+            itemFrame_relief=None,
+            itemFrame_image=self.background,
+            itemFrame_image_scale=(0.38, 0, 0.33),
+            itemFrame_image_pos=(0.2, 0, -0.2),
+            itemFrame_frameSize=(-0.05, 0.48, -0.5, 0.1),
+            itemFrame_borderWidth=(0.01, 0.01),
+            numItemsVisible=5)
         ds.setTransparency(1)
         return ds
 
     def makeCheckBox(self, npos, ntex, ntexcolor, comm):
-        dcf = DirectCheckButton(parent=aspect2d, relief=None, scale=0.1, boxBorder=0.08, boxImage=self.circle, boxImageScale=(0.4,
-                                                                                                                              0.4,
-                                                                                                                              0.4), boxRelief=None, pos=npos, text=ntex, text_fg=ntexcolor, text_scale=0.8, text_pos=(0.2,
-                                                                                                                                                                                                                      0), indicator_pos=(-0.566667, 0, -0.045), indicator_image_pos=(-0.26, 0, 0.075), command=comm, text_align=TextNode.ALeft)
+        dcf = DirectCheckButton(
+            parent=aspect2d,
+            relief=None,
+            scale=0.1,
+            boxBorder=0.08,
+            boxImage=self.circle,
+            boxImageScale=(0.4, 0.4, 0.4),
+            boxRelief=None,
+            pos=npos,
+            text=ntex,
+            text_fg=ntexcolor,
+            text_scale=0.8,
+            text_pos=(0.2, 0),
+            indicator_pos=(-0.566667, 0, -0.045),
+            indicator_image_pos=(-0.26, 0, 0.075),
+            command=comm,
+            text_align=TextNode.ALeft)
         dcf.setTransparency(1)
         return dcf
 
     def makeHighlight(self, npos):
-        return DirectFrame(parent=aspect2d, relief='flat', state='disabled', frameSize=(-0.25, 0.26, -0.05, 0.05), borderWidth=(0.01,
-                                                                                                                                0.01), pos=npos, frameColor=(1,
-                                                                                                                                                             0,
-                                                                                                                                                             1,
-                                                                                                                                                             0.4))
+        return DirectFrame(
+            parent=aspect2d,
+            relief='flat',
+            state='disabled',
+            frameSize=(-0.25, 0.26, -0.05, 0.05),
+            borderWidth=(0.01, 0.01),
+            pos=npos,
+            frameColor=(1, 0, 1, 0.4))
 
     def getRandomResult(self):
         randomName = random.choice(self.nameList)

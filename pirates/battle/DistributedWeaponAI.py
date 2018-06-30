@@ -2,6 +2,7 @@ from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveA
 from direct.directnotify import DirectNotifyGlobal
 from pirates.battle.WeaponBaseAI import WeaponBaseAI
 
+
 class DistributedWeaponAI(DistributedInteractiveAI, WeaponBaseAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedWeaponAI')
 

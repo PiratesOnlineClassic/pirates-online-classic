@@ -7,8 +7,8 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect
 
-class Wind(PooledEffect, EffectController):
 
+class Wind(PooledEffect, EffectController):
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -26,18 +26,32 @@ class Wind(PooledEffect, EffectController):
         self.flash.setTransparency(1)
         self.flash.setScale(self.startScale)
         self.flash.reparentTo(self.flashDummy)
-        self.flash.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+        self.flash.node().setAttrib(
+            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                  ColorBlendAttrib.OIncomingAlpha,
+                                  ColorBlendAttrib.OOne))
 
     def createTrack(self):
         self.flash.setScale(2.0)
         self.flash.setColorScale(self.fadeColor)
-        fadeIn = self.flash.colorScaleInterval(self.fadeTime / 3, self.fadeColor, startColorScale=Vec4(0, 0, 0, 0))
-        fadeOut = self.flash.colorScaleInterval(self.fadeTime / 3, Vec4(0, 0, 0, 0), startColorScale=self.fadeColor)
+        fadeIn = self.flash.colorScaleInterval(
+            self.fadeTime / 3, self.fadeColor, startColorScale=Vec4(0, 0, 0, 0))
+        fadeOut = self.flash.colorScaleInterval(
+            self.fadeTime / 3, Vec4(0, 0, 0, 0), startColorScale=self.fadeColor)
         texStage = self.flash.findAllTextureStages()[0]
-        self.scroller = LerpFunctionInterval(self.setNewUVs, fromData=0.0, toData=3.0, duration=self.fadeTime, extraArgs=[texStage])
-        self.startEffect = Parallel(fadeIn, Func(self.scroller.loop), Func(self.flashDummy.show))
-        self.endEffect = Sequence(fadeOut, Func(self.flashDummy.hide), Func(self.scroller.pause), Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(self.fadeTime), self.endEffect)
+        self.scroller = LerpFunctionInterval(
+            self.setNewUVs,
+            fromData=0.0,
+            toData=3.0,
+            duration=self.fadeTime,
+            extraArgs=[texStage])
+        self.startEffect = Parallel(fadeIn, Func(self.scroller.loop),
+                                    Func(self.flashDummy.show))
+        self.endEffect = Sequence(fadeOut, Func(self.flashDummy.hide),
+                                  Func(self.scroller.pause),
+                                  Func(self.cleanUpEffect))
+        self.track = Sequence(self.startEffect, Wait(self.fadeTime),
+                              self.endEffect)
 
     def setNewUVs(self, time, texStage):
         self.flash.setTexOffset(texStage, time, 0)

@@ -12,7 +12,8 @@ class IdentityPanel(GuiPanel.GuiPanel):
 
     def __init__(self, Id, Name, width, height, **kw):
         self.width = width
-        GuiPanel.GuiPanel.__init__(self, Name, self.width, height, False, 1, **kw)
+        GuiPanel.GuiPanel.__init__(self, Name, self.width, height, False, 1,
+                                   **kw)
         self.initialiseoptions(IdentityPanel)
         self.Name = Name
         self.Id = Id

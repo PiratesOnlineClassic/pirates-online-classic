@@ -1,8 +1,10 @@
 from direct.distributed.DistributedNodeAI import DistributedNodeAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedInteractiveAI(DistributedNodeAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInteractiveAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedInteractiveAI')
 
     ACCEPT = 1
     DENY = 0
@@ -17,7 +19,8 @@ class DistributedInteractiveAI(DistributedNodeAI):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
-            self.notify.warning('Failed to request interact for non-existant avatar!')
+            self.notify.warning(
+                'Failed to request interact for non-existant avatar!')
 
             self.air.logPotentialHacker(
                 message='Received requestInteraction from non-existant avatar',
@@ -50,7 +53,8 @@ class DistributedInteractiveAI(DistributedNodeAI):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
-            self.notify.warning('Failed to request exit for non-existant avatar!')
+            self.notify.warning(
+                'Failed to request exit for non-existant avatar!')
 
             self.air.logPotentialHacker(
                 message='Received requestExit from non-existant avatar',
@@ -75,7 +79,8 @@ class DistributedInteractiveAI(DistributedNodeAI):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
-            self.notify.warning('Failed to demand exit for non-existant avatar!')
+            self.notify.warning(
+                'Failed to demand exit for non-existant avatar!')
             return
 
         self.d_setUserId(0)
@@ -90,7 +95,8 @@ class DistributedInteractiveAI(DistributedNodeAI):
         self.sendUpdateToAvatarId(avatarId, 'rejectExit', [])
 
     def d_offerOptions(self, avatarId, optionIds, statusCodes):
-        self.sendUpdateToAvatarId(avatarId, 'offerOptions', [optionIds, statusCodes])
+        self.sendUpdateToAvatarId(avatarId, 'offerOptions',
+                                  [optionIds, statusCodes])
 
     def selectOption(self, optionId):
         pass

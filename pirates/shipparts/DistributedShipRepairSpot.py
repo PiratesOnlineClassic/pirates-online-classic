@@ -22,17 +22,23 @@ class DistributedShipRepairSpot(DistributedInteractive):
     def announceGenerate(self):
         DistributedInteractive.announceGenerate(self)
         ship = self.cr.doId2do[self._shipId]
-        NodePath.__init__(self, 'ship-%s-repairSpot-%s' % (ship.doId, self._index))
+        NodePath.__init__(self,
+                          'ship-%s-repairSpot-%s' % (ship.doId, self._index))
         locName = PVPGlobals.RepairSpotLocatorNames[self._index]
         locator = ship.locators.find('**/%s;+s' % locName)
         self.setPos(locator.getPos(ship.root))
         self.setHpr(locator.getHpr(ship.root))
         self.setScale(locator.getScale(ship.root))
         self.reparentTo(ship.modelGeom)
-        self.setInteractOptions(proximityText=PLocalizer.InteractRepairSpot, diskRadius=10.0, sphereScale=6.0)
+        self.setInteractOptions(
+            proximityText=PLocalizer.InteractRepairSpot,
+            diskRadius=10.0,
+            sphereScale=6.0)
         self.setAllowInteract(1)
         self.checkInUse()
-        self._statePushes = DestructiveScratchPad(evalUsable=FunctionCall(self._evalUsableState, ship._repairSpotMgr._state.fullHealth, ship.getWheelInUseSV()))
+        self._statePushes = DestructiveScratchPad(
+            evalUsable=FunctionCall(self._evalUsableState, ship._repairSpotMgr.
+                                    _state.fullHealth, ship.getWheelInUseSV()))
 
     def disable(self):
         self._statePushes.destroy()
@@ -65,7 +71,8 @@ class DistributedShipRepairSpot(DistributedInteractive):
         localAvatar.b_setGameState('ShipRepair')
 
     def stopRepairing(self):
-        if self.userId == localAvatar.doId and localAvatar.getGameState() == 'ShipRepair':
+        if self.userId == localAvatar.doId and localAvatar.getGameState(
+        ) == 'ShipRepair':
             localAvatar.b_setGameState(localAvatar.gameFSM.defaultState)
             base.localAvatar.motionFSM.on()
 

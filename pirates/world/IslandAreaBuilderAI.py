@@ -6,6 +6,7 @@ from pirates.world.DistributedDinghyAI import DistributedDinghyAI
 from pirates.treasuremap.DistributedBuriedTreasureAI import DistributedBuriedTreasureAI
 from pirates.treasuremap.DistributedSurfaceTreasureAI import DistributedSurfaceTreasureAI
 
+
 class IslandAreaBuilderAI(GameAreaBuilderAI):
     notify = directNotify.newCategory('IslandAreaBuilderAI')
 
@@ -14,12 +15,22 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
 
         self.wantDinghys = config.GetBool('want-dinghys', True)
 
-    def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
+    def createObject(self,
+                     objType,
+                     objectData,
+                     parent,
+                     parentUid,
+                     objKey,
+                     dynamic,
+                     parentIsObj=False,
+                     fileName=None,
+                     actualParentObj=None):
         if objType == 'Dinghy' and self.wantDinghys:
             newObj = self.__createDinghy(parent, parentUid, objKey, objectData)
         else:
-            newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey,
-                dynamic, parentIsObj, fileName, actualParentObj)
+            newObj = GameAreaBuilderAI.createObject(
+                self, objType, objectData, parent, parentUid, objKey, dynamic,
+                parentIsObj, fileName, actualParentObj)
 
         return newObj
 

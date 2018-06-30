@@ -12,12 +12,23 @@ from pirates.piratesgui.BorderFrame import BorderFrame
 
 
 class GuiPanel(BorderFrame):
-    
 
-    def __init__(self, title, w, h, showClose=True, titleSize=0, modelSuffix='_f', **kw):
+    def __init__(self,
+                 title,
+                 w,
+                 h,
+                 showClose=True,
+                 titleSize=0,
+                 modelSuffix='_f',
+                 **kw):
         self.width = w
         self.height = h
-        BorderFrame.__init__(self, frameSize=(0, w, 0, h), suffix=modelSuffix, sortOrder=20, **kw)
+        BorderFrame.__init__(
+            self,
+            frameSize=(0, w, 0, h),
+            suffix=modelSuffix,
+            sortOrder=20,
+            **kw)
         self.initialiseoptions(GuiPanel)
         titleFont = PiratesGuiGlobals.TextScaleMed
         textColor = PiratesGuiGlobals.TextFG1
@@ -41,13 +52,35 @@ class GuiPanel(BorderFrame):
                     textShadow = None
                     wordwrap = 10
         if title:
-            self.titleLabel = DirectLabel(parent=self, relief=None, pos=(0.05, 0, h - PiratesGuiGlobals.TextScaleSmall * 2.5), text=title, text_align=TextNode.ALeft, text_scale=titleFont, text_pos=(0.015,
-                                                                                                                                                                                                      0.015), text_fg=textColor, text_shadow=textShadow, text_font=PiratesGlobals.getPirateOutlineFont(), textMayChange=1, text_wordwrap=wordwrap, sortOrder=21)
+            self.titleLabel = DirectLabel(
+                parent=self,
+                relief=None,
+                pos=(0.05, 0, h - PiratesGuiGlobals.TextScaleSmall * 2.5),
+                text=title,
+                text_align=TextNode.ALeft,
+                text_scale=titleFont,
+                text_pos=(0.015, 0.015),
+                text_fg=textColor,
+                text_shadow=textShadow,
+                text_font=PiratesGlobals.getPirateOutlineFont(),
+                textMayChange=1,
+                text_wordwrap=wordwrap,
+                sortOrder=21)
         else:
             self.titleLabel = None
         if showClose:
             lookoutUI = loader.loadModel('models/gui/lookout_gui')
-            self.closeButton = DirectButton(parent=self, relief=None, image=(lookoutUI.find('**/lookout_close_window'), lookoutUI.find('**/lookout_close_window_down'), lookoutUI.find('**/lookout_close_window_over'), lookoutUI.find('**/lookout_close_window_disabled')), pos=(w - 0.055, 0, h - 0.055), scale=0.125, command=self.closePanel, sortOrder=21)
+            self.closeButton = DirectButton(
+                parent=self,
+                relief=None,
+                image=(lookoutUI.find('**/lookout_close_window'),
+                       lookoutUI.find('**/lookout_close_window_down'),
+                       lookoutUI.find('**/lookout_close_window_over'),
+                       lookoutUI.find('**/lookout_close_window_disabled')),
+                pos=(w - 0.055, 0, h - 0.055),
+                scale=0.125,
+                command=self.closePanel,
+                sortOrder=21)
             lookoutUI.removeNode()
         else:
             self.closeButton = None
@@ -79,13 +112,23 @@ class GuiPanel(BorderFrame):
         if self.fadeLerp:
             self.fadeLerp.pause()
             del self.fadeLerp
-        self.fadeLerp = LerpFunctionInterval(self.setAlphaScale, fromData=self.getColorScale()[3], toData=1, duration=0.5)
+        self.fadeLerp = LerpFunctionInterval(
+            self.setAlphaScale,
+            fromData=self.getColorScale()[3],
+            toData=1,
+            duration=0.5)
         self.fadeLerp.start()
 
     def withoutFrame(self, event):
         if self.fadeLerp:
             self.fadeLerp.pause()
             del self.fadeLerp
-        self.fadeLerp = LerpFunctionInterval(self.setAlphaScale, fromData=self.getColorScale()[3], toData=0, duration=0.5)
+        self.fadeLerp = LerpFunctionInterval(
+            self.setAlphaScale,
+            fromData=self.getColorScale()[3],
+            toData=0,
+            duration=0.5)
         self.fadeLerp.start()
+
+
 # okay decompiling .\pirates\piratesgui\GuiPanel.pyc

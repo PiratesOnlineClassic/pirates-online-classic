@@ -9,8 +9,13 @@ from pirates.quest import DistributedQuestGiver
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
-class DistributedReputationAvatar(DistributedAvatar.DistributedAvatar, DistributedMovingObject.DistributedMovingObject, DistributedInteractive.DistributedInteractive, DistributedQuestGiver.DistributedQuestGiver):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedReputationAvatar')
+class DistributedReputationAvatar(
+        DistributedAvatar.DistributedAvatar,
+        DistributedMovingObject.DistributedMovingObject,
+        DistributedInteractive.DistributedInteractive,
+        DistributedQuestGiver.DistributedQuestGiver):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedReputationAvatar')
 
     def __init__(self, cr):
         DistributedAvatar.DistributedAvatar.__init__(self, cr)
@@ -44,10 +49,12 @@ class DistributedReputationAvatar(DistributedAvatar.DistributedAvatar, Distribut
         DistributedQuestGiver.DistributedQuestGiver.announceGenerate(self)
 
     def setLocation(self, parentId, zoneId, teleport=0):
-        DistributedMovingObject.DistributedMovingObject.setLocation(self, parentId, zoneId, teleport)
+        DistributedMovingObject.DistributedMovingObject.setLocation(
+            self, parentId, zoneId, teleport)
 
     def wrtReparentTo(self, parent):
-        DistributedMovingObject.DistributedMovingObject.wrtReparentTo(self, parent)
+        DistributedMovingObject.DistributedMovingObject.wrtReparentTo(
+            self, parent)
 
     def updateReputation(self, category, value):
         pass

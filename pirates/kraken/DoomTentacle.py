@@ -5,19 +5,23 @@ from pirates.kraken.TentacleUtils import TentacleUtils
 
 
 class DoomTentacle(Actor, TentacleUtils):
-    
+
     ModelInfo = ('models/char/doomTentacle_high', 'models/char/doomTentacle_')
     SfxNames = dict()
-    SfxNames.update({'pain': 'sfx_crab_pain.mp3', 'death': 'sfx_crab_death.mp3'})
+    SfxNames.update({
+        'pain': 'sfx_crab_pain.mp3',
+        'death': 'sfx_crab_death.mp3'
+    })
     sfx = {}
-    AnimList = (('emerge', 'emerge'), )
+    AnimList = (('emerge', 'emerge'),)
 
     def __init__(self):
         Actor.__init__(self, None, None, None, flattenable=0, setFinal=1)
         TentacleUtils.__init__(self)
         if not DoomTentacle.sfx:
             for name in DoomTentacle.SfxNames:
-                DoomTentacle.sfx[name] = loader.loadSfx('audio/' + DoomTentacle.SfxNames[name])
+                DoomTentacle.sfx[name] = loader.loadSfx(
+                    'audio/' + DoomTentacle.SfxNames[name])
 
         filePrefix = self.ModelInfo[1]
         if loader.loadModelCopy(filePrefix + '1000') != None:

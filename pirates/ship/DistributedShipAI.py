@@ -3,6 +3,7 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.battle.Teamable import Teamable
 from pirates.ship import ShipGlobals
 
+
 class DistributedShipAI(DistributedMovingObjectAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipAI')
 

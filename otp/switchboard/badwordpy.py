@@ -9,10 +9,12 @@ from otp.otpbase import OTPLocalizer
 
 wordList = ['']
 
+
 def cleanText(text):
     text = text.strip('.,?!')
     text = text.lower()
     return text
+
 
 def isWord(self, text):
     try:
@@ -24,18 +26,20 @@ def isWord(self, text):
     except UnicodeDecodeError:
         return False
 
+
 def test(message):
     modifications = []
     words = message.split(' ')
     offset = 0
     for word in words:
         if word and not isWord(word):
-            modifications.append((offset, offset+len(word)-1))
+            modifications.append((offset, offset + len(word) - 1))
         offset += len(word) + 1
 
     if len(modifications) > 0:
         return True
     return False
+
 
 def garbleSingle(message):
     newMessage = ''
@@ -48,6 +52,7 @@ def garbleSingle(message):
             newMessage = newMessage + ' '
 
     return newMessage
+
 
 def scrubTalk(message, mods):
     scrubbed = 0
@@ -63,7 +68,8 @@ def scrubTalk(message, mods):
     for word in words:
         if word == '':
             newwords.append(word)
-        elif word[0] == '\x07' or len(word) > 1 and word[0] == '.' and word[1] == '\x07':
+        elif word[0] == '\x07' or len(
+                word) > 1 and word[0] == '.' and word[1] == '\x07':
             newwords.append('\x01WLDisplay\x01' + garbleSingle(word) + '\x02')
             scrubbed = 1
         elif not isWord(word):
@@ -74,6 +80,7 @@ def scrubTalk(message, mods):
 
     newText = ' '.join(newwords)
     return (newText, scrubbed)
+
 
 def replaceBadWords(text):
     words = text.split(' ')
@@ -91,18 +98,20 @@ def replaceBadWords(text):
     newText = ' '.join(newwords)
     return newText
 
+
 def scrub(message):
     modifications = []
     words = message.split(' ')
     offset = 0
     for word in words:
         if word and not isWord(word):
-            modifications.append((offset, offset+len(word)-1))
+            modifications.append((offset, offset + len(word) - 1))
         offset += len(word) + 1
 
     cleanMessage = message
     for modStart, modStop in modifications:
-        cleanMessage = cleanMessage[:modStart] + '*'*(modStop-modStart+1) + cleanMessage[modStop+1:]
+        cleanMessage = cleanMessage[:modStart] + '*' * (
+            modStop - modStart + 1) + cleanMessage[modStop + 1:]
 
     message, scrubbed = scrubTalk(cleanMessage, modifications)
     return message

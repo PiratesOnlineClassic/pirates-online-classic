@@ -9,7 +9,6 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class CrewMatchInviteeButton(RequestButton):
-    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -17,11 +16,13 @@ class CrewMatchInviteeButton(RequestButton):
 
 
 class CrewMatchInvitee(GuiPanel.GuiPanel):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('CrewMatchInvitee')
 
-    def __init__(self, avId, avName, location, initialRequest=False, crewType=1):
-        GuiPanel.GuiPanel.__init__(self, PLocalizer.CrewMatchCrewLookout, 0.5, 0.5, showClose=False)
+    def __init__(self, avId, avName, location, initialRequest=False,
+                 crewType=1):
+        GuiPanel.GuiPanel.__init__(
+            self, PLocalizer.CrewMatchCrewLookout, 0.5, 0.5, showClose=False)
         self.initialiseoptions(CrewMatchInvitee)
         self.setPos(0.15, 0, 0.25)
         self.avId = avId
@@ -30,16 +31,27 @@ class CrewMatchInvitee(GuiPanel.GuiPanel):
         self.location = location
         self.crewType = crewType
         if location != '':
-            text = PLocalizer.CrewMatchInviteeInvitation % (self.avName, self.location)
+            text = PLocalizer.CrewMatchInviteeInvitation % (self.avName,
+                                                            self.location)
         else:
             text = PLocalizer.CrewMatchInviteeInvitationNoLocation % self.avName
-        self.message = DirectLabel(parent=self, relief=None, text=text, text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.25,
-                                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                                      0.35), textMayChange=1)
-        self.bOk = CrewMatchInviteeButton(text=PLocalizer.CrewInviteeOK, command=self.__handleOk)
+        self.message = DirectLabel(
+            parent=self,
+            relief=None,
+            text=text,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_align=TextNode.ACenter,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_wordwrap=11,
+            pos=(0.25, 0, 0.35),
+            textMayChange=1)
+        self.bOk = CrewMatchInviteeButton(
+            text=PLocalizer.CrewInviteeOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
         self.bOk.setPos(0.1, 0, 0.05)
-        self.bNo = CrewMatchInviteeButton(text=PLocalizer.CrewInviteeNo, command=self.__handleNo)
+        self.bNo = CrewMatchInviteeButton(
+            text=PLocalizer.CrewInviteeNo, command=self.__handleNo)
         self.bNo.reparentTo(self)
         self.bNo.setPos(0.3, 0, 0.05)
         self.accept('clientLogout', self.destroy)

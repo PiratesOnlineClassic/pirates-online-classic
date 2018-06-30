@@ -13,21 +13,51 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class InventoryList(DirectScrolledFrame):
-    
 
-    def __init__(self, inventory, height, trade=0, buy=0, sell=0, use=0, weapon=0, listItemClass=InventoryListItem.InventoryListItem, listItemWidth=0, listItemHeight=0):
+    def __init__(self,
+                 inventory,
+                 height,
+                 trade=0,
+                 buy=0,
+                 sell=0,
+                 use=0,
+                 weapon=0,
+                 listItemClass=InventoryListItem.InventoryListItem,
+                 listItemWidth=0,
+                 listItemHeight=0):
         self.ListItem = listItemClass
         self.listItemWidth = listItemWidth
         self.listItemHeight = listItemHeight
         self.width = self.listItemWidth + PiratesGuiGlobals.ScrollbarSize
         self.height = height
         charGui = loader.loadModel('models/gui/char_gui')
-        DirectScrolledFrame.__init__(self, relief=None, state=DGG.NORMAL, manageScrollBars=0, autoHideScrollBars=1, frameSize=(0, self.width, 0, self.height), canvasSize=(0, self.width - 0.05, 0.025, self.height - 0.025), verticalScroll_relief=None, verticalScroll_image=charGui.find('**/chargui_slider_small'), verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0, self.height), verticalScroll_image_scale=(self.height + 0.05, 1, 0.75), verticalScroll_image_hpr=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           90), verticalScroll_image_pos=(self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.004, 0, self.height * 0.5), verticalScroll_image_color=(0.61,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         0.6,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         0.6,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         1), verticalScroll_thumb_image=(charGui.find('**/chargui_slider_node'), charGui.find('**/chargui_slider_node_down'), charGui.find('**/chargui_slider_node_over')), verticalScroll_thumb_relief=None, verticalScroll_thumb_image_scale=0.25, verticalScroll_resizeThumb=0, horizontalScroll_relief=None, sortOrder=5)
+        DirectScrolledFrame.__init__(
+            self,
+            relief=None,
+            state=DGG.NORMAL,
+            manageScrollBars=0,
+            autoHideScrollBars=1,
+            frameSize=(0, self.width, 0, self.height),
+            canvasSize=(0, self.width - 0.05, 0.025, self.height - 0.025),
+            verticalScroll_relief=None,
+            verticalScroll_image=charGui.find('**/chargui_slider_small'),
+            verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0,
+                                      self.height),
+            verticalScroll_image_scale=(self.height + 0.05, 1, 0.75),
+            verticalScroll_image_hpr=(0, 0, 90),
+            verticalScroll_image_pos=(
+                self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.004, 0,
+                self.height * 0.5),
+            verticalScroll_image_color=(0.61, 0.6, 0.6, 1),
+            verticalScroll_thumb_image=(
+                charGui.find('**/chargui_slider_node'),
+                charGui.find('**/chargui_slider_node_down'),
+                charGui.find('**/chargui_slider_node_over')),
+            verticalScroll_thumb_relief=None,
+            verticalScroll_thumb_image_scale=0.25,
+            verticalScroll_resizeThumb=0,
+            horizontalScroll_relief=None,
+            sortOrder=5)
         self.initialiseoptions(InventoryList)
         self.verticalScroll.incButton.destroy()
         self.verticalScroll.decButton.destroy()
@@ -63,8 +93,7 @@ class InventoryList(DirectScrolledFrame):
 
     def loadInventoryPanels(self):
         for item in self.inventory:
-            data = [
-             item, 1]
+            data = [item, 1]
             self.addPanel(data, repack=0)
 
         self.repackPanels()
@@ -88,15 +117,21 @@ class InventoryList(DirectScrolledFrame):
             self.panels[i].setPos(0.01, 0, -z * (i + 1))
             self.panels[i].origionalPos = self.panels[i].getPos(render2d)
 
-        self['canvasSize'] = (
-         0, self.listItemWidth - 0.09, -z * (i + 1), 0)
+        self['canvasSize'] = (0, self.listItemWidth - 0.09, -z * (i + 1), 0)
 
     def addPanel(self, data, repack=1):
         itemId = data[0]
         if itemId == InventoryType.MeleeWeaponL1:
             return
         isDisabled = 0
-        panel = self.ListItem(data, trade=self.trade, buy=self.buy, sell=self.sell, use=self.use, weapon=self.weapon, isDisabled=isDisabled)
+        panel = self.ListItem(
+            data,
+            trade=self.trade,
+            buy=self.buy,
+            sell=self.sell,
+            use=self.use,
+            weapon=self.weapon,
+            isDisabled=isDisabled)
         panel.reparentTo(self.getCanvas())
         self.panels.append(panel)
         if repack:
@@ -139,4 +174,6 @@ class InventoryList(DirectScrolledFrame):
                 counter += panel.data[1]
 
         return counter
+
+
 # okay decompiling .\pirates\piratesgui\InventoryList.pyc

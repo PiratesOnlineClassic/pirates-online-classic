@@ -59,29 +59,68 @@ class TimeOfDayPanel(AppShell):
         fogRange = self.todMgr.fog.getExpDensity()
         ambientColor = self.todMgr.alight.node().getColor()
         directionalColor = self.todMgr.dlight.node().getColor()
-        self.fogColor.set((int(fogColor[0] * 255), int(fogColor[1] * 255), int(fogColor[2] * 255)))
+        self.fogColor.set((int(fogColor[0] * 255), int(fogColor[1] * 255),
+                           int(fogColor[2] * 255)))
         self.fogRange.set((fogRange,))
-        self.ambientColor.set((int(ambientColor[0] * 255), int(ambientColor[1] * 255), int(ambientColor[2] * 255)))
-        self.directionalColor.set((int(directionalColor[0] * 255), int(directionalColor[1] * 255), int(directionalColor[2] * 255)))
+        self.ambientColor.set((int(ambientColor[0] * 255),
+                               int(ambientColor[1] * 255),
+                               int(ambientColor[2] * 255)))
+        self.directionalColor.set((int(directionalColor[0] * 255),
+                                   int(directionalColor[1] * 255),
+                                   int(directionalColor[2] * 255)))
 
     def getTkColorFromVec4(self, v):
-        return getTkColorString([int(v[0] * 255), int(v[1] * 255), int(v[2] * 255)])
+        return getTkColorString(
+            [int(v[0] * 255), int(v[1] * 255),
+             int(v[2] * 255)])
 
     def createInterface(self):
         interior = self.interior()
         todFrame = Frame(interior, borderwidth=4, relief='raised')
-        todLabel = Label(todFrame, text='TIME OF DAY', font=('MS Sans Serif', 14))
+        todLabel = Label(
+            todFrame, text='TIME OF DAY', font=('MS Sans Serif', 14))
         printButton = Button(todFrame, text='PRINT', command=self.printSettings)
-        texToggle = Button(todFrame, text='Toggle Textures', command=base.toggleTexture)
+        texToggle = Button(
+            todFrame, text='Toggle Textures', command=base.toggleTexture)
         todStateFrame = Frame(todFrame, borderwidth=2, relief='sunken')
         self.todVar = IntVar()
         self.todVar.set(self.todMgr.currentState)
-        todDawn = Radiobutton(todStateFrame, text='Dawn', variable=self.todVar, value=PiratesGlobals.TOD_DAWN, command=self.changeTod)
-        todDay = Radiobutton(todStateFrame, text='Day', variable=self.todVar, value=PiratesGlobals.TOD_DAY, command=self.changeTod)
-        todDusk = Radiobutton(todStateFrame, text='Dusk', variable=self.todVar, value=PiratesGlobals.TOD_DUSK, command=self.changeTod)
-        todNight = Radiobutton(todStateFrame, text='Night', variable=self.todVar, value=PiratesGlobals.TOD_NIGHT, command=self.changeTod)
-        todStars = Radiobutton(todStateFrame, text='Stars', variable=self.todVar, value=PiratesGlobals.TOD_STARS, command=self.changeTod)
-        todOff = Radiobutton(todStateFrame, text='TOD Off', variable=self.todVar, value=PiratesGlobals.TOD_OFF, command=self.changeTod)
+        todDawn = Radiobutton(
+            todStateFrame,
+            text='Dawn',
+            variable=self.todVar,
+            value=PiratesGlobals.TOD_DAWN,
+            command=self.changeTod)
+        todDay = Radiobutton(
+            todStateFrame,
+            text='Day',
+            variable=self.todVar,
+            value=PiratesGlobals.TOD_DAY,
+            command=self.changeTod)
+        todDusk = Radiobutton(
+            todStateFrame,
+            text='Dusk',
+            variable=self.todVar,
+            value=PiratesGlobals.TOD_DUSK,
+            command=self.changeTod)
+        todNight = Radiobutton(
+            todStateFrame,
+            text='Night',
+            variable=self.todVar,
+            value=PiratesGlobals.TOD_NIGHT,
+            command=self.changeTod)
+        todStars = Radiobutton(
+            todStateFrame,
+            text='Stars',
+            variable=self.todVar,
+            value=PiratesGlobals.TOD_STARS,
+            command=self.changeTod)
+        todOff = Radiobutton(
+            todStateFrame,
+            text='TOD Off',
+            variable=self.todVar,
+            value=PiratesGlobals.TOD_OFF,
+            command=self.changeTod)
         todDawn.pack(side=LEFT, fill=X, expand=0)
         todDay.pack(side=LEFT, fill=X, expand=0)
         todDusk.pack(side=LEFT, fill=X, expand=0)
@@ -91,10 +130,30 @@ class TimeOfDayPanel(AppShell):
         todCycleFrame = Frame(todFrame, borderwidth=2, relief='sunken')
         self.todCycleVar = IntVar()
         self.todCycleVar.set(int(self.todMgr.cycleDuration))
-        todCycle0 = Radiobutton(todCycleFrame, text='Off', variable=self.todCycleVar, value=0, command=self.changeTod)
-        todCycle1 = Radiobutton(todCycleFrame, text='30 sec', variable=self.todCycleVar, value=30, command=self.changeTod)
-        todCycle2 = Radiobutton(todCycleFrame, text='2 min', variable=self.todCycleVar, value=120, command=self.changeTod)
-        todCycle3 = Radiobutton(todCycleFrame, text='10 min', variable=self.todCycleVar, value=600, command=self.changeTod)
+        todCycle0 = Radiobutton(
+            todCycleFrame,
+            text='Off',
+            variable=self.todCycleVar,
+            value=0,
+            command=self.changeTod)
+        todCycle1 = Radiobutton(
+            todCycleFrame,
+            text='30 sec',
+            variable=self.todCycleVar,
+            value=30,
+            command=self.changeTod)
+        todCycle2 = Radiobutton(
+            todCycleFrame,
+            text='2 min',
+            variable=self.todCycleVar,
+            value=120,
+            command=self.changeTod)
+        todCycle3 = Radiobutton(
+            todCycleFrame,
+            text='10 min',
+            variable=self.todCycleVar,
+            value=600,
+            command=self.changeTod)
         todCycle0.pack(side=LEFT, fill=X, expand=0)
         todCycle1.pack(side=LEFT, fill=X, expand=0)
         todCycle2.pack(side=LEFT, fill=X, expand=0)
@@ -109,18 +168,43 @@ class TimeOfDayPanel(AppShell):
         fogFrame = Frame(interior, borderwidth=4, relief='raised')
         self.fogLabel = Label(fogFrame, text='FOG', font=('MS Sans Serif', 14))
         self.fogLabel['bg'] = self.getTkColorFromVec4(initialFogColor)
-        self.fogColor = Valuator.ValuatorGroup(parent=fogFrame, dim=3, labels=['R', 'G', 'B'], value=[int(initialFogColor[0] * 255), int(initialFogColor[1] * 255), int(initialFogColor[2] * 255)], type='slider', valuator_style='full', valuator_min=0, valuator_max=255, valuator_resolution=1)
+        self.fogColor = Valuator.ValuatorGroup(
+            parent=fogFrame,
+            dim=3,
+            labels=['R', 'G', 'B'],
+            value=[
+                int(initialFogColor[0] * 255),
+                int(initialFogColor[1] * 255),
+                int(initialFogColor[2] * 255)
+            ],
+            type='slider',
+            valuator_style='full',
+            valuator_min=0,
+            valuator_max=255,
+            valuator_resolution=1)
         self.fogColor['command'] = self.setFogColorVec
 
         def popupFogColorPicker():
-            color = tkColorChooser.askcolor(parent=interior, initialcolor=(0, 0, 0))
+            color = tkColorChooser.askcolor(
+                parent=interior, initialcolor=(0, 0, 0))
             if color[0] is not None:
                 self.fogColor.set((color[0][0], color[0][1], color[0][2]))
             return
 
-        pButton = Button(fogFrame, text='Popup Color Picker', command=popupFogColorPicker)
+        pButton = Button(
+            fogFrame, text='Popup Color Picker', command=popupFogColorPicker)
         initialRange = self.todMgr.fog.getExpDensity()
-        self.fogRange = Valuator.ValuatorGroup(parent=fogFrame, dim=1, labels=['Range'], value=[initialRange], type='slider', valuator_style='full', min=0.0, max=0.015, numDigits=6, resolution=1e-06)
+        self.fogRange = Valuator.ValuatorGroup(
+            parent=fogFrame,
+            dim=1,
+            labels=['Range'],
+            value=[initialRange],
+            type='slider',
+            valuator_style='full',
+            min=0.0,
+            max=0.015,
+            numDigits=6,
+            resolution=1e-06)
         self.fogRange['command'] = self.setFogRangeVec
         self.fogLabel.pack(fill=X, expand=0)
         pButton.pack(fill=X, expand=0)
@@ -129,38 +213,76 @@ class TimeOfDayPanel(AppShell):
         fogFrame.pack(fill=BOTH, expand=1, pady=4)
         initialAmbientColor = self.todMgr.alight.node().getColor()
         ambientFrame = Frame(interior, borderwidth=4, relief='raised')
-        self.ambientLabel = Label(ambientFrame, text='AMBIENT LIGHT', font=('MS Sans Serif',
-                                                                            14))
+        self.ambientLabel = Label(
+            ambientFrame, text='AMBIENT LIGHT', font=('MS Sans Serif', 14))
         self.ambientLabel['bg'] = self.getTkColorFromVec4(initialAmbientColor)
-        self.ambientColor = Valuator.ValuatorGroup(parent=ambientFrame, dim=3, labels=['R', 'G', 'B'], value=[int(initialAmbientColor[0] * 255), int(initialAmbientColor[1] * 255), int(initialAmbientColor[2] * 255)], type='slider', valuator_style='full', valuator_min=0, valuator_max=255, valuator_resolution=1)
+        self.ambientColor = Valuator.ValuatorGroup(
+            parent=ambientFrame,
+            dim=3,
+            labels=['R', 'G', 'B'],
+            value=[
+                int(initialAmbientColor[0] * 255),
+                int(initialAmbientColor[1] * 255),
+                int(initialAmbientColor[2] * 255)
+            ],
+            type='slider',
+            valuator_style='full',
+            valuator_min=0,
+            valuator_max=255,
+            valuator_resolution=1)
         self.ambientColor['command'] = self.setAmbientColorVec
 
         def popupAmbientColorPicker():
-            color = tkColorChooser.askcolor(parent=interior, initialcolor=(0, 0, 0))
+            color = tkColorChooser.askcolor(
+                parent=interior, initialcolor=(0, 0, 0))
             if color[0] is not None:
                 self.ambientColor.set((color[0][0], color[0][1], color[0][2]))
             return
 
-        pButton = Button(ambientFrame, text='Popup Color Picker', command=popupAmbientColorPicker)
+        pButton = Button(
+            ambientFrame,
+            text='Popup Color Picker',
+            command=popupAmbientColorPicker)
         self.ambientLabel.pack(fill=X, expand=0)
         pButton.pack(fill=X, expand=0)
         self.ambientColor.pack(fill=X, expand=0)
         ambientFrame.pack(fill=BOTH, expand=1, pady=4)
         initialDirectionalColor = self.todMgr.dlight.node().getColor()
         directionalFrame = Frame(interior, borderwidth=4, relief='raised')
-        self.directionalLabel = Label(directionalFrame, text='DIRECTIONAL LIGHT', font=('MS Sans Serif',
-                                                                                        14))
-        self.directionalLabel['bg'] = self.getTkColorFromVec4(initialDirectionalColor)
-        self.directionalColor = Valuator.ValuatorGroup(parent=directionalFrame, dim=3, labels=['R', 'G', 'B'], value=[int(initialDirectionalColor[0] * 255), int(initialDirectionalColor[1] * 255), int(initialDirectionalColor[2] * 255)], type='slider', valuator_style='full', valuator_min=0, valuator_max=255, valuator_resolution=1)
+        self.directionalLabel = Label(
+            directionalFrame,
+            text='DIRECTIONAL LIGHT',
+            font=('MS Sans Serif', 14))
+        self.directionalLabel['bg'] = self.getTkColorFromVec4(
+            initialDirectionalColor)
+        self.directionalColor = Valuator.ValuatorGroup(
+            parent=directionalFrame,
+            dim=3,
+            labels=['R', 'G', 'B'],
+            value=[
+                int(initialDirectionalColor[0] * 255),
+                int(initialDirectionalColor[1] * 255),
+                int(initialDirectionalColor[2] * 255)
+            ],
+            type='slider',
+            valuator_style='full',
+            valuator_min=0,
+            valuator_max=255,
+            valuator_resolution=1)
         self.directionalColor['command'] = self.setDirectionalColorVec
 
         def popupDirectionalColorPicker():
-            color = tkColorChooser.askcolor(parent=interior, initialcolor=(0, 0, 0))
+            color = tkColorChooser.askcolor(
+                parent=interior, initialcolor=(0, 0, 0))
             if color[0] is not None:
-                self.directionalColor.set((color[0][0], color[0][1], color[0][2]))
+                self.directionalColor.set((color[0][0], color[0][1],
+                                           color[0][2]))
             return
 
-        pButton = Button(directionalFrame, text='Popup Color Picker', command=popupDirectionalColorPicker)
+        pButton = Button(
+            directionalFrame,
+            text='Popup Color Picker',
+            command=popupDirectionalColorPicker)
         self.directionalLabel.pack(fill=X, expand=0)
         pButton.pack(fill=X, expand=0)
         self.directionalColor.pack(fill=X, expand=0)
@@ -204,7 +326,8 @@ class TimeOfDayPanel(AppShell):
         self.todMgr.alight.node().setColor(vColor)
         self.ambientLabel['bg'] = getTkColorString(color)
         todState = self.todVar.get()
-        TODGlobals.AmbientLightColors[self.todMgr.environment][todState] = vColor
+        TODGlobals.AmbientLightColors[self.todMgr.environment][
+            todState] = vColor
         if self.editor and self.editor.TODPanelLoaded:
             self.editor.objectMgr.canModifyCurrAttribs(edit=True)
             self.editor.objectMgr.currEditedObjInfo.setTodModified(True)
@@ -214,7 +337,8 @@ class TimeOfDayPanel(AppShell):
         self.todMgr.dlight.node().setColor(vColor)
         self.directionalLabel['bg'] = getTkColorString(color)
         todState = self.todVar.get()
-        TODGlobals.DirectionalLightColors[self.todMgr.environment][todState] = vColor
+        TODGlobals.DirectionalLightColors[self.todMgr.environment][
+            todState] = vColor
         if self.editor and self.editor.TODPanelLoaded:
             self.editor.objectMgr.canModifyCurrAttribs(edit=True)
             self.editor.objectMgr.currEditedObjInfo.setTodModified(True)
@@ -232,4 +356,6 @@ class TimeOfDayPanel(AppShell):
         print '# Directional Colors'
         print 'self.directionalLightColors = ',
         pprint.pprint(TODGlobals.DirectionalLightColors)
+
+
 # okay decompiling .\pirates\leveleditor\TimeOfDayPanel.pyc

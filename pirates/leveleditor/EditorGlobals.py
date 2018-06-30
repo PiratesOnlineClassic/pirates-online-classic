@@ -25,44 +25,44 @@ LOD_STATE_LOW = 2
 LOD_STATE_MED = 3
 flickerTracks = []
 
+
 def LightDynamic(objData, parent=render, drawIcon=True):
-    if objData and objData.has_key('Pos'):
+    if objData and 'Pos' in objData:
         objPos = objData['Pos']
     else:
         objPos = Vec3(0, 0, 0)
-    if objData and objData.has_key('Hpr'):
+    if objData and 'Hpr' in objData:
         objHpr = objData['Hpr']
     else:
         objHpr = Vec3(0, 0, 0)
     color = None
-    if objData and objData.has_key('Visual'):
-        if objData['Visual'].has_key('Color'):
+    if objData and 'Visual' in objData:
+        if 'Color' in objData['Visual']:
             color = objData['Visual']['Color']
     attenuation = None
-    if objData and objData.has_key('Attenuation'):
-        attenuation = (
-         0, 0, float(objData['Attenuation']))
+    if objData and 'Attenuation' in objData:
+        attenuation = (0, 0, float(objData['Attenuation']))
     intensity = None
-    if objData and objData.has_key('Intensity'):
+    if objData and 'Intensity' in objData:
         intensity = float(objData['Intensity'])
     coneAngle = None
     dropOff = None
-    if objData and objData.has_key('ConeAngle'):
+    if objData and 'ConeAngle' in objData:
         coneAngle = float(objData['ConeAngle'])
         if coneAngle == 0.0:
             objData['ConeAngle'] = '60.0'
             coneAngle = 60.0
-    if objData and objData.has_key('DropOff'):
+    if objData and 'DropOff' in objData:
         dropOff = float(objData['DropOff'])
     exponent = None
     flickering = False
-    if objData and objData.has_key('Flickering') and objData['Flickering'] == True:
+    if objData and 'Flickering' in objData and objData['Flickering'] == True:
         flickering = True
     flickRate = 1.0
-    if objData and objData.has_key('FlickRate'):
+    if objData and 'FlickRate' in objData:
         flickRate = float(objData['FlickRate'])
     lightType = DynamicLight.DYN_LIGHT_POINT
-    if objData and objData.has_key('LightType'):
+    if objData and 'LightType' in objData:
         typeString = objData['LightType']
         if typeString == 'AMBIENT':
             lightType = DynamicLight.DYN_LIGHT_AMBIENT
@@ -70,7 +70,16 @@ def LightDynamic(objData, parent=render, drawIcon=True):
             lightType = DynamicLight.DYN_LIGHT_DIRECTIONAL
         elif typeString == 'SPOT':
             lightType = DynamicLight.DYN_LIGHT_SPOT
-    light = DynamicLight.DynamicLight(type=lightType, parent=parent, pos=objPos, hpr=objHpr, color=color, atten=attenuation, exp=exponent, flicker=flickering, drawIcon=drawIcon)
+    light = DynamicLight.DynamicLight(
+        type=lightType,
+        parent=parent,
+        pos=objPos,
+        hpr=objHpr,
+        color=color,
+        atten=attenuation,
+        exp=exponent,
+        flicker=flickering,
+        drawIcon=drawIcon)
     light.turnOff()
     if intensity:
         light.setIntensity(intensity)
@@ -102,13 +111,34 @@ def CreateCreature(species=None):
     return creature
 
 
-def CreateSFX(sfxFile=None, volume=0.5, looping=True, delayMin=0, delayMax=0, pos=None, hpr=None, parent=None, drawIcon=True):
-    soundFX = SoundFX.SoundFX(sfxFile=sfxFile, volume=volume, looping=looping, delayMin=delayMin, delayMax=delayMax, pos=pos, hpr=hpr, parent=parent, listenerNode=base.cam, drawIcon=drawIcon)
+def CreateSFX(sfxFile=None,
+              volume=0.5,
+              looping=True,
+              delayMin=0,
+              delayMax=0,
+              pos=None,
+              hpr=None,
+              parent=None,
+              drawIcon=True):
+    soundFX = SoundFX.SoundFX(
+        sfxFile=sfxFile,
+        volume=volume,
+        looping=looping,
+        delayMin=delayMin,
+        delayMax=delayMax,
+        pos=pos,
+        hpr=hpr,
+        parent=parent,
+        listenerNode=base.cam,
+        drawIcon=drawIcon)
     return soundFX
 
 
 shipList = ShipGlobals.SHIP_CLASS_LIST
-notUsedShipList = ['DINGHY', 'INTERCEPTORL4', 'MERCHANTL4', 'WARSHIPL4', 'DAUNTLESS', 'FLYING_DUTCHMAN', 'SKEL_WARSHIPL3', 'SKEL_INTERCEPTORL3']
+notUsedShipList = [
+    'DINGHY', 'INTERCEPTORL4', 'MERCHANTL4', 'WARSHIPL4', 'DAUNTLESS',
+    'FLYING_DUTCHMAN', 'SKEL_WARSHIPL3', 'SKEL_INTERCEPTORL3'
+]
 numShips = len(shipList) - 1
 for index in range(numShips, -1, -1):
     if shipList[index] in notUsedShipList:

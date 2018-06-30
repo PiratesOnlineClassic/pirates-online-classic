@@ -2,6 +2,7 @@ from direct.actor.Actor import Actor
 from direct.interval.IntervalGlobal import ActorInterval
 from direct.showbase.PythonUtil import report
 
+
 class UsesAnimationMixer:
 
     def __init__(self, animationMixerType=None):
@@ -25,9 +26,13 @@ class UsesAnimationMixer:
         self.animationMixer.delete()
         self.animationMixer = None
 
-    @report(types=['args', 'deltaStamp'], dConfigParam=['want-animmixer-report', 'want-jump-report'])
+    @report(
+        types=['args', 'deltaStamp'],
+        dConfigParam=['want-animmixer-report', 'want-jump-report'])
     def loop(self, *args, **kwargs):
-        self.notify.debug("loop: Performing loop with argumets %s! and kwargs %s" % (str(args), str(kwargs)))
+        self.notify.debug(
+            "loop: Performing loop with argumets %s! and kwargs %s" %
+            (str(args), str(kwargs)))
         if self.mixingEnabled:
             defaultBlendT = self.animationMixer.defaultBlendT
         else:
@@ -35,13 +40,18 @@ class UsesAnimationMixer:
         blendT = kwargs.pop('blendT', defaultBlendT)
         blendDelay = kwargs.pop('blendDelay', 0)
         if self.mixingEnabled:
-            self.animationMixer.loop(blendT=blendT, blendDelay=blendDelay, *args, **kwargs)
+            self.animationMixer.loop(
+                blendT=blendT, blendDelay=blendDelay, *args, **kwargs)
         else:
             Actor.loop(self, *args, **kwargs)
 
-    @report(types=['args', 'deltaStamp'], dConfigParam=['want-animmixer-report', 'want-jump-report'])
+    @report(
+        types=['args', 'deltaStamp'],
+        dConfigParam=['want-animmixer-report', 'want-jump-report'])
     def play(self, *args, **kwargs):
-        self.notify.debug("play: Performing play with argumets %s! and kwargs %s" % (str(args), str(kwargs)))
+        self.notify.debug(
+            "play: Performing play with argumets %s! and kwargs %s" %
+            (str(args), str(kwargs)))
         if self.mixingEnabled:
             defaultBlendT = self.animationMixer.defaultBlendT
         else:
@@ -50,13 +60,22 @@ class UsesAnimationMixer:
         blendOutT = kwargs.pop('blendOutT', defaultBlendT)
         blendInto = kwargs.pop('blendInto', None)
         if self.mixingEnabled:
-            self.animationMixer.play(blendInT=blendInT, blendOutT=blendOutT, blendInto=blendInto, *args, **kwargs)
+            self.animationMixer.play(
+                blendInT=blendInT,
+                blendOutT=blendOutT,
+                blendInto=blendInto,
+                *args,
+                **kwargs)
         else:
             Actor.play(self, *args, **kwargs)
 
-    @report(types=['args', 'deltaStamp'], dConfigParam=['want-animmixer-report', 'want-jump-report'])
+    @report(
+        types=['args', 'deltaStamp'],
+        dConfigParam=['want-animmixer-report', 'want-jump-report'])
     def pingpong(self, *args, **kwargs):
-        self.notify.debug("pingpong: Performing pingpong with argumets %s! and kwargs %s" % (str(args), str(kwargs)))
+        self.notify.debug(
+            "pingpong: Performing pingpong with argumets %s! and kwargs %s" %
+            (str(args), str(kwargs)))
         if self.mixingEnabled:
             defaultBlendT = self.animationMixer.defaultBlendT
         else:
@@ -67,9 +86,13 @@ class UsesAnimationMixer:
         else:
             Actor.pingpong(self, *args, **kwargs)
 
-    @report(types=['args', 'deltaStamp'], dConfigParam=['want-animmixer-report', 'want-jump-report'])
+    @report(
+        types=['args', 'deltaStamp'],
+        dConfigParam=['want-animmixer-report', 'want-jump-report'])
     def pose(self, *args, **kwargs):
-        self.notify.debug("pose: Performing pose with argumets %s! and kwargs %s" % (str(args), str(kwargs)))
+        self.notify.debug(
+            "pose: Performing pose with argumets %s! and kwargs %s" %
+            (str(args), str(kwargs)))
         if self.mixingEnabled:
             defaultBlendT = self.animationMixer.defaultBlendT
         else:
@@ -80,17 +103,25 @@ class UsesAnimationMixer:
         else:
             Actor.pose(self, *args, **kwargs)
 
-    @report(types=['args', 'deltaStamp'], dConfigParam=['want-animmixer-report', 'want-jump-report'])
+    @report(
+        types=['args', 'deltaStamp'],
+        dConfigParam=['want-animmixer-report', 'want-jump-report'])
     def stop(self, *args, **kwargs):
-        self.notify.debug("stop: Stopping animation with argumets %s! and kwargs %s" % (str(args), str(kwargs)))
+        self.notify.debug(
+            "stop: Stopping animation with argumets %s! and kwargs %s" %
+            (str(args), str(kwargs)))
         if self.mixingEnabled:
             self.animationMixer.stop(*args, **kwargs)
         else:
             Actor.stop(self, *args, **kwargs)
 
-    @report(types=['args', 'deltaStamp'], dConfigParam=['want-animmixer-report', 'want-jump-report'])
+    @report(
+        types=['args', 'deltaStamp'],
+        dConfigParam=['want-animmixer-report', 'want-jump-report'])
     def actorInterval(self, *args, **kwargs):
-        self.notify.debug("actorInterval: Performing actorInterval with argumets %s! and kwargs %s" % (str(args), str(kwargs)))
+        self.notify.debug(
+            "actorInterval: Performing actorInterval with argumets %s! and kwargs %s"
+            % (str(args), str(kwargs)))
         mixingWanted = kwargs.pop('mixingWanted', self.mixingEnabled)
         if mixingWanted:
             defaultBlendT = self.animationMixer.defaultBlendT
@@ -101,17 +132,23 @@ class UsesAnimationMixer:
         blendInto = kwargs.pop('blendInto', None)
         if mixingWanted:
             partName = kwargs.get('partName', None)
-            return self.animationMixer.actorInterval(ActorInterval(self, *args, **kwargs), partName, blendInT, blendOutT, blendInto)
+            return self.animationMixer.actorInterval(
+                ActorInterval(self, *args, **kwargs), partName, blendInT,
+                blendOutT, blendInto)
         return ActorInterval(self, *args, **kwargs)
 
-    @report(types=['args', 'deltaStamp'], dConfigParam=['want-animmixer-report', 'want-jump-report'])
+    @report(
+        types=['args', 'deltaStamp'],
+        dConfigParam=['want-animmixer-report', 'want-jump-report'])
     def disableMixing(self):
         self.mixingEnabled = False
         self.animationMixer.cleanup()
         Actor.disableBlend(self)
         Actor.stop(self)
 
-    @report(types=['args', 'deltaStamp'], dConfigParam=['want-animmixer-report', 'want-jump-report'])
+    @report(
+        types=['args', 'deltaStamp'],
+        dConfigParam=['want-animmixer-report', 'want-jump-report'])
     def enableMixing(self):
         self.mixingEnabled = True
         Actor.enableBlend(self)

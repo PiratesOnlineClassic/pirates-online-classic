@@ -6,6 +6,7 @@ from direct.particles import Particles
 from pirates.effects.EffectController import EffectController
 import random
 
+
 class RainMist(EffectController, NodePath):
     cardScale = 64.0
 
@@ -15,7 +16,8 @@ class RainMist(EffectController, NodePath):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleWhiteSteam')
         if not RainMist.particleDummy:
-            RainMist.particleDummy = render.attachNewNode(ModelNode('RainMistParticleDummy'))
+            RainMist.particleDummy = render.attachNewNode(
+                ModelNode('RainMistParticleDummy'))
             RainMist.particleDummy.setDepthWrite(0)
             RainMist.particleDummy.setColorScale(1.0, 1.0, 1.0, 1)
             RainMist.particleDummy.setLightOff()
@@ -67,8 +69,13 @@ class RainMist(EffectController, NodePath):
     def createTrack(self):
         self.p0.renderer.setColor(Vec4(0.8, 0.8, 1.0, 0.25))
         posUpdate = LerpFunctionInterval(self.updatePos, 1.0)
-        self.startEffect = Sequence(Wait(1.0), Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(posUpdate.loop))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(1.0), Func(posUpdate.finish), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Wait(1.0), Func(self.p0.setBirthRate, 0.02),
+            Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy), Func(posUpdate.loop))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100.0), Wait(1.0),
+            Func(posUpdate.finish), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def updatePos(self, t):

@@ -7,33 +7,86 @@ from pirates.piratesgui import (PirateButtonChain, PirateMemberList,
                                 PiratesGuiGlobals, SocialPage)
 from pirates.uberdog.UberDogGlobals import CrewStatus
 
-HUD_ICONS = {0: None, 1: 'icon_cutlass_black', 2: 'icon_pistol_single', 3: 'icon_voodoo_doll_straw', 4: 'icon_dagger_dagger', 5: 'icon_grenade', 6: 'icon_voodoo_staff_L1', 7: 'icon_cannon', 8: 'sail_come_about', 9: 'topgui_icon_ship', 10: 'treasure_w_card'}
+HUD_ICONS = {
+    0: None,
+    1: 'icon_cutlass_black',
+    2: 'icon_pistol_single',
+    3: 'icon_voodoo_doll_straw',
+    4: 'icon_dagger_dagger',
+    5: 'icon_grenade',
+    6: 'icon_voodoo_staff_L1',
+    7: 'icon_cannon',
+    8: 'sail_come_about',
+    9: 'topgui_icon_ship',
+    10: 'treasure_w_card'
+}
+
 
 class CrewHUD(SocialPage.SocialPage):
-    
+
     notify = directNotify.newCategory('CrewHUD')
 
     def __init__(self):
         SocialPage.SocialPage.__init__(self, 'Crew HUD')
         self.crew = {}
-        self.mainFrame = DirectFrame(relief=None, parent=base.a2dTopLeft, frameSize=(0,
-                                                                                     0.5,
-                                                                                     0,
-                                                                                     1.5), state=DGG.DISABLED, sortOrder=0)
-        self.mainFrameSea = DirectFrame(relief=None, parent=base.a2dTopLeft, frameSize=(0,
-                                                                                        0.5,
-                                                                                        0,
-                                                                                        1), state=DGG.DISABLED, sortOrder=0)
+        self.mainFrame = DirectFrame(
+            relief=None,
+            parent=base.a2dTopLeft,
+            frameSize=(0, 0.5, 0, 1.5),
+            state=DGG.DISABLED,
+            sortOrder=0)
+        self.mainFrameSea = DirectFrame(
+            relief=None,
+            parent=base.a2dTopLeft,
+            frameSize=(0, 0.5, 0, 1),
+            state=DGG.DISABLED,
+            sortOrder=0)
         self.mainFrame.setPos(-0.0566664, 0, -1.93)
         self.mainFrameSea.setPos(-0.0566664, 0, -1.62667)
-        self.hudLabel = DirectLabel(relief=None, parent=self.mainFrame, text=PLocalizer.CrewHUDNoCrew, text_scale=PiratesGuiGlobals.TextScaleTitleSmall, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0.29,
-                                                                                                                                                                                                                                   1.56,
-                                                                                                                                                                                                                                   0), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, state=DGG.DISABLED)
-        self.hudLabelSea = DirectLabel(relief=None, parent=self.mainFrameSea, text=PLocalizer.CrewHUDNoCrew, text_scale=PiratesGuiGlobals.TextScaleTitleSmall, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0.29,
-                                                                                                                                                                                                                                         1.055,
-                                                                                                                                                                                                                                         0), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, state=DGG.DISABLED)
-        self.membersList = PirateMemberList.PirateMemberList(12, self.mainFrame, 'FOOLIO HC', height=1.5475, memberHeight=0.08, memberWidth=0.48, memberOffset=0.2, bottom=0.074, width=0.6, hud=True)
-        self.membersListSea = PirateMemberList.PirateMemberList(12, self.mainFrameSea, 'FOOLIO HC', height=1.0475, memberHeight=0.065, memberWidth=0.48, memberOffset=0.2, bottom=0.074, width=0.6, hud=True)
+        self.hudLabel = DirectLabel(
+            relief=None,
+            parent=self.mainFrame,
+            text=PLocalizer.CrewHUDNoCrew,
+            text_scale=PiratesGuiGlobals.TextScaleTitleSmall,
+            text_align=TextNode.ACenter,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_pos=(0.29, 1.56, 0),
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            textMayChange=1,
+            state=DGG.DISABLED)
+        self.hudLabelSea = DirectLabel(
+            relief=None,
+            parent=self.mainFrameSea,
+            text=PLocalizer.CrewHUDNoCrew,
+            text_scale=PiratesGuiGlobals.TextScaleTitleSmall,
+            text_align=TextNode.ACenter,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_pos=(0.29, 1.055, 0),
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            textMayChange=1,
+            state=DGG.DISABLED)
+        self.membersList = PirateMemberList.PirateMemberList(
+            12,
+            self.mainFrame,
+            'FOOLIO HC',
+            height=1.5475,
+            memberHeight=0.08,
+            memberWidth=0.48,
+            memberOffset=0.2,
+            bottom=0.074,
+            width=0.6,
+            hud=True)
+        self.membersListSea = PirateMemberList.PirateMemberList(
+            12,
+            self.mainFrameSea,
+            'FOOLIO HC',
+            height=1.0475,
+            memberHeight=0.065,
+            memberWidth=0.48,
+            memberOffset=0.2,
+            bottom=0.074,
+            width=0.6,
+            hud=True)
         self.weaponCard = loader.loadModel('models/textureCards/weapon_icons')
         self.card = loader.loadModel('models/textureCards/skillIcons')
         self.topGui = loader.loadModel('models/gui/toplevel_gui')
@@ -56,28 +109,48 @@ class CrewHUD(SocialPage.SocialPage):
     def addCrew(self, member):
         avId = member.avatarId
         if avId not in self.crew or self.debugAvId:
-            button = self.membersList.addMember(avId + self.debugCount, None, PirateMemberList.MODE_CREW_HUD, member)
-            buttonSea = self.membersListSea.addMember(avId + self.debugCount, None, PirateMemberList.MODE_CREW_HUD_SEA, member)
-            reloadFrame = DirectFrame(parent=button, relief=None, state=DGG.DISABLED, image=self.card.find('**/base'), image_scale=0.08, image_pos=(0,
-                                                                                                                                                    0,
-                                                                                                                                                    0.02), pos=(0.09,
-                                                                                                                                                                0,
-                                                                                                                                                                0.01))
-            reloadFrameSea = DirectFrame(parent=buttonSea, relief=None, state=DGG.DISABLED, image=self.card.find('**/base'), image_scale=0.055, image_pos=(0,
-                                                                                                                                                           0,
-                                                                                                                                                           0.02), pos=(0.11,
-                                                                                                                                                                       0,
-                                                                                                                                                                       0.01))
-            skillFrame = DirectFrame(parent=reloadFrame, relief=None, state=DGG.DISABLED, image=self.weaponCard.find('**/icon_cutlass_iron'), image_scale=0.07, image_pos=(0,
-                                                                                                                                                                           0,
-                                                                                                                                                                           0.02))
-            skillFrameSea = DirectFrame(parent=reloadFrameSea, relief=None, state=DGG.DISABLED, image=self.weaponCard.find('**/icon_cutlass_iron'), image_scale=0.035, image_pos=(0,
-                                                                                                                                                                                  0,
-                                                                                                                                                                                  0.02))
+            button = self.membersList.addMember(avId + self.debugCount, None,
+                                                PirateMemberList.MODE_CREW_HUD,
+                                                member)
+            buttonSea = self.membersListSea.addMember(
+                avId + self.debugCount, None,
+                PirateMemberList.MODE_CREW_HUD_SEA, member)
+            reloadFrame = DirectFrame(
+                parent=button,
+                relief=None,
+                state=DGG.DISABLED,
+                image=self.card.find('**/base'),
+                image_scale=0.08,
+                image_pos=(0, 0, 0.02),
+                pos=(0.09, 0, 0.01))
+            reloadFrameSea = DirectFrame(
+                parent=buttonSea,
+                relief=None,
+                state=DGG.DISABLED,
+                image=self.card.find('**/base'),
+                image_scale=0.055,
+                image_pos=(0, 0, 0.02),
+                pos=(0.11, 0, 0.01))
+            skillFrame = DirectFrame(
+                parent=reloadFrame,
+                relief=None,
+                state=DGG.DISABLED,
+                image=self.weaponCard.find('**/icon_cutlass_iron'),
+                image_scale=0.07,
+                image_pos=(0, 0, 0.02))
+            skillFrameSea = DirectFrame(
+                parent=reloadFrameSea,
+                relief=None,
+                state=DGG.DISABLED,
+                image=self.weaponCard.find('**/icon_cutlass_iron'),
+                image_scale=0.035,
+                image_pos=(0, 0, 0.02))
             skillFrame.setTransparency(1)
             skillFrameSea.setTransparency(1)
             self.crew[avId + self.debugCount] = [
-             button, reloadFrame, skillFrame, buttonSea, reloadFrameSea, skillFrameSea]
+                button, reloadFrame, skillFrame, buttonSea, reloadFrameSea,
+                skillFrameSea
+            ]
 
         if self.debugAvId and self.debugCount < 11:
             print 'In CrewHUD Debug mode, generating debug button %s' % self.debugCount
@@ -87,8 +160,10 @@ class CrewHUD(SocialPage.SocialPage):
     def removeCrew(self, member):
         avId = member.avatarId
         self.crew.pop(avId, None)
-        self.membersList.removeMember(avId, None, PirateMemberList.MODE_CREW_HUD)
-        self.membersListSea.removeMember(avId, None, PirateMemberList.MODE_CREW_HUD_SEA)
+        self.membersList.removeMember(avId, None,
+                                      PirateMemberList.MODE_CREW_HUD)
+        self.membersListSea.removeMember(avId, None,
+                                         PirateMemberList.MODE_CREW_HUD_SEA)
 
     def updateActionIcon(self, avId, action):
         skillFrameObj = self.crew.get(avId)
@@ -117,7 +192,8 @@ class CrewHUD(SocialPage.SocialPage):
                     elif action == 10:
                         skillFrame['image_scale'] = 0.2
                 else:
-                    skillFrame['image'] = self.weaponCard.find('**/%s' % newIcon)
+                    skillFrame['image'] = self.weaponCard.find(
+                        '**/%s' % newIcon)
                     skillFrame['image_scale'] = 0.06
             skillFrame['image_pos'] = (0, 0, 0.02)
             if action in [8]:
@@ -131,7 +207,8 @@ class CrewHUD(SocialPage.SocialPage):
                     elif action == 10:
                         skillFrameSea['image_scale'] = 0.1
                 else:
-                    skillFrameSea['image'] = self.weaponCard.find('**/%s' % newIcon)
+                    skillFrameSea['image'] = self.weaponCard.find(
+                        '**/%s' % newIcon)
                     skillFrameSea['image_scale'] = 0.035
             skillFrameSea['image_pos'] = (0, 0, 0.02)
 
@@ -180,7 +257,8 @@ class CrewHUD(SocialPage.SocialPage):
         print 'DEBUG: Deactivating crew HUD display debug mode'
 
     def respondChatPanelMax(self):
-        if self.hudOn and self.chatPanelOpen and self.atSea or self.hudOn and len(self.crew) > 2:
+        if self.hudOn and self.chatPanelOpen and self.atSea or self.hudOn and len(
+                self.crew) > 2:
             self.toggledByChat = True
             self.setHUDOff()
 

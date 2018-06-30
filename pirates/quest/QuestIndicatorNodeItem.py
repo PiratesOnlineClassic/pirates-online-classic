@@ -6,7 +6,6 @@ from pirates.quest.QuestIndicatorNode import QuestIndicatorNode
 
 
 class QuestIndicatorNodeItem(QuestIndicatorNode):
-    
 
     def __init__(self, questStep):
         self.pendingStepObj = None
@@ -19,4 +18,6 @@ class QuestIndicatorNodeItem(QuestIndicatorNode):
             self.pendingStepObj = None
         QuestIndicatorNode.delete(self)
         return
+
+
 # okay decompiling .\pirates\quest\QuestIndicatorNodeItem.pyc

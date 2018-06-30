@@ -21,10 +21,32 @@ from pirates.creature.Wasp import Wasp
 from pirates.pirate import AvatarTypes
 from pirates.piratesbase import PLocalizer
 
-CreatureTypes = {AvatarTypes.Crab: Crab, AvatarTypes.RockCrab: Crab, AvatarTypes.GiantCrab: Crab, AvatarTypes.Chicken: Chicken, AvatarTypes.Rooster: Rooster, AvatarTypes.Pig: Pig, AvatarTypes.Dog: Dog, AvatarTypes.Seagull: Seagull, AvatarTypes.Stump: Stump, AvatarTypes.FlyTrap: FlyTrap, AvatarTypes.Scorpion: Scorpion, AvatarTypes.DreadScorpion: Scorpion, AvatarTypes.Alligator: Alligator, AvatarTypes.BigGator: Alligator, AvatarTypes.HugeGator: Alligator, AvatarTypes.Bat: Bat, AvatarTypes.VampireBat: Bat, AvatarTypes.Wasp: Wasp, AvatarTypes.AngryWasp: Wasp, AvatarTypes.Monkey: Monkey}
+CreatureTypes = {
+    AvatarTypes.Crab: Crab,
+    AvatarTypes.RockCrab: Crab,
+    AvatarTypes.GiantCrab: Crab,
+    AvatarTypes.Chicken: Chicken,
+    AvatarTypes.Rooster: Rooster,
+    AvatarTypes.Pig: Pig,
+    AvatarTypes.Dog: Dog,
+    AvatarTypes.Seagull: Seagull,
+    AvatarTypes.Stump: Stump,
+    AvatarTypes.FlyTrap: FlyTrap,
+    AvatarTypes.Scorpion: Scorpion,
+    AvatarTypes.DreadScorpion: Scorpion,
+    AvatarTypes.Alligator: Alligator,
+    AvatarTypes.BigGator: Alligator,
+    AvatarTypes.HugeGator: Alligator,
+    AvatarTypes.Bat: Bat,
+    AvatarTypes.VampireBat: Bat,
+    AvatarTypes.Wasp: Wasp,
+    AvatarTypes.AngryWasp: Wasp,
+    AvatarTypes.Monkey: Monkey
+}
+
 
 class DistributedCreature(DistributedBattleNPC):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCreature')
 
     def __init__(self, cr):
@@ -54,7 +76,8 @@ class DistributedCreature(DistributedBattleNPC):
             self.creature.setAvatarType(avatarType)
             self.creature.reparentTo(self.getGeomNode())
             self.motionFSM.setAnimInfo(self.getAnimInfo('LandRoam'))
-            self.nametag3d.setName('empty_use_self_dot_creature_dot_nametag3d_instead')
+            self.nametag3d.setName(
+                'empty_use_self_dot_creature_dot_nametag3d_instead')
             self.creature.nametag3d.reparentTo(self.nametag3d)
 
     def loop(self, *args, **kw):
@@ -122,7 +145,8 @@ class DistributedCreature(DistributedBattleNPC):
         from pirates.piratesbase import PLocalizer
         if self.level:
             color = self.cr.battleMgr.getExperienceColor(base.localAvatar, self)
-            name = '%s  %s\x01smallCaps\x01%s%s\x02\x02' % (self.name, color, PLocalizer.Lv, self.level)
+            name = '%s  %s\x01smallCaps\x01%s%s\x02\x02' % (
+                self.name, color, PLocalizer.Lv, self.level)
         else:
             name = self.name
         self.getNameText()['text'] = name
@@ -146,7 +170,9 @@ class DistributedCreature(DistributedBattleNPC):
         self.setupCreature(avatarType)
 
     def getEnterDeathTrack(self):
-        return Sequence(Func(self.setAllowInteract, False), self.creature.getEnterDeathTrack())
+        return Sequence(
+            Func(self.setAllowInteract, False),
+            self.creature.getEnterDeathTrack())
 
     def getExitDeathTrack(self):
         return Sequence(self.creature.getExitDeathTrack())
@@ -172,4 +198,6 @@ class DistributedCreature(DistributedBattleNPC):
                 self.collNodePath.forceRecomputeBounds()
         if self.battleTube:
             self.battleTube.setPointB(0, 0, max(5.0, height))
+
+
 # okay decompiling .\pirates\creature\DistributedCreature.pyc

@@ -6,7 +6,6 @@ from direct.task import Task
 
 
 class Target:
-    
 
     def __init__(self, ship):
         self.ship = ship
@@ -41,7 +40,6 @@ class Target:
 
 
 class ShipTargets:
-    
 
     def __init__(self, ship):
         self.ship = ship
@@ -122,4 +120,6 @@ class ShipTargets:
             return int(t2.time - t1.time)
         else:
             return t2.priority - t1.priority
+
+
 # okay decompiling .\pirates\piratesgui\ShipTargets.pyc

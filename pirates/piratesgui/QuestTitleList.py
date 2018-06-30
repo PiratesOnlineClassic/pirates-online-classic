@@ -15,7 +15,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class QuestTitleNode:
-    
 
     def __init__(self, questDNA):
         self.questDNA = questDNA
@@ -37,13 +36,13 @@ class QuestTitleNode:
 
 
 class QuestTitleList(DirectScrolledFrame):
-    
-    HeadingFrameColor = (
-     (0, 0, 0, 0), (0.45, 0.35, 0.15, 0.4), (0.55, 0.45, 0.25, 0.4))
-    SelectedFrameColor = (
-     (0.9, 0.7, 0.5, 0.4), (0.85, 0.65, 0.45, 0.4), (0.95, 0.75, 0.55, 0.4))
-    DeselectedFrameColor = (
-     (0, 0, 0, 0), (0.25, 0.23, 0.15, 0.6), (0.35, 0.33, 0.25, 0.6))
+
+    HeadingFrameColor = ((0, 0, 0, 0), (0.45, 0.35, 0.15, 0.4), (0.55, 0.45,
+                                                                 0.25, 0.4))
+    SelectedFrameColor = ((0.9, 0.7, 0.5, 0.4), (0.85, 0.65, 0.45, 0.4),
+                          (0.95, 0.75, 0.55, 0.4))
+    DeselectedFrameColor = ((0, 0, 0, 0), (0.25, 0.23, 0.15, 0.6), (0.35, 0.33,
+                                                                    0.25, 0.6))
     charGui = None
     compassGui = None
     chapter4Lockout = False
@@ -56,12 +55,33 @@ class QuestTitleList(DirectScrolledFrame):
         if not self.charGui:
             self.charGui = loader.loadModel('models/gui/char_gui')
             self.compassGui = loader.loadModel('models/gui/compass_main')
-        DirectScrolledFrame.__init__(self, relief=None, state=DGG.NORMAL, manageScrollBars=0, autoHideScrollBars=1, frameSize=(0, self.width, 0, self.height), canvasSize=(0, self.width - 0.05, 0.025, self.height - 0.025), verticalScroll_relief=None, verticalScroll_image=self.charGui.find('**/chargui_slider_small'), verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0, self.height), verticalScroll_image_scale=(self.height + 0.05, 1, 0.75), verticalScroll_image_hpr=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                90), verticalScroll_image_pos=(self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.004, 0, self.height * 0.5), verticalScroll_image_color=(0.61,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              0.6,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              0.6,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              1), verticalScroll_thumb_image=(self.charGui.find('**/chargui_slider_node'), self.charGui.find('**/chargui_slider_node_down'), self.charGui.find('**/chargui_slider_node_over')), verticalScroll_thumb_relief=None, verticalScroll_thumb_image_scale=0.4, verticalScroll_resizeThumb=0, horizontalScroll_relief=None, sortOrder=5)
+        DirectScrolledFrame.__init__(
+            self,
+            relief=None,
+            state=DGG.NORMAL,
+            manageScrollBars=0,
+            autoHideScrollBars=1,
+            frameSize=(0, self.width, 0, self.height),
+            canvasSize=(0, self.width - 0.05, 0.025, self.height - 0.025),
+            verticalScroll_relief=None,
+            verticalScroll_image=self.charGui.find('**/chargui_slider_small'),
+            verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0,
+                                      self.height),
+            verticalScroll_image_scale=(self.height + 0.05, 1, 0.75),
+            verticalScroll_image_hpr=(0, 0, 90),
+            verticalScroll_image_pos=(
+                self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.004, 0,
+                self.height * 0.5),
+            verticalScroll_image_color=(0.61, 0.6, 0.6, 1),
+            verticalScroll_thumb_image=(
+                self.charGui.find('**/chargui_slider_node'),
+                self.charGui.find('**/chargui_slider_node_down'),
+                self.charGui.find('**/chargui_slider_node_over')),
+            verticalScroll_thumb_relief=None,
+            verticalScroll_thumb_image_scale=0.4,
+            verticalScroll_resizeThumb=0,
+            horizontalScroll_relief=None,
+            sortOrder=5)
         self.initialiseoptions(QuestTitleList)
         self.verticalScroll.incButton.destroy()
         self.verticalScroll.decButton.destroy()
@@ -105,8 +125,7 @@ class QuestTitleList(DirectScrolledFrame):
                 z -= 0.042
             button.setPos(0, 0, z)
 
-        self['canvasSize'] = (
-         0, self.width - 0.05, z, 0)
+        self['canvasSize'] = (0, self.width - 0.05, z, 0)
 
     def update(self, questIdList, quest, newQuest):
         if quest and isinstance(quest, Quest.Quest):
@@ -134,8 +153,7 @@ class QuestTitleList(DirectScrolledFrame):
                     tree = self.trees.get(pathName)
                     self.trees[pathName] = self.__makeTree(path, tree)
                 else:
-                    path = [
-                     QuestDB.QuestDict.get(questId)]
+                    path = [QuestDB.QuestDict.get(questId)]
                     self.trees[questId] = self.__makeTree(path, tree=None)
 
         if len(questIdList) == 1:
@@ -151,7 +169,8 @@ class QuestTitleList(DirectScrolledFrame):
             tree = QuestTitleNode(None)
         parent = tree
         for node in path:
-            if self.chapter4Lockout and node.getQuestId() == 'c4.1visitValentina':
+            if self.chapter4Lockout and node.getQuestId(
+            ) == 'c4.1visitValentina':
                 pass
             else:
                 parent = parent.addChild(QuestTitleNode(node))
@@ -208,7 +227,8 @@ class QuestTitleList(DirectScrolledFrame):
                 goal = prog[1]
                 if progress < goal:
                     if goal > 1:
-                        text += '   \x01questPercent\x01%d of %d\x02' % (progress, goal)
+                        text += '   \x01questPercent\x01%d of %d\x02' % (
+                            progress, goal)
                 else:
                     text += '   \x01questComplete\x01' + PLocalizer.QuestTitleComplete + '\x02'
 
@@ -216,16 +236,19 @@ class QuestTitleList(DirectScrolledFrame):
             if container.isChoice():
                 count, total, length = container.getProgress(showComplete=True)
                 if total == length:
-                    text += '   \x01questPercent\x01%d of %d\x02' % (count, total)
+                    text += '   \x01questPercent\x01%d of %d\x02' % (count,
+                                                                     total)
                 else:
-                    text += '   \x01questPercent\x01%d of %d (of %d)\x02' % (count, total, length)
+                    text += '   \x01questPercent\x01%d of %d (of %d)\x02' % (
+                        count, total, length)
                 format = ' \x01questPercent\x01%s\x02'
                 if localizerText:
                     text += format % localizerText.get('items', 'Items')
                 else:
                     text += format % 'Items'
             else:
-                compCont, cont = container.percentComplete(localAvatar.getQuestLadderHistory())
+                compCont, cont = container.percentComplete(
+                    localAvatar.getQuestLadderHistory())
                 compNum = int(float(compCont) / float(cont) * 100.0)
                 if compNum > 0:
                     text += '   \x01questPercent\x01(%d%%)\x02' % compNum
@@ -236,7 +259,8 @@ class QuestTitleList(DirectScrolledFrame):
         for node, indent in self.__graphWalker(tree):
             if not node.questId:
                 continue
-            isContainer = isinstance(node.questDNA, QuestLadderDNA.QuestContainerDNA)
+            isContainer = isinstance(node.questDNA,
+                                     QuestLadderDNA.QuestContainerDNA)
             text = self.__getText(indent, node.questId, isContainer)
             text_scale = PiratesGuiGlobals.TextScaleLarge
             frameSize = (0, 0.92, 0, 0.042)
@@ -249,19 +273,37 @@ class QuestTitleList(DirectScrolledFrame):
             else:
                 textFg = PiratesGuiGlobals.TextFG2
                 frameColor = self.DeselectedFrameColor
-            button = DirectButton(parent=guiParent, relief=DGG.RAISED, frameSize=frameSize, borderWidth=(0.005,
-                                                                                                         0.005), frameColor=frameColor, text=text, text_fg=textFg, text_scale=text_scale, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, text_pos=text_pos, command=self.select, extraArgs=[node.questId])
+            button = DirectButton(
+                parent=guiParent,
+                relief=DGG.RAISED,
+                frameSize=frameSize,
+                borderWidth=(0.005, 0.005),
+                frameColor=frameColor,
+                text=text,
+                text_fg=textFg,
+                text_scale=text_scale,
+                text_align=TextNode.ALeft,
+                text_shadow=PiratesGuiGlobals.TextShadow,
+                text_pos=text_pos,
+                command=self.select,
+                extraArgs=[node.questId])
             questDNA = QuestDB.QuestDict.get(node.questId)
             if questDNA:
                 if questDNA.getVelvetRoped():
                     if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                         subCard = loader.loadModel('models/gui/toplevel_gui')
-                        appendMe = DirectFrame(parent=button, relief=None, pos=(self.width - 0.985, 0, -0.03), state=DGG.DISABLED, geom=subCard.find('**/subscribers_lock'), geom_scale=0.12, geom_pos=(0.06,
-                                                                                                                                                                                                        0,
-                                                                                                                                                                                                        0.06))
+                        appendMe = DirectFrame(
+                            parent=button,
+                            relief=None,
+                            pos=(self.width - 0.985, 0, -0.03),
+                            state=DGG.DISABLED,
+                            geom=subCard.find('**/subscribers_lock'),
+                            geom_scale=0.12,
+                            geom_pos=(0.06, 0, 0.06))
                         subCard.removeNode()
             button.accept('press-wheel_up-%s' % button.guiId, self.mouseWheelUp)
-            button.accept('press-wheel_down-%s' % button.guiId, self.mouseWheelDown)
+            button.accept('press-wheel_down-%s' % button.guiId,
+                          self.mouseWheelDown)
             button.indent = indent
             button.questId = node.questId
             self.buttons.append(button)
@@ -301,6 +343,9 @@ class QuestTitleList(DirectScrolledFrame):
         if container:
             if not container.viewedInGUI:
                 container.viewedInGUI = True
-                selectedButton['text'] = self.__getText(selectedButton.indent, questId)
+                selectedButton['text'] = self.__getText(selectedButton.indent,
+                                                        questId)
         return
+
+
 # okay decompiling .\pirates\piratesgui\QuestTitleList.pyc

@@ -29,8 +29,8 @@ class QuestIndicatorNodeArea(QuestIndicatorNode):
             base.cr.relatedObjectMgr.abortRequest(self.pendingStepObj)
             self.pendingStepObj = None
 
-        self.pendingStepObj = base.cr.relatedObjectMgr.requestObjects([self.questStep.getStepDoId()],
-            eachCallback=stepObjHere)
+        self.pendingStepObj = base.cr.relatedObjectMgr.requestObjects(
+            [self.questStep.getStepDoId()], eachCallback=stepObjHere)
 
     def loadZoneLevel(self, level):
         QuestIndicatorNode.loadZoneLevel(self, level)

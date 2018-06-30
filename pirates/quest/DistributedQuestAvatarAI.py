@@ -2,8 +2,10 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.quest.QuestAvatarBase import QuestAvatarBase
 from pirates.quest.QuestHolder import QuestHolder
 
+
 class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedQuestAvatarAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedQuestAvatarAI')
 
     def __init__(self, air):
         self.air = air
@@ -55,7 +57,8 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
         self.currentQuestChoiceContainers = currentQuestChoiceContainers
 
     def d_setCurrentQuestChoiceContainers(self, currentQuestChoiceContainers):
-        self.sendUpdate('setCurrentQuestChoiceContainers', [currentQuestChoiceContainers])
+        self.sendUpdate('setCurrentQuestChoiceContainers',
+                        [currentQuestChoiceContainers])
 
     def b_setCurrentQuestChoiceContainers(self, currentQuestChoiceContainers):
         self.setCurrentQuestChoiceContainers(currentQuestChoiceContainers)

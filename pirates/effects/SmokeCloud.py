@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SmokeCloud(PooledEffect, EffectController):
-    
+
     cardScale = 64.0
 
     def __init__(self):
@@ -24,7 +24,8 @@ class SmokeCloud(PooledEffect, EffectController):
         self.radius = 6.0
         self.spriteScale = 1.0
         if not SmokeCloud.particleDummy:
-            SmokeCloud.particleDummy = render.attachNewNode(ModelNode('SmokeCloudParticleDummy'))
+            SmokeCloud.particleDummy = render.attachNewNode(
+                ModelNode('SmokeCloudParticleDummy'))
             SmokeCloud.particleDummy.setDepthWrite(0)
             SmokeCloud.particleDummy.setLightOff()
             SmokeCloud.particleDummy.setColorScaleOff()
@@ -61,10 +62,14 @@ class SmokeCloud(PooledEffect, EffectController):
         self.p0.renderer.setXScaleFlag(1)
         self.p0.renderer.setYScaleFlag(1)
         self.p0.renderer.setAnimAngleFlag(1)
-        self.p0.renderer.setInitialXScale(0.07 * self.spriteScale * self.cardScale)
-        self.p0.renderer.setFinalXScale(0.22 * self.spriteScale * self.cardScale)
-        self.p0.renderer.setInitialYScale(0.07 * self.spriteScale * self.cardScale)
-        self.p0.renderer.setFinalYScale(0.22 * self.spriteScale * self.cardScale)
+        self.p0.renderer.setInitialXScale(
+            0.07 * self.spriteScale * self.cardScale)
+        self.p0.renderer.setFinalXScale(
+            0.22 * self.spriteScale * self.cardScale)
+        self.p0.renderer.setInitialYScale(
+            0.07 * self.spriteScale * self.cardScale)
+        self.p0.renderer.setFinalYScale(
+            0.22 * self.spriteScale * self.cardScale)
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPNOBLEND)
         self.p0.renderer.setAlphaDisable(0)
@@ -77,7 +82,12 @@ class SmokeCloud(PooledEffect, EffectController):
         self.p0.emitter.setRadius(self.radius)
 
     def createTrack(self):
-        self.track = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(1.0), Func(self.p0.setBirthRate, 100), Wait(3.0), Func(self.cleanUpEffect))
+        self.track = Sequence(
+            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self), Wait(1.0),
+            Func(self.p0.setBirthRate, 100), Wait(3.0),
+            Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -87,4 +97,6 @@ class SmokeCloud(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\SmokeCloud.pyc

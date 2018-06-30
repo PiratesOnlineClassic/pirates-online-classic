@@ -1,8 +1,10 @@
 from direct.distributed.DistributedSmoothNodeAI import DistributedSmoothNodeAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedFormationAI(DistributedSmoothNodeAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedFormationAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedFormationAI')
 
     def __init__(self, air):
         DistributedSmoothNodeAI.__init__(self, air)

@@ -25,7 +25,8 @@ class Lantern(NodePath, ShatterableObject.ShatterableObject, ShipPart.ShipPart):
         self.lightGlow = None
         self.lanternGlowEffect = None
         if not self.glassBreakSfx:
-            self.glassBreakSfx = (loader.loadSfx('audio/glass_break1.mp3'), loader.loadSfx('audio/glass_break2.mp3'),
+            self.glassBreakSfx = (loader.loadSfx('audio/glass_break1.mp3'),
+                                  loader.loadSfx('audio/glass_break2.mp3'),
                                   loader.loadSfx('audio/glass_break3.mp3'))
 
     def disable(self):
@@ -66,7 +67,8 @@ class Lantern(NodePath, ShatterableObject.ShatterableObject, ShipPart.ShipPart):
             self.geom_Medium = lightMed.find('**/+GeomNode')
         else:
             self.geom_Medium = NodePath('med')
-        self.propCollisions = self.attachNewNode('Lantern-%d' % self.dna.posIndex)
+        self.propCollisions = self.attachNewNode(
+            'Lantern-%d' % self.dna.posIndex)
         self.prop.flattenMedium()
         self.initializeDebris(wantHidden=1, wantRotate=1)
         self.coll = self.prop.findAllMatches('**/collisions/*')
@@ -87,7 +89,8 @@ class Lantern(NodePath, ShatterableObject.ShatterableObject, ShipPart.ShipPart):
             VBase4(1, 1, 0.8, 1),
             VBase4(0, 0, 1, 1),
             VBase4(0, 1, 0, 1),
-            VBase4(1, 0, 0, 1)]
+            VBase4(1, 0, 0, 1)
+        ]
         plight = self.prop.find('**/polylight*')
         if not plight.isEmpty():
             plight.detachNode()
@@ -131,7 +134,8 @@ class Lantern(NodePath, ShatterableObject.ShatterableObject, ShipPart.ShipPart):
             filePrefix = DecorDNA.DecorDict.get(shipClass)
         return filePrefix
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
+                            targetEffects, pos, normal, codes, attacker):
         sfx = random.choice(self.glassBreakSfx)
         base.playSfx(sfx, node=self, cutoff=2500)
 
@@ -158,7 +162,15 @@ class Lantern(NodePath, ShatterableObject.ShatterableObject, ShipPart.ShipPart):
         if self.flash:
             self.flash.finish()
             self.flash = None
-        self.flash = Sequence(Func(self.hideBaseTexture), Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03), Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03), Func(self.prop.setColorOff), Func(self.showBaseTexture), Wait(0.1), Func(self.hideBaseTexture), Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03), Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03), Func(self.prop.setColorOff), Func(self.showBaseTexture))
+        self.flash = Sequence(
+            Func(self.hideBaseTexture),
+            Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03),
+            Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03),
+            Func(self.prop.setColorOff), Func(self.showBaseTexture), Wait(0.1),
+            Func(self.hideBaseTexture),
+            Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03),
+            Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03),
+            Func(self.prop.setColorOff), Func(self.showBaseTexture))
         self.flash.start()
         return
 

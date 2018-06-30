@@ -13,7 +13,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class ShipSplintersA(PooledEffect, EffectController):
-    
+
     cardScale = 128.0
     SfxNames = ('wood_impact_1.mp3', 'wood_impact_3.mp3', 'wood_impact_4.mp3')
     splashSfx = []
@@ -28,7 +28,8 @@ class ShipSplintersA(PooledEffect, EffectController):
                 self.splashSfx.append(base.loader.loadSfx('audio/' + filename))
 
         if not ShipSplintersA.particleDummy:
-            ShipSplintersA.particleDummy = render.attachNewNode(ModelNode('ShipSplintersAParticleDummy'))
+            ShipSplintersA.particleDummy = render.attachNewNode(
+                ModelNode('ShipSplintersAParticleDummy'))
             ShipSplintersA.particleDummy.setDepthWrite(0)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
@@ -80,7 +81,12 @@ class ShipSplintersA(PooledEffect, EffectController):
 
     def createTrack(self):
         sfx = random.choice(self.splashSfx)
-        self.track = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.3), Func(self.p0.setBirthRate, 100), Wait(3.0), Func(self.cleanUpEffect))
+        self.track = Sequence(
+            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self), Wait(0.3),
+            Func(self.p0.setBirthRate, 100), Wait(3.0),
+            Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -90,4 +96,6 @@ class ShipSplintersA(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\ShipSplintersA.pyc

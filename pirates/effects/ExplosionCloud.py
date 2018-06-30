@@ -6,8 +6,9 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class ExplosionCloud(PooledEffect, EffectController):
-    
+
     cardScale = 64.0
 
     def __init__(self):
@@ -17,7 +18,8 @@ class ExplosionCloud(PooledEffect, EffectController):
         self.card = model.find('**/particleFlameSmoke')
         self.speed = 20.0
         if not ExplosionCloud.particleDummy:
-            ExplosionCloud.particleDummy = render.attachNewNode(ModelNode('ExplosionCloudParticleDummy'))
+            ExplosionCloud.particleDummy = render.attachNewNode(
+                ModelNode('ExplosionCloudParticleDummy'))
             ExplosionCloud.particleDummy.setDepthWrite(0)
             ExplosionCloud.particleDummy.setLightOff()
             ExplosionCloud.particleDummy.setColorScaleOff()
@@ -63,9 +65,14 @@ class ExplosionCloud(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.800000011920929, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.3921568691730499, 0.19607843458652496, 0.0, 1.0), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.5, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.0, 0.0, 0.0, 0.0), 1)
+        self.p0.renderer.setColorBlendMode(
+            ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor,
+            ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 0.800000011920929, Vec4(1.0, 1.0, 1.0, 1.0),
+            Vec4(0.3921568691730499, 0.19607843458652496, 0.0, 1.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.5, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.0, 0.0, 0.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -73,7 +80,11 @@ class ExplosionCloud(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(20.0)
-        self.track = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Wait(1.0), Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
+        self.track = Sequence(
+            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy), Wait(1.0),
+            Func(self.p0.setBirthRate, 100), Wait(7.0),
+            Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

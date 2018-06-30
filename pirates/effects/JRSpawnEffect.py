@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class JRSpawnEffect(PooledEffect, EffectController):
-    
+
     card2Scale = 64.0
     cardScale = 64.0
 
@@ -22,7 +22,8 @@ class JRSpawnEffect(PooledEffect, EffectController):
         if parent is not None:
             self.reparentTo(parent)
         if not JRSpawnEffect.particleDummy:
-            JRSpawnEffect.particleDummy = render.attachNewNode(ModelNode('JRSpawnEffectParticleDummy'))
+            JRSpawnEffect.particleDummy = render.attachNewNode(
+                ModelNode('JRSpawnEffectParticleDummy'))
             JRSpawnEffect.particleDummy.setColorScaleOff()
             JRSpawnEffect.particleDummy.setLightOff()
             JRSpawnEffect.particleDummy.setFogOff()
@@ -73,9 +74,13 @@ class JRSpawnEffect(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.5, Vec4(1.0, 1.0, 0.2, 1.0), Vec4(0.8, 0.6, 0.25, 0.75), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.5, 1.0, Vec4(0.8, 0.6, 0.25, 0.75), Vec4(0.5, 0.25, 0.0, 0.5), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingColor,
+                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 0.5, Vec4(1.0, 1.0, 0.2, 1.0), Vec4(0.8, 0.6, 0.25, 0.75), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.5, 1.0, Vec4(0.8, 0.6, 0.25, 0.75), Vec4(0.5, 0.25, 0.0, 0.5), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -106,7 +111,8 @@ class JRSpawnEffect(PooledEffect, EffectController):
         self.p1.renderer.setNonanimatedTheta(0.0)
         self.p1.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p1.renderer.setAlphaDisable(0)
-        self.p1.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.5, 0.6, 0.15, 1.0), Vec4(0.6, 0.75, 0.0, 0.0), 1)
+        self.p1.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(0.5, 0.6, 0.15, 1.0), Vec4(0.6, 0.75, 0.0, 0.0), 1)
         self.p1.emitter.setEmissionType(BaseParticleEmitter.ETCUSTOM)
         self.p1.emitter.setAmplitude(2.5)
         self.p1.emitter.setAmplitudeSpread(0.0)
@@ -118,23 +124,46 @@ class JRSpawnEffect(PooledEffect, EffectController):
         return
 
     def setupSize(self):
-        self.p0.renderer.setInitialXScale(0.015 * self.effectScale * self.card2Scale)
-        self.p0.renderer.setFinalXScale(0.05 * self.effectScale * self.card2Scale)
-        self.p0.renderer.setInitialYScale(0.015 * self.effectScale * self.card2Scale)
-        self.p0.renderer.setFinalYScale(0.05 * self.effectScale * self.card2Scale)
-        self.p1.renderer.setInitialXScale(0.015 * self.effectScale * self.card2Scale)
-        self.p1.renderer.setFinalXScale(0.05 * self.effectScale * self.card2Scale)
-        self.p1.renderer.setInitialYScale(0.015 * self.effectScale * self.card2Scale)
-        self.p1.renderer.setFinalYScale(0.05 * self.effectScale * self.card2Scale)
+        self.p0.renderer.setInitialXScale(
+            0.015 * self.effectScale * self.card2Scale)
+        self.p0.renderer.setFinalXScale(
+            0.05 * self.effectScale * self.card2Scale)
+        self.p0.renderer.setInitialYScale(
+            0.015 * self.effectScale * self.card2Scale)
+        self.p0.renderer.setFinalYScale(
+            0.05 * self.effectScale * self.card2Scale)
+        self.p1.renderer.setInitialXScale(
+            0.015 * self.effectScale * self.card2Scale)
+        self.p1.renderer.setFinalXScale(
+            0.05 * self.effectScale * self.card2Scale)
+        self.p1.renderer.setInitialYScale(
+            0.015 * self.effectScale * self.card2Scale)
+        self.p1.renderer.setFinalYScale(
+            0.05 * self.effectScale * self.card2Scale)
         self.p1.emitter.setAmplitude(3.5 * self.effectScale)
 
     def createTrack(self):
-        expand = LerpFunctionInterval(self.reSize, 1.0, toData=1.0, fromData=0.0)
-        shrink = LerpFunctionInterval(self.reSize, 0.75, toData=0.0, fromData=1.0)
-        moveUp = LerpPosInterval(self, 0.75, Vec3(self.getX(), self.getY(), self.getZ() + 1.0), startPos=self.getPos())
-        self.startEffect = Sequence(Func(self.setupSize), Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.p1.setBirthRate, 0.015), Func(self.p1.clearToInitial), Func(self.f.start, self, self.particleDummy), expand)
-        self.endEffect = Sequence(Parallel(moveUp, shrink), Wait(0.25), Func(self.p0.setBirthRate, 100), Func(self.p1.setBirthRate, 100), Wait(2.0), Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(self.duration), self.endEffect)
+        expand = LerpFunctionInterval(
+            self.reSize, 1.0, toData=1.0, fromData=0.0)
+        shrink = LerpFunctionInterval(
+            self.reSize, 0.75, toData=0.0, fromData=1.0)
+        moveUp = LerpPosInterval(
+            self,
+            0.75,
+            Vec3(self.getX(), self.getY(),
+                 self.getZ() + 1.0),
+            startPos=self.getPos())
+        self.startEffect = Sequence(
+            Func(self.setupSize), Func(self.p0.setBirthRate, 0.01),
+            Func(self.p0.clearToInitial), Func(self.p1.setBirthRate, 0.015),
+            Func(self.p1.clearToInitial),
+            Func(self.f.start, self, self.particleDummy), expand)
+        self.endEffect = Sequence(
+            Parallel(moveUp, shrink), Wait(0.25),
+            Func(self.p0.setBirthRate, 100), Func(self.p1.setBirthRate, 100),
+            Wait(2.0), Func(self.cleanUpEffect))
+        self.track = Sequence(self.startEffect, Wait(self.duration),
+                              self.endEffect)
 
     def reSize(self, t):
         self.p0.emitter.setRadius(3.0 * t * self.effectScale)
@@ -148,4 +177,6 @@ class JRSpawnEffect(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\JRSpawnEffect.pyc

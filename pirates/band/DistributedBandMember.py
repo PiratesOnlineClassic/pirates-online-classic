@@ -8,7 +8,7 @@ from pirates.speedchat import PSCDecoders
 
 
 class DistributedBandMember(DistributedObject, PAvatarHandle):
-    
+
     notify = directNotify.newCategory('BandMember')
     allBandmembers = {}
     band_map = {}
@@ -100,20 +100,21 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
     def setHp(self, hp):
         self.hp = hp
         if self.isGenerated():
-            messenger.send(BandConstance.BandMemberHpChange, [self, self.hp, self.maxHp])
+            messenger.send(BandConstance.BandMemberHpChange,
+                           [self, self.hp, self.maxHp])
 
     def setMaxHp(self, maxHp):
         self.maxHp = maxHp
         if self.isGenerated():
-            messenger.send(BandConstance.BandMemberHpChange, [self, self.hp, self.maxHp])
+            messenger.send(BandConstance.BandMemberHpChange,
+                           [self, self.hp, self.maxHp])
 
     def setBandId(self, manager, id):
         if self.bandId:
             self.band_map[self.bandId].remove(self)
             if len(self.band_map[self.bandId]) <= 0:
                 del self.band_map[self.bandId]
-        self.bandId = (
-         manager, id)
+        self.bandId = (manager, id)
         if self.bandId:
             self.band_map.setdefault(self.bandId, set()).add(self)
 
@@ -136,31 +137,40 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
     def setShipHasSpace(self, hasSpace):
         self.shipHasSpace = hasSpace
         if self.isGenerated:
-            messenger.send(BandConstance.BandMemberShipChange, [self, self.shipInfo[0]])
+            messenger.send(BandConstance.BandMemberShipChange,
+                           [self, self.shipInfo[0]])
 
     def getShipHasSpace(self):
-        return self.shipInfo[0] and (self.shipHasSpace or localAvatar.getInventory() and self.shipInfo[0] in localAvatar.getInventory().getShipDoIdList())
+        return self.shipInfo[0] and (
+            self.shipHasSpace or localAvatar.getInventory() and
+            self.shipInfo[0] in localAvatar.getInventory().getShipDoIdList())
 
     def setChat(self, message, chatFlags, DISLid):
         if not self.cr.avatarFriendsManager.checkIgnored(self.avatarId):
-            displayMess = '%s %s %s' % (self.name, PLocalizer.CrewPrefix, message)
+            displayMess = '%s %s %s' % (self.name, PLocalizer.CrewPrefix,
+                                        message)
             base.chatAssistant.receivePartyMessage(displayMess)
 
     def setWLChat(self, message, chatFlags, DISLid):
         if not self.whiteListEnabled:
             return
         if not self.cr.avatarFriendsManager.checkIgnored(self.avatarId):
-            displayMess = '%s %s %s' % (self.name, PLocalizer.CrewPrefix, message)
+            displayMess = '%s %s %s' % (self.name, PLocalizer.CrewPrefix,
+                                        message)
             base.chatAssistant.receivePartyMessage(displayMess)
 
     def setSpeedChat(self, senderId, msgIndex):
         if not self.cr.avatarFriendsManager.checkIgnored(self.avatarId):
-            displayMess = '%s %s %s' % (self.name, PLocalizer.CrewPrefix, SCDecoders.decodeSCStaticTextMsg(msgIndex))
+            displayMess = '%s %s %s' % (
+                self.name, PLocalizer.CrewPrefix,
+                SCDecoders.decodeSCStaticTextMsg(msgIndex))
             base.chatAssistant.receivePartyMessage(displayMess)
 
     def setSCQuestChat(self, senderId, questInt, msgType, taskNum):
         if not self.cr.avatarFriendsManager.checkIgnored(self.avatarId):
-            displayMess = '%s %s %s' % (self.name, PLocalizer.CrewPrefix, PSCDecoders.decodeSCQuestMsgInt(questInt, msgType, taskNum))
+            displayMess = '%s %s %s' % (self.name, PLocalizer.CrewPrefix,
+                                        PSCDecoders.decodeSCQuestMsgInt(
+                                            questInt, msgType, taskNum))
             base.chatAssistant.receivePartyMessage(displayMess)
 
     def getName(self):
@@ -172,7 +182,8 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
 
     def setShipDeployMessage(self, fromAvatarId, shipName, locationName):
         if self.avatarId != localAvatar.doId:
-            message = PLocalizer.OtherShipIsBeingDeployed % (self.name, shipName, locationName)
+            message = PLocalizer.OtherShipIsBeingDeployed % (
+                self.name, shipName, locationName)
             localAvatar.guiMgr.messageStack.addTextMessage(message)
 
     def isOnline(self):
@@ -190,9 +201,18 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
         self.sendUpdate('teleportQuery', [localAvId, localShardId])
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
-    def sendTeleportResponse(self, available, shardId, instanceDoId, areaDoId, sendToId=None):
-        self.d_teleportResponse(available, shardId, instanceDoId, areaDoId, sendToId)
+    def sendTeleportResponse(self,
+                             available,
+                             shardId,
+                             instanceDoId,
+                             areaDoId,
+                             sendToId=None):
+        self.d_teleportResponse(available, shardId, instanceDoId, areaDoId,
+                                sendToId)
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
-    def d_teleportResponse(self, available, shardId, instanceDoId, areaDoId, sendToId):
-        self.sendUpdate('teleportResponse', [localAvatar.doId, available, shardId, instanceDoId, areaDoId])
+    def d_teleportResponse(self, available, shardId, instanceDoId, areaDoId,
+                           sendToId):
+        self.sendUpdate(
+            'teleportResponse',
+            [localAvatar.doId, available, shardId, instanceDoId, areaDoId])

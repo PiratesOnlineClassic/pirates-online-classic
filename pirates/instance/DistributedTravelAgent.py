@@ -1,5 +1,6 @@
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 
+
 class DistributedTravelAgent(DistributedObjectGlobal):
     notify = directNotify.newCategory('DistributedTravelAgent')
 

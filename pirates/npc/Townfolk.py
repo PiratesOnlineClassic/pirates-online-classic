@@ -3,8 +3,10 @@ from pirates.pirate import AvatarTypes, Biped, Human
 from pirates.piratesbase import PiratesGlobals
 
 AnimDict = {}
+
+
 class Townfolk(Human.Human):
-    
+
     def __init__(self):
         Human.Human.__init__(self)
         self.avatarType = AvatarTypes.Townfolk

@@ -13,10 +13,16 @@ from pirates.effects.SmallSplash import SmallSplash
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect
 
-DebrisDict = {'0': 'models/props/rock_1_floor', '1': 'models/props/rock_2_floor', '2': 'models/props/rock_3_floor', '3': 'models/props/rock_4_floor'}
+DebrisDict = {
+    '0': 'models/props/rock_1_floor',
+    '1': 'models/props/rock_2_floor',
+    '2': 'models/props/rock_3_floor',
+    '3': 'models/props/rock_4_floor'
+}
+
 
 class RockDebris(PooledEffect):
-    
+
     BaseEndPlaneZ = -10
 
     def __init__(self):
@@ -47,21 +53,34 @@ class RockDebris(PooledEffect):
         return
 
     def createTrack(self, rate=1):
-        self.startVel = Vec3(random.uniform(-self.radiusDist, self.radiusDist), random.uniform(-self.radiusDist, self.radiusDist), random.uniform(self.minHeight, self.maxHeight))
+        self.startVel = Vec3(
+            random.uniform(-self.radiusDist, self.radiusDist),
+            random.uniform(-self.radiusDist, self.radiusDist),
+            random.uniform(self.minHeight, self.maxHeight))
         try:
-            playProjectile = ProjectileInterval(self.transNode, startPos=self.startPos, startVel=self.startVel, endZ=self.endPlaneZ, gravityMult=4.0)
+            playProjectile = ProjectileInterval(
+                self.transNode,
+                startPos=self.startPos,
+                startVel=self.startVel,
+                endZ=self.endPlaneZ,
+                gravityMult=4.0)
             self.playProjectile = playProjectile
-        except StandardError:
+        except Exception:
             playProjectile = Wait(0.2)
             self.playProjectile = None
 
         randomNumX = random.uniform(360, 2880)
         randomNumY = random.uniform(360, 2880)
         randomNumZ = random.uniform(360, 2880)
-        self.playRotate = self.debris.hprInterval(6, Point3(randomNumX, randomNumY, randomNumZ))
-        enableColl = Sequence(Wait(0.2), Func(self.cnode.setFromCollideMask, PiratesGlobals.TargetBitmask))
+        self.playRotate = self.debris.hprInterval(
+            6, Point3(randomNumX, randomNumY, randomNumZ))
+        enableColl = Sequence(
+            Wait(0.2),
+            Func(self.cnode.setFromCollideMask, PiratesGlobals.TargetBitmask))
         playDebris = Parallel(playProjectile, enableColl)
-        self.track = Sequence(Func(self.transNode.reparentTo, self), playDebris, Func(self.cleanUpEffect))
+        self.track = Sequence(
+            Func(self.transNode.reparentTo, self), playDebris,
+            Func(self.cleanUpEffect))
         return
 
     def play(self, rate=1):
@@ -109,7 +128,8 @@ class RockDebris(PooledEffect):
         if objType == PiratesGlobals.COLL_SEA and base.cr.wantSpecialEffects:
             pos = entry.getSurfacePoint(render)
             if base.cr.activeWorld.getWater():
-                entryWaterHeight = base.cr.activeWorld.getWater().calcHeight(pos[0], pos[1]) + 7.0
+                entryWaterHeight = base.cr.activeWorld.getWater().calcHeight(
+                    pos[0], pos[1]) + 7.0
             else:
                 entryWaterHeight = pos[2]
             splashEffect = SmallSplash.getEffect()
@@ -126,12 +146,16 @@ class RockDebris(PooledEffect):
                     dustCloudEffect.wrtReparentTo(render)
                     dustCloudEffect.setPos(pos)
                     dustCloudEffect.play()
-                self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
+                self.cnode.setFromCollideMask(
+                    PiratesGlobals.TargetBitmask.allOff())
 
     def offsetEndPlaneZFrom(self, zHeight):
         self.endPlaneZ = self.BaseEndPlaneZ + zHeight
 
     def testTrajectory(self):
         self.createTrack()
-        return bool(self.playProjectile and self.playProjectile.testTrajectory())
+        return bool(self.playProjectile and
+                    self.playProjectile.testTrajectory())
+
+
 # okay decompiling .\pirates\effects\RockDebris.pyc

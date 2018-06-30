@@ -6,6 +6,7 @@ from direct.particles import ForceGroup
 from pirates.effects.PooledEffect import PooledEffect
 from pirates.effects.EffectController import EffectController
 
+
 class FireSplats(PooledEffect, EffectController):
     cardScale = 128.0
 
@@ -17,7 +18,8 @@ class FireSplats(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleCards')
         self.card = model.find('**/particleSplat')
         if not FireSplats.particleDummy:
-            FireSplats.particleDummy = base.effectsRoot.attachNewNode(ModelNode('FireSplatsParticleDummy'))
+            FireSplats.particleDummy = base.effectsRoot.attachNewNode(
+                ModelNode('FireSplatsParticleDummy'))
             FireSplats.particleDummy.setDepthWrite(0)
             FireSplats.particleDummy.setLightOff()
             FireSplats.particleDummy.setColorScaleOff()
@@ -58,8 +60,11 @@ class FireSplats(PooledEffect, EffectController):
         self.p0.renderer.setAnimAngleFlag(1)
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 0.4, 0.2, 1.0), Vec4(0.35, 0.0, 0.0, 0.0), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingAlpha,
+                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(1.0, 0.4, 0.2, 1.0), Vec4(0.35, 0.0, 0.0, 0.0), 1)
         self.p0.renderer.setAlphaDisable(0)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(-1.0)
@@ -76,16 +81,25 @@ class FireSplats(PooledEffect, EffectController):
         self.f.disable()
 
     def createTrack(self, lod=None):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100.0), Wait(2.0),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def setScale(self, scale=VBase3(1, 1, 1)):
         self.effectScale = scale[0]
-        self.p0.renderer.setInitialXScale(0.04 * self.cardScale * self.effectScale)
-        self.p0.renderer.setInitialYScale(0.04 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalXScale(0.03 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalYScale(0.06 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialXScale(
+            0.04 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialYScale(
+            0.04 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalXScale(
+            0.03 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalYScale(
+            0.06 * self.cardScale * self.effectScale)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 18.0 * self.effectScale))
         self.p0.emitter.setRadius(5.0 * self.effectScale)
 

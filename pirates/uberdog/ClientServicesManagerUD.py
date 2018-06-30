@@ -22,8 +22,10 @@ if accountDBType == 'remote':
 # Sometimes we'll want to force a specific access level, such as on the
 # developer server:
 minAccessLevel = simbase.config.GetInt('min-access-level', 100)
-accountServerEndpoint = simbase.config.GetString('account-server-endpoint', '')  # TODO
-accountServerSecret = simbase.config.GetString('account-server-secret', '6163636f756e7473')
+accountServerEndpoint = simbase.config.GetString('account-server-endpoint',
+                                                 '')  # TODO
+accountServerSecret = simbase.config.GetString('account-server-secret',
+                                               '6163636f756e7473')
 
 http = HTTPClient()
 http.setVerifySsl(0)
@@ -43,6 +45,7 @@ def executeHttpRequest(url, **extras):
     except:
         return None
 
+
 #blacklist = executeHttpRequest('names/blacklist.json')
 #if blacklist:
 #    blacklist = json.loads(blacklist)
@@ -51,7 +54,6 @@ def executeHttpRequest(url, **extras):
 def judgeName(name):
     if not name:
         return False
-
     """
     if blacklist:
         for namePart in name.split(' '):
@@ -64,6 +66,7 @@ def judgeName(name):
                     return False
     """
     return True
+
 
 # --- ACCOUNT DATABASES ---
 # These classes make up the available account databases for Pirates Online Classic.
@@ -78,8 +81,8 @@ class AccountDB:
     def __init__(self, csm):
         self.csm = csm
 
-        filename = simbase.config.GetString(
-            'account-bridge-filename', 'astron/databases/account-bridge')
+        filename = simbase.config.GetString('account-bridge-filename',
+                                            'astron/databases/account-bridge')
         self.dbm = semidbm.open(filename, 'c')
 
     def addNameRequest(self, avId, name):
@@ -100,7 +103,8 @@ class AccountDB:
             self.dbm.sync()
             callback(True)
         else:
-            self.notify.warning('Unable to associate user %s with account %d!' % (userId, accountId))
+            self.notify.warning('Unable to associate user %s with account %d!' %
+                                (userId, accountId))
             callback(False)
 
 
@@ -137,6 +141,7 @@ class DeveloperAccountDB(AccountDB):
 # give the user an access level of 600. Instead, the first user that is created
 # gets 700 access, and every user created afterwards gets 100 access:
 
+
 class LocalAccountDB(AccountDB):
     notify = directNotify.newCategory('LocalAccountDB')
 
@@ -149,7 +154,8 @@ class LocalAccountDB(AccountDB):
                 'success': True,
                 'userId': username,
                 'accountId': 0,
-                'accessLevel': max((700 if not self.dbm else 100), minAccessLevel)
+                'accessLevel': max((700
+                                    if not self.dbm else 100), minAccessLevel)
             }
             callback(response)
             return response
@@ -184,26 +190,20 @@ class RemoteAccountDB(AccountDB):
             token = base64.b64decode(token)
         except TypeError:
             self.notify.warning('Could not decode the provided token!')
-            response = {
-                'success': False,
-                'reason': "Can't decode this token."
-            }
+            response = {'success': False, 'reason': "Can't decode this token."}
             callback(response)
             return response
 
         # Ensure this token is a valid size:
         if (not token) or ((len(token) % 16) != 0):
             self.notify.warning('Invalid token length!')
-            response = {
-                'success': False,
-                'reason': 'Invalid token length.'
-            }
+            response = {'success': False, 'reason': 'Invalid token length.'}
             callback(response)
             return response
 
         # Next, decrypt the token using AES-128 in CBC mode:
-        accountServerSecret = simbase.config.GetString(
-            'account-server-secret', '6163636f756e7473')
+        accountServerSecret = simbase.config.GetString('account-server-secret',
+                                                       '6163636f756e7473')
 
         # Ensure that our secret is the correct size:
         if len(accountServerSecret) > AES.block_size:
@@ -225,19 +225,19 @@ class RemoteAccountDB(AccountDB):
         cipher = AES.new(accountServerSecret, mode=AES.MODE_CBC, IV=iv)
         try:
             token = json.loads(cipher.decrypt(cipherText).replace('\x00', ''))
-            if ('timestamp' not in token) or (not isinstance(token['timestamp'], int)):
+            if ('timestamp' not in token) or (not isinstance(
+                    token['timestamp'], int)):
                 raise ValueError
-            if ('userid' not in token) or (not isinstance(token['userid'], int)):
+            if ('userid' not in token) or (not isinstance(token['userid'],
+                                                          int)):
                 raise ValueError
-            if ('accesslevel' not in token) or (not isinstance(token['accesslevel'], int)):
+            if ('accesslevel' not in token) or (not isinstance(
+                    token['accesslevel'], int)):
                 raise ValueError
-        except ValueError, e:
+        except ValueError as e:
             print e
             self.notify.warning('Invalid token.')
-            response = {
-                'success': False,
-                'reason': 'Invalid token.'
-            }
+            response = {'success': False, 'reason': 'Invalid token.'}
             callback(response)
             return response
 
@@ -245,10 +245,7 @@ class RemoteAccountDB(AccountDB):
         expiration = simbase.config.GetInt('account-token-expiration', 1800)
         tokenDelta = int(time.time()) - token['timestamp']
         if tokenDelta > expiration:
-            response = {
-                'success': False,
-                'reason': 'This token has expired.'
-            }
+            response = {'success': False, 'reason': 'This token has expired.'}
             callback(response)
             return response
 
@@ -316,8 +313,11 @@ class LoginAccountFSM(OperationFSM):
 
     def __handleLookup(self, result):
         if not result.get('success'):
-            self.csm.air.writeServerEvent('tokenRejected', target=self.target, token=self.token)
-            self.demand('Kill', result.get('reason', 'The account server rejected your token.'))
+            self.csm.air.writeServerEvent(
+                'tokenRejected', target=self.target, token=self.token)
+            self.demand(
+                'Kill',
+                result.get('reason', 'The account server rejected your token.'))
             return
 
         self.userId = result.get('userId', 0)
@@ -329,12 +329,13 @@ class LoginAccountFSM(OperationFSM):
             self.demand('CreateAccount')
 
     def enterRetrieveAccount(self):
-        self.csm.air.dbInterface.queryObject(
-            self.csm.air.dbId, self.accountId, self.__handleRetrieve)
+        self.csm.air.dbInterface.queryObject(self.csm.air.dbId, self.accountId,
+                                             self.__handleRetrieve)
 
     def __handleRetrieve(self, dclass, fields):
         if dclass != self.csm.air.dclassesByName['AccountUD']:
-            self.demand('Kill', 'Your account object was not found in the database!')
+            self.demand('Kill',
+                        'Your account object was not found in the database!')
             return
 
         self.account = fields
@@ -350,19 +351,23 @@ class LoginAccountFSM(OperationFSM):
             'ACCESS_LEVEL': self.accessLevel
         }
         self.csm.air.dbInterface.createObject(
-            self.csm.air.dbId,
-            self.csm.air.dclassesByName['AccountUD'],
-            self.account,
-            self.__handleCreate)
+            self.csm.air.dbId, self.csm.air.dclassesByName['AccountUD'],
+            self.account, self.__handleCreate)
 
     def __handleCreate(self, accountId):
         if self.state != 'CreateAccount':
-            self.notify.warning('Received a create account response outside of the CreateAccount state.')
+            self.notify.warning(
+                'Received a create account response outside of the CreateAccount state.'
+            )
             return
 
         if not accountId:
-            self.notify.warning('Database failed to construct an account object!')
-            self.demand('Kill', 'Your account object could not be created in the game database.')
+            self.notify.warning(
+                'Database failed to construct an account object!')
+            self.demand(
+                'Kill',
+                'Your account object could not be created in the game database.'
+            )
             return
 
         self.accountId = accountId
@@ -370,14 +375,13 @@ class LoginAccountFSM(OperationFSM):
         self.demand('StoreAccountID')
 
     def enterStoreAccountID(self):
-        self.csm.accountDB.storeAccountID(
-            self.userId,
-            self.accountId,
-            self.__handleStored)
+        self.csm.accountDB.storeAccountID(self.userId, self.accountId,
+                                          self.__handleStored)
 
     def __handleStored(self, success=True):
         if not success:
-            self.demand('Kill', 'The account server could not save your user ID!')
+            self.demand('Kill',
+                        'The account server could not save your user ID!')
             return
 
         self.demand('SetAccount')
@@ -386,8 +390,7 @@ class LoginAccountFSM(OperationFSM):
         # If necessary, update their account information:
         if self.accessLevel:
             self.csm.air.dbInterface.updateObject(
-                self.csm.air.dbId,
-                self.accountId,
+                self.csm.air.dbId, self.accountId,
                 self.csm.air.dclassesByName['AccountUD'],
                 {'ACCESS_LEVEL': self.accessLevel})
 
@@ -395,27 +398,23 @@ class LoginAccountFSM(OperationFSM):
         datagram = PyDatagram()
         datagram.addServerHeader(
             self.csm.GetAccountConnectionChannel(self.accountId),
-            self.csm.air.ourChannel,
-            CLIENTAGENT_EJECT)
+            self.csm.air.ourChannel, CLIENTAGENT_EJECT)
         datagram.addUint16(100)
         datagram.addString('This account has been logged in from elsewhere.')
         self.csm.air.send(datagram)
 
         # Next, add this connection to the account channel.
         datagram = PyDatagram()
-        datagram.addServerHeader(
-            self.target,
-            self.csm.air.ourChannel,
-            CLIENTAGENT_OPEN_CHANNEL)
-        datagram.addChannel(self.csm.GetAccountConnectionChannel(self.accountId))
+        datagram.addServerHeader(self.target, self.csm.air.ourChannel,
+                                 CLIENTAGENT_OPEN_CHANNEL)
+        datagram.addChannel(
+            self.csm.GetAccountConnectionChannel(self.accountId))
         self.csm.air.send(datagram)
 
         # Now set their sender channel to represent their account affiliation:
         datagram = PyDatagram()
-        datagram.addServerHeader(
-            self.target,
-            self.csm.air.ourChannel,
-            CLIENTAGENT_SET_CLIENT_ID)
+        datagram.addServerHeader(self.target, self.csm.air.ourChannel,
+                                 CLIENTAGENT_SET_CLIENT_ID)
 
         # Account ID in high 32 bits, 0 in low (no avatar):
         datagram.addChannel(self.accountId << 32)
@@ -423,24 +422,26 @@ class LoginAccountFSM(OperationFSM):
 
         # Un-sandbox them!
         datagram = PyDatagram()
-        datagram.addServerHeader(
-            self.target,
-            self.csm.air.ourChannel,
-            CLIENTAGENT_SET_STATE)
+        datagram.addServerHeader(self.target, self.csm.air.ourChannel,
+                                 CLIENTAGENT_SET_STATE)
 
         datagram.addUint16(2)  # ESTABLISHED
         self.csm.air.send(datagram)
 
         # Update the last login timestamp:
         self.csm.air.dbInterface.updateObject(
-            self.csm.air.dbId,
-            self.accountId,
-            self.csm.air.dclassesByName['AccountUD'],
-            {'LAST_LOGIN': time.ctime(),
-             'ACCOUNT_ID': str(self.userId)})
+            self.csm.air.dbId, self.accountId,
+            self.csm.air.dclassesByName['AccountUD'], {
+                'LAST_LOGIN': time.ctime(),
+                'ACCOUNT_ID': str(self.userId)
+            })
 
         # We're done.
-        self.csm.air.writeServerEvent('accountLogin', target=self.target, accountId=self.accountId, userId=self.userId)
+        self.csm.air.writeServerEvent(
+            'accountLogin',
+            target=self.target,
+            accountId=self.accountId,
+            userId=self.userId)
         self.csm.sendUpdateToChannel(self.target, 'acceptLogin', [])
         self.demand('Off')
 
@@ -466,12 +467,13 @@ class CreateAvatarFSM(OperationFSM):
         self.demand('RetrieveAccount')
 
     def enterRetrieveAccount(self):
-        self.csm.air.dbInterface.queryObject(
-            self.csm.air.dbId, self.target, self.__handleRetrieve)
+        self.csm.air.dbInterface.queryObject(self.csm.air.dbId, self.target,
+                                             self.__handleRetrieve)
 
     def __handleRetrieve(self, dclass, fields):
         if dclass != self.csm.air.dclassesByName['AccountUD']:
-            self.demand('Kill', 'Your account object was not found in the database!')
+            self.demand('Kill',
+                        'Your account object was not found in the database!')
             return
 
         self.account = fields
@@ -479,11 +481,12 @@ class CreateAvatarFSM(OperationFSM):
         self.avList = self.account['ACCOUNT_AV_SET']
         # Sanitize:
         self.avList = self.avList[:4]
-        self.avList += [0] * (4-len(self.avList))
+        self.avList += [0] * (4 - len(self.avList))
 
         # Make sure the index is open:
         if self.avList[self.index]:
-            self.demand('Kill', 'This avatar slot is already taken by another avatar!')
+            self.demand('Kill',
+                        'This avatar slot is already taken by another avatar!')
             return
 
         # Okay, there's space. Let's create the avatar!
@@ -501,12 +504,12 @@ class CreateAvatarFSM(OperationFSM):
         self.csm.air.dbInterface.createObject(
             self.csm.air.dbId,
             self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
-            pirateFields,
-            self.__handleCreate)
+            pirateFields, self.__handleCreate)
 
     def __handleCreate(self, avId):
         if not avId:
-            self.demand('Kill', 'Database failed to create the new avatar object!')
+            self.demand('Kill',
+                        'Database failed to create the new avatar object!')
             return
 
         self.avId = avId
@@ -516,8 +519,7 @@ class CreateAvatarFSM(OperationFSM):
         # Associate the avatar with the account...
         self.avList[self.index] = self.avId
         self.csm.air.dbInterface.updateObject(
-            self.csm.air.dbId,
-            self.target,
+            self.csm.air.dbId, self.target,
             self.csm.air.dclassesByName['AccountUD'],
             {'ACCOUNT_AV_SET': self.avList},
             {'ACCOUNT_AV_SET': self.account['ACCOUNT_AV_SET']},
@@ -525,12 +527,20 @@ class CreateAvatarFSM(OperationFSM):
 
     def __handleStoreAvatar(self, fields):
         if fields:
-            self.demand('Kill', 'Database failed to associate the new avatar to your account!')
+            self.demand(
+                'Kill',
+                'Database failed to associate the new avatar to your account!')
             return
 
         # Otherwise, we're done!
-        self.csm.air.writeServerEvent('avatarCreated', avId=self.avId, target=self.target, dna=self.dna.encode('hex'), avatarSlot=self.index)
-        self.csm.sendUpdateToAccountId(self.target, 'createAvatarResp', [self.avId])
+        self.csm.air.writeServerEvent(
+            'avatarCreated',
+            avId=self.avId,
+            target=self.target,
+            dna=self.dna.encode('hex'),
+            avatarSlot=self.index)
+        self.csm.sendUpdateToAccountId(self.target, 'createAvatarResp',
+                                       [self.avId])
         self.demand('Off')
 
 
@@ -539,12 +549,13 @@ class AvatarOperationFSM(OperationFSM):
 
     def enterRetrieveAccount(self):
         # Query the account:
-        self.csm.air.dbInterface.queryObject(
-            self.csm.air.dbId, self.target, self.__handleRetrieve)
+        self.csm.air.dbInterface.queryObject(self.csm.air.dbId, self.target,
+                                             self.__handleRetrieve)
 
     def __handleRetrieve(self, dclass, fields):
         if dclass != self.csm.air.dclassesByName['AccountUD']:
-            self.demand('Kill', 'Your account object was not found in the database!')
+            self.demand('Kill',
+                        'Your account object was not found in the database!')
             return
 
         self.account = fields
@@ -553,7 +564,7 @@ class AvatarOperationFSM(OperationFSM):
 
         # Sanitize:
         self.avList = self.avList[:4]
-        self.avList += [0] * (4-len(self.avList))
+        self.avList += [0] * (4 - len(self.avList))
 
         self.demand(self.POST_ACCOUNT_STATE)
 
@@ -576,17 +587,16 @@ class GetAvatarsFSM(AvatarOperationFSM):
                     if self.state != 'QueryAvatars':
                         return
                     if dclass != self.csm.air.dclassesByName['DistributedPlayerPirateUD']:
-                        self.demand('Kill', "One of the account's avatars is invalid!")
+                        self.demand('Kill',
+                                    "One of the account's avatars is invalid!")
                         return
                     self.avatarFields[avId] = fields
                     self.pendingAvatars.remove(avId)
                     if not self.pendingAvatars:
                         self.demand('SendAvatars')
 
-                self.csm.air.dbInterface.queryObject(
-                    self.csm.air.dbId,
-                    avId,
-                    response)
+                self.csm.air.dbInterface.queryObject(self.csm.air.dbId, avId,
+                                                     response)
 
         if not self.pendingAvatars:
             self.demand('SendAvatars')
@@ -605,11 +615,9 @@ class GetAvatarsFSM(AvatarOperationFSM):
             elif wishNameState == 'PENDING':
                 actualNameState = self.csm.accountDB.getNameStatus(avId)
                 self.csm.air.dbInterface.updateObject(
-                    self.csm.air.dbId,
-                    avId,
+                    self.csm.air.dbId, avId,
                     self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
-                    {'WishNameState': [actualNameState]}
-                )
+                    {'WishNameState': [actualNameState]})
                 if actualNameState == 'PENDING':
                     nameState = 2
                 if actualNameState == 'APPROVED':
@@ -622,11 +630,13 @@ class GetAvatarsFSM(AvatarOperationFSM):
             elif wishNameState == 'REJECTED':
                 nameState = 4
 
-            potentialAvs.append([avId, name, fields['setDNAString'][0],
-                                 index, nameState])
+            potentialAvs.append(
+                [avId, name, fields['setDNAString'][0], index, nameState])
 
-        self.csm.sendUpdateToAccountId(self.target, 'setAvatars', [potentialAvs])
+        self.csm.sendUpdateToAccountId(self.target, 'setAvatars',
+                                       [potentialAvs])
         self.demand('Off')
+
 
 # This inherits from GetAvatarsFSM, because the delete operation ends in a
 # setAvatars message being sent to the client.
@@ -650,26 +660,30 @@ class DeleteAvatarFSM(GetAvatarsFSM):
         avsDeleted.append([self.avId, int(time.time())])
 
         self.csm.air.dbInterface.updateObject(
-            self.csm.air.dbId,
-            self.target,
-            self.csm.air.dclassesByName['AccountUD'],
-            {'ACCOUNT_AV_SET': self.avList,
-             'ACCOUNT_AV_SET_DEL': avsDeleted},
-            {'ACCOUNT_AV_SET': self.account['ACCOUNT_AV_SET'],
-             'ACCOUNT_AV_SET_DEL': self.account['ACCOUNT_AV_SET_DEL']},
-            self.__handleDelete)
+            self.csm.air.dbId, self.target,
+            self.csm.air.dclassesByName['AccountUD'], {
+                'ACCOUNT_AV_SET': self.avList,
+                'ACCOUNT_AV_SET_DEL': avsDeleted
+            }, {
+                'ACCOUNT_AV_SET': self.account['ACCOUNT_AV_SET'],
+                'ACCOUNT_AV_SET_DEL': self.account['ACCOUNT_AV_SET_DEL']
+            }, self.__handleDelete)
         self.csm.accountDB.removeNameRequest(self.avId)
 
     def __handleDelete(self, fields):
         if fields:
             status = False
-            self.csm.sendUpdateToAccountId(self.target, 'acknowledgeDeleteAvatarResp', [self.avId, status])
-            self.demand('Kill', 'Database failed to mark the avatar as deleted!')
+            self.csm.sendUpdateToAccountId(
+                self.target, 'acknowledgeDeleteAvatarResp', [self.avId, status])
+            self.demand('Kill',
+                        'Database failed to mark the avatar as deleted!')
             return
 
         status = True
-        self.csm.sendUpdateToAccountId(self.target, 'acknowledgeDeleteAvatarResp', [self.avId, status])
+        self.csm.sendUpdateToAccountId(
+            self.target, 'acknowledgeDeleteAvatarResp', [self.avId, status])
         self.demand('QueryAvatars')
+
 
 class SetNameTypedFSM(AvatarOperationFSM):
     notify = directNotify.newCategory('SetNameTypedFSM')
@@ -715,17 +729,20 @@ class SetNameTypedFSM(AvatarOperationFSM):
                 status = False
             else:
                 self.csm.air.dbInterface.updateObject(
-                    self.csm.air.dbId,
-                    self.avId,
-                    self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
-                    {'WishNameState': ('PENDING',),
-                     'WishName': (self.name,)})
+                    self.csm.air.dbId, self.avId,
+                    self.csm.air.dclassesByName['DistributedPlayerPirateUD'], {
+                        'WishNameState': ('PENDING',),
+                        'WishName': (self.name,)
+                    })
 
         if self.avId:
-            self.csm.air.writeServerEvent('avatarWishname', avId=self.avId, name=self.name)
+            self.csm.air.writeServerEvent(
+                'avatarWishname', avId=self.avId, name=self.name)
 
-        self.csm.sendUpdateToAccountId(self.target, 'setNameTypedResp', [self.avId, status])
+        self.csm.sendUpdateToAccountId(self.target, 'setNameTypedResp',
+                                       [self.avId, status])
         self.demand('Off')
+
 
 class SetNamePatternFSM(AvatarOperationFSM):
     notify = directNotify.newCategory('SetNamePatternFSM')
@@ -767,21 +784,23 @@ class SetNamePatternFSM(AvatarOperationFSM):
                 part = part.lower()
             parts.append(part)
 
-        parts[2] += parts.pop(3) # Merge 2&3 (the last name) as there should be no space.
+        parts[2] += parts.pop(
+            3)  # Merge 2&3 (the last name) as there should be no space.
         while '' in parts:
             parts.remove('')
         name = ' '.join(parts)
 
         self.csm.air.dbInterface.updateObject(
-            self.csm.air.dbId,
-            self.avId,
-            self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
-            {'WishNameState': ('',),
-             'WishName': ('',),
-             'setName': (name,)})
+            self.csm.air.dbId, self.avId,
+            self.csm.air.dclassesByName['DistributedPlayerPirateUD'], {
+                'WishNameState': ('',),
+                'WishName': ('',),
+                'setName': (name,)
+            })
 
         self.csm.air.writeServerEvent('avatarNamed', avId=self.avId, name=name)
-        self.csm.sendUpdateToAccountId(self.target, 'setNamePatternResp', [self.avId, 1])
+        self.csm.sendUpdateToAccountId(self.target, 'setNamePatternResp',
+                                       [self.avId, 1])
         self.demand('Off')
 
 
@@ -796,7 +815,9 @@ class AcknowledgeNameFSM(AvatarOperationFSM):
     def enterGetTargetAvatar(self):
         # Make sure the target avatar is part of the account:
         if self.avId not in self.avList:
-            self.demand('Kill', 'Tried to acknowledge name on an avatar not in the account!')
+            self.demand(
+                'Kill',
+                'Tried to acknowledge name on an avatar not in the account!')
             return
 
         self.csm.air.dbInterface.queryObject(self.csm.air.dbId, self.avId,
@@ -822,22 +843,26 @@ class AcknowledgeNameFSM(AvatarOperationFSM):
             wishName = ''
             self.csm.accountDB.removeNameRequest(self.avId)
         else:
-            self.demand('Kill', "Tried to acknowledge name on an avatar in %s state!" % wishNameState)
+            self.demand(
+                'Kill', "Tried to acknowledge name on an avatar in %s state!" %
+                wishNameState)
             return
 
         # Push the change back through:
         self.csm.air.dbInterface.updateObject(
-            self.csm.air.dbId,
-            self.avId,
-            self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
-            {'WishNameState': (wishNameState,),
-             'WishName': (wishName,),
-             'setName': (name,)},
-            {'WishNameState': fields['WishNameState'],
-             'WishName': fields['WishName'],
-             'setName': fields['setName']})
+            self.csm.air.dbId, self.avId,
+            self.csm.air.dclassesByName['DistributedPlayerPirateUD'], {
+                'WishNameState': (wishNameState,),
+                'WishName': (wishName,),
+                'setName': (name,)
+            }, {
+                'WishNameState': fields['WishNameState'],
+                'WishName': fields['WishName'],
+                'setName': fields['setName']
+            })
 
-        self.csm.sendUpdateToAccountId(self.target, 'acknowledgeAvatarNameResp', [])
+        self.csm.sendUpdateToAccountId(self.target, 'acknowledgeAvatarNameResp',
+                                       [])
         self.demand('Off')
 
 
@@ -869,14 +894,13 @@ class LoadAvatarFSM(AvatarOperationFSM):
     def enterSetAvatarTask(self, channel, inventoryId, task):
         # Finally, grant ownership and shut down.
         datagram = PyDatagram()
-        datagram.addServerHeader(
-            self.avId,
-            self.csm.air.ourChannel,
-            STATESERVER_OBJECT_SET_OWNER)
+        datagram.addServerHeader(self.avId, self.csm.air.ourChannel,
+                                 STATESERVER_OBJECT_SET_OWNER)
         datagram.addChannel(self.target << 32 | self.avId)
         self.csm.air.send(datagram)
 
-        self.csm.air.writeServerEvent('avatarChosen', avId=self.avId, target=self.target)
+        self.csm.air.writeServerEvent(
+            'avatarChosen', avId=self.avId, target=self.target)
         self.demand('Off')
         return task.done
 
@@ -886,23 +910,19 @@ class LoadAvatarFSM(AvatarOperationFSM):
         # First, give them a POSTREMOVE to unload the avatar, just in case they
         # disconnect while we're working.
         datagramCleanup = PyDatagram()
-        datagramCleanup.addServerHeader(
-            self.avId,
-            channel,
-            STATESERVER_OBJECT_DELETE_RAM)
+        datagramCleanup.addServerHeader(self.avId, channel,
+                                        STATESERVER_OBJECT_DELETE_RAM)
 
         datagramCleanup.addUint32(self.avId)
         datagram = PyDatagram()
-        datagram.addServerHeader(
-            channel,
-            self.csm.air.ourChannel,
-            CLIENTAGENT_ADD_POST_REMOVE)
+        datagram.addServerHeader(channel, self.csm.air.ourChannel,
+                                 CLIENTAGENT_ADD_POST_REMOVE)
         datagram.addString(datagramCleanup.getMessage())
         self.csm.air.send(datagram)
 
         # setup the avatar's inventory.
         self.csm.air.inventoryManager.initiateInventory(self.avId,
-            self.inventorySetup)
+                                                        self.inventorySetup)
 
     def inventorySetup(self, inventoryId):
         channel = self.csm.GetAccountConnectionChannel(self.target)
@@ -911,30 +931,35 @@ class LoadAvatarFSM(AvatarOperationFSM):
         adminAccess = self.account.get('ACCESS_LEVEL', 0)
         adminAccess = adminAccess - adminAccess % 100
 
-        self.csm.air.sendActivate(self.avId, 0, 0, self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
-            {'setAdminAccess': (adminAccess,), 'setInventoryId': (inventoryId,)})
+        self.csm.air.sendActivate(
+            self.avId, 0, 0,
+            self.csm.air.dclassesByName['DistributedPlayerPirateUD'], {
+                'setAdminAccess': (adminAccess,),
+                'setInventoryId': (inventoryId,)
+            })
 
         # Next, add them to the avatar channel:
         datagram = PyDatagram()
-        datagram.addServerHeader(
-            channel,
-            self.csm.air.ourChannel,
-            CLIENTAGENT_OPEN_CHANNEL)
+        datagram.addServerHeader(channel, self.csm.air.ourChannel,
+                                 CLIENTAGENT_OPEN_CHANNEL)
         datagram.addChannel(self.csm.GetPuppetConnectionChannel(self.avId))
         self.csm.air.send(datagram)
 
         # Now set their sender channel to represent their account affiliation:
         datagram = PyDatagram()
-        datagram.addServerHeader(
-            channel,
-            self.csm.air.ourChannel,
-            CLIENTAGENT_SET_CLIENT_ID)
+        datagram.addServerHeader(channel, self.csm.air.ourChannel,
+                                 CLIENTAGENT_SET_CLIENT_ID)
         datagram.addChannel(self.target << 32 | self.avId)
         self.csm.air.send(datagram)
 
         # Eliminate race conditions.
-        taskMgr.doMethodLater(0.2, self.enterSetAvatarTask, 'avatarTask-%s' % self.avId,
-            extraArgs=[channel, inventoryId], appendTask=True)
+        taskMgr.doMethodLater(
+            0.2,
+            self.enterSetAvatarTask,
+            'avatarTask-%s' % self.avId,
+            extraArgs=[channel, inventoryId],
+            appendTask=True)
+
 
 class UnloadAvatarFSM(OperationFSM):
     notify = directNotify.newCategory('UnloadAvatarFSM')
@@ -950,42 +975,35 @@ class UnloadAvatarFSM(OperationFSM):
 
         # Clear off POSTREMOVE:
         datagram = PyDatagram()
-        datagram.addServerHeader(
-            channel,
-            self.csm.air.ourChannel,
-            CLIENTAGENT_CLEAR_POST_REMOVES)
+        datagram.addServerHeader(channel, self.csm.air.ourChannel,
+                                 CLIENTAGENT_CLEAR_POST_REMOVES)
         self.csm.air.send(datagram)
 
         # Remove avatar channel:
         datagram = PyDatagram()
-        datagram.addServerHeader(
-            channel,
-            self.csm.air.ourChannel,
-            CLIENTAGENT_CLOSE_CHANNEL)
+        datagram.addServerHeader(channel, self.csm.air.ourChannel,
+                                 CLIENTAGENT_CLOSE_CHANNEL)
         datagram.addChannel(self.csm.GetPuppetConnectionChannel(self.avId))
         self.csm.air.send(datagram)
 
         # Reset sender channel:
         datagram = PyDatagram()
-        datagram.addServerHeader(
-            channel,
-            self.csm.air.ourChannel,
-            CLIENTAGENT_SET_CLIENT_ID)
-        datagram.addChannel(self.target<<32)
+        datagram.addServerHeader(channel, self.csm.air.ourChannel,
+                                 CLIENTAGENT_SET_CLIENT_ID)
+        datagram.addChannel(self.target << 32)
         self.csm.air.send(datagram)
 
         # Unload avatar object:
         datagram = PyDatagram()
-        datagram.addServerHeader(
-            self.avId,
-            channel,
-            STATESERVER_OBJECT_DELETE_RAM)
+        datagram.addServerHeader(self.avId, channel,
+                                 STATESERVER_OBJECT_DELETE_RAM)
         datagram.addUint32(self.avId)
         self.csm.air.send(datagram)
 
         # Done!
         self.csm.air.writeServerEvent('avatarUnload', avId=self.avId)
         self.demand('Off')
+
 
 # --- CLIENT SERVICES MANAGER UBERDOG ---
 class ClientServicesManagerUD(DistributedObjectGlobalUD):
@@ -1016,10 +1034,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
     def killConnection(self, connId, reason, code=122):
         datagram = PyDatagram()
-        datagram.addServerHeader(
-            connId,
-            self.air.ourChannel,
-            CLIENTAGENT_EJECT)
+        datagram.addServerHeader(connId, self.air.ourChannel, CLIENTAGENT_EJECT)
         datagram.addUint16(code)
         datagram.addString(reason)
         self.air.send(datagram)
@@ -1028,22 +1043,29 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         fsm = self.connection2fsm.get(connId)
 
         if not fsm:
-            self.notify.warning('Tried to kill connection %d for duplicate FSM, but none exists!' % connId)
+            self.notify.warning(
+                'Tried to kill connection %d for duplicate FSM, but none exists!'
+                % connId)
             return
 
-        self.killConnection(connId, 'An operation is already underway: ' + fsm.__name__)
+        self.killConnection(connId,
+                            'An operation is already underway: ' + fsm.__name__)
 
     def killAccount(self, accountId, reason, code=122):
-        self.killConnection(self.GetAccountConnectionChannel(accountId), reason, code)
+        self.killConnection(
+            self.GetAccountConnectionChannel(accountId), reason, code)
 
     def killAccountFSM(self, accountId):
         fsm = self.account2fsm.get(accountId)
         if not fsm:
 
-            self.notify.warning('Tried to kill account %d for duplicate FSM, but none exists!' % accountId)
+            self.notify.warning(
+                'Tried to kill account %d for duplicate FSM, but none exists!' %
+                accountId)
             return
 
-        self.killAccount(accountId, 'An operation is already underway: ' + fsm.__name__)
+        self.killAccount(accountId,
+                         'An operation is already underway: ' + fsm.__name__)
 
     def runAccountFSM(self, fsmtype, *args):
         sender = self.air.getAccountIdFromSender()
@@ -1059,7 +1081,8 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         self.account2fsm[sender].request('Start', *args)
 
     def login(self, cookie, authKey):
-        self.notify.debug('Received login cookie %r from %d' % (cookie, self.air.getMsgSender()))
+        self.notify.debug('Received login cookie %r from %d' %
+                          (cookie, self.air.getMsgSender()))
 
         sender = self.air.getMsgSender()
 
@@ -1083,7 +1106,8 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         self.connection2fsm[sender].request('Start', cookie)
 
     def requestAvatars(self):
-        self.notify.debug('Received avatar list request from %d' % (self.air.getMsgSender()))
+        self.notify.debug(
+            'Received avatar list request from %d' % (self.air.getMsgSender()))
         self.runAccountFSM(GetAvatarsFSM)
 
     def createAvatar(self, dna, index, name):
@@ -1096,7 +1120,8 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         self.runAccountFSM(SetNameTypedFSM, avId, name)
 
     def setNamePattern(self, avId, p1, f1, p2, f2, p3, f3, p4, f4):
-        self.runAccountFSM(SetNamePatternFSM, avId, [(p1, f1), (p2, f2), (p3, f3), (p4, f4)])
+        self.runAccountFSM(SetNamePatternFSM, avId, [(p1, f1), (p2, f2),
+                                                     (p3, f3), (p4, f4)])
 
     def acknowledgeAvatarName(self, avId):
         self.runAccountFSM(AcknowledgeNameFSM, avId)

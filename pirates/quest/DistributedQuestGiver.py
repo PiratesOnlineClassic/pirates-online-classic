@@ -10,8 +10,8 @@ from panda3d.core import *
 from pirates.distributed import InteractGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import BlackPearlCrew, PDialog, RewardPanel
-from pirates.quest import (QuestConstants, QuestDB, QuestLadderDB,
-                           QuestMenuGUI, QuestParser, QuestTaskDNA)
+from pirates.quest import (QuestConstants, QuestDB, QuestLadderDB, QuestMenuGUI,
+                           QuestParser, QuestTaskDNA)
 from pirates.quest.QuestDetailGUI import QuestDetailGUI
 from pirates.reputation.ReputationGlobals import getLevelFromTotalReputation
 
@@ -114,19 +114,28 @@ class DistributedQuestGiver(Avatar.Avatar):
                 if questId in prereqExcludes:
                     continue
             prereqs = questDNA.getPrereqs()
-            boolWeapLvlCheck = (questDNA.weapLvlType != None) & (questDNA.minWeapLevel > 0)
+            boolWeapLvlCheck = (questDNA.weapLvlType !=
+                                None) & (questDNA.minWeapLevel > 0)
             for prereq in prereqs:
                 if prereq.giverMatters():
                     if prereq.giverCanGive(self.getUniqueId()):
                         if questDNA.minLevel > localAvatar.level:
                             pass
-                        elif not base.cr.questDependency.checkDependency(questId, localAvatar.getQuestLadderHistory(), 1):
+                        elif not base.cr.questDependency.checkDependency(
+                                questId, localAvatar.getQuestLadderHistory(),
+                                1):
                             pass
-                        elif boolWeapLvlCheck & (questDNA.minWeapLevel > getLevelFromTotalReputation(questDNA.weapLvlType, inventory.getReputation(questDNA.weapLvlType))[0]):
+                        elif boolWeapLvlCheck & (
+                                questDNA.minWeapLevel >
+                                getLevelFromTotalReputation(
+                                    questDNA.weapLvlType,
+                                    inventory.getReputation(
+                                        questDNA.weapLvlType))[0]):
                             pass
                         elif questDNA.getAcquireOnce():
                             history = localAvatar.getQuestLadderHistory()
-                            questLadderId = base.cr.questDynMap.findQuestLadderInt(questId)
+                            questLadderId = base.cr.questDynMap.findQuestLadderInt(
+                                questId)
                             containsLadderId = history.count(questLadderId)
                             if containsLadderId:
                                 pass
@@ -144,7 +153,8 @@ class DistributedQuestGiver(Avatar.Avatar):
                     found = False
                     for quest in questList:
                         questId = questDNA.getQuestId()
-                        if questId == quest.getQuestId() or localAvatar.questStatus.hasLadderQuestId(questId):
+                        if questId == quest.getQuestId(
+                        ) or localAvatar.questStatus.hasLadderQuestId(questId):
                             found = True
 
                     if found:
@@ -198,7 +208,8 @@ class DistributedQuestGiver(Avatar.Avatar):
 
     def presentQuestOffer(self, offers, ladder=False):
         if self.questMenuGUI:
-            DistributedQuestGiver.notify.warning('setQuestOffer: old questMenu GUI still around')
+            DistributedQuestGiver.notify.warning(
+                'setQuestOffer: old questMenu GUI still around')
             self.cleanUpQuestMenu()
         self.cleanUpQuestDetails()
 
@@ -229,8 +240,13 @@ class DistributedQuestGiver(Avatar.Avatar):
             questDNA = offer.getQuestDNA()
             if questDNA:
                 questStr = questDNA.getDialogBefore()
-                self.acceptOnce('lastSubtitlePage', displayQuestDetails, [offer])
-                localAvatar.guiMgr.subtitler.setPageChat(questStr, options=[PLocalizer.Decline, PLocalizer.Accept], callback=handleOption, extraArgs=[offer])
+                self.acceptOnce('lastSubtitlePage', displayQuestDetails,
+                                [offer])
+                localAvatar.guiMgr.subtitler.setPageChat(
+                    questStr,
+                    options=[PLocalizer.Decline, PLocalizer.Accept],
+                    callback=handleOption,
+                    extraArgs=[offer])
 
         def questFull(arg):
             self.cleanUpQuestMenu()
@@ -245,9 +261,13 @@ class DistributedQuestGiver(Avatar.Avatar):
                     numWorkQuests += 1
 
         if numWorkQuests > QuestConstants.MAXIMUM_MERC_WORK:
-            self.questMenuGUI = PDialog.PDialog(text=PLocalizer.QuestFull, style=OTPDialog.Acknowledge, command=questFull)
+            self.questMenuGUI = PDialog.PDialog(
+                text=PLocalizer.QuestFull,
+                style=OTPDialog.Acknowledge,
+                command=questFull)
         else:
-            self.questMenuGUI = QuestMenuGUI.QuestMenuGUI(offers, handleSelection, describeQuest)
+            self.questMenuGUI = QuestMenuGUI.QuestMenuGUI(
+                offers, handleSelection, describeQuest)
         self.clearOffer()
 
     def presentQuestGiven(self, quest):
@@ -262,7 +282,8 @@ class DistributedQuestGiver(Avatar.Avatar):
                 self.__handleDoneChatPage(0)
 
         self.questDetailGUI = QuestDetailGUI(None, None, quest)
-        localAvatar.guiMgr.subtitler.setPageChat('', options=[PLocalizer.Accept], callback=handleOption)
+        localAvatar.guiMgr.subtitler.setPageChat(
+            '', options=[PLocalizer.Accept], callback=handleOption)
         base.questdet = self.questDetailGUI
         self.ignore('doneChatPage')
 
@@ -279,7 +300,19 @@ class DistributedQuestGiver(Avatar.Avatar):
             duration = 0.5
         dummy.wrtReparentTo(camera.getParent())
         camH, dummyH = getShortestRotation(camera.getH(), dummy.getH())
-        self.questDetailCamera = Parallel(LerpFunc(camera.setH, duration=duration, fromData=camH, toData=dummyH, blendType='easeInOut'), LerpFunc(camera.setY, duration=duration, fromData=camera.getY(), toData=dummy.getY(), blendType='easeInOut'))
+        self.questDetailCamera = Parallel(
+            LerpFunc(
+                camera.setH,
+                duration=duration,
+                fromData=camH,
+                toData=dummyH,
+                blendType='easeInOut'),
+            LerpFunc(
+                camera.setY,
+                duration=duration,
+                fromData=camera.getY(),
+                toData=dummy.getY(),
+                blendType='easeInOut'))
         dummy.removeNode()
         self.questDetailCamera.start()
 
@@ -301,8 +334,14 @@ class DistributedQuestGiver(Avatar.Avatar):
         timestamp = globalClockDelta.getFrameNetworkTime()
         self.sendUpdate('setPageNumber', [paragraph, pageNumber, timestamp])
 
-    def playQuestString(self, questStr, timeout=False, quitButton=1, useChatBubble=False, confirm=False):
-        self.notify.debug('playQuestString %s, %s, %s, %s' % (timeout, quitButton, useChatBubble, confirm))
+    def playQuestString(self,
+                        questStr,
+                        timeout=False,
+                        quitButton=1,
+                        useChatBubble=False,
+                        confirm=False):
+        self.notify.debug('playQuestString %s, %s, %s, %s' %
+                          (timeout, quitButton, useChatBubble, confirm))
         if questStr.find('quest_') == 0:
             nmp = QuestParser.NPCMoviePlayer(questStr, localAvatar, self)
             nmp.play()
@@ -312,15 +351,23 @@ class DistributedQuestGiver(Avatar.Avatar):
             if questStr:
                 if timeout:
                     if useChatBubble:
-                        self.setPageChat(localAvatar.doId, 0, questStr, 0, extraChatFlags=CFSpeech | CFTimeout, pageButton=False)
+                        self.setPageChat(
+                            localAvatar.doId,
+                            0,
+                            questStr,
+                            0,
+                            extraChatFlags=CFSpeech | CFTimeout,
+                            pageButton=False)
                     else:
-                        base.localAvatar.guiMgr.subtitler.setPageChat(questStr, timeout=timeout)
+                        base.localAvatar.guiMgr.subtitler.setPageChat(
+                            questStr, timeout=timeout)
                     return
                 else:
                     self.playingQuestString = True
                     if self.newOffer == False:
                         questStr += '\x07'
-                    base.localAvatar.guiMgr.subtitler.setPageChat(questStr, confirm=confirm)
+                    base.localAvatar.guiMgr.subtitler.setPageChat(
+                        questStr, confirm=confirm)
                     self.dialogOpen = True
                 if quitButton == 1 or confirm:
                     self.accept('doneChatPage', self.__handleDoneChatPage)
@@ -330,7 +377,8 @@ class DistributedQuestGiver(Avatar.Avatar):
                     self.accept('nextChatPage', self.__handleNextChatPage)
 
     def __handleNextChatPage(self, pageNumber, elapsed):
-        self.notify.debug('handleNextChatPage pageNumber = %s, elapsed = %s' % (pageNumber, elapsed))
+        self.notify.debug('handleNextChatPage pageNumber = %s, elapsed = %s' %
+                          (pageNumber, elapsed))
         if pageNumber == base.localAvatar.guiMgr.subtitler.getNumChatPages() - 1:
             self.ignore('nextChatPage')
             self.playingQuestString = False
@@ -356,23 +404,30 @@ class DistributedQuestGiver(Avatar.Avatar):
                     self.rewardPanel = None
                 return
 
-            self.rewardPanel = RewardPanel.RewardPanel(aspect2d, doneCallback=cleanupReward)
+            self.rewardPanel = RewardPanel.RewardPanel(
+                aspect2d, doneCallback=cleanupReward)
 
     def playDialog(self):
         self.notify.warning('playDialog() needs override!')
 
-    def setQuestsCompleted(self, menuFlag, completedContainerIds, completedChainedQuestIds, completedQuestIds, completedQuestDoIds):
+    def setQuestsCompleted(self, menuFlag, completedContainerIds,
+                           completedChainedQuestIds, completedQuestIds,
+                           completedQuestDoIds):
         questStr = ''
         if len(completedContainerIds):
             if len(completedContainerIds) > 1:
-                self.notify.warning('Multiple simultaneous completed quest containers for the same NPC: %s!' % completedContainerIds)
+                self.notify.warning(
+                    'Multiple simultaneous completed quest containers for the same NPC: %s!'
+                    % completedContainerIds)
             containerId = completedContainerIds[0]
             self.containerId = containerId
             container = QuestLadderDB.getContainer(containerId)
             if container:
                 questStr = container.getDialogAfter()
-                localAvatar.b_setGameState('NPCInteract', localArgs=[self, False])
-                self.playQuestString(questStr, quitButton=menuFlag, confirm=True)
+                localAvatar.b_setGameState(
+                    'NPCInteract', localArgs=[self, False])
+                self.playQuestString(
+                    questStr, quitButton=menuFlag, confirm=True)
                 return
             else:
                 self.notify.warning('%s not in QuestLadderDB!' % containerId)
@@ -384,24 +439,31 @@ class DistributedQuestGiver(Avatar.Avatar):
                 quest = QuestDB.QuestDict.get(questId)
                 if quest:
                     questStr = quest.getDialogAfter()
-                    self.notify.debug('%s dialogAfter: %s' % (questId, questStr))
-                    self.playQuestString(questStr, quitButton=menuFlag, confirm=True)
+                    self.notify.debug(
+                        '%s dialogAfter: %s' % (questId, questStr))
+                    self.playQuestString(
+                        questStr, quitButton=menuFlag, confirm=True)
                 else:
                     self.notify.warning('%s not in QuestDB!' % questId)
             localAvatar.b_setGameState('NPCInteract', localArgs=[self, True])
-        if len(completedQuestIds) == 0 and len(completedChainedQuestIds) == 0 and len(completedContainerIds) == 0:
+        if len(completedQuestIds) == 0 and len(
+                completedChainedQuestIds) == 0 and len(
+                    completedContainerIds) == 0:
             if not self.hasOpenGUI():
                 self.cancelInteraction(base.localAvatar)
 
-    def playDialogMovie(self, dialogId, doneCallback=None, oldLocalAvState=None):
+    def playDialogMovie(self, dialogId, doneCallback=None,
+                        oldLocalAvState=None):
         movieChoice = InteractGlobals.getNPCTutorial(dialogId)
         if movieChoice == None:
             movieChoice = dialogId
         globalClock.tick()
-        self.currentDialogMovie = QuestParser.NPCMoviePlayer(movieChoice, localAvatar, self)
+        self.currentDialogMovie = QuestParser.NPCMoviePlayer(
+            movieChoice, localAvatar, self)
         self.currentDialogMovie.overrideOldAvState(oldLocalAvState)
         self.currentDialogMovie.play()
-        self.acceptOnce('dialogFinish', self.stopDialogMovie, extraArgs=[doneCallback])
+        self.acceptOnce(
+            'dialogFinish', self.stopDialogMovie, extraArgs=[doneCallback])
         return
 
     def stopDialogMovie(self, doneCallback):
@@ -435,20 +497,20 @@ class DistributedQuestGiver(Avatar.Avatar):
             for quest in inventory.getQuestList():
                 questType = self.QuestIconDontCare
                 if quest.tasks is None:
-                    self.notify.warning('quest %s: does not contain a dna; potential for crash.' % quest.getQuestId())
+                    self.notify.warning(
+                        'quest %s: does not contain a dna; potential for crash.'
+                        % quest.getQuestId())
                     return False
                 for task, taskState in zip(quest.tasks, quest.taskStates):
                     if isinstance(task, QuestTaskDNA.VisitTaskDNA):
                         if task.npcId == selfId:
                             questStatus = self.QuestIconComplete
-                            return (
-                             questType, questStatus)
+                            return (questType, questStatus)
 
                 if quest.canBeReturnedTo(selfId):
                     if quest.isComplete():
                         questStatus = self.QuestIconComplete
-                        return (
-                         questType, questStatus)
+                        return (questType, questStatus)
                     else:
                         numInProgress += 1
 
@@ -462,19 +524,28 @@ class DistributedQuestGiver(Avatar.Avatar):
             if len(prereqExcludes):
                 if questId in prereqExcludes:
                     continue
-            boolWeapLvlCheck = (questDNA.weapLvlType != None) & (questDNA.minWeapLevel > 0)
+            boolWeapLvlCheck = (questDNA.weapLvlType !=
+                                None) & (questDNA.minWeapLevel > 0)
             for prereq in questDNA.prereqs:
                 if prereq.giverMatters():
                     if prereq.giverCanGive(selfId):
                         if questDNA.minLevel > localAvatar.level:
                             pass
-                        elif not base.cr.questDependency.checkDependency(questId, localAvatar.getQuestLadderHistory(), 1):
+                        elif not base.cr.questDependency.checkDependency(
+                                questId, localAvatar.getQuestLadderHistory(),
+                                1):
                             pass
-                        elif boolWeapLvlCheck & (questDNA.minWeapLevel > getLevelFromTotalReputation(questDNA.weapLvlType, inventory.getReputation(questDNA.weapLvlType))[0]):
+                        elif boolWeapLvlCheck & (
+                                questDNA.minWeapLevel >
+                                getLevelFromTotalReputation(
+                                    questDNA.weapLvlType,
+                                    inventory.getReputation(
+                                        questDNA.weapLvlType))[0]):
                             pass
                         elif questDNA.getAcquireOnce():
                             history = localAvatar.getQuestLadderHistory()
-                            questLadderId = base.cr.questDynMap.findQuestLadderInt(questId)
+                            questLadderId = base.cr.questDynMap.findQuestLadderInt(
+                                questId)
                             containsLadderId = history.count(questLadderId)
                             if containsLadderId:
                                 pass
@@ -492,7 +563,8 @@ class DistributedQuestGiver(Avatar.Avatar):
                     found = False
                     for quest in questList:
                         questId = questDNA.questId
-                        if questId == quest.questId or av.questStatus.hasLadderQuestId(questId):
+                        if questId == quest.questId or av.questStatus.hasLadderQuestId(
+                                questId):
                             found = True
 
                     if found:
@@ -509,24 +581,27 @@ class DistributedQuestGiver(Avatar.Avatar):
                     break
 
             questStatus = self.QuestIconNew
-            return (
-             questType, questStatus)
+            return (questType, questStatus)
         if numInProgress:
             questStatus = self.QuestIconProgress
-            return (
-             questType, questStatus)
+            return (questType, questStatus)
         return False
 
     def loadQuestIcons(self):
         if not DistributedQuestGiver.QuestIconWorkTexture:
-            DistributedQuestGiver.QuestIconWorkTexture = loader.loadModel('models/gui/new_work_quest_icon')
-            DistributedQuestGiver.QuestIconStoryTexture = loader.loadModel('models/gui/new_story_quest_icon')
-            discardNP = DistributedQuestGiver.QuestIconStoryTexture.find('**/pPlane2')
+            DistributedQuestGiver.QuestIconWorkTexture = loader.loadModel(
+                'models/gui/new_work_quest_icon')
+            DistributedQuestGiver.QuestIconStoryTexture = loader.loadModel(
+                'models/gui/new_story_quest_icon')
+            discardNP = DistributedQuestGiver.QuestIconStoryTexture.find(
+                '**/pPlane2')
             if not discardNP.isEmpty():
                 discardNP.removeNode()
             gui = loader.loadModel('models/gui/toplevel_gui')
-            DistributedQuestGiver.QuestIconProgressTexture = gui.find('**/quest_pending_icon')
-            DistributedQuestGiver.QuestIconCompleteTexture = gui.find('**/reward_waiting_icon')
+            DistributedQuestGiver.QuestIconProgressTexture = gui.find(
+                '**/quest_pending_icon')
+            DistributedQuestGiver.QuestIconCompleteTexture = gui.find(
+                '**/reward_waiting_icon')
 
     def updateNametagQuestIcon(self, questId=None, item=None, note=None):
         offers = self.hasQuestOffersForLocalAvatar()
@@ -539,25 +614,31 @@ class DistributedQuestGiver(Avatar.Avatar):
             type, status = offers
             if status == DistributedQuestGiver.QuestIconNew:
                 if type == DistributedQuestGiver.QuestIconStory:
-                    self.nametagIcon = DistributedQuestGiver.QuestIconStoryTexture.copyTo(self.nametag3d)
+                    self.nametagIcon = DistributedQuestGiver.QuestIconStoryTexture.copyTo(
+                        self.nametag3d)
                 else:
-                    self.nametagIcon = DistributedQuestGiver.QuestIconStoryTexture.copyTo(self.nametag3d)
+                    self.nametagIcon = DistributedQuestGiver.QuestIconStoryTexture.copyTo(
+                        self.nametag3d)
                 self.nametagIcon.setScale(3.5)
             else:
                 if status == DistributedQuestGiver.QuestIconComplete:
-                    self.nametagIcon = DistributedQuestGiver.QuestIconCompleteTexture.copyTo(self.nametag3d)
+                    self.nametagIcon = DistributedQuestGiver.QuestIconCompleteTexture.copyTo(
+                        self.nametag3d)
                     self.nametagIcon.setScale(12)
                 else:
                     if status == DistributedQuestGiver.QuestIconProgress:
-                        self.nametagIcon = DistributedQuestGiver.QuestIconProgressTexture.copyTo(self.nametag3d)
+                        self.nametagIcon = DistributedQuestGiver.QuestIconProgressTexture.copyTo(
+                            self.nametag3d)
                         self.nametagIcon.setScale(12)
                     else:
-                        self.notify.error('invalid quest status: %s or type: %s' % (status, type))
+                        self.notify.error('invalid quest status: %s or type: %s'
+                                          % (status, type))
             self.nametagIcon.setPos(0, 0, 3.5)
             self.nametagIcon.reparentTo(self.getNameText())
             self.nametagIcon.setDepthWrite(0)
             if status == DistributedQuestGiver.QuestIconComplete or status == DistributedQuestGiver.QuestIconNew:
-                self.nametagIconGlow = loader.loadModel('models/effects/lanternGlow')
+                self.nametagIconGlow = loader.loadModel(
+                    'models/effects/lanternGlow')
                 self.nametagIconGlow.reparentTo(self.nametag.getNameIcon())
                 self.nametagIconGlow.setScale(20.0)
                 self.nametagIconGlow.setColorScaleOff()
@@ -565,7 +646,10 @@ class DistributedQuestGiver(Avatar.Avatar):
                 self.nametagIconGlow.setLightOff()
                 self.nametagIconGlow.setPos(0, -0.05, 3.0)
                 self.nametagIconGlow.setDepthWrite(0)
-                self.nametagIconGlow.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+                self.nametagIconGlow.node().setAttrib(
+                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                          ColorBlendAttrib.OIncomingAlpha,
+                                          ColorBlendAttrib.OOne))
                 self.nametagIconGlow.setColor(0.85, 0.85, 0.85, 0.85)
         else:
             if self.nametagIcon:

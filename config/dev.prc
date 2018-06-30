@@ -6,7 +6,7 @@ force-tutorial-complete #t
 skip-tutorial #t
 force-tutorial #t
 
-# Npc:
+# NPC:
 want-townfolk #t
 want-enemies #t
 want-animals #t
@@ -34,9 +34,6 @@ dev-analyics #t
 
 # Weapons:
 instant-skill-recharge #f
-
-# Development:
-want-dev #f
 
 # Manual Overrides:
 always-allow-digging #t

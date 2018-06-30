@@ -348,7 +348,6 @@ StartingStacks = {
     InventoryType.SailBroadsideRight: 2,
     InventoryType.GrenadeExplosion: 2,
 
-
     # Weapon Tokens
     InventoryType.CutlassToken: 1,
     InventoryType.PistolToken: 0,

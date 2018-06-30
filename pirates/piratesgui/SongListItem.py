@@ -17,7 +17,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class SongListItem(DirectButton):
-    
+
     width = 0
     height = 0
     guiLoaded = False
@@ -28,7 +28,16 @@ class SongListItem(DirectButton):
     weaponIcons = None
     skillIcons = None
 
-    def __init__(self, data, trade=0, buy=0, sell=0, use=0, weapon=0, isDisabled=0, width=0, height=0):
+    def __init__(self,
+                 data,
+                 trade=0,
+                 buy=0,
+                 sell=0,
+                 use=0,
+                 weapon=0,
+                 isDisabled=0,
+                 width=0,
+                 height=0):
         self.width = width
         self.height = height
         self.data = data
@@ -50,8 +59,10 @@ class SongListItem(DirectButton):
             return
         SongListItem.topGui = loader.loadModel('models/gui/toplevel_gui')
         SongListItem.coinImage = SongListItem.topGui.find('**/treasure_w_coin*')
-        SongListItem.weaponIcons = loader.loadModel('models/textureCards/weapon_icons')
-        SongListItem.skillIcons = loader.loadModel('models/textureCards/skillIcons')
+        SongListItem.weaponIcons = loader.loadModel(
+            'models/textureCards/weapon_icons')
+        SongListItem.skillIcons = loader.loadModel(
+            'models/textureCards/skillIcons')
         SongListItem.guiLoaded = True
 
     def loadData(self):
@@ -87,8 +98,8 @@ class SongListItem(DirectButton):
 
     def sendEvents(self):
         if self.buy:
-            messenger.send(PiratesGuiGlobals.InventoryBuyEvent, [
-             self.data, self.buy])
+            messenger.send(PiratesGuiGlobals.InventoryBuyEvent,
+                           [self.data, self.buy])
 
     def bringToFront(self):
         self.reparentTo(self.getParent())
@@ -96,4 +107,6 @@ class SongListItem(DirectButton):
     def equipWeapon(self, event):
         if base.localAvatar.guiMgr.weaponPage.equipStatus > 0:
             base.localAvatar.guiMgr.weaponPage.equipWeapon(self.data[0])
+
+
 # okay decompiling .\pirates\piratesgui\SongListItem.pyc

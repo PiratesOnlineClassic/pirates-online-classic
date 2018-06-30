@@ -16,6 +16,7 @@ from pirates.piratesgui import PiratesConfirm
 from pirates.piratesgui import PiratesInfo
 from pirates.piratesgui import PiratesOffLineRequest
 
+
 class GuildPage(SocialPage.SocialPage):
     memberHeight = 0.1
 
@@ -54,21 +55,37 @@ class GuildPage(SocialPage.SocialPage):
         self.membersFrame = DirectFrame(relief=None, parent=self)
         self.tokenFrame = DirectFrame(relief=None, parent=self)
         self.setupMemberPage = 0
-        self.membersList = PirateMemberList.PirateMemberList(5, self.membersFrame, 'FOOLIO HC', height=0.5475, memberHeight=0.1, memberWidth=0.48, memberOffset=0.055)
+        self.membersList = PirateMemberList.PirateMemberList(
+            5,
+            self.membersFrame,
+            'FOOLIO HC',
+            height=0.5475,
+            memberHeight=0.1,
+            memberWidth=0.48,
+            memberOffset=0.055)
         self.membersList.setPos(0.001, 0.0, 0.123)
-        self.mainChain = PirateButtonChain.PirateButtonChain(0.49, self.mainFrame, True)
+        self.mainChain = PirateButtonChain.PirateButtonChain(
+            0.49, self.mainFrame, True)
         self.mainChain.setPos(-0.012, 0.0, 0.045)
-        self.memberChain = PirateButtonChain.PirateButtonChain(0.49, self.membersFrame, True)
+        self.memberChain = PirateButtonChain.PirateButtonChain(
+            0.49, self.membersFrame, True)
         self.memberChain.setPos(-0.012, 0.0, 0.045)
         self.membersFrame.hide()
-        self.tokenChain = PirateButtonChain.PirateButtonChain(0.49, self.tokenFrame, True)
+        self.tokenChain = PirateButtonChain.PirateButtonChain(
+            0.49, self.tokenFrame, True)
         self.tokenChain.setPos(-0.012, 0.0, 0.045)
         self.tokenFrame.hide()
         self.accept('Guild Status Updated', self.revertGui)
-        self.headingLabel = DirectLabel(parent=self, relief=None, text=PLocalizer.GuildPageTitle, state=DGG.NORMAL, text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.0,
-                                                                                                                                                                                                        0.0), text_fg=PiratesGuiGlobals.TextFG1, pos=(0.23,
-                                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                                      0.694))
+        self.headingLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            text=PLocalizer.GuildPageTitle,
+            state=DGG.NORMAL,
+            text_align=TextNode.ACenter,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_pos=(0.0, 0.0),
+            text_fg=PiratesGuiGlobals.TextFG1,
+            pos=(0.23, 0, 0.694))
         return
 
     def show(self):
@@ -99,13 +116,14 @@ class GuildPage(SocialPage.SocialPage):
             if self.guildName == '0' or self.guildName == '':
                 self.guildName = PLocalizer.GuildDefaultName % self.guildId
             if not self.nameLabel:
-                self.nameLabel = DirectLabel(parent=self.mainFrame, relief=None, text=self.guildName, text_fg=(0.95,
-                                                                                                               1,
-                                                                                                               1,
-                                                                                                               1), text_align=TextNode.ACenter, text_shadow=(0,
-                                                                                                                                                             0,
-                                                                                                                                                             0,
-                                                                                                                                                             1), text_scale=0.06)
+                self.nameLabel = DirectLabel(
+                    parent=self.mainFrame,
+                    relief=None,
+                    text=self.guildName,
+                    text_fg=(0.95, 1, 1, 1),
+                    text_align=TextNode.ACenter,
+                    text_shadow=(0, 0, 0, 1),
+                    text_scale=0.06)
                 self.nameLabel.setPos(0.23, 0, 0.637)
             rank = base.localAvatar.getGuildRank()
             if rank == 1:
@@ -117,28 +135,36 @@ class GuildPage(SocialPage.SocialPage):
             else:
                 ranktxt = PLocalizer.Loading
             if not self.rankLabel:
-                self.rankLabel = DirectLabel(parent=self.mainFrame, relief=None, text=ranktxt, text_fg=(1,
-                                                                                                        1,
-                                                                                                        1,
-                                                                                                        1), text_align=TextNode.ACenter, text_shadow=(0,
-                                                                                                                                                      0.0,
-                                                                                                                                                      0,
-                                                                                                                                                      1), text_scale=0.04)
+                self.rankLabel = DirectLabel(
+                    parent=self.mainFrame,
+                    relief=None,
+                    text=ranktxt,
+                    text_fg=(1, 1, 1, 1),
+                    text_align=TextNode.ACenter,
+                    text_shadow=(0, 0.0, 0, 1),
+                    text_scale=0.04)
                 self.rankLabel.setPos(0.23, 0, 0.585)
         if not self.memberButton:
-            self.memberButton = self.mainChain.premakeButton(PLocalizer.GuildPageShowMembers, self.showGuildMembers)
+            self.memberButton = self.mainChain.premakeButton(
+                PLocalizer.GuildPageShowMembers, self.showGuildMembers)
         if not self.renameButton:
-            self.renameButton = self.mainChain.premakeButton(PLocalizer.GuildPageNameGuild, self.renameGuild)
+            self.renameButton = self.mainChain.premakeButton(
+                PLocalizer.GuildPageNameGuild, self.renameGuild)
         if not self.createButton:
-            self.createButton = self.mainChain.premakeButton(PLocalizer.GuildPageCreateGuild, self.createGuild)
+            self.createButton = self.mainChain.premakeButton(
+                PLocalizer.GuildPageCreateGuild, self.createGuild)
         if not self.leaveButton:
-            self.leaveButton = self.mainChain.premakeButton(PLocalizer.GuildPageLeaveGuild, self.leaveGuild)
+            self.leaveButton = self.mainChain.premakeButton(
+                PLocalizer.GuildPageLeaveGuild, self.leaveGuild)
         if not self.inviteButton:
-            self.inviteButton = self.mainChain.premakeButton(PLocalizer.GuildInvite, self.inviteGuild)
+            self.inviteButton = self.mainChain.premakeButton(
+                PLocalizer.GuildInvite, self.inviteGuild)
         if not self.redeemInvite:
-            self.redeemInvite = self.mainChain.premakeButton(PLocalizer.GuildRedeemInvite, self.redeemInviteGuild)
+            self.redeemInvite = self.mainChain.premakeButton(
+                PLocalizer.GuildRedeemInvite, self.redeemInviteGuild)
         if not self.codeInviteOptions:
-            self.codeInviteOptions = self.mainChain.premakeButton(PLocalizer.GuildCodeOptions, self.b_codeInviteOptions)
+            self.codeInviteOptions = self.mainChain.premakeButton(
+                PLocalizer.GuildCodeOptions, self.b_codeInviteOptions)
         self.mainChain.makeButtons()
         self.determineButtonState()
         return
@@ -154,7 +180,8 @@ class GuildPage(SocialPage.SocialPage):
             self.guildRank = base.localAvatar.getGuildRank()
             if self.guildName == '0' or self.guildName == '':
                 self.guildName = PLocalizer.GuildDefaultName % self.guildId
-        if self.guildName and self.guildName != PLocalizer.GuildNoGuild and (self.guildName != '0' or self.guildName != ''):
+        if self.guildName and self.guildName != PLocalizer.GuildNoGuild and (
+                self.guildName != '0' or self.guildName != ''):
             self.nameLabel.show()
             self.nameLabel['text'] = self.guildName
         elif self.nameLabel:
@@ -182,7 +209,8 @@ class GuildPage(SocialPage.SocialPage):
             self.inviteButton['state'] = DGG.DISABLED
             self.redeemInvite['state'] = DGG.NORMAL
             self.codeInviteOptions['state'] = DGG.DISABLED
-            if self.guildRank > 2 and (self.guildReal == '0' or self.guildReal == ''):
+            if self.guildRank > 2 and (self.guildReal == '0' or
+                                       self.guildReal == ''):
                 self.renameButton['state'] = DGG.NORMAL
                 self.redeemInvite['state'] = DGG.DISABLED
             if self.guildRank > 1:
@@ -214,7 +242,8 @@ class GuildPage(SocialPage.SocialPage):
         return
 
     def aboutGuild(self):
-        self.confirmBox = PiratesInfo.PiratesInfo(PLocalizer.GuildAbout, PLocalizer.GuildTut)
+        self.confirmBox = PiratesInfo.PiratesInfo(PLocalizer.GuildAbout,
+                                                  PLocalizer.GuildTut)
         if self.nameEntry:
             self.nameEntry.hide()
             self.nameLabel.show()
@@ -225,7 +254,9 @@ class GuildPage(SocialPage.SocialPage):
         self.displayTokenOptionsFrame()
 
     def b_clearPermToken(self):
-        self.confirmBox = PiratesConfirm.PiratesConfirm(PLocalizer.GuildClearPerm, PLocalizer.GuildMessageClearPermInvite, self.executeClearPermToken)
+        self.confirmBox = PiratesConfirm.PiratesConfirm(
+            PLocalizer.GuildClearPerm, PLocalizer.GuildMessageClearPermInvite,
+            self.executeClearPermToken)
 
     def executeClearPermToken(self):
         try:
@@ -242,7 +273,9 @@ class GuildPage(SocialPage.SocialPage):
         pass
 
     def b_clearLimitedUseToken(self):
-        self.confirmBox = PiratesConfirm.PiratesConfirm(PLocalizer.GuildClearLimUse, PLocalizer.GuildMessageClearLimInvite, self.executeClearLimitedUseToken)
+        self.confirmBox = PiratesConfirm.PiratesConfirm(
+            PLocalizer.GuildClearLimUse, PLocalizer.GuildMessageClearLimInvite,
+            self.executeClearLimitedUseToken)
 
     def executeClearLimitedUseToken(self):
         base.cr.guildManager.requestClearTokens(0)
@@ -252,17 +285,22 @@ class GuildPage(SocialPage.SocialPage):
         pass
 
     def b_aboutTokenManagement(self):
-        self.confirmBox = PiratesInfo.PiratesInfo(PLocalizer.GuildTokenAbout, PLocalizer.GuildTokenTut)
+        self.confirmBox = PiratesInfo.PiratesInfo(PLocalizer.GuildTokenAbout,
+                                                  PLocalizer.GuildTokenTut)
 
     def redeemInviteGuild(self):
         self.inputTokenForGuild()
 
-    def displayRedeemErrorMessage(self, msgString=OTPLocalizer.GuildRedeemErrorInvalidToken):
-        self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(PLocalizer.GuildInvite, msgString)
+    def displayRedeemErrorMessage(
+            self, msgString=OTPLocalizer.GuildRedeemErrorInvalidToken):
+        self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(
+            PLocalizer.GuildInvite, msgString)
 
     def displayRedeemConfirmMessage(self, guildName):
         self.guildId = base.localAvatar.getGuildId()
-        self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(PLocalizer.GuildInvite, PLocalizer.GuildInviteJoinSucessful % guildName)
+        self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(
+            PLocalizer.GuildInvite,
+            PLocalizer.GuildInviteJoinSucessful % guildName)
         if self.tokenEntry:
             self.tokenEntry.set('')
 
@@ -271,14 +309,20 @@ class GuildPage(SocialPage.SocialPage):
 
     def displayInviteGuild(self, displayToken, preExistPerm):
         if displayToken == 'TOO_MANY_TOKENS':
-            self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(PLocalizer.GuildInvite, PLocalizer.GuildInviteTooManyTokens)
+            self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(
+                PLocalizer.GuildInvite, PLocalizer.GuildInviteTooManyTokens)
         elif displayToken == 'GUILD FULL':
-            self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(PLocalizer.GuildInvite, OTPLocalizer.GuildInviterTooFull)
+            self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(
+                PLocalizer.GuildInvite, OTPLocalizer.GuildInviterTooFull)
         else:
-            self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(PLocalizer.GuildInvite, PLocalizer.GuildInviteResponse, displayToken, preExistPerm)
+            self.confirmBox = PiratesOffLineRequest.PiratesOffLineRequest(
+                PLocalizer.GuildInvite, PLocalizer.GuildInviteResponse,
+                displayToken, preExistPerm)
 
     def leaveGuild(self):
-        self.confirmBox = PiratesConfirm.PiratesConfirm(PLocalizer.GuildPageLeaveGuild, PLocalizer.GuildAskLeave, base.cr.guildManager.removeMember, base.localAvatar.getDoId())
+        self.confirmBox = PiratesConfirm.PiratesConfirm(
+            PLocalizer.GuildPageLeaveGuild, PLocalizer.GuildAskLeave,
+            base.cr.guildManager.removeMember, base.localAvatar.getDoId())
         if self.nameEntry:
             self.nameEntry.hide()
             self.nameLabel.show()
@@ -289,47 +333,64 @@ class GuildPage(SocialPage.SocialPage):
     def createGuild(self):
         if self.tokenEntry:
             self.tokenEntry.hide()
-        self.confirmBox = PiratesConfirm.PiratesConfirm(PLocalizer.GuildPageCreateGuild, PLocalizer.GuildAskCreate, base.cr.guildManager.createGuild)
+        self.confirmBox = PiratesConfirm.PiratesConfirm(
+            PLocalizer.GuildPageCreateGuild, PLocalizer.GuildAskCreate,
+            base.cr.guildManager.createGuild)
         if self.clearPermToken:
             self.clearPermToken['state'] = DGG.DISABLED
         if self.clearLimitedUseToken:
             self.clearLimitedUseToken['state'] = DGG.DISABLED
 
     def renameGuild(self):
-        buttonColor = (
-         (0.33, 0.3, 0.26, 1.0), (0.26, 0.24, 0.21, 1.0), (0.49, 0.45, 0.39, 1.0), (0.16, 0.15, 0.13, 1.0))
+        buttonColor = ((0.33, 0.3, 0.26, 1.0), (0.26, 0.24, 0.21, 1.0),
+                       (0.49, 0.45, 0.39, 1.0), (0.16, 0.15, 0.13, 1.0))
         if self.nameEntry:
             self.nameLabel.hide()
             self.nameEntry.show()
             self.nameEntry['focus'] = 1
         else:
             self.nameLabel.hide()
-            self.nameEntry = DirectEntry(parent=self.mainFrame, relief=DGG.RAISED, scale=0.051, pos=(0.24,
-                                                                                                     0,
-                                                                                                     0.637), borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameColor=(1,
-                                                                                                                                                                         1,
-                                                                                                                                                                         1,
-                                                                                                                                                                         0.1), text_align=TextNode.ACenter, width=8, numLines=1, focus=1, cursorKeys=1, text_fg=(1,
-                                                                                                                                                                                                                                                                 1,
-                                                                                                                                                                                                                                                                 1,
-                                                                                                                                                                                                                                                                 1), command=self._typedAName, suppressKeys=1, suppressMouse=1, autoCapitalize=1)
+            self.nameEntry = DirectEntry(
+                parent=self.mainFrame,
+                relief=DGG.RAISED,
+                scale=0.051,
+                pos=(0.24, 0, 0.637),
+                borderWidth=PiratesGuiGlobals.BorderWidthSmall,
+                frameColor=(1, 1, 1, 0.1),
+                text_align=TextNode.ACenter,
+                width=8,
+                numLines=1,
+                focus=1,
+                cursorKeys=1,
+                text_fg=(1, 1, 1, 1),
+                command=self._typedAName,
+                suppressKeys=1,
+                suppressMouse=1,
+                autoCapitalize=1)
 
     def inputTokenForGuild(self):
-        buttonColor = (
-         (0.33, 0.3, 0.26, 1.0), (0.26, 0.24, 0.21, 1.0), (0.49, 0.45, 0.39, 1.0), (0.16, 0.15, 0.13, 1.0))
+        buttonColor = ((0.33, 0.3, 0.26, 1.0), (0.26, 0.24, 0.21, 1.0),
+                       (0.49, 0.45, 0.39, 1.0), (0.16, 0.15, 0.13, 1.0))
         if self.tokenEntry:
             self.tokenEntry.show()
             self.tokenEntry['focus'] = 1
         else:
-            self.tokenEntry = DirectEntry(parent=self.mainFrame, relief=DGG.RAISED, scale=0.051, pos=(0.24,
-                                                                                                      0,
-                                                                                                      0.637), borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameColor=(1,
-                                                                                                                                                                          1,
-                                                                                                                                                                          1,
-                                                                                                                                                                          0.1), text_align=TextNode.ACenter, width=8, numLines=1, focus=1, cursorKeys=1, text_fg=(1,
-                                                                                                                                                                                                                                                                  1,
-                                                                                                                                                                                                                                                                  1,
-                                                                                                                                                                                                                                                                  1), command=self._typedAToken, suppressKeys=1, suppressMouse=1)
+            self.tokenEntry = DirectEntry(
+                parent=self.mainFrame,
+                relief=DGG.RAISED,
+                scale=0.051,
+                pos=(0.24, 0, 0.637),
+                borderWidth=PiratesGuiGlobals.BorderWidthSmall,
+                frameColor=(1, 1, 1, 0.1),
+                text_align=TextNode.ACenter,
+                width=8,
+                numLines=1,
+                focus=1,
+                cursorKeys=1,
+                text_fg=(1, 1, 1, 1),
+                command=self._typedAToken,
+                suppressKeys=1,
+                suppressMouse=1)
 
     def _typedAName(self, *args):
         self.nameEntry['focus'] = 0
@@ -372,33 +433,38 @@ class GuildPage(SocialPage.SocialPage):
                 label = self.permTokenValue
             else:
                 label = PLocalizer.GuildNoPermInviteCodeSet
-            self.permTokenLabel = DirectLabel(parent=self.tokenFrame, relief=None, text=str(label), text_fg=(0.95,
-                                                                                                             1,
-                                                                                                             1,
-                                                                                                             1), text_align=TextNode.ACenter, text_shadow=(0,
-                                                                                                                                                           0,
-                                                                                                                                                           0,
-                                                                                                                                                           1), text_scale=0.06)
+            self.permTokenLabel = DirectLabel(
+                parent=self.tokenFrame,
+                relief=None,
+                text=str(label),
+                text_fg=(0.95, 1, 1, 1),
+                text_align=TextNode.ACenter,
+                text_shadow=(0, 0, 0, 1),
+                text_scale=0.06)
             self.permTokenLabel.setPos(0.23, 0, 0.57)
         if not self.permTokenLabelTitle:
-            self.permTokenLabelTitle = DirectLabel(parent=self.tokenFrame, relief=None, text=PLocalizer.GuildPermCodeLabel, text_fg=(0.95,
-                                                                                                                                     1,
-                                                                                                                                     1,
-                                                                                                                                     1), text_align=TextNode.ACenter, text_shadow=(0,
-                                                                                                                                                                                   0,
-                                                                                                                                                                                   0,
-                                                                                                                                                                                   1), text_scale=0.04)
+            self.permTokenLabelTitle = DirectLabel(
+                parent=self.tokenFrame,
+                relief=None,
+                text=PLocalizer.GuildPermCodeLabel,
+                text_fg=(0.95, 1, 1, 1),
+                text_align=TextNode.ACenter,
+                text_shadow=(0, 0, 0, 1),
+                text_scale=0.04)
             self.permTokenLabelTitle.setPos(0.23, 0, 0.647)
         self.permTokenLabelTitle.hide()
         if self.permTokenValue and self.permTokenLabel:
             self.permTokenLabel['text'] = self.permTokenValue
             self.permTokenLabelTitle.show()
         if not self.clearPermToken:
-            self.clearPermToken = self.tokenChain.premakeButton(PLocalizer.GuildClearPerm, self.b_clearPermToken)
+            self.clearPermToken = self.tokenChain.premakeButton(
+                PLocalizer.GuildClearPerm, self.b_clearPermToken)
         if not self.clearLimitedUseToken:
-            self.clearLimitedUseToken = self.tokenChain.premakeButton(PLocalizer.GuildClearLimUse, self.b_clearLimitedUseToken)
+            self.clearLimitedUseToken = self.tokenChain.premakeButton(
+                PLocalizer.GuildClearLimUse, self.b_clearLimitedUseToken)
         if not self.tokenManagementToMain:
-            self.tokenManagementToMain = self.tokenChain.premakeButton(PLocalizer.GuildPageRevertGui, self.revertGui)
+            self.tokenManagementToMain = self.tokenChain.premakeButton(
+                PLocalizer.GuildPageRevertGui, self.revertGui)
         self.tokenChain.makeButtons()
         self.tokenFrame.show()
         self.permTokenLabel.show()
@@ -417,23 +483,27 @@ class GuildPage(SocialPage.SocialPage):
         self.tokenFrame.hide()
         self.membersFrame.show()
         if not self.setupMemberPage:
-            self.revertButton = self.memberChain.premakeButton(PLocalizer.GuildPageRevertGui, self.revertGui)
+            self.revertButton = self.memberChain.premakeButton(
+                PLocalizer.GuildPageRevertGui, self.revertGui)
             self.memberChain.makeButtons()
             self.setupMemberPage = True
         else:
             self.membersFrame.show()
         self.membersList.clearMembers()
         for info in memlist:
-            self.membersList.addMember(info[0], None, PirateMemberList.MODE_GUILD, list(info))
+            self.membersList.addMember(info[0], None,
+                                       PirateMemberList.MODE_GUILD, list(info))
 
         return
 
     def addMember(self, info):
-        self.membersList.addMember(info[0], None, PirateMemberList.MODE_GUILD, list(info))
+        self.membersList.addMember(info[0], None, PirateMemberList.MODE_GUILD,
+                                   list(info))
         return
 
     def removeMember(self, avatarId):
-        self.membersList.removeMember(avatarId, None, PirateMemberList.MODE_GUILD)
+        self.membersList.removeMember(avatarId, None,
+                                      PirateMemberList.MODE_GUILD)
         return
 
     def updateGuildMemberRank(self, avatarId, rank):
@@ -444,11 +514,12 @@ class GuildPage(SocialPage.SocialPage):
 
     def notifyTokenGeneratorOfRedeem(self, redeemerName):
         msg = PLocalizer.GuildNotifyTokenCreatorOfRedeem % redeemerName
-        base.localAvatar.guiMgr.messageStack.addTextMessage(msg, seconds=15, priority=0, color=(0.5,
-                                                                                                0.0,
-                                                                                                0,
-                                                                                                1), icon=('friends',
-                                                                                                          ''))
+        base.localAvatar.guiMgr.messageStack.addTextMessage(
+            msg,
+            seconds=15,
+            priority=0,
+            color=(0.5, 0.0, 0, 1),
+            icon=('friends', ''))
 
     def requestPermTokenValue(self):
         pass  # TODO base.cr.guildManager.requestPermToken()

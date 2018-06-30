@@ -26,8 +26,10 @@ class Window(NodePath, ShipPart.ShipPart):
         self.flash = None
         self.textures = None
         if not self.glassBreakSfx:
-            self.glassBreakSfx = (loader.loadSfx('audio/glass_break1.mp3'), loader.loadSfx('audio/glass_break2.mp3'),
-                                  loader.loadSfx('audio/glass_break3.mp3'), loader.loadSfx('audio/explode-w-glass.mp3'))
+            self.glassBreakSfx = (loader.loadSfx('audio/glass_break1.mp3'),
+                                  loader.loadSfx('audio/glass_break2.mp3'),
+                                  loader.loadSfx('audio/glass_break3.mp3'),
+                                  loader.loadSfx('audio/explode-w-glass.mp3'))
 
     def delete(self):
         del self.dna
@@ -123,7 +125,8 @@ class Window(NodePath, ShipPart.ShipPart):
             filePrefix = DecorDNA.DecorDict.get(shipClass)
         return filePrefix
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
+                            targetEffects, pos, normal, codes, attacker):
         print
         'Window Sound'
         sfx = random.choice(self.glassBreakSfx)
@@ -166,7 +169,15 @@ class Window(NodePath, ShipPart.ShipPart):
             self.flash.finish()
             self.flash = None
 
-        self.flash = Sequence(Func(self.hideBaseTexture), Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03), Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03), Func(self.prop.setColorOff), Func(self.showBaseTexture), Wait(0.1), Func(self.hideBaseTexture), Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03), Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03), Func(self.prop.setColorOff), Func(self.showBaseTexture))
+        self.flash = Sequence(
+            Func(self.hideBaseTexture),
+            Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03),
+            Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03),
+            Func(self.prop.setColorOff), Func(self.showBaseTexture), Wait(0.1),
+            Func(self.hideBaseTexture),
+            Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03),
+            Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03),
+            Func(self.prop.setColorOff), Func(self.showBaseTexture))
         self.flash.start()
 
     def hideBaseTexture(self):

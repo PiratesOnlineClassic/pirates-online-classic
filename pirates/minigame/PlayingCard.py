@@ -61,7 +61,8 @@ class PlayingCardNodePath(NodePath, PlayingCardBase):
 
     def setImage(self):
         if self.faceUp:
-            image = PlayingCardGlobals.getImage(self.style, self.suit, self.rank)
+            image = PlayingCardGlobals.getImage(self.style, self.suit,
+                                                self.rank)
         else:
             image = PlayingCardGlobals.getBack(self.style)
         if self.image:
@@ -82,7 +83,8 @@ class PlayingCardButton(PlayingCardBase, DirectButton):
 
     def setImage(self):
         if self.faceUp:
-            image = PlayingCardGlobals.getImage(self.style, self.suit, self.rank)
+            image = PlayingCardGlobals.getImage(self.style, self.suit,
+                                                self.rank)
         else:
             image = PlayingCardGlobals.getBack(self.style)
         self['image'] = image

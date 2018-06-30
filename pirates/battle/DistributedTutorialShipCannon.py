@@ -41,9 +41,15 @@ class DistributedTutorialShipCannon(DistributedShipCannon):
         if self.cannonMoved == 0:
             self.moveCannonPanel = NewTutorialPanel(['moveCannon'])
             self.moveCannonPanel.hide()
-            taskMgr.add(self.watchForCannonMovementTask, self.uniqueName('cannonMoveWatchTask'))
-            taskMgr.doMethodLater(2.0, self.moveCannonPanel.activate, self.uniqueName('moveCannonPanelPause'), extraArgs=[])
-        self.fireCannonPanel = NewTutorialPanel(['fireCannon', '\n', 'wreckInstruction', 1, 2, 3])
+            taskMgr.add(self.watchForCannonMovementTask,
+                        self.uniqueName('cannonMoveWatchTask'))
+            taskMgr.doMethodLater(
+                2.0,
+                self.moveCannonPanel.activate,
+                self.uniqueName('moveCannonPanelPause'),
+                extraArgs=[])
+        self.fireCannonPanel = NewTutorialPanel(
+            ['fireCannon', '\n', 'wreckInstruction', 1, 2, 3])
         self.fireCannonPanel.hide()
 
     def exitFireCannon(self):
@@ -75,7 +81,11 @@ class DistributedTutorialShipCannon(DistributedShipCannon):
             self.moveCannonPanel.hide()
         taskMgr.remove(self.uniqueName('moveCannonPanelPause'))
         taskMgr.remove(self.uniqueName('cannonMoveWatchTask'))
-        taskMgr.doMethodLater(2.0, self.fireCannonPanel.activate, self.uniqueName('fireCannonPanelPause'), extraArgs=[])
+        taskMgr.doMethodLater(
+            2.0,
+            self.fireCannonPanel.activate,
+            self.uniqueName('fireCannonPanelPause'),
+            extraArgs=[])
 
     def watchForCannonMovementTask(self, task):
         dx, dy = localAvatar.cameraFSM.cannonCamera.mouseDelta
@@ -91,4 +101,5 @@ class DistributedTutorialShipCannon(DistributedShipCannon):
             self.cannonExitShown = 1
             self.exitCannonPanel = NewTutorialPanel(['exitCannon'], False)
             self.exitCannonPanel.activate()
-            self.accept(InteractiveBase.END_INTERACT_EVENT, self.handleEndInteractKey)
+            self.accept(InteractiveBase.END_INTERACT_EVENT,
+                        self.handleEndInteractKey)

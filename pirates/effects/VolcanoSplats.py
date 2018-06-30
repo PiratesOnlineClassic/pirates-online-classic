@@ -9,7 +9,6 @@ from pandac.PandaModules import *
 
 class VolcanoSplats(NodePath):
 
-
     def __init__(self):
         NodePath.__init__(self, 'VolcanoSplats')
         self.renderParent = self.attachNewNode('VolcanoSplats-renderParent')
@@ -39,7 +38,8 @@ class VolcanoSplats(NodePath):
         self.p0.factory.setAngularVelocitySpread(36.0)
         self.p0.renderer.setAlphaMode(BaseParticleRenderer.PRALPHAUSER)
         self.p0.renderer.setUserAlpha(0.35)
-        self.p0.renderer.setTextureFromNode('models/effects/particleMaps', '**/particleVolcanoLava')
+        self.p0.renderer.setTextureFromNode('models/effects/particleMaps',
+                                            '**/particleVolcanoLava')
         self.p0.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
         self.p0.renderer.setXScaleFlag(1)
         self.p0.renderer.setYScaleFlag(1)
@@ -51,9 +51,13 @@ class VolcanoSplats(NodePath):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.55, 0.75, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0))
-        self.p0.renderer.getColorInterpolationManager().addConstant(0.75, 1.0, Vec4(1.0, 1.0, 1.0, 0.0))
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingAlpha,
+                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.55, 0.75, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0))
+        self.p0.renderer.getColorInterpolationManager().addConstant(
+            0.75, 1.0, Vec4(1.0, 1.0, 1.0, 0.0))
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -101,13 +105,18 @@ class VolcanoSplats(NodePath):
         self.p0.renderer.setInitialYScale(7.0 * scale)
         self.p0.renderer.setFinalYScale(15.0 * scale)
         self.p0.emitter.setRadius(120 * scale)
-        self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 60.0 * (6 - 1 / scale) / 5))
+        self.p0.emitter.setOffsetForce(
+            Vec3(0.0, 0.0, 60.0 * (6 - 1 / scale) / 5))
 
     def getEruptionSeq(self):
         if not self.seq:
-            self.seq = Sequence(Func(self.p0.setBirthRate, 0.2), Func(self.p0.clearToInitial), Wait(3), Func(self.p0.setBirthRate, 10000))
+            self.seq = Sequence(
+                Func(self.p0.setBirthRate, 0.2), Func(self.p0.clearToInitial),
+                Wait(3), Func(self.p0.setBirthRate, 10000))
         return self.seq
 
     def isEnabled(self):
         return self.f.isEnabled()
+
+
 # okay decompiling .\pirates\effects\VolcanoSplats.pyc

@@ -7,8 +7,9 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class DustRing(PooledEffect, EffectController):
-    
+
     cardScale = 64.0
 
     def __init__(self):
@@ -17,7 +18,8 @@ class DustRing(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleSmoke')
         if not DustRing.particleDummy:
-            DustRing.particleDummy = render.attachNewNode(ModelNode('DustRingParticleDummy'))
+            DustRing.particleDummy = render.attachNewNode(
+                ModelNode('DustRingParticleDummy'))
             DustRing.particleDummy.setDepthWrite(0)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
@@ -65,7 +67,12 @@ class DustRing(PooledEffect, EffectController):
         self.p0.emitter.setRadius(2.0)
 
     def createTrack(self):
-        self.track = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.1), Func(self.p0.setBirthRate, 100), Wait(4.0), Func(self.cleanUpEffect))
+        self.track = Sequence(
+            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self), Wait(0.1),
+            Func(self.p0.setBirthRate, 100), Wait(4.0),
+            Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

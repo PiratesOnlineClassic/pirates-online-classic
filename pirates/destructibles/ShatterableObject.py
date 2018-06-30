@@ -7,6 +7,7 @@ from pirates.effects.ProjectileArc import ProjectileArc
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase.PiratesGlobals import *
 
+
 class ShatterableObject(DirectObject):
 
     def __init__(self):
@@ -33,7 +34,8 @@ class ShatterableObject(DirectObject):
         del self.debrisB
         del self.intervals
 
-    def initializeDebris(self, wantHidden=0, wantRotate=1, wantColl=0, bounce=0):
+    def initializeDebris(self, wantHidden=0, wantRotate=1, wantColl=0,
+                         bounce=0):
         self.wantHidden = wantHidden
         self.wantRotate = wantRotate
         self.wantColl = wantColl
@@ -68,9 +70,12 @@ class ShatterableObject(DirectObject):
             self.debrisA[i].show()
 
         for i in range(len(self.debrisB)):
-            self.debrisB[i].setPos(self.getDebrisParent(), self.resetPos[i + len(self.debrisA)])
-            self.debrisB[i].setHpr(self.getDebrisParent(), self.resetHpr[i + len(self.debrisA)])
-            self.debrisB[i].setScale(self.getDebrisParent(), self.resetScale[i + len(self.debrisA)])
+            self.debrisB[i].setPos(self.getDebrisParent(),
+                                   self.resetPos[i + len(self.debrisA)])
+            self.debrisB[i].setHpr(self.getDebrisParent(),
+                                   self.resetHpr[i + len(self.debrisA)])
+            self.debrisB[i].setScale(self.getDebrisParent(),
+                                     self.resetScale[i + len(self.debrisA)])
             self.debrisB[i].show()
 
         if self.wantHidden:
@@ -97,7 +102,9 @@ class ShatterableObject(DirectObject):
     def breakMe(self, debrisNode):
         projDummy = ProjectileArc(self.wantRotate, self.wantColl)
         projDummy.reparentTo(self.prop)
-        projDummy.startVel = Vec3(random.uniform(-60, 60), random.uniform(-60, 60), random.uniform(30, 100))
+        projDummy.startVel = Vec3(
+            random.uniform(-60, 60), random.uniform(-60, 60),
+            random.uniform(30, 100))
         projDummy.gravityMult = 4.0
         projDummy.rotateMin = 30
         projDummy.rotateMax = 200
@@ -110,7 +117,9 @@ class ShatterableObject(DirectObject):
         debrisNode.setPos(0, 0, 0)
         debrisNode.setHpr(0, 0, 0)
         projDummy.startPos = projDummy.transNode.getPos(self.prop)
-        shatterSeq = Sequence(Func(projDummy.play), Wait(10.0), Func(debrisNode.reparentTo, debrisParent), Func(debrisNode.hide))
+        shatterSeq = Sequence(
+            Func(projDummy.play), Wait(10.0),
+            Func(debrisNode.reparentTo, debrisParent), Func(debrisNode.hide))
         self.intervals.append(shatterSeq)
         shatterSeq.start()
 

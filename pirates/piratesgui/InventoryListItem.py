@@ -17,7 +17,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class InventoryListItem(DirectButton):
-    
+
     width = 0
     height = 0
     guiLoaded = False
@@ -28,7 +28,16 @@ class InventoryListItem(DirectButton):
     weaponIcons = None
     skillIcons = None
 
-    def __init__(self, data, trade=0, buy=0, sell=0, use=0, weapon=0, isDisabled=0, width=0, height=0):
+    def __init__(self,
+                 data,
+                 trade=0,
+                 buy=0,
+                 sell=0,
+                 use=0,
+                 weapon=0,
+                 isDisabled=0,
+                 width=0,
+                 height=0):
         self.width = width
         self.height = height
         self.data = data
@@ -49,9 +58,12 @@ class InventoryListItem(DirectButton):
         if InventoryListItem.guiLoaded:
             return
         InventoryListItem.topGui = loader.loadModel('models/gui/toplevel_gui')
-        InventoryListItem.coinImage = InventoryListItem.topGui.find('**/treasure_w_coin*')
-        InventoryListItem.weaponIcons = loader.loadModel('models/textureCards/weapon_icons')
-        InventoryListItem.skillIcons = loader.loadModel('models/textureCards/skillIcons')
+        InventoryListItem.coinImage = InventoryListItem.topGui.find(
+            '**/treasure_w_coin*')
+        InventoryListItem.weaponIcons = loader.loadModel(
+            'models/textureCards/weapon_icons')
+        InventoryListItem.skillIcons = loader.loadModel(
+            'models/textureCards/skillIcons')
         InventoryListItem.guiLoaded = True
 
     def loadData(self):
@@ -89,17 +101,16 @@ class InventoryListItem(DirectButton):
 
     def sendEvents(self):
         if self.trade:
-            messenger.send(PiratesGuiGlobals.InventoryTradeEvent, [
-             self.data, self.trade])
+            messenger.send(PiratesGuiGlobals.InventoryTradeEvent,
+                           [self.data, self.trade])
         if self.buy:
-            messenger.send(PiratesGuiGlobals.InventoryBuyEvent, [
-             self.data, self.buy])
+            messenger.send(PiratesGuiGlobals.InventoryBuyEvent,
+                           [self.data, self.buy])
         if self.sell:
-            messenger.send(PiratesGuiGlobals.InventorySellEvent, [
-             self.data, self.sell])
+            messenger.send(PiratesGuiGlobals.InventorySellEvent,
+                           [self.data, self.sell])
         if self.use:
-            messenger.send(PiratesGuiGlobals.InventoryUseEvent, [
-             self.data])
+            messenger.send(PiratesGuiGlobals.InventoryUseEvent, [self.data])
 
     def bringToFront(self):
         self.reparentTo(self.getParent())
@@ -107,4 +118,6 @@ class InventoryListItem(DirectButton):
     def equipWeapon(self, event):
         if base.localAvatar.guiMgr.weaponPage.equipStatus > 0:
             base.localAvatar.guiMgr.weaponPage.equipWeapon(self.data[0])
+
+
 # okay decompiling .\pirates\piratesgui\InventoryListItem.pyc

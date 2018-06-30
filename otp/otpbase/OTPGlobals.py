@@ -59,11 +59,11 @@ DisconnectReasons = {
     DisconnectCloseWindow: 'closed window',
     DisconnectPythonError: 'python error',
     DisconnectSwitchShards: 'switch shards',
-    DisconnectGraphicsError: 'graphics error'}
+    DisconnectGraphicsError: 'graphics error'
+}
 DatabaseDialogTimeout = 20.0
 DatabaseGiveupTimeout = 45.0
-PeriodTimerWarningTime = (
-    600, 300, 60)
+PeriodTimerWarningTime = (600, 300, 60)
 WalkCutOff = 0.5
 RunCutOff = 8.0
 FloorOffset = 0.025
@@ -218,10 +218,8 @@ QuestsHotkeyOff = 'end-up'
 InventoryHotkeyOn = 'home'
 InventoryHotkeyOff = 'home-up'
 PrintCamPosHotkey = 'f12'
-GlobalDialogColor = (
-    1, 1, 0.75, 1)
-DefaultBackgroundColor = (
-    0.3, 0.3, 0.3, 1)
+GlobalDialogColor = (1, 1, 0.75, 1)
+DefaultBackgroundColor = (0.3, 0.3, 0.3, 1)
 toonBodyScales = {
     'mouse': 0.6,
     'cat': 0.73,
@@ -231,7 +229,8 @@ toonBodyScales = {
     'dog': 0.85,
     'monkey': 0.68,
     'bear': 0.85,
-    'pig': 0.77}
+    'pig': 0.77
+}
 toonHeadScales = {
     'mouse': Point3(1.0),
     'cat': Point3(1.0),
@@ -241,7 +240,8 @@ toonHeadScales = {
     'dog': Point3(1.0),
     'monkey': Point3(1.0),
     'bear': Point3(1.0),
-    'pig': Point3(1.0)}
+    'pig': Point3(1.0)
+}
 legHeightDict = {'s': 1.5, 'm': 2.0, 'l': 2.75}
 torsoHeightDict = {
     's': 1.5,
@@ -252,7 +252,8 @@ torsoHeightDict = {
     'ls': 2.25,
     'sd': 1.5,
     'md': 1.75,
-    'ld': 2.25}
+    'ld': 2.25
+}
 headHeightDict = {
     'dls': 0.75,
     'dss': 0.5,
@@ -287,7 +288,8 @@ headHeightDict = {
     'sls': 0.75,
     'sss': 0.5,
     'ssl': 0.5,
-    'sll': 0.75}
+    'sll': 0.75
+}
 RandomButton = 'Randomize'
 TypeANameButton = 'Type Name'
 PickANameButton = 'Pick-A-Name'
@@ -311,18 +313,9 @@ PeriodOnlyAfterLetter = 'You can use a period in your name, but only after a let
 ApostropheOnlyAfterLetter = 'You can use an apostrophe in your name, but only after a letter.'
 NoNumbersInTheMiddle = 'Numeric digits may not appear in the middle of a word.'
 ThreeWordsOrLess = 'Your name must be three words or fewer.'
-CopyrightedNames = (
-    'mickey',
-    'mickey mouse',
-    'mickeymouse',
-    'minnie',
-    'minnie mouse',
-    'minniemouse',
-    'donald',
-    'donald duck',
-    'donaldduck',
-    'pluto',
-    'goofy')
+CopyrightedNames = ('mickey', 'mickey mouse', 'mickeymouse', 'minnie',
+                    'minnie mouse', 'minniemouse', 'donald', 'donald duck',
+                    'donaldduck', 'pluto', 'goofy')
 GuildUpdateMembersEvent = 'guildUpdateMembersEvent'
 GuildInvitationEvent = 'guildInvitationEvent'
 GuildAcceptInviteEvent = 'guildAcceptInviteEvent'

@@ -2,10 +2,12 @@ from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 from pirates.uberdog.UberDogGlobals import (InventoryCategory, InventoryId,
-    InventoryType, getSkillCategory)
+                                            InventoryType, getSkillCategory)
+
 
 class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedInventoryAI')
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
@@ -19,7 +21,9 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         DistributedObjectAI.announceGenerate(self)
 
     def setCategoryLimits(self, categoriesAndLimits):
-        self.categoryLimits = {category: limit for category, limit in categoriesAndLimits}
+        self.categoryLimits = {
+            category: limit for category, limit in categoriesAndLimits
+        }
 
     def d_setCategoryLimits(self, categoriesAndLimits):
         self.sendUpdate('setCategoryLimits', [categoriesAndLimits])
@@ -29,7 +33,8 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setCategoryLimits(self.getCategoryLimits())
 
     def getCategoryLimits(self):
-        return [[category, limit] for category, limit in self.categoryLimits.items()]
+        return [[category, limit]
+                for category, limit in self.categoryLimits.items()]
 
     def setDoIds(self, categoriesAndDoIds):
         self.doIds = {doId: category for category, doId in categoriesAndDoIds}
@@ -60,10 +65,13 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setAccumulators(self.getAccumulators())
 
     def getAccumulators(self):
-        return [[accumulatorType, quantity] for accumulatorType, quantity in self.accumulators.items()]
+        return [[accumulatorType, quantity]
+                for accumulatorType, quantity in self.accumulators.items()]
 
     def setStackLimits(self, stackTypesAndLimits):
-        self.stackLimits = {stackType: limit for stackType, limit in stackTypesAndLimits}
+        self.stackLimits = {
+            stackType: limit for stackType, limit in stackTypesAndLimits
+        }
 
     def d_setStackLimits(self, stackTypesAndLimits):
         self.sendUpdate('setStackLimits', [stackTypesAndLimits])
@@ -73,10 +81,15 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setStackLimits(self.getStackLimits())
 
     def getStackLimits(self):
-        return [[stackType, limit] for stackType, limit in self.stackLimits.items()]
+        return [
+            [stackType, limit] for stackType, limit in self.stackLimits.items()
+        ]
 
     def setStacks(self, stackTypesAndQuantities):
-        self.stacks = {stackType: quantity for stackType, quantity in stackTypesAndQuantities}
+        self.stacks = {
+            stackType: quantity
+            for stackType, quantity in stackTypesAndQuantities
+        }
 
         for stackType, quantity in stackTypesAndQuantities:
             category = InventoryId.getCategory(stackType)
@@ -91,14 +104,16 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setStacks(self.getStacks())
 
     def getStacks(self):
-        return [[stackType, quantity] for stackType, quantity in self.stacks.items()]
+        return [[stackType, quantity]
+                for stackType, quantity in self.stacks.items()]
 
     def setAccumulator(self, accumulatorType, quantity):
         self.accumulators[accumulatorType] = quantity
         self.d_setAccumulators(self.getAccumulators())
 
     def d_setAccumulator(self, accumulatorType, quantity):
-        self.sendUpdateToAvatarId(self.ownerId, 'accumulator', [accumulatorType, quantity])
+        self.sendUpdateToAvatarId(self.ownerId, 'accumulator',
+                                  [accumulatorType, quantity])
 
     def b_setAccumulator(self, accumulatorType, quantity):
         self.setAccumulator(accumulatorType, quantity)
@@ -109,7 +124,8 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setStackLimits(self.getStackLimits())
 
     def d_setStackLimit(self, stackType, limit):
-        self.sendUpdateToAvatarId(self.ownerId, 'stackLimit', [stackType, limit])
+        self.sendUpdateToAvatarId(self.ownerId, 'stackLimit',
+                                  [stackType, limit])
 
     def b_setStackLimit(self, stackType, limit):
         self.setStackLimit(stackType, limit)
@@ -167,10 +183,12 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         return limit > (stored + amount)
 
     def d_setTemporaryInventory(self, temporaryInventory):
-        self.sendUpdateToAvatarId(self.ownerId, 'setTemporaryInventory', [temporaryInventory])
+        self.sendUpdateToAvatarId(self.ownerId, 'setTemporaryInventory',
+                                  [temporaryInventory])
 
     def d_setTemporaryStack(self, stackType, amount):
-        self.sendUpdateToAvatarId(self.ownerId, 'setTemporaryStack', [stackType, amount])
+        self.sendUpdateToAvatarId(self.ownerId, 'setTemporaryStack',
+                                  [stackType, amount])
 
     def sendMaxHp(self, limit, avId):
         avatar = self.air.doId2do.get(self.ownerId)
@@ -197,7 +215,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
             return
 
         self.notify.warning('No valid callback for a callback response!'
-            'What was the purpose of that?')
+                            'What was the purpose of that?')
 
     def delete(self):
         self.air.inventoryManager.removeInventory(self)

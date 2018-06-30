@@ -15,7 +15,8 @@ from pirates.effects.PooledEffect import PooledEffect
 class WakeMist(PooledEffect, EffectController):
 
     cardScale = 64.0
-    splashSfxNames = ('wtrsplash_1.mp3', 'wtrsplash_2.mp3', 'wtrsplash_3.mp3', 'wtrsplash_4.mp3')
+    splashSfxNames = ('wtrsplash_1.mp3', 'wtrsplash_2.mp3', 'wtrsplash_3.mp3',
+                      'wtrsplash_4.mp3')
     splashSfx = []
 
     def __init__(self):
@@ -28,7 +29,8 @@ class WakeMist(PooledEffect, EffectController):
                 self.splashSfx.append(base.loader.loadSfx('audio/' + filename))
 
         if not WakeMist.particleDummy:
-            WakeMist.particleDummy = render.attachNewNode(ModelNode('WakeMistParticleDummy'))
+            WakeMist.particleDummy = render.attachNewNode(
+                ModelNode('WakeMistParticleDummy'))
             WakeMist.particleDummy.setDepthWrite(0)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
@@ -88,7 +90,11 @@ class WakeMist(PooledEffect, EffectController):
 
     def createTrack(self, rate=1):
         sfx = random.choice(self.splashSfx)
-        particleSpray = Sequence(Func(self.p0.setBirthRate, 0.15), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.3), Func(self.p0.setBirthRate, 8), Wait(4.0), Func(self.cleanUpEffect))
+        particleSpray = Sequence(
+            Func(self.p0.setBirthRate, 0.15), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self), Wait(0.3),
+            Func(self.p0.setBirthRate, 8), Wait(4.0), Func(self.cleanUpEffect))
         self.track = Parallel(particleSpray, Func(base.playSfx, sfx, node=self))
 
     def cleanUpEffect(self):
@@ -99,4 +105,6 @@ class WakeMist(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\WakeMist.pyc

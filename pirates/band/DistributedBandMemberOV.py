@@ -8,7 +8,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 
 class DistributedBandMemberOV(DistributedObjectOV.DistributedObjectOV):
-    
+
     notify = directNotify.newCategory('PirateBand')
 
     def __init__(self, cr):
@@ -52,7 +52,9 @@ class DistributedBandMemberOV(DistributedObjectOV.DistributedObjectOV):
         return
 
     def d_setSCQuestChat(self, questInt, msgType, taskNum):
-        self.sendUpdate('setSCQuestChat', [base.localAvatar.getDoId(), questInt, msgType, taskNum])
+        self.sendUpdate(
+            'setSCQuestChat',
+            [base.localAvatar.getDoId(), questInt, msgType, taskNum])
 
     def b_setSCQuestChat(self, questInt, msgType, taskNum):
         localObj = self.cr.doId2do.get(self.doId, None)
@@ -63,9 +65,14 @@ class DistributedBandMemberOV(DistributedObjectOV.DistributedObjectOV):
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
     def teleportQuery(self, requesterId, requesterShardId):
-        self.cr.teleportMgr.handleAvatarTeleportQuery(requesterId, requesterShardId)
+        self.cr.teleportMgr.handleAvatarTeleportQuery(requesterId,
+                                                      requesterShardId)
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
-    def teleportResponse(self, responderId, available, shardId, instanceDoId, areaDoId):
-        self.cr.teleportMgr.handleAvatarTeleportResponse(responderId, available, shardId, instanceDoId, areaDoId)
+    def teleportResponse(self, responderId, available, shardId, instanceDoId,
+                         areaDoId):
+        self.cr.teleportMgr.handleAvatarTeleportResponse(
+            responderId, available, shardId, instanceDoId, areaDoId)
+
+
 # okay decompiling .\pirates\band\DistributedBandMemberOV.pyc

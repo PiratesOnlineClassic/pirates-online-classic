@@ -1,6 +1,7 @@
-MINIMUM_MAGICWORD_ACCESS = 200
 from direct.showbase.PythonUtil import describeException
 
+
+MINIMUM_MAGICWORD_ACCESS = 200
 
 class MagicError(Exception):
     pass
@@ -86,6 +87,7 @@ spellbook = Spellbook()
 
 # CATEGORIES
 class MagicWordCategory:
+
     def __init__(self, name, access):
         self.name = name
         self.access = access
@@ -100,6 +102,7 @@ CATEGORY_SYSTEM_ADMIN = MagicWordCategory('System Admin commands', 600)
 
 
 class MagicWord:
+
     def __init__(self, name, func, types, access, doc):
         self.name = name
         self.func = func
@@ -114,18 +117,16 @@ class MagicWord:
 
         args = string.split(None, maxArgs - 1)[:maxArgs]
         if len(args) < minArgs:
-            raise MagicError(
-                'Magic word %s requires at least %d arguments' %
-                (self.name, minArgs))
+            raise MagicError('Magic word %s requires at least %d arguments' %
+                             (self.name, minArgs))
 
         output = []
         for i, (type, arg) in enumerate(zip(self.types, args)):
             try:
                 targ = type(arg)
             except (TypeError, ValueError):
-                raise MagicError(
-                    'Argument %d of magic word %s must be %s' %
-                    (i, self.name, type.__name__))
+                raise MagicError('Argument %d of magic word %s must be %s' %
+                                 (i, self.name, type.__name__))
 
             output.append(targ)
 

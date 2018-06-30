@@ -15,14 +15,16 @@ from pirates.effects.PooledEffect import PooledEffect
 
 DebrisDict = {'0': 'models/props/testBoard', '1': 'models/props/testBoard'}
 
+
 class ShipDebris(PooledEffect):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
         self.collSphereRadius = 2.0
         self.startPos = Vec3(0, 0, 0)
-        self.startVel = Vec3(random.uniform(-25, 25), random.uniform(20, 140), random.uniform(10, 120))
+        self.startVel = Vec3(
+            random.uniform(-25, 25), random.uniform(20, 140),
+            random.uniform(10, 120))
         self.endPlaneZ = -10
         self.transNode = self.attachNewNode('trans')
         filePrefix = DebrisDict.get(str(random.randint(0, 1)))
@@ -41,14 +43,24 @@ class ShipDebris(PooledEffect):
         self.createTrack()
 
     def createTrack(self, rate=1):
-        playProjectile = ProjectileInterval(self.transNode, startPos=self.startPos, startVel=self.startVel, endZ=self.endPlaneZ, gravityMult=4.0)
+        playProjectile = ProjectileInterval(
+            self.transNode,
+            startPos=self.startPos,
+            startVel=self.startVel,
+            endZ=self.endPlaneZ,
+            gravityMult=4.0)
         randomNumX = random.uniform(360, 2880)
         randomNumY = random.uniform(360, 2880)
         randomNumZ = random.uniform(360, 2880)
-        self.playRotate = self.debris.hprInterval(6, Point3(randomNumX, randomNumY, randomNumZ))
-        enableColl = Sequence(Wait(0.2), Func(self.cnode.setFromCollideMask, PiratesGlobals.TargetBitmask))
+        self.playRotate = self.debris.hprInterval(
+            6, Point3(randomNumX, randomNumY, randomNumZ))
+        enableColl = Sequence(
+            Wait(0.2),
+            Func(self.cnode.setFromCollideMask, PiratesGlobals.TargetBitmask))
         playDebris = Parallel(playProjectile, enableColl)
-        self.track = Sequence(Func(self.transNode.reparentTo, self), playDebris, Func(self.cleanUpEffect))
+        self.track = Sequence(
+            Func(self.transNode.reparentTo, self), playDebris,
+            Func(self.cleanUpEffect))
 
     def play(self, rate=1):
         if self.startPos[2] > self.endPlaneZ:
@@ -95,7 +107,8 @@ class ShipDebris(PooledEffect):
         if objType == PiratesGlobals.COLL_SEA and base.cr.wantSpecialEffects:
             pos = entry.getSurfacePoint(render)
             if base.cr.activeWorld.getWater():
-                entryWaterHeight = base.cr.activeWorld.getWater().calcHeight(pos[0], pos[1]) + 7.0
+                entryWaterHeight = base.cr.activeWorld.getWater().calcHeight(
+                    pos[0], pos[1]) + 7.0
             else:
                 entryWaterHeight = pos[2]
             splashEffect = SmallSplash.getEffect()
@@ -112,5 +125,8 @@ class ShipDebris(PooledEffect):
                     dustRingEffect.reparentTo(render)
                     dustRingEffect.setPos(pos)
                     dustRingEffect.play()
-                self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
+                self.cnode.setFromCollideMask(
+                    PiratesGlobals.TargetBitmask.allOff())
+
+
 # okay decompiling .\pirates\effects\ShipDebris.pyc

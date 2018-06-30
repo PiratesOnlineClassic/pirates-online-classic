@@ -2,6 +2,7 @@ import math
 
 from direct.showbase.PythonUtil import pivotScalar, rad90, rad270, reduceAngle
 
+
 class ShipRockerOffState:
 
     def getRollAngle(self):
@@ -30,7 +31,8 @@ class ShipRockerImpactState:
 
     def getRollAngle(self):
         theta = rad90 * (self.getT() / self.duration)
-        return self.startRoll + (self.targetRoll - self.startRoll) * math.sin(theta)
+        return self.startRoll + (
+            self.targetRoll - self.startRoll) * math.sin(theta)
 
     def getRollVelocity(self):
         theta = rad90 * (self.getT() / self.duration)
@@ -63,7 +65,8 @@ class ShipRockerRollState:
     def getRollVelocity(self):
         t = self.getT()
         theta = self.thetaBase + self.timeScale * t
-        return self.amplitude * self.timeScale * math.cos(theta) * (1.0 - t / self.duration)
+        return self.amplitude * self.timeScale * math.cos(theta) * (
+            1.0 - t / self.duration)
 
     def getRollTarget(self):
         target = self.amplitude * (1.0 - self.getT() / self.duration)
@@ -73,7 +76,7 @@ class ShipRockerRollState:
 
 
 class ShipRocker:
-    
+
     DefMaxRoll = 15.0
     DefFakeMass = 1.0
 
@@ -131,7 +134,11 @@ class ShipRocker:
         newRoll = 0.1 * curRollTarget + roll
         newRoll = clampScalar(newRoll, self._maxRoll, -self._maxRoll)
         impactDur = 0.05 * abs(newRoll - curRoll) * self._fakeMass
-        self._impact.set(timebase=curTime, duration=impactDur, startRoll=curRoll, targetRoll=newRoll)
+        self._impact.set(
+            timebase=curTime,
+            duration=impactDur,
+            startRoll=curRoll,
+            targetRoll=newRoll)
         amplitude = abs(newRoll)
         timeScale = 3.0 / self._fakeMass
         rollDur = amplitude / timeScale / ((self._fakeMass + 1.0) * 0.5)
@@ -139,5 +146,10 @@ class ShipRocker:
             thetaBase = rad90
         else:
             thetaBase = rad270
-        self._roll.set(timebase=curTime + impactDur, duration=rollDur, timeScale=timeScale, amplitude=amplitude, thetaBase=thetaBase)
+        self._roll.set(
+            timebase=curTime + impactDur,
+            duration=rollDur,
+            timeScale=timeScale,
+            amplitude=amplitude,
+            thetaBase=thetaBase)
         self._active = True

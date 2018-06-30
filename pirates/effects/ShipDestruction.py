@@ -14,8 +14,8 @@ from pirates.effects.PooledEffect import PooledEffect
 
 ObjectDict = {'0': 'models/props/testBoard', '1': 'models/props/testBoard'}
 
+
 class ShipDestruction(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -37,10 +37,23 @@ class ShipDestruction(PooledEffect, EffectController):
         self.objIvals = Parallel()
         for obj in self.objects:
             obj.setScale(self.effectScale * random.uniform(6, 10) / 10.0)
-            startPosition = Vec3(self.effectScale * random.uniform(0, 25), self.effectScale * random.uniform(-5, 5), self.effectScale * random.uniform(-5, 5))
-            startVelocity = Vec3(self.effectScale * random.uniform(-20, 20), self.effectScale * random.uniform(-20, 20), self.effectScale * random.uniform(20, 80))
-            projectileIval = ProjectileInterval(obj, startPos=startPosition, startVel=startVelocity, endZ=-25 * self.effectScale, gravityMult=4.0)
-            rotationIval = obj.hprInterval(6, Point3(random.uniform(360, 2880), random.uniform(360, 2880), random.uniform(360, 2880)))
+            startPosition = Vec3(self.effectScale * random.uniform(0, 25),
+                                 self.effectScale * random.uniform(-5, 5),
+                                 self.effectScale * random.uniform(-5, 5))
+            startVelocity = Vec3(self.effectScale * random.uniform(-20, 20),
+                                 self.effectScale * random.uniform(-20, 20),
+                                 self.effectScale * random.uniform(20, 80))
+            projectileIval = ProjectileInterval(
+                obj,
+                startPos=startPosition,
+                startVel=startVelocity,
+                endZ=-25 * self.effectScale,
+                gravityMult=4.0)
+            rotationIval = obj.hprInterval(
+                6,
+                Point3(
+                    random.uniform(360, 2880), random.uniform(360, 2880),
+                    random.uniform(360, 2880)))
             objIval = Parallel(projectileIval, rotationIval)
             self.objIvals.append(objIval)
 
@@ -57,4 +70,6 @@ class ShipDestruction(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\ShipDestruction.pyc

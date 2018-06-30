@@ -17,7 +17,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class SplitBase:
-    
 
     def deleteSplitDisplay(self, node):
         if node:
@@ -33,7 +32,6 @@ class SplitBase:
 
 
 class BlackjackStatusPanel(DirectFrame, SplitBase):
-    
 
     def __init__(self, maxHandCards):
         DirectFrame.__init__(self, parent=base.a2dBackground, relief=DGG.FLAT)
@@ -48,46 +46,59 @@ class BlackjackStatusPanel(DirectFrame, SplitBase):
         self.cardScaler.setScale(0.5)
         for i in range(maxHandCards):
             left = 0.06 * maxHandCards * 0.5
-            card = PlayingCard.PlayingCardNodePath('standard', PlayingCardGlobals.Unknown)
+            card = PlayingCard.PlayingCardNodePath('standard',
+                                                   PlayingCardGlobals.Unknown)
             card.reparentTo(self.cardScaler)
             card.setPos(i * 0.06 - left, 0, 0)
             card.hide()
             self.hand.append(card)
 
-        self.actionLabel = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ACenter, text_scale=0.04, pos=(0,
-                                                                                                                             0,
-                                                                                                                             0.15), text_fg=(1,
-                                                                                                                                             1,
-                                                                                                                                             1,
-                                                                                                                                             1), text_shadow=(0,
-                                                                                                                                                              0,
-                                                                                                                                                              0,
-                                                                                                                                                              1))
-        self.handNameLabel = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ACenter, text_scale=0.04, pos=(0, 0, -0.13), text_fg=(1,
-                                                                                                                                                      1,
-                                                                                                                                                      1,
-                                                                                                                                                      1), text_shadow=(0,
-                                                                                                                                                                       0,
-                                                                                                                                                                       0,
-                                                                                                                                                                       1))
-        self.splitLabel = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ACenter, text_scale=0.04, pos=(0, 0, -0.17), text_fg=(1,
-                                                                                                                                                   1,
-                                                                                                                                                   1,
-                                                                                                                                                   1), text_shadow=(0,
-                                                                                                                                                                    0,
-                                                                                                                                                                    0,
-                                                                                                                                                                    1))
-        self.handsLabel = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ACenter, text_scale=0.04, pos=(0, 0, -0.21), text_fg=(1,
-                                                                                                                                                   1,
-                                                                                                                                                   1,
-                                                                                                                                                   1), text_shadow=(0,
-                                                                                                                                                                    0,
-                                                                                                                                                                    0,
-                                                                                                                                                                    1))
+        self.actionLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            text='',
+            text_align=TextNode.ACenter,
+            text_scale=0.04,
+            pos=(0, 0, 0.15),
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1))
+        self.handNameLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            text='',
+            text_align=TextNode.ACenter,
+            text_scale=0.04,
+            pos=(0, 0, -0.13),
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1))
+        self.splitLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            text='',
+            text_align=TextNode.ACenter,
+            text_scale=0.04,
+            pos=(0, 0, -0.17),
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1))
+        self.handsLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            text='',
+            text_align=TextNode.ACenter,
+            text_scale=0.04,
+            pos=(0, 0, -0.21),
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1))
         self.handsLabel.cardArray = []
         self.handsLabel.labelArray = []
         self.actionLabel.setTransparency(1)
-        self.fadeActionLabel = Sequence(Func(self.actionLabel.show), LerpColorScaleInterval(self.actionLabel, 0.1, Vec4(1, 1, 1, 1), Vec4(1, 1, 1, 0)), Wait(3.0), LerpColorScaleInterval(self.actionLabel, 0.5, Vec4(1, 1, 1, 0), Vec4(1, 1, 1, 1)), Func(self.actionLabel.hide))
+        self.fadeActionLabel = Sequence(
+            Func(self.actionLabel.show),
+            LerpColorScaleInterval(self.actionLabel, 0.1, Vec4(1, 1, 1, 1),
+                                   Vec4(1, 1, 1, 0)), Wait(3.0),
+            LerpColorScaleInterval(self.actionLabel, 0.5, Vec4(1, 1, 1, 0),
+                                   Vec4(1, 1, 1, 1)),
+            Func(self.actionLabel.hide))
         return
 
     def destroy(self):
@@ -115,9 +126,10 @@ class BlackjackStatusPanel(DirectFrame, SplitBase):
 
 
 class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
-    
-    HandPos = (
-     Vec3(0, 0, 0.4), Vec3(0.38, 0, 0.33), Vec3(0.65, 0, 0.1), Vec3(0.45, 0, -0.26), Vec3(0, 0, -0.3), Vec3(-0.45, 0, -0.26), Vec3(-0.65, 0, 0.1), Vec3(-0.38, 0, 0.33))
+
+    HandPos = (Vec3(0, 0, 0.4), Vec3(0.38, 0, 0.33), Vec3(0.65, 0, 0.1),
+               Vec3(0.45, 0, -0.26), Vec3(0, 0, -0.3), Vec3(-0.45, 0, -0.26),
+               Vec3(-0.65, 0, 0.1), Vec3(-0.38, 0, 0.33))
     LocalAvatarGuiIndex = 4
 
     def sliderValueToBid(self, value):
@@ -134,21 +146,37 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
     def y_to_gui_coordinate(self, y):
         return self.height - y * self.height
 
-    def create_slider(self, update_function, default_value, x, y, resolution, label, parent):
+    def create_slider(self, update_function, default_value, x, y, resolution,
+                      label, parent):
         slider_x = self.x_to_gui_coordinate(x)
         slider_y = self.y_to_gui_coordinate(y)
 
         def update_slider(slider, update_function):
-            string = slider.label + '  (%d)' % self.sliderValueToBid(slider['value'])
+            string = slider.label + '  (%d)' % self.sliderValueToBid(
+                slider['value'])
             slider['text'] = string
             update_function(slider['value'])
 
         charGui = loader.loadModel('models/gui/char_gui')
-        slider = DirectSlider(parent=parent, relief=None, command=update_slider, image=charGui.find('**/chargui_slider_small'), image_scale=(2.15,
-                                                                                                                                             2.15,
-                                                                                                                                             1.5), thumb_relief=None, thumb_image=(charGui.find('**/chargui_slider_node'), charGui.find('**/chargui_slider_node_down'), charGui.find('**/chargui_slider_node_over')), pos=(slider_x, 0.0, slider_y), text_align=TextNode.ACenter, text_scale=(0.1,
-                                                                                                                                                                                                                                                                                                                                                                                              0.1), text_pos=(0.0,
-                                                                                                                                                                                                                                                                                                                                                                                                              0.1), text_fg=PiratesGuiGlobals.TextFG1, scale=0.43, pageSize=resolution, text='default', value=default_value)
+        slider = DirectSlider(
+            parent=parent,
+            relief=None,
+            command=update_slider,
+            image=charGui.find('**/chargui_slider_small'),
+            image_scale=(2.15, 2.15, 1.5),
+            thumb_relief=None,
+            thumb_image=(charGui.find('**/chargui_slider_node'),
+                         charGui.find('**/chargui_slider_node_down'),
+                         charGui.find('**/chargui_slider_node_over')),
+            pos=(slider_x, 0.0, slider_y),
+            text_align=TextNode.ACenter,
+            text_scale=(0.1, 0.1),
+            text_pos=(0.0, 0.1),
+            text_fg=PiratesGuiGlobals.TextFG1,
+            scale=0.43,
+            pageSize=resolution,
+            text='default',
+            value=default_value)
         charGui.removeNode()
         slider.label = label
         slider['extraArgs'] = [slider, update_function]
@@ -168,12 +196,14 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
             statusPanel.setPos(pos)
             self.playerStatusPanels.append(statusPanel)
 
-        self.localStatusPanel = self.playerStatusPanels[self.LocalAvatarGuiIndex]
+        self.localStatusPanel = self.playerStatusPanels[
+            self.LocalAvatarGuiIndex]
         width = 1.0
         height = 0.25
-        self.menu = BorderFrame(parent=base.a2dBottomCenter, frameSize=(-width / 2.0, width / 2.0, 0, height), pos=(0,
-                                                                                                                    0,
-                                                                                                                    0))
+        self.menu = BorderFrame(
+            parent=base.a2dBottomCenter,
+            frameSize=(-width / 2.0, width / 2.0, 0, height),
+            pos=(0, 0, 0))
         self.width = width
         self.height = height
         self.initializeTableInterface()
@@ -183,29 +213,42 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
         helpText = PLocalizer.TableCardsHelp
         helpPos = (0.0, 0.0, 0.24)
         text = PLocalizer.BlackjackCardSwap
-        button = GuiButton(parent=self.menu, command=self.playerAction, helpText=helpText, helpPos=helpPos, pos=(x, 0, y), canReposition=True)
-        self.setButtonSettings2Lines(button, (x, 0, y), text, [PlayingCardGlobals.CardSwap])
+        button = GuiButton(
+            parent=self.menu,
+            command=self.playerAction,
+            helpText=helpText,
+            helpPos=helpPos,
+            pos=(x, 0, y),
+            canReposition=True)
+        self.setButtonSettings2Lines(button, (x, 0, y), text,
+                                     [PlayingCardGlobals.CardSwap])
         button.show()
         self.cardSwapButton = button
         self.buttonArray = self.buttonArray + [button]
         x += x_increment
         text = PLocalizer.BlackjackDoubleDown
-        button = GuiButton(parent=self.menu, command=self.playerAction, canReposition=True)
-        self.setButtonSettings2Lines(button, (x, 0, y), text, [PlayingCardGlobals.DoubleDown])
+        button = GuiButton(
+            parent=self.menu, command=self.playerAction, canReposition=True)
+        self.setButtonSettings2Lines(button, (x, 0, y), text,
+                                     [PlayingCardGlobals.DoubleDown])
         button.show()
         self.doubleDownButton = button
         self.buttonArray = self.buttonArray + [button]
         x += x_increment
         text = PLocalizer.BlackjackStay
-        button = GuiButton(parent=self.menu, command=self.playerAction, canReposition=True)
-        self.setButtonSettings(button, (x, 0, y), text, [PlayingCardGlobals.Stay])
+        button = GuiButton(
+            parent=self.menu, command=self.playerAction, canReposition=True)
+        self.setButtonSettings(button, (x, 0, y), text,
+                               [PlayingCardGlobals.Stay])
         button.show()
         self.stayButton = button
         self.buttonArray = self.buttonArray + [button]
         x += x_increment
         text = PLocalizer.BlackjackHit
-        button = GuiButton(parent=self.menu, command=self.playerAction, canReposition=True)
-        self.setButtonSettings(button, (x, 0, y), text, [PlayingCardGlobals.Hit])
+        button = GuiButton(
+            parent=self.menu, command=self.playerAction, canReposition=True)
+        self.setButtonSettings(button, (x, 0, y), text,
+                               [PlayingCardGlobals.Hit])
         button.show()
         self.hitButton = button
         self.buttonArray = self.buttonArray + [button]
@@ -216,16 +259,20 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
         x += x_increment
         x += x_increment
         text = PLocalizer.BlackjackSplit
-        button = GuiButton(parent=self.menu, command=self.playerAction, canReposition=True)
-        self.setButtonSettings(button, (x, 0, y), text, [PlayingCardGlobals.Split])
+        button = GuiButton(
+            parent=self.menu, command=self.playerAction, canReposition=True)
+        self.setButtonSettings(button, (x, 0, y), text,
+                               [PlayingCardGlobals.Split])
         button.show()
         self.splitButton = button
         self.buttonArray = self.buttonArray + [button]
         x += x_increment
         bid = self.table.getTableBidAmount()
         text = PLocalizer.BlackjackBid + ' ' + bid.__repr__()
-        button = GuiButton(parent=self.menu, command=self.playerAction, canReposition=True)
-        self.setButtonSettings(button, (x, 0, y), text, [PlayingCardGlobals.Bid])
+        button = GuiButton(
+            parent=self.menu, command=self.playerAction, canReposition=True)
+        self.setButtonSettings(button, (x, 0, y), text,
+                               [PlayingCardGlobals.Bid])
         button.show()
         self.bidButton = button
         self.buttonArray = self.buttonArray + [button]
@@ -243,19 +290,28 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
         y = -0.25
         label = PLocalizer.BlackjackBid
         resolution = 1.0
-        self.bidSlider = self.create_slider(bid_update_function, default_value, x, y, resolution, label, self.menu)
+        self.bidSlider = self.create_slider(bid_update_function, default_value,
+                                            x, y, resolution, label, self.menu)
         x = -0.36
         y = 0.1775
         x_increment = 0.24
         text = PLocalizer.PokerCheat1
-        button = GuiButton(parent=self.menu, command=self.cardSwapButtonSelection, canReposition=True)
-        self.setButtonSettings2Lines(button, (x, 0, y), text, [PlayingCardGlobals.Cheat1])
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardSwapButtonSelection,
+            canReposition=True)
+        self.setButtonSettings2Lines(button, (x, 0, y), text,
+                                     [PlayingCardGlobals.Cheat1])
         self.cheat1Button = button
         self.buttonArray = self.buttonArray + [button]
         x = x + x_increment
         text = PLocalizer.PokerCheat2
-        button = GuiButton(parent=self.menu, command=self.cardSwapButtonSelection, canReposition=True)
-        self.setButtonSettings2Lines(button, (x, 0, y), text, [PlayingCardGlobals.Cheat2])
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardSwapButtonSelection,
+            canReposition=True)
+        self.setButtonSettings2Lines(button, (x, 0, y), text,
+                                     [PlayingCardGlobals.Cheat2])
         self.cheat2Button = button
         self.buttonArray = self.buttonArray + [button]
         x = x + x_increment
@@ -265,15 +321,32 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
         goldCoin = gui.find('**/treasure_w_coin*')
         scale = 0.32
         currentMoney = localAvatar.getInventory().getGoldInPocket()
-        self.moneyDisplay = DirectLabel(parent=self.menu, relief=None, pos=(-0.3 + x_increment / 2.0, 0, 0.075), geom=goldCoin, geom_scale=(scale, scale, scale), geom_pos=(0,
-                                                                                                                                                                            0,
-                                                                                                                                                                            0), text='%s' % currentMoney, text_align=TextNode.ALeft, text_scale=0.04, text_pos=(0.05, -0.01), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, scale=1.1)
-        self.accept('inventoryQuantity-%s-%s' % (localAvatar.getInventoryId(), InventoryType.GoldInPocket), self.setMoney)
+        self.moneyDisplay = DirectLabel(
+            parent=self.menu,
+            relief=None,
+            pos=(-0.3 + x_increment / 2.0, 0, 0.075),
+            geom=goldCoin,
+            geom_scale=(scale, scale, scale),
+            geom_pos=(0, 0, 0),
+            text='%s' % currentMoney,
+            text_align=TextNode.ALeft,
+            text_scale=0.04,
+            text_pos=(0.05, -0.01),
+            text_fg=PiratesGuiGlobals.TextFG1,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            textMayChange=1,
+            scale=1.1)
+        self.accept(
+            'inventoryQuantity-%s-%s' % (localAvatar.getInventoryId(),
+                                         InventoryType.GoldInPocket),
+            self.setMoney)
         this = self
         identifier = 0
         this.sfxArray = []
         this.hitIdentifier = identifier
-        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_hit.mp3')]
+        this.sfxArray = this.sfxArray + [
+            loader.loadSfx('audio/sfx_cards_hit.mp3')
+        ]
         identifier = identifier + 1
         self.hands = []
         self.splitCardsArray = []
@@ -321,7 +394,8 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
         map(lambda panel: panel.arrow.hide(), self.playerStatusPanels)
 
     def getGuiIndex(self, seatIndex):
-        return (self.LocalAvatarGuiIndex - self.table.localAvatarSeat + seatIndex) % (self.table.NumSeats + 1)
+        return (self.LocalAvatarGuiIndex - self.table.localAvatarSeat +
+                seatIndex) % (self.table.NumSeats + 1)
 
     def setTableState(self, hands, allHands):
         for panel in self.playerStatusPanels:
@@ -361,7 +435,8 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
                         handNameLabel['text'] = str(handValue)
                 else:
                     if handValue > 21:
-                        handNameLabel['text'] = PLocalizer.BlackjackBusted % handValue
+                        handNameLabel[
+                            'text'] = PLocalizer.BlackjackBusted % handValue
                     else:
                         handNameLabel['text'] = str(handValue)
                 handNameLabel.show()
@@ -369,12 +444,16 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
                     handArray = allHands[i]
                     total_hands = len(handArray)
                     if total_hands > 1:
-                        current_hand_index = self.table.getCurrentHandIndex(i, allHands)
-                        splitLabel['text'] = PLocalizer.BlackjackHandofHand % (current_hand_index + 1, total_hands)
+                        current_hand_index = self.table.getCurrentHandIndex(
+                            i, allHands)
+                        splitLabel['text'] = PLocalizer.BlackjackHandofHand % (
+                            current_hand_index + 1, total_hands)
                         splitLabel.show()
                         hands_text = ''
                         for h in range(current_hand_index):
-                            hands_text = hands_text + str(PlayingCardGlobals.getBlackjackHandValue(handArray[h])) + '   '
+                            hands_text = hands_text + str(
+                                PlayingCardGlobals.getBlackjackHandValue(
+                                    handArray[h])) + '   '
 
                         handsLabel.show()
                         self.createSplitDisplay(i, allHands, handsLabel)
@@ -490,7 +569,11 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
 
     def leaveAction(self, action):
         self.deleteLeaveDialog()
-        self.leaveDialog = PDialog.PDialog(text=PLocalizer.PokerLeaveConfirmMessage, style=OTPDialog.YesNo, giveMouse=False, command=self.leaveCallback)
+        self.leaveDialog = PDialog.PDialog(
+            text=PLocalizer.PokerLeaveConfirmMessage,
+            style=OTPDialog.YesNo,
+            giveMouse=False,
+            command=self.leaveCallback)
         self.table.setDialogBin(self.leaveDialog)
 
     def timerExpiredCallback(self):
@@ -564,9 +647,11 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
                 card_x_increment = 0.06
                 left = card_x_increment * scale * length * -0.5
                 for i in range(length):
-                    card = PlayingCard.PlayingCardNodePath('standard', PlayingCardGlobals.Unknown)
+                    card = PlayingCard.PlayingCardNodePath(
+                        'standard', PlayingCardGlobals.Unknown)
                     card.reparentTo(parent)
-                    card.setPos(x + left + i * (card_x_increment * scale), 0, card_y)
+                    card.setPos(x + left + i * (card_x_increment * scale), 0,
+                                card_y)
                     card.setScale(scale)
                     card.setValue(hand[i])
                     card.turnUp()
@@ -579,13 +664,15 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
                         color = 0.6
                         card.setColor(color, color, color, 1.0)
 
-                label = DirectLabel(parent=parent, relief=None, text='', text_align=TextNode.ACenter, text_scale=0.04, pos=(x, 0.0, y), text_fg=(1,
-                                                                                                                                                 1,
-                                                                                                                                                 1,
-                                                                                                                                                 1), text_shadow=(0,
-                                                                                                                                                                  0,
-                                                                                                                                                                  0,
-                                                                                                                                                                  1))
+                label = DirectLabel(
+                    parent=parent,
+                    relief=None,
+                    text='',
+                    text_align=TextNode.ACenter,
+                    text_scale=0.04,
+                    pos=(x, 0.0, y),
+                    text_fg=(1, 1, 1, 1),
+                    text_shadow=(0, 0, 0, 1))
                 label['text'] = str(value)
                 label.show()
                 parent.labelArray.append(label)
@@ -600,4 +687,6 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
         for i in range(length):
             card = panel.hand[i]
             card.setPos(left + i * x_increment, 0, 0)
+
+
 # okay decompiling .\pirates\minigame\BlackjackTableGUI.pyc

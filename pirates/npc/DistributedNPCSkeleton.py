@@ -8,8 +8,11 @@ from pirates.effects.JRSpawnEffect import JRSpawnEffect
 from pirates.npc import Skeleton
 from pirates.piratesbase import PiratesGlobals
 
-class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC, Skeleton.Skeleton):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCSkeleton')
+
+class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC,
+                             Skeleton.Skeleton):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedNPCSkeleton')
 
     def __init__(self, cr):
         DistributedBattleNPC.DistributedBattleNPC.__init__(self, cr)
@@ -35,7 +38,8 @@ class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC, Skeleton
 
     def setAvatarType(self, avatarType):
         Skeleton.Skeleton.setAvatarType(self, avatarType)
-        DistributedBattleNPC.DistributedBattleNPC.setAvatarType(self, avatarType)
+        DistributedBattleNPC.DistributedBattleNPC.setAvatarType(
+            self, avatarType)
 
     def createGameFSM(self):
         self.gameFSM = NPCSkeletonGameFSM.NPCSkeletonGameFSM(self)
@@ -49,7 +53,8 @@ class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC, Skeleton
         Skeleton.Skeleton.setSpeed(self, forwardSpeed, rotateSpeed)
 
     def setHp(self, hitPoints, quietly=0):
-        DistributedBattleNPC.DistributedBattleNPC.setHp(self, hitPoints, quietly)
+        DistributedBattleNPC.DistributedBattleNPC.setHp(self, hitPoints,
+                                                        quietly)
         if self.glow:
             self.glow.adjustHeartColor(float(self.hp) / float(self.maxHp))
 
@@ -80,7 +85,8 @@ class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC, Skeleton
             return
 
         def startVFX():
-            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting(
+            ) >= base.options.SpecialEffectsHigh:
                 spawnEffect = JRSpawnEffect.getEffect()
                 if spawnEffect:
                     spawnEffect.reparentTo(render)
@@ -90,7 +96,16 @@ class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC, Skeleton
                     spawnEffect.play()
 
         if hasattr(self, 'ambushEnemy'):
-            spawnIval = Sequence(Func(self.hide), Func(startVFX), Wait(1.0), Parallel(self.actorInterval('intro'), Sequence(Wait(0.5), Func(self.show))), Func(self.ambushIntroDone))
+            spawnIval = Sequence(
+                Func(self.hide), Func(startVFX), Wait(1.0),
+                Parallel(
+                    self.actorInterval('intro'),
+                    Sequence(Wait(0.5), Func(self.show))),
+                Func(self.ambushIntroDone))
         else:
-            spawnIval = Sequence(Func(self.hide), Func(startVFX), Wait(1.0), Parallel(self.actorInterval('intro'), Sequence(Wait(0.5), Func(self.show))))
+            spawnIval = Sequence(
+                Func(self.hide), Func(startVFX), Wait(1.0),
+                Parallel(
+                    self.actorInterval('intro'),
+                    Sequence(Wait(0.5), Func(self.show))))
         return spawnIval

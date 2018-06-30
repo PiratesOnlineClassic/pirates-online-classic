@@ -38,15 +38,18 @@ class TonicsPanel(DirectFrame):
         if TonicsPanel.guiLoaded:
             return
         TonicsPanel.topGui = loader.loadModel('models/gui/toplevel_gui')
-        TonicsPanel.weaponIcons = loader.loadModel('models/textureCards/weapon_icons')
-        TonicsPanel.skillIcons = loader.loadModel('models/textureCards/skillIcons')
+        TonicsPanel.weaponIcons = loader.loadModel(
+            'models/textureCards/weapon_icons')
+        TonicsPanel.skillIcons = loader.loadModel(
+            'models/textureCards/skillIcons')
         TonicsPanel.guiLoaded = True
 
     def setSkillId(self, skillId):
         self.skillId = skillId
         if self.button:
             self.button.destroy()
-        self.button = SkillpageGuiButton.SkillpageGuiButton(self.callback, self.skillId, 0)
+        self.button = SkillpageGuiButton.SkillpageGuiButton(
+            self.callback, self.skillId, 0)
         self.button['geom_scale'] = 0.09
         self.button.reparentTo(self)
         self.button.resetFrameSize()
@@ -56,7 +59,8 @@ class TonicsPanel(DirectFrame):
         DirectFrame.destroy(self)
 
     def callback(self, skillId):
-        localAvatar.guiMgr.combatTray.trySkill(InventoryType.UseItem, skillId, 0)
+        localAvatar.guiMgr.combatTray.trySkill(InventoryType.UseItem, skillId,
+                                               0)
 
     def updateQuantity(self, amt):
         self.amt = amt
@@ -74,8 +78,10 @@ class TonicsPanel(DirectFrame):
         if amt != self.amt:
             self.amt = amt
             self.button.attachQuantity(amt)
-        range = localAvatar.cr.battleMgr.getModifiedRechargeTime(localAvatar, InventoryType.UseItem)
-        value = localAvatar.skillDiary.getTimeSpentRecharging(InventoryType.UseItem)
+        range = localAvatar.cr.battleMgr.getModifiedRechargeTime(
+            localAvatar, InventoryType.UseItem)
+        value = localAvatar.skillDiary.getTimeSpentRecharging(
+            InventoryType.UseItem)
         if not value:
             value = range
         self.skillRing.update(value, range)

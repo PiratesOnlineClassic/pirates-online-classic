@@ -8,6 +8,7 @@ from pandac.PandaModules import *
 from pirates.piratesgui.GameOptions import Options
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class BlackSmoke(PooledEffect, EffectController):
 
     cardScale = 64.0
@@ -21,7 +22,8 @@ class BlackSmoke(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleBlackSmoke')
         if not BlackSmoke.particleDummy:
-            BlackSmoke.particleDummy = base.effectsRoot.attachNewNode(ModelNode('BlackSmokeParticleDummy'))
+            BlackSmoke.particleDummy = base.effectsRoot.attachNewNode(
+                ModelNode('BlackSmokeParticleDummy'))
             BlackSmoke.particleDummy.setDepthWrite(0)
             BlackSmoke.particleDummy.setColorScaleOff()
             BlackSmoke.particleDummy.setLightOff()
@@ -78,11 +80,16 @@ class BlackSmoke(PooledEffect, EffectController):
         EffectController.startLoop(self, lod)
 
     def createTrack(self, lod=Options.SpecialEffectsHigh):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.25), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.25), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy))
         if self._accelerateTime > 0:
             self.startEffect.append(Func(self.accelerate, self._accelerateTime))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(4.0), Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(self.duration), self.endEffect)
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100.0), Wait(4.0),
+            Func(self.cleanUpEffect))
+        self.track = Sequence(self.startEffect, Wait(self.duration),
+                              self.endEffect)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

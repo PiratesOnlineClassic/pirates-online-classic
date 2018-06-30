@@ -4,6 +4,7 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class AttuneSmoke(PooledEffect, EffectController):
 
     cardScale = 64.0
@@ -50,7 +51,8 @@ class AttuneSmoke(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.0, 0.0, 0.0, 1.0), Vec4(0.0, 0.0, 0.0, 1.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(0.0, 0.0, 0.0, 1.0), Vec4(0.0, 0.0, 0.0, 1.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(0.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -61,8 +63,12 @@ class AttuneSmoke(PooledEffect, EffectController):
 
     def createTrack(self):
         self.setColorScale(1, 1, 1, 1)
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.04), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.04), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100), Wait(7.0),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(3.0), self.endEffect)
 
     def cleanUpEffect(self):

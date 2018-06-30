@@ -10,7 +10,7 @@ from panda3d.core import *
 
 
 class CameraMode(DirectObject.DirectObject, FSM):
-    
+
     Modes = Enum('NORMAL, BATTLE')
 
     def __init__(self):
@@ -50,7 +50,8 @@ class CameraMode(DirectObject.DirectObject, FSM):
         self.ccRay2 = CollisionRay(0.0, 0.0, 0.0, 0.0, 0.0, -1.0)
         self.ccRay2Node = CollisionNode('ccRay2Node')
         self.ccRay2Node.addSolid(self.ccRay2)
-        self.ccRay2NodePath = self.camFloorRayNode.attachNewNode(self.ccRay2Node)
+        self.ccRay2NodePath = self.camFloorRayNode.attachNewNode(
+            self.ccRay2Node)
         self.ccRay2BitMask = OTPGlobals.FloorBitmask
         self.ccRay2Node.setFromCollideMask(self.ccRay2BitMask)
         self.ccRay2Node.setIntoCollideMask(BitMask32.allOff())
@@ -58,8 +59,10 @@ class CameraMode(DirectObject.DirectObject, FSM):
         self.camFloorCollisionBroadcaster = CollisionHandlerFloor()
         self.camFloorCollisionBroadcaster.setInPattern('on-floor')
         self.camFloorCollisionBroadcaster.setOutPattern('off-floor')
-        self.camFloorCollisionBroadcaster.addCollider(self.ccRay2NodePath, self.ccRay2MoveNodePath)
-        self.cTravOnFloor.addCollider(self.ccRay2NodePath, self.camFloorCollisionBroadcaster)
+        self.camFloorCollisionBroadcaster.addCollider(self.ccRay2NodePath,
+                                                      self.ccRay2MoveNodePath)
+        self.cTravOnFloor.addCollider(self.ccRay2NodePath,
+                                      self.camFloorCollisionBroadcaster)
         self.accept('mouse3', self.enableMouseControl)
         self.accept('mouse3-up', self.disableMouseControl)
         if base.mouseWatcherNode.isButtonDown(MouseButton.three()):
@@ -89,9 +92,10 @@ class CameraMode(DirectObject.DirectObject, FSM):
         if 'localAvatar' in __builtins__:
             localAvatar.guiMgr._hideCursor()
 
-        base.win.movePointer(0, base.win.getXSize() / 2, base.win.getYSize() / 2)
-        self.lastMousePos = (
-         base.win.getXSize() / 2, base.win.getYSize() / 2)
+        base.win.movePointer(0,
+                             base.win.getXSize() / 2,
+                             base.win.getYSize() / 2)
+        self.lastMousePos = (base.win.getXSize() / 2, base.win.getYSize() / 2)
         if self.getCurrentOrNextState() == 'Active':
             self._startMouseControlTasks()
 
@@ -106,7 +110,7 @@ class CameraMode(DirectObject.DirectObject, FSM):
                 localAvatar.guiMgr._showCursor()
 
             base.win.movePointer(0, int(self.origMousePos[0]),
-                int(self.origMousePos[1]))
+                                 int(self.origMousePos[1]))
 
     def _startMouseControlTasks(self):
         if self.mouseControl:
@@ -125,7 +129,10 @@ class CameraMode(DirectObject.DirectObject, FSM):
 
     def _startMouseReadTask(self):
         self._stopMouseReadTask()
-        taskMgr.add(self._mouseReadTask, '%s-MouseRead' % self._getTopNodeName(), priority=-29)
+        taskMgr.add(
+            self._mouseReadTask,
+            '%s-MouseRead' % self._getTopNodeName(),
+            priority=-29)
 
     def _mouseReadTask(self, task):
         if hasattr(base, 'oobeMode') and base.oobeMode:
@@ -135,13 +142,14 @@ class CameraMode(DirectObject.DirectObject, FSM):
             if not base.mouseWatcherNode.hasMouse():
                 self.mouseDelta = (0, 0)
             else:
-                winSize = (
-                 base.win.getXSize(), base.win.getYSize())
+                winSize = (base.win.getXSize(), base.win.getYSize())
                 mouseData = base.win.getPointer(0)
-                if mouseData.getX() > winSize[0] or mouseData.getY() > winSize[1]:
+                if mouseData.getX() > winSize[0] or mouseData.getY(
+                ) > winSize[1]:
                     self.mouseDelta = (0, 0)
                 else:
-                    self.mouseDelta = (mouseData.getX() - self.lastMousePos[0], mouseData.getY() - self.lastMousePos[1])
+                    self.mouseDelta = (mouseData.getX() - self.lastMousePos[0],
+                                       mouseData.getY() - self.lastMousePos[1])
                     base.win.movePointer(0, winSize[0] / 2, winSize[1] / 2)
                     mouseData = base.win.getPointer(0)
                     self.lastMousePos = (mouseData.getX(), mouseData.getY())
@@ -152,8 +160,14 @@ class CameraMode(DirectObject.DirectObject, FSM):
 
     def _startMouseUpdateTask(self):
         self._stopMouseUpdateTask()
-        taskMgr.add(self._avatarFacingTask, '%s-AvatarFacing' % self._getTopNodeName(), priority=23)
-        taskMgr.add(self._mouseUpdateTask, '%s-MouseUpdate' % self._getTopNodeName(), priority=40)
+        taskMgr.add(
+            self._avatarFacingTask,
+            '%s-AvatarFacing' % self._getTopNodeName(),
+            priority=23)
+        taskMgr.add(
+            self._mouseUpdateTask,
+            '%s-MouseUpdate' % self._getTopNodeName(),
+            priority=40)
 
     def _avatarFacingTask(self, task):
         return task.cont
@@ -167,4 +181,6 @@ class CameraMode(DirectObject.DirectObject, FSM):
 
     def avFaceCamera(self):
         pass
+
+
 # okay decompiling .\pirates\pirate\CameraMode.pyc

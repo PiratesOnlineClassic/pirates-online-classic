@@ -9,8 +9,9 @@ from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.pvp.PVPGameBase import PVPGameBase
 from pirates.ship import DistributedShip
 
+
 class PVPGamePirateer(PVPGameBase):
-    
+
     notify = directNotify.newCategory('PVPGamePirateer')
 
     def __init__(self, cr):
@@ -28,14 +29,19 @@ class PVPGamePirateer(PVPGameBase):
 
     def generate(self):
         PVPGameBase.generate(self)
-        self.accept(PiratesGlobals.EVENT_SPHERE_PORT + PiratesGlobals.SPHERE_ENTER_SUFFIX, self.handleEnterPort)
-        self.accept(PiratesGlobals.EVENT_SPHERE_PORT + PiratesGlobals.SPHERE_EXIT_SUFFIX, self.handleExitPort)
+        self.accept(
+            PiratesGlobals.EVENT_SPHERE_PORT +
+            PiratesGlobals.SPHERE_ENTER_SUFFIX, self.handleEnterPort)
+        self.accept(
+            PiratesGlobals.EVENT_SPHERE_PORT +
+            PiratesGlobals.SPHERE_EXIT_SUFFIX, self.handleExitPort)
         self.accept('enterwreckSphere', self.approachWreck)
         self.accept('exitwreckSphere', self.leaveWreck)
 
     def announceGenerate(self):
         PVPGameBase.announceGenerate(self)
-        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects([self.instanceId], eachCallback=self.instanceGenerated)
+        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects(
+            [self.instanceId], eachCallback=self.instanceGenerated)
 
     def instanceGenerated(self, instanceObj):
         self.instance = instanceObj
@@ -96,10 +102,12 @@ class PVPGamePirateer(PVPGameBase):
     def displayCoin(self, shipId):
         self.coinCarriers.append(shipId)
         ship = base.cr.doId2do.get(shipId)
-        self.notify.debug('<PIRATEER> ------ we gots us a coin thief %s' % shipId)
+        self.notify.debug(
+            '<PIRATEER> ------ we gots us a coin thief %s' % shipId)
         ship.stats['maxSpeed'] = ship.stats['maxSpeed'] * 3 / 4
         barUI = loader.loadModelCopy('models/gui/treasure_loaded')
-        self.titleFrameImage = OnscreenImage(image=barUI, pos=(0, -45, 210), scale=(45, 45, 45), parent=ship)
+        self.titleFrameImage = OnscreenImage(
+            image=barUI, pos=(0, -45, 210), scale=(45, 45, 45), parent=ship)
         self.titleFrameImage.setBillboardPointEye()
         self.titleFrameImage.setLightOff()
 
@@ -120,14 +128,16 @@ class PVPGamePirateer(PVPGameBase):
         wid = int(collEntry.getIntoNodePath().getNetTag('avId'))
         if collEntry.getFromNodePath().hasNetTag('shipId'):
             shipId = int(collEntry.getFromNodePath().getNetTag('shipId'))
-            self.notify.debug('<PIRATEER> ------ %s approaches wreck %s' % (str(shipId), str(wid)))
+            self.notify.debug('<PIRATEER> ------ %s approaches wreck %s' %
+                              (str(shipId), str(wid)))
             self.sendUpdate('lootWreck', [wid, shipId])
 
     def leaveWreck(self, collEntry):
         wid = int(collEntry.getIntoNodePath().getNetTag('avId'))
         if collEntry.getFromNodePath().hasNetTag('shipId'):
             shipId = int(collEntry.getFromNodePath().getNetTag('shipId'))
-            self.notify.debug('<PIRATEER> ------ %s leaves wreck %s' % (str(shipId), str(wid)))
+            self.notify.debug('<PIRATEER> ------ %s leaves wreck %s' %
+                              (str(shipId), str(wid)))
             self.sendUpdate('unLootWreck', [wid, shipId])
 
     def getScoreList(self):
@@ -136,9 +146,13 @@ class PVPGamePirateer(PVPGameBase):
     def setScoreList(self, teams, scores):
         self.scoreList = []
         for currIdx in range(len(teams)):
-            if teams[currIdx] > 10 and teams[currIdx] % 10 != localAvatar.getTeam():
+            if teams[currIdx] > 10 and teams[currIdx] % 10 != localAvatar.getTeam(
+            ):
                 continue
-            self.scoreList.append({'Team': teams[currIdx], 'Score': scores[currIdx]})
+            self.scoreList.append({
+                'Team': teams[currIdx],
+                'Score': scores[currIdx]
+            })
 
         self.scoreList.sort(self.sortScores)
         print 'got new score list %s' % self.scoreList
@@ -151,7 +165,12 @@ class PVPGamePirateer(PVPGameBase):
             return 100
         return team1 - team2
 
-    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+    def createNewItem(self,
+                      item,
+                      parent,
+                      itemType=None,
+                      columnWidths=[],
+                      color=None):
         itemColorScale = None
         blink = False
         team = item.get('Team')
@@ -163,7 +182,8 @@ class PVPGamePirateer(PVPGameBase):
         if team > 10 and team < 20 and score != self.prevLoadScore:
             blink = True
             self.prevLoadScore = score
-        return MiniScoreItemGui(item, parent, self.instance, itemColorScale, self.instance.gameRules, blink)
+        return MiniScoreItemGui(item, parent, self.instance, itemColorScale,
+                                self.instance.gameRules, blink)
 
     def getScoreText(self, scoreValue):
         team = scoreValue.get('Team')
@@ -187,4 +207,5 @@ class PVPGamePirateer(PVPGameBase):
                 else:
                     return 'Loading [     ]'
             else:
-                return PLocalizer.PVPTeam % str(team) + str(score) + '/' + str(maxTeamScore)
+                return PLocalizer.PVPTeam % str(team) + str(score) + '/' + str(
+                    maxTeamScore)

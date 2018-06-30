@@ -7,7 +7,6 @@ from pirates.quest import QuestDB, QuestLadder, QuestLadderDB
 
 
 class QuestLadderDependency:
-    
 
     def __init__(self):
         self.idDependencyMap = {}
@@ -19,12 +18,12 @@ class QuestLadderDependency:
         self.intDependencyMap[99999] = 99999
 
     def findIdDependency(self, questId):
-        if self.idDependencyMap.has_key(questId):
+        if questId in self.idDependencyMap:
             return self.idDependencyMap[questId]
         return 0
 
     def findIntDependency(self, questInt):
-        if self.idDependencyMap.has_key(questId):
+        if questId in self.idDependencyMap:
             return self.intDependencyMap[questId]
         return 0
 
@@ -40,4 +39,6 @@ class QuestLadderDependency:
             return True
         else:
             return False
+
+
 # okay decompiling .\pirates\quest\QuestLadderDependency.pyc

@@ -15,7 +15,6 @@ from pirates.piratesgui import PiratesGuiGlobals, SocialPage
 
 class PirateButtonChain:
 
-
     def __init__(self, width, parent, fromBottom=False):
         self.fromBottom = fromBottom
         self.width = width
@@ -30,21 +29,20 @@ class PirateButtonChain:
         gui = loader.loadModel('models/gui/avatar_chooser_rope')
         topPanel = gui.find('**/avatar_c_A_top')
         topPanelOver = gui.find('**/avatar_c_A_top_over')
-        self.topButton = (
-         topPanel, topPanel, topPanelOver, topPanel)
+        self.topButton = (topPanel, topPanel, topPanelOver, topPanel)
         middlePanel = gui.find('**/avatar_c_A_middle')
         middlePanelOver = gui.find('**/avatar_c_A_middle_over')
-        self.middleButton = (middlePanel, middlePanel, middlePanelOver, middlePanel)
+        self.middleButton = (middlePanel, middlePanel, middlePanelOver,
+                             middlePanel)
         bottomPanel = gui.find('**/avatar_c_A_bottom')
         bottomPanelOver = gui.find('**/avatar_c_A_bottom_over')
-        self.bottomButton = (
-         bottomPanel, bottomPanel, bottomPanelOver, bottomPanel)
+        self.bottomButton = (bottomPanel, bottomPanel, bottomPanelOver,
+                             bottomPanel)
         self.iScale = 0.25
         self.gScale = (self.width * 0.65, 0.0, 0.28)
         self.tPos = (0.0, -0.015, 0.0)
         self.tBPos = (0.0, 0.025, 0.0)
-        self.iPos = (
-         0.1, 0, -0.0)
+        self.iPos = (0.1, 0, -0.0)
         self.offX = self.width * 0.5
         self.topZ = 0.08
         self.midZ = 0.075
@@ -74,19 +72,26 @@ class PirateButtonChain:
             yLoc = self.tPos[1] + textPos[1]
             zLoc = self.tPos[2] + textPos[2]
             buttonTextPos = (xLoc, yLoc, zLoc)
-        preformButton = DirectButton(parent=self.baseFrame, relief=None, text=inText, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=buttonTextPos, text_align=TextNode.ACenter, text0_fg=PiratesGuiGlobals.TextFG2, text1_fg=PiratesGuiGlobals.TextFG3, text2_fg=PiratesGuiGlobals.TextFG1, text3_fg=PiratesGuiGlobals.TextFG9, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, command=inCommand, geom=self.middleButton, geom_scale=self.gScale, geom0_color=(1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1), geom1_color=(1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    1), geom2_color=(1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     1), geom3_color=(0.5,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0.5,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0.5,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      1))
+        preformButton = DirectButton(
+            parent=self.baseFrame,
+            relief=None,
+            text=inText,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_pos=buttonTextPos,
+            text_align=TextNode.ACenter,
+            text0_fg=PiratesGuiGlobals.TextFG2,
+            text1_fg=PiratesGuiGlobals.TextFG3,
+            text2_fg=PiratesGuiGlobals.TextFG1,
+            text3_fg=PiratesGuiGlobals.TextFG9,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            textMayChange=1,
+            command=inCommand,
+            geom=self.middleButton,
+            geom_scale=self.gScale,
+            geom0_color=(1, 1, 1, 1),
+            geom1_color=(1, 1, 1, 1),
+            geom2_color=(1, 1, 1, 1),
+            geom3_color=(0.5, 0.5, 0.5, 1))
         self.buttonList.append(preformButton)
         self.buttonQueue.append((inText, inCommand))
         self.buttonIndex += 1
@@ -99,7 +104,8 @@ class PirateButtonChain:
             isLast = False
             if index == len(self.buttonQueue) - 1:
                 isLast = True
-            self.createButtons(self.buttonQueue[index][0], self.buttonQueue[index][1], isLast)
+            self.createButtons(self.buttonQueue[index][0],
+                               self.buttonQueue[index][1], isLast)
 
         self.buttonQueue = []
 
@@ -113,11 +119,16 @@ class PirateButtonChain:
             formingButton['geom'] = self.topButton
         else:
             if inLast and not self.fromBottom:
-                formingButton.setPos(self.offX, 0, self.startZ - (self.topZ + self.midZ * (self.buttonCount - 2) + self.endZ))
+                formingButton.setPos(
+                    self.offX, 0,
+                    self.startZ - (self.topZ + self.midZ *
+                                   (self.buttonCount - 2) + self.endZ))
                 formingButton['geom'] = self.bottomButton
                 formingButton['text_pos'] = self.tBPos
             else:
-                formingButton.setPos(self.offX, 0, self.startZ - (self.topZ + self.midZ * (self.buttonCount - 1)))
+                formingButton.setPos(
+                    self.offX, 0, self.startZ -
+                    (self.topZ + self.midZ * (self.buttonCount - 1)))
                 formingButton['geom'] = self.middleButton
         formingButton.resetFrameSize()
         self.buttonCount += 1
@@ -127,4 +138,6 @@ class PirateButtonChain:
 
     def getHeight(self):
         return self.topZ + self.midZ * (self.buttonCount - 2) + self.endZ
+
+
 # okay decompiling .\pirates\piratesgui\PirateButtonChain.pyc

@@ -10,11 +10,12 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class TableGUI:
-    
+
     use_hourglass = False
 
     def suitImage(self, suit):
-        card = PlayingCard.PlayingCardNodePath('standard', PlayingCardGlobals.Unknown)
+        card = PlayingCard.PlayingCardNodePath('standard',
+                                               PlayingCardGlobals.Unknown)
         card.setScale(0.25)
         card.setValue(suit * 13)
         card.turnUp()
@@ -54,19 +55,21 @@ class TableGUI:
                 icon.setScale(scale)
                 self.suitGeomArray.append(icon)
             else:
-                self.suitGeomArray = [
-                 None, None, None, None]
+                self.suitGeomArray = [None, None, None, None]
         x = -0.36
         y = 0.07
         x_increment = 0.24
         text = PLocalizer.TableLeave
-        button = GuiButton(parent=self.menu, command=self.leaveAction, canReposition=True)
-        self.setButtonSettings(button, (x, 0, y), text, [PlayingCardGlobals.Leave])
+        button = GuiButton(
+            parent=self.menu, command=self.leaveAction, canReposition=True)
+        self.setButtonSettings(button, (x, 0, y), text,
+                               [PlayingCardGlobals.Leave])
         self.leaveButton = button
         self.buttonArray = self.buttonArray + [button]
         button.show()
         text = PLocalizer.TableCancel
-        button = GuiButton(parent=self.menu, command=self.cancelSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu, command=self.cancelSelection, canReposition=True)
         self.setButtonSettings(button, (x, 0, y), text, [0])
         self.cancelButton = button
         self.buttonArray = self.buttonArray + [button]
@@ -82,7 +85,10 @@ class TableGUI:
         x_increment = 0.24
         suit = 0
         text = PLocalizer.PlayingCardSuits[suit]
-        button = GuiButton(parent=self.menu, command=self.cardSuitSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardSuitSelection,
+            canReposition=True)
         self.setButtonSettings(button, (x, 0, y), text, [suit])
         self.suitButtonArray = self.suitButtonArray + [button]
         geom = self.suitGeomArray[suit]
@@ -91,7 +97,10 @@ class TableGUI:
         x = x + x_increment
         suit = suit + 1
         text = PLocalizer.PlayingCardSuits[suit]
-        button = GuiButton(parent=self.menu, command=self.cardSuitSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardSuitSelection,
+            canReposition=True)
         self.setButtonSettings(button, (x, 0, y), text, [suit])
         self.suitButtonArray = self.suitButtonArray + [button]
         geom = self.suitGeomArray[suit]
@@ -100,7 +109,10 @@ class TableGUI:
         x = x + x_increment
         suit = suit + 1
         text = PLocalizer.PlayingCardSuits[suit]
-        button = GuiButton(parent=self.menu, command=self.cardSuitSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardSuitSelection,
+            canReposition=True)
         self.setButtonSettings(button, (x, 0, y), text, [suit])
         self.suitButtonArray = self.suitButtonArray + [button]
         geom = self.suitGeomArray[suit]
@@ -109,7 +121,10 @@ class TableGUI:
         x = x + x_increment
         suit = suit + 1
         text = PLocalizer.PlayingCardSuits[suit]
-        button = GuiButton(parent=self.menu, command=self.cardSuitSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardSuitSelection,
+            canReposition=True)
         self.setButtonSettings(button, (x, 0, y), text, [suit])
         self.suitButtonArray = self.suitButtonArray + [button]
         geom = self.suitGeomArray[suit]
@@ -122,49 +137,73 @@ class TableGUI:
         x_increment = 0.12
         rank = 0
         text = PLocalizer.Card2
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
         rank = rank + 1
         text = PLocalizer.Card3
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
         rank = rank + 1
         text = PLocalizer.Card4
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
         rank = rank + 1
         text = PLocalizer.Card5
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
         rank = rank + 1
         text = PLocalizer.Card6
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
         rank = rank + 1
         text = PLocalizer.Card7
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
         rank = rank + 1
         text = PLocalizer.Card8
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
         rank = rank + 1
         text = PLocalizer.Card9
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
@@ -176,31 +215,46 @@ class TableGUI:
         x = x + x_increment
         x = x + x_increment
         text = PLocalizer.CardT
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
         rank = rank + 1
         text = PLocalizer.CardJ
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
         rank = rank + 1
         text = PLocalizer.CardQ
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
         rank = rank + 1
         text = PLocalizer.CardK
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
         rank = rank + 1
         text = PLocalizer.CardA
-        button = GuiButton(parent=self.menu, command=self.cardRankSelection, canReposition=True)
+        button = GuiButton(
+            parent=self.menu,
+            command=self.cardRankSelection,
+            canReposition=True)
         self.setButtonSettingsHalfWidth(button, (x, 0, y), text, [rank])
         self.rankButtonArray = self.rankButtonArray + [button]
         x = x + x_increment
@@ -231,27 +285,39 @@ class TableGUI:
             button['text_fg'] = (c, c, c, 1.0)
 
     def setButtonSettingsHalfWidth(self, button, position, text, extra=None):
-        button.configure(text=text, text_fg=(1.0, 1.0, 1.0, 1.0), text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0, -PiratesGuiGlobals.TextScaleLarge * 0.25), text_wordwrap=0, image_scale=(0.11,
-                                                                                                                                                                                                     0.22,
-                                                                                                                                                                                                     0.24))
+        button.configure(
+            text=text,
+            text_fg=(1.0, 1.0, 1.0, 1.0),
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_pos=(0, -PiratesGuiGlobals.TextScaleLarge * 0.25),
+            text_wordwrap=0,
+            image_scale=(0.11, 0.22, 0.24))
         button.setPos(position[0], position[1], position[2])
         button['extraArgs'] = extra
         button.resetFrameSize()
         button.hide()
 
     def setButtonSettings(self, button, position, text, extra=None):
-        button.configure(text=text, text_fg=(1.0, 1.0, 1.0, 1.0), text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0, -PiratesGuiGlobals.TextScaleLarge * 0.25), text_wordwrap=0, image_scale=(0.24,
-                                                                                                                                                                                                     0.24,
-                                                                                                                                                                                                     0.24))
+        button.configure(
+            text=text,
+            text_fg=(1.0, 1.0, 1.0, 1.0),
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_pos=(0, -PiratesGuiGlobals.TextScaleLarge * 0.25),
+            text_wordwrap=0,
+            image_scale=(0.24, 0.24, 0.24))
         button.setPos(position[0], position[1], position[2])
         button['extraArgs'] = extra
         button.resetFrameSize()
         button.hide()
 
     def setButtonSettings2Lines(self, button, position, text, extra=None):
-        button.configure(text=text, text_fg=(1.0, 1.0, 1.0, 1.0), text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0, PiratesGuiGlobals.TextScaleLarge * 0.25), text_wordwrap=0, image_scale=(0.24,
-                                                                                                                                                                                                    0.24,
-                                                                                                                                                                                                    0.24))
+        button.configure(
+            text=text,
+            text_fg=(1.0, 1.0, 1.0, 1.0),
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_pos=(0, PiratesGuiGlobals.TextScaleLarge * 0.25),
+            text_wordwrap=0,
+            image_scale=(0.24, 0.24, 0.24))
         button.setPos(position[0], position[1], position[2])
         button['extraArgs'] = extra
         button.resetFrameSize()
@@ -275,7 +341,8 @@ class TableGUI:
             inventory = localAvatar.getInventory()
             if inventory:
                 for i in range(itemsPerGroup):
-                    number = inventory.getStackQuantity(InventoryType.begin_Cards + j * itemsPerGroup + i)
+                    number = inventory.getStackQuantity(
+                        InventoryType.begin_Cards + j * itemsPerGroup + i)
                     if number > 0:
                         self.normalButton(buttonArray[j])
                         break
@@ -286,7 +353,8 @@ class TableGUI:
             buttonArray[i].show()
             inventory = localAvatar.getInventory()
             if inventory:
-                number = inventory.getStackQuantity(InventoryType.begin_Cards + cardStartIndex + i)
+                number = inventory.getStackQuantity(InventoryType.begin_Cards +
+                                                    cardStartIndex + i)
                 if number > 0:
                     self.normalButton(buttonArray[i])
                 else:
@@ -337,8 +405,14 @@ class TableGUI:
         if card >= 0 and card < 52:
             original_suit = card / 13
             original_rank = card % 13
-            string = PLocalizer.PokerSwapConfirmMessage % (PLocalizer.getPlayingCardName(original_suit, original_rank), PLocalizer.getPlayingCardName(suit, rank))
-            self.swapDialog = PDialog.PDialog(text=string, style=OTPDialog.YesNo, giveMouse=False, command=self.swapCallback)
+            string = PLocalizer.PokerSwapConfirmMessage % (
+                PLocalizer.getPlayingCardName(original_suit, original_rank),
+                PLocalizer.getPlayingCardName(suit, rank))
+            self.swapDialog = PDialog.PDialog(
+                text=string,
+                style=OTPDialog.YesNo,
+                giveMouse=False,
+                command=self.swapCallback)
             self.table.setDialogBin(self.swapDialog)
             position = self.swapDialog.getPos()
             position.setZ(position[2] + 0.35)
@@ -405,9 +479,13 @@ class TableGUI:
         cancelCallback = None
         timerExpiredCallback = self.timerExpiredCallback
         if self.use_hourglass:
-            localAvatar.guiMgr.setHourglassTimer(time, showMinutes, mode, titleText, titleFg, infoText, cancelText, cancelCallback, timerExpiredCallback)
+            localAvatar.guiMgr.setHourglassTimer(
+                time, showMinutes, mode, titleText, titleFg, infoText,
+                cancelText, cancelCallback, timerExpiredCallback)
         else:
-            localAvatar.guiMgr.setTimer(time, showMinutes, mode, titleText, titleFg, infoText, cancelText, cancelCallback, timerExpiredCallback, 1)
+            localAvatar.guiMgr.setTimer(time, showMinutes, mode, titleText,
+                                        titleFg, infoText, cancelText,
+                                        cancelCallback, timerExpiredCallback, 1)
         self.timer = True
         self.timeout = False
         if self.use_hourglass:
@@ -428,7 +506,8 @@ class TableGUI:
                 end_time = 5.0
                 start_position = Vec3(0.591146, 0, 0.127604 - 0.5)
                 end_position = Vec3(0.591146, 0, 0.127604)
-                timer.setSlide(start_time, end_time, start_position, end_position)
+                timer.setSlide(start_time, end_time, start_position,
+                               end_position)
         return
 
     def endTimer(self):
@@ -457,21 +536,43 @@ class TableGUI:
         self.levelUpSfx = loader.loadSfx('audio/treasure_whoosh.mp3')
         self.levelUpSfx.setVolume(0.5)
         self.levelUpText = NodePath('text')
-        self.levelUpLabel = DirectLabel(parent=self.levelUpText, relief=None, text='', text_font=PiratesGlobals.getPirateOutlineFont(), text_fg=(0.1,
-                                                                                                                                                 0.7,
-                                                                                                                                                 0.1,
-                                                                                                                                                 1), text_shadow=(0,
-                                                                                                                                                                  0,
-                                                                                                                                                                  0,
-                                                                                                                                                                  1), scale=0.25)
-        self.levelUpCategoryLabel = DirectLabel(parent=self.levelUpText, relief=None, text='', text_font=PiratesGlobals.getPirateOutlineFont(), text_fg=(0.1,
-                                                                                                                                                         0.7,
-                                                                                                                                                         0.1,
-                                                                                                                                                         1), text_shadow=(0,
-                                                                                                                                                                          0,
-                                                                                                                                                                          0,
-                                                                                                                                                                          1), scale=0.125, pos=(0, 0, -0.175))
-        self.levelUpIval = Sequence(Func(self.levelUpText.reparentTo, aspect2d), Parallel(LerpPosInterval(self.levelUpText, 5, pos=Point3(0, 0, 0.3), startPos=Point3(0, 0, -0.3)), Sequence(LerpColorScaleInterval(self.levelUpText, 0.5, colorScale=VBase4(1, 1, 1, 1), startColorScale=VBase4(1, 1, 1, 0)), Wait(4), LerpColorScaleInterval(self.levelUpText, 0.5, colorScale=VBase4(1, 1, 1, 0), startColorScale=VBase4(1, 1, 1, 1)))), Func(self.levelUpText.detachNode))
+        self.levelUpLabel = DirectLabel(
+            parent=self.levelUpText,
+            relief=None,
+            text='',
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            text_fg=(0.1, 0.7, 0.1, 1),
+            text_shadow=(0, 0, 0, 1),
+            scale=0.25)
+        self.levelUpCategoryLabel = DirectLabel(
+            parent=self.levelUpText,
+            relief=None,
+            text='',
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            text_fg=(0.1, 0.7, 0.1, 1),
+            text_shadow=(0, 0, 0, 1),
+            scale=0.125,
+            pos=(0, 0, -0.175))
+        self.levelUpIval = Sequence(
+            Func(self.levelUpText.reparentTo, aspect2d),
+            Parallel(
+                LerpPosInterval(
+                    self.levelUpText,
+                    5,
+                    pos=Point3(0, 0, 0.3),
+                    startPos=Point3(0, 0, -0.3)),
+                Sequence(
+                    LerpColorScaleInterval(
+                        self.levelUpText,
+                        0.5,
+                        colorScale=VBase4(1, 1, 1, 1),
+                        startColorScale=VBase4(1, 1, 1, 0)), Wait(4),
+                    LerpColorScaleInterval(
+                        self.levelUpText,
+                        0.5,
+                        colorScale=VBase4(1, 1, 1, 0),
+                        startColorScale=VBase4(1, 1, 1, 1)))),
+            Func(self.levelUpText.detachNode))
         return
 
     def showText(self, title, text, color=None, amount=0):

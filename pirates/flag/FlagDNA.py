@@ -24,46 +24,68 @@ class FlagDNA(AvatarDNA.AvatarDNA):
         self.emblems = {}
 
     def __repr__(self):
-        return `[
-         self.shape, self.bgData, self.layoutData, self.emblems]`
+        return repr( [self.shape, self.bgData, self.layoutData, self.emblems])
 
     def __str__(self):
         output = 'Flag DNA\n'
         output += '------------------------------\n'
         output += ' Shape\n'
         output += ' -----\n'
-        output += '  %-20s%-20s\n' % ('Style:', FlagGlobals.Shapes.getString(self.getShapeStyle()))
+        output += '  %-20s%-20s\n' % (
+            'Style:', FlagGlobals.Shapes.getString(self.getShapeStyle()))
         output += ' \nBackground\n'
         output += ' ----------\n'
-        output += '  %-20s%-20s\n' % ('Style:', FlagGlobals.Backgrounds.getString(self.getBackgroundStyle()))
-        output += '  %-20s %-20s\n' % ('Color-0:', `(FlagGlobals.Colors[self.getBackgroundColor(0)])`)
-        output += '  %-20s %-20s\n' % ('Color-1:', `(FlagGlobals.Colors[self.getBackgroundColor(1)])`)
-        output += '  %-20s %-20s\n' % ('Color-2:', `(FlagGlobals.Colors[self.getBackgroundColor(2)])`)
-        output += '  %-20s %-20s\n' % ('Color-3:', `(FlagGlobals.Colors[self.getBackgroundColor(3)])`)
-        output += '  %-20s %-20s\n' % ('H-flip:', `(bool(self.getBackgroundHorizontalFlip()))`)
-        output += '  %-20s %-20s\n' % ('V-flip:', `(bool(self.getBackgroundVerticalFlip()))`)
+        output += '  %-20s%-20s\n' % ('Style:',
+                                      FlagGlobals.Backgrounds.getString(
+                                          self.getBackgroundStyle()))
+        output += '  %-20s %-20s\n' % ('Color-0:', repr( (
+            FlagGlobals.Colors[self.getBackgroundColor(0)])))
+        output += '  %-20s %-20s\n' % ('Color-1:', repr( (
+            FlagGlobals.Colors[self.getBackgroundColor(1)])))
+        output += '  %-20s %-20s\n' % ('Color-2:', repr( (
+            FlagGlobals.Colors[self.getBackgroundColor(2)])))
+        output += '  %-20s %-20s\n' % ('Color-3:', repr( (
+            FlagGlobals.Colors[self.getBackgroundColor(3)])))
+        output += '  %-20s %-20s\n' % ('H-flip:', repr( (bool(
+            self.getBackgroundHorizontalFlip()))))
+        output += '  %-20s %-20s\n' % ('V-flip:', repr( (bool(
+            self.getBackgroundVerticalFlip()))))
         output += ' \nLayout\n'
         output += ' ----------\n'
-        output += '  %-20s%-20s\n' % ('Style:', FlagGlobals.Backgrounds.getString(self.getLayoutStyle()))
-        output += '  %-20s %-20s\n' % ('X-Pos:', `(self.getLayoutXPos())`)
-        output += '  %-20s %-20s\n' % ('Y-Pos:', `(self.getLayoutYPos())`)
-        output += '  %-20s %-20s\n' % ('R-Val:', `(self.getLayoutRVal())`)
-        output += '  %-20s %-20s\n' % ('Scale:', `(self.getLayoutScale())`)
+        output += '  %-20s%-20s\n' % (
+            'Style:', FlagGlobals.Backgrounds.getString(self.getLayoutStyle()))
+        output += '  %-20s %-20s\n' % ('X-Pos:', repr( (self.getLayoutXPos())))
+        output += '  %-20s %-20s\n' % ('Y-Pos:', repr( (self.getLayoutYPos())))
+        output += '  %-20s %-20s\n' % ('R-Val:', repr( (self.getLayoutRVal())))
+        output += '  %-20s %-20s\n' % ('Scale:', repr( (self.getLayoutScale())))
         for enum in self.getEmblemIndices():
             output += ' \nEmblem-%02d\n' % enum
             output += ' ---------\n'
-            output += '  %-20s %-20s\n' % ('Style', FlagGlobals.Emblems.getString(self.getEmblemStyle(enum)))
-            output += '  %-20s %-20s\n' % ('Color:', `(FlagGlobals.Colors[self.getEmblemColor(enum)])`)
-            output += '  %-20s %-20s\n' % ('Pos:', `(self.getEmblemPos(enum))`)
-            output += '  %-20s %-20s\n' % ('R-Val:', `(self.getEmblemRVal(enum))`)
-            output += '  %-20s %-20s\n' % ('Scale:', `(self.getEmblemScale(enum))`)
+            output += '  %-20s %-20s\n' % ('Style',
+                                           FlagGlobals.Emblems.getString(
+                                               self.getEmblemStyle(enum)))
+            output += '  %-20s %-20s\n' % ('Color:', repr( (
+                FlagGlobals.Colors[self.getEmblemColor(enum)])))
+            output += '  %-20s %-20s\n' % ('Pos:', repr(
+                                           (self.getEmblemPos(enum))))
+            output += '  %-20s %-20s\n' % ('R-Val:', repr(
+                                           (self.getEmblemRVal(enum))))
+            output += '  %-20s %-20s\n' % ('Scale:', repr(
+                                           (self.getEmblemScale(enum))))
 
         return output
 
     def setShapeStyle(self, style):
         self.__setShapeStyle(style)
 
-    def setBackground(self, style=None, color_0=None, color_1=None, color_2=None, color_3=None, hFlip=None, vFlip=None):
+    def setBackground(self,
+                      style=None,
+                      color_0=None,
+                      color_1=None,
+                      color_2=None,
+                      color_3=None,
+                      hFlip=None,
+                      vFlip=None):
         if style is not None:
             self.__setBackgroundStyle(style)
         if color_0 is not None:
@@ -80,7 +102,8 @@ class FlagDNA(AvatarDNA.AvatarDNA):
             self.__setBackgroundVerticalFlip(vFlip)
         return
 
-    def setLayout(self, style=None, xpos=None, ypos=None, rval=None, scale=None):
+    def setLayout(self, style=None, xpos=None, ypos=None, rval=None,
+                  scale=None):
         if style is not None:
             self.__setLayoutStyle(style)
         if xpos is not None:
@@ -93,7 +116,13 @@ class FlagDNA(AvatarDNA.AvatarDNA):
             self.__setLayoutScale(scale)
         return
 
-    def setEmblem(self, index, style=None, color=None, pos=None, rval=None, scale=None):
+    def setEmblem(self,
+                  index,
+                  style=None,
+                  color=None,
+                  pos=None,
+                  rval=None,
+                  scale=None):
         emblem = self.emblems.setdefault(index, self.DefaultEmblemData[:])
         if style is not None:
             self.__setEmblemStyle(index, style)
@@ -114,17 +143,20 @@ class FlagDNA(AvatarDNA.AvatarDNA):
     def flattenEmblemIndices(self):
         indices = self.getEmblemIndices()
         indices.sort()
-        newEmblems = dict(zip(range(len(indices)), [ self.emblems[x] for x in indices ]))
+        newEmblems = dict(
+            zip(range(len(indices)), [self.emblems[x] for x in indices]))
         self.emblems = newEmblems
 
     def __setShapeStyle(self, val):
         self.shape = PythonUtil.clampScalar(val, 0, FlagGlobals.ShapeCount)
 
     def __setBackgroundStyle(self, val):
-        self.bgData[0] = PythonUtil.clampScalar(val, 0, FlagGlobals.BackgroundCount - 1)
+        self.bgData[0] = PythonUtil.clampScalar(val, 0,
+                                                FlagGlobals.BackgroundCount - 1)
 
     def __setBackgroundColor(self, index, val):
-        self.bgData[1 + index] = PythonUtil.clampScalar(val, 0, FlagGlobals.ColorCount - 1)
+        self.bgData[1 + index] = PythonUtil.clampScalar(
+            val, 0, FlagGlobals.ColorCount - 1)
 
     def __setBackgroundHorizontalFlip(self, val):
         self.bgData[5] = bool(val)
@@ -133,35 +165,43 @@ class FlagDNA(AvatarDNA.AvatarDNA):
         self.bgData[6] = bool(val)
 
     def __setLayoutStyle(self, val):
-        self.layoutData[0] = PythonUtil.clampScalar(val, 0, FlagGlobals.LayoutCount - 1)
+        self.layoutData[0] = PythonUtil.clampScalar(val, 0,
+                                                    FlagGlobals.LayoutCount - 1)
 
     def __setLayoutXPos(self, val):
-        self.layoutData[1] = PythonUtil.clampScalar(val, FlagGlobals.XPosLowCount, FlagGlobals.XPosHiCount - 1)
+        self.layoutData[1] = PythonUtil.clampScalar(
+            val, FlagGlobals.XPosLowCount, FlagGlobals.XPosHiCount - 1)
 
     def __setLayoutYPos(self, val):
-        self.layoutData[2] = PythonUtil.clampScalar(val, FlagGlobals.YPosLowCount, FlagGlobals.YPosHiCount - 1)
+        self.layoutData[2] = PythonUtil.clampScalar(
+            val, FlagGlobals.YPosLowCount, FlagGlobals.YPosHiCount - 1)
 
     def __setLayoutRVal(self, val):
         self.layoutData[3] = int(val) % FlagGlobals.RotationCount
 
     def __setLayoutScale(self, val):
-        self.layoutData[4] = PythonUtil.clampScalar(val, 0, FlagGlobals.LayoutScaleCount - 1)
+        self.layoutData[4] = PythonUtil.clampScalar(
+            val, 0, FlagGlobals.LayoutScaleCount - 1)
 
     def __setEmblemStyle(self, emblemNum, val):
-        self.emblems[emblemNum][0] = PythonUtil.clampScalar(val, 0, FlagGlobals.EmblemCount - 1)
+        self.emblems[emblemNum][0] = PythonUtil.clampScalar(
+            val, 0, FlagGlobals.EmblemCount - 1)
 
     def __setEmblemColor(self, emblemNum, val):
-        self.emblems[emblemNum][1] = PythonUtil.clampScalar(val, 0, FlagGlobals.ColorCount - 1)
+        self.emblems[emblemNum][1] = PythonUtil.clampScalar(
+            val, 0, FlagGlobals.ColorCount - 1)
 
     def __setEmblemPos(self, emblemNum, val):
         PosCount = len(FlagGlobals.LayoutOffsets[self.layoutData[0]])
-        self.emblems[emblemNum][2] = PythonUtil.clampScalar(val, 0, PosCount - 1)
+        self.emblems[emblemNum][2] = PythonUtil.clampScalar(
+            val, 0, PosCount - 1)
 
     def __setEmblemRVal(self, emblemNum, val):
         self.emblems[emblemNum][3] = int(val) % FlagGlobals.RotationCount
 
     def __setEmblemScale(self, emblemNum, val):
-        self.emblems[emblemNum][4] = PythonUtil.clampScalar(val, 0, FlagGlobals.EmblemScaleCount - 1)
+        self.emblems[emblemNum][4] = PythonUtil.clampScalar(
+            val, 0, FlagGlobals.EmblemScaleCount - 1)
 
     def getShapeStyle(self):
         return self.shape
@@ -256,7 +296,8 @@ class FlagDNA(AvatarDNA.AvatarDNA):
     def __getRandomEmblemPos(self, index=-1):
 
         def genRandPos():
-            return random.randrange(0, len(FlagGlobals.LayoutOffsets[self.layoutData[0]]))
+            return random.randrange(
+                0, len(FlagGlobals.LayoutOffsets[self.layoutData[0]]))
 
         pos = genRandPos()
         return pos
@@ -288,7 +329,12 @@ class FlagDNA(AvatarDNA.AvatarDNA):
 
     def randomizeEmblem(self, index):
         eData = [
-         self.__getRandomEmblemStyle(), self.__getRandomEmblemColor(), self.__getRandomEmblemPos(index), self.__getRandomEmblemRVal(), self.__getRandomEmblemScale()]
+            self.__getRandomEmblemStyle(),
+            self.__getRandomEmblemColor(),
+            self.__getRandomEmblemPos(index),
+            self.__getRandomEmblemRVal(),
+            self.__getRandomEmblemScale()
+        ]
         self.emblems[index] = eData
 
     def randomize(self, shape=False, bg=False, emblems=False):
@@ -329,8 +375,7 @@ class FlagDNA(AvatarDNA.AvatarDNA):
         data = PyDatagram(dnaStr)
         iter = PyDatagramIterator(data)
         self.setShapeStyle(int(iter.getUint8()))
-        bgData = [
-         0] * len(self.bgData)
+        bgData = [0] * len(self.bgData)
         layoutData = [0] * len(self.layoutData)
         for x in range(len(bgData)):
             bgData[x] = int(iter.getUint8())
@@ -354,4 +399,4 @@ class FlagDNA(AvatarDNA.AvatarDNA):
 if __name__ == '__main__':
     f = FlagDNA()
     print f
-    print `f`
+    print repr( f)

@@ -10,7 +10,7 @@ from panda3d.core import *
 
 
 class OptionMenu(DirectOptionMenu):
-    
+
     normal_fg_color = (0.2, 0.8, 0.6, 1.0)
     disabled_fg_color = (0.2, 0.2, 0.2, 1.0)
 
@@ -22,24 +22,47 @@ class OptionMenu(DirectOptionMenu):
         popupMarkerImage = char_gui.find('**/chargui_forward')
         popupMarkerImageOver = char_gui.find('**/chargui_forward_over')
         char_gui.removeNode()
-        optiondefs = (
-         (
-          'image', titleImage, None), ('image_pos', (0, 0, -6), None), ('image_scale', (6, 3, 3), None), ('popupMarkerImage', (popupMarkerImage, popupMarkerImage, popupMarkerImageOver, popupMarkerImage), None), ('popupMarkerImageScale', 5, None), ('popupMarkerHpr', (0, 0, 90), None), ('text_fg', self.normal_fg_color, None), ('text_align', TextNode.ACenter, None), ('popupBgColor', (0.0745, 0.0627, 0.0501, 1.0), None), ('popupTextColor', (0.831, 0.745, 0.58, 1.0), None), ('popupHalfWidth', 3.8, None), ('highlightColor', (0.212, 0.192, 0.169, 1), None), ('frameSize', (0, 3.4, 0, 0.6), None), ('relief', None, None))
+        optiondefs = (('image', titleImage, None), ('image_pos', (0, 0, -6),
+                                                    None), ('image_scale',
+                                                            (6, 3, 3), None),
+                      ('popupMarkerImage',
+                       (popupMarkerImage, popupMarkerImage,
+                        popupMarkerImageOver, popupMarkerImage),
+                       None), ('popupMarkerImageScale', 5,
+                               None), ('popupMarkerHpr', (0, 0, 90),
+                                       None), ('text_fg', self.normal_fg_color,
+                                               None), ('text_align',
+                                                       TextNode.ACenter, None),
+                      ('popupBgColor', (0.0745, 0.0627, 0.0501, 1.0),
+                       None), ('popupTextColor', (0.831, 0.745, 0.58, 1.0),
+                               None), ('popupHalfWidth', 3.8, None),
+                      ('highlightColor', (0.212, 0.192, 0.169, 1),
+                       None), ('frameSize', (0, 3.4, 0, 0.6),
+                               None), ('relief', None, None))
         self.defineoptions(kw, optiondefs)
         DirectOptionMenu.__init__(self, parent)
         self.popupMarker.removeNode()
-        self.popupMarker = self.createcomponent('popupMarker', (), None, DirectButton, (self,), image=self['popupMarkerImage'], image_scale=self['popupMarkerImageScale'], hpr=self['popupMarkerHpr'], relief=None, frameSize=(-0.5, 0.5, -0.2, 0.2))
+        self.popupMarker = self.createcomponent(
+            'popupMarker', (),
+            None,
+            DirectButton, (self,),
+            image=self['popupMarkerImage'],
+            image_scale=self['popupMarkerImageScale'],
+            hpr=self['popupMarkerHpr'],
+            relief=None,
+            frameSize=(-0.5, 0.5, -0.2, 0.2))
         self.popupMarker.bind(DGG.B1PRESS, self.showPopupMenu)
         self.popupMarker.bind(DGG.B1RELEASE, self.selectHighlightedIndex)
-        self.popupMarker.guiItem.setSound(DGG.B1PRESS + self.popupMarker.guiId, self['clickSound'])
+        self.popupMarker.guiItem.setSound(DGG.B1PRESS + self.popupMarker.guiId,
+                                          self['clickSound'])
         self.initialiseoptions(OptionMenu)
         return
 
     def setItems(self):
         if self.popupMenu != None:
             self.destroycomponent('popupMenu')
-        self.popupMenu = self.createcomponent('popupMenu', (), None, DirectFrame, (
-         self,), relief=None)
+        self.popupMenu = self.createcomponent(
+            'popupMenu', (), None, DirectFrame, (self,), relief=None)
         self.popupMenu.setBin('gui-popup', 0)
         if not self['items']:
             return
@@ -48,7 +71,15 @@ class OptionMenu(DirectOptionMenu):
         self.maxX = self['popupHalfWidth']
         self.minX = -1 * self.maxX
         for item in self['items']:
-            c = self.createcomponent('item%d' % itemIndex, (), 'item', DirectButton, (self.popupMenu,), text=item, text_align=TextNode.ACenter, frameColor=self['popupBgColor'], text_fg=self['popupTextColor'], command=lambda i=itemIndex: self.set(i))
+            c = self.createcomponent(
+                'item%d' % itemIndex, (),
+                'item',
+                DirectButton, (self.popupMenu,),
+                text=item,
+                text_align=TextNode.ACenter,
+                frameColor=self['popupBgColor'],
+                text_fg=self['popupTextColor'],
+                command=lambda i=itemIndex: self.set(i))
             bounds = c.getBounds()
             if self.minX == None:
                 self.minX = bounds[0]
@@ -76,13 +107,16 @@ class OptionMenu(DirectOptionMenu):
         self.maxHeight = self.maxZ - self.minZ
         for i in range(itemIndex):
             item = self.component('item%d' % i)
-            item['frameSize'] = (
-             self.minX, self.maxX, self.minZ, self.maxZ)
+            item['frameSize'] = (self.minX, self.maxX, self.minZ, self.maxZ)
             item.setPos(0, 0, -self.maxZ - i * self.maxHeight)
             item.bind(DGG.B1RELEASE, self.hidePopupMenu)
-            item.bind(DGG.WITHIN, lambda x, i=i, item=item: self._highlightItem(item, i))
+            item.bind(
+                DGG.WITHIN,
+                lambda x, i=i, item=item: self._highlightItem(item, i))
             fc = item['frameColor']
-            item.bind(DGG.WITHOUT, lambda x, item=item, fc=fc: self._unhighlightItem(item, fc))
+            item.bind(
+                DGG.WITHOUT,
+                lambda x, item=item, fc=fc: self._unhighlightItem(item, fc))
 
         f = self.component('popupMenu')
         f['frameSize'] = (0, self.maxWidth, -self.maxHeight * itemIndex, 0)
@@ -95,9 +129,9 @@ class OptionMenu(DirectOptionMenu):
         if self.initFrameSize:
             bounds = list(self.initFrameSize)
         else:
-            bounds = [
-             self.minX, self.maxX, self.minZ, self.maxZ]
-        pm.setPos(bounds[1] + pmw / 2.0, 0, bounds[2] + (bounds[3] - bounds[2]) / 2.0)
+            bounds = [self.minX, self.maxX, self.minZ, self.maxZ]
+        pm.setPos(bounds[1] + pmw / 2.0, 0,
+                  bounds[2] + (bounds[3] - bounds[2]) / 2.0)
         bounds[1] += pmw
         self['frameSize'] = (bounds[0], bounds[1], bounds[2], bounds[3])
         self.hidePopupMenu()
@@ -142,11 +176,11 @@ class OptionMenu(DirectOptionMenu):
             self.selectedIndex = newIndex
             #TODO: FIXME! Temp patch to resolve options auto resolution bug
             if self.selectedIndex >= len(self['items']):
-                self.selectedIndex = len(self['items']) -1
+                self.selectedIndex = len(self['items']) - 1
             item = self['items'][self.selectedIndex]
             self['text'] = item
             if fCommand and self['command']:
-                apply(self['command'], [item, index] + self['extraArgs'])
+                self['command'](*[item, index] + self['extraArgs'])
         return
 
     def setByValue(self, val, fCommand=True):
@@ -157,4 +191,6 @@ class OptionMenu(DirectOptionMenu):
             i += 1
 
         self.set(i, fCommand=fCommand)
+
+
 # okay decompiling .\pirates\piratesgui\OptionMenu.pyc

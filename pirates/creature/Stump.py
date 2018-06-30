@@ -8,25 +8,61 @@ from pirates.creature.Creature import Creature
 
 
 class Stump(Creature):
-    
+
     ModelInfo = ('models/char/mossman_hi', 'models/char/mossman_')
     SfxNames = dict(Creature.SfxNames)
-    SfxNames.update({'death': 'sfx_mossman_death.mp3', 'pain': 'sfx_mossman_agitated.mp3', 'spawn': 'sfx_mossman_intro.mp3'})
+    SfxNames.update({
+        'death': 'sfx_mossman_death.mp3',
+        'pain': 'sfx_mossman_agitated.mp3',
+        'spawn': 'sfx_mossman_intro.mp3'
+    })
     sfx = {}
-    AnimList = (
-     ('idle', 'idle'), ('walk', 'walk'), ('run', 'run'), ('death', 'death'), ('intro', 'intro'), ('jump', 'jump'), ('kick', 'kick'), ('kick_right', 'kick_right'), ('slap_left', 'slap_left'), ('slap_right', 'slap_right'), ('strafe_left', 'strafe_left'), ('strafe_right', 'strafe_right'), ('swat_left', 'swat_left'), ('swat_right', 'swat_right'), ('jump_attack', 'jump_attack'), ('pain', 'pain'))
+    AnimList = (('idle', 'idle'), ('walk', 'walk'), ('run', 'run'),
+                ('death', 'death'), ('intro', 'intro'), ('jump', 'jump'),
+                ('kick', 'kick'), ('kick_right', 'kick_right'), ('slap_left',
+                                                                 'slap_left'),
+                ('slap_right', 'slap_right'), ('strafe_left', 'strafe_left'),
+                ('strafe_right', 'strafe_right'), ('swat_left', 'swat_left'),
+                ('swat_right', 'swat_right'), ('jump_attack',
+                                               'jump_attack'), ('pain', 'pain'))
 
     class AnimationMixer(Creature.AnimationMixer):
-        
-        notify = DirectNotifyGlobal.directNotify.newCategory('StumpAnimationMixer')
+
+        notify = DirectNotifyGlobal.directNotify.newCategory(
+            'StumpAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION
-        AnimRankings = {'idle': (LOOP['LOOP'],), 'walk': (LOOP['LOOP'],), 'run': (LOOP['LOOP'],), 'strafe_left': (LOOP['LOOP'],), 'strafe_right': (LOOP['LOOP'],), 'death': (ACTION['MOVIE'],), 'intro': (ACTION['ACTION'],), 'jump': (ACTION['ACTION'],), 'kick': (ACTION['ACTION'],), 'kick_right': (ACTION['ACTION'],), 'slap_left': (ACTION['ACTION'],), 'slap_right': (ACTION['ACTION'],), 'swat_left': (ACTION['ACTION'],), 'swat_right': (ACTION['ACTION'],), 'jump_attack': (ACTION['ACTION'],), 'pain': (ACTION['ACTION'],)}
+        AnimRankings = {
+            'idle': (LOOP['LOOP'],),
+            'walk': (LOOP['LOOP'],),
+            'run': (LOOP['LOOP'],),
+            'strafe_left': (LOOP['LOOP'],),
+            'strafe_right': (LOOP['LOOP'],),
+            'death': (ACTION['MOVIE'],),
+            'intro': (ACTION['ACTION'],),
+            'jump': (ACTION['ACTION'],),
+            'kick': (ACTION['ACTION'],),
+            'kick_right': (ACTION['ACTION'],),
+            'slap_left': (ACTION['ACTION'],),
+            'slap_right': (ACTION['ACTION'],),
+            'swat_left': (ACTION['ACTION'],),
+            'swat_right': (ACTION['ACTION'],),
+            'jump_attack': (ACTION['ACTION'],),
+            'pain': (ACTION['ACTION'],)
+        }
 
     @classmethod
     def setupAnimInfo(cls):
-        cls.setupAnimInfoState('LandRoam', (('idle', 1.0), ('walk', 1.0), ('walk', 1.0), ('walk', -1.0), ('walk', 1.0), ('walk', 1.0), ('walk', 1.0), ('walk', 1.0), ('walk', 1.0), ('walk', 1.0), ('idle', 1.0), ('idle', 1.0)))
-        cls.setupAnimInfoState('WaterRoam', (('idle', 1.0), ('walk', 1.0), ('walk', 1.0), ('walk', -1.0), ('walk', 1.0), ('walk', 1.0), ('walk', 1.0), ('walk', 1.0), ('walk', 1.0), ('walk', 1.0), ('idle', 1.0), ('idle', 1.0)))
+        cls.setupAnimInfoState('LandRoam',
+                               (('idle', 1.0), ('walk', 1.0), ('walk', 1.0),
+                                ('walk', -1.0), ('walk', 1.0), ('walk', 1.0),
+                                ('walk', 1.0), ('walk', 1.0), ('walk', 1.0),
+                                ('walk', 1.0), ('idle', 1.0), ('idle', 1.0)))
+        cls.setupAnimInfoState('WaterRoam',
+                               (('idle', 1.0), ('walk', 1.0), ('walk', 1.0),
+                                ('walk', -1.0), ('walk', 1.0), ('walk', 1.0),
+                                ('walk', 1.0), ('walk', 1.0), ('walk', 1.0),
+                                ('walk', 1.0), ('idle', 1.0), ('idle', 1.0)))
 
     def __init__(self):
         Creature.__init__(self)
@@ -34,7 +70,8 @@ class Stump(Creature):
         self.leftHandNode = None
         if not Stump.sfx:
             for name in Stump.SfxNames:
-                Stump.sfx[name] = loader.loadSfx('audio/' + Stump.SfxNames[name])
+                Stump.sfx[name] = loader.loadSfx('audio/' +
+                                                 Stump.SfxNames[name])
 
         self.nametagOffset = 10
         self.generateCreature()
@@ -78,4 +115,6 @@ class Stump(Creature):
 
     def adjustNametag3d(self, parentScale=1.0):
         self.nametag3d.setZ(self.scale * parentScale * self.nametagOffset)
+
+
 # okay decompiling .\pirates\creature\Stump.pyc

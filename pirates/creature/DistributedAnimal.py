@@ -10,7 +10,6 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class DistributedAnimal(DistributedCreature.DistributedCreature):
-    
 
     def __init__(self, cr):
         DistributedCreature.DistributedCreature.__init__(self, cr)
@@ -30,4 +29,6 @@ class DistributedAnimal(DistributedCreature.DistributedCreature):
 
     def initializeBattleCollisions(self):
         pass
+
+
 # okay decompiling .\pirates\creature\DistributedAnimal.pyc

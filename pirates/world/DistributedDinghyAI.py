@@ -1,6 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 
+
 class DistributedDinghyAI(DistributedInteractiveAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDinghyAI')
     MULTIUSE = True
@@ -66,8 +67,9 @@ class DistributedDinghyAI(DistributedInteractiveAI):
         inventory = avatar.getInventory()
 
         if not inventory:
-            self.notify.warning('Failed to select ship %d, avatar %d has no inventory!' % (
-                shipId, avatar.doId))
+            self.notify.warning(
+                'Failed to select ship %d, avatar %d has no inventory!' %
+                (shipId, avatar.doId))
 
             return
 

@@ -1,4 +1,4 @@
-# Hacking Checks
+# Hacking Checks:
 want-treasurechest-inactive-log #f
 
 # Webhooks:
@@ -22,4 +22,3 @@ notify-timestamp #t
 
 # RPC:
 want-rpc-server #t
-

@@ -31,7 +31,8 @@ class Wake(PooledEffect):
         self.u = 0.0
         self.pastForwardVelocity = []
         self.pastRotationalVelocity = []
-        self.wake = Actor.Actor('models/sea/wake_zero', {'still': 'models/sea/wake_still'})
+        self.wake = Actor.Actor('models/sea/wake_zero',
+                                {'still': 'models/sea/wake_still'})
         self.bend = self.wake.controlJoint(None, 'modelRoot', 'def_wake_2')
         self.wake.controlJoint(self.bend, 'modelRoot', 'def_wake_3')
         self.wake.controlJoint(self.bend, 'modelRoot', 'def_wake_4')
@@ -64,14 +65,22 @@ class Wake(PooledEffect):
             pass
         else:
             self.spNP.setDepthTest(0)
-        self.wake.setAttrib(ColorWriteAttrib.make(ColorWriteAttrib.CRed | ColorWriteAttrib.CGreen | ColorWriteAttrib.CBlue))
+        self.wake.setAttrib(
+            ColorWriteAttrib.make(ColorWriteAttrib.CRed |
+                                  ColorWriteAttrib.CGreen |
+                                  ColorWriteAttrib.CBlue))
         if hasattr(base, 'pe'):
-            spn.setEffect(CompassEffect.make(base.pe.seaPatch.patchNP, CompassEffect.PZ))
+            spn.setEffect(
+                CompassEffect.make(base.pe.seaPatch.patchNP, CompassEffect.PZ))
         else:
-            spn.setEffect(CompassEffect.make(base.cr.activeWorld.getWater().patchNP, CompassEffect.PZ))
+            spn.setEffect(
+                CompassEffect.make(base.cr.activeWorld.getWater().patchNP,
+                                   CompassEffect.PZ))
         if self.use_water_bin:
-            mask = 4294967295L
-            stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
+            mask = 4294967295
+            stencil = StencilAttrib.make(
+                1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep,
+                StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
             self.spNP.setAttrib(stencil)
         self.shadow = None
         return
@@ -222,8 +231,10 @@ class Wake(PooledEffect):
             string = 'FLYING_DUTCHMAN'
         if draw_shadow:
             if self.shadow_model:
-                water_shadow = WaterShadow('p_ship_shadow', self.shadow_model, ship)
-                water_shadow.setPos(shadow_offset_x, shadow_offset_y, shadow_offset_z)
+                water_shadow = WaterShadow('p_ship_shadow', self.shadow_model,
+                                           ship)
+                water_shadow.setPos(shadow_offset_x, shadow_offset_y,
+                                    shadow_offset_z)
                 water_shadow.setScale(scale_x, scale_y, scale_z)
                 if not hasattr(base, 'pe'):
                     water_shadow.setHpr(180, 0, 0)
@@ -260,7 +271,8 @@ class Wake(PooledEffect):
             del self.pastRotationalVelocity[0]
 
         velocity = sum(self.pastForwardVelocity) / len(self.pastForwardVelocity)
-        rotationalVelocity = sum(self.pastRotationalVelocity) / len(self.pastRotationalVelocity)
+        rotationalVelocity = sum(self.pastRotationalVelocity) / len(
+            self.pastRotationalVelocity)
         if velocity < self.MinWakeVelocity:
             self.wake.hide()
             self.bowWave.hide()
@@ -268,7 +280,8 @@ class Wake(PooledEffect):
             if velocity < self.FadeOutVelocity:
                 self.wake.show()
                 self.bowWave.show()
-                scale = (velocity - self.MinWakeVelocity) / (self.FadeOutVelocity - self.MinWakeVelocity)
+                scale = (velocity - self.MinWakeVelocity) / (
+                    self.FadeOutVelocity - self.MinWakeVelocity)
                 self.wake.setAlphaScale(scale)
                 self.bowWave.setAlphaScale(scale)
             else:
@@ -303,7 +316,8 @@ class Wake(PooledEffect):
             if velocity < self.FadeOutVelocity:
                 self.wake.show()
                 self.bowWave.show()
-                scale = (velocity - self.MinWakeVelocity) / (self.FadeOutVelocity - self.MinWakeVelocity)
+                scale = (velocity - self.MinWakeVelocity) / (
+                    self.FadeOutVelocity - self.MinWakeVelocity)
                 self.wake.setAlphaScale(scale)
                 self.bowWave.setAlphaScale(scale)
             else:
@@ -335,4 +349,6 @@ class Wake(PooledEffect):
             self.shadow.removeNode()
         PooledEffect.destroy(self)
         return
+
+
 # okay decompiling .\pirates\effects\Wake.pyc

@@ -48,37 +48,16 @@ class DiscordPresence:
     }
 
     largeImages = [
-        'ga_barbosas_cave',
-        'ga_cangrejos',
-        'ga_cave',
-        'ga_cave_lava',
-        'ga_cave2',
-        'ga_cutthroat',
-        'ga_devils_anvil',
-        'ga_driftwood',
-        'ga_french_pvp',
-        'ga_ocean',
-        'ga_outcast',
-        'ga_padres_del_fuego',
-        'ga_perdida',
-        'ga_port_royal',
-        'ga_rumrunners',
-        'ga_spanish_pvp',
-        'ga_tormenta',
-        'ga_tortuga',
-        'game_logo',
-        'sc_sailing'
+        'ga_barbosas_cave', 'ga_cangrejos', 'ga_cave', 'ga_cave_lava',
+        'ga_cave2', 'ga_cutthroat', 'ga_devils_anvil', 'ga_driftwood',
+        'ga_french_pvp', 'ga_ocean', 'ga_outcast', 'ga_padres_del_fuego',
+        'ga_perdida', 'ga_port_royal', 'ga_rumrunners', 'ga_spanish_pvp',
+        'ga_tormenta', 'ga_tortuga', 'game_logo', 'sc_sailing'
     ]
 
     smallImages = [
-        'coin_green',
-        'coin_red',
-        'coin_white',
-        'halfmoon',
-        'jollymoon',
-        'moon',
-        'poker',
-        'skill_wheel'
+        'coin_green', 'coin_red', 'coin_white', 'halfmoon', 'jollymoon', 'moon',
+        'poker', 'skill_wheel'
     ]
 
     WEAPON_TYPE_IMAGE = 'image'
@@ -126,8 +105,10 @@ class DiscordPresence:
     def __init__(self):
         self._clientId = config.GetString('discord-client-id', '')
         self._version = config.GetInt('discord-rpc-version', 1)
-        self._allowTeleportFromDiscord = config.GetBool('allow-teleport-from-discord', False)
-        self._wantDevelopmentMessage = config.GetBool('discord-development-message', False)
+        self._allowTeleportFromDiscord = config.GetBool(
+            'allow-teleport-from-discord', False)
+        self._wantDevelopmentMessage = config.GetBool(
+            'discord-development-message', False)
         self._changeTime = None
         self._pipe = None
 
@@ -160,7 +141,10 @@ class DiscordPresence:
     def __get_ipc_path(self, pipe=0):
         ipc_path = None
         if sys.platform == 'linux' or sys.platform == 'darwin':
-            ipc_path = (os.environ.get('XDG_RUNTIME_DIR',None) or os.environ.get('TMPDIR',None) or os.environ.get('TMP',None) or os.environ.get('TEMP',None) or '/tmp') + '/discord-ipc-' + str(pipe)
+            ipc_path = (os.environ.get('XDG_RUNTIME_DIR', None) or
+                        os.environ.get('TMPDIR', None) or os.environ.get(
+                            'TMP', None) or os.environ.get('TEMP', None) or
+                        '/tmp') + '/discord-ipc-' + str(pipe)
         elif sys.platform == 'win32':
             ipc_path = r'\\?\pipe\discord-ipc-' + str(pipe)
         return ipc_path
@@ -172,11 +156,13 @@ class DiscordPresence:
 
         # Check to see if we are already running
         if self.running:
-            self.notify.debug('Attempting to start an already started DiscordPresence')
+            self.notify.debug(
+                'Attempting to start an already started DiscordPresence')
             return
 
         if not self._clientId or self._clientId == '':
-            self.notify.debug('Failed to start Discord Rich Presence; ClientId not specified')
+            self.notify.debug(
+                'Failed to start Discord Rich Presence; ClientId not specified')
             return
 
         self.notify.info('Connecting to Discord...')
@@ -189,13 +175,16 @@ class DiscordPresence:
             try:
                 self._pipe.connect(ipc_path)
             except socket.error:
-                self.notify.warning('Failed to start Discord Rich Presence; could not connect!')
+                self.notify.warning(
+                    'Failed to start Discord Rich Presence; could not connect!')
                 return
         else:
             try:
                 self._pipe = open(ipc_path, 'r+b')
             except IOError:
-                self.notify.warning('Failed to start Discord Rich Presence; could not open file!')
+                self.notify.warning(
+                    'Failed to start Discord Rich Presence; could not open file!'
+                )
                 return
 
         self.__handshake()
@@ -247,7 +236,8 @@ class DiscordPresence:
             self.notify.debug('Failed to read data from Discord')
             self.disconnect()
         finally:
-            self.notify.debug('Received Rich Presence response: %s' % str(response))
+            self.notify.debug(
+                'Received Rich Presence response: %s' % str(response))
             return response
 
     def __send(self, opcode, payload):
@@ -257,7 +247,8 @@ class DiscordPresence:
 
         self.notify.debug('Sending Presence update: %s' % str(payload))
         payload = json.dumps(payload)
-        encoded_data = struct.pack("<ii", opcode, len(payload)) + payload.encode("utf-8")
+        encoded_data = struct.pack("<ii", opcode,
+                                   len(payload)) + payload.encode("utf-8")
         try:
             if sys.platform == 'linux' or sys.platform == 'darwin':
                 self._pipe.sendall(encoded_data)
@@ -290,12 +281,16 @@ class DiscordPresence:
             large_image = 'game_logo'
 
         if large_image not in self.largeImages and large_image != None:
-            self.notify.warning('Failed to set Large Image; %s is not a registered image!' % large_image)
+            self.notify.warning(
+                'Failed to set Large Image; %s is not a registered image!' %
+                large_image)
             large_image = None
             large_text = None
 
         if small_image not in self.smallImages and small_image != None:
-            self.notify.warning('Failed to set Small Image; %s is not a registered image' % small_image)
+            self.notify.warning(
+                'Failed to set Small Image; %s is not a registered image' %
+                small_image)
             small_image = None
             small_text = None
 
@@ -304,7 +299,7 @@ class DiscordPresence:
             self._changeTime = time.time()
 
         if not start and not self._currentCountdown:
-            start=self._changeTime
+            start = self._changeTime
 
         payload = {
             "cmd": "SET_ACTIVITY",
@@ -364,10 +359,7 @@ class DiscordPresence:
         if self._stateOverride:
             state = self._stateOverride
         elif self._wantDevelopmentMessage and __debug__:
-            messages = [
-                'Developing the game',
-                'Working on source code'
-            ]
+            messages = ['Developing the game', 'Working on source code']
             state = random.choice(messages)
         elif district:
             state = '%s: %s' % (PLocalizer.Ocean, district)
@@ -377,42 +369,32 @@ class DiscordPresence:
             details = self._detailsOverride
         elif self._afk:
             messages = [
-                'Currently AFK',
-                'Asleep on the Job',
-                'Away from Keyboard']
+                'Currently AFK', 'Asleep on the Job', 'Away from Keyboard'
+            ]
 
             if self._currentAction == PresenceActions.Sailing:
                 if self._currentWeapon == 'wheel':
-                    messages += [
-                        'Fallen asleep at the wheel'
-                    ]
+                    messages += ['Fallen asleep at the wheel']
 
             details = random.choice(messages)
         elif self._cursed and self._currentAction != PresenceActions.PVP:
             details = 'Cursed by Jolly Roger'
         elif self._currentAction == PresenceActions.PVP:
             messages = [
-                'Battling Cursed Pirates',
-                'Battling Their Fellow Pirates'
+                'Battling Cursed Pirates', 'Battling Their Fellow Pirates'
             ]
             details = random.choice(messages)
         elif self._currentAction == PresenceActions.Sailing:
             oceanName = self.__getOceanName()
-            messages = [
-                'Sailing the Caribbean',
-                'Sailing the Seven Seas'
-            ]
+            messages = ['Sailing the Caribbean', 'Sailing the Seven Seas']
             if not oceanName:
                 details = random.choice(messages)
             else:
                 details = 'Sailing in %s' % oceanName
         elif self._currentAction == PresenceActions.Poker:
             messages = [
-                'Playing Card Games',
-                'Playing Cards',
-                'Playing Parlor Games',
-                'Cheating The Dealer',
-                'Cheating their Way to Victory'
+                'Playing Card Games', 'Playing Cards', 'Playing Parlor Games',
+                'Cheating The Dealer', 'Cheating their Way to Victory'
             ]
             details = random.choice(messages)
         elif self._currentAction == PresenceActions.Battle:
@@ -424,21 +406,20 @@ class DiscordPresence:
                 details = 'Currently on %s' % locationName
         elif self._currentAction == PresenceActions.Digging:
             messages = [
-                'Digging for buried treasure',
-                'Digging for treasure',
+                'Digging for buried treasure', 'Digging for treasure',
                 'Digging for lost treasure'
             ]
             details = random.choice(messages)
         elif self._currentAction == PresenceActions.Searching:
             messages = [
-                'Searching for gold!',
-                'Searching for treasure',
-                'Searching for lost treasure',
-                'Searching for lost goods'
+                'Searching for gold!', 'Searching for treasure',
+                'Searching for lost treasure', 'Searching for lost goods'
             ]
             details = random.choice(messages)
         else:
-            self.notify.warning('Failed to choose the correct details; Lets just enjoy the Caribbean...')
+            self.notify.warning(
+                'Failed to choose the correct details; Lets just enjoy the Caribbean...'
+            )
             details = 'Enjoying the Caribbean'
 
         return (state, details)
@@ -453,9 +434,12 @@ class DiscordPresence:
         elif self._currentLocation:
             image = self.discordLocations.get(self._currentLocation, None)
             if image:
-                text = locationName = PLocalizer.LocationNames.get(self._currentLocation, None)
+                text = locationName = PLocalizer.LocationNames.get(
+                    self._currentLocation, None)
             else:
-                self.notify.warning('Failed to locate image key for location: %s' % self._currentLocation)
+                self.notify.warning(
+                    'Failed to locate image key for location: %s' %
+                    self._currentLocation)
 
         return (image, text)
 
@@ -477,11 +461,12 @@ class DiscordPresence:
             else:
                 image = 'coin_white'
         elif self._currentAction == PresenceActions.Poker:
-            image= 'poker'
+            image = 'poker'
             text = 'Parlor Games'  # TODO: Display name of current parlor game?
         elif self._currentWeapon:
             data = {}
-            weaponCategory = WeaponGlobals.getWeaponCategory(self._currentWeapon)
+            weaponCategory = WeaponGlobals.getWeaponCategory(
+                self._currentWeapon)
             if self._currentWeapon in self.weaponTypes:
                 data = self.weaponTypes[self._currentWeapon]
             elif weaponCategory in self.weaponTypes:
@@ -598,12 +583,13 @@ class DiscordPresence:
             small_image=small_image,
             small_text=small_text,
             start=self._changeTime,
-            party_id='POC-CREW', #TODO: Pull from actual party/crew data?
+            party_id='POC-CREW',  #TODO: Pull from actual party/crew data?
             party_size=partySize,
             join=join,
             end=self._currentCountdown)
 
         return response
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def discordCountdown(countdown):
@@ -613,6 +599,7 @@ def discordCountdown(countdown):
     base.richPresence.setCountdown(countdown)
     return 'Countdown set to %d!' % countdown
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str, int])
 def discordLocation(locationUid, interior):
     """
@@ -621,6 +608,7 @@ def discordLocation(locationUid, interior):
 
     base.richPresence.setLocation(locationUid, interior=interior)
     return 'Location set to %s!' % locationUid
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def discordAction(state):
@@ -639,11 +627,13 @@ def discordAction(state):
 
     # Verify the state is valid
     if state not in states:
-        return 'Invalid state: %s; Valid: (%s)' % (state, ','.join(states.keys()))
+        return 'Invalid state: %s; Valid: (%s)' % (state, ','.join(
+            states.keys()))
 
     stateId = states[state]
     base.richPresence.setCurrentAction(stateId)
     return 'Action set to %s (%d)' % (state, stateId)
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def lastDiscordAction():
@@ -652,6 +642,7 @@ def lastDiscordAction():
     """
     base.richPresence.setLastAction()
     return 'Action set to last'
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def testDiscordPVP():
@@ -662,9 +653,10 @@ def testDiscordPVP():
     base.richPresence.setPVP()
 
     now = datetime.datetime.now()
-    ahead = now + datetime.timedelta(minutes = 20)
+    ahead = now + datetime.timedelta(minutes=20)
     base.richPresence.setCountdown(time.mktime(ahead.timetuple()))
     return 'Test PVP State set!'
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def testDiscordSailing():
@@ -675,6 +667,7 @@ def testDiscordSailing():
     base.richPresence.setCurrentWeapon('wheel')
     return 'Test Sailing State set!'
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def testDiscordPoker():
     """
@@ -682,6 +675,7 @@ def testDiscordPoker():
     """
     base.richPresence.setParlorGame()
     return 'Test Parlor Game state set!'
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def discordState(state):
@@ -691,6 +685,7 @@ def discordState(state):
     base.richPresence.setStateOverride(state)
     return 'State set to "%s"!' % state
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def resetDiscordState():
     """
@@ -698,6 +693,7 @@ def resetDiscordState():
     """
     base.richPresence.setStateOverride(None)
     return 'State reset!'
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def discordDetails(details):
@@ -707,6 +703,7 @@ def discordDetails(details):
     base.richPresence.setDetailsOverride(details)
     return 'Details set to "%s"!' % details
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def resetDiscordDetails():
     """
@@ -714,6 +711,7 @@ def resetDiscordDetails():
     """
     base.richPresence.setDetailsOverride(None)
     return 'Details reset!'
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
 def discordCrew(current, max):
@@ -723,6 +721,7 @@ def discordCrew(current, max):
     base.richPresence.setCurrentCrew(current, max)
     return 'Crew size set to: (%d, %d)' % (current, max)
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def discordAllowJoin(join):
     """
@@ -731,15 +730,13 @@ def discordAllowJoin(join):
     base.richPresence.setCanJoin(join)
     return 'CanJoin state set to: %s' % join
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def discordCurrentWeapon(weapon):
     """
     Sets your current Discord weapon
     """
-    words = [
-        'wheel',
-        'cannon'
-    ]
+    words = ['wheel', 'cannon']
 
     if weapon not in words:
         weapon = int(weapon)

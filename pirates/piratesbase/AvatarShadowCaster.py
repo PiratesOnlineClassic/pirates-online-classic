@@ -7,7 +7,6 @@ from pirates.piratesbase import TODGlobals
 
 
 class AvatarShadowCaster(DirectObject):
-    
 
     def __init__(self, lightSrc):
         DirectObject.__init__(self)
@@ -53,7 +52,8 @@ class AvatarShadowCaster(DirectObject):
         self.casterState = NodePath('temp')
         #self.casterState.setAttrib(DrawMaskAttrib.makeShow())
         self.casterState.setColorScaleOff(2)
-        self.casterState.setColor(self.shadowColor, self.shadowColor, self.shadowColor, 1, 2)
+        self.casterState.setColor(self.shadowColor, self.shadowColor,
+                                  self.shadowColor, 1, 2)
         self.casterState.setTextureOff(2)
         self.casterState.setLightOff(2)
         self.casterState.setFogOff(2)
@@ -112,7 +112,8 @@ class AvatarShadowCaster(DirectObject):
             self.shadowColorIndex += 1
 
         prevH, prevColor = TODGlobals.ShadowColorTable[self.shadowColorIndex]
-        nextH, nextColor = TODGlobals.ShadowColorTable[self.shadowColorIndex + 1]
+        nextH, nextColor = TODGlobals.ShadowColorTable[self.shadowColorIndex +
+                                                       1]
         dt = (h - prevH) / (nextH - prevH)
         grayLevel = dt * (nextColor - prevColor) + prevColor
         if self.shadowColor != grayLevel:
@@ -120,14 +121,17 @@ class AvatarShadowCaster(DirectObject):
             ShadowCaster.setGlobalDropShadowGrayLevel(1.0 - grayLevel)
             if self.shadowsEnabled:
                 self.casterState.setColor(grayLevel, grayLevel, grayLevel, 1, 2)
-                self.shadowCam.node().setInitialState(self.casterState.getState())
+                self.shadowCam.node().setInitialState(
+                    self.casterState.getState())
 
     def __createBuffer(self):
         self.__destroyBuffer()
         if self.fMoreShadows:
-            self.shadowBuffer = base.win.makeTextureBuffer('shadow', 1024 * 4, 1024 * 4, tex=self.shadowTex)
+            self.shadowBuffer = base.win.makeTextureBuffer(
+                'shadow', 1024 * 4, 1024 * 4, tex=self.shadowTex)
         else:
-            self.shadowBuffer = base.win.makeTextureBuffer('shadow', 1024, 1024, tex=self.shadowTex)
+            self.shadowBuffer = base.win.makeTextureBuffer(
+                'shadow', 1024, 1024, tex=self.shadowTex)
         self.shadowBuffer.setSort(30)
         self.shadowBuffer.setClearColor(self.clearColor)
         dr = self.shadowBuffer.makeDisplayRegion()

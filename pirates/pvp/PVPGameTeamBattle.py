@@ -5,8 +5,9 @@ from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.pvp.PVPGameBase import PVPGameBase
 from pirates.ship import DistributedShip
 
+
 class PVPGameTeamBattle(PVPGameBase):
-    
+
     notify = directNotify.newCategory('PVPGameTeamBattle')
 
     def __init__(self, cr):
@@ -23,7 +24,8 @@ class PVPGameTeamBattle(PVPGameBase):
 
     def announceGenerate(self):
         PVPGameBase.announceGenerate(self)
-        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects([self.instanceId], eachCallback=self.instanceGenerated)
+        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects(
+            [self.instanceId], eachCallback=self.instanceGenerated)
 
     def instanceGenerated(self, instanceObj):
         self.instance = instanceObj
@@ -101,7 +103,12 @@ class PVPGameTeamBattle(PVPGameBase):
         scoreList.sort(self.sortScores)
         return scoreList
 
-    def createScoreboardItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+    def createScoreboardItem(self,
+                             item,
+                             parent,
+                             itemType=None,
+                             columnWidths=[],
+                             color=None):
         itemColorScale = None
         blink = False
         team = item.get('Team')
@@ -114,7 +121,8 @@ class PVPGameTeamBattle(PVPGameBase):
             itemColorScale = PVPGlobals.TEAM_COLOR[team]
         else:
             itemColorScale = (1, 1, 1, 1)
-        return MiniScoreItemGui(item, parent, self.instance, itemColorScale, self.instance.gameRules, blink)
+        return MiniScoreItemGui(item, parent, self.instance, itemColorScale,
+                                self.instance.gameRules, blink)
 
     def getScoreText(self, scoreValue):
         team = scoreValue.get('Team')
@@ -133,10 +141,18 @@ class PVPGameTeamBattle(PVPGameBase):
         return [PVPGlobals.SCORE, PVPGlobals.DEATHS]
 
     def getColumnLabels(self):
-        return [PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
+        return [
+            PLocalizer.PVPPlayer, PLocalizer.PVPScore,
+            PLocalizer.PVPTimesDefeated
+        ]
 
     def addPlayer(self, playerId):
-        self.stats[playerId] = {PVPGlobals.SCORE: 0, PVPGlobals.KILLS: 0, PVPGlobals.DEATHS: 0, PVPGlobals.TEAM: 0}
+        self.stats[playerId] = {
+            PVPGlobals.SCORE: 0,
+            PVPGlobals.KILLS: 0,
+            PVPGlobals.DEATHS: 0,
+            PVPGlobals.TEAM: 0
+        }
         PVPGameBase.addPlayer(self, playerId)
 
     def setPlayerStat(self, playerId, stat, value):
@@ -148,7 +164,10 @@ class PVPGameTeamBattle(PVPGameBase):
             self.scoreChanged()
 
     def sortStats(self, stats):
-        return sorted(sorted(stats, key=lambda x: int(x[1][1][1])), key=lambda x: int(x[1][0][1]), reverse=True)
+        return sorted(
+            sorted(stats, key=lambda x: int(x[1][1][1])),
+            key=lambda x: int(x[1][0][1]),
+            reverse=True)
 
     def getStats(self):
         return self.getTeamStats()

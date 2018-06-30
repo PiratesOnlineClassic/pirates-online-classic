@@ -6,13 +6,13 @@ from otp.chat.WhiteList import WhiteList
 
 class PWhiteList(WhiteList):
 
-
     def __init__(self):
         vfs = VirtualFileSystem.getGlobalPtr()
         filename = Filename('pwhitelist.txt')
         searchPath = DSearchPath()
         if __debug__:
-            searchPath.appendDirectory(Filename.expandFrom('../resources/phase_3/etc'))
+            searchPath.appendDirectory(
+                Filename.expandFrom('../resources/phase_3/etc'))
         else:
             searchPath.appendDirectory(Filename.expandFrom('phase_3/etc'))
 

@@ -7,7 +7,8 @@ from pirates.ship import ShipGlobals
 from pirates.shipparts import DistributedShippart, Wheel
 
 
-class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, DistributedShippart.DistributedShippart):
+class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive,
+                               DistributedShippart.DistributedShippart):
     notify = directNotify.newCategory('DistributedSteeringWheel')
 
     def __init__(self, cr):
@@ -21,7 +22,8 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
         DistributedInteractive.DistributedInteractive.generate(self)
         DistributedShippart.DistributedShippart.generate(self)
         if not self.cr.tutorial:
-            self.setInteractOptions(proximityText=PLocalizer.InteractWheel, sphereScale=6)
+            self.setInteractOptions(
+                proximityText=PLocalizer.InteractWheel, sphereScale=6)
 
     def announceGenerate(self):
         DistributedInteractive.DistributedInteractive.announceGenerate(self)
@@ -77,9 +79,12 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
         if self.isInteractionAllowed(av):
             base.localAvatar.motionFSM.off()
             self.ship.resetMiniLog('ShipPilot-%s' % (avId,))
-            s = MiniLogSentry(self.ship.miniLog, 'SW.requestInteraction', avId, interactType)
-            self.ship.miniLog.appendLine("localAvatar's parent: (%s)" % (localAvatar.getParentObj(),))
-            DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
+            s = MiniLogSentry(self.ship.miniLog, 'SW.requestInteraction', avId,
+                              interactType)
+            self.ship.miniLog.appendLine(
+                "localAvatar's parent: (%s)" % (localAvatar.getParentObj(),))
+            DistributedInteractive.DistributedInteractive.requestInteraction(
+                self, avId, interactType)
 
     def isInteractionAllowed(self, av):
         return self.ship.canTakeWheel(self, av)
@@ -113,7 +118,8 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
         self.ignore('shipSinking-' + str(self.shipId))
 
     def shipSinking(self):
-        self.notify.debug('[DistributedSteeringWheel] shipSinking %s' % self.ship.doId)
+        self.notify.debug(
+            '[DistributedSteeringWheel] shipSinking %s' % self.ship.doId)
         self.requestExit()
 
     def loadTargetIndicator(self):
@@ -130,7 +136,8 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
                 self.disk.setTransparency(TransparencyAttrib.MAlpha)
                 self.disk.setDepthWrite(0)
                 locator = self.ship.locators.find('**/location_wheel;+s')
-                locator.isEmpty() or self.disk.setPos(locator.getPos(self.ship.root))
+                locator.isEmpty() or self.disk.setPos(
+                    locator.getPos(self.ship.root))
 
     def addPropToShip(self):
         self.locator = self.ship.locators.find('**/location_wheel;+s')
@@ -155,7 +162,8 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
         self.checkInUse()
 
     def checkInUse(self):
-        if self.userId and base.localAvatar.getDoId() != self.ship.ownerId and localAvatar.getDoId() != self.userId:
+        if self.userId and base.localAvatar.getDoId(
+        ) != self.ship.ownerId and localAvatar.getDoId() != self.userId:
             self.setAllowInteract(0)
         else:
             if self.userId and base.localAvatar.getDoId() == self.ship.ownerId:
@@ -166,7 +174,8 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
                 self.setAllowInteract(1)
 
     def setAllowInteract(self, allow, forceOff=False):
-        DistributedInteractive.DistributedInteractive.setAllowInteract(self, allow)
+        DistributedInteractive.DistributedInteractive.setAllowInteract(
+            self, allow)
         if not allow and forceOff:
             if self.ship.steeringAvId == base.localAvatar.doId:
                 self.requestExit()

@@ -13,7 +13,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class FlameTrail(PooledEffect, EffectController):
-    
+
     cardScale = 128.0
 
     def __init__(self):
@@ -22,7 +22,8 @@ class FlameTrail(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleVolcanoLava')
         if not FlameTrail.particleDummy:
-            FlameTrail.particleDummy = render.attachNewNode(ModelNode('FlameTrailParticleDummy'))
+            FlameTrail.particleDummy = render.attachNewNode(
+                ModelNode('FlameTrailParticleDummy'))
             FlameTrail.particleDummy.setDepthWrite(0)
             FlameTrail.particleDummy.setFogOff()
             FlameTrail.particleDummy.setLightOff()
@@ -69,8 +70,11 @@ class FlameTrail(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPNOBLEND)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha, ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0, 0, 0, 1.0), 1)
+        self.p0.renderer.setColorBlendMode(
+            ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha,
+            ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0, 0, 0, 1.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(-2.0)
         self.p0.emitter.setAmplitudeSpread(0.5)
@@ -78,8 +82,13 @@ class FlameTrail(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(2.0)
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 4.0), Wait(3.8),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(15.0), self.endEffect)
 
     def cleanUpEffect(self):
@@ -90,4 +99,6 @@ class FlameTrail(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\FlameTrail.pyc

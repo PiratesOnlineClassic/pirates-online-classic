@@ -6,6 +6,7 @@ from direct.particles import ForceGroup
 from pirates.effects.PooledEffect import PooledEffect
 from pirates.effects.EffectController import EffectController
 
+
 class FeastSmoke(PooledEffect, EffectController):
     cardScale = 64.0
 
@@ -18,7 +19,8 @@ class FeastSmoke(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleBlackSmoke')
         if not FeastSmoke.particleDummy:
-            FeastSmoke.particleDummy = base.effectsRoot.attachNewNode(ModelNode('FeastSmokeParticleDummy'))
+            FeastSmoke.particleDummy = base.effectsRoot.attachNewNode(
+                ModelNode('FeastSmokeParticleDummy'))
             FeastSmoke.particleDummy.setDepthWrite(0)
             FeastSmoke.particleDummy.setColorScaleOff()
             FeastSmoke.particleDummy.setLightOff()
@@ -79,14 +81,20 @@ class FeastSmoke(PooledEffect, EffectController):
         self.p0.accelerate(25, 1, self.p0.getBirthRate())
 
     def createTrack(self, lod=None):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.25), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(10.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.25), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100.0), Wait(10.0),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def setScale(self, scale=VBase3(1, 1, 1)):
         self.effectScale = scale[0]
-        self.p0.renderer.setInitialXScale(0.3 * self.cardScale * self.effectScale)
-        self.p0.renderer.setInitialYScale(0.3 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialXScale(
+            0.3 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialYScale(
+            0.3 * self.cardScale * self.effectScale)
         self.p0.renderer.setFinalXScale(1.0 * self.cardScale * self.effectScale)
         self.p0.renderer.setFinalYScale(1.0 * self.cardScale * self.effectScale)
         self.p0.emitter.setOffsetForce(Vec3(4.0, 4.0, 50.0 * self.effectScale))

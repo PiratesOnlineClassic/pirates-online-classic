@@ -35,9 +35,8 @@ class PlayerFriendsManager(DistributedObjectGlobal):
         self.sendUpdate('requestUseUnlimitedSecret', [0, secret])
 
     def sendRequestUseLimitedSecret(self, secret, username, password):
-        self.sendUpdate(
-            'requestUseLimitedSecret', [
-                0, secret, username, password])
+        self.sendUpdate('requestUseLimitedSecret',
+                        [0, secret, username, password])
 
     def sendWhisper(self, recipientId, msgText):
         self.sendUpdate('whisperTo', [0, recipientId, msgText])
@@ -55,22 +54,19 @@ class PlayerFriendsManager(DistributedObjectGlobal):
         self.sendUpdate('whisperSCEmoteTo', [0, recipientId, msgId])
 
     def invitationFrom(self, playerId, avatarName):
-        messenger.send(
-            OTPGlobals.PlayerFriendInvitationEvent, [
-                playerId, avatarName])
+        messenger.send(OTPGlobals.PlayerFriendInvitationEvent,
+                       [playerId, avatarName])
 
     def retractInvite(self, playerId):
         messenger.send(OTPGlobals.PlayerFriendRetractInviteEvent, [playerId])
 
     def rejectInvite(self, playerId, reason):
-        messenger.send(
-            OTPGlobals.PlayerFriendRejectInviteEvent, [
-                playerId, reason])
+        messenger.send(OTPGlobals.PlayerFriendRejectInviteEvent,
+                       [playerId, reason])
 
     def rejectRemove(self, playerId, reason):
-        messenger.send(
-            OTPGlobals.PlayerFriendRejectRemoveEvent, [
-                playerId, reason])
+        messenger.send(OTPGlobals.PlayerFriendRejectRemoveEvent,
+                       [playerId, reason])
 
     def secretResponse(self, secret):
         print 'secretResponse %s' % secret
@@ -95,13 +91,13 @@ class PlayerFriendsManager(DistributedObjectGlobal):
             if not self.playerId2Info[id].onlineYesNo and info.onlineYesNo:
                 self.playerId2Info[id] = info
                 messenger.send('playerOnline', [id])
-                base.chatAssistant.receiveFriendUpdate(
-                    id, info.playerName, info.onlineYesNo)
+                base.chatAssistant.receiveFriendUpdate(id, info.playerName,
+                                                       info.onlineYesNo)
             elif self.playerId2Info[id].onlineYesNo and not info.onlineYesNo:
                 self.playerId2Info[id] = info
                 messenger.send('playerOffline', [id])
-                base.chatAssistant.receiveFriendUpdate(
-                    id, info.playerName, info.onlineYesNo)
+                base.chatAssistant.receiveFriendUpdate(id, info.playerName,
+                                                       info.onlineYesNo)
         if not self.askAvatarKnownHere(info.avatarId):
             self.requestAvatarInfo(info.avatarId)
         self.playerId2Info[id] = info

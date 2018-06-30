@@ -14,7 +14,6 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class LanternGlow(DirectObject, EffectController, NodePath):
-    
 
     def __init__(self, newParent=render, billboardOffset=1.0):
         NodePath.__init__(self, 'LanternGlow')
@@ -25,8 +24,7 @@ class LanternGlow(DirectObject, EffectController, NodePath):
         self.glow = NodePath(SequenceNode('lanternGlow'))
         glowCard = loader.loadModel('models/effects/lanternGlow').getChild(0)
         self.glowCards = []
-        level = [
-         15, 15.5, 16, 16.5, 17, 17.5, 18, 17.5, 17, 16.5, 16, 15.5, 15]
+        level = [15, 15.5, 16, 16.5, 17, 17.5, 18, 17.5, 17, 16.5, 16, 15.5, 15]
         index = random.randint(0, len(level))
         level = level[index:-1] + level[0:index]
         for i in level:
@@ -35,10 +33,14 @@ class LanternGlow(DirectObject, EffectController, NodePath):
                 newGlow.setScale(i)
                 self.glowCards.append(newGlow)
 
-        self.glow.node().setFrameRate(len(self.glowCards * 2) * random.choice([0.8, 0.9, 1, 1.1, 1.2]))
+        self.glow.node().setFrameRate(
+            len(self.glowCards * 2) * random.choice([0.8, 0.9, 1, 1.1, 1.2]))
         self.glow.node().setPlayRate(1)
         self.glow.node().loop(1)
-        self.glow.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+        self.glow.node().setAttrib(
+            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                  ColorBlendAttrib.OIncomingAlpha,
+                                  ColorBlendAttrib.OOne))
         self.glow.setDepthWrite(0)
         self.glow.setFogOff()
         self.glow.setLightOff()
@@ -48,12 +50,25 @@ class LanternGlow(DirectObject, EffectController, NodePath):
         self.startScale = 15
         self.endScale = 18
         self.period = 0.2
-        self.glow.node().setAttrib(ColorWriteAttrib.make(ColorWriteAttrib.CRed | ColorWriteAttrib.CGreen | ColorWriteAttrib.CBlue))
+        self.glow.node().setAttrib(
+            ColorWriteAttrib.make(ColorWriteAttrib.CRed |
+                                  ColorWriteAttrib.CGreen |
+                                  ColorWriteAttrib.CBlue))
 
     def createTrack(self, lod=None):
         randomness = random.random() / 20
-        scaleUp = self.glow.scaleInterval(self.period + randomness, self.endScale, startScale=self.startScale, blendType='easeInOut', other=render)
-        scaleDown = self.glow.scaleInterval(self.period + randomness, self.startScale, startScale=self.endScale, blendType='easeInOut', other=render)
+        scaleUp = self.glow.scaleInterval(
+            self.period + randomness,
+            self.endScale,
+            startScale=self.startScale,
+            blendType='easeInOut',
+            other=render)
+        scaleDown = self.glow.scaleInterval(
+            self.period + randomness,
+            self.startScale,
+            startScale=self.endScale,
+            blendType='easeInOut',
+            other=render)
         self.startEffect = Sequence(scaleUp, scaleDown)
         self.endEffect = None
         self.track = self.startEffect
@@ -76,7 +91,9 @@ class LanternGlow(DirectObject, EffectController, NodePath):
             self.glow.stash()
 
     def setupShaders(self):
-        LanternGlow.shaders = {'lantern': loader.loadShader('models/misc/ship_lantern.cg')}
+        LanternGlow.shaders = {
+            'lantern': loader.loadShader('models/misc/ship_lantern.cg')
+        }
 
     def enableShaders(self):
         if self.glow and not self.glow.isEmpty():
@@ -91,7 +108,9 @@ class LanternGlow(DirectObject, EffectController, NodePath):
                 def lanternColorScaleTask(task):
                     if task.shaderCount > 0:
                         if hasattr(self, 'glow'):
-                            render.setShaderInput('lanternColorScale', Vec4(self.glow.getColorScale()))
+                            render.setShaderInput(
+                                'lanternColorScale',
+                                Vec4(self.glow.getColorScale()))
 
                         return Task.cont
                     else:

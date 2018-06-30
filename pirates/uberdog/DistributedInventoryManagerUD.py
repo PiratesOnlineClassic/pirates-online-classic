@@ -24,15 +24,16 @@ class InventoryFSM(FSM):
         pass
 
     def enterStart(self):
-        self.manager.air.dbInterface.queryObject(self.manager.air.dbId,
+        self.manager.air.dbInterface.queryObject(
+            self.manager.air.dbId,
             self.avatarId,
             self.__avatarQueryCallback,
             dclass=self.manager.air.dclassesByName['DistributedPlayerPirateUD'])
 
     def __avatarQueryCallback(self, dclass, fields):
         if not dclass and not fields:
-            self.notify.warning('Failed to query avatar %d for inventory!' % (
-                self.avatarId))
+            self.notify.warning(
+                'Failed to query avatar %d for inventory!' % (self.avatarId))
 
             return
 
@@ -73,15 +74,16 @@ class InventoryFSM(FSM):
             'setStacks': (startStacks,)
         }
 
-        self.manager.air.dbInterface.createObject(self.manager.air.dbId,
+        self.manager.air.dbInterface.createObject(
+            self.manager.air.dbId,
             self.manager.air.dclassesByName['PirateInventoryUD'],
             fields=fields,
             callback=self.__inventoryCreatedCallback)
 
     def __inventoryCreatedCallback(self, inventoryId):
         if not inventoryId:
-            self.notify.warning('Failed to create inventory for avatar %d!' % (
-                self.avatarId))
+            self.notify.warning(
+                'Failed to create inventory for avatar %d!' % (self.avatarId))
 
             return
 
@@ -91,7 +93,8 @@ class InventoryFSM(FSM):
             'setInventoryId': (inventoryId,),
         }
 
-        self.manager.air.dbInterface.updateObject(self.manager.air.dbId,
+        self.manager.air.dbInterface.updateObject(
+            self.manager.air.dbId,
             self.avatarId,
             self.manager.air.dclassesByName['DistributedPlayerPirateUD'],
             fields,
@@ -99,8 +102,8 @@ class InventoryFSM(FSM):
 
     def __inventorySetCallback(self, fields):
         if fields is not None:
-            self.notify.warning('Failed to update inventory %d for avatar %d' % (
-                self.inventoryId, self.avatarId))
+            self.notify.warning('Failed to update inventory %d for avatar %d' %
+                                (self.inventoryId, self.avatarId))
 
             return
 
@@ -110,7 +113,8 @@ class InventoryFSM(FSM):
         pass
 
     def enterLoad(self):
-        self.manager.air.sendActivate(self.inventoryId,
+        self.manager.air.sendActivate(
+            self.inventoryId,
             self.avatarId,
             OtpDoGlobals.OTP_ZONE_ID_MANAGEMENT,
             dclass=self.manager.air.dclassesByName['PirateInventoryUD'])
@@ -124,8 +128,10 @@ class InventoryFSM(FSM):
     def exitLoad(self):
         pass
 
+
 class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryManagerUD')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedInventoryManagerUD')
 
     def __init__(self, air):
         DistributedObjectGlobalUD.__init__(self, air)
@@ -135,8 +141,10 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
     def announceGenerate(self):
         DistributedObjectGlobalUD.announceGenerate(self)
 
-        self.air.netMessenger.accept('hasInventoryResponse', self, self.proccessCallbackResponse)
-        self.air.netMessenger.accept('getInventoryResponse', self, self.proccessCallbackResponse)
+        self.air.netMessenger.accept('hasInventoryResponse', self,
+                                     self.proccessCallbackResponse)
+        self.air.netMessenger.accept('getInventoryResponse', self,
+                                     self.proccessCallbackResponse)
 
     def hasInventory(self, inventoryId, callback):
         self.air.netMessenger.send('hasInventory', [inventoryId, callback])
@@ -154,8 +162,9 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
 
     def initiateInventory(self, avatarId, callback=None):
         if avatarId in self.avatar2fsm:
-            self.notify.warning('Failed to initiate inventory for avatar %d, an operation is already running!' % (
-                avatarId))
+            self.notify.warning(
+                'Failed to initiate inventory for avatar %d, an operation is already running!'
+                % (avatarId))
 
             return
 
@@ -168,4 +177,4 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
             return
 
         self.notify.warning('No valid callback for a callback response!'
-            'What was the purpose of that?')
+                            'What was the purpose of that?')

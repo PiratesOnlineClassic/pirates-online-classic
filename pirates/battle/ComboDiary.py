@@ -11,9 +11,32 @@ class ComboDiary:
     SKILLID_INDEX = 1
     DAMAGE_INDEX = 2
     TOLERANCE = 3.0
-    COMBO_ORDER = {InventoryType.CutlassRep: [InventoryType.CutlassHack, InventoryType.CutlassSlash, InventoryType.CutlassCleave, InventoryType.CutlassFlourish, InventoryType.CutlassStab], InventoryType.DaggerRep: [InventoryType.DaggerCut, InventoryType.DaggerSwipe, InventoryType.DaggerGouge, InventoryType.DaggerEviscerate]}
-    SPECIAL_SKILLS = {InventoryType.CutlassRep: [InventoryType.CutlassSweep, InventoryType.CutlassBrawl, InventoryType.CutlassBladestorm], InventoryType.DaggerRep: [InventoryType.DaggerAsp, InventoryType.DaggerAdder, InventoryType.DaggerSidewinder, InventoryType.DaggerViperNest]}
-    EXCLUDED_SKILLS = (InventoryType.CannonShoot, InventoryType.CutlassTaunt, InventoryType.DaggerThrowDirt, InventoryType.DollAttune, EnemySkills.DOLL_UNATTUNE, InventoryType.DollHeal, InventoryType.DollCure, InventoryType.DollShackles, InventoryType.DollCurse)
+    COMBO_ORDER = {
+        InventoryType.CutlassRep: [
+            InventoryType.CutlassHack, InventoryType.CutlassSlash,
+            InventoryType.CutlassCleave, InventoryType.CutlassFlourish,
+            InventoryType.CutlassStab
+        ],
+        InventoryType.DaggerRep: [
+            InventoryType.DaggerCut, InventoryType.DaggerSwipe,
+            InventoryType.DaggerGouge, InventoryType.DaggerEviscerate
+        ]
+    }
+    SPECIAL_SKILLS = {
+        InventoryType.CutlassRep: [
+            InventoryType.CutlassSweep, InventoryType.CutlassBrawl,
+            InventoryType.CutlassBladestorm
+        ],
+        InventoryType.DaggerRep: [
+            InventoryType.DaggerAsp, InventoryType.DaggerAdder,
+            InventoryType.DaggerSidewinder, InventoryType.DaggerViperNest
+        ]
+    }
+    EXCLUDED_SKILLS = (InventoryType.CannonShoot, InventoryType.CutlassTaunt,
+                       InventoryType.DaggerThrowDirt, InventoryType.DollAttune,
+                       EnemySkills.DOLL_UNATTUNE, InventoryType.DollHeal,
+                       InventoryType.DollCure, InventoryType.DollShackles,
+                       InventoryType.DollCurse)
 
     def __init__(self, av):
         self.owner = av
@@ -117,7 +140,8 @@ class ComboDiary:
         if skillId in comboChain:
             index = comboChain.index(skillId)
             requisiteAttack = comboChain[index - 1]
-            if lastSkillId != requisiteAttack and lastSkillId not in self.SPECIAL_SKILLS.get(repId):
+            if lastSkillId != requisiteAttack and lastSkillId not in self.SPECIAL_SKILLS.get(
+                    repId):
                 return 0
 
         barTime = 3.0
@@ -135,6 +159,7 @@ class ComboDiary:
                 skillId = entry[self.SKILLID_INDEX]
                 damage = entry[self.DAMAGE_INDEX]
                 timestamp = entry[self.TIMESTAMP_INDEX]
-                s += '    %s : %s damage, timestamp=%f (s)\n' % (skillId, damage, timestamp)
+                s += '    %s : %s damage, timestamp=%f (s)\n' % (
+                    skillId, damage, timestamp)
 
         return s

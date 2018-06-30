@@ -4,8 +4,11 @@ from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world import WorldGlobals
 from pirates.world.InteriorAreaBuilderAI import InteriorAreaBuilderAI
 
-class DistributedGAInteriorAI(DistributedCartesianGridAI, DistributedGameAreaAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGAInteriorAI')
+
+class DistributedGAInteriorAI(DistributedCartesianGridAI,
+                              DistributedGameAreaAI):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedGAInteriorAI')
 
     def __init__(self, air):
         startingZone = WorldGlobals.GAME_AREA_INTERIOR_STARTING_ZONE
@@ -14,7 +17,7 @@ class DistributedGAInteriorAI(DistributedCartesianGridAI, DistributedGameAreaAI)
         cellWidth = WorldGlobals.GAME_AREA_INTERIOR_CELL_SIZE
 
         DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize,
-            gridRadius, cellWidth)
+                                            gridRadius, cellWidth)
 
         DistributedGameAreaAI.__init__(self, air)
 

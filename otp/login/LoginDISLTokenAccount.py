@@ -38,4 +38,6 @@ class LoginDISLTokenAccount(LoginBase.LoginBase):
 
     def supportsAuthenticateDelete(self):
         return 0
+
+
 # okay decompiling .\otp\login\LoginDISLTokenAccount.pyc

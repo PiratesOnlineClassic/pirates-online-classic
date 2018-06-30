@@ -16,7 +16,9 @@ class DistributedFortCannon(DistributedIslandCannon.DistributedIslandCannon):
 
     def announceGenerate(self):
         DistributedIslandCannon.DistributedIslandCannon.announceGenerate(self)
-        self.notify.debug('doId=%s pos=%s renderPos=%s parent=%s' % (self.doId, self.getPos(), self.getPos(render), self.getParent()))
+        self.notify.debug(
+            'doId=%s pos=%s renderPos=%s parent=%s' %
+            (self.doId, self.getPos(), self.getPos(render), self.getParent()))
         self.prop.fortId = self.fortId
 
     def setFortId(self, fortId):

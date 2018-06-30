@@ -13,7 +13,21 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
 
     def __init__(self, parent=None, **kw):
         FSM.FSM.__init__(self, 'PChatInputTyped')
-        optiondefs = (('parent', parent, None), ('relief', DGG.SUNKEN, None), ('scale', 0.03, None), ('frameSize', (-0.2, 25.3, -0.5, 1.2), None), ('borderWidth', (0.1, 0.1), None), ('frameColor', (0.9, 0.9, 0.85, 0.8), None), ('entryFont', OTPGlobals.getInterfaceFont(), None), ('width', 25, None), ('numLines', 1, None), ('cursorKeys', 1, None), ('backgroundFocus', 0, None), ('suppressKeys', 1, None), ('suppressMouse', 1, None), ('command', self.sendChat, None), ('focus', 0, None), ('text', '', None))
+        optiondefs = (('parent', parent, None), ('relief', DGG.SUNKEN,
+                                                 None), ('scale', 0.03, None),
+                      ('frameSize', (-0.2, 25.3, -0.5, 1.2),
+                       None), ('borderWidth', (0.1, 0.1),
+                               None), ('frameColor', (0.9, 0.9, 0.85, 0.8),
+                                       None), ('entryFont',
+                                               OTPGlobals.getInterfaceFont(),
+                                               None), ('width', 25, None),
+                      ('numLines', 1, None), ('cursorKeys', 1,
+                                              None), ('backgroundFocus', 0,
+                                                      None), ('suppressKeys', 1,
+                                                              None),
+                      ('suppressMouse', 1,
+                       None), ('command', self.sendChat,
+                               None), ('focus', 0, None), ('text', '', None))
         self.defineoptions(kw, optiondefs)
         DirectEntry.__init__(self, parent=parent, **kw)
         self.initialiseoptions(PChatInputTyped)
@@ -48,13 +62,15 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
         else:
             if request == 'PlayerWhisper':
                 whisperId = args[0][0]
-                if not base.chatAssistant.checkWhisperTypedChatPlayer(whisperId):
+                if not base.chatAssistant.checkWhisperTypedChatPlayer(
+                        whisperId):
                     messenger.send('Chat-Failed player typed chat test')
                     return
             else:
                 if request == 'AvatarWhisper':
                     whisperId = args[0][0]
-                    if not base.chatAssistant.checkWhisperTypedChatAvatar(whisperId):
+                    if not base.chatAssistant.checkWhisperTypedChatAvatar(
+                            whisperId):
                         messenger.send('Chat-Failed avatar typed chat test')
                         return
         return FSM.FSM.defaultFilter(self, request, *args)
@@ -158,7 +174,8 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
                 base.localAvatar.setChatAbsolute(text, CFSpeech | CFTimeout)
                 return
             else:
-                if base.config.GetBool('want-slash-commands', 1) and text[0] == '/':
+                if base.config.GetBool('want-slash-commands',
+                                       1) and text[0] == '/':
                     base.chatAssistant.executeSlashCommand(text)
                 else:
                     self.sendChatByMode(text)
@@ -177,7 +194,8 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
             base.chatAssistant.sendPlayerWhisperTypedChat(text, self.whisperId)
         else:
             if state == 'AvatarWhisper':
-                base.chatAssistant.sendAvatarWhisperTypedChat(text, self.whisperId)
+                base.chatAssistant.sendAvatarWhisperTypedChat(
+                    text, self.whisperId)
             else:
                 if state == 'GuildChat':
                     base.chatAssistant.sendAvatarGuildTypedChat(text)
@@ -186,7 +204,8 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
                         base.chatAssistant.sendAvatarCrewTypedChat(text)
                     else:
                         if state == 'ShipPVPChat':
-                            base.chatAssistant.sendAvatarShipPVPCrewTypedChat(text)
+                            base.chatAssistant.sendAvatarShipPVPCrewTypedChat(
+                                text)
                         else:
                             base.chatAssistant.sendAvatarOpenTypedChat(text)
 
@@ -217,45 +236,56 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
 
     def chatOverflow(self, overflowText):
         if not self.wantSlidingWindow:
-            self.sendChat(self.get() + chr(overflowText.getKeycode()), overflow=True)
+            self.sendChat(
+                self.get() + chr(overflowText.getKeycode()), overflow=True)
         else:
             self.fillToLength = self.guiItem.getNumCharacters() - 3
-            if len(self.savedStringLeft) + len(self.savedStringRight) + self.slideDistance <= self.maxSavedLength:
+            if len(self.savedStringLeft) + len(
+                    self.savedStringRight
+            ) + self.slideDistance <= self.maxSavedLength:
                 self.slideBack(self.get() + chr(overflowText.getKeycode()))
 
     def chatErased(self, key):
         if not self.wantSlidingWindow:
             return
-        while self.guiItem.getNumCharacters() < self.fillToLength and (len(self.savedStringRight) > 0 or len(self.savedStringLeft) > 0):
+        while self.guiItem.getNumCharacters() < self.fillToLength and (len(
+                self.savedStringRight) > 0 or len(self.savedStringLeft) > 0):
             if len(self.savedStringRight) > 0:
                 self.set(self.get() + self.savedStringRight[0])
                 self.savedStringRight = self.savedStringRight[1:]
             elif len(self.savedStringLeft) > 0:
                 self.set(self.savedStringLeft[-1] + self.get())
                 self.savedStringLeft = self.savedStringLeft[0:-1]
-                self.guiItem.setCursorPosition(self.guiItem.getCursorPosition() + 1)
+                self.guiItem.setCursorPosition(
+                    self.guiItem.getCursorPosition() + 1)
 
     def slideBack(self, inputText):
         if len(self.savedStringRight) < 1:
             self.savedStringLeft += inputText[0:self.slideDistance]
-            self.set(inputText[self.slideDistance:] + self.savedStringRight[0:self.slideDistance])
+            self.set(inputText[self.slideDistance:] +
+                     self.savedStringRight[0:self.slideDistance])
         else:
             self.savedStringLeft += inputText[0:self.slideDistance]
-            self.set(inputText[self.slideDistance:] + self.savedStringRight[0:self.slideDistance])
+            self.set(inputText[self.slideDistance:] +
+                     self.savedStringRight[0:self.slideDistance])
             self.savedStringRight = self.savedStringRight[self.slideDistance:]
-            self.guiItem.setCursorPosition(self.guiItem.getNumCharacters() - self.slideDistance)
-        print '%s + %s + %s' % (self.savedStringLeft, self.get(), self.savedStringRight)
+            self.guiItem.setCursorPosition(self.guiItem.getNumCharacters() -
+                                           self.slideDistance)
+        print '%s + %s + %s' % (self.savedStringLeft, self.get(),
+                                self.savedStringRight)
 
     def slideFront(self, inputText):
-        self.savedStringRight = inputText[-1 * self.slideDistance:] + self.savedStringRight
-        self.set(self.savedStringLeft[-1 * self.slideDistance:] + inputText[:-1 * self.slideDistance])
+        self.savedStringRight = inputText[-1 * self.
+                                          slideDistance:] + self.savedStringRight
+        self.set(self.savedStringLeft[-1 * self.slideDistance:] +
+                 inputText[:-1 * self.slideDistance])
         self.savedStringLeft = self.savedStringLeft[0:-1 * self.slideDistance]
         self.guiItem.setCursorPosition(self.slideDistance)
-        print '%s + %s + %s' % (self.savedStringLeft, self.get(), self.savedStringRight)
+        print '%s + %s + %s' % (self.savedStringLeft, self.get(),
+                                self.savedStringRight)
 
     def addToHistory(self, text):
-        self.history = [
-         text] + self.history[:self.historySize - 1]
+        self.history = [text] + self.history[:self.historySize - 1]
         self.historyIndex = 0
 
     def setPrevHistory(self):
@@ -303,4 +333,6 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
                 return str(extraInfo)
             else:
                 return str(exception)
+
+
 # okay decompiling .\pirates\chat\PChatInputTyped.pyc

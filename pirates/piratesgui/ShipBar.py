@@ -13,15 +13,33 @@ from pirates.piratesgui.TabBar import TabBar, TopTab
 
 
 class ShipTab(TopTab):
-    
 
     def __init__(self, tabBar, name, **kw):
-        optiondefs = (('suffix', '_c', None), ('frameSize', (0, 0.205, 0.0, 0.1), None), ('borderScale', 0.135, None), ('bgBuffer', 0.14, None), ('showBackground', True, None), ('bgColorScale', VBase4(0, 0, 0, 1), None), ('flatten', 0, None), ('label', '', None), ('textMayChange', 0, None), ('textpos', (0.1, 0.025, 0), None))
+        optiondefs = (('suffix', '_c',
+                       None), ('frameSize', (0, 0.205, 0.0, 0.1),
+                               None), ('borderScale', 0.135,
+                                       None), ('bgBuffer', 0.14, None),
+                      ('showBackground', True,
+                       None), ('bgColorScale', VBase4(0, 0, 0, 1),
+                               None), ('flatten', 0, None), ('label', '', None),
+                      ('textMayChange', 0, None), ('textpos', (0.1, 0.025, 0),
+                                                   None))
         self.defineoptions(kw, optiondefs)
         TopTab.__init__(self, tabBar, name, **kw)
         self.initialiseoptions(ShipTab)
         self.guiComponents['background'].setTransparency(0, 1)
-        self.label = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text=name, text_pos=self['textpos'], text_scale=0.05, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, text_font=PiratesGlobals.getInterfaceFont(), textMayChange=1)
+        self.label = DirectLabel(
+            parent=self,
+            relief=None,
+            state=DGG.DISABLED,
+            text=name,
+            text_pos=self['textpos'],
+            text_scale=0.05,
+            text_align=TextNode.ACenter,
+            text_fg=PiratesGuiGlobals.TextFG1,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_font=PiratesGlobals.getInterfaceFont(),
+            textMayChange=1)
         return
 
     def setTextBright(self, bright):
@@ -32,10 +50,10 @@ class ShipTab(TopTab):
 
 
 class ShipTabBar(TabBar):
-    
 
     def __init__(self, backParent, frontParent, parent, *args, **kw):
-        optiondefs = (('relief', None, None), ('state', DGG.DISABLED, None), ('offset', 0.5, None))
+        optiondefs = (('relief', None, None), ('state', DGG.DISABLED, None),
+                      ('offset', 0.5, None))
         self.defineoptions(kw, optiondefs)
         TabBar.__init__(self, backParent, frontParent, parent, *args, **kw)
         self.initialiseoptions(ShipTabBar)
@@ -57,4 +75,6 @@ class ShipTabBar(TabBar):
             tab = self.tabs[name]
             tab.reparentTo(self.fParent)
             tab.setZ(0.077)
+
+
 # okay decompiling .\pirates\piratesgui\ShipBar.pyc

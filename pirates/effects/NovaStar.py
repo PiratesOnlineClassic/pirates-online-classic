@@ -6,8 +6,9 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class NovaStar(PooledEffect, EffectController):
-    
+
     cardScale = 128.0
 
     def __init__(self):
@@ -19,7 +20,10 @@ class NovaStar(PooledEffect, EffectController):
         self.setLightOff()
         self.setFogOff()
         self.setColorScaleOff()
-        self.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+        self.node().setAttrib(
+            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                  ColorBlendAttrib.OIncomingAlpha,
+                                  ColorBlendAttrib.OOne))
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1', 64)
@@ -60,7 +64,9 @@ class NovaStar(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.setColorBlendMode(
+            ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor,
+            ColorBlendAttrib.OOneMinusIncomingAlpha)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -68,8 +74,13 @@ class NovaStar(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.01)
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.setPoolSize, 64), Func(self.p0.clearToInitial), Func(self.f.start, self, self), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.02), Func(self.setPoolSize, 64),
+            Func(self.p0.clearToInitial), Func(self.f.start, self, self),
+            Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(
+                self.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(duration), self.endEffect)
 
     def cleanUpEffect(self):

@@ -1,5 +1,6 @@
 from direct.fsm.StatePush import StateVar
 
+
 class Setting:
 
     def __init__(self, name, value):

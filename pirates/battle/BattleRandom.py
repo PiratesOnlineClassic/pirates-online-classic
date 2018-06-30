@@ -3,6 +3,7 @@ import random
 from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesbase import PiratesGlobals
 
+
 class BattleRandom:
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleRandom')
 

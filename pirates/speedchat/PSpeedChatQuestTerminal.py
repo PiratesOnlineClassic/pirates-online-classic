@@ -36,7 +36,7 @@ def decodeSCQuestMsgInt(questInt, msgType, taskNum):
 
 
 class PSpeedChatQuestTerminal(SCTerminal):
-    
+
     def __init__(self, msg, questInt, toNpcId, msgType, taskNum):
         SCTerminal.__init__(self)
         self.msg = msg
@@ -50,5 +50,6 @@ class PSpeedChatQuestTerminal(SCTerminal):
 
     def handleSelect(self):
         SCTerminal.handleSelect(self)
-        messenger.send(self.getEventName(PSpeedChatQuestMsgEvent), [
-         self.questInt, self.toNpcId, self.msgType, self.taskNum])
+        messenger.send(
+            self.getEventName(PSpeedChatQuestMsgEvent),
+            [self.questInt, self.toNpcId, self.msgType, self.taskNum])

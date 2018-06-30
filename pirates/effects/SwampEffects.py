@@ -15,7 +15,7 @@ from pirates.swamp.Swamp import Swamp
 
 
 class SwampEffects(EnvironmentEffects.EnvironmentEffects):
-    
+
     GROUND_FOG_Z = 2.0
     FIREFLIES_Z = 6.0
     RANDOM_SOUND_PERIOD = 6
@@ -26,7 +26,11 @@ class SwampEffects(EnvironmentEffects.EnvironmentEffects):
         self.fireflies = None
         self.groundFog = None
         self.swamp_water = None
-        self.randomAnimalSoundFiles = ['phase_4/audio/sfx_swamp_frog_crowd.mp3', 'phase_4/audio/sfx_swamp_owl_call01.mp3', 'phase_4/audio/sfx_swamp_owl_call02.mp3']
+        self.randomAnimalSoundFiles = [
+            'phase_4/audio/sfx_swamp_frog_crowd.mp3',
+            'phase_4/audio/sfx_swamp_owl_call01.mp3',
+            'phase_4/audio/sfx_swamp_owl_call02.mp3'
+        ]
         self.randomSfx = []
         self.startEffects()
         return
@@ -39,9 +43,13 @@ class SwampEffects(EnvironmentEffects.EnvironmentEffects):
         if hasattr(base, 'cr'):
             base.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_SWAMP)
         self.swamp_water = None
-        if base.config.GetBool('want-shaders', 1) and base.win and base.win.getGsg() and base.win.getGsg().getShaderModel() >= GraphicsStateGuardian.SM20:
+        if base.config.GetBool(
+                'want-shaders',
+                1) and base.win and base.win.getGsg() and base.win.getGsg(
+                ).getShaderModel() >= GraphicsStateGuardian.SM20:
             reflection = Reflection.getGlobalReflection()
-            self.swamp_water = Swamp(self.modelPath + '_water', self.parent, reflection)
+            self.swamp_water = Swamp(self.modelPath + '_water', self.parent,
+                                     reflection)
         else:
             water = loader.loadModel(self.modelPath + '_water')
             water.reparentTo(self.parent)
@@ -56,17 +64,27 @@ class SwampEffects(EnvironmentEffects.EnvironmentEffects):
         if not self.groundFog:
             self.groundFog = GroundFog()
         if self.groundFog and hasattr(base, 'cr'):
-            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
+            if base.options.getSpecialEffectsSetting(
+            ) >= base.options.SpecialEffectsMedium:
                 self.groundFog.reparentTo(base.localAvatar)
-                self.groundFog.startLoop(base.options.getSpecialEffectsSetting())
+                self.groundFog.startLoop(
+                    base.options.getSpecialEffectsSetting())
         if hasattr(base, 'cr') and not hasattr(base.cr, 'isFake'):
-            taskMgr.add(self.adjustGroundFogZ, self.parent.uniqueName('groundFogZTask'))
-        base.ambientMgr.requestFadeIn('swamp', duration=10, finalVolume=PiratesGlobals.DEFAULT_AMBIENT_VOLUME, priority=1)
+            taskMgr.add(self.adjustGroundFogZ,
+                        self.parent.uniqueName('groundFogZTask'))
+        base.ambientMgr.requestFadeIn(
+            'swamp',
+            duration=10,
+            finalVolume=PiratesGlobals.DEFAULT_AMBIENT_VOLUME,
+            priority=1)
         for file in self.randomAnimalSoundFiles:
             sfx = loader.loadSfx(file)
             self.randomSfx.append(sfx)
 
-        taskMgr.doMethodLater(self.RANDOM_SOUND_PERIOD, self.checkForRandomSound, name='checkForRandomSound-' + str(id(self)))
+        taskMgr.doMethodLater(
+            self.RANDOM_SOUND_PERIOD,
+            self.checkForRandomSound,
+            name='checkForRandomSound-' + str(id(self)))
         return
 
     def stopEffects(self):
@@ -109,6 +127,11 @@ class SwampEffects(EnvironmentEffects.EnvironmentEffects):
             if roll < self.RANDOM_SOUND_CHANCE:
                 sfxToPlay = random.choice(self.randomSfx)
                 sfxToPlay.play()
-        taskMgr.doMethodLater(self.RANDOM_SOUND_PERIOD, self.checkForRandomSound, name='checkForRandomSound-' + str(id(self)))
+        taskMgr.doMethodLater(
+            self.RANDOM_SOUND_PERIOD,
+            self.checkForRandomSound,
+            name='checkForRandomSound-' + str(id(self)))
         return Task.done
+
+
 # okay decompiling .\pirates\effects\SwampEffects.pyc

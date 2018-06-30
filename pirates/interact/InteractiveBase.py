@@ -12,6 +12,7 @@ END_INTERACT_EVENT = 'escape'
 PROXIMITY = 0
 MOUSE_OVER = 1
 
+
 class InteractiveBase(FSM.FSM):
     DiskUseColor = None
     DiskDefaultColor = (0, 1, 0, 1)
@@ -63,7 +64,8 @@ class InteractiveBase(FSM.FSM):
             self.useLabel = None
         FSM.FSM.cleanup(self)
         if self.__isTarget:
-            if hasattr(base.cr, 'targetMgr') and base.cr.targetMgr and self.proximityCollisionId:
+            if hasattr(base.cr, 'targetMgr'
+                      ) and base.cr.targetMgr and self.proximityCollisionId:
                 base.cr.targetMgr.removeTarget(self.proximityCollisionId)
             self.__isTarget = 0
         if hasattr(base, 'localAvatar') and localAvatar.currentTarget is self:
@@ -79,7 +81,21 @@ class InteractiveBase(FSM.FSM):
             self.tutorialPanel = None
         self.ignoreAll()
 
-    def setInteractOptions(self, tutorialMode=None, proximityText=None, mouseClickText=None, mouseOver=0, mouseClick=0, otherCollision=None, otherCollisionName=None, sphereScale=12.0, diskRadius=5.0, parent=None, isTarget=0, exclusive=1, endInteract=1, allowInteract=True):
+    def setInteractOptions(self,
+                           tutorialMode=None,
+                           proximityText=None,
+                           mouseClickText=None,
+                           mouseOver=0,
+                           mouseClick=0,
+                           otherCollision=None,
+                           otherCollisionName=None,
+                           sphereScale=12.0,
+                           diskRadius=5.0,
+                           parent=None,
+                           isTarget=0,
+                           exclusive=1,
+                           endInteract=1,
+                           allowInteract=True):
         self.tutorialMode = tutorialMode
         self.diskRadius = diskRadius
         self.request('Off')
@@ -138,12 +154,14 @@ class InteractiveBase(FSM.FSM):
         proximityCollision = CollisionSphere(0, 0, 0, 1)
         proximityCollision.setTangible(0)
         proximityCollisionNode = CollisionNode(self.proximityCollisionEvent)
-        proximityCollisionNode.setIntoCollideMask(PiratesGlobals.WallBitmask | PiratesGlobals.SelectBitmask)
+        proximityCollisionNode.setIntoCollideMask(PiratesGlobals.WallBitmask |
+                                                  PiratesGlobals.SelectBitmask)
         proximityCollisionNode.addSolid(proximityCollision)
         parentNP = self
         if parent:
             parentNP = parent
-        self.proximityCollisionNodePath = parentNP.attachNewNode(proximityCollisionNode)
+        self.proximityCollisionNodePath = parentNP.attachNewNode(
+            proximityCollisionNode)
         self.proximityCollisionNodePath.hide()
         self.proximityCollisionId = self.proximityCollisionNodePath.get_key()
         if self.ignoreProximity:
@@ -183,9 +201,17 @@ class InteractiveBase(FSM.FSM):
             self.disk.setDepthTest(0)
 
     def loadUseLabel(self):
-        self.useLabel = DirectLabel(parent=aspect2d, frameColor=(0.1, 0.1, 0.25, 0.2), text='', text_align=TextNode.ACenter, text_scale=0.06, 
-                                    text_pos=(0.02,0.02), text_fg=(1, 1, 1, 1), text_shadow=(0, 0, 0, 1), textMayChange=1, 
-                                    text_font=PiratesGlobals.getPirateOutlineFont())
+        self.useLabel = DirectLabel(
+            parent=aspect2d,
+            frameColor=(0.1, 0.1, 0.25, 0.2),
+            text='',
+            text_align=TextNode.ACenter,
+            text_scale=0.06,
+            text_pos=(0.02, 0.02),
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1),
+            textMayChange=1,
+            text_font=PiratesGlobals.getPirateOutlineFont())
         self.useLabel.setPos(0, 0, -0.7)
         self.useLabel.setAlphaScale(0)
         self.useLabel.hide()
@@ -295,7 +321,8 @@ class InteractiveBase(FSM.FSM):
             self.disk.hide()
 
     def __loadTutorialPanel(self):
-        self.tutorialPanel = NewTutorialPanel.NewTutorialPanel([self.tutorialMode])
+        self.tutorialPanel = NewTutorialPanel.NewTutorialPanel(
+            [self.tutorialMode])
 
     def __showTutorialPanel(self):
         if not self.tutorialPanel or self.tutorialPanel.isEmpty():
@@ -317,7 +344,8 @@ class InteractiveBase(FSM.FSM):
             self.useLabel['text'] = self.proximityText
             if self.fader:
                 self.fader.pause()
-            fadeOut = LerpFunctionInterval(self.useLabel.setAlphaScale, fromData=0, toData=1, duration=0.5)
+            fadeOut = LerpFunctionInterval(
+                self.useLabel.setAlphaScale, fromData=0, toData=1, duration=0.5)
             self.fader = Sequence(Func(self.useLabel.show), fadeOut)
             self.fader.start()
 
@@ -331,7 +359,11 @@ class InteractiveBase(FSM.FSM):
             if self.fader:
                 self.fader.pause()
             toColor = self.getColorScale()
-            fadeOut = LerpFunctionInterval(self.useLabel.setAlphaScale, fromData=toColor[3], toData=0, duration=0.5)
+            fadeOut = LerpFunctionInterval(
+                self.useLabel.setAlphaScale,
+                fromData=toColor[3],
+                toData=0,
+                duration=0.5)
             self.fader = Sequence(fadeOut, Func(self.useLabel.hide))
             self.fader.start()
 
@@ -342,7 +374,11 @@ class InteractiveBase(FSM.FSM):
             self.useLabel['text'] = self.mouseClickText
             if self.fader:
                 self.fader.pause()
-            fadeOut = LerpFunctionInterval(self.useLabel.setAlphaScale, fromData=self.getColorScale()[3], toData=1, duration=0.5)
+            fadeOut = LerpFunctionInterval(
+                self.useLabel.setAlphaScale,
+                fromData=self.getColorScale()[3],
+                toData=1,
+                duration=0.5)
             self.fader = Sequence(Func(self.useLabel.show), fadeOut)
             self.fader.start()
 
@@ -350,7 +386,11 @@ class InteractiveBase(FSM.FSM):
         if self.useLabel:
             if self.fader:
                 self.fader.pause()
-            fadeOut = LerpFunctionInterval(self.useLabel.setAlphaScale, fromData=self.getColorScale()[3], toData=0, duration=0.5)
+            fadeOut = LerpFunctionInterval(
+                self.useLabel.setAlphaScale,
+                fromData=self.getColorScale()[3],
+                toData=0,
+                duration=0.5)
             self.fader = Sequence(fadeOut, Func(self.useLabel.hide))
             self.fader.start()
 
@@ -359,7 +399,8 @@ class InteractiveBase(FSM.FSM):
             return
         base.cr.activeWorld.handleUseKey(self)
         currentInteractive = base.cr.interactionMgr.getCurrentInteractive()
-        if currentInteractive and currentInteractive != self and currentInteractive.isExclusiveInteraction():
+        if currentInteractive and currentInteractive != self and currentInteractive.isExclusiveInteraction(
+        ):
             currentInteractive.requestExit()
         self.requestInteraction(base.localAvatar.doId, interactType)
 
@@ -383,7 +424,8 @@ class InteractiveBase(FSM.FSM):
         if self.__mouseOver:
             self.accept(self.mouseOverEvent, self.mouseOverHandler)
         if self.proximityCollisionEnterEvent:
-            self.accept(self.proximityCollisionEnterEvent, self.handleEnterProximity)
+            self.accept(self.proximityCollisionEnterEvent,
+                        self.handleEnterProximity)
 
     def exitIdle(self):
         if self.__mouseOver:
@@ -399,7 +441,8 @@ class InteractiveBase(FSM.FSM):
             self.showMouseOverInfo()
             self.accept(self.mouseOverEvent, self.mouseOverHandler)
         if self.proximityCollisionEnterEvent:
-            self.accept(self.proximityCollisionEnterEvent, self.handleEnterProximity)
+            self.accept(self.proximityCollisionEnterEvent,
+                        self.handleEnterProximity)
 
     def exitMouseOver(self):
         if self.__mouseClick:
@@ -446,7 +489,8 @@ class InteractiveBase(FSM.FSM):
 
     def exitUse(self):
         self.hideUseInfo()
-        if self.hasProximityCollision and not self.proximityCollisionNodePath.isEmpty() and not self.ignoreProximity:
+        if self.hasProximityCollision and not self.proximityCollisionNodePath.isEmpty(
+        ) and not self.ignoreProximity:
             self.proximityCollisionNodePath.unstash()
         base.cr.interactionMgr.setCurrentInteractive(None)
         if self.__endInteract:

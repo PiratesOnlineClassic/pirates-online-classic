@@ -11,10 +11,9 @@ from pirates.effects.SpectralTrail import SpectralTrail
 from pirates.effects.Wake import Wake
 from pirates.piratesbase import PiratesGlobals
 from pirates.ship import ShipGlobals
-from pirates.shipparts import (BowSprit, BowSpritDNA, Cabin, CabinDNA,
-                               CannonPort, DecorDNA, Hull, HullDNA, Lantern,
-                               Mast, MastDNA, Sail, SailDNA, ShipDecor, Wheel,
-                               Window)
+from pirates.shipparts import (
+    BowSprit, BowSpritDNA, Cabin, CabinDNA, CannonPort, DecorDNA, Hull, HullDNA,
+    Lantern, Mast, MastDNA, Sail, SailDNA, ShipDecor, Wheel, Window)
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
@@ -51,9 +50,11 @@ class ShipModel(NodePath):
         self.broadside = ShipBroadside(self)
         self.modelGeom = self.root.attachNewNode(ModelNode('modelGeomRoot'))
         self.modelCollisions = self.root.attachNewNode(ModelNode('modelCol'))
-        self.interactionCollisions = self.root.attachNewNode(ModelNode('interactCol'))
+        self.interactionCollisions = self.root.attachNewNode(
+            ModelNode('interactCol'))
         self.projScreen = ProjectionScreen('p')
-        self.projScreen = self.modelGeom.attachNewNode(ProjectionScreen('one big screen'))
+        self.projScreen = self.modelGeom.attachNewNode(
+            ProjectionScreen('one big screen'))
         self.projScreen.node().setTexcoordName('uvHole')
         self.highStatic = self.root.attachNewNode('highStatic')
         self.mediumStatic = NodePath('mediumStatic')
@@ -133,7 +134,8 @@ class ShipModel(NodePath):
                 if cannonType > 0:
                     cannon = Cannon.Cannon(self.cr)
                     cannon.loadModel(self.dna)
-                    cannonPost = self.locators.find('**/cannon_' + str(i) + ';+s')
+                    cannonPost = self.locators.find('**/cannon_' + str(i) +
+                                                    ';+s')
                     cannon.reparentTo(self.root)
                     cannon.setPos(cannonPost.getPos(self.root))
                     cannon.setHpr(cannonPost.getHpr(self.root))
@@ -146,8 +148,11 @@ class ShipModel(NodePath):
             for i in xrange(len(self.dna.leftBroadsideConfig)):
                 cannonType = self.dna.leftBroadsideConfig[i]
                 if cannonType > 0:
-                    cannonPost = self.locators.find('**/broadside_left_' + str(i) + ';+s')
-                    cannon = CannonPort.CannonPort(self.dna.leftBroadsideConfig[i], self.broadside, cannonPost, 0, len(self.leftBroadside))
+                    cannonPost = self.locators.find('**/broadside_left_' +
+                                                    str(i) + ';+s')
+                    cannon = CannonPort.CannonPort(
+                        self.dna.leftBroadsideConfig[i], self.broadside,
+                        cannonPost, 0, len(self.leftBroadside))
                     cannon.reparentTo(self.root)
                     cannon.setPos(cannonPost.getPos(self.root))
                     cannon.setHpr(cannonPost.getHpr(self.root))
@@ -161,8 +166,11 @@ class ShipModel(NodePath):
             for i in xrange(len(self.dna.rightBroadsideConfig)):
                 cannonType = self.dna.rightBroadsideConfig[i]
                 if cannonType > 0:
-                    cannonPost = self.locators.find('**/broadside_right_' + str(i) + ';+s')
-                    cannon = CannonPort.CannonPort(self.dna.rightBroadsideConfig[i], self.broadside, cannonPost, 0, len(self.rightBroadside))
+                    cannonPost = self.locators.find('**/broadside_right_' +
+                                                    str(i) + ';+s')
+                    cannon = CannonPort.CannonPort(
+                        self.dna.rightBroadsideConfig[i], self.broadside,
+                        cannonPost, 0, len(self.rightBroadside))
                     cannon.reparentTo(self.root)
                     cannon.setPos(cannonPost.getPos(self.root))
                     cannon.setHpr(cannonPost.getHpr(self.root))
@@ -203,7 +211,8 @@ class ShipModel(NodePath):
                 self.prow.geom_Low.setHpr(self.prow.getHpr(self.root))
                 self.prow.geom_Low.setScale(self.prow.getScale(self.root))
                 self.prow.addToShip()
-            if self.wantCollisions and self.prow.propCollisions != NodePath.notFound():
+            if self.wantCollisions and self.prow.propCollisions != NodePath.notFound(
+            ):
                 self.prow.propCollisions.reparentTo(self.root)
                 self.prow.propCollisions.setPos(locator.getPos())
                 self.prow.propCollisions.setHpr(locator.getHpr())
@@ -245,7 +254,12 @@ class ShipModel(NodePath):
                 self.ram.propCollisions.setScale(locator.getScale())
         self.masts = {}
         self.sails = {}
-        configNames = (('setMastConfig1', 'setSailConfig1'), ('setMastConfig2', 'setSailConfig2'), ('setMastConfig3', 'setSailConfig3'), ('setForemastConfig', 'setForesailConfig'), ('setAftmastConfig', 'setAftsailConfig'))
+        configNames = (('setMastConfig1', 'setSailConfig1'),
+                       ('setMastConfig2', 'setSailConfig2'), ('setMastConfig3',
+                                                              'setSailConfig3'),
+                       ('setForemastConfig',
+                        'setForesailConfig'), ('setAftmastConfig',
+                                               'setAftsailConfig'))
         for i in xrange(len(configNames)):
             mastConfigName, sailConfigName = configNames[i]
             mastId = getattr(self.dna, 'g' + mastConfigName[1:])()
@@ -272,15 +286,16 @@ class ShipModel(NodePath):
             elif mast.dna.mastType >= ShipGlobals.SKEL_FOREMASTL1 and mast.dna.mastType <= ShipGlobals.SKEL_FOREMASTL3:
                 locator = self.locators.find('**/location_foremast;+s')
             elif mast.dna.mastType >= ShipGlobals.MAINMASTL1 and mast.dna.mastType <= ShipGlobals.TRIMASTL5:
-                locator = self.locators.find('**/location_mainmast_' + str(mast.dna.posIndex) + ';+s')
+                locator = self.locators.find('**/location_mainmast_' +
+                                             str(mast.dna.posIndex) + ';+s')
             elif mast.dna.mastType >= ShipGlobals.SKEL_MAINMASTL1_A and mast.dna.mastType <= ShipGlobals.SKEL_TRIMASTL5:
-                locator = self.locators.find('**/location_mainmast_' + str(mast.dna.posIndex) + ';+s')
+                locator = self.locators.find('**/location_mainmast_' +
+                                             str(mast.dna.posIndex) + ';+s')
             elif mast.dna.mastType >= ShipGlobals.AFTMASTL1 and mast.dna.mastType <= ShipGlobals.AFTMASTL3:
                 locator = self.locators.find('**/location_aftmast;+s')
             elif mast.dna.mastType >= ShipGlobals.SKEL_AFTMASTL1 and mast.dna.mastType <= ShipGlobals.SKEL_AFTMASTL3:
                 locator = self.locators.find('**/location_aftmast;+s')
-            self.masts[mast.dna.posIndex] = [
-             mast, 0]
+            self.masts[mast.dna.posIndex] = [mast, 0]
             self.sails[mast.dna.posIndex] = {}
             for j in xrange(len(mastDNA.sailConfig)):
                 if mastDNA.sailConfig[j] == 0 and fromEditor:
@@ -302,8 +317,7 @@ class ShipModel(NodePath):
                 sail.addToShip()
                 sail.sailActor.reparentTo(mast)
                 sail.setScale(locator.getScale())
-                self.sails[mast.dna.posIndex][sail.dna.posIndex] = [
-                 sail, 0]
+                self.sails[mast.dna.posIndex][sail.dna.posIndex] = [sail, 0]
                 sail.setAnimState('Idle')
 
         self.decors = []
@@ -353,7 +367,11 @@ class ShipModel(NodePath):
         return self.rotationalVelocity
 
     def setLOD(self, lod):
-        lodDic = {'low': 'geom_Low', 'medium': 'geom_Medium', 'high': 'geom_High'}
+        lodDic = {
+            'low': 'geom_Low',
+            'medium': 'geom_Medium',
+            'high': 'geom_High'
+        }
         self.highDetail.hide()
         self.mediumDetail.hide()
         self.lowDetail.hide()
@@ -371,14 +389,28 @@ class ShipModel(NodePath):
         if hasattr(self.cabin, lodDic[lod]):
             exec 'self.cabin.' + lodDic[lod] + '.show()'
 
-    def fireCannon(self, index, ammo=InventoryType.CannonRoundShot, targetPos=None, targetNode=None, wantCollisions=0, flightTime=None, preciseHit=False, offset=Vec3(0, 0, 0)):
+    def fireCannon(self,
+                   index,
+                   ammo=InventoryType.CannonRoundShot,
+                   targetPos=None,
+                   targetNode=None,
+                   wantCollisions=0,
+                   flightTime=None,
+                   preciseHit=False,
+                   offset=Vec3(0, 0, 0)):
         if targetNode:
             targetPos = targetNode.getPos(render)
         targetPos = targetPos + offset
         if len(self.cannons):
-            self.cannons[index].playAttack(InventoryType.CannonShoot, ammo, 'localShipHit', targetPos, wantCollisions, flightTime, preciseHit)
+            self.cannons[index].playAttack(
+                InventoryType.CannonShoot, ammo, 'localShipHit', targetPos,
+                wantCollisions, flightTime, preciseHit)
 
-    def fireAllCannons(self, ammo=InventoryType.CannonRoundShot, targetPos=None, targetNode=None, wantCollisions=0):
+    def fireAllCannons(self,
+                       ammo=InventoryType.CannonRoundShot,
+                       targetPos=None,
+                       targetNode=None,
+                       wantCollisions=0):
         for i in xrange(len(self.cannons)):
             self.fireCannon(i, ammo, targetPos, targetNode, wantCollisions)
 
@@ -488,8 +520,10 @@ class ShipModel(NodePath):
         dna.stripeColorIndex = copy.copy(stats['setStripeColorIndex'])
         dna.patternColorIndex = copy.copy(stats['setPatternColorIndex'])
         dna.hullHilightColorIndex = copy.copy(stats['setHullHilightColorIndex'])
-        dna.stripeHilightColorIndex = copy.copy(stats['setStripeHilightColorIndex'])
-        dna.patternHilightColorIndex = copy.copy(stats['setPatternHilightColorIndex'])
+        dna.stripeHilightColorIndex = copy.copy(
+            stats['setStripeHilightColorIndex'])
+        dna.patternHilightColorIndex = copy.copy(
+            stats['setPatternHilightColorIndex'])
         dna.sailConfig1 = copy.copy(stats['setSailConfig1'])
         dna.sailConfig2 = copy.copy(stats['setSailConfig2'])
         dna.sailConfig3 = copy.copy(stats['setSailConfig3'])
@@ -535,11 +569,14 @@ class ShipModel(NodePath):
                 prop.loadCollisions()
             decorPlacement = DecorDNA.DecorDict.get(decorType)
             if decorPlacement[1] == DecorDNA.WALL:
-                locator = self.locators.find('**/wall_decor_' + str(posIndex) + ';+s')
+                locator = self.locators.find('**/wall_decor_' + str(posIndex) +
+                                             ';+s')
             elif decorPlacement[1] == DecorDNA.FLOOR:
-                locator = self.locators.find('**/floor_decor_' + str(posIndex) + ';+s')
+                locator = self.locators.find('**/floor_decor_' + str(posIndex) +
+                                             ';+s')
             elif decorPlacement[1] == DecorDNA.WINDOW:
-                locator = self.locators.find('**/window_' + str(posIndex) + ';+s')
+                locator = self.locators.find('**/window_' + str(posIndex) +
+                                             ';+s')
             prop.setPos(locator.getPos(self.root))
             prop.setHpr(locator.getHpr(self.root))
             prop.setScale(locator.getScale(self.root))
@@ -548,7 +585,8 @@ class ShipModel(NodePath):
                 prop.propCollisions.reparentTo(self.hull[0].propCollisions)
                 prop.propCollisions.setPos(self.root, locator.getPos(self.root))
                 prop.propCollisions.setHpr(self.root, locator.getHpr(self.root))
-                prop.propCollisions.setScale(self.root, locator.getScale(self.root))
+                prop.propCollisions.setScale(self.root,
+                                             locator.getScale(self.root))
             self.decors.append(prop)
 
     def fadeIn(self):
@@ -562,7 +600,22 @@ class ShipModel(NodePath):
         self.cabin.geom_High.setTextureOff(3)
         self.cabin.geom_Medium.setTextureOff(3)
         self.cabin.geom_Low.setTextureOff(3)
-        self.fader = Parallel(self.stormEffect.colorScaleInterval(1.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(0, 0, 0, 0)), Func(self.hull[0].geom_High.clearTexture), Func(self.hull[0].geom_Medium.clearTexture), Func(self.hull[0].geom_Low.clearTexture), Func(self.cabin.geom_High.clearTexture), Func(self.cabin.geom_Medium.clearTexture), Func(self.cabin.geom_Low.clearTexture), Sequence(self.colorScaleInterval(1.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(0, 0, 0, 0)), Func(self.showAllPanels), self.colorScaleInterval(1.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(0, 0, 0, 1)), Func(self.clearTransparency)))
+        self.fader = Parallel(
+            self.stormEffect.colorScaleInterval(
+                1.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(0, 0, 0, 0)),
+            Func(self.hull[0].geom_High.clearTexture),
+            Func(self.hull[0].geom_Medium.clearTexture),
+            Func(self.hull[0].geom_Low.clearTexture),
+            Func(self.cabin.geom_High.clearTexture),
+            Func(self.cabin.geom_Medium.clearTexture),
+            Func(self.cabin.geom_Low.clearTexture),
+            Sequence(
+                self.colorScaleInterval(
+                    1.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(0, 0, 0, 0)),
+                Func(self.showAllPanels),
+                self.colorScaleInterval(
+                    1.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(0, 0, 0, 1)),
+                Func(self.clearTransparency)))
         self.fader.start()
         return
 
@@ -571,7 +624,19 @@ class ShipModel(NodePath):
             self.fader.finish()
             self.fader = None
         self.setTransparency(1)
-        self.fader = Sequence(Func(self.stormEffect.fadeOutAndStop), self.colorScaleInterval(1.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(1, 1, 1, 1)), Func(self.hull[0].geom_High.setTextureOff, 3), Func(self.hull[0].geom_Medium.setTextureOff, 3), Func(self.hull[0].geom_Low.setTextureOff, 3), Func(self.cabin.geom_High.setTextureOff, 3), Func(self.cabin.geom_Medium.setTextureOff, 3), Func(self.cabin.geom_Low.setTextureOff, 3), self.colorScaleInterval(1.0, Vec4(0, 0, 0, 0), startColorScale=Vec4(0, 0, 0, 1)), Func(self.hideAllPanels), Func(self.clearTransparency))
+        self.fader = Sequence(
+            Func(self.stormEffect.fadeOutAndStop),
+            self.colorScaleInterval(
+                1.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(1, 1, 1, 1)),
+            Func(self.hull[0].geom_High.setTextureOff, 3),
+            Func(self.hull[0].geom_Medium.setTextureOff, 3),
+            Func(self.hull[0].geom_Low.setTextureOff, 3),
+            Func(self.cabin.geom_High.setTextureOff, 3),
+            Func(self.cabin.geom_Medium.setTextureOff, 3),
+            Func(self.cabin.geom_Low.setTextureOff, 3),
+            self.colorScaleInterval(
+                1.0, Vec4(0, 0, 0, 0), startColorScale=Vec4(0, 0, 0, 1)),
+            Func(self.hideAllPanels), Func(self.clearTransparency))
         self.fader.start()
         return
 
@@ -597,8 +662,15 @@ class ShipModel(NodePath):
             self.effect.effectScale = 3.0
             self.effect.radius = 0.5
             self.effect.setPos(0, 0, 0)
-        proj_ival = ProjectileInterval(self.effect, endZ=0, startPos=startPos, endPos=targetPos, duration=4.0, gravityMult=1.0)
-        self.JRival = Sequence(Func(self.effect.startLoop), proj_ival, Func(self.effect.stopLoop))
+        proj_ival = ProjectileInterval(
+            self.effect,
+            endZ=0,
+            startPos=startPos,
+            endPos=targetPos,
+            duration=4.0,
+            gravityMult=1.0)
+        self.JRival = Sequence(
+            Func(self.effect.startLoop), proj_ival, Func(self.effect.stopLoop))
         self.JRival.start()
 
     def stopJRteleportFX(self):
@@ -611,4 +683,10 @@ class ShipModel(NodePath):
         return
 
     def getShipInfo(self):
-        return [self.modelClass, [ [mast.dna.getMastType(), mast.dna.getPosIndex(), mast.dna.getSailConfig()] for mast, dMast in self.masts.itervalues() ]]
+        return [
+            self.modelClass, [[
+                mast.dna.getMastType(),
+                mast.dna.getPosIndex(),
+                mast.dna.getSailConfig()
+            ] for mast, dMast in self.masts.itervalues()]
+        ]

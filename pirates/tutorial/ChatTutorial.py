@@ -65,7 +65,8 @@ class ChatTutorial(DirectObject.DirectObject):
     def showPart3(self):
         if self.stage != 2:
             return
-        self.panel3 = NewTutorialPanel.NewTutorialPanel([self.contentPart3, 'test'])
+        self.panel3 = NewTutorialPanel.NewTutorialPanel(
+            [self.contentPart3, 'test'])
         self.panel3.activate()
         self.panel3.setYesCommand(self.__handleOKButton)
         self.stage = 3
@@ -73,7 +74,8 @@ class ChatTutorial(DirectObject.DirectObject):
     def showPart4(self):
         if self.stage != 3:
             return
-        self.panel4 = NewTutorialPanel.NewTutorialPanel([self.contentPart4, 'test'])
+        self.panel4 = NewTutorialPanel.NewTutorialPanel(
+            [self.contentPart4, 'test'])
         self.panel4.activate()
         self.panel4.setYesCommand(self.__handleOKButton15)
         self.stage = 4
@@ -81,13 +83,15 @@ class ChatTutorial(DirectObject.DirectObject):
     def showPart5(self):
         if self.stage != 4:
             return
-        self.panel5 = NewTutorialPanel.NewTutorialPanel([self.contentPart5, 'test'])
+        self.panel5 = NewTutorialPanel.NewTutorialPanel(
+            [self.contentPart5, 'test'])
         self.panel5.activate()
         self.panel5.setYesCommand(self.__handleOKButton2)
         self.stage = 5
 
     def updateTutorialState(self):
-        base.localAvatar.b_setTutorial(PiratesGlobals.TUT_INTRODUCTION_TO_FRIENDS)
+        base.localAvatar.b_setTutorial(
+            PiratesGlobals.TUT_INTRODUCTION_TO_FRIENDS)
 
     def panelCleanup(self):
         messenger.send('closeTutorialWindowAll')

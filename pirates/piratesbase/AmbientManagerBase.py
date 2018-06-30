@@ -3,6 +3,7 @@ from direct.interval.IntervalGlobal import LerpFunc, Sequence
 from direct.showbase.DirectObject import DirectObject
 from pandac.PandaModules import AudioSound
 
+
 class AmbientSound:
     notify = DirectNotifyGlobal.directNotify.newCategory('AmbientSound')
 
@@ -70,8 +71,12 @@ class AmbientSound:
             self.activeInterval.pause()
             del self.activeInterval
 
-        self.activeInterval = Sequence(LerpFunc(self.changeVolumeTask, fromData=self.startVolume,
-            toData=self.finalVolume, duration=self.duration))
+        self.activeInterval = Sequence(
+            LerpFunc(
+                self.changeVolumeTask,
+                fromData=self.startVolume,
+                toData=self.finalVolume,
+                duration=self.duration))
 
         self.activeInterval.start()
 
@@ -111,17 +116,20 @@ class AmbientManagerBase(DirectObject):
 
     def load(self, name, path, looping=True, isMusic=False):
         retval = False
-        if self.ambientDict.has_key(name):
+        if name in self.ambientDict:
             if self.ambientDict[name].path == path:
-                self.notify.warning('ambient name=%s path=%s already loaded' % (name, path))
+                self.notify.warning(
+                    'ambient name=%s path=%s already loaded' % (name, path))
             else:
-                self.notify.warning('ambient name %s is already bound to %s' % self.ambientDict[name].path)
+                self.notify.warning('ambient name %s is already bound to %s' %
+                                    self.ambientDict[name].path)
         else:
-            newAmbient = AmbientSound(path, self.masterAmbientVolume, looping, isMusic)
+            newAmbient = AmbientSound(path, self.masterAmbientVolume, looping,
+                                      isMusic)
             self.ambientDict[name] = newAmbient
 
     def unload(self, name):
-        if self.ambientDict.has_key(name):
+        if name in self.ambientDict:
             self.ambientDict[name].unload()
             del self.ambientDict[name]
         else:
@@ -134,8 +142,9 @@ class AmbientManagerBase(DirectObject):
         self.requestChangeVolume(name, duration, finalVolume, priority)
 
     def requestChangeVolume(self, name, duration, finalVolume, priority=0):
-        if self.ambientDict.has_key(name):
-            self.ambientDict[name].requestChangeVolume(duration, finalVolume, priority)
+        if name in self.ambientDict:
+            self.ambientDict[name].requestChangeVolume(duration, finalVolume,
+                                                       priority)
 
     def delete(self):
         for name in self.ambientDict.keys():
@@ -151,4 +160,5 @@ class AmbientManagerBase(DirectObject):
         if not newMasterAmbientVolume == self.masterAmbientVolume:
             self.masterAmbientVolume = newMasterAmbientVolume
             for name in self.ambientDict.keys():
-                self.ambientDict[name].changeMasterAmbientVolume(self.masterAmbientVolume)
+                self.ambientDict[name].changeMasterAmbientVolume(
+                    self.masterAmbientVolume)

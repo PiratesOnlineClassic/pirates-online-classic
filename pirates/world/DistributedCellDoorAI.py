@@ -3,8 +3,10 @@ import random
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedCellDoorAI(DistributedInteractiveAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCellDoorAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedCellDoorAI')
 
     def __init__(self, air):
         DistributedInteractiveAI.__init__(self, air)

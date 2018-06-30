@@ -14,7 +14,6 @@ from pirates.effects.PooledEffect import PooledEffect
 
 class CannonMuzzleFire(PooledEffect, EffectController):
 
-
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -33,8 +32,12 @@ class CannonMuzzleFire(PooledEffect, EffectController):
     def createTrack(self, rate=1):
         self.splash.setPlayRate(rate, 'splashdown')
         animDuration = self.splash.getDuration('splashdown') * 0.3
-        fadeOut = self.splash.colorInterval(0.6, Vec4(1, 1, 1, 0), startColor=Vec4(1, 1, 1, 1))
-        self.track = Sequence(Func(self.splash.setColor, 1, 1, 1, 1), Func(self.splash.play, 'splashdown'), Wait(animDuration), fadeOut, Func(self.cleanUpEffect))
+        fadeOut = self.splash.colorInterval(
+            0.6, Vec4(1, 1, 1, 0), startColor=Vec4(1, 1, 1, 1))
+        self.track = Sequence(
+            Func(self.splash.setColor, 1, 1, 1, 1),
+            Func(self.splash.play, 'splashdown'), Wait(animDuration), fadeOut,
+            Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         self.detachNode()
@@ -47,4 +50,6 @@ class CannonMuzzleFire(PooledEffect, EffectController):
         del self.splash
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\CannonMuzzleFire.pyc

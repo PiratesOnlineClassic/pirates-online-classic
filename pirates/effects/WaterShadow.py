@@ -8,17 +8,23 @@ from pandac.PandaModules import *
 
 class WaterShadow(NodePath):
 
-
-    def __init__(self, name, shadow_model, parent, use_water_bin=True, bin_number=7):
+    def __init__(self,
+                 name,
+                 shadow_model,
+                 parent,
+                 use_water_bin=True,
+                 bin_number=7):
         self.name = name
         self.use_water_bin = use_water_bin
         self.bin_number = bin_number
         self.shadow_model = shadow_model
         if self.shadow_model:
             if hasattr(base, 'pe'):
-                shadow_spn = SeaPatchNode('water_shadow_spn', base.pe.seaPatch.patch)
+                shadow_spn = SeaPatchNode('water_shadow_spn',
+                                          base.pe.seaPatch.patch)
             else:
-                shadow_spn = SeaPatchNode('water_shadow_spn', base.cr.activeWorld.getWater().patch)
+                shadow_spn = SeaPatchNode('water_shadow_spn',
+                                          base.cr.activeWorld.getWater().patch)
             shadow_spn.setWantColor(0)
             shadow_spn.setWantUv(0)
             shadow_spn.setWantNormal(0)
@@ -36,12 +42,20 @@ class WaterShadow(NodePath):
             self.reparentTo(parent)
             OTPRender.renderReflection(False, self, 'p_water_shadow', None)
             if hasattr(base, 'pe'):
-                shadow_spn.setEffect(CompassEffect.make(base.pe.seaPatch.patchNP, CompassEffect.PZ))
+                shadow_spn.setEffect(
+                    CompassEffect.make(base.pe.seaPatch.patchNP,
+                                       CompassEffect.PZ))
             else:
-                shadow_spn.setEffect(CompassEffect.make(base.cr.activeWorld.getWater().patchNP, CompassEffect.PZ))
+                shadow_spn.setEffect(
+                    CompassEffect.make(base.cr.activeWorld.getWater().patchNP,
+                                       CompassEffect.PZ))
             if self.use_water_bin:
-                mask = 4294967295L
-                stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
+                mask = 4294967295
+                stencil = StencilAttrib.make(
+                    1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep,
+                    StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
                 self.setAttrib(stencil)
         return
+
+
 # okay decompiling .\pirates\effects\WaterShadow.pyc

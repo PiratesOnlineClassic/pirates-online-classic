@@ -8,11 +8,28 @@ from pirates.creature.DistributedCreature import DistributedCreature
 from pirates.npc.Boss import Boss
 from pirates.pirate import AvatarTypes
 
-CreatureTypes = {AvatarTypes.Crab: AvatarTypes.Crab, AvatarTypes.RockCrab: AvatarTypes.Crab, AvatarTypes.GiantCrab: AvatarTypes.Crab, AvatarTypes.Stump: AvatarTypes.Stump, AvatarTypes.FlyTrap: AvatarTypes.FlyTrap, AvatarTypes.Scorpion: AvatarTypes.Scorpion, AvatarTypes.DreadScorpion: AvatarTypes.Scorpion, AvatarTypes.Alligator: AvatarTypes.Alligator, AvatarTypes.BigGator: AvatarTypes.Alligator, AvatarTypes.HugeGator: AvatarTypes.Alligator, AvatarTypes.Bat: AvatarTypes.Bat, AvatarTypes.VampireBat: AvatarTypes.Bat, AvatarTypes.Wasp: AvatarTypes.Wasp, AvatarTypes.AngryWasp: AvatarTypes.Wasp}
+CreatureTypes = {
+    AvatarTypes.Crab: AvatarTypes.Crab,
+    AvatarTypes.RockCrab: AvatarTypes.Crab,
+    AvatarTypes.GiantCrab: AvatarTypes.Crab,
+    AvatarTypes.Stump: AvatarTypes.Stump,
+    AvatarTypes.FlyTrap: AvatarTypes.FlyTrap,
+    AvatarTypes.Scorpion: AvatarTypes.Scorpion,
+    AvatarTypes.DreadScorpion: AvatarTypes.Scorpion,
+    AvatarTypes.Alligator: AvatarTypes.Alligator,
+    AvatarTypes.BigGator: AvatarTypes.Alligator,
+    AvatarTypes.HugeGator: AvatarTypes.Alligator,
+    AvatarTypes.Bat: AvatarTypes.Bat,
+    AvatarTypes.VampireBat: AvatarTypes.Bat,
+    AvatarTypes.Wasp: AvatarTypes.Wasp,
+    AvatarTypes.AngryWasp: AvatarTypes.Wasp
+}
+
 
 class DistributedBossCreature(DistributedCreature, Boss):
-    
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBossCreature')
+
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedBossCreature')
 
     def __init__(self, cr):
         DistributedCreature.__init__(self, cr)
@@ -39,4 +56,6 @@ class DistributedBossCreature(DistributedCreature, Boss):
 
     def getBossHighlightColor(self):
         return Boss.getBossHighlightColor(self)
+
+
 # okay decompiling .\pirates\creature\DistributedBossCreature.pyc

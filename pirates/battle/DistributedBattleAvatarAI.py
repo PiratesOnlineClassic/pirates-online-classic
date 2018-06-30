@@ -1,5 +1,5 @@
 from direct.directnotify import DirectNotifyGlobal
-from pirates.reputation. DistributedReputationAvatarAI import  DistributedReputationAvatarAI
+from pirates.reputation.DistributedReputationAvatarAI import DistributedReputationAvatarAI
 from pirates.battle.WeaponBaseAI import WeaponBaseAI
 from pirates.battle.Teamable import Teamable
 from pirates.pirate import AvatarTypes
@@ -9,8 +9,11 @@ from pirates.pirate.BattleAvatarGameFSMAI import BattleAvatarGameFSMAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 
-class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Teamable):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleAvatarAI')
+
+class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI,
+                                Teamable):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedBattleAvatarAI')
 
     def __init__(self, air):
         DistributedReputationAvatarAI.__init__(self, air)
@@ -68,8 +71,8 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
             if isinstance(parentObj, DistributedGameAreaAI):
                 if not self.weapon:
                     self.weapon = DistributedWeaponAI(self.air)
-                    self.weapon.generateWithRequiredAndId(self.air.allocateChannel(),
-                        self.parentId, self.zoneId)
+                    self.weapon.generateWithRequiredAndId(
+                        self.air.allocateChannel(), self.parentId, self.zoneId)
 
                 if self.weapon:
                     self.weapon.b_setLocation(parentId, zoneId)
@@ -91,7 +94,9 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.gameFSM.request(gameState)
 
     def d_setGameState(self, gameState):
-        self.sendUpdate('setGameState', [gameState, globalClockDelta.getRealNetworkTime(bits=16)])
+        self.sendUpdate(
+            'setGameState',
+            [gameState, globalClockDelta.getRealNetworkTime(bits=16)])
 
     def b_setGameState(self, gameState):
         self.setGameState(gameState)
@@ -359,11 +364,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
     def addSkillEffect(self, effectId, duration, attackerId):
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
-        skillEffect = [
-            effectId,
-            duration,
-            timestamp,
-            attackerId]
+        skillEffect = [effectId, duration, timestamp, attackerId]
 
         self.skillEffects.append(skillEffect)
         self.d_setSkillEffects(self.skillEffects)

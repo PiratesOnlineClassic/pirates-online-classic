@@ -14,11 +14,67 @@ from pirates.ship.DistributedShipOV import DistributedShipOV
 from pirates.shipparts.DistributedHullOV import DistributedHullOV
 from pirates.shipparts.DistributedMastOV import DistributedMastOV
 
-HullDict = {ShipGlobals.WARSHIPL1: 'models/shipparts/warshipMeter', ShipGlobals.WARSHIPL2: 'models/shipparts/warshipMeter', ShipGlobals.WARSHIPL3: 'models/shipparts/warshipMeter', ShipGlobals.WARSHIPL4: 'models/shipparts/warshipMeter', ShipGlobals.MERCHANTL1: 'models/shipparts/merchantMeter', ShipGlobals.MERCHANTL2: 'models/shipparts/merchantMeter', ShipGlobals.MERCHANTL3: 'models/shipparts/merchantMeter', ShipGlobals.MERCHANTL4: 'models/shipparts/merchantMeter', ShipGlobals.INTERCEPTORL1: 'models/shipparts/interceptorMeter', ShipGlobals.INTERCEPTORL2: 'models/shipparts/interceptorMeter', ShipGlobals.INTERCEPTORL3: 'models/shipparts/interceptorMeter', ShipGlobals.INTERCEPTORL4: 'models/shipparts/interceptorMeter', ShipGlobals.BLACK_PEARL: 'models/shipparts/merchantMeter', ShipGlobals.GOLIATH: 'models/shipparts/warshipMeter', ShipGlobals.SKEL_WARSHIPL3: 'models/shipparts/warshipMeter', ShipGlobals.SKEL_INTERCEPTORL3: 'models/shipparts/interceptorMeter'}
-MastDict = {ShipGlobals.MAINMASTL1: 'models/shipparts/mainmast_square', ShipGlobals.MAINMASTL2: 'models/shipparts/mainmast_square', ShipGlobals.MAINMASTL3: 'models/shipparts/mainmast_square', ShipGlobals.MAINMASTL4: 'models/shipparts/mainmast_square', ShipGlobals.MAINMASTL5: 'models/shipparts/mainmast_square', ShipGlobals.TRIMASTL1: 'models/shipparts/L2mastTri', ShipGlobals.TRIMASTL2: 'models/shipparts/L2mastTri', ShipGlobals.TRIMASTL3: 'models/shipparts/L2mastTri', ShipGlobals.TRIMASTL4: 'models/shipparts/L2mastTri', ShipGlobals.TRIMASTL5: 'models/shipparts/L2mastTri', ShipGlobals.FOREMASTL1: 'models/shipparts/L1foremast', ShipGlobals.FOREMASTL2: 'models/shipparts/L2foremast', ShipGlobals.FOREMASTL3: 'models/shipparts/L2foremast', ShipGlobals.AFTMASTL1: 'models/shipparts/L2aftmast', ShipGlobals.AFTMASTL2: 'models/shipparts/L2aftmast', ShipGlobals.AFTMASTL3: 'models/shipparts/L2aftmast', ShipGlobals.SKEL_MAINMASTL1_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL2_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL3_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL4_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL5_A: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL1_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL2_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL3_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL4_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_MAINMASTL5_B: 'models/shipparts/mainmast_square', ShipGlobals.SKEL_TRIMASTL1: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_TRIMASTL2: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_TRIMASTL3: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_TRIMASTL4: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_TRIMASTL5: 'models/shipparts/L2mastTri', ShipGlobals.SKEL_FOREMASTL1: 'models/shipparts/L1foremast', ShipGlobals.SKEL_FOREMASTL2: 'models/shipparts/L1foremast', ShipGlobals.SKEL_FOREMASTL3: 'models/shipparts/L1foremast', ShipGlobals.SKEL_AFTMASTL1: 'models/shipparts/L2aftmast', ShipGlobals.SKEL_AFTMASTL2: 'models/shipparts/L2aftmast', ShipGlobals.SKEL_AFTMASTL3: 'models/shipparts/L2aftmast'}
+HullDict = {
+    ShipGlobals.WARSHIPL1: 'models/shipparts/warshipMeter',
+    ShipGlobals.WARSHIPL2: 'models/shipparts/warshipMeter',
+    ShipGlobals.WARSHIPL3: 'models/shipparts/warshipMeter',
+    ShipGlobals.WARSHIPL4: 'models/shipparts/warshipMeter',
+    ShipGlobals.MERCHANTL1: 'models/shipparts/merchantMeter',
+    ShipGlobals.MERCHANTL2: 'models/shipparts/merchantMeter',
+    ShipGlobals.MERCHANTL3: 'models/shipparts/merchantMeter',
+    ShipGlobals.MERCHANTL4: 'models/shipparts/merchantMeter',
+    ShipGlobals.INTERCEPTORL1: 'models/shipparts/interceptorMeter',
+    ShipGlobals.INTERCEPTORL2: 'models/shipparts/interceptorMeter',
+    ShipGlobals.INTERCEPTORL3: 'models/shipparts/interceptorMeter',
+    ShipGlobals.INTERCEPTORL4: 'models/shipparts/interceptorMeter',
+    ShipGlobals.BLACK_PEARL: 'models/shipparts/merchantMeter',
+    ShipGlobals.GOLIATH: 'models/shipparts/warshipMeter',
+    ShipGlobals.SKEL_WARSHIPL3: 'models/shipparts/warshipMeter',
+    ShipGlobals.SKEL_INTERCEPTORL3: 'models/shipparts/interceptorMeter'
+}
+MastDict = {
+    ShipGlobals.MAINMASTL1: 'models/shipparts/mainmast_square',
+    ShipGlobals.MAINMASTL2: 'models/shipparts/mainmast_square',
+    ShipGlobals.MAINMASTL3: 'models/shipparts/mainmast_square',
+    ShipGlobals.MAINMASTL4: 'models/shipparts/mainmast_square',
+    ShipGlobals.MAINMASTL5: 'models/shipparts/mainmast_square',
+    ShipGlobals.TRIMASTL1: 'models/shipparts/L2mastTri',
+    ShipGlobals.TRIMASTL2: 'models/shipparts/L2mastTri',
+    ShipGlobals.TRIMASTL3: 'models/shipparts/L2mastTri',
+    ShipGlobals.TRIMASTL4: 'models/shipparts/L2mastTri',
+    ShipGlobals.TRIMASTL5: 'models/shipparts/L2mastTri',
+    ShipGlobals.FOREMASTL1: 'models/shipparts/L1foremast',
+    ShipGlobals.FOREMASTL2: 'models/shipparts/L2foremast',
+    ShipGlobals.FOREMASTL3: 'models/shipparts/L2foremast',
+    ShipGlobals.AFTMASTL1: 'models/shipparts/L2aftmast',
+    ShipGlobals.AFTMASTL2: 'models/shipparts/L2aftmast',
+    ShipGlobals.AFTMASTL3: 'models/shipparts/L2aftmast',
+    ShipGlobals.SKEL_MAINMASTL1_A: 'models/shipparts/mainmast_square',
+    ShipGlobals.SKEL_MAINMASTL2_A: 'models/shipparts/mainmast_square',
+    ShipGlobals.SKEL_MAINMASTL3_A: 'models/shipparts/mainmast_square',
+    ShipGlobals.SKEL_MAINMASTL4_A: 'models/shipparts/mainmast_square',
+    ShipGlobals.SKEL_MAINMASTL5_A: 'models/shipparts/mainmast_square',
+    ShipGlobals.SKEL_MAINMASTL1_B: 'models/shipparts/mainmast_square',
+    ShipGlobals.SKEL_MAINMASTL2_B: 'models/shipparts/mainmast_square',
+    ShipGlobals.SKEL_MAINMASTL3_B: 'models/shipparts/mainmast_square',
+    ShipGlobals.SKEL_MAINMASTL4_B: 'models/shipparts/mainmast_square',
+    ShipGlobals.SKEL_MAINMASTL5_B: 'models/shipparts/mainmast_square',
+    ShipGlobals.SKEL_TRIMASTL1: 'models/shipparts/L2mastTri',
+    ShipGlobals.SKEL_TRIMASTL2: 'models/shipparts/L2mastTri',
+    ShipGlobals.SKEL_TRIMASTL3: 'models/shipparts/L2mastTri',
+    ShipGlobals.SKEL_TRIMASTL4: 'models/shipparts/L2mastTri',
+    ShipGlobals.SKEL_TRIMASTL5: 'models/shipparts/L2mastTri',
+    ShipGlobals.SKEL_FOREMASTL1: 'models/shipparts/L1foremast',
+    ShipGlobals.SKEL_FOREMASTL2: 'models/shipparts/L1foremast',
+    ShipGlobals.SKEL_FOREMASTL3: 'models/shipparts/L1foremast',
+    ShipGlobals.SKEL_AFTMASTL1: 'models/shipparts/L2aftmast',
+    ShipGlobals.SKEL_AFTMASTL2: 'models/shipparts/L2aftmast',
+    ShipGlobals.SKEL_AFTMASTL3: 'models/shipparts/L2aftmast'
+}
+
 
 class ShipMeter(DirectObject, NodePath):
-    
+
     def __init__(self, shipId, shipClass=0, mastInfo=[], siegeTeam=0):
         NodePath.__init__(self, 'ShipMeter')
         self.shipId = shipId
@@ -35,8 +91,7 @@ class ShipMeter(DirectObject, NodePath):
         self.ram = None
         self.cabin = None
         self.panelStates = []
-        self.mastStates = [
-         None, None, None, None, None]
+        self.mastStates = [None, None, None, None, None]
         self.mastTypes = [None, None, None, None, None]
         self.smokeEffects = []
         self.oldHullHp = []
@@ -56,14 +111,15 @@ class ShipMeter(DirectObject, NodePath):
         else:
             if self.shipId:
                 hullOVs = base.cr.getOwnerViewDoList(DistributedHullOV)
-                hullOVs = [ ov for ov in hullOVs if ov.shipId == self.shipId ]
+                hullOVs = [ov for ov in hullOVs if ov.shipId == self.shipId]
                 for hullOV in hullOVs:
                     self.setHullType(hullOV.shipClass)
 
                 mastOVs = base.cr.getOwnerViewDoList(DistributedMastOV)
-                mastOVs = [ ov for ov in mastOVs if ov.shipId == self.shipId ]
+                mastOVs = [ov for ov in mastOVs if ov.shipId == self.shipId]
                 for mastOV in mastOVs:
-                    self.setMastType(mastOV.mastType, mastOV.posIndex, mastOV.sailConfig)
+                    self.setMastType(mastOV.mastType, mastOV.posIndex,
+                                     mastOV.sailConfig)
 
         self.accept('setShipClass-%s' % self.shipId, self.setHullType)
         self.accept('setMastType-%s' % self.shipId, self.setMastType)
@@ -91,7 +147,7 @@ class ShipMeter(DirectObject, NodePath):
         filePrefix = HullDict.get(modelType)
         self.hull = loader.loadModel(filePrefix)
         self.hull.reparentTo(self.modelRoot)
-        allPanels = self.hull.findAllMatches('**/panel_*') 
+        allPanels = self.hull.findAllMatches('**/panel_*')
         for i in range(len(allPanels)):
             panel = self.hull.find('**/panel_' + str(i))
             if not panel.isEmpty():
@@ -118,7 +174,7 @@ class ShipMeter(DirectObject, NodePath):
         myMasts = []
         myMastStates = []
         mySails = []
-        mastSegments = self.mastModels[index].findAllMatches('**/mast_*') 
+        mastSegments = self.mastModels[index].findAllMatches('**/mast_*')
         for i in range(len(mastSegments)):
             mastSegment = self.mastModels[index].find('**/mast_' + str(i))
             if not mastSegment.isEmpty():
@@ -164,9 +220,11 @@ class ShipMeter(DirectObject, NodePath):
                 else:
                     if id == ShipGlobals.MAINMAST:
                         if self.modelClass == 11 and index == 1:
-                            locator = self.hull.find('**/location_mainmast_2;+s')
+                            locator = self.hull.find(
+                                '**/location_mainmast_2;+s')
                         else:
-                            locator = self.hull.find('**/location_mainmast_' + str(index) + ';+s')
+                            locator = self.hull.find('**/location_mainmast_' +
+                                                     str(index) + ';+s')
                     else:
                         if id == ShipGlobals.AFTMAST:
                             locator = self.hull.find('**/location_aftmast;+s')
@@ -288,7 +346,14 @@ class ShipMeter(DirectObject, NodePath):
             return Vec4(0.5, 0, 0, 1)
 
     def playFlash(self, target, normalColor):
-        flash = Sequence(Func(target.setColor, Vec4(1, 1, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 0, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 1, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 0, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 1, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 0, 0, 1)), Wait(0.1), Func(target.setColorOff))
+        flash = Sequence(
+            Func(target.setColor, Vec4(1, 1, 0, 1)), Wait(0.1),
+            Func(target.setColor, Vec4(1, 0, 0, 1)), Wait(0.1),
+            Func(target.setColor, Vec4(1, 1, 0, 1)), Wait(0.1),
+            Func(target.setColor, Vec4(1, 0, 0, 1)), Wait(0.1),
+            Func(target.setColor, Vec4(1, 1, 0, 1)), Wait(0.1),
+            Func(target.setColor, Vec4(1, 0, 0, 1)), Wait(0.1),
+            Func(target.setColorOff))
         flash.start()
 
     def setShipInfo(self, shipClass, mastInfo):

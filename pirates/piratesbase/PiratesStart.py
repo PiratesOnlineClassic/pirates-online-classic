@@ -19,10 +19,12 @@ if __debug__:
 
 print 'PiratesStart: Starting the game.'
 
+
 class game:
 
     name = 'pirates'
     process = 'client'
+
 
 __builtin__.game = game()
 
@@ -57,7 +59,8 @@ rolloverSound.setVolume(0.5)
 DirectGuiGlobals.setDefaultRolloverSound(rolloverSound)
 clickSound = base.loader.loadSfx('audio/sfx_gui_click_22.mp3')
 DirectGuiGlobals.setDefaultClickSound(clickSound)
-DirectGuiGlobals.setDefaultDialogGeom(loader.loadModelOnce('models/gui/panel_parchment'))
+DirectGuiGlobals.setDefaultDialogGeom(
+    loader.loadModelOnce('models/gui/panel_parchment'))
 clearColor = Vec4(0.0, 0.0, 0.0, 1.0)
 base.win.setClearColor(clearColor)
 from pirates.shader.Hdr import *
@@ -74,6 +77,7 @@ from otp.distributed import OtpDoGlobals
 from pirates.piratesbase import UserFunnel
 
 if __debug__ and base.config.GetBool('want-debug-injector', False):
+
     def openInjector_wx():
         import wx
         from direct.stdpy import threading, thread
@@ -82,23 +86,34 @@ if __debug__ and base.config.GetBool('want-debug-injector', False):
             code = textbox.GetValue()
             exec (code, globals())
 
-        app = wx.App(redirect = False)
+        app = wx.App(redirect=False)
 
-        frame = wx.Frame(None, title = "POC Injector", size=(640, 420), style=wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.MINIMIZE_BOX)
+        frame = wx.Frame(
+            None,
+            title="POC Injector",
+            size=(640, 420),
+            style=wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.MINIMIZE_BOX)
         panel = wx.Panel(frame)
-        button = wx.Button(parent = panel, id = -1, label = "Inject", size = (50, 20), pos = (295, 0))
+        button = wx.Button(
+            parent=panel, id=-1, label="Inject", size=(50, 20), pos=(295, 0))
         global textbox
-        textbox = wx.TextCtrl(parent = panel, id = -1, pos = (20, 22), size = (600, 340), style = wx.TE_MULTILINE)
+        textbox = wx.TextCtrl(
+            parent=panel,
+            id=-1,
+            pos=(20, 22),
+            size=(600, 340),
+            style=wx.TE_MULTILINE)
         frame.Bind(wx.EVT_BUTTON, __inject_wx, button)
 
         frame.Show()
         app.SetTopWindow(frame)
 
-        textbox.AppendText("# Welcome to the Pirates Online Classic Debug Injector! #")
+        textbox.AppendText(
+            "# Welcome to the Pirates Online Classic Debug Injector! #")
 
-        __builtin__.injectorThread = threading.Thread(target = app.MainLoop)
+        __builtin__.injectorThread = threading.Thread(target=app.MainLoop)
         __builtin__.injectorThread.start()
-    
+
     openInjector_wx()
     __builtin__.devInjectorOpen = True
     UserFunnel.logSubmit(1, 'DEV_INJECTOR_OPENS')

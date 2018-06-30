@@ -11,10 +11,9 @@ from pirates.piratesgui.ShipSnapshot import ShipSnapshot
 
 
 class ShipFrameShopping(ShipFrameSelect):
-    
 
     def __init__(self, parent, **kw):
-        optiondefs = (('mode', 'repair', None), )
+        optiondefs = (('mode', 'repair', None),)
         self.defineoptions(kw, optiondefs)
         ShipFrameSelect.__init__(self, parent, **kw)
         self.initialiseoptions(ShipFrameShopping)
@@ -39,4 +38,6 @@ class ShipFrameShopping(ShipFrameSelect):
             else:
                 if self['mode'] == 'overhaul':
                     self.button['text'] = PLocalizer.InteractOverhaul
+
+
 # okay decompiling .\pirates\piratesgui\ShipFrameShopping.pyc

@@ -13,8 +13,9 @@ from pirates.piratesbase import PLocalizer
 damper = 0.5
 sliderRange = (-0.5, 0.5)
 
+
 class Ear(DirectObject.DirectObject):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('Ear')
 
     def __init__(self, main=None):
@@ -47,14 +48,28 @@ class Ear(DirectObject.DirectObject):
         customRange = (-1.0, 1.0)
         if self.main.wantMarketingViewer:
             sliderRange = (-1.0, 1.0)
-        self.pgs1 = CharGuiSlider(self.main, parent=self.earFrame, text=PLocalizer.EarScale, range=sliderRange, command=self.updateControlShape)
+        self.pgs1 = CharGuiSlider(
+            self.main,
+            parent=self.earFrame,
+            text=PLocalizer.EarScale,
+            range=sliderRange,
+            command=self.updateControlShape)
         self.pgs1.setPos(-0.4, 0, -0.3)
-        self.pgs2 = CharGuiSlider(self.main, parent=self.earFrame, text=PLocalizer.EarFlapAngle, range=sliderRange, command=self.updateControlShape)
+        self.pgs2 = CharGuiSlider(
+            self.main,
+            parent=self.earFrame,
+            text=PLocalizer.EarFlapAngle,
+            range=sliderRange,
+            command=self.updateControlShape)
         self.pgs2.setPos(-0.4, 0, -0.55)
-        self.pgs3 = CharGuiSlider(self.main, parent=self.earFrame, text=PLocalizer.EarPosition, range=sliderRange, command=self.updateControlShape)
+        self.pgs3 = CharGuiSlider(
+            self.main,
+            parent=self.earFrame,
+            text=PLocalizer.EarPosition,
+            range=sliderRange,
+            command=self.updateControlShape)
         self.pgs3.setPos(-0.4, 0, -0.8)
-        self.pgs = [
-         self.pgs1, self.pgs2, self.pgs3]
+        self.pgs = [self.pgs1, self.pgs2, self.pgs3]
 
     def unload(self):
         self.notify.debug('called ear unload')
@@ -63,8 +78,7 @@ class Ear(DirectObject.DirectObject):
         del self.avatar
 
     def loadExtraArgs(self):
-        self.pgs1['extraArgs'] = [
-         self.pgs1, 'earScale']
+        self.pgs1['extraArgs'] = [self.pgs1, 'earScale']
         self.pgs2['extraArgs'] = [self.pgs2, 'earFlap']
         self.pgs3['extraArgs'] = [self.pgs3, 'earPosition']
 
@@ -79,12 +93,15 @@ class Ear(DirectObject.DirectObject):
         self.saveDNA()
 
     def setupButtons(self):
-        self.earFrame = DirectFrame(parent=self._parent, relief=None, text=PLocalizer.EarFrameTitle, text_fg=(1,
-                                                                                                             1,
-                                                                                                             1,
-                                                                                                             1), text_scale=0.18, text_pos=(0, -0.05), pos=(0,
-                                                                                                                                                            0,
-                                                                                                                                                            0), scale=0.7)
+        self.earFrame = DirectFrame(
+            parent=self._parent,
+            relief=None,
+            text=PLocalizer.EarFrameTitle,
+            text_fg=(1, 1, 1, 1),
+            text_scale=0.18,
+            text_pos=(0, -0.05),
+            pos=(0, 0, 0),
+            scale=0.7)
         self.earFrame.hide()
         return
 
@@ -127,6 +144,7 @@ class Ear(DirectObject.DirectObject):
 
     def updateControlShape(self, pgs, extraArgs1=None, extraArgs2=None):
         if extraArgs1 != None:
-            self.avatar.pirate.setControlValue(pgs.node().getValue(), extraArgs1)
+            self.avatar.pirate.setControlValue(pgs.node().getValue(),
+                                               extraArgs1)
         self.main.handleQuarterView(extraArgs2)
         return

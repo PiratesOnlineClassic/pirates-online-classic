@@ -109,7 +109,8 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
     def loadModelParts(self):
         loaderOptions = LoaderOptions(LoaderOptions.LFSearch)
         modelBaseName = self.modelPath
-        terrainModel = loader.loadModelCopy(modelBaseName + '_terrain', loaderOptions)
+        terrainModel = loader.loadModelCopy(modelBaseName + '_terrain',
+                                            loaderOptions)
         if terrainModel:
             self.geom = terrainModel.getChild(0)
             self.geom.setName(terrainModel.getName())
@@ -119,13 +120,15 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         pierModel = loader.loadModelCopy(modelBaseName + '_pier', loaderOptions)
         if pierModel:
             pierModel.getChild(0).reparentTo(self.geom)
-        vegeWallModel = loader.loadModelCopy(modelBaseName + '_nat_wall', loaderOptions)
+        vegeWallModel = loader.loadModelCopy(modelBaseName + '_nat_wall',
+                                             loaderOptions)
         if vegeWallModel:
             vegeWallModel.getChild(0).reparentTo(self.geom)
         vegModel = loader.loadModelCopy(modelBaseName + '_veg', loaderOptions)
         if vegModel:
             vegModel.getChild(0).reparentTo(self.geom)
-        rockModel = loader.loadModelCopy(modelBaseName + '_rocks', loaderOptions)
+        rockModel = loader.loadModelCopy(modelBaseName + '_rocks',
+                                         loaderOptions)
         if rockModel:
             rockModel.getChild(0).reparentTo(self.geom)
         logModel = loader.loadModelCopy(modelBaseName + '_logs', loaderOptions)
@@ -142,7 +145,8 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
             self.geom.reparentTo(self)
 
     def setLinks(self, isExterior, exteriorUid, links):
-        self.notify.debug('%s(%s) setLinks %s %s' % (self, self.doId, isExterior, links))
+        self.notify.debug(
+            '%s(%s) setLinks %s %s' % (self, self.doId, isExterior, links))
         self.isExterior = isExterior
         self.exteriorUid = exteriorUid
         for link in links:
@@ -194,10 +198,11 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
 
     def setupEntranceNodes(self):
         entranceNodes = self.findAllMatches('**/entrance_locator_*')
-        eNodeMap = dict(zip([ node.getName() for node in entranceNodes ], entranceNodes))
+        eNodeMap = dict(
+            zip([node.getName() for node in entranceNodes], entranceNodes))
         eNodeMapKeys = eNodeMap.keys()
         eNodeMapKeys.sort()
-        self.entranceNodes = [ eNodeMap[key] for key in eNodeMapKeys ]
+        self.entranceNodes = [eNodeMap[key] for key in eNodeMapKeys]
 
     def getEntranceNode(self, index):
         if index < len(self.entranceNodes):
@@ -236,7 +241,10 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
             worldLocationId, worldLocationZone = world.getLocation()
             world.removeWorldInterest(area)
             worldEvent = 'unloadWorld-' + str(worldLocationId)
-            self.acceptOnce(worldEvent, self.unloadWorldFinished, extraArgs=[self.pendingAreaUnload])
+            self.acceptOnce(
+                worldEvent,
+                self.unloadWorldFinished,
+                extraArgs=[self.pendingAreaUnload])
             self.cr.clearTaggedInterestNamed(worldEvent, ['instanceInterest'])
         else:
             self.notify.warning('no area to be removed for connector entry')
@@ -253,10 +261,12 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         worldId, worldZoneId = self.areaWorldZone[areaIndex]
         area = self.getLoadedArea()
         if area and self.getAreaIndex(area) == areaIndex:
-            self.notify.debug('%s already loaded game area %s' % (self.doId, areaIndex))
+            self.notify.debug(
+                '%s already loaded game area %s' % (self.doId, areaIndex))
             return
         else:
-            self.notify.debug('%s Loading game area %s' % (self.doId, areaIndex))
+            self.notify.debug(
+                '%s Loading game area %s' % (self.doId, areaIndex))
             areaDoId = self.areaId[areaIndex]
             area = self.cr.doId2do.get(areaDoId)
             if area and not self.pendingAreaUnload:
@@ -272,7 +282,9 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
                 else:
                     if area:
                         if aDoId != self.pendingAreaUnload:
-                            self.notify.debug('%s already have interest %s %s' % (self.doId, area.getLocation()[0], area.getLocation()[1]))
+                            self.notify.debug('%s already have interest %s %s' %
+                                              (self.doId, area.getLocation()[0],
+                                               area.getLocation()[1]))
                             self.loadAreaFinished(area)
                         else:
                             self.areaIndexLoading = areaIndex
@@ -286,14 +298,20 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
     @report(types=['frameCount', 'args'], dConfigParam='want-connector-report')
     def setPrivateArea(self, worldId, worldZoneId, areaDoId, autoFadeIn=True):
         areaIndex = self.areaIndexLoading
-        self.notify.debug('setPrivateArea: worldId %s worldZoneId %s' % (worldId, worldZoneId))
+        self.notify.debug('setPrivateArea: worldId %s worldZoneId %s' %
+                          (worldId, worldZoneId))
         if worldId == 0 and worldZoneId == 0:
             worldId, worldZoneId = self.areaWorldZone[areaIndex]
         self.setArea(worldId, worldZoneId, areaDoId, autoFadeIn)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-connector-report')
-    def setArea(self, worldLocationId, worldLocationZone, areaDoId, autoFadeIn=True):
-        self.cr.addTaggedInterest(worldLocationId, worldLocationZone, ['instanceInterest'])
+    def setArea(self,
+                worldLocationId,
+                worldLocationZone,
+                areaDoId,
+                autoFadeIn=True):
+        self.cr.addTaggedInterest(worldLocationId, worldLocationZone,
+                                  ['instanceInterest'])
 
         @report(types=['frameCount'], dConfigParam='want-connector-report')
         def areaFinishedCallback(area):
@@ -304,8 +322,8 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         if self.pendingArea:
             self.cr.relatedObjectMgr.abortRequest(self.pendingArea)
 
-        self.pendingArea = self.cr.relatedObjectMgr.requestObjects([areaDoId],
-            eachCallback=areaFinishedCallback)
+        self.pendingArea = self.cr.relatedObjectMgr.requestObjects(
+            [areaDoId], eachCallback=areaFinishedCallback)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-connector-report')
     def unloadWorldFinished(self, areaDoId):
@@ -349,7 +367,8 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         if self.envEffects:
             self.envEffects.delete()
             self.envEffects = None
-        self.envEffects = EnvironmentEffects.EnvironmentEffects(self.geom, self.modelPath)
+        self.envEffects = EnvironmentEffects.EnvironmentEffects(
+            self.geom, self.modelPath)
         return
 
     def stopCustomEffects(self):
@@ -359,7 +378,8 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         return
 
     def handleChildArrive(self, childObj, zoneId):
-        DistributedNode.DistributedNode.handleChildArrive(self, childObj, zoneId)
+        DistributedNode.DistributedNode.handleChildArrive(
+            self, childObj, zoneId)
         if childObj.isLocal():
             childObj.refreshActiveQuestStep(forceClear=True)
             childObj.lastConnectorId = self.doId

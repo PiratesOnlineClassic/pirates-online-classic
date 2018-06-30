@@ -1,5 +1,6 @@
 from panda3d.core import PandaNode
 
+
 class SeaPatchNode(PandaNode):
 
     def __init__(self, name, patch):

@@ -15,29 +15,78 @@ from pirates.speedchat import PSpeedChatGlobals
 from pirates.speedchat.PSpeedChatQuestMenu import PSpeedChatQuestMenu
 from pirates.speedchat.PSpeedChatTypes import *
 
-scStructure = [
- [
-  OTPLocalizer.PSCMenuExpressions, [OTPLocalizer.PSCMenuGreetings, 50700, 50701, 50702, 50703, 50704], [OTPLocalizer.PSCMenuGoodbyes, 50800, 50801, 50802], [OTPLocalizer.PSCMenuFriendly, 50900], [OTPLocalizer.PSCMenuHappy, 51000], [OTPLocalizer.PSCMenuSad, 51100], [OTPLocalizer.PSCMenuSorry, 51200, 51201, 51202, 51203, 51204], 50105, 50100, 50101, 50102, 50103, 50104], [OTPLocalizer.PSCMenuCombat, 51300, 51301, 51302, 51303, 51304, 51305, 51306, 51307, 51308], [OTPLocalizer.PSCMenuSeaCombat, 51400, 51401, 51402, 51403, 51404, 51405, 51406, 51407, 51408, 51409, 51410, 51411, 51412, 51413, 51414, 51415, 51416, 51417, 51418, 51419, 51420, 51421], [OTPLocalizer.PSCMenuPlaces, [OTPLocalizer.PSCMenuLetsSail, 51500, 51501, 51502, 51503, 51504, 51505, 51506, 51507, 51508, 51509, 51510, 51511, 51512], [OTPLocalizer.PSCMenuLetsHeadTo, [OTPLocalizer.PSCMenuHeadToPortRoyal, 51800, 51801], 51600, 51601, 51602], [OTPLocalizer.PSCMenuWhereIs, 52500], 50400, 50401], [OTPLocalizer.PSCMenuDirections, 51700, 51701, 51702, 51703, 51704, 51705, 51706, 51707], [OTPLocalizer.PSCMenuInsults, 50200, 50201, 50202, 50203, 50204, 50205], [OTPLocalizer.PSCMenuCompliments, 50300, 50301, 50302, 50303, 50304, 50305, 50306], [OTPLocalizer.PSCMenuCardGames, [OTPLocalizer.PSCMenuPoker, 51900, 51901, 51902, 51903, 51904], [OTPLocalizer.PSCMenuBlackjack, 52600, 52601], 52400, 52401, 52402], [OTPLocalizer.PSCMenuInvitations, [OTPLocalizer.PSCMenuVersusPlayer, 52300, 52301, 52302, 52303, 52304], [OTPLocalizer.PSCMenuHunting, 52200, 52201], 52100, 52101], [PSpeedChatQuestMenu, OTPLocalizer.PSCMenuQuests], 50005, 50001, 50002, 50003, 50004]
+scStructure = [[
+    OTPLocalizer.PSCMenuExpressions,
+    [OTPLocalizer.PSCMenuGreetings, 50700, 50701, 50702, 50703,
+     50704], [OTPLocalizer.PSCMenuGoodbyes, 50800, 50801,
+              50802], [OTPLocalizer.PSCMenuFriendly,
+                       50900], [OTPLocalizer.PSCMenuHappy,
+                                51000], [OTPLocalizer.PSCMenuSad, 51100],
+    [OTPLocalizer.PSCMenuSorry, 51200, 51201, 51202, 51203,
+     51204], 50105, 50100, 50101, 50102, 50103, 50104
+], [
+    OTPLocalizer.PSCMenuCombat, 51300, 51301, 51302, 51303, 51304, 51305, 51306,
+    51307, 51308
+], [
+    OTPLocalizer.PSCMenuSeaCombat, 51400, 51401, 51402, 51403, 51404, 51405,
+    51406, 51407, 51408, 51409, 51410, 51411, 51412, 51413, 51414, 51415, 51416,
+    51417, 51418, 51419, 51420, 51421
+], [
+    OTPLocalizer.PSCMenuPlaces, [
+        OTPLocalizer.PSCMenuLetsSail, 51500, 51501, 51502, 51503, 51504, 51505,
+        51506, 51507, 51508, 51509, 51510, 51511, 51512
+    ], [
+        OTPLocalizer.PSCMenuLetsHeadTo,
+        [OTPLocalizer.PSCMenuHeadToPortRoyal, 51800, 51801], 51600, 51601, 51602
+    ], [OTPLocalizer.PSCMenuWhereIs, 52500], 50400, 50401
+], [
+    OTPLocalizer.PSCMenuDirections, 51700, 51701, 51702, 51703, 51704, 51705,
+    51706, 51707
+], [OTPLocalizer.PSCMenuInsults, 50200, 50201, 50202, 50203, 50204, 50205], [
+    OTPLocalizer.PSCMenuCompliments, 50300, 50301, 50302, 50303, 50304, 50305,
+    50306
+], [
+    OTPLocalizer.PSCMenuCardGames,
+    [OTPLocalizer.PSCMenuPoker, 51900, 51901, 51902, 51903,
+     51904], [OTPLocalizer.PSCMenuBlackjack, 52600, 52601], 52400, 52401, 52402
+], [
+    OTPLocalizer.PSCMenuInvitations,
+    [OTPLocalizer.PSCMenuVersusPlayer, 52300, 52301, 52302, 52303,
+     52304], [OTPLocalizer.PSCMenuHunting, 52200, 52201], 52100, 52101
+], [PSpeedChatQuestMenu, OTPLocalizer.PSCMenuQuests], 50005, 50001, 50002,
+               50003, 50004]
+
 
 class PChatInputSpeedChat(DirectObject.DirectObject):
 
-    DefaultSCColorScheme = SCColorScheme(arrowColor=(1, 1, 1), rolloverColor=(1, 1,
-                                                                              1))
+    DefaultSCColorScheme = SCColorScheme(
+        arrowColor=(1, 1, 1), rolloverColor=(1, 1, 1))
     holidayIdList = []
 
     def __init__(self):
         self.whisperId = None
         self.toPlayer = 0
-        self.emoteNoAccessPanel = DirectFrame(parent=hidden, relief=None, state='normal', text=OTPLocalizer.SCEmoteNoAccessMsg, frameSize=(-1,
-                                                                                                                                           1,
-                                                                                                                                           -1,
-                                                                                                                                           1), geom=DGG.getDefaultDialogGeom(), geom_color=OTPGlobals.GlobalDialogColor, geom_scale=(0.92,
-                                                                                                                                                                                                                                     1,
-                                                                                                                                                                                                                                     0.6), geom_pos=(0,
-                                                                                                                                                                                                                                                     0,
-                                                                                                                                                                                                                                                     -0.08), text_scale=0.08)
+        self.emoteNoAccessPanel = DirectFrame(
+            parent=hidden,
+            relief=None,
+            state='normal',
+            text=OTPLocalizer.SCEmoteNoAccessMsg,
+            frameSize=(-1, 1, -1, 1),
+            geom=DGG.getDefaultDialogGeom(),
+            geom_color=OTPGlobals.GlobalDialogColor,
+            geom_scale=(0.92, 1, 0.6),
+            geom_pos=(0, 0, -0.08),
+            text_scale=0.08)
         self.emoteNoAccessPanel.hide()
-        DirectButton(parent=self.emoteNoAccessPanel, relief=None, text=OTPLocalizer.SCEmoteNoAccessOK, text_scale=0.05, text_pos=(0.0, -0.1), textMayChange=0, pos=(0.0, 0.0, -0.2), command=self.handleEmoteNoAccessDone)
+        DirectButton(
+            parent=self.emoteNoAccessPanel,
+            relief=None,
+            text=OTPLocalizer.SCEmoteNoAccessOK,
+            text_scale=0.05,
+            text_pos=(0.0, -0.1),
+            textMayChange=0,
+            pos=(0.0, 0.0, -0.2),
+            command=self.handleEmoteNoAccessDone)
         structure = []
         structure.append([SCEmoteMenu, OTPLocalizer.SCMenuEmotions])
         self.emoteMenuIdx = len(structure) - 1
@@ -59,23 +108,20 @@ class PChatInputSpeedChat(DirectObject.DirectObject):
                 if id == PLocalizer.EMOTE_VALENTINES:
                     continue
                 if not emote_structure:
-                    emote_structure = [
-                     OTPLocalizer.Emotes_Root]
+                    emote_structure = [OTPLocalizer.Emotes_Root]
                 if not emote_dance_structure:
-                    emote_dance_structure = [
-                     OTPLocalizer.Emotes_Dances]
+                    emote_dance_structure = [OTPLocalizer.Emotes_Dances]
                     emote_structure.append(emote_dance_structure)
                 if not emote_general_structure:
-                    emote_general_structure = [
-                     OTPLocalizer.Emotes_General]
+                    emote_general_structure = [OTPLocalizer.Emotes_General]
                     emote_structure.append(emote_general_structure)
                 if not emote_music_structure:
-                    emote_music_structure = [
-                     OTPLocalizer.Emotes_Music]
+                    emote_music_structure = [OTPLocalizer.Emotes_Music]
                     emote_structure.append(emote_music_structure)
                 if not emote_expressions_structure:
                     emote_expressions_structure = [
-                     OTPLocalizer.Emotes_Expressions]
+                        OTPLocalizer.Emotes_Expressions
+                    ]
                     emote_structure.append(emote_expressions_structure)
                 if emote_gender == avatar_gender or emote_gender is None:
                     if emote_group == OTPLocalizer.Emotes_Dances:
@@ -95,18 +141,23 @@ class PChatInputSpeedChat(DirectObject.DirectObject):
             eventName = self.speedChat.getEventName(eventBaseName)
             self.accept(eventName, handler)
 
-        listenForSCEvent(SpeedChatGlobals.SCTerminalLinkedEmoteEvent, self.handleLinkedEmote)
-        listenForSCEvent(SpeedChatGlobals.SCStaticTextMsgEvent, self.handleStaticTextMsg)
-        listenForSCEvent(SpeedChatGlobals.SCCustomMsgEvent, self.handleCustomMsg)
+        listenForSCEvent(SpeedChatGlobals.SCTerminalLinkedEmoteEvent,
+                         self.handleLinkedEmote)
+        listenForSCEvent(SpeedChatGlobals.SCStaticTextMsgEvent,
+                         self.handleStaticTextMsg)
+        listenForSCEvent(SpeedChatGlobals.SCCustomMsgEvent,
+                         self.handleCustomMsg)
         listenForSCEvent(SpeedChatGlobals.SCEmoteMsgEvent, self.handleEmoteMsg)
-        listenForSCEvent(SpeedChatGlobals.SCEmoteNoAccessEvent, self.handleEmoteNoAccess)
-        listenForSCEvent('SpeedChatStyleChange', self.handleSpeedChatStyleChange)
-        listenForSCEvent(PSpeedChatGlobals.PSpeedChatQuestMsgEvent, self.handleQuestMsg)
+        listenForSCEvent(SpeedChatGlobals.SCEmoteNoAccessEvent,
+                         self.handleEmoteNoAccess)
+        listenForSCEvent('SpeedChatStyleChange',
+                         self.handleSpeedChatStyleChange)
+        listenForSCEvent(PSpeedChatGlobals.PSpeedChatQuestMsgEvent,
+                         self.handleQuestMsg)
         self.fsm = ClassicFSM.ClassicFSM('SpeedChat', [
-         State.State('off', self.enterOff, self.exitOff, [
-          'active']),
-         State.State('active', self.enterActive, self.exitActive, [
-          'off'])], 'off', 'off')
+            State.State('off', self.enterOff, self.exitOff, ['active']),
+            State.State('active', self.enterActive, self.exitActive, ['off'])
+        ], 'off', 'off')
         self.fsm.enterInitialState()
         self.mode = 'AllChat'
         self.whisperId = None
@@ -147,12 +198,14 @@ class PChatInputSpeedChat(DirectObject.DirectObject):
             return
         else:
             if mode == 'PlayerWhisper':
-                if not base.chatAssistant.checkWhisperSpeedChatPlayer(whisperId):
+                if not base.chatAssistant.checkWhisperSpeedChatPlayer(
+                        whisperId):
                     messenger.send('Chat-Failed player typed chat test')
                     return
             else:
                 if mode == 'AvatarWhisper':
-                    if not base.chatAssistant.checkWhisperSpeedChatAvatar(whisperId):
+                    if not base.chatAssistant.checkWhisperSpeedChatAvatar(
+                            whisperId):
                         messenger.send('Chat-Failed avatar typed chat test')
                         return
         self.mode = mode
@@ -169,7 +222,8 @@ class PChatInputSpeedChat(DirectObject.DirectObject):
         def selectionMade(self=self):
             localAvatar.chatMgr.speedChatDone()
 
-        self.terminalSelectedEvent = self.speedChat.getEventName(SpeedChatGlobals.SCTerminalSelectedEvent)
+        self.terminalSelectedEvent = self.speedChat.getEventName(
+            SpeedChatGlobals.SCTerminalSelectedEvent)
         self.accept(self.terminalSelectedEvent, selectionMade)
         self.speedChat.reparentTo(base.a2dBottomLeft, DGG.FOREGROUND_SORT_INDEX)
         pos = self.speedChat.getPos()
@@ -190,7 +244,12 @@ class PChatInputSpeedChat(DirectObject.DirectObject):
             lt.b_setEmoteState(emoteId, animMultiplier=lt.animMultiplier)
         return
 
-    def sendChatByMode(self, msgType, textId, questInt=0, taskNum=0, questFlag=0):
+    def sendChatByMode(self,
+                       msgType,
+                       textId,
+                       questInt=0,
+                       taskNum=0,
+                       questFlag=0):
         messenger.send('sentSpeedChat')
         if msgType == SPEEDCHAT_EMOTE:
             base.chatAssistant.sendAvatarOpenSpeedChat(msgType, textId)
@@ -199,36 +258,44 @@ class PChatInputSpeedChat(DirectObject.DirectObject):
             if questFlag:
                 pass
             else:
-                base.chatAssistant.sendPlayerWhisperSpeedChat(msgType, textId, self.whisperId)
+                base.chatAssistant.sendPlayerWhisperSpeedChat(
+                    msgType, textId, self.whisperId)
         else:
             if self.mode == 'AvatarWhisper':
                 if questFlag:
                     pass
                 else:
-                    base.chatAssistant.sendAvatarWhisperSpeedChat(msgType, textId, self.whisperId)
+                    base.chatAssistant.sendAvatarWhisperSpeedChat(
+                        msgType, textId, self.whisperId)
             else:
                 if self.mode == 'GuildChat':
                     if questFlag:
                         pass
                     else:
-                        base.chatAssistant.sendAvatarGuildSpeedChat(msgType, textId)
+                        base.chatAssistant.sendAvatarGuildSpeedChat(
+                            msgType, textId)
                 else:
                     if self.mode == 'CrewChat':
                         if questFlag:
-                            base.chatAssistant.sendAvatarCrewSCQuestChat(msgType, questInt, taskNum)
+                            base.chatAssistant.sendAvatarCrewSCQuestChat(
+                                msgType, questInt, taskNum)
                         else:
-                            base.chatAssistant.sendAvatarCrewSpeedChat(msgType, textId)
+                            base.chatAssistant.sendAvatarCrewSpeedChat(
+                                msgType, textId)
                     else:
                         if self.mode == 'ShipPVP':
                             if questFlag:
                                 pass
                             else:
-                                base.chatAssistant.sendAvatarShipPVPCrewSpeedChat(msgType, textId)
+                                base.chatAssistant.sendAvatarShipPVPCrewSpeedChat(
+                                    msgType, textId)
                         else:
                             if questFlag:
-                                base.chatAssistant.sendAvatarSCQuestChat(msgType, questInt, taskNum)
+                                base.chatAssistant.sendAvatarSCQuestChat(
+                                    msgType, questInt, taskNum)
                             else:
-                                base.chatAssistant.sendAvatarOpenSpeedChat(msgType, textId)
+                                base.chatAssistant.sendAvatarOpenSpeedChat(
+                                    msgType, textId)
 
     def handleStaticTextMsg(self, textId):
         if textId in PLocalizer.EmoteMessagesSelf:
@@ -254,7 +321,12 @@ class PChatInputSpeedChat(DirectObject.DirectObject):
             sendText = localAvatar.requestEmote(emoteId)
         if sendText:
             if emoteId == PLocalizer.EMOTE_VALENTINES:
-                emoteId = random.choice([PLocalizer.EMOTE_VALENTINES_A, PLocalizer.EMOTE_VALENTINES_B, PLocalizer.EMOTE_VALENTINES_C, PLocalizer.EMOTE_VALENTINES_D, PLocalizer.EMOTE_VALENTINES_E])
+                emoteId = random.choice([
+                    PLocalizer.EMOTE_VALENTINES_A,
+                    PLocalizer.EMOTE_VALENTINES_B,
+                    PLocalizer.EMOTE_VALENTINES_C,
+                    PLocalizer.EMOTE_VALENTINES_D, PLocalizer.EMOTE_VALENTINES_E
+                ])
                 self.sendChatByMode(1, emoteId)
             else:
                 self.sendChatByMode(2, emoteId)
@@ -276,8 +348,12 @@ class PChatInputSpeedChat(DirectObject.DirectObject):
         self.hide()
 
     def handleSpeedChatStyleChange(self):
-        nameKey, arrowColor, rolloverColor, frameColor = speedChatStyles[base.localAvatar.getSpeedChatStyleIndex()]
-        newSCColorScheme = SCColorScheme(arrowColor=arrowColor, rolloverColor=rolloverColor, frameColor=frameColor)
+        nameKey, arrowColor, rolloverColor, frameColor = speedChatStyles[
+            base.localAvatar.getSpeedChatStyleIndex()]
+        newSCColorScheme = SCColorScheme(
+            arrowColor=arrowColor,
+            rolloverColor=rolloverColor,
+            frameColor=frameColor)
         self.speedChat.setColorScheme(newSCColorScheme)
 
     def createSpeedChatObject(self, structure):
@@ -285,7 +361,10 @@ class PChatInputSpeedChat(DirectObject.DirectObject):
             self.speedChat.exit()
             self.speedChat.destroy()
             del self.speedChat
-        self.speedChat = SpeedChat(structure=structure, backgroundModelName='models/gui/SpeedChatPanel', guiModelName='models/textureCards/speedchatIcons')
+        self.speedChat = SpeedChat(
+            structure=structure,
+            backgroundModelName='models/gui/SpeedChatPanel',
+            guiModelName='models/textureCards/speedchatIcons')
         self.speedChat.setScale(0.04)
         self.speedChat.setBin('gui-popup', 0)
         self.speedChat.setTopLevelOverlap(0.0)
@@ -325,4 +404,6 @@ class PChatInputSpeedChat(DirectObject.DirectObject):
 
         self.createSpeedChatObject(self.structure)
         return
+
+
 # okay decompiling .\pirates\chat\PChatInputSpeedChat.pyc

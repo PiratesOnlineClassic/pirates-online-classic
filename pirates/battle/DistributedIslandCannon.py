@@ -5,7 +5,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class DistributedIslandCannon(DistributedPCCannon.DistributedPCCannon):
-    
+
     notify = directNotify.newCategory('DistributedIslandCannon')
 
     def __init__(self, cr):
@@ -32,7 +32,8 @@ class DistributedIslandCannon(DistributedPCCannon.DistributedPCCannon):
         self.islandId = islandId
 
         def putCannonOnIsland(island, self=self):
-            self.notify.debug('putCannon %s on island %s' % (self.doId, islandId))
+            self.notify.debug(
+                'putCannon %s on island %s' % (self.doId, islandId))
             self.island = island
             self.island.attachCannon(self)
             self.accept(island.uniqueName('disable'), self.islandDisable)
@@ -41,7 +42,8 @@ class DistributedIslandCannon(DistributedPCCannon.DistributedPCCannon):
             return
 
         if islandId > 0:
-            self.pendingPlacement = base.cr.relatedObjectMgr.requestObjects([self.islandId], eachCallback=putCannonOnIsland)
+            self.pendingPlacement = base.cr.relatedObjectMgr.requestObjects(
+                [self.islandId], eachCallback=putCannonOnIsland)
 
     def setCannonIndex(self, cannonIndex):
         self.cannonIndex = cannonIndex
@@ -67,7 +69,8 @@ class DistributedIslandCannon(DistributedPCCannon.DistributedPCCannon):
 
     def addDestructableCollision(self):
         if self.__isDestructable:
-            self.prop.coll.node().setIntoCollideMask(OTPGlobals.WallBitmask | PiratesGlobals.TargetBitmask)
+            self.prop.coll.node().setIntoCollideMask(
+                OTPGlobals.WallBitmask | PiratesGlobals.TargetBitmask)
             self.prop.coll.setTag('objType', str(PiratesGlobals.COLL_CANNON))
             self.prop.coll.setTag('cannonId', str(self.doId))
         self.prop.propCollisions.reparentTo(self)

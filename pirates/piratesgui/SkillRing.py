@@ -7,7 +7,7 @@ from panda3d.core import *
 
 
 class SkillRing(DirectFrame):
-    
+
     card = None
     rechargeRing = None
     base = None
@@ -76,4 +76,6 @@ class SkillRing(DirectFrame):
                     self.meterFaceHalf2.setColor(self.meterActiveColor)
                     progress = progress - 0.5
                 self.meterFaceHalf2.setR(-180 * (progress / 0.5))
+
+
 # okay decompiling .\pirates\piratesgui\SkillRing.pyc

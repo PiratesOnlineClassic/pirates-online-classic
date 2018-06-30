@@ -62,8 +62,11 @@ class WitherStar(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha, ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.6, 0.9, 0.7, 0.4), 1)
+        self.p0.renderer.setColorBlendMode(
+            ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha,
+            ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.6, 0.9, 0.7, 0.4), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -73,14 +76,19 @@ class WitherStar(PooledEffect, EffectController):
         self.p0.emitter.setRadius(0.01)
 
     def createTrack(self, lod=None):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(1.5), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100.0), Wait(1.5),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(0.5), self.endEffect)
 
     def setEffectColor(self, color):
         self.effectColor = Vec4(1, 1, 1, 1) - (Vec4(1, 1, 1, 1) - color) / 2.0
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, self.effectColor, Vec4(0.6, 0.9, 0.7, 0.4), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, self.effectColor, Vec4(0.6, 0.9, 0.7, 0.4), 1)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -90,4 +98,6 @@ class WitherStar(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\WitherStar.pyc

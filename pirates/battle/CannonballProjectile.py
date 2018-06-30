@@ -16,15 +16,41 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 class CannonballProjectile(ProjectileAmmo):
     default_motion_color = [
-     Vec4(0.1, 0.2, 0.4, 1.0), Vec4(0.1, 0.2, 0.4, 1.0), Vec4(0.1, 0.2, 0.4, 1.0), Vec4(0.1, 0.2, 0.4, 1.0), Vec4(0.1, 0.2, 0.4, 1.0)]
+        Vec4(0.1, 0.2, 0.4, 1.0),
+        Vec4(0.1, 0.2, 0.4, 1.0),
+        Vec4(0.1, 0.2, 0.4, 1.0),
+        Vec4(0.1, 0.2, 0.4, 1.0),
+        Vec4(0.1, 0.2, 0.4, 1.0)
+    ]
     fire_motion_color = [
-     Vec4(1.0, 0.0, 0.0, 1.0), Vec4(1.0, 0.5, 0.0, 1.0), Vec4(1.0, 0.5, 0.0, 1.0), Vec4(1.0, 0.5, 0.0, 1.0), Vec4(1.0, 0.5, 0.0, 1.0)]
+        Vec4(1.0, 0.0, 0.0, 1.0),
+        Vec4(1.0, 0.5, 0.0, 1.0),
+        Vec4(1.0, 0.5, 0.0, 1.0),
+        Vec4(1.0, 0.5, 0.0, 1.0),
+        Vec4(1.0, 0.5, 0.0, 1.0)
+    ]
     r = 0.8
-    small_vertex_list = [Vec4(r, 0.0, r, 1.0), Vec4(r, 0.0, -r, 1.0), Vec4(-r, 0.0, -r, 1.0), Vec4(-r, 0.0, r, 1.0), Vec4(r, 0.0, r, 1.0)]
+    small_vertex_list = [
+        Vec4(r, 0.0, r, 1.0),
+        Vec4(r, 0.0, -r, 1.0),
+        Vec4(-r, 0.0, -r, 1.0),
+        Vec4(-r, 0.0, r, 1.0),
+        Vec4(r, 0.0, r, 1.0)
+    ]
     r = 2.0
-    large_vertex_list = [Vec4(r, 0.0, r, 1.0), Vec4(r, 0.0, -r, 1.0), Vec4(-r, 0.0, -r, 1.0), Vec4(-r, 0.0, r, 1.0), Vec4(r, 0.0, r, 1.0)]
+    large_vertex_list = [
+        Vec4(r, 0.0, r, 1.0),
+        Vec4(r, 0.0, -r, 1.0),
+        Vec4(-r, 0.0, -r, 1.0),
+        Vec4(-r, 0.0, r, 1.0),
+        Vec4(r, 0.0, r, 1.0)
+    ]
     r = 1.0
-    chainshot_vertex_list = [Vec4(-r, 0, 0, 1), Vec4(r, 0, 0, 1), Vec4(-r, 0, 0, 1)]
+    chainshot_vertex_list = [
+        Vec4(-r, 0, 0, 1),
+        Vec4(r, 0, 0, 1),
+        Vec4(-r, 0, 0, 1)
+    ]
 
     def __init__(self, cr, ammoSkillId, event, buffs=[]):
         self.trailEffect = None
@@ -53,10 +79,13 @@ class CannonballProjectile(ProjectileAmmo):
             cannonball = loader.loadModelCopy('models/ammunition/cannonball')
         else:
             if self.ammoSkillId == InventoryType.CannonRoundShot:
-                cannonball = loader.loadModelCopy('models/ammunition/cannonball')
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
+                cannonball = loader.loadModelCopy(
+                    'models/ammunition/cannonball')
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsMedium:
                     self.createMotionTrails(self)
-                if base.options.getSpecialEffectsSetting() == base.options.SpecialEffectsLow:
+                if base.options.getSpecialEffectsSetting(
+                ) == base.options.SpecialEffectsLow:
                     self.createSimpleMotionTrail(self)
             elif self.ammoSkillId == InventoryType.CannonChainShot:
                 cannonball = loader.loadModelCopy('models/ammunition/chainShot')
@@ -64,100 +93,138 @@ class CannonballProjectile(ProjectileAmmo):
                 ball1.setBillboardPointEye()
                 ball2 = cannonball.find('**/ball_1')
                 ball2.setBillboardPointEye()
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsLow:
                     randVal = random.uniform(-180.0, 180.0)
                     randSpeed = random.uniform(-0.1, 0.1)
                     randDirection = 1
-                    self.effectIval = cannonball.hprInterval(0.4 + randSpeed, Point3(randVal, 360 * randDirection, 0), startHpr=Point3(randVal, 0, 0))
+                    self.effectIval = cannonball.hprInterval(
+                        0.4 + randSpeed,
+                        Point3(randVal, 360 * randDirection, 0),
+                        startHpr=Point3(randVal, 0, 0))
                     self.effectIval.loop()
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsMedium:
                     self.createMotionTrails(self, self.chainshot_vertex_list)
-                if base.options.getSpecialEffectsSetting() == base.options.SpecialEffectsLow:
+                if base.options.getSpecialEffectsSetting(
+                ) == base.options.SpecialEffectsLow:
                     self.createSimpleMotionTrail(self)
             elif self.ammoSkillId == InventoryType.CannonFirebrand:
-                cannonball = loader.loadModelCopy('models/ammunition/cannonball')
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
+                cannonball = loader.loadModelCopy(
+                    'models/ammunition/cannonball')
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsLow:
                     self.trailEffect = FireTrail.getEffect()
                     if self.trailEffect:
-                        self.trailEffect.wantGlow = base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium
+                        self.trailEffect.wantGlow = base.options.getSpecialEffectsSetting(
+                        ) >= base.options.SpecialEffectsMedium
                         self.trailEffect.reparentTo(cannonball)
                         self.trailEffect.startLoop()
             elif self.ammoSkillId == InventoryType.CannonFlamingSkull or self.ammoSkillId == InventoryType.CannonFirebrand:
                 maxGlowScale = 28
                 minGlowScale = 24
-                cannonball = loader.loadModelCopy('models/ammunition/cannonball')
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
+                cannonball = loader.loadModelCopy(
+                    'models/ammunition/cannonball')
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsLow:
                     self.trailEffect = FireTrail.getEffect()
                     if self.trailEffect:
-                        self.trailEffect.wantGlow = base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium
+                        self.trailEffect.wantGlow = base.options.getSpecialEffectsSetting(
+                        ) >= base.options.SpecialEffectsMedium
                         self.trailEffect.reparentTo(cannonball)
                         self.trailEffect.startLoop()
             elif self.ammoSkillId == InventoryType.CannonFury:
                 maxGlowScale = 40
                 minGlowScale = 30
                 cannonball = self.attachNewNode('cannonball')
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsLow:
                     self.trailEffect = FuryTrail.getEffect()
                     if self.trailEffect:
-                        self.trailEffect.wantGlow = base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium
-                        self.trailEffect.wantBlur = base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh
+                        self.trailEffect.wantGlow = base.options.getSpecialEffectsSetting(
+                        ) >= base.options.SpecialEffectsMedium
+                        self.trailEffect.wantBlur = base.options.getSpecialEffectsSetting(
+                        ) >= base.options.SpecialEffectsHigh
                         self.trailEffect.reparentTo(cannonball)
                         self.trailEffect.startLoop()
             elif self.ammoSkillId == InventoryType.CannonComet:
                 cannonball = self.attachNewNode('cannonball')
-                cannonball1 = loader.loadModelCopy('models/ammunition/cannonball')
+                cannonball1 = loader.loadModelCopy(
+                    'models/ammunition/cannonball')
                 self.trailEffect = FireTrail.getEffect()
                 if self.trailEffect:
-                    self.trailEffect.wantGlow = base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium
+                    self.trailEffect.wantGlow = base.options.getSpecialEffectsSetting(
+                    ) >= base.options.SpecialEffectsMedium
                     self.trailEffect.reparentTo(cannonball1)
                     self.trailEffect.startLoop()
-                self.createMotionTrails(self, self.small_vertex_list, self.fire_motion_color)
-                cannonball2 = loader.loadModelCopy('models/ammunition/cannonball')
+                self.createMotionTrails(self, self.small_vertex_list,
+                                        self.fire_motion_color)
+                cannonball2 = loader.loadModelCopy(
+                    'models/ammunition/cannonball')
                 self.trailEffect = FireTrail.getEffect()
                 if self.trailEffect:
-                    self.trailEffect.wantGlow = base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium
+                    self.trailEffect.wantGlow = base.options.getSpecialEffectsSetting(
+                    ) >= base.options.SpecialEffectsMedium
                     self.trailEffect.reparentTo(cannonball2)
                     self.trailEffect.startLoop()
-                self.createMotionTrails(self, self.small_vertex_list, self.fire_motion_color)
-                cannonball3 = loader.loadModelCopy('models/ammunition/cannonball')
+                self.createMotionTrails(self, self.small_vertex_list,
+                                        self.fire_motion_color)
+                cannonball3 = loader.loadModelCopy(
+                    'models/ammunition/cannonball')
                 self.trailEffect = FireTrail.getEffect()
                 if self.trailEffect:
-                    self.trailEffect.wantGlow = base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium
+                    self.trailEffect.wantGlow = base.options.getSpecialEffectsSetting(
+                    ) >= base.options.SpecialEffectsMedium
                     self.trailEffect.reparentTo(cannonball3)
                     self.trailEffect.startLoop()
-                self.createMotionTrails(self, self.small_vertex_list, self.fire_motion_color)
+                self.createMotionTrails(self, self.small_vertex_list,
+                                        self.fire_motion_color)
                 cannonball1.reparentTo(cannonball)
                 cannonball1.setPos(0, 4, -4)
                 cannonball2.reparentTo(cannonball)
                 cannonball2.setPos(0, -4, -4)
                 cannonball3.reparentTo(cannonball)
                 cannonball3.setPos(0, 0, 4)
-                self.effectIval = cannonball.hprInterval(1.0, Point3(0, 0, 360), startHpr=Point3(0, 0, 0))
+                self.effectIval = cannonball.hprInterval(
+                    1.0, Point3(0, 0, 360), startHpr=Point3(0, 0, 0))
                 self.effectIval.loop()
             elif self.ammoSkillId == InventoryType.CannonGrappleHook:
-                cannonball = loader.loadModelCopy('models/ammunition/GrapplingHook')
+                cannonball = loader.loadModelCopy(
+                    'models/ammunition/GrapplingHook')
                 cannonball.flattenStrong()
                 prop = cannonball.getChild(0)
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
-                    self.effectIval = Sequence(LerpHprInterval(prop, 2.0, Point3(0, 0, 360), startHpr=Point3(0, 0, 0)))
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsLow:
+                    self.effectIval = Sequence(
+                        LerpHprInterval(
+                            prop,
+                            2.0,
+                            Point3(0, 0, 360),
+                            startHpr=Point3(0, 0, 0)))
                     self.effectIval.loop()
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsHigh:
                     self.createMotionTrails(self, self.small_vertex_list)
-                if base.options.getSpecialEffectsSetting() <= base.options.SpecialEffectsMedium:
+                if base.options.getSpecialEffectsSetting(
+                ) <= base.options.SpecialEffectsMedium:
                     self.createSimpleMotionTrail(self)
             elif self.ammoSkillId == InventoryType.CannonThunderbolt:
                 maxGlowScale = 19
                 minGlowScale = 15
                 cannonball = self.attachNewNode('cannonball')
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsLow:
                     self.trailEffect = ThunderBallGlow.getEffect()
                     if self.trailEffect:
                         self.trailEffect.reparentTo(cannonball)
                         self.trailEffect.setScale(0.5)
                         self.trailEffect.startLoop()
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
-                    self.glowA = loader.loadModelCopy('models/effects/flareRing')
-                    self.glowA.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsHigh:
+                    self.glowA = loader.loadModelCopy(
+                        'models/effects/flareRing')
+                    self.glowA.node().setAttrib(
+                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
                     self.glowA.setDepthWrite(0)
                     self.glowA.setFogOff()
                     self.glowA.setLightOff()
@@ -165,18 +232,24 @@ class CannonballProjectile(ProjectileAmmo):
                     self.glowA.setColorScale(0.5, 0.8, 1, 0.5)
                     self.glowA.reparentTo(cannonball)
                     self.glowA.setBillboardPointEye()
-                    scaleUp = self.glowA.scaleInterval(0.1, 4.5, startScale=3.5, blendType='easeInOut')
-                    scaleDown = self.glowA.scaleInterval(0.1, 3.5, startScale=4.5, blendType='easeInOut')
+                    scaleUp = self.glowA.scaleInterval(
+                        0.1, 4.5, startScale=3.5, blendType='easeInOut')
+                    scaleDown = self.glowA.scaleInterval(
+                        0.1, 3.5, startScale=4.5, blendType='easeInOut')
                     self.glowATrack = Sequence(scaleUp, scaleDown)
                     self.glowATrack.loop()
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsMedium:
                     self.createMotionTrails(self)
-                if base.options.getSpecialEffectsSetting() == base.options.SpecialEffectsLow:
+                if base.options.getSpecialEffectsSetting(
+                ) == base.options.SpecialEffectsLow:
                     self.createSimpleMotionTrail(self)
             elif self.ammoSkillId == InventoryType.CannonExplosive:
-                cannonball = loader.loadModelCopy('models/ammunition/cannonball')
+                cannonball = loader.loadModelCopy(
+                    'models/ammunition/cannonball')
             else:
-                cannonball = loader.loadModelCopy('models/ammunition/cannonball')
+                cannonball = loader.loadModelCopy(
+                    'models/ammunition/cannonball')
                 if self.ammoSkillId == InventoryType.CannonBullet:
                     cannonball.setColor(0.85, 0.85, 0.66, 1.0)
                 elif self.ammoSkillId == InventoryType.CannonGasCloud:
@@ -195,9 +268,12 @@ class CannonballProjectile(ProjectileAmmo):
                     cannonball.setColor(0.05, 0.65, 0.03, 1.0)
             cannonball.setScale(2.0)
             if WeaponConstants.C_OPENFIRE in self.buffs:
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
-                    self.glowB = loader.loadModelCopy('models/effects/lanternGlow')
-                    self.glowB.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsLow:
+                    self.glowB = loader.loadModelCopy(
+                        'models/effects/lanternGlow')
+                    self.glowB.node().setAttrib(
+                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
                     self.glowB.setDepthWrite(0)
                     self.glowB.setFogOff()
                     self.glowB.setLightOff()
@@ -205,8 +281,16 @@ class CannonballProjectile(ProjectileAmmo):
                     self.glowB.setColorScale(1, 0.8, 0.5, 0.9)
                     self.glowB.reparentTo(cannonball)
                     self.glowB.setBillboardPointEye()
-                    scaleUp = self.glowB.scaleInterval(0.1, maxGlowScale, startScale=minGlowScale, blendType='easeInOut')
-                    scaleDown = self.glowB.scaleInterval(0.1, minGlowScale, startScale=maxGlowScale, blendType='easeInOut')
+                    scaleUp = self.glowB.scaleInterval(
+                        0.1,
+                        maxGlowScale,
+                        startScale=minGlowScale,
+                        blendType='easeInOut')
+                    scaleDown = self.glowB.scaleInterval(
+                        0.1,
+                        minGlowScale,
+                        startScale=maxGlowScale,
+                        blendType='easeInOut')
                     self.glowBTrack = Sequence(scaleUp, scaleDown)
                     self.glowBTrack.loop()
         return cannonball
@@ -231,7 +315,10 @@ class CannonballProjectile(ProjectileAmmo):
         ProjectileAmmo.destroy(self)
         return
 
-    def createMotionTrails(self, parent, vertex_list=small_vertex_list, motion_color=default_motion_color):
+    def createMotionTrails(self,
+                           parent,
+                           vertex_list=small_vertex_list,
+                           motion_color=default_motion_color):
         self.mtrail = PolyTrail(None, vertex_list, motion_color, 0.3)
         self.mtrail.setUnmodifiedVertexColors(motion_color)
         self.mtrail.reparentTo(parent)
@@ -243,8 +330,12 @@ class CannonballProjectile(ProjectileAmmo):
 
     def createSimpleMotionTrail(self, parent):
         self.strail = loader.loadModelCopy('models/effects/cannonTrail')
-        self.strail.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
-        self.scaleIval = LerpScaleInterval(self.strail, 0.25, Vec3(3.3, 16, 3.3), startScale=Vec3(3.3, 3, 3.3))
+        self.strail.node().setAttrib(
+            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                  ColorBlendAttrib.OIncomingAlpha,
+                                  ColorBlendAttrib.OOne))
+        self.scaleIval = LerpScaleInterval(
+            self.strail, 0.25, Vec3(3.3, 16, 3.3), startScale=Vec3(3.3, 3, 3.3))
         self.scaleIval.start()
         self.strail.setColorScale(0.2, 0.3, 0.5, 1.0)
         self.strail.reparentTo(parent)

@@ -8,12 +8,16 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class MiniQuestItemGui(DirectFrame):
-    
+
     Width = PiratesGuiGlobals.ObjectivesPanelWidth - PiratesGuiGlobals.GridSize
     Height = 0.1
 
     def __init__(self, quest, parent=None, **kw):
-        optiondefs = (('state', DGG.NORMAL, None), ('frameColor', PiratesGuiGlobals.FrameColor, None), ('borderWidth', PiratesGuiGlobals.BorderWidth, None), ('frameSize', (0.0, MiniQuestItemGui.Width, 0.0, MiniQuestItemGui.Height), None))
+        optiondefs = (('state', DGG.NORMAL, None),
+                      ('frameColor', PiratesGuiGlobals.FrameColor, None),
+                      ('borderWidth', PiratesGuiGlobals.BorderWidth,
+                       None), ('frameSize', (0.0, MiniQuestItemGui.Width, 0.0,
+                                             MiniQuestItemGui.Height), None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent)
         self.initialiseoptions(MiniQuestItemGui)
@@ -33,9 +37,16 @@ class MiniQuestItemGui(DirectFrame):
             textFg = (0.1, 0.8, 0.1, 1)
         else:
             textFg = PiratesGuiGlobals.TextFG1
-        self.descText = DirectLabel(parent=self, relief=None, text=self.quest.getStatusText(), text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_fg=textFg, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0.04,
-                                                                                                                                                                                                                                                       0,
-                                                                                                                                                                                                                                                       0.05))
+        self.descText = DirectLabel(
+            parent=self,
+            relief=None,
+            text=self.quest.getStatusText(),
+            text_align=TextNode.ALeft,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_fg=textFg,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            textMayChange=1,
+            pos=(0.04, 0, 0.05))
         return
 
     def _destroyIface(self):
@@ -45,4 +56,6 @@ class MiniQuestItemGui(DirectFrame):
     def handleQuestChange(self):
         self._destroyIface()
         self._createIface()
+
+
 # okay decompiling .\pirates\quest\MiniQuestItemGui.pyc

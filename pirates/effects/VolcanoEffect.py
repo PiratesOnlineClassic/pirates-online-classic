@@ -42,8 +42,7 @@ class VolcanoEffect(NodePath):
         self.seq = None
         self.eruptSeq = None
         if not self.eruptionSfx:
-            self.eruptionSfx = (
-             loader.loadSfx('audio/eruption.mp3'),)
+            self.eruptionSfx = (loader.loadSfx('audio/eruption.mp3'),)
         return
 
     def enable(self):
@@ -102,14 +101,19 @@ class VolcanoEffect(NodePath):
 
     def getEruptSequence(self):
         if not self.eruptSeq:
-            self.eruptSeq = Parallel(self.splats2.getEruptionSeq(), Sequence(Wait(0.75), self.splats1.getEruptionSeq()), SoundInterval(self.eruptionSfx[0]))
+            self.eruptSeq = Parallel(
+                self.splats2.getEruptionSeq(),
+                Sequence(Wait(0.75), self.splats1.getEruptionSeq()),
+                SoundInterval(self.eruptionSfx[0]))
         return self.eruptSeq
 
     def start(self):
         self.stop()
         if not self.isRestEnabled():
             self.enableRest()
-        self.seq = Parallel(self.getEruptSequence(), Sequence(Wait(random.randint(60, 120)), Func(self.start)))
+        self.seq = Parallel(
+            self.getEruptSequence(),
+            Sequence(Wait(random.randint(60, 120)), Func(self.start)))
         self.seq.start()
 
     def stop(self):
@@ -119,7 +123,8 @@ class VolcanoEffect(NodePath):
             self.eruptSeq.pause()
 
     def isEnabled(self):
-        return self.smoke.isEnabled() | self.smoke2.isEnabled() | self.splats1.isEnabled() | self.splats2.isEnabled()
+        return self.smoke.isEnabled() | self.smoke2.isEnabled(
+        ) | self.splats1.isEnabled() | self.splats2.isEnabled()
 
     def isSmokeEnabled(self):
         return self.smoke.isEnabled() | self.smoke2.isEnabled()
@@ -143,4 +148,6 @@ class VolcanoEffect(NodePath):
     def accelerateSmoke(self, time):
         self.smoke.accelerate(time)
         self.smoke2.accelerate(time)
+
+
 # okay decompiling .\pirates\effects\VolcanoEffect.pyc

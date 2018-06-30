@@ -6,7 +6,7 @@ from pandac.PandaModules import *
 
 
 class FireworkTrailType:
-    
+
     Default = 0
     Glow = 1
     Sparkle = 2
@@ -16,7 +16,7 @@ class FireworkTrailType:
 
 
 class FireworkBurstType:
-    
+
     Sparkles = 0
     BasicShell = 1
     LongShell = 2
@@ -27,7 +27,7 @@ class FireworkBurstType:
 
 
 class FireworkType:
-    
+
     BasicBlast = 0
     LongBlast = 1
     TrailBurst = 2
@@ -41,7 +41,9 @@ class FireworkType:
 
 
 class FireworkShowType:
-    
+
     FourthOfJuly = 0
     NewYear = 1
+
+
 # okay decompiling .\pirates\effects\FireworkGlobals.pyc

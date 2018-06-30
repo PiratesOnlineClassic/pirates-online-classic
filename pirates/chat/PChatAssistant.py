@@ -54,31 +54,41 @@ class PChatAssistant(ChatAssistant):
         return False
 
     def receiveSystemMessage(self, message):
-        base.localAvatar.guiMgr.messageStack.addTextMessage(message, seconds=20, priority=0, color=(0.5,
-                                                                                                    0,
-                                                                                                    0,
-                                                                                                    1), icon=('admin',
-                                                                                                              ''))
+        base.localAvatar.guiMgr.messageStack.addTextMessage(
+            message,
+            seconds=20,
+            priority=0,
+            color=(0.5, 0, 0, 1),
+            icon=('admin', ''))
         ChatAssistant.receiveSystemMessage(self, message)
 
     def receiveGuildMessage(self, message):
         error = None
         if not isThought(message):
-            self.historyOpen.insert(0, ChatMessage(self.chatTime(), GUILDCHAT, message, None, None, None, 0, 0, 0))
+            self.historyOpen.insert(
+                0,
+                ChatMessage(self.chatTime(), GUILDCHAT, message, None, None,
+                            None, 0, 0, 0))
         messenger.send('NewOpenMessage')
         return error
 
     def receiveCrewMessage(self, message):
         error = None
         if not isThought(message):
-            self.historyOpen.insert(0, ChatMessage(self.chatTime(), CREWCHAT, message, None, None, None, 0, 0, 0))
+            self.historyOpen.insert(
+                0,
+                ChatMessage(self.chatTime(), CREWCHAT, message, None, None,
+                            None, 0, 0, 0))
         messenger.send('NewOpenMessage')
         return error
 
     def receiveShipPVPMessage(self, message):
         error = None
         if not isThought(message):
-            self.historyOpen.insert(0, ChatMessage(self.chatTime(), SHIPPVPCHAT, message, None, None, None, 0, 0, 0))
+            self.historyOpen.insert(
+                0,
+                ChatMessage(self.chatTime(), SHIPPVPCHAT, message, None, None,
+                            None, 0, 0, 0))
         messenger.send('NewOpenMessage')
         return error
 
@@ -89,7 +99,10 @@ class PChatAssistant(ChatAssistant):
         if not name and senderId:
             name = self.findName(senderId, 0)
         if not isThought(message):
-            self.historyOpen.insert(0, ChatMessage(self.chatTime(), GMCHAT, message, chatFlags, senderId, name, 0, 0, 0))
+            self.historyOpen.insert(
+                0,
+                ChatMessage(self.chatTime(), GMCHAT, message, chatFlags,
+                            senderId, name, 0, 0, 0))
         messenger.send('NewOpenMessage')
         return error
 
@@ -231,7 +244,8 @@ class PChatAssistant(ChatAssistant):
                 localAvatar.toggleLookingForCrewSign()
             elif comm in ('code', 'redeemcode'):
                 localAvatar.submitCodeToServer(argStr)
-                base.chatAssistant.receiveGameMessage(PLocalizer.CodeSubmitting % argStr)
+                base.chatAssistant.receiveGameMessage(
+                    PLocalizer.CodeSubmitting % argStr)
             elif comm in ('holiday', 'holidays', 'holidaylist', 'event'):
                 base.cr.newsManager.displayHolidayStatus()
             elif comm in ('x2', 'x2bonus'):
@@ -240,9 +254,11 @@ class PChatAssistant(ChatAssistant):
                     timeRemain = int(timeRemain)
                     minutes, seconds = divmod(timeRemain, 60)
                     hours, minutes = divmod(minutes, 60)
-                    base.chatAssistant.receiveGameMessage(PLocalizer.TEMP_DOUBLE_REP_CHAT % (hours, minutes))
+                    base.chatAssistant.receiveGameMessage(
+                        PLocalizer.TEMP_DOUBLE_REP_CHAT % (hours, minutes))
                 else:
-                    base.chatAssistant.receiveGameMessage(PLocalizer.NO_TEMP_DOUBLE_REP)
+                    base.chatAssistant.receiveGameMessage(
+                        PLocalizer.NO_TEMP_DOUBLE_REP)
             elif comm in 'crewhud':
                 localAvatar.guiMgr.crewPage.crewHUD.toggleHUD()
             elif comm == 'time':
@@ -250,7 +266,8 @@ class PChatAssistant(ChatAssistant):
             else:
                 valid = False
             if valid:
-                base.cr.centralLogger.writeClientEvent(('slash command - %s(%s)' % (comm, argStr))[:255])
+                base.cr.centralLogger.writeClientEvent(
+                    ('slash command - %s(%s)' % (comm, argStr))[:255])
 
     def getWhisperReplyId(self):
         for message in self.historyOpen:

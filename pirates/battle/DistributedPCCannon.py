@@ -71,11 +71,15 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
         self.skillId = InventoryType.CannonShoot
         self.reloadTime = 0
         self.rechargeTime = 0
-        self.volley = WeaponGlobals.getAttackVolley(self.skillId, self.getAmmoSkillId())
+        self.volley = WeaponGlobals.getAttackVolley(self.skillId,
+                                                    self.getAmmoSkillId())
         self.modeFSM = ClassicFSM.ClassicFSM('modeFSM', [
-         State.State('off', self.enterOff, self.exitOff),
-         State.State('fireCannon', self.enterFireCannon, self.exitFireCannon),
-         State.State('tutorialCutscene', self.enterTutorialCutscene, self.exitTutorialCutscene)], 'off', 'off')
+            State.State('off', self.enterOff, self.exitOff),
+            State.State('fireCannon', self.enterFireCannon,
+                        self.exitFireCannon),
+            State.State('tutorialCutscene', self.enterTutorialCutscene,
+                        self.exitTutorialCutscene)
+        ], 'off', 'off')
         self.modeFSM.enterInitialState()
         self.aimAITrack = None
         self.headingNode = NodePath('dummy')
@@ -89,11 +93,16 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
         DistributedWeapon.DistributedWeapon.generate(self)
         if self.tutorial:
             tutorialMode = 'useCannon'
-            proximityText = (None, )
+            proximityText = (None,)
         else:
             tutorialMode = None
             proximityText = (PLocalizer.InteractCannon,)
-        self.setInteractOptions(tutorialMode=tutorialMode, proximityText=proximityText, diskRadius=12.0, sphereScale=8.0, endInteract=0)
+        self.setInteractOptions(
+            tutorialMode=tutorialMode,
+            proximityText=proximityText,
+            diskRadius=12.0,
+            sphereScale=8.0,
+            endInteract=0)
         return
 
     def announceGenerate(self):
@@ -141,7 +150,8 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
 
     def requestInteraction(self, avId, interactType=0):
         base.localAvatar.motionFSM.off()
-        DistributedWeapon.DistributedWeapon.requestInteraction(self, avId, interactType)
+        DistributedWeapon.DistributedWeapon.requestInteraction(
+            self, avId, interactType)
 
     def enterOff(self):
         pass
@@ -161,7 +171,8 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
         self.accept('control', self.fireCannon)
         self.accept('wheel_up', self.changeAmmo, extraArgs=[1])
         self.accept('wheel_down', self.changeAmmo, extraArgs=[-1])
-        self.accept(InteractiveBase.END_INTERACT_EVENT, self.handleEndInteractKey)
+        self.accept(InteractiveBase.END_INTERACT_EVENT,
+                    self.handleEndInteractKey)
         localAvatar.cameraFSM.request('Cannon', self.prop)
         self.cgui = CannonGUI.CannonGUI(self)
         self.cgui.setAmmoId(self.getAmmoSkillId())
@@ -169,20 +180,24 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
         self.startReload()
 
         def gotInventory(inv):
-            ammoInvId = WeaponGlobals.getSkillAmmoInventoryId(self.getAmmoSkillId())
+            ammoInvId = WeaponGlobals.getSkillAmmoInventoryId(
+                self.getAmmoSkillId())
             maxShots = inv.getStackLimit(ammoInvId)
             self.numShots = inv.getStackQuantity(ammoInvId)
             if WeaponGlobals.isInfiniteAmmo(self.getAmmoSkillId()):
                 self.cgui.setAmmoLeft(-1, -1)
             else:
                 self.cgui.setAmmoLeft(self.numShots, maxShots)
-            base.localAvatar.guiMgr.combatTray.initCombatTray(InventoryType.CannonRep)
-            base.localAvatar.guiMgr.combatTray.skillTray.updateSkillTray(rep=InventoryType.CannonRep, weaponMode=WeaponGlobals.CANNON)
+            base.localAvatar.guiMgr.combatTray.initCombatTray(
+                InventoryType.CannonRep)
+            base.localAvatar.guiMgr.combatTray.skillTray.updateSkillTray(
+                rep=InventoryType.CannonRep, weaponMode=WeaponGlobals.CANNON)
             self.updateCannonDressing()
 
         if self.__invRequest:
             DistributedInventoryBase.cancelGetInventory(self.__invRequest)
-        self.__invRequest = DistributedInventoryBase.getInventory(localAvatar.getInventoryId(), gotInventory)
+        self.__invRequest = DistributedInventoryBase.getInventory(
+            localAvatar.getInventoryId(), gotInventory)
 
     def exitFireCannon(self):
         self.ignore('mouse1')
@@ -199,7 +214,8 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
             self.fireSubframeCall = None
         self.cannonDressingNode.detachNode()
         base.localAvatar.guiMgr.combatTray.skillTray.hideSkillTray()
-        base.localAvatar.guiMgr.combatTray.initCombatTray(localAvatar.currentWeaponId)
+        base.localAvatar.guiMgr.combatTray.initCombatTray(
+            localAvatar.currentWeaponId)
         return
 
     def requestExit(self):
@@ -239,7 +255,8 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
         if WeaponGlobals.isInfiniteAmmo(self.getAmmoSkillId()):
             self.cgui.setAmmoLeft(-1, -1)
         else:
-            ammoInvId = WeaponGlobals.getSkillAmmoInventoryId(self.getAmmoSkillId())
+            ammoInvId = WeaponGlobals.getSkillAmmoInventoryId(
+                self.getAmmoSkillId())
             self.numShots = inv.getStackQuantity(ammoInvId)
             maxShots = inv.getStackLimit(ammoInvId)
             self.cgui.setAmmoLeft(self.numShots, maxShots)
@@ -248,7 +265,8 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
         self.hideCannonDressing()
         self.volley = 0
         self.cgui.setVolley(self.volley)
-        self.rechargeTime = self.cr.battleMgr.getModifiedReloadTime(self.av, self.skillId, self.getAmmoSkillId())
+        self.rechargeTime = self.cr.battleMgr.getModifiedReloadTime(
+            self.av, self.skillId, self.getAmmoSkillId())
         self.startReload()
 
     def updateReloadBar(self):
@@ -258,7 +276,8 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
         recharge = self.av.skillDiary.getTimeSpentRecharging(self.skillId)
         if recharge:
             timeSpentReloading = recharge
-        self.rechargeTime = self.cr.battleMgr.getModifiedReloadTime(self.av, self.skillId, self.getAmmoSkillId())
+        self.rechargeTime = self.cr.battleMgr.getModifiedReloadTime(
+            self.av, self.skillId, self.getAmmoSkillId())
         self.startReload(elapsedTime=timeSpentReloading)
 
     def updateCannonDressing(self):
@@ -273,7 +292,8 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
             else:
                 self.cannonDressingNode.reparentTo(self.prop.pivot)
             if not self.grapplingHook:
-                self.grapplingHook = loader.loadModel('models/ammunition/GrapplingHook')
+                self.grapplingHook = loader.loadModel(
+                    'models/ammunition/GrapplingHook')
             if self.grapplingHook:
                 self.grapplingHook.setPos(0.3, -3.0, -1.0)
                 self.grapplingHook.reparentTo(self.cannonDressingNode)
@@ -300,7 +320,8 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
         if self.pendingDoMovie:
             base.cr.relatedObjectMgr.abortRequest(self.pendingDoMovie)
             self.pendingDoMovie = None
-        self.pendingDoMovie = base.cr.relatedObjectMgr.requestObjects([avId], eachCallback=doMovie, timeout=60)
+        self.pendingDoMovie = base.cr.relatedObjectMgr.requestObjects(
+            [avId], eachCallback=doMovie, timeout=60)
         return
 
     def startWeapon(self, av):
@@ -349,12 +370,14 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
         return
 
     def fireCannon(self):
-        rechargingTime = base.localAvatar.skillDiary.getTimeRemaining(self.skillId)
+        rechargingTime = base.localAvatar.skillDiary.getTimeRemaining(
+            self.skillId)
         if rechargingTime > 0:
             return
         if self.fireSubframeCall:
             self.fireSubframeCall.cleanup()
-        self.fireSubframeCall = SubframeCall(self._doFireCannon, 10, self.uniqueName('fireCannon'))
+        self.fireSubframeCall = SubframeCall(self._doFireCannon, 10,
+                                             self.uniqueName('fireCannon'))
 
     def _doFireCannon(self):
         if self.volley > 0:
@@ -362,33 +385,44 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
             p = self.prop.pivot.getP(render)
             r = 0
             pos = self.prop.cannonExitPoint.getPos(render)
-            posHpr = [
-             pos[0], pos[1], pos[2], h, p, r]
+            posHpr = [pos[0], pos[1], pos[2], h, p, r]
             charge = 0.0
             timestamp = globalClockDelta.getFrameNetworkTime(bits=32)
-            self.sendRequestProjectileSkill(self.skillId, self.getAmmoSkillId(), posHpr, charge, timestamp)
-            self.prop.playAttack(self.skillId, self.getAmmoSkillId(), self.projectileHitEvent, buffs=localAvatar.getSkillEffects())
+            self.sendRequestProjectileSkill(self.skillId, self.getAmmoSkillId(),
+                                            posHpr, charge, timestamp)
+            self.prop.playAttack(
+                self.skillId,
+                self.getAmmoSkillId(),
+                self.projectileHitEvent,
+                buffs=localAvatar.getSkillEffects())
             self.volley -= 1
             self.cgui.setVolley(self.volley)
-            if not WeaponGlobals.isInfiniteAmmo(self.getAmmoSkillId()) and not base.config.GetBool('infinite-ammo', 0):
+            if not WeaponGlobals.isInfiniteAmmo(
+                    self.getAmmoSkillId()) and not base.config.GetBool(
+                        'infinite-ammo', 0):
                 inv = base.localAvatar.getInventory()
-                ammoInvId = WeaponGlobals.getSkillAmmoInventoryId(self.getAmmoSkillId())
+                ammoInvId = WeaponGlobals.getSkillAmmoInventoryId(
+                    self.getAmmoSkillId())
                 maxShots = inv.getStackLimit(ammoInvId)
                 self.numShots -= 1
                 self.cgui.setAmmoLeft(self.numShots, maxShots)
             self.hideCannonDressing()
             base.localAvatar.skillDiary.startRecharging(self.skillId, 0)
-            self.rechargeTime = self.cr.battleMgr.getModifiedReloadTime(self.av, self.skillId, self.getAmmoSkillId())
+            self.rechargeTime = self.cr.battleMgr.getModifiedReloadTime(
+                self.av, self.skillId, self.getAmmoSkillId())
             self.startReload()
         else:
             base.playSfx(self.emptySound)
-        for i in range(len(localAvatar.guiMgr.combatTray.skillTray.traySkillMap)):
-            if localAvatar.guiMgr.combatTray.skillTray.traySkillMap[i] == self.getAmmoSkillId():
+        for i in range(
+                len(localAvatar.guiMgr.combatTray.skillTray.traySkillMap)):
+            if localAvatar.guiMgr.combatTray.skillTray.traySkillMap[
+                    i] == self.getAmmoSkillId():
                 button = localAvatar.guiMgr.combatTray.skillTray.tray[i + 1]
                 if button.skillStatus is True:
                     button.updateQuantity(self.numShots)
 
-    def useProjectileSkill(self, skillId, ammoSkillId, posHpr, timestamp, charge):
+    def useProjectileSkill(self, skillId, ammoSkillId, posHpr, timestamp,
+                           charge):
         x, y, z, h, p, r = posHpr
         if not self.localAvatarUsingWeapon:
             self.prop.hNode.setH(render, h)
@@ -396,7 +430,8 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
             buffs = []
             if self.av:
                 buffs = self.av.skillEffects
-            self.prop.playAttack(skillId, ammoSkillId, self.projectileHitEvent, buffs=buffs)
+            self.prop.playAttack(
+                skillId, ammoSkillId, self.projectileHitEvent, buffs=buffs)
 
     def doAIAttack(self, x, y, z, tzone, skillId, ammoSkillId, timestamp):
         if not (self.cr.activeWorld and self.cr.activeWorld.worldGrid):
@@ -410,7 +445,13 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
         p = self.prop.hNode.getP()
         self.prop.pivot.setP(p)
         self.prop.hNode.setP(0)
-        self.prop.playAttack(skillId, ammoSkillId, self.projectileHitEvent, targetPos, buffs=buffs, timestamp=timestamp)
+        self.prop.playAttack(
+            skillId,
+            ammoSkillId,
+            self.projectileHitEvent,
+            targetPos,
+            buffs=buffs,
+            timestamp=timestamp)
         if __dev__ and base.config.GetBool('show-ai-cannon-targets', 0):
             self.tracker.setPos(render, targetPos)
 
@@ -423,14 +464,20 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
 
     def startReload(self, elapsedTime=0):
         self.stopReload()
-        self.cgui.startReload(self.rechargeTime, self.volley, elapsedTime=elapsedTime, doneCallback=self.finishReload)
+        self.cgui.startReload(
+            self.rechargeTime,
+            self.volley,
+            elapsedTime=elapsedTime,
+            doneCallback=self.finishReload)
 
     def stopReload(self):
         self.cgui.stopReload()
 
     def finishReload(self):
-        self.volley = WeaponGlobals.getAttackVolley(self.skillId, self.getAmmoSkillId())
-        if self.volley > self.numShots and not WeaponGlobals.isInfiniteAmmo(self.getAmmoSkillId()):
+        self.volley = WeaponGlobals.getAttackVolley(self.skillId,
+                                                    self.getAmmoSkillId())
+        if self.volley > self.numShots and not WeaponGlobals.isInfiniteAmmo(
+                self.getAmmoSkillId()):
             self.volley = self.numShots
         if hasattr(self, 'cgui'):
             self.cgui.setVolley(self.volley)
@@ -458,7 +505,8 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
             if not ammo or ammo.destroyed:
                 continue
             for entryData in colList:
-                DistributedWeapon.DistributedWeapon.projectileHitObject(self, entryData[1])
+                DistributedWeapon.DistributedWeapon.projectileHitObject(
+                    self, entryData[1])
                 if ammo.destroyed:
                     break
 

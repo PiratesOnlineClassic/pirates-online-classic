@@ -1,6 +1,7 @@
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
+
 class CodeRedemptionUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('CodeRedemptionUD')
 

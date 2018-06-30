@@ -13,14 +13,34 @@ from pirates.piratesgui.GuiButton import GuiButton
 
 
 class Subtitler(DirectObject.DirectObject):
-    
 
     def __init__(self):
         DirectObject.DirectObject.__init__(self)
         self.event = None
         self.sfx = None
-        self.text = DirectLabel(parent=render2d, relief=None, text='', text_align=TextNode.ACenter, text_scale=0.055, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, text_font=PiratesGlobals.getPirateFont(), pos=(0, 0, -0.9), sortOrder=80)
-        self.confirmButton = DialogButton(parent=base.a2dBottomRight, pos=(-0.15, 0, 0.095), text=PLocalizer.MakeAPirateNext, text_scale=0.05, text_pos=(0.04, -0.018), text_fg=PiratesGuiGlobals.TextFG2, textMayChange=1, command=self.advancePageNumber, sortOrder=90, buttonStyle=DialogButton.YES)
+        self.text = DirectLabel(
+            parent=render2d,
+            relief=None,
+            text='',
+            text_align=TextNode.ACenter,
+            text_scale=0.055,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            textMayChange=1,
+            text_font=PiratesGlobals.getPirateFont(),
+            pos=(0, 0, -0.9),
+            sortOrder=80)
+        self.confirmButton = DialogButton(
+            parent=base.a2dBottomRight,
+            pos=(-0.15, 0, 0.095),
+            text=PLocalizer.MakeAPirateNext,
+            text_scale=0.05,
+            text_pos=(0.04, -0.018),
+            text_fg=PiratesGuiGlobals.TextFG2,
+            textMayChange=1,
+            command=self.advancePageNumber,
+            sortOrder=90,
+            buttonStyle=DialogButton.YES)
         base.transitions.loadLetterbox()
         self.text.setScale(aspect2d, 1)
         self.accept('aspectRatioChanged', self.text.setScale, [aspect2d, 1])
@@ -89,7 +109,13 @@ class Subtitler(DirectObject.DirectObject):
         self.__chatPages = []
         return
 
-    def setPageChat(self, message, timeout=False, confirm=False, options=None, callback=None, extraArgs=[]):
+    def setPageChat(self,
+                    message,
+                    timeout=False,
+                    confirm=False,
+                    options=None,
+                    callback=None,
+                    extraArgs=[]):
         if options != None:
             self.__loadOptionButtons(options, callback, extraArgs)
         self.__processChatMessage(message)
@@ -103,7 +129,17 @@ class Subtitler(DirectObject.DirectObject):
             callback(*args)
 
         for i in xrange(len(options)):
-            optionButton = GuiButton(parent=base.a2dBottomRight, pos=(-0.15 - (len(options) - 1 - i) * 0.25, 0, 0.095), text=str(options[i]), text_pos=(0, -0.0125), text_scale=0.05, text_fg=PiratesGuiGlobals.TextFG2, textMayChange=1, command=optionCallback, extraArgs=[options[i]] + extraArgs, sortOrder=90)
+            optionButton = GuiButton(
+                parent=base.a2dBottomRight,
+                pos=(-0.15 - (len(options) - 1 - i) * 0.25, 0, 0.095),
+                text=str(options[i]),
+                text_pos=(0, -0.0125),
+                text_scale=0.05,
+                text_fg=PiratesGuiGlobals.TextFG2,
+                textMayChange=1,
+                command=optionCallback,
+                extraArgs=[options[i]] + extraArgs,
+                sortOrder=90)
             optionButton.hide()
             self.__optionButtons.append(optionButton)
 
@@ -168,7 +204,8 @@ class Subtitler(DirectObject.DirectObject):
             self.sfx = sfx
             base.playSfx(sfx)
         if timeout:
-            taskMgr.doMethodLater(timeout, self.clearText, 'clearSubtitleTask', extraArgs=[True])
+            taskMgr.doMethodLater(
+                timeout, self.clearText, 'clearSubtitleTask', extraArgs=[True])
         return
 
     def fadeInText(self, text, color=None, sfx=None):
@@ -186,7 +223,8 @@ class Subtitler(DirectObject.DirectObject):
             self.fader = None
         if color:
             self.text['text_fg'] = color
-        self.fader = LerpFunctionInterval(self.text.setAlphaScale, fromData=0, toData=1, duration=1.0)
+        self.fader = LerpFunctionInterval(
+            self.text.setAlphaScale, fromData=0, toData=1, duration=1.0)
         self.fader.start()
         return
 
@@ -201,7 +239,8 @@ class Subtitler(DirectObject.DirectObject):
         if self.fader:
             self.fader.finish()
             self.fader = None
-        fadeOut = LerpFunctionInterval(self.text.setAlphaScale, fromData=1, toData=0, duration=1.0)
+        fadeOut = LerpFunctionInterval(
+            self.text.setAlphaScale, fromData=1, toData=0, duration=1.0)
 
         def restoreColor():
             self.text['text_fg'] = PiratesGuiGlobals.TextFG2
@@ -209,7 +248,8 @@ class Subtitler(DirectObject.DirectObject):
         def resetPos():
             self.text.setPos(Vec3(0.0, 0.0, 0.0))
 
-        self.fader = Sequence(fadeOut, Func(self.text.hide), Func(restoreColor), Func(resetPos))
+        self.fader = Sequence(fadeOut, Func(self.text.hide), Func(restoreColor),
+                              Func(resetPos))
         self.fader.start()
         return
 
@@ -234,4 +274,6 @@ class Subtitler(DirectObject.DirectObject):
         self.clearText()
         self.confirmButton['command'] = self.advancePageNumber
         return
+
+
 # okay decompiling .\pirates\piratesgui\Subtitler.pyc

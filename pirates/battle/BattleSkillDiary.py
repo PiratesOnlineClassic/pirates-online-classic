@@ -14,10 +14,14 @@ class BattleSkillDiary:
         self.__timers = {}
 
     def startRecharging(self, skillId, ammoSkillId):
-        if self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId, ammoSkillId) == 0.0:
+        if self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId,
+                                                     ammoSkillId) == 0.0:
             return
 
-        self.__timers[skillId] = [self.CHARGING, 0.0, globalClock.getFrameTime(), ammoSkillId]
+        self.__timers[skillId] = [
+            self.CHARGING, 0.0,
+            globalClock.getFrameTime(), ammoSkillId
+        ]
 
     def pauseRecharging(self, skillId):
         details = self.__timers.get(skillId)
@@ -25,7 +29,8 @@ class BattleSkillDiary:
             return
 
         ammoSkillId = details[3]
-        if self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId, ammoSkillId) == 0.0:
+        if self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId,
+                                                     ammoSkillId) == 0.0:
             return
 
         details[0] = self.IDLE
@@ -41,7 +46,8 @@ class BattleSkillDiary:
             return
 
         ammoSkillId = details[3]
-        if self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId, ammoSkillId) == 0.0:
+        if self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId,
+                                                     ammoSkillId) == 0.0:
             return
 
         if details[0] != self.CHARGING:
@@ -49,7 +55,7 @@ class BattleSkillDiary:
             details[2] = globalClock.getFrameTime()
 
     def clearRecharging(self, skillId):
-        if self.__timers.has_key(skillId):
+        if skillId in self.__timers:
             del self.__timers[skillId]
 
     def getTimeSpentRecharging(self, skillId):
@@ -72,7 +78,8 @@ class BattleSkillDiary:
             return
 
         ammoSkillId = details[3]
-        timeRequired = self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId, ammoSkillId)
+        timeRequired = self.cr.battleMgr.getModifiedRechargeTime(
+            self.av, skillId, ammoSkillId)
         if timeRequired == 0.0:
             return 0.0
 
@@ -85,7 +92,8 @@ class BattleSkillDiary:
             return timeRequired - timeSpent
 
     def canUseSkill(self, skillId, ammoSkillId, tolerance=0.0):
-        timeRequired = self.cr.battleMgr.getModifiedRechargeTime(self.av, skillId, ammoSkillId)
+        timeRequired = self.cr.battleMgr.getModifiedRechargeTime(
+            self.av, skillId, ammoSkillId)
         if timeRequired == 0.0:
             return 1
 
@@ -109,5 +117,5 @@ class BattleSkillDiary:
             dt = details[1]
             timeStamp = details[2]
             remaining = self.getTimeRemaining(skillId)
-            s += ' %s (%s): %s, dt=%f, t=%f, remaining=%f (s)\n' % (skillName, skillId,
-                state, dt, timeStamp, remaining)
+            s += ' %s (%s): %s, dt=%f, t=%f, remaining=%f (s)\n' % (
+                skillName, skillId, state, dt, timeStamp, remaining)

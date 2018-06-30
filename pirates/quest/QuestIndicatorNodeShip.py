@@ -7,24 +7,27 @@ from pirates.quest.QuestIndicatorGridNode import QuestIndicatorGridNode
 
 
 class QuestIndicatorNodeShip(QuestIndicatorGridNode):
-    
 
     def __init__(self, questStep):
         self.nearEffect = None
-        QuestIndicatorGridNode.__init__(self, 'ShipIndicator', [
-         300, 1500], questStep)
+        QuestIndicatorGridNode.__init__(self, 'ShipIndicator', [300, 1500],
+                                        questStep)
         self._selfRefreshTask = None
         self._refreshTargetZone = None
         return
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def delete(self):
         QuestIndicatorGridNode.delete(self)
         self.nearEffect = None
         self.stopTargetRefresh()
         return
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def enterOff(self):
         if self.nearEffect:
             self.nearEffect.reallyCleanUpEffect()
@@ -40,28 +43,38 @@ class QuestIndicatorNodeShip(QuestIndicatorGridNode):
         QuestIndicatorGridNode.exitFar(self)
         self.stopTargetRefresh()
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def enterNear(self):
         QuestIndicatorGridNode.enterNear(self)
         self.startNearEffect()
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def exitNear(self):
         self.stopNearEffect()
         QuestIndicatorGridNode.exitNear(self)
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def enterAt(self):
         QuestIndicatorGridNode.enterAt(self)
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def exitAt(self):
         QuestIndicatorGridNode.exitAt(self)
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def stepObjArrived(self, stepObj):
         QuestIndicatorGridNode.stepObjArrived(self, stepObj)
-        if self.getCurrentOrNextState() in ('Near', ):
+        if self.getCurrentOrNextState() in ('Near',):
             self.startNearEffect()
 
     def stepObjLeft(self):
@@ -78,7 +91,9 @@ class QuestIndicatorNodeShip(QuestIndicatorGridNode):
         if self.nearEffect:
             self.nearEffect.hideEffect()
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def startNearEffect(self):
         if self.nearEffect:
             self.nearEffect.reallyCleanUpEffect()
@@ -91,8 +106,12 @@ class QuestIndicatorNodeShip(QuestIndicatorGridNode):
         if self.muted:
             self.hideEffect()
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def stopNearEffect(self):
         if self.nearEffect:
             self.nearEffect.stopLoop()
+
+
 # okay decompiling .\pirates\quest\QuestIndicatorNodeShip.pyc

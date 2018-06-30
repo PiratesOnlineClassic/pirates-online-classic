@@ -18,12 +18,20 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class SongItemGui(SongListItem):
-    
+
     width = PiratesGuiGlobals.InventoryItemGuiWidth
     height = PiratesGuiGlobals.InventoryItemGuiHeight
     available = True
 
-    def __init__(self, data, trade=0, buy=0, sell=0, use=0, weapon=0, isDisabled=0, **kw):
+    def __init__(self,
+                 data,
+                 trade=0,
+                 buy=0,
+                 sell=0,
+                 use=0,
+                 weapon=0,
+                 isDisabled=0,
+                 **kw):
         if (trade or buy or sell or use or weapon) and not isDisabled:
             buttonRelief = DGG.RAISED
             buttonState = DGG.NORMAL
@@ -31,10 +39,25 @@ class SongItemGui(SongListItem):
             buttonRelief = DGG.RIDGE
             buttonState = DGG.DISABLED
         self.loadGui()
-        optiondefs = (
-         ('relief', None, None), ('state', buttonState, None), ('frameSize', (0, self.width, 0, self.height), None), ('image', SongItemGui.genericButton, None), ('image_scale', (0.54, 1, 0.42), None), ('image_pos', (0.26, 0, 0.08), None), ('pressEffect', 0, None), ('command', self.sendEvents, None))
+        optiondefs = (('relief', None, None), ('state', buttonState, None),
+                      ('frameSize', (0, self.width, 0, self.height),
+                       None), ('image', SongItemGui.genericButton,
+                               None), ('image_scale', (0.54, 1, 0.42), None),
+                      ('image_pos', (0.26, 0, 0.08),
+                       None), ('pressEffect', 0, None), ('command',
+                                                         self.sendEvents, None))
         self.defineoptions(kw, optiondefs)
-        SongListItem.__init__(self, data, trade=trade, buy=buy, sell=sell, use=use, weapon=weapon, isDisabled=isDisabled, width=self.width, height=self.height)
+        SongListItem.__init__(
+            self,
+            data,
+            trade=trade,
+            buy=buy,
+            sell=sell,
+            use=use,
+            weapon=weapon,
+            isDisabled=isDisabled,
+            width=self.width,
+            height=self.height)
         self.initialiseoptions(SongItemGui)
         self.createGui()
         self.helpBox = None
@@ -44,24 +67,53 @@ class SongItemGui(SongListItem):
         if SongItemGui.guiLoaded:
             return
         SongListItem.loadGui(self)
-        SongItemGui.parchmentImage = loader.loadModel('models/gui/panel_parchment')
-        SongItemGui.genericButton = (SongListItem.topGui.find('**/generic_button'), SongListItem.topGui.find('**/generic_button_down'), SongListItem.topGui.find('**/generic_button_over'), SongListItem.topGui.find('**/generic_button_disabled'))
+        SongItemGui.parchmentImage = loader.loadModel(
+            'models/gui/panel_parchment')
+        SongItemGui.genericButton = (
+            SongListItem.topGui.find('**/generic_button'),
+            SongListItem.topGui.find('**/generic_button_down'),
+            SongListItem.topGui.find('**/generic_button_over'),
+            SongListItem.topGui.find('**/generic_button_disabled'))
 
     def createGui(self):
         itemId = self.data[0]
-        self.picture = DirectFrame(parent=self, relief=None, state=DGG.DISABLED, pos=(0.01,
-                                                                                      0,
-                                                                                      0.01))
-        self.nameTag = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text=self.name, text_scale=PiratesGuiGlobals.TextScaleSmall * PLocalizer.getHeadingScale(2), text_align=TextNode.ALeft, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, pos=(0.05,
-                                                                                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                                                                                           0.105), text_font=PiratesGlobals.getInterfaceFont())
+        self.picture = DirectFrame(
+            parent=self, relief=None, state=DGG.DISABLED, pos=(0.01, 0, 0.01))
+        self.nameTag = DirectLabel(
+            parent=self,
+            relief=None,
+            state=DGG.DISABLED,
+            text=self.name,
+            text_scale=PiratesGuiGlobals.TextScaleSmall *
+            PLocalizer.getHeadingScale(2),
+            text_align=TextNode.ALeft,
+            text_fg=PiratesGuiGlobals.TextFG1,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            pos=(0.05, 0, 0.105),
+            text_font=PiratesGlobals.getInterfaceFont())
         itemTypeFormatted = ''
-        self.itemTypeName = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text=itemTypeFormatted, text_scale=PiratesGuiGlobals.TextScaleSmall, text_align=TextNode.ALeft, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_font=PiratesGlobals.getInterfaceFont(), pos=(0.05,
-                                                                                                                                                                                                                                                                                                                     0,
-                                                                                                                                                                                                                                                                                                                     0.065))
-        self.miscText = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text='', text_scale=PiratesGuiGlobals.TextScaleSmall, text_align=TextNode.ALeft, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.05,
-                                                                                                                                                                                                                                                                       0,
-                                                                                                                                                                                                                                                                       0.025))
+        self.itemTypeName = DirectLabel(
+            parent=self,
+            relief=None,
+            state=DGG.DISABLED,
+            text=itemTypeFormatted,
+            text_scale=PiratesGuiGlobals.TextScaleSmall,
+            text_align=TextNode.ALeft,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_font=PiratesGlobals.getInterfaceFont(),
+            pos=(0.05, 0, 0.065))
+        self.miscText = DirectLabel(
+            parent=self,
+            relief=None,
+            state=DGG.DISABLED,
+            text='',
+            text_scale=PiratesGuiGlobals.TextScaleSmall,
+            text_align=TextNode.ALeft,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_wordwrap=11,
+            pos=(0.05, 0, 0.025))
         if self.minLvl > 0:
             repId = WeaponGlobals.getRepId(itemId)
             if repId:
@@ -74,26 +126,51 @@ class SongItemGui(SongListItem):
             self.checkSkillReq(skillId)
         if self.buy:
             self.checkPlayerInventory(itemId)
-        self.costText = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, image=SongListItem.coinImage, image_scale=0.12, image_pos=Vec3(-0.01, 0, 0.01), text=str(self.price), text_scale=PiratesGuiGlobals.TextScaleSmall, text_align=TextNode.ARight, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, text_pos=(-0.03, 0, 0), pos=(self.width - 0.035, 0, 0.105), text_font=PiratesGlobals.getInterfaceFont())
+        self.costText = DirectLabel(
+            parent=self,
+            relief=None,
+            state=DGG.DISABLED,
+            image=SongListItem.coinImage,
+            image_scale=0.12,
+            image_pos=Vec3(-0.01, 0, 0.01),
+            text=str(self.price),
+            text_scale=PiratesGuiGlobals.TextScaleSmall,
+            text_align=TextNode.ARight,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_wordwrap=11,
+            text_pos=(-0.03, 0, 0),
+            pos=(self.width - 0.035, 0, 0.105),
+            text_font=PiratesGlobals.getInterfaceFont())
         if self.quantity and self.quantity > 1:
-            self.quantityLabel = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text=str(self.quantity), frameColor=(0,
-                                                                                                                                0,
-                                                                                                                                0,
-                                                                                                                                1), frameSize=(-0.01, 0.02, -0.01, 0.025), text_scale=0.0275, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.02,
-                                                                                                                                                                                                                                                                                                                               0,
-                                                                                                                                                                                                                                                                                                                               0.025), text_font=PiratesGlobals.getPirateBoldOutlineFont())
+            self.quantityLabel = DirectLabel(
+                parent=self,
+                relief=None,
+                state=DGG.DISABLED,
+                text=str(self.quantity),
+                frameColor=(0, 0, 0, 1),
+                frameSize=(-0.01, 0.02, -0.01, 0.025),
+                text_scale=0.0275,
+                text_align=TextNode.ACenter,
+                text_fg=PiratesGuiGlobals.TextFG2,
+                text_shadow=PiratesGuiGlobals.TextShadow,
+                text_wordwrap=11,
+                pos=(0.02, 0, 0.025),
+                text_font=PiratesGlobals.getPirateBoldOutlineFont())
         itemClass = EconomyGlobals.getItemCategory(itemId)
         if itemClass == ItemType.WEAPON or itemClass == ItemType.POUCH:
             asset = EconomyGlobals.getItemIcons(itemId)
             if asset:
-                self.picture['geom'] = SongItemGui.weaponIcons.find('**/%s*' % asset)
+                self.picture['geom'] = SongItemGui.weaponIcons.find(
+                    '**/%s*' % asset)
                 self.picture['geom_scale'] = 0.11
                 self.picture['geom_pos'] = (0.08, 0, 0.068)
         else:
             if itemClass == ItemType.CONSUMABLE:
                 asset = EconomyGlobals.getItemIcons(itemId)
                 if asset:
-                    self.picture['geom'] = SongItemGui.skillIcons.find('**/%s*' % asset)
+                    self.picture['geom'] = SongItemGui.skillIcons.find(
+                        '**/%s*' % asset)
                     self.picture['geom_scale'] = 0.11
                     self.picture['geom_pos'] = (0.08, 0, 0.068)
         if InventoryType.begin_WeaponCannonAmmo <= itemId and itemId <= InventoryType.end_WeaponCannonAmmo or InventoryType.begin_WeaponPistolAmmo <= itemId and itemId <= InventoryType.end_WeaponGrenadeAmmo or InventoryType.begin_WeaponDaggerAmmo <= itemId and itemId <= InventoryType.end_WeaponDaggerAmmo:
@@ -101,12 +178,14 @@ class SongItemGui(SongListItem):
             if skillId:
                 asset = WeaponGlobals.getSkillIcon(skillId)
                 if asset:
-                    self.picture['geom'] = SongListItem.skillIcons.find('**/%s' % asset)
+                    self.picture['geom'] = SongListItem.skillIcons.find(
+                        '**/%s' % asset)
                     self.picture['geom_scale'] = 0.15
                     self.picture['geom_pos'] = (0.069, 0, 0.069)
         else:
             if InventoryType.SmallBottle <= itemId and itemId <= InventoryType.LargeBottle:
-                self.picture['geom'] = SongListItem.topGui.find('**/main_gui_ship_bottle')
+                self.picture['geom'] = SongListItem.topGui.find(
+                    '**/main_gui_ship_bottle')
                 self.picture['geom_scale'] = 0.1
                 self.picture['geom_pos'] = (0.069, 0, 0.069)
         self.flattenStrong()
@@ -116,7 +195,8 @@ class SongItemGui(SongListItem):
         inv = localAvatar.getInventory()
         if inv:
             repAmt = inv.getAccumulator(repId)
-            if minLvl > ReputationGlobals.getLevelFromTotalReputation(repId, repAmt)[0]:
+            if minLvl > ReputationGlobals.getLevelFromTotalReputation(
+                    repId, repAmt)[0]:
                 self.highlightRed(PLocalizer.LevelRequirement % self.minLvl)
 
     def checkTrainingReq(self, trainingReq):
@@ -138,19 +218,24 @@ class SongItemGui(SongListItem):
             currStock = inventory.getStackQuantity(itemId)
             currStockLimit = inventory.getStackLimit(itemId)
             if currStock == 0:
-                self.name = PLocalizer.makeHeadingString(PLocalizer.SongTitleUnknown, 2)
-                self.nameTag['text'] = PLocalizer.makeHeadingString(PLocalizer.SongTitleUnknown, 2)
-                self.itemTypeName['text'] = PLocalizer.makeHeadingString(PLocalizer.SongComingSoon, 1)
+                self.name = PLocalizer.makeHeadingString(
+                    PLocalizer.SongTitleUnknown, 2)
+                self.nameTag['text'] = PLocalizer.makeHeadingString(
+                    PLocalizer.SongTitleUnknown, 2)
+                self.itemTypeName['text'] = PLocalizer.makeHeadingString(
+                    PLocalizer.SongComingSoon, 1)
                 self.disable()
 
     def highlightRed(self, text=''):
         self['state'] = DGG.DISABLED
         self['image_color'] = Vec4(0.55, 0.55, 0.5, 1)
         self.available = False
-        self.highlightBox(text, Vec4(0.75, 0.5, 0.5, 1), PiratesGuiGlobals.TextFG6)
+        self.highlightBox(text, Vec4(0.75, 0.5, 0.5, 1),
+                          PiratesGuiGlobals.TextFG6)
 
     def highlightGreen(self, text=''):
-        self.highlightBox(text, Vec4(0.5, 0.75, 0.5, 1), PiratesGuiGlobals.TextFG4)
+        self.highlightBox(text, Vec4(0.5, 0.75, 0.5, 1),
+                          PiratesGuiGlobals.TextFG4)
 
     def highlightBox(self, text, image_color, text_fg):
         self.miscText['text_fg'] = text_fg
@@ -170,9 +255,24 @@ class SongItemGui(SongListItem):
             return
         weaponInfo = PLocalizer.WeaponDescriptions.get(self.data[0])
         weaponDesc = weaponInfo
-        self.helpText = DirectFrame(parent=self, relief=None, text=weaponDesc, state=DGG.DISABLED, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleSmall, text_fg=PiratesGuiGlobals.TextFG2, text_wordwrap=13, textMayChange=0, sortOrder=91)
+        self.helpText = DirectFrame(
+            parent=self,
+            relief=None,
+            text=weaponDesc,
+            state=DGG.DISABLED,
+            text_align=TextNode.ALeft,
+            text_scale=PiratesGuiGlobals.TextScaleSmall,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_wordwrap=13,
+            textMayChange=0,
+            sortOrder=91)
         height = -self.helpText.getHeight()
-        self.helpBox = BorderFrame(parent=aspect2d, state=DGG.DISABLED, frameSize=(-0.03, 0.43, height, 0.05), sortOrder=90, borderScale=0.2)
+        self.helpBox = BorderFrame(
+            parent=aspect2d,
+            state=DGG.DISABLED,
+            frameSize=(-0.03, 0.43, height, 0.05),
+            sortOrder=90,
+            borderScale=0.2)
         self.helpText.reparentTo(self.helpBox)
         self.helpBox.setBin('gui-popup', 0)
         self.helpBox.setPos(self, 0.25, 0, -0.035)
@@ -204,7 +304,8 @@ class SongItemGui(SongListItem):
             self.wrtReparentTo(aspect2d)
             taskMgr.remove(self.taskName('dragTask'))
             vWidget2render2d = self.getPos(render2d)
-            vMouse2render2d = Point3(event.getMouse()[0], 0, event.getMouse()[1])
+            vMouse2render2d = Point3(event.getMouse()[0], 0,
+                                     event.getMouse()[1])
             editVec = Vec3(vWidget2render2d - vMouse2render2d)
             task = taskMgr.add(self.dragTask, self.taskName('dragTask'))
             task.editVec = editVec
@@ -215,7 +316,8 @@ class SongItemGui(SongListItem):
         else:
             mwn = base.mouseWatcherNode
             if mwn.hasMouse():
-                vMouse2render2d = Point3(mwn.getMouse()[0], 0, mwn.getMouse()[1])
+                vMouse2render2d = Point3(mwn.getMouse()[0], 0,
+                                         mwn.getMouse()[1])
                 newPos = vMouse2render2d + task.editVec
                 self.setPos(render2d, newPos)
                 newPos = self.getPos(aspect2d)
@@ -236,7 +338,8 @@ class SongItemGui(SongListItem):
             taskMgr.remove(self.taskName('dragTask'))
 
     def showDetails(self, event):
-        taskMgr.doMethodLater(PiratesGuiGlobals.HelpPopupTime, self.createHelpbox, 'helpInfoTask')
+        taskMgr.doMethodLater(PiratesGuiGlobals.HelpPopupTime,
+                              self.createHelpbox, 'helpInfoTask')
         self.createHelpbox()
 
     def hideDetails(self, event):
@@ -245,4 +348,6 @@ class SongItemGui(SongListItem):
             self.helpBox.destroy()
             self.helpBox = None
         return
+
+
 # okay decompiling .\pirates\piratesgui\SongItemGui.pyc

@@ -3,8 +3,10 @@ import random
 from direct.directnotify import DirectNotifyGlobal
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 
+
 class DistributedGameTableAI(DistributedInteractiveAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGameTableAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedGameTableAI')
     MULTIUSE = True
 
     def __init__(self, air, availableSeats=7, numberAI=3):
@@ -24,11 +26,13 @@ class DistributedGameTableAI(DistributedInteractiveAI):
     def handleRequestInteraction(self, avatar, interactType, instant):
         availableSeatIndex = self.getRandomOpenSeat()
         if self.getOpenSeatCount == 0:
-            self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [3, 0])
+            self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse',
+                                      [3, 0])
             return self.DENY
 
         self.avatarSit(avatar, availableSeatIndex)
-        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [1, availableSeatIndex])
+        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse',
+                                  [1, availableSeatIndex])
         return self.ACCEPT
 
     def handleRequestExit(self, avatar):
@@ -37,7 +41,8 @@ class DistributedGameTableAI(DistributedInteractiveAI):
             return self.DENY
 
         self.avatarStand(avatar, seatIndex)
-        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [2, seatIndex])
+        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse',
+                                  [2, seatIndex])
         return self.ACCEPT
 
     @property
@@ -87,7 +92,9 @@ class DistributedGameTableAI(DistributedInteractiveAI):
     def avatarSit(self, avatar, seatIndex):
         currentSeat = self.seats[seatIndex]
         if currentSeat:
-            self.notify.warning('Failed to seat avatar; Seat %d is already occupied!' % seatIndex)
+            self.notify.warning(
+                'Failed to seat avatar; Seat %d is already occupied!' %
+                seatIndex)
             return
 
         self.seats[seatIndex] = avatar
@@ -96,7 +103,9 @@ class DistributedGameTableAI(DistributedInteractiveAI):
     def avatarStand(self, avatar, seatIndex):
         currentSeat = self.seats[seatIndex]
         if currentSeat != avatar:
-            self.notify.warning('Failed to stand avatar; Seat %d is not occupied by avatar!' % seatIndex)
+            self.notify.warning(
+                'Failed to stand avatar; Seat %d is not occupied by avatar!' %
+                seatIndex)
             return
 
         self.seats[seatIndex] = None
@@ -158,7 +167,8 @@ class DistributedGameTableAI(DistributedInteractiveAI):
 
     def generatePlayers(self):
         if self._generatedAI:
-            self.notify.warning('Failed to generate table AI; AI players already generated!')
+            self.notify.warning(
+                'Failed to generate table AI; AI players already generated!')
             return
 
         self._generatedAI = True

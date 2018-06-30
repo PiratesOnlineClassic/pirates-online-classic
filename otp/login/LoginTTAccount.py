@@ -56,4 +56,6 @@ class LoginTTAccount(LoginBase.LoginBase, TTAccount.TTAccount):
 
     def needToSetParentPassword(self):
         return self.response.getBool('secretsPasswordNotSet', 0)
+
+
 # okay decompiling .\otp\login\LoginTTAccount.pyc

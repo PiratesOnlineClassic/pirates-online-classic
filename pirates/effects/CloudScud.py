@@ -9,8 +9,9 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class CloudScud(PooledEffect, EffectController):
-    
+
     cardScale = 64.0
 
     def __init__(self):
@@ -19,10 +20,14 @@ class CloudScud(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleSmoke')
         if not CloudScud.particleDummy:
-            CloudScud.particleDummy = base.effectsRoot.attachNewNode(ModelNode('CloudScudParticleDummy'))
+            CloudScud.particleDummy = base.effectsRoot.attachNewNode(
+                ModelNode('CloudScudParticleDummy'))
             CloudScud.particleDummy.setDepthWrite(0)
             CloudScud.particleDummy.setDepthTest(0)
-            CloudScud.particleDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+            CloudScud.particleDummy.node().setAttrib(
+                ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                      ColorBlendAttrib.OIncomingAlpha,
+                                      ColorBlendAttrib.OOne))
             CloudScud.particleDummy.setFogOff()
             CloudScud.particleDummy.setBin('fixed', 120)
         self.f = ParticleEffect.ParticleEffect()
@@ -69,8 +74,14 @@ class CloudScud(PooledEffect, EffectController):
         self.accept('timeOfDayChange', self._timeChange)
 
     def createTrack(self):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.setPoolSize, 32), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(self.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.02), Func(self.setPoolSize, 32),
+            Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(
+                self.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def cleanUpEffect(self):

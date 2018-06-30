@@ -13,13 +13,13 @@ from pirates.effects.PooledEffect import PooledEffect
 
 class WaspCloud(PooledEffect, EffectController):
 
-
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         self.speed = 20.0
         if not WaspCloud.particleDummy:
-            WaspCloud.particleDummy = render.attachNewNode(ModelNode('WaspCloudParticleDummy'))
+            WaspCloud.particleDummy = render.attachNewNode(
+                ModelNode('WaspCloudParticleDummy'))
             WaspCloud.particleDummy.setDepthWrite(0)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
@@ -56,7 +56,8 @@ class WaspCloud(PooledEffect, EffectController):
         self.p0.renderer.setUserAlpha(1.0)
         self.p0.renderer.setAnimateFramesEnable(True)
         self.p0.renderer.setAnimateFramesRate(18.0)
-        self.p0.renderer.addTextureFromNode('models/effects/particleWasp_tflip', '**/*')
+        self.p0.renderer.addTextureFromNode('models/effects/particleWasp_tflip',
+                                            '**/*')
         self.p0.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
         self.p0.renderer.setXScaleFlag(1)
         self.p0.renderer.setYScaleFlag(1)
@@ -68,9 +69,19 @@ class WaspCloud(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.20000000298023224, 0.800000011920929, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.7843137383460999, 0.5882353186607361, 0.5882353186607361, 1.0), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.800000011920929, 1.0, Vec4(0.7843137383460999, 0.5882353186607361, 0.5882353186607361, 1.0), Vec4(0.7843137383460999, 0.5882353186607361, 0.5882353186607361, 0.0), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.20000000298023224, Vec4(1.0, 1.0, 1.0, 0.0), Vec4(1.0, 1.0, 1.0, 1.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.20000000298023224, 0.800000011920929, Vec4(1.0, 1.0, 1.0, 1.0),
+            Vec4(0.7843137383460999, 0.5882353186607361, 0.5882353186607361,
+                 1.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.800000011920929, 1.0,
+            Vec4(0.7843137383460999, 0.5882353186607361, 0.5882353186607361,
+                 1.0),
+            Vec4(0.7843137383460999, 0.5882353186607361, 0.5882353186607361,
+                 0.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 0.20000000298023224, Vec4(1.0, 1.0, 1.0, 0.0),
+            Vec4(1.0, 1.0, 1.0, 1.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -80,11 +91,19 @@ class WaspCloud(PooledEffect, EffectController):
         self.p0.emitter.setRadius(3.0)
 
     def createTrack(self):
-        fadeIn = self.particleDummy.colorInterval(1.0, Vec4(1, 1, 1, 1), startColor=Vec4(0.0, 0.0, 0.0, 1))
-        fadeOut = self.particleDummy.colorInterval(0.5, Vec4(0, 0, 0, 1), startColor=Vec4(1, 1, 1, 1))
+        fadeIn = self.particleDummy.colorInterval(
+            1.0, Vec4(1, 1, 1, 1), startColor=Vec4(0.0, 0.0, 0.0, 1))
+        fadeOut = self.particleDummy.colorInterval(
+            0.5, Vec4(0, 0, 0, 1), startColor=Vec4(1, 1, 1, 1))
         self.setScale(0.5, 1, 1)
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.05), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), fadeIn)
-        self.endEffect = Sequence(Func(self.wrtReparentTo, render), Parallel(fadeOut, Func(self.p0.setBirthRate, 100)), Wait(2.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.05), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self), fadeIn)
+        self.endEffect = Sequence(
+            Func(self.wrtReparentTo, render),
+            Parallel(fadeOut, Func(self.p0.setBirthRate, 100)), Wait(2.0),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(2.0), self.endEffect)
 
     def cleanUpEffect(self):
@@ -95,4 +114,6 @@ class WaspCloud(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\WaspCloud.pyc

@@ -61,7 +61,8 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
 
     def loadHigh(self):
         filePrefix = self.getPrefix(self.dna.cabinType)
-        (result, data) = ShipGlobals.getShipGeom('%s-geometry_High' % filePrefix)
+        (result,
+         data) = ShipGlobals.getShipGeom('%s-geometry_High' % filePrefix)
         if result:
             (geom, static) = data
             hull = geom.copyTo(hidden)
@@ -107,7 +108,8 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
 
     def loadMedium(self):
         filePrefix = self.getPrefix(self.dna.cabinType)
-        (result, data) = ShipGlobals.getShipGeom('%s-geometry_Medium' % filePrefix)
+        (result,
+         data) = ShipGlobals.getShipGeom('%s-geometry_Medium' % filePrefix)
         if result:
             (geom, static) = data
             hull = geom.copyTo(hidden)
@@ -166,7 +168,8 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
             self.geom_Low.setPos(self.geom_Low.getPos() + lodPosOffset)
             self.changeColor(self.geom_Low)
             self.geom_Low.flattenStrong()
-            self.geom_Low.findAllMatches('**/+GeomNode').reparentTo(self.ship.lowStatic)
+            self.geom_Low.findAllMatches('**/+GeomNode').reparentTo(
+                self.ship.lowStatic)
         else:
             self.geom_Low = NodePath('hull_geom')
 
@@ -198,9 +201,11 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
             return
 
         self.collisions.reparentTo(self.propCollisions)
-        numPanels = self.collisions.findAllMatches('**/collision_panel_*').getNumPaths()
+        numPanels = self.collisions.findAllMatches(
+            '**/collision_panel_*').getNumPaths()
         for i in range(numPanels):
-            self.collPanels.append(self.collisions.find('**/collision_panel_' + str(i)))
+            self.collPanels.append(
+                self.collisions.find('**/collision_panel_' + str(i)))
 
         if self.ship:
             self.setupCollisions(self.ship)
@@ -322,7 +327,8 @@ class Cabin(SplattableObject.SplattableObject, ShipPart.ShipPart):
             if not self.details.isEmpty():
                 self.details.unstash()
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
+                            targetEffects, pos, normal, codes, attacker):
         if localAvatar.ship == self.ship:
             sfx = random.choice(self.woodBreakSfx)
             base.playSfx(sfx, node=self.ship, cutoff=2000)

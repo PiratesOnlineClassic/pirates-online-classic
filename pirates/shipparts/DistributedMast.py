@@ -20,13 +20,15 @@ from pirates.destructibles import DistributedDestructibleArray
 
 
 class DistributedMast(DistributedShippart.DistributedShippart,
-                      DistributedDestructibleArray.DistributedDestructibleArray, DirectObject.DirectObject):
+                      DistributedDestructibleArray.DistributedDestructibleArray,
+                      DirectObject.DirectObject):
     notify = directNotify.newCategory('DistributedMast')
 
     def __init__(self, cr):
         self.cr = cr
         DistributedShippart.DistributedShippart.__init__(self, cr)
-        DistributedDestructibleArray.DistributedDestructibleArray.__init__(self, cr)
+        DistributedDestructibleArray.DistributedDestructibleArray.__init__(
+            self, cr)
         NodePath.__init__(self, 'DistributedMast')
         self.stats = None
 
@@ -39,7 +41,8 @@ class DistributedMast(DistributedShippart.DistributedShippart,
     def announceGenerate(self):
         self.notify.debug('Announce Generate ' + str(self.doId))
         DistributedShippart.DistributedShippart.announceGenerate(self)
-        DistributedDestructibleArray.DistributedDestructibleArray.announceGenerate(self)
+        DistributedDestructibleArray.DistributedDestructibleArray.announceGenerate(
+            self)
         breakPoint = -1
         for i in range(len(self.arrayHp)):
             if self.arrayHp[i] <= 0:
@@ -63,9 +66,7 @@ class DistributedMast(DistributedShippart.DistributedShippart,
         self.prop = Mast.Mast(self.ship, self.cr)
         self.prop.shipId = self.shipId
         self.prop.doId = self.doId
-        self.ship.masts[self.dna.posIndex] = [
-            self.prop,
-            self]
+        self.ship.masts[self.dna.posIndex] = [self.prop, self]
 
     def disable(self):
         self.notify.debug('Disable ' + str(self.doId))
@@ -97,17 +98,18 @@ class DistributedMast(DistributedShippart.DistributedShippart,
         self.prop.loadLow()
 
     def setArrayHp(self, hpArray):
-        DistributedDestructibleArray.DistributedDestructibleArray.setArrayHp(self, hpArray)
+        DistributedDestructibleArray.DistributedDestructibleArray.setArrayHp(
+            self, hpArray)
         messenger.send('setMastHp-%s' % self.shipId, self.getArrayHp())
 
     def getArrayHp(self):
-        return [
-            self.dna.posIndex,
-            self.arrayHp,
-            self.maxArrayHp]
+        return [self.dna.posIndex, self.arrayHp, self.maxArrayHp]
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
-        self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
+                            targetEffects, pos, normal, codes, attacker):
+        self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult,
+                                      targetEffects, pos, normal, codes,
+                                      attacker)
 
     def playDeath(self, index=None):
         if self.prop.mastsState[index] == 0 and self.isGenerated():
@@ -196,14 +198,11 @@ class DistributedMast(DistributedShippart.DistributedShippart,
 
     def setSailConfig(self, val):
         self.dna.setSailConfig(val)
-        messenger.send('setMastType-%s' % self.shipId, [
-            self.dna.mastType,
-            self.dna.posIndex,
-            self.dna.sailConfig])
-        messenger.send('setMastHp-%s' % self.shipId, [
-            self.dna.posIndex,
-            self.arrayHp,
-            self.maxArrayHp])
+        messenger.send(
+            'setMastType-%s' % self.shipId,
+            [self.dna.mastType, self.dna.posIndex, self.dna.sailConfig])
+        messenger.send('setMastHp-%s' % self.shipId,
+                       [self.dna.posIndex, self.arrayHp, self.maxArrayHp])
 
     def getSailConfig(self):
         return self.dna.getSailConfig()

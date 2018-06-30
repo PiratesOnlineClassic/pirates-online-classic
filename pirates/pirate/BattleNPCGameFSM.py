@@ -11,7 +11,8 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 class BattleNPCGameFSM(BattleAvatarGameFSM.BattleAvatarGameFSM):
 
     def __init__(self, av):
-        BattleAvatarGameFSM.BattleAvatarGameFSM.__init__(self, av, 'BattleNPCFSM')
+        BattleAvatarGameFSM.BattleAvatarGameFSM.__init__(
+            self, av, 'BattleNPCFSM')
 
     def enterAttackChase(self, extraArgs=[]):
         self.av.motionFSM.on()
@@ -92,6 +93,23 @@ class BattleNPCGameFSM(BattleAvatarGameFSM.BattleAvatarGameFSM):
         nameText = self.av.getNameText()
         if nameText is None:
             return
-        self.fadeOutIval = Sequence(Func(self.av.setTransparency, TransparencyAttrib.MAlpha), Func(self.av.setAlphaScale, 1.0), Func(nameText.setAlphaScale, 1.0), Parallel(LerpFunctionInterval(self.av.setAlphaScale, 3.0, fromData=1.0, toData=0.0, blendType='easeInOut'), LerpFunctionInterval(nameText.setAlphaScale, 3.0, fromData=1.0, toData=0.0, blendType='easeInOut')), Func(self.av.hide), Func(nameText.hide), Func(parentGA.sendUpdate, 'requestNPCRemoval', [npcDoId]))
+        self.fadeOutIval = Sequence(
+            Func(self.av.setTransparency, TransparencyAttrib.MAlpha),
+            Func(self.av.setAlphaScale, 1.0), Func(nameText.setAlphaScale, 1.0),
+            Parallel(
+                LerpFunctionInterval(
+                    self.av.setAlphaScale,
+                    3.0,
+                    fromData=1.0,
+                    toData=0.0,
+                    blendType='easeInOut'),
+                LerpFunctionInterval(
+                    nameText.setAlphaScale,
+                    3.0,
+                    fromData=1.0,
+                    toData=0.0,
+                    blendType='easeInOut')), Func(self.av.hide),
+            Func(nameText.hide),
+            Func(parentGA.sendUpdate, 'requestNPCRemoval', [npcDoId]))
         self.fadeOutIval.start()
         return

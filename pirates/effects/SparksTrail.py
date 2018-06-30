@@ -4,8 +4,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class SparksTrail(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -17,7 +17,8 @@ class SparksTrail(PooledEffect, EffectController):
         self.effectScale = 1.0
         self.lifespan = 1.0
         if not SparksTrail.particleDummy:
-            SparksTrail.particleDummy = render.attachNewNode(ModelNode('SparksTrailParticleDummy'))
+            SparksTrail.particleDummy = render.attachNewNode(
+                ModelNode('SparksTrailParticleDummy'))
             SparksTrail.particleDummy.setDepthWrite(0)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
@@ -53,7 +54,9 @@ class SparksTrail(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingAlpha,
+                                           ColorBlendAttrib.OOne)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitudeSpread(0.0)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, -2.0))
@@ -62,8 +65,12 @@ class SparksTrail(PooledEffect, EffectController):
         self.setEffectScale(self.effectScale)
 
     def createTrack(self):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100.0), Wait(1.0),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def setEffectColor(self, color):

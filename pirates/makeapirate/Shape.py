@@ -13,8 +13,9 @@ from pirates.piratesbase import PLocalizer
 damper = 0.5
 sliderRange = (-0.5, 0.5)
 
+
 class Shape(DirectObject.DirectObject):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('Shape')
 
     def __init__(self, main=None):
@@ -45,22 +46,40 @@ class Shape(DirectObject.DirectObject):
 
     def loadGUI(self):
         global sliderRange
-        customRange = (
-         -0.5, 0.5)
+        customRange = (-0.5, 0.5)
         if self.main.wantMarketingViewer:
             sliderRange = (-1.0, 1.0)
-        self.pgsScale = CharGuiSlider(self.main, parent=self.headFrame, text=PLocalizer.BodyHeadScale, command=self.updateHeadSlider, range=sliderRange)
+        self.pgsScale = CharGuiSlider(
+            self.main,
+            parent=self.headFrame,
+            text=PLocalizer.BodyHeadScale,
+            command=self.updateHeadSlider,
+            range=sliderRange)
         self.pgsScale.setPos(-0.4, 0, -0.2)
         self.pgsScale['extraArgs'] = [self.pgsScale, 0, 0]
-        self.pgs1 = CharGuiSlider(self.main, parent=self.headFrame, text=PLocalizer.ShapeHeadWidth, command=self.updateControlShape, range=sliderRange)
+        self.pgs1 = CharGuiSlider(
+            self.main,
+            parent=self.headFrame,
+            text=PLocalizer.ShapeHeadWidth,
+            command=self.updateControlShape,
+            range=sliderRange)
         self.pgs1.setPos(-0.4, 0, -0.45)
-        self.pgs2 = CharGuiSlider(self.main, parent=self.headFrame, text=PLocalizer.ShapeHeadHeight, command=self.updateControlShape, range=sliderRange)
+        self.pgs2 = CharGuiSlider(
+            self.main,
+            parent=self.headFrame,
+            text=PLocalizer.ShapeHeadHeight,
+            command=self.updateControlShape,
+            range=sliderRange)
         self.pgs2.setPos(-0.4, 0, -0.7)
         customRange = (0.0, 1.0)
-        self.pgs3 = CharGuiSlider(self.main, parent=self.headFrame, text=PLocalizer.ShapeHeadRoundness, command=self.updateControlShape, range=customRange)
+        self.pgs3 = CharGuiSlider(
+            self.main,
+            parent=self.headFrame,
+            text=PLocalizer.ShapeHeadRoundness,
+            command=self.updateControlShape,
+            range=customRange)
         self.pgs3.setPos(-0.4, 0, -0.95)
-        self.pgs = [
-         self.pgs1, self.pgs2, self.pgs3, self.pgsScale]
+        self.pgs = [self.pgs1, self.pgs2, self.pgs3, self.pgsScale]
 
     def unload(self):
         self.notify.debug('called Shape unload')
@@ -69,8 +88,7 @@ class Shape(DirectObject.DirectObject):
         del self.avatar
 
     def loadExtraArgs(self):
-        self.pgs1['extraArgs'] = [
-         self.pgs1, 'headWidth']
+        self.pgs1['extraArgs'] = [self.pgs1, 'headWidth']
         self.pgs2['extraArgs'] = [self.pgs2, 'headHeight']
         self.pgs3['extraArgs'] = [self.pgs3, 'headRoundness']
 
@@ -104,10 +122,16 @@ class Shape(DirectObject.DirectObject):
             self.once = True
 
     def setupButtons(self):
-        self.texturePicker = CharGuiPicker(self.main, parent=self._parent, text=PLocalizer.ShapeTextureFrameTitle, nextCommand=self.handleNextTexture, backCommand=self.handleLastTexture)
+        self.texturePicker = CharGuiPicker(
+            self.main,
+            parent=self._parent,
+            text=PLocalizer.ShapeTextureFrameTitle,
+            nextCommand=self.handleNextTexture,
+            backCommand=self.handleLastTexture)
         self.texturePicker.setPos(0, 0, 0)
         self.texturePicker.hide()
-        self.headFrame = DirectFrame(parent=self._parent, relief=None, pos=(0, 0, -0.3), scale=0.7)
+        self.headFrame = DirectFrame(
+            parent=self._parent, relief=None, pos=(0, 0, -0.3), scale=0.7)
         self.headFrame.hide()
         return
 
@@ -164,7 +188,8 @@ class Shape(DirectObject.DirectObject):
 
     def updateControlShape(self, pgs, extraArgs1=None, extraArgs2=None):
         if extraArgs1 != None:
-            self.avatar.pirate.setControlValue(pgs.node().getValue(), extraArgs1)
+            self.avatar.pirate.setControlValue(pgs.node().getValue(),
+                                               extraArgs1)
         self.main.handleQuarterView(extraArgs2)
         return
 

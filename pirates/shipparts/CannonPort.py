@@ -14,8 +14,10 @@ CannonPortDict = {
     ShipGlobals.BPCANNON: 'models/shipparts/cannon_bp_port',
     ShipGlobals.SKEL_CANNON_L1: 'models/shipparts/GP_cannonPort',
     ShipGlobals.SKEL_CANNON_L2: 'models/shipparts/GP_cannonPort',
-    ShipGlobals.SKEL_CANNON_L3: 'models/shipparts/GP_cannonPort'}
-DefaultAnimDict = (('zero', '_zero'), ('Fire', '_fire'), ('Open', '_open'), ('Close', '_close'))
+    ShipGlobals.SKEL_CANNON_L3: 'models/shipparts/GP_cannonPort'
+}
+DefaultAnimDict = (('zero', '_zero'), ('Fire', '_fire'), ('Open', '_open'),
+                   ('Close', '_close'))
 
 
 class CannonPort(NodePath):
@@ -35,8 +37,7 @@ class CannonPort(NodePath):
         self.loaded = False
         self._isEnabled = 1
         self._isTargetable = 0
-        if cannonType in [
-            InventoryType.CannonL4]:
+        if cannonType in [InventoryType.CannonL4]:
             self._isTargetable = 1
             self._addCollisionSphere(parent, side, index)
 
@@ -58,7 +59,8 @@ class CannonPort(NodePath):
         radius = 3.0
         collSphere = CollisionSphere(0, 0, 0, radius)
         collSphere.setTangible(1)
-        self.cSphereStr = parent.uniqueName('cannonPortSphere') + '-' + str(side) + '-' + str(index)
+        self.cSphereStr = parent.uniqueName('cannonPortSphere') + '-' + str(
+            side) + '-' + str(index)
         self.collSphereEvent = 'enter' + self.cSphereStr
         collSphereNode = CollisionNode(self.cSphereStr)
         collSphereNode.setFromCollideMask(BitMask32.allOff())

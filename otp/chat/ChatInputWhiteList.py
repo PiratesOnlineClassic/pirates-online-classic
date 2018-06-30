@@ -15,65 +15,23 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
 
     def __init__(self, parent=None, **kw):
         FSM.FSM.__init__(self, 'ChatInputWhiteList')
-        optiondefs = (
-            ('parent',
-             parent,
-             None),
-            ('relief',
-             DGG.SUNKEN,
-             None),
-            ('scale',
-             0.03,
-             None),
-            ('frameSize',
-             (-0.2,
-              25.3,
-              -0.5,
-              1.2),
-                None),
-            ('borderWidth',
-             (0.1,
-              0.1),
-                None),
-            ('frameColor',
-             (0.9,
-              0.9,
-              0.85,
-              0.8),
-                None),
-            ('entryFont',
-             OTPGlobals.getInterfaceFont(),
-             None),
-            ('width',
-             25,
-             None),
-            ('numLines',
-             1,
-             None),
-            ('cursorKeys',
-             1,
-             None),
-            ('backgroundFocus',
-             0,
-             None),
-            ('suppressKeys',
-             1,
-             None),
-            ('suppressMouse',
-             1,
-             None),
-            ('command',
-             self.sendChat,
-             None),
-            ('failedCommand',
-             self.sendFailed,
-             None),
-            ('focus',
-             0,
-             None),
-            ('text',
-             '',
-             None))
+        optiondefs = (('parent', parent, None), ('relief', DGG.SUNKEN,
+                                                 None), ('scale', 0.03, None),
+                      ('frameSize', (-0.2, 25.3, -0.5, 1.2),
+                       None), ('borderWidth', (0.1, 0.1),
+                               None), ('frameColor', (0.9, 0.9, 0.85, 0.8),
+                                       None), ('entryFont',
+                                               OTPGlobals.getInterfaceFont(),
+                                               None), ('width', 25, None),
+                      ('numLines', 1, None), ('cursorKeys', 1,
+                                              None), ('backgroundFocus', 0,
+                                                      None), ('suppressKeys', 1,
+                                                              None),
+                      ('suppressMouse', 1,
+                       None), ('command', self.sendChat,
+                               None), ('failedCommand', self.sendFailed,
+                                       None), ('focus', 0, None), ('text', '',
+                                                                   None))
         self.defineoptions(kw, optiondefs)
         DirectEntry.__init__(self, parent=parent, **kw)
         self.initialiseoptions(ChatInputWhiteList)
@@ -82,8 +40,7 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
         wantHistory = 0
         if __dev__:
             wantHistory = 1
-        self.wantHistory = base.config.GetBool(
-            'want-chat-history', wantHistory)
+        self.wantHistory = base.config.GetBool('want-chat-history', wantHistory)
         self.history = ['']
         self.historySize = base.config.GetInt('chat-history-size', 10)
         self.historyIndex = 0
@@ -213,8 +170,8 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
             text = ' '.join(newwords)
         if text:
             self.set('')
-            if text and base.config.GetBool(
-                    'want-slash-commands', 1) and text[0] == '/':
+            if text and base.config.GetBool('want-slash-commands',
+                                            1) and text[0] == '/':
                 base.chatAssistant.executeSlashCommand(text)
             else:
                 self.sendChatByMode(text)
@@ -260,8 +217,7 @@ class ChatInputWhiteList(FSM.FSM, DirectEntry):
         self.sendChat(self.get(plain=True), overflow=True)
 
     def addToHistory(self, text):
-        self.history = [
-            text] + self.history[:self.historySize - 1]
+        self.history = [text] + self.history[:self.historySize - 1]
         self.historyIndex = 0
 
     def getPrevHistory(self):

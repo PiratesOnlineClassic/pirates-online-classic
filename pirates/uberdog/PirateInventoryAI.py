@@ -4,6 +4,7 @@ from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, Inventory
 from pirates.reputation import ReputationGlobals
 from pirates.battle import WeaponGlobals
 
+
 class PirateInventoryAI(DistributedInventoryAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PirateInventoryAI')
 
@@ -46,7 +47,8 @@ class PirateInventoryAI(DistributedInventoryAI):
         return self.getReputation(InventoryType.OverallRep)
 
     def setGoldInPocket(self, quantity):
-        self.b_setStackQuantity(InventoryType.GoldInPocket, min(quantity, 65000))
+        self.b_setStackQuantity(InventoryType.GoldInPocket, min(
+            quantity, 65000))
 
     def setVitaeLevel(self, quantity):
         self.b_setStackQuantity(InventoryType.Vitae_Level, quantity)

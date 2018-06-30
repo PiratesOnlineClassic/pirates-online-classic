@@ -11,13 +11,24 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class TextPrinter(DirectObject.DirectObject):
-    
 
     def __init__(self):
         DirectObject.DirectObject.__init__(self)
         self.event = None
         self.sfx = None
-        self.text = DirectLabel(parent=aspect2d, relief=None, text='', text_align=TextNode.ACenter, text_scale=0.06, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0, 0, -0.9), text_font=PiratesGlobals.getPirateOutlineFont(), sortOrder=80, state=DGG.DISABLED)
+        self.text = DirectLabel(
+            parent=aspect2d,
+            relief=None,
+            text='',
+            text_align=TextNode.ACenter,
+            text_scale=0.06,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            textMayChange=1,
+            pos=(0, 0, -0.9),
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            sortOrder=80,
+            state=DGG.DISABLED)
         self.text.hide()
         self.fader = None
         self.subtitleParent = render2d.attachNewNode(PGTop('subtitleParent'))
@@ -66,7 +77,8 @@ class TextPrinter(DirectObject.DirectObject):
             base.playSfx(sfx)
         if timeout:
             chatTimeout = 10
-            taskMgr.doMethodLater(chatTimeout, self.clearText, 'clearSubtitleTask', extraArgs=[])
+            taskMgr.doMethodLater(
+                chatTimeout, self.clearText, 'clearSubtitleTask', extraArgs=[])
         return
 
     def fadeInText(self, text, color=None, sfx=None):
@@ -85,7 +97,8 @@ class TextPrinter(DirectObject.DirectObject):
             self.fader = None
         if color:
             self.text['text_fg'] = color
-        self.fader = LerpFunctionInterval(self.text.setAlphaScale, fromData=0, toData=1, duration=1.0)
+        self.fader = LerpFunctionInterval(
+            self.text.setAlphaScale, fromData=0, toData=1, duration=1.0)
         self.fader.start()
         return
 
@@ -99,7 +112,8 @@ class TextPrinter(DirectObject.DirectObject):
         if self.fader:
             self.fader.finish()
             self.fader = None
-        fadeOut = LerpFunctionInterval(self.text.setAlphaScale, fromData=1, toData=0, duration=1.0)
+        fadeOut = LerpFunctionInterval(
+            self.text.setAlphaScale, fromData=1, toData=0, duration=1.0)
 
         def restoreColor():
             self.text['text_fg'] = PiratesGuiGlobals.TextFG2
@@ -108,4 +122,6 @@ class TextPrinter(DirectObject.DirectObject):
         self.fader = Sequence(fadeOut, Func(self.text.hide), Func(restoreColor))
         self.fader.start()
         return
+
+
 # okay decompiling .\pirates\piratesgui\TextPrinter.pyc

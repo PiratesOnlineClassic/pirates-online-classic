@@ -4,8 +4,9 @@ from direct.distributed.DistributedObject import DistributedObject
 from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.UberDogGlobals import *
 
+
 class PVPManager(DistributedObject):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('PVPManager')
 
     def __init__(self, cr):

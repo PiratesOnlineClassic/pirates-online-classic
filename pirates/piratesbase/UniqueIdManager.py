@@ -1,7 +1,7 @@
 from direct.task import Task
 
+
 class UniqueIdManager:
-    
 
     def __init__(self, repository, instance=None):
         self.instance = instance
@@ -13,7 +13,8 @@ class UniqueIdManager:
     def __str__(self):
         if self.instance == None:
             return 'No instance set'
-        outStr = 'uidMgr for %d : %s\n' % (self.instance.doId, self.instance.getUniqueId())
+        outStr = 'uidMgr for %d : %s\n' % (self.instance.doId,
+                                           self.instance.getUniqueId())
         outStr += '-' * 50
         outStr += '\n'
         for uid in self.uid2doId:
@@ -44,9 +45,9 @@ class UniqueIdManager:
             if parentInstance:
                 parentInstance.uidMgr.removeUid(uid)
                 return
-        if self.uid2doId.has_key(uid):
+        if uid in self.uid2doId:
             del self.uid2doId[uid]
-        if self.uidCallbacks.has_key(uid):
+        if uid in self.uidCallbacks:
             del self.uidCallbacks[uid]
         if self.instance:
             subInstances = self.instance.getSubInstances()
@@ -56,7 +57,11 @@ class UniqueIdManager:
     def addUid(self, uid, objId):
         if uid != '':
             self.uid2doId[uid] = objId
-            taskMgr.doMethodLater(0.1, self._requestUidCallbackLater, 'uidCallback-' + uid, extraArgs=[uid, objId])
+            taskMgr.doMethodLater(
+                0.1,
+                self._requestUidCallbackLater,
+                'uidCallback-' + uid,
+                extraArgs=[uid, objId])
 
     def getDoId(self, uid, deep=True):
         doId = self.uid2doId.get(uid)
@@ -79,12 +84,17 @@ class UniqueIdManager:
                 callback(objDoId)
                 return True
             else:
-                taskMgr.doMethodLater(0.1, self._requestUidCallbackLater, 'uidCallback-' + uid, extraArgs=[uid, objDoId])
+                taskMgr.doMethodLater(
+                    0.1,
+                    self._requestUidCallbackLater,
+                    'uidCallback-' + uid,
+                    extraArgs=[uid, objDoId])
         else:
             if self.instance:
                 subInstances = self.instance.getSubInstances()
                 for currSubInstance in subInstances:
-                    result = currSubInstance.uidMgr.addUidCallback(uid, callback, timeout, onlyOnce)
+                    result = currSubInstance.uidMgr.addUidCallback(
+                        uid, callback, timeout, onlyOnce)
                     if result:
                         return result
 
@@ -98,7 +108,7 @@ class UniqueIdManager:
             return False
 
     def removeUidCallback(self, uid, callback):
-        if self.uidCallbacks.has_key(uid):
+        if uid in self.uidCallbacks:
             callbacks = self.uidCallbacks[uid][:]
             for currCallback in callbacks:
                 if callback == currCallback[0]:
@@ -116,7 +126,11 @@ class UniqueIdManager:
         self._requestUidCallback(uid, objId)
         return Task.done
 
-    def _requestUidCallback(self, uid, objId=None, checkParents=True, objInstance=None):
+    def _requestUidCallback(self,
+                            uid,
+                            objId=None,
+                            checkParents=True,
+                            objInstance=None):
         if objId == None:
             objId = self.uid2doId.get(uid)
         if objId and objInstance == None:
@@ -124,9 +138,13 @@ class UniqueIdManager:
         if self.instance:
             parentInstance = self.instance.getParentInstance()
             if parentInstance and checkParents:
-                parentInstance.uidMgr._requestUidCallback(uid, objId, checkParents=checkParents, objInstance=objInstance)
+                parentInstance.uidMgr._requestUidCallback(
+                    uid,
+                    objId,
+                    checkParents=checkParents,
+                    objInstance=objInstance)
                 return
-        if objId and self.uidCallbacks.has_key(uid):
+        if objId and uid in self.uidCallbacks:
             callbacks = self.uidCallbacks[uid][:]
             for currCallback in callbacks:
                 currCallback[0](objId)
@@ -138,10 +156,11 @@ class UniqueIdManager:
         if self.instance:
             subInstances = self.instance.getSubInstances()
             for currSubInstance in subInstances:
-                currSubInstance.uidMgr._requestUidCallback(uid, objId, checkParents=False, objInstance=objInstance)
+                currSubInstance.uidMgr._requestUidCallback(
+                    uid, objId, checkParents=False, objInstance=objInstance)
 
     def removeUidObj(self, uid):
-        if self.uid2obj.has_key(uid):
+        if uid in self.uid2obj:
             del self.uid2obj[uid]
 
     def addUidObj(self, uid, obj):

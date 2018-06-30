@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class LavaBurst(PooledEffect, EffectController):
-    
+
     cardScale = 64.0
 
     def __init__(self, parent=None):
@@ -62,9 +62,13 @@ class LavaBurst(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.3, Vec4(1.0, 1.0, 1.0, 0.0), Vec4(1.0, 1.0, 1.0, 1.0), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.6, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 0.25, 0.25, 0.0), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingColor,
+                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 0.3, Vec4(1.0, 1.0, 1.0, 0.0), Vec4(1.0, 1.0, 1.0, 1.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.6, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 0.25, 0.25, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -73,9 +77,14 @@ class LavaBurst(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(1.0)
         self.effectBirthRate = 4.0 * random.random() + 1.5
-        self.loopEffect = Sequence(Wait(self.effectBirthRate), Func(self.randomizeEffect))
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, self.effectBirthRate), Func(self.p0.clearToInitial), Func(self.f.start, self, self), Func(self.f.reparentTo, self), Func(self.loopEffect.loop))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 0.0), Func(self.cleanUpEffect))
+        self.loopEffect = Sequence(
+            Wait(self.effectBirthRate), Func(self.randomizeEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, self.effectBirthRate),
+            Func(self.p0.clearToInitial), Func(self.f.start, self, self),
+            Func(self.f.reparentTo, self), Func(self.loopEffect.loop))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(2.0), self.endEffect)
 
     def randomizeEffect(self):
@@ -98,4 +107,6 @@ class LavaBurst(PooledEffect, EffectController):
         self.loopEffect.finish()
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\LavaBurst.pyc

@@ -13,12 +13,13 @@ class PlayGame(StateData.StateData):
     def __init__(self, parentFSM, doneEvent):
         StateData.StateData.__init__(self, doneEvent)
         self.fsm = ClassicFSM.ClassicFSM('PlayGame', [
-         State.State('start', self.enterStart, self.exitStart, [
-          'teleportToShard']),
-         State.State('teleportToShard', self.enterTeleportToShard, self.exitTeleportToShard, [
-          'play']),
-         State.State('play', self.enterPlay, self.exitPlay, [
-          'start', 'teleportToShard'])], 'start', 'start')
+            State.State('start', self.enterStart, self.exitStart,
+                        ['teleportToShard']),
+            State.State('teleportToShard', self.enterTeleportToShard,
+                        self.exitTeleportToShard, ['play']),
+            State.State('play', self.enterPlay, self.exitPlay,
+                        ['start', 'teleportToShard'])
+        ], 'start', 'start')
         self.fsm.enterInitialState()
         self.parentFSM = parentFSM
         self.parentFSM.getStateNamed('playGame').addChild(self.fsm)
@@ -35,7 +36,8 @@ class PlayGame(StateData.StateData):
             'hoodId': hoodId,
             'zoneId': zoneId,
             'shardId': shardId,
-            'avId': avId}])
+            'avId': avId
+        }])
 
     def exit(self):
         pass
@@ -72,9 +74,10 @@ class PlayGame(StateData.StateData):
             base.localAvatar.sendUpdate('giveDefaultQuest')
             self.pendingInitQuest = None
 
-        if base.localAvatar.style.getTutorial() == 0 and base.cr.forceTutorial == 0 and base.cr.skipTutorial == 1:
-            self.pendingInitQuest = base.cr.relatedObjectMgr.requestObjects([base.localAvatar.getInventoryId()],
-                eachCallback=initDefQuest)
+        if base.localAvatar.style.getTutorial(
+        ) == 0 and base.cr.forceTutorial == 0 and base.cr.skipTutorial == 1:
+            self.pendingInitQuest = base.cr.relatedObjectMgr.requestObjects(
+                [base.localAvatar.getInventoryId()], eachCallback=initDefQuest)
 
     def exitPlay(self):
         if base.config.GetBool('want-dev', False):
@@ -84,14 +87,16 @@ class PlayGame(StateData.StateData):
             del self.pendingInitQuest
 
     def enterTeleportToShard(self, requestStatus):
-        self.notify.debug('enterTeleportToShard(requestStatus=' + str(requestStatus) + ')')
+        self.notify.debug('enterTeleportToShard(requestStatus=' +
+                          str(requestStatus) + ')')
         base.transitions.fadeScreen(1.0)
         where = requestStatus['where']
         zoneId = requestStatus['zoneId']
         shardId = requestStatus['shardId']
         callbackEvent = base.localAvatar.uniqueName('shardChangeEvent')
         base.localAvatar.teleportToShard(shardId, zoneId, callbackEvent)
-        self.acceptOnce(callbackEvent, self.fsm.request, extraArgs=[where, [requestStatus]])
+        self.acceptOnce(
+            callbackEvent, self.fsm.request, extraArgs=[where, [requestStatus]])
 
     def exitTeleportToShard(self):
         base.transitions.noFade()

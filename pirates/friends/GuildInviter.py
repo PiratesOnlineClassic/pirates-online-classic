@@ -10,10 +10,13 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.RequestButton import RequestButton
 
+
 class GuildInviterButton(RequestButton):
+
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
         self.initialiseoptions(GuildInviterButton)
+
 
 class GuildInviter(GuiPanel.GuiPanel):
     notify = DirectNotifyGlobal.directNotify.newCategory('GuildInviter')
@@ -26,48 +29,70 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.avName = avName
         self.avDisableName = 'disable-%s' % avId
         self.fsm = ClassicFSM.ClassicFSM('GuildInviter', [
-         State.State('off', self.enterOff, self.exitOff),
-         State.State('getStarted', self.enterGetNewGuild, self.exitGetNewGuild),
-         State.State('begin', self.enterBegin, self.exitBegin),
-         State.State('tooMany', self.enterTooMany, self.exitTooMany),
-         State.State('notYet', self.enterNotYet, self.exitNotYet),
-         State.State('checkAvailability', self.enterCheckAvailability, self.exitCheckAvailability),
-         State.State('notAvailable', self.enterNotAvailable, self.exitNotAvailable),
-         State.State('notAcceptingGuilds', self.enterNotAcceptingGuilds, self.exitNotAcceptingGuilds),
-         State.State('wentAway', self.enterWentAway, self.exitWentAway),
-         State.State('busy', self.enterBusy, self.exitBusy),
-         State.State('alreadyInGuild', self.enterAlreadyInGuild, self.exitAlreadyInGuild),
-         State.State('guildFull', self.enterGuildFull, self.exitGuildFull),
-         State.State('alreadyInvited', self.enterAlreadyInvited, self.exitAlreadyInvited),
-         State.State('askingNPC', self.enterAskingNPC, self.exitAskingNPC),
-         State.State('endGuildship', self.enterEndGuildship, self.exitEndGuildship),
-         State.State('guildNoMore', self.enterGuildsNoMore, self.exitGuildsNoMore),
-         State.State('self', self.enterSelf, self.exitSelf),
-         State.State('ignored', self.enterIgnored, self.exitIgnored),
-         State.State('asking', self.enterAsking, self.exitAsking),
-         State.State('yes', self.enterYes, self.exitYes),
-         State.State('no', self.enterNo, self.exitNo),
-         State.State('otherTooMany', self.enterOtherTooMany, self.exitOtherTooMany),
-         State.State('maybe', self.enterMaybe, self.exitMaybe),
-         State.State('down', self.enterDown, self.exitDown),
-         State.State('cancel', self.enterCancel, self.exitCancel)], 'off', 'off')
-        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, 
-                                   text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, 
-                                   pos=(0.25, 0, 0.35), textMayChange=1)
+            State.State('off', self.enterOff, self.exitOff),
+            State.State('getStarted', self.enterGetNewGuild,
+                        self.exitGetNewGuild),
+            State.State('begin', self.enterBegin, self.exitBegin),
+            State.State('tooMany', self.enterTooMany, self.exitTooMany),
+            State.State('notYet', self.enterNotYet, self.exitNotYet),
+            State.State('checkAvailability', self.enterCheckAvailability,
+                        self.exitCheckAvailability),
+            State.State('notAvailable', self.enterNotAvailable,
+                        self.exitNotAvailable),
+            State.State('notAcceptingGuilds', self.enterNotAcceptingGuilds,
+                        self.exitNotAcceptingGuilds),
+            State.State('wentAway', self.enterWentAway, self.exitWentAway),
+            State.State('busy', self.enterBusy, self.exitBusy),
+            State.State('alreadyInGuild', self.enterAlreadyInGuild,
+                        self.exitAlreadyInGuild),
+            State.State('guildFull', self.enterGuildFull, self.exitGuildFull),
+            State.State('alreadyInvited', self.enterAlreadyInvited,
+                        self.exitAlreadyInvited),
+            State.State('askingNPC', self.enterAskingNPC, self.exitAskingNPC),
+            State.State('endGuildship', self.enterEndGuildship,
+                        self.exitEndGuildship),
+            State.State('guildNoMore', self.enterGuildsNoMore,
+                        self.exitGuildsNoMore),
+            State.State('self', self.enterSelf, self.exitSelf),
+            State.State('ignored', self.enterIgnored, self.exitIgnored),
+            State.State('asking', self.enterAsking, self.exitAsking),
+            State.State('yes', self.enterYes, self.exitYes),
+            State.State('no', self.enterNo, self.exitNo),
+            State.State('otherTooMany', self.enterOtherTooMany,
+                        self.exitOtherTooMany),
+            State.State('maybe', self.enterMaybe, self.exitMaybe),
+            State.State('down', self.enterDown, self.exitDown),
+            State.State('cancel', self.enterCancel, self.exitCancel)
+        ], 'off', 'off')
+        self.message = DirectLabel(
+            parent=self,
+            relief=None,
+            text='',
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_align=TextNode.ACenter,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_wordwrap=11,
+            pos=(0.25, 0, 0.35),
+            textMayChange=1)
         self.context = None
-        self.bOk = GuildInviterButton(text=OTPLocalizer.GuildInviterOK, command=self.__handleOk)
+        self.bOk = GuildInviterButton(
+            text=OTPLocalizer.GuildInviterOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
         self.bOk.setPos(0.2, 0, 0.05)
         self.bOk.hide()
-        self.bCancel = GuildInviterButton(text=OTPLocalizer.GuildInviterCancel, command=self.__handleCancel)
+        self.bCancel = GuildInviterButton(
+            text=OTPLocalizer.GuildInviterCancel, command=self.__handleCancel)
         self.bCancel.reparentTo(self)
         self.bCancel.setPos(0.2, 0, 0.05)
         self.bCancel.hide()
-        self.bYes = GuildInviterButton(text=OTPLocalizer.GuildInviterYes, command=self.__handleYes)
+        self.bYes = GuildInviterButton(
+            text=OTPLocalizer.GuildInviterYes, command=self.__handleYes)
         self.bYes.reparentTo(self)
         self.bYes.setPos(0.1, 0, 0.05)
         self.bYes.hide()
-        self.bNo = GuildInviterButton(text=OTPLocalizer.GuildInviterNo, command=self.__handleNo)
+        self.bNo = GuildInviterButton(
+            text=OTPLocalizer.GuildInviterNo, command=self.__handleNo)
         self.bNo.reparentTo(self)
         self.bNo.setPos(0.3, 0, 0.05)
         self.bNo.hide()
@@ -151,7 +176,8 @@ class GuildInviter(GuiPanel.GuiPanel):
             self.fsm.request('askingNPC')
             return
         self.fsm.request('asking')
-        self.message['text'] = OTPLocalizer.GuildInviterCheckAvailability % self.avName
+        self.message[
+            'text'] = OTPLocalizer.GuildInviterCheckAvailability % self.avName
         base.cr.guildManager.sendRequestInvite(self.avId)
         self.bCancel.show()
 
@@ -164,7 +190,8 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.bCancel.hide()
 
     def enterNotAvailable(self):
-        self.message['text'] = OTPLocalizer.GuildInviterNotAvailable % self.avName
+        self.message[
+            'text'] = OTPLocalizer.GuildInviterNotAvailable % self.avName
         self.context = None
         self.bOk.show()
 
@@ -172,7 +199,8 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.bOk.hide()
 
     def enterNotAcceptingGuilds(self):
-        self.message['text'] = OTPLocalizer.GuildInviterGuildSaidNo % self.avName
+        self.message[
+            'text'] = OTPLocalizer.GuildInviterGuildSaidNo % self.avName
         self.context = None
         self.bOk.show()
 
@@ -222,7 +250,8 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.bCancel.hide()
 
     def enterAlreadyInvited(self):
-        self.message['text'] = OTPLocalizer.GuildInviterAlreadyInvited % self.avName
+        self.message[
+            'text'] = OTPLocalizer.GuildInviterAlreadyInvited % self.avName
         self['text_pos'] = (0.0, 0.2)
         self.context = None
         self.bCancel.show()
@@ -246,7 +275,8 @@ class GuildInviter(GuiPanel.GuiPanel):
         return Task.done
 
     def enterEndGuildship(self):
-        self.message['text'] = OTPLocalizer.GuildInviterEndGuildship % self.avName
+        self.message[
+            'text'] = OTPLocalizer.GuildInviterEndGuildship % self.avName
         self.context = None
         self.bYes.show()
         self.bNo.show()
@@ -257,7 +287,8 @@ class GuildInviter(GuiPanel.GuiPanel):
 
     def enterGuildsNoMore(self):
         base.cr.avatarGuildsManager.sendRequestRemove(self.avId)
-        self.message['text'] = OTPLocalizer.GuildInviterGuildsNoMore % self.avName
+        self.message[
+            'text'] = OTPLocalizer.GuildInviterGuildsNoMore % self.avName
         self.bOk.show()
         if not base.cr.identifyAvatar(self.avId):
             messenger.send(self.avDisableName)
@@ -284,8 +315,10 @@ class GuildInviter(GuiPanel.GuiPanel):
     def enterAsking(self):
         self.accept(self.avDisableName, self.__handleDisableAvatar)
         self.message['text'] = OTPLocalizer.GuildInviterAsking % self.avName
-        self.accept(OTPGlobals.GuildAcceptInviteEvent, self.__handleGuildAcceptInvite)
-        self.accept(OTPGlobals.GuildRejectInviteEvent, self.__handleGuildRejectInvite)
+        self.accept(OTPGlobals.GuildAcceptInviteEvent,
+                    self.__handleGuildAcceptInvite)
+        self.accept(OTPGlobals.GuildRejectInviteEvent,
+                    self.__handleGuildRejectInvite)
         self.bCancel.show()
 
     def exitAsking(self):
@@ -295,7 +328,8 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.bCancel.hide()
 
     def enterYes(self):
-        self.message['text'] = OTPLocalizer.GuildInviterGuildSaidYes % self.avName
+        self.message[
+            'text'] = OTPLocalizer.GuildInviterGuildSaidYes % self.avName
         messenger.send('AvatarChange')
         self.context = None
         self.bOk.show()
@@ -304,7 +338,8 @@ class GuildInviter(GuiPanel.GuiPanel):
         self.bOk.hide()
 
     def enterNo(self):
-        self.message['text'] = OTPLocalizer.GuildInviterGuildSaidNo % self.avName
+        self.message[
+            'text'] = OTPLocalizer.GuildInviterGuildSaidNo % self.avName
         self.context = None
         self.bCancel.hide()
         self.bOk.setPos(0.2, 0, 0.05)
@@ -384,7 +419,9 @@ class GuildInviter(GuiPanel.GuiPanel):
         elif yesNoAlready == 13:
             self.fsm.request('otherTooMany')
         else:
-            self.notify.warning('Got unexpected response to friendConsidering: %s' % yesNoAlready)
+            self.notify.warning(
+                'Got unexpected response to friendConsidering: %s' %
+                yesNoAlready)
             self.fsm.request('maybe')
 
     def __handleGuildAcceptInvite(self, avId):
@@ -403,7 +440,8 @@ class GuildInviter(GuiPanel.GuiPanel):
         elif reason == RejectCode.NO_GUILD:
             self.fsm.request('no')
         else:
-            self.notify.warning('guildRejectInvite: %s unknown reason: %s.' % (avId, reason))
+            self.notify.warning(
+                'guildRejectInvite: %s unknown reason: %s.' % (avId, reason))
 
     def __handleDisableAvatar(self):
         self.fsm.request('wentAway')

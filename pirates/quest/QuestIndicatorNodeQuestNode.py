@@ -9,12 +9,10 @@ from pirates.quest.QuestIndicatorNode import QuestIndicatorNode
 
 
 class QuestIndicatorNodeQuestNode(QuestIndicatorNode):
-    
 
     def __init__(self, questStep):
         self.pendingStepObj = None
-        QuestIndicatorNode.__init__(self, 'QuestNodeIndicator', [
-         50], questStep)
+        QuestIndicatorNode.__init__(self, 'QuestNodeIndicator', [50], questStep)
         return
 
     def delete(self):
@@ -25,7 +23,9 @@ class QuestIndicatorNodeQuestNode(QuestIndicatorNode):
         QuestIndicatorNode.delete(self)
         return
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def placeInWorld(self):
         originObj = base.cr.doId2do.get(self.questStep.getOriginDoId())
         if originObj:
@@ -62,4 +62,6 @@ class QuestIndicatorNodeQuestNode(QuestIndicatorNode):
 
     def exitAt(self):
         pass
+
+
 # okay decompiling .\pirates\quest\QuestIndicatorNodeQuestNode.pyc

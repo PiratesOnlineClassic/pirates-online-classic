@@ -6,8 +6,9 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class Explosion(PooledEffect, EffectController):
-    
+
     cardScale = 128.0
 
     def __init__(self):
@@ -19,7 +20,8 @@ class Explosion(PooledEffect, EffectController):
         self.radius = 8.0
         self.effectScale = 1.0
         if not Explosion.particleDummy:
-            Explosion.particleDummy = render.attachNewNode(ModelNode('ExplosionParticleDummy'))
+            Explosion.particleDummy = render.attachNewNode(
+                ModelNode('ExplosionParticleDummy'))
             Explosion.particleDummy.setDepthWrite(0)
             Explosion.particleDummy.setLightOff()
             Explosion.particleDummy.setFogOff()
@@ -59,8 +61,11 @@ class Explosion(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha, ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.39, 0.39, 0.19, 0.0), 1)
+        self.p0.renderer.setColorBlendMode(
+            ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha,
+            ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.39, 0.39, 0.19, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(2.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -71,12 +76,20 @@ class Explosion(PooledEffect, EffectController):
     def createTrack(self):
         self.p0.setLitterSize(10 * self.effectScale)
         self.p0.renderer.setUserAlpha(self.effectScale)
-        self.p0.renderer.setInitialXScale(0.05 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialXScale(
+            0.05 * self.cardScale * self.effectScale)
         self.p0.renderer.setFinalXScale(0.1 * self.cardScale * self.effectScale)
-        self.p0.renderer.setInitialYScale(0.05 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalYScale(0.15 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialYScale(
+            0.05 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalYScale(
+            0.15 * self.cardScale * self.effectScale)
         self.p0.emitter.setRadius(self.radius)
-        self.track = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.6), Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
+        self.track = Sequence(
+            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self), Wait(0.6),
+            Func(self.p0.setBirthRate, 100), Wait(7.0),
+            Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

@@ -14,7 +14,6 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SkeletonGlow(PooledEffect, EffectController):
-    
 
     def __init__(self, newParent=render, billboardOffset=0.0):
         PooledEffect.__init__(self)
@@ -35,10 +34,15 @@ class SkeletonGlow(PooledEffect, EffectController):
     def createTracks(self):
         randomness = random.random() / 20
         pulseUp = self.glow.scaleInterval(0.03 + randomness, 2, startScale=1.3)
-        pulseDown = self.glow.scaleInterval(0.03 + randomness, 1.3, startScale=2)
-        fadeIn = self.glow.colorInterval(0.03 + randomness, Vec4(1, 1, 1, 1), startColor=self.glowColor)
-        fadeOut = self.glow.colorInterval(0.03 + randomness, self.glowColor, startColor=Vec4(1, 1, 1, 1))
-        self.track = Sequence(Wait(self.pulseRate), Parallel(fadeIn, pulseUp), Parallel(fadeOut, pulseDown))
+        pulseDown = self.glow.scaleInterval(
+            0.03 + randomness, 1.3, startScale=2)
+        fadeIn = self.glow.colorInterval(
+            0.03 + randomness, Vec4(1, 1, 1, 1), startColor=self.glowColor)
+        fadeOut = self.glow.colorInterval(
+            0.03 + randomness, self.glowColor, startColor=Vec4(1, 1, 1, 1))
+        self.track = Sequence(
+            Wait(self.pulseRate), Parallel(fadeIn, pulseUp),
+            Parallel(fadeOut, pulseDown))
 
     def adjustHeartColor(self, hpPercent):
         if hpPercent >= 1.0:
@@ -64,4 +68,6 @@ class SkeletonGlow(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\SkeletonGlow.pyc

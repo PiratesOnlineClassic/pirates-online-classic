@@ -20,19 +20,15 @@ from pirates.npc.Townfolk import *
 from pirates.pirate import PirateAvatarPanel, PlayerPanel
 from pirates.piratesbase import (Freebooter, PiratesGlobals, PLocalizer,
                                  UserFunnel)
-from pirates.piratesgui import (BarSelectionMenu, ChestPanel, ChestTray,
-                                ClothingPage, CollectionMain, CollectionPage,
-                                CombatTray, ComboMeter, CrewInvitee,
-                                CrewInviter, CrewPage, FeedbackPanel,
-                                FriendsPage, GameGui, GuildPage,
-                                HighSeasScoreboard, HpMeter, JournalButton,
-                                LookoutRequestLVL1, MapPage, MessageStackPanel,
-                                PiratesGuiGlobals, PiratesTimer,
-                                PiratesTimerHourglass, PVPPanel, QuestPage,
-                                RadarGui, SheetFrame, ShipPage, SkillPage,
-                                SocialPanel, StatusTray, StayTunedPanel,
-                                TitlesPage, TradeInviter, TradePanel,
-                                TrialNonPayerPanel, WeaponPage, WorkMeter)
+from pirates.piratesgui import (
+    BarSelectionMenu, ChestPanel, ChestTray, ClothingPage, CollectionMain,
+    CollectionPage, CombatTray, ComboMeter, CrewInvitee, CrewInviter, CrewPage,
+    FeedbackPanel, FriendsPage, GameGui, GuildPage, HighSeasScoreboard, HpMeter,
+    JournalButton, LookoutRequestLVL1, MapPage, MessageStackPanel,
+    PiratesGuiGlobals, PiratesTimer, PiratesTimerHourglass, PVPPanel, QuestPage,
+    RadarGui, SheetFrame, ShipPage, SkillPage, SocialPanel, StatusTray,
+    StayTunedPanel, TitlesPage, TradeInviter, TradePanel, TrialNonPayerPanel,
+    WeaponPage, WorkMeter)
 from pirates.piratesgui.AttuneMenu import AttuneMenu
 from pirates.piratesgui.BorderFrame import BorderFrame
 from pirates.piratesgui.DownloadBlockerPanel import DownloadBlockerPanel
@@ -62,7 +58,7 @@ from otp.nametag.Nametag import Nametag
 
 
 class GuiManager(FSM.FSM):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('GuiManager')
     WantClothingPage = base.config.GetBool('want-clothing-page', 0)
     WantTitlesPage = base.config.GetBool('want-titles-page', 0)
@@ -137,13 +133,21 @@ class GuiManager(FSM.FSM):
         self.questionMarkDisplay = None
         self.feedbackFormActive = False
         self.crewHUDTurnedOff = False
-        self.gameGui = GameGui.GameGui(parent=base.a2dTopLeft, state=DGG.DISABLED, relief=None, pos=(-0.2, 0, -0.27), scale=0.75)
+        self.gameGui = GameGui.GameGui(
+            parent=base.a2dTopLeft,
+            state=DGG.DISABLED,
+            relief=None,
+            pos=(-0.2, 0, -0.27),
+            scale=0.75)
         self.codeShown = 0
-        self.messageStack = MessageStackPanel.MessageStackPanel(parent=base.a2dBottomLeft, relief=None, pos=(0.01,
-                                                                                                             0,
-                                                                                                             0.6))
+        self.messageStack = MessageStackPanel.MessageStackPanel(
+            parent=base.a2dBottomLeft, relief=None, pos=(0.01, 0, 0.6))
         self.__repValues = {}
-        self.chestTray = ChestTray.ChestTray(parent=base.a2dBottomRight, parentMgr=self, pos=(-0.131, 0, 0.02), sortOrder=1)
+        self.chestTray = ChestTray.ChestTray(
+            parent=base.a2dBottomRight,
+            parentMgr=self,
+            pos=(-0.131, 0, 0.02),
+            sortOrder=1)
         self.chestPanel = ChestPanel.ChestPanel(parent=self.chestTray)
         scale = 1.0
         if base.options:
@@ -169,25 +173,47 @@ class GuiManager(FSM.FSM):
         self.chestPanel.addPage(self.skillPage)
         gui = loader.loadModel('models/gui/toplevel_gui')
         self.combatTray = CombatTray.CombatTray(parent=base.a2dBottomRight)
-        self.barSelection = BarSelectionMenu.BarSelectionMenu([], self.combatTray.toggleWeapon)
+        self.barSelection = BarSelectionMenu.BarSelectionMenu(
+            [], self.combatTray.toggleWeapon)
         self.barSelection.reparentTo(base.a2dBottomCenter)
         self.barSelection.setPos(-0.41, 0, 0.075)
         self.barSelection.setBin('gui-popup', 0)
         self.attuneSelection = AttuneMenu()
         self.attuneSelection.setPos(-0.5, 0, -0.08)
         goldCoin = gui.find('**/treasure_w_coin*')
-        self.moneyDisplay = DirectLabel(parent=base.a2dBottomRight, relief=0, pos=(-0.46, 0, -0.07), scale=2, geom=goldCoin, geom_scale=0.18, geom_pos=(0.06,
-                                                                                                                                                        0,
-                                                                                                                                                        0.087), text='', text_font=PiratesGlobals.getPirateBoldOutlineFont(), text_align=TextNode.ACenter, text_scale=0.02, text_pos=(0.06,
-                                                                                                                                                                                                                                                                                      0.045), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1)
+        self.moneyDisplay = DirectLabel(
+            parent=base.a2dBottomRight,
+            relief=0,
+            pos=(-0.46, 0, -0.07),
+            scale=2,
+            geom=goldCoin,
+            geom_scale=0.18,
+            geom_pos=(0.06, 0, 0.087),
+            text='',
+            text_font=PiratesGlobals.getPirateBoldOutlineFont(),
+            text_align=TextNode.ACenter,
+            text_scale=0.02,
+            text_pos=(0.06, 0.045),
+            text_fg=PiratesGuiGlobals.TextFG1,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            textMayChange=1)
         self.moneyDisplay.setName(self.moneyDisplay.uniqueName('moneyDisplay'))
         self.moneyDisplay.flattenStrong()
         if os.getenv('GAME_ENVIRONMENT', 'LIVE') in ['QA', 'DEV', 'TEST']:
             questionMark = gui.find('**/generic_question*')
-            self.questionMarkDisplay = DirectButton(parent=base.a2dBottomRight, relief=0, pos=(-0.32, 0, -0.11), scale=4.2, geom=questionMark, geom_scale=0.18, geom_pos=(0.06,
-                                                                                                                                                                          0,
-                                                                                                                                                                          0.087), text='', textMayChange=1, command=self.__loadFeedbackPanel)
-            self.questionMarkDisplay.setName(self.questionMarkDisplay.uniqueName('questionMarkDisplay'))
+            self.questionMarkDisplay = DirectButton(
+                parent=base.a2dBottomRight,
+                relief=0,
+                pos=(-0.32, 0, -0.11),
+                scale=4.2,
+                geom=questionMark,
+                geom_scale=0.18,
+                geom_pos=(0.06, 0, 0.087),
+                text='',
+                textMayChange=1,
+                command=self.__loadFeedbackPanel)
+            self.questionMarkDisplay.setName(
+                self.questionMarkDisplay.uniqueName('questionMarkDisplay'))
             self.questionMarkDisplay.flattenStrong()
             self.questionMarkDisplay.setColor(0.8, 0.7, 0.5, 1)
         self.disableOptions = base.config.GetBool('disable-pirates-options', 0)
@@ -199,12 +225,23 @@ class GuiManager(FSM.FSM):
             optionsState = DGG.NORMAL
             optionsHotKeys = ['f7']
             optionsKeyLabel = 'F7'
-        self.optionsButton = GuiButton(parent=base.a2dBottomRight, relief=None, hotkeys=optionsHotKeys, hotkeyLabel=optionsKeyLabel, helpText=PLocalizer.OptionsButtonHelp, helpPos=(-0.26, 0, 0.06), helpDelay=0, helpBin=None, pos=(-0.22,
-                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                      0.09), canReposition=True, image=gui.find('**/topgui_icon_main_menu'), image_scale=0.22, sortOrder=2, command=self.toggleGameOptions, state=optionsState, frameSize=(-0.08,
-                                                                                                                                                                                                                                                                                                                                                                                                           0.08,
-                                                                                                                                                                                                                                                                                                                                                                                                           -0.08,
-                                                                                                                                                                                                                                                                                                                                                                                                           0.08))
+        self.optionsButton = GuiButton(
+            parent=base.a2dBottomRight,
+            relief=None,
+            hotkeys=optionsHotKeys,
+            hotkeyLabel=optionsKeyLabel,
+            helpText=PLocalizer.OptionsButtonHelp,
+            helpPos=(-0.26, 0, 0.06),
+            helpDelay=0,
+            helpBin=None,
+            pos=(-0.22, 0, 0.09),
+            canReposition=True,
+            image=gui.find('**/topgui_icon_main_menu'),
+            image_scale=0.22,
+            sortOrder=2,
+            command=self.toggleGameOptions,
+            state=optionsState,
+            frameSize=(-0.08, 0.08, -0.08, 0.08))
         if self.disableOptions:
             self.optionsButton.setColorScale(Vec4(0.7, 0.7, 0.7, 0.7))
         else:
@@ -212,24 +249,32 @@ class GuiManager(FSM.FSM):
         if self.av.getInventory():
             skills = self.av.getInventory().getSkills(self.av.currentWeaponId)
         self.combatTray.hideSkills()
-        self.accept('localAvatarQuestComplete', self.showQuestCompleteText, extraArgs=[PLocalizer.ChatPanelQuestCompletedMsg])
-        self.accept('localAvatarQuestUpdate', self.showQuestNotifyText, extraArgs=[PLocalizer.ChatPanelQuestUpdatedMsg])
+        self.accept(
+            'localAvatarQuestComplete',
+            self.showQuestCompleteText,
+            extraArgs=[PLocalizer.ChatPanelQuestCompletedMsg])
+        self.accept(
+            'localAvatarQuestUpdate',
+            self.showQuestNotifyText,
+            extraArgs=[PLocalizer.ChatPanelQuestUpdatedMsg])
         self.accept('localAvatarQuestItemUpdate', self.showQuestItemNotifyText)
         self.bossMeter = HpMeter.HpMeter(width=1.2, height=0.02)
         self.bossMeter.reparentTo(base.a2dTopCenter)
         self.bossMeter.setPos(-0.9, 0, -0.15)
         self.bossMeter.setScale(1.5)
         self.bossMeter.hide()
-        self.targetStatusTray = StatusTray.StatusTray(parent=base.a2dTopCenter, pos=(-0.225, 0, -0.25), showSkills=1)
+        self.targetStatusTray = StatusTray.StatusTray(
+            parent=base.a2dTopCenter, pos=(-0.225, 0, -0.25), showSkills=1)
         self.targetStatusTray.reparentTo(base.a2dTopCenter)
         self.targetStatusTray.hpMeter.setPos(0.04, 0, 0.058)
         self.targetStatusTray.meterChangeOffset = (-0.3875, 0, -0.192)
         self.shipIcons = loader.loadModel('models/gui/ship_battle')
-        self.targetStatusTray.targetFrame = DirectFrame(relief=None, parent=self.targetStatusTray, image=self.shipIcons.find('**/ship_battle_speed_bar*'), image_scale=(0.43,
-                                                                                                                                                                        1.0,
-                                                                                                                                                                        0.7), pos=(0.284,
-                                                                                                                                                                                   0.0,
-                                                                                                                                                                                   0.078))
+        self.targetStatusTray.targetFrame = DirectFrame(
+            relief=None,
+            parent=self.targetStatusTray,
+            image=self.shipIcons.find('**/ship_battle_speed_bar*'),
+            image_scale=(0.43, 1.0, 0.7),
+            pos=(0.284, 0.0, 0.078))
         self.targetStatusTray.hideValues = 1
         self.targetStatusTray.hpLabel.hide()
         self.targetStatusTray.voodooLabel.hide()
@@ -239,9 +284,12 @@ class GuiManager(FSM.FSM):
         self.targetStatusTray.statusEffectsPanel.setScale(0.8)
         self.targetStatusTray.statusEffectsPanel.setPos(-0.15, 0, -0.0525)
         self.targetStatusTray.hide()
-        self.targetStatusTray.enemyFrame = DirectFrame(relief=None, parent=self.targetStatusTray, image=self.shipIcons.find('**/ship_battle_dish02*'), image_scale=(0.35,
-                                                                                                                                                                    0.35,
-                                                                                                                                                                    0.35), pos=(-0.25, 0.0, -0.1725))
+        self.targetStatusTray.enemyFrame = DirectFrame(
+            relief=None,
+            parent=self.targetStatusTray,
+            image=self.shipIcons.find('**/ship_battle_dish02*'),
+            image_scale=(0.35, 0.35, 0.35),
+            pos=(-0.25, 0.0, -0.1725))
         self.shipTargetPanel = None
         self.socialPanel = SocialPanel.SocialPanel()
         self.socialPanel.reparentTo(base.a2dBottomRight)
@@ -263,22 +311,30 @@ class GuiManager(FSM.FSM):
         self.accept(PiratesGlobals.PlayerDetailsEvent, self.handlePlayerDetails)
         self.accept('clickedNametag', self.handleClickedNametag)
         self.accept(BandConstance.BandMakeEvent, self.handleCrewInvite)
-        self.accept(BandConstance.BandInvitationEvent, self.handleCrewInvitation)
+        self.accept(BandConstance.BandInvitationEvent,
+                    self.handleCrewInvitation)
         self.accept(PiratesGlobals.GuildMakeEvent, self.handleGuildInvite)
-        self.accept(PiratesGlobals.GuildInvitationEvent, self.handleGuildInvitation)
-        self.accept(PiratesGlobals.FriendMakeEvent, self.handleAvatarFriendInvite)
-        self.accept(OTPGlobals.AvatarFriendInvitationEvent, self.handleAvatarFriendInvitation)
-        self.accept(OTPGlobals.PlayerFriendInvitationEvent, self.handlePlayerFriendInvitation)
+        self.accept(PiratesGlobals.GuildInvitationEvent,
+                    self.handleGuildInvitation)
+        self.accept(PiratesGlobals.FriendMakeEvent,
+                    self.handleAvatarFriendInvite)
+        self.accept(OTPGlobals.AvatarFriendInvitationEvent,
+                    self.handleAvatarFriendInvitation)
+        self.accept(OTPGlobals.PlayerFriendInvitationEvent,
+                    self.handlePlayerFriendInvitation)
         self.accept(PiratesGlobals.TradeRequestEvent, self.handleTradeInvite)
-        self.accept(PiratesGlobals.TradeIncomingEvent, self.handleTradeInvitation)
+        self.accept(PiratesGlobals.TradeIncomingEvent,
+                    self.handleTradeInvitation)
         self.accept(PiratesGlobals.PVPChallengedEvent, self.handlePVPInvitation)
         self.accept(PiratesGlobals.PVPAcceptedEvent, self.handlePVPAccepted)
         self.accept(OTPGlobals.WhisperIncomingEvent, self.handleWhisperIncoming)
         self.soundWhisper = loader.loadSfx('audio/sfx_gui_whisper.mp3')
-        self.radarGui = RadarGui.RadarGui(base.a2dTopRight, self.av, sortOrder=1)
+        self.radarGui = RadarGui.RadarGui(
+            base.a2dTopRight, self.av, sortOrder=1)
         self.radarGui.setPos(-self.radarGui.width, 0, -self.radarGui.height)
         self.lookoutPopup2DNode = None
-        self.lookoutPage = LookoutRequestLVL1.LookoutRequestLVL1(PLocalizer.LookoutPanelTitle, base.cr.matchMaker, self)
+        self.lookoutPage = LookoutRequestLVL1.LookoutRequestLVL1(
+            PLocalizer.LookoutPanelTitle, base.cr.matchMaker, self)
         self.chestPanel.addPage(self.lookoutPage)
         self.createLookoutPopup()
         self.accept('highSeasScoreBoardClose', self.removeHighSeasScoreboard)
@@ -292,14 +348,25 @@ class GuiManager(FSM.FSM):
         if self.WantTitlesPage:
             self.accept('guiMgrToggleTitles', self.showTitlesPanel)
         self.accept('guiMgrToggleShips', self.showShipPanel)
-        self.accept('guiMgrToggleTreasures', self.togglePage, extraArgs=[self.collectionMain])
+        self.accept(
+            'guiMgrToggleTreasures',
+            self.togglePage,
+            extraArgs=[self.collectionMain])
         self.accept('guiMgrToggleLevels', self.showSkillPage)
         self.accept('guiMgrToggleQuest', self.showQuestPanel)
         self.accept('guiMgrToggleLookout', self.showLookoutPanel)
-        self.oceanMsg = DirectFrame(parent=self.gameGui, relief=None, text='Ocean Zone', text_fg=PiratesGuiGlobals.TextFG2, text_scale=0.4, text_font=PiratesGlobals.getPirateOutlineFont(), text_shadow=PiratesGuiGlobals.TextShadow, text_align=TextNode.ACenter, frameSize=(-1, 1, -0.5, 0.5), frameColor=(0.5,
-                                                                                                                                                                                                                                                                                                              0.5,
-                                                                                                                                                                                                                                                                                                              0.5,
-                                                                                                                                                                                                                                                                                                              1.0), pos=(2.0, 0, -0.3))
+        self.oceanMsg = DirectFrame(
+            parent=self.gameGui,
+            relief=None,
+            text='Ocean Zone',
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_scale=0.4,
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_align=TextNode.ACenter,
+            frameSize=(-1, 1, -0.5, 0.5),
+            frameColor=(0.5, 0.5, 0.5, 1.0),
+            pos=(2.0, 0, -0.3))
         self.oceanMsg.setScale(0.1)
         self.oceanMsg.hide()
         self.pvpPanel = None
@@ -518,13 +585,15 @@ class GuiManager(FSM.FSM):
         if self.skillPage:
             self.skillPage.updateUnspent(category, value)
         if localAvatar.isWeaponDrawn:
-            self.combatTray.initCombatTray(WeaponGlobals.getRepId(localAvatar.currentWeaponId))
+            self.combatTray.initCombatTray(
+                WeaponGlobals.getRepId(localAvatar.currentWeaponId))
 
     def updateSkillUnlock(self, skillId, amt):
         if self.skillPage:
             self.skillPage.updateSkillUnlock(skillId)
         if localAvatar.isWeaponDrawn:
-            self.combatTray.initCombatTray(WeaponGlobals.getRepId(localAvatar.currentWeaponId))
+            self.combatTray.initCombatTray(
+                WeaponGlobals.getRepId(localAvatar.currentWeaponId))
 
     def updateTonic(self, tonicId):
         self.combatTray.updateBestTonic()
@@ -585,8 +654,11 @@ class GuiManager(FSM.FSM):
         if currentWeapon and currentWeapon not in equipped:
             skillCategory = getSkillCategory(currentWeapon)
             for weapon in equipped:
-                if equipped and getSkillCategory(weapon) == skillCategory and localAvatar.guiMgr.combatTray:
-                    localAvatar.l_setCurrentWeapon(weapon, localAvatar.isWeaponDrawn)
+                if equipped and getSkillCategory(
+                        weapon
+                ) == skillCategory and localAvatar.guiMgr.combatTray:
+                    localAvatar.l_setCurrentWeapon(weapon,
+                                                   localAvatar.isWeaponDrawn)
                     break
 
         self.weaponPage.refreshList()
@@ -612,15 +684,42 @@ class GuiManager(FSM.FSM):
         self.levelUpSfx = loader.loadSfx('audio/treasure_whoosh.mp3')
         self.levelUpSfx.setVolume(0.5)
         self.levelUpText = NodePath('levelUpText')
-        self.levelUpLabel = DirectLabel(parent=self.levelUpText, relief=None, text='', text_font=PiratesGlobals.getPirateOutlineFont(), text_fg=(0.1,
-                                                                                                                                                 0.7,
-                                                                                                                                                 0.1,
-                                                                                                                                                 1), scale=0.25)
-        self.levelUpCategoryLabel = DirectLabel(parent=self.levelUpText, relief=None, text='', text_font=PiratesGlobals.getPirateOutlineFont(), text_fg=(0.1,
-                                                                                                                                                         0.7,
-                                                                                                                                                         0.1,
-                                                                                                                                                         1), scale=0.125, pos=(0, 0, -0.125))
-        self.levelUpIval = Sequence(Func(self.levelUpSfx.play), Func(self.levelUpText.reparentTo, aspect2d), Parallel(LerpPosInterval(self.levelUpText, 5, pos=Point3(0, 0, 0.3), startPos=Point3(0, 0, -0.3)), Sequence(LerpColorScaleInterval(self.levelUpText, 0.5, colorScale=VBase4(1, 1, 1, 1), startColorScale=VBase4(1, 1, 1, 0)), Wait(4), LerpColorScaleInterval(self.levelUpText, 0.5, colorScale=VBase4(1, 1, 1, 0), startColorScale=VBase4(1, 1, 1, 1)))), Func(self.levelUpText.detachNode))
+        self.levelUpLabel = DirectLabel(
+            parent=self.levelUpText,
+            relief=None,
+            text='',
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            text_fg=(0.1, 0.7, 0.1, 1),
+            scale=0.25)
+        self.levelUpCategoryLabel = DirectLabel(
+            parent=self.levelUpText,
+            relief=None,
+            text='',
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            text_fg=(0.1, 0.7, 0.1, 1),
+            scale=0.125,
+            pos=(0, 0, -0.125))
+        self.levelUpIval = Sequence(
+            Func(self.levelUpSfx.play),
+            Func(self.levelUpText.reparentTo, aspect2d),
+            Parallel(
+                LerpPosInterval(
+                    self.levelUpText,
+                    5,
+                    pos=Point3(0, 0, 0.3),
+                    startPos=Point3(0, 0, -0.3)),
+                Sequence(
+                    LerpColorScaleInterval(
+                        self.levelUpText,
+                        0.5,
+                        colorScale=VBase4(1, 1, 1, 1),
+                        startColorScale=VBase4(1, 1, 1, 0)), Wait(4),
+                    LerpColorScaleInterval(
+                        self.levelUpText,
+                        0.5,
+                        colorScale=VBase4(1, 1, 1, 0),
+                        startColorScale=VBase4(1, 1, 1, 1)))),
+            Func(self.levelUpText.detachNode))
         return
 
     def showLevelUpText(self, category, level):
@@ -640,7 +739,8 @@ class GuiManager(FSM.FSM):
             else:
                 self.levelUpCategoryLabel['text_fg'] = (0.1, 0.7, 0.2, 1)
                 self.levelUpLabel['text_fg'] = (0.1, 0.7, 0.1, 1)
-        self.levelUpCategoryLabel['text'] = '%s Level %s' % (categoryName, level)
+        self.levelUpCategoryLabel['text'] = '%s Level %s' % (categoryName,
+                                                             level)
         self.levelUpIval.pause()
         self.levelUpIval.start()
         msg = PLocalizer.ChatPanelLevelUpMsg % (categoryName, level)
@@ -661,8 +761,10 @@ class GuiManager(FSM.FSM):
             levelUpReward += PLocalizer.LevelUpSkillUnlock % skillName
 
         if levelUpReward:
-            levelUpReward = PLocalizer.ChatPanelLevelUpMsg % (categoryName, level) + '\n' + levelUpReward
-            self.messageStack.addTextMessage(levelUpReward, icon=('reputation', category))
+            levelUpReward = PLocalizer.ChatPanelLevelUpMsg % (
+                categoryName, level) + '\n' + levelUpReward
+            self.messageStack.addTextMessage(
+                levelUpReward, icon=('reputation', category))
         if self.skillPage.tabBar:
             self.skillPage.tabBar.stash()
 
@@ -719,20 +821,27 @@ class GuiManager(FSM.FSM):
         return
 
     def handleTopTen(self, stuff):
-        self.topTen = DirectFrame(parent=aspect2d, relief=DGG.FLAT, frameSize=(-0.8, 0.8, -0.7, 0.6), frameColor=PiratesGuiGlobals.FrameColor, pos=(0,
-                                                                                                                                                    0,
-                                                                                                                                                    0), text='Reputation Top Ten', text_align=TextNode.ACenter, text_scale=0.04, text_fg=(0.9,
-                                                                                                                                                                                                                                          1,
-                                                                                                                                                                                                                                          0.9,
-                                                                                                                                                                                                                                          1), text_pos=(0,
-                                                                                                                                                                                                                                                        0.5,
-                                                                                                                                                                                                                                                        0))
+        self.topTen = DirectFrame(
+            parent=aspect2d,
+            relief=DGG.FLAT,
+            frameSize=(-0.8, 0.8, -0.7, 0.6),
+            frameColor=PiratesGuiGlobals.FrameColor,
+            pos=(0, 0, 0),
+            text='Reputation Top Ten',
+            text_align=TextNode.ACenter,
+            text_scale=0.04,
+            text_fg=(0.9, 1, 0.9, 1),
+            text_pos=(0, 0.5, 0))
         count = len(stuff)
         for person in stuff:
-            slot = DirectFrame(parent=self.topTen, relief=DGG.FLAT, frameSize=(-0.5, 0.5, -0.035, 0.045), frameColor=(1,
-                                                                                                                      1,
-                                                                                                                      1,
-                                                                                                                      1), pos=(0, 0, 0.5 + -0.1 * count), text='%10d    %s' % (person[2], person[1]), text_scale=0.04)
+            slot = DirectFrame(
+                parent=self.topTen,
+                relief=DGG.FLAT,
+                frameSize=(-0.5, 0.5, -0.035, 0.045),
+                frameColor=(1, 1, 1, 1),
+                pos=(0, 0, 0.5 + -0.1 * count),
+                text='%10d    %s' % (person[2], person[1]),
+                text_scale=0.04)
             count -= 1
 
         taskMgr.doMethodLater(15.0, self.dismissTopTen, 'clearTopTen')
@@ -791,7 +900,8 @@ class GuiManager(FSM.FSM):
     def handleRelationships(self, avId, avName, playerId=None):
         if self.relationshipChooser:
             self.relationshipChooser.destroy()
-        self.relationshipChooser = RelationshipChooser.RelationshipChooser(avId, avName, playerId)
+        self.relationshipChooser = RelationshipChooser.RelationshipChooser(
+            avId, avName, playerId)
         self.relationshipChooser.setPos(-0.75, 0, -0.295)
 
     def handleAvatarFriendInvite(self, avId, avName):
@@ -842,16 +952,19 @@ class GuiManager(FSM.FSM):
         self.guildInviter = GuildInviter.GuildInviter(avId, avName)
         self.guildInviter.setPos(-0.75, 0, -0.15)
 
-    def handleGuildMember(self, avId, avName, guildId, canpromote, candemote, cankick):
+    def handleGuildMember(self, avId, avName, guildId, canpromote, candemote,
+                          cankick):
         if self.guildMember:
             self.guildMember.destroy()
-        self.guildMember = GuildMember.GuildMember(avId, avName, guildId, canpromote, candemote, cankick)
+        self.guildMember = GuildMember.GuildMember(
+            avId, avName, guildId, canpromote, candemote, cankick)
         self.guildMember.setPos(-0.75, 0, -0.15)
 
     def handleGuildInvitation(self, avId, avName, guildId, guildname):
         if self.guildInvitee:
             self.guildInvitee.destroy()
-        self.guildInvitee = GuildInvitee.GuildInvitee(avId, avName, guildId, guildname)
+        self.guildInvitee = GuildInvitee.GuildInvitee(avId, avName, guildId,
+                                                      guildname)
         self.guildInvitee.setPos(-0.75, 0, -0.15)
 
     def handleCrewInvite(self, avId, avName):
@@ -863,7 +976,8 @@ class GuiManager(FSM.FSM):
     def handleCrewLeave(self):
         if self.crewInviter:
             self.crewInviter.destroy()
-        self.crewInviter = CrewInviter.CrewInviter(self.av.doId, self.av.getName())
+        self.crewInviter = CrewInviter.CrewInviter(self.av.doId,
+                                                   self.av.getName())
         self.crewInviter.setPos(-0.75, 0, -0.15)
 
     def handleCrewInvitation(self, avId, avName='Unknown'):
@@ -925,7 +1039,8 @@ class GuiManager(FSM.FSM):
         if sender:
             senderName = sender.getName()
         else:
-            self.notify.warning('handleWhisperIncoming: senderId: %s not found' % senderId)
+            self.notify.warning(
+                'handleWhisperIncoming: senderId: %s not found' % senderId)
             senderName = 'Unknown'
         whisperType = WhisperPopup.WTNormal
         base.chatAssistant.receiveAvatarWhisperTypedChat(msgText, senderId)
@@ -958,7 +1073,8 @@ class GuiManager(FSM.FSM):
         self.tmCompleteUI.show()
         if self.showTMCompleteLerp:
             self.showTMCompleteLerp.pause()
-        self.showTMCompleteLerp = LerpColorScaleInterval(self.tmCompleteUI, 1, Vec4(1, 1, 1, 1))
+        self.showTMCompleteLerp = LerpColorScaleInterval(
+            self.tmCompleteUI, 1, Vec4(1, 1, 1, 1))
         self.showTMCompleteLerp.start()
         return
 
@@ -971,12 +1087,14 @@ class GuiManager(FSM.FSM):
         return
 
     def createTMCompleteUI(self, tm, results):
-        self.tmCompleteUI = TreasureMapCompletePanel('Treasure Map Complete', tm, results)
+        self.tmCompleteUI = TreasureMapCompletePanel('Treasure Map Complete',
+                                                     tm, results)
         self.tmCompleteUI.setPos(-1.25, 0, -0.82)
 
     def showPVPInstructions(self, title, instructions):
         if not self.gameRulesPanel:
-            self.gameRulesPanel = PVPRulesPanel('PVPRulesPanel', title, instructions)
+            self.gameRulesPanel = PVPRulesPanel('PVPRulesPanel', title,
+                                                instructions)
 
     def hidePVPInstructions(self):
         if self.gameRulesPanel:
@@ -986,7 +1104,10 @@ class GuiManager(FSM.FSM):
 
     def createPVPStatus(self, holder):
         if self.pvpStatus is None:
-            self.pvpStatus = SheetFrame.SheetFrame(PiratesGuiGlobals.PVPCompletePageWidth, PiratesGuiGlobals.PVPCompletePageHeight, PLocalizer.PVPPanelTitle, holder)
+            self.pvpStatus = SheetFrame.SheetFrame(
+                PiratesGuiGlobals.PVPCompletePageWidth,
+                PiratesGuiGlobals.PVPCompletePageHeight,
+                PLocalizer.PVPPanelTitle, holder)
             self.pvpStatus.setPos(-1.25, 0, -0.82)
             self.pvpStatus.hide()
         return
@@ -1036,7 +1157,8 @@ class GuiManager(FSM.FSM):
 
     def showPVPTimer(self, pvpInstance):
         if pvpInstance.hasTimeLimit():
-            timeRemaining = pvpInstance.getTimeLimit() - (globalClock.getRealTime() - pvpInstance.gameStartTime)
+            timeRemaining = pvpInstance.getTimeLimit() - (
+                globalClock.getRealTime() - pvpInstance.gameStartTime)
             self.setTimer(timeRemaining, alarmTime=10)
             self._oldTimerPos = self.timer.getPos()
             self.timer.setPos(0.4, 0, 1.5)
@@ -1099,7 +1221,8 @@ class GuiManager(FSM.FSM):
         self.pvpCompleteUI.show()
         if self.showPVPCompleteLerp:
             self.showPVPCompleteLerp.pause()
-        self.showPVPCompleteLerp = LerpColorScaleInterval(self.pvpCompleteUI, 1, Vec4(1, 1, 1, 1))
+        self.showPVPCompleteLerp = LerpColorScaleInterval(
+            self.pvpCompleteUI, 1, Vec4(1, 1, 1, 1))
         self.showPVPCompleteLerp.start()
 
     def setPVPResult(self, type, rank, teams, tie):
@@ -1112,10 +1235,12 @@ class GuiManager(FSM.FSM):
                 self.pvpCompleteUI.setOutcome(PLocalizer.PVPLost)
         else:
             if type == 'player':
-                self.pvpCompleteUI.setOutcome('%s%s' % (PLocalizer.PVPYourRank, rank))
+                self.pvpCompleteUI.setOutcome(
+                    '%s%s' % (PLocalizer.PVPYourRank, rank))
             else:
                 if type == 'team':
-                    self.pvpCompleteUI.setOutcome('%s%s' % (PLocalizer.PVPYourTeamRank, rank))
+                    self.pvpCompleteUI.setOutcome(
+                        '%s%s' % (PLocalizer.PVPYourTeamRank, rank))
 
     def hidePVPCompleteUI(self):
         if self.showPVPCompleteLerp:
@@ -1188,7 +1313,8 @@ class GuiManager(FSM.FSM):
             if self._putBackSocialPanel:
                 self.socialPanel.show()
                 self._putBackSocialPanel = 0
-            if self.av.getCrewShip() and self.av.getCrewShip() == self.av.getShip():
+            if self.av.getCrewShip() and self.av.getCrewShip(
+            ) == self.av.getShip():
                 self.av.getCrewShip().showStatusDisplay()
                 self.av.getCrewShip().showTargets()
             if self.prevTag and not Freebooter.AllAccessHoliday:
@@ -1211,9 +1337,27 @@ class GuiManager(FSM.FSM):
                 pass
         return
 
-    def setTimer(self, time, showMinutes=1, mode=None, titleText='', titleFg=None, infoText='', cancelText='', cancelCallback=None, timerExpiredCallback=None, alarmTime=5):
+    def setTimer(self,
+                 time,
+                 showMinutes=1,
+                 mode=None,
+                 titleText='',
+                 titleFg=None,
+                 infoText='',
+                 cancelText='',
+                 cancelCallback=None,
+                 timerExpiredCallback=None,
+                 alarmTime=5):
         self.timerExpired()
-        self.timer = PiratesTimer.PiratesTimer(showMinutes=showMinutes, mode=mode, titleText=titleText, titleFg=titleFg, infoText=infoText, cancelText=cancelText, cancelCallback=cancelCallback, alarmTime=alarmTime)
+        self.timer = PiratesTimer.PiratesTimer(
+            showMinutes=showMinutes,
+            mode=mode,
+            titleText=titleText,
+            titleFg=titleFg,
+            infoText=infoText,
+            cancelText=cancelText,
+            cancelCallback=cancelCallback,
+            alarmTime=alarmTime)
         self.timer.reparentTo(base.a2dBottomLeft)
         self.timer.setPos(0.32, 0, 1.2)
         self.timer.show()
@@ -1232,9 +1376,25 @@ class GuiManager(FSM.FSM):
         if self.timer and self.timer.mode == mode:
             self.timerExpired()
 
-    def setHourglassTimer(self, time, showMinutes=1, mode=None, titleText='', titleFg=None, infoText='', cancelText='', cancelCallback=None, timerExpiredCallback=None):
+    def setHourglassTimer(self,
+                          time,
+                          showMinutes=1,
+                          mode=None,
+                          titleText='',
+                          titleFg=None,
+                          infoText='',
+                          cancelText='',
+                          cancelCallback=None,
+                          timerExpiredCallback=None):
         self.hourglassTimerExpired()
-        timer = PiratesTimerHourglass.PiratesTimerHourglass(showMinutes=showMinutes, mode=mode, titleText=titleText, titleFg=titleFg, infoText=infoText, cancelText=cancelText, cancelCallback=cancelCallback)
+        timer = PiratesTimerHourglass.PiratesTimerHourglass(
+            showMinutes=showMinutes,
+            mode=mode,
+            titleText=titleText,
+            titleFg=titleFg,
+            infoText=infoText,
+            cancelText=cancelText,
+            cancelCallback=cancelCallback)
         self.timerHourglass = timer
         timer.reparentTo(base.a2dBottomLeft)
         timer.setPos(0.13, 0, 1.2)
@@ -1278,7 +1438,8 @@ class GuiManager(FSM.FSM):
 
         taskMgr.doMethodLater(3.0, clearTitle, 'clearTitle')
 
-    def createWarning(self, text, color=PiratesGuiGlobals.TextFG6, duration=2.0):
+    def createWarning(self, text, color=PiratesGuiGlobals.TextFG6,
+                      duration=2.0):
         self.warningMsg.showText(text, color)
         taskMgr.remove('clearWarning')
 
@@ -1298,12 +1459,13 @@ class GuiManager(FSM.FSM):
 
     def createInteractionalSubtitle(self, text, avatar, audio=None, color=None):
         if self.interactionalFrame == None:
-            self.interactionalFrame = DirectFrame(parent=aspect2d, relief=DGG.FLAT, state=DGG.DISABLED, frameSize=(-0.8, 0.8, -0.1, 0.1), frameColor=(0,
-                                                                                                                                                      0,
-                                                                                                                                                      0,
-                                                                                                                                                      0), pos=(0.125,
-                                                                                                                                                               0,
-                                                                                                                                                               0.79))
+            self.interactionalFrame = DirectFrame(
+                parent=aspect2d,
+                relief=DGG.FLAT,
+                state=DGG.DISABLED,
+                frameSize=(-0.8, 0.8, -0.1, 0.1),
+                frameColor=(0, 0, 0, 0),
+                pos=(0.125, 0, 0.79))
         else:
             self.interactionalFrame.show()
         if self.bg == None:
@@ -1317,8 +1479,11 @@ class GuiManager(FSM.FSM):
             self.interactionalSubtitler.text.setScale(1)
             self.interactionalSubtitler.text['text_wordwrap'] = 28
         self.interactionalSubtitler.showText(text, color)
-        textBounds = self.interactionalSubtitler.text.component('text0').textNode.getFrameActual()
-        self.interactionalSubtitler.text.setPos(0, 0, -(textBounds[3] + textBounds[2]) / 2 * self.interactionalSubtitler.text['text_scale'][1])
+        textBounds = self.interactionalSubtitler.text.component(
+            'text0').textNode.getFrameActual()
+        self.interactionalSubtitler.text.setPos(
+            0, 0, -(textBounds[3] + textBounds[2]) / 2 *
+            self.interactionalSubtitler.text['text_scale'][1])
         avatar.playCurrentDialogue(audio, 0)
         return
 
@@ -1334,7 +1499,12 @@ class GuiManager(FSM.FSM):
             self.journalButton.addNewQuest()
             self.journalButton['extraArgs'] = [quest]
             return
-        self.journalButton = JournalButton.JournalButton(parent=base.a2dBottomRight, command=self.viewJournal, pos=(-0.12, 0, 0.27), scale=0.9, extraArgs=[quest])
+        self.journalButton = JournalButton.JournalButton(
+            parent=base.a2dBottomRight,
+            command=self.viewJournal,
+            pos=(-0.12, 0, 0.27),
+            scale=0.9,
+            extraArgs=[quest])
         self.journalButton.addNewQuest()
 
     def viewJournal(self, quest):
@@ -1350,7 +1520,8 @@ class GuiManager(FSM.FSM):
         return
 
     def createHighSeasScoreboard(self, portName, missionData, playerData, ship):
-        self.scoreboard = HighSeasScoreboard.HighSeasScoreboard(portName, missionData, playerData, ship)
+        self.scoreboard = HighSeasScoreboard.HighSeasScoreboard(
+            portName, missionData, playerData, ship)
         self.scoreboard.setPos(-self.scoreboard.width / 2.0, 0, -0.95)
 
     def loadOffscreenHitEffects(self):
@@ -1390,21 +1561,31 @@ class GuiManager(FSM.FSM):
         top.hide()
         top.flattenStrong()
         top.setName('topHitFlash')
-        self.offscreenHitEffects = [
-         left, bottom, right, top]
-        flashLeft = Sequence(Func(left.show), LerpColorInterval(left, 0.2, onColor, offColor), LerpColorInterval(left, 0.4, offColor, onColor), Func(left.hide))
-        flashRight = Sequence(Func(right.show), LerpColorInterval(right, 0.2, onColor, offColor), LerpColorInterval(right, 0.4, offColor, onColor), Func(right.hide))
-        flashBottom = Sequence(Func(bottom.show), LerpColorInterval(bottom, 0.2, onColor, offColor), LerpColorInterval(bottom, 0.4, offColor, onColor), Func(bottom.hide))
-        flashTop = Sequence(Func(top.show), LerpColorInterval(top, 0.2, onColor, offColor), LerpColorInterval(top, 0.4, offColor, onColor), Func(top.hide))
-        self.offscreenHitIvals = [
-         flashLeft, flashBottom, flashRight, flashTop]
+        self.offscreenHitEffects = [left, bottom, right, top]
+        flashLeft = Sequence(
+            Func(left.show), LerpColorInterval(left, 0.2, onColor, offColor),
+            LerpColorInterval(left, 0.4, offColor, onColor), Func(left.hide))
+        flashRight = Sequence(
+            Func(right.show), LerpColorInterval(right, 0.2, onColor, offColor),
+            LerpColorInterval(right, 0.4, offColor, onColor), Func(right.hide))
+        flashBottom = Sequence(
+            Func(bottom.show), LerpColorInterval(bottom, 0.2, onColor,
+                                                 offColor),
+            LerpColorInterval(bottom, 0.4, offColor, onColor),
+            Func(bottom.hide))
+        flashTop = Sequence(
+            Func(top.show), LerpColorInterval(top, 0.2, onColor, offColor),
+            LerpColorInterval(top, 0.4, offColor, onColor), Func(top.hide))
+        self.offscreenHitIvals = [flashLeft, flashBottom, flashRight, flashTop]
 
     def hitFromOffscreen(self, attacker):
         self.loadOffscreenHitEffects()
         pos = attacker.getPos(self.av)
         distance = attacker.getDistance(self.av)
         angle = rad2Deg(math.atan2(pos[0], pos[1]))
-        if distance > 6.0 or hasattr(self.av, 'gameFSM') and self.av.gameFSM.state == 'Cannon' or self.av.gameFSM.state == 'ShipPilot':
+        if distance > 6.0 or hasattr(
+                self.av, 'gameFSM'
+        ) and self.av.gameFSM.state == 'Cannon' or self.av.gameFSM.state == 'ShipPilot':
             if angle < -135 or angle > 135:
                 self.offscreenHitIvals[1].start()
             elif angle < -45:
@@ -1422,13 +1603,16 @@ class GuiManager(FSM.FSM):
         self.lookoutPopup2D.setContents(Nametag.CSpeech | Nametag.CThought)
         self.lookoutPopup2D.setActive(True)
         self.lookoutPopup.addNametag(self.lookoutPopup2D)
-        self.lookoutPopup2DNode = base.a2dBottomRight.attachNewNode(self.lookoutPopup2D)
-        self.lookoutPopup2DNode.setPosHprScale(-0.6, 0, 0.18, 0, 0, 0, 0.04, 0.04, 0.04)
+        self.lookoutPopup2DNode = base.a2dBottomRight.attachNewNode(
+            self.lookoutPopup2D)
+        self.lookoutPopup2DNode.setPosHprScale(-0.6, 0, 0.18, 0, 0, 0, 0.04,
+                                               0.04, 0.04)
         self.lookoutPopup2DNode.setColorScale(0.92, 0.82, 0.65, 1.0)
         self.lookoutPopup.setFont(PiratesGlobals.getInterfaceFont())
         self.lookoutPopup.manage(base.marginManager)
         self.lookoutPopup.setActive(True)
-        self.lookoutPage.accept(self.lookoutPopup.getUniqueId(), self.lookoutPage.msgClick)
+        self.lookoutPage.accept(self.lookoutPopup.getUniqueId(),
+                                self.lookoutPage.msgClick)
 
     def deleteLookoutPopup(self):
         self.lookoutPopup.unmanage(base.marginManager)
@@ -1447,31 +1631,32 @@ class GuiManager(FSM.FSM):
     def loadPirateCode(self):
         if self.pirateCode:
             return
-        self.pirateCode = BorderFrame(parent=base.a2dLeftCenter, frameSize=(0, 1.0,
-                                                                            0, 0.3), pos=(0.25,
-                                                                                          0,
-                                                                                          0), scale=0.75)
-        self.pirateCode.setName(self.pirateCode.uniqueName('PirateCodeBorderFrame'))
-        codeMessage1 = DirectLabel(parent=self.pirateCode, relief=None, text=PLocalizer.PirateCodeWarning1, text_fg=(1,
-                                                                                                                     1,
-                                                                                                                     1,
-                                                                                                                     1), text_shadow=(0,
-                                                                                                                                      0,
-                                                                                                                                      0,
-                                                                                                                                      1), pos=(0.5,
-                                                                                                                                               0,
-                                                                                                                                               0.18), text_scale=0.08)
-        codeMessage2 = DirectLabel(parent=self.pirateCode, relief=None, text=PLocalizer.PirateCodeWarning2, text_fg=(1,
-                                                                                                                     1,
-                                                                                                                     1,
-                                                                                                                     1), text_shadow=(0,
-                                                                                                                                      0,
-                                                                                                                                      0,
-                                                                                                                                      1), pos=(0.49,
-                                                                                                                                               0,
-                                                                                                                                               0.09), text_scale=0.08)
+        self.pirateCode = BorderFrame(
+            parent=base.a2dLeftCenter,
+            frameSize=(0, 1.0, 0, 0.3),
+            pos=(0.25, 0, 0),
+            scale=0.75)
+        self.pirateCode.setName(
+            self.pirateCode.uniqueName('PirateCodeBorderFrame'))
+        codeMessage1 = DirectLabel(
+            parent=self.pirateCode,
+            relief=None,
+            text=PLocalizer.PirateCodeWarning1,
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1),
+            pos=(0.5, 0, 0.18),
+            text_scale=0.08)
+        codeMessage2 = DirectLabel(
+            parent=self.pirateCode,
+            relief=None,
+            text=PLocalizer.PirateCodeWarning2,
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1),
+            pos=(0.49, 0, 0.09),
+            text_scale=0.08)
         self.pirateCode.hide()
-        self.pirateCodeDialog = base.loader.loadSfx('audio/dialog/will_turner_7.2.b.mp3')
+        self.pirateCodeDialog = base.loader.loadSfx(
+            'audio/dialog/will_turner_7.2.b.mp3')
         return
 
     def showPirateCode(self):
@@ -1656,7 +1841,9 @@ class GuiManager(FSM.FSM):
         if moveToCenter and base.mouseWatcherNode.hasMouse():
             self.mouseX = base.win.getPointer(0).getX()
             self.mouseY = base.win.getPointer(0).getY()
-            base.win.movePointer(0, base.win.getXSize() / 2, base.win.getYSize() / 2)
+            base.win.movePointer(0,
+                                 base.win.getXSize() / 2,
+                                 base.win.getYSize() / 2)
 
     def showSeaChest(self, page=None):
         if page:
@@ -1720,8 +1907,7 @@ class GuiManager(FSM.FSM):
     def exitPopup(self):
         pass
 
-    def enterInterface(self, extraArgs=[
- True, True]):
+    def enterInterface(self, extraArgs=[True, True]):
         allowChat, allowSeaChest = extraArgs
         self.setChatAllowed(allowChat, close=not allowChat)
         self.setSeaChestAllowed(allowSeaChest, close=not allowChat)
@@ -1775,7 +1961,27 @@ class GuiManager(FSM.FSM):
             finalScale = Point3(2, 2, 2)
         receiveDelay = 0.35
         placeDelay = 0.7
-        displayIval = Sequence(Parallel(LerpScaleInterval(uiItem, duration=receiveDelay, scale=startScale, blendType='easeOut'), LerpColorScaleInterval(uiItem, receiveDelay, Vec4(1, 1, 1, 1), blendType='easeIn')), Wait(0.5), Parallel(LerpPosInterval(uiItem, duration=placeDelay, pos=finalPos, blendType='easeIn'), LerpScaleInterval(uiItem, duration=placeDelay, scale=finalScale, blendType='easeIn')))
+        displayIval = Sequence(
+            Parallel(
+                LerpScaleInterval(
+                    uiItem,
+                    duration=receiveDelay,
+                    scale=startScale,
+                    blendType='easeOut'),
+                LerpColorScaleInterval(
+                    uiItem, receiveDelay, Vec4(1, 1, 1, 1),
+                    blendType='easeIn')), Wait(0.5),
+            Parallel(
+                LerpPosInterval(
+                    uiItem,
+                    duration=placeDelay,
+                    pos=finalPos,
+                    blendType='easeIn'),
+                LerpScaleInterval(
+                    uiItem,
+                    duration=placeDelay,
+                    scale=finalScale,
+                    blendType='easeIn')))
         displayIval.start()
         self.addEffectIval(displayIval)
 
@@ -1802,7 +2008,8 @@ class GuiManager(FSM.FSM):
             height = 1.6
             x = -width / 2
             y = -height / 2
-            self.gameOptions = GameOptions('Game Options', x, y, width, height, base.options)
+            self.gameOptions = GameOptions('Game Options', x, y, width, height,
+                                           base.options)
             self.gameOptions.show()
             base.options = self.gameOptions.options
 
@@ -1819,7 +2026,11 @@ class GuiManager(FSM.FSM):
     def hideDirtPanel(self):
         if self.dirtPanel is None:
             return
-        fadeOut = LerpFunctionInterval(self.dirtPanel.setAlphaScale, fromData=self.dirtPanel.getColorScale()[3], toData=0, duration=0.3)
+        fadeOut = LerpFunctionInterval(
+            self.dirtPanel.setAlphaScale,
+            fromData=self.dirtPanel.getColorScale()[3],
+            toData=0,
+            duration=0.3)
         self.dirtFader = Sequence(fadeOut, Func(self.dirtPanel.hide))
         self.dirtFader.start()
         return
@@ -1829,15 +2040,17 @@ class GuiManager(FSM.FSM):
         smokeTex = card.find('**/effectSmokeBlind')
         card.removeNode()
         del card
-        self.smokePanel = DirectFrame(parent=aspect2d, relief=None, frameSize=(-4,
-                                                                               4,
-                                                                               -4.0,
-                                                                               4.0), frameColor=(0.5,
-                                                                                                 0.5,
-                                                                                                 0.5,
-                                                                                                 0.85), sortOrder=25, pos=(0,
-                                                                                                                           0,
-                                                                                                                           0.25), image=smokeTex, image_scale=4.0, suppressMouse=0, suppressKeys=0)
+        self.smokePanel = DirectFrame(
+            parent=aspect2d,
+            relief=None,
+            frameSize=(-4, 4, -4.0, 4.0),
+            frameColor=(0.5, 0.5, 0.5, 0.85),
+            sortOrder=25,
+            pos=(0, 0, 0.25),
+            image=smokeTex,
+            image_scale=4.0,
+            suppressMouse=0,
+            suppressKeys=0)
         self.smokePanel.hide()
         return
 
@@ -1846,14 +2059,17 @@ class GuiManager(FSM.FSM):
         dirtTex = card.find('**/effectDirtBlind')
         card.removeNode()
         del card
-        self.dirtPanel = DirectFrame(parent=aspect2d, relief=None, frameSize=(-4, 4,
-                                                                              -4.0,
-                                                                              4.0), frameColor=(0.5,
-                                                                                                0.5,
-                                                                                                0.5,
-                                                                                                0.85), sortOrder=25, pos=(0,
-                                                                                                                          0,
-                                                                                                                          0.25), image=dirtTex, image_scale=4.0, suppressMouse=0, suppressKeys=0)
+        self.dirtPanel = DirectFrame(
+            parent=aspect2d,
+            relief=None,
+            frameSize=(-4, 4, -4.0, 4.0),
+            frameColor=(0.5, 0.5, 0.5, 0.85),
+            sortOrder=25,
+            pos=(0, 0, 0.25),
+            image=dirtTex,
+            image_scale=4.0,
+            suppressMouse=0,
+            suppressKeys=0)
         self.dirtPanel.hide()
         return
 
@@ -1870,18 +2086,37 @@ class GuiManager(FSM.FSM):
     def hideSmokePanel(self):
         if self.smokePanel is None:
             return
-        fadeOut = LerpFunctionInterval(self.smokePanel.setAlphaScale, fromData=self.smokePanel.getColorScale()[3], toData=0, duration=0.3)
+        fadeOut = LerpFunctionInterval(
+            self.smokePanel.setAlphaScale,
+            fromData=self.smokePanel.getColorScale()[3],
+            toData=0,
+            duration=0.3)
         self.smokeFader = Sequence(fadeOut, Func(self.smokePanel.hide))
         self.smokeFader.start()
         return
 
     def showQuestProgress(self, questProgress):
         if not self.progressText:
-            self.progressText = DirectLabel(parent=base.a2dBottomCenter, relief=None, text='', text_pos=(0,
-                                                                                                         0.06), text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0,
-                                                                                                                                                                                                                                                                                             0,
-                                                                                                                                                                                                                                                                                             0.1))
-            self.showProgressIval = Sequence(Func(self.progressText.clearColorScale), Func(self.progressText.show), Wait(4.0), LerpColorScaleInterval(self.progressText, 1.0, colorScale=Vec4(1, 1, 1, 0), startColorScale=Vec4(1, 1, 1, 1)), Func(self.progressText.hide))
+            self.progressText = DirectLabel(
+                parent=base.a2dBottomCenter,
+                relief=None,
+                text='',
+                text_pos=(0, 0.06),
+                text_scale=PiratesGuiGlobals.TextScaleLarge,
+                text_align=TextNode.ACenter,
+                text_fg=PiratesGuiGlobals.TextFG1,
+                text_shadow=PiratesGuiGlobals.TextShadow,
+                textMayChange=1,
+                pos=(0, 0, 0.1))
+            self.showProgressIval = Sequence(
+                Func(self.progressText.clearColorScale),
+                Func(self.progressText.show), Wait(4.0),
+                LerpColorScaleInterval(
+                    self.progressText,
+                    1.0,
+                    colorScale=Vec4(1, 1, 1, 0),
+                    startColorScale=Vec4(1, 1, 1, 1)),
+                Func(self.progressText.hide))
         if not questProgress:
             progressText = PLocalizer.DidNotFindQuestItem
             self.progressText['text'] = progressText
@@ -1926,7 +2161,8 @@ class GuiManager(FSM.FSM):
                 if self._putBackSocialPanel:
                     self.socialPanel.show()
                     self._putBackSocialPanel = 0
-                if self.questPage and len(self.questPage.trackedQuestLabel['text']):
+                if self.questPage and len(
+                        self.questPage.trackedQuestLabel['text']):
                     self.questPage.trackedQuestLabel.show()
             if self.tutorialStatus >= PiratesGlobals.TUT_GOT_COMPASS:
                 self.radarGui.show()
@@ -1953,7 +2189,8 @@ class GuiManager(FSM.FSM):
         if not __dev__ and localAvatar.isPaid:
             return
         if not self.nonPayerPanel:
-            self.nonPayerPanel = TrialNonPayerPanel.TrialNonPayerPanel(trial=False)
+            self.nonPayerPanel = TrialNonPayerPanel.TrialNonPayerPanel(
+                trial=False)
         if quest is not None:
             self.nonPayerPanel.show(quest)
         else:
@@ -1964,7 +2201,17 @@ class GuiManager(FSM.FSM):
         self.oceanMsg.show()
         self.oceanMsg['text'] = PLocalizer.EnterOceanZone % oceanZoneName
         self.oceanMsg.setScale(0.1, 0.1, 0.1)
-        self.oceanIval = Sequence(LerpScaleInterval(self.oceanMsg, duration=2.0, scale=Point3(0.45, 0.45, 0.45), blendType='easeOut'), LerpScaleInterval(self.oceanMsg, duration=3.0, scale=Point3(0.1, 0.1, 0.1), blendType='easeOut'), Func(self.oceanMsg.hide))
+        self.oceanIval = Sequence(
+            LerpScaleInterval(
+                self.oceanMsg,
+                duration=2.0,
+                scale=Point3(0.45, 0.45, 0.45),
+                blendType='easeOut'),
+            LerpScaleInterval(
+                self.oceanMsg,
+                duration=3.0,
+                scale=Point3(0.1, 0.1, 0.1),
+                blendType='easeOut'), Func(self.oceanMsg.hide))
         self.oceanIval.start()
 
     def createPreviewTag(self):
@@ -1972,23 +2219,58 @@ class GuiManager(FSM.FSM):
             return
         if os.getenv('GAME_SHOW_ADDS') != 'NO':
             return
-        self.prevTag = DirectFrame(parent=base.a2dTopRight, relief=None, pos=(-0.25,
-                                                                              0,
-                                                                              -0.63), scale=0.8, sortOrder=0)
+        self.prevTag = DirectFrame(
+            parent=base.a2dTopRight,
+            relief=None,
+            pos=(-0.25, 0, -0.63),
+            scale=0.8,
+            sortOrder=0)
         gui2 = loader.loadModelCopy('models/textureCards/basic_unlimited')
-        self.imageOne = DirectFrame(parent=self.prevTag, relief=None, image=gui2.find('**/but_message_panel_border'), image_scale=(1,
-                                                                                                                                   1,
-                                                                                                                                   0.95), scale=0.4)
-        self.titleText1 = DirectLabel(parent=self.prevTag, relief=None, text=PLocalizer.PreviewTitle1, text_align=TextNode.ACenter, text_scale=0.09, text_fg=PiratesGuiGlobals.TextFG1, text_font=PiratesGlobals.getPirateFont(), text_shadow=PiratesGuiGlobals.TextShadow, pos=(0.0,
-                                                                                                                                                                                                                                                                                 0,
-                                                                                                                                                                                                                                                                                 0.08))
-        self.titleText2 = DirectLabel(parent=self.prevTag, relief=None, text=PLocalizer.PreviewTitle2, text_align=TextNode.ACenter, text_scale=0.07, text_fg=PiratesGuiGlobals.TextFG1, text_font=PiratesGlobals.getPirateFont(), text_shadow=PiratesGuiGlobals.TextShadow, pos=(0.0, 0, -0.01))
+        self.imageOne = DirectFrame(
+            parent=self.prevTag,
+            relief=None,
+            image=gui2.find('**/but_message_panel_border'),
+            image_scale=(1, 1, 0.95),
+            scale=0.4)
+        self.titleText1 = DirectLabel(
+            parent=self.prevTag,
+            relief=None,
+            text=PLocalizer.PreviewTitle1,
+            text_align=TextNode.ACenter,
+            text_scale=0.09,
+            text_fg=PiratesGuiGlobals.TextFG1,
+            text_font=PiratesGlobals.getPirateFont(),
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            pos=(0.0, 0, 0.08))
+        self.titleText2 = DirectLabel(
+            parent=self.prevTag,
+            relief=None,
+            text=PLocalizer.PreviewTitle2,
+            text_align=TextNode.ACenter,
+            text_scale=0.07,
+            text_fg=PiratesGuiGlobals.TextFG1,
+            text_font=PiratesGlobals.getPirateFont(),
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            pos=(0.0, 0, -0.01))
         norm_geom = gui2.find('**/but_nav')
         over_geom = gui2.find('**/but_nav_over')
         down_geom = gui2.find('**/but_nav_down')
         dsbl_geom = gui2.find('**/but_nav_disabled')
-        self.upgradeButton = DirectButton(parent=self.prevTag, relief=None, geom=(norm_geom, down_geom, over_geom), pos=(0.0, 0, -0.11), scale=0.8, command=base.popupBrowser, extraArgs=[PLocalizer.URL_UpgradeNow], text=PLocalizer.FirstAddUpgrade, text_fg=PiratesGuiGlobals.TextFG1, text_font=PiratesGlobals.getInterfaceFont(), text_shadow=PiratesGuiGlobals.TextShadow, text_scale=0.05, text_wordwrap=9, text_pos=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                             0.01))
+        self.upgradeButton = DirectButton(
+            parent=self.prevTag,
+            relief=None,
+            geom=(norm_geom, down_geom, over_geom),
+            pos=(0.0, 0, -0.11),
+            scale=0.8,
+            command=base.popupBrowser,
+            extraArgs=[PLocalizer.URL_UpgradeNow],
+            text=PLocalizer.FirstAddUpgrade,
+            text_fg=PiratesGuiGlobals.TextFG1,
+            text_font=PiratesGlobals.getInterfaceFont(),
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_scale=0.05,
+            text_wordwrap=9,
+            text_pos=(0, 0.01))
         return
 
     def showPrevPanel(self):
@@ -2013,22 +2295,42 @@ class GuiManager(FSM.FSM):
 
             return
 
-        DistributedInventoryBase.DistributedInventoryBase.getInventory(localAvatar.getInventoryId(), inventoryReceived)
+        DistributedInventoryBase.DistributedInventoryBase.getInventory(
+            localAvatar.getInventoryId(), inventoryReceived)
 
     def addTreasureMapButtons(self, tm):
         if os.getenv('GAME_ENVIRONMENT', 'LIVE') in ['QA', 'DEV', 'TEST']:
-            helpPos = (
-             -0.26, 0, 0.095)
-            self.tmButtonQuick = GuiButton(parent=base.a2dTopRight, text=PLocalizer.PlayTMNow, text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.0, -0.01), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=40, image_scale=(0.45,
-                                                                                                                                                                                                                                                                                                            1,
-                                                                                                                                                                                                                                                                                                            0.25), command=self.questPage.startTreasureMap, extraArgs=[tm], pos=(-0.65,
-                                                                                                                                                                                                                                                                                                                                                                                 0,
-                                                                                                                                                                                                                                                                                                                                                                                 -0.23), helpText=PLocalizer.PlayTMNowHelp, helpPos=helpPos)
-            self.tmButtonSearch = GuiButton(parent=base.a2dTopRight, text=PLocalizer.PlayTMLookout, text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.0, -0.01), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=40, image_scale=(0.45,
-                                                                                                                                                                                                                                                                                                                 1,
-                                                                                                                                                                                                                                                                                                                 0.25), command=self.questPage.startTreasureMap, extraArgs=[tm, False], pos=(-0.65,
-                                                                                                                                                                                                                                                                                                                                                                                             0,
-                                                                                                                                                                                                                                                                                                                                                                                             -0.33), helpText=PLocalizer.PlayTMLookoutHelp, helpPos=helpPos)
+            helpPos = (-0.26, 0, 0.095)
+            self.tmButtonQuick = GuiButton(
+                parent=base.a2dTopRight,
+                text=PLocalizer.PlayTMNow,
+                text_align=TextNode.ACenter,
+                text_scale=PiratesGuiGlobals.TextScaleLarge,
+                text_pos=(0.0, -0.01),
+                text_fg=PiratesGuiGlobals.TextFG1,
+                text_shadow=PiratesGuiGlobals.TextShadow,
+                text_wordwrap=40,
+                image_scale=(0.45, 1, 0.25),
+                command=self.questPage.startTreasureMap,
+                extraArgs=[tm],
+                pos=(-0.65, 0, -0.23),
+                helpText=PLocalizer.PlayTMNowHelp,
+                helpPos=helpPos)
+            self.tmButtonSearch = GuiButton(
+                parent=base.a2dTopRight,
+                text=PLocalizer.PlayTMLookout,
+                text_align=TextNode.ACenter,
+                text_scale=PiratesGuiGlobals.TextScaleLarge,
+                text_pos=(0.0, -0.01),
+                text_fg=PiratesGuiGlobals.TextFG1,
+                text_shadow=PiratesGuiGlobals.TextShadow,
+                text_wordwrap=40,
+                image_scale=(0.45, 1, 0.25),
+                command=self.questPage.startTreasureMap,
+                extraArgs=[tm, False],
+                pos=(-0.65, 0, -0.33),
+                helpText=PLocalizer.PlayTMLookoutHelp,
+                helpPos=helpPos)
             self.tmButtonQuick.setColorScale(1, 1, 1, 0.75)
             self.tmButtonSearch.setColorScale(1, 1, 1, 0.75)
 

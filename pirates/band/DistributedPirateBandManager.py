@@ -3,7 +3,7 @@ from pirates.band import BandConstance
 
 
 class DistributedPirateBandManager(DistributedObject):
-    
+
     notify = directNotify.newCategory('PirateBandManager')
 
     def __init__(self, cr):
@@ -25,20 +25,24 @@ class DistributedPirateBandManager(DistributedObject):
 
     def requestOutCome(self, avatarId, responce):
         if responce == 0:
-            if len(localAvatar.guiMgr.crewPage.crew) <= 1 and localAvatar.getLookingForCrew() == 1:
+            if len(localAvatar.guiMgr.crewPage.crew
+                  ) <= 1 and localAvatar.getLookingForCrew() == 1:
                 localAvatar.toggleLookingForCrewSign()
             messenger.send('BandAdded-%s' % (avatarId,), [avatarId])
             return
-        messenger.send('BandRequestRejected-%s' % (avatarId,), [avatarId, responce])
+        messenger.send('BandRequestRejected-%s' % (avatarId,),
+                       [avatarId, responce])
 
     def invitationFrom(self, avatarId, avatarName):
-        messenger.send(BandConstance.BandInvitationEvent, [avatarId, avatarName])
+        messenger.send(BandConstance.BandInvitationEvent,
+                       [avatarId, avatarName])
 
     def invitationCancel(self, avatarId):
         messenger.send('BandRequestCancel-%s' % (avatarId,), [])
 
     def d_invitationResponce(self, avatarId, responce):
-        if responce == 0 and len(localAvatar.guiMgr.crewPage.crew) == 0 and localAvatar.getLookingForCrew() == 1:
+        if responce == 0 and len(localAvatar.guiMgr.crewPage.crew
+                                ) == 0 and localAvatar.getLookingForCrew() == 1:
             localAvatar.toggleLookingForCrewSign()
         self.sendUpdate('invitationResponce', [avatarId, responce])
 

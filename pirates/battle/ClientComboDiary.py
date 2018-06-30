@@ -34,8 +34,7 @@ class ClientComboDiary(ComboDiary.ComboDiary):
                 totalCombo += 1
                 totalDamage += entry[self.DAMAGE_INDEX]
 
-        return (
-         totalCombo, totalDamage, numAttackers)
+        return (totalCombo, totalDamage, numAttackers)
 
     def checkComboExpired(self, avId, skillId):
         attacker = base.cr.doId2do.get(avId)
@@ -49,7 +48,8 @@ class ClientComboDiary(ComboDiary.ComboDiary):
         barTime = self.TimingCache.get(skillId, None)
         if barTime is None:
             anim = skillInfo[WeaponGlobals.PLAYABLE_INDEX]
-            skillAnim = getattr(base.cr.combatAnims, anim)(attacker, skillId, 0, 0, None)
+            skillAnim = getattr(base.cr.combatAnims, anim)(attacker, skillId, 0,
+                                                           0, None)
             barTime = skillAnim.getDuration()
             self.TimingCache[skillId] = barTime
         curTime = globalClock.getFrameTime()
@@ -74,8 +74,10 @@ class ClientComboDiary(ComboDiary.ComboDiary):
                             if comboLength < numHits:
                                 return 0
                             elif comboLength >= numHits:
-                                preMultihitEntry = self.timers[attackerId][comboLength - numHits]
-                                preMultihitSkillId = preMultihitEntry[self.SKILLID_INDEX]
+                                preMultihitEntry = self.timers[attackerId][
+                                    comboLength - numHits]
+                                preMultihitSkillId = preMultihitEntry[
+                                    self.SKILLID_INDEX]
                                 if preMultihitSkillId != skillId:
                                     return 0
                     elif skillId in comboChain:
@@ -112,7 +114,7 @@ class ClientComboDiary(ComboDiary.ComboDiary):
             index = comboChain.index(skillId)
             requisiteAttack = comboChain[index - 1]
             currentAttack = comboChain[index]
-            if lastSkillId != requisiteAttack and lastSkillId != currentAttack and lastSkillId not in self.SPECIAL_SKILLS.get(repId):
+            if lastSkillId != requisiteAttack and lastSkillId != currentAttack and lastSkillId not in self.SPECIAL_SKILLS.get(
+                    repId):
                 return 0
         return 1
-

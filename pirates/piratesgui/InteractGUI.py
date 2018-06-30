@@ -7,10 +7,10 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class InteractGUI(DirectFrame):
-    
 
     def __init__(self):
-        DirectFrame.__init__(self, relief=None, sortOrder=3, pos=(-0.5, 0, -0.4))
+        DirectFrame.__init__(
+            self, relief=None, sortOrder=3, pos=(-0.5, 0, -0.4))
         self.optionButtons = []
         self.initialiseoptions(InteractGUI)
         return
@@ -28,10 +28,21 @@ class InteractGUI(DirectFrame):
             del self.title
         self.optionButtons = []
 
-    def setOptions(self, title, optionIds, statusCodes, optionCallback, bribeType):
+    def setOptions(self, title, optionIds, statusCodes, optionCallback,
+                   bribeType):
         z = 1.0
         self.destroyOptionButtons()
-        self.title = DirectLabel(parent=self, relief=None, text=title, text_align=TextNode.ACenter, text_scale=0.07, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0, 0, z - 0.08), text_font=PiratesGlobals.getPirateOutlineFont())
+        self.title = DirectLabel(
+            parent=self,
+            relief=None,
+            text=title,
+            text_align=TextNode.ACenter,
+            text_scale=0.07,
+            text_fg=PiratesGuiGlobals.TextFG1,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            textMayChange=1,
+            pos=(0, 0, z - 0.08),
+            text_font=PiratesGlobals.getPirateOutlineFont())
         gui = loader.loadModel('models/gui/avatar_chooser_rope')
         topPanel = gui.find('**/avatar_c_A_top')
         topPanelOver = gui.find('**/avatar_c_A_top_over')
@@ -39,28 +50,28 @@ class InteractGUI(DirectFrame):
         middlePanelOver = gui.find('**/avatar_c_A_middle_over')
         bottomPanel = gui.find('**/avatar_c_A_bottom')
         bottomPanelOver = gui.find('**/avatar_c_A_bottom_over')
-        for i, optionId, statusCode in zip(range(len(optionIds)), optionIds, statusCodes):
-            optionName = InteractGlobals.InteractOptionNames.get(optionId, 'Error')
-            optionHelp = InteractGlobals.InteractOptionHelpText.get(optionId, 'Error')
+        for i, optionId, statusCode in zip(
+                range(len(optionIds)), optionIds, statusCodes):
+            optionName = InteractGlobals.InteractOptionNames.get(
+                optionId, 'Error')
+            optionHelp = InteractGlobals.InteractOptionHelpText.get(
+                optionId, 'Error')
             print 'DEBUG: InteractGUI.optionName = %s' % optionName
             if (optionName == 'Bribe') & (bribeType == 1):
                 optionName = PLocalizer.InteractBribeAlt
             if i == 0:
-                image = (
-                 topPanel, topPanel, topPanelOver, topPanel)
+                image = (topPanel, topPanel, topPanelOver, topPanel)
                 textPos = (0, -0.03)
                 z -= 0.19
             elif i == len(optionIds) - 1:
-                image = (
-                 bottomPanel, bottomPanel, bottomPanelOver, bottomPanel)
+                image = (bottomPanel, bottomPanel, bottomPanelOver, bottomPanel)
                 textPos = (0, 0.033)
                 if i == 1:
                     z -= 0.165
                 else:
                     z -= 0.155
             else:
-                image = (
-                 middlePanel, middlePanel, middlePanelOver, middlePanel)
+                image = (middlePanel, middlePanel, middlePanelOver, middlePanel)
                 textPos = (0, -0.015)
                 if i == 1:
                     z -= 0.11
@@ -78,9 +89,24 @@ class InteractGUI(DirectFrame):
                 state = DGG.NORMAL
                 textFg = PiratesGuiGlobals.TextFG2
                 imageColor = (1, 1, 1, 1)
-            optionButton = DirectButton(parent=self, relief=None, state=state, pressEffect=0, text=optionName, text_fg=textFg, text_shadow=PiratesGuiGlobals.TextShadow, text_align=TextNode.ACenter, text_scale=0.05, text_pos=textPos, image=image, image_scale=0.4, image_color=imageColor, pos=(0, 0, z), command=optionCallback, extraArgs=[optionId])
+            optionButton = DirectButton(
+                parent=self,
+                relief=None,
+                state=state,
+                pressEffect=0,
+                text=optionName,
+                text_fg=textFg,
+                text_shadow=PiratesGuiGlobals.TextShadow,
+                text_align=TextNode.ACenter,
+                text_scale=0.05,
+                text_pos=textPos,
+                image=image,
+                image_scale=0.4,
+                image_color=imageColor,
+                pos=(0, 0, z),
+                command=optionCallback,
+                extraArgs=[optionId])
             self.optionButtons.append(optionButton)
 
         gui.removeNode()
         return
-

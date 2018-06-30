@@ -4,6 +4,7 @@ from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesbase import PiratesGlobals
 
+
 class FortBarricade:
     notify = directNotify.newCategory('FortBarricade')
 

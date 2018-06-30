@@ -5,9 +5,11 @@ from pirates.piratesbase.TimeOfDayManager import TimeOfDayManager
 from pirates.effects.FireworkGlobals import *
 from otp.ai.MagicWordGlobal import *
 
+
 class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
     from direct.directnotify import DirectNotifyGlobal
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTimeOfDayManager')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedTimeOfDayManager')
 
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)
@@ -34,6 +36,7 @@ class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
         self.cycleDuration = cycleDuration
         self.enterInitState()
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def setClouds(level):
     """
@@ -42,6 +45,7 @@ def setClouds(level):
 
     base.cr.timeOfDayManager.skyGroup.setCloudLevel(level)
     return 'Transitioning clouds to %d.' % level
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def fireworks(showType=FireworkShowType.FourthOfJuly):

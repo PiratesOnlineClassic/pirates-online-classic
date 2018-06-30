@@ -7,7 +7,9 @@ from pirates.world.IslandAreaBuilderAI import IslandAreaBuilderAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 
-class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):
+
+class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI,
+                          Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedIslandAI')
 
     def __init__(self, air):
@@ -17,7 +19,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         cellWidth = WorldGlobals.ISLAND_CELL_SIZE + gridSize
 
         DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize,
-            gridRadius, cellWidth)
+                                            gridRadius, cellWidth)
 
         DistributedGameAreaAI.__init__(self, air)
         Teamable.__init__(self)
@@ -76,8 +78,8 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def setZoneSphereSize(self, rad0, rad1, rad2):
         self.sphereRadii = [rad0, rad1, rad2]
-        self.gridSize = self.getGridSizeFromSphereRadius(rad0 + rad1,
-            self.cellWidth, self.gridRadius)
+        self.gridSize = self.getGridSizeFromSphereRadius(
+            rad0 + rad1, self.cellWidth, self.gridRadius)
 
     def d_setZoneSphereSize(self, rad0, rad1, rad2):
         self.sendUpdate('setZoneSphereSize', [rad0, rad1, rad2])
@@ -91,8 +93,9 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def setZoneSphereCenter(self, x, y):
         self.sphereCenter = [x, y]
-        self.gridSize = self.getGridSizeFromSphere(self.sphereRadii[0] + self.sphereRadii[1],
-            self.sphereCenter, self.cellWidth, self.gridRadius)
+        self.gridSize = self.getGridSizeFromSphere(
+            self.sphereRadii[0] + self.sphereRadii[1], self.sphereCenter,
+            self.cellWidth, self.gridRadius)
 
     def d_setZoneSphereCenter(self, x, y):
         self.sendUpdate('setZoneSphereCenter', [x, y])

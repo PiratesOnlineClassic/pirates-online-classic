@@ -16,7 +16,7 @@ sliderRange = (-0.5, 0.5)
 
 
 class Eyes(DirectObject.DirectObject):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('Eyes')
 
     def __init__(self, main=None):
@@ -46,19 +46,35 @@ class Eyes(DirectObject.DirectObject):
 
     def loadGUI(self):
         customRrange = (-1.0, 1.0)
-        self.pgs1 = CharGuiSlider(self.main, parent=self.browFrame, text=PLocalizer.EyeBrowProtruding, range=(0.0,
-                                                                                                              1.0), command=self.updateControlShape)
+        self.pgs1 = CharGuiSlider(
+            self.main,
+            parent=self.browFrame,
+            text=PLocalizer.EyeBrowProtruding,
+            range=(0.0, 1.0),
+            command=self.updateControlShape)
         self.pgs1.setPos(-0.4, 0, -0.3)
-        self.pgs6 = CharGuiSlider(self.main, parent=self.eyeFrame, text=PLocalizer.EyeCorner, command=self.updateControlShape, range=(-0.25, 0.25))
+        self.pgs6 = CharGuiSlider(
+            self.main,
+            parent=self.eyeFrame,
+            text=PLocalizer.EyeCorner,
+            command=self.updateControlShape,
+            range=(-0.25, 0.25))
         self.pgs6.setPos(-0.4, 0, -0.3)
-        self.pgs7 = CharGuiSlider(self.main, parent=self.eyeFrame, text=PLocalizer.EyeOpeningSize, range=(-1,
-                                                                                                          1), command=self.updateControlShape)
+        self.pgs7 = CharGuiSlider(
+            self.main,
+            parent=self.eyeFrame,
+            text=PLocalizer.EyeOpeningSize,
+            range=(-1, 1),
+            command=self.updateControlShape)
         self.pgs7.setPos(-0.4, 0, -0.55)
-        self.pgs8 = CharGuiSlider(self.main, parent=self.eyeFrame, text=PLocalizer.EyeSpacing, range=(-1,
-                                                                                                      1), command=self.updateControlShape)
+        self.pgs8 = CharGuiSlider(
+            self.main,
+            parent=self.eyeFrame,
+            text=PLocalizer.EyeSpacing,
+            range=(-1, 1),
+            command=self.updateControlShape)
         self.pgs8.setPos(-0.4, 0, -0.8)
-        self.pgs = [
-         self.pgs1, self.pgs6, self.pgs7, self.pgs8]
+        self.pgs = [self.pgs1, self.pgs6, self.pgs7, self.pgs8]
 
     def unload(self):
         self.notify.debug('called eyes unload')
@@ -67,8 +83,7 @@ class Eyes(DirectObject.DirectObject):
         del self.avatar
 
     def loadExtraArgs(self):
-        self.pgs1['extraArgs'] = [
-         self.pgs1, 'browProtruding', 135]
+        self.pgs1['extraArgs'] = [self.pgs1, 'browProtruding', 135]
         self.pgs6['extraArgs'] = [self.pgs6, 'eyeCorner']
         self.pgs7['extraArgs'] = [self.pgs7, 'eyeOpeningSize']
         self.pgs8['extraArgs'] = [self.pgs8, 'eyeSpacing']
@@ -88,19 +103,32 @@ class Eyes(DirectObject.DirectObject):
         self.saveDNA()
 
     def setupButtons(self):
-        self.browFrame = DirectFrame(parent=self._parent, relief=None, text=PLocalizer.EyeBrowFrameTitle, text_fg=(1,
-                                                                                                                  1,
-                                                                                                                  1,
-                                                                                                                  1), text_scale=0.18, text_pos=(0, -0.05), pos=(0, 0, -0.1), scale=0.7)
+        self.browFrame = DirectFrame(
+            parent=self._parent,
+            relief=None,
+            text=PLocalizer.EyeBrowFrameTitle,
+            text_fg=(1, 1, 1, 1),
+            text_scale=0.18,
+            text_pos=(0, -0.05),
+            pos=(0, 0, -0.1),
+            scale=0.7)
         self.browFrame.hide()
-        self.eyeFrame = DirectFrame(parent=self._parent, relief=None, text=PLocalizer.EyeFrameTitle, text_fg=(1,
-                                                                                                             1,
-                                                                                                             1,
-                                                                                                             1), text_scale=0.18, text_pos=(0, -0.05), pos=(0,
-                                                                                                                                                            0,
-                                                                                                                                                            -1.1), scale=0.7)
+        self.eyeFrame = DirectFrame(
+            parent=self._parent,
+            relief=None,
+            text=PLocalizer.EyeFrameTitle,
+            text_fg=(1, 1, 1, 1),
+            text_scale=0.18,
+            text_pos=(0, -0.05),
+            pos=(0, 0, -1.1),
+            scale=0.7)
         self.eyeFrame.hide()
-        self.colorPicker = CharGuiPicker(self.main, parent=self._parent, text=PLocalizer.EyesColorFrameTitle, nextCommand=self.handleNextColor, backCommand=self.handleLastColor)
+        self.colorPicker = CharGuiPicker(
+            self.main,
+            parent=self._parent,
+            text=PLocalizer.EyesColorFrameTitle,
+            nextCommand=self.handleNextColor,
+            backCommand=self.handleLastColor)
         self.colorPicker.setPos(0, 0, 0.2)
         self.colorPicker.hide()
         return
@@ -155,19 +183,22 @@ class Eyes(DirectObject.DirectObject):
         self.avatar.pirate.generateEyesTexture()
 
     def handleNextColor(self):
-        self.avatar.eyesColorIdx = (self.avatar.eyesColorIdx + 1) % self.avatar.numEyeColors
+        self.avatar.eyesColorIdx = (
+            self.avatar.eyesColorIdx + 1) % self.avatar.numEyeColors
         self.notify.debug('new color idx %s' % self.avatar.eyesColorIdx)
         self.avatar.pirate.setEyesColor(self.avatar.eyesColorIdx)
         self.avatar.pirate.generateEyesTexture()
 
     def handleLastColor(self):
-        self.avatar.eyesColorIdx = (self.avatar.eyesColorIdx - 1) % self.avatar.numEyeColors
+        self.avatar.eyesColorIdx = (
+            self.avatar.eyesColorIdx - 1) % self.avatar.numEyeColors
         self.notify.debug('new color idx %s' % self.avatar.eyesColorIdx)
         self.avatar.pirate.setEyesColor(self.avatar.eyesColorIdx)
         self.avatar.pirate.generateEyesTexture()
 
     def updateControlShape(self, pgs, extraArgs1=None, extraArgs2=None):
         if extraArgs1 != None:
-            self.avatar.pirate.setControlValue(pgs.node().getValue(), extraArgs1)
+            self.avatar.pirate.setControlValue(pgs.node().getValue(),
+                                               extraArgs1)
         self.main.handleQuarterView(extraArgs2)
         return

@@ -14,13 +14,14 @@ from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 
 
 class ShipPage(InventoryPage):
-    
+
     BottleFrame = None
 
     def __init__(self):
         if not ShipPage.BottleFrame:
             gui = loader.loadModel('models/gui/gui_ship_window')
-            ShipPage.BottleFrame = gui.find('**/ship_bottle').copyTo(NodePath(''))
+            ShipPage.BottleFrame = gui.find('**/ship_bottle').copyTo(
+                NodePath(''))
             ShipPage.BottleFrame.flattenStrong()
         InventoryPage.__init__(self)
         self.initialiseoptions(ShipPage)
@@ -83,7 +84,8 @@ class ShipPage(InventoryPage):
         self.addPanel(shipId)
         self.refreshList()
         taskMgr.remove('ShipPage-refresh')
-        taskMgr.doMethodLater(5, self.refreshList, 'ShipPage-refresh', extraArgs=[])
+        taskMgr.doMethodLater(
+            5, self.refreshList, 'ShipPage-refresh', extraArgs=[])
 
     def shipOVRemoved(self, shipId):
         self.removePanel(shipId)
@@ -100,10 +102,17 @@ class ShipPage(InventoryPage):
         self.tabBar = localAvatar.guiMgr.chestPanel.makeTabBar()
 
     def makeTab(self, shipId):
-        tab = self.tabBar.addTab(shipId, frameSize=(-0.125, 0.125, -0.125, 0.125), unfocusSize=(-0.125, 0.125, -0.125, 0.125), focusSize=(-0.125, 0.125, -0.135, 0.135), command=self.showPanel, extraArgs=[shipId])
+        tab = self.tabBar.addTab(
+            shipId,
+            frameSize=(-0.125, 0.125, -0.125, 0.125),
+            unfocusSize=(-0.125, 0.125, -0.125, 0.125),
+            focusSize=(-0.125, 0.125, -0.135, 0.135),
+            command=self.showPanel,
+            extraArgs=[shipId])
         tab.shipModel = tab.attachNewNode('modelInstance')
         if shipId > 2:
-            self.panels[shipId].bottleFrame.shipMeter.modelRoot.instanceTo(tab.shipModel)
+            self.panels[shipId].bottleFrame.shipMeter.modelRoot.instanceTo(
+                tab.shipModel)
             tab.shipModel.setHpr(-70, 12, 15)
             tab.shipModel.setDepthTest(1, 100)
             tab.shipModel.setDepthWrite(1, 100)
@@ -159,7 +168,7 @@ class ShipPage(InventoryPage):
             for id in range(len(shipIds), 3):
                 self.addPanel(id)
 
-            validShips = [ shipId for shipId in shipIds if shipId in self.panels ]
+            validShips = [shipId for shipId in shipIds if shipId in self.panels]
             for shipId in validShips:
                 self.makeTab(shipId)
 
@@ -180,12 +189,14 @@ class ShipPage(InventoryPage):
             if inventory.isReady():
                 doRefresh(inventory)
             else:
-                self.acceptOnce('inventoryReady-%s' % inventory.getDoId(), doRefresh)
+                self.acceptOnce('inventoryReady-%s' % inventory.getDoId(),
+                                doRefresh)
 
         if self.pendingRequestInventory:
             base.cr.relatedObjectMgr.abortRequest(self.pendingRequestInventory)
             self.pendingRequestInventory = None
-        self.pendingRequestInventory = base.cr.relatedObjectMgr.requestObjects([localAvatar.getInventoryId()], eachCallback=doReadyCheck)
+        self.pendingRequestInventory = base.cr.relatedObjectMgr.requestObjects(
+            [localAvatar.getInventoryId()], eachCallback=doReadyCheck)
         return
 
     def showPanel(self, shipId):
@@ -210,4 +221,6 @@ class ShipPage(InventoryPage):
 
     def slideOpenPrecall(self):
         self.show()
+
+
 # okay decompiling .\pirates\piratesgui\ShipPage.pyc

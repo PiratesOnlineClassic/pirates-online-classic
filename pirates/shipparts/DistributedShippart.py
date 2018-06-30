@@ -90,8 +90,7 @@ class DistributedShippart(DistributedNode.DistributedNode):
     def sendReadyMessage(self):
         if not self.sentReadyMessage:
             self.sentReadyMessage = 1
-            messenger.send('shippartReady-%s' % self.doId, [
-                self])
+            messenger.send('shippartReady-%s' % self.doId, [self])
 
     def setGeomParentId(self, geomParentId):
         self.geomParentId = geomParentId

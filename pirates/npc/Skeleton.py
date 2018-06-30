@@ -18,9 +18,76 @@ from pirates.makeapirate import NPCPirate
 from pirates.pirate import AvatarTypes, Biped
 from pirates.piratesbase import PiratesGlobals
 
-AvType2style = {AvatarTypes.EarthUndead[0]: '1', AvatarTypes.EarthUndead[1]: '8', AvatarTypes.EarthUndead[2]: '4', AvatarTypes.EarthUndead[3]: '1', AvatarTypes.EarthUndead[4]: '2', AvatarTypes.EarthUndead[5]: '8', AvatarTypes.EarthUndead[6]: '1', AvatarTypes.EarthUndead[7]: '2', AvatarTypes.EarthUndead[8]: '8', AvatarTypes.EarthUndead[9]: '4', AvatarTypes.AirUndead[0]: '1', AvatarTypes.AirUndead[1]: '2', AvatarTypes.AirUndead[2]: '8', AvatarTypes.AirUndead[3]: '1', AvatarTypes.AirUndead[4]: '2', AvatarTypes.AirUndead[5]: '8', AvatarTypes.AirUndead[6]: '1', AvatarTypes.AirUndead[7]: '2', AvatarTypes.AirUndead[8]: '8', AvatarTypes.AirUndead[9]: '4', AvatarTypes.FireUndead[0]: '1', AvatarTypes.FireUndead[1]: '2', AvatarTypes.FireUndead[2]: '8', AvatarTypes.FireUndead[3]: '1', AvatarTypes.FireUndead[4]: '2', AvatarTypes.FireUndead[5]: '8', AvatarTypes.FireUndead[6]: '1', AvatarTypes.FireUndead[7]: '2', AvatarTypes.FireUndead[8]: '8', AvatarTypes.FireUndead[9]: '4', AvatarTypes.WaterUndead[0]: 'djcr', AvatarTypes.WaterUndead[1]: 'djjm', AvatarTypes.WaterUndead[2]: 'djko', AvatarTypes.WaterUndead[3]: 'djpa', AvatarTypes.WaterUndead[4]: 'djtw', AvatarTypes.WaterUndead[5]: 'djcr', AvatarTypes.WaterUndead[6]: 'djjm', AvatarTypes.WaterUndead[7]: 'djko', AvatarTypes.WaterUndead[8]: 'djpa', AvatarTypes.WaterUndead[9]: 'djtw', AvatarTypes.FrenchUndead[0]: 'fr1', AvatarTypes.FrenchUndead[1]: 'fr2', AvatarTypes.FrenchUndead[2]: 'fr3', AvatarTypes.FrenchUndead[3]: 'fr4', AvatarTypes.SpanishUndead[0]: 'sp1', AvatarTypes.SpanishUndead[1]: 'sp2', AvatarTypes.SpanishUndead[2]: 'sp3', AvatarTypes.SpanishUndead[3]: 'sp4'}
+AvType2style = {
+    AvatarTypes.EarthUndead[0]: '1',
+    AvatarTypes.EarthUndead[1]: '8',
+    AvatarTypes.EarthUndead[2]: '4',
+    AvatarTypes.EarthUndead[3]: '1',
+    AvatarTypes.EarthUndead[4]: '2',
+    AvatarTypes.EarthUndead[5]: '8',
+    AvatarTypes.EarthUndead[6]: '1',
+    AvatarTypes.EarthUndead[7]: '2',
+    AvatarTypes.EarthUndead[8]: '8',
+    AvatarTypes.EarthUndead[9]: '4',
+    AvatarTypes.AirUndead[0]: '1',
+    AvatarTypes.AirUndead[1]: '2',
+    AvatarTypes.AirUndead[2]: '8',
+    AvatarTypes.AirUndead[3]: '1',
+    AvatarTypes.AirUndead[4]: '2',
+    AvatarTypes.AirUndead[5]: '8',
+    AvatarTypes.AirUndead[6]: '1',
+    AvatarTypes.AirUndead[7]: '2',
+    AvatarTypes.AirUndead[8]: '8',
+    AvatarTypes.AirUndead[9]: '4',
+    AvatarTypes.FireUndead[0]: '1',
+    AvatarTypes.FireUndead[1]: '2',
+    AvatarTypes.FireUndead[2]: '8',
+    AvatarTypes.FireUndead[3]: '1',
+    AvatarTypes.FireUndead[4]: '2',
+    AvatarTypes.FireUndead[5]: '8',
+    AvatarTypes.FireUndead[6]: '1',
+    AvatarTypes.FireUndead[7]: '2',
+    AvatarTypes.FireUndead[8]: '8',
+    AvatarTypes.FireUndead[9]: '4',
+    AvatarTypes.WaterUndead[0]: 'djcr',
+    AvatarTypes.WaterUndead[1]: 'djjm',
+    AvatarTypes.WaterUndead[2]: 'djko',
+    AvatarTypes.WaterUndead[3]: 'djpa',
+    AvatarTypes.WaterUndead[4]: 'djtw',
+    AvatarTypes.WaterUndead[5]: 'djcr',
+    AvatarTypes.WaterUndead[6]: 'djjm',
+    AvatarTypes.WaterUndead[7]: 'djko',
+    AvatarTypes.WaterUndead[8]: 'djpa',
+    AvatarTypes.WaterUndead[9]: 'djtw',
+    AvatarTypes.FrenchUndead[0]: 'fr1',
+    AvatarTypes.FrenchUndead[1]: 'fr2',
+    AvatarTypes.FrenchUndead[2]: 'fr3',
+    AvatarTypes.FrenchUndead[3]: 'fr4',
+    AvatarTypes.SpanishUndead[0]: 'sp1',
+    AvatarTypes.SpanishUndead[1]: 'sp2',
+    AvatarTypes.SpanishUndead[2]: 'sp3',
+    AvatarTypes.SpanishUndead[3]: 'sp4'
+}
 AnimDict = {}
-AnimListDict = {'djcr': Biped.DefaultAnimList, 'djjm': Biped.DefaultAnimList, 'djko': Biped.DefaultAnimList, 'djpa': Biped.DefaultAnimList, 'djtw': Biped.DefaultAnimList, '1': Biped.DefaultAnimList, '2': Biped.DefaultAnimList, '4': Biped.DefaultAnimList, '8': Biped.DefaultAnimList, 'fr1': Biped.DefaultAnimList, 'fr2': Biped.DefaultAnimList, 'fr3': Biped.DefaultAnimList, 'fr4': Biped.DefaultAnimList, 'sp1': Biped.DefaultAnimList, 'sp2': Biped.DefaultAnimList, 'sp3': Biped.DefaultAnimList, 'sp4': Biped.DefaultAnimList}
+AnimListDict = {
+    'djcr': Biped.DefaultAnimList,
+    'djjm': Biped.DefaultAnimList,
+    'djko': Biped.DefaultAnimList,
+    'djpa': Biped.DefaultAnimList,
+    'djtw': Biped.DefaultAnimList,
+    '1': Biped.DefaultAnimList,
+    '2': Biped.DefaultAnimList,
+    '4': Biped.DefaultAnimList,
+    '8': Biped.DefaultAnimList,
+    'fr1': Biped.DefaultAnimList,
+    'fr2': Biped.DefaultAnimList,
+    'fr3': Biped.DefaultAnimList,
+    'fr4': Biped.DefaultAnimList,
+    'sp1': Biped.DefaultAnimList,
+    'sp2': Biped.DefaultAnimList,
+    'sp3': Biped.DefaultAnimList,
+    'sp4': Biped.DefaultAnimList
+}
 djcrCustomAnimList = [['intro', '2']]
 djjmCustomAnimList = [['intro', '2']]
 djkoCustomAnimList = [['intro', '2']]
@@ -29,21 +96,97 @@ djtwCustomAnimList = [['intro', '2']]
 gp1CustomAnimList = [['idle', '1'], ['intro', '2'], ['run', '1'], ['walk', '1']]
 gp2CustomAnimList = [['idle', '2'], ['intro', '2'], ['run', '2'], ['walk', '2']]
 gp4CustomAnimList = [['idle', '4'], ['intro', '4'], ['run', '4'], ['walk', '4']]
-gp8CustomAnimList = [['idle', '8'], ['intro', '2'], ['into_idle', '8'], ['run', '8'], ['walk', '8']]
-frgp1CustomAnimList = [['foil_coup', '1'], ['foil_hack', '1'], ['foil_idle', '1'], ['foil_slash', '1'], ['foil_thrust', '1'], ['foil_kick', '1'], ['sword_advance', '1']]
-frgp2CustomAnimList = [['foil_coup', '1'], ['foil_hack', '1'], ['foil_idle', '1'], ['foil_slash', '1'], ['foil_thrust', '1'], ['foil_kick', '1'], ['sword_advance', '1']]
-frgp3CustomAnimList = [['foil_coup', '1'], ['foil_hack', '1'], ['foil_idle', '1'], ['foil_slash', '1'], ['foil_thrust', '1'], ['foil_kick', '1'], ['sword_advance', '1']]
-frgp4CustomAnimList = [['foil_coup', '1'], ['foil_hack', '1'], ['foil_idle', '1'], ['foil_slash', '1'], ['foil_thrust', '1'], ['foil_kick', '1'], ['sword_advance', '1']]
-spgp1CustomAnimList = [['dualcutlass_comboA', '4'], ['dualcutlass_comboB', '4'], ['dualcutlass_draw', '4'], ['dualcutlass_idle', '4'], ['dualcutlass_hurt', '4'], ['dualcutlass_walk', '4']]
-spgp2CustomAnimList = [['dualcutlass_comboA', '4'], ['dualcutlass_comboB', '4'], ['dualcutlass_draw', '4'], ['dualcutlass_idle', '4'], ['dualcutlass_hurt', '4'], ['dualcutlass_walk', '4']]
-spgp3CustomAnimList = [['dualcutlass_comboA', '4'], ['dualcutlass_comboB', '4'], ['dualcutlass_draw', '4'], ['dualcutlass_idle', '4'], ['dualcutlass_hurt', '4'], ['dualcutlass_walk', '4']]
-spgp4CustomAnimList = [['dualcutlass_comboA', '4'], ['dualcutlass_comboB', '4'], ['dualcutlass_draw', '4'], ['dualcutlass_idle', '4'], ['dualcutlass_hurt', '4'], ['dualcutlass_walk', '4']]
-CustomAnimDict = {'djcr': djcrCustomAnimList, 'djjm': djjmCustomAnimList, 'djko': djkoCustomAnimList, 'djpa': djpaCustomAnimList, 'djtw': djtwCustomAnimList, '1': gp1CustomAnimList, '2': gp2CustomAnimList, '4': gp4CustomAnimList, '8': gp8CustomAnimList, 'fr1': frgp1CustomAnimList, 'fr2': frgp2CustomAnimList, 'fr3': frgp3CustomAnimList, 'fr4': frgp4CustomAnimList, 'sp1': spgp1CustomAnimList, 'sp2': spgp2CustomAnimList, 'sp3': spgp3CustomAnimList, 'sp4': spgp4CustomAnimList}
-ModelDict = {'djcr': 'models/char/dj_crash', 'djjm': 'models/char/dj_jimmylegs', 'djko': 'models/char/dj_koleniko', 'djpa': 'models/char/dj_palifico', 'djtw': 'models/char/dj_twins', '1': 'models/char/jr_gp1', '2': 'models/char/jr_gp2', '4': 'models/char/jr_gp4', '8': 'models/char/jr_gp3', 'fr1': 'models/char/fr_gp1', 'fr2': 'models/char/fr_gp2', 'fr3': 'models/char/fr_gp3', 'fr4': 'models/char/fr_gp4', 'sp1': 'models/char/sp_gp1', 'sp2': 'models/char/sp_gp2', 'sp3': 'models/char/sp_gp3', 'sp4': 'models/char/sp_gp4'}
-SuffixDict = {'djcr': '_dj_cr', 'djjm': '_dj_jm', 'djko': '_dj_ko', 'djpa': '_dj_pa', 'djtw': '_dj_tw', '1': '_gp', '2': '_gp', '4': '_gp', '8': '_gp', 'fr1': '_fr_gp', 'fr2': '_fr_gp', 'fr3': '_fr_gp', 'fr4': '_fr_gp', 'sp1': '_sp_gp', 'sp2': '_sp_gp', 'sp3': '_sp_gp', 'sp4': '_sp_gp'}
+gp8CustomAnimList = [['idle', '8'], ['intro', '2'], ['into_idle', '8'],
+                     ['run', '8'], ['walk', '8']]
+frgp1CustomAnimList = [['foil_coup', '1'], ['foil_hack', '1'],
+                       ['foil_idle', '1'], ['foil_slash', '1'],
+                       ['foil_thrust', '1'], ['foil_kick',
+                                              '1'], ['sword_advance', '1']]
+frgp2CustomAnimList = [['foil_coup', '1'], ['foil_hack', '1'],
+                       ['foil_idle', '1'], ['foil_slash', '1'],
+                       ['foil_thrust', '1'], ['foil_kick',
+                                              '1'], ['sword_advance', '1']]
+frgp3CustomAnimList = [['foil_coup', '1'], ['foil_hack', '1'],
+                       ['foil_idle', '1'], ['foil_slash', '1'],
+                       ['foil_thrust', '1'], ['foil_kick',
+                                              '1'], ['sword_advance', '1']]
+frgp4CustomAnimList = [['foil_coup', '1'], ['foil_hack', '1'],
+                       ['foil_idle', '1'], ['foil_slash', '1'],
+                       ['foil_thrust', '1'], ['foil_kick',
+                                              '1'], ['sword_advance', '1']]
+spgp1CustomAnimList = [['dualcutlass_comboA', '4'], ['dualcutlass_comboB', '4'],
+                       ['dualcutlass_draw', '4'], ['dualcutlass_idle', '4'],
+                       ['dualcutlass_hurt', '4'], ['dualcutlass_walk', '4']]
+spgp2CustomAnimList = [['dualcutlass_comboA', '4'], ['dualcutlass_comboB', '4'],
+                       ['dualcutlass_draw', '4'], ['dualcutlass_idle', '4'],
+                       ['dualcutlass_hurt', '4'], ['dualcutlass_walk', '4']]
+spgp3CustomAnimList = [['dualcutlass_comboA', '4'], ['dualcutlass_comboB', '4'],
+                       ['dualcutlass_draw', '4'], ['dualcutlass_idle', '4'],
+                       ['dualcutlass_hurt', '4'], ['dualcutlass_walk', '4']]
+spgp4CustomAnimList = [['dualcutlass_comboA', '4'], ['dualcutlass_comboB', '4'],
+                       ['dualcutlass_draw', '4'], ['dualcutlass_idle', '4'],
+                       ['dualcutlass_hurt', '4'], ['dualcutlass_walk', '4']]
+CustomAnimDict = {
+    'djcr': djcrCustomAnimList,
+    'djjm': djjmCustomAnimList,
+    'djko': djkoCustomAnimList,
+    'djpa': djpaCustomAnimList,
+    'djtw': djtwCustomAnimList,
+    '1': gp1CustomAnimList,
+    '2': gp2CustomAnimList,
+    '4': gp4CustomAnimList,
+    '8': gp8CustomAnimList,
+    'fr1': frgp1CustomAnimList,
+    'fr2': frgp2CustomAnimList,
+    'fr3': frgp3CustomAnimList,
+    'fr4': frgp4CustomAnimList,
+    'sp1': spgp1CustomAnimList,
+    'sp2': spgp2CustomAnimList,
+    'sp3': spgp3CustomAnimList,
+    'sp4': spgp4CustomAnimList
+}
+ModelDict = {
+    'djcr': 'models/char/dj_crash',
+    'djjm': 'models/char/dj_jimmylegs',
+    'djko': 'models/char/dj_koleniko',
+    'djpa': 'models/char/dj_palifico',
+    'djtw': 'models/char/dj_twins',
+    '1': 'models/char/jr_gp1',
+    '2': 'models/char/jr_gp2',
+    '4': 'models/char/jr_gp4',
+    '8': 'models/char/jr_gp3',
+    'fr1': 'models/char/fr_gp1',
+    'fr2': 'models/char/fr_gp2',
+    'fr3': 'models/char/fr_gp3',
+    'fr4': 'models/char/fr_gp4',
+    'sp1': 'models/char/sp_gp1',
+    'sp2': 'models/char/sp_gp2',
+    'sp3': 'models/char/sp_gp3',
+    'sp4': 'models/char/sp_gp4'
+}
+SuffixDict = {
+    'djcr': '_dj_cr',
+    'djjm': '_dj_jm',
+    'djko': '_dj_ko',
+    'djpa': '_dj_pa',
+    'djtw': '_dj_tw',
+    '1': '_gp',
+    '2': '_gp',
+    '4': '_gp',
+    '8': '_gp',
+    'fr1': '_fr_gp',
+    'fr2': '_fr_gp',
+    'fr3': '_fr_gp',
+    'fr4': '_fr_gp',
+    'sp1': '_sp_gp',
+    'sp2': '_sp_gp',
+    'sp3': '_sp_gp',
+    'sp4': '_sp_gp'
+}
+
 
 class Skeleton(Biped.Biped):
-    
+
     animInfo = {}
 
     def __init__(self):
@@ -74,7 +217,7 @@ class Skeleton(Biped.Biped):
             return
         except:
             self.Skeleton_deleted = 1
-        
+
         self.loaded = 0
         self.deleteDropShadow()
         self.model.delete()
@@ -91,8 +234,10 @@ class Skeleton(Biped.Biped):
             self.glow = None
 
     def setupNodes(self):
-        self.headNode = self.controlJoint(None, 'modelRoot', 'def_head01', '2000')
-        self.scaleNode = self.controlJoint(None, 'modelRoot', 'def_scale_jt', '2000')
+        self.headNode = self.controlJoint(None, 'modelRoot', 'def_head01',
+                                          '2000')
+        self.scaleNode = self.controlJoint(None, 'modelRoot', 'def_scale_jt',
+                                           '2000')
         exposedHeadJoint = self.getLOD('2000').find('**/def_head01')
         if not exposedHeadJoint.isEmpty():
             self.headNode.reparentTo(exposedHeadJoint)
@@ -145,7 +290,9 @@ class Skeleton(Biped.Biped):
             animSuffix = ''
             for i in range(0, len(CustomAnimDict[self.style])):
                 if anim[0] == CustomAnimDict[self.style][i][0]:
-                    animSuffix = SuffixDict[self.style] + CustomAnimDict[self.style][i][1]
+                    animSuffix = SuffixDict[self.
+                                            style] + CustomAnimDict[self.
+                                                                    style][i][1]
                     break
 
             AnimDict[anim[0]] = animPrefix + '_' + anim[1] + animSuffix
@@ -219,12 +366,17 @@ class Skeleton(Biped.Biped):
 
     def getEnterDeathTrack(self):
         animName = self.getDeathAnimName()
-        soundWaitTime = {'death': 0.8, 'death3': 1.8, 'death4': 1.6}.get(animName, 1.0)
+        soundWaitTime = {
+            'death': 0.8,
+            'death3': 1.8,
+            'death4': 1.6
+        }.get(animName, 1.0)
         duration = self.getDuration(animName)
         frames = self.getNumFrames(animName)
 
         def startVFX():
-            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting(
+            ) >= base.options.SpecialEffectsHigh:
                 deathEffect = JRDeathEffect.getEffect()
                 if deathEffect:
                     deathEffect.reparentTo(self)
@@ -246,17 +398,77 @@ class Skeleton(Biped.Biped):
                     spiritEffect.setScale(1.0)
                     Sequence(Wait(0.25), Func(spiritEffect.play)).start()
 
-        return Sequence(Wait(0.5), Parallel(Sequence(self.actorInterval(animName, startFrame=0.0, endFrame=frames - 1.0, blendOutT=0.0, blendInT=0.0), self.actorInterval(animName, startFrame=frames - 1.0, endFrame=frames, duration=5.0, blendOutT=0.0, blendInT=0.0)), Sequence(Wait(duration / 3.0), Func(self.setTransparency, 1), LerpColorScaleInterval(self, duration / 3.0, Vec4(0.55, 0.7, 0.2, 1.0), startColorScale=Vec4(1)), Func(startVFX), LerpColorScaleInterval(self, duration / 3.0, Vec4(0.0, 0.0, 0.0, 0.0), startColorScale=Vec4(0.55, 0.7, 0.2, 1.0)), Func(self.hide), Func(self.clearColorScale), Func(self.clearTransparency)), Sequence(Wait(soundWaitTime), SoundInterval(self.sfx['death'], loop=0)), Func(self.setAllowInteract, False)))
+        return Sequence(
+            Wait(0.5),
+            Parallel(
+                Sequence(
+                    self.actorInterval(
+                        animName,
+                        startFrame=0.0,
+                        endFrame=frames - 1.0,
+                        blendOutT=0.0,
+                        blendInT=0.0),
+                    self.actorInterval(
+                        animName,
+                        startFrame=frames - 1.0,
+                        endFrame=frames,
+                        duration=5.0,
+                        blendOutT=0.0,
+                        blendInT=0.0)),
+                Sequence(
+                    Wait(duration / 3.0), Func(self.setTransparency, 1),
+                    LerpColorScaleInterval(
+                        self,
+                        duration / 3.0,
+                        Vec4(0.55, 0.7, 0.2, 1.0),
+                        startColorScale=Vec4(1)), Func(startVFX),
+                    LerpColorScaleInterval(
+                        self,
+                        duration / 3.0,
+                        Vec4(0.0, 0.0, 0.0, 0.0),
+                        startColorScale=Vec4(0.55, 0.7, 0.2, 1.0)),
+                    Func(self.hide), Func(self.clearColorScale),
+                    Func(self.clearTransparency)),
+                Sequence(
+                    Wait(soundWaitTime), SoundInterval(
+                        self.sfx['death'], loop=0)),
+                Func(self.setAllowInteract, False)))
 
     def getExitDeathTrack(self):
         return Biped.Biped.getExitDeathTrack(self)
 
     @classmethod
     def setupAnimInfo(cls):
-        cls.setupAnimInfoState('LandRoam', (('idle', 1.5), ('walk', 1.0), ('run', 1.0), ('walk', -1.0), ('strafe_left', 1), ('strafe_right', 1), ('run_diagonal_left', 1), ('run_diagonal_right', 1), ('walk_back_diagonal_left', 1), ('walk_back_diagonal_right', 1), ('fall_ground', 1), ('fall_ground', 1)))
-        cls.setupAnimInfoState('WaterRoam', (('tread_water', 1.0), ('swim', 1.0), ('swim', 1.0), ('swim_back', 1.0), ('swim_left_diagonal', 1.0), ('swim_right_diagonal', 1.0), ('swim_left_diagonal', 1.0), ('swim_right_diagonal', 1.0), ('swim_back_diagonal_left', 1.0), ('swim_back_diagonal_right', 1.0), ('fall_ground', 1), ('fall_ground', 1)))
-        cls.setupAnimInfoState('LandTreasureRoam', (('chest_idle', 1.0), ('chest_walk', 1.0), ('chest_walk', 1.0), ('chest_walk', -1.0), ('strafe_left', 1.0), ('strafe_right', 1.0), ('run_diagonal_left', 1), ('run_diagonal_right', 1), ('walk_back_diagonal_left', 1), ('walk_back_diagonal_right', 1), ('fall_ground', 1), ('fall_ground', 1)))
-        cls.setupAnimInfoState('WaterRoam', (('tread_water', 1.0), ('swim', 1.0), ('swim', 1.0), ('swim_back', 1.0), ('swim_left_diagonal', 1.0), ('swim_right_diagonal', 1.0), ('swim_left_diagonal', 1.0), ('swim_right_diagonal', 1.0), ('swim_back_diagonal_left', 1.0), ('swim_back_diagonal_right', 1.0), ('fall_ground', 1), ('fall_ground', 1)))
+        cls.setupAnimInfoState(
+            'LandRoam',
+            (('idle', 1.5), ('walk', 1.0), ('run', 1.0), ('walk', -1.0),
+             ('strafe_left', 1), ('strafe_right', 1), ('run_diagonal_left', 1),
+             ('run_diagonal_right', 1), ('walk_back_diagonal_left', 1),
+             ('walk_back_diagonal_right', 1), ('fall_ground', 1),
+             ('fall_ground', 1)))
+        cls.setupAnimInfoState(
+            'WaterRoam',
+            (('tread_water', 1.0), ('swim', 1.0), ('swim', 1.0),
+             ('swim_back', 1.0), ('swim_left_diagonal', 1.0),
+             ('swim_right_diagonal', 1.0), ('swim_left_diagonal', 1.0),
+             ('swim_right_diagonal', 1.0), ('swim_back_diagonal_left', 1.0),
+             ('swim_back_diagonal_right', 1.0), ('fall_ground', 1),
+             ('fall_ground', 1)))
+        cls.setupAnimInfoState(
+            'LandTreasureRoam',
+            (('chest_idle', 1.0), ('chest_walk', 1.0), ('chest_walk', 1.0),
+             ('chest_walk', -1.0), ('strafe_left', 1.0), ('strafe_right', 1.0),
+             ('run_diagonal_left', 1), ('run_diagonal_right', 1),
+             ('walk_back_diagonal_left', 1), ('walk_back_diagonal_right', 1),
+             ('fall_ground', 1), ('fall_ground', 1)))
+        cls.setupAnimInfoState(
+            'WaterRoam',
+            (('tread_water', 1.0), ('swim', 1.0), ('swim', 1.0),
+             ('swim_back', 1.0), ('swim_left_diagonal', 1.0),
+             ('swim_right_diagonal', 1.0), ('swim_left_diagonal', 1.0),
+             ('swim_right_diagonal', 1.0), ('swim_back_diagonal_left', 1.0),
+             ('swim_back_diagonal_right', 1.0), ('fall_ground', 1),
+             ('fall_ground', 1)))
 
 
 Skeleton.setupAnimInfo()

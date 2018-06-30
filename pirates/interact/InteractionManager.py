@@ -43,7 +43,8 @@ class InteractionManager(DirectObject.DirectObject):
         if self.__locked:
             return
         taskMgr.remove(self.__updateTaskName)
-        taskMgr.doMethodLater(self.__updateDelay, self.updateTextMessage, self.__updateTaskName)
+        taskMgr.doMethodLater(self.__updateDelay, self.updateTextMessage,
+                              self.__updateTaskName)
 
     def stop(self, endCurrent=False):
         if self.__locked:
@@ -67,7 +68,10 @@ class InteractionManager(DirectObject.DirectObject):
     def addInteractive(self, iObj, priority=InteractiveBase.PROXIMITY):
         if iObj.allowInteract:
             if (iObj, priority) in self.__interactives:
-                raise HierarchyException(HierarchyException.JOSWILSO, 'Redundant Interactive - %s(%d)' % (iObj.getName(), iObj.doId))
+                raise HierarchyException(
+                    HierarchyException.JOSWILSO,
+                    'Redundant Interactive - %s(%d)' % (iObj.getName(),
+                                                        iObj.doId))
             self.__interactives.append((iObj, priority))
 
     def removeInteractive(self, iObj, priority=InteractiveBase.PROXIMITY):
@@ -172,7 +176,8 @@ class InteractionManager(DirectObject.DirectObject):
             cRay = CollisionRay(0.0, 0.0, 4000.0, 0.0, 0.0, -1.0)
             cRayNode = CollisionNode('InteractionMgr-cRay')
             cRayNode.addSolid(cRay)
-            cRayNode.setFromCollideMask(PiratesGlobals.FloorBitmask | PiratesGlobals.ShipFloorBitmask)
+            cRayNode.setFromCollideMask(PiratesGlobals.FloorBitmask |
+                                        PiratesGlobals.ShipFloorBitmask)
             cRayNode.setIntoCollideMask(BitMask32.allOff())
             cRayNode.setBounds(BoundingSphere())
             cRayNode.setFinal(1)

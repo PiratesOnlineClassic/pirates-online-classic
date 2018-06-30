@@ -36,12 +36,16 @@ class DistributedCellDoor(DistributedInteractive.DistributedInteractive):
     def announceGenerate(self):
         DistributedInteractive.DistributedInteractive.announceGenerate(self)
         self.setupDoor()
-        self.setInteractOptions(proximityText=PLocalizer.InteractKickDoor, diskRadius=9.0,
-            sphereScale=6.0, allowInteract=self.allowInteract)
+        self.setInteractOptions(
+            proximityText=PLocalizer.InteractKickDoor,
+            diskRadius=9.0,
+            sphereScale=6.0,
+            allowInteract=self.allowInteract)
 
         self.setHealth(self.health, doAnim=True)
         self.setAllowInteract(localAvatar.getJailCellIndex() == self.cellIndex)
-        self.accept('localAvatar-setJailCellIndex', self.handleLocalAvatarCellIndex)
+        self.accept('localAvatar-setJailCellIndex',
+                    self.handleLocalAvatarCellIndex)
 
     def disable(self):
         self.ignoreAll()
@@ -71,9 +75,8 @@ class DistributedCellDoor(DistributedInteractive.DistributedInteractive):
         self.collisionNodePath = interior.find(self.doorCollisionStr)
         self.shutH = self.doorGeomNodePath.getH()
         self.openH = self.shutH + 120
-        self.kickEvents = (
-            self.uniqueName('kickStart'),
-            self.uniqueName('kickEnd'))
+        self.kickEvents = (self.uniqueName('kickStart'),
+                           self.uniqueName('kickEnd'))
 
         self.accept(self.kickEvents[0], self.d_doorKicked)
         self.accept(self.kickEvents[1], self.localDoorKicked)
@@ -91,11 +94,13 @@ class DistributedCellDoor(DistributedInteractive.DistributedInteractive):
             print '***JCW*** no current camera'
             localAvatar.printState()
         else:
-            oldXform = localAvatar.cameraFSM.getCurrentCamera().getTransform(render)
+            oldXform = localAvatar.cameraFSM.getCurrentCamera().getTransform(
+                render)
             localAvatar.lookAt(self)
             localAvatar.setP(0)
             localAvatar.setR(0)
-            localAvatar.cameraFSM.getCurrentCamera().setTransform(render, oldXform)
+            localAvatar.cameraFSM.getCurrentCamera().setTransform(
+                render, oldXform)
 
     def rejectInteraction(self):
         DistributedInteractive.DistributedInteractive.rejectInteraction(self)
@@ -119,10 +124,13 @@ class DistributedCellDoor(DistributedInteractive.DistributedInteractive):
         startHpr = self.doorGeomNodePath.getHpr()
         hpr = Vec3(self.openH, startHpr[1], startHpr[2])
         if not self.OpenSfx:
-            self.OpenSfx = base.loader.loadSfx('audio/sfx_door_spanish_open.mp3')
+            self.OpenSfx = base.loader.loadSfx(
+                'audio/sfx_door_spanish_open.mp3')
 
-        self.doorTrack = Sequence(Func(base.playSfx, self.OpenSfx, node=self.doorGeomNodePath), LerpHprInterval(
-            self.doorGeomNodePath, 0.2, hpr=hpr, startHpr=startHpr))
+        self.doorTrack = Sequence(
+            Func(base.playSfx, self.OpenSfx, node=self.doorGeomNodePath),
+            LerpHprInterval(
+                self.doorGeomNodePath, 0.2, hpr=hpr, startHpr=startHpr))
 
         self.doorTrack.start()
 
@@ -141,10 +149,13 @@ class DistributedCellDoor(DistributedInteractive.DistributedInteractive):
         startHpr = self.doorGeomNodePath.getHpr()
         hpr = Vec3(self.shutH, startHpr[1], startHpr[2])
         if not self.CloseSfx:
-            self.CloseSfx = base.loader.loadSfx('audio/sfx_door_shanty_slam.mp3')
+            self.CloseSfx = base.loader.loadSfx(
+                'audio/sfx_door_shanty_slam.mp3')
 
-        self.doorTrack = Sequence(Func(base.playSfx, self.CloseSfx, node=self.doorGeomNodePath), LerpHprInterval(
-            self.doorGeomNodePath, 0.2, hpr=hpr, startHpr=startHpr))
+        self.doorTrack = Sequence(
+            Func(base.playSfx, self.CloseSfx, node=self.doorGeomNodePath),
+            LerpHprInterval(
+                self.doorGeomNodePath, 0.2, hpr=hpr, startHpr=startHpr))
 
         self.doorTrack.start()
 

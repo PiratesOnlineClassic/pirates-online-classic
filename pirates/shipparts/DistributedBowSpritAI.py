@@ -10,8 +10,12 @@ class DistributedBowSpritDNA(BowSpritDNA):
     def __init__(self):
         BowSpritDNA.__init__(self)
 
-class DistributedBowSpritAI(DistributedShippartAI, DistributedDestructibleObjectAI, DistributedBowSpritDNA):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBowSpritAI')
+
+class DistributedBowSpritAI(DistributedShippartAI,
+                            DistributedDestructibleObjectAI,
+                            DistributedBowSpritDNA):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedBowSpritAI')
 
     def __init__(self, air):
         DistributedShippartAI.__init__(self, air)

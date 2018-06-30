@@ -3,17 +3,22 @@ from panda3d.core import *
 from pirates.creature.Creature import Creature
 from pirates.pirate import AvatarTypes
 
+
 class Body(Creature):
-    
+
     ModelInfo = ('models/char/krakenHead-high', 'models/char/krakenHead-')
     SfxNames = dict(Creature.SfxNames)
-    SfxNames.update({'pain': 'sfx_crab_pain.mp3', 'death': 'sfx_crab_death.mp3'})
+    SfxNames.update({
+        'pain': 'sfx_crab_pain.mp3',
+        'death': 'sfx_crab_death.mp3'
+    })
     sfx = {}
-    AnimList = (('idle', 'idle'), )
+    AnimList = (('idle', 'idle'),)
 
     class AnimationMixer(Creature.AnimationMixer):
-        
-        notify = DirectNotifyGlobal.directNotify.newCategory('CrabAnimationMixer')
+
+        notify = DirectNotifyGlobal.directNotify.newCategory(
+            'CrabAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION
         AnimRankings = {'idle': (LOOP['LOOP'],)}
@@ -27,5 +32,13 @@ class Body(Creature):
 
     @classmethod
     def setupAnimInfo(cls):
-        cls.setupAnimInfoState('LandRoam', (('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', -1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0)))
-        cls.setupAnimInfoState('WaterRoam', (('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', -1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0)))
+        cls.setupAnimInfoState('LandRoam',
+                               (('idle', 1.0), ('idle', 1.0), ('idle', 1.0),
+                                ('idle', -1.0), ('idle', 1.0), ('idle', 1.0),
+                                ('idle', 1.0), ('idle', 1.0), ('idle', 1.0),
+                                ('idle', 1.0), ('idle', 1.0), ('idle', 1.0)))
+        cls.setupAnimInfoState('WaterRoam',
+                               (('idle', 1.0), ('idle', 1.0), ('idle', 1.0),
+                                ('idle', -1.0), ('idle', 1.0), ('idle', 1.0),
+                                ('idle', 1.0), ('idle', 1.0), ('idle', 1.0),
+                                ('idle', 1.0), ('idle', 1.0), ('idle', 1.0)))

@@ -9,10 +9,12 @@ exec 'from pirates.leveleditor.worldData.%s import *' % dataModule
 lines = []
 for mainUid in objectStruct['Objects']:
     mainObj = objectStruct['Objects'][mainUid]
-    lines.append('Name:\t%s\t%s\nType:\t%s\n\n' % (mainObj['Name'], mainUid, mainObj['Type']))
+    lines.append('Name:\t%s\t%s\nType:\t%s\n\n' % (mainObj['Name'], mainUid,
+                                                   mainObj['Type']))
     for uid in mainObj['Objects']:
         object = mainObj['Objects'][uid]
-        lines.append('%s\t%s\t%s\n' % (uid, object['Type'], `(object['Pos'])`))
+        lines.append('%s\t%s\t%s\n' % (uid, object['Type'], repr(
+                                       (object['Pos']))))
 
     lines.append('\n')
 

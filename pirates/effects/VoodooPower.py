@@ -67,9 +67,14 @@ class VoodooPower(PooledEffect, EffectController):
         self.p0.factory.setAngularVelocitySpread(0.0)
         self.p0.renderer.setAlphaMode(BaseParticleRenderer.PRALPHAINOUT)
         self.p0.renderer.setUserAlpha(0.25)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 0.5), Vec4(0.75, 0.6, 1.0, 0.75), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingAlpha,
+                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.setColorBlendMode(
+            ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor,
+            ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 0.5), Vec4(0.75, 0.6, 1.0, 0.75), 1)
         self.p0.renderer.setFromNode(self.card)
         self.p0.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
         self.p0.renderer.setXScaleFlag(1)
@@ -108,8 +113,11 @@ class VoodooPower(PooledEffect, EffectController):
         self.p1.factory.setAngularVelocitySpread(0.0)
         self.p1.renderer.setAlphaMode(BaseParticleRenderer.PRALPHAINOUT)
         self.p1.renderer.setUserAlpha(1.0)
-        self.p1.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
-        self.p1.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.1, 0.2, 1.0, 0.0), Vec4(0.1, 0.2, 0.75, 1.0), 1)
+        self.p1.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingAlpha,
+                                           ColorBlendAttrib.OOne)
+        self.p1.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(0.1, 0.2, 1.0, 0.0), Vec4(0.1, 0.2, 0.75, 1.0), 1)
         self.p1.renderer.setFromNode(self.card2)
         self.p1.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
         self.p1.renderer.setXScaleFlag(1)
@@ -155,7 +163,8 @@ class VoodooPower(PooledEffect, EffectController):
         self.p2.renderer.setNonanimatedTheta(0.0)
         self.p2.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p2.renderer.setAlphaDisable(0)
-        self.p2.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.85, 0.75, 0.9, 0.6), Vec4(0.0, 0.0, 0.0, 0.75), 1)
+        self.p2.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(0.85, 0.75, 0.9, 0.6), Vec4(0.0, 0.0, 0.0, 0.75), 1)
         self.p2.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p2.emitter.setAmplitude(0.2)
         self.p2.emitter.setAmplitudeSpread(0.0)
@@ -169,8 +178,17 @@ class VoodooPower(PooledEffect, EffectController):
         self.p0.renderer.setInitialXScale(0.0001 * self.cardScale)
         self.p0.renderer.setInitialYScale(0.0001 * self.cardScale)
         expand = Sequence(Func(self.resize), Wait(0.6))
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self), Func(expand.loop), Wait(2.0), Func(self.p1.setBirthRate, 0.1), Func(self.p1.clearToInitial), Func(self.p2.setBirthRate, 0.03), Func(self.p2.clearToInitial), Wait(3.5), Func(expand.finish))
-        self.endEffect = Sequence(Func(expand.finish), Func(self.p0.setBirthRate, 100.0), Func(self.p1.setBirthRate, 100.0), Func(self.p2.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self), Func(expand.loop), Wait(2.0),
+            Func(self.p1.setBirthRate, 0.1), Func(self.p1.clearToInitial),
+            Func(self.p2.setBirthRate, 0.03), Func(self.p2.clearToInitial),
+            Wait(3.5), Func(expand.finish))
+        self.endEffect = Sequence(
+            Func(expand.finish), Func(self.p0.setBirthRate, 100.0),
+            Func(self.p1.setBirthRate, 100.0), Func(self.p2.setBirthRate,
+                                                    100.0), Wait(2.0),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(0.5), self.endEffect)
 
     def resize(self):
@@ -181,11 +199,15 @@ class VoodooPower(PooledEffect, EffectController):
     def setEffectColor(self, color):
         self.effectColor = Vec4(1, 1, 1, 0) - (Vec4(1, 1, 1, 1) - color) / 2.0
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1, 1, 1, 0.5), self.effectColor, 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(1, 1, 1, 0.5), self.effectColor, 1)
         self.p1.renderer.getColorInterpolationManager().clearToInitial()
-        self.p1.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.1, 0.2, 1.0, 0.0), self.effectColor + Vec4(-0.2, -0.1, 0, 0.5), 1)
+        self.p1.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(0.1, 0.2, 1.0, 0.0),
+            self.effectColor + Vec4(-0.2, -0.1, 0, 0.5), 1)
         self.p2.renderer.getColorInterpolationManager().clearToInitial()
-        self.p2.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, self.effectColor, Vec4(0.0, 0.0, 0.0, 0.75), 1)
+        self.p2.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, self.effectColor, Vec4(0.0, 0.0, 0.0, 0.75), 1)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -195,4 +217,6 @@ class VoodooPower(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\VoodooPower.pyc

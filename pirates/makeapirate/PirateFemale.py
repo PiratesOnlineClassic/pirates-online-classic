@@ -39,51 +39,286 @@ ZOMB_PANT_TEXTURE = 5
 ZOMB_BELT = 0
 ZOMB_SHOE = 0
 ZOMB_SHOE_TEXTURE = 0
-body_textures = [
- [
-  'FP_sf_body_cauc', 'fp_zomb_a_body'], ['FP_ms_body_cauc', 'fp_zomb_a_body'], ['FP_mi_body_cauc', 'fp_zomb_a_body'], ['FP_tp_body_cauc', 'fp_zomb_a_body'], ['FP_mi_body_cauc', 'fp_zomb_a_body']]
+body_textures = [['FP_sf_body_cauc', 'fp_zomb_a_body'], [
+    'FP_ms_body_cauc', 'fp_zomb_a_body'
+], ['FP_mi_body_cauc', 'fp_zomb_a_body'], ['FP_tp_body_cauc', 'fp_zomb_a_body'],
+                 ['FP_mi_body_cauc', 'fp_zomb_a_body']]
 face_textures = [
- 'female_face_cauc_a', 'female_face_cauc_b', 'female_face_asian_a', 'female_face_dark_a', 'female_face_very_aged']
-PC_FACE_CHOICES = [
- 0, 1, 2, 3]
+    'female_face_cauc_a', 'female_face_cauc_b', 'female_face_asian_a',
+    'female_face_dark_a', 'female_face_very_aged'
+]
+PC_FACE_CHOICES = [0, 1, 2, 3]
 PC_HAIR_CHOICES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 PC_HAT_CHOICES = {0: [0], 1: [0], 3: [0], 5: [0], 6: [0]}
-PC_SHIRT_CHOICES = {0: [0, 1, 2, 3], 1: [0, 1, 2, 3], 2: [0, 1, 2, 3], 3: [1, 2, 3], 4: [0, 1, 2, 3]}
-PC_VEST_CHOICES = {0: [0], 1: [0, 1, 2, 3], 2: [0, 1, 2, 3], 3: [0, 1, 2], 4: [0, 1, 2]}
+PC_SHIRT_CHOICES = {
+    0: [0, 1, 2, 3],
+    1: [0, 1, 2, 3],
+    2: [0, 1, 2, 3],
+    3: [1, 2, 3],
+    4: [0, 1, 2, 3]
+}
+PC_VEST_CHOICES = {
+    0: [0],
+    1: [0, 1, 2, 3],
+    2: [0, 1, 2, 3],
+    3: [0, 1, 2],
+    4: [0, 1, 2]
+}
 PC_COAT_CHOICES = {0: [0], 1: [0, 1], 2: [0, 1, 2]}
-PC_BELT_CHOICES = {0: [0], 1: [0], 2: [0], 3: [0], 4: [0], 5: [0], 6: [0], 7: [0], 8: [0], 9: [0], 10: [0]}
-PC_PANT_CHOICES = {0: [0, 1, 2, 3, 4, 5], 1: [0, 1, 2, 3, 4], 2: [0, 1, 2, 3, 4, 5, 6]}
+PC_BELT_CHOICES = {
+    0: [0],
+    1: [0],
+    2: [0],
+    3: [0],
+    4: [0],
+    5: [0],
+    6: [0],
+    7: [0],
+    8: [0],
+    9: [0],
+    10: [0]
+}
+PC_PANT_CHOICES = {
+    0: [0, 1, 2, 3, 4, 5],
+    1: [0, 1, 2, 3, 4],
+    2: [0, 1, 2, 3, 4, 5, 6]
+}
 PC_SOCK_CHOICES = {0: [0]}
-PC_SHOE_CHOICES = {0: [0], 1: [0, 1, 2, 3], 2: [0, 1, 2, 3], 3: [0, 1, 2, 3, 4], 4: [0, 1, 2, 3]}
-NPC_FACE_CHOICES = [
- 0, 1, 2, 3, 4]
-NPC_HAIR_CHOICES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+PC_SHOE_CHOICES = {
+    0: [0],
+    1: [0, 1, 2, 3],
+    2: [0, 1, 2, 3],
+    3: [0, 1, 2, 3, 4],
+    4: [0, 1, 2, 3]
+}
+NPC_FACE_CHOICES = [0, 1, 2, 3, 4]
+NPC_HAIR_CHOICES = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+]
 NPC_HAT_CHOICES = {0: [0], 1: [0], 2: [0], 3: [0], 4: [0], 5: [0], 6: [0]}
-NPC_SHIRT_CHOICES = {0: [0, 1, 2, 3], 1: [0, 1, 2, 3], 2: [0, 1, 2, 3], 3: [0, 1, 2, 3], 4: [0, 1, 2, 3], 5: [0, 1, 2, 3], 6: [0, 1, 2, 3]}
-NPC_VEST_CHOICES = {0: [0], 1: [0, 1, 2, 3], 2: [0, 1, 2, 3], 3: [0, 1, 2], 4: [0, 1, 2]}
+NPC_SHIRT_CHOICES = {
+    0: [0, 1, 2, 3],
+    1: [0, 1, 2, 3],
+    2: [0, 1, 2, 3],
+    3: [0, 1, 2, 3],
+    4: [0, 1, 2, 3],
+    5: [0, 1, 2, 3],
+    6: [0, 1, 2, 3]
+}
+NPC_VEST_CHOICES = {
+    0: [0],
+    1: [0, 1, 2, 3],
+    2: [0, 1, 2, 3],
+    3: [0, 1, 2],
+    4: [0, 1, 2]
+}
 NPC_COAT_CHOICES = {0: [0], 1: [0, 1, 2, 3], 2: [0, 1, 2, 3], 3: [0]}
-NPC_BELT_CHOICES = {0: [0], 1: [0], 2: [0], 3: [0], 4: [0], 5: [0], 6: [0], 7: [0], 8: [0], 9: [0], 10: [0]}
-NPC_PANT_CHOICES = {0: [0, 1, 2, 3, 4, 5], 1: [0, 1, 2, 3, 4], 2: [0, 1, 2, 3, 4, 5, 6], 3: [0, 1], 4: [0, 1], 5: [0]}
+NPC_BELT_CHOICES = {
+    0: [0],
+    1: [0],
+    2: [0],
+    3: [0],
+    4: [0],
+    5: [0],
+    6: [0],
+    7: [0],
+    8: [0],
+    9: [0],
+    10: [0]
+}
+NPC_PANT_CHOICES = {
+    0: [0, 1, 2, 3, 4, 5],
+    1: [0, 1, 2, 3, 4],
+    2: [0, 1, 2, 3, 4, 5, 6],
+    3: [0, 1],
+    4: [0, 1],
+    5: [0]
+}
 NPC_SOCK_CHOICES = {0: [0], 1: [0, 1, 2, 3]}
-NPC_SHOE_CHOICES = {0: [0], 1: [0, 1, 2, 3], 2: [0, 1, 2, 3], 3: [0, 1, 2, 3, 4], 4: [0, 1, 2, 3], 5: [0]}
+NPC_SHOE_CHOICES = {
+    0: [0],
+    1: [0, 1, 2, 3],
+    2: [0, 1, 2, 3],
+    3: [0, 1, 2, 3, 4],
+    4: [0, 1, 2, 3],
+    5: [0]
+}
 eye_iris_textures = [
- 'pupilAqua', 'pupilBlue', 'pupilDarkBrown', 'pupilGreen', 'pupilHazel', 'pupilLightBrown']
+    'pupilAqua', 'pupilBlue', 'pupilDarkBrown', 'pupilGreen', 'pupilHazel',
+    'pupilLightBrown'
+]
 female_hairs = [
- 'style 0: bun', 'style 1: bun w/bangA', 'style 2: bun w/bangB', 'style 3: Ponytail', 'style 4: Ponytail w/bangA', 'style 5: Ponytail w/bangB', 'style 6: poof+barrette', 'style 7: poof+barrette w/bang', 'style 8: half down main+bun+backhair', 'style 9: half down main+pony+backhair', 'style 10: half down main+backhair+barrette', 'style 11: braid back+barrette', 'style 12: braid back+barrette w/bangA', 'style 13: braid back+barrette w/bangB', 'style 14: layered long', 'style 15: layered short', 'style 16: dreads short']
+    'style 0: bun', 'style 1: bun w/bangA', 'style 2: bun w/bangB',
+    'style 3: Ponytail', 'style 4: Ponytail w/bangA',
+    'style 5: Ponytail w/bangB', 'style 6: poof+barrette',
+    'style 7: poof+barrette w/bang', 'style 8: half down main+bun+backhair',
+    'style 9: half down main+pony+backhair',
+    'style 10: half down main+backhair+barrette',
+    'style 11: braid back+barrette', 'style 12: braid back+barrette w/bangA',
+    'style 13: braid back+barrette w/bangB', 'style 14: layered long',
+    'style 15: layered short', 'style 16: dreads short'
+]
 shirt_styles = [
- 'S_short_sleeve_round_neck', 'S_short_sleeve_vneck', 'S_short_sleeve_square_neck', 'S_long_sleeve_vneck_puffy', 'S_long_sleeve_vneck_collar', 'S_long_sleeve_tall_collar']
-vector_tattoos = [
- [
-  0, 0.3, 0.862, 0.033, 0, 0], [0, 0.15, 0.79, 0.066, 271.1, 0], [0, 0.124, 0.61, 0.066, 271.1, 0], [0, 0.5, 0.5, 1.0, 0, 0], [0, 0.13, 0.35, 0.1, 0, 0], [0, 0.5, 0.5, 0.1, 0, 0], [0, 0.5, 0.5, 0.1, 0, 0], [0, 0.5, 0.5, 0.1, 0, 0]]
+    'S_short_sleeve_round_neck', 'S_short_sleeve_vneck',
+    'S_short_sleeve_square_neck', 'S_long_sleeve_vneck_puffy',
+    'S_long_sleeve_vneck_collar', 'S_long_sleeve_tall_collar'
+]
+vector_tattoos = [[0, 0.3, 0.862, 0.033, 0,
+                   0], [0, 0.15, 0.79, 0.066, 271.1,
+                        0], [0, 0.124, 0.61, 0.066, 271.1, 0],
+                  [0, 0.5, 0.5, 1.0, 0, 0], [0, 0.13, 0.35, 0.1, 0, 0],
+                  [0, 0.5, 0.5, 0.1, 0, 0], [0, 0.5, 0.5, 0.1, 0,
+                                             0], [0, 0.5, 0.5, 0.1, 0, 0]]
 jewelry_geos_face = [
- 'acc_none', 'acc_face_brow_spike_right', 'acc_face_brow_ring_right', 'acc_face_brow_spike_left', 'acc_face_brow_ring_left', 'acc_face_ear_stud_left', 'acc_face_ear_open_left', 'acc_face_ear_spike_top_left', 'acc_face_ear_hoop_b_left', 'acc_face_ear_hoop_a_left', 'acc_face_ear_spike_bot_left', 'acc_face_ear_bighoop_left', 'acc_face_ear_cuff_c_left', 'acc_face_ear_cuff_b_left', 'acc_face_ear_cuff_a_left', 'acc_face_ear_cuff_a_right', 'acc_face_ear_open_right', 'acc_face_ear_stud_right', 'acc_face_ear_spike_top_right', 'acc_face_ear_hoop_b_right', 'acc_face_ear_hoop_a_right', 'acc_face_ear_spike_bot_right', 'acc_face_ear_bighoop_right', 'acc_face_ear_cuff_c_right', 'acc_face_ear_cuff_b_right', 'acc_face_lip_ring_top_left', 'acc_face_lip_ring_bot_left', 'acc_face_lip_ring_center', 'acc_face_lip_ring_bot_right', 'acc_face_lip_ring_top_right', 'acc_face_nose_ring_right', 'acc_face_nose_post_top', 'acc_face_nose_post_bot', 'acc_face_nose_ring_left', 'acc_face_nose_ring_center']
+    'acc_none', 'acc_face_brow_spike_right', 'acc_face_brow_ring_right',
+    'acc_face_brow_spike_left', 'acc_face_brow_ring_left',
+    'acc_face_ear_stud_left', 'acc_face_ear_open_left',
+    'acc_face_ear_spike_top_left', 'acc_face_ear_hoop_b_left',
+    'acc_face_ear_hoop_a_left', 'acc_face_ear_spike_bot_left',
+    'acc_face_ear_bighoop_left', 'acc_face_ear_cuff_c_left',
+    'acc_face_ear_cuff_b_left', 'acc_face_ear_cuff_a_left',
+    'acc_face_ear_cuff_a_right', 'acc_face_ear_open_right',
+    'acc_face_ear_stud_right', 'acc_face_ear_spike_top_right',
+    'acc_face_ear_hoop_b_right', 'acc_face_ear_hoop_a_right',
+    'acc_face_ear_spike_bot_right', 'acc_face_ear_bighoop_right',
+    'acc_face_ear_cuff_c_right', 'acc_face_ear_cuff_b_right',
+    'acc_face_lip_ring_top_left', 'acc_face_lip_ring_bot_left',
+    'acc_face_lip_ring_center', 'acc_face_lip_ring_bot_right',
+    'acc_face_lip_ring_top_right', 'acc_face_nose_ring_right',
+    'acc_face_nose_post_top', 'acc_face_nose_post_bot',
+    'acc_face_nose_ring_left', 'acc_face_nose_ring_center'
+]
 jewelry_geos_body = [
- 'acc_none', 'acc_body_ring_left_index_base', 'acc_body_ring_left_index_stone', 'acc_body_ring_left_mid_base', 'acc_body_ring_left_mid_stone', 'acc_body_ring_left_ring_base', 'acc_body_ring_left_ring_stone', 'acc_body_ring_left_pinky_base', 'acc_body_ring_left_pinky_stone', 'acc_body_ring_right_index_base', 'acc_body_ring_right_index_stone', 'acc_body_ring_right_mid_base', 'acc_body_ring_right_mid_stone', 'acc_body_ring_right_ring_base', 'acc_body_ring_right_ring_stone', 'acc_body_ring_right_pinky_base', 'acc_body_ring_right_pinky_stone']
-jewelry_options = {'RBrow': [[0], [1], [2]], 'LBrow': [[0], [3], [4]], 'LEar': [[0], [5], [6], [7], [8, 9], [10], [11], [12], [13], [14], [13, 14], [11, 13, 14], [6, 7], [5, 13, 14]], 'REar': [[0], [15], [16], [17], [18], [19, 20], [21], [22], [23], [24], [23, 24], [22, 23, 24], [16, 18], [17, 23, 24]], 'Nose': [[0], [30], [31], [32], [33], [34], [31, 32], [31, 33]], 'Mouth': [[0], [25], [26], [27], [28], [29], [25, 28], [27, 28]], 'LHand': [[0], [1], [1, 2], [3], [3, 4], [5], [5, 6], [7], [7, 8], [1, 3], [1, 5], [3, 7]], 'RHand': [[0], [9], [9, 10], [11], [11, 12], [13], [13, 14], [15], [15, 16], [9, 11], [9, 13], [11, 15]]}
+    'acc_none', 'acc_body_ring_left_index_base',
+    'acc_body_ring_left_index_stone', 'acc_body_ring_left_mid_base',
+    'acc_body_ring_left_mid_stone', 'acc_body_ring_left_ring_base',
+    'acc_body_ring_left_ring_stone', 'acc_body_ring_left_pinky_base',
+    'acc_body_ring_left_pinky_stone', 'acc_body_ring_right_index_base',
+    'acc_body_ring_right_index_stone', 'acc_body_ring_right_mid_base',
+    'acc_body_ring_right_mid_stone', 'acc_body_ring_right_ring_base',
+    'acc_body_ring_right_ring_stone', 'acc_body_ring_right_pinky_base',
+    'acc_body_ring_right_pinky_stone'
+]
+jewelry_options = {
+    'RBrow': [[0], [1], [2]],
+    'LBrow': [[0], [3], [4]],
+    'LEar': [[0], [5], [6], [7], [8, 9], [10], [11], [12], [13], [14], [13, 14],
+             [11, 13, 14], [6, 7], [5, 13, 14]],
+    'REar': [[0], [15], [16], [17], [18], [19, 20], [21], [22], [23], [24],
+             [23, 24], [22, 23, 24], [16, 18], [17, 23, 24]],
+    'Nose': [[0], [30], [31], [32], [33], [34], [31, 32], [31, 33]],
+    'Mouth': [[0], [25], [26], [27], [28], [29], [25, 28], [27, 28]],
+    'LHand': [[0], [1], [1, 2], [3], [3, 4], [5], [5, 6], [7], [7, 8], [1, 3],
+              [1, 5], [3, 7]],
+    'RHand': [[0], [9], [9, 10], [11], [11, 12], [13], [13, 14], [15], [15, 16],
+              [9, 11], [9, 13], [11, 15]]
+}
 clothes_textures = ClothingGlobals.textures['FEMALE']
 SliderNames = [
- 'headWidth', 'headHeight', 'headRoundness', 'jawWidth', 'jawChinAngle', 'jawChinSize', 'jawLength', 'mouthWidth', 'mouthLipThickness', 'cheekFat', 'browProtruding', 'eyeCorner', 'eyeOpeningSize', 'eyeSpacing', 'noseBridgeWidth', 'noseNostrilWidth', 'noseLength', 'noseBump', 'noseNostrilHeight', 'noseNostrilAngle', 'noseBridgeBroke', 'noseNostrilBroke', 'earScale', 'earFlap', 'earPosition']
-ControlShapes = {'headWidth': [[['def_trs_left_forehead', TX, 0.198, 0, 0, 0], ['def_trs_right_forehead', TX, -0.198, 0, 0, 0]], [['def_trs_left_forehead', TX, 0.198, 0, 0, 0], ['def_trs_right_forehead', TX, -0.198, 0, 0, 0]]], 'headHeight': [[['def_trs_forehead', TZ, 0.566, 0, 0, 0], ['def_trs_left_forehead', TZ, 0.47, 0, 0, 0], ['def_trs_right_forehead', TZ, 0.47, 0, 0, 0]], [['def_trs_forehead', TZ, 0.566, 0, 0, 0], ['def_trs_left_forehead', TZ, 0.47, 0, 0, 0], ['def_trs_right_forehead', TZ, 0.47, 0, 0, 0]]], 'headRoundness': [[['def_trs_left_jaw1', TX, 0.108, 0, 0, 0], ['def_trs_left_jaw1', TZ, -0.095, 0, 0, 0], ['def_trs_right_jaw1', TX, -0.108, 0, 0, 0], ['def_trs_right_jaw1', TZ, -0.095, 0, 0, 0]]], 'jawWidth': [[['def_trs_left_jaw2', TX, 0.185, 0, 0, 0], ['def_trs_right_jaw2', TX, -0.185, 0, 0, 0]], [['def_trs_left_jaw2', TX, 0.185, 0, 0, 0], ['def_trs_right_jaw2', TX, -0.185, 0, 0, 0]]], 'jawLength': [[['trs_face_bottom', TZ, -0.008, 0, 0, 0]], [['trs_face_bottom', TZ, -0.008, 0, 0, 0]]], 'jawChinAngle': [[['def_trs_left_jaw1', TY, -0.17, 0, 0, 0], ['def_trs_right_jaw1', TY, -0.17, 0, 0, 0], ['def_trs_mid_jaw', TY, -0.244, 0, 0, 0]], [['def_trs_left_jaw1', TY, -0.17, 0, 0, 0], ['def_trs_right_jaw1', TY, -0.17, 0, 0, 0], ['def_trs_mid_jaw', TY, -0.244, 0, 0, 0]]], 'jawChinSize': [[['def_trs_left_jaw1', TZ, -0.1, 0, 0, 0], ['def_trs_right_jaw1', TZ, -0.1, 0, 0, 0], ['def_trs_mid_jaw', TZ, -0.1, 0, 0, 0]], [['def_trs_left_jaw1', TZ, -0.1, 0, 0, 0], ['def_trs_right_jaw1', TZ, -0.1, 0, 0, 0], ['def_trs_mid_jaw', TZ, -0.1, 0, 0, 0]]], 'mouthWidth': [[['trs_lips_top', SX, 1.2, 0, 0, 0], ['trs_lips_bot', SX, 1.2, 0, 0, 0]]], 'mouthLipThickness': [[['trs_lips_top', SZ, 1.25, 0, 0, 0], ['trs_lips_bot', SZ, 1.25, 0, 0, 0]], [['trs_lips_top', SZ, 1.25, 0, 0, 0], ['trs_lips_bot', SZ, 1.25, 0, 0, 0]]], 'cheekFat': [[['def_trs_left_cheek', TX, 0.156, 0, 0, 0], ['def_trs_right_cheek', TX, -0.156, 0, 0, 0]], [['def_trs_left_cheek', TX, 0.156, 0, 0, 0], ['def_trs_right_cheek', TX, -0.156, 0, 0, 0]]], 'browProtruding': [[['trs_left_eyebrow', TY, -0.02, 0, 0, 0], ['trs_right_eyebrow', TY, -0.02, 0, 0, 0]]], 'eyeCorner': [[['trs_left_eyesocket', RZ, 45 - 10, 0, 0, 0], ['trs_right_eyesocket', RZ, -(45 - 10), 0, 0, 0]], [['trs_left_eyesocket', RZ, 45 - 10, 0, 0, 0], ['trs_right_eyesocket', RZ, -(45 - 10), 0, 0, 0]]], 'eyeOpeningSize': [[['trs_left_eyesocket', SX, 1.025, 0, 0, 0], ['trs_left_eyesocket', SZ, 1.025, 0, 0, 0], ['trs_right_eyesocket', SX, 1.025, 0, 0, 0], ['trs_right_eyesocket', SZ, 1.025, 0, 0, 0]], [['trs_left_eyesocket', SX, 1.025, 0, 0, 0], ['trs_left_eyesocket', SZ, 1.025, 0, 0, 0], ['trs_right_eyesocket', SX, 1.025, 0, 0, 0], ['trs_right_eyesocket', SZ, 1.025, 0, 0, 0]]], 'eyeSpacing': [[['trs_left_eyesocket', TX, 0.006, 0, 0, 0], ['trs_right_eyesocket', TX, -0.006, 0, 0, 0]], [['trs_left_eyesocket', TX, 0.006, 0, 0, 0], ['trs_right_eyesocket', TX, -0.006, 0, 0, 0]]], 'noseBridgeWidth': [[['def_trs_mid_nose_top', SX, 1.5, 0, 0, 0]], [['def_trs_mid_nose_top', SX, 1.5, 0, 0, 0]]], 'noseNostrilWidth': [[['def_trs_mid_nose_bot', SX, 1.5, 0, 0, 0]], [['def_trs_mid_nose_bot', SX, 1.5, 0, 0, 0]]], 'noseLength': [[['def_trs_mid_nose_bot', TZ, 0.057, 0, 0, 0]], [['def_trs_mid_nose_bot', TZ, 0.057, 0, 0, 0]]], 'noseBump': [[['def_trs_mid_nose_top', TZ, 0.179, 0, 0, 0], ['def_trs_mid_nose_top', TY, -0.301, 0, 0, 0]], [['def_trs_mid_nose_top', TZ, 0.179, 0, 0, 0], ['def_trs_mid_nose_top', TY, -0.301, 0, 0, 0]]], 'noseBridgeBroke': [[['def_trs_mid_nose_top', TX, 0.015, 0, 0, 0]], [['def_trs_mid_nose_top', TX, 0.015, 0, 0, 0]]], 'noseNostrilHeight': [[['def_trs_mid_nose_bot', SY, 1.25, 0, 0, 0]], [['def_trs_mid_nose_bot', SY, 1.25, 0, 0, 0]]], 'noseNostrilAngle': [[['def_trs_mid_nose_bot', RY, 12, 0, 0, 0]], [['def_trs_mid_nose_bot', RY, 12, 0, 0, 0]]], 'noseNostrilBroke': [[['def_trs_mid_nose_bot', TX, 0.015, 0, 0, 0]], [['def_trs_mid_nose_bot', TX, 0.015, 0, 0, 0]]], 'earScale': [[['def_trs_left_ear', SZ, 1.1, 0, 0, 0], ['def_trs_right_ear', SZ, 1.1, 0, 0, 0], ['def_trs_left_ear', SX, 1.1, 0, 0, 0], ['def_trs_right_ear', SX, 1.1, 0, 0, 0]], [['def_trs_left_ear', SZ, 1.1, 0, 0, 0], ['def_trs_right_ear', SZ, 1.1, 0, 0, 0], ['def_trs_left_ear', SX, 1.1, 0, 0, 0], ['def_trs_right_ear', SX, 1.1, 0, 0, 0]]], 'earFlap': [[['def_trs_left_ear', RX, -20, 0, 0, 0], ['def_trs_right_ear', RX, 20, 0, 0, 0]], [['def_trs_left_ear', RX, -20, 0, 0, 0], ['def_trs_right_ear', RX, 20, 0, 0, 0]]], 'earPosition': [[['def_trs_left_ear', TZ, 0.145, 0, 0, 0], ['def_trs_right_ear', TZ, 0.145, 0, 0, 0]], [['def_trs_left_ear', TZ, 0.145, 0, 0, 0], ['def_trs_right_ear', TZ, 0.145, 0, 0, 0]]]}
+    'headWidth', 'headHeight', 'headRoundness', 'jawWidth', 'jawChinAngle',
+    'jawChinSize', 'jawLength', 'mouthWidth', 'mouthLipThickness', 'cheekFat',
+    'browProtruding', 'eyeCorner', 'eyeOpeningSize', 'eyeSpacing',
+    'noseBridgeWidth', 'noseNostrilWidth', 'noseLength', 'noseBump',
+    'noseNostrilHeight', 'noseNostrilAngle', 'noseBridgeBroke',
+    'noseNostrilBroke', 'earScale', 'earFlap', 'earPosition'
+]
+ControlShapes = {
+    'headWidth': [[['def_trs_left_forehead', TX, 0.198, 0, 0, 0],
+                   ['def_trs_right_forehead', TX, -0.198, 0, 0, 0]],
+                  [['def_trs_left_forehead', TX, 0.198, 0, 0, 0],
+                   ['def_trs_right_forehead', TX, -0.198, 0, 0, 0]]],
+    'headHeight': [[['def_trs_forehead', TZ, 0.566, 0, 0,
+                     0], ['def_trs_left_forehead', TZ, 0.47, 0, 0, 0],
+                    ['def_trs_right_forehead', TZ, 0.47, 0, 0, 0]],
+                   [['def_trs_forehead', TZ, 0.566, 0, 0,
+                     0], ['def_trs_left_forehead', TZ, 0.47, 0, 0, 0],
+                    ['def_trs_right_forehead', TZ, 0.47, 0, 0, 0]]],
+    'headRoundness': [[['def_trs_left_jaw1', TX, 0.108, 0, 0,
+                        0], ['def_trs_left_jaw1', TZ, -0.095, 0, 0,
+                             0], ['def_trs_right_jaw1', TX, -0.108, 0, 0, 0],
+                       ['def_trs_right_jaw1', TZ, -0.095, 0, 0, 0]]],
+    'jawWidth': [[['def_trs_left_jaw2', TX, 0.185, 0, 0, 0],
+                  ['def_trs_right_jaw2', TX, -0.185, 0, 0, 0]],
+                 [['def_trs_left_jaw2', TX, 0.185, 0, 0, 0],
+                  ['def_trs_right_jaw2', TX, -0.185, 0, 0, 0]]],
+    'jawLength': [[['trs_face_bottom', TZ, -0.008, 0, 0, 0]],
+                  [['trs_face_bottom', TZ, -0.008, 0, 0, 0]]],
+    'jawChinAngle': [[['def_trs_left_jaw1', TY, -0.17, 0, 0,
+                       0], ['def_trs_right_jaw1', TY, -0.17, 0, 0, 0],
+                      ['def_trs_mid_jaw', TY, -0.244, 0, 0, 0]],
+                     [['def_trs_left_jaw1', TY, -0.17, 0, 0,
+                       0], ['def_trs_right_jaw1', TY, -0.17, 0, 0, 0],
+                      ['def_trs_mid_jaw', TY, -0.244, 0, 0, 0]]],
+    'jawChinSize': [[['def_trs_left_jaw1', TZ, -0.1, 0, 0,
+                      0], ['def_trs_right_jaw1', TZ, -0.1, 0, 0, 0],
+                     ['def_trs_mid_jaw', TZ, -0.1, 0, 0, 0]],
+                    [['def_trs_left_jaw1', TZ, -0.1, 0, 0,
+                      0], ['def_trs_right_jaw1', TZ, -0.1, 0, 0, 0],
+                     ['def_trs_mid_jaw', TZ, -0.1, 0, 0, 0]]],
+    'mouthWidth': [[['trs_lips_top', SX, 1.2, 0, 0, 0],
+                    ['trs_lips_bot', SX, 1.2, 0, 0, 0]]],
+    'mouthLipThickness':
+    [[['trs_lips_top', SZ, 1.25, 0, 0, 0], ['trs_lips_bot', SZ, 1.25, 0, 0, 0]],
+     [['trs_lips_top', SZ, 1.25, 0, 0, 0], ['trs_lips_bot', SZ, 1.25, 0, 0,
+                                            0]]],
+    'cheekFat': [[['def_trs_left_cheek', TX, 0.156, 0, 0, 0],
+                  ['def_trs_right_cheek', TX, -0.156, 0, 0, 0]],
+                 [['def_trs_left_cheek', TX, 0.156, 0, 0, 0],
+                  ['def_trs_right_cheek', TX, -0.156, 0, 0, 0]]],
+    'browProtruding': [[['trs_left_eyebrow', TY, -0.02, 0, 0, 0],
+                        ['trs_right_eyebrow', TY, -0.02, 0, 0, 0]]],
+    'eyeCorner': [[['trs_left_eyesocket', RZ, 45 - 10, 0, 0, 0],
+                   ['trs_right_eyesocket', RZ, -(45 - 10), 0, 0, 0]],
+                  [['trs_left_eyesocket', RZ, 45 - 10, 0, 0, 0],
+                   ['trs_right_eyesocket', RZ, -(45 - 10), 0, 0, 0]]],
+    'eyeOpeningSize': [[['trs_left_eyesocket', SX, 1.025, 0, 0,
+                         0], ['trs_left_eyesocket', SZ, 1.025, 0, 0,
+                              0], ['trs_right_eyesocket', SX, 1.025, 0, 0, 0],
+                        ['trs_right_eyesocket', SZ, 1.025, 0, 0, 0]],
+                       [['trs_left_eyesocket', SX, 1.025, 0, 0,
+                         0], ['trs_left_eyesocket', SZ, 1.025, 0, 0, 0],
+                        ['trs_right_eyesocket', SX, 1.025, 0, 0,
+                         0], ['trs_right_eyesocket', SZ, 1.025, 0, 0, 0]]],
+    'eyeSpacing': [[['trs_left_eyesocket', TX, 0.006, 0, 0, 0],
+                    ['trs_right_eyesocket', TX, -0.006, 0, 0, 0]],
+                   [['trs_left_eyesocket', TX, 0.006, 0, 0, 0],
+                    ['trs_right_eyesocket', TX, -0.006, 0, 0, 0]]],
+    'noseBridgeWidth': [[['def_trs_mid_nose_top', SX, 1.5, 0, 0, 0]],
+                        [['def_trs_mid_nose_top', SX, 1.5, 0, 0, 0]]],
+    'noseNostrilWidth': [[['def_trs_mid_nose_bot', SX, 1.5, 0, 0, 0]],
+                         [['def_trs_mid_nose_bot', SX, 1.5, 0, 0, 0]]],
+    'noseLength': [[['def_trs_mid_nose_bot', TZ, 0.057, 0, 0, 0]],
+                   [['def_trs_mid_nose_bot', TZ, 0.057, 0, 0, 0]]],
+    'noseBump': [[['def_trs_mid_nose_top', TZ, 0.179, 0, 0, 0],
+                  ['def_trs_mid_nose_top', TY, -0.301, 0, 0, 0]],
+                 [['def_trs_mid_nose_top', TZ, 0.179, 0, 0, 0],
+                  ['def_trs_mid_nose_top', TY, -0.301, 0, 0, 0]]],
+    'noseBridgeBroke': [[['def_trs_mid_nose_top', TX, 0.015, 0, 0, 0]],
+                        [['def_trs_mid_nose_top', TX, 0.015, 0, 0, 0]]],
+    'noseNostrilHeight': [[['def_trs_mid_nose_bot', SY, 1.25, 0, 0, 0]],
+                          [['def_trs_mid_nose_bot', SY, 1.25, 0, 0, 0]]],
+    'noseNostrilAngle': [[['def_trs_mid_nose_bot', RY, 12, 0, 0, 0]],
+                         [['def_trs_mid_nose_bot', RY, 12, 0, 0, 0]]],
+    'noseNostrilBroke': [[['def_trs_mid_nose_bot', TX, 0.015, 0, 0, 0]],
+                         [['def_trs_mid_nose_bot', TX, 0.015, 0, 0, 0]]],
+    'earScale': [[['def_trs_left_ear', SZ, 1.1, 0, 0,
+                   0], ['def_trs_right_ear', SZ, 1.1, 0, 0,
+                        0], ['def_trs_left_ear', SX, 1.1, 0, 0, 0],
+                  ['def_trs_right_ear', SX, 1.1, 0, 0, 0]],
+                 [['def_trs_left_ear', SZ,
+                   1.1, 0, 0, 0], ['def_trs_right_ear', SZ, 1.1, 0, 0,
+                                   0], ['def_trs_left_ear', SX, 1.1, 0, 0, 0],
+                  ['def_trs_right_ear', SX, 1.1, 0, 0, 0]]],
+    'earFlap': [[['def_trs_left_ear', RX, -20, 0, 0, 0],
+                 ['def_trs_right_ear', RX, 20, 0, 0, 0]],
+                [['def_trs_left_ear', RX, -20, 0, 0, 0],
+                 ['def_trs_right_ear', RX, 20, 0, 0, 0]]],
+    'earPosition': [[['def_trs_left_ear', TZ, 0.145, 0, 0, 0],
+                     ['def_trs_right_ear', TZ, 0.145, 0, 0, 0]],
+                    [['def_trs_left_ear', TZ, 0.145, 0, 0, 0],
+                     ['def_trs_right_ear', TZ, 0.145, 0, 0, 0]]]
+}
+
 
 class PirateFemale(DirectObject.DirectObject):
 
@@ -97,21 +332,41 @@ class PirateFemale(DirectObject.DirectObject):
         self.dnaZomb = HumanDNA.HumanDNA('f')
         self.makeZombie()
         self.loaded = 0
-        self.tattooZones = [
-         [
-          0, 1, 2, 3, 4, 5, 6, 9, 10], [13, 15, 31], [14, 16, 32], [-1], [0], [0], [0], [0]]
+        self.tattooZones = [[0, 1, 2, 3, 4, 5, 6, 9, 10], [13, 15, 31],
+                            [14, 16, 32], [-1], [0], [0], [0], [0]]
         self.tattooStage = TextureStage('tattoo')
         self.tattooStage.setTexcoordName('tattoomap')
-        self.tattoos = [
-         1, 2, 3, 4, 5, 6, 7, 8]
-        self.currentClothing = {'HAT': [0, 0, 0], 'SHIRT': [0, 0, 0], 'VEST': [0, 0, 0], 'COAT': [0, 0, 0], 'BELT': [0, 0, 0], 'PANT': [0, 0, 0], 'SHOE': [0, 0, 0]}
-        self.currentClothingModels = {'HAT': NodePathCollection(), 'HAT': NodePathCollection(), 'HAIR': NodePathCollection(), 'SHIRT': NodePathCollection(), 'VEST': NodePathCollection(), 'COAT': NodePathCollection(), 'BELT': [NodePathCollection(), NodePathCollection()], 'PANT': NodePathCollection(), 'SHOE': NodePathCollection()}
+        self.tattoos = [1, 2, 3, 4, 5, 6, 7, 8]
+        self.currentClothing = {
+            'HAT': [0, 0, 0],
+            'SHIRT': [0, 0, 0],
+            'VEST': [0, 0, 0],
+            'COAT': [0, 0, 0],
+            'BELT': [0, 0, 0],
+            'PANT': [0, 0, 0],
+            'SHOE': [0, 0, 0]
+        }
+        self.currentClothingModels = {
+            'HAT': NodePathCollection(),
+            'HAT': NodePathCollection(),
+            'HAIR': NodePathCollection(),
+            'SHIRT': NodePathCollection(),
+            'VEST': NodePathCollection(),
+            'COAT': NodePathCollection(),
+            'BELT': [NodePathCollection(),
+                     NodePathCollection()],
+            'PANT': NodePathCollection(),
+            'SHOE': NodePathCollection()
+        }
         self.currentBody = NodePathCollection()
         self.currentBody.addPath(NodePath('temp'))
         self.currentBody.addPath(NodePath('temp'))
         self.currentBody.addPath(NodePath('temp'))
         self.currentTatttooZones = [
-         NodePathCollection(), NodePathCollection(), NodePathCollection()]
+            NodePathCollection(),
+            NodePathCollection(),
+            NodePathCollection()
+        ]
         self.newAvatars = base.config.GetBool('want-new-avatars', 0)
 
     def delete(self):
@@ -148,8 +403,7 @@ class PirateFemale(DirectObject.DirectObject):
                 self.tattoos[6] = self.pirate.style.getTattooZone7()
                 self.tattoos[7] = self.pirate.style.getTattooZone8()
             else:
-                self.tattoos[0] = [
-                 0, 0, 0, 1, 0, 0]
+                self.tattoos[0] = [0, 0, 0, 1, 0, 0]
                 self.tattoos[1] = [0, 0, 0, 1, 0, 0]
                 self.tattoos[2] = [0, 0, 0, 1, 0, 0]
                 self.tattoos[3] = [0, 0, 0, 1, 0, 0]
@@ -166,7 +420,8 @@ class PirateFemale(DirectObject.DirectObject):
             scaleX = tattoo[3] * scale
             scaleY = tattoo[3]
             posY = tattoo[2]
-            t = TransformState.makePosRotateScale2d(Vec2(tattoo[1], posY), tattoo[4], Vec2(scaleX, scaleY))
+            t = TransformState.makePosRotateScale2d(
+                Vec2(tattoo[1], posY), tattoo[4], Vec2(scaleX, scaleY))
             tex.setWrapU(Texture.WMBorderColor)
             tex.setWrapV(Texture.WMBorderColor)
             tex.setBorderColor(VBase4(1.0, 1.0, 1.0, 0.0))
@@ -186,7 +441,8 @@ class PirateFemale(DirectObject.DirectObject):
         scaleX = tattoo[3] * scale
         scaleY = tattoo[3]
         posY = tattoo[2]
-        t = TransformState.makePosRotateScale2d(Vec2(tattoo[1], posY), tattoo[4], Vec2(scaleX, scaleY))
+        t = TransformState.makePosRotateScale2d(
+            Vec2(tattoo[1], posY), tattoo[4], Vec2(scaleX, scaleY))
         tex.setWrapU(Texture.WMBorderColor)
         tex.setWrapV(Texture.WMBorderColor)
         tex.setBorderColor(VBase4(1.0, 1.0, 1.0, 0.0))
@@ -208,10 +464,12 @@ class PirateFemale(DirectObject.DirectObject):
                                 break
 
                         for k in range(0, tc.getNumTextureStages()):
-                            if tc[k].getTexcoordName().getName().find('Light') != -1:
+                            if tc[k].getTexcoordName().getName().find(
+                                    'Light') != -1:
                                 tc[k].setMode(TextureStage.MBlend)
                                 tc[k].setSort(10)
-                            elif tc[k].getTexcoordName().getName().find('Dark') != -1:
+                            elif tc[k].getTexcoordName().getName().find(
+                                    'Dark') != -1:
                                 tc[k].setSort(0)
 
         setupMultiTexture(self.hairPieces)
@@ -231,11 +489,15 @@ class PirateFemale(DirectObject.DirectObject):
 
     def handleHeadHiding(self):
         self.notify.debug(female_hairs[self.pirate.style.getHatIdx()])
-        hairIdx = [self.pirate.style.getHairHair(), self.pirate.style.getHairBaseColor()]
-        hatIdx = self.pirate.style.getClothesHat() + [self.pirate.style.getHatColor()]
+        hairIdx = [
+            self.pirate.style.getHairHair(),
+            self.pirate.style.getHairBaseColor()
+        ]
+        hatIdx = self.pirate.style.getClothesHat() + [
+            self.pirate.style.getHatColor()
+        ]
         if self.pirate.zombie:
-            hatIdx = [
-             ZOMB_HAT, 0, 0]
+            hatIdx = [ZOMB_HAT, 0, 0]
             hatColor = self.dnaZomb.lookupHatColor()
         else:
             hatColor = HumanDNA.hatColors[1][hatIdx[2]]
@@ -263,7 +525,10 @@ class PirateFemale(DirectObject.DirectObject):
             lowLODColor = self.getTextureName('HAT', hatIdx[0], 0)[1]
             if self.pirate.optimizeLOD:
                 if currentHat.getNumPaths() > 2:
-                    currentHat[2].setColorScale(VBase4(lowLODColor[0] * hatColor[0], lowLODColor[1] * hatColor[1], lowLODColor[2] * hatColor[2], 1))
+                    currentHat[2].setColorScale(
+                        VBase4(lowLODColor[0] * hatColor[0],
+                               lowLODColor[1] * hatColor[1],
+                               lowLODColor[2] * hatColor[2], 1))
         self.setHairBaseColor()
 
     def setupHead(self, lodName='2000'):
@@ -321,7 +586,8 @@ class PirateFemale(DirectObject.DirectObject):
         self.eyeBrowIdx = 0
         self.eyeBrows = NodePathCollection()
         for lod in ['2000', '1000', '500']:
-            eyebrows = self.pirate.getLOD(lod).findAllMatches('**/hair_eyebrow_*')
+            eyebrows = self.pirate.getLOD(lod).findAllMatches(
+                '**/hair_eyebrow_*')
             flattenMe = NodePath('flattenMe')
             for i in xrange(eyebrows.getNumPaths()):
                 eyebrows[i].copyTo(flattenMe)
@@ -336,7 +602,11 @@ class PirateFemale(DirectObject.DirectObject):
         self.hair = geom.findAllMatches('**/hair*')
         self.hairPieces = []
         hairList = [
-         '**/hair_a0', '**/hair_b0', '**/hair_c0', '**/hair_d0', '**/hair_e0', '**/hair_f0', '**/hair_g0', '**/hair_h0', '**/hair_i0', '**/hair_j0', '**/hair_k0', '**/hair_l0', '**/hair_m0', '**/hair_n0', '**/hair_o0_reg*']
+            '**/hair_a0', '**/hair_b0', '**/hair_c0', '**/hair_d0',
+            '**/hair_e0', '**/hair_f0', '**/hair_g0', '**/hair_h0',
+            '**/hair_i0', '**/hair_j0', '**/hair_k0', '**/hair_l0',
+            '**/hair_m0', '**/hair_n0', '**/hair_o0_reg*'
+        ]
         self.hairPieces.append(geom.findAllMatches('**/hair_a0'))
         self.hairPieces.append(geom.findAllMatches('**/hair_b0'))
         self.hairPieces.append(geom.findAllMatches('**/hair_c0'))
@@ -375,7 +645,12 @@ class PirateFemale(DirectObject.DirectObject):
         self.hairs.append([13])
         self.hairs.append([14])
         hairCutList = [
-         '**/hair_a0_cut*', '**/hair_b0_cut*', '**/hair_c0_cut*', '**/hair_d0_cut*', '**/hair_e0_cut*', '**/hair_f0_cut*', '**/hair_g0_cut*', '**/hair_h0_cut*', '**/hair_i0_cut*', '**/hair_j0_cut*', '**/hair_k0_cut*', '**/hair_l0_cut*', '**/hair_m0_cut*', '**/hair_n0_cut*', '**/hair_o0_cut*']
+            '**/hair_a0_cut*', '**/hair_b0_cut*', '**/hair_c0_cut*',
+            '**/hair_d0_cut*', '**/hair_e0_cut*', '**/hair_f0_cut*',
+            '**/hair_g0_cut*', '**/hair_h0_cut*', '**/hair_i0_cut*',
+            '**/hair_j0_cut*', '**/hair_k0_cut*', '**/hair_l0_cut*',
+            '**/hair_m0_cut*', '**/hair_n0_cut*', '**/hair_o0_cut*'
+        ]
         self.hairCuts = []
         self.hairCuts.append(geom.findAllMatches('**/hair_a0_cut*'))
         self.hairCuts.append(geom.findAllMatches('**/hair_b0_cut*'))
@@ -404,14 +679,19 @@ class PirateFemale(DirectObject.DirectObject):
         self.hat = geom.findAllMatches('**/clothing_layer1_hat_*')
         self.hats = []
         self.hats.append(geom.findAllMatches('**/clothing_layer1_hat_none*'))
-        self.hats.append(geom.findAllMatches('**/clothing_layer1_hat_dress_hat'))
-        self.hats.append(geom.findAllMatches('**/clothing_layer1_hat_navy_hat*'))
-        self.hats.append(geom.findAllMatches('**/clothing_layer1_hat_navy_fancy'))
-        self.hats.append(geom.findAllMatches('**/clothing_layer1_hat_band_workers*'))
-        self.hats.append(geom.findAllMatches('**/clothing_layer1_hat_bandanna_full*'))
-        self.hats.append(geom.findAllMatches('**/clothing_layer1_hat_bandanna_reg*'))
-        self.colorableHats = [
-         4, 5, 6]
+        self.hats.append(
+            geom.findAllMatches('**/clothing_layer1_hat_dress_hat'))
+        self.hats.append(
+            geom.findAllMatches('**/clothing_layer1_hat_navy_hat*'))
+        self.hats.append(
+            geom.findAllMatches('**/clothing_layer1_hat_navy_fancy'))
+        self.hats.append(
+            geom.findAllMatches('**/clothing_layer1_hat_band_workers*'))
+        self.hats.append(
+            geom.findAllMatches('**/clothing_layer1_hat_bandanna_full*'))
+        self.hats.append(
+            geom.findAllMatches('**/clothing_layer1_hat_bandanna_reg*'))
+        self.colorableHats = [4, 5, 6]
         self.hairLODs = []
         self.hairCutLODs = []
         for item in hairList:
@@ -438,11 +718,13 @@ class PirateFemale(DirectObject.DirectObject):
         self.wig.stash()
         self.jewelryFaceParts = []
         for name in jewelry_geos_face:
-            self.jewelryFaceParts.append(self.pirate.findAllMatches('**/%s' % name))
+            self.jewelryFaceParts.append(
+                self.pirate.findAllMatches('**/%s' % name))
 
         self.jewelryBodyParts = []
         for name in jewelry_geos_body:
-            self.jewelryBodyParts.append(self.pirate.findAllMatches('**/%s' % name))
+            self.jewelryBodyParts.append(
+                self.pirate.findAllMatches('**/%s' % name))
 
         for npc in self.jewelryFaceParts:
             length = npc.getNumPaths()
@@ -482,11 +764,19 @@ class PirateFemale(DirectObject.DirectObject):
                         for idx in range(1, length):
                             secondary.addPathsFrom(parts[piece[idx]])
 
-                data = [
-                 primary, secondary]
+                data = [primary, secondary]
                 self.jewelrySets[key].append(data)
 
-        self.currentJewelry = {'LEar': [0, 0, 0], 'REar': [0, 0, 0], 'LBrow': [0, 0, 0], 'RBrow': [0, 0, 0], 'Nose': [0, 0, 0], 'Mouth': [0, 0, 0], 'LHand': [0, 0, 0], 'RHand': [0, 0, 0]}
+        self.currentJewelry = {
+            'LEar': [0, 0, 0],
+            'REar': [0, 0, 0],
+            'LBrow': [0, 0, 0],
+            'RBrow': [0, 0, 0],
+            'Nose': [0, 0, 0],
+            'Mouth': [0, 0, 0],
+            'LHand': [0, 0, 0],
+            'RHand': [0, 0, 0]
+        }
 
     def setBlendValue(self, val, attr):
         self.pirate.setBlendValue(0.0, self.blendShapes[attr][0])
@@ -517,12 +807,59 @@ class PirateFemale(DirectObject.DirectObject):
 
         if self.newAvatars:
             self.stripTexture(self.body)
-        self.bodyPiecesToGroup = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 1, 14: 2, 15: 1, 16: 2, 17: 1, 18: 2, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 0, 26: 0, 27: 0, 28: 0, 29: 0, 30: 0, 31: 1, 32: 2}
-        self.groupsToBodyPieces = [
-         [
-          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], [13, 15, 17, 31], [14, 16, 18, 32]]
+        self.bodyPiecesToGroup = {
+            0: 0,
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0,
+            6: 0,
+            7: 0,
+            8: 0,
+            9: 0,
+            10: 0,
+            11: 0,
+            12: 0,
+            13: 1,
+            14: 2,
+            15: 1,
+            16: 2,
+            17: 1,
+            18: 2,
+            19: 0,
+            20: 0,
+            21: 0,
+            22: 0,
+            23: 0,
+            24: 0,
+            25: 0,
+            26: 0,
+            27: 0,
+            28: 0,
+            29: 0,
+            30: 0,
+            31: 1,
+            32: 2
+        }
+        self.groupsToBodyPieces = [[
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23, 24,
+            25, 26, 27, 28, 29, 30
+        ], [13, 15, 17, 31], [14, 16, 18, 32]]
         layerBList = [
-         '**/body_neck1', '**/body_neck2', '**/body_neck_back', '**/body_collar1', '**/body_chest_center', '**/body_collar_round', '**/body_chest_remain', '**/body_ribs1', '**/body_ribs2', '**/body_torso_upper', '**/body_clavicles', '**/body_belly_button', '**/body_waist_line', '**/body_bicep_left', '**/body_bicep_right', '**/body_forearm_left', '**/body_forearm_right', '**/body_hand_left', '**/body_hand_right', '**/body_upper_hips', '**/body_hips', '**/body_thigh_left', '**/body_thigh_right', '**/body_knee_left', '**/body_knee_right', '**/body_uppercalf_left', '**/body_uppercalf_right', '**/body_lowercalf_left', '**/body_lowercalf_right', '**/body_foot_left', '**/body_foot_right', '**/body_armpit_left', '**/body_armpit_right']
+            '**/body_neck1', '**/body_neck2', '**/body_neck_back',
+            '**/body_collar1', '**/body_chest_center', '**/body_collar_round',
+            '**/body_chest_remain', '**/body_ribs1', '**/body_ribs2',
+            '**/body_torso_upper', '**/body_clavicles', '**/body_belly_button',
+            '**/body_waist_line', '**/body_bicep_left', '**/body_bicep_right',
+            '**/body_forearm_left', '**/body_forearm_right',
+            '**/body_hand_left', '**/body_hand_right', '**/body_upper_hips',
+            '**/body_hips', '**/body_thigh_left', '**/body_thigh_right',
+            '**/body_knee_left', '**/body_knee_right', '**/body_uppercalf_left',
+            '**/body_uppercalf_right', '**/body_lowercalf_left',
+            '**/body_lowercalf_right', '**/body_foot_left',
+            '**/body_foot_right', '**/body_armpit_left', '**/body_armpit_right'
+        ]
         self.layerBodyLODs = []
         for part in layerBList:
             bodyParts = {}
@@ -534,12 +871,14 @@ class PirateFemale(DirectObject.DirectObject):
         chest = NodePathCollection()
         leftArm = NodePathCollection()
         rightArm = NodePathCollection()
-        self.currentTattooZones = [
-         chest, leftArm, rightArm, self.faces[0]]
+        self.currentTattooZones = [chest, leftArm, rightArm, self.faces[0]]
         for i in self.bodyPiecesToGroup.items():
-            self.currentTattooZones[i[1]].addPath(self.layerBodyLODs[i[0]]['2000'])
-            self.currentTattooZones[i[1]].addPath(self.layerBodyLODs[i[0]]['1000'])
-            self.currentTattooZones[i[1]].addPath(self.layerBodyLODs[i[0]]['500'])
+            self.currentTattooZones[i[1]].addPath(
+                self.layerBodyLODs[i[0]]['2000'])
+            self.currentTattooZones[i[1]].addPath(
+                self.layerBodyLODs[i[0]]['1000'])
+            self.currentTattooZones[i[1]].addPath(
+                self.layerBodyLODs[i[0]]['500'])
 
         self.bodys.append(geom.findAllMatches('**/body_neck1'))
         self.bodys.append(geom.findAllMatches('**/body_neck2'))
@@ -641,43 +980,115 @@ class PirateFemale(DirectObject.DirectObject):
         self.clothingHatTexture = 0
         self.partLayer = {}
         layer1List = [
-         '**/clothing_layer1_shirt_common_base', '**/clothing_layer1_shirt_common_low_vcut', '**/clothing_layer1_shirt_common_front', '**/clothing_layer1_shirt_common_breast', '**/clothing_layer1_shirt_common_belt_front', '**/clothing_layer1_shirt_common_belt_interior', '**/clothing_layer1_shirt_common_belly_front', '**/clothing_layer1_shirt_common_waist_line', '**/clothing_layer1_shirt_short_sleeve1*', '**/clothing_layer1_shirt_short_sleeve_puffy*', '**/clothing_layer1_shirt_long_sleeve_puffy*', '**/clothing_layer1_shirt_long_sleeve_lowcut*', '**/clothing_layer1_shirt_long_sleeve_collar*', '**/clothing_layer1_shirt_long_sleeve_tallcollar*', '**/clothing_layer1_shirt_gypsy', '**/clothing_layer1_pant_short_*', '**/clothing_layer1_pant_shorts_*', '**/clothing_layer1_pant_skirt_*', '**/clothing_layer1_skirt_gypsy_short', '**/clothing_layer1_skirt_gypsy_long', '**/clothing_layer1_sock_stockings_*', '**/clothing_layer1_shoe_none_*', '**/clothing_layer1_shoe_boot_short*', '**/clothing_layer1_shoe_boot_medium*', '**/clothing_layer1_shoe_boot_kneehigh*', '**/clothing_layer1_shoe_boot_tall*', '**/clothing_layer1_pant_navy*', '**/clothing_layer1_shoe_navy*', '**/clothing_layer1_hat_dress_hat;+s', '**/clothing_layer1_hat_navy_hat*;+s', '**/clothing_layer1_hat_navy_fancy;+s', '**/clothing_layer1_hat_band_workers*;+s', '**/clothing_layer1_hat_bandanna_full*;+s', '**/clothing_layer1_hat_bandanna_reg*;+s', '**/clothing_layer1_hat_navy_fancy_feather;+s', '**/clothing_layer1_hat_dress_hat_feather;+s']
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_common_base'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_common_low_vcut'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_common_front'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_common_breast'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_common_belt_front'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_common_belt_interior'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_common_belly_front'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_common_waist_line'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_short_sleeve1*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_short_sleeve_puffy*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_long_sleeve_puffy*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_long_sleeve_lowcut*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_long_sleeve_collar*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_long_sleeve_tallcollar*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shirt_gypsy'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_pant_short_*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_pant_shorts_*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_pant_skirt_*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_skirt_gypsy_short'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_skirt_gypsy_long'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_sock_stockings_*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shoe_none_*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shoe_boot_short*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shoe_boot_medium*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shoe_boot_kneehigh*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shoe_boot_tall*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_pant_navy*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_shoe_navy*'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_hat_dress_hat;+s'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_hat_navy_hat*;+s'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_hat_navy_fancy;+s'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_hat_band_workers*;+s'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_hat_bandanna_full*;+s'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_hat_bandanna_reg*;+s'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_hat_navy_fancy_feather;+s'))
-        self.clothingsLayer1.append(geom.findAllMatches('**/clothing_layer1_hat_dress_hat_feather;+s'))
+            '**/clothing_layer1_shirt_common_base',
+            '**/clothing_layer1_shirt_common_low_vcut',
+            '**/clothing_layer1_shirt_common_front',
+            '**/clothing_layer1_shirt_common_breast',
+            '**/clothing_layer1_shirt_common_belt_front',
+            '**/clothing_layer1_shirt_common_belt_interior',
+            '**/clothing_layer1_shirt_common_belly_front',
+            '**/clothing_layer1_shirt_common_waist_line',
+            '**/clothing_layer1_shirt_short_sleeve1*',
+            '**/clothing_layer1_shirt_short_sleeve_puffy*',
+            '**/clothing_layer1_shirt_long_sleeve_puffy*',
+            '**/clothing_layer1_shirt_long_sleeve_lowcut*',
+            '**/clothing_layer1_shirt_long_sleeve_collar*',
+            '**/clothing_layer1_shirt_long_sleeve_tallcollar*',
+            '**/clothing_layer1_shirt_gypsy', '**/clothing_layer1_pant_short_*',
+            '**/clothing_layer1_pant_shorts_*',
+            '**/clothing_layer1_pant_skirt_*',
+            '**/clothing_layer1_skirt_gypsy_short',
+            '**/clothing_layer1_skirt_gypsy_long',
+            '**/clothing_layer1_sock_stockings_*',
+            '**/clothing_layer1_shoe_none_*',
+            '**/clothing_layer1_shoe_boot_short*',
+            '**/clothing_layer1_shoe_boot_medium*',
+            '**/clothing_layer1_shoe_boot_kneehigh*',
+            '**/clothing_layer1_shoe_boot_tall*',
+            '**/clothing_layer1_pant_navy*', '**/clothing_layer1_shoe_navy*',
+            '**/clothing_layer1_hat_dress_hat;+s',
+            '**/clothing_layer1_hat_navy_hat*;+s',
+            '**/clothing_layer1_hat_navy_fancy;+s',
+            '**/clothing_layer1_hat_band_workers*;+s',
+            '**/clothing_layer1_hat_bandanna_full*;+s',
+            '**/clothing_layer1_hat_bandanna_reg*;+s',
+            '**/clothing_layer1_hat_navy_fancy_feather;+s',
+            '**/clothing_layer1_hat_dress_hat_feather;+s'
+        ]
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_common_base'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_common_low_vcut'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_common_front'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_common_breast'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_common_belt_front'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches(
+                '**/clothing_layer1_shirt_common_belt_interior'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_common_belly_front'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_common_waist_line'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_short_sleeve1*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_short_sleeve_puffy*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_long_sleeve_puffy*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_long_sleeve_lowcut*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_long_sleeve_collar*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches(
+                '**/clothing_layer1_shirt_long_sleeve_tallcollar*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shirt_gypsy'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_pant_short_*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_pant_shorts_*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_pant_skirt_*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_skirt_gypsy_short'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_skirt_gypsy_long'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_sock_stockings_*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shoe_none_*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shoe_boot_short*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shoe_boot_medium*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shoe_boot_kneehigh*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shoe_boot_tall*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_pant_navy*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_shoe_navy*'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_hat_dress_hat;+s'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_hat_navy_hat*;+s'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_hat_navy_fancy;+s'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_hat_band_workers*;+s'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_hat_bandanna_full*;+s'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_hat_bandanna_reg*;+s'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_hat_navy_fancy_feather;+s'))
+        self.clothingsLayer1.append(
+            geom.findAllMatches('**/clothing_layer1_hat_dress_hat_feather;+s'))
         self.layer1LODs = []
         for item in layer1List:
             itemInfo = {}
@@ -690,7 +1101,8 @@ class PirateFemale(DirectObject.DirectObject):
         self.partLayer['PANT'] = self.clothingsLayer1
         self.partLayer['SHOE'] = self.clothingsLayer1
         self.partLayer['HAT'] = self.clothingsLayer1
-        self.clothesTextures = loader.loadModelCopy('models/misc/female_clothes.bam')
+        self.clothesTextures = loader.loadModelCopy(
+            'models/misc/female_clothes.bam')
         for type in clothes_textures.values():
             for model in type:
                 for texInfo in model:
@@ -703,13 +1115,23 @@ class PirateFemale(DirectObject.DirectObject):
                             self.texDict[texName] = None
 
         self.texDict['FP_none'] = None
-        self.clothingsShirt.append([[0, 1, 2, 3, 6, 7, 8], -4, -7, -8, -9, -11, -12, -31, -32])
-        self.clothingsShirt.append([[0, 1, 2, 3, 6, 7, 9], -2, -4, -5, -6, -7, -8, -9, -10, -11, -12, -31, -32])
-        self.clothingsShirt.append([[0, 1, 2, 3, 6, 7, 10], -1, -4, -5, -6, -7, -8, -9, -11, -12, -13, -14, -31, -32])
-        self.clothingsShirt.append([[0, 1, 2, 3, 6, 7, 11], -2, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -16, -31, -32])
-        self.clothingsShirt.append([[0, 1, 2, 3, 4, 5, 6, 7, 12], -2, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -16, -19, -31, -32])
-        self.clothingsShirt.append([[0, 1, 2, 3, 4, 5, 6, 7, 13], -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -16, -19, -31, -32])
-        self.clothingsShirt.append([[14], -1, -2, -4, -5, -6, -7, -8, -9, -11, -12, -13, -14, -31, -32])
+        self.clothingsShirt.append([[0, 1, 2, 3, 6, 7, 8], -4, -7, -8, -9, -11,
+                                    -12, -31, -32])
+        self.clothingsShirt.append([[0, 1, 2, 3, 6, 7, 9], -2, -4, -5, -6, -7,
+                                    -8, -9, -10, -11, -12, -31, -32])
+        self.clothingsShirt.append([[0, 1, 2, 3, 6, 7, 10], -1, -4, -5, -6, -7,
+                                    -8, -9, -11, -12, -13, -14, -31, -32])
+        self.clothingsShirt.append([[0, 1, 2, 3, 6, 7,
+                                     11], -2, -4, -5, -6, -7, -8, -9, -10, -11,
+                                    -12, -13, -14, -15, -16, -31, -32])
+        self.clothingsShirt.append([[0, 1, 2, 3, 4, 5, 6, 7,
+                                     12], -2, -4, -5, -6, -7, -8, -9, -10, -11,
+                                    -12, -13, -14, -15, -16, -19, -31, -32])
+        self.clothingsShirt.append([[0, 1, 2, 3, 4, 5, 6, 7, 13], -1, -2, -3,
+                                    -4, -5, -6, -7, -8, -9, -10, -11, -12, -13,
+                                    -14, -15, -16, -19, -31, -32])
+        self.clothingsShirt.append([[14], -1, -2, -4, -5, -6, -7, -8, -9, -11,
+                                    -12, -13, -14, -31, -32])
         self.clothingsHat.append([[]])
         self.clothingsHat.append([[28, 35]])
         self.clothingsHat.append([[29]])
@@ -717,36 +1139,75 @@ class PirateFemale(DirectObject.DirectObject):
         self.clothingsHat.append([[31]])
         self.clothingsHat.append([[32]])
         self.clothingsHat.append([[33]])
-        self.clothingsPant.append([[15], -19, -20, -21, -22, -23, -24, -25, -26])
+        self.clothingsPant.append([[15], -19, -20, -21, -22, -23, -24, -25,
+                                   -26])
         self.clothingsPant.append([[16], -19, -20, -21, -22])
         self.clothingsPant.append([[17], -19, -20, -21, -22])
         self.clothingsPant.append([[18], -19, -20, -21, -22, -23, -24])
-        self.clothingsPant.append([[19], -19, -20, -21, -22, -23, -24, -25, -26, -27, -28])
-        self.clothingsPant.append([[26], -19, -20, -21, -22, -23, -24, -25, -26, -27, -28])
+        self.clothingsPant.append([[19], -19, -20, -21, -22, -23, -24, -25, -26,
+                                   -27, -28])
+        self.clothingsPant.append([[26], -19, -20, -21, -22, -23, -24, -25, -26,
+                                   -27, -28])
         self.clothingsSock.append([[]])
-        self.clothingsSock.append([[20], -23, -24, -25, -26, -27, -28, -29, -30])
+        self.clothingsSock.append([[20], -23, -24, -25, -26, -27, -28, -29,
+                                   -30])
         self.clothingsShoe.append([[21]])
         self.clothingsShoe.append([[22], -29, -30])
         self.clothingsShoe.append([[23], -27, -28, -29, -30])
         self.clothingsShoe.append([[24], -25, -26, -27, -28, -29, -30])
-        self.clothingsShoe.append([[25], -23, -24, -25, -26, -27, -28, -29, -30])
+        self.clothingsShoe.append([[25], -23, -24, -25, -26, -27, -28, -29,
+                                   -30])
         self.clothingsShoe.append([[27], -29, -30])
         layer2List = [
-         '**/clothing_layer2_vest_none*', '**/clothing_layer2_vest_closed*', '**/clothing_layer2_vest_lowcut*', '**/clothing_layer2_vest_corset_high*', '**/clothing_layer2_vest_corset_low*', '**/clothing_layer2_belt_none*', '**/clothing_layer2_belt_sash_reg_base_front', '**/clothing_layer2_belt_sash_reg_base_interior', '**/clothing_layer2_belt_sash_reg_cloth', '**/clothing_layer2_belt_square_interior', '**/clothing_layer2_belt_square_buckle_front', '**/clothing_layer2_belt_square_strap_front']
-        self.clothingsLayer2.append(geom.findAllMatches('**/clothing_layer2_vest_none*'))
-        self.clothingsLayer2.append(geom.findAllMatches('**/clothing_layer2_vest_closed*'))
-        self.clothingsLayer2.append(geom.findAllMatches('**/clothing_layer2_vest_lowcut*'))
-        self.clothingsLayer2.append(geom.findAllMatches('**/clothing_layer2_vest_corset_high*'))
-        self.clothingsLayer2.append(geom.findAllMatches('**/clothing_layer2_vest_corset_low*'))
-        self.clothingsLayer2.append(geom.findAllMatches('**/clothing_layer2_belt_none*'))
-        self.clothingsLayer2.append(geom.findAllMatches('**/clothing_layer2_belt_sash_reg_base_front'))
-        self.clothingsLayer2.append(geom.findAllMatches('**/clothing_layer2_belt_sash_reg_base_interior'))
-        self.clothingsLayer2.append(geom.findAllMatches('**/clothing_layer2_belt_sash_reg_cloth'))
-        self.clothingsLayer2.append(geom.findAllMatches('**/clothing_layer2_belt_square_interior'))
-        self.clothingsLayer2.append(geom.findAllMatches('**/clothing_layer2_belt_square_buckle_front'))
-        self.clothingsLayer2.append(geom.findAllMatches('**/clothing_layer2_belt_square_strap_front'))
+            '**/clothing_layer2_vest_none*', '**/clothing_layer2_vest_closed*',
+            '**/clothing_layer2_vest_lowcut*',
+            '**/clothing_layer2_vest_corset_high*',
+            '**/clothing_layer2_vest_corset_low*',
+            '**/clothing_layer2_belt_none*',
+            '**/clothing_layer2_belt_sash_reg_base_front',
+            '**/clothing_layer2_belt_sash_reg_base_interior',
+            '**/clothing_layer2_belt_sash_reg_cloth',
+            '**/clothing_layer2_belt_square_interior',
+            '**/clothing_layer2_belt_square_buckle_front',
+            '**/clothing_layer2_belt_square_strap_front'
+        ]
+        self.clothingsLayer2.append(
+            geom.findAllMatches('**/clothing_layer2_vest_none*'))
+        self.clothingsLayer2.append(
+            geom.findAllMatches('**/clothing_layer2_vest_closed*'))
+        self.clothingsLayer2.append(
+            geom.findAllMatches('**/clothing_layer2_vest_lowcut*'))
+        self.clothingsLayer2.append(
+            geom.findAllMatches('**/clothing_layer2_vest_corset_high*'))
+        self.clothingsLayer2.append(
+            geom.findAllMatches('**/clothing_layer2_vest_corset_low*'))
+        self.clothingsLayer2.append(
+            geom.findAllMatches('**/clothing_layer2_belt_none*'))
+        self.clothingsLayer2.append(
+            geom.findAllMatches('**/clothing_layer2_belt_sash_reg_base_front'))
+        self.clothingsLayer2.append(
+            geom.findAllMatches(
+                '**/clothing_layer2_belt_sash_reg_base_interior'))
+        self.clothingsLayer2.append(
+            geom.findAllMatches('**/clothing_layer2_belt_sash_reg_cloth'))
+        self.clothingsLayer2.append(
+            geom.findAllMatches('**/clothing_layer2_belt_square_interior'))
+        self.clothingsLayer2.append(
+            geom.findAllMatches('**/clothing_layer2_belt_square_buckle_front'))
+        self.clothingsLayer2.append(
+            geom.findAllMatches('**/clothing_layer2_belt_square_strap_front'))
         if base.config.GetBool('want-gen-pics-buttons'):
-            self.clothesByType = {'SHIRT': self.clothingsLayer1[:15], 'VEST': self.clothingsLayer2[:5], 'PANT': self.clothingsLayer1[15:20] + self.clothingsLayer1[26:27], 'COAT': self.clothingsLayer3, 'BELT': self.clothingsLayer2[5:], 'SHOE': self.clothingsLayer1[22:26] + self.clothingsLayer1[27:28], 'HAT': self.clothingsLayer1[28:]}
+            self.clothesByType = {
+                'SHIRT': self.clothingsLayer1[:15],
+                'VEST': self.clothingsLayer2[:5],
+                'PANT':
+                self.clothingsLayer1[15:20] + self.clothingsLayer1[26:27],
+                'COAT': self.clothingsLayer3,
+                'BELT': self.clothingsLayer2[5:],
+                'SHOE':
+                self.clothingsLayer1[22:26] + self.clothingsLayer1[27:28],
+                'HAT': self.clothingsLayer1[28:]
+            }
         self.partLayer['VEST'] = self.clothingsLayer2
         self.partLayer['BELT'] = self.clothingsLayer2
         self.clothingsVest.append([[0]])
@@ -773,16 +1234,23 @@ class PirateFemale(DirectObject.DirectObject):
         self.clothingsBelt.append([[9, 10, 11]])
         self.clothingsBelt.append([[9, 10, 11]])
         layer3List = [
-         '**/clothing_layer3_coat_none*', '**/clothing_layer3_coat_long*', '**/clothing_layer3_coat_short*', '**/clothing_layer3_coat_navy*']
-        self.clothingsLayer3.append(geom.findAllMatches('**/clothing_layer3_coat_none*'))
-        self.clothingsLayer3.append(geom.findAllMatches('**/clothing_layer3_coat_long*'))
-        self.clothingsLayer3.append(geom.findAllMatches('**/clothing_layer3_coat_short*'))
-        self.clothingsLayer3.append(geom.findAllMatches('**/clothing_layer3_coat_navy*'))
+            '**/clothing_layer3_coat_none*', '**/clothing_layer3_coat_long*',
+            '**/clothing_layer3_coat_short*', '**/clothing_layer3_coat_navy*'
+        ]
+        self.clothingsLayer3.append(
+            geom.findAllMatches('**/clothing_layer3_coat_none*'))
+        self.clothingsLayer3.append(
+            geom.findAllMatches('**/clothing_layer3_coat_long*'))
+        self.clothingsLayer3.append(
+            geom.findAllMatches('**/clothing_layer3_coat_short*'))
+        self.clothingsLayer3.append(
+            geom.findAllMatches('**/clothing_layer3_coat_navy*'))
         self.partLayer['COAT'] = self.clothingsLayer3
         self.clothingsCoat.append([[0]])
         self.clothingsCoat.append([[1], -9, -12, -13, -14, -15, -16, -31, -32])
         self.clothingsCoat.append([[2], -9, -12, -13, -14, -15, -16, -31, -32])
-        self.clothingsCoat.append([[3], -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -16, -19, -31, -32])
+        self.clothingsCoat.append([[3], -1, -2, -3, -4, -5, -6, -7, -8, -9, -10,
+                                   -11, -12, -13, -14, -15, -16, -19, -31, -32])
         if self.newAvatars:
             self.generateShirtSets()
             self.generatePantSets()
@@ -858,14 +1326,18 @@ class PirateFemale(DirectObject.DirectObject):
         lowLODColor = texture[1]
         if len(texName) == 1:
             tex = self.clothesTextures.findTexture(texName[0])
-            self.setClothesTexture(tex, pieces, self.partLayer[part], lowLODColor)
+            self.setClothesTexture(tex, pieces, self.partLayer[part],
+                                   lowLODColor)
         else:
             tex = self.clothesTextures.findTexture(texName[0])
-            self.setClothesTexture(tex, [pieces[0]], self.partLayer[part], lowLODColor)
+            self.setClothesTexture(tex, [pieces[0]], self.partLayer[part],
+                                   lowLODColor)
             if len(pieces) > 2:
-                self.setClothesTexture(tex, [pieces[2]], self.partLayer[part], lowLODColor)
+                self.setClothesTexture(tex, [pieces[2]], self.partLayer[part],
+                                       lowLODColor)
             tex = self.clothesTextures.findTexture(texName[1])
-            self.setClothesTexture(tex, [pieces[1]], self.partLayer[part], lowLODColor)
+            self.setClothesTexture(tex, [pieces[1]], self.partLayer[part],
+                                   lowLODColor)
 
     def setShirtTexture(self, shirtIdx, texIdx, shirtPieces):
         if len(clothes_textures['SHIRT'][shirtIdx]) == 0:
@@ -873,7 +1345,8 @@ class PirateFemale(DirectObject.DirectObject):
         texName = clothes_textures['SHIRT'][shirtIdx][texIdx][0]
         lowLODColor = clothes_textures['SHIRT'][shirtIdx][texIdx][1]
         tex = self.clothesTextures.findTexture(texName)
-        self.setClothesTexture(tex, shirtPieces, self.clothingsLayer1, lowLODColor)
+        self.setClothesTexture(tex, shirtPieces, self.clothingsLayer1,
+                               lowLODColor)
 
     def setVestTexture(self, vestIdx, texIdx, vestPieces):
         numChoices = len(clothes_textures['VEST'][vestIdx])
@@ -882,7 +1355,8 @@ class PirateFemale(DirectObject.DirectObject):
         texName = clothes_textures['VEST'][vestIdx][texIdx][0]
         lowLODColor = clothes_textures['VEST'][vestIdx][texIdx][1]
         tex = self.clothesTextures.findTexture(texName)
-        self.setClothesTexture(tex, vestPieces, self.clothingsLayer2, lowLODColor)
+        self.setClothesTexture(tex, vestPieces, self.clothingsLayer2,
+                               lowLODColor)
 
     def setCoatTexture(self, coatIdx, texIdx, coatPieces):
         if len(clothes_textures['COAT'][coatIdx]) == 0:
@@ -890,7 +1364,8 @@ class PirateFemale(DirectObject.DirectObject):
         texName = clothes_textures['COAT'][coatIdx][texIdx][0]
         lowLODColor = clothes_textures['COAT'][coatIdx][texIdx][1]
         tex = self.clothesTextures.findTexture(texName)
-        self.setClothesTexture(tex, coatPieces, self.clothingsLayer3, lowLODColor)
+        self.setClothesTexture(tex, coatPieces, self.clothingsLayer3,
+                               lowLODColor)
 
     def setPantTexture(self, pantIdx, texIdx, pantPieces):
         numChoices = len(clothes_textures['PANT'][pantIdx])
@@ -899,7 +1374,8 @@ class PirateFemale(DirectObject.DirectObject):
         texName = clothes_textures['PANT'][pantIdx][texIdx][0]
         lowLODColor = clothes_textures['PANT'][pantIdx][texIdx][1]
         tex = self.clothesTextures.findTexture(texName)
-        self.setClothesTexture(tex, pantPieces, self.clothingsLayer1, lowLODColor)
+        self.setClothesTexture(tex, pantPieces, self.clothingsLayer1,
+                               lowLODColor)
 
     def setBeltTexture(self, beltIdx, texIdx, beltPieces):
         if beltIdx == 0:
@@ -909,11 +1385,14 @@ class PirateFemale(DirectObject.DirectObject):
         texName = clothes_textures['BELT'][beltIdx][texIdx][0].split('+')
         lowLODColor = clothes_textures['BELT'][beltIdx][texIdx][1]
         tex = self.clothesTextures.findTexture(texName[0])
-        self.setClothesTexture(tex, [beltPieces[0]], self.clothingsLayer2, lowLODColor)
+        self.setClothesTexture(tex, [beltPieces[0]], self.clothingsLayer2,
+                               lowLODColor)
         if len(beltPieces) > 2:
-            self.setClothesTexture(tex, [beltPieces[2]], self.clothingsLayer2, lowLODColor)
+            self.setClothesTexture(tex, [beltPieces[2]], self.clothingsLayer2,
+                                   lowLODColor)
         tex = self.clothesTextures.findTexture(texName[1])
-        self.setClothesTexture(tex, [beltPieces[1]], self.clothingsLayer2, lowLODColor)
+        self.setClothesTexture(tex, [beltPieces[1]], self.clothingsLayer2,
+                               lowLODColor)
 
     def setShoeTexture(self, shoeIdx, texIdx, shoePieces):
         if len(clothes_textures['SHOE'][shoeIdx]) == 0:
@@ -921,7 +1400,8 @@ class PirateFemale(DirectObject.DirectObject):
         texName = clothes_textures['SHOE'][shoeIdx][texIdx][0]
         lowLODColor = clothes_textures['SHOE'][shoeIdx][texIdx][1]
         tex = self.clothesTextures.findTexture(texName)
-        self.setClothesTexture(tex, shoePieces, self.clothingsLayer1, lowLODColor)
+        self.setClothesTexture(tex, shoePieces, self.clothingsLayer1,
+                               lowLODColor)
 
     def setSockTexture(self, sockIdx, texIdx, sockPieces):
         if len(clothes_textures['SOCK'][sockIdx]) == 0:
@@ -1008,7 +1488,8 @@ class PirateFemale(DirectObject.DirectObject):
         layerCoat = self.clothingsCoat[coatIdx[0]]
         currentVest = self.vestSets[vestIdx[0]][style1][style2Shirt][style3Vest]
         if style1Shirt == 'belt':
-            currentShirt = self.shirtSets[shirtIdx[0]][style1Shirt][style2Shirt][style3Shirt]
+            currentShirt = self.shirtSets[shirtIdx[0]][style1Shirt][
+                style2Shirt][style3Shirt]
         else:
             currentShirt = self.shirtSets[shirtIdx[0]][style1Shirt][style2Shirt]
         currentCoat = self.coatSets[coatIdx[0]]
@@ -1016,7 +1497,8 @@ class PirateFemale(DirectObject.DirectObject):
             currentBelt = self.beltSets[beltIdx[0]]['coat3']
         else:
             currentBelt = self.beltSets[beltIdx[0]]['full']
-        currentPant = self.pantSets[pantIdx[0]][style1Pant][style2Pant][style3Pant]
+        currentPant = self.pantSets[pantIdx[0]][style1Pant][style2Pant][
+            style3Pant]
         currentShoe = self.shoeSets[shoeIdx[0]][style3Vest]
         layerPant = self.clothingsPant[pantIdx[0]]
         parts = NodePathCollection()
@@ -1029,8 +1511,12 @@ class PirateFemale(DirectObject.DirectObject):
             currentPant.setTexture(self.texDict[texInfo[0]])
             currentPant.setColorScale(pantColor)
             if self.pirate.optimizeLOD:
-                for i in xrange(currentPant.getNumPaths() * 2 / 3, currentPant.getNumPaths()):
-                    currentPant[i].setColorScale(VBase4(texInfo[1][0] * pantColor[0], texInfo[1][1] * pantColor[1], texInfo[1][2] * pantColor[2], 1))
+                for i in xrange(currentPant.getNumPaths() * 2 / 3,
+                                currentPant.getNumPaths()):
+                    currentPant[i].setColorScale(
+                        VBase4(texInfo[1][0] * pantColor[0],
+                               texInfo[1][1] * pantColor[1],
+                               texInfo[1][2] * pantColor[2], 1))
 
         self.currentClothingModels['SHOE'].stash()
         currentShoe.unstash()
@@ -1040,8 +1526,12 @@ class PirateFemale(DirectObject.DirectObject):
             shoeColor = dna.lookupClothesBotColor()[2]
             currentShoe.setTexture(self.texDict[texInfo[0]])
             if self.pirate.optimizeLOD:
-                for i in xrange(currentShoe.getNumPaths() * 2 / 3, currentShoe.getNumPaths()):
-                    currentShoe[i].setColorScale(VBase4(texInfo[1][0] * shoeColor[0], texInfo[1][1] * shoeColor[1], texInfo[1][2] * shoeColor[2], 1))
+                for i in xrange(currentShoe.getNumPaths() * 2 / 3,
+                                currentShoe.getNumPaths()):
+                    currentShoe[i].setColorScale(
+                        VBase4(texInfo[1][0] * shoeColor[0],
+                               texInfo[1][1] * shoeColor[1],
+                               texInfo[1][2] * shoeColor[2], 1))
 
         self.currentClothingModels['SHIRT'].stash()
         self.currentClothingModels['SHIRT'] = currentShirt
@@ -1053,8 +1543,12 @@ class PirateFemale(DirectObject.DirectObject):
                 shirtColor = dna.lookupClothesTopColor()[0]
                 currentShirt.setColorScale(shirtColor)
                 if self.pirate.optimizeLOD:
-                    for i in xrange(currentShirt.getNumPaths() * 2 / 3, currentShirt.getNumPaths()):
-                        currentShirt[i].setColorScale(VBase4(texInfo[1][0] * shirtColor[0], texInfo[1][1] * shirtColor[1], texInfo[1][2] * shirtColor[2], 1))
+                    for i in xrange(currentShirt.getNumPaths() * 2 / 3,
+                                    currentShirt.getNumPaths()):
+                        currentShirt[i].setColorScale(
+                            VBase4(texInfo[1][0] * shirtColor[0],
+                                   texInfo[1][1] * shirtColor[1],
+                                   texInfo[1][2] * shirtColor[2], 1))
 
             self.currentClothingModels['SHIRT'] = currentShirt
             for i in layerShirt[1:]:
@@ -1070,8 +1564,12 @@ class PirateFemale(DirectObject.DirectObject):
                 currentVest.setTexture(self.texDict[texInfo[0]])
                 currentVest.setColorScale(vestColor)
                 if self.pirate.optimizeLOD:
-                    for i in xrange(currentVest.getNumPaths() * 2 / 3, currentVest.getNumPaths()):
-                        currentVest[i].setColorScale(VBase4(texInfo[1][0] * vestColor[0], texInfo[1][1] * vestColor[1], texInfo[1][2] * vestColor[2], 1))
+                    for i in xrange(currentVest.getNumPaths() * 2 / 3,
+                                    currentVest.getNumPaths()):
+                        currentVest[i].setColorScale(
+                            VBase4(texInfo[1][0] * vestColor[0],
+                                   texInfo[1][1] * vestColor[1],
+                                   texInfo[1][2] * vestColor[2], 1))
 
             for i in layerVest[1:]:
                 bodySet[self.bodyPiecesToGroup[-i]].add(-i)
@@ -1101,8 +1599,12 @@ class PirateFemale(DirectObject.DirectObject):
             for i in [0, 1]:
                 currentBelt[i].setColorScale(beltColor)
                 if self.pirate.optimizeLOD:
-                    for j in xrange(currentBelt[i].getNumPaths() * 2 / 3, currentBelt[i].getNumPaths()):
-                        currentBelt[i][j].setColorScale(VBase4(texInfo[1][0] * beltColor[0], texInfo[1][1] * beltColor[1], texInfo[1][2] * beltColor[2], 1))
+                    for j in xrange(currentBelt[i].getNumPaths() * 2 / 3,
+                                    currentBelt[i].getNumPaths()):
+                        currentBelt[i][j].setColorScale(
+                            VBase4(texInfo[1][0] * beltColor[0],
+                                   texInfo[1][1] * beltColor[1],
+                                   texInfo[1][2] * beltColor[2], 1))
 
             for i in layerBelt[1:]:
                 bodySet[self.bodyPiecesToGroup[-i]].add(-i)
@@ -1116,18 +1618,22 @@ class PirateFemale(DirectObject.DirectObject):
             currentCoat.setTexture(self.texDict[texInfo[0]])
             currentCoat.setColorScale(coatColor)
             if self.pirate.optimizeLOD:
-                for i in xrange(currentCoat.getNumPaths() * 2 / 3, currentCoat.getNumPaths()):
-                    currentCoat[i].setColorScale(VBase4(texInfo[1][0] * coatColor[0], texInfo[1][1] * coatColor[1], texInfo[1][2] * coatColor[2], 1))
+                for i in xrange(currentCoat.getNumPaths() * 2 / 3,
+                                currentCoat.getNumPaths()):
+                    currentCoat[i].setColorScale(
+                        VBase4(texInfo[1][0] * coatColor[0],
+                               texInfo[1][1] * coatColor[1],
+                               texInfo[1][2] * coatColor[2], 1))
 
         for partSet in [layerCoat, layerPant, layerShoe]:
             for i in partSet[1:]:
                 bodySet[self.bodyPiecesToGroup[-i]].add(-i)
 
-        bodyList = [ list(x) for x in bodySet ]
+        bodyList = [list(x) for x in bodySet]
         for pieces in bodyList:
             pieces.sort()
 
-        bodyTuple = [ tuple(x) for x in bodyList ]
+        bodyTuple = [tuple(x) for x in bodyList]
         for i in xrange(3):
             if bodyTuple[i] not in self.bodySets[i]:
                 flattenedSet = NodePathCollection()
@@ -1149,7 +1655,8 @@ class PirateFemale(DirectObject.DirectObject):
             bodyTexIdx = ZOMB_BODY_TEXTURE
         else:
             bodyTexIdx = 0
-        tex = self.texDict[body_textures[self.pirate.style.getBodyShape()][bodyTexIdx]]
+        tex = self.texDict[body_textures[self.pirate.style.getBodyShape()][
+            bodyTexIdx]]
         self.currentBody.setTexture(tex)
         currentBody = NodePathCollection()
         currentChest = self.bodySets[0][bodyTuple[0]]
@@ -1169,7 +1676,9 @@ class PirateFemale(DirectObject.DirectObject):
         self.faces[0].setColorScale(skinColor)
         currentBody.setColorScale(skinColor)
         if self.pirate.optimizeLOD:
-            color = VBase4(lowColor[0] * skinColor[0], lowColor[1] * skinColor[1], lowColor[2] * skinColor[2], 1.0)
+            color = VBase4(lowColor[0] * skinColor[0],
+                           lowColor[1] * skinColor[1],
+                           lowColor[2] * skinColor[2], 1.0)
             currentChest[2].setColorScale(color)
             currentLeftArm[2].setColorScale(color)
             currentRightArm[2].setColorScale(color)
@@ -1177,7 +1686,9 @@ class PirateFemale(DirectObject.DirectObject):
         self.currentBody.stash()
         currentBody.unstash()
         self.currentBody = currentBody
-        self.currentTattooZones = [currentChest, currentLeftArm, currentRightArm, self.faces[0]]
+        self.currentTattooZones = [
+            currentChest, currentLeftArm, currentRightArm, self.faces[0]
+        ]
         self.setupTattoos()
 
     def handleClothesHidingOld(self):
@@ -1215,14 +1726,16 @@ class PirateFemale(DirectObject.DirectObject):
 
         self.handleLayer1Hiding(layerShoe)
         if shoeIdx[0] == 4:
-            self.handleLayer2Hiding(self.clothingsLayer1, layerPant, 'knee', 'uppercalf')
+            self.handleLayer2Hiding(self.clothingsLayer1, layerPant, 'knee',
+                                    'uppercalf')
             if pantIdx[0] == 2:
                 self.handleLayer2Hiding(self.clothingsLayer1, layerShoe, 'top')
         layerShirt = self.clothingsShirt[shirtIdx[0]]
         parts = NodePathCollection()
         if vestIdx[0] < 3:
             if self.clothesTextures != None:
-                self.setPartTexture('SHIRT', shirtIdx[0], shirtIdx[1], layerShirt[0])
+                self.setPartTexture('SHIRT', shirtIdx[0], shirtIdx[1],
+                                    layerShirt[0])
             for j in range(0, len(layerShirt[0])):
                 parts = self.clothingsLayer1[layerShirt[0][j]]
                 if parts.getNumPaths():
@@ -1243,17 +1756,24 @@ class PirateFemale(DirectObject.DirectObject):
 
         if parts.getNumPaths():
             if vestIdx[0] == 1:
-                self.handleLayer2Hiding(self.clothingsLayer1, layerShirt, 'base', 'low_vcut', 'front')
-                self.handleLayer2Hiding(self.clothingsLayer1, layerShirt, 'breast', 'belt', 'waist')
+                self.handleLayer2Hiding(self.clothingsLayer1, layerShirt,
+                                        'base', 'low_vcut', 'front')
+                self.handleLayer2Hiding(self.clothingsLayer1, layerShirt,
+                                        'breast', 'belt', 'waist')
                 self.handleLayer2Hiding(self.clothingsLayer1, layerPant, 'belt')
             elif vestIdx[0] == 2:
-                self.handleLayer2Hiding(self.clothingsLayer1, layerShirt, 'base', 'front', 'waist')
-                self.handleLayer2Hiding(self.clothingsLayer1, layerShirt, 'belt')
-                self.handleLayer2Hiding(self.clothingsLayer1, layerPant, 'belt', '_abs')
+                self.handleLayer2Hiding(self.clothingsLayer1, layerShirt,
+                                        'base', 'front', 'waist')
+                self.handleLayer2Hiding(self.clothingsLayer1, layerShirt,
+                                        'belt')
+                self.handleLayer2Hiding(self.clothingsLayer1, layerPant, 'belt',
+                                        '_abs')
                 if pantIdx[0] == 2:
-                    self.handleLayer2Hiding(self.clothingsLayer2, layerVest, 'bottom_pant')
+                    self.handleLayer2Hiding(self.clothingsLayer2, layerVest,
+                                            'bottom_pant')
                 else:
-                    self.handleLayer2Hiding(self.clothingsLayer2, layerVest, 'bottom_skirt')
+                    self.handleLayer2Hiding(self.clothingsLayer2, layerVest,
+                                            'bottom_skirt')
             else:
                 self.handleLayer2Hiding(self.clothingsLayer1, layerPant, 'belt')
                 self.handleLayer1Hiding(layerVest)
@@ -1281,19 +1801,25 @@ class PirateFemale(DirectObject.DirectObject):
                 parts.unstash()
 
         if coatIdx[0] == 3:
-            self.handleLayer3Hiding(self.clothingsLayer2, layerVest, layerShirt, True)
+            self.handleLayer3Hiding(self.clothingsLayer2, layerVest, layerShirt,
+                                    True)
             self.handleLayer1Hiding(layerCoat)
         else:
             if parts.getNumPaths():
-                self.handleLayer3Hiding(self.clothingsLayer2, layerVest, layerShirt)
-                self.handleLayer2Hiding(self.clothingsLayer2, layerBelt, '_cloth', 'interior')
+                self.handleLayer3Hiding(self.clothingsLayer2, layerVest,
+                                        layerShirt)
+                self.handleLayer2Hiding(self.clothingsLayer2, layerBelt,
+                                        '_cloth', 'interior')
                 if pantIdx[0] == 2:
                     if coatIdx[0] == 1:
-                        self.handleLayer2Hiding(self.clothingsLayer1, layerPant, 'side', 'longcoat', 'tails')
+                        self.handleLayer2Hiding(self.clothingsLayer1, layerPant,
+                                                'side', 'longcoat', 'tails')
                     if coatIdx[0] == 2:
-                        self.handleLayer2Hiding(self.clothingsLayer1, layerPant, 'side', 'interior', 'back')
+                        self.handleLayer2Hiding(self.clothingsLayer1, layerPant,
+                                                'side', 'interior', 'back')
                 else:
-                    self.handleLayer2Hiding(self.clothingsLayer1, layerPant, 'interior')
+                    self.handleLayer2Hiding(self.clothingsLayer1, layerPant,
+                                            'interior')
                 self.handleLayer1Hiding(layerCoat)
         self.pirate.generateColor()
         self.pirate.generateClothesColor()
@@ -1304,7 +1830,8 @@ class PirateFemale(DirectObject.DirectObject):
         if texIdx >= len(clothes_textures[type][clothing[0]]):
             self.currentClothing[type][1] = 0
         if texIdx < 0:
-            self.currentClothing[type][1] = len(clothes_textures[type][clothing[0]]) - 1
+            self.currentClothing[type][1] = len(
+                clothes_textures[type][clothing[0]]) - 1
         self.pirate.setClothesByType(type, clothing[0], clothing[1])
         self.handleClothesHiding()
 
@@ -1318,7 +1845,12 @@ class PirateFemale(DirectObject.DirectObject):
             parts[-idx].stash()
             self.notify.debug('hiding %s' % parts[-idx][0].getName())
 
-    def handleLayer2Hiding(self, clothingLayer, layer1Element, hide1='base', hide2=None, hide3=None):
+    def handleLayer2Hiding(self,
+                           clothingLayer,
+                           layer1Element,
+                           hide1='base',
+                           hide2=None,
+                           hide3=None):
         for i in range(0, len(layer1Element[0])):
             parts = clothingLayer[layer1Element[0][i]]
             for j in range(0, parts.getNumPaths()):
@@ -1334,7 +1866,11 @@ class PirateFemale(DirectObject.DirectObject):
 
         return
 
-    def handleLayer3Hiding(self, clothingLayer, layer2Element, layer1Element, hideAll=False):
+    def handleLayer3Hiding(self,
+                           clothingLayer,
+                           layer2Element,
+                           layer1Element,
+                           hideAll=False):
         for i in range(0, len(layer2Element[0])):
             parts = clothingLayer[layer2Element[0][i]]
             for j in range(0, parts.getNumPaths()):
@@ -1385,7 +1921,16 @@ class PirateFemale(DirectObject.DirectObject):
         self.accBody.stash()
 
     def handleJewelryHiding(self):
-        jewelryDNA = {'LEar': self.pirate.style.getJewelryZone1(), 'REar': self.pirate.style.getJewelryZone2(), 'LBrow': self.pirate.style.getJewelryZone3(), 'RBrow': self.pirate.style.getJewelryZone4(), 'Nose': self.pirate.style.getJewelryZone5(), 'Mouth': self.pirate.style.getJewelryZone6(), 'LHand': self.pirate.style.getJewelryZone7(), 'RHand': self.pirate.style.getJewelryZone8()}
+        jewelryDNA = {
+            'LEar': self.pirate.style.getJewelryZone1(),
+            'REar': self.pirate.style.getJewelryZone2(),
+            'LBrow': self.pirate.style.getJewelryZone3(),
+            'RBrow': self.pirate.style.getJewelryZone4(),
+            'Nose': self.pirate.style.getJewelryZone5(),
+            'Mouth': self.pirate.style.getJewelryZone6(),
+            'LHand': self.pirate.style.getJewelryZone7(),
+            'RHand': self.pirate.style.getJewelryZone8()
+        }
         for key in self.currentJewelry.keys():
             primaryColor = HumanDNA.jewelryColors[jewelryDNA[key][1]]
             secondaryColor = HumanDNA.jewelryColors[jewelryDNA[key][2]]
@@ -1471,7 +2016,8 @@ class PirateFemale(DirectObject.DirectObject):
 
     def generatePantSets(self):
         self.pantSets = []
-        tex = self.clothesTextures.findTexture(clothes_textures['PANT'][1][0][0])
+        tex = self.clothesTextures.findTexture(
+            clothes_textures['PANT'][1][0][0])
 
         def getBasicData():
             return {
@@ -1479,38 +2025,44 @@ class PirateFemale(DirectObject.DirectObject):
                     'belt': {
                         'noCoat': NodePathCollection(),
                         'longCoat': NodePathCollection(),
-                        'shortCoat': NodePathCollection()},
+                        'shortCoat': NodePathCollection()
+                    },
                     'lowVest': {
                         'noCoat': NodePathCollection(),
                         'longCoat': NodePathCollection(),
-                        'shortCoat': NodePathCollection()},
+                        'shortCoat': NodePathCollection()
+                    },
                     'neither': {
                         'noCoat': NodePathCollection(),
                         'longCoat': NodePathCollection(),
-                        'shortCoat': NodePathCollection()}},
+                        'shortCoat': NodePathCollection()
+                    }
+                },
                 'shortBoot': {
                     'belt': {
                         'noCoat': NodePathCollection(),
                         'longCoat': NodePathCollection(),
-                        'shortCoat': NodePathCollection()},
+                        'shortCoat': NodePathCollection()
+                    },
                     'lowVest': {
                         'noCoat': NodePathCollection(),
                         'longCoat': NodePathCollection(),
-                        'shortCoat': NodePathCollection()},
+                        'shortCoat': NodePathCollection()
+                    },
                     'neither': {
                         'noCoat': NodePathCollection(),
                         'longCoat': NodePathCollection(),
-                        'shortCoat': NodePathCollection()}}}
+                        'shortCoat': NodePathCollection()
+                    }
+                }
+            }
 
         for pantIdx in xrange(len(self.clothingsPant)):
             pant = self.clothingsPant[pantIdx]
             texName = clothes_textures['PANT'][pantIdx][0]
             tex = self.texDict.get(texName[0])
             flattenedSet = getBasicData()
-            for lod in [
-                '2000',
-                '1000',
-                '500']:
+            for lod in ['2000', '1000', '500']:
                 pantData = getBasicData()
                 for idx in pant[0]:
                     pieceSet = self.layer1LODs[idx][lod]
@@ -1528,7 +2080,8 @@ class PirateFemale(DirectObject.DirectObject):
                             anyCoat = True
 
                         if name.find('side') < 0:
-                            if name.find('longcoat') < 0 and name.find('tails') < 0:
+                            if name.find('longcoat') < 0 and name.find(
+                                    'tails') < 0:
                                 longCoat = True
 
                             if anyCoat and name.find('back') < 0:
@@ -1542,97 +2095,120 @@ class PirateFemale(DirectObject.DirectObject):
                         if name.find('knee') < 0 and name.find('uppercalf') < 0:
                             tallBoot = True
 
-                        pantData['shortBoot']['neither']['noCoat'].addPath(piece)
+                        pantData['shortBoot']['neither']['noCoat'].addPath(
+                            piece)
                         if skirt:
                             if longCoat:
-                                pantData['shortBoot']['neither']['longCoat'].addPath(piece)
+                                pantData['shortBoot']['neither'][
+                                    'longCoat'].addPath(piece)
 
                             if shortCoat:
-                                pantData['shortBoot']['neither']['shortCoat'].addPath(piece)
+                                pantData['shortBoot']['neither'][
+                                    'shortCoat'].addPath(piece)
 
                         elif anyCoat:
-                            pantData['shortBoot']['neither']['longCoat'].addPath(piece)
-                            pantData['shortBoot']['neither']['shortCoat'].addPath(piece)
+                            pantData['shortBoot']['neither'][
+                                'longCoat'].addPath(piece)
+                            pantData['shortBoot']['neither'][
+                                'shortCoat'].addPath(piece)
 
                         if belt:
-                            pantData['shortBoot']['belt']['noCoat'].addPath(piece)
+                            pantData['shortBoot']['belt']['noCoat'].addPath(
+                                piece)
                             if skirt:
                                 if longCoat:
-                                    pantData['shortBoot']['belt']['longCoat'].addPath(piece)
+                                    pantData['shortBoot']['belt'][
+                                        'longCoat'].addPath(piece)
 
                                 if shortCoat:
-                                    pantData['shortBoot']['belt']['shortCoat'].addPath(piece)
+                                    pantData['shortBoot']['belt'][
+                                        'shortCoat'].addPath(piece)
 
                             elif anyCoat:
-                                pantData['shortBoot']['belt']['longCoat'].addPath(piece)
-                                pantData['shortBoot']['belt']['shortCoat'].addPath(piece)
+                                pantData['shortBoot']['belt'][
+                                    'longCoat'].addPath(piece)
+                                pantData['shortBoot']['belt'][
+                                    'shortCoat'].addPath(piece)
 
                         if lowVest:
-                            pantData['shortBoot']['lowVest']['noCoat'].addPath(piece)
+                            pantData['shortBoot']['lowVest']['noCoat'].addPath(
+                                piece)
                             if skirt:
                                 if longCoat:
-                                    pantData['shortBoot']['lowVest']['longCoat'].addPath(piece)
+                                    pantData['shortBoot']['lowVest'][
+                                        'longCoat'].addPath(piece)
 
                                 if shortCoat:
-                                    pantData['shortBoot']['lowVest']['shortCoat'].addPath(piece)
+                                    pantData['shortBoot']['lowVest'][
+                                        'shortCoat'].addPath(piece)
 
                             elif anyCoat:
-                                pantData['shortBoot']['lowVest']['longCoat'].addPath(piece)
-                                pantData['shortBoot']['lowVest']['shortCoat'].addPath(piece)
+                                pantData['shortBoot']['lowVest'][
+                                    'longCoat'].addPath(piece)
+                                pantData['shortBoot']['lowVest'][
+                                    'shortCoat'].addPath(piece)
 
                         if tallBoot:
-                            pantData['tallBoot']['neither']['noCoat'].addPath(piece)
+                            pantData['tallBoot']['neither']['noCoat'].addPath(
+                                piece)
                             if skirt:
                                 if longCoat:
-                                    pantData['tallBoot']['neither']['longCoat'].addPath(piece)
+                                    pantData['tallBoot']['neither'][
+                                        'longCoat'].addPath(piece)
 
                                 if shortCoat:
-                                    pantData['tallBoot']['neither']['shortCoat'].addPath(piece)
+                                    pantData['tallBoot']['neither'][
+                                        'shortCoat'].addPath(piece)
 
                             elif anyCoat:
-                                pantData['tallBoot']['neither']['longCoat'].addPath(piece)
-                                pantData['tallBoot']['neither']['shortCoat'].addPath(piece)
+                                pantData['tallBoot']['neither'][
+                                    'longCoat'].addPath(piece)
+                                pantData['tallBoot']['neither'][
+                                    'shortCoat'].addPath(piece)
 
                             if belt:
-                                pantData['tallBoot']['belt']['noCoat'].addPath(piece)
+                                pantData['tallBoot']['belt']['noCoat'].addPath(
+                                    piece)
                                 if skirt:
                                     if longCoat:
-                                        pantData['tallBoot']['belt']['longCoat'].addPath(piece)
+                                        pantData['tallBoot']['belt'][
+                                            'longCoat'].addPath(piece)
 
                                     if shortCoat:
-                                        pantData['tallBoot']['belt']['shortCoat'].addPath(piece)
+                                        pantData['tallBoot']['belt'][
+                                            'shortCoat'].addPath(piece)
 
                                 elif anyCoat:
-                                    pantData['tallBoot']['belt']['longCoat'].addPath(piece)
-                                    pantData['tallBoot']['belt']['shortCoat'].addPath(piece)
+                                    pantData['tallBoot']['belt'][
+                                        'longCoat'].addPath(piece)
+                                    pantData['tallBoot']['belt'][
+                                        'shortCoat'].addPath(piece)
 
                             if lowVest:
-                                pantData['tallBoot']['lowVest']['noCoat'].addPath(piece)
+                                pantData['tallBoot']['lowVest'][
+                                    'noCoat'].addPath(piece)
                                 if skirt:
                                     if longCoat:
-                                        pantData['tallBoot']['lowVest']['longCoat'].addPath(piece)
+                                        pantData['tallBoot']['lowVest'][
+                                            'longCoat'].addPath(piece)
 
                                     if shortCoat:
-                                        pantData['tallBoot']['lowVest']['shortCoat'].addPath(piece)
+                                        pantData['tallBoot']['lowVest'][
+                                            'shortCoat'].addPath(piece)
 
                                 elif anyCoat:
-                                    pantData['tallBoot']['lowVest']['longCoat'].addPath(piece)
-                                    pantData['tallBoot']['lowVest']['shortCoat'].addPath(piece)
+                                    pantData['tallBoot']['lowVest'][
+                                        'longCoat'].addPath(piece)
+                                    pantData['tallBoot']['lowVest'][
+                                        'shortCoat'].addPath(piece)
 
-                for style1 in [
-                    'shortBoot',
-                    'tallBoot']:
-                    for style2 in [
-                        'belt',
-                        'lowVest',
-                        'neither']:
-                        for style3 in [
-                            'shortCoat',
-                            'longCoat',
-                            'noCoat']:
+                for style1 in ['shortBoot', 'tallBoot']:
+                    for style2 in ['belt', 'lowVest', 'neither']:
+                        for style3 in ['shortCoat', 'longCoat', 'noCoat']:
                             data = pantData[style1][style2][style3]
                             geomSet = self.flattenData(data, lod, tex)
-                            flattenedSet[style1][style2][style3].addPathsFrom(geomSet)
+                            flattenedSet[style1][style2][style3].addPathsFrom(
+                                geomSet)
 
             self.pantSets.append(flattenedSet)
 
@@ -1670,9 +2246,15 @@ class PirateFemale(DirectObject.DirectObject):
                 combinedSet = NodePathCollection()
                 flattenedSet = {'pants': combinedSet, 'skirt': combinedSet}
             else:
-                flattenedSet = {'pants': NodePathCollection(), 'skirt': NodePathCollection()}
+                flattenedSet = {
+                    'pants': NodePathCollection(),
+                    'skirt': NodePathCollection()
+                }
             for lod in ['2000', '1000', '500']:
-                shoeData = {'pants': NodePathCollection(), 'skirt': NodePathCollection()}
+                shoeData = {
+                    'pants': NodePathCollection(),
+                    'skirt': NodePathCollection()
+                }
                 for idx in shoe[0]:
                     pieceSet = self.layer1LODs[idx][lod]
                     for i in xrange(pieceSet.getNumPaths()):
@@ -1693,10 +2275,28 @@ class PirateFemale(DirectObject.DirectObject):
 
     def generateShirtSets(self):
         self.shirtSets = []
-        tex = self.clothesTextures.findTexture(clothes_textures['SHIRT'][1][0][0])
+        tex = self.clothesTextures.findTexture(
+            clothes_textures['SHIRT'][1][0][0])
 
         def getBasicData():
-            return {'belt': {'coat': {'vest1': NodePathCollection(), 'vest2': NodePathCollection(), 'neither': NodePathCollection()}, 'noCoat': {'vest1': NodePathCollection(), 'vest2': NodePathCollection(), 'neither': NodePathCollection()}}, 'nobelt': {'coat': NodePathCollection(), 'noCoat': NodePathCollection()}}
+            return {
+                'belt': {
+                    'coat': {
+                        'vest1': NodePathCollection(),
+                        'vest2': NodePathCollection(),
+                        'neither': NodePathCollection()
+                    },
+                    'noCoat': {
+                        'vest1': NodePathCollection(),
+                        'vest2': NodePathCollection(),
+                        'neither': NodePathCollection()
+                    }
+                },
+                'nobelt': {
+                    'coat': NodePathCollection(),
+                    'noCoat': NodePathCollection()
+                }
+            }
 
         for shirtIdx in xrange(len(self.clothingsShirt)):
             shirt = self.clothingsShirt[shirtIdx]
@@ -1713,23 +2313,31 @@ class PirateFemale(DirectObject.DirectObject):
                         front = name.find('front') < 0
                         belt = name.find('belt') < 0
                         coat = not front or not name.find('vcut') < 0
-                        vest2 = belt and name.find('base') < 0 and front and name.find('waist') < 0
-                        vest1 = vest2 and name.find('low_vcut') < 0 and name.find('breast') < 0
+                        vest2 = belt and name.find(
+                            'base') < 0 and front and name.find('waist') < 0
+                        vest1 = vest2 and name.find(
+                            'low_vcut') < 0 and name.find('breast') < 0
                         shirtData['nobelt']['noCoat'].addPath(piece)
                         if coat:
                             shirtData['nobelt']['coat'].addPath(piece)
                         if belt:
-                            shirtData['belt']['noCoat']['neither'].addPath(piece)
+                            shirtData['belt']['noCoat']['neither'].addPath(
+                                piece)
                             if vest1:
-                                shirtData['belt']['noCoat']['vest1'].addPath(piece)
+                                shirtData['belt']['noCoat']['vest1'].addPath(
+                                    piece)
                             if vest2:
-                                shirtData['belt']['noCoat']['vest2'].addPath(piece)
+                                shirtData['belt']['noCoat']['vest2'].addPath(
+                                    piece)
                             if coat:
-                                shirtData['belt']['coat']['neither'].addPath(piece)
+                                shirtData['belt']['coat']['neither'].addPath(
+                                    piece)
                                 if vest1:
-                                    shirtData['belt']['coat']['vest1'].addPath(piece)
+                                    shirtData['belt']['coat']['vest1'].addPath(
+                                        piece)
                                 if vest2:
-                                    shirtData['belt']['coat']['vest2'].addPath(piece)
+                                    shirtData['belt']['coat']['vest2'].addPath(
+                                        piece)
 
                 for style2 in ['coat', 'noCoat']:
                     for style3 in ['vest1', 'vest2', 'neither']:
@@ -1745,7 +2353,8 @@ class PirateFemale(DirectObject.DirectObject):
                         geomSet.stash()
                         geomSet.setTexture(tex, 1)
                         flattenNode.removeNode()
-                        flattenedSet['belt'][style2][style3].addPathsFrom(geomSet)
+                        flattenedSet['belt'][style2][style3].addPathsFrom(
+                            geomSet)
 
                 for style2 in ['coat', 'noCoat']:
                     data = shirtData['nobelt'][style2]
@@ -1757,7 +2366,28 @@ class PirateFemale(DirectObject.DirectObject):
     def generateVestSets(self):
 
         def getBasicData():
-            return {'belt': {'coat': {'pants': NodePathCollection(), 'skirt': NodePathCollection()}, 'noCoat': {'pants': NodePathCollection(), 'skirt': NodePathCollection()}}, 'nobelt': {'coat': {'pants': NodePathCollection(), 'skirt': NodePathCollection()}, 'noCoat': {'pants': NodePathCollection(), 'skirt': NodePathCollection()}}}
+            return {
+                'belt': {
+                    'coat': {
+                        'pants': NodePathCollection(),
+                        'skirt': NodePathCollection()
+                    },
+                    'noCoat': {
+                        'pants': NodePathCollection(),
+                        'skirt': NodePathCollection()
+                    }
+                },
+                'nobelt': {
+                    'coat': {
+                        'pants': NodePathCollection(),
+                        'skirt': NodePathCollection()
+                    },
+                    'noCoat': {
+                        'pants': NodePathCollection(),
+                        'skirt': NodePathCollection()
+                    }
+                }
+            }
 
         self.vestSets = []
         for vestIdx in xrange(len(self.clothingsVest)):
@@ -1782,26 +2412,33 @@ class PirateFemale(DirectObject.DirectObject):
                             vestData['nobelt']['noCoat']['skirt'].addPath(piece)
                         if coat:
                             if pants:
-                                vestData['nobelt']['coat']['pants'].addPath(piece)
+                                vestData['nobelt']['coat']['pants'].addPath(
+                                    piece)
                             if skirt:
-                                vestData['nobelt']['coat']['skirt'].addPath(piece)
+                                vestData['nobelt']['coat']['skirt'].addPath(
+                                    piece)
                         if belt:
                             if pants:
-                                vestData['belt']['noCoat']['pants'].addPath(piece)
+                                vestData['belt']['noCoat']['pants'].addPath(
+                                    piece)
                             if skirt:
-                                vestData['belt']['noCoat']['skirt'].addPath(piece)
+                                vestData['belt']['noCoat']['skirt'].addPath(
+                                    piece)
                             if coat:
                                 if pants:
-                                    vestData['belt']['coat']['pants'].addPath(piece)
+                                    vestData['belt']['coat']['pants'].addPath(
+                                        piece)
                                 if skirt:
-                                    vestData['belt']['coat']['skirt'].addPath(piece)
+                                    vestData['belt']['coat']['skirt'].addPath(
+                                        piece)
 
                 for style1 in ['belt', 'nobelt']:
                     for style2 in ['coat', 'noCoat']:
                         for style3 in ['pants', 'skirt']:
                             data = vestData[style1][style2][style3]
                             geomSet = self.flattenData(data, lod, tex)
-                            flattenedSet[style1][style2][style3].addPathsFrom(geomSet)
+                            flattenedSet[style1][style2][style3].addPathsFrom(
+                                geomSet)
 
             self.vestSets.append(flattenedSet)
 
@@ -1820,14 +2457,25 @@ class PirateFemale(DirectObject.DirectObject):
 
     def generateBeltSets(self):
         self.beltSets = []
-        tex = self.clothesTextures.findTexture(clothes_textures['VEST'][1][0][0].split('+')[0])
+        tex = self.clothesTextures.findTexture(
+            clothes_textures['VEST'][1][0][0].split('+')[0])
         for beltIdx in xrange(len(self.clothingsBelt)):
             belt = self.clothingsBelt[beltIdx]
             texName = clothes_textures['BELT'][beltIdx][0]
             tex = self.texDict.get(texName[0])
-            flattenedSet = {'full': [NodePathCollection(), NodePathCollection()], 'coat3': [NodePathCollection(), NodePathCollection()]}
+            flattenedSet = {
+                'full': [NodePathCollection(),
+                         NodePathCollection()],
+                'coat3': [NodePathCollection(),
+                          NodePathCollection()]
+            }
             for lod in ['2000', '1000', '500']:
-                beltData = {'full': [NodePathCollection(), NodePathCollection()], 'coat3': [NodePathCollection(), NodePathCollection()]}
+                beltData = {
+                    'full': [NodePathCollection(),
+                             NodePathCollection()],
+                    'coat3': [NodePathCollection(),
+                              NodePathCollection()]
+                }
                 idx1 = belt[0][0]
                 pieceSet1 = self.layer2LODs[idx1][lod]
                 for i in xrange(pieceSet1.getNumPaths()):
@@ -1877,7 +2525,8 @@ class PirateFemale(DirectObject.DirectObject):
 
     def generateHairSets(self):
         cuts = [
-         '', 'cut_c', 'cut_c', 'cut_c', 'cut_e', 'cut_c', 'cut_d', 'cut_c']
+            '', 'cut_c', 'cut_c', 'cut_c', 'cut_e', 'cut_c', 'cut_d', 'cut_c'
+        ]
 
         def getBasicData():
             data = []
@@ -1916,7 +2565,8 @@ class PirateFemale(DirectObject.DirectObject):
                                     hairData.addPath(hairCut[j])
                                     cutFound = 1
                                 elif hatIdx == 6:
-                                    if hairCut[j].getName().find(cuts[hatIdx + 1]) >= 0:
+                                    if hairCut[j].getName().find(
+                                            cuts[hatIdx + 1]) >= 0:
                                         hairCutIndices.add(partIdx)
                                         hairData.addPath(hairCut[j])
                                         cutFound = 1
@@ -1937,7 +2587,8 @@ class PirateFemale(DirectObject.DirectObject):
                         flattenedSet[hatIdx].addPathsFrom(cachedCopy)
                     else:
                         if 14 in self.hairs[hairIdx]:
-                            geomSet = self.flattenData(hairData, lod, False, 'hair_dreads')
+                            geomSet = self.flattenData(hairData, lod, False,
+                                                       'hair_dreads')
                         else:
                             geomSet = self.flattenData(hairData, lod, False)
                         flattenedSet[hatIdx].addPathsFrom(geomSet)
@@ -1962,7 +2613,12 @@ class PirateFemale(DirectObject.DirectObject):
         geomSet.stash()
         return geomSet
 
-    def flattenData(self, geomData, lod, texStrip=True, overrideNode=None, flattenStrong=True):
+    def flattenData(self,
+                    geomData,
+                    lod,
+                    texStrip=True,
+                    overrideNode=None,
+                    flattenStrong=True):
         flattenMe = NodePath('flattenMe')
         for i in xrange(geomData.getNumPaths()):
             geomData[i].copyTo(flattenMe)
@@ -1976,7 +2632,8 @@ class PirateFemale(DirectObject.DirectObject):
         if texStrip:
             self.stripTexture(geomSet)
         if overrideNode:
-            overrideNP = self.pirate.getLOD(lod).getChild(0).attachNewNode(overrideNode)
+            overrideNP = self.pirate.getLOD(lod).getChild(0).attachNewNode(
+                overrideNode)
             geomSet.reparentTo(overrideNP)
             geomSet = NodePathCollection()
             geomSet.addPath(overrideNP)
@@ -1989,12 +2646,15 @@ class PirateFemale(DirectObject.DirectObject):
         flattenMe = NodePath('flattenMe')
         for i in xrange(geomData.getNumPaths()):
             geomPart = geomData[i].copyTo(flattenMe)
-            geomPart.setState(geomPart.getState().removeAttrib(TextureAttrib.getClassType()))
+            geomPart.setState(geomPart.getState().removeAttrib(
+                TextureAttrib.getClassType()))
             geomNode = geomPart.node()
             for j in xrange(geomNode.getNumGeoms()):
                 geomState = geomNode.getGeomState(j)
-                if geomState.getAttrib(TextureAttrib.getClassType()).getTexture().getName().find('eather') < 0:
-                    geomNode.setGeomState(j, geomState.removeAttrib(TextureAttrib.getClassType()))
+                if geomState.getAttrib(TextureAttrib.getClassType()).getTexture(
+                ).getName().find('eather') < 0:
+                    geomNode.setGeomState(
+                        j, geomState.removeAttrib(TextureAttrib.getClassType()))
 
         geomSet = flattenMe.findAllMatches('**/+GeomNode')
         for i in xrange(geomSet.getNumPaths()):
@@ -2008,4 +2668,5 @@ class PirateFemale(DirectObject.DirectObject):
             geomNode = geomSet[i].node()
             for j in xrange(geomNode.getNumGeoms()):
                 geomState = geomNode.getGeomState(j)
-                geomNode.setGeomState(j, geomState.removeAttrib(TextureAttrib.getClassType()))
+                geomNode.setGeomState(
+                    j, geomState.removeAttrib(TextureAttrib.getClassType()))

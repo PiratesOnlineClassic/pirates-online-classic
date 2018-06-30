@@ -11,23 +11,26 @@ from pirates.piratesgui.ListFrame import ListFrame
 
 
 class PVPPanel(DirectFrame):
-    
 
     def __init__(self, name, holder=None):
         w = PiratesGuiGlobals.PVPPanelWidth
         h = PiratesGuiGlobals.PVPPanelHeight
         DirectFrame.__init__(self, relief=None, frameSize=(0.0, w, 0.0, h))
         self.initialiseoptions(PVPPanel)
-        self.list = ListFrame(PiratesGuiGlobals.PVPPageWidth, None, name, holder, frameColor=(0,
-                                                                                              0,
-                                                                                              0,
-                                                                                              0))
+        self.list = ListFrame(
+            PiratesGuiGlobals.PVPPageWidth,
+            None,
+            name,
+            holder,
+            frameColor=(0, 0, 0, 0))
         self.list.setup()
         self.list.reparentTo(self)
         self.list.setPos(0.005, 0.2, 0.17)
         self.renownDisplay = None
         if base.config.GetBool('want-infamy', 0) and not self.renownDisplay:
-            self.renownDisplay = PVPRankGui.PVPRankGui(parent=base.a2dBottomRight, displayType=PVPRankGui.LAND_RENOWN_DISPLAY)
+            self.renownDisplay = PVPRankGui.PVPRankGui(
+                parent=base.a2dBottomRight,
+                displayType=PVPRankGui.LAND_RENOWN_DISPLAY)
             self.renownDisplay.setPos(0.0, 0.0, 0.0)
         return
 
@@ -53,4 +56,6 @@ class PVPPanel(DirectFrame):
         DirectFrame.hide(self)
         if self.renownDisplay:
             self.renownDisplay.hide()
+
+
 # okay decompiling .\pirates\piratesgui\PVPPanel.pyc

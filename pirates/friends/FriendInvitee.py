@@ -6,10 +6,13 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui import GuiPanel, PDialog, PiratesGuiGlobals
 from pirates.piratesgui.RequestButton import RequestButton
 
+
 class FriendInviteeButton(RequestButton):
+
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
         self.initialiseoptions(FriendInviteeButton)
+
 
 class FriendInvitee(GuiPanel.GuiPanel):
     notify = DirectNotifyGlobal.directNotify.newCategory('FriendInvitee')
@@ -25,16 +28,27 @@ class FriendInvitee(GuiPanel.GuiPanel):
             self.__handleNo()
             return
         if self.isPlayerInvite:
-            text = OTPLocalizer.FriendInviteeInvitation % (self.avName + "'s player")
+            text = OTPLocalizer.FriendInviteeInvitation % (
+                self.avName + "'s player")
         else:
             text = OTPLocalizer.FriendInviteeInvitation % self.avName
-        self.message = DirectLabel(parent=self, relief=None, text=text, text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, 
-                                   text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, 
-                                   pos=(0.25, 0, 0.35), textMayChange=1)
-        self.bOk = FriendInviteeButton(text=OTPLocalizer.FriendInviteeOK, command=self.__handleOk)
+        self.message = DirectLabel(
+            parent=self,
+            relief=None,
+            text=text,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_align=TextNode.ACenter,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_wordwrap=11,
+            pos=(0.25, 0, 0.35),
+            textMayChange=1)
+        self.bOk = FriendInviteeButton(
+            text=OTPLocalizer.FriendInviteeOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
         self.bOk.setPos(0.1, 0, 0.05)
-        self.bNo = FriendInviteeButton(text=OTPLocalizer.FriendInviteeNo, command=self.__handleNo)
+        self.bNo = FriendInviteeButton(
+            text=OTPLocalizer.FriendInviteeNo, command=self.__handleNo)
         self.bNo.reparentTo(self)
         self.bNo.setPos(0.3, 0, 0.05)
         self.accept('cancelFriendInvitation', self.__handleCancelFromAbove)

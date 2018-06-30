@@ -121,16 +121,8 @@ class ChatAssistant(DirectObject.DirectObject):
         if not isThought(message):
             self.historyOpen.insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    GAMECHAT,
-                    message,
-                    None,
-                    None,
-                    None,
-                    0,
-                    0,
-                    0))
+                ChatMessage(self.chatTime(), GAMECHAT, message, None, None,
+                            None, 0, 0, 0))
         messenger.send('NewOpenMessage')
         return error
 
@@ -139,16 +131,8 @@ class ChatAssistant(DirectObject.DirectObject):
         if not isThought(message):
             self.historyOpen.insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    SYSTEMCHAT,
-                    message,
-                    None,
-                    None,
-                    None,
-                    0,
-                    0,
-                    0))
+                ChatMessage(self.chatTime(), SYSTEMCHAT, message, None, None,
+                            None, 0, 0, 0))
         messenger.send('NewOpenMessage')
         return error
 
@@ -157,16 +141,8 @@ class ChatAssistant(DirectObject.DirectObject):
         if not isThought(message):
             self.historyOpen.insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    PARTYCHAT,
-                    message,
-                    None,
-                    None,
-                    None,
-                    0,
-                    0,
-                    0))
+                ChatMessage(self.chatTime(), PARTYCHAT, message, None, None,
+                            None, 0, 0, 0))
         messenger.send('NewOpenMessage')
         return error
 
@@ -174,31 +150,15 @@ class ChatAssistant(DirectObject.DirectObject):
         if isOnline:
             self.historyOpen.insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    FRIEND_UPDATE,
-                    OTPLocalizer.FriendOnline %
-                    friendName,
-                    None,
-                    None,
-                    None,
-                    0,
-                    0,
-                    0))
+                ChatMessage(self.chatTime(), FRIEND_UPDATE,
+                            OTPLocalizer.FriendOnline % friendName, None, None,
+                            None, 0, 0, 0))
         else:
             self.historyOpen.insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    FRIEND_UPDATE,
-                    OTPLocalizer.FriendOffline %
-                    friendName,
-                    None,
-                    None,
-                    None,
-                    0,
-                    0,
-                    0))
+                ChatMessage(self.chatTime(), FRIEND_UPDATE,
+                            OTPLocalizer.FriendOffline % friendName, None, None,
+                            None, 0, 0, 0))
         messenger.send('NewOpenMessage')
         return
 
@@ -210,36 +170,23 @@ class ChatAssistant(DirectObject.DirectObject):
             if isOnline:
                 self.historyOpen.insert(
                     0,
-                    ChatMessage(
-                        self.chatTime(),
-                        GUILD_UPDATE,
-                        OTPLocalizer.GuildMemberOnline %
-                        memberName,
-                        None,
-                        None,
-                        None,
-                        0,
-                        0,
-                        0))
+                    ChatMessage(self.chatTime(), GUILD_UPDATE,
+                                OTPLocalizer.GuildMemberOnline % memberName,
+                                None, None, None, 0, 0, 0))
             else:
                 self.historyOpen.insert(
                     0,
-                    ChatMessage(
-                        self.chatTime(),
-                        GUILD_UPDATE,
-                        OTPLocalizer.GuildMemberOffline %
-                        memberName,
-                        None,
-                        None,
-                        None,
-                        0,
-                        0,
-                        0))
+                    ChatMessage(self.chatTime(), GUILD_UPDATE,
+                                OTPLocalizer.GuildMemberOffline % memberName,
+                                None, None, None, 0, 0, 0))
             messenger.send('NewOpenMessage')
         return
 
-    def receiveAvatarOpenTypedChat(
-            self, message, chatFlags, senderId, name=None):
+    def receiveAvatarOpenTypedChat(self,
+                                   message,
+                                   chatFlags,
+                                   senderId,
+                                   name=None):
         if self.useWhiteListFilter:
             message = self.whiteListFilterMessage(message)
         error = None
@@ -248,16 +195,8 @@ class ChatAssistant(DirectObject.DirectObject):
         if not isThought(message):
             self.historyOpen.insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    TYPEDCHAT,
-                    message,
-                    chatFlags,
-                    senderId,
-                    name,
-                    0,
-                    0,
-                    0))
+                ChatMessage(self.chatTime(), TYPEDCHAT, message, chatFlags,
+                            senderId, name, 0, 0, 0))
         messenger.send('NewOpenMessage')
         return error
 
@@ -268,21 +207,16 @@ class ChatAssistant(DirectObject.DirectObject):
         if not isThought(message):
             self.historyOpen.insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    TYPEDCHAT,
-                    message,
-                    chatFlags,
-                    senderId,
-                    name,
-                    0,
-                    0,
-                    0))
+                ChatMessage(self.chatTime(), TYPEDCHAT, message, chatFlags,
+                            senderId, name, 0, 0, 0))
         messenger.send('NewOpenMessage')
         return error
 
-    def receiveAvatarOpenSpeedChat(
-            self, type, messageIndex, senderId, name=None):
+    def receiveAvatarOpenSpeedChat(self,
+                                   type,
+                                   messageIndex,
+                                   senderId,
+                                   name=None):
         error = None
         if not name and senderId:
             name = self.findName(senderId, 0)
@@ -292,16 +226,8 @@ class ChatAssistant(DirectObject.DirectObject):
             IAmSender = 0
         self.historyOpen.insert(
             0,
-            ChatMessage(
-                self.chatTime(),
-                type,
-                messageIndex,
-                None,
-                senderId,
-                name,
-                0,
-                0,
-                IAmSender))
+            ChatMessage(self.chatTime(), type, messageIndex, None, senderId,
+                        name, 0, 0, IAmSender))
         messenger.send('NewOpenMessage')
         return error
 
@@ -313,20 +239,14 @@ class ChatAssistant(DirectObject.DirectObject):
             name = self.findName(senderId, 0)
         if not self.historyReceivedWhisperAvatar.get(senderId):
             self.historyReceivedWhisperAvatar[senderId] = []
-        self.historyReceivedWhisperAvatar[senderId].insert(0, ChatMessage(
-            self.chatTime(), TYPEDCHAT, message, None, senderId, name, 0, 1, 0))
+        self.historyReceivedWhisperAvatar[senderId].insert(
+            0,
+            ChatMessage(self.chatTime(), TYPEDCHAT, message, None, senderId,
+                        name, 0, 1, 0))
         self.historyOpen.insert(
             0,
-            ChatMessage(
-                self.chatTime(),
-                TYPEDCHAT,
-                message,
-                None,
-                senderId,
-                name,
-                0,
-                1,
-                0))
+            ChatMessage(self.chatTime(), TYPEDCHAT, message, None, senderId,
+                        name, 0, 1, 0))
         messenger.send('NewOpenMessage')
         return error
 
@@ -336,44 +256,35 @@ class ChatAssistant(DirectObject.DirectObject):
             name = self.findName(senderId, 0)
         if not self.historyReceivedWhisperAvatar.get(senderId):
             self.historyReceivedWhisperAvatar[senderId] = []
-        self.historyReceivedWhisperAvatar[senderId].insert(0, ChatMessage(
-            self.chatTime(), TYPEDCHAT, message, None, senderId, name, 0, 1, 0))
+        self.historyReceivedWhisperAvatar[senderId].insert(
+            0,
+            ChatMessage(self.chatTime(), TYPEDCHAT, message, None, senderId,
+                        name, 0, 1, 0))
         self.historyOpen.insert(
             0,
-            ChatMessage(
-                self.chatTime(),
-                TYPEDCHAT,
-                message,
-                None,
-                senderId,
-                name,
-                0,
-                1,
-                0))
+            ChatMessage(self.chatTime(), TYPEDCHAT, message, None, senderId,
+                        name, 0, 1, 0))
         messenger.send('NewOpenMessage')
         return error
 
-    def receiveAvatarWhisperSpeedChat(
-            self, type, messageIndex, senderId, name=None):
+    def receiveAvatarWhisperSpeedChat(self,
+                                      type,
+                                      messageIndex,
+                                      senderId,
+                                      name=None):
         error = None
         if not name and senderId:
             name = self.findName(senderId, 0)
         if not self.historyReceivedWhisperAvatar.get(senderId):
             self.historyReceivedWhisperAvatar[senderId] = []
-        self.historyReceivedWhisperAvatar[senderId].insert(0, ChatMessage(
-            self.chatTime(), type, messageIndex, None, senderId, name, 0, 1, 0))
+        self.historyReceivedWhisperAvatar[senderId].insert(
+            0,
+            ChatMessage(self.chatTime(), type, messageIndex, None, senderId,
+                        name, 0, 1, 0))
         self.historyOpen.insert(
             0,
-            ChatMessage(
-                self.chatTime(),
-                type,
-                messageIndex,
-                None,
-                senderId,
-                name,
-                0,
-                1,
-                0))
+            ChatMessage(self.chatTime(), type, messageIndex, None, senderId,
+                        name, 0, 1, 0))
         messenger.send('NewOpenMessage')
         return error
 
@@ -385,21 +296,16 @@ class ChatAssistant(DirectObject.DirectObject):
             self.historyOpen[senderId] = []
         self.historyOpen.insert(
             0,
-            ChatMessage(
-                self.chatTime(),
-                TYPEDCHAT,
-                message,
-                None,
-                senderId,
-                name,
-                1,
-                0,
-                0))
+            ChatMessage(self.chatTime(), TYPEDCHAT, message, None, senderId,
+                        name, 1, 0, 0))
         messenger.send('NewOpenMessage')
         return error
 
-    def receivePlayerOpenSpeedChat(
-            self, type, messageIndex, senderId, name=None):
+    def receivePlayerOpenSpeedChat(self,
+                                   type,
+                                   messageIndex,
+                                   senderId,
+                                   name=None):
         error = None
         if not name and senderId:
             name = self.findName(senderId, 1)
@@ -407,16 +313,8 @@ class ChatAssistant(DirectObject.DirectObject):
             self.historyOpen[senderId] = []
         self.historyOpen.insert(
             0,
-            ChatMessage(
-                self.chatTime(),
-                type,
-                messageIndex,
-                None,
-                senderId,
-                name,
-                1,
-                0,
-                0))
+            ChatMessage(self.chatTime(), type, messageIndex, None, senderId,
+                        name, 1, 0, 0))
         messenger.send('NewOpenMessage')
         return error
 
@@ -426,20 +324,14 @@ class ChatAssistant(DirectObject.DirectObject):
             name = self.findName(senderId, 1)
         if not self.historyReceivedWhisperPlayer.get(senderId):
             self.historyReceivedWhisperPlayer[senderId] = []
-        self.historyReceivedWhisperPlayer[senderId].insert(0, ChatMessage(
-            self.chatTime(), TYPEDCHAT, message, None, senderId, name, 1, 1, 0))
+        self.historyReceivedWhisperPlayer[senderId].insert(
+            0,
+            ChatMessage(self.chatTime(), TYPEDCHAT, message, None, senderId,
+                        name, 1, 1, 0))
         self.historyOpen.insert(
             0,
-            ChatMessage(
-                self.chatTime(),
-                TYPEDCHAT,
-                message,
-                None,
-                senderId,
-                name,
-                1,
-                1,
-                0))
+            ChatMessage(self.chatTime(), TYPEDCHAT, message, None, senderId,
+                        name, 1, 1, 0))
         messenger.send('NewOpenMessage')
         return error
 
@@ -449,44 +341,35 @@ class ChatAssistant(DirectObject.DirectObject):
             name = self.findName(senderId, 1)
         if not self.historyReceivedWhisperPlayer.get(senderId):
             self.historyReceivedWhisperPlayer[senderId] = []
-        self.historyReceivedWhisperPlayer[senderId].insert(0, ChatMessage(
-            self.chatTime(), TYPEDCHAT, message, None, senderId, name, 1, 1, 0))
+        self.historyReceivedWhisperPlayer[senderId].insert(
+            0,
+            ChatMessage(self.chatTime(), TYPEDCHAT, message, None, senderId,
+                        name, 1, 1, 0))
         self.historyOpen.insert(
             0,
-            ChatMessage(
-                self.chatTime(),
-                TYPEDCHAT,
-                message,
-                None,
-                senderId,
-                name,
-                1,
-                1,
-                0))
+            ChatMessage(self.chatTime(), TYPEDCHAT, message, None, senderId,
+                        name, 1, 1, 0))
         messenger.send('NewOpenMessage')
         return error
 
-    def receivePlayerWhisperSpeedChat(
-            self, type, messageIndex, senderId, name=None):
+    def receivePlayerWhisperSpeedChat(self,
+                                      type,
+                                      messageIndex,
+                                      senderId,
+                                      name=None):
         error = None
         if not name and senderId:
             name = self.findName(senderId, 1)
         if not self.historyReceivedWhisperPlayer.get(senderId):
             self.historyReceivedWhisperPlayer[senderId] = []
-        self.historyReceivedWhisperPlayer[senderId].insert(0, ChatMessage(
-            self.chatTime(), type, messageIndex, None, senderId, name, 1, 1, 0))
+        self.historyReceivedWhisperPlayer[senderId].insert(
+            0,
+            ChatMessage(self.chatTime(), type, messageIndex, None, senderId,
+                        name, 1, 1, 0))
         self.historyOpen.insert(
             0,
-            ChatMessage(
-                self.chatTime(),
-                type,
-                messageIndex,
-                None,
-                senderId,
-                name,
-                1,
-                1,
-                0))
+            ChatMessage(self.chatTime(), type, messageIndex, None, senderId,
+                        name, 1, 1, 0))
         messenger.send('NewOpenMessage')
         return error
 
@@ -546,56 +429,26 @@ class ChatAssistant(DirectObject.DirectObject):
             base.localAvatar.whisperTo(message, receiverId)
             self.historySentWhisperAvatar[receiverId].insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    TYPEDCHAT,
-                    message,
-                    None,
-                    receiverId,
-                    self.findName(receiverId),
-                    0,
-                    1,
-                    1))
+                ChatMessage(self.chatTime(), TYPEDCHAT, message, None,
+                            receiverId, self.findName(receiverId), 0, 1, 1))
             if self.logWhispers:
                 self.historyOpen.insert(
                     0,
-                    ChatMessage(
-                        self.chatTime(),
-                        TYPEDCHAT,
-                        message,
-                        None,
-                        receiverId,
-                        self.findName(receiverId),
-                        0,
-                        1,
-                        1))
+                    ChatMessage(self.chatTime(), TYPEDCHAT, message, None,
+                                receiverId, self.findName(receiverId), 0, 1, 1))
                 messenger.send('NewOpenMessage')
         else:
             self.historySentWhisperAvatar[receiverId].insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    AVATAR_UNAVAILABLE,
-                    OTPLocalizer.WhisperUnavailable,
-                    None,
-                    receiverId,
-                    '',
-                    0,
-                    1,
-                    1))
+                ChatMessage(self.chatTime(), AVATAR_UNAVAILABLE,
+                            OTPLocalizer.WhisperUnavailable, None, receiverId,
+                            '', 0, 1, 1))
             if self.logWhispers:
                 self.historyOpen.insert(
                     0,
-                    ChatMessage(
-                        self.chatTime(),
-                        AVATAR_UNAVAILABLE,
-                        OTPLocalizer.WhisperUnavailable,
-                        None,
-                        receiverId,
-                        '',
-                        0,
-                        1,
-                        1))
+                    ChatMessage(self.chatTime(), AVATAR_UNAVAILABLE,
+                                OTPLocalizer.WhisperUnavailable, None,
+                                receiverId, '', 0, 1, 1))
                 messenger.send('NewOpenMessage')
         return error
 
@@ -606,29 +459,13 @@ class ChatAssistant(DirectObject.DirectObject):
         base.localAvatar.whisperWLTo(message, receiverId)
         self.historySentWhisperAvatar[receiverId].insert(
             0,
-            ChatMessage(
-                self.chatTime(),
-                TYPEDCHAT,
-                message,
-                None,
-                receiverId,
-                self.findName(receiverId),
-                0,
-                1,
-                1))
+            ChatMessage(self.chatTime(), TYPEDCHAT, message, None, receiverId,
+                        self.findName(receiverId), 0, 1, 1))
         if self.logWhispers:
             self.historyOpen.insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    TYPEDCHAT,
-                    message,
-                    None,
-                    receiverId,
-                    self.findName(receiverId),
-                    0,
-                    1,
-                    1))
+                ChatMessage(self.chatTime(), TYPEDCHAT, message, None,
+                            receiverId, self.findName(receiverId), 0, 1, 1))
             messenger.send('NewOpenMessage')
         return error
 
@@ -645,29 +482,13 @@ class ChatAssistant(DirectObject.DirectObject):
                 base.localAvatar.whisperSCCustomTo(messageIndex, receiverId, 0)
             self.historySentWhisperAvatar[receiverId].insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    type,
-                    messageIndex,
-                    None,
-                    receiverId,
-                    self.findName(receiverId),
-                    0,
-                    1,
-                    1))
+                ChatMessage(self.chatTime(), type, messageIndex, None,
+                            receiverId, self.findName(receiverId), 0, 1, 1))
             if self.logWhispers:
                 self.historyOpen.insert(
                     0,
-                    ChatMessage(
-                        self.chatTime(),
-                        type,
-                        messageIndex,
-                        None,
-                        receiverId,
-                        self.findName(receiverId),
-                        0,
-                        1,
-                        1))
+                    ChatMessage(self.chatTime(), type, messageIndex, None,
+                                receiverId, self.findName(receiverId), 0, 1, 1))
                 messenger.send('NewOpenMessage')
         return error
 
@@ -686,31 +507,13 @@ class ChatAssistant(DirectObject.DirectObject):
         base.cr.playerFriendsManager.sendWhisper(receiverId, message)
         self.historySentWhisperPlayer[receiverId].insert(
             0,
-            ChatMessage(
-                self.chatTime(),
-                TYPEDCHAT,
-                message,
-                None,
-                receiverId,
-                self.findName(receiverId),
-                1,
-                1,
-                1))
+            ChatMessage(self.chatTime(), TYPEDCHAT, message, None, receiverId,
+                        self.findName(receiverId), 1, 1, 1))
         if self.logWhispers:
             self.historyOpen.insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    TYPEDCHAT,
-                    message,
-                    None,
-                    receiverId,
-                    self.findName(
-                        receiverId,
-                        1),
-                    1,
-                    1,
-                    1))
+                ChatMessage(self.chatTime(), TYPEDCHAT, message, None,
+                            receiverId, self.findName(receiverId, 1), 1, 1, 1))
             messenger.send('NewOpenMessage')
         return error
 
@@ -721,31 +524,13 @@ class ChatAssistant(DirectObject.DirectObject):
         base.cr.playerFriendsManager.sendWLWhisper(receiverId, message)
         self.historySentWhisperPlayer[receiverId].insert(
             0,
-            ChatMessage(
-                self.chatTime(),
-                TYPEDCHAT,
-                message,
-                None,
-                receiverId,
-                self.findName(receiverId),
-                1,
-                1,
-                1))
+            ChatMessage(self.chatTime(), TYPEDCHAT, message, None, receiverId,
+                        self.findName(receiverId), 1, 1, 1))
         if self.logWhispers:
             self.historyOpen.insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    TYPEDCHAT,
-                    message,
-                    None,
-                    receiverId,
-                    self.findName(
-                        receiverId,
-                        1),
-                    1,
-                    1,
-                    1))
+                ChatMessage(self.chatTime(), TYPEDCHAT, message, None,
+                            receiverId, self.findName(receiverId, 1), 1, 1, 1))
             messenger.send('NewOpenMessage')
         return error
 
@@ -754,8 +539,7 @@ class ChatAssistant(DirectObject.DirectObject):
         if not self.historySentWhisperPlayer.get(receiverId):
             self.historySentWhisperPlayer[receiverId] = []
         if type == SPEEDCHAT_NORMAL:
-            base.cr.playerFriendsManager.sendSCWhisper(
-                receiverId, messageIndex)
+            base.cr.playerFriendsManager.sendSCWhisper(receiverId, messageIndex)
         else:
             if type == SPEEDCHAT_EMOTE:
                 base.cr.playerFriendsManager.sendSCEmoteWhisper(
@@ -765,31 +549,14 @@ class ChatAssistant(DirectObject.DirectObject):
                     receiverId, messageIndex)
             self.historySentWhisperPlayer[receiverId].insert(
                 0,
-                ChatMessage(
-                    self.chatTime(),
-                    type,
-                    messageIndex,
-                    None,
-                    receiverId,
-                    self.findName(receiverId),
-                    1,
-                    1,
-                    1))
+                ChatMessage(self.chatTime(), type, messageIndex, None,
+                            receiverId, self.findName(receiverId), 1, 1, 1))
             if self.logWhispers:
                 self.historyOpen.insert(
                     0,
-                    ChatMessage(
-                        self.chatTime(),
-                        type,
-                        messageIndex,
-                        None,
-                        receiverId,
-                        self.findName(
-                            receiverId,
-                            1),
-                        1,
-                        1,
-                        1))
+                    ChatMessage(self.chatTime(), type,
+                                messageIndex, None, receiverId,
+                                self.findName(receiverId, 1), 1, 1, 1))
                 messenger.send('NewOpenMessage')
         return error
 

@@ -7,6 +7,7 @@ from pirates.seapatch.SeaPatch import SeaPatch
 from pirates.world.OceanGridBase import OceanGridBase
 from pirates.world import WorldGlobals
 
+
 class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
 
     def __init__(self, cr):
@@ -53,7 +54,8 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
         self.accept('enter' + self.cName, self.handleEdgeOfWorld)
 
     def handleEdgeOfWorld(self, event):
-        localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.EdgeOfWorldWarning)
+        localAvatar.guiMgr.messageStack.addTextMessage(
+            PLocalizer.EdgeOfWorldWarning)
 
     def reparentLocalAvatarToWorld(self, parent=None):
         if parent:
@@ -68,19 +70,25 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
     oceanAreas = {}
 
     def addOceanArea(self, pos1, pos2, name, uid):
-        ul = Point3(min(pos2.getX(), pos1.getX()), max(pos2.getY(), pos1.getY()), 0)
-        lr = Point3(max(pos2.getX(), pos1.getX()), min(pos2.getY(), pos1.getY()), 0)
+        ul = Point3(
+            min(pos2.getX(), pos1.getX()), max(pos2.getY(), pos1.getY()), 0)
+        lr = Point3(
+            max(pos2.getX(), pos1.getX()), min(pos2.getY(), pos1.getY()), 0)
         if name in self.oceanAreas:
             pos1, pos2 = self.oceanAreas[name][0:2]
-            ul = Point3(min(ul.getX(), pos1.getX()), max(ul.getY(), pos1.getY()), 0)
-            lr = Point3(max(lr.getX(), pos2.getX()), min(lr.getY(), pos2.getY()), 0)
+            ul = Point3(
+                min(ul.getX(), pos1.getX()), max(ul.getY(), pos1.getY()), 0)
+            lr = Point3(
+                max(lr.getX(), pos2.getX()), min(lr.getY(), pos2.getY()), 0)
         self.oceanAreas[name] = [ul, lr, uid]
 
     def addOceanAreasToMap(self):
         mapPage = base.localAvatar.guiMgr.mapPage
         areaNames = self.oceanAreas.keys()
         for name in areaNames:
-            mapPage.addOceanArea(name, self.oceanAreas[name][2], self.oceanAreas[name][0], self.oceanAreas[name][1])
+            mapPage.addOceanArea(name, self.oceanAreas[name][2],
+                                 self.oceanAreas[name][0],
+                                 self.oceanAreas[name][1])
 
     def addIslandGrid(self, island):
         self.islandGrids[island.doId] = island
@@ -107,7 +115,9 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
         self.unstash()
         self.water.enable()
 
-    @report(types=['deltaStamp', 'avLocation', 'args'], dConfigParam=['want-connector-report', 'want-shipboard-report'])
+    @report(
+        types=['deltaStamp', 'avLocation', 'args'],
+        dConfigParam=['want-connector-report', 'want-shipboard-report'])
     def stopProcessVisibility(self, *args, **kw):
         DistributedCartesianGrid.stopProcessVisibility(self, *args, **kw)
 

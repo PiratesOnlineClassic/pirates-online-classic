@@ -1,7 +1,9 @@
 from otp.avatar.Avatar import Avatar
 from pirates.pirate import AvatarTypes
 
+
 class JackSparrow(Avatar):
+
     def __init__(self):
         Avatar.__init__(self)
         self.avatarType = AvatarTypes.JackSparrow
@@ -13,7 +15,9 @@ class JackSparrow(Avatar):
         loader.unloadModel('models/char/js_2000')
         Avatar.delete(self)
 
+
 class WillTurner(Avatar):
+
     def __init__(self):
         Avatar.__init__(self)
         self.avatarType = AvatarTypes.WillTurner
@@ -25,7 +29,9 @@ class WillTurner(Avatar):
         loader.unloadModel('models/char/wt_2000')
         Avatar.delete(self)
 
+
 class ElizabethSwan(Avatar):
+
     def __init__(self):
         Avatar.__init__(self)
         self.avatarType = AvatarTypes.ElizabethSwan
@@ -37,7 +43,9 @@ class ElizabethSwan(Avatar):
         loader.unloadModel('models/char/es_2000')
         Avatar.delete(self)
 
+
 class CaptBarbossa(Avatar):
+
     def __init__(self):
         Avatar.__init__(self)
         self.avatarType = AvatarTypes.CaptBarbossa
@@ -49,7 +57,9 @@ class CaptBarbossa(Avatar):
         loader.unloadModel('models/char/cb_2000')
         Avatar.delete(self)
 
+
 class TiaDalma(Avatar):
+
     def __init__(self):
         Avatar.__init__(self)
         self.avatarType = AvatarTypes.TiaDalma
@@ -61,7 +71,9 @@ class TiaDalma(Avatar):
         loader.unloadModel('models/char/td_2000')
         Avatar.delete(self)
 
+
 class JoshGibbs(Avatar):
+
     def __init__(self):
         Avatar.__init__(self)
         self.avatarType = AvatarTypes.JoshameeGibbs
@@ -73,7 +85,9 @@ class JoshGibbs(Avatar):
         loader.unloadModel('models/char/jg_2000')
         Avatar.delete(self)
 
+
 class JollyRoger(Avatar):
+
     def __init__(self):
         Avatar.__init__(self)
         self.avatarType = AvatarTypes.JollyRoger

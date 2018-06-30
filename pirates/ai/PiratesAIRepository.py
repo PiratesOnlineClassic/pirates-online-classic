@@ -22,15 +22,18 @@ from pirates.trades.TradeManagerAI import TradeManagerAI
 from pirates.world.WorldCreatorAI import WorldCreatorAI
 from pirates.battle.BattleManagerAI import BattleManagerAI
 
+
 class PiratesAIRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesAIRepository')
     notify.setInfo(True)
 
     def __init__(self, baseChannel, serverId, districtName):
-        PiratesInternalRepository.__init__(self, baseChannel, serverId, dcSuffix='AI')
+        PiratesInternalRepository.__init__(
+            self, baseChannel, serverId, dcSuffix='AI')
 
         self.districtName = districtName
-        self.zoneAllocator = UniqueIdAllocator(PiratesGlobals.DynamicZonesBegin, PiratesGlobals.DynamicZonesEnd)
+        self.zoneAllocator = UniqueIdAllocator(PiratesGlobals.DynamicZonesBegin,
+                                               PiratesGlobals.DynamicZonesEnd)
         self.zoneId2owner = {}
         self.disconnectReasons = {}
         self.uidMgr = UniqueIdManager(self)
@@ -42,9 +45,10 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.districtId = self.allocateChannel()
         self.distributedDistrict = PiratesDistrictAI(self)
         self.distributedDistrict.setName(self.districtName)
-        self.distributedDistrict.setMainWorld(WorldGlobals.PiratesWorldSceneFile)
-        self.distributedDistrict.generateWithRequiredAndId(self.districtId,
-            self.getGameDoId(), 2)
+        self.distributedDistrict.setMainWorld(
+            WorldGlobals.PiratesWorldSceneFile)
+        self.distributedDistrict.generateWithRequiredAndId(
+            self.districtId, self.getGameDoId(), 2)
 
         self.setAI(self.districtId, self.ourChannel)
 
@@ -56,10 +60,12 @@ class PiratesAIRepository(PiratesInternalRepository):
         messenger.send('district-ready')
 
     def incrementPopulation(self):
-        self.populationTracker.b_setPopulation(self.populationTracker.getPopulation() + 1)
+        self.populationTracker.b_setPopulation(
+            self.populationTracker.getPopulation() + 1)
 
     def decrementPopulation(self):
-        self.populationTracker.b_setPopulation(self.populationTracker.getPopulation() - 1)
+        self.populationTracker.b_setPopulation(
+            self.populationTracker.getPopulation() - 1)
 
     def allocateZone(self, owner=None):
         zoneId = self.zoneAllocator.allocate()
@@ -82,17 +88,23 @@ class PiratesAIRepository(PiratesInternalRepository):
         Create "global" objects, e.g. TimeManager et al.
         """
 
-        self.centralLogger = self.generateGlobalObject(OTP_DO_ID_CENTRAL_LOGGER, 'CentralLogger')
+        self.centralLogger = self.generateGlobalObject(OTP_DO_ID_CENTRAL_LOGGER,
+                                                       'CentralLogger')
 
         self.populationTracker = DistributedPopulationTrackerAI(self)
         self.populationTracker.setShardId(self.districtId)
-        self.populationTracker.setPopLimits(config.GetInt('shard-pop-limit-low', 100), config.GetInt('shard-pop-limit-high', 300))
-        self.populationTracker.generateWithRequiredAndId(self.allocateChannel(), self.getGameDoId(), OTP_ZONE_ID_DISTRICTS_STATS)
+        self.populationTracker.setPopLimits(
+            config.GetInt('shard-pop-limit-low', 100),
+            config.GetInt('shard-pop-limit-high', 300))
+        self.populationTracker.generateWithRequiredAndId(
+            self.allocateChannel(), self.getGameDoId(),
+            OTP_ZONE_ID_DISTRICTS_STATS)
 
         self.timeManager = TimeManagerAI(self)
         self.timeManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
-        self.travelAgent = self.generateGlobalObject(OTP_DO_ID_PIRATES_TRAVEL_AGENT, 'DistributedTravelAgent')
+        self.travelAgent = self.generateGlobalObject(
+            OTP_DO_ID_PIRATES_TRAVEL_AGENT, 'DistributedTravelAgent')
 
         self.teleportMgr = DistributedTeleportMgrAI(self)
         self.teleportMgr.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
@@ -115,7 +127,8 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.battleMgr = BattleManagerAI(self)
         self.battleMgr.startup()
 
-        self.inventoryManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')
+        self.inventoryManager = self.generateGlobalObject(
+            OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')
 
         self.magicWords = MagicWordManagerAI(self)
         self.magicWords.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
@@ -123,11 +136,13 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.tradeMgr = TradeManagerAI(self)
         self.tradeMgr.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
-        self.guildManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_GUILD_MANAGER, 'PCGuildManager')
+        self.guildManager = self.generateGlobalObject(
+            OTP_DO_ID_PIRATES_GUILD_MANAGER, 'PCGuildManager')
 
         self.districtTracker = DistrictTrackerAI(self)
 
-        self.shipLoader = self.generateGlobalObject(OTP_DO_ID_PIRATES_SHIP_MANAGER, 'DistributedShipLoader')
+        self.shipLoader = self.generateGlobalObject(
+            OTP_DO_ID_PIRATES_SHIP_MANAGER, 'DistributedShipLoader')
 
     def createWorlds(self):
         """
@@ -135,4 +150,5 @@ class PiratesAIRepository(PiratesInternalRepository):
         """
 
         self.worldCreator = WorldCreatorAI(self)
-        self.worldCreator.loadObjectsFromFile(WorldGlobals.PiratesWorldSceneFile)
+        self.worldCreator.loadObjectsFromFile(
+            WorldGlobals.PiratesWorldSceneFile)

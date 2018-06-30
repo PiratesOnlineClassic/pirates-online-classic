@@ -8,7 +8,8 @@ from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
 from otp.otpbase import OTPGlobals
-from pirates.battle import (DistributedBattleAvatar, EnemyGlobals, EnemySkills, WeaponGlobals)
+from pirates.battle import (DistributedBattleAvatar, EnemyGlobals, EnemySkills,
+                            WeaponGlobals)
 from pirates.leveleditor import CustomAnims
 from pirates.pirate import AvatarTypes, BattleNPCGameFSM, Biped
 from pirates.piratesbase import PiratesGlobals, PLocalizer
@@ -53,15 +54,19 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
     def setupStyle(self):
         if self.style:
             if self.animSet != 'default':
-                allAnims = copy.copy(CustomAnims.INTERACT_ANIMS.get(self.animSet))
+                allAnims = copy.copy(
+                    CustomAnims.INTERACT_ANIMS.get(self.animSet))
                 if allAnims:
-                    if allAnims.has_key('props'):
+                    if 'props' in allAnims:
                         del allAnims['props']
                     if self.startState != 'Idle':
-                        allAnims['walk'] = [
-                         'walk']
-                        allAnims['walk_back_diagonal_left'] = ['walk_back_diagonal_left']
-                        allAnims['walk_back_diagonal_right'] = ['walk_back_diagonal_right']
+                        allAnims['walk'] = ['walk']
+                        allAnims['walk_back_diagonal_left'] = [
+                            'walk_back_diagonal_left'
+                        ]
+                        allAnims['walk_back_diagonal_right'] = [
+                            'walk_back_diagonal_right'
+                        ]
                         allAnims['run'] = ['run']
                         allAnims['run_diagonal_left'] = ['run_diagonal_left']
                         allAnims['run_diagonal_right'] = ['run_diagonal_right']
@@ -95,7 +100,8 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
                 oldAnimInfo = animInfoCopy.get(currAnimState)
                 if oldAnimInfo == None:
                     continue
-                newAnimInfo = ((currChoice, oldAnimInfo[0][1]),) + oldAnimInfo[1:]
+                newAnimInfo = (
+                    (currChoice, oldAnimInfo[0][1]),) + oldAnimInfo[1:]
                 if self.motionFSM.motionAnimFSM.state == currAnimState:
                     self.motionFSM.setAnimInfo(newAnimInfo)
                 self.animInfo[currAnimState] = newAnimInfo
@@ -136,7 +142,8 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
         DistributedBattleAvatar.DistributedBattleAvatar.reparentTo(self, parent)
 
     def wrtReparentTo(self, parent):
-        DistributedBattleAvatar.DistributedBattleAvatar.wrtReparentTo(self, parent)
+        DistributedBattleAvatar.DistributedBattleAvatar.wrtReparentTo(
+            self, parent)
 
     def createGameFSM(self):
         self.gameFSM = BattleNPCGameFSM.BattleNPCGameFSM(self)
@@ -199,7 +206,8 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
         if self.pendingBoardVehicle:
             base.cr.relatedObjectMgr.abortRequest(self.pendingBoardVehicle)
             self.pendingBoardVehicle = None
-        self.pendingBoardVehicle = base.cr.relatedObjectMgr.requestObjects([vehicleDoId], eachCallback=self.boardExistingVehicle)
+        self.pendingBoardVehicle = base.cr.relatedObjectMgr.requestObjects(
+            [vehicleDoId], eachCallback=self.boardExistingVehicle)
 
     def boardExistingVehicle(self, vehicle):
         self.reparentTo(vehicle.getModel())
@@ -215,7 +223,9 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
                 self.cRay = CollisionRay(0.0, 0.0, 4000.0, 0.0, 0.0, -1.0)
                 self.cRayNode = CollisionNode(self.taskName('cRay'))
                 self.cRayNode.addSolid(self.cRay)
-                self.cRayNode.setFromCollideMask(PiratesGlobals.FloorBitmask | PiratesGlobals.ShipFloorBitmask)
+                self.cRayNode.setFromCollideMask(
+                    PiratesGlobals.FloorBitmask |
+                    PiratesGlobals.ShipFloorBitmask)
                 self.cRayNode.setIntoCollideMask(BitMask32.allOff())
                 self.cRayNode.setBounds(BoundingSphere())
                 self.cRayNode.setFinal(1)
@@ -272,7 +282,8 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
         cTrav.traverse(render)
         cTrav.removeCollider(self.cRayNodePath)
         floorRay.removeCollider(self.cRayNodePath)
-        self.notify.debug('  quick floor check hasContact: %s' % floorRay.hasContact())
+        self.notify.debug(
+            '  quick floor check hasContact: %s' % floorRay.hasContact())
         self.notify.debug('  myPos NEW is %s' % self.getPos())
         self.lastFloorCheckedXYZ = [self.getX(), self.getY(), self.getZ()]
 
@@ -344,7 +355,8 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
     def _handleEnterSphereTest(self, collEntry):
         otherCollNode = collEntry.getFromNodePath()
         myCollNode = collEntry.getIntoNodePath()
-        print 'NPC colliding me %s other %s' % (str(myCollNode), str(otherCollNode))
+        print 'NPC colliding me %s other %s' % (str(myCollNode),
+                                                str(otherCollNode))
 
     def _handleAgainSphereTest(self, collEntry):
         print 'NPC colliding'
@@ -375,7 +387,8 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             if inAttack:
                 self.setH(parentObj, oldH)
             if self.enableZPrint:
-                print '%s:  new z is %s, old z is %s' % (self.doId, newPos[2], oldZ)
+                print '%s:  new z is %s, old z is %s' % (self.doId, newPos[2],
+                                                         oldZ)
             headingNodePos = self.headingNode.getPos()
             xDiff = abs(newPos[0] - headingNodePos[0])
             yDiff = abs(newPos[1] - headingNodePos[1])
@@ -413,8 +426,12 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
                 hChange = self.getH(parentObj) - oldH
                 if hChange and hChange < 0.1 and hChange > -0.1:
                     hChange = 0.0
-            self.motionFSM.motionAnimFSM.updateNPCAnimState(speed, hChange, slideScale)
-        if self.canCheckFloors == True and self.floorChecksEnabled == False and (self.getX() != self.lastFloorCheckedXYZ[0] or self.getY() != self.lastFloorCheckedXYZ[1] or self.getZ() != self.lastFloorCheckedXYZ[2]):
+            self.motionFSM.motionAnimFSM.updateNPCAnimState(
+                speed, hChange, slideScale)
+        if self.canCheckFloors == True and self.floorChecksEnabled == False and (
+                self.getX() != self.lastFloorCheckedXYZ[0] or
+                self.getY() != self.lastFloorCheckedXYZ[1] or
+                self.getZ() != self.lastFloorCheckedXYZ[2]):
             self.performQuickFloorCheck()
         self.trackTerrain()
 
@@ -468,8 +485,12 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             return 0
         playerLevel = base.localAvatar.getLevel()
         enemyLevel = self.getLevel()
-        levelDiff = max(1, abs(playerLevel - enemyLevel) - EnemyGlobals.AGGRO_RADIUS_LEVEL_BUFFER)
-        searchDist = self.getAggroRadius() / max(1.0, levelDiff / EnemyGlobals.AGGRO_RADIUS_FALLOFF_RATE)
+        levelDiff = max(
+            1,
+            abs(playerLevel - enemyLevel) -
+            EnemyGlobals.AGGRO_RADIUS_LEVEL_BUFFER)
+        searchDist = self.getAggroRadius() / max(
+            1.0, levelDiff / EnemyGlobals.AGGRO_RADIUS_FALLOFF_RATE)
         return max(searchDist, EnemyGlobals.MIN_SEARCH_RADIUS)
 
     def getInstantAggroSphereSize(self):
@@ -505,7 +526,8 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             else:
                 handNode = self.rightHandNode
             if handNode == None:
-                self.notify.warning('could not find hand to place prop %s in' % propPath)
+                self.notify.warning(
+                    'could not find hand to place prop %s in' % propPath)
                 return
             motion_blur = prop.find('**/motion_blur')
             if not motion_blur.isEmpty():
@@ -515,7 +537,9 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
             self.animProp = prop
             self.animPropType = propType
         else:
-            self.notify.warning('could not load prop %s to be used with DistInteractiveProp' % propPath)
+            self.notify.warning(
+                'could not load prop %s to be used with DistInteractiveProp' %
+                propPath)
 
     def clearAnimProp(self):
         if self.animProp:
@@ -557,26 +581,35 @@ class DistributedBattleNPC(DistributedBattleAvatar.DistributedBattleAvatar):
         self.initZ = z
         self.setZ(z)
 
-    def playSkillMovie(self, skillId, ammoSkillId, skillResult, charge, targetId=0):
+    def playSkillMovie(self,
+                       skillId,
+                       ammoSkillId,
+                       skillResult,
+                       charge,
+                       targetId=0):
         if self.currentTarget:
             self.headsUp(self.currentTarget)
         if targetId == 0 and self.currentTarget:
             targetId = self.currentTarget.doId
-        DistributedBattleAvatar.DistributedBattleAvatar.playSkillMovie(self, skillId, ammoSkillId, skillResult, charge, targetId)
+        DistributedBattleAvatar.DistributedBattleAvatar.playSkillMovie(
+            self, skillId, ammoSkillId, skillResult, charge, targetId)
 
     def preprocessAttackAnim(self):
         if self.currentAttack[0] >= InventoryType.begin_WeaponSkillGrenade and self.currentAttack[0] < InventoryType.end_WeaponSkillGrenade:
-            skillInfo = WeaponGlobals.getSkillAnimInfo(EnemySkills.EnemySkills.GRENADE_RELOAD)
+            skillInfo = WeaponGlobals.getSkillAnimInfo(
+                EnemySkills.EnemySkills.GRENADE_RELOAD)
             if not skillInfo:
                 return
             anim = skillInfo[WeaponGlobals.PLAYABLE_INDEX]
-            reloadAnim = getattr(self.cr.combatAnims, anim)(self, EnemySkills.EnemySkills.GRENADE_RELOAD, 0, 0, None)
+            reloadAnim = getattr(self.cr.combatAnims, anim)(
+                self, EnemySkills.EnemySkills.GRENADE_RELOAD, 0, 0, None)
             self.curAttackAnim = Sequence(self.curAttackAnim, reloadAnim)
 
     def checkWeaponSwitch(self, currentWeaponId, isWeaponDrawn):
         if isWeaponDrawn == self.isWeaponDrawn and currentWeaponId == self.currentWeaponId:
             self.setWalkForWeapon()
-        DistributedBattleAvatar.DistributedBattleAvatar.checkWeaponSwitch(self, currentWeaponId, isWeaponDrawn)
+        DistributedBattleAvatar.DistributedBattleAvatar.checkWeaponSwitch(
+            self, currentWeaponId, isWeaponDrawn)
 
     def getFloorRayReach(self):
         if self.ship:

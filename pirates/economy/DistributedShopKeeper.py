@@ -5,7 +5,9 @@ from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
 from otp.uberdog.RejectCode import RejectCode
 from pirates.distributed import InteractGlobals
-from pirates.economy import (AccessoriesStoreGUI, BarberStoreGUI, EconomyGlobals, JewelryStoreGUI, MusicianGUI, ShipStoreGUI, StoreGUI, TattooStoreGUI)
+from pirates.economy import (AccessoriesStoreGUI, BarberStoreGUI,
+                             EconomyGlobals, JewelryStoreGUI, MusicianGUI,
+                             ShipStoreGUI, StoreGUI, TattooStoreGUI)
 from pirates.economy.EconomyGlobals import *
 from pirates.leveleditor import NPCList
 from pirates.makeapirate import ClothingGlobals
@@ -16,6 +18,7 @@ from pirates.piratesgui.ShipShoppingPanel import ShipShoppingPanel
 from pirates.ship.ShipGlobals import *
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 from pirates.uberdog.UberDogGlobals import *
+
 
 class DistributedShopKeeper:
     notify = directNotify.newCategory('DistributedShopKeeper')
@@ -79,56 +82,78 @@ class DistributedShopKeeper:
 
     def loadShopCoin(self):
         if not DistributedShopKeeper.shopCoins:
-            DistributedShopKeeper.shopCoins = loader.loadModel('models/textureCards/shopCoins')
+            DistributedShopKeeper.shopCoins = loader.loadModel(
+                'models/textureCards/shopCoins')
         if not DistributedShopKeeper.barberCoin:
-            DistributedShopKeeper.barberCoin = DistributedShopKeeper.shopCoins.find('**/shopCoin_barber')
+            DistributedShopKeeper.barberCoin = DistributedShopKeeper.shopCoins.find(
+                '**/shopCoin_barber')
         if not DistributedShopKeeper.blacksmithCoin:
-            DistributedShopKeeper.blacksmithCoin = DistributedShopKeeper.shopCoins.find('**/shopCoin_blacksmith')
+            DistributedShopKeeper.blacksmithCoin = DistributedShopKeeper.shopCoins.find(
+                '**/shopCoin_blacksmith')
         if not DistributedShopKeeper.gunsmithCoin:
-            DistributedShopKeeper.gunsmithCoin = DistributedShopKeeper.shopCoins.find('**/shopCoin_gunsmith')
+            DistributedShopKeeper.gunsmithCoin = DistributedShopKeeper.shopCoins.find(
+                '**/shopCoin_gunsmith')
         if not DistributedShopKeeper.jewelerCoin:
-            DistributedShopKeeper.jewelerCoin = DistributedShopKeeper.shopCoins.find('**/shopCoin_jeweler')
+            DistributedShopKeeper.jewelerCoin = DistributedShopKeeper.shopCoins.find(
+                '**/shopCoin_jeweler')
         if not DistributedShopKeeper.shipwrightCoin:
-            DistributedShopKeeper.shipwrightCoin = DistributedShopKeeper.shopCoins.find('**/shopCoin_shipwright')
+            DistributedShopKeeper.shipwrightCoin = DistributedShopKeeper.shopCoins.find(
+                '**/shopCoin_shipwright')
         if not DistributedShopKeeper.tailorCoin:
-            DistributedShopKeeper.tailorCoin = DistributedShopKeeper.shopCoins.find('**/shopCoin_tailor')
+            DistributedShopKeeper.tailorCoin = DistributedShopKeeper.shopCoins.find(
+                '**/shopCoin_tailor')
         if not DistributedShopKeeper.tattooCoin:
-            DistributedShopKeeper.tattooCoin = DistributedShopKeeper.shopCoins.find('**/shopCoin_tattoo')
+            DistributedShopKeeper.tattooCoin = DistributedShopKeeper.shopCoins.find(
+                '**/shopCoin_tattoo')
         if not DistributedShopKeeper.gypsyCoin:
-            DistributedShopKeeper.gypsyCoin = DistributedShopKeeper.shopCoins.find('**/shopCoin_voodoo')
+            DistributedShopKeeper.gypsyCoin = DistributedShopKeeper.shopCoins.find(
+                '**/shopCoin_voodoo')
         if not DistributedShopKeeper.trainerCoin:
-            DistributedShopKeeper.trainerCoin = DistributedShopKeeper.shopCoins.find('**/shopCoin_trainer')
+            DistributedShopKeeper.trainerCoin = DistributedShopKeeper.shopCoins.find(
+                '**/shopCoin_trainer')
         if not DistributedShopKeeper.pvpRewardsCoin:
-            DistributedShopKeeper.pvpRewardsCoin = DistributedShopKeeper.shopCoins.find('**/shopCoin_jeweler')
+            DistributedShopKeeper.pvpRewardsCoin = DistributedShopKeeper.shopCoins.find(
+                '**/shopCoin_jeweler')
         if not DistributedShopKeeper.musicianCoin:
-            DistributedShopKeeper.musicianCoin = DistributedShopKeeper.shopCoins.find('**/shopCoin_music')
+            DistributedShopKeeper.musicianCoin = DistributedShopKeeper.shopCoins.find(
+                '**/shopCoin_music')
         if not self.shopCoin:
             if DistributedShopKeeper.shopCoins:
                 if self.avatarType.isA(AvatarTypes.Barber):
-                    tex = DistributedShopKeeper.barberCoin.copyTo(self.nametag3d)
+                    tex = DistributedShopKeeper.barberCoin.copyTo(
+                        self.nametag3d)
                 elif self.avatarType.isA(AvatarTypes.Blacksmith):
-                    tex = DistributedShopKeeper.blacksmithCoin.copyTo(self.nametag3d)
+                    tex = DistributedShopKeeper.blacksmithCoin.copyTo(
+                        self.nametag3d)
                 elif self.avatarType.isA(AvatarTypes.Gunsmith):
-                    tex = DistributedShopKeeper.gunsmithCoin.copyTo(self.nametag3d)
+                    tex = DistributedShopKeeper.gunsmithCoin.copyTo(
+                        self.nametag3d)
                 elif self.avatarType.isA(AvatarTypes.Jeweler):
-                    tex = DistributedShopKeeper.jewelerCoin.copyTo(self.nametag3d)
+                    tex = DistributedShopKeeper.jewelerCoin.copyTo(
+                        self.nametag3d)
                 elif self.avatarType.isA(AvatarTypes.Shipwright):
-                    tex = DistributedShopKeeper.shipwrightCoin.copyTo(self.nametag3d)
+                    tex = DistributedShopKeeper.shipwrightCoin.copyTo(
+                        self.nametag3d)
                 elif self.avatarType.isA(AvatarTypes.Tailor):
-                    tex = DistributedShopKeeper.tailorCoin.copyTo(self.nametag3d)
+                    tex = DistributedShopKeeper.tailorCoin.copyTo(
+                        self.nametag3d)
                 elif self.avatarType.isA(AvatarTypes.Tattoo):
-                    tex = DistributedShopKeeper.tattooCoin.copyTo(self.nametag3d)
+                    tex = DistributedShopKeeper.tattooCoin.copyTo(
+                        self.nametag3d)
                 elif self.avatarType.isA(AvatarTypes.Gypsy):
                     tex = DistributedShopKeeper.gypsyCoin.copyTo(self.nametag3d)
                 elif self.avatarType.isA(AvatarTypes.Musician):
-                    tex = DistributedShopKeeper.musicianCoin.copyTo(self.nametag3d)
+                    tex = DistributedShopKeeper.musicianCoin.copyTo(
+                        self.nametag3d)
                 elif self.avatarType.isA(AvatarTypes.Trainer):
-                    tex = DistributedShopKeeper.trainerCoin.copyTo(self.nametag3d)
+                    tex = DistributedShopKeeper.trainerCoin.copyTo(
+                        self.nametag3d)
                 elif self.avatarType.isA(AvatarTypes.PvPRewards):
-                    tex = DistributedShopKeeper.pvpRewardsCoin.copyTo(self.nametag3d)
+                    tex = DistributedShopKeeper.pvpRewardsCoin.copyTo(
+                        self.nametag3d)
                 else:
                     tex = None
-                
+
                 if tex:
                     self.shopCoin = tex
                     if self.nametagIcon:
@@ -139,7 +164,8 @@ class DistributedShopKeeper:
                         self.shopCoin.setPos(0.0, 0.0, 3.5)
                     self.shopCoin.reparentTo(self.getNameText())
                     self.shopCoin.setDepthWrite(0)
-                    self.shopCoinGlow = loader.loadModel('models/effects/lanternGlow')
+                    self.shopCoinGlow = loader.loadModel(
+                        'models/effects/lanternGlow')
                     self.shopCoinGlow.reparentTo(self.nametag.getNameIcon())
                     self.shopCoinGlow.setColorScaleOff()
                     self.shopCoinGlow.setFogOff()
@@ -151,7 +177,10 @@ class DistributedShopKeeper:
                         self.shopCoinGlow.setScale(15.0)
                         self.shopCoinGlow.setPos(0, -0.05, 6.5)
                     self.shopCoinGlow.setDepthWrite(0)
-                    self.shopCoinGlow.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+                    self.shopCoinGlow.node().setAttrib(
+                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                              ColorBlendAttrib.OIncomingAlpha,
+                                              ColorBlendAttrib.OOne))
                     self.shopCoinGlow.setColor(0.85, 0.85, 0.85, 0.85)
         elif self.nametagIcon:
             self.shopCoin.setScale(2.0)
@@ -184,40 +213,70 @@ class DistributedShopKeeper:
         self.storeType = storeType
         if storeType == InteractGlobals.STORE:
             inventory = self.shopInventory[:]
-            if hasattr(self.cr.distributedDistrict, 'siegeManager') and self.cr.distributedDistrict.siegeManager.getPvpEnabled() and self.cr.distributedDistrict.siegeManager.getUseRepairKit() and self.avatarType.isA(AvatarTypes.Gunsmith):
+            if hasattr(
+                    self.cr.distributedDistrict, 'siegeManager'
+            ) and self.cr.distributedDistrict.siegeManager.getPvpEnabled(
+            ) and self.cr.distributedDistrict.siegeManager.getUseRepairKit(
+            ) and self.avatarType.isA(AvatarTypes.Gunsmith):
                 inventory += SIEGE_SHELF
-            self.storeMenuGUI = StoreGUI.StoreGUI(inventory, PLocalizer.MerchantStore)
+            self.storeMenuGUI = StoreGUI.StoreGUI(inventory,
+                                                  PLocalizer.MerchantStore)
         elif storeType == InteractGlobals.MUSICIAN:
-            self.fadeIval = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
+            self.fadeIval = Sequence(
+                Func(self.setTransparency, 1),
+                self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)),
+                Func(self.hide))
             self.fadeIval.start()
             inventory = self.shopInventory[:]
-            self.storeMenuGUI = MusicianGUI.MusicianGUI(inventory, PLocalizer.InteractMusician)
+            self.storeMenuGUI = MusicianGUI.MusicianGUI(
+                inventory, PLocalizer.InteractMusician)
         elif storeType == InteractGlobals.SHIPS:
-            self.storeMenuGUI = ShipStoreGUI.ShipStoreGUI(SHIP_SHELF, PLocalizer.Shipyard)
+            self.storeMenuGUI = ShipStoreGUI.ShipStoreGUI(
+                SHIP_SHELF, PLocalizer.Shipyard)
         elif storeType == InteractGlobals.TRAIN:
             pass
         elif storeType == InteractGlobals.UPGRADE:
             pass
         elif storeType == InteractGlobals.ACCESSORIES_STORE:
-            self.fadeIval = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
+            self.fadeIval = Sequence(
+                Func(self.setTransparency, 1),
+                self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)),
+                Func(self.hide))
             self.fadeIval.start()
-            self.storeMenuGUI = AccessoriesStoreGUI.AccessoriesStoreGUI(npc=self, shopId=self.getShopId())
+            self.storeMenuGUI = AccessoriesStoreGUI.AccessoriesStoreGUI(
+                npc=self, shopId=self.getShopId())
         elif storeType == InteractGlobals.TATTOO_STORE:
-            self.fadeIval = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
+            self.fadeIval = Sequence(
+                Func(self.setTransparency, 1),
+                self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)),
+                Func(self.hide))
             self.fadeIval.start()
-            self.storeMenuGUI = TattooStoreGUI.TattooStoreGUI(npc=self, shopId=self.getShopId())
+            self.storeMenuGUI = TattooStoreGUI.TattooStoreGUI(
+                npc=self, shopId=self.getShopId())
         elif storeType == InteractGlobals.JEWELRY_STORE:
-            self.fadeIval = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
+            self.fadeIval = Sequence(
+                Func(self.setTransparency, 1),
+                self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)),
+                Func(self.hide))
             self.fadeIval.start()
-            self.storeMenuGUI = JewelryStoreGUI.JewelryStoreGUI(npc=self, shopId=self.getShopId())
+            self.storeMenuGUI = JewelryStoreGUI.JewelryStoreGUI(
+                npc=self, shopId=self.getShopId())
         elif storeType == InteractGlobals.BARBER_STORE:
-            self.fadeIval = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
+            self.fadeIval = Sequence(
+                Func(self.setTransparency, 1),
+                self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)),
+                Func(self.hide))
             self.fadeIval.start()
-            self.storeMenuGUI = BarberStoreGUI.BarberStoreGUI(npc=self, shopId=self.getShopId())
+            self.storeMenuGUI = BarberStoreGUI.BarberStoreGUI(
+                npc=self, shopId=self.getShopId())
         elif storeType == InteractGlobals.PVP_REWARDS_TATTOO:
-            self.fadeIval = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
+            self.fadeIval = Sequence(
+                Func(self.setTransparency, 1),
+                self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)),
+                Func(self.hide))
             self.fadeIval.start()
-            self.storeMenuGUI = TattooStoreGUI.TattooStoreGUI(npc=self, shopId=PiratesGlobals.PRIVATEER_TATTOOS)
+            self.storeMenuGUI = TattooStoreGUI.TattooStoreGUI(
+                npc=self, shopId=PiratesGlobals.PRIVATEER_TATTOOS)
 
     def finishShopping(self):
         self.ignore('exitStore')
@@ -316,7 +375,10 @@ class DistributedShopKeeper:
             if self.confirmDialog:
                 self.confirmDialog.destroy()
                 self.confirmDialog = None
-            self.confirmDialog = PDialog.PDialog(text=PLocalizer.ShipRepaired, style=OTPDialog.Acknowledge, command=self.handleRepairAcknowledge)
+            self.confirmDialog = PDialog.PDialog(
+                text=PLocalizer.ShipRepaired,
+                style=OTPDialog.Acknowledge,
+                command=self.handleRepairAcknowledge)
 
     def handleRepairAcknowledge(self, choice):
         if self.confirmDialog:
@@ -325,21 +387,27 @@ class DistributedShopKeeper:
 
     def makeSaleResponse(self, result):
         if result == RejectCode.OVERFLOW:
-            localAvatar.guiMgr.createWarning(PLocalizer.TradeCannotHoldWarning, PiratesGuiGlobals.TextFG6)
+            localAvatar.guiMgr.createWarning(PLocalizer.TradeCannotHoldWarning,
+                                             PiratesGuiGlobals.TextFG6)
         elif result == RejectCode.TIMEOUT:
-            localAvatar.guiMgr.createWarning(PLocalizer.TradeTimeoutWarning, PiratesGuiGlobals.TextFG6)
+            localAvatar.guiMgr.createWarning(PLocalizer.TradeTimeoutWarning,
+                                             PiratesGuiGlobals.TextFG6)
         elif result == 2:
             if self.storeMenuGUI:
                 self.storeMenuGUI.updateBalance()
         elif result != 1:
-            localAvatar.guiMgr.createWarning(PLocalizer.TradeFailedWarning, PiratesGuiGlobals.TextFG6)
+            localAvatar.guiMgr.createWarning(PLocalizer.TradeFailedWarning,
+                                             PiratesGuiGlobals.TextFG6)
         else:
             localAvatar.guiMgr.combatTray.skillTray.updateSkillTrayAmounts()
             localAvatar.guiMgr.combatTray.tonicButton.getBestTonic()
             localAvatar.guiMgr.weaponPage.updateTonics()
 
     def startRepair(self, storeType):
-        self.pickShipGUI = ShipShoppingPanel(PLocalizer.ShipRepair, doneCallback=self.confirmRepairShip, mode='repair')
+        self.pickShipGUI = ShipShoppingPanel(
+            PLocalizer.ShipRepair,
+            doneCallback=self.confirmRepairShip,
+            mode='repair')
         for shipId in base.localAvatar.getInventory().getShipDoIdList():
             self.pickShipGUI.addOwnShip(shipId, self.confirmRepairShip)
 
@@ -354,7 +422,10 @@ class DistributedShopKeeper:
         if self.confirmDialog:
             self.confirmDialog.destroy()
             self.confirmDialog = None
-        self.confirmDialog = PDialog.PDialog(text=PLocalizer.RepairConfirmDialog % {'gold': cost}, style=OTPDialog.YesNo, command=r)
+        self.confirmDialog = PDialog.PDialog(
+            text=PLocalizer.RepairConfirmDialog % {'gold': cost},
+            style=OTPDialog.YesNo,
+            command=r)
 
     def sendRequestRepairShip(self, shipId, choice):
         shipOV = self.cr.getOwnerView(shipId)
@@ -364,8 +435,11 @@ class DistributedShopKeeper:
         if choice == 1:
             inventory = base.localAvatar.getInventory()
             if inventory:
-                if inventory.getStackQuantity(InventoryType.GoldInPocket) < cost:
-                    base.localAvatar.guiMgr.createWarning(PLocalizer.NotEnoughMoneyWarning, PiratesGuiGlobals.TextFG6)
+                if inventory.getStackQuantity(
+                        InventoryType.GoldInPocket) < cost:
+                    base.localAvatar.guiMgr.createWarning(
+                        PLocalizer.NotEnoughMoneyWarning,
+                        PiratesGuiGlobals.TextFG6)
                     return
             self.sendUpdate('requestPurchaseRepair', [shipId])
         if self.confirmDialog:
@@ -373,7 +447,8 @@ class DistributedShopKeeper:
             self.confirmDialog = None
 
     def startSellShip(self, storeType):
-        self.pickShipGUI = ShipShoppingPanel(PLocalizer.SellShip, doneCallback=self.confirmSellShip, mode='sell')
+        self.pickShipGUI = ShipShoppingPanel(
+            PLocalizer.SellShip, doneCallback=self.confirmSellShip, mode='sell')
 
         def inventoryHere(inv):
             self.__invRequest = None
@@ -385,7 +460,8 @@ class DistributedShopKeeper:
 
         if self.__invRequest:
             DistributedInventoryBase.cancelGetInventory(self.__invRequest)
-        self.__invRequest = DistributedInventoryBase.getInventory(localAvatar.getInventoryId(), inventoryHere)
+        self.__invRequest = DistributedInventoryBase.getInventory(
+            localAvatar.getInventoryId(), inventoryHere)
 
     def confirmSellShip(self, shipId=None):
         if not shipId:
@@ -394,7 +470,8 @@ class DistributedShopKeeper:
         if not shipOV:
             return
         if shipOV.state != 'Off':
-            base.localAvatar.guiMgr.createWarning(PLocalizer.ShipNotInBottleWarning, PiratesGuiGlobals.TextFG6)
+            base.localAvatar.guiMgr.createWarning(
+                PLocalizer.ShipNotInBottleWarning, PiratesGuiGlobals.TextFG6)
             return
         modelType = ShipGlobals.getModelClass(shipOV.shipClass)
         cost = EconomyGlobals.getItemCost(modelType) / 2
@@ -402,7 +479,10 @@ class DistributedShopKeeper:
         if self.confirmDialog:
             self.confirmDialog.destroy()
             self.confirmDialog = None
-        self.confirmDialog = PDialog.PDialog(text=PLocalizer.SellShipConfirmDialog % {'gold': cost}, style=OTPDialog.YesNo, command=r)
+        self.confirmDialog = PDialog.PDialog(
+            text=PLocalizer.SellShipConfirmDialog % {'gold': cost},
+            style=OTPDialog.YesNo,
+            command=r)
 
     def doubleConfirmSellShip(self, shipId, choice):
         r = Functor(self.sendRequestSellShip, shipId)
@@ -410,7 +490,10 @@ class DistributedShopKeeper:
             self.confirmDialog.destroy()
             self.confirmDialog = None
         if choice == 1:
-            self.confirmDialog = PDialog.PDialog(text=PLocalizer.SellShipAreYouSureDialog, style=OTPDialog.YesNo, command=r)
+            self.confirmDialog = PDialog.PDialog(
+                text=PLocalizer.SellShipAreYouSureDialog,
+                style=OTPDialog.YesNo,
+                command=r)
 
     def sendRequestSellShip(self, shipId, choice):
         shipOV = self.cr.getOwnerView(shipId)
@@ -423,12 +506,17 @@ class DistributedShopKeeper:
         if choice == 1:
             inventory = base.localAvatar.getInventory()
             if inventory:
-                if cost > 0 and inventory.getStackQuantity(InventoryType.GoldInPocket) + cost > inventory.getStackLimit(InventoryType.GoldInPocket):
+                if cost > 0 and inventory.getStackQuantity(
+                        InventoryType.GoldInPocket
+                ) + cost > inventory.getStackLimit(InventoryType.GoldInPocket):
                     r = Functor(self.sendRequestSellShipGoldOverflow, shipId)
                     if self.confirmDialog:
                         self.confirmDialog.destroy()
                         self.confirmDialog = None
-                    self.confirmDialog = PDialog.PDialog(text=PLocalizer.ExcessGoldLost, style=OTPDialog.YesNo, command=r)
+                    self.confirmDialog = PDialog.PDialog(
+                        text=PLocalizer.ExcessGoldLost,
+                        style=OTPDialog.YesNo,
+                        command=r)
                     return
             self.sendUpdate('requestSellShip', [shipId])
         if self.pickShipGUI:
@@ -443,7 +531,10 @@ class DistributedShopKeeper:
         self.finishShopping()
 
     def startOverhaul(self, storeType):
-        self.pickShipGUI = ShipShoppingPanel(PLocalizer.ShipOverhaul, doneCallback=self.confirmOverhaulShip, mode='overhaul')
+        self.pickShipGUI = ShipShoppingPanel(
+            PLocalizer.ShipOverhaul,
+            doneCallback=self.confirmOverhaulShip,
+            mode='overhaul')
         for shipId in base.localAvatar.getInventory().getShipDoIdList():
             self.pickShipGUI.addOwnShip(shipId, self.confirmOverhaulShip)
 
@@ -454,14 +545,20 @@ class DistributedShopKeeper:
         if not shipOV:
             return
         if shipOV.state != 'Off':
-            base.localAvatar.guiMgr.createWarning(PLocalizer.ShipNotInBottleWarning, PiratesGuiGlobals.TextFG6)
+            base.localAvatar.guiMgr.createWarning(
+                PLocalizer.ShipNotInBottleWarning, PiratesGuiGlobals.TextFG6)
             return
         shipClass = shipOV.getShipClass()
-        cost = EconomyGlobals.getItemCost(shipClass) * EconomyGlobals.OVERHAUL_COST_PERCENTAGE
+        cost = EconomyGlobals.getItemCost(
+            shipClass) * EconomyGlobals.OVERHAUL_COST_PERCENTAGE
         if self.confirmDialog:
             self.confirmDialog.destroy()
             self.confirmDialog = None
-        self.confirmDialog = PDialog.PDialog(text=PLocalizer.OverhaulConfirmDialog % {'gold': cost}, style=OTPDialog.YesNo, command=self.sendRequestOverhaulShip, extraArgs=[shipId])
+        self.confirmDialog = PDialog.PDialog(
+            text=PLocalizer.OverhaulConfirmDialog % {'gold': cost},
+            style=OTPDialog.YesNo,
+            command=self.sendRequestOverhaulShip,
+            extraArgs=[shipId])
 
     def sendRequestOverhaulShip(self, choice, extraArgs):
         if self.pickShipGUI:
@@ -471,12 +568,16 @@ class DistributedShopKeeper:
         if not shipOV:
             return
         shipClass = shipOV.getShipClass()
-        cost = EconomyGlobals.getItemCost(shipClass) * EconomyGlobals.OVERHAUL_COST_PERCENTAGE
+        cost = EconomyGlobals.getItemCost(
+            shipClass) * EconomyGlobals.OVERHAUL_COST_PERCENTAGE
         if choice == 1:
             inventory = base.localAvatar.getInventory()
             if inventory:
-                if inventory.getStackQuantity(InventoryType.GoldInPocket) < cost:
-                    base.localAvatar.guiMgr.createWarning(PLocalizer.NotEnoughMoneyWarning, PiratesGuiGlobals.TextFG6)
+                if inventory.getStackQuantity(
+                        InventoryType.GoldInPocket) < cost:
+                    base.localAvatar.guiMgr.createWarning(
+                        PLocalizer.NotEnoughMoneyWarning,
+                        PiratesGuiGlobals.TextFG6)
                     return
             self.sendUpdate('requestPurchaseOverhaul', [shipId])
         self.finishShopping()

@@ -15,11 +15,14 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class DistributedDiceGame(DistributedGameTable.DistributedGameTable):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDiceGame')
-    SeatInfo = (
-     (
-      Vec3(-4, 6.5, 0), Vec3(180, 0, 0)), (Vec3(-11, 0, 0), Vec3(-90, 0, 0)), (Vec3(-4, -6.5, 0), Vec3(0, 0, 0)), (Vec3(0, -6.5, 0), Vec3(0, 0, 0)), (Vec3(4, -6.5, 0), Vec3(0, 0, 0)), (Vec3(11, 0, 0), Vec3(90, 0, 0)), (Vec3(4, 6.5, 0), Vec3(180, 0, 0)))
+    SeatInfo = ((Vec3(-4, 6.5, 0), Vec3(180, 0, 0)), (Vec3(-11, 0, 0),
+                                                      Vec3(-90, 0, 0)),
+                (Vec3(-4, -6.5, 0),
+                 Vec3(0, 0, 0)), (Vec3(0, -6.5, 0), Vec3(0, 0, 0)), (Vec3(
+                     4, -6.5, 0), Vec3(0, 0, 0)), (Vec3(11, 0, 0), Vec3(
+                         90, 0, 0)), (Vec3(4, 6.5, 0), Vec3(180, 0, 0)))
     NumSeats = 7
 
     def __init__(self, cr, numdice=5, public=1, name='dice game'):
@@ -53,7 +56,8 @@ class DistributedDiceGame(DistributedGameTable.DistributedGameTable):
         dna.setJawRoundness(-0.0732600092888)
         dna.setJawAngle(0.189869761467)
         dna.setJawLength(0.0209314227104)
-        self.dealer = self.createDealer('Dealer', dna, Vec3(0, 6.5, 0), Vec3(180, 0, 0))
+        self.dealer = self.createDealer('Dealer', dna, Vec3(0, 6.5, 0),
+                                        Vec3(180, 0, 0))
 
     def generate(self):
         DistributedGameTable.DistributedGameTable.generate(self)
@@ -92,8 +96,10 @@ class DistributedDiceGame(DistributedGameTable.DistributedGameTable):
             self.notify.error('guiCallback: unknown action: %s' % action)
 
     def localAvatarSatDown(self, seatIndex):
-        DistributedGameTable.DistributedGameTable.localAvatarSatDown(self, seatIndex)
-        self.gui = DiceGameGUI.DiceGameGUI(self, self.numDice, self.public, self.gameName)
+        DistributedGameTable.DistributedGameTable.localAvatarSatDown(
+            self, seatIndex)
+        self.gui = DiceGameGUI.DiceGameGUI(self, self.numDice, self.public,
+                                           self.gameName)
         self.extraGuiSetup()
         camera.setPosHpr(self, 0, -10, 20, 0, -65, 0)
         base.camLens.setMinFov(55)
@@ -104,13 +110,15 @@ class DistributedDiceGame(DistributedGameTable.DistributedGameTable):
         self.extraGuiDestroy()
         self.gui.destroy()
         del self.gui
-        DistributedGameTable.DistributedGameTable.localAvatarGotUp(self, seatIndex)
+        DistributedGameTable.DistributedGameTable.localAvatarGotUp(
+            self, seatIndex)
 
     def playerIsReady(self):
         inv = base.localAvatar.getInventory()
         if inv:
             if inv.getStackQuantity(InventoryType.GoldInPocket) < self.ante:
-                base.localAvatar.guiMgr.createWarning(PLocalizer.NotEnoughMoneyWarning, PiratesGuiGlobals.TextFG6)
+                base.localAvatar.guiMgr.createWarning(
+                    PLocalizer.NotEnoughMoneyWarning, PiratesGuiGlobals.TextFG6)
             else:
                 self.sendUpdate('playerIsReady', [])
                 self.gui.mainButton['state'] = DGG.DISABLED
@@ -182,4 +190,6 @@ class DistributedDiceGame(DistributedGameTable.DistributedGameTable):
     def sendChat(self, chatType):
         avId = base.localAvatar.getDoId()
         self.sendUpdate('sendChat', [chatType, avId])
+
+
 # okay decompiling .\pirates\minigame\DistributedDiceGame.pyc

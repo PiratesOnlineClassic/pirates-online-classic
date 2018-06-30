@@ -10,7 +10,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 
 class DistributedBank(DistributedInteractive.DistributedInteractive):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBank')
 
     def __init__(self, cr):
@@ -33,13 +33,17 @@ class DistributedBank(DistributedInteractive.DistributedInteractive):
         self.model.reparentTo(self)
         self.model.setColorScale(1, 1, 1, 1, 1)
         self.goldPileCollection = self.findAllMatches('**/pile*')
-        self.goldPileList = self.goldPileCollection 
+        self.goldPileList = self.goldPileCollection
         self.goldPileList.reverse()
         self.goldPileCollection.stash()
         self.initInteractOpts()
 
     def initInteractOpts(self):
-        self.setInteractOptions(sphereScale=12, diskRadius=30, proximityText=PLocalizer.PVPStealTreasure, exclusive=0)
+        self.setInteractOptions(
+            sphereScale=12,
+            diskRadius=30,
+            proximityText=PLocalizer.PVPStealTreasure,
+            exclusive=0)
 
     def disable(self):
         DistributedInteractive.DistributedInteractive.disable(self)
@@ -47,19 +51,28 @@ class DistributedBank(DistributedInteractive.DistributedInteractive):
         del self.model
 
     def enterProximity(self):
-        if (self.belongsToTeam == PiratesGlobals.INVALID_TEAM or self.belongsToTeam != localAvatar.getTeam()) and localAvatar.lootCarried < self.cr.activeWorld.getMaxCarry() and self.value > 0:
-            base.cr.interactionMgr.addInteractive(self, InteractiveBase.PROXIMITY)
+        if (self.belongsToTeam == PiratesGlobals.INVALID_TEAM or
+                self.belongsToTeam != localAvatar.getTeam()
+           ) and localAvatar.lootCarried < self.cr.activeWorld.getMaxCarry(
+           ) and self.value > 0:
+            base.cr.interactionMgr.addInteractive(self,
+                                                  InteractiveBase.PROXIMITY)
             messenger.send('enterProximityOfInteractive')
         else:
-            if self.belongsToTeam == localAvatar.getTeam() and localAvatar.lootCarried > 0:
-                self.cr.activeWorld.handleDeposit('Team ' + str(self.belongsToTeam), localAvatar.getDoId(), self.getDoId())
+            if self.belongsToTeam == localAvatar.getTeam(
+            ) and localAvatar.lootCarried > 0:
+                self.cr.activeWorld.handleDeposit(
+                    'Team ' + str(self.belongsToTeam), localAvatar.getDoId(),
+                    self.getDoId())
             else:
-                base.cr.interactionMgr.removeInteractive(self, InteractiveBase.PROXIMITY)
+                base.cr.interactionMgr.removeInteractive(
+                    self, InteractiveBase.PROXIMITY)
                 messenger.send('enterProximityOfInteractive')
         self.accept(self.proximityCollisionExitEvent, self.handleExitProximity)
 
     def handleExitProximity(self, collEntry):
-        DistributedInteractive.DistributedInteractive.handleExitProximity(self, collEntry)
+        DistributedInteractive.DistributedInteractive.handleExitProximity(
+            self, collEntry)
 
     def showProximityInfo(self):
         self.cr.activeWorld.updateTreasureProximityText(self)
@@ -74,7 +87,8 @@ class DistributedBank(DistributedInteractive.DistributedInteractive):
         if base.localAvatar.lootCarried > 0:
             base.localAvatar.b_setGameState('LandTreasureRoam')
         else:
-            base.localAvatar.b_setGameState(base.localAvatar.gameFSM.defaultState)
+            base.localAvatar.b_setGameState(
+                base.localAvatar.gameFSM.defaultState)
 
     def setBelongsToTeam(self, team):
         self.belongsToTeam = team
@@ -92,7 +106,8 @@ class DistributedBank(DistributedInteractive.DistributedInteractive):
 
     def requestInteraction(self, avId, interactType=0):
         base.localAvatar.motionFSM.off()
-        DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
+        DistributedInteractive.DistributedInteractive.requestInteraction(
+            self, avId, interactType)
 
     def rejectInteraction(self):
         DistributedInteractive.DistributedInteractive.rejectInteraction(self)
@@ -112,5 +127,8 @@ class DistributedBank(DistributedInteractive.DistributedInteractive):
             return
 
         if parentObjId > 0:
-            self.pendingPlacement = base.cr.relatedObjectMgr.requestObjects([self.parentObjId], eachCallback=putBankOnParent)
+            self.pendingPlacement = base.cr.relatedObjectMgr.requestObjects(
+                [self.parentObjId], eachCallback=putBankOnParent)
+
+
 # okay decompiling .\pirates\pvp\DistributedBank.pyc

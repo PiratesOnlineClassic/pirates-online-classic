@@ -1,6 +1,7 @@
 from pirates.battle.ComboDiary import ComboDiary
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
+
 class ComboDiaryAI(ComboDiary):
     notify = directNotify.newCategory('ComboDiaryAI')
 

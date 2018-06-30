@@ -24,7 +24,8 @@ def lerp(a, b, t):
 
 
 def sLerp(p0, p1, t, arcLen):
-    return (p0 * math.sin((1 - t) * arcLen) + p1 * math.sin(t * arcLen)) / math.sin(arcLen)
+    return (p0 * math.sin(
+        (1 - t) * arcLen) + p1 * math.sin(t * arcLen)) / math.sin(arcLen)
 
 
 def nLerp(a, b, t):
@@ -35,7 +36,17 @@ def nLerp(a, b, t):
 
 class ArcBall(NodePath, DirectObject):
 
-    def __init__(self, name, radius=1, scrollFactor=1, camera=base.cam, frame=Vec4(-1, 1, -1, 1), keepUpright=0, mouseDownEvent='mouse1', mouseUpEvent='mouse1-up', *args, **kwargs):
+    def __init__(self,
+                 name,
+                 radius=1,
+                 scrollFactor=1,
+                 camera=base.cam,
+                 frame=Vec4(-1, 1, -1, 1),
+                 keepUpright=0,
+                 mouseDownEvent='mouse1',
+                 mouseUpEvent='mouse1-up',
+                 *args,
+                 **kwargs):
         NodePath.__init__(self, name, *args, **kwargs)
         DirectObject.__init__(self)
         self._rNode = self.attachNewNode('rotateNode')
@@ -60,9 +71,11 @@ class ArcBall(NodePath, DirectObject):
         self.geom_node_path.setDepthTest(0)
         self.geom_node_path.setTransparency(1)
         self.head_geom_node = GeomNode('head')
-        self.head_geom_node_path = self.geom_node_path.attachNewNode(self.head_geom_node)
+        self.head_geom_node_path = self.geom_node_path.attachNewNode(
+            self.head_geom_node)
         self.tail_geom_node = GeomNode('tail')
-        self.tail_geom_node_path = self.geom_node_path.attachNewNode(self.tail_geom_node)
+        self.tail_geom_node_path = self.geom_node_path.attachNewNode(
+            self.tail_geom_node)
         self._ballIval = None
         return
 
@@ -246,11 +259,14 @@ class ArcBall(NodePath, DirectObject):
         frame = self._frame
         ll = Point3(frame[0], frame[2], 0)
         ur = Point3(frame[1], frame[3], 0)
-        aspectTs = TransformState.makeScale2d(Point2(1 / base.camLens.getAspectRatio(), 1))
+        aspectTs = TransformState.makeScale2d(
+            Point2(1 / base.camLens.getAspectRatio(), 1))
         ll = aspectTs.getMat().xformPoint(ll)
         ur = aspectTs.getMat().xformPoint(ur)
-        posTs = TransformState.makePos2d(Point2(ll[0] + ur[0], ll[1] + ur[1]) / -2.0)
-        scaleTs = TransformState.makeScale2d(Point2(2.0 / (ur[0] - ll[0]), 2.0 / (ur[1] - ll[1])))
+        posTs = TransformState.makePos2d(
+            Point2(ll[0] + ur[0], ll[1] + ur[1]) / -2.0)
+        scaleTs = TransformState.makeScale2d(
+            Point2(2.0 / (ur[0] - ll[0]), 2.0 / (ur[1] - ll[1])))
         frameTs = scaleTs.compose(posTs)
         self._mouseToHomogenousFrameMat = Mat4(frameTs.getMat())
         self._mouseToHomogenousFrameMatInv = Mat4(frameTs.getInverse().getMat())
@@ -281,7 +297,8 @@ class ArcBall(NodePath, DirectObject):
     def saveNorth(self):
         upSpaceNodePath = self
         Z = Vec3.unitZ()
-        upSpaceToRNode = TransformState.makeHpr(upSpaceNodePath.getHpr(self._rNode))
+        upSpaceToRNode = TransformState.makeHpr(
+            upSpaceNodePath.getHpr(self._rNode))
         self._north = upSpaceToRNode.getMat().xformPoint(Z)
 
     def _applyConstraints(self):
@@ -295,7 +312,8 @@ class ArcBall(NodePath, DirectObject):
         upSpaceNodePath = self
         rNodeNorth = Z
         arcballNorth = -Y
-        rNodeToUpSpace = TransformState.makeHpr(self._rNode.getHpr(upSpaceNodePath))
+        rNodeToUpSpace = TransformState.makeHpr(
+            self._rNode.getHpr(upSpaceNodePath))
         northPole = rNodeToUpSpace.getMat().xformPoint(rNodeNorth)
         dot = northPole.dot(arcballNorth)
         theta = math.acos(clampScalar(-1, 1, dot))
@@ -321,7 +339,9 @@ class ArcBall(NodePath, DirectObject):
         northPole = rNodeToUpSpace.getMat().xformPoint(rNodeNorth)
         dot = northPole.dot(X)
         proj = northPole - X * dot
-        theta = math.acos(clampScalar(-1.0, 1.0, proj.dot(arcballNorth) / proj.length()))
+        theta = math.acos(
+            clampScalar(-1.0, 1.0,
+                        proj.dot(arcballNorth) / proj.length()))
         if theta > thetaLimit:
             theta -= thetaLimit
             if northPole.dot(Z) < 0.0:
@@ -332,7 +352,9 @@ class ArcBall(NodePath, DirectObject):
             northPole = rNodeToUpSpace.getMat().xformPoint(rNodeNorth)
         dot = northPole.dot(Z)
         proj = northPole - Z * dot
-        theta = math.acos(clampScalar(-1.0, 1.0, proj.dot(arcballNorth) / proj.length()))
+        theta = math.acos(
+            clampScalar(-1.0, 1.0,
+                        proj.dot(arcballNorth) / proj.length()))
         if theta > thetaLimit:
             theta -= thetaLimit
             if northPole.dot(X) >= 0.0:
@@ -348,13 +370,16 @@ class ArcBall(NodePath, DirectObject):
         upSpaceNodePath = self
         axis = pt / pt.length()
         up = Z
-        rNodeToUpSpace = TransformState.makeHpr(self._rNode.getHpr(upSpaceNodePath))
+        rNodeToUpSpace = TransformState.makeHpr(
+            self._rNode.getHpr(upSpaceNodePath))
         northPole = rNodeToUpSpace.getMat().xformPoint(rNodeNorth)
         right = up.cross(axis)
         final = axis.cross(right)
         dot = northPole.dot(axis)
         proj = northPole - axis * dot
-        theta = math.acos(clampScalar(-1.0, 1.0, proj.dot(final) / (proj.length() * final.length())))
+        theta = math.acos(
+            clampScalar(-1.0, 1.0,
+                        proj.dot(final) / (proj.length() * final.length())))
         if northPole.dot(right) < 0.0:
             theta *= -1
         return Quat(math.cos(theta / 2.0), Vec3(axis) * math.sin(theta / 2.0))
@@ -376,7 +401,10 @@ class ArcBall(NodePath, DirectObject):
             return Quat(math.cos(theta / 2.0), axis * math.sin(theta / 2.0))
         else:
             if 0.0 < factor < 1.0:
-                q = nLerp(Quat.identQuat(), Quat(math.cos(theta / 2.0), axis * math.sin(theta / 2.0)), factor)
+                q = nLerp(
+                    Quat.identQuat(),
+                    Quat(math.cos(theta / 2.0), axis * math.sin(theta / 2.0)),
+                    factor)
                 return q
 
     def _getRotateAboutAxisQuat(self, axis, p0, p1, factor=1.0):
@@ -388,9 +416,10 @@ class ArcBall(NodePath, DirectObject):
         axis = proj0.cross(proj1)
         area = axis.length()
         axis.normalize()
-        theta = math.acos(clampScalar(-1, 1, proj0.dot(proj1) / (proj0.length() * proj1.length())))
-        return (
-         Quat(math.cos(theta / 2.0), axis * math.sin(theta / 2.0)), area)
+        theta = math.acos(
+            clampScalar(-1, 1,
+                        proj0.dot(proj1) / (proj0.length() * proj1.length())))
+        return (Quat(math.cos(theta / 2.0), axis * math.sin(theta / 2.0)), area)
 
     def _rotateQuatByQuat(self, q0, q1, factor=1.0):
         self._rNode.setQuat(nLerp(q0, q0 * q1, factor))
@@ -413,7 +442,8 @@ class ArcBall(NodePath, DirectObject):
         if camRaySpherePt and not pt.almostEqual(camRaySpherePt, 0.0001):
             camToSphere = self.cam.getTransform(self._rNode)
             OC = camToSphere.getMat().xformPoint(Vec3(0, 0, 0))
-            theta = math.acos(clampScalar(-1.0, 1.0, self._radius / OC.length()))
+            theta = math.acos(
+                clampScalar(-1.0, 1.0, self._radius / OC.length()))
             axis = OC.cross(pt)
             axis.normalize()
             q = Quat(math.cos(theta / 2), axis * math.sin(theta / 2))
@@ -422,11 +452,9 @@ class ArcBall(NodePath, DirectObject):
             OC *= self._radius
             newPt = ts.getMat().xformPoint(OC)
             dTheta = math.acos(clampScalar(-1.0, 1.0, pt.dot(newPt)))
-            return (
-             newPt, dTheta)
+            return (newPt, dTheta)
         else:
-            return (
-             pt, 0)
+            return (pt, 0)
 
     def reorientNorth(self, time=0.0):
         self.setNorth(Vec3(0, 1, 0))
@@ -460,8 +488,7 @@ class ArcBall(NodePath, DirectObject):
 
     def _startRotateTask(self, *args):
         self.saveTransforms()
-        modePairs = (
-         (0, 2), (1, 3))
+        modePairs = ((0, 2), (1, 3))
         if not self._ctrlBtnState:
             rMode = modePairs[self.rMode][0]
         else:
@@ -503,7 +530,6 @@ class ArcBall(NodePath, DirectObject):
             self.saveNorth()
         return task.cont
 
-
     def _stopRotateTask(self, *args):
         taskMgr.remove(self.getName() + '-rotateTask')
         self.tail_geom_node.removeAllGeoms()
@@ -539,14 +565,18 @@ class ArcBall(NodePath, DirectObject):
             texture_writer = GeomVertexWriter(vertex_data, 'texcoord')
             triStrip = GeomTristrips(Geom.UHStatic)
             if len(pts) == 1:
-                vertex_writer.addData3f(p1[0] - cross[0], p1[1] - cross[1], p1[2] - cross[2])
-                vertex_writer.addData3f(p1[0] + cross[0], p1[1] + cross[1], p1[2] + cross[2])
+                vertex_writer.addData3f(p1[0] - cross[0], p1[1] - cross[1],
+                                        p1[2] - cross[2])
+                vertex_writer.addData3f(p1[0] + cross[0], p1[1] + cross[1],
+                                        p1[2] + cross[2])
                 color_writer.addData4f(0, 1, 0, 1)
                 color_writer.addData4f(0, 1, 0, 1)
                 texture_writer.addData2f(1, 1)
                 texture_writer.addData2f(0, 1)
-                vertex_writer.addData3f(p0[0] - cross[0], p0[1] - cross[1], p0[2] - cross[2])
-                vertex_writer.addData3f(p0[0] + cross[0], p0[1] + cross[1], p0[2] + cross[2])
+                vertex_writer.addData3f(p0[0] - cross[0], p0[1] - cross[1],
+                                        p0[2] - cross[2])
+                vertex_writer.addData3f(p0[0] + cross[0], p0[1] + cross[1],
+                                        p0[2] + cross[2])
                 color_writer.addData4f(0, 1, 0, 1)
                 color_writer.addData4f(0, 1, 0, 1)
                 texture_writer.addData2f(1, 1 - remainder)
@@ -554,8 +584,10 @@ class ArcBall(NodePath, DirectObject):
                 triStrip.addNextVertices(4)
             else:
                 for pt in pts[:2]:
-                    vertex_writer.addData3f(pt[0] - cross[0], pt[1] - cross[1], pt[2] - cross[2])
-                    vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1], pt[2] + cross[2])
+                    vertex_writer.addData3f(pt[0] - cross[0], pt[1] - cross[1],
+                                            pt[2] - cross[2])
+                    vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1],
+                                            pt[2] + cross[2])
                     color_writer.addData4f(0, 1, 0, 1)
                     color_writer.addData4f(0, 1, 0, 1)
 
@@ -574,8 +606,10 @@ class ArcBall(NodePath, DirectObject):
             texture_writer = GeomVertexWriter(vertex_data, 'texcoord')
             triStrip = GeomTristrips(Geom.UHStatic)
             for pt in pts[1:]:
-                vertex_writer.addData3f(pt[0] - cross[0], pt[1] - cross[1], pt[2] - cross[2])
-                vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1], pt[2] + cross[2])
+                vertex_writer.addData3f(pt[0] - cross[0], pt[1] - cross[1],
+                                        pt[2] - cross[2])
+                vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1],
+                                        pt[2] + cross[2])
                 color_writer.addData4f(0, 1, 0, 1)
                 color_writer.addData4f(0, 1, 0, 1)
 
@@ -589,8 +623,10 @@ class ArcBall(NodePath, DirectObject):
             if numPts % 2:
                 texture_writer.addData2f(1, 1)
                 texture_writer.addData2f(0, 1)
-            vertex_writer.addData3f(p0[0] - cross[0], p0[1] - cross[1], p0[2] - cross[2])
-            vertex_writer.addData3f(p0[0] + cross[0], p0[1] + cross[1], p0[2] + cross[2])
+            vertex_writer.addData3f(p0[0] - cross[0], p0[1] - cross[1],
+                                    p0[2] - cross[2])
+            vertex_writer.addData3f(p0[0] + cross[0], p0[1] + cross[1],
+                                    p0[2] + cross[2])
             color_writer.addData4f(0, 1, 0, 1)
             color_writer.addData4f(0, 1, 0, 1)
             if numPts % 2:
@@ -613,7 +649,9 @@ class ArcBall(NodePath, DirectObject):
         proj0 = p0 - axis * dot0
         dot1 = axis.dot(p1)
         proj1 = p1 - axis * dot1
-        theta = math.acos(clampScalar(-1, 1, proj0.dot(proj1) / (proj0.length() * proj1.length())))
+        theta = math.acos(
+            clampScalar(-1, 1,
+                        proj0.dot(proj1) / (proj0.length() * proj1.length())))
         if not proj0.almostEqual(proj1, 0.0001) and theta != 0:
             if proj0.lengthSquared() >= proj1.lengthSquared():
                 A = proj0
@@ -631,8 +669,15 @@ class ArcBall(NodePath, DirectObject):
             t = math.atan2(a, b / math.tan(theta))
             aUnit *= a
             bUnit *= b
-            pts = [ aUnit * math.cos(x * t / N) + bUnit * math.sin(x * t / N) for x in range(N + 1) ]
-            pts = [ pt + axis * math.sqrt(self._radius * self._radius - pt.lengthSquared()) for pt in pts ]
+            pts = [
+                aUnit * math.cos(x * t / N) + bUnit * math.sin(x * t / N)
+                for x in range(N + 1)
+            ]
+            pts = [
+                pt + axis *
+                math.sqrt(self._radius * self._radius - pt.lengthSquared())
+                for pt in pts
+            ]
             if A != proj0:
                 pts.reverse()
             format = GeomVertexFormat.getV3c4t2()
@@ -645,8 +690,10 @@ class ArcBall(NodePath, DirectObject):
             cross.normalize()
             cross *= width / 2.0
             pt = pts[0]
-            vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1], pt[2] + cross[2])
-            vertex_writer.addData3f(pt[0] - cross[0], pt[1] - cross[1], pt[2] - cross[2])
+            vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1],
+                                    pt[2] + cross[2])
+            vertex_writer.addData3f(pt[0] - cross[0], pt[1] - cross[1],
+                                    pt[2] - cross[2])
             color_writer.addData4f(0, 1, 0, 1)
             color_writer.addData4f(0, 1, 0, 1)
             texture_writer.addData2f(0, 1)
@@ -657,8 +704,10 @@ class ArcBall(NodePath, DirectObject):
             cross.normalize()
             cross *= width / 2.0
             pt = pts[1]
-            vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1], pt[2] + cross[2])
-            vertex_writer.addData3f(pt[0] - cross[0], pt[1] - cross[1], pt[2] - cross[2])
+            vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1],
+                                    pt[2] + cross[2])
+            vertex_writer.addData3f(pt[0] - cross[0], pt[1] - cross[1],
+                                    pt[2] - cross[2])
             color_writer.addData4f(0, 1, 0, 1)
             color_writer.addData4f(0, 1, 0, 1)
             texture_writer.addData2f(0, 0)
@@ -678,8 +727,10 @@ class ArcBall(NodePath, DirectObject):
                 cross.normalize()
                 cross *= width / 2.0
                 pt = pts[x + 1]
-                vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1], pt[2] + cross[2])
-                vertex_writer.addData3f(pt[0] - cross[0], pt[1] - cross[1], pt[2] - cross[2])
+                vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1],
+                                        pt[2] + cross[2])
+                vertex_writer.addData3f(pt[0] - cross[0], pt[1] - cross[1],
+                                        pt[2] - cross[2])
                 color_writer.addData4f(0, 1, 0, 1)
                 color_writer.addData4f(0, 1, 0, 1)
                 if x % 2:
@@ -694,8 +745,10 @@ class ArcBall(NodePath, DirectObject):
             cross.normalize()
             cross *= width / 2.0
             pt = pts[-1]
-            vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1], pt[2] + cross[2])
-            vertex_writer.addData3f(pt[0] - cross[0], pt[1] - cross[1], pt[2] - cross[2])
+            vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1],
+                                    pt[2] + cross[2])
+            vertex_writer.addData3f(pt[0] - cross[0], pt[1] - cross[1],
+                                    pt[2] - cross[2])
             color_writer.addData4f(0, 1, 0, 1)
             color_writer.addData4f(0, 1, 0, 1)
             if N % 2:
@@ -723,4 +776,6 @@ class ArcBall(NodePath, DirectObject):
 
     def _stopArrowTask(self):
         taskMgr.remove(self.getName() + '-arrowTask')
+
+
 # okay decompiling .\pirates\map\ArcBall.pyc

@@ -15,6 +15,7 @@ NPC_WALK_CUTOFF = 0.5
 RUN_CUTOFF = PiratesGlobals.ToonForwardSpeed
 NPC_RUN_CUTOFF = 17.0
 
+
 class MotionAnimFSM(FSM):
     BLENDAMT = 0.4
     GROUNDSTATE = Enum('OverSolid, OverWater')
@@ -99,21 +100,33 @@ class MotionAnimFSM(FSM):
                 return
 
             if animIdx == PiratesGlobals.WALK_INDEX:
-                newAnimInfo = ((self.animInfo[PiratesGlobals.STAND_INDEX][0], self.animInfo[PiratesGlobals.STAND_INDEX][1]),
-                    (self.animInfo[PiratesGlobals.WALK_INDEX][0], newScale)) + self.animInfo[2:]
+                newAnimInfo = ((self.animInfo[PiratesGlobals.STAND_INDEX][0],
+                                self.animInfo[PiratesGlobals.STAND_INDEX][1]),
+                               (self.animInfo[PiratesGlobals.WALK_INDEX][0],
+                                newScale)) + self.animInfo[2:]
             else:
-                newAnimInfo = ((self.animInfo[PiratesGlobals.STAND_INDEX][0], self.animInfo[PiratesGlobals.STAND_INDEX][1]),
-                    (self.animInfo[PiratesGlobals.WALK_INDEX][0], self.animInfo[PiratesGlobals.WALK_INDEX][1]),
-                    (self.animInfo[PiratesGlobals.RUN_INDEX][0], newScale)) + self.animInfo[3:]
+                newAnimInfo = ((self.animInfo[PiratesGlobals.STAND_INDEX][0],
+                                self.animInfo[PiratesGlobals.STAND_INDEX][1]),
+                               (self.animInfo[PiratesGlobals.WALK_INDEX][0],
+                                self.animInfo[PiratesGlobals.WALK_INDEX][1]),
+                               (self.animInfo[PiratesGlobals.RUN_INDEX][0],
+                                newScale)) + self.animInfo[3:]
 
             if slideSpeed:
                 slideSpeed = max(slideSpeed, 0.45)
-                newAnimInfo = ((self.animInfo[PiratesGlobals.STAND_INDEX][0], self.animInfo[PiratesGlobals.STAND_INDEX][1]),
-                    (self.animInfo[PiratesGlobals.WALK_INDEX][0], self.animInfo[PiratesGlobals.WALK_INDEX][1]),
-                    (self.animInfo[PiratesGlobals.RUN_INDEX][0], self.animInfo[PiratesGlobals.RUN_INDEX][1]),
-                    (self.animInfo[PiratesGlobals.REVERSE_INDEX][0], self.animInfo[PiratesGlobals.REVERSE_INDEX][1]),
-                    (self.animInfo[PiratesGlobals.STRAFE_LEFT_INDEX][0], slideSpeed),
-                    (self.animInfo[PiratesGlobals.STRAFE_RIGHT_INDEX][0], slideSpeed)) + self.animInfo[6:]
+                newAnimInfo = (
+                    (self.animInfo[PiratesGlobals.STAND_INDEX][0],
+                     self.animInfo[PiratesGlobals.STAND_INDEX][1]),
+                    (self.animInfo[PiratesGlobals.WALK_INDEX][0],
+                     self.animInfo[PiratesGlobals.WALK_INDEX][1]),
+                    (self.animInfo[PiratesGlobals.RUN_INDEX][0],
+                     self.animInfo[PiratesGlobals.RUN_INDEX][1]),
+                    (self.animInfo[PiratesGlobals.REVERSE_INDEX][0],
+                     self.animInfo[PiratesGlobals.REVERSE_INDEX][1]),
+                    (self.animInfo[PiratesGlobals.STRAFE_LEFT_INDEX][0],
+                     slideSpeed),
+                    (self.animInfo[PiratesGlobals.STRAFE_RIGHT_INDEX][0],
+                     slideSpeed)) + self.animInfo[6:]
 
             self.av.motionFSM.setAnimInfo(newAnimInfo, reset=False)
             self.av.setPlayRate(newScale, self.animInfo[animIdx][0])
@@ -152,7 +165,8 @@ class MotionAnimFSM(FSM):
             state = 'Idle'
 
         zeroSpeedLimit = 0.1
-        if globalClock.getFrameTime() - self.zeroSpeedTimer < zeroSpeedLimit and self.motionFSMLag:
+        if globalClock.getFrameTime(
+        ) - self.zeroSpeedTimer < zeroSpeedLimit and self.motionFSMLag:
             if state != self.state and self.state != 'Idle':
                 return
 
@@ -245,14 +259,23 @@ class MotionAnimFSM(FSM):
             if self.idleJumpIval:
                 self.idleJumpIval.finish()
 
-            self.idleJumpIval = self.av.actorInterval('jump', startFrame=startFrame, endFrame=endFrame, playRate=1.5,
-                blendInT=0.0, blendOutT=self.BLENDAMT * 0.5)
+            self.idleJumpIval = self.av.actorInterval(
+                'jump',
+                startFrame=startFrame,
+                endFrame=endFrame,
+                playRate=1.5,
+                blendInT=0.0,
+                blendOutT=self.BLENDAMT * 0.5)
 
             self.idleJumpIval.start()
         else:
             startFrame = 6
             endFrame = 31
-            self.av.play('jump', fromFrame=startFrame, toFrame=endFrame, blendInT=self.BLENDAMT * 0.5,
+            self.av.play(
+                'jump',
+                fromFrame=startFrame,
+                toFrame=endFrame,
+                blendInT=self.BLENDAMT * 0.5,
                 blendOutT=self.BLENDAMT * 0.5)
 
     @report(types=['args', 'deltaStamp'], dConfigParam=['want-jump-report'])
@@ -262,7 +285,11 @@ class MotionAnimFSM(FSM):
 
         startFrame = 31
         endFrame = 43
-        self.landIval = self.av.actorInterval('jump', startFrame=startFrame, endFrame=endFrame, blendInT=0.0,
+        self.landIval = self.av.actorInterval(
+            'jump',
+            startFrame=startFrame,
+            endFrame=endFrame,
+            blendInT=0.0,
             blendOutT=self.BLENDAMT * 0.5)
 
         self.landIval.start()
@@ -272,8 +299,12 @@ class MotionAnimFSM(FSM):
         if not self.landRunIval:
             startFrame = 32
             endFrame = startFrame + 5
-            self.landRunIval = self.av.actorInterval('jump', startFrame=startFrame, endFrame=endFrame,
-                blendInT=0.0, blendOutT=0.15)
+            self.landRunIval = self.av.actorInterval(
+                'jump',
+                startFrame=startFrame,
+                endFrame=endFrame,
+                blendInT=0.0,
+                blendOutT=0.15)
 
         self.landRunIval.start()
 
@@ -671,7 +702,10 @@ class MotionFSM(FSM):
 
         self.stopCheckUnderWater()
         if self.getCurrentOrNextState() is not 'Off':
-            task = taskMgr.add(self.__checkUnderWater, 'localAvatarCheckUnderWater', priority=34)
+            task = taskMgr.add(
+                self.__checkUnderWater,
+                'localAvatarCheckUnderWater',
+                priority=34)
             task.oldParent = self.av.getParent()
 
     def stopCheckUnderWater(self):
@@ -685,7 +719,8 @@ class MotionFSM(FSM):
         self.av.disableWaterEffect()
 
     def __checkUnderWater(self, task):
-        if not (hasattr(self.av.controlManager.currentControls, 'lifter') and base.cr.isOceanEnabled()):
+        if not (hasattr(self.av.controlManager.currentControls, 'lifter') and
+                base.cr.isOceanEnabled()):
             return task.cont
 
         if self.lifterDelayFrames:
@@ -718,14 +753,18 @@ class MotionFSM(FSM):
                     if task.oldParent == self.av.getParent():
                         self.av.setZ(avZ - avAirborneHeight)
 
-                    self.av.cameraFSM.fpsCamera.lerpFromZOffset(avAirborneHeight, PiratesGlobals.SWIM_WALK_TRANSITION_TIME)
+                    self.av.cameraFSM.fpsCamera.lerpFromZOffset(
+                        avAirborneHeight,
+                        PiratesGlobals.SWIM_WALK_TRANSITION_TIME)
                     self.av.controlManager.currentControls.oneTimeCollide()
                     messenger.send('localAvatarExitWater')
-                    self.av.b_setGroundState(self.motionAnimFSM.GROUNDSTATE.OverSolid)
+                    self.av.b_setGroundState(
+                        self.motionAnimFSM.GROUNDSTATE.OverSolid)
             else:
                 if avZ + avHeight - avAirborneHeight <= waterZ and not self.__overwater:
                     self.__overwater = True
-                    self.av.b_setGroundState(self.motionAnimFSM.GROUNDSTATE.OverWater)
+                    self.av.b_setGroundState(
+                        self.motionAnimFSM.GROUNDSTATE.OverWater)
 
                 if avZ + avHeight <= waterZ:
                     self.__submerged = True

@@ -15,10 +15,18 @@ from pirates.piratesgui import GuiButton, PiratesGuiGlobals
 
 
 class PiratesTimer(OTPTimer.OTPTimer):
-    
+
     BGImage = None
 
-    def __init__(self, showMinutes=0, mode=None, titleText='', titleFg=None, infoText='', cancelText='', cancelCallback=None, alarmTime=0):
+    def __init__(self,
+                 showMinutes=0,
+                 mode=None,
+                 titleText='',
+                 titleFg=None,
+                 infoText='',
+                 cancelText='',
+                 cancelCallback=None,
+                 alarmTime=0):
         self.showMinutes = showMinutes
         self.mode = mode
         OTPTimer.OTPTimer.__init__(self)
@@ -59,12 +67,18 @@ class PiratesTimer(OTPTimer.OTPTimer):
         PiratesTimer.ClockImage = model.find('**/timer_front')
         PiratesTimer.BGImage = model.find('**/timer_back')
         model.removeNode()
-        self.bgDial = DirectFrame(parent=self, state=DGG.DISABLED, relief=None, image=self.BGImage)
-        self.fgLabel = DirectLabel(parent=self, state=DGG.DISABLED, relief=None, image=self.ClockImage, image_pos=(-0.01,
-                                                                                                                   0,
-                                                                                                                   0.035), image_scale=(1.1,
-                                                                                                                                        1,
-                                                                                                                                        0.8), text_scale=0.07, text_align=TextNode.ACenter, text_font=PiratesGlobals.getPirateOutlineFont())
+        self.bgDial = DirectFrame(
+            parent=self, state=DGG.DISABLED, relief=None, image=self.BGImage)
+        self.fgLabel = DirectLabel(
+            parent=self,
+            state=DGG.DISABLED,
+            relief=None,
+            image=self.ClockImage,
+            image_pos=(-0.01, 0, 0.035),
+            image_scale=(1.1, 1, 0.8),
+            text_scale=0.07,
+            text_align=TextNode.ACenter,
+            text_font=PiratesGlobals.getPirateOutlineFont())
         return
 
     def setTime(self, currTime):
@@ -130,10 +144,32 @@ class PiratesTimer(OTPTimer.OTPTimer):
         self.stopAlarm()
 
     def createTimerText(self, titleText, titleFg, infoText):
-        self.titleText = DirectFrame(parent=self, state=DGG.DISABLED, relief=None, text=titleText, text_align=TextNode.ACenter, text_scale=0.05, text_fg=titleFg, text_shadow=PiratesGuiGlobals.TextShadow, text_font=PiratesGlobals.getPirateOutlineFont(), textMayChange=1, text_wordwrap=6, pos=(0,
-                                                                                                                                                                                                                                                                                                    0,
-                                                                                                                                                                                                                                                                                                    0.7))
-        self.infoText = DirectFrame(parent=self, state=DGG.DISABLED, relief=None, text=infoText, text_align=TextNode.ACenter, text_scale=0.14, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_font=PiratesGlobals.getPirateOutlineFont(), textMayChange=1, text_wordwrap=6, pos=(0, 0, -0.75))
+        self.titleText = DirectFrame(
+            parent=self,
+            state=DGG.DISABLED,
+            relief=None,
+            text=titleText,
+            text_align=TextNode.ACenter,
+            text_scale=0.05,
+            text_fg=titleFg,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            textMayChange=1,
+            text_wordwrap=6,
+            pos=(0, 0, 0.7))
+        self.infoText = DirectFrame(
+            parent=self,
+            state=DGG.DISABLED,
+            relief=None,
+            text=infoText,
+            text_align=TextNode.ACenter,
+            text_scale=0.14,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            textMayChange=1,
+            text_wordwrap=6,
+            pos=(0, 0, -0.75))
         return
 
     def createCancelButton(self, cancelCallback, cancelText):
@@ -141,17 +177,27 @@ class PiratesTimer(OTPTimer.OTPTimer):
             return
         if not base.localAvatar.isCrewCaptain():
             return
-        self.cancelButton = GuiButton.GuiButton(parent=self, helpText=cancelText, command=cancelCallback, borderWidth=PiratesGuiGlobals.BorderWidth, text=PLocalizer.Cancel, frameColor=PiratesGuiGlobals.ButtonColor3, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0,
-                                                                                                                                                                                                                                                                     0.015), frameSize=(-0.09, 0.09, -0.015, 0.065), text_scale=PiratesGuiGlobals.TextScaleLarge, pad=(0.01,
-                                                                                                                                                                                                                                                                                                                                                                       0.01), pos=(0,
-                                                                                                                                                                                                                                                                                                                                                                                   0,
-                                                                                                                                                                                                                                                                                                                                                                                   -1.55), scale=2.3)
+        self.cancelButton = GuiButton.GuiButton(
+            parent=self,
+            helpText=cancelText,
+            command=cancelCallback,
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            text=PLocalizer.Cancel,
+            frameColor=PiratesGuiGlobals.ButtonColor3,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_pos=(0, 0.015),
+            frameSize=(-0.09, 0.09, -0.015, 0.065),
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            pad=(0.01, 0.01),
+            pos=(0, 0, -1.55),
+            scale=2.3)
 
     def startDial(self, t=6):
         if self.dialInterval:
             self.dialInterval.pause()
             self.dialInterval = None
-        self.dialInterval = LerpHprInterval(self.bgDial, t, Vec3(0, 0, 360), Vec3(0, 0, 0))
+        self.dialInterval = LerpHprInterval(self.bgDial, t, Vec3(0, 0, 360),
+                                            Vec3(0, 0, 0))
         self.dialInterval.loop()
         return
 
@@ -167,7 +213,15 @@ class PiratesTimer(OTPTimer.OTPTimer):
             origScale = self.getScale()
             scale = origScale * 1.2
             t = 0.5
-            self.alarmInterval = Sequence(Parallel(SoundInterval(self.alarmSfx), LerpScaleInterval(self, t, scale, origScale, blendType='noBlend')), Parallel(SoundInterval(self.alarmSfx), LerpScaleInterval(self, t, origScale, scale, blendType='noBlend')))
+            self.alarmInterval = Sequence(
+                Parallel(
+                    SoundInterval(self.alarmSfx),
+                    LerpScaleInterval(
+                        self, t, scale, origScale, blendType='noBlend')),
+                Parallel(
+                    SoundInterval(self.alarmSfx),
+                    LerpScaleInterval(
+                        self, t, origScale, scale, blendType='noBlend')))
             self.alarmInterval.loop()
             self.startDial(t=2)
 
@@ -185,4 +239,6 @@ class PiratesTimer(OTPTimer.OTPTimer):
         self.endTime = endTime
         self.startPosition = startPosition
         self.endPosition = endPosition
+
+
 # okay decompiling .\pirates\piratesgui\PiratesTimer.pyc

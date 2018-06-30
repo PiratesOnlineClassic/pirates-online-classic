@@ -5,6 +5,7 @@ from pirates.quest import Quest, QuestBase
 QUEST_TYPE_AVATAR = 0
 QUEST_TYPE_TM = 1
 
+
 class DistributedQuestOV(DistributedObjectOV, QuestBase.QuestBase, Quest.Quest):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedQuestOV')
 

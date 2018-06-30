@@ -2,8 +2,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase import DirectObject, TaskThreaded
 
 
-class GameServerTestSuite(DirectObject.DirectObject,
-                          TaskThreaded.TaskThreaded):
+class GameServerTestSuite(DirectObject.DirectObject, TaskThreaded.TaskThreaded):
     notify = directNotify.newCategory('GarbageReport')
 
     def __init__(self, cr):
@@ -19,9 +18,9 @@ class GameServerTestSuite(DirectObject.DirectObject,
             def startTimeout(self, name):
                 self.stopTimeout(name)
                 _taskName = self._getTaskName(name)
-                taskMgr.doMethodLater(
-                    self.Timeout, Functor(
-                        self._timeout, _taskName), _taskName)
+                taskMgr.doMethodLater(self.Timeout,
+                                      Functor(self._timeout, _taskName),
+                                      _taskName)
 
             def stopTimeout(self, name):
                 _taskName = self._getTaskName(name)
@@ -45,8 +44,8 @@ class GameServerTestSuite(DirectObject.DirectObject,
             def handleMsg(self, msgType, di):
                 self.parent.cr.handler(msgType, di)
 
-        class TestGetAvatars(TaskThreaded.TaskThread,
-                             TimeoutTest, MsgHandlerTest):
+        class TestGetAvatars(TaskThreaded.TaskThread, TimeoutTest,
+                             MsgHandlerTest):
 
             def setUp(self):
                 self.state = 'request'
@@ -86,7 +85,8 @@ class GameServerTestSuite(DirectObject.DirectObject,
                     self.timeoutName = 'openInterest'
                     self.startTimeout(self.timeoutName)
                     self.handle = self.parent.cr.addInterest(
-                        self.parent.cr.GameGlobalsId, 91504, 'testInterest', doneEvent)
+                        self.parent.cr.GameGlobalsId, 91504, 'testInterest',
+                        doneEvent)
                     self.state = 'waitOpenComplete'
                 else:
                     if self.state == 'modify':
@@ -101,7 +101,8 @@ class GameServerTestSuite(DirectObject.DirectObject,
                         self.timeoutName = 'modifyInterest'
                         self.startTimeout(self.timeoutName)
                         self.parent.cr.alterInterest(
-                            self.handle, self.parent.cr.GameGlobalsId, 91506, 'testInterest', doneEvent)
+                            self.handle, self.parent.cr.GameGlobalsId, 91506,
+                            'testInterest', doneEvent)
                         self.state = 'waitModifyComplete'
                     else:
                         if self.state == 'close':
@@ -123,8 +124,7 @@ class GameServerTestSuite(DirectObject.DirectObject,
                                 self.finished()
                 return
 
-        class TestNonRequiredNonSetFields(
-                TaskThreaded.TaskThread, TimeoutTest):
+        class TestNonRequiredNonSetFields(TaskThreaded.TaskThread, TimeoutTest):
             Timeout = 60
 
             def setUp(self):

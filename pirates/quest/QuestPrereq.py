@@ -6,7 +6,6 @@ from direct.showbase.PythonUtil import POD, makeTuple
 
 
 class QuestPrereq(POD):
-    
 
     def giverMatters(self):
         return hasattr(self, 'giverCanGive')
@@ -19,7 +18,7 @@ class QuestPrereq(POD):
 
 
 class HpAtLeast(QuestPrereq):
-    
+
     DataSet = {'minHp': None}
 
     def __init__(self, minHp):
@@ -30,7 +29,7 @@ class HpAtLeast(QuestPrereq):
 
 
 class SwiftnessAtLeast(QuestPrereq):
-    
+
     DataSet = {'minSwiftness': None}
 
     def __init__(self, minSwiftness):
@@ -41,7 +40,7 @@ class SwiftnessAtLeast(QuestPrereq):
 
 
 class LuckAtLeast(QuestPrereq):
-    
+
     DataSet = {'minLuck': None}
 
     def __init__(self, minLuck):
@@ -52,7 +51,7 @@ class LuckAtLeast(QuestPrereq):
 
 
 class MojoAtLeast(QuestPrereq):
-    
+
     DataSet = {'minMojo': None}
 
     def __init__(self, minMojo):
@@ -63,7 +62,7 @@ class MojoAtLeast(QuestPrereq):
 
 
 class DidQuest(QuestPrereq):
-    
+
     DataSet = {'questIds': None}
 
     def __init__(self, questIds):
@@ -81,7 +80,7 @@ class DidQuest(QuestPrereq):
 
 
 class GetFrom(QuestPrereq):
-    
+
     DataSet = {'questGivers': None}
 
     def __init__(self, questGivers):
@@ -92,4 +91,6 @@ class GetFrom(QuestPrereq):
 
     def giverCanGive(self, giver):
         return giver in self.questGivers
+
+
 # okay decompiling .\pirates\quest\QuestPrereq.pyc

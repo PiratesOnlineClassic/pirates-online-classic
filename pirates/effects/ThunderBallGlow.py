@@ -14,7 +14,6 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class ThunderBallGlow(PooledEffect, EffectController):
-    
 
     def __init__(self, effectParent=None, billboardOffset=1.0):
         PooledEffect.__init__(self)
@@ -37,13 +36,23 @@ class ThunderBallGlow(PooledEffect, EffectController):
 
     def createTrack(self):
         randomness = random.random() / 4.0
-        fadeIn = self.glow.colorInterval(0.25 + randomness, Vec4(0.5, 0.8, 0.9, 0.75), startColor=Vec4(0.5, 0.9, 1, 1), blendType='easeInOut')
-        fadeOut = self.glow.colorInterval(0.25 + randomness, Vec4(0.5, 0.9, 1, 1), startColor=Vec4(0.5, 0.8, 0.9, 0.75), blendType='easeInOut')
+        fadeIn = self.glow.colorInterval(
+            0.25 + randomness,
+            Vec4(0.5, 0.8, 0.9, 0.75),
+            startColor=Vec4(0.5, 0.9, 1, 1),
+            blendType='easeInOut')
+        fadeOut = self.glow.colorInterval(
+            0.25 + randomness,
+            Vec4(0.5, 0.9, 1, 1),
+            startColor=Vec4(0.5, 0.8, 0.9, 0.75),
+            blendType='easeInOut')
         self.fadePulse = Sequence(fadeIn, fadeOut)
         glowPart = self.glow.find('**/glow_aura')
         glowPart.setColorScale(0.25, 0.2, 0.3, 0.75)
-        scaleUp = glowPart.scaleInterval(0.25 + randomness, 1.0, startScale=0.8, blendType='easeInOut')
-        scaleDown = glowPart.scaleInterval(0.25 + randomness, 0.75, startScale=1.0, blendType='easeInOut')
+        scaleUp = glowPart.scaleInterval(
+            0.25 + randomness, 1.0, startScale=0.8, blendType='easeInOut')
+        scaleDown = glowPart.scaleInterval(
+            0.25 + randomness, 0.75, startScale=1.0, blendType='easeInOut')
         self.track1 = Sequence(scaleDown, scaleUp)
 
     def play(self, rate=1):
@@ -84,4 +93,6 @@ class ThunderBallGlow(PooledEffect, EffectController):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
         return
+
+
 # okay decompiling .\pirates\effects\ThunderBallGlow.pyc

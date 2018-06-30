@@ -2,6 +2,7 @@ from direct.fsm.StatePush import FunctionCall, StateVar
 from pirates.pvp import PVPGlobals
 from pirates.ship.ShipRepairSpotMgrBase import ShipRepairSpotMgrBase
 
+
 class ShipRepairSpotMgr(ShipRepairSpotMgrBase):
 
     def __init__(self, cr, shipId):
@@ -20,8 +21,17 @@ class ShipRepairSpotMgr(ShipRepairSpotMgrBase):
 
     def _onShipReady(self):
         ShipRepairSpotMgrBase._onShipReady(self)
-        self._statePushes.extend([FunctionCall(self._evalNeedModels, self._state.validShipClass, self._state.hasTeam), FunctionCall(self._evalNeedHoles, self._state.fullHealth, self._state.needModels), FunctionCall(self._needModelsChanged, self._state.needModels), FunctionCall(self._needHolesChanged, self._state.needHoles),
-         FunctionCall(self._handleRepairSpotIndicesChanged, PVPGlobals.ShipClass2repairLocators[self._ship.shipClass])])
+        self._statePushes.extend([
+            FunctionCall(self._evalNeedModels, self._state.validShipClass,
+                         self._state.hasTeam),
+            FunctionCall(self._evalNeedHoles, self._state.fullHealth,
+                         self._state.needModels),
+            FunctionCall(self._needModelsChanged, self._state.needModels),
+            FunctionCall(self._needHolesChanged, self._state.needHoles),
+            FunctionCall(
+                self._handleRepairSpotIndicesChanged,
+                PVPGlobals.ShipClass2repairLocators[self._ship.shipClass])
+        ])
 
     def _evalNeedModels(self, validShipClass, hasTeam):
         self._state.needModels.set(validShipClass and hasTeam)

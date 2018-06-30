@@ -4,6 +4,7 @@ from panda3d.core import *
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals, TeamUtils
 
+
 class WeaponBaseBase:
     areaCollisionsCreated = 0
     areaCollSphere = None
@@ -79,7 +80,8 @@ class WeaponBaseBase:
         self.createCollisions()
         self.areaCollSphere.reparentTo(self.getRender())
         self.areaCollSphere.setPos(target, pos)
-        radius = self.repository.battleMgr.getModifiedAttackAreaRadius(self.avatar, skillId, ammoSkillId)
+        radius = self.repository.battleMgr.getModifiedAttackAreaRadius(
+            self.avatar, skillId, ammoSkillId)
         self.areaCollSphere.setScale(radius)
         self.areaCollTrav.addCollider(self.areaCollSphere, self.areaCollQueue)
         self.areaCollTrav.traverse(self.getRender())
@@ -91,7 +93,8 @@ class WeaponBaseBase:
         self.createCollisions()
         self.areaCollTube.reparentTo(self.getRender())
         self.areaCollTube.setPosHpr(self, 0, 0, 0, 0, 0, 0)
-        range = self.repository.battleMgr.getModifiedAttackRange(self.avatar, skillId, ammoSkillId)
+        range = self.repository.battleMgr.getModifiedAttackRange(
+            self.avatar, skillId, ammoSkillId)
         self.areaCollTube.setScale(range)
         self.areaCollTrav.addCollider(self.areaCollTube, self.areaCollQueue)
         self.areaCollTrav.traverse(self.getRender())
@@ -106,7 +109,8 @@ class WeaponBaseBase:
         self.createCollisions()
         self.areaCollCone.reparentTo(self.getRender())
         self.areaCollCone.setPosHpr(self.getConeOriginNode(), 0, 0, 0, 0, 0, 0)
-        range = self.repository.battleMgr.getModifiedAttackRange(self.avatar, skillId, ammoSkillId)
+        range = self.repository.battleMgr.getModifiedAttackRange(
+            self.avatar, skillId, ammoSkillId)
         self.areaCollCone.setScale(range)
         self.areaCollTrav.addCollider(self.areaCollCone, self.areaCollQueue)
         self.areaCollTrav.traverse(self.getRender())
@@ -152,7 +156,8 @@ class WeaponBaseBase:
 
                 if not TeamUtils.damageAllowed(potentialTarget, self.avatar):
                     if attackerId and potentialTargetId == attackerId:
-                        if not WeaponGlobals.isAttackAreaSelfDamaging(skillId, ammoSkillId):
+                        if not WeaponGlobals.isAttackAreaSelfDamaging(
+                                skillId, ammoSkillId):
                             continue
                     else:
                         continue
@@ -160,7 +165,8 @@ class WeaponBaseBase:
                 if potentialTarget.gameFSM.state == 'Death':
                     continue
 
-                if not self.repository.battleMgr.obeysPirateCode(self.avatar, potentialTarget):
+                if not self.repository.battleMgr.obeysPirateCode(
+                        self.avatar, potentialTarget):
                     continue
 
                 targets.append(potentialTargetId)

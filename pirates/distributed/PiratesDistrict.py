@@ -36,7 +36,11 @@ class PiratesDistrict(DistributedDistrict):
 
     def setAvatarCount(self, avatarCount):
         self.avatarCount = avatarCount
-        messenger.send('PiratesDistrict-updateAvCounts', sentArgs=[self.doId, self.name, self.avatarCount, self.newAvatarCount])
+        messenger.send(
+            'PiratesDistrict-updateAvCounts',
+            sentArgs=[
+                self.doId, self.name, self.avatarCount, self.newAvatarCount
+            ])
 
     def getAvatarCount(self):
         return self.avatarCount
@@ -53,4 +57,3 @@ class PiratesDistrict(DistributedDistrict):
 
     def getName(self):
         return self.name
-

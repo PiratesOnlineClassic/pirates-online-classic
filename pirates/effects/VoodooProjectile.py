@@ -25,7 +25,8 @@ class VoodooProjectile(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleDarkSmoke')
         if not VoodooProjectile.particleDummy:
-            VoodooProjectile.particleDummy = render.attachNewNode(ModelNode('VoodooProjectileParticleDummy'))
+            VoodooProjectile.particleDummy = render.attachNewNode(
+                ModelNode('VoodooProjectileParticleDummy'))
             VoodooProjectile.particleDummy.setDepthWrite(0)
             VoodooProjectile.particleDummy.setLightOff()
             VoodooProjectile.particleDummy.setColorScaleOff()
@@ -39,12 +40,27 @@ class VoodooProjectile(PooledEffect, EffectController):
         self.p0.setEmitter('DiscEmitter')
         self.f.addParticles(self.p0)
         self.motion_color = [
-         Vec4(0.5, 0.2, 1.0, 1.0), Vec4(0.5, 0.2, 1.0, 1.0), Vec4(0.5, 0.2, 1.0, 1.0), Vec4(0.5, 0.2, 1.0, 1.0), Vec4(0.5, 0.2, 1.0, 1.0)]
+            Vec4(0.5, 0.2, 1.0, 1.0),
+            Vec4(0.5, 0.2, 1.0, 1.0),
+            Vec4(0.5, 0.2, 1.0, 1.0),
+            Vec4(0.5, 0.2, 1.0, 1.0),
+            Vec4(0.5, 0.2, 1.0, 1.0)
+        ]
         r = 0.2
-        vertex_list = [Vec4(r, 0.0, r, 1.0), Vec4(r, 0.0, -r, 1.0), Vec4(-r, 0.0, -r, 1.0), Vec4(-r, 0.0, r, 1.0), Vec4(r, 0.0, r, 1.0)]
-        self.motion_trail = PolyTrail.PolyTrail(None, vertex_list, self.motion_color)
+        vertex_list = [
+            Vec4(r, 0.0, r, 1.0),
+            Vec4(r, 0.0, -r, 1.0),
+            Vec4(-r, 0.0, -r, 1.0),
+            Vec4(-r, 0.0, r, 1.0),
+            Vec4(r, 0.0, r, 1.0)
+        ]
+        self.motion_trail = PolyTrail.PolyTrail(None, vertex_list,
+                                                self.motion_color)
         self.motion_trail.reparentTo(self)
-        self.motion_trail.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+        self.motion_trail.node().setAttrib(
+            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                  ColorBlendAttrib.OIncomingAlpha,
+                                  ColorBlendAttrib.OOne))
         self.p0.setPoolSize(256)
         self.p0.setBirthRate(0.01)
         self.p0.setLitterSize(1)
@@ -79,8 +95,11 @@ class VoodooProjectile(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.5, 0.2, 1.0, 0.25), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingAlpha,
+                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.5, 0.2, 1.0, 0.25), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(-0.25)
         self.p0.emitter.setAmplitudeSpread(0.25)
@@ -91,38 +110,61 @@ class VoodooProjectile(PooledEffect, EffectController):
         return
 
     def createTrack(self, targetPos, speed, target, motion_color):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(1.5), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100.0), Wait(1.5),
+            Func(self.cleanUpEffect))
         try:
             if target:
-                throwTrack = ProjectileInterval(self, startPos=self.getPos(), endPos=targetPos, duration=speed, gravityMult=1.0)
+                throwTrack = ProjectileInterval(
+                    self,
+                    startPos=self.getPos(),
+                    endPos=targetPos,
+                    duration=speed,
+                    gravityMult=1.0)
             else:
                 endZ = 0
                 if targetPos[2] < endZ:
                     endZ = targetPos[2]
-                throwTrack = ProjectileInterval(self, endZ=endZ, startPos=self.getPos(), wayPoint=targetPos, timeToWayPoint=1.0, gravityMult=1.0)
-        except StandardError, e:
+                throwTrack = ProjectileInterval(
+                    self,
+                    endZ=endZ,
+                    startPos=self.getPos(),
+                    wayPoint=targetPos,
+                    timeToWayPoint=1.0,
+                    gravityMult=1.0)
+        except Exception as e:
             throwTrack = None
         else:
             if throwTrack:
                 if not motion_color:
                     motion_color = self.motion_color
                     self.motion_trail.setVertexColors(motion_color)
-                movement = Sequence(Func(self.motion_trail.beginTrail), throwTrack, Func(self.motion_trail.endTrail))
-                self.track = Sequence(self.startEffect, movement, self.endEffect)
+                movement = Sequence(
+                    Func(self.motion_trail.beginTrail), throwTrack,
+                    Func(self.motion_trail.endTrail))
+                self.track = Sequence(self.startEffect, movement,
+                                      self.endEffect)
             self.track = Wait(2)
 
         return
 
     def play(self, targetPos, time, target):
-        motion_color = [Vec4(1.0, 1.0, 1.0, 1.0), self.effectColor, Vec4(1.0, 1.0, 1.0, 1.0), self.effectColor, Vec4(1.0, 1.0, 1.0, 1.0)]
+        motion_color = [
+            Vec4(1.0, 1.0, 1.0, 1.0), self.effectColor,
+            Vec4(1.0, 1.0, 1.0, 1.0), self.effectColor,
+            Vec4(1.0, 1.0, 1.0, 1.0)
+        ]
         self.createTrack(targetPos, time, target, motion_color)
         self.track.start()
 
     def setEffectColor(self, color):
         self.effectColor = Vec4(1, 1, 1, 1) - (Vec4(1, 1, 1, 1) - color) / 1.5
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), self.effectColor, 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), self.effectColor, 1)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -133,4 +175,6 @@ class VoodooProjectile(PooledEffect, EffectController):
         self.motion_trail.destroy()
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\VoodooProjectile.pyc

@@ -2,8 +2,11 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.DistributedSmoothNodeAI import DistributedSmoothNodeAI
 from pirates.distributed.DistributedTargetableObjectAI import DistributedTargetableObjectAI
 
-class DistributedMovingObjectAI(DistributedSmoothNodeAI, DistributedTargetableObjectAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedMovingObjectAI')
+
+class DistributedMovingObjectAI(DistributedSmoothNodeAI,
+                                DistributedTargetableObjectAI):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedMovingObjectAI')
 
     def __init__(self, air):
         DistributedSmoothNodeAI.__init__(self, air)

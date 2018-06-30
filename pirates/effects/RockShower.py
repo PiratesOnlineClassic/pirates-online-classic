@@ -13,7 +13,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class RockShower(PooledEffect, EffectController):
-    
+
     cardScale = 128.0
 
     def __init__(self):
@@ -22,7 +22,8 @@ class RockShower(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleRockShower')
         if not RockShower.particleDummy:
-            RockShower.particleDummy = render.attachNewNode(ModelNode('RockShowerParticleDummy'))
+            RockShower.particleDummy = render.attachNewNode(
+                ModelNode('RockShowerParticleDummy'))
             RockShower.particleDummy.setDepthWrite(0)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
@@ -78,7 +79,12 @@ class RockShower(PooledEffect, EffectController):
         self.p0.emitter.setCubicLerping(0)
 
     def createTrack(self):
-        self.track = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.3), Func(self.p0.setBirthRate, 100), Wait(3.0), Func(self.cleanUpEffect))
+        self.track = Sequence(
+            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self), Wait(0.3),
+            Func(self.p0.setBirthRate, 100), Wait(3.0),
+            Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -88,4 +94,6 @@ class RockShower(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\RockShower.pyc

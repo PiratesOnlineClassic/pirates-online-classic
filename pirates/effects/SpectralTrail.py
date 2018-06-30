@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SpectralTrail(PooledEffect, EffectController):
-    
+
     cardScale = 128.0
 
     def __init__(self):
@@ -21,7 +21,8 @@ class SpectralTrail(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/darkglow')
         self.card = model.find('**/effectDarkGlow2')
         if not SpectralTrail.particleDummy:
-            SpectralTrail.particleDummy = render.attachNewNode(ModelNode('SpectralTrailParticleDummy'))
+            SpectralTrail.particleDummy = render.attachNewNode(
+                ModelNode('SpectralTrailParticleDummy'))
             SpectralTrail.particleDummy.setDepthWrite(0)
             SpectralTrail.particleDummy.setLightOff()
             SpectralTrail.particleDummy.setColorScaleOff()
@@ -60,8 +61,11 @@ class SpectralTrail(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.65, 0.65, 1.0, 1.0), Vec4(0.0, 0.0, 0.0, 0.0), 1)
+        self.p0.renderer.setColorBlendMode(
+            ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor,
+            ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(0.65, 0.65, 1.0, 1.0), Vec4(0.0, 0.0, 0.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(0.0)
         self.p0.emitter.setAmplitudeSpread(0.5)
@@ -71,8 +75,13 @@ class SpectralTrail(PooledEffect, EffectController):
         self.p0.emitter.setRadius(0.5)
 
     def createTrack(self, rate=1):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(3.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100.0), Wait(3.0),
+            Func(self.cleanUpEffect))
         self.track = Parallel(self.startEffect, Wait(4.0), self.endEffect)
 
     def cleanUpEffect(self):
@@ -83,4 +92,6 @@ class SpectralTrail(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\SpectralTrail.pyc

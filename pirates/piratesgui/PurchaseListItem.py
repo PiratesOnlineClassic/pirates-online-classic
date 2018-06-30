@@ -18,18 +18,38 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class PurchaseListItem(InventoryListItem):
-    
+
     itemCount = 0
     itemCost = 0
     itemQuantity = 0
 
-    def __init__(self, data, trade=0, buy=0, sell=0, use=0, weapon=0, isDisabled=0, **kw):
+    def __init__(self,
+                 data,
+                 trade=0,
+                 buy=0,
+                 sell=0,
+                 use=0,
+                 weapon=0,
+                 isDisabled=0,
+                 **kw):
         width = PiratesGuiGlobals.PurchaseListItemWidth
         height = PiratesGuiGlobals.PurchaseListItemHeight
-        optiondefs = (
-         ('relief', None, None), ('state', DGG.NORMAL, None), ('frameSize', (0, width, 0, height), None), ('pressEffect', 0, None), ('command', self.sendEvents, None))
+        optiondefs = (('relief', None, None), ('state', DGG.NORMAL, None),
+                      ('frameSize', (0, width, 0, height),
+                       None), ('pressEffect', 0, None), ('command',
+                                                         self.sendEvents, None))
         self.defineoptions(kw, optiondefs)
-        InventoryListItem.__init__(self, data, trade=trade, buy=buy, sell=sell, use=use, weapon=weapon, isDisabled=isDisabled, width=PiratesGuiGlobals.PurchaseListItemWidth, height=PiratesGuiGlobals.PurchaseListItemHeight)
+        InventoryListItem.__init__(
+            self,
+            data,
+            trade=trade,
+            buy=buy,
+            sell=sell,
+            use=use,
+            weapon=weapon,
+            isDisabled=isDisabled,
+            width=PiratesGuiGlobals.PurchaseListItemWidth,
+            height=PiratesGuiGlobals.PurchaseListItemHeight)
         self.initialiseoptions(PurchaseListItem)
         self.createGui()
         self.bind(DGG.ENTER, self.highlightStart)
@@ -54,28 +74,58 @@ class PurchaseListItem(InventoryListItem):
         self.itemCount += 1
         self.itemQuantity = self.quantity
         self.itemCost = self.price
-        self.picture = DirectFrame(parent=self, relief=None, state=DGG.DISABLED, pos=(0.035,
-                                                                                      0,
-                                                                                      0.025))
-        self.quantityLabel = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text=str(self.quantity), text_fg=PiratesGuiGlobals.TextFG2, text_scale=PiratesGuiGlobals.TextScaleSmall * PLocalizer.getHeadingScale(2), text_align=TextNode.ARight, text_wordwrap=11, pos=(0.1225,
-                                                                                                                                                                                                                                                                                   0,
-                                                                                                                                                                                                                                                                                   0.015))
-        self.nameTag = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text=self.name, text_fg=PiratesGuiGlobals.TextFG2, text_scale=PiratesGuiGlobals.TextScaleSmall * PLocalizer.getHeadingScale(2), text_align=TextNode.ALeft, pos=(0.13,
-                                                                                                                                                                                                                                                 0,
-                                                                                                                                                                                                                                                 0.015))
-        self.costText = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, image=InventoryListItem.coinImage, image_scale=0.12, image_pos=Vec3(-0.005, 0, 0.0125), text=str(self.price), text_fg=PiratesGuiGlobals.TextFG2, text_scale=PiratesGuiGlobals.TextScaleSmall, text_align=TextNode.ARight, text_wordwrap=11, text_pos=(-0.03, 0, 0), pos=(self.width - 0.035, 0, 0.015), text_font=PiratesGlobals.getInterfaceFont())
+        self.picture = DirectFrame(
+            parent=self, relief=None, state=DGG.DISABLED, pos=(0.035, 0, 0.025))
+        self.quantityLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            state=DGG.DISABLED,
+            text=str(self.quantity),
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_scale=PiratesGuiGlobals.TextScaleSmall *
+            PLocalizer.getHeadingScale(2),
+            text_align=TextNode.ARight,
+            text_wordwrap=11,
+            pos=(0.1225, 0, 0.015))
+        self.nameTag = DirectLabel(
+            parent=self,
+            relief=None,
+            state=DGG.DISABLED,
+            text=self.name,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_scale=PiratesGuiGlobals.TextScaleSmall *
+            PLocalizer.getHeadingScale(2),
+            text_align=TextNode.ALeft,
+            pos=(0.13, 0, 0.015))
+        self.costText = DirectLabel(
+            parent=self,
+            relief=None,
+            state=DGG.DISABLED,
+            image=InventoryListItem.coinImage,
+            image_scale=0.12,
+            image_pos=Vec3(-0.005, 0, 0.0125),
+            text=str(self.price),
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_scale=PiratesGuiGlobals.TextScaleSmall,
+            text_align=TextNode.ARight,
+            text_wordwrap=11,
+            text_pos=(-0.03, 0, 0),
+            pos=(self.width - 0.035, 0, 0.015),
+            text_font=PiratesGlobals.getInterfaceFont())
         itemClass = EconomyGlobals.getItemCategory(itemId)
         if itemClass == ItemType.WEAPON or itemClass == ItemType.POUCH:
             asset = EconomyGlobals.getItemIcons(itemId)
             if asset:
-                self.picture['geom'] = InventoryListItem.weaponIcons.find('**/%s*' % asset)
+                self.picture['geom'] = InventoryListItem.weaponIcons.find(
+                    '**/%s*' % asset)
                 self.picture['geom_scale'] = 0.04
                 self.picture['geom_pos'] = (0, 0, 0)
         else:
             if itemClass == ItemType.CONSUMABLE:
                 asset = EconomyGlobals.getItemIcons(itemId)
                 if asset:
-                    self.picture['geom'] = InventoryListItem.skillIcons.find('**/%s*' % asset)
+                    self.picture['geom'] = InventoryListItem.skillIcons.find(
+                        '**/%s*' % asset)
                     self.picture['geom_scale'] = 0.04
                     self.picture['geom_pos'] = (0, 0, 0)
         if InventoryType.begin_WeaponCannonAmmo <= itemId and itemId <= InventoryType.end_WeaponCannonAmmo or InventoryType.begin_WeaponPistolAmmo <= itemId and itemId <= InventoryType.end_WeaponGrenadeAmmo or InventoryType.begin_WeaponDaggerAmmo <= itemId and itemId <= InventoryType.end_WeaponDaggerAmmo:
@@ -83,12 +133,14 @@ class PurchaseListItem(InventoryListItem):
             if skillId:
                 asset = WeaponGlobals.getSkillIcon(skillId)
                 if asset:
-                    self.picture['geom'] = InventoryListItem.skillIcons.find('**/%s' % asset)
+                    self.picture['geom'] = InventoryListItem.skillIcons.find(
+                        '**/%s' % asset)
                     self.picture['geom_scale'] = 0.06
                     self.picture['geom_pos'] = (0, 0, 0)
         else:
             if InventoryType.SmallBottle <= itemId and itemId <= InventoryType.LargeBottle:
-                self.picture['geom'] = self.topGui.find('**/main_gui_ship_bottle')
+                self.picture['geom'] = self.topGui.find(
+                    '**/main_gui_ship_bottle')
                 self.picture['geom_scale'] = 0.1
                 self.picture['geom_pos'] = (0, 0, 0)
         self.flattenStrong()
@@ -100,13 +152,18 @@ class PurchaseListItem(InventoryListItem):
         InventoryListItem.destroy(self)
 
     def createHighlight(self, args=None):
-        self.quantityLabel['text_fg'] = self.costText['text_fg'] = self.nameTag['text_fg'] = PiratesGuiGlobals.TextFG6
+        self.quantityLabel['text_fg'] = self.costText['text_fg'] = self.nameTag[
+            'text_fg'] = PiratesGuiGlobals.TextFG6
 
     def highlightStart(self, event=None):
-        taskMgr.doMethodLater(PiratesGuiGlobals.HelpPopupTime, self.createHighlight, 'itemHighlightTask')
+        taskMgr.doMethodLater(PiratesGuiGlobals.HelpPopupTime,
+                              self.createHighlight, 'itemHighlightTask')
         self.createHighlight()
 
     def highlightStop(self, event=None):
         taskMgr.remove('itemHighlightTask')
-        self.quantityLabel['text_fg'] = self.costText['text_fg'] = self.nameTag['text_fg'] = PiratesGuiGlobals.TextFG2
+        self.quantityLabel['text_fg'] = self.costText['text_fg'] = self.nameTag[
+            'text_fg'] = PiratesGuiGlobals.TextFG2
+
+
 # okay decompiling .\pirates\piratesgui\PurchaseListItem.pyc

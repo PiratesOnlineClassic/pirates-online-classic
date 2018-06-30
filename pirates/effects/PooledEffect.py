@@ -2,6 +2,7 @@ from direct.showbase import Pool
 from direct.showbase.DirectObject import DirectObject
 from pandac.PandaModules import *
 
+
 class PooledEffect(DirectObject, NodePath):
     pool = None
     poolLimit = 124

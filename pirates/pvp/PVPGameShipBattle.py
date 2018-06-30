@@ -4,8 +4,9 @@ from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.pvp.PVPGameBase import PVPGameBase
 from pirates.ship import DistributedShip
 
+
 class PVPGameShipBattle(PVPGameBase):
-    
+
     notify = directNotify.newCategory('PVPGameShipBattle')
 
     def __init__(self, cr):
@@ -23,7 +24,8 @@ class PVPGameShipBattle(PVPGameBase):
 
     def announceGenerate(self):
         PVPGameBase.announceGenerate(self)
-        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects([self.instanceId], eachCallback=self.instanceGenerated)
+        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects(
+            [self.instanceId], eachCallback=self.instanceGenerated)
         self.cr.loadingScreen.show()
         localAvatar.motionFSM.off()
 
@@ -54,14 +56,16 @@ class PVPGameShipBattle(PVPGameBase):
         self.maxTeamScore = maxScore
 
     def setShipDoId(self, shipId):
-        self.shipRequest = base.cr.relatedObjectMgr.requestObjects([shipId], eachCallback=self._shipArrived)
+        self.shipRequest = base.cr.relatedObjectMgr.requestObjects(
+            [shipId], eachCallback=self._shipArrived)
 
     def _shipArrived(self, ship):
         self.localShip = ship
         ship.registerBuildCompleteFunction(Functor(self._boardShip, ship))
 
     def _boardShip(self, ship):
-        self.acceptOnce(ship.uniqueName('localAvBoardedShip'), self._boardShipDone)
+        self.acceptOnce(
+            ship.uniqueName('localAvBoardedShip'), self._boardShipDone)
         ship.localAvatarInstantBoard()
 
     def _boardShipDone(self):
@@ -90,9 +94,13 @@ class PVPGameShipBattle(PVPGameBase):
     def setScoreList(self, teams, scores):
         self.scoreList = []
         for currIdx in range(len(teams)):
-            if teams[currIdx] > 1000 and teams[currIdx] != localAvatar.getDoId():
+            if teams[currIdx] > 1000 and teams[currIdx] != localAvatar.getDoId(
+            ):
                 continue
-            self.scoreList.append({'Team': teams[currIdx], 'Score': scores[currIdx]})
+            self.scoreList.append({
+                'Team': teams[currIdx],
+                'Score': scores[currIdx]
+            })
 
         self.scoreList.sort(self.sortScores)
         print 'got new score list %s' % self.scoreList
@@ -108,7 +116,12 @@ class PVPGameShipBattle(PVPGameBase):
         else:
             return team1 - team2
 
-    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+    def createNewItem(self,
+                      item,
+                      parent,
+                      itemType=None,
+                      columnWidths=[],
+                      color=None):
         itemColorScale = None
         team = item.get('Team')
         score = item.get('Score')
@@ -116,7 +129,8 @@ class PVPGameShipBattle(PVPGameBase):
             if self.prevTeamScore != None and score < self.prevTeamScore:
                 itemColorScale = (1, 0, 0)
             self.prevTeamScore = score
-        return MiniScoreItemGui(item, parent, self.instance, itemColorScale, self.instance.gameRules)
+        return MiniScoreItemGui(item, parent, self.instance, itemColorScale,
+                                self.instance.gameRules)
 
     def getScoreText(self, scoreValue):
         team = scoreValue.get('Team')

@@ -9,8 +9,8 @@ from pirates.ai import HolidayGlobals
 from pirates.chat.PChatInputSpeedChat import PChatInputSpeedChat
 from pirates.economy import (AccessoriesStoreGUI, BarberStoreGUI,
                              JewelryStoreGUI, StoreGUI, TattooStoreGUI)
-from pirates.makeapirate import (BarberGlobals, ClothingGlobals,
-                                 JewelryGlobals, TattooGlobals)
+from pirates.makeapirate import (BarberGlobals, ClothingGlobals, JewelryGlobals,
+                                 TattooGlobals)
 from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 
@@ -22,7 +22,9 @@ messages = {
     4: PLocalizer.JollyRogerCurseIndoors,
     5: PLocalizer.JollyRogerCurseOutdoors,
     6: PLocalizer.JollyRogerCurseJail,
-    7: PLocalizer.JollyRogerCurseEnd}
+    7: PLocalizer.JollyRogerCurseEnd
+}
+
 
 class NewsManager(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('NewsManager')
@@ -43,9 +45,15 @@ class NewsManager(DistributedObject.DistributedObject):
 
     def displayMessage(self, messageId):
         message = messages.get(messageId)
-        if self.inNewsWorld() and not self.inTutorial(level=PiratesGlobals.TUT_GOT_COMPASS):
-            base.localAvatar.guiMgr.messageStack.addModalTextMessage(message, seconds=45, priority=0,
-                color=PiratesGuiGlobals.TextFG14, icon=('admin', ''), suffix='_f')
+        if self.inNewsWorld(
+        ) and not self.inTutorial(level=PiratesGlobals.TUT_GOT_COMPASS):
+            base.localAvatar.guiMgr.messageStack.addModalTextMessage(
+                message,
+                seconds=45,
+                priority=0,
+                color=PiratesGuiGlobals.TextFG14,
+                icon=('admin', ''),
+                suffix='_f')
 
             base.chatAssistant.receiveGameMessage(message)
 
@@ -54,8 +62,13 @@ class NewsManager(DistributedObject.DistributedObject):
         taskMgr.remove('showHolidayMessage-holidayId:' + str(holidayId))
         if not hasattr(base, 'localAvatar'):
             return
-        if base.localAvatar.getTutorialState() == 0 or self.inNewsWorld() == None:
-            taskMgr.doMethodLater(15, self.showHolidayMessage, 'showHolidayMessage-holidayId:' + str(holidayId), extraArgs=[holidayId, msgType])
+        if base.localAvatar.getTutorialState() == 0 or self.inNewsWorld(
+        ) == None:
+            taskMgr.doMethodLater(
+                15,
+                self.showHolidayMessage,
+                'showHolidayMessage-holidayId:' + str(holidayId),
+                extraArgs=[holidayId, msgType])
             return
         if msgType == 1:
             hours, minutes = self.getTimeRemaining(holidayId)
@@ -64,9 +77,16 @@ class NewsManager(DistributedObject.DistributedObject):
         elif msgType == 0:
             message = HolidayGlobals.getHolidayEndMsg(holidayId)
             chatMessage = HolidayGlobals.getHolidayEndChatMsg(holidayId)
-        if self.inNewsWorld() and not self.inTutorial(level=PiratesGlobals.TUT_GOT_COMPASS):
+        if self.inNewsWorld(
+        ) and not self.inTutorial(level=PiratesGlobals.TUT_GOT_COMPASS):
             if message:
-                base.localAvatar.guiMgr.messageStack.addModalTextMessage(message, seconds=45, priority=0, color=PiratesGuiGlobals.TextFG14, icon=(HolidayGlobals.getHolidayIcon(holidayId), ''), suffix='_f')
+                base.localAvatar.guiMgr.messageStack.addModalTextMessage(
+                    message,
+                    seconds=45,
+                    priority=0,
+                    color=PiratesGuiGlobals.TextFG14,
+                    icon=(HolidayGlobals.getHolidayIcon(holidayId), ''),
+                    suffix='_f')
             if chatMessage:
                 base.chatAssistant.receiveGameMessage(chatMessage)
 
@@ -75,7 +95,8 @@ class NewsManager(DistributedObject.DistributedObject):
             self.notify.debug('setHolidayId: Starting Holiday %s' % holidayId)
             self.holidayIdList.append(holidayId)
             base.setHoliday(holidayId, 1)
-            AccessoriesStoreGUI.AccessoriesStoreGUI.holidayIdList.append(holidayId)
+            AccessoriesStoreGUI.AccessoriesStoreGUI.holidayIdList.append(
+                holidayId)
             JewelryStoreGUI.JewelryStoreGUI.holidayIdList.append(holidayId)
             BarberStoreGUI.BarberStoreGUI.holidayIdList.append(holidayId)
             TattooStoreGUI.TattooStoreGUI.holidayIdList.append(holidayId)
@@ -95,14 +116,16 @@ class NewsManager(DistributedObject.DistributedObject):
                 Freebooter.AllAccessHoliday = True
                 if localAvatar.guiMgr.prevTag:
                     localAvatar.guiMgr.prevTag.hide()
-            messenger.send('HolidayStarted', [HolidayGlobals.getHolidayName(holidayId)])
+            messenger.send('HolidayStarted',
+                           [HolidayGlobals.getHolidayName(holidayId)])
 
     def endHoliday(self, holidayId):
         if holidayId in self.holidayIdList:
             self.notify.debug('setHolidayId: Ending Holiday %s' % holidayId)
             self.holidayIdList.remove(holidayId)
             base.setHoliday(holidayId, 0)
-            AccessoriesStoreGUI.AccessoriesStoreGUI.holidayIdList.remove(holidayId)
+            AccessoriesStoreGUI.AccessoriesStoreGUI.holidayIdList.remove(
+                holidayId)
             JewelryStoreGUI.JewelryStoreGUI.holidayIdList.remove(holidayId)
             BarberStoreGUI.BarberStoreGUI.holidayIdList.remove(holidayId)
             TattooStoreGUI.TattooStoreGUI.holidayIdList.remove(holidayId)
@@ -113,7 +136,8 @@ class NewsManager(DistributedObject.DistributedObject):
                 self.multiplyAllAccessories(2)
             if holidayId == PiratesGlobals.ALLACCESSWEEKEND:
                 Freebooter.AllAccessHoliday = False
-            messenger.send('HolidayEnded', [HolidayGlobals.getHolidayName(holidayId)])
+            messenger.send('HolidayEnded',
+                           [HolidayGlobals.getHolidayName(holidayId)])
 
     def setHolidayIdList(self, holidayIdArray):
         holidayIdList = []
@@ -166,19 +190,18 @@ class NewsManager(DistributedObject.DistributedObject):
     def getTimeRemaining(self, holidayId):
         t = self.holidayEndTimes.get(holidayId, -1)
         if t == -1:
-            return [
-             0, 0]
+            return [0, 0]
         t = int(t)
         epochNow = int(time.time())
         epochRemain = t - epochNow
         minutes, seconds = divmod(epochRemain, 60)
         hours, minutes = divmod(minutes, 60)
-        return [
-         hours, minutes]
+        return [hours, minutes]
 
     def displayHolidayStatus(self):
         if not self.holidayIdList:
-            base.chatAssistant.receiveGameMessage(PLocalizer.NO_CURRENT_HOLIDAYS)
+            base.chatAssistant.receiveGameMessage(
+                PLocalizer.NO_CURRENT_HOLIDAYS)
             return
         for holidayId in self.holidayIdList:
             h, m = self.getTimeRemaining(holidayId)

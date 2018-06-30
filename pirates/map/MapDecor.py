@@ -34,7 +34,9 @@ class Billboard(Item):
         self.setDepthTest(0)
 
     def _initBillboard(self, nodePath):
-        self.setEffect(BillboardEffect.make(Vec3(0, 0, 1), True, False, 0, nodePath, Point3(0)))
+        self.setEffect(
+            BillboardEffect.make(
+                Vec3(0, 0, 1), True, False, 0, nodePath, Point3(0)))
         self.node().setBounds(BoundingSphere(Point3(0), 0.15))
 
     def updateZoom(self, zoom):
@@ -43,7 +45,13 @@ class Billboard(Item):
 
 class Model(Item):
 
-    def __init__(self, name, modelName, scale=1.0, modelPath=None, *args, **kwargs):
+    def __init__(self,
+                 name,
+                 modelName,
+                 scale=1.0,
+                 modelPath=None,
+                 *args,
+                 **kwargs):
         Item.__init__(self, name, *args, **kwargs)
         self._initModel(modelName, scale, modelPath)
 
@@ -76,7 +84,14 @@ class Model(Item):
 
 class PickableModel(Model):
 
-    def __init__(self, name, modelName, scale=1.0, collisionIndex=17, modelPath=None, *args, **kwargs):
+    def __init__(self,
+                 name,
+                 modelName,
+                 scale=1.0,
+                 collisionIndex=17,
+                 modelPath=None,
+                 *args,
+                 **kwargs):
         Model.__init__(self, name, modelName, scale, modelPath, *args, **kwargs)
         bm = BitMask32.bit(collisionIndex)
         cGeom = self.geom.find('**/+CollisionNode;+s')
@@ -87,7 +102,15 @@ class PickableModel(Model):
 
 class BillboardModel(Billboard, PickableModel):
 
-    def __init__(self, name, modelName, nodePath=NodePath(), offset=0.0, scale=1.0, collisionIndex=17, *args, **kwargs):
+    def __init__(self,
+                 name,
+                 modelName,
+                 nodePath=NodePath(),
+                 offset=0.0,
+                 scale=1.0,
+                 collisionIndex=17,
+                 *args,
+                 **kwargs):
         Billboard.__init__(self, name, nodePath)
         PickableModel.__init__(self, modelName, scale, collisionIndex)
         self.geom.setY(-(offset + 0.0075))
@@ -103,8 +126,10 @@ class Ship(Item):
         self.shipModel.reparentTo(self)
         self.shipModel.setScale(0.13)
         self.shipModel.setTwoSided(1)
-        formattedName = '\x01smallCaps\x01\x01slant\x01' + name.replace(' ', '\n') + '\x02\x02'
-        self.text = Text(name + '-text', NodePath(), 0.0, formattedName, 0, scale=0.017)
+        formattedName = '\x01smallCaps\x01\x01slant\x01' + name.replace(
+            ' ', '\n') + '\x02\x02'
+        self.text = Text(
+            name + '-text', NodePath(), 0.0, formattedName, 0, scale=0.017)
         self.text.reparentTo(self)
         r = self.shipModel.getBounds().getRadius()
         self.text.setPos(0, -r * 0.75, 0.001)
@@ -132,8 +157,18 @@ class Ship(Item):
 
 class Island(PickableModel):
 
-    def __init__(self, name, islandUid, modelName, isTeleportIsland, scale=1.0, collisionIndex=17, stencilId=0, *args, **kwargs):
-        PickableModel.__init__(self, name, modelName, (scale / 160.0), collisionIndex, *args, **kwargs)
+    def __init__(self,
+                 name,
+                 islandUid,
+                 modelName,
+                 isTeleportIsland,
+                 scale=1.0,
+                 collisionIndex=17,
+                 stencilId=0,
+                 *args,
+                 **kwargs):
+        PickableModel.__init__(self, name, modelName, (scale / 160.0),
+                               collisionIndex, *args, **kwargs)
         self.setTag('islandUid', islandUid)
         if isTeleportIsland or base.config.GetBool('teleport-all'):
             self.setTag('isTeleportIsland', 'True')
@@ -175,7 +210,15 @@ class Island(PickableModel):
         return self._hasTeleportToken
 
     def updateCanTeleportTo(self):
-        self.setTag('canTeleportTo', str(bool(self._hasTeleportToken or self._isCurrentIsland or self._isPortOfCall or base.cr.distributedDistrict.worldCreator.isPvpIslandByUid(self.getTag('islandUid')) or base.config.GetBool('teleport-all', 0))))
+        self.setTag(
+            'canTeleportTo',
+            str(
+                bool(
+                    self._hasTeleportToken or self._isCurrentIsland or
+                    self._isPortOfCall or
+                    base.cr.distributedDistrict.worldCreator.isPvpIslandByUid(
+                        self.getTag('islandUid')) or
+                    base.config.GetBool('teleport-all', 0))))
 
     def getCanTeleportTo(self):
         return self.getTag('canTeleportTo') == 'True'
@@ -192,11 +235,25 @@ class Island(PickableModel):
 
 class Text(Billboard):
 
-    def __init__(self, name, nodePath, offset, text, stencilId, scale=0.025, *args, **kwargs):
+    def __init__(self,
+                 name,
+                 nodePath,
+                 offset,
+                 text,
+                 stencilId,
+                 scale=0.025,
+                 *args,
+                 **kwargs):
         Billboard.__init__(self, name, nodePath, *args, **kwargs)
         self.setBin('fixed', 110)
         self.scale = scale
-        self.textNode = OnscreenText(text=text, fg=Vec4(0, 0, 0, 1), scale=scale, shadow=Vec4(0, 0, 0, 0), mayChange=True, font=PiratesGlobals.getPirateFont())
+        self.textNode = OnscreenText(
+            text=text,
+            fg=Vec4(0, 0, 0, 1),
+            scale=scale,
+            shadow=Vec4(0, 0, 0, 0),
+            mayChange=True,
+            font=PiratesGlobals.getPirateFont())
         self.textNode.detachNode()
         sNode = self.attachNewNode('stencil')
         sNode.setY(-offset)
@@ -212,8 +269,20 @@ class Text(Billboard):
 
 class TextIsland(Island):
 
-    def __init__(self, name, islandUid, modelName, isTeleportIsland, nodePath=NodePath(), offset=0.0, scale=1.0, collisionIndex=17, stencilId=0, *args, **kwargs):
-        Island.__init__(self, name, islandUid, modelName, isTeleportIsland, scale, collisionIndex, stencilId, *args, **kwargs)
+    def __init__(self,
+                 name,
+                 islandUid,
+                 modelName,
+                 isTeleportIsland,
+                 nodePath=NodePath(),
+                 offset=0.0,
+                 scale=1.0,
+                 collisionIndex=17,
+                 stencilId=0,
+                 *args,
+                 **kwargs):
+        Island.__init__(self, name, islandUid, modelName, isTeleportIsland,
+                        scale, collisionIndex, stencilId, *args, **kwargs)
         pencil = self.geom.find('**/pencil*')
         if not pencil.isEmpty():
             pass
@@ -238,7 +307,8 @@ class TextIsland(Island):
             return '\x01smallCaps\x01%s\x02' % (out,)
 
         formattedName = formatName(self.name, 10)
-        self.text = Text(name + '-text', nodePath, offset, formattedName, stencilId)
+        self.text = Text(name + '-text', nodePath, offset, formattedName,
+                         stencilId)
         self.text.reparentTo(self.textScaleNode)
         self.text.setBin('background', 2)
         if self.getNetTag('islandUid') == '1160614528.73sdnaik':
@@ -267,10 +337,12 @@ class TextIsland(Island):
         self.button.setPos(buttonPos)
         self.button.setColorScaleOff()
         self.button.hide()
-        self.teleportIconDisabled = compassGui.find('**/compass_icon_objective_grey')
+        self.teleportIconDisabled = compassGui.find(
+            '**/compass_icon_objective_grey')
         self.teleportIconDisabled.setScale(0.14)
         self.teleportIconDisabled.reparentTo(self.button)
-        self.teleportIconEnabled = compassGui.find('**/compass_icon_objective_green')
+        self.teleportIconEnabled = compassGui.find(
+            '**/compass_icon_objective_green')
         self.teleportIconEnabled.setScale(0.14)
         self.teleportIconEnabled.reparentTo(self.button)
         self.manIcon = icons.find('**/icon_stickman')
@@ -373,15 +445,25 @@ class TextIsland(Island):
 
     def createHelpBox(self):
         if not self.helpBox:
-            self.helpLabel = DirectLabel(parent=aspect2d, relief=None, text='', text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleSmall, text_fg=PiratesGuiGlobals.TextFG2, text_wordwrap=12, text_shadow=(0,
-                                                                                                                                                                                                                          0,
-                                                                                                                                                                                                                          0,
-                                                                                                                                                                                                                          1), textMayChange=1, sortOrder=91)
+            self.helpLabel = DirectLabel(
+                parent=aspect2d,
+                relief=None,
+                text='',
+                text_align=TextNode.ALeft,
+                text_scale=PiratesGuiGlobals.TextScaleSmall,
+                text_fg=PiratesGuiGlobals.TextFG2,
+                text_wordwrap=12,
+                text_shadow=(0, 0, 0, 1),
+                textMayChange=1,
+                sortOrder=91)
             height = -(self.helpLabel.getHeight() + 0.01)
             width = max(0.25, self.helpLabel.getWidth() + 0.04)
-            self.helpBox = BorderFrame(parent=aspect2d, state=DGG.DISABLED, frameSize=(-0.04, width, height, 0.05), pos=(0,
-                                                                                                                         0,
-                                                                                                                         0), sortOrder=90)
+            self.helpBox = BorderFrame(
+                parent=aspect2d,
+                state=DGG.DISABLED,
+                frameSize=(-0.04, width, height, 0.05),
+                pos=(0, 0, 0),
+                sortOrder=90)
             self.helpLabel.reparentTo(self.helpBox)
             self.helpBox.hide()
         return
@@ -397,7 +479,8 @@ class TextIsland(Island):
     def showDetails(self, pos):
         print pos
         if self.helpLabel['text'] != '':
-            self.helpBox.setPos(pos - Point3(self.helpBox['frameSize'][1] * 1.25, 0, 0))
+            self.helpBox.setPos(
+                pos - Point3(self.helpBox['frameSize'][1] * 1.25, 0, 0))
             self.helpBox.setBin('gui-popup', 0)
             self.helpBox.show()
 
@@ -434,7 +517,12 @@ class OceanAreaText(Text):
             self.fadeIval.pause()
             self.fadeIval = None
         self.setTransparency(1)
-        self.fadeIval = LerpFunc(self.setAlphaScale, duration=0.15 * abs(value - self.getColorScale().getW()), fromData=self.getColorScale().getW(), toData=value, blendType=blendType)
+        self.fadeIval = LerpFunc(
+            self.setAlphaScale,
+            duration=0.15 * abs(value - self.getColorScale().getW()),
+            fromData=self.getColorScale().getW(),
+            toData=value,
+            blendType=blendType)
         self.fadeIval.start()
         return
 
@@ -450,19 +538,36 @@ class OceanAreaText(Text):
 class Swirl(Model):
 
     def __init__(self, name, scale=1.0, speed=1, *args, **kwargs):
-        Model.__init__(self, name, 'models/worldmap/world_map_swirl', (scale / 80.0), *args, **kwargs)
+        Model.__init__(self, name, 'models/worldmap/world_map_swirl',
+                       (scale / 80.0), *args, **kwargs)
         self.swirl = self.attachNewNode('swirl')
         self.geom.reparentTo(self.swirl)
-        self.swirlLoop = self.swirl.hprInterval(duration=10.0 / speed, startHpr=Vec3(0, 0, 0), hpr=Vec3(360, 0, 0))
+        self.swirlLoop = self.swirl.hprInterval(
+            duration=10.0 / speed, startHpr=Vec3(0, 0, 0), hpr=Vec3(360, 0, 0))
         self.swirlLoop.loop()
 
 
 class Dart(PickableModel):
 
-    def __init__(self, name, parent, defaultPos, color=Vec4(1), offset=0.0, *args, **kwargs):
+    def __init__(self,
+                 name,
+                 parent,
+                 defaultPos,
+                 color=Vec4(1),
+                 offset=0.0,
+                 *args,
+                 **kwargs):
         self.startScale = 0.075
         self.highlightScale = 0.1
-        PickableModel.__init__(self, name, modelName='icon_objective_grey', scale=self.startScale, collisionIndex=17, modelPath='models/gui/compass_main', *args, **kwargs)
+        PickableModel.__init__(
+            self,
+            name,
+            modelName='icon_objective_grey',
+            scale=self.startScale,
+            collisionIndex=17,
+            modelPath='models/gui/compass_main',
+            *args,
+            **kwargs)
         self.defaultPos = defaultPos
         self.edgeMode = False
         self.helpBox = None
@@ -493,15 +598,25 @@ class Dart(PickableModel):
 
     def createHelpBox(self):
         if not self.helpBox:
-            self.helpLabel = DirectLabel(parent=aspect2d, relief=None, text='', text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleSmall, text_fg=PiratesGuiGlobals.TextFG2, text_wordwrap=12, text_shadow=(0,
-                                                                                                                                                                                                                          0,
-                                                                                                                                                                                                                          0,
-                                                                                                                                                                                                                          1), textMayChange=1, sortOrder=91)
+            self.helpLabel = DirectLabel(
+                parent=aspect2d,
+                relief=None,
+                text='',
+                text_align=TextNode.ALeft,
+                text_scale=PiratesGuiGlobals.TextScaleSmall,
+                text_fg=PiratesGuiGlobals.TextFG2,
+                text_wordwrap=12,
+                text_shadow=(0, 0, 0, 1),
+                textMayChange=1,
+                sortOrder=91)
             height = -(self.helpLabel.getHeight() + 0.01)
             width = max(0.25, self.helpLabel.getWidth() + 0.04)
-            self.helpBox = BorderFrame(parent=aspect2d, state=DGG.DISABLED, frameSize=(-0.04, width, height, 0.05), pos=(0,
-                                                                                                                         0,
-                                                                                                                         0), sortOrder=90)
+            self.helpBox = BorderFrame(
+                parent=aspect2d,
+                state=DGG.DISABLED,
+                frameSize=(-0.04, width, height, 0.05),
+                pos=(0, 0, 0),
+                sortOrder=90)
             self.helpLabel.reparentTo(self.helpBox)
             self.helpBox.hide()
         return
@@ -516,7 +631,8 @@ class Dart(PickableModel):
 
     def showDetails(self, pos):
         if self.helpLabel['text'] != '':
-            self.helpBox.setPos(pos + Point3(self.helpBox['frameSize'][1] * 0.25, 0, 0))
+            self.helpBox.setPos(
+                pos + Point3(self.helpBox['frameSize'][1] * 0.25, 0, 0))
             self.helpBox.setBin('gui-popup', 0)
             self.helpBox.show()
             self.geom.setScale(self.highlightScale)
@@ -555,5 +671,19 @@ class Dart(PickableModel):
             self.edgeModeNode.setPos(*args, **kwargs)
 
 
-DecorTypes = Enum('Item,                    Billboard,                    Model,                    BillboardModel,                    Island,                    Text,                    TextIsland,                    Dart,                    Swirl,                    OceanAreaText,                    Ship')
-DecorClasses = {DecorTypes.Item: Item, DecorTypes.Billboard: Billboard, DecorTypes.Model: Model, DecorTypes.BillboardModel: BillboardModel, DecorTypes.Island: Island, DecorTypes.Text: Text, DecorTypes.TextIsland: TextIsland, DecorTypes.Dart: Dart, DecorTypes.Swirl: Swirl, DecorTypes.OceanAreaText: OceanAreaText, DecorTypes.Ship: Ship}
+DecorTypes = Enum(
+    'Item,                    Billboard,                    Model,                    BillboardModel,                    Island,                    Text,                    TextIsland,                    Dart,                    Swirl,                    OceanAreaText,                    Ship'
+)
+DecorClasses = {
+    DecorTypes.Item: Item,
+    DecorTypes.Billboard: Billboard,
+    DecorTypes.Model: Model,
+    DecorTypes.BillboardModel: BillboardModel,
+    DecorTypes.Island: Island,
+    DecorTypes.Text: Text,
+    DecorTypes.TextIsland: TextIsland,
+    DecorTypes.Dart: Dart,
+    DecorTypes.Swirl: Swirl,
+    DecorTypes.OceanAreaText: OceanAreaText,
+    DecorTypes.Ship: Ship
+}

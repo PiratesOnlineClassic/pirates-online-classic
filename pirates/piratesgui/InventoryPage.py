@@ -8,10 +8,17 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class InventoryPage(DirectFrame):
-    
 
     def __init__(self):
-        DirectFrame.__init__(self, relief=None, state=DGG.DISABLED, frameColor=PiratesGuiGlobals.FrameColor, borderWidth=PiratesGuiGlobals.BorderWidth, frameSize=(0.0, PiratesGuiGlobals.InventoryPageWidth, 0.0, PiratesGuiGlobals.InventoryPageHeight), pos=(-0.54, 0, -0.72))
+        DirectFrame.__init__(
+            self,
+            relief=None,
+            state=DGG.DISABLED,
+            frameColor=PiratesGuiGlobals.FrameColor,
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            frameSize=(0.0, PiratesGuiGlobals.InventoryPageWidth, 0.0,
+                       PiratesGuiGlobals.InventoryPageHeight),
+            pos=(-0.54, 0, -0.72))
         self.initialiseoptions(InventoryPage)
         return
 
@@ -29,4 +36,6 @@ class InventoryPage(DirectFrame):
 
     def slideOpenPrecall(self):
         pass
+
+
 # okay decompiling .\pirates\piratesgui\InventoryPage.pyc

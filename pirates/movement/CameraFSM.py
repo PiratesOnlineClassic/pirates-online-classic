@@ -5,8 +5,8 @@ from direct.task import Task
 from panda3d.core import *
 from pirates.pirate import CannonCamera, FPSCamera, ShipCamera
 
+
 class CameraFSM(FSM):
-    
 
     def __init__(self, av):
         FSM.__init__(self, 'CameraFSM')

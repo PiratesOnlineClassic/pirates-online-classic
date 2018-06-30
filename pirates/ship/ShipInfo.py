@@ -50,14 +50,16 @@ class ShipInfo(DistributedObject):
 
     def setHp(self, hp):
         self.hp = hp
-        messenger.send(PiratesGlobals.CrewMemberHpChange, [self, self.hp, self.maxHp])
+        messenger.send(PiratesGlobals.CrewMemberHpChange,
+                       [self, self.hp, self.maxHp])
 
     def getMaxHp(self):
         return self.maxHp
 
     def setMaxHp(self, maxHp):
         self.maxHp = maxHp
-        messenger.send(PiratesGlobals.CrewMemberHpChange, [self, self.hp, self.maxHp])
+        messenger.send(PiratesGlobals.CrewMemberHpChange,
+                       [self, self.hp, self.maxHp])
 
     def getLocationName(self):
         return self.locationName

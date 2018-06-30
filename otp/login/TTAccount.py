@@ -41,20 +41,21 @@ class TTAccount:
         return
 
     def createAccount(self, loginName, password, data):
-        return self.talk('create', data=self.__makeLoginDict(
-            loginName, password, data))
+        return self.talk(
+            'create', data=self.__makeLoginDict(loginName, password, data))
 
     def authorize(self, loginName, password):
-        return self.talk(
-            'play', data=self.__makeLoginDict(loginName, password))
+        return self.talk('play', data=self.__makeLoginDict(loginName, password))
 
     def createBilling(self, loginName, password, data):
-        return self.talk('purchase', data=self.__makeLoginDict(
-            loginName, password, data))
+        return self.talk(
+            'purchase', data=self.__makeLoginDict(loginName, password, data))
 
     def setParentPassword(self, loginName, password, parentPassword):
-        return self.talk('setParentPassword', data=self.__makeLoginDict(
-            loginName, password, {'parentPassword': parentPassword}))
+        return self.talk(
+            'setParentPassword',
+            data=self.__makeLoginDict(loginName, password,
+                                      {'parentPassword': parentPassword}))
 
     def supportsParentPassword(self):
         return 1
@@ -63,18 +64,14 @@ class TTAccount:
         try:
             errorMsg = self.talk(
                 'authenticateParentPassword',
-                data=self.__makeLoginDict(
-                    loginName,
-                    parentPassword))
+                data=self.__makeLoginDict(loginName, parentPassword))
             if not errorMsg:
                 return (1, None)
             if self.response.getInt('errorCode') in (5, 72):
                 return (0, None)
-            return (
-                0, errorMsg)
+            return (0, errorMsg)
         except TTAccountException as e:
-            return (
-                0, str(e))
+            return (0, str(e))
 
         return
 
@@ -85,47 +82,44 @@ class TTAccount:
         try:
             errorMsg = self.talk(
                 'authenticateDelete',
-                data=self.__makeLoginDict(
-                    loginName,
-                    password))
+                data=self.__makeLoginDict(loginName, password))
             if not errorMsg:
                 return (1, None)
             if self.response.getInt('errorCode') in (5, 72):
                 return (0, None)
-            return (
-                0, errorMsg)
+            return (0, errorMsg)
         except TTAccountException as e:
-            return (
-                0, str(e))
+            return (0, str(e))
 
         return
 
-    def enableSecretFriends(self, loginName, password,
-                            parentPassword, enable=1):
+    def enableSecretFriends(self, loginName, password, parentPassword,
+                            enable=1):
         try:
             errorMsg = self.talk(
                 'setSecretChat',
                 data=self.__makeLoginDict(
-                    loginName,
-                    parentPassword,
-                    {
-                        'chat': base.cr.secretChatAllowed,
-                        'secretsNeedParentPassword': base.cr.secretChatNeedsParentPassword}))
+                    loginName, parentPassword, {
+                        'chat':
+                        base.cr.secretChatAllowed,
+                        'secretsNeedParentPassword':
+                        base.cr.secretChatNeedsParentPassword
+                    }))
             if not errorMsg:
                 return (1, None)
             if self.response.getInt('errorCode') in (5, 72):
                 return (0, None)
-            return (
-                0, errorMsg)
+            return (0, errorMsg)
         except TTAccountException as e:
-            return (
-                0, str(e))
+            return (0, str(e))
 
         return
 
     def changePassword(self, loginName, password, newPassword):
-        return self.talk('purchase', data=self.__makeLoginDict(
-            loginName, password, {'newPassword': newPassword}))
+        return self.talk(
+            'purchase',
+            data=self.__makeLoginDict(loginName, password,
+                                      {'newPassword': newPassword}))
 
     def requestPwdReminder(self, email=None, acctName=None):
         data = {}
@@ -141,21 +135,20 @@ class TTAccount:
 
     def getAccountData(self, loginName, password):
         errorMsg = self.talk(
-            'get', data=self.__makeLoginDict(
-                loginName, password))
+            'get', data=self.__makeLoginDict(loginName, password))
         if errorMsg:
             self.notify.warning('getAccountData error: %s' % errorMsg)
             return errorMsg
         if self.response.hasKey('errorMsg'):
             self.notify.warning(
-                "error field is: '%s'" %
-                self.response.getString('errorMsg'))
+                "error field is: '%s'" % self.response.getString('errorMsg'))
         self.accountData = copy.deepcopy(self.response)
         fieldNameMap = {
             'em': 'email',
             'l1': 'addr1',
             'l2': 'addr2',
-            'l3': 'addr3'}
+            'l3': 'addr3'
+        }
         dict = self.accountData.dict
         for fieldName in dict.keys():
             if fieldName in fieldNameMap:
@@ -182,10 +175,9 @@ class TTAccount:
                     msg += ' ' + OTPLocalizer.TTAccountCallCustomerService % self.cr.accountServerConstants.getString(
                         'customerServicePhoneNumber')
                 else:
-                    self.notify.warning(
-                        'unknown error code class: %s: %s' %
-                        (self.response.getInt('errorCode'),
-                         self.response.getString('errorMsg')))
+                    self.notify.warning('unknown error code class: %s: %s' %
+                                        (self.response.getInt('errorCode'),
+                                         self.response.getString('errorMsg')))
                     msg = self.response.getString('errorMsg')
                     msg += ' ' + OTPLocalizer.TTAccountCallCustomerService % self.cr.accountServerConstants.getString(
                         'customerServicePhoneNumber')
@@ -202,8 +194,8 @@ class TTAccount:
         for key in data.keys():
             data[key] = str(data[key])
 
-        if operation in ('play', 'get', 'cancel',
-                         'authenticateParentPassword', 'authenticateDelete'):
+        if operation in ('play', 'get', 'cancel', 'authenticateParentPassword',
+                         'authenticateDelete'):
             pass
         else:
             if operation == 'forgotPassword':
@@ -223,8 +215,8 @@ class TTAccount:
                                     pass
                             else:
                                 self.notify.error(
-                                    "Internal TTAccount error: need to add 'required data' checking for %s operation" %
-                                    operation)
+                                    "Internal TTAccount error: need to add 'required data' checking for %s operation"
+                                    % operation)
         op2Php = {
             'play': 'play',
             'get': 'get',
@@ -235,7 +227,8 @@ class TTAccount:
             'authenticateParentPassword': 'authenticateChat',
             'authenticateDelete': 'authDelete',
             'setSecretChat': 'setChat',
-            'forgotPassword': 'forgotPw'}
+            'forgotPassword': 'forgotPw'
+        }
         url = URLSpec(getAccountServer())
         url.setPath('/%s.php' % op2Php[operation])
         body = ''
@@ -263,8 +256,9 @@ class TTAccount:
             'country': 'country',
             'zip': 'zip',
             'referrer': 'ref',
-            'secretsNeedParentPassword': 'secretsNeedsParentPassword'}
-        ignoredFields = ('ccType', )
+            'secretsNeedParentPassword': 'secretsNeedsParentPassword'
+        }
+        ignoredFields = ('ccType',)
         outBoundFields = {}
         for fieldName in data.keys():
             if fieldName not in serverFields:
@@ -282,17 +276,18 @@ class TTAccount:
 
         self.notify.debug('url=' + url.cStr())
         self.notify.debug('body=' + body)
-        if operation in ('get', ):
+        if operation in ('get',):
             expectedHeader = 'ACCOUNT INFO'
         else:
-            if operation in ('play', 'cancel', 'create', 'purchase', 'setParentPassword',
-                             'setSecretChat', 'authenticateParentPassword', 'authenticateDelete',
+            if operation in ('play', 'cancel', 'create', 'purchase',
+                             'setParentPassword', 'setSecretChat',
+                             'authenticateParentPassword', 'authenticateDelete',
                              'forgotPassword'):
                 expectedHeader = 'ACCOUNT SERVER RESPONSE'
             else:
                 self.notify.error(
-                    "Internal TTAccount error: need to set expected response header for '%s' operation" %
-                    operation)
+                    "Internal TTAccount error: need to set expected response header for '%s' operation"
+                    % operation)
         self.response = RemoteValueSet.RemoteValueSet(
             url, self.cr.http, body=body, expectedHeader=expectedHeader)
         self.notify.debug('    self.response=' + str(self.response))
@@ -303,8 +298,9 @@ class TTAccount:
                 self.cr.freeTimeExpiresAt = 0
         if self.response.hasKey('errorMsg'):
             return self.getLastErrorMsg()
-        if operation in ('get', 'forgotPassword', 'authenticateDelete', 'play', 'cancel',
-                         'create', 'purchase', 'setParentPassword', 'authenticateParentPassword'):
+        if operation in ('get', 'forgotPassword', 'authenticateDelete', 'play',
+                         'cancel', 'create', 'purchase', 'setParentPassword',
+                         'authenticateParentPassword'):
             pass
         else:
             if operation == 'setSecretChat':
@@ -312,7 +308,9 @@ class TTAccount:
                 self.playTokenIsEncrypted = 1
             else:
                 self.notify.error(
-                    'Internal TTAccount error: need to extract useful data for %s operation' %
-                    operation)
+                    'Internal TTAccount error: need to extract useful data for %s operation'
+                    % operation)
         return
+
+
 # okay decompiling .\otp\login\TTAccount.pyc

@@ -4,6 +4,7 @@ from otp.friends.PlayerFriendsManager import PlayerFriendsManager
 from otp.otpbase import OTPGlobals
 from pirates.friends.PCFriendInfo import PCFriendInfo
 
+
 class PCPlayerFriendsManager(PlayerFriendsManager):
     notify = directNotify.newCategory('PCPlayerFriendsManager')
 

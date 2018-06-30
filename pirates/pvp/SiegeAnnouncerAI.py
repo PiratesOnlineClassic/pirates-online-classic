@@ -1,6 +1,7 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class SiegeAnnouncerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('SiegeAnnouncerAI')
 

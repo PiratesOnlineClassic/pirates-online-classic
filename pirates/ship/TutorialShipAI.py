@@ -1,6 +1,7 @@
 from pirates.ship.DistributedShipAI import DistributedShipAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class TutorialShipAI(DistributedShipAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('TutorialShipAI')
 

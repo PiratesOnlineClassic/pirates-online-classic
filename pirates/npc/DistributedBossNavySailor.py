@@ -10,8 +10,9 @@ from pirates.pirate import AvatarTypes
 
 
 class DistributedBossNavySailor(DistributedNPCNavySailor, Boss):
-    
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBossNavySailor')
+
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedBossNavySailor')
 
     def __init__(self, cr):
         DistributedNPCNavySailor.__init__(self, cr)
@@ -37,4 +38,6 @@ class DistributedBossNavySailor(DistributedNPCNavySailor, Boss):
 
     def getBossHighlightColor(self):
         return Boss.getBossHighlightColor(self)
+
+
 # okay decompiling .\pirates\npc\DistributedBossNavySailor.pyc

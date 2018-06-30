@@ -8,7 +8,8 @@ from otp.distributed import OtpDoGlobals
 from otp.ai.MagicWordGlobal import *
 
 
-class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.PlayerBase):
+class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI,
+                          PlayerBase.PlayerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerAI')
 
     def __init__(self, air):
@@ -42,15 +43,19 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.Pl
         return True
 
     def setLocation(self, parentId, zoneId):
-        DistributedAvatarAI.DistributedAvatarAI.setLocation(self, parentId, zoneId)
+        DistributedAvatarAI.DistributedAvatarAI.setLocation(
+            self, parentId, zoneId)
 
         if self.isPlayerControlled():
             if not self.air._isValidPlayerLocation(parentId, zoneId):
-                self.notify.info('booting player %s for doing setLocation to (%s, %s)' % (
-                    self.doId, parentId, zoneId))
+                self.notify.info(
+                    'booting player %s for doing setLocation to (%s, %s)' %
+                    (self.doId, parentId, zoneId))
 
-                self.air.writeServerEvent('suspicious', avId=self.doId, issue='invalid setLocation: (%s, %s)' % (
-                    parentId, zoneId))
+                self.air.writeServerEvent(
+                    'suspicious',
+                    avId=self.doId,
+                    issue='invalid setLocation: (%s, %s)' % (parentId, zoneId))
 
                 self.requestDelete()
 
@@ -129,6 +134,7 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.Pl
                 return
 
         self.friendsList.append((friendId, friendCode))
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def system(message):

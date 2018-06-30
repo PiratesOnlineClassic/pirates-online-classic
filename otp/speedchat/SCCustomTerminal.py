@@ -21,6 +21,7 @@ class SCCustomTerminal(SCTerminal):
 
     def handleSelect(self):
         SCTerminal.handleSelect(self)
-        messenger.send(self.getEventName(SCCustomMsgEvent), [
-            self.textId])
+        messenger.send(self.getEventName(SCCustomMsgEvent), [self.textId])
+
+
 # okay decompiling .\otp\speedchat\SCCustomTerminal.pyc

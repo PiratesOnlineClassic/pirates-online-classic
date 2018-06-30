@@ -19,8 +19,11 @@ from pirates.battle import WeaponGlobals
 from pirates.reputation import ReputationGlobals
 from pirates.battle.BattleSkillDiaryAI import BattleSkillDiaryAI
 
-class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNA, DistributedQuestAvatarAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
+
+class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI,
+                                HumanDNA, DistributedQuestAvatarAI):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedPlayerPirateAI')
 
     def __init__(self, air):
         DistributedPlayerAI.__init__(self, air)
@@ -64,7 +67,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.accept('HolidayEnded', self.processHolidayEnd)
         self.accept('todHalloweenStateChange', self.attemptToSetCursedZombie)
 
-        taskMgr.doMethodLater(0.05, self.__processGroggy, self.uniqueName('process-groggy'))
+        taskMgr.doMethodLater(0.05, self.__processGroggy,
+                              self.uniqueName('process-groggy'))
 
     def __processGroggy(self, task):
         inventory = self.getInventory()
@@ -99,8 +103,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 if self.currentIsland:
                     validReturns = [
                         LocationIds.PORT_ROYAL_ISLAND,
-                        LocationIds.TORTUGA_ISLAND,
-                        LocationIds.DEL_FUEGO_PORT,
+                        LocationIds.TORTUGA_ISLAND, LocationIds.DEL_FUEGO_PORT,
                         LocationIds.CUBA_ISLAND
                     ]
 
@@ -191,8 +194,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.teleportFlags = teleportFlags
 
     def d_setTeleportFlags(self, teleportFlags):
-        self.sendUpdate('setTeleportFlags', [PiratesGlobals.encodeTeleportFlag(
-            teleportFlags)])
+        self.sendUpdate('setTeleportFlags',
+                        [PiratesGlobals.encodeTeleportFlag(teleportFlags)])
 
     def b_setTeleportFlag(self, teleportFlags):
         self.setTeleportFlags(teleportFlags)
@@ -202,12 +205,14 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return self.teleportFlags
 
     def d_relayTeleportLoc(self, shardId, zoneId, teleportMgrDoId):
-        self.sendUpdateToAvatarId(self.doId, 'relayTeleportLoc', [shardId, zoneId,
-            teleportMgrDoId])
+        self.sendUpdateToAvatarId(self.doId, 'relayTeleportLoc',
+                                  [shardId, zoneId, teleportMgrDoId])
 
-    def d_forceTeleportStart(self, instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone):
-        self.sendUpdateToAvatarId(self.doId, 'forceTeleportStart', [instanceName, tzDoId, thDoId,
-            worldGridDoId, tzParent, tzZone])
+    def d_forceTeleportStart(self, instanceName, tzDoId, thDoId, worldGridDoId,
+                             tzParent, tzZone):
+        self.sendUpdateToAvatarId(
+            self.doId, 'forceTeleportStart',
+            [instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone])
 
     def setReturnLocation(self, returnLocation):
         self.returnLocation = returnLocation
@@ -242,7 +247,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.currentIsland = currentIsland
 
     def d_setCurrentIsland(self, currentIsland):
-        self.sendUpdateToAvatarId(self.doId, 'setCurrentIsland', [currentIsland])
+        self.sendUpdateToAvatarId(self.doId, 'setCurrentIsland',
+                                  [currentIsland])
 
     def b_setCurrentIsland(self, currentIsland):
         self.setCurrentIsland(currentIsland)
@@ -263,8 +269,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def setEmote(self, emoteId):
         if not self.hasEmote(emoteId):
-            self.notify.debug('Cannot set emote for %d, invalid emoteId specified!' % (
-                self.doId))
+            self.notify.debug(
+                'Cannot set emote for %d, invalid emoteId specified!' %
+                (self.doId))
 
             return
 
@@ -316,24 +323,30 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def sendTattooMessage(self, tattooUID):
         self.sendUpdate("sendTattooMessage", [tattooUID])
 
-    def sendReputationMessage(self, targetId, categories, reputationList, basicPenalty, crewBonus, doubleXPBonus, holidayBonus):
-        self.sendUpdate("sendReputationMessage", [targetId, categories, reputationList, basicPenalty,
-            crewBonus, doubleXPBonus, holidayBonus])
+    def sendReputationMessage(self, targetId, categories, reputationList,
+                              basicPenalty, crewBonus, doubleXPBonus,
+                              holidayBonus):
+        self.sendUpdate("sendReputationMessage", [
+            targetId, categories, reputationList, basicPenalty, crewBonus,
+            doubleXPBonus, holidayBonus
+        ])
 
     def spendSkillPoint(self, skillId):
         inventory = self.getInventory()
 
         if not inventory:
-            self.notify.debug('Cannot spend skill point %d for avatar %d, no inventory present' % (
-                skillId, self.doId))
+            self.notify.debug(
+                'Cannot spend skill point %d for avatar %d, no inventory present'
+                % (skillId, self.doId))
 
             return
 
         def updateStack(stackType):
             unspentStack = inventory.getStackQuantity(stackType)
             if not unspentStack:
-                self.notify.debug('Cannot update stack %d, player has no skill points!' % (
-                    stackType))
+                self.notify.debug(
+                    'Cannot update stack %d, player has no skill points!' %
+                    (stackType))
 
                 return
 
@@ -368,7 +381,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             updateStack(InventoryType.UnspentWand)
         else:
             self.notify.debug('Cannot spend skill point for skill %d,'
-                'has no unspent category!' % skillId)
+                              'has no unspent category!' % skillId)
 
             return
 
@@ -382,11 +395,14 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         inventory = simbase.air.inventoryManager.getInventory(self.doId)
 
         if not inventory:
-            self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
+            self.notify.warning(
+                'Failed to choose best tonic for %d; Avatar does not have an inventory'
+                % self.doId)
             return 0
 
         detected = 0
-        for tonicId in range(InventoryType.begin_Consumables, InventoryType.end_Consumables, -1):
+        for tonicId in range(InventoryType.begin_Consumables,
+                             InventoryType.end_Consumables, -1):
             amount = inventory.getStackQuantity(tonicId)
             if amount > 0:
                 detected = tonicId
@@ -397,7 +413,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         inventory = simbase.air.inventoryManager.getInventory(self.doId)
 
         if not inventory:
-            self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
+            self.notify.warning(
+                'Failed to choose best tonic for %d; Avatar does not have an inventory'
+                % self.doId)
             return 0
 
         tonics = inventory.getTonics()
@@ -415,7 +433,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         inventory = simbase.air.inventoryManager.getInventory(self.doId)
 
         if not inventory:
-            self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
+            self.notify.warning(
+                'Failed to choose best tonic for %d; Avatar does not have an inventory'
+                % self.doId)
             return
 
         amount = inventory.getStackQuantity(tonicId)
@@ -429,21 +449,29 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             return
 
         # Calculate max potential values for restoring
-        healedHp = min(WeaponGlobals.getAttackSelfHP(tonicId) + self.getHp()[0], self.getMaxHp())
-        restoredMojo = min(WeaponGlobals.getAttackSelfMojo(tonicId) + self.getMojo(), self.getMaxMojo())
-        restoredPower = min(WeaponGlobals.getAttackSelfPower(tonicId) + self.getPower(), self.getMaxPower())
+        healedHp = min(
+            WeaponGlobals.getAttackSelfHP(tonicId) + self.getHp()[0],
+            self.getMaxHp())
+        restoredMojo = min(
+            WeaponGlobals.getAttackSelfMojo(tonicId) + self.getMojo(),
+            self.getMaxMojo())
+        restoredPower = min(
+            WeaponGlobals.getAttackSelfPower(tonicId) + self.getPower(),
+            self.getMaxPower())
 
         # Apply values
         self.b_setHp(healedHp)
         self.b_setMojo(restoredMojo)
         self.b_setPower(restoredPower)
 
-        inventory.b_setStackQuantity(tonicId, inventory.getStackQuantity(tonicId) - 1)
+        inventory.b_setStackQuantity(tonicId,
+                                     inventory.getStackQuantity(tonicId) - 1)
 
     def useBestTonic(self):
         tonicId = self.getBestTonic()
         if tonicId == 0:
-            self.notify.warning('Failed to determine the best tonic for %d' % self.doId)
+            self.notify.warning(
+                'Failed to determine the best tonic for %d' % self.doId)
             return
 
         self.useTonic(tonicId)
@@ -484,8 +512,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getHostileStickyTargets(self):
         hostile = []
         friendlyTeams = [
-            PiratesGlobals.VILLAGER_TEAM,
-            PiratesGlobals.PLAYER_TEAM
+            PiratesGlobals.VILLAGER_TEAM, PiratesGlobals.PLAYER_TEAM
         ]
 
         for targetId in self.stickyTargets:
@@ -502,8 +529,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getFriendlyStickyTargets(self):
         friendly = []
         friendlyTeams = [
-            PiratesGlobals.VILLAGER_TEAM,
-            PiratesGlobals.PLAYER_TEAM
+            PiratesGlobals.VILLAGER_TEAM, PiratesGlobals.PLAYER_TEAM
         ]
 
         for targetId in self.stickyTargets:
@@ -533,7 +559,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         else:
             # Sanity check for weird conditions
             if not self.air:
-                self.notify.warning('Failed to process attemptToSetcursedZombie; Air is NoneType')
+                self.notify.warning(
+                    'Failed to process attemptToSetcursedZombie; Air is NoneType'
+                )
                 return
 
             # We are not in PVP. Lets check if its a Cursed Moon
@@ -575,26 +603,34 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.gmNameTagColor = gmNameTagColor
         self.gmNameTagString = gmNameTagString
 
-    def d_updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
-        self.sendUpdate('updateGMNameTag', [gmNameTagState, gmNameTagColor, gmNameTagString])
+    def d_updateGMNameTag(self, gmNameTagState, gmNameTagColor,
+                          gmNameTagString):
+        self.sendUpdate('updateGMNameTag',
+                        [gmNameTagState, gmNameTagColor, gmNameTagString])
 
-    def b_updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
+    def b_updateGMNameTag(self, gmNameTagState, gmNameTagColor,
+                          gmNameTagString):
         self.d_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
         self.updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
 
     def startToonUp(self):
         self.toonUpTask = taskMgr.doMethodLater(2.0, self.toonUp,
-            self.uniqueName('toonUp'))
+                                                self.uniqueName('toonUp'))
 
     def toonUp(self, task):
-        if self.getHp()[0] >= self.getMaxHp() and self.getMojo() >= self.getMaxMojo():
+        if self.getHp()[0] >= self.getMaxHp() and self.getMojo(
+        ) >= self.getMaxMojo():
             return task.done
 
         if self.getHp()[0] < self.getMaxHp():
-            self.b_setHp(min(self.getMaxHp(), self.getHp()[0] + 8 * self.getLevel() / 2.47))
+            self.b_setHp(
+                min(self.getMaxHp(),
+                    self.getHp()[0] + 8 * self.getLevel() / 2.47))
 
         if self.getMojo() < self.getMaxMojo():
-            self.b_setMojo(min(self.getMaxMojo(), self.getMojo() + 6 * self.getLevel() / 2.35))
+            self.b_setMojo(
+                min(self.getMaxMojo(),
+                    self.getMojo() + 6 * self.getLevel() / 2.35))
 
         return task.again
 
@@ -649,6 +685,7 @@ def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
 
     return 'Nametag set.'
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def setFounder(state):
     """
@@ -657,6 +694,7 @@ def setFounder(state):
 
     spellbook.getInvoker().d_setFounder(state)
     return 'Founder set to: %s' % state
+
 
 @magicWord(category=CATEGORY_MODERATION, types=[str, str, str])
 def toggleGM():
@@ -667,10 +705,10 @@ def toggleGM():
     invoker = spellbook.getInvoker()
     invoker.d_setFounder(True)
     invoker.b_setAllowGMNameTag(not invoker.getAllowGMNameTag())
-    invoker.b_updateGMNameTag(not invoker.gmNameTagState, 'red',
-        'Game Master')
+    invoker.b_updateGMNameTag(not invoker.gmNameTagState, 'red', 'Game Master')
 
     return 'Nametag toggled to: %s' % str(invoker.gmNameTagState)
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def name(name):
@@ -680,6 +718,7 @@ def name(name):
 
     spellbook.getTarget().b_setName(name)
     return 'Your name has been set to %s.' % name
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def hp(hp):
@@ -692,6 +731,7 @@ def hp(hp):
     target.b_setHp(hp)
     return 'Your hp has been set to %d.' % hp
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def maxHp(maxHp):
     """
@@ -701,17 +741,18 @@ def maxHp(maxHp):
     spellbook.getTarget().b_setMaxHp(maxHp)
     return 'Your maxHp has been set to %d.' % maxHp
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def mojo(mojo):
     """
     Sets the targets Mojo level
     """
 
-
     target = spellbook.getTarget()
     mojo = max(0, min(mojo, target.getMaxMojo()))
     target.b_setMojo(mojo)
     return 'Your mojo has been set to %d.' % mojo
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def maxMojo(maxMojo):
@@ -721,6 +762,7 @@ def maxMojo(maxMojo):
 
     spellbook.getTarget().b_setMaxMojo(maxMojo)
     return 'Your maxMojo has been set to %d.' % maxMojo
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def level(level):
@@ -741,6 +783,7 @@ def level(level):
 
     return 'Your level has been set to %d.' % level
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def zombie():
     """
@@ -753,6 +796,7 @@ def zombie():
 
     return 'Targets Zombie state forced to %s' % target.forcedZombie
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def removeGroggy():
     """
@@ -764,6 +808,7 @@ def removeGroggy():
     inventory.setVitaeLevel(0)
     return "Removed active groggy effect!"
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def location():
     """
@@ -771,5 +816,5 @@ def location():
     """
 
     invoker = spellbook.getInvoker()
-    return "avatarId: %d, parentId: %d, zoneId: %d" % (invoker.doId,
-        invoker.parentId, invoker.zoneId)
+    return "avatarId: %d, parentId: %d, zoneId: %d" % (
+        invoker.doId, invoker.parentId, invoker.zoneId)

@@ -7,6 +7,7 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class WoodShards(PooledEffect, EffectController):
 
     cardScale = 128.0
@@ -74,7 +75,11 @@ class WoodShards(PooledEffect, EffectController):
         self.p0.emitter.setRadius(0.5)
 
     def createTrack(self):
-        self.track = Sequence(Func(self.p0.setBirthRate, 0.03), Func(self.p0.clearToInitial), Func(self.f.reparentTo, self), Wait(0.3), Func(self.p0.setBirthRate, 100), Wait(2.0), Func(self.cleanUpEffect))
+        self.track = Sequence(
+            Func(self.p0.setBirthRate, 0.03), Func(self.p0.clearToInitial),
+            Func(self.f.reparentTo, self), Wait(0.3),
+            Func(self.p0.setBirthRate, 100), Wait(2.0),
+            Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

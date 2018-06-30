@@ -3,14 +3,15 @@ from pirates.battle import WeaponGlobals
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *
 from pirates.uberdog.UberDogGlobals import (InventoryCategory, InventoryId,
-    InventoryType, getSkillCategory)
+                                            InventoryType, getSkillCategory)
 
 
 class DistributedInventoryBase:
     GetInvRequests = {}
     GetInvRequestId2InvId = {}
     InvRequestSerialGen = SerialNumGen()
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryBase')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedInventoryBase')
 
     def __init__(self, distributedObjectCollectionManager):
         self.dcm = distributedObjectCollectionManager
@@ -50,12 +51,18 @@ class DistributedInventoryBase:
             cls.GetInvRequests.setdefault(inventoryId, {})
             cls.GetInvRequests[inventoryId][requestId] = callback
             cls.GetInvRequestId2InvId[requestId] = inventoryId
-            taskMgr.doMethodLater(timeout, cls.handleGetInventoryTimedOut, 'getInventoryTimedOut-' + str(requestId), extraArgs=[requestId, inventoryId, callback])
+            taskMgr.doMethodLater(
+                timeout,
+                cls.handleGetInventoryTimedOut,
+                'getInventoryTimedOut-' + str(requestId),
+                extraArgs=[requestId, inventoryId, callback])
         return requestId
 
     @classmethod
     def handleGetInventoryTimedOut(cls, requestId, inventoryId, callback):
-        cls.notify.warning('inventory timed out.  requestId = %s, inventoryId = %s, callback = %s' % (requestId, inventoryId, callback))
+        cls.notify.warning(
+            'inventory timed out.  requestId = %s, inventoryId = %s, callback = %s'
+            % (requestId, inventoryId, callback))
         cls.cancelGetInventory(requestId)
         callback(None)
         return
@@ -96,7 +103,8 @@ class DistributedInventoryBase:
         self.categoryLimits = dict(categoriesAndLimits)
         for category, limit in categoriesAndLimits:
             if old.get(category, 0) != limit:
-                messenger.send('inventoryLimit-%s-%s' % (self.doId, category), [limit])
+                messenger.send('inventoryLimit-%s-%s' % (self.doId, category),
+                               [limit])
 
     def setStackLimits(self, stackTypesAndLimits):
         old = self.stackLimits
@@ -120,7 +128,8 @@ class DistributedInventoryBase:
 
     def setDoIds(self, categoriesAndDoIds):
         old = self.doIds
-        self.doIds = dict([ (doId, category) for category, doId in categoriesAndDoIds ])
+        self.doIds = dict(
+            [(doId, category) for category, doId in categoriesAndDoIds])
         self.doIdsInCategory = {}
         for category, doId in categoriesAndDoIds:
             category = self.doIdsInCategory.setdefault(category, [])
@@ -128,8 +137,8 @@ class DistributedInventoryBase:
 
         for doId, category in old.items():
             if self.doIds.get(doId) is None:
-                messenger.send('inventoryRemoveDoId-%s-%s' % (self.doId, category), [
-                 doId])
+                messenger.send(
+                    'inventoryRemoveDoId-%s-%s' % (self.doId, category), [doId])
                 if category == InventoryCategory.SHIPS:
                     self.removeShip(doId)
 
@@ -140,13 +149,16 @@ class DistributedInventoryBase:
             if old.get(doId) is None:
                 distObj = self.dcm.doId2do.get(doId)
                 if distObj is not None:
-                    messenger.send('inventoryAddDoId-%s-%s' % (self.doId, category), [
-                     distObj])
+                    messenger.send(
+                        'inventoryAddDoId-%s-%s' % (self.doId, category),
+                        [distObj])
                     if category == InventoryCategory.QUESTS:
-                        messenger.send('QuestAddDoId-%s-%s' % (self.doId, InventoryCategory.QUESTS), [
-                         distObj])
+                        messenger.send(
+                            'QuestAddDoId-%s-%s' %
+                            (self.doId, InventoryCategory.QUESTS), [distObj])
                 else:
-                    self.acceptOnce('generate-%s' % (doId,), self._objectGenerated, [category])
+                    self.acceptOnce('generate-%s' % (doId,),
+                                    self._objectGenerated, [category])
                     mightBeComplete = False
 
         self.sentReadyMessage = False
@@ -159,7 +171,8 @@ class DistributedInventoryBase:
         self.accumulators = dict(accumulatorTypesAndQuantities)
         for t, q in accumulatorTypesAndQuantities:
             if old.get(t, 0) != q:
-                messenger.send('inventoryAccumulator-%s-%s' % (self.doId, t), [q])
+                messenger.send('inventoryAccumulator-%s-%s' % (self.doId, t),
+                               [q])
                 if t >= InventoryType.begin_Accumulator and t <= InventoryType.end_Accumulator:
                     messenger.send('repChange-%s' % self.doId)
 
@@ -187,9 +200,11 @@ class DistributedInventoryBase:
             messenger.send(self.getReadyMessage(), [self])
             self.sentReadyMessage = True
             if self.doId in DistributedInventoryBase.GetInvRequests:
-                reqId2callback = DistributedInventoryBase.GetInvRequests.pop(self.doId)
+                reqId2callback = DistributedInventoryBase.GetInvRequests.pop(
+                    self.doId)
                 for requestId in reqId2callback:
-                    DistributedInventoryBase.GetInvRequestId2InvId.pop(requestId)
+                    DistributedInventoryBase.GetInvRequestId2InvId.pop(
+                        requestId)
 
                 reqIds = reqId2callback.keys()
                 reqIds.sort()
@@ -199,8 +214,8 @@ class DistributedInventoryBase:
                     taskMgr.remove('getInventoryTimedOut-' + str(reqId))
 
     def _objectGenerated(self, category, distObj):
-        messenger.send('inventoryAddDoId-%s-%s' % (self.doId, category), [
-         distObj])
+        messenger.send('inventoryAddDoId-%s-%s' % (self.doId, category),
+                       [distObj])
         self._checkDoIdsCompletion()
 
     def setTemporaryInventory(self, enabled):
@@ -299,7 +314,8 @@ class DistributedInventoryBase:
 
     def getStackQuantity(self, stackType):
         if self.useTemporaryInventory:
-            return self.temporaryInventory.get(stackType, self.stacks.get(stackType, 0))
+            return self.temporaryInventory.get(stackType,
+                                               self.stacks.get(stackType, 0))
         else:
             return self.stacks.get(stackType, 0)
 
@@ -373,7 +389,8 @@ class DistributedInventoryBase:
         return self.getStackQuantity(InventoryType.CubaTeleportToken)
 
     def getTonics(self):
-        return dict(((tonicId, self.getStackQuantity(tonicId)) for tonicId in InventoryType.Potions))
+        return dict(((tonicId, self.getStackQuantity(tonicId))
+                     for tonicId in InventoryType.Potions))
 
     def getShipRepairKits(self):
         return self.getStackQuantity(InventoryType.ShipRepairKit)

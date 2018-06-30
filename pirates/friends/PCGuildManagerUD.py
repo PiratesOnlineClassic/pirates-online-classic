@@ -1,6 +1,7 @@
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
+
 class PCGuildManagerUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('PCGuildManagerUD')
 

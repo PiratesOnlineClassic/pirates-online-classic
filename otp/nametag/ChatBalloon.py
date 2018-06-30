@@ -15,8 +15,13 @@ class ChatBalloon:
     def __init__(self, model):
         self.model = model
 
-    def generate(self, text, font, textColor=(0, 0, 0, 1), balloonColor=(1, 1, 1, 1),
-                 wordWrap=10.0, reversed=False):
+    def generate(self,
+                 text,
+                 font,
+                 textColor=(0, 0, 0, 1),
+                 balloonColor=(1, 1, 1, 1),
+                 wordWrap=10.0,
+                 reversed=False):
         root = NodePath('balloon')
 
         # Add balloon geometry:
@@ -50,11 +55,8 @@ class ChatBalloon:
             # The nametag code wants the text on the left side of the axis,
             # rather than on the right side. Therefore, we move the text to the
             # opposite side:
-            t.setX(
-                self.TEXT_SHIFT_REVERSED -
-                self.TEXT_SHIFT_PROP *
-                width -
-                width)
+            t.setX(self.TEXT_SHIFT_REVERSED - self.TEXT_SHIFT_PROP * width -
+                   width)
 
         # Set a minimum width and height for short or empty messages
         if width < self.MIN_WIDTH:

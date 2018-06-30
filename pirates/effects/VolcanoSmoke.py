@@ -9,7 +9,6 @@ from pandac.PandaModules import *
 
 class VolcanoSmoke(NodePath):
 
-
     def __init__(self):
         NodePath.__init__(self, 'VolcanoSmoke')
         self.renderParent = self.attachNewNode('VolcanoSmoke-renderParent')
@@ -41,7 +40,8 @@ class VolcanoSmoke(NodePath):
         self.p0.factory.setAngularVelocitySpread(0.0)
         self.p0.renderer.setAlphaMode(BaseParticleRenderer.PRALPHAUSER)
         self.p0.renderer.setUserAlpha(1.0)
-        self.p0.renderer.setTextureFromNode('models/effects/particleMaps', '**/particleVolcanoSmoke')
+        self.p0.renderer.setTextureFromNode('models/effects/particleMaps',
+                                            '**/particleVolcanoSmoke')
         self.p0.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
         self.p0.renderer.setXScaleFlag(1)
         self.p0.renderer.setYScaleFlag(1)
@@ -53,10 +53,14 @@ class VolcanoSmoke(NodePath):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.35, Vec4(1, 0.5, 0.25, 1), Vec4(0.0, 0.0, 0.0, 1.0))
-        self.p0.renderer.getColorInterpolationManager().addConstant(0.35, 1.0, Vec4(0.0, 0.0, 0.0, 1.0))
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.5, 0.85, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0))
-        self.p0.renderer.getColorInterpolationManager().addConstant(0.85, 1.0, Vec4(1.0, 1.0, 1.0, 0.0))
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 0.35, Vec4(1, 0.5, 0.25, 1), Vec4(0.0, 0.0, 0.0, 1.0))
+        self.p0.renderer.getColorInterpolationManager().addConstant(
+            0.35, 1.0, Vec4(0.0, 0.0, 0.0, 1.0))
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.5, 0.85, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0))
+        self.p0.renderer.getColorInterpolationManager().addConstant(
+            0.85, 1.0, Vec4(1.0, 1.0, 1.0, 0.0))
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETEXPLICIT)
         self.p0.emitter.setAmplitude(0.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -70,7 +74,9 @@ class VolcanoSmoke(NodePath):
         self.force0.setVectorMasks(1, 1, 0)
         self.force0.setActive(1)
         self.f0.addForce(self.force0)
-        self.force1 = LinearSourceForce(Point3(0.0, 0.0, 0.0), LinearDistanceForce.FTONEOVERRSQUARED, 1.125, 1.0, 0)
+        self.force1 = LinearSourceForce(
+            Point3(0.0, 0.0, 0.0), LinearDistanceForce.FTONEOVERRSQUARED, 1.125,
+            1.0, 0)
         self.force1.setVectorMasks(1, 1, 0)
         self.force1.setAmplitude(0.005)
         self.force1.setActive(0)
@@ -104,4 +110,6 @@ class VolcanoSmoke(NodePath):
 
     def isEnabled(self):
         return self.f.isEnabled()
+
+
 # okay decompiling .\pirates\effects\VolcanoSmoke.pyc

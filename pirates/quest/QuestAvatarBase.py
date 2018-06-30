@@ -1,5 +1,3 @@
-
-
 class QuestAvatarBase:
 
     def getQuests(self):

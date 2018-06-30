@@ -6,8 +6,10 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.distributed import InteractGlobals
 from pirates.economy import EconomyGlobals
 
+
 class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCTownfolkAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedNPCTownfolkAI')
 
     def __init__(self, air):
         DistributedBattleNPCAI.__init__(self, air)
@@ -18,7 +20,7 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
 
     def handleRequestInteraction(self, avatar, interactType, instant):
         if interactType == PiratesGlobals.INTERACT_TYPE_FRIENDLY:
-            
+
             self.sendUpdateToAvatarId(avatar.doId, 'triggerInteractShow', [0])
             self.sendUpdateToAvatarId(avatar.doId, 'offerOptions', [2])
 

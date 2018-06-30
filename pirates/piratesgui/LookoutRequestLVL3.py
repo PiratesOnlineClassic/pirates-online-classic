@@ -11,15 +11,21 @@ from pirates.piratesgui.OptionItemGui import OptionItemGui
 
 
 class LookoutRequestLVL3(DirectFrame):
-    
 
-    def __init__(self, name, titleTextScale=None, itemList=None, optionsFor=None):
+    def __init__(self,
+                 name,
+                 titleTextScale=None,
+                 itemList=None,
+                 optionsFor=None):
         self.width = PiratesGuiGlobals.LookoutRequestLVL3Width
         self.height = PiratesGuiGlobals.LookoutRequestLVL3Height
-        DirectFrame.__init__(self, relief=DGG.RIDGE, state=DGG.NORMAL, frameColor=(0,
-                                                                                   0,
-                                                                                   0,
-                                                                                   0), borderWidth=PiratesGuiGlobals.BorderWidth, frameSize=(0, self.width, 0, self.height))
+        DirectFrame.__init__(
+            self,
+            relief=DGG.RIDGE,
+            state=DGG.NORMAL,
+            frameColor=(0, 0, 0, 0),
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            frameSize=(0, self.width, 0, self.height))
         self.initialiseoptions(LookoutRequestLVL3)
         base.localAvatar.guiMgr.lookoutPage.title = name
         self.optionsFor = optionsFor
@@ -28,20 +34,27 @@ class LookoutRequestLVL3(DirectFrame):
             self.itemList = itemList
         else:
             self.itemList = None
-        self.activityListItems = ListFrame(0.8, None, 'blah', self, frameColor=(0,
-                                                                                0,
-                                                                                0,
-                                                                                0))
+        self.activityListItems = ListFrame(
+            0.8, None, 'blah', self, frameColor=(0, 0, 0, 0))
         self.activityListItems.itemBuffer = 0.04
         self.activityListItems.setup()
-        self.activityList = DirectScrolledFrame(parent=self, frameSize=(0, 0.9, 0,
-                                                                        0.77), relief=DGG.GROOVE, state=DGG.NORMAL, frameColor=(0,
-                                                                                                                                0,
-                                                                                                                                0,
-                                                                                                                                0), borderWidth=PiratesGuiGlobals.BorderWidth, canvasSize=(0, 0.7, 0, self.activityListItems['frameSize'][3]), verticalScroll_frameColor=PiratesGuiGlobals.ScrollbarColor, verticalScroll_borderWidth=(0.0075,
-                                                                                                                                                                                                                                                                                                                                       0.0075), verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0, self.height), verticalScroll_thumb_frameColor=PiratesGuiGlobals.ButtonColor2, verticalScroll_incButton_frameColor=PiratesGuiGlobals.ButtonColor2, verticalScroll_decButton_frameColor=PiratesGuiGlobals.ButtonColor2, sortOrder=5, pos=(0.115,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         0.2))
+        self.activityList = DirectScrolledFrame(
+            parent=self,
+            frameSize=(0, 0.9, 0, 0.77),
+            relief=DGG.GROOVE,
+            state=DGG.NORMAL,
+            frameColor=(0, 0, 0, 0),
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            canvasSize=(0, 0.7, 0, self.activityListItems['frameSize'][3]),
+            verticalScroll_frameColor=PiratesGuiGlobals.ScrollbarColor,
+            verticalScroll_borderWidth=(0.0075, 0.0075),
+            verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0,
+                                      self.height),
+            verticalScroll_thumb_frameColor=PiratesGuiGlobals.ButtonColor2,
+            verticalScroll_incButton_frameColor=PiratesGuiGlobals.ButtonColor2,
+            verticalScroll_decButton_frameColor=PiratesGuiGlobals.ButtonColor2,
+            sortOrder=5,
+            pos=(0.115, 0, 0.2))
         self.activityListItems.reparentTo(self.activityList.getCanvas())
         self.selectedItem = None
         self.optionsPanel = None
@@ -51,7 +64,15 @@ class LookoutRequestLVL3(DirectFrame):
 
     def createDoneButton(self):
         lookoutUI = loader.loadModelOnce('models/gui/lookout_gui')
-        self.acceptButton, self.acceptButtonText = self.parentPanel.parentPanel.createButtonAndText(imageInfo={'textureCard': lookoutUI, 'imageName': 'lookout_accept', 'buttonPos': (0.54, 0, 0.15), 'buttonScale': 0.3, 'clickCommand': self.confirmOptions}, textInfo=PLocalizer.LookoutConfirm)
+        self.acceptButton, self.acceptButtonText = self.parentPanel.parentPanel.createButtonAndText(
+            imageInfo={
+                'textureCard': lookoutUI,
+                'imageName': 'lookout_accept',
+                'buttonPos': (0.54, 0, 0.15),
+                'buttonScale': 0.3,
+                'clickCommand': self.confirmOptions
+            },
+            textInfo=PLocalizer.LookoutConfirm)
 
     def confirmOptions(self):
         if self.optionsFor != None:
@@ -99,8 +120,14 @@ class LookoutRequestLVL3(DirectFrame):
     def getItemList(self):
         return self.itemList
 
-    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
-        newItem = OptionItemGui(item, parent, frameColor=(0, 0, 0, 0), titleWrapLen=4)
+    def createNewItem(self,
+                      item,
+                      parent,
+                      itemType=None,
+                      columnWidths=[],
+                      color=None):
+        newItem = OptionItemGui(
+            item, parent, frameColor=(0, 0, 0, 0), titleWrapLen=4)
         newItem.setup()
         return newItem
 
@@ -114,8 +141,10 @@ class LookoutRequestLVL3(DirectFrame):
             self.itemList = itemList
             self.activityListItems._handleItemChange()
             self.activityList['canvasSize'] = (
-             0, 0.7, 0, self.activityListItems['frameSize'][3])
+                0, 0.7, 0, self.activityListItems['frameSize'][3])
         self.activityList.show()
         self.acceptButton.show()
         self.title = self.name
+
+
 # okay decompiling .\pirates\piratesgui\LookoutRequestLVL3.pyc

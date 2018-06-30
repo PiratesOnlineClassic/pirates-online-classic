@@ -10,8 +10,13 @@ class RemoteValueSet:
 
     notify = DirectNotifyGlobal.directNotify.newCategory('RemoteValueSet')
 
-    def __init__(self, url, http, body='', expectedHeader=None,
-                 expectedFields=[], onUnexpectedResponse=None):
+    def __init__(self,
+                 url,
+                 http,
+                 body='',
+                 expectedHeader=None,
+                 expectedFields=[],
+                 onUnexpectedResponse=None):
         if onUnexpectedResponse is None:
             onUnexpectedResponse = self.__onUnexpectedResponse
         response = HTTPUtil.getHTTPResponse(url, http, body)
@@ -37,7 +42,8 @@ class RemoteValueSet:
                 if len(expectedFields):
                     if name not in expectedFields:
                         self.notify.warning(
-                            "received field '%s' that is not in expected field list" % name)
+                            "received field '%s' that is not in expected field list"
+                            % name)
                 self.dict[name] = value
 
         for name in expectedFields:
@@ -76,4 +82,6 @@ class RemoteValueSet:
 
     def __onUnexpectedResponse(self, errStr):
         raise HTTPUtil.UnexpectedResponse(errStr)
+
+
 # okay decompiling .\otp\login\RemoteValueSet.pyc

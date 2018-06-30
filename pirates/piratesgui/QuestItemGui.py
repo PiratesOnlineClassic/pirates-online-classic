@@ -21,10 +21,8 @@ class QuestItemGui(InventoryItemGui):
         questScroll = self.topGui.find('**/main_gui_quest_scroll')
         data = (UberDogGlobals.InventoryCategory.QUESTS, quest.getDoId())
         self.quest = quest
-        InventoryItemGui.__init__(self, data, image=questScroll, image_color=(0.7,
-                                                                              0.7,
-                                                                              0.7,
-                                                                              1))
+        InventoryItemGui.__init__(
+            self, data, image=questScroll, image_color=(0.7, 0.7, 0.7, 1))
         self.initialiseoptions(QuestItemGui)
         self.accept(self.quest.getChangeEvent(), self._handleQuestChange)
 
@@ -39,23 +37,48 @@ class QuestItemGui(InventoryItemGui):
         if len(reward) > 1:
             if self.quest.isComplete():
                 textFg = (0.1, 0.8, 0.1, 1)
-                text = PLocalizer.QuestItemGuiCompleteFormat % {'desc': self.quest.getStatusText(), 'return': self.quest.getReturnText(), 'reward': reward}
+                text = PLocalizer.QuestItemGuiCompleteFormat % {
+                    'desc': self.quest.getStatusText(),
+                    'return': self.quest.getReturnText(),
+                    'reward': reward
+                }
             else:
                 textFg = PiratesGuiGlobals.TextFG2
-                text = PLocalizer.QuestItemGuiIncompleteFormat % {'desc': self.quest.getStatusText(), 'reward': reward}
+                text = PLocalizer.QuestItemGuiIncompleteFormat % {
+                    'desc': self.quest.getStatusText(),
+                    'reward': reward
+                }
         else:
             if self.quest.isComplete():
                 textFg = (0.1, 0.8, 0.1, 1)
-                text = PLocalizer.QuestItemGuiCompleteFormatNoReward % {'desc': self.quest.getStatusText(), 'return': self.quest.getReturnText()}
+                text = PLocalizer.QuestItemGuiCompleteFormatNoReward % {
+                    'desc': self.quest.getStatusText(),
+                    'return': self.quest.getReturnText()
+                }
             else:
                 textFg = PiratesGuiGlobals.TextFG2
-                text = PLocalizer.QuestItemGuiIncompleteFormatNoReward % {'desc': self.quest.getStatusText()}
-        self.descText = DirectLabel(parent=self, relief=None, text=text, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_fg=textFg, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(-0.1, 0, 0.1))
+                text = PLocalizer.QuestItemGuiIncompleteFormatNoReward % {
+                    'desc': self.quest.getStatusText()
+                }
+        self.descText = DirectLabel(
+            parent=self,
+            relief=None,
+            text=text,
+            text_align=TextNode.ALeft,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_fg=textFg,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            textMayChange=1,
+            pos=(-0.1, 0, 0.1))
         bWidth = 0.2
         bHeight = 0.05
         bBorder = 0.005
         if self.quest.isDroppable():
-            self.dropButton = GuiButton(parent=self, text=PLocalizer.Drop, pos=(0.8, 0, -0.02), command=self._dropQuest)
+            self.dropButton = GuiButton(
+                parent=self,
+                text=PLocalizer.Drop,
+                pos=(0.8, 0, -0.02),
+                command=self._dropQuest)
         else:
             self.dropButton = None
         self.shareButton = None
@@ -81,4 +104,6 @@ class QuestItemGui(InventoryItemGui):
 
     def _shareQuest(self):
         localAvatar.requestShareQuest(self.quest.getQuestId())
+
+
 # okay decompiling .\pirates\piratesgui\QuestItemGui.pyc

@@ -13,6 +13,7 @@ TortugaH = 0.0
 PadresLocation = Point3(6700, -22800, 100)
 PadresH = 0.0
 
+
 class FireworkShowManager:
 
     def __init__(self):
@@ -57,17 +58,29 @@ class FireworkShowManager:
         if timeOffset <= showDuration + wait:
             delay = max(0.0, wait - timeOffset)
             offset = max(0.0, timeOffset - delay - wait)
-            taskMgr.doMethodLater(delay, self.beginPortRoyalShow, 'beginPortRoyalShow', extraArgs=[offset])
+            taskMgr.doMethodLater(
+                delay,
+                self.beginPortRoyalShow,
+                'beginPortRoyalShow',
+                extraArgs=[offset])
         timeOffset = timeOffset - (showDuration + wait)
         if timeOffset <= showDuration + wait:
             delay = max(0.0, wait - timeOffset)
             offset = max(0.0, timeOffset - delay - wait)
-            taskMgr.doMethodLater(delay, self.beginTortugaShow, 'beginTortugaShow', extraArgs=[offset])
+            taskMgr.doMethodLater(
+                delay,
+                self.beginTortugaShow,
+                'beginTortugaShow',
+                extraArgs=[offset])
         timeOffset = timeOffset - (showDuration + wait)
         if timeOffset <= showDuration + wait:
             delay = max(0.0, wait - timeOffset)
             offset = max(0.0, timeOffset - delay - wait)
-            taskMgr.doMethodLater(delay, self.beginPadresShow, 'beginPadresShow', extraArgs=[offset])
+            taskMgr.doMethodLater(
+                delay,
+                self.beginPadresShow,
+                'beginPadresShow',
+                extraArgs=[offset])
 
     def disable(self):
         self.showType = None

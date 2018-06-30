@@ -10,27 +10,35 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class GuiTray(DirectFrame):
-    
 
     def __init__(self, parent, w=0.5, h=0.1, draggable=0, **kw):
         self.width = w
         self.height = h
         self.__fader = None
         if draggable:
-            optiondefs = (
-             (
-              'relief', DGG.RIDGE, None), ('state', DGG.NORMAL, None), ('frameColor', PiratesGuiGlobals.FrameColor, None), ('borderWidth', PiratesGuiGlobals.BorderWidth, None), ('frameSize', (0, self.width, 0, self.height), None))
+            optiondefs = (('relief', DGG.RIDGE, None), ('state', DGG.NORMAL,
+                                                        None),
+                          ('frameColor', PiratesGuiGlobals.FrameColor,
+                           None), ('borderWidth', PiratesGuiGlobals.BorderWidth,
+                                   None), ('frameSize', (0, self.width, 0,
+                                                         self.height), None))
         else:
-            optiondefs = (
-             ('relief', None, None), ('state', DGG.DISABLED, None), ('frameColor', PiratesGuiGlobals.FrameColor, None), ('borderWidth', PiratesGuiGlobals.BorderWidth, None), ('frameSize', (0, self.width, 0, self.height), None))
+            optiondefs = (('relief', None, None), ('state', DGG.DISABLED, None),
+                          ('frameColor', PiratesGuiGlobals.FrameColor,
+                           None), ('borderWidth', PiratesGuiGlobals.BorderWidth,
+                                   None), ('frameSize', (0, self.width, 0,
+                                                         self.height), None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent, **kw)
         self.initialiseoptions(GuiTray)
         self.draggable = draggable
         if self.draggable:
-            self.dragBar = DirectButton(parent=self, relief=DGG.FLAT, frameColor=PiratesGuiGlobals.ButtonColor1, frameSize=(0, 0.02, 0, self.height - 0.01 * 2), pos=(0.01,
-                                                                                                                                                                      0,
-                                                                                                                                                                      0.01))
+            self.dragBar = DirectButton(
+                parent=self,
+                relief=DGG.FLAT,
+                frameColor=PiratesGuiGlobals.ButtonColor1,
+                frameSize=(0, 0.02, 0, self.height - 0.01 * 2),
+                pos=(0.01, 0, 0.01))
             self.dragBar.bind(DGG.B1PRESS, self.dragStart)
             self.dragBar.bind(DGG.B1RELEASE, self.dragStop)
             self.dragBar.bind(DGG.B2PRESS, self.dragStart)
@@ -51,7 +59,8 @@ class GuiTray(DirectFrame):
         if self.draggable:
             taskMgr.remove(self.taskName('dragTask'))
             vWidget2render2d = self.getPos(render2d)
-            vMouse2render2d = Point3(event.getMouse()[0], 0, event.getMouse()[1])
+            vMouse2render2d = Point3(event.getMouse()[0], 0,
+                                     event.getMouse()[1])
             editVec = Vec3(vWidget2render2d - vMouse2render2d)
             task = taskMgr.add(self.dragTask, self.taskName('dragTask'))
             task.editVec = editVec
@@ -96,6 +105,14 @@ class GuiTray(DirectFrame):
     def fadeOut(self, delay=0.0, duration=0.5):
         if self.__fader:
             self.__fader.pause()
-        self.__fader = Sequence(Wait(delay), LerpFunctionInterval(self.setAlphaScale, fromData=self.getColorScale()[3], toData=0.0, duration=duration), Func(self.hide))
+        self.__fader = Sequence(
+            Wait(delay),
+            LerpFunctionInterval(
+                self.setAlphaScale,
+                fromData=self.getColorScale()[3],
+                toData=0.0,
+                duration=duration), Func(self.hide))
         self.__fader.start()
+
+
 # okay decompiling .\pirates\piratesgui\GuiTray.pyc

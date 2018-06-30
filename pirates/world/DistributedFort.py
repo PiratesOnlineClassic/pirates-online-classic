@@ -72,7 +72,8 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
         self.battleTubeHeight = 100.0
         DistributedBattleAvatar.DistributedBattleAvatar.announceGenerate(self)
         self.cr.relatedObjectMgr.abortRequest(self.islandRequest)
-        self.islandRequest = self.cr.relatedObjectMgr.requestObjects([self.islandId], eachCallback=self.__gotIsland)
+        self.islandRequest = self.cr.relatedObjectMgr.requestObjects(
+            [self.islandId], eachCallback=self.__gotIsland)
 
     def disable(self):
         DistributedBattleAvatar.DistributedBattleAvatar.disable(self)
@@ -86,14 +87,17 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
         if island.lastZoneLevel == 0:
             self.__setupIslandDependentObjects()
         else:
-            self.cr.distributedDistrict.worldCreator.registerPostLoadCall(self.__setupIslandDependentObjects)
+            self.cr.distributedDistrict.worldCreator.registerPostLoadCall(
+                self.__setupIslandDependentObjects)
         return
 
     def __setupIslandDependentObjects(self):
         self.notify.debug('setupIslandDependentObjects')
         if not self.areDrawbridgesLoaded():
-            self.cr.distributedDistrict.worldCreator.registerPostLoadCall(self.__setupIslandDependentObjects)
-            self.notify.debug('no drawbridges yet, registering another post load call')
+            self.cr.distributedDistrict.worldCreator.registerPostLoadCall(
+                self.__setupIslandDependentObjects)
+            self.notify.debug(
+                'no drawbridges yet, registering another post load call')
             return
         self.notify.debug('drawbridges are in render')
         self.setupCollisions()
@@ -168,11 +172,13 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
         self.hpAnchor.setPos(fortPartBounds.getApproxCenter())
         self.hpAnchor.setZ(self.hpAnchor.getZ() + zAdj)
         self.hpAnchor.reparentTo(self.fortNode)
-        self.hpMeter = HpMeter.HpMeter(fadeOut=0, parent=self.hpAnchor, originAtMidPt=True)
+        self.hpMeter = HpMeter.HpMeter(
+            fadeOut=0, parent=self.hpAnchor, originAtMidPt=True)
         self.hpMeter.setScale(200)
         self.hpMeter.setBin('fixed', 130)
         self.hpMeter.setDepthWrite(False)
-        myEffect = BillboardEffect.make(Vec3(0, 0, 1), True, False, 150, NodePath(), Point3(0, 0, 0))
+        myEffect = BillboardEffect.make(
+            Vec3(0, 0, 1), True, False, 150, NodePath(), Point3(0, 0, 0))
         self.hpMeter.node().setEffect(myEffect)
         self.hpMeter.update(self.hp, self.maxHp)
         self.hideFortHpMeter()
@@ -191,7 +197,8 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
                 self.hpMeter.hide()
 
     def takeDamage(self, hpLost, pos, bonus=0):
-        DistributedBattleAvatar.DistributedBattleAvatar.takeDamage(self, hpLost, pos, bonus)
+        DistributedBattleAvatar.DistributedBattleAvatar.takeDamage(
+            self, hpLost, pos, bonus)
 
     def died(self):
         if self.cr and self.cr.wantSpecialEffects != 0:
@@ -223,17 +230,21 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
         curNodePath.setTag('fortId', str(self.doId))
         shipCollider = drawbridge.find('**/*shipcollide*;+s')
         if shipCollider.isEmpty():
-            self.notify.warning('setupDrawbridgeCollisions could not find ship collider for %s' % dbName)
+            self.notify.warning(
+                'setupDrawbridgeCollisions could not find ship collider for %s'
+                % dbName)
         tempStr = 'drawbridge_pier'
         lenTemp = len(tempStr)
         suffix = dbName[lenTemp:]
-        otherParts = ('crane_island', 'crane1_island', 'drawbridge_fort', 'crane_fort',
-                      'crane1_fort', 'drawbridge_fort')
+        otherParts = ('crane_island', 'crane1_island', 'drawbridge_fort',
+                      'crane_fort', 'crane1_fort', 'drawbridge_fort')
         for otherPart in otherParts:
             nodeName = otherPart + suffix
             curNodePath = render.find('**/%s' % nodeName)
             if curNodePath.isEmpty():
-                self.notify.warning("setupDrawbridgeCollisions() couldn't find nodepath %s" % nodeName)
+                self.notify.warning(
+                    "setupDrawbridgeCollisions() couldn't find nodepath %s" %
+                    nodeName)
             else:
                 oldBitMask = curNodePath.getCollideMask()
                 newBitMask = oldBitMask | PiratesGlobals.TargetBitmask
@@ -242,7 +253,7 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
                 curNodePath.setTag('fortId', str(self.doId))
 
     def setupDrawbridges(self):
-        if TreasureMapBlackPearlGlobals.DrawbridgeDict.has_key(self.objKey):
+        if self.objKey in TreasureMapBlackPearlGlobals.DrawbridgeDict:
             dbTuple = TreasureMapBlackPearlGlobals.DrawbridgeDict[self.objKey]
             for dbName in dbTuple:
                 drawbridge = render.find('**/%s' % dbName)
@@ -254,7 +265,7 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
 
     def areDrawbridgesLoaded(self):
         retval = True
-        if TreasureMapBlackPearlGlobals.DrawbridgeDict.has_key(self.objKey):
+        if self.objKey in TreasureMapBlackPearlGlobals.DrawbridgeDict:
             dbTuple = TreasureMapBlackPearlGlobals.DrawbridgeDict[self.objKey]
             for dbName in dbTuple:
                 drawbridge = render.find('**/%s' % dbName)
@@ -266,14 +277,21 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
     def updateDrawbridges(self):
         for drawbridge in self.drawbridges:
             if self.hp <= 0:
-                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting(
+                ) >= base.options.SpecialEffectsHigh:
                     smokeEffect = SmokeExplosion.getEffect()
                     if smokeEffect:
                         smokeEffect.reparentTo(render)
                         smokeEffect.setPos(drawbridge, 0, 0, 0)
                         smokeEffect.spriteScale = 1.0
                         smokeEffect.play()
-                posHprIval = LerpPosHprInterval(drawbridge, 1.0, Vec3(drawbridge.getX(), drawbridge.getY(), drawbridge.getZ() - 130.0), Vec3(drawbridge.getH(), drawbridge.getP() - 360.0, drawbridge.getR() + 15))
+                posHprIval = LerpPosHprInterval(
+                    drawbridge, 1.0,
+                    Vec3(drawbridge.getX(), drawbridge.getY(),
+                         drawbridge.getZ() - 130.0),
+                    Vec3(drawbridge.getH(),
+                         drawbridge.getP() - 360.0,
+                         drawbridge.getR() + 15))
                 posHprIval.start()
 
     def debugMissing(self):
@@ -297,7 +315,9 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
         for drawbridge in self.drawbridges:
             if drawbridge.getR() == angle:
                 return
-            ival = LerpHprInterval(drawbridge, 4.0, Vec3(drawbridge.getH(), drawbridge.getP(), angle))
+            ival = LerpHprInterval(
+                drawbridge, 4.0,
+                Vec3(drawbridge.getH(), drawbridge.getP(), angle))
             ival.start()
 
     def hideDrawbridges(self):
@@ -330,11 +350,22 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
     def setLevel(self, level):
         self.level = level
 
-    def printExpText(self, totalExp, colorSetting, basicPenalty, crewBonus, doubleXPBonus, holidayBonus):
+    def printExpText(self, totalExp, colorSetting, basicPenalty, crewBonus,
+                     doubleXPBonus, holidayBonus):
         taskMgr.doMethodLater(0.5, self.showHpText, self.taskName('printExp'), [
-         totalExp, 4, 6.0, 1.0, basicPenalty, crewBonus, doubleXPBonus, holidayBonus])
+            totalExp, 4, 6.0, 1.0, basicPenalty, crewBonus, doubleXPBonus,
+            holidayBonus
+        ])
 
-    def showHpText(self, number, bonus=0, duration=2.0, scale=1.0, basicPenalty=0, crewBonus=0, doubleXPBonus=0, holidayBonus=0):
+    def showHpText(self,
+                   number,
+                   bonus=0,
+                   duration=2.0,
+                   scale=1.0,
+                   basicPenalty=0,
+                   crewBonus=0,
+                   doubleXPBonus=0,
+                   holidayBonus=0):
         if self.isEmpty():
             return
         distance = camera.getDistance(self)
@@ -357,7 +388,17 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
             mods[TextEffect.MOD_2XPBONUS] = doubleXPBonus
         if holidayBonus > 0:
             mods[TextEffect.MOD_HOLIDAYBONUS] = holidayBonus
-        newEffect = TextEffect.genTextEffect(self.hpAnchor, self.HpTextGenerator, number, bonus, self.isNpc, cleanup, startPos, destPos, scale, modifiers=mods)
+        newEffect = TextEffect.genTextEffect(
+            self.hpAnchor,
+            self.HpTextGenerator,
+            number,
+            bonus,
+            self.isNpc,
+            cleanup,
+            startPos,
+            destPos,
+            scale,
+            modifiers=mods)
         if newEffect:
             self.textEffects.append(newEffect)
         return

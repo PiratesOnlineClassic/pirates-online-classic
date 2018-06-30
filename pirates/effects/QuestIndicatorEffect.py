@@ -8,7 +8,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class QuestIndicatorEffect(PooledEffect, EffectController):
-    
+
     cardScale = 16.0
     cardScale2 = 64.0
 
@@ -18,7 +18,8 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/skyBeam')
         self.card = model.find('**/*')
         self.wantBottomEffect = 1
-        self.particleDummy = render.attachNewNode(ModelNode('QuestIndicatorParticleDummy'))
+        self.particleDummy = render.attachNewNode(
+            ModelNode('QuestIndicatorParticleDummy'))
         self.particleDummy.setDepthWrite(0)
         self.particleDummy.setLightOff()
         self.particleDummy.setFogOff()
@@ -64,7 +65,9 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(15.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingAlpha,
+                                           ColorBlendAttrib.OOne)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(0.5)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -106,7 +109,9 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
         self.p1.renderer.setNonanimatedTheta(0.0)
         self.p1.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p1.renderer.setAlphaDisable(0)
-        self.p1.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
+        self.p1.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingAlpha,
+                                           ColorBlendAttrib.OOne)
         self.p1.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p1.emitter.setAmplitude(0.0)
         self.p1.emitter.setAmplitudeSpread(0.0)
@@ -123,8 +128,17 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
             self.p1.setLitterSize(8)
         else:
             self.p1.setLitterSize(0)
-        self.startEffect = Sequence(Func(self.p0.clearToInitial), Func(self.p0.softStart), Func(self.f.start, self, self.particleDummy), Func(self.p1.clearToInitial), Func(self.p1.softStart), Func(self.f2.start, self, self.particleDummy), Func(self.startAdjustTask), Func(self.particleDummy.hide), Func(self.hide), Wait(0.01), Func(self.particleDummy.show), Func(self.show))
-        self.endEffect = Sequence(Func(self.p0.softStop), Func(self.p1.softStop), Wait(2.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.clearToInitial), Func(self.p0.softStart),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.p1.clearToInitial), Func(self.p1.softStart),
+            Func(self.f2.start, self, self.particleDummy),
+            Func(self.startAdjustTask), Func(self.particleDummy.hide),
+            Func(self.hide), Wait(0.01), Func(self.particleDummy.show),
+            Func(self.show))
+        self.endEffect = Sequence(
+            Func(self.p0.softStop), Func(self.p1.softStop), Wait(2.0),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(2.5), self.endEffect)
 
     def startLoop(self, pos=Point3(0), pdPos=Point3()):
@@ -136,7 +150,8 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
 
     def startAdjustTask(self):
         self.stopAdjustTask()
-        task = taskMgr.doMethodLater(1, self.adjustTask, 'questIndicatorEffect-adjust')
+        task = taskMgr.doMethodLater(1, self.adjustTask,
+                                     'questIndicatorEffect-adjust')
         self.adjustTask(task, force=True)
 
     def adjustTask(self, task, force=False):
@@ -148,7 +163,9 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
                 self.adjustIval.pause()
                 self.adjustIval = None
             if not force:
-                self.adjustIval = Parallel(self.scaleInterval(1, newFEScale), self.particleDummy.scaleInterval(1, newPDScale))
+                self.adjustIval = Parallel(
+                    self.scaleInterval(1, newFEScale),
+                    self.particleDummy.scaleInterval(1, newPDScale))
                 self.adjustIval.start()
             else:
                 self.p0.clearToInitial()
@@ -187,4 +204,6 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
 
     def setWantBottomEffect(self, want):
         self.wantBottomEffect = want
+
+
 # okay decompiling .\pirates\effects\QuestIndicatorEffect.pyc

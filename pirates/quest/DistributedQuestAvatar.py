@@ -8,8 +8,10 @@ from pirates.quest.QuestPath import QuestStep
 from pirates.quest.QuestStepIndicator import QuestStepIndicator
 
 
-class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestHolder):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedQuestAvatar')
+class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase,
+                             QuestHolder.QuestHolder):
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedQuestAvatar')
 
     def __init__(self):
         self.lastQuestStepRequest = None
@@ -45,14 +47,18 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
         return self.currentQuestChoiceContainers
 
     def requestDropQuest(self, questId):
-        DistributedQuestAvatar.notify.debug('requestDropQuest: %s (%s)' % (questId, self.doId))
+        DistributedQuestAvatar.notify.debug(
+            'requestDropQuest: %s (%s)' % (questId, self.doId))
         self.sendUpdate('requestDropQuest', [questId])
 
     def requestShareQuest(self, questId):
-        DistributedQuestAvatar.notify.debug('requestShareQuest: %s (%s)' % (questId, self.doId))
+        DistributedQuestAvatar.notify.debug(
+            'requestShareQuest: %s (%s)' % (questId, self.doId))
         self.sendUpdate('requestShareQuest', [questId])
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def refreshActiveQuestStep(self, forceClear=False, forceRefresh=False):
         if self.activeQuestId:
             if forceRefresh or forceClear:
@@ -65,7 +71,9 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
             else:
                 self.b_requestQuestStep('')
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def b_requestQuestStep(self, questId):
         if questId:
             stepRequest = (self.getLocation()[0], questId)
@@ -85,17 +93,23 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
             self.l_requestQuestStep(None)
             self.l_setQuestStep(None)
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def d_requestQuestStep(self, stepRequest):
         self.sendUpdate('requestQuestStep', [stepRequest[1]])
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def l_requestQuestStep(self, stepRequest):
         if stepRequest:
             self.lastQuestStepRequest = stepRequest
             self.oldQuestStep = None
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def setQuestStep(self, questStepArgs):
         questStep = QuestStep(*questStepArgs)
         self.l_setQuestStep(questStep)
@@ -109,11 +123,14 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
         if island:
             pos = island.getPos()
             if mapPage.worldMap.mapBall.questDartPlaced:
-                localAvatar.guiMgr.mapPage.worldMap.mapBall.updateDart('questStep', pos)
+                localAvatar.guiMgr.mapPage.worldMap.mapBall.updateDart(
+                    'questStep', pos)
             else:
                 localAvatar.guiMgr.mapPage.addQuestDart('questStep', pos)
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def l_setQuestStep(self, questStep):
         if questStep == QuestStep.getNullStep():
             self.oldQuestStep = None
@@ -125,35 +142,47 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
         self.questStep = questStep
         self.questIndicator.showQuestStep(self.questStep)
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def b_requestActiveQuest(self, questId):
         if not questId == self.activeQuestId:
             self.d_requestActiveQuest(questId)
 
         self.l_requestActiveQuest(questId)
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def d_requestActiveQuest(self, questId):
         self.sendUpdate('requestActiveQuest', [questId])
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def l_requestActiveQuest(self, questId):
         self.b_requestQuestStep(questId)
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def setActiveQuest(self, questId):
         self.l_setActiveQuest(questId)
 
-    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam='want-quest-indicator-report')
     def l_setActiveQuest(self, questId):
         if questId != self.activeQuestId:
             self.activeQuestId = questId
-            messenger.send('localAvatarActiveQuestId', sentArgs=[self.activeQuestId])
+            messenger.send(
+                'localAvatarActiveQuestId', sentArgs=[self.activeQuestId])
             self.b_requestQuestStep(questId)
             if self.guiMgr and self.guiMgr.mapPage:
                 questDartName = localAvatar.guiMgr.mapPage.worldMap.mapBall.questDartName
                 if questDartName:
-                    localAvatar.guiMgr.mapPage.worldMap.mapBall.updateDartText(questDartName, questId)
+                    localAvatar.guiMgr.mapPage.worldMap.mapBall.updateDartText(
+                        questDartName, questId)
 
     def popupProgressBlocker(self, questId):
         if questId == 'c3visitJoshamee':
@@ -166,7 +195,9 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
 
         popupDialogText = PLocalizer.ProgressBlockPopupDialog.get(questId)
         if popupDialogText:
-            self.popupDialog = PDialog.PDialog(text=popupDialogText, style=OTPDialog.Acknowledge,
+            self.popupDialog = PDialog.PDialog(
+                text=popupDialogText,
+                style=OTPDialog.Acknowledge,
                 command=self.__cleanupDialog)
         else:
             localAvatar.guiMgr.showNonPayer(quest=questId, focus=9)

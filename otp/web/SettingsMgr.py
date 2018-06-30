@@ -23,9 +23,8 @@ class SettingsMgr(DistributedObjectGlobal, SettingsMgrBase):
     def _scheduleChangedSettingRequest(self):
         if self._sracs:
             self._sracs.destroy()
-        self._sracs = FrameDelayedCall(
-            'requestAllChangedSettings',
-            self.sendRequestAllChangedSettings)
+        self._sracs = FrameDelayedCall('requestAllChangedSettings',
+                                       self.sendRequestAllChangedSettings)
 
     def delete(self):
         self.ignore(self._crConnectEvent)
@@ -41,6 +40,5 @@ class SettingsMgr(DistributedObjectGlobal, SettingsMgrBase):
         if valueStr == self._getCurrentValueRepr(settingName):
             return
         self.notify.info(
-            'got setting change: %s -> %s' %
-            (settingName, valueStr))
+            'got setting change: %s -> %s' % (settingName, valueStr))
         self._changeSetting(settingName, valueStr)

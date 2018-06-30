@@ -9,6 +9,7 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class DarkShipFog(PooledEffect, EffectController):
     cardScale = 64.0
 
@@ -18,7 +19,8 @@ class DarkShipFog(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleFlameSmoke')
         if not DarkShipFog.particleDummy:
-            DarkShipFog.particleDummy = render.attachNewNode(ModelNode('DarkShipFogParticleDummy'))
+            DarkShipFog.particleDummy = render.attachNewNode(
+                ModelNode('DarkShipFogParticleDummy'))
             DarkShipFog.particleDummy.setDepthWrite(0)
             DarkShipFog.particleDummy.setColorScale(1.0, 1.0, 1.0, 1)
             DarkShipFog.particleDummy.setLightOff()
@@ -56,7 +58,8 @@ class DarkShipFog(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addConstant(0.0, 1.0, Vec4(0.45, 0.7, 1.0, 0.75), 1)
+        self.p0.renderer.getColorInterpolationManager().addConstant(
+            0.0, 1.0, Vec4(0.45, 0.7, 1.0, 0.75), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETEXPLICIT)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -66,8 +69,12 @@ class DarkShipFog(PooledEffect, EffectController):
         self.p0.emitter.setRadius(250.0)
 
     def createTrack(self):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(5.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100.0), Wait(5.0),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(5.0), self.endEffect)
 
     def cleanUpEffect(self):

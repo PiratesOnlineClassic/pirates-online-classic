@@ -13,17 +13,31 @@ from pirates.pirate import AvatarTypes
 from pirates.distributed import TargetManagerBase
 
 
-class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.TargetManagerBase):
+class TargetManager(DistributedObject.DistributedObject,
+                    TargetManagerBase.TargetManagerBase):
     notify = directNotify.newCategory('TargetManager')
     neverDisable = 1
-    WeaponsWithoutReticles = (0, InventoryType.CutlassWeaponL1, InventoryType.CutlassWeaponL2, InventoryType.CutlassWeaponL3, InventoryType.CutlassWeaponL4, InventoryType.CutlassWeaponL5, InventoryType.CutlassWeaponL6, InventoryType.DollWeaponL1, InventoryType.DollWeaponL2, InventoryType.DollWeaponL3, InventoryType.DollWeaponL4, InventoryType.DollWeaponL5, InventoryType.DollWeaponL6, InventoryType.GrenadeWeaponL1, InventoryType.GrenadeWeaponL2, InventoryType.GrenadeWeaponL3, InventoryType.GrenadeWeaponL4, InventoryType.GrenadeWeaponL5, InventoryType.GrenadeWeaponL6, InventoryType.MeleeWeaponL1, InventoryType.MeleeWeaponL2, InventoryType.MeleeWeaponL3, InventoryType.MeleeWeaponL4, InventoryType.MeleeWeaponL5, InventoryType.MeleeWeaponL6)
+    WeaponsWithoutReticles = (
+        0, InventoryType.CutlassWeaponL1, InventoryType.CutlassWeaponL2,
+        InventoryType.CutlassWeaponL3, InventoryType.CutlassWeaponL4,
+        InventoryType.CutlassWeaponL5, InventoryType.CutlassWeaponL6,
+        InventoryType.DollWeaponL1, InventoryType.DollWeaponL2,
+        InventoryType.DollWeaponL3, InventoryType.DollWeaponL4,
+        InventoryType.DollWeaponL5, InventoryType.DollWeaponL6,
+        InventoryType.GrenadeWeaponL1, InventoryType.GrenadeWeaponL2,
+        InventoryType.GrenadeWeaponL3, InventoryType.GrenadeWeaponL4,
+        InventoryType.GrenadeWeaponL5, InventoryType.GrenadeWeaponL6,
+        InventoryType.MeleeWeaponL1, InventoryType.MeleeWeaponL2,
+        InventoryType.MeleeWeaponL3, InventoryType.MeleeWeaponL4,
+        InventoryType.MeleeWeaponL5, InventoryType.MeleeWeaponL6)
     WeaponBaseRange = {
         InventoryType.CutlassRep: 6,
         InventoryType.PistolRep: 70,
         InventoryType.DaggerRep: 50,
         InventoryType.GrenadeRep: 20,
         InventoryType.WandRep: 0,
-        InventoryType.DollRep: 6}
+        InventoryType.DollRep: 6
+    }
     RETICLE_POS = Vec3(0, 0, 0.149)
 
     def __init__(self, cr):
@@ -33,7 +47,8 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         self.setTargetNodePath(render)
         self.wantAimAssist = True
         self.distanceChecker = NodePath('distanceChecker')
-        aimRay = CollisionSegment(0.0, 0.0, 0.0, 0.0, WeaponGlobals.MaxAimDistance, 0.0)
+        aimRay = CollisionSegment(0.0, 0.0, 0.0, 0.0,
+                                  WeaponGlobals.MaxAimDistance, 0.0)
         aimRayNode = CollisionNode('TargetManager.aimRayNode')
         aimRayNode.addSolid(aimRay)
         bitmask = PiratesGlobals.BattleAimBitmask | PiratesGlobals.BattleAimOccludeBitmask
@@ -78,9 +93,8 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
                 if localAvatar.currentAimOver == target:
                     localAvatar.currentAimOver = None
                     self.reticle.setColorScale(1, 1, 1, self.reticleAlpha)
-                    messenger.send(target.uniqueName('aimOver'), [
-                        0])
-                    target.hideHpMeter(delay = 1.0)
+                    messenger.send(target.uniqueName('aimOver'), [0])
+                    target.hideHpMeter(delay=1.0)
                     target.hideEnemyTargetInfo()
 
                 if localAvatar.currentSelection == target:
@@ -102,7 +116,8 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         for i in range(numEntries):
             entry = self.aimQueue.getEntry(i)
             targetColl = entry.getIntoNodePath()
-            if targetColl.node().getIntoCollideMask() == PiratesGlobals.BattleAimOccludeBitmask:
+            if targetColl.node().getIntoCollideMask(
+            ) == PiratesGlobals.BattleAimOccludeBitmask:
                 break
             target = self.getObjectFromNodepath(targetColl)
             if target:
@@ -132,7 +147,8 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         for i in range(numEntries):
             entry = self.aimQueue.getEntry(i)
             targetColl = entry.getIntoNodePath()
-            if targetColl.node().getIntoCollideMask().hasBitsInCommon(PiratesGlobals.BattleAimOccludeBitmask):
+            if targetColl.node().getIntoCollideMask().hasBitsInCommon(
+                    PiratesGlobals.BattleAimOccludeBitmask):
                 break
             target = self.getObjectFromNodepath(targetColl)
             if target:
@@ -162,8 +178,10 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         return self.objectDict.get(np.id(), None)
 
     def pickObject(self):
-        entry = self.iRay.pickBitMask(bitMask=PiratesGlobals.BattleAimBitmask, targetNodePath=self.targetNodePath,
-                                      skipFlags=SKIP_CAMERA)
+        entry = self.iRay.pickBitMask(
+            bitMask=PiratesGlobals.BattleAimBitmask,
+            targetNodePath=self.targetNodePath,
+            skipFlags=SKIP_CAMERA)
         while entry:
             nodePath = entry.getIntoNodePath()
             obj = self.getObjectFromNodepath(nodePath)
@@ -260,31 +278,37 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
             if TeamUtils.damageAllowed(target, localAvatar):
                 self.reticle.setColorScale(1, 1, 1, self.reticleAlpha)
                 if base.localAvatar.currentWeapon:
-                    repId = WeaponGlobals.getRepId(base.localAvatar.currentWeaponId)
+                    repId = WeaponGlobals.getRepId(
+                        base.localAvatar.currentWeaponId)
                     baseRange = self.WeaponBaseRange.get(repId)
                     calcRange = 0
                     blastRange = 0
                     ammoSkillId = localAvatar.guiMgr.combatTray.ammoSkillId
                     if repId == InventoryType.PistolRep:
                         if localAvatar.guiMgr.combatTray.isCharging:
-                            calcRange = base.cr.battleMgr.getModifiedAttackRange(localAvatar,
-                                                                                 InventoryType.PistolTakeAim,
-                                                                                 ammoSkillId)
+                            calcRange = base.cr.battleMgr.getModifiedAttackRange(
+                                localAvatar, InventoryType.PistolTakeAim,
+                                ammoSkillId)
                         else:
-                            calcRange = base.cr.battleMgr.getModifiedAttackRange(localAvatar, InventoryType.PistolShoot,
-                                                                                 ammoSkillId)
+                            calcRange = base.cr.battleMgr.getModifiedAttackRange(
+                                localAvatar, InventoryType.PistolShoot,
+                                ammoSkillId)
                     elif repId == InventoryType.DaggerRep:
-                        calcRange = base.cr.battleMgr.getModifiedAttackRange(localAvatar, InventoryType.DaggerAsp, 0)
+                        calcRange = base.cr.battleMgr.getModifiedAttackRange(
+                            localAvatar, InventoryType.DaggerAsp, 0)
                     elif repId == InventoryType.WandRep:
                         if ammoSkillId:
-                            calcRange = base.cr.battleMgr.getModifiedAttackRange(localAvatar, ammoSkillId, 0)
+                            calcRange = base.cr.battleMgr.getModifiedAttackRange(
+                                localAvatar, ammoSkillId, 0)
 
-                        blastRange = base.cr.battleMgr.getModifiedAttackRange(localAvatar, InventoryType.StaffBlast, 0)
+                        blastRange = base.cr.battleMgr.getModifiedAttackRange(
+                            localAvatar, InventoryType.StaffBlast, 0)
 
                     distance = base.localAvatar.getDistance(target)
                     if hasattr(target, 'battleTubeNodePaths'):
                         for tube in target.battleTubeNodePaths:
-                            tubeLength = max(target.battleTubeRadius, target.battleTubeHeight)
+                            tubeLength = max(target.battleTubeRadius,
+                                             target.battleTubeHeight)
                             if distance - tubeLength < distance:
                                 distance -= tubeLength
                                 continue
@@ -349,9 +373,11 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         tNodePath.setPos(target, 0, 0, target.getHeight() * 0.6)
         nearVec = self.getNearProjectionPoint(tNodePath)
         nearVec *= base.camLens.getFocalLength() / base.camLens.getNear()
-        render2dX = CLAMP(nearVec[0] / base.camLens.getFilmSize()[0] / 2.0, -0.9, 0.9)
+        render2dX = CLAMP(nearVec[0] / base.camLens.getFilmSize()[0] / 2.0,
+                          -0.9, 0.9)
         aspect2dX = render2dX * base.getAspectRatio()
-        aspect2dZ = CLAMP(nearVec[2] / base.camLens.getFilmSize()[1] / 2.0, -0.8, 0.9)
+        aspect2dZ = CLAMP(nearVec[2] / base.camLens.getFilmSize()[1] / 2.0,
+                          -0.8, 0.9)
         tNodePath.removeNode()
         return Vec3(aspect2dX, 0, aspect2dZ), distance
 

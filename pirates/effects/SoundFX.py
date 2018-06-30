@@ -9,9 +9,19 @@ from pandac.PandaModules import *
 
 
 class SoundFX(NodePath):
-    
 
-    def __init__(self, sfxFile, volume=0.5, looping=True, delayMin=0, delayMax=0, pos=None, hpr=None, parent=None, listenerNode=None, taskName='playSfx', drawIcon=False):
+    def __init__(self,
+                 sfxFile,
+                 volume=0.5,
+                 looping=True,
+                 delayMin=0,
+                 delayMax=0,
+                 pos=None,
+                 hpr=None,
+                 parent=None,
+                 listenerNode=None,
+                 taskName='playSfx',
+                 drawIcon=False):
         NodePath.NodePath.__init__(self, 'soundFX')
         self.volume = volume
         self.looping = looping
@@ -51,7 +61,11 @@ class SoundFX(NodePath):
         self.stopPlaying()
         if taskName is None:
             taskName = self.taskName
-        base.sfxPlayer.playSfx(sfx=self.sfx, volume=self.volume, node=self, listenerNode=self.listenerNode)
+        base.sfxPlayer.playSfx(
+            sfx=self.sfx,
+            volume=self.volume,
+            node=self,
+            listenerNode=self.listenerNode)
         self.delayStartT = 0
         if self.looping:
             self.currentDelay = random.uniform(self.delayMin, self.delayMax)
@@ -67,7 +81,11 @@ class SoundFX(NodePath):
             stopT = globalClock.getFrameTime()
             deltaT = stopT - self.delayStartT
             if deltaT >= self.currentDelay:
-                base.sfxPlayer.playSfx(sfx=self.sfx, volume=self.volume, node=self, listenerNode=self.listenerNode)
+                base.sfxPlayer.playSfx(
+                    sfx=self.sfx,
+                    volume=self.volume,
+                    node=self,
+                    listenerNode=self.listenerNode)
                 self.delayStartT = 0
                 self.currentDelay = random.uniform(self.delayMin, self.delayMax)
         return Task.cont
@@ -100,4 +118,6 @@ class SoundFX(NodePath):
             taskMgr.remove(self.task.name)
         if taskMgr.hasTaskNamed(self.taskName):
             taskMgr.remove(self.taskName)
+
+
 # okay decompiling .\pirates\effects\SoundFX.pyc

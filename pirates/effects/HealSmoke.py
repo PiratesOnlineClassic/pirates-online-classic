@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class HealSmoke(PooledEffect, EffectController):
-    
+
     cardScale = 64.0
 
     def __init__(self):
@@ -59,7 +59,9 @@ class HealSmoke(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingAlpha,
+                                           ColorBlendAttrib.OOne)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(0.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -69,15 +71,21 @@ class HealSmoke(PooledEffect, EffectController):
         self.p0.emitter.setRadius(1.5)
 
     def createTrack(self):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.04), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(3.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.04), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100), Wait(3.0),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(3.0), self.endEffect)
 
     def setEffectColor(self, color):
         self.effectColor = color
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.25, Vec4(0, 0, 0, 0), Vec4(1, 1, 1, 1), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.25, 1.0, Vec4(1, 1, 1, 1), self.effectColor, 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 0.25, Vec4(0, 0, 0, 0), Vec4(1, 1, 1, 1), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.25, 1.0, Vec4(1, 1, 1, 1), self.effectColor, 1)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -87,4 +95,6 @@ class HealSmoke(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\HealSmoke.pyc

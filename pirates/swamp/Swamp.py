@@ -14,10 +14,17 @@ from pirates.seapatch.Water import Water
 if base.config.GetBool('want-water-panel', False):
     from pirates.seapatch.WaterPanel import *
 
-class Swamp(Water):  
+
+class Swamp(Water):
     notify = directNotify.newCategory('Swamp')
 
-    def __init__(self, swamp_model_file_path, parentNP=render, reflection=None, input_swamp_model=None, input_shader_file_path=None, input_water_color=None):
+    def __init__(self,
+                 swamp_model_file_path,
+                 parentNP=render,
+                 reflection=None,
+                 input_swamp_model=None,
+                 input_shader_file_path=None,
+                 input_water_color=None):
         if input_swamp_model:
             swamp_name = 'Swamp I'
         else:
@@ -39,10 +46,12 @@ class Swamp(Water):
         self.patchNP = NodePath(self.seamodel)
         self.patchNP.reparentTo(self.parentNP)
         self.hidden = False
-        mask = 4294967295L
+        mask = 4294967295
         if self.use_water_bin:
             self.seamodel.setBin('water', 1)
-            stencil = StencilAttrib.make(1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOReplace, 1, mask, mask)
+            stencil = StencilAttrib.make(
+                1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep,
+                StencilAttrib.SOKeep, StencilAttrib.SOReplace, 1, mask, mask)
             self.seamodel.setAttrib(stencil)
         else:
             self.seamodel.setBin('background', 200)
@@ -63,9 +72,13 @@ class Swamp(Water):
             self.model3.setPos(-10.0, 50.0, 15.0)
             self.model3.setHpr(0.0, 0.0, 0.0)
             self.model3.setBin('water', 50)
-            stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
+            stencil = StencilAttrib.make(
+                1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep,
+                StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
             self.model.setAttrib(stencil)
-            stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 0, mask, mask)
+            stencil = StencilAttrib.make(
+                1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep,
+                StencilAttrib.SOKeep, StencilAttrib.SOKeep, 0, mask, mask)
             self.model3.setAttrib(stencil)
         if self.use_water_bin:
             self.patchNP.setBin('water', 10)
@@ -80,7 +93,9 @@ class Swamp(Water):
             self.patchNP.setLight(self.todMgr.alight)
         seaMin, seaMax = self.seamodel.getTightBounds()
         seaDelta = seaMax - seaMin
-        cp = CollisionPolygon(Point3(-1.0, -1.0, 0), Point3(1.0, -1.0, 0), Point3(1.0, 1.0, 0), Point3(-1.0, 1.0, 0))
+        cp = CollisionPolygon(
+            Point3(-1.0, -1.0, 0), Point3(1.0, -1.0, 0), Point3(1.0, 1.0, 0),
+            Point3(-1.0, 1.0, 0))
         cNode = CollisionNode('seaCollision')
         cNode.setCollideMask(PiratesGlobals.TargetBitmask)
         cNode.addSolid(cp)
@@ -122,7 +137,10 @@ class Swamp(Water):
             shader_file_path = 'models/swamps/swamp002_2X.cg'
         else:
             shader_file_path = input_shader_file_path
-        if base.config.GetBool('want-shaders', 1) and base.win and base.win.getGsg() and base.win.getGsg().getShaderModel() >= GraphicsStateGuardian.SM20:
+        if base.config.GetBool(
+                'want-shaders',
+                1) and base.win and base.win.getGsg() and base.win.getGsg(
+                ).getShaderModel() >= GraphicsStateGuardian.SM20:
             self.shader = loader.loadShader(shader_file_path)
             if self.shader != None:
                 self.seamodel.setShader(self.shader)
@@ -148,45 +166,65 @@ class Swamp(Water):
                 default_water_alpha_texture_filename = 'maps/default_inv_alpha' + self.texture_extension
                 if swamp_model_file_path:
                     if False:
-                        self.base_texture = loader.loadTexture('maps/oceanWater2' + self.texture_extension)
-                        self.texture_d = self.base_texture.loadRelated(InternalName.make('-d'))
-                        self.texture_n = self.base_texture.loadRelated(InternalName.make('-n'))
-                        self.texture_bb = self.base_texture.loadRelated(InternalName.make('-bb'))
+                        self.base_texture = loader.loadTexture(
+                            'maps/oceanWater2' + self.texture_extension)
+                        self.texture_d = self.base_texture.loadRelated(
+                            InternalName.make('-d'))
+                        self.texture_n = self.base_texture.loadRelated(
+                            InternalName.make('-n'))
+                        self.texture_bb = self.base_texture.loadRelated(
+                            InternalName.make('-bb'))
                     else:
                         swamp_texture = self.seamodel.findTexture('*')
-                        self.set_water_color_texture(default_water_color_texture_filename, True, swamp_texture)
+                        self.set_water_color_texture(
+                            default_water_color_texture_filename, True,
+                            swamp_texture)
                         if False:
                             card_x_size = 0.5
                             card_y_size = 0.5
                             card = CardMaker('test_texture_card')
-                            card.setFrame(-card_x_size, card_x_size, -card_y_size, card_y_size)
+                            card.setFrame(-card_x_size, card_x_size,
+                                          -card_y_size, card_y_size)
                             card_node_path = NodePath(card.generate())
                             card_node_path.setTexture(swamp_texture, 1)
-                            card_node_path.node().setBounds(OmniBoundingVolume())
+                            card_node_path.node().setBounds(
+                                OmniBoundingVolume())
                             card_node_path.node().setFinal(1)
                             card_node_path.reparentTo(render2d)
-                        self.texture_d = loader.loadTexture('maps/oceanWater2-d' + self.texture_extension)
-                        self.texture_n = loader.loadTexture('maps/oceanWater2-n' + self.texture_extension)
-                        self.texture_bb = loader.loadTexture('maps/oceanWater2-bb' + self.texture_extension)
-                        self.texture_low2 = loader.loadTexture('maps/oceanWater2-low2' + self.texture_extension)
+                        self.texture_d = loader.loadTexture(
+                            'maps/oceanWater2-d' + self.texture_extension)
+                        self.texture_n = loader.loadTexture(
+                            'maps/oceanWater2-n' + self.texture_extension)
+                        self.texture_bb = loader.loadTexture(
+                            'maps/oceanWater2-bb' + self.texture_extension)
+                        self.texture_low2 = loader.loadTexture(
+                            'maps/oceanWater2-low2' + self.texture_extension)
                         self.seamodel.setShaderInput('d', self.texture_d)
                         self.seamodel.setShaderInput('n', self.texture_n)
                         self.seamodel.setShaderInput('bb', self.texture_bb)
                         self.seamodel.setShaderInput('low2', self.texture_low2)
-                    self.set_water_alpha_texture(default_water_alpha_texture_filename)
+                    self.set_water_alpha_texture(
+                        default_water_alpha_texture_filename)
                 else:
-                    self.texture_d = loader.loadTexture('maps/oceanWater2-d' + self.texture_extension)
-                    self.texture_n = loader.loadTexture('maps/oceanWater2-n' + self.texture_extension)
-                    self.texture_bb = loader.loadTexture('maps/oceanWater2-bb' + self.texture_extension)
-                    self.texture_low2 = loader.loadTexture('maps/oceanWater2-low2' + self.texture_extension)
+                    self.texture_d = loader.loadTexture('maps/oceanWater2-d' +
+                                                        self.texture_extension)
+                    self.texture_n = loader.loadTexture('maps/oceanWater2-n' +
+                                                        self.texture_extension)
+                    self.texture_bb = loader.loadTexture('maps/oceanWater2-bb' +
+                                                         self.texture_extension)
+                    self.texture_low2 = loader.loadTexture(
+                        'maps/oceanWater2-low2' + self.texture_extension)
                     self.seamodel.setShaderInput('d', self.texture_d)
                     self.seamodel.setShaderInput('n', self.texture_n)
                     self.seamodel.setShaderInput('bb', self.texture_bb)
                     self.seamodel.setShaderInput('low2', self.texture_low2)
-                    self.set_water_color_texture(default_water_color_texture_filename)
-                    self.set_water_alpha_texture(default_water_alpha_texture_filename)
+                    self.set_water_color_texture(
+                        default_water_color_texture_filename)
+                    self.set_water_alpha_texture(
+                        default_water_alpha_texture_filename)
                 if self.enable_water_panel:
-                    self.water_panel.set_texture(default_water_color_texture_filename)
+                    self.water_panel.set_texture(
+                        default_water_color_texture_filename)
                     self.water_panel.set_shader(shader_file_path)
         buffer_width = 512
         buffer_height = 512
@@ -194,13 +232,17 @@ class Swamp(Water):
             if reflection:
                 self.reflection = reflection
             else:
-                self.reflection = Reflection('swamp', buffer_width, buffer_height, render, Plane(Vec3(0, 0, 1), Point3(0, 0, 0)))
+                self.reflection = Reflection(
+                    'swamp', buffer_width, buffer_height, render,
+                    Plane(Vec3(0, 0, 1), Point3(0, 0, 0)))
             if self.reflection_enabled():
                 self.reflection_on()
             else:
                 self.reflection_off()
-            self.seamodel.setShaderInput('reflectiontexture', self.reflection.reflection_texture)
-            OTPRender.renderReflection(False, self.patchNP, 'p_swamp_water', None)
+            self.seamodel.setShaderInput('reflectiontexture',
+                                         self.reflection.reflection_texture)
+            OTPRender.renderReflection(False, self.patchNP, 'p_swamp_water',
+                                       None)
         else:
             self.reflection_factor = 0.0
             self.set_reflection_parameters()
@@ -251,13 +293,15 @@ class Swamp(Water):
             self.enabled = True
             if self.patchNP.getParent().isEmpty() == False:
                 self.patchNP.unstash()
-            taskMgr.add(self.camTask, 'swampCamTask-' + str(id(self)), priority=49)
+            taskMgr.add(
+                self.camTask, 'swampCamTask-' + str(id(self)), priority=49)
 
     def camTask(self, task):
         refNode = base.cam
         p = refNode.getPos(render)
         r = refNode.getHpr(render)
-        if self.shader and self.todMgr and self.todMgr.getCurrentOrNextState() != 'Off':
+        if self.shader and self.todMgr and self.todMgr.getCurrentOrNextState(
+        ) != 'Off':
             self.clear_color = self.todMgr.fog.getColor()
             fog_color = self.todMgr.fog.getColor()
             self.fog_r = fog_color.getX()
@@ -294,7 +338,8 @@ class Swamp(Water):
                 sigma = 0.5
                 a = math.log(x) - mu
                 a = a * a
-                self.s = 2.0 * (1.0 / (x * sigma * math.sqrt(2.0 * math.pi))) * math.exp(-a / (2 * sigma * sigma))
+                self.s = 2.0 * (1.0 / (x * sigma * math.sqrt(2.0 * math.pi))
+                               ) * math.exp(-a / (2 * sigma * sigma))
                 if self.s < 0.0:
                     self.s = 0.0
                 self.p = 80.0

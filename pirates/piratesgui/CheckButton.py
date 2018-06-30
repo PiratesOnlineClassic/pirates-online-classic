@@ -7,13 +7,16 @@ from panda3d.core import *
 
 
 class CheckButton(DirectButton):
-    
 
     def __init__(self, parent=None, **kw):
         toplevel_gui = loader.loadModel('models/gui/toplevel_gui')
         generic_box = toplevel_gui.find('**/generic_box')
         generic_box_over = toplevel_gui.find('**/generic_box_over')
-        optiondefs = (('geom', None, None), ('value', False, self.setValue), ('checkedGeom', toplevel_gui.find('**/generic_check'), None), ('image', (generic_box, generic_box, generic_box_over, generic_box), None), ('image_scale', 0.6, None))
+        optiondefs = (('geom', None, None), ('value', False, self.setValue),
+                      ('checkedGeom', toplevel_gui.find('**/generic_check'),
+                       None), ('image', (generic_box, generic_box,
+                                         generic_box_over, generic_box),
+                               None), ('image_scale', 0.6, None))
         self.oldValue = False
         self.quiet = True
         self.defineoptions(kw, optiondefs)
@@ -39,8 +42,9 @@ class CheckButton(DirectButton):
         if self.oldValue ^ self['value']:
             self.oldValue = self['value']
             if self['command'] and not self.quiet:
-                args = [
-                 int(self['value'])] + self['extraArgs']
+                args = [int(self['value'])] + self['extraArgs']
                 self['command'](*args)
         return
+
+
 # okay decompiling .\pirates\piratesgui\CheckButton.pyc

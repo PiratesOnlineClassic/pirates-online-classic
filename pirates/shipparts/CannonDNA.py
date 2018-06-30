@@ -17,17 +17,20 @@ CannonDict = {
     ShipGlobals.SKEL_CANNON_L1: 'models/shipparts/GP_cannon',
     ShipGlobals.SKEL_CANNON_L2: 'models/shipparts/GP_cannon',
     ShipGlobals.SKEL_CANNON_L3: 'models/shipparts/GP_cannon',
-    ShipGlobals.BPCANNON: 'models/shipparts/cannon_bp'}
+    ShipGlobals.BPCANNON: 'models/shipparts/cannon_bp'
+}
 
 
 class CannonDNA(AvatarDNA.AvatarDNA):
+
     def __init__(self):
         self.baseTeam = 0
         self.cannonType = 0
         self.ammoType = InventoryType.CannonRoundShot
 
     def __str__(self):
-        string = 'decorType %s, posIndex %s, colorIndex %s' % (self.decorType, self.posIndex, self.colorIndex)
+        string = 'decorType %s, posIndex %s, colorIndex %s' % (
+            self.decorType, self.posIndex, self.colorIndex)
         return string
 
     def setBaseTeam(self, val):

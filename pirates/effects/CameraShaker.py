@@ -3,6 +3,7 @@ import random
 from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
 
+
 class CameraShaker(NodePath):
 
     CutsceneScale = None
@@ -36,7 +37,8 @@ class CameraShaker(NodePath):
     def play(self, radius=10.0):
         if base.cam.getDistance(self.shakerNode) <= radius:
             if self.scalePower:
-                self.shakePower = self.shakePower * (1 - base.localAvatar.getDistance(self.shakerNode) / radius)
+                self.shakePower = self.shakePower * (
+                    1 - base.localAvatar.getDistance(self.shakerNode) / radius)
             self.createTrack()
         else:
             self.removeNode()
@@ -47,10 +49,26 @@ class CameraShaker(NodePath):
             power *= CameraShaker.CutsceneScale
         elif CameraShaker.TutorialInteriorScale is not None:
             power *= CameraShaker.TutorialInteriorScale
-        cameraRock1 = base.cam.hprInterval(self.shakeSpeed, Point3(power, power, 0), startHpr=Point3(0, 0, 0), blendType='easeInOut')
-        cameraRock2 = base.cam.hprInterval(self.shakeSpeed, Point3(-power, -power, 0), startHpr=Point3(power, power, 0), blendType='easeInOut')
-        cameraRock3 = base.cam.hprInterval(self.shakeSpeed, Point3(power, power, 0), startHpr=Point3(-power, -power, 0), blendType='easeInOut')
-        cameraRock4 = base.cam.hprInterval(self.shakeSpeed, Point3(0, 0, 0), startHpr=Point3(power, power, 0), blendType='easeInOut')
+        cameraRock1 = base.cam.hprInterval(
+            self.shakeSpeed,
+            Point3(power, power, 0),
+            startHpr=Point3(0, 0, 0),
+            blendType='easeInOut')
+        cameraRock2 = base.cam.hprInterval(
+            self.shakeSpeed,
+            Point3(-power, -power, 0),
+            startHpr=Point3(power, power, 0),
+            blendType='easeInOut')
+        cameraRock3 = base.cam.hprInterval(
+            self.shakeSpeed,
+            Point3(power, power, 0),
+            startHpr=Point3(-power, -power, 0),
+            blendType='easeInOut')
+        cameraRock4 = base.cam.hprInterval(
+            self.shakeSpeed,
+            Point3(0, 0, 0),
+            startHpr=Point3(power, power, 0),
+            blendType='easeInOut')
         self.track = Sequence(cameraRock1)
         for i in range(self.numShakes):
             self.track.append(cameraRock2)

@@ -13,8 +13,9 @@ from pirates.piratesbase import PLocalizer
 damper = 0.5
 sliderRange = (-0.5, 0.5)
 
+
 class Mouth(DirectObject.DirectObject):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('Mouth')
 
     def __init__(self, main=None):
@@ -44,23 +45,59 @@ class Mouth(DirectObject.DirectObject):
 
     def loadGUI(self):
         customRange = (-1.0, 1.0)
-        self.pgs1 = CharGuiSlider(self.main, parent=self.jawFrame, text=PLocalizer.MouthJawWidth, command=self.updateControlShape, range=customRange)
+        self.pgs1 = CharGuiSlider(
+            self.main,
+            parent=self.jawFrame,
+            text=PLocalizer.MouthJawWidth,
+            command=self.updateControlShape,
+            range=customRange)
         self.pgs1.setPos(-0.4, 0, -0.3)
-        self.pgs2 = CharGuiSlider(self.main, parent=self.jawFrame, text=PLocalizer.MouthJawLength, command=self.updateControlShape, range=customRange)
+        self.pgs2 = CharGuiSlider(
+            self.main,
+            parent=self.jawFrame,
+            text=PLocalizer.MouthJawLength,
+            command=self.updateControlShape,
+            range=customRange)
         self.pgs2.setPos(-0.4, 0, -0.55)
-        self.pgs3 = CharGuiSlider(self.main, parent=self.jawFrame, text=PLocalizer.MouthJawChinAngle, command=self.updateControlShape, range=customRange)
+        self.pgs3 = CharGuiSlider(
+            self.main,
+            parent=self.jawFrame,
+            text=PLocalizer.MouthJawChinAngle,
+            command=self.updateControlShape,
+            range=customRange)
         self.pgs3.setPos(-0.4, 0, -0.8)
-        self.pgs4 = CharGuiSlider(self.main, parent=self.jawFrame, text=PLocalizer.MouthJawChinSize, command=self.updateControlShape, range=customRange)
+        self.pgs4 = CharGuiSlider(
+            self.main,
+            parent=self.jawFrame,
+            text=PLocalizer.MouthJawChinSize,
+            command=self.updateControlShape,
+            range=customRange)
         self.pgs4.setPos(-0.4, 0, -1.05)
-        self.pgs5 = CharGuiSlider(self.main, parent=self.lipFrame, text=PLocalizer.MouthWidth, command=self.updateControlShape, range=(-1.0,
-                                                                                                                                       0.0))
+        self.pgs5 = CharGuiSlider(
+            self.main,
+            parent=self.lipFrame,
+            text=PLocalizer.MouthWidth,
+            command=self.updateControlShape,
+            range=(-1.0, 0.0))
         self.pgs5.setPos(-0.4, 0, -0.3)
-        self.pgs6 = CharGuiSlider(self.main, parent=self.lipFrame, text=PLocalizer.MouthThickness, command=self.updateControlShape, range=customRange)
+        self.pgs6 = CharGuiSlider(
+            self.main,
+            parent=self.lipFrame,
+            text=PLocalizer.MouthThickness,
+            command=self.updateControlShape,
+            range=customRange)
         self.pgs6.setPos(-0.4, 0, -0.55)
-        self.pgs8 = CharGuiSlider(self.main, parent=self.cheekFrame, text=PLocalizer.CheekFat, command=self.updateControlShape, range=customRange)
+        self.pgs8 = CharGuiSlider(
+            self.main,
+            parent=self.cheekFrame,
+            text=PLocalizer.CheekFat,
+            command=self.updateControlShape,
+            range=customRange)
         self.pgs8.setPos(-0.4, 0, -0.3)
         self.pgs = [
-         self.pgs1, self.pgs2, self.pgs3, self.pgs4, self.pgs5, self.pgs6, self.pgs8]
+            self.pgs1, self.pgs2, self.pgs3, self.pgs4, self.pgs5, self.pgs6,
+            self.pgs8
+        ]
 
     def unload(self):
         self.notify.debug('called Mouth unload')
@@ -69,8 +106,7 @@ class Mouth(DirectObject.DirectObject):
         del self.avatar
 
     def loadExtraArgs(self):
-        self.pgs1['extraArgs'] = [
-         self.pgs1, 'jawWidth']
+        self.pgs1['extraArgs'] = [self.pgs1, 'jawWidth']
         self.pgs2['extraArgs'] = [self.pgs2, 'jawLength']
         self.pgs3['extraArgs'] = [self.pgs3, 'jawChinAngle', 135]
         self.pgs4['extraArgs'] = [self.pgs4, 'jawChinSize']
@@ -94,26 +130,42 @@ class Mouth(DirectObject.DirectObject):
         self.saveDNA()
 
     def setupButtons(self):
-        self.jawFrame = DirectFrame(parent=self._parent, relief=None, text=PLocalizer.MouthJawFrameTitle, text_fg=(1,
-                                                                                                                  1,
-                                                                                                                  1,
-                                                                                                                  1), text_scale=0.18, text_pos=(0, -0.05), pos=(0,
-                                                                                                                                                                 0,
-                                                                                                                                                                 0.4), scale=0.7)
+        self.jawFrame = DirectFrame(
+            parent=self._parent,
+            relief=None,
+            text=PLocalizer.MouthJawFrameTitle,
+            text_fg=(1, 1, 1, 1),
+            text_scale=0.18,
+            text_pos=(0, -0.05),
+            pos=(0, 0, 0.4),
+            scale=0.7)
         self.jawFrame.hide()
-        self.lipFrame = DirectFrame(parent=self._parent, relief=None, text=PLocalizer.MouthFrameTitle, text_fg=(1,
-                                                                                                               1,
-                                                                                                               1,
-                                                                                                               1), text_scale=0.18, text_pos=(0, -0.05), pos=(0, 0, -0.55), scale=0.7)
+        self.lipFrame = DirectFrame(
+            parent=self._parent,
+            relief=None,
+            text=PLocalizer.MouthFrameTitle,
+            text_fg=(1, 1, 1, 1),
+            text_scale=0.18,
+            text_pos=(0, -0.05),
+            pos=(0, 0, -0.55),
+            scale=0.7)
         self.lipFrame.hide()
-        self.cheekFrame = DirectFrame(parent=self._parent, relief=None, text=PLocalizer.MouthCheekFrameTitle, text_fg=(1,
-                                                                                                                      1,
-                                                                                                                      1,
-                                                                                                                      1), text_scale=0.18, text_pos=(0, -0.05), pos=(0,
-                                                                                                                                                                     0,
-                                                                                                                                                                     -1.4), scale=0.7)
+        self.cheekFrame = DirectFrame(
+            parent=self._parent,
+            relief=None,
+            text=PLocalizer.MouthCheekFrameTitle,
+            text_fg=(1, 1, 1, 1),
+            text_scale=0.18,
+            text_pos=(0, -0.05),
+            pos=(0, 0, -1.4),
+            scale=0.7)
         self.cheekFrame.hide()
-        self.teethPicker = CharGuiPicker(self.main, parent=self._parent, text=PLocalizer.MouthTeethFrame, nextCommand=self.handleNextTeeth, backCommand=self.handleLastTeeth)
+        self.teethPicker = CharGuiPicker(
+            self.main,
+            parent=self._parent,
+            text=PLocalizer.MouthTeethFrame,
+            nextCommand=self.handleNextTeeth,
+            backCommand=self.handleLastTeeth)
         self.teethPicker.setPos(0, 0, -0.3)
         self.teethPicker.hide()
         return
@@ -165,7 +217,8 @@ class Mouth(DirectObject.DirectObject):
 
     def updateControlShape(self, pgs, extraArgs1=None, extraArgs2=None):
         if extraArgs1 != None:
-            self.avatar.pirate.setControlValue(pgs.node().getValue(), extraArgs1)
+            self.avatar.pirate.setControlValue(pgs.node().getValue(),
+                                               extraArgs1)
         self.main.handleQuarterView(extraArgs2)
         return
 

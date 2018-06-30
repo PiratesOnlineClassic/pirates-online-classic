@@ -2,6 +2,7 @@ from pirates.battle import EnemyGlobals
 from pirates.npc.BossNPCList import BOSS_NPC_LIST
 from pirates.piratesbase import PLocalizer
 
+
 class BossBase:
 
     def __init__(self, repository):
@@ -32,7 +33,8 @@ class BossBase:
     def loadBossDataAvatarType(self, avatarType):
         self.bossData = BOSS_NPC_LIST[''].copy()
         self.bossData['AvatarType'] = avatarType
-        self.bossData['Name'] = PLocalizer.BossNames[avatarType.faction][avatarType.track][avatarType.id][avatarType.boss - 1]
+        self.bossData['Name'] = PLocalizer.BossNames[avatarType.faction][
+            avatarType.track][avatarType.id][avatarType.boss - 1]
 
     def loadBossDataHybrid(self, uniqueId, avatarType):
         defaultData = BOSS_NPC_LIST[''].copy()

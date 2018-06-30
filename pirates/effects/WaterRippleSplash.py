@@ -21,7 +21,8 @@ class WaterRippleSplash(PooledEffect, EffectController):
         if parent is not None:
             self.reparentTo(parent)
         if not self.particleDummy:
-            self.particleDummy = render.attachNewNode(ModelNode('WaterRippleSplashParticleDummy'))
+            self.particleDummy = render.attachNewNode(
+                ModelNode('WaterRippleSplashParticleDummy'))
             self.particleDummy.setDepthWrite(0)
             self.particleDummy.setLightOff()
             self.particleDummy.setFogOff()
@@ -70,7 +71,8 @@ class WaterRippleSplash(PooledEffect, EffectController):
         self.p1.renderer.setNonanimatedTheta(0.0)
         self.p1.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p1.renderer.setAlphaDisable(0)
-        self.p1.renderer.getColorInterpolationManager().addLinear(0.6, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0), 1)
+        self.p1.renderer.getColorInterpolationManager().addLinear(
+            0.6, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0), 1)
         self.p1.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p1.emitter.setAmplitude(1.0)
         self.p1.emitter.setAmplitudeSpread(0.0)
@@ -81,8 +83,11 @@ class WaterRippleSplash(PooledEffect, EffectController):
         return
 
     def createTrack(self):
-        self.startEffect = Sequence(Func(self.p1.setBirthRate, 0.02), Func(self.p1.clearToInitial), Func(self.f.start, self, self))
-        self.endEffect = Sequence(Func(self.p1.setBirthRate, 100.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p1.setBirthRate, 0.02), Func(self.p1.clearToInitial),
+            Func(self.f.start, self, self))
+        self.endEffect = Sequence(
+            Func(self.p1.setBirthRate, 100.0), Func(self.cleanUpEffect))
         self.endEffect2 = Sequence(Func(self.p1.setBirthRate, 100.0))
         self.track = Sequence(self.startEffect, Wait(0.5), self.endEffect2)
 
@@ -94,4 +99,6 @@ class WaterRippleSplash(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\WaterRippleSplash.pyc

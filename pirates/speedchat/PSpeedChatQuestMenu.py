@@ -40,9 +40,15 @@ class PSpeedChatQuestMenu(SCMenu):
         i = 0
         for task in quest.questDNA.getTasks():
             if len(quest.getSCSummaryText(0)) > 2:
-                self.append(PSpeedChatQuestTerminal(quest.getSCSummaryText(i), qInt, quest.giverId, 0, i))
+                self.append(
+                    PSpeedChatQuestTerminal(
+                        quest.getSCSummaryText(i), qInt, quest.giverId, 0, i))
             if len(quest.getSCWhereIsText(0)) > 2:
-                self.append(PSpeedChatQuestTerminal(quest.getSCWhereIsText(i), qInt, quest.giverId, 1, i))
+                self.append(
+                    PSpeedChatQuestTerminal(
+                        quest.getSCWhereIsText(i), qInt, quest.giverId, 1, i))
             if len(quest.getSCHowToText(0)) > 2:
-                self.append(PSpeedChatQuestTerminal(quest.getSCHowToText(i), qInt, quest.giverId, 2, i))
+                self.append(
+                    PSpeedChatQuestTerminal(
+                        quest.getSCHowToText(i), qInt, quest.giverId, 2, i))
             i = i + 1

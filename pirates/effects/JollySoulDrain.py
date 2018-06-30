@@ -11,8 +11,9 @@ from pirates.effects import PolyTrail
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class JollySoulDrain(PooledEffect, EffectController):
-    
+
     cardScale = 64.0
 
     def __init__(self, type=None):
@@ -21,7 +22,8 @@ class JollySoulDrain(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleEvilSmoke')
         if not self.particleDummy:
-            self.particleDummy = self.attachNewNode(ModelNode('JollySoulDrainParticleDummy'))
+            self.particleDummy = self.attachNewNode(
+                ModelNode('JollySoulDrainParticleDummy'))
             self.particleDummy.setDepthWrite(0)
             self.particleDummy.setLightOff()
             self.particleDummy.setColorScaleOff()
@@ -69,8 +71,11 @@ class JollySoulDrain(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(1)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusConstantColor, ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addConstant(0.0, 1.0, Vec4(0.7843137383460999, 1.0, 1.0, 1.0), 1)
+        self.p0.renderer.setColorBlendMode(
+            ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusConstantColor,
+            ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addConstant(
+            0.0, 1.0, Vec4(0.7843137383460999, 1.0, 1.0, 1.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -78,8 +83,12 @@ class JollySoulDrain(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.1)
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 2.0), Wait(1.5),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(3.0), self.endEffect)
 
     def cleanUpEffect(self):

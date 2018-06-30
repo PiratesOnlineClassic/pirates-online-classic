@@ -15,23 +15,32 @@ class WorldMap(DirectFrame):
     def __init__(self, parent, **kwargs):
         cm = CardMaker('Portrait')
         cm.setFrame(Vec4(-1, 1, -1, 1))
-        b = SceneBuffer('worldmap-buffer', size=(512, 512), clearColor=Vec4(0.85))
+        b = SceneBuffer(
+            'worldmap-buffer', size=(512, 512), clearColor=Vec4(0.85))
         b.camLens.setNear(0.001)
         b.camLens.setFar(5.0)
         self.buffer = b
         shot = NodePath(cm.generate())
         shot.setTexture(b.getTexture(), 1)
-        optiondefs = (
-         ('relief', None, None), ('geom', shot, None))
+        optiondefs = (('relief', None, None), ('geom', shot, None))
         self.defineoptions(kwargs, optiondefs)
         DirectFrame.__init__(self, parent, **kwargs)
         self.initialiseoptions(WorldMap)
         self.setTransparency(1)
         self.radius = 1.0
-        self.camY = [
-         -0.3, 0.25]
-        self.tiltLimit = [ x * math.pi / 180 for x in (26, 34) ]
-        self.mapBall = DecoratedMapBall('WorldMapArcBall', self, self.tiltLimit[1], mapSize=240000, radius=self.radius, scrollFactor=0.125, camera=b.camera, keepUpright=1, mouseDownEvent=self.getMouseDownEvent(), mouseUpEvent=self.getMouseUpEvent())
+        self.camY = [-0.3, 0.25]
+        self.tiltLimit = [x * math.pi / 180 for x in (26, 34)]
+        self.mapBall = DecoratedMapBall(
+            'WorldMapArcBall',
+            self,
+            self.tiltLimit[1],
+            mapSize=240000,
+            radius=self.radius,
+            scrollFactor=0.125,
+            camera=b.camera,
+            keepUpright=1,
+            mouseDownEvent=self.getMouseDownEvent(),
+            mouseUpEvent=self.getMouseUpEvent())
         self.render = b.getSceneRoot()
         self.worldRoot = self.render.attachNewNode('world')
         self.worldRoot.setTransparency(1)
@@ -105,17 +114,20 @@ class WorldMap(DirectFrame):
             frameSize = Vec4(-1, 1, -1, 1)
             scale = self.getScale(aspect2d)
             pos = self.getPos(aspect2d)
-            ts = TransformState.makePosRotateScale2d(Point2(pos[0], pos[2]), 0, Vec2(scale[0], scale[2]))
+            ts = TransformState.makePosRotateScale2d(
+                Point2(pos[0], pos[2]), 0, Vec2(scale[0], scale[2]))
             botLeft = Point3(frameSize[0], frameSize[2], 0)
             topRight = Point3(frameSize[1], frameSize[3], 0)
             botLeft = ts.getMat().xformPoint(botLeft)
             topRight = ts.getMat().xformPoint(topRight)
-            self.mapBall.setFrame(Vec4(botLeft[0], topRight[0], botLeft[1], topRight[1]))
+            self.mapBall.setFrame(
+                Vec4(botLeft[0], topRight[0], botLeft[1], topRight[1]))
 
     def setZoom(self, zoom):
         self._zoom = clampScalar(0.0, 0.75, zoom)
         self.buffer.camera.setY(lerp(self.camY[0], self.camY[1], self._zoom))
-        self.mapBall._setTiltLimit(lerp(self.tiltLimit[0], self.tiltLimit[1], self._zoom))
+        self.mapBall._setTiltLimit(
+            lerp(self.tiltLimit[0], self.tiltLimit[1], self._zoom))
         self.mapBall.updateTextZoom(self._zoom)
 
     def mouseWheelUp(self, *args, **kwargs):
@@ -163,15 +175,16 @@ class WorldMap(DirectFrame):
         if hasattr(self, 'mapConfig'):
             self.mapConfig.show()
             return
-        self.mapConfig = MapConfig(relief=DGG.FLAT, frameSize=(-0.02, 0.82, -1, 1), frameColor=(1,
-                                                                                                1,
-                                                                                                1,
-                                                                                                1), pos=(0.7,
-                                                                                                         0,
-                                                                                                         0.0), scale=0.75)
+        self.mapConfig = MapConfig(
+            relief=DGG.FLAT,
+            frameSize=(-0.02, 0.82, -1, 1),
+            frameColor=(1, 1, 1, 1),
+            pos=(0.7, 0, 0.0),
+            scale=0.75)
         self.mapConfig.camSlider['command'] = self.buffer.camera.setY
         self.mapConfig.worldPSlider['command'] = self.ballRoot.setP
-        self.mapConfig.worldDecorScaleSlider['command'] = self.mapBall.setDecorScale
+        self.mapConfig.worldDecorScaleSlider[
+            'command'] = self.mapBall.setDecorScale
         self.mapConfig.saveState0Button['command'] = self.saveState
         self.mapConfig.saveState0Button['extraArgs'] = [0]
         self.mapConfig.saveState1Button['command'] = self.saveState
@@ -187,16 +200,17 @@ class WorldMap(DirectFrame):
         if hasattr(self, 'mapConfig'):
 
             def zoom(t):
-                self.mapConfig.camSlider['value'] = lerp(self.camY[0], self.camY[1], t)
+                self.mapConfig.camSlider['value'] = lerp(
+                    self.camY[0], self.camY[1], t)
 
             self.mapConfig.finalSlider['command'] = zoom
             if pt == 0:
                 self.mapConfig.finalSlider['range'] = (
-                 0, self.mapConfig.finalSlider['range'][1])
+                    0, self.mapConfig.finalSlider['range'][1])
                 self.mapConfig.finalSlider['value'] = 0.0
             elif pt == 1:
                 self.mapConfig.finalSlider['range'] = (
-                 self.mapConfig.finalSlider['range'][0], 1.0)
+                    self.mapConfig.finalSlider['range'][0], 1.0)
                 self.mapConfig.finalSlider['value'] = 1.0
 
     def resetMapConfig(self):
@@ -205,14 +219,16 @@ class WorldMap(DirectFrame):
             self.mapConfig.worldYSlider['value'] = self.worldRoot.getY()
             self.mapConfig.worldZSlider['value'] = self.worldRoot.getZ()
             self.mapConfig.worldPSlider['value'] = self.ballRoot.getP()
-            self.mapConfig.worldDecorScaleSlider['value'] = self.mapBall.mapScale
+            self.mapConfig.worldDecorScaleSlider[
+                'value'] = self.mapBall.mapScale
 
     def hideMapConfig(self):
         if hasattr(self, 'mapConfig'):
             self.mapConfig.show()
 
     def showCollisionDebug(self):
-        if hasattr(self, 'collisionBufferFrames') and self.collisionBufferFrames:
+        if hasattr(self,
+                   'collisionBufferFrames') and self.collisionBufferFrames:
             for buffer, frame in self.collisionBufferFrames:
                 frame.unstash()
                 buffer.enable()
@@ -221,28 +237,46 @@ class WorldMap(DirectFrame):
         self.collisionBufferFrames = []
         cm = CardMaker('Side')
         cm.setFrame(Vec4(-1, 1, -1, 1))
-        side = SceneBuffer('side-buffer', size=(512, 512), clearColor=Vec4(0, 0, 0, 1), sceneGraph=self.render)
+        side = SceneBuffer(
+            'side-buffer',
+            size=(512, 512),
+            clearColor=Vec4(0, 0, 0, 1),
+            sceneGraph=self.render)
         side.camera.setPos(4, 1, 0)
         side.camera.setH(90)
         shot = NodePath(cm.generate())
         shot.setTexture(side.getTexture(), 1)
-        df = DirectFrame(geom=shot, relief=None, parent=aspect2d, scale=0.5, pos=(0.833, 0, -0.5), text='side', text_scale=0.1, text_pos=(-0.75, 0.75, 0), text_fg=(1,
-                                                                                                                                                                    1,
-                                                                                                                                                                    1,
-                                                                                                                                                                    1))
+        df = DirectFrame(
+            geom=shot,
+            relief=None,
+            parent=aspect2d,
+            scale=0.5,
+            pos=(0.833, 0, -0.5),
+            text='side',
+            text_scale=0.1,
+            text_pos=(-0.75, 0.75, 0),
+            text_fg=(1, 1, 1, 1))
         self.collisionBufferFrames.append((side, df))
-        top = SceneBuffer('top-buffer', size=(512, 512), clearColor=Vec4(0, 0, 0, 1), sceneGraph=self.render)
+        top = SceneBuffer(
+            'top-buffer',
+            size=(512, 512),
+            clearColor=Vec4(0, 0, 0, 1),
+            sceneGraph=self.render)
         top.camera.setPos(0, 1, 4)
         top.camera.setP(-90)
         cm.setName('Top')
         shot = NodePath(cm.generate())
         shot.setTexture(top.getTexture(), 1)
-        df = DirectFrame(geom=shot, relief=None, parent=aspect2d, scale=0.5, pos=(0.833,
-                                                                                  0,
-                                                                                  0.5), text='top', text_scale=0.1, text_pos=(-0.75, 0.75, 0), text_fg=(1,
-                                                                                                                                                        1,
-                                                                                                                                                        1,
-                                                                                                                                                        1))
+        df = DirectFrame(
+            geom=shot,
+            relief=None,
+            parent=aspect2d,
+            scale=0.5,
+            pos=(0.833, 0, 0.5),
+            text='top',
+            text_scale=0.1,
+            text_pos=(-0.75, 0.75, 0),
+            text_fg=(1, 1, 1, 1))
         self.collisionBufferFrames.append((top, df))
         self.mapBall.traverser.showCollisions(self.render)
         colNodes = self.render.findAllMatches('**/camRayNode')
@@ -291,7 +325,8 @@ class WorldMap(DirectFrame):
         pass
 
     def addIsland(self, name, islandUid, modelPath, worldPos, rotation):
-        return self.mapBall.placeIsland(name, islandUid, modelPath, worldPos, rotation)
+        return self.mapBall.placeIsland(name, islandUid, modelPath, worldPos,
+                                        rotation)
 
     def updateIsland(self, name, worldPos=None, rotation=None):
         self.mapBall.updateIsland(name, worldPos, rotation)

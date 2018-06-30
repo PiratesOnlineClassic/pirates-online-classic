@@ -17,8 +17,8 @@ EXPECTED = 1
 JOINED = 2
 READY = 3
 
+
 class ScoreboardHolder:
-    
 
     def __init__(self, game):
         self.game = game
@@ -29,21 +29,42 @@ class ScoreboardHolder:
     def getItemChangeMsg(self):
         return self.game.taskName('scoreChanged')
 
-    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
-        return self.game.createScoreboardItem(item, parent, itemType=None, columnWidths=[], color=None)
+    def createNewItem(self,
+                      item,
+                      parent,
+                      itemType=None,
+                      columnWidths=[],
+                      color=None):
+        return self.game.createScoreboardItem(
+            item, parent, itemType=None, columnWidths=[], color=None)
 
 
 class StatsHolder:
-    
 
     def __init__(self, game):
         self.game = game
 
-    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+    def createNewItem(self,
+                      item,
+                      parent,
+                      itemType=None,
+                      columnWidths=[],
+                      color=None):
         if itemType == PiratesGuiGlobals.UIListItemType_ColumHeadings:
-            newItem = StatRowHeadingGui(item, self.game.getColumnLabels(), parent, itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16, itemWidths=columnWidths)
+            newItem = StatRowHeadingGui(
+                item,
+                self.game.getColumnLabels(),
+                parent,
+                itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16,
+                itemWidths=columnWidths)
         else:
-            newItem = StatRowGui(item, self.game.getColumnLabels(), parent, itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16, itemWidths=columnWidths, txtColor=color)
+            newItem = StatRowGui(
+                item,
+                self.game.getColumnLabels(),
+                parent,
+                itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16,
+                itemWidths=columnWidths,
+                txtColor=color)
         newItem.setup()
         return newItem
 
@@ -58,7 +79,7 @@ class StatsHolder:
 
 
 class DistributedPVPInstance(DistributedInstanceWorld, FSM):
-    
+
     notify = directNotify.newCategory('DistributedPVPInstance')
     RulesDoneEvent = 'rulesDone'
 
@@ -98,7 +119,8 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
 
     def enterWaitOnServer(self):
         if not self.completed:
-            localAvatar.guiMgr.showPVPInstructions(self.getTitle(), self.getInstructions())
+            localAvatar.guiMgr.showPVPInstructions(self.getTitle(),
+                                                   self.getInstructions())
 
     def exitWaitOnServer(self):
         localAvatar.guiMgr.hidePVPInstructions()
@@ -186,18 +208,23 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
 
     def goToShip(self, pendingObj):
         pendingObj.localAvatarBoardShip()
-        self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
+        self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN,
+                                             'mainWorld')
 
     def localAvRespawn(self, av):
         self.sendUpdate('requestSpawnLoc')
-        self.acceptOnce(self.cr.activeWorld.uniqueName('spawnInfoReceived'), self.requestSpawnLocResp)
+        self.acceptOnce(
+            self.cr.activeWorld.uniqueName('spawnInfoReceived'),
+            self.requestSpawnLocResp)
         return [True, None]
 
     def requestSpawnLocResp(self):
         print '[rslr]'
         if self.completed:
             return
-        self.goToSpawnIval = Sequence(Func(localAvatar.cameraFSM.request, 'Off'), Wait(2.1), Func(self.respawn), Func(self.cleanupSpawnIval))
+        self.goToSpawnIval = Sequence(
+            Func(localAvatar.cameraFSM.request, 'Off'), Wait(2.1),
+            Func(self.respawn), Func(self.cleanupSpawnIval))
         self.goToSpawnIval.start()
 
     def cleanupSpawnIval(self):
@@ -213,11 +240,14 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
         print '[teleportToPosStep1]'
         if self.cr.activeWorld == None or self.cr.activeWorld.spawnInfo == None:
             return
-        self.cr.teleportMgr.createSpawnInterests(self.cr.activeWorld.spawnInfo[2], self.teleportToPosStep2, self.worldGrid, localAvatar)
+        self.cr.teleportMgr.createSpawnInterests(
+            self.cr.activeWorld.spawnInfo[2], self.teleportToPosStep2,
+            self.worldGrid, localAvatar)
 
     def teleportToPosStep2(self, parentObj, teleportingObj):
         print '[teleportToPosStep2]'
-        base.cr.teleportMgr.localTeleportPos(self.cr.activeWorld.spawnInfo[0], parentObj, smooth=True)
+        base.cr.teleportMgr.localTeleportPos(
+            self.cr.activeWorld.spawnInfo[0], parentObj, smooth=True)
 
     def requestPVPLeave(self):
         self.sendUpdate('requestLeave', [])
@@ -237,7 +267,10 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
         localAvatar.guiMgr.removePVPCompleteUI()
         localAvatar.guiMgr.setSeaChestAllowed(True, False, 1, True)
         localAvatar.gameFSM.lockFSM = False
-        base.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld', shardId=localAvatar.getDefaultShard())
+        base.cr.teleportMgr.initiateTeleport(
+            PiratesGlobals.INSTANCE_MAIN,
+            'mainWorld',
+            shardId=localAvatar.getDefaultShard())
         base.cr.loadingScreen.showTarget()
 
     def requestLeaveApproved(self):
@@ -351,7 +384,10 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
         return [PVPGlobals.KILLS, PVPGlobals.DEATHS]
 
     def getColumnLabels(self):
-        return [PLocalizer.PVPPlayer, PLocalizer.PVPEnemiesDefeated, PLocalizer.PVPTimesDefeated]
+        return [
+            PLocalizer.PVPPlayer, PLocalizer.PVPEnemiesDefeated,
+            PLocalizer.PVPTimesDefeated
+        ]
 
     def addPlayerStats(self, playerId):
         pass
@@ -387,13 +423,16 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
             playerTeam = self.teams[playerId]
             playerStats = []
             for stat in self.getColumnStats():
-                playerStats.append([PVPGlobals.statText[stat], str(stats[stat])])
+                playerStats.append(
+                    [PVPGlobals.statText[stat],
+                     str(stats[stat])])
 
             if playerId == localAvatar.doId:
                 playerColor = (1, 1, 1, 1)
             else:
                 playerColor = PVPGlobals.getTeamColor(playerTeam)
-            displayStats.append([playerName, playerStats, ['color', playerColor]])
+            displayStats.append(
+                [playerName, playerStats, ['color', playerColor]])
 
         displayStats = self.sortStats(displayStats)
         displayStats.insert(0, self.getColumnLabels())
@@ -411,13 +450,16 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
                 teams[playerTeam] = []
             playerStats = []
             for stat in self.getColumnStats():
-                playerStats.append([PVPGlobals.statText[stat], str(stats[stat])])
+                playerStats.append(
+                    [PVPGlobals.statText[stat],
+                     str(stats[stat])])
 
             if playerId == localAvatar.doId:
                 playerColor = (1, 1, 1, 1)
             else:
                 playerColor = None
-            teams[playerTeam].append([playerName, playerStats, ['color', playerColor]])
+            teams[playerTeam].append(
+                [playerName, playerStats, ['color', playerColor]])
 
         for team, teamStats in teams.items():
             teamTotals = []
@@ -426,10 +468,13 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
 
             for playerName, playerStats, color in teamStats:
                 for i in range(len(playerStats)):
-                    teamTotals[i][1] = str(int(teamTotals[i][1]) + int(playerStats[i][1]))
+                    teamTotals[i][1] = str(
+                        int(teamTotals[i][1]) + int(playerStats[i][1]))
 
             teamStat = [
-             'Team %s' % team, teamTotals, ['color', PVPGlobals.getTeamColor(team)]]
+                'Team %s' % team, teamTotals,
+                ['color', PVPGlobals.getTeamColor(team)]
+            ]
             teamStats = self.sortStats(teamStats)
             teamStats.insert(0, teamStat)
             displayStats += teamStats
@@ -446,19 +491,15 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
         if defeaterId == defeatedId:
             thirdPersonMsgs = [PLocalizer.PVPSuicide]
             if defeatedId == localAvatar.doId:
-                firstPersonMsgs = [
-                 PLocalizer.PVPYouSuicide]
+                firstPersonMsgs = [PLocalizer.PVPYouSuicide]
             else:
                 firstPersonMsgs = None
         else:
-            thirdPersonMsgs = [
-             PLocalizer.PVPDefeat]
+            thirdPersonMsgs = [PLocalizer.PVPDefeat]
             if defeatedId == localAvatar.doId:
-                firstPersonMsgs = [
-                 PLocalizer.PVPYouWereDefeated]
+                firstPersonMsgs = [PLocalizer.PVPYouWereDefeated]
             elif defeaterId == localAvatar.doId:
-                firstPersonMsgs = [
-                 PLocalizer.PVPYouDefeated]
+                firstPersonMsgs = [PLocalizer.PVPYouDefeated]
             else:
                 firstPersonMsgs = None
         firstPersonMsg = None

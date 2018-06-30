@@ -7,16 +7,19 @@ from direct.directnotify.DirectNotifyGlobal import *
 from pirates.ai import HolidayGlobals
 
 __all__ = [
-    'WebhookException', 'WebhookBase', 'GenericWebhook', 'GithubWebhook', 'SlackWebhook',
-    'SlackAttachmentException', 'SlackAttachment', 'SlackField', 'PiratesWebhookManager']
+    'WebhookException', 'WebhookBase', 'GenericWebhook', 'GithubWebhook',
+    'SlackWebhook', 'SlackAttachmentException', 'SlackAttachment', 'SlackField',
+    'PiratesWebhookManager'
+]
+
 
 class WebhookException(Exception):
     """
     Generic Discord Webhook Exception
     """
 
-class WebhookBase(object):
 
+class WebhookBase(object):
     """
     Base class for all Discord webhooks
     """
@@ -41,7 +44,8 @@ class WebhookBase(object):
 
         formatted = self.formatMessage()
         if not formatted:
-            raise WebhookException('Unable to send webhook post; formatMessage returned None')
+            raise WebhookException(
+                'Unable to send webhook post; formatMessage returned None')
 
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
@@ -51,12 +55,13 @@ class WebhookBase(object):
 
         result = requests.post(url, headers=headers, data=formatted).text
         if result != '' and result != 'ok':
-            raise WebhookException('Unexpected error occured while sending post; %s' % str(result))
+            raise WebhookException(
+                'Unexpected error occured while sending post; %s' % str(result))
 
         return True
 
-class GenericWebhook(WebhookBase):
 
+class GenericWebhook(WebhookBase):
     """
     Represents a generic basic message Discord webhook
     """
@@ -73,7 +78,7 @@ class GenericWebhook(WebhookBase):
         """
 
         data = {}
-        data['content']= self.message
+        data['content'] = self.message
 
         if self.author:
             data['username'] = self.author
@@ -83,8 +88,8 @@ class GenericWebhook(WebhookBase):
 
         return json.dumps(data)
 
-class GithubWebhook(WebhookBase):
 
+class GithubWebhook(WebhookBase):
     """
     Represents a Github Discord webhook
     """
@@ -99,8 +104,8 @@ class GithubWebhook(WebhookBase):
 
         return NotImplemented
 
-class SlackWebhook(WebhookBase):
 
+class SlackWebhook(WebhookBase):
     """
     Represents a Slack Discord webhook
     """
@@ -123,7 +128,9 @@ class SlackWebhook(WebhookBase):
         if isinstance(attachment, SlackAttachment):
             self.attachments.append(attachment)
         else:
-            raise WebhookException('Unable to add attachment. %s is not an instance of %s' % (attachment.__class__.__name__, SlackAttachment.__name__))
+            raise WebhookException(
+                'Unable to add attachment. %s is not an instance of %s' %
+                (attachment.__class__.__name__, SlackAttachment.__name__))
 
     def formatMessage(self):
         """
@@ -166,18 +173,30 @@ class SlackWebhook(WebhookBase):
 
         return formatted
 
+
 class SlackAttachmentException(Exception):
     """
     Exception specified to the SlackAttachment object
     """
 
-class SlackAttachment(object):
 
+class SlackAttachment(object):
     """
     Represents a attachment for the SlackWebhook object
     """
 
-    def __init__(self, author_name='', author_icon='', color='', pretext='', title='', title_link='', image_url='', footer='', footer_icon='', ts=0, fields=[]):
+    def __init__(self,
+                 author_name='',
+                 author_icon='',
+                 color='',
+                 pretext='',
+                 title='',
+                 title_link='',
+                 image_url='',
+                 footer='',
+                 footer_icon='',
+                 ts=0,
+                 fields=[]):
         self.author_name = author_name
         self.author_icon = author_icon
         self.color = color
@@ -198,10 +217,12 @@ class SlackAttachment(object):
         if isinstance(field, SlackField):
             self.fields.append(field)
         else:
-            raise SlackAttachmentException('Unable to add field; %s is not an instance of %s' % (field.__class__.__name__, SlackField.__name__))
+            raise SlackAttachmentException(
+                'Unable to add field; %s is not an instance of %s' %
+                (field.__class__.__name__, SlackField.__name__))
+
 
 class SlackField(object):
-
     """
     Represents a SlackAttachment field
     """
@@ -211,8 +232,8 @@ class SlackField(object):
         self.value = value
         self.short = short
 
-class PiratesWebhookManager(object):
 
+class PiratesWebhookManager(object):
     """
     Manages Webhook transactions for the server
     """
@@ -230,7 +251,8 @@ class PiratesWebhookManager(object):
 
         self.want_exception_logs = config.GetBool('discord-log-exceptions')
         self.exception_log_url = config.GetString('discord-exception-url', '')
-        self.discord_except_backlog = config.GetInt('discord-exception-backlog', 10)
+        self.discord_except_backlog = config.GetInt('discord-exception-backlog',
+                                                    10)
 
         self.want_holiday_logs = config.GetBool('discord-log-holidays', True)
         self.holiday_log_urls = ConfigVariableList('discord-holiday-url')
@@ -269,9 +291,12 @@ class PiratesWebhookManager(object):
 
         if avatar and parentObj and hasattr(avatar, 'getPos'):
             attachment.addField(SlackField())
-            attachment.addField(SlackField(title='Character Pos', value=str(avatar.getPos())))
-            attachment.addField(SlackField(title='Character Name', value=avatar.getName()))
-            attachment.addField(SlackField(title='Island', value=parentObj.getLocalizerName()))
+            attachment.addField(
+                SlackField(title='Character Pos', value=str(avatar.getPos())))
+            attachment.addField(
+                SlackField(title='Character Name', value=avatar.getName()))
+            attachment.addField(
+                SlackField(title='Island', value=parentObj.getLocalizerName()))
 
         #TODO: add account name?
 
@@ -280,18 +305,21 @@ class PiratesWebhookManager(object):
         Attaches info about the server
         """
         attachment.addField(SlackField())
-        attachment.addField(SlackField(title='Dev Server', value=self.air.isDevServer()))
+        attachment.addField(
+            SlackField(title='Dev Server', value=self.air.isDevServer()))
 
     def logPotentialHacker(self, avatarId, accountId, message, **kwargs):
         """
         Logs a potential hacker message to Discord
         """
         if self.want_hacker_logs and not self.hacker_log_url:
-            self.notify.warning('Failed to send hacker webhook; Hacker url not defined!')
+            self.notify.warning(
+                'Failed to send hacker webhook; Hacker url not defined!')
             return
 
         # Generate header message
-        districtName = self.air.distributedDistrict.getName() if hasattr(self.air, 'distributedDistrict') else None
+        districtName = self.air.distributedDistrict.getName() if hasattr(
+            self.air, 'distributedDistrict') else None
         if districtName:
             headerMessage = 'Detected potential hacker on %s.' % districtName
         else:
@@ -320,11 +348,13 @@ class PiratesWebhookManager(object):
         Logs a server exception to Discord
         """
         if self.want_exception_logs and not self.exception_log_url:
-            self.notify.warning('Failed to send exception webhook; Exception url not defined!')
+            self.notify.warning(
+                'Failed to send exception webhook; Exception url not defined!')
             return
 
         # Generate header message
-        districtName = self.air.distributedDistrict.getName() if hasattr(self.air, 'distributedDistrict') else None
+        districtName = self.air.distributedDistrict.getName() if hasattr(
+            self.air, 'distributedDistrict') else None
         if districtName:
             headerMessage = 'Internal exception occured on %s.' % districtName
         else:
@@ -344,10 +374,12 @@ class PiratesWebhookManager(object):
             discordStacktrace += '%s\n' % stack
 
         hookMessage = '@everyone' if self.want_everyone else ''
-        webhookMessage = SlackWebhook(self.exception_log_url, message=hookMessage)
+        webhookMessage = SlackWebhook(
+            self.exception_log_url, message=hookMessage)
         attachment = SlackAttachment(title=headerMessage)
 
-        attachment.addField(SlackField(title='Trackback', value=discordStacktrace))
+        attachment.addField(
+            SlackField(title='Trackback', value=discordStacktrace))
 
         # Attempt to attach additional information
         self.__attemptAttachAvatarInfo(attachment, avatarId, accountId)
@@ -356,7 +388,12 @@ class PiratesWebhookManager(object):
         webhookMessage.addAttachment(attachment)
         self.__sendWebhook(webhookMessage, self.want_exception_logs)
 
-    def logGenericMessage(self, url, message, author=None, avatar=None, verify=True):
+    def logGenericMessage(self,
+                          url,
+                          message,
+                          author=None,
+                          avatar=None,
+                          verify=True):
         """
         Sends a basic message to Discord
         Avatar must be a valid URL image
@@ -370,7 +407,9 @@ class PiratesWebhookManager(object):
         """
 
         if self.want_holiday_logs and len(self.holiday_log_urls) == 0:
-            self.notify.warning('Failed to send holiday webhook; No holiday webhook urls defined!')
+            self.notify.warning(
+                'Failed to send holiday webhook; No holiday webhook urls defined!'
+            )
             return
 
         baseMessage = HolidayGlobals.getHolidayDiscordMessage(holidayId)
@@ -379,11 +418,11 @@ class PiratesWebhookManager(object):
         for endpoint in self.holiday_log_urls:
             webhookMessage = SlackWebhook(endpoint, message=hookMessage)
             attachment = SlackAttachment(
-                pretext=HolidayGlobals.getHolidayDiscordPrefixMessage(holidayId),
+                pretext=HolidayGlobals.getHolidayDiscordPrefixMessage(
+                    holidayId),
                 title=HolidayGlobals.getHolidayDiscordName(holidayId),
                 image_url=HolidayGlobals.getHolidayDiscordImage(holidayId),
-                footer=HolidayGlobals.getHolidayDiscordDates(holidayId)
-            )
+                footer=HolidayGlobals.getHolidayDiscordDates(holidayId))
 
             webhookMessage.addAttachment(attachment)
             self.__sendWebhook(webhookMessage, self.want_holiday_logs)

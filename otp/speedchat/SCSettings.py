@@ -7,8 +7,12 @@ from otp.speedchat.SCColorScheme import SCColorScheme
 
 class SCSettings:
 
-    def __init__(self, eventPrefix, whisperMode=0, colorScheme=None,
-                 submenuOverlap=2.0 / 3, topLevelOverlap=None):
+    def __init__(self,
+                 eventPrefix,
+                 whisperMode=0,
+                 colorScheme=None,
+                 submenuOverlap=2.0 / 3,
+                 topLevelOverlap=None):
         self.eventPrefix = eventPrefix
         self.whisperMode = whisperMode
         if colorScheme is None:
@@ -17,4 +21,6 @@ class SCSettings:
         self.submenuOverlap = submenuOverlap
         self.topLevelOverlap = topLevelOverlap
         return
+
+
 # okay decompiling .\otp\speedchat\SCSettings.pyc

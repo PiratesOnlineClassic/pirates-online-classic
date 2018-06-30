@@ -8,8 +8,8 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class HitFlashA(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -26,7 +26,10 @@ class HitFlashA(PooledEffect, EffectController):
         self.flashDummy = self.attachNewNode('FlashDummy')
         self.flashDummy.reparentTo(self)
         self.flashDummy.hide()
-        self.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+        self.flashDummy.node().setAttrib(
+            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                  ColorBlendAttrib.OIncomingAlpha,
+                                  ColorBlendAttrib.OOne))
         self.flash = loader.loadModelCopy('models/effects/combat_hit_spark')
         self.flash.setDepthWrite(0)
         self.flash.setFogOff()
@@ -49,10 +52,27 @@ class HitFlashA(PooledEffect, EffectController):
     def createTrack(self):
         self.flash.setScale(self.splatScale)
         self.flash.setColorScale(1, 1, 1, 1)
-        fadeBlast = self.flash.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale=self.startCol, blendType='easeOut')
-        scaleBlast = self.flash.scaleInterval(self.fadeTime, self.splatScale, startScale=self.startScale, blendType='easeOut')
-        scaleSlashRay = self.slashRay.scaleInterval(self.fadeTime / 4, Vec3(self.splatScale * 2.0, 0.2, 0.2), startScale=Vec3(self.startScale, 0.2, self.splatScale * self.rayFlareValue), blendType='easeOut')
-        fadeSlashRay = self.slashRay.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale=self.startCol, blendType='easeIn')
+        fadeBlast = self.flash.colorScaleInterval(
+            self.fadeTime,
+            Vec4(0, 0, 0, 0),
+            startColorScale=self.startCol,
+            blendType='easeOut')
+        scaleBlast = self.flash.scaleInterval(
+            self.fadeTime,
+            self.splatScale,
+            startScale=self.startScale,
+            blendType='easeOut')
+        scaleSlashRay = self.slashRay.scaleInterval(
+            self.fadeTime / 4,
+            Vec3(self.splatScale * 2.0, 0.2, 0.2),
+            startScale=Vec3(self.startScale, 0.2,
+                            self.splatScale * self.rayFlareValue),
+            blendType='easeOut')
+        fadeSlashRay = self.slashRay.colorScaleInterval(
+            self.fadeTime,
+            Vec4(0, 0, 0, 0),
+            startColorScale=self.startCol,
+            blendType='easeIn')
         anim = Parallel(fadeBlast, scaleBlast)
         if self.useRay:
             anim.append(scaleSlashRay)
@@ -65,7 +85,9 @@ class HitFlashA(PooledEffect, EffectController):
             self.spark.show()
         else:
             self.spark.hide()
-        self.track = Sequence(Func(self.flashDummy.show), anim, Func(self.flashDummy.hide), Func(self.cleanUpEffect))
+        self.track = Sequence(
+            Func(self.flashDummy.show), anim, Func(self.flashDummy.hide),
+            Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

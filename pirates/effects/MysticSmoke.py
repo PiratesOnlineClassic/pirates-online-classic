@@ -10,7 +10,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class MysticSmoke(PooledEffect, EffectController):
-    
+
     cardScale = 64.0
 
     def __init__(self, parent=None):
@@ -64,7 +64,8 @@ class MysticSmoke(PooledEffect, EffectController):
         self.p0.renderer.setFinalYScale(0.1 * self.cardScale)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.5, 0.6, 0.15, 1.0), Vec4(0.6, 0.75, 0.0, 0.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(0.5, 0.6, 0.15, 1.0), Vec4(0.6, 0.75, 0.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETCUSTOM)
         self.p0.emitter.setAmplitude(5.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -76,8 +77,12 @@ class MysticSmoke(PooledEffect, EffectController):
         return
 
     def createTrack(self, lod=None):
-        self.startEffect = Parallel(Func(self.p0.setBirthRate, 0.015), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(2.0), Func(self.cleanUpEffect))
+        self.startEffect = Parallel(
+            Func(self.p0.setBirthRate, 0.015), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100), Wait(2.0),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10), self.endEffect)
 
     def cleanUpEffect(self):
@@ -89,4 +94,6 @@ class MysticSmoke(PooledEffect, EffectController):
         self.removeNode()
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\MysticSmoke.pyc

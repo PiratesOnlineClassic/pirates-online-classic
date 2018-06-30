@@ -7,12 +7,14 @@ from otp.distributed.OtpDoGlobals import *
 from pirates.uberdog.PiratesRPCServerUD import PiratesRPCServerUD
 from pirates.ai.NewsManagerUD import NewsManagerUD
 
+
 class PiratesUberRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesUberRepository')
     notify.setInfo(True)
 
     def __init__(self, baseChannel, serverId):
-        PiratesInternalRepository.__init__(self, baseChannel, serverId, dcSuffix='UD')
+        PiratesInternalRepository.__init__(
+            self, baseChannel, serverId, dcSuffix='UD')
         self.rpc = None
         self.districtTracker = None
 
@@ -36,8 +38,13 @@ class PiratesUberRepository(PiratesInternalRepository):
         self.districtTracker = DistrictTrackerUD(self)
         self.newsManager = NewsManagerUD(self)
 
-        self.centralLogger = self.generateGlobalObject(OTP_DO_ID_CENTRAL_LOGGER, 'CentralLogger')
-        self.csm = self.generateGlobalObject(OTP_DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
-        self.travelAgent = self.generateGlobalObject(OTP_DO_ID_PIRATES_TRAVEL_AGENT, 'DistributedTravelAgent')
-        self.inventoryManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')
-        self.shipLoader = self.generateGlobalObject(OTP_DO_ID_PIRATES_SHIP_MANAGER, 'DistributedShipLoader')
+        self.centralLogger = self.generateGlobalObject(OTP_DO_ID_CENTRAL_LOGGER,
+                                                       'CentralLogger')
+        self.csm = self.generateGlobalObject(OTP_DO_ID_CLIENT_SERVICES_MANAGER,
+                                             'ClientServicesManager')
+        self.travelAgent = self.generateGlobalObject(
+            OTP_DO_ID_PIRATES_TRAVEL_AGENT, 'DistributedTravelAgent')
+        self.inventoryManager = self.generateGlobalObject(
+            OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')
+        self.shipLoader = self.generateGlobalObject(
+            OTP_DO_ID_PIRATES_SHIP_MANAGER, 'DistributedShipLoader')

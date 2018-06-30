@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class JRDeathEffect(PooledEffect, EffectController):
-    
+
     card2Scale = 64.0
     cardScale = 64.0
 
@@ -22,7 +22,8 @@ class JRDeathEffect(PooledEffect, EffectController):
         if parent is not None:
             self.reparentTo(parent)
         if not JRDeathEffect.particleDummy:
-            JRDeathEffect.particleDummy = render.attachNewNode(ModelNode('JRDeathEffectParticleDummy'))
+            JRDeathEffect.particleDummy = render.attachNewNode(
+                ModelNode('JRDeathEffectParticleDummy'))
             JRDeathEffect.particleDummy.setColorScaleOff()
             JRDeathEffect.particleDummy.setLightOff()
             JRDeathEffect.particleDummy.setFogOff()
@@ -82,9 +83,13 @@ class JRDeathEffect(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.6, Vec4(1.0, 1.0, 0.2, 1.0), Vec4(0.8, 0.6, 0.25, 0.75), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.6, 1.0, Vec4(0.8, 0.6, 0.25, 0.75), Vec4(0.5, 0.25, 0.0, 0.0), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingColor,
+                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 0.6, Vec4(1.0, 1.0, 0.2, 1.0), Vec4(0.8, 0.6, 0.25, 0.75), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.6, 1.0, Vec4(0.8, 0.6, 0.25, 0.75), Vec4(0.5, 0.25, 0.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -115,7 +120,8 @@ class JRDeathEffect(PooledEffect, EffectController):
         self.p1.renderer.setNonanimatedTheta(0.0)
         self.p1.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p1.renderer.setAlphaDisable(0)
-        self.p1.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.5, 0.6, 0.15, 1.0), Vec4(0.6, 0.75, 0.0, 0.0), 1)
+        self.p1.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(0.5, 0.6, 0.15, 1.0), Vec4(0.6, 0.75, 0.0, 0.0), 1)
         self.p1.emitter.setEmissionType(BaseParticleEmitter.ETCUSTOM)
         self.p1.emitter.setAmplitudeSpread(0.0)
         self.p1.emitter.setOffsetForce(Vec3(0.0, 0.0, 10.0))
@@ -126,19 +132,33 @@ class JRDeathEffect(PooledEffect, EffectController):
         return
 
     def setupSize(self):
-        self.p0.renderer.setInitialXScale(0.05 * self.effectScale * self.card2Scale)
-        self.p0.renderer.setFinalXScale(0.03 * self.effectScale * self.card2Scale)
-        self.p0.renderer.setInitialYScale(0.03 * self.effectScale * self.card2Scale)
-        self.p0.renderer.setFinalYScale(0.08 * self.effectScale * self.card2Scale)
-        self.p1.renderer.setInitialXScale(0.025 * self.effectScale * self.card2Scale)
-        self.p1.renderer.setFinalXScale(0.05 * self.effectScale * self.card2Scale)
-        self.p1.renderer.setInitialYScale(0.025 * self.effectScale * self.card2Scale)
-        self.p1.renderer.setFinalYScale(0.05 * self.effectScale * self.card2Scale)
+        self.p0.renderer.setInitialXScale(
+            0.05 * self.effectScale * self.card2Scale)
+        self.p0.renderer.setFinalXScale(
+            0.03 * self.effectScale * self.card2Scale)
+        self.p0.renderer.setInitialYScale(
+            0.03 * self.effectScale * self.card2Scale)
+        self.p0.renderer.setFinalYScale(
+            0.08 * self.effectScale * self.card2Scale)
+        self.p1.renderer.setInitialXScale(
+            0.025 * self.effectScale * self.card2Scale)
+        self.p1.renderer.setFinalXScale(
+            0.05 * self.effectScale * self.card2Scale)
+        self.p1.renderer.setInitialYScale(
+            0.025 * self.effectScale * self.card2Scale)
+        self.p1.renderer.setFinalYScale(
+            0.05 * self.effectScale * self.card2Scale)
         self.p1.emitter.setAmplitude(8.0 * self.effectScale)
 
     def createTrack(self):
-        self.startEffect = Sequence(Func(self.setupSize), Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.p1.setBirthRate, 0.01), Func(self.p1.clearToInitial), Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Func(self.p1.setBirthRate, 100), Wait(2.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.setupSize), Func(self.p0.setBirthRate, 0.01),
+            Func(self.p0.clearToInitial), Func(self.p1.setBirthRate, 0.01),
+            Func(self.p1.clearToInitial),
+            Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100), Func(self.p1.setBirthRate, 100),
+            Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def cleanUpEffect(self):
@@ -149,4 +169,6 @@ class JRDeathEffect(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\JRDeathEffect.pyc

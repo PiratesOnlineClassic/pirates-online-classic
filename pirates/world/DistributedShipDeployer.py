@@ -6,6 +6,7 @@ from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 
+
 class DistributedShipDeployer(DistributedNode):
 
     def __init__(self, cr):
@@ -28,13 +29,26 @@ class DistributedShipDeployer(DistributedNode):
         self.reparentTo(self.getParentObj())
         self.createSpheres()
         self.enableDeploySpheres(False)
-        self.accept(self.uniqueName('enterShipDeploySphere'), self.handleShipCollideEnter)
-        self.accept(self.uniqueName('exitShipDeploySphere'), self.handleShipCollideExit)
-        self.accept(self.uniqueName('enterShipDeploy-MaxSphereSoft'), self.handleShipEnterSoftBarrier)
-        self.accept(self.uniqueName('exitShipDeploy-MaxSphereSoft'), self.handleShipExitSoftBarrier)
-        self.accept(self.uniqueName('enterShipDeploy-MaxSphereHard'), self.handleShipEnterHardBarrier)
-        self.accept(self.uniqueName('exitShipDeploy-MaxSphereHard'), self.handleShipExitHardBarrier)
-        self.accept(self.uniqueName('enterShipDeploy-MinSphere'), self.handleShipEnterMinSphere)
+        self.accept(
+            self.uniqueName('enterShipDeploySphere'),
+            self.handleShipCollideEnter)
+        self.accept(
+            self.uniqueName('exitShipDeploySphere'), self.handleShipCollideExit)
+        self.accept(
+            self.uniqueName('enterShipDeploy-MaxSphereSoft'),
+            self.handleShipEnterSoftBarrier)
+        self.accept(
+            self.uniqueName('exitShipDeploy-MaxSphereSoft'),
+            self.handleShipExitSoftBarrier)
+        self.accept(
+            self.uniqueName('enterShipDeploy-MaxSphereHard'),
+            self.handleShipEnterHardBarrier)
+        self.accept(
+            self.uniqueName('exitShipDeploy-MaxSphereHard'),
+            self.handleShipExitHardBarrier)
+        self.accept(
+            self.uniqueName('enterShipDeploy-MinSphere'),
+            self.handleShipEnterMinSphere)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-shipboard-report')
     def disable(self):
@@ -121,14 +135,15 @@ class DistributedShipDeployer(DistributedNode):
 
         for x in xrange(numSpheres):
             pos = getSpherePos(x)
-            cSphere = CollisionSphere(pos[0], pos[1], pos[2], self.spacing / 2.0)
+            cSphere = CollisionSphere(pos[0], pos[1], pos[2],
+                                      self.spacing / 2.0)
             cSphere.setTangible(0)
             cSphereNode = CollisionNode(self.uniqueName('ShipDeploySphere'))
             cSphereNode.addSolid(cSphere)
             cSphereNode.setFromCollideMask(BitMask32.allOff())
             cSphereNode.setIntoCollideMask(PiratesGlobals.ShipCollideBitmask)
             sphere = self.attachNewNode(cSphereNode)
-            sphere.setTag('deploySphereId', `x`)
+            sphere.setTag('deploySphereId', repr( x))
             self.deploySpheres.append(sphere)
 
     def showSpheres(self):
@@ -156,7 +171,9 @@ class DistributedShipDeployer(DistributedNode):
 
         padding = 3
         numSpheres = len(self.deploySpheres)
-        for sphere in (s % numSpheres for s in xrange(sphereId - padding, sphereId + padding + 1)):
+        for sphere in (
+                s % numSpheres
+                for s in xrange(sphereId - padding, sphereId + padding + 1)):
             self.deploySpheres[sphere].unstash()
 
     def handleShipCollideExit(self, colEntry):
@@ -169,7 +186,8 @@ class DistributedShipDeployer(DistributedNode):
     @report(types=['frameCount', 'args'], dConfigParam='want-shipboard-report')
     def handleShipEnterMinSphere(self, colEntry):
         if localAvatar.ship and localAvatar.ship.steeringAvId == localAvatar.doId:
-            localAvatar.guiMgr.createWarning(PLocalizer.CoralReefWarning, PiratesGuiGlobals.TextFG6)
+            localAvatar.guiMgr.createWarning(PLocalizer.CoralReefWarning,
+                                             PiratesGuiGlobals.TextFG6)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-shipboard-report')
     def handleShipEnterSoftBarrier(self, colEntry):
@@ -191,7 +209,8 @@ class DistributedShipDeployer(DistributedNode):
     @report(types=['frameCount', 'args'], dConfigParam='want-shipboard-report')
     def handleShipEnterHardBarrier(self, colEntry):
         if localAvatar.ship and localAvatar.ship.steeringAvId == localAvatar.doId:
-            localAvatar.guiMgr.createWarning(PLocalizer.CoralReefWarning, PiratesGuiGlobals.TextFG6)
+            localAvatar.guiMgr.createWarning(PLocalizer.CoralReefWarning,
+                                             PiratesGuiGlobals.TextFG6)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-shipboard-report')
     def handleShipExitHardBarrier(self, colEntry):

@@ -5,8 +5,9 @@ from pirates.pvp.DistributedPVPInstance import DistributedPVPInstance
 from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.ship import DistributedShip
 
+
 class DistributedPVPTeamBattle(DistributedPVPInstance):
-    
+
     notify = directNotify.newCategory('DistributedPVPTeamBattle')
 
     def __init__(self, cr):
@@ -67,7 +68,12 @@ class DistributedPVPTeamBattle(DistributedPVPInstance):
         scoreList.sort(self.sortScores)
         return scoreList
 
-    def createScoreboardItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+    def createScoreboardItem(self,
+                             item,
+                             parent,
+                             itemType=None,
+                             columnWidths=[],
+                             color=None):
         itemColorScale = None
         blink = False
         team = item.get('Team')
@@ -96,10 +102,18 @@ class DistributedPVPTeamBattle(DistributedPVPInstance):
         return [PVPGlobals.SCORE, PVPGlobals.DEATHS]
 
     def getColumnLabels(self):
-        return [PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
+        return [
+            PLocalizer.PVPPlayer, PLocalizer.PVPScore,
+            PLocalizer.PVPTimesDefeated
+        ]
 
     def addPlayerStats(self, playerId):
-        self.stats[playerId] = {PVPGlobals.SCORE: 0, PVPGlobals.KILLS: 0, PVPGlobals.DEATHS: 0, PVPGlobals.TEAM: 0}
+        self.stats[playerId] = {
+            PVPGlobals.SCORE: 0,
+            PVPGlobals.KILLS: 0,
+            PVPGlobals.DEATHS: 0,
+            PVPGlobals.TEAM: 0
+        }
 
     def setPlayerStat(self, playerId, stat, value):
         playerName = self.names[playerId]
@@ -109,7 +123,10 @@ class DistributedPVPTeamBattle(DistributedPVPInstance):
             self.scoreChanged()
 
     def sortStats(self, stats):
-        return sorted(sorted(stats, key=lambda x: int(x[1][1][1])), key=lambda x: int(x[1][0][1]), reverse=True)
+        return sorted(
+            sorted(stats, key=lambda x: int(x[1][1][1])),
+            key=lambda x: int(x[1][0][1]),
+            reverse=True)
 
     def getStats(self):
         return self.getTeamStats()

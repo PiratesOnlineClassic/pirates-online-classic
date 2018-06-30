@@ -17,30 +17,32 @@ class QuestStatData:
     Misc = {}
 
     def incrementTasks(self, name, count=1):
-        if not self.Tasks.has_key(name):
+        if name not in self.Tasks:
             self.Tasks[name] = count
         else:
             self.Tasks[name] = self.Tasks[name] + count
 
     def incrementEnemies(self, name, count=1):
-        if not self.Enemies.has_key(name):
+        if name not in self.Enemies:
             self.Enemies[name] = count
         else:
             self.Enemies[name] = self.Enemies[name] + count
 
     def incrementMisc(self, name, count=1):
-        if not self.Misc.has_key(name):
+        if name not in self.Misc:
             self.Misc[name] = count
         else:
             self.Misc[name] = self.Misc[name] + count
 
     def computeTime(self):
-        self.totalEnemyTime = self.Misc.get('totalEnemies') * self.EnemyDefeatTime
+        self.totalEnemyTime = self.Misc.get(
+            'totalEnemies') * self.EnemyDefeatTime
         self.totalShipTime = self.Misc.get('totalShips') * self.ShipDefeatTime
         self.totalQuestFightTime = self.totalEnemyTime + self.totalShipTime
         self.totalVoyageTime = self.Misc.get('voyages') * self.VoyageTime
         self.pokerGoldTime = self.Misc.get('poker-gold') * self.PokerGoldTime
-        self.goldTime = self.Misc.get('gold') * self.GoldTime - self.pokerGoldTime
+        self.goldTime = self.Misc.get(
+            'gold') * self.GoldTime - self.pokerGoldTime
         self.treasureTime = self.Misc.get('treasures') * self.TreasureTime
         self.visitTime = self.Misc.get('visits') * self.VisitTime
         self.totalTime = self.totalQuestFightTime + self.totalVoyageTime + self.goldTime + self.TreasureTime + self.visitTime
@@ -67,4 +69,6 @@ class QuestStatData:
         argStr += 'visitTime=%s,' % self.visitTime
         argStr += 'totalTime=%s,' % self.totalTime
         return '%s(%s)' % (self.__class__.__name__, argStr)
+
+
 # okay decompiling .\pirates\quest\QuestStatData.pyc

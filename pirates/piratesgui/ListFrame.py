@@ -11,17 +11,34 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class ListFrame(DirectFrame, DirectObject):
-    
+
     revealSpeed = PiratesGuiGlobals.ItemRevealTime
     pageFinishWait = PiratesGuiGlobals.PageFinishWaitTime
     maxTotalWait = PiratesGuiGlobals.MaxTotalRevealTime
 
-    def __init__(self, w, h, title, holder=None, hideAll=True, delayedReveal=None, frameColor=PiratesGuiGlobals.FrameColor, **kw):
+    def __init__(self,
+                 w,
+                 h,
+                 title,
+                 holder=None,
+                 hideAll=True,
+                 delayedReveal=None,
+                 frameColor=PiratesGuiGlobals.FrameColor,
+                 **kw):
         self.adjustHeight = False
         if h == None:
             h = 1
             self.adjustHeight = True
-        DirectFrame.__init__(self, relief=None, state=DGG.NORMAL, frameColor=frameColor, borderWidth=PiratesGuiGlobals.BorderWidth, frameSize=(0.0, w, 0.0, h), pos=(PiratesGuiGlobals.BorderWidth[0], 0, PiratesGuiGlobals.BorderWidth[0]), **kw)
+        DirectFrame.__init__(
+            self,
+            relief=None,
+            state=DGG.NORMAL,
+            frameColor=frameColor,
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            frameSize=(0.0, w, 0.0, h),
+            pos=(PiratesGuiGlobals.BorderWidth[0], 0,
+                 PiratesGuiGlobals.BorderWidth[0]),
+            **kw)
         self.initialiseoptions(ListFrame)
         self.delayedReveal = delayedReveal
         self.items = []
@@ -58,7 +75,8 @@ class ListFrame(DirectFrame, DirectObject):
         return self.holder.getItemList()
 
     def createNewItem(self, item, itemType=None, columnWidths=[], color=None):
-        return self.holder.createNewItem(item, self, itemType, columnWidths, color)
+        return self.holder.createNewItem(item, self, itemType, columnWidths,
+                                         color)
 
     def setResizeItemHeights(self, resize):
         self.resizeItemHeights = resize
@@ -85,7 +103,12 @@ class ListFrame(DirectFrame, DirectObject):
         else:
             return -1
 
-    def createListItem(self, currItem, revealTime=0, itemType=None, columnWidths=[], color=None):
+    def createListItem(self,
+                       currItem,
+                       revealTime=0,
+                       itemType=None,
+                       columnWidths=[],
+                       color=None):
         newItem = self.createNewItem(currItem, itemType, columnWidths, color)
         self.items.insert(0, newItem)
         itemHeight = self.getItemHeight()
@@ -101,8 +124,7 @@ class ListFrame(DirectFrame, DirectObject):
             if itemHeight == -1:
                 currHeight = gui.getHeight()
             else:
-                gui['frameSize'] = (
-                 0, gui.getWidth(), 0, itemHeight)
+                gui['frameSize'] = (0, gui.getWidth(), 0, itemHeight)
                 currHeight = itemHeight
             currHeight += self.itemBuffer
             y += currHeight
@@ -112,8 +134,8 @@ class ListFrame(DirectFrame, DirectObject):
 
         if self.adjustHeight:
             newSize = self['frameSize']
-            self['frameSize'] = (
-             newSize[0], newSize[1], newSize[2], totalY + self.topBuffer)
+            self['frameSize'] = (newSize[0], newSize[1], newSize[2],
+                                 totalY + self.topBuffer)
         if hasattr(currItem, 'getChangeEvent'):
             self.accept(currItem.getChangeEvent(), self._handleItemChange)
         if revealTime:
@@ -147,20 +169,28 @@ class ListFrame(DirectFrame, DirectObject):
                             if itemText[0] == PLocalizer.TBTGame or itemText[0] == PLocalizer.CTLGame or itemText[0] == PLocalizer.SBTGame or itemText[0] == PLocalizer.PokerGame:
                                 if 0:
                                     itmPtr.setColorScale(0.3, 0.3, 0.3, 1)
-                                    lock = DirectFrame(parent=itmPtr, relief=None, image=self.lockArt, image_scale=0.2, image_pos=(0.55,
-                                                                                                                                   0,
-                                                                                                                                   0.09))
+                                    lock = DirectFrame(
+                                        parent=itmPtr,
+                                        relief=None,
+                                        image=self.lockArt,
+                                        image_scale=0.2,
+                                        image_pos=(0.55, 0, 0.09))
                                     itmPtr.locked = True
-                                    itmPtr['command'] = base.localAvatar.guiMgr.showNonPayer
-                                    itmPtr['extraArgs'] = ['Restricted_ListFrame', 4]
-                    if (itemType == None or itemType != 'Space') and self.delayedReveal:
+                                    itmPtr[
+                                        'command'] = base.localAvatar.guiMgr.showNonPayer
+                                    itmPtr['extraArgs'] = [
+                                        'Restricted_ListFrame', 4
+                                    ]
+                    if (itemType == None or
+                            itemType != 'Space') and self.delayedReveal:
                         revealTime += self.revealSpeed
 
         return
 
     def sendFinished(args=None):
         messenger.send(self.getListFinishedMessage())
-        taskMgr.doMethodLater(self.pageFinishWait + revealTime, sendFinished, 'scoreboardWait')
+        taskMgr.doMethodLater(self.pageFinishWait + revealTime, sendFinished,
+                              'scoreboardWait')
 
     def _destroyIface(self):
         for gui in self.items:
@@ -185,4 +215,6 @@ class ListFrame(DirectFrame, DirectObject):
     def cleanup(self):
         for currItem in self.items:
             currItem.descText.wrtReparentTo(currItem)
+
+
 # okay decompiling .\pirates\piratesgui\ListFrame.pyc

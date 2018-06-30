@@ -7,14 +7,15 @@ from panda3d.core import *
 
 
 class DialMeter(DirectFrame):
-    
+
     MeterFull = None
     MeterHalf = None
 
     def __init__(self, parent, **kw):
-        optiondefs = (
-         (
-          'state', DGG.DISABLED, None), ('relief', None, None), ('meterColor', VBase4(0, 0, 0, 1), None), ('baseColor', VBase4(1, 1, 1, 1), None), ('wantCover', True, None))
+        optiondefs = (('state', DGG.DISABLED, None), ('relief', None, None),
+                      ('meterColor', VBase4(0, 0, 0, 1),
+                       None), ('baseColor', VBase4(1, 1, 1, 1),
+                               None), ('wantCover', True, None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent, **kw)
         self.initialiseoptions(DialMeter)
@@ -76,4 +77,6 @@ class DialMeter(DirectFrame):
                     self.meterFaceHalf2.setColor(meterColor)
                     progress = progress - 0.5
                 self.meterFaceHalf2.setR(-180 * (progress / 0.5))
+
+
 # okay decompiling .\pirates\piratesgui\DialMeter.pyc

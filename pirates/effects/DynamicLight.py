@@ -8,10 +8,19 @@ DYN_LIGHT_DIRECTIONAL = 1
 DYN_LIGHT_POINT = 2
 DYN_LIGHT_SPOT = 3
 
-class DynamicLight(NodePath):
-    
 
-    def __init__(self, type=DYN_LIGHT_POINT, parent=None, pos=None, hpr=None, color=None, atten=None, exp=None, flicker=False, drawIcon=False):
+class DynamicLight(NodePath):
+
+    def __init__(self,
+                 type=DYN_LIGHT_POINT,
+                 parent=None,
+                 pos=None,
+                 hpr=None,
+                 color=None,
+                 atten=None,
+                 exp=None,
+                 flicker=False,
+                 drawIcon=False):
         self.light = None
         self.lightNodePath = None
         self.flickerIval = None
@@ -73,7 +82,8 @@ class DynamicLight(NodePath):
             newModel.flattenLight()
             self.models.append(newModel)
             if type == DYN_LIGHT_DIRECTIONAL or type == DYN_LIGHT_SPOT:
-                lightDirectionModel = loader.loadModel('models/props/light_tool_arrow')
+                lightDirectionModel = loader.loadModel(
+                    'models/props/light_tool_arrow')
                 lightDirectionModel.setScale(5.0)
                 lightDirectionModel.setY(2)
                 lightDirectionModel.setH(180)
@@ -119,7 +129,8 @@ class DynamicLight(NodePath):
 
     def setIntensityColor(self):
         mup = self.intensity
-        color = VBase4(self.color[0] * mup, self.color[1] * mup, self.color[2] * mup, self.color[3] * mup)
+        color = VBase4(self.color[0] * mup, self.color[1] * mup,
+                       self.color[2] * mup, self.color[3] * mup)
         for currModel in self.models:
             if currModel and not currModel.isEmpty():
                 currModel.setColor(color)
@@ -182,10 +193,18 @@ class DynamicLight(NodePath):
                 duration = 0.05 + random.random() * 0.2
                 if self.attenIval:
                     self.attenIval.finish()
-                self.attenIval = LerpFunctionInterval(self.setTempIntensity, duration=duration, toData=toData, fromData=fromData, name='DynamicLightFlicker-%d' % id(self))
+                self.attenIval = LerpFunctionInterval(
+                    self.setTempIntensity,
+                    duration=duration,
+                    toData=toData,
+                    fromData=fromData,
+                    name='DynamicLightFlicker-%d' % id(self))
                 self.attenIval.start()
 
-            flickerIval = Sequence(Func(flickerFunc), Wait(0.25), name='DynamicLightHandle-%d' % id(self))
+            flickerIval = Sequence(
+                Func(flickerFunc),
+                Wait(0.25),
+                name='DynamicLightHandle-%d' % id(self))
             flickerIval.loop()
             self.flickerIval = flickerIval
 

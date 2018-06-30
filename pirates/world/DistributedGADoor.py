@@ -1,5 +1,6 @@
 from pirates.world import DistributedGAConnector
 
+
 class DistributedGADoor(DistributedGAConnector.DistributedGAConnector):
     notify = directNotify.newCategory('DistributedGADoor')
 
@@ -15,7 +16,8 @@ class DistributedGADoor(DistributedGAConnector.DistributedGAConnector):
 
     def loadArea(self, areaIndex, entry=None):
         parentId, zoneId = self.areaParentZone[areaIndex]
-        visContext = self.cr.addInterest(parentId, zoneId, 'gaConnector', areaEvent)
+        visContext = self.cr.addInterest(parentId, zoneId, 'gaConnector',
+                                         areaEvent)
 
     def setupConnectorNodes(self):
         pass

@@ -18,7 +18,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class WeaponPanel(DirectFrame):
-    
+
     width = PiratesGuiGlobals.InventoryInfoWidth
     height = PiratesGuiGlobals.InventoryInfoHeight
     guiLoaded = False
@@ -45,10 +45,17 @@ class WeaponPanel(DirectFrame):
         if WeaponPanel.guiLoaded:
             return
         WeaponPanel.topGui = loader.loadModel('models/gui/toplevel_gui')
-        WeaponPanel.genericButton = (WeaponPanel.topGui.find('**/generic_button'), WeaponPanel.topGui.find('**/generic_button_down'), WeaponPanel.topGui.find('**/generic_button_over'), WeaponPanel.topGui.find('**/generic_button_disabled'))
-        WeaponPanel.parchmentImage = loader.loadModel('models/gui/panel_parchment')
-        WeaponPanel.weaponIcons = loader.loadModel('models/textureCards/weapon_icons')
-        WeaponPanel.skillIcons = loader.loadModel('models/textureCards/skillIcons')
+        WeaponPanel.genericButton = (
+            WeaponPanel.topGui.find('**/generic_button'),
+            WeaponPanel.topGui.find('**/generic_button_down'),
+            WeaponPanel.topGui.find('**/generic_button_over'),
+            WeaponPanel.topGui.find('**/generic_button_disabled'))
+        WeaponPanel.parchmentImage = loader.loadModel(
+            'models/gui/panel_parchment')
+        WeaponPanel.weaponIcons = loader.loadModel(
+            'models/textureCards/weapon_icons')
+        WeaponPanel.skillIcons = loader.loadModel(
+            'models/textureCards/skillIcons')
         WeaponPanel.kbButton = WeaponPanel.topGui.find('**/keyboard_button')
         WeaponPanel.MeterFrame = loader.loadModel('models/gui/ship_battle')
         WeaponPanel.guiLoaded = True
@@ -72,28 +79,62 @@ class WeaponPanel(DirectFrame):
             hotkeys = ('f%s' % self.key,)
             desc = PLocalizer.WeaponDescriptions.get(itemId)
             helpText = '%s\n%s' % (PLocalizer.makeHeadingString(name, 2), desc)
-            self.weaponButton = CombatTray.WeaponButton(hotkeys=hotkeys, hotkeyLabel=hotkeyLabel, helpText=helpText, parent=self, showQuant=0, pos=(0.1, 0, -0.02), scale=1.1, command=localAvatar.guiMgr.combatTray.toggleWeapon)
+            self.weaponButton = CombatTray.WeaponButton(
+                hotkeys=hotkeys,
+                hotkeyLabel=hotkeyLabel,
+                helpText=helpText,
+                parent=self,
+                showQuant=0,
+                pos=(0.1, 0, -0.02),
+                scale=1.1,
+                command=localAvatar.guiMgr.combatTray.toggleWeapon)
             self.weaponButton.ignoreHotkeys()
             self.weaponButton.setWeaponId(itemId)
             self.weaponButton['extraArgs'] = [itemId]
             self.weaponButton.helpDelay = 0
             self.weaponButton.helpPos = (0.12, 0, -0.04)
-            self.desc = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text=name, text_scale=PiratesGuiGlobals.TextScaleSmall, text_align=TextNode.ALeft, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, pos=(0.29, 0, -0.005), text_font=PiratesGlobals.getInterfaceFont())
+            self.desc = DirectLabel(
+                parent=self,
+                relief=None,
+                state=DGG.DISABLED,
+                text=name,
+                text_scale=PiratesGuiGlobals.TextScaleSmall,
+                text_align=TextNode.ALeft,
+                text_fg=PiratesGuiGlobals.TextFG2,
+                text_shadow=PiratesGuiGlobals.TextShadow,
+                pos=(0.29, 0, -0.005),
+                text_font=PiratesGlobals.getInterfaceFont())
         else:
             self.repMeter = None
-            name = PLocalizer.makeHeadingString(PLocalizer.InventoryTypeNames[repCategory], 2)
-            self.categoryLabel = DirectLabel(parent=self, relief=None, text=name, text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, pos=(0.29,
-                                                                                                                                                                                                         0,
-                                                                                                                                                                                                         0.06), textMayChange=0)
-            self.weaponButton = CombatTray.WeaponButton(parent=self, state=DGG.DISABLED, showQuant=0, scale=1.1)
+            name = PLocalizer.makeHeadingString(
+                PLocalizer.InventoryTypeNames[repCategory], 2)
+            self.categoryLabel = DirectLabel(
+                parent=self,
+                relief=None,
+                text=name,
+                text_scale=PiratesGuiGlobals.TextScaleLarge,
+                text_align=TextNode.ALeft,
+                text_shadow=PiratesGuiGlobals.TextShadow,
+                pos=(0.29, 0, 0.06),
+                textMayChange=0)
+            self.weaponButton = CombatTray.WeaponButton(
+                parent=self, state=DGG.DISABLED, showQuant=0, scale=1.1)
             self.weaponButton.setPos(0.1, 0, -0.02)
             self.weaponButton.setWeaponId(itemId)
             self.weaponButton.helpDelay = 0
             self.weaponButton.helpPos = (0.12, 0, -0.04)
             unlockDesc = PLocalizer.WeaponUnlockText[repCategory]
-            self.desc = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text=unlockDesc, text_scale=PiratesGuiGlobals.TextScaleSmall, text_align=TextNode.ALeft, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, pos=(0.29,
-                                                                                                                                                                                                                                                             0,
-                                                                                                                                                                                                                                                             0.025), text_font=PiratesGlobals.getInterfaceFont())
+            self.desc = DirectLabel(
+                parent=self,
+                relief=None,
+                state=DGG.DISABLED,
+                text=unlockDesc,
+                text_scale=PiratesGuiGlobals.TextScaleSmall,
+                text_align=TextNode.ALeft,
+                text_fg=PiratesGuiGlobals.TextFG2,
+                text_shadow=PiratesGuiGlobals.TextShadow,
+                pos=(0.29, 0, 0.025),
+                text_font=PiratesGlobals.getInterfaceFont())
             self.setColorScale(0.4, 0.4, 0.4, 1, 1)
         return
 
@@ -107,4 +148,6 @@ class WeaponPanel(DirectFrame):
 
     def bringToFront(self):
         self.reparentTo(self.getParent())
+
+
 # okay decompiling .\pirates\piratesgui\WeaponPanel.pyc

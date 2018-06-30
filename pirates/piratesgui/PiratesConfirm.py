@@ -13,7 +13,6 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class PiratesConfirmButton(RequestButton):
-    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -21,10 +20,16 @@ class PiratesConfirmButton(RequestButton):
 
 
 class PiratesConfirm(GuiPanel.GuiPanel):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesConfirm')
 
-    def __init__(self, title, message, command, avId=None, tattoo=None, barber=None):
+    def __init__(self,
+                 title,
+                 message,
+                 command,
+                 avId=None,
+                 tattoo=None,
+                 barber=None):
         GuiPanel.GuiPanel.__init__(self, title, 0.5, 0.5)
         self.initialiseoptions(PiratesConfirm)
         self.command = command
@@ -35,13 +40,23 @@ class PiratesConfirm(GuiPanel.GuiPanel):
             self.__handleNo()
             return
         text = message
-        self.message = DirectLabel(parent=self, relief=None, text=message, text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.25,
-                                                                                                                                                                                                                                                         0,
-                                                                                                                                                                                                                                                         0.35), textMayChange=1)
-        self.bOk = PiratesConfirmButton(text=PLocalizer.GenericConfirmOK, command=self.__handleOk)
+        self.message = DirectLabel(
+            parent=self,
+            relief=None,
+            text=message,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_align=TextNode.ACenter,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_wordwrap=11,
+            pos=(0.25, 0, 0.35),
+            textMayChange=1)
+        self.bOk = PiratesConfirmButton(
+            text=PLocalizer.GenericConfirmOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
         self.bOk.setPos(0.1, 0, 0.05)
-        self.bNo = PiratesConfirmButton(text=PLocalizer.GenericConfirmNo, command=self.__handleNo)
+        self.bNo = PiratesConfirmButton(
+            text=PLocalizer.GenericConfirmNo, command=self.__handleNo)
         self.bNo.reparentTo(self)
         self.bNo.setPos(0.3, 0, 0.05)
         self.accept('clientLogout', self.destroy)
@@ -73,4 +88,6 @@ class PiratesConfirm(GuiPanel.GuiPanel):
 
     def __handleCancelFromAbove(self):
         self.destroy()
+
+
 # okay decompiling .\pirates\piratesgui\PiratesConfirm.pyc

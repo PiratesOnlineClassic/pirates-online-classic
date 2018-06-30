@@ -8,10 +8,27 @@ from pirates.piratesgui.PurchaseListItem import PurchaseListItem
 
 
 class PurchaseList(InventoryList):
-    
 
-    def __init__(self, inventory, height, trade=0, buy=0, sell=0, use=0, weapon=0):
-        InventoryList.__init__(self, inventory=inventory, height=height, trade=trade, buy=buy, sell=sell, use=use, weapon=weapon, listItemClass=PurchaseListItem, listItemWidth=PiratesGuiGlobals.PurchaseListItemWidth, listItemHeight=PiratesGuiGlobals.PurchaseListItemHeight)
+    def __init__(self,
+                 inventory,
+                 height,
+                 trade=0,
+                 buy=0,
+                 sell=0,
+                 use=0,
+                 weapon=0):
+        InventoryList.__init__(
+            self,
+            inventory=inventory,
+            height=height,
+            trade=trade,
+            buy=buy,
+            sell=sell,
+            use=use,
+            weapon=weapon,
+            listItemClass=PurchaseListItem,
+            listItemWidth=PiratesGuiGlobals.PurchaseListItemWidth,
+            listItemHeight=PiratesGuiGlobals.PurchaseListItemHeight)
         self.initialiseoptions(PurchaseList)
         self.loadInventoryPanels()
 
@@ -40,4 +57,6 @@ class PurchaseList(InventoryList):
                 return panel.itemCount * panel.itemQuantity
 
         return 0
+
+
 # okay decompiling .\pirates\piratesgui\PurchaseList.pyc

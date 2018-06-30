@@ -6,8 +6,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-class AttuneEffect(PooledEffect, EffectController):
 
+class AttuneEffect(PooledEffect, EffectController):
 
     def __init__(self, parent=None):
         PooledEffect.__init__(self)
@@ -15,7 +15,8 @@ class AttuneEffect(PooledEffect, EffectController):
         if parent is not None:
             self.reparentTo(parent)
         if not self.particleDummy:
-            self.particleDummy = render.attachNewNode(ModelNode('AttuneParticleDummy'))
+            self.particleDummy = render.attachNewNode(
+                ModelNode('AttuneParticleDummy'))
             self.particleDummy.setDepthWrite(0)
             self.particleDummy.setLightOff()
         self.f = ParticleEffect.ParticleEffect()
@@ -61,15 +62,26 @@ class AttuneEffect(PooledEffect, EffectController):
 
     def createTrack(self):
         posIval = LerpPosInterval(self, 0.75, Point3(0, 0, 0.5))
-        self.startEffect = Sequence(Func(self.p0.clearToInitial), Func(self.p0.setBirthRate, 0.01), Func(self.p0.factory.setLifespanBase, 0.75), Func(self.particleDummy.reparentTo, render), Func(self.f.start, self, self.particleDummy), posIval, Func(self.p0.setBirthRate, 0.03), Func(self.p0.factory.setLifespanBase, 1.75), Wait(1.0), Func(self.particleDummy.wrtReparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(3.0), Func(self.p0.setBirthRate, 0.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.clearToInitial), Func(self.p0.setBirthRate, 0.01),
+            Func(self.p0.factory.setLifespanBase, 0.75),
+            Func(self.particleDummy.reparentTo, render),
+            Func(self.f.start, self, self.particleDummy), posIval,
+            Func(self.p0.setBirthRate, 0.03),
+            Func(self.p0.factory.setLifespanBase, 1.75), Wait(1.0),
+            Func(self.particleDummy.wrtReparentTo, self))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100.0), Wait(3.0),
+            Func(self.p0.setBirthRate, 0.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(2.0), self.endEffect)
 
     def setEffectColor(self, color):
         self.effectColor = color
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.2, Vec4(0, 0, 0, 0.5), Vec4(0, 0, 0, 1), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.2, 1.0, Vec4(0, 0, 0, 0.75), self.effectColor, 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 0.2, Vec4(0, 0, 0, 0.5), Vec4(0, 0, 0, 1), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.2, 1.0, Vec4(0, 0, 0, 0.75), self.effectColor, 1)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

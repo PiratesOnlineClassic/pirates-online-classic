@@ -4,10 +4,11 @@ from direct.showbase.PythonUtil import *
 from otp.otpbase import OTPGlobals
 from pirates.piratesbase import PiratesGlobals
 
+
 class ZoneLOD(DirectObject):
     notify = directNotify.newCategory('ZoneLOD')
 
-    def __init__(self, uniqueNameFunc, zoneRadii = []):
+    def __init__(self, uniqueNameFunc, zoneRadii=[]):
         self.uniqueNameFunc = uniqueNameFunc
         self.zoneRadii = zoneRadii
         self.zoneSphere = []
@@ -29,7 +30,7 @@ class ZoneLOD(DirectObject):
         if hasattr(self, 'outerSphere') and self.numSpheres:
             self.setZoneLevel(self.outerSphere + 1)
 
-    def setZoneRadii(self, zoneRadii, zoneCenter = [0, 0]):
+    def setZoneRadii(self, zoneRadii, zoneCenter=[0, 0]):
         self.numSpheres = len(zoneRadii)
         self.zoneRadii = zoneRadii
         self.zoneCenter = zoneCenter
@@ -77,8 +78,12 @@ class ZoneLOD(DirectObject):
 
     def enableAllLODSpheres(self):
         for i in range(self.numSpheres):
-            self.accept(self.uniqueNameFunc('exitzoneLevel' + str(i)), Functor(self.handleExitZoneLevel, i + 1))
-            self.accept(self.uniqueNameFunc('enterzoneLevel' + str(i)), Functor(self.handleEnterZoneLevel, i))
+            self.accept(
+                self.uniqueNameFunc('exitzoneLevel' + str(i)),
+                Functor(self.handleExitZoneLevel, i + 1))
+            self.accept(
+                self.uniqueNameFunc('enterzoneLevel' + str(i)),
+                Functor(self.handleEnterZoneLevel, i))
 
         for sphere in self.zoneSphere:
             sphere.unstash()
@@ -95,7 +100,7 @@ class ZoneLOD(DirectObject):
 
         self.allEnabled = False
 
-    def clearAllEnabled(self, resetLastZoneLevel = False):
+    def clearAllEnabled(self, resetLastZoneLevel=False):
         self.allEnabled = False
         if resetLastZoneLevel:
             self.setCollLevel(self.lastZoneLevel)
@@ -118,24 +123,28 @@ class ZoneLOD(DirectObject):
             self.zoneSphere[level - 1].unstash()
 
         if level <= self.outerSphere:
-            self.accept(self.uniqueNameFunc('exitzoneLevel' + str(level)), Functor(self.handleExitZoneLevel, level + 1))
+            self.accept(
+                self.uniqueNameFunc('exitzoneLevel' + str(level)),
+                Functor(self.handleExitZoneLevel, level + 1))
 
         if level > self.innerSphere:
-            self.accept(self.uniqueNameFunc('enterzoneLevel' + str(level - 1)), Functor(self.handleEnterZoneLevel, level - 1))
+            self.accept(
+                self.uniqueNameFunc('enterzoneLevel' + str(level - 1)),
+                Functor(self.handleEnterZoneLevel, level - 1))
 
-    def handleEnterZoneLevel(self, level, entry = None):
+    def handleEnterZoneLevel(self, level, entry=None):
         if level >= self.lastZoneLevel:
             return
 
         self.setZoneLevel(level, entry)
 
-    def handleExitZoneLevel(self, level, entry = None):
+    def handleExitZoneLevel(self, level, entry=None):
         if level < self.lastZoneLevel:
             return
 
         self.setZoneLevel(level, entry)
 
-    def setZoneLevel(self, level, entry = None):
+    def setZoneLevel(self, level, entry=None):
         self.notify.debug('Changing Zone %s:%s' % (self.name, level))
         if self.levelForced:
             return

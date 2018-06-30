@@ -10,21 +10,22 @@ from pirates.piratesbase import PiratesGlobals
 
 class BattleManagerBase:
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManager')
-    PirateCodeWeapons = (
-        InventoryType.PistolWeaponL1,
-        InventoryType.PistolWeaponL2,
-        InventoryType.PistolWeaponL3,
-        InventoryType.PistolWeaponL4,
-        InventoryType.PistolWeaponL5,
-        InventoryType.PistolWeaponL6,
-        InventoryType.MusketWeaponL1,
-        InventoryType.MusketWeaponL2,
-        InventoryType.MusketWeaponL3)
+    PirateCodeWeapons = (InventoryType.PistolWeaponL1,
+                         InventoryType.PistolWeaponL2,
+                         InventoryType.PistolWeaponL3,
+                         InventoryType.PistolWeaponL4,
+                         InventoryType.PistolWeaponL5,
+                         InventoryType.PistolWeaponL6,
+                         InventoryType.MusketWeaponL1,
+                         InventoryType.MusketWeaponL2,
+                         InventoryType.MusketWeaponL3)
 
     SkillRechargeTimeConfig = config.GetFloat('skill-recharge-time', -1.0)
 
     def isPVP(self, attacker, target):
-        if target and target.getTeam() == PiratesGlobals.PLAYER_TEAM and attacker and attacker.getTeam() == PiratesGlobals.PLAYER_TEAM:
+        if target and target.getTeam(
+        ) == PiratesGlobals.PLAYER_TEAM and attacker and attacker.getTeam(
+        ) == PiratesGlobals.PLAYER_TEAM:
             return True
         return False
 
@@ -33,7 +34,11 @@ class BattleManagerBase:
             return True
         if not target.isNpc and target.zombie:
             return True
-        human = target.avatarType.isA(AvatarTypes.Navy) or target.avatarType.isA(AvatarTypes.Townfolk) or target.avatarType.isA(AvatarTypes.Pirate) or target.avatarType.isA(AvatarTypes.TradingCo)
+        human = target.avatarType.isA(
+            AvatarTypes.Navy) or target.avatarType.isA(
+                AvatarTypes.Townfolk) or target.avatarType.isA(
+                    AvatarTypes.Pirate) or target.avatarType.isA(
+                        AvatarTypes.TradingCo)
         if human and attacker.currentWeaponId in self.PirateCodeWeapons:
             return False
         return True
@@ -45,7 +50,8 @@ class BattleManagerBase:
         chanceOfHit = WeaponGlobals.getAttackAccuracy(skillId, ammoSkillId)
         if target and not WeaponGlobals.isFriendlyFire(skillId, ammoSkillId):
             if not inPVPMode:
-                accuracyModifier = WeaponGlobals.getComparativeLevelAccuracyModifier(attacker, target)
+                accuracyModifier = WeaponGlobals.getComparativeLevelAccuracyModifier(
+                    attacker, target)
                 chanceOfHit = max(0.0, chanceOfHit + accuracyModifier)
         skillRange = self.getModifiedAttackRange(attacker, skillId, ammoSkillId)
         chanceOfParry = 0.0
@@ -63,19 +69,39 @@ class BattleManagerBase:
             defInv = target.getInventory()
             if defInv:
                 if attackType == WeaponGlobals.AC_MISSILE:
-                    chanceOfDodge = max(0, defInv.getStackQuantity(InventoryType.PistolDodge) - 1) * WeaponGlobals.getAttackDodge(InventoryType.PistolDodge)
+                    chanceOfDodge = max(
+                        0,
+                        defInv.getStackQuantity(InventoryType.PistolDodge) - 1
+                    ) * WeaponGlobals.getAttackDodge(InventoryType.PistolDodge)
                 elif attackType == WeaponGlobals.AC_COMBAT:
-                    chanceOfParry = max(0, defInv.getStackQuantity(InventoryType.CutlassParry) - 1) * WeaponGlobals.getAttackDodge(InventoryType.CutlassParry)
+                    chanceOfParry = max(
+                        0,
+                        defInv.getStackQuantity(InventoryType.CutlassParry) - 1
+                    ) * WeaponGlobals.getAttackDodge(InventoryType.CutlassParry)
                 elif attackType == WeaponGlobals.AC_MAGIC:
-                    chanceOfResist = max(0, defInv.getStackQuantity(InventoryType.DollSpiritWard) - 1) * WeaponGlobals.getAttackDodge(InventoryType.DollSpiritWard)
+                    chanceOfResist = max(
+                        0,
+                        defInv.getStackQuantity(InventoryType.DollSpiritWard) -
+                        1) * WeaponGlobals.getAttackDodge(
+                            InventoryType.DollSpiritWard)
         if not attacker.isNpc:
             attInv = attacker.getInventory()
             if attInv:
                 if attackType == WeaponGlobals.AC_MAGIC:
                     pass
                 elif attackType == WeaponGlobals.AC_MISSILE:
-                    chanceOfHit += max(0, attInv.getStackQuantity(InventoryType.PistolSharpShooter) - 1) * WeaponGlobals.getAttackAccuracy(InventoryType.PistolSharpShooter)
-                    chanceOfDodge -= max(0, attInv.getStackQuantity(InventoryType.PistolSharpShooter) - 1) * WeaponGlobals.getAttackAccuracy(InventoryType.PistolSharpShooter) / 2
+                    chanceOfHit += max(
+                        0,
+                        attInv.getStackQuantity(
+                            InventoryType.PistolSharpShooter) -
+                        1) * WeaponGlobals.getAttackAccuracy(
+                            InventoryType.PistolSharpShooter)
+                    chanceOfDodge -= max(
+                        0,
+                        attInv.getStackQuantity(
+                            InventoryType.PistolSharpShooter) -
+                        1) * WeaponGlobals.getAttackAccuracy(
+                            InventoryType.PistolSharpShooter) / 2
                 elif attackType == WeaponGlobals.AC_COMBAT:
                     pass
         randVal = attacker.battleRandom.getRandom('willWeaponHit:accuracy')
@@ -96,23 +122,32 @@ class BattleManagerBase:
             return WeaponGlobals.RESULT_RESIST
         return WeaponGlobals.RESULT_HIT
 
-    def getModifiedSkillEffects(self, attacker, target, skillId, ammoSkillId, charge=0, distance=0.0):
+    def getModifiedSkillEffects(self,
+                                attacker,
+                                target,
+                                skillId,
+                                ammoSkillId,
+                                charge=0,
+                                distance=0.0):
         if not attacker.getWorld():
             return ([0, 0, 0, 0, 0], [0, 0, 0, 0, 0])
-        attackerEffects, targetEffects = WeaponGlobals.getAttackEffects(skillId, ammoSkillId)
+        attackerEffects, targetEffects = WeaponGlobals.getAttackEffects(
+            skillId, ammoSkillId)
         inPVPMode = self.isPVP(attacker, target)
         tHealth = targetEffects[0]
         tMojo = targetEffects[3]
         aHealth = attackerEffects[0]
         aMojo = attackerEffects[3]
-        randVal = attacker.battleRandom.getRandom('getModifiedSkillEffect %s %s' % (attacker, target))
+        randVal = attacker.battleRandom.getRandom(
+            'getModifiedSkillEffect %s %s' % (attacker, target))
         if attacker.isNpc:
             minValue = -1
         else:
             minValue = 0
         if tHealth <= 0:
             if attacker.isNpc:
-                tHealth = -1 * attacker.getMonsterDmg() * WeaponGlobals.getNPCModifier(skillId)
+                tHealth = -1 * attacker.getMonsterDmg(
+                ) * WeaponGlobals.getNPCModifier(skillId)
             randomDamageMod = randVal / 2 + 0.5
             tHealth = min(tHealth * randomDamageMod, minValue)
         if tMojo < 0:
@@ -121,13 +156,15 @@ class BattleManagerBase:
         if not attacker.isNpc:
             if skillId != InventoryType.UseItem:
                 if not inPVPMode or tHealth > 0:
-                    damageMod = WeaponGlobals.getLevelDamageModifier(attacker.getLevel())
+                    damageMod = WeaponGlobals.getLevelDamageModifier(
+                        attacker.getLevel())
                     tHealth *= damageMod
                     tMojo *= damageMod
                     aHealth *= damageMod
             if skillId != InventoryType.UseItem:
                 if hasattr(attacker, 'currentWeaponId'):
-                    attackerBonus, targetBonus = WeaponGlobals.getWeaponStats(attacker.currentWeaponId)
+                    attackerBonus, targetBonus = WeaponGlobals.getWeaponStats(
+                        attacker.currentWeaponId)
                     if attackerBonus:
                         if targetBonus:
                             if aHealth > 0:
@@ -147,7 +184,8 @@ class BattleManagerBase:
                 if skillId != InventoryType.UseItem:
                     scaleVal = 1
                     if hasattr(attacker, 'currentWeaponId'):
-                        scaleVal = WeaponGlobals.getWeaponDamageScale(attacker.currentWeaponId)
+                        scaleVal = WeaponGlobals.getWeaponDamageScale(
+                            attacker.currentWeaponId)
                     aHealth *= scaleVal
                     tHealth *= scaleVal
                 if attacker.isNpc:
@@ -155,33 +193,63 @@ class BattleManagerBase:
                 else:
                     inv = attacker.getInventory()
                     if inv and skillId != InventoryType.UseItem:
-                        amt = max(0, inv.getStackQuantity(skillId) - 2) * WeaponGlobals.LEVELUP_DAMAGE_MULTIPLIER
+                        amt = max(0,
+                                  inv.getStackQuantity(skillId) -
+                                  2) * WeaponGlobals.LEVELUP_DAMAGE_MULTIPLIER
                         amt += 1.0
                         tHealth *= amt
                         tMojo *= amt
                         aHealth *= amt
-                        amt = max(0, inv.getStackQuantity(ammoSkillId) - 2) * WeaponGlobals.LEVELUP_DAMAGE_MULTIPLIER
+                        amt = max(0,
+                                  inv.getStackQuantity(ammoSkillId) -
+                                  2) * WeaponGlobals.LEVELUP_DAMAGE_MULTIPLIER
                         amt += 1.0
                         tHealth *= amt
                         tMojo *= amt
                         aHealth *= amt
-                        if WeaponGlobals.isVoodooWeapon(attacker.currentWeaponId):
-                            amt = max(0, inv.getStackQuantity(InventoryType.StaffSpiritLore) - 1) * WeaponGlobals.getAttackTargetHP(InventoryType.StaffSpiritLore)
+                        if WeaponGlobals.isVoodooWeapon(
+                                attacker.currentWeaponId):
+                            amt = max(
+                                0,
+                                inv.getStackQuantity(
+                                    InventoryType.StaffSpiritLore) -
+                                1) * WeaponGlobals.getAttackTargetHP(
+                                    InventoryType.StaffSpiritLore)
                             amt += 1.0
                             tHealth *= amt
                             tMojo *= amt
                             aHealth *= amt
-                        if WeaponGlobals.isVoodooWeapon(attacker.currentWeaponId) and aMojo < 0:
-                            amt = max(0, inv.getStackQuantity(InventoryType.StaffConservation) - 1) * WeaponGlobals.getAttackSelfMojo(InventoryType.StaffConservation)
+                        if WeaponGlobals.isVoodooWeapon(
+                                attacker.currentWeaponId) and aMojo < 0:
+                            amt = max(
+                                0,
+                                inv.getStackQuantity(
+                                    InventoryType.StaffConservation) -
+                                1) * WeaponGlobals.getAttackSelfMojo(
+                                    InventoryType.StaffConservation)
                             aMojo = min(aMojo - aMojo * amt, 1)
-                        if WeaponGlobals.isBladedWeapon(attacker.currentWeaponId):
-                            amt = max(0, inv.getStackQuantity(InventoryType.DaggerBladeInstinct) - 1) * WeaponGlobals.getAttackTargetHP(InventoryType.DaggerBladeInstinct)
+                        if WeaponGlobals.isBladedWeapon(
+                                attacker.currentWeaponId):
+                            amt = max(
+                                0,
+                                inv.getStackQuantity(
+                                    InventoryType.DaggerBladeInstinct) -
+                                1) * WeaponGlobals.getAttackTargetHP(
+                                    InventoryType.DaggerBladeInstinct)
                             amt += 1.0
                             tHealth *= amt
                             tMojo *= amt
                             aMojo *= amt
-                        if WeaponGlobals.getAttackClass(skillId) == WeaponGlobals.AC_CANNON or WeaponGlobals.getAttackClass(skillId) == WeaponGlobals.AC_GRENADE:
-                            amt = max(0, inv.getStackQuantity(InventoryType.CannonBarrage) - 1) * WeaponGlobals.getAttackTargetHP(InventoryType.CannonBarrage)
+                        if WeaponGlobals.getAttackClass(
+                                skillId
+                        ) == WeaponGlobals.AC_CANNON or WeaponGlobals.getAttackClass(
+                                skillId) == WeaponGlobals.AC_GRENADE:
+                            amt = max(
+                                0,
+                                inv.getStackQuantity(
+                                    InventoryType.CannonBarrage) -
+                                1) * WeaponGlobals.getAttackTargetHP(
+                                    InventoryType.CannonBarrage)
                             amt += 1.0
                             tHealth *= amt
                             tMojo *= amt
@@ -195,9 +263,15 @@ class BattleManagerBase:
                         else:
                             inv = attacker.getInventory()
                             if inv:
-                                attackClass = WeaponGlobals.getAttackClass(skillId)
+                                attackClass = WeaponGlobals.getAttackClass(
+                                    skillId)
                                 if attackClass == WeaponGlobals.AC_GRENADE or attackClass == WeaponGlobals.AC_CANNON:
-                                    amt = max(0, inv.getStackQuantity(InventoryType.GrenadeToughness) - 1) * WeaponGlobals.getAttackSelfHP(InventoryType.GrenadeToughness)
+                                    amt = max(
+                                        0,
+                                        inv.getStackQuantity(
+                                            InventoryType.GrenadeToughness) -
+                                        1) * WeaponGlobals.getAttackSelfHP(
+                                            InventoryType.GrenadeToughness)
                                     amt = 1.0 - amt
                                     aHealth *= amt
                 if target:
@@ -207,34 +281,52 @@ class BattleManagerBase:
                         else:
                             inv = target.getInventory()
                             if inv:
-                                attackClass = WeaponGlobals.getAttackClass(skillId)
+                                attackClass = WeaponGlobals.getAttackClass(
+                                    skillId)
                                 if attackClass == WeaponGlobals.AC_GRENADE or attackClass == WeaponGlobals.AC_CANNON:
-                                    amt = max(0, inv.getStackQuantity(InventoryType.GrenadeToughness) - 1) * WeaponGlobals.getAttackSelfHP(InventoryType.GrenadeToughness)
+                                    amt = max(
+                                        0,
+                                        inv.getStackQuantity(
+                                            InventoryType.GrenadeToughness) -
+                                        1) * WeaponGlobals.getAttackSelfHP(
+                                            InventoryType.GrenadeToughness)
                                     amt = 1.0 - amt
                                     tHealth *= amt
                 if skillId == InventoryType.PistolTakeAim:
                     if charge > 0:
-                        maxCharge = WeaponGlobals.getAttackMaxCharge(skillId, ammoSkillId)
+                        maxCharge = WeaponGlobals.getAttackMaxCharge(
+                            skillId, ammoSkillId)
                         charge = min(charge, maxCharge)
                         tHealth += tHealth * charge * 1.0
                         aHealth += aHealth * charge * 1.0
-                if hasattr(attacker, 'getSkillEffects') and skillId != InventoryType.UseItem:
+                if hasattr(
+                        attacker,
+                        'getSkillEffects') and skillId != InventoryType.UseItem:
                     skillEffects = attacker.getSkillEffects()
                     if WeaponGlobals.C_OPENFIRE in skillEffects:
-                        if WeaponGlobals.getAttackClass(skillId) == WeaponGlobals.AC_CANNON:
+                        if WeaponGlobals.getAttackClass(
+                                skillId) == WeaponGlobals.AC_CANNON:
                             tHealth *= WeaponGlobals.OPEN_FIRE_BONUS
                             aHealth *= WeaponGlobals.OPEN_FIRE_BONUS
                     if WeaponGlobals.C_WEAKEN in skillEffects:
-                        if WeaponGlobals.getAttackClass(skillId) == WeaponGlobals.AC_COMBAT:
-                            tHealth = min(-1, tHealth - tHealth * WeaponGlobals.WEAKEN_PENALTY)
-                            aHealth = min(-1, aHealth - aHealth * WeaponGlobals.WEAKEN_PENALTY)
+                        if WeaponGlobals.getAttackClass(
+                                skillId) == WeaponGlobals.AC_COMBAT:
+                            tHealth = min(
+                                -1, tHealth -
+                                tHealth * WeaponGlobals.WEAKEN_PENALTY)
+                            aHealth = min(
+                                -1, aHealth -
+                                aHealth * WeaponGlobals.WEAKEN_PENALTY)
                 if target and skillId != InventoryType.UseItem:
                     if hasattr(target, 'getSkillEffects'):
                         skillEffects = target.getSkillEffects()
                         if WeaponGlobals.C_CURSE in skillEffects:
-                            if WeaponGlobals.getAttackClass(skillId) != WeaponGlobals.AC_MAGIC:
-                                tHealth += int(tHealth * WeaponGlobals.CURSED_DAM_AMP)
-                                aHealth += int(aHealth * WeaponGlobals.CURSED_DAM_AMP)
+                            if WeaponGlobals.getAttackClass(
+                                    skillId) != WeaponGlobals.AC_MAGIC:
+                                tHealth += int(
+                                    tHealth * WeaponGlobals.CURSED_DAM_AMP)
+                                aHealth += int(
+                                    aHealth * WeaponGlobals.CURSED_DAM_AMP)
                         if WeaponGlobals.C_TAKECOVER in skillEffects:
                             tHealth = 0
                             aHealth = 0
@@ -243,13 +335,20 @@ class BattleManagerBase:
         if target and skillId != InventoryType.UseItem and not inPVPMode:
             if hasattr(target, 'avatarType'):
                 avClass = EnemyGlobals.getMonsterClass(target.avatarType)
-                if avClass == EnemyGlobals.MONSTER and (buff == WeaponGlobals.C_UNDEAD_KILLER or ammoBuff == WeaponGlobals.C_UNDEAD_KILLER):
-                    tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
-                elif avClass == EnemyGlobals.SKELETON and (buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER):
-                    tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
+                if avClass == EnemyGlobals.MONSTER and (
+                        buff == WeaponGlobals.C_UNDEAD_KILLER or
+                        ammoBuff == WeaponGlobals.C_UNDEAD_KILLER):
+                    tHealth = min(-1,
+                                  tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
+                elif avClass == EnemyGlobals.SKELETON and (
+                        buff == WeaponGlobals.C_MONSTER_KILLER or
+                        ammoBuff == WeaponGlobals.C_MONSTER_KILLER):
+                    tHealth = min(-1,
+                                  tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
                 elif avClass == EnemyGlobals.HUMAN:
                     if buff == WeaponGlobals.C_MONSTER_KILLER or ammoBuff == WeaponGlobals.C_MONSTER_KILLER or buff == WeaponGlobals.C_UNDEAD_KILLER or ammoBuff == WeaponGlobals.C_UNDEAD_KILLER:
-                        tHealth = min(-1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
+                        tHealth = min(
+                            -1, tHealth * WeaponGlobals.RESIST_DAMAGE_PENALTY)
         if buff == WeaponGlobals.C_LIFEDRAIN or ammoBuff == WeaponGlobals.C_LIFEDRAIN:
             aHealth += abs(tHealth)
         else:
@@ -275,8 +374,10 @@ class BattleManagerBase:
             aHealth *= EnemyGlobals.ENEMY_DAMAGE_NERF
             tHealth *= EnemyGlobals.ENEMY_DAMAGE_NERF
             tMojo *= EnemyGlobals.ENEMY_DAMAGE_NERF
-        if skillId != InventoryType.UseItem and target and not WeaponGlobals.isFriendlyFire(skillId, ammoSkillId) and not inPVPMode:
-            damageMod = WeaponGlobals.getComparativeLevelDamageModifier(attacker, target)
+        if skillId != InventoryType.UseItem and target and not WeaponGlobals.isFriendlyFire(
+                skillId, ammoSkillId) and not inPVPMode:
+            damageMod = WeaponGlobals.getComparativeLevelDamageModifier(
+                attacker, target)
             numHits = WeaponGlobals.getNumHits(skillId, ammoSkillId)
             if numHits > 1:
                 numHits += 1
@@ -285,13 +386,18 @@ class BattleManagerBase:
             if aHealth <= 0:
                 aHealth = min(0.0, aHealth * damageMod)
         if inPVPMode:
-            scale = WeaponGlobals.getWeaponPvpDamageScale(attacker.currentWeaponId)
+            scale = WeaponGlobals.getWeaponPvpDamageScale(
+                attacker.currentWeaponId)
             tHealth *= scale
             tMojo *= scale
             aHealth *= scale
         targetEffects = [
-         tHealth, targetEffects[1], targetEffects[2], tMojo, targetEffects[4]]
-        attackerEffects = [aHealth, attackerEffects[1], attackerEffects[2], aMojo, attackerEffects[4]]
+            tHealth, targetEffects[1], targetEffects[2], tMojo, targetEffects[4]
+        ]
+        attackerEffects = [
+            aHealth, attackerEffects[1], attackerEffects[2], aMojo,
+            attackerEffects[4]
+        ]
         if not target:
             for i in xrange(len(targetEffects)):
                 targetEffects[i] = 0
@@ -304,47 +410,68 @@ class BattleManagerBase:
         if target and skillId == InventoryType.UseItem:
             if buff == WeaponGlobals.C_SHIPHEAL:
                 if hasattr(target, 'b_setSpDelta'):
-                    hpDelta = WeaponGlobals.getAttackHullHP(skillId, ammoSkillId)
+                    hpDelta = WeaponGlobals.getAttackHullHP(
+                        skillId, ammoSkillId)
                     target.b_setHpDelta(hpDelta)
-                    spDelta = WeaponGlobals.getAttackSailHP(skillId, ammoSkillId)
+                    spDelta = WeaponGlobals.getAttackSailHP(
+                        skillId, ammoSkillId)
                     target.b_setSpDelta(spDelta)
         return (attackerEffects, targetEffects)
 
-    def getModifiedSkillEffectsSword(self, attacker, target, skillId, ammoSkillId, charge=0, distance=0.0):
+    def getModifiedSkillEffectsSword(self,
+                                     attacker,
+                                     target,
+                                     skillId,
+                                     ammoSkillId,
+                                     charge=0,
+                                     distance=0.0):
         if not target or not attacker.getWorld():
             return ([0, 0, 0, 0, 0], [0, 0, 0, 0, 0])
-        attackerEffects, targetEffects = WeaponGlobals.getAttackEffects(skillId, ammoSkillId)
+        attackerEffects, targetEffects = WeaponGlobals.getAttackEffects(
+            skillId, ammoSkillId)
         tDamage = targetEffects[0]
         inPVPMode = self.isPVP(attacker, target)
-        randVal = attacker.battleRandom.getRandom('getModifiedSkillEffectSword %s' % tDamage)
+        randVal = attacker.battleRandom.getRandom(
+            'getModifiedSkillEffectSword %s' % tDamage)
         randomDamageMod = randVal / 2 + 0.5
         if attacker.isNpc:
             minValue = -1
         else:
             minValue = 0
         if attacker.isNpc:
-            tDamage = -1 * attacker.getMonsterDmg() * WeaponGlobals.getNPCModifier(skillId)
+            tDamage = -1 * attacker.getMonsterDmg(
+            ) * WeaponGlobals.getNPCModifier(skillId)
         tDamage = min(tDamage * randomDamageMod, minValue)
         if not attacker.isNpc and not inPVPMode:
-            damageMod = WeaponGlobals.getLevelDamageModifier(attacker.getLevel())
+            damageMod = WeaponGlobals.getLevelDamageModifier(
+                attacker.getLevel())
             tDamage *= damageMod
         if hasattr(attacker, 'currentWeaponId'):
-            attackerBonus, targetBonus = WeaponGlobals.getWeaponStats(attacker.currentWeaponId)
+            attackerBonus, targetBonus = WeaponGlobals.getWeaponStats(
+                attacker.currentWeaponId)
             if tDamage != 0:
                 tDamage += targetBonus[0]
         if hasattr(attacker, 'currentWeaponId'):
-            tDamage *= WeaponGlobals.getWeaponDamageScale(attacker.currentWeaponId)
+            tDamage *= WeaponGlobals.getWeaponDamageScale(
+                attacker.currentWeaponId)
         if attacker.isNpc:
             pass
         else:
             inv = attacker.getInventory()
             if inv:
-                tDamage *= max(0, inv.getStackQuantity(skillId) - 2) * WeaponGlobals.LEVELUP_DAMAGE_MULTIPLIER + 1
-                tDamage *= max(0, inv.getStackQuantity(InventoryType.DaggerBladeInstinct) - 1) * WeaponGlobals.getAttackTargetHP(InventoryType.DaggerBladeInstinct) + 1
+                tDamage *= max(0,
+                               inv.getStackQuantity(skillId) -
+                               2) * WeaponGlobals.LEVELUP_DAMAGE_MULTIPLIER + 1
+                tDamage *= max(
+                    0,
+                    inv.getStackQuantity(InventoryType.DaggerBladeInstinct) -
+                    1) * WeaponGlobals.getAttackTargetHP(
+                        InventoryType.DaggerBladeInstinct) + 1
         if hasattr(attacker, 'getSkillEffects'):
             skillEffects = attacker.getSkillEffects()
             if WeaponGlobals.C_WEAKEN in skillEffects:
-                tDamage = min(-1, tDamage - tDamage * WeaponGlobals.WEAKEN_PENALTY)
+                tDamage = min(-1,
+                              tDamage - tDamage * WeaponGlobals.WEAKEN_PENALTY)
         if hasattr(target, 'getSkillEffects'):
             skillEffects = target.getSkillEffects()
             if WeaponGlobals.C_CURSE in skillEffects:
@@ -357,8 +484,10 @@ class BattleManagerBase:
                 bonus = WeaponGlobals.getComboBonus(comboLength)
                 if bonus:
                     tDamage -= bonus
-        if skillId != InventoryType.UseItem and target and not WeaponGlobals.isFriendlyFire(skillId, ammoSkillId):
-            damageMod = WeaponGlobals.getComparativeLevelDamageModifier(attacker, target)
+        if skillId != InventoryType.UseItem and target and not WeaponGlobals.isFriendlyFire(
+                skillId, ammoSkillId):
+            damageMod = WeaponGlobals.getComparativeLevelDamageModifier(
+                attacker, target)
             if inPVPMode:
                 damageMod = 1
             numHits = WeaponGlobals.getNumHits(skillId, ammoSkillId)
@@ -370,24 +499,20 @@ class BattleManagerBase:
             tDamage *= EnemyGlobals.ENEMY_DAMAGE_NERF
         else:
             if inPVPMode:
-                scale = WeaponGlobals.getWeaponPvpDamageScale(attacker.currentWeaponId)
+                scale = WeaponGlobals.getWeaponPvpDamageScale(
+                    attacker.currentWeaponId)
                 tDamage *= scale
-        return (
-            [0, 0, 0, 0, 0],
-            [
-                int(tDamage),
-                targetEffects[1],
-                targetEffects[2],
-                targetEffects[3],
-                targetEffects[4]
-            ]
-        )
+        return ([0, 0, 0, 0, 0], [
+            int(tDamage), targetEffects[1], targetEffects[2], targetEffects[3],
+            targetEffects[4]
+        ])
 
     def getModifiedShipEffects(self, skillId, ammoSkillId=0, distance=0.0):
         shipEffects = WeaponGlobals.getShipEffects(skillId, ammoSkillId)
         return shipEffects
 
-    def addStats(self, attackerStats, targetStats, attackerBonusStats, targetBonusStats):
+    def addStats(self, attackerStats, targetStats, attackerBonusStats,
+                 targetBonusStats):
         for i in range(len(attackerStats)):
             if attackerStats[i] != 0:
                 attackerStats[i] += attackerBonusStats[i]
@@ -396,8 +521,7 @@ class BattleManagerBase:
             if targetStats[i] != 0:
                 targetStats[i] += targetBonusStats[i]
 
-        return (
-         attackerStats, targetStats)
+        return (attackerStats, targetStats)
 
     def damageModifier(self, level, attacker, damage):
         modifier = level * EnemyGlobals.CANNON_DAMAGE_MODIFIER_PER_LEVEL + EnemyGlobals.CANNON_BASE_DAMAGE_MODIFIER
@@ -409,7 +533,8 @@ class BattleManagerBase:
             damage = self.damageModifier(attacker.getLevel(), attacker, damage)
         else:
             self.notify.warning('ship taking damage with no attacker')
-        finalDamage = self.getModifiedShipDamage(attacker, target, skillId, ammoSkillId, damage)
+        finalDamage = self.getModifiedShipDamage(attacker, target, skillId,
+                                                 ammoSkillId, damage)
         return finalDamage
 
     def getModifiedSailDamage(self, attacker, target, skillId, ammoSkillId):
@@ -418,10 +543,12 @@ class BattleManagerBase:
             damage = self.damageModifier(attacker.getLevel(), attacker, damage)
         else:
             self.notify.warning('ship taking damage with no attacker')
-        finalDamage = self.getModifiedShipDamage(attacker, target, skillId, ammoSkillId, damage)
+        finalDamage = self.getModifiedShipDamage(attacker, target, skillId,
+                                                 ammoSkillId, damage)
         return finalDamage
 
-    def getModifiedShipDamage(self, attacker, target, skillId, ammoSkillId, damage):
+    def getModifiedShipDamage(self, attacker, target, skillId, ammoSkillId,
+                              damage):
         if not attacker:
             return damage
         if hasattr(attacker, 'ship') and attacker.ship:
@@ -438,22 +565,42 @@ class BattleManagerBase:
             inv = attacker.getInventory()
             if inv:
                 if skillId != InventoryType.CannonShoot:
-                    amt = max(0, inv.getStackQuantity(skillId) - 2) * WeaponGlobals.LEVELUP_DAMAGE_MULTIPLIER
+                    amt = max(0,
+                              inv.getStackQuantity(skillId) -
+                              2) * WeaponGlobals.LEVELUP_DAMAGE_MULTIPLIER
                     amt += 1.0
                     damage *= amt
-                amt = max(0, inv.getStackQuantity(ammoSkillId) - 2) * WeaponGlobals.LEVELUP_DAMAGE_MULTIPLIER
+                amt = max(0,
+                          inv.getStackQuantity(ammoSkillId) -
+                          2) * WeaponGlobals.LEVELUP_DAMAGE_MULTIPLIER
                 amt += 1.0
                 damage *= amt
-                if WeaponGlobals.getAttackClass(skillId) == WeaponGlobals.AC_CANNON or WeaponGlobals.getAttackClass(skillId) == WeaponGlobals.AC_GRENADE or skillId == EnemySkills.LEFT_BROADSIDE or skillId == EnemySkills.RIGHT_BROADSIDE:
-                    amt = max(0, inv.getStackQuantity(InventoryType.CannonBarrage) - 1) * WeaponGlobals.getAttackTargetHP(InventoryType.CannonBarrage)
+                if WeaponGlobals.getAttackClass(
+                        skillId
+                ) == WeaponGlobals.AC_CANNON or WeaponGlobals.getAttackClass(
+                        skillId
+                ) == WeaponGlobals.AC_GRENADE or skillId == EnemySkills.LEFT_BROADSIDE or skillId == EnemySkills.RIGHT_BROADSIDE:
+                    amt = max(
+                        0,
+                        inv.getStackQuantity(InventoryType.CannonBarrage) -
+                        1) * WeaponGlobals.getAttackTargetHP(
+                            InventoryType.CannonBarrage)
                     amt += 1.0
                     damage *= amt
                 if skillId == EnemySkills.LEFT_BROADSIDE:
-                    amt = max(0, inv.getStackQuantity(InventoryType.SailBroadsideLeft) - 2) * WeaponGlobals.getAttackTargetHP(InventoryType.SailBroadsideLeft)
+                    amt = max(
+                        0,
+                        inv.getStackQuantity(InventoryType.SailBroadsideLeft) -
+                        2) * WeaponGlobals.getAttackTargetHP(
+                            InventoryType.SailBroadsideLeft)
                     amt += 1.0
                     damage *= amt
                 if skillId == EnemySkills.RIGHT_BROADSIDE:
-                    amt = max(0, inv.getStackQuantity(InventoryType.SailBroadsideRight) - 2) * WeaponGlobals.getAttackTargetHP(InventoryType.SailBroadsideRight)
+                    amt = max(
+                        0,
+                        inv.getStackQuantity(InventoryType.SailBroadsideRight) -
+                        2) * WeaponGlobals.getAttackTargetHP(
+                            InventoryType.SailBroadsideRight)
                     amt += 1.0
                     damage *= amt
         if hasattr(attacker, 'getSkillEffects'):
@@ -472,8 +619,13 @@ class BattleManagerBase:
             scale = WeaponGlobals.getAmmoNPCDamageScale(ammoSkillId)
             damage *= scale
         if target:
-            if hasattr(attacker, 'getNPCship') and attacker.getNPCship() or hasattr(target, 'getNPCship') and target.getNPCship():
-                damageMod = max(EnemyGlobals.MAX_COMPARATIVE_SHIP_LEVEL_DAMAGE_MOD, WeaponGlobals.getComparativeShipLevelDamageModifier(attacker, target))
+            if hasattr(attacker,
+                       'getNPCship') and attacker.getNPCship() or hasattr(
+                           target, 'getNPCship') and target.getNPCship():
+                damageMod = max(
+                    EnemyGlobals.MAX_COMPARATIVE_SHIP_LEVEL_DAMAGE_MOD,
+                    WeaponGlobals.getComparativeShipLevelDamageModifier(
+                        attacker, target))
                 if damage <= 0:
                     damage = min(-1, damage * damageMod)
         return int(damage)
@@ -500,12 +652,24 @@ class BattleManagerBase:
                                             rechargeTime *= WeaponGlobals.POWER_RECHARGE_RATE_REDUCTION
 
                         if skillId == InventoryType.CannonShoot:
-                            rechargeTime *= 1.0 - max(0, inv.getStackQuantity(InventoryType.CannonShoot) - 2) * WeaponGlobals.CANNON_SHOOT_RATE_REDUCTION
+                            rechargeTime *= 1.0 - max(
+                                0,
+                                inv.getStackQuantity(InventoryType.CannonShoot)
+                                - 2) * WeaponGlobals.CANNON_SHOOT_RATE_REDUCTION
                         elif WeaponGlobals.getIsShipSkill(skillId):
                             if skillId == InventoryType.SailBroadsideLeft or skillId == InventoryType.SailBroadsideRight:
-                                rechargeTime *= 1.0 - max(0, inv.getStackQuantity(InventoryType.SailTaskmaster) - 1) * WeaponGlobals.getAttackRechargeTime(InventoryType.SailTaskmaster)
+                                rechargeTime *= 1.0 - max(
+                                    0,
+                                    inv.getStackQuantity(
+                                        InventoryType.SailTaskmaster) -
+                                    1) * WeaponGlobals.getAttackRechargeTime(
+                                        InventoryType.SailTaskmaster)
                         elif WeaponGlobals.isBladedWeapon(av.currentWeaponId):
-                            rechargeTime *= 1.0 - max(0, inv.getStackQuantity(InventoryType.DaggerFinesse) - 1) * WeaponGlobals.getAttackRechargeTime(InventoryType.DaggerFinesse)
+                            rechargeTime *= 1.0 - max(
+                                0,
+                                inv.getStackQuantity(InventoryType.DaggerFinesse)
+                                - 1) * WeaponGlobals.getAttackRechargeTime(
+                                    InventoryType.DaggerFinesse)
         return rechargeTime
 
     def getModifiedReloadTime(self, av, skillId, ammoSkillId=0):
@@ -524,8 +688,14 @@ class BattleManagerBase:
                                     if buff == WeaponGlobals.C_RECHARGE:
                                         rechargeTime *= WeaponGlobals.POWER_RECHARGE_RATE_REDUCTION
 
-                        if WeaponGlobals.getAttackClass(skillId) == WeaponGlobals.AC_CANNON:
-                            amt = max(0, inv.getStackQuantity(InventoryType.CannonRapidReload) - 1) * WeaponGlobals.getAttackRechargeTime(InventoryType.CannonRapidReload)
+                        if WeaponGlobals.getAttackClass(
+                                skillId) == WeaponGlobals.AC_CANNON:
+                            amt = max(
+                                0,
+                                inv.getStackQuantity(
+                                    InventoryType.CannonRapidReload) -
+                                1) * WeaponGlobals.getAttackRechargeTime(
+                                    InventoryType.CannonRapidReload)
                             amt = 1.0 - amt
                             rechargeTime *= amt
         return rechargeTime
@@ -539,7 +709,12 @@ class BattleManagerBase:
                     if inv:
                         attackType = WeaponGlobals.getAttackClass(skillId)
                         if attackType == WeaponGlobals.AC_MISSILE:
-                            amt = max(0, inv.getStackQuantity(InventoryType.PistolEagleEye) - 1) * WeaponGlobals.getAttackRange(InventoryType.PistolEagleEye)
+                            amt = max(
+                                0,
+                                inv.getStackQuantity(
+                                    InventoryType.PistolEagleEye) -
+                                1) * WeaponGlobals.getAttackRange(
+                                    InventoryType.PistolEagleEye)
                             range += amt
         return range
 
@@ -552,18 +727,31 @@ class BattleManagerBase:
                     if inv:
                         attackType = WeaponGlobals.getAttackClass(skillId)
                         if attackType == WeaponGlobals.AC_GRENADE or attackType == WeaponGlobals.AC_CANNON:
-                            amt = max(0, inv.getStackQuantity(InventoryType.GrenadeDemolitions) - 1) * WeaponGlobals.getAttackAreaRadius(InventoryType.GrenadeDemolitions)
+                            amt = max(
+                                0,
+                                inv.getStackQuantity(
+                                    InventoryType.GrenadeDemolitions) -
+                                1) * WeaponGlobals.getAttackAreaRadius(
+                                    InventoryType.GrenadeDemolitions)
                             amt += 1.0
                             aoeRadius *= amt
         return aoeRadius
 
-    def getModifiedAttackReputation(self, attacker, target, skillId, ammoSkillId):
+    def getModifiedAttackReputation(self, attacker, target, skillId,
+                                    ammoSkillId):
         reputation = WeaponGlobals.getAttackReputation(skillId, ammoSkillId)
         if reputation:
-            reputation *= WeaponGlobals.getWeaponExperienceScale(attacker.currentWeaponId)
+            reputation *= WeaponGlobals.getWeaponExperienceScale(
+                attacker.currentWeaponId)
         return reputation
 
-    def getModifiedExperienceGrade(self, attacker, target, skillId=0, ammoSkillId=0, currentWeaponId=0, repId=0):
+    def getModifiedExperienceGrade(self,
+                                   attacker,
+                                   target,
+                                   skillId=0,
+                                   ammoSkillId=0,
+                                   currentWeaponId=0,
+                                   repId=0):
         attackerLevel = attacker.getLevel()
         targetLevel = target.getLevel()
         isBoss = target.isBoss()
@@ -578,7 +766,8 @@ class BattleManagerBase:
                 repId = WeaponGlobals.getSkillReputationCategoryId(skillId)
         if repId:
             value = inv.getReputation(repId)
-            weaponLevel, leftoverValue = ReputationGlobals.getLevelFromTotalReputation(repId, value)
+            weaponLevel, leftoverValue = ReputationGlobals.getLevelFromTotalReputation(
+                repId, value)
         levelWeight = 0
         if weaponLevel:
             levelWeight = 2
@@ -598,7 +787,8 @@ class BattleManagerBase:
         return levelGrade
 
     def getExperienceColor(self, av, target):
-        levelRank = self.getModifiedExperienceGrade(av, target, currentWeaponId=av.currentWeaponId)
+        levelRank = self.getModifiedExperienceGrade(
+            av, target, currentWeaponId=av.currentWeaponId)
         if levelRank >= EnemyGlobals.RED:
             color = '\x01red\x01'
         elif levelRank >= EnemyGlobals.YELLOW:

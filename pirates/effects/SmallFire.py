@@ -1,6 +1,6 @@
 # uncompyle6 version 3.1.0
 # Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.14 (default, Mar  9 2018, 23:57:12) 
+# Decompiled from: Python 2.7.14 (default, Mar  9 2018, 23:57:12)
 # [GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2)]
 # Embedded file name: pirates.effects.SmallFire
 from pandac.PandaModules import *
@@ -12,8 +12,9 @@ from direct.particles import ForceGroup
 from pirates.piratesgui.GameOptions import Options
 from pirates.effects.EffectController import EffectController
 
+
 class SmallFire(EffectController, NodePath):
-    
+
     cardScale = 64.0
 
     def __init__(self, effectParent=None):
@@ -24,7 +25,8 @@ class SmallFire(EffectController, NodePath):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleFire2')
         if not SmallFire.particleDummy:
-            SmallFire.particleDummy = base.effectsRoot.attachNewNode(ModelNode('FireParticleDummy'))
+            SmallFire.particleDummy = base.effectsRoot.attachNewNode(
+                ModelNode('FireParticleDummy'))
             SmallFire.particleDummy.setDepthWrite(0)
             SmallFire.particleDummy.setFogOff()
             SmallFire.particleDummy.setLightOff()
@@ -63,8 +65,11 @@ class SmallFire(EffectController, NodePath):
         self.p0.renderer.setAnimAngleFlag(1)
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 0.6, 0.2, 1.0), Vec4(0.5, 0.2, 0.2, 0.5), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
+                                           ColorBlendAttrib.OIncomingAlpha,
+                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(
+            0.0, 1.0, Vec4(1.0, 0.6, 0.2, 1.0), Vec4(0.5, 0.2, 0.2, 0.5), 1)
         self.p0.renderer.setAlphaDisable(0)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(-0.25)
@@ -75,16 +80,27 @@ class SmallFire(EffectController, NodePath):
         self.setScale(VBase3(1, 1, 1))
 
     def createTrack(self, lod=None):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(
+            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(
+            Func(self.p0.setBirthRate, 100.0), Wait(2.0),
+            Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def setScale(self, scale=VBase3(1, 1, 1)):
         self.effectScale = scale[0]
-        self.p0.renderer.setInitialXScale(0.01 * self.cardScale * self.effectScale)
-        self.p0.renderer.setInitialYScale(0.01 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalXScale(0.001 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalYScale(0.001 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialXScale(
+            0.01 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialYScale(
+            0.01 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalXScale(
+            0.001 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalYScale(
+            0.001 * self.cardScale * self.effectScale)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 2.0 * self.effectScale))
         self.p0.emitter.setRadius(0.5 * self.effectScale)
+
+
 # okay decompiling SmallFire.pyc

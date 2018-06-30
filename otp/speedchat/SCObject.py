@@ -72,4 +72,6 @@ class SCObject(DirectObject):
 
     def finalizeAll(self):
         self.finalize()
+
+
 # okay decompiling .\otp\speedchat\SCObject.pyc

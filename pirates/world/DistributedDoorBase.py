@@ -7,6 +7,7 @@ from pirates.distributed import DistributedInteractive
 from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
 from pirates.quest.QuestConstants import LocationIds
 
+
 class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
     notify = directNotify.newCategory('DistributedDoorBase')
 
@@ -53,8 +54,12 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
     def announceGenerate(self):
         DistributedInteractive.DistributedInteractive.announceGenerate(self)
         self.setupDoors()
-        self.setInteractOptions(proximityText=self.getPrompt(), diskRadius=12.0, sphereScale=7.0,
-            endInteract=0, allowInteract=self.allowInteract)
+        self.setInteractOptions(
+            proximityText=self.getPrompt(),
+            diskRadius=12.0,
+            sphereScale=7.0,
+            endInteract=0,
+            allowInteract=self.allowInteract)
 
     def getPrompt(self):
         return PLocalizer.InteractOpenDoor
@@ -82,9 +87,20 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
             if self.doorTrack:
                 self.doorTrack.pause()
                 self.doorTrack = None
-            self.doorTrack = Sequence(Func(base.playSfx, self.openSfx, node=self.soundNode, volume=0.7, cutoff=100),
-                self.openDoorIval, Wait(2.0), self.closeDoorIval, Func(base.playSfx, self.closeSfx,
-                node=self.soundNode, volume=0.7, cutoff=100))
+            self.doorTrack = Sequence(
+                Func(
+                    base.playSfx,
+                    self.openSfx,
+                    node=self.soundNode,
+                    volume=0.7,
+                    cutoff=100), self.openDoorIval, Wait(2.0),
+                self.closeDoorIval,
+                Func(
+                    base.playSfx,
+                    self.closeSfx,
+                    node=self.soundNode,
+                    volume=0.7,
+                    cutoff=100))
             self.doorTrack.start(ts)
 
     def getParentModel(self):
@@ -102,12 +118,16 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
         doorLeft = parent.find(self.doorLeftStr)
         doorRight = parent.find(self.doorRightStr)
         if not doorLeft.isEmpty():
-            self.openDoorIval.append(LerpHprInterval(doorLeft, self.tOpen, Vec3(-90, 0, 0)))
-            self.closeDoorIval.append(LerpHprInterval(doorLeft, self.tOpen, Vec3(0, 0, 0)))
+            self.openDoorIval.append(
+                LerpHprInterval(doorLeft, self.tOpen, Vec3(-90, 0, 0)))
+            self.closeDoorIval.append(
+                LerpHprInterval(doorLeft, self.tOpen, Vec3(0, 0, 0)))
 
         if not doorRight.isEmpty():
-            self.openDoorIval.append(LerpHprInterval(doorRight, self.tOpen, Vec3(90, 0, 0)))
-            self.closeDoorIval.append(LerpHprInterval(doorRight, self.tOpen, Vec3(0, 0, 0)))
+            self.openDoorIval.append(
+                LerpHprInterval(doorRight, self.tOpen, Vec3(90, 0, 0)))
+            self.closeDoorIval.append(
+                LerpHprInterval(doorRight, self.tOpen, Vec3(0, 0, 0)))
 
         doorLocator = parent.find(self.doorLocatorStr)
         modelName = ''
@@ -144,16 +164,24 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
         else:
             self.hasDoors = 1
         if string.find(modelName, 'english') >= 0:
-            self.openSfx = base.loader.loadSfx('audio/sfx_door_english_open.mp3')
+            self.openSfx = base.loader.loadSfx(
+                'audio/sfx_door_english_open.mp3')
         elif string.find(modelName, 'shanty') >= 0:
             self.openSfx = base.loader.loadSfx('audio/sfx_door_shanty_open.mp3')
         elif string.find(modelName, 'spanish') >= 0:
-            self.openSfx = base.loader.loadSfx('audio/sfx_door_spanish_open.mp3')
+            self.openSfx = base.loader.loadSfx(
+                'audio/sfx_door_spanish_open.mp3')
         else:
-            self.openSfx = base.loader.loadSfx('audio/sfx_door_english_open.mp3')
+            self.openSfx = base.loader.loadSfx(
+                'audio/sfx_door_english_open.mp3')
         self.closeSfx = base.loader.loadSfx('audio/sfx_door_shanty_slam.mp3')
-        self.openDoorIval.append(Func(base.playSfx, self.openSfx, node=self.soundNode,
-            volume=0.7, cutoff=100))
+        self.openDoorIval.append(
+            Func(
+                base.playSfx,
+                self.openSfx,
+                node=self.soundNode,
+                volume=0.7,
+                cutoff=100))
 
     def getOtherSideParentModel(self):
         pass
@@ -165,20 +193,34 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
         self.openOtherDoorIval = Parallel()
         self.closeOtherDoorIval = Parallel()
         if not doorLeft.isEmpty():
-            self.openOtherDoorIval.append(LerpHprInterval(doorLeft, self.tOpen, Vec3(-90, 0, 0)))
-            self.closeOtherDoorIval.append(LerpHprInterval(doorLeft, self.tOpen, Vec3(0, 0, 0)))
+            self.openOtherDoorIval.append(
+                LerpHprInterval(doorLeft, self.tOpen, Vec3(-90, 0, 0)))
+            self.closeOtherDoorIval.append(
+                LerpHprInterval(doorLeft, self.tOpen, Vec3(0, 0, 0)))
         if not doorRight.isEmpty():
-            self.openOtherDoorIval.append(LerpHprInterval(doorRight, self.tOpen, Vec3(90, 0, 0)))
-            self.closeOtherDoorIval.append(LerpHprInterval(doorRight, self.tOpen, Vec3(0, 0, 0)))
+            self.openOtherDoorIval.append(
+                LerpHprInterval(doorRight, self.tOpen, Vec3(90, 0, 0)))
+            self.closeOtherDoorIval.append(
+                LerpHprInterval(doorRight, self.tOpen, Vec3(0, 0, 0)))
         if self.closeSfx is not None:
-            self.closeOtherDoorIval.append(Sequence(Wait(0.25), Func(base.playSfx, self.closeSfx,
-                node=self.soundNode, volume=0.7, cutoff=100)))
+            self.closeOtherDoorIval.append(
+                Sequence(
+                    Wait(0.25),
+                    Func(
+                        base.playSfx,
+                        self.closeSfx,
+                        node=self.soundNode,
+                        volume=0.7,
+                        cutoff=100)))
 
     def requestInteraction(self, avId, interactType=0):
-        if self.buildingUid == LocationIds.KINGSHEAD_DOOR and not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
-            base.localAvatar.guiMgr.showNonPayer(quest='Restricted_Location', focus=0)
+        if self.buildingUid == LocationIds.KINGSHEAD_DOOR and not Freebooter.getPaidStatus(
+                base.localAvatar.getDoId()):
+            base.localAvatar.guiMgr.showNonPayer(
+                quest='Restricted_Location', focus=0)
             return
-        DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
+        DistributedInteractive.DistributedInteractive.requestInteraction(
+            self, avId, interactType)
         if avId == base.localAvatar.doId:
             self.fadeOut()
 
@@ -192,14 +234,19 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
 
         if localAvatar.gameFSM is None:
             return
-        si = Sequence(Func(localAvatar.gameFSM.request, 'DoorInteract', [self.hasDoors]), Func(doFadeOut),
-            self.openDoorIval, self.closeDoorIval, Func(self.loadOtherSide))
+        si = Sequence(
+            Func(localAvatar.gameFSM.request, 'DoorInteract', [self.hasDoors]),
+            Func(doFadeOut), self.openDoorIval, self.closeDoorIval,
+            Func(self.loadOtherSide))
         self.fadeOutTrack = si
         self.fadeOutTrack.start()
 
     def fadeIn(self):
-        sf = Sequence(Func(localAvatar.gameFSM.request, 'DoorInteract'), Func(base.transitions.fadeIn, self.tOpen),
-            self.openOtherDoorIval, self.closeOtherDoorIval, Func(localAvatar.gameFSM.request, 'LandRoam'))
+        sf = Sequence(
+            Func(localAvatar.gameFSM.request, 'DoorInteract'),
+            Func(base.transitions.fadeIn, self.tOpen), self.openOtherDoorIval,
+            self.closeOtherDoorIval,
+            Func(localAvatar.gameFSM.request, 'LandRoam'))
         self.fadeInTrack = sf
         self.fadeInTrack.start()
 

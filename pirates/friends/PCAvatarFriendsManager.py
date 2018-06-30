@@ -4,6 +4,7 @@ from otp.friends.AvatarFriendsManager import AvatarFriendsManager
 from otp.otpbase import OTPGlobals
 from pirates.friends.PCFriendInfo import PCFriendInfo
 
+
 class PCAvatarFriendsManager(AvatarFriendsManager):
     notify = directNotify.newCategory('PCAvatarFriendsManager')
 
@@ -27,7 +28,9 @@ class PCAvatarFriendsManager(AvatarFriendsManager):
 
     def setShipState(self, avatarId, onShip, shipId):
         if not hasattr(base, 'localAvatar'):
-            self.notify.warning("setShipState: But I don't have a base.localAvatar!  gameFSM in state: %s" % base.cr.gameFSM.getCurrentState().getName())
+            self.notify.warning(
+                "setShipState: But I don't have a base.localAvatar!  gameFSM in state: %s"
+                % base.cr.gameFSM.getCurrentState().getName())
             return
         self.avatarId2ShipState[avatarId] = onShip
         self.avatarId2ShipId[avatarId] = shipId

@@ -3,8 +3,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class Glow(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -19,7 +19,10 @@ class Glow(PooledEffect, EffectController):
         self.effectModel.hide()
         self.effectModel.setDepthWrite(0)
         self.effectModel.setBillboardPointWorld()
-        self.effectModel.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+        self.effectModel.node().setAttrib(
+            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                  ColorBlendAttrib.OIncomingAlpha,
+                                  ColorBlendAttrib.OOne))
 
     def createTrack(self):
         self.effectModel.hide()
@@ -28,14 +31,30 @@ class Glow(PooledEffect, EffectController):
         self.setColorScale(1, 1, 1, 1)
         self.effectModel.setColorScale(self.effectColor)
         flash = LerpScaleInterval(self.glow, 0.15, 1.0, startScale=50.0)
-        fadeOut = LerpColorScaleInterval(self, 0.25, Vec4(0, 0, 0, 0), startColorScale=Vec4(1, 1, 1, 1))
-        scaleUp = self.spark.scaleInterval(0.3, 1.2, startScale=1.0, blendType='easeOut')
-        scaleDown = self.spark.scaleInterval(0.4, 1.0, startScale=1.2, blendType='easeInOut')
-        colorUp = self.glow.colorScaleInterval(0.3, Vec4(1, 1, 1, 1), startColorScale=Vec4(1, 1, 1, 0.75), blendType='easeOut')
-        colorDown = self.glow.colorScaleInterval(0.4, Vec4(1, 1, 1, 0.75), startColorScale=Vec4(1, 1, 1, 1), blendType='easeInOut')
-        pulseIval = Sequence(Parallel(scaleUp, colorUp), Parallel(scaleDown, colorDown))
-        self.startEffect = Sequence(Func(self.effectModel.show), Func(self.glow.setColorScale, Vec4(1, 1, 1, 0.15)), flash, Func(pulseIval.loop))
-        self.endEffect = Sequence(fadeOut, Func(pulseIval.finish), Func(self.cleanUpEffect))
+        fadeOut = LerpColorScaleInterval(
+            self, 0.25, Vec4(0, 0, 0, 0), startColorScale=Vec4(1, 1, 1, 1))
+        scaleUp = self.spark.scaleInterval(
+            0.3, 1.2, startScale=1.0, blendType='easeOut')
+        scaleDown = self.spark.scaleInterval(
+            0.4, 1.0, startScale=1.2, blendType='easeInOut')
+        colorUp = self.glow.colorScaleInterval(
+            0.3,
+            Vec4(1, 1, 1, 1),
+            startColorScale=Vec4(1, 1, 1, 0.75),
+            blendType='easeOut')
+        colorDown = self.glow.colorScaleInterval(
+            0.4,
+            Vec4(1, 1, 1, 0.75),
+            startColorScale=Vec4(1, 1, 1, 1),
+            blendType='easeInOut')
+        pulseIval = Sequence(
+            Parallel(scaleUp, colorUp), Parallel(scaleDown, colorDown))
+        self.startEffect = Sequence(
+            Func(self.effectModel.show),
+            Func(self.glow.setColorScale, Vec4(1, 1, 1, 0.15)), flash,
+            Func(pulseIval.loop))
+        self.endEffect = Sequence(fadeOut, Func(pulseIval.finish),
+                                  Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def cleanUpEffect(self):

@@ -59,26 +59,24 @@ class SplattableObject(NodePath):
         self.smokeEffects = {}
         self.holeLocations = {}
         if not self.holeCard:
-            SplattableObject.holeCard = loader.loadModel('models/effects/battleEffects')
-            SplattableObject.holeTexArray = [
-                [
-                    self.holeCard.find('**/effectHoleC').findTexture('*'),
-                    1],
-                [
-                    self.holeCard.find('**/effectHoleD').findTexture('*'),
-                    1],
-                [
-                    self.holeCard.find('**/effectHoleE').findTexture('*'),
-                    1]]
-            SplattableObject.breakTex1 = self.holeCard.find('**/effectHullBreach').findTexture('*')
+            SplattableObject.holeCard = loader.loadModel(
+                'models/effects/battleEffects')
+            SplattableObject.holeTexArray = [[
+                self.holeCard.find('**/effectHoleC').findTexture('*'), 1
+            ], [self.holeCard.find('**/effectHoleD').findTexture('*'),
+                1], [self.holeCard.find('**/effectHoleE').findTexture('*'), 1]]
+            SplattableObject.breakTex1 = self.holeCard.find(
+                '**/effectHullBreach').findTexture('*')
             if base.supportAlphaFb:
                 blankTex = Texture()
                 image = PNMImage(512, 512, 4)
                 blankTex.load(image)
                 SplattableObject.blankTex = blankTex
             else:
-                SplattableObject.blankTex = self.holeCard.find('**/hullBlank').findTexture('*')
-            SplattableObject.shipTextures = loader.loadModel('models/textureCards/shipTextures')
+                SplattableObject.blankTex = self.holeCard.find(
+                    '**/hullBlank').findTexture('*')
+            SplattableObject.shipTextures = loader.loadModel(
+                'models/textureCards/shipTextures')
             for texInfo in SplattableObject.holeTexArray:
                 tex = texInfo[0]
                 tex.setWrapU(Texture.WMBorderColor)
@@ -131,16 +129,17 @@ class SplattableObject(NodePath):
         if len(self.panelsMed) - 1 >= index:
             self.panelsMed[index].setTexture(self.holeLayer, self.blankTex)
 
-        if self.fireEffects.has_key(index):
+        if index in self.fireEffects:
             self.fireEffects[index].stopLoop()
             del self.fireEffects[index]
 
-        if self.smokeEffects.has_key(index):
+        if index in self.smokeEffects:
             self.smokeEffects[index].stopLoop()
             del self.smokeEffects[index]
 
     def playHoleSplat(self, pos, normal, index):
-        if base.options.getSpecialEffectsSetting() <= base.options.SpecialEffectsLow:
+        if base.options.getSpecialEffectsSetting(
+        ) <= base.options.SpecialEffectsLow:
             return
 
         panel = None
@@ -162,7 +161,8 @@ class SplattableObject(NodePath):
 
         if base.cr.wantSpecialEffects and panel:
             holeCount = base.textureFlattenMgr.addSplattable(self, index)
-            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting(
+            ) >= base.options.SpecialEffectsHigh:
                 t = TextureStage('hole stage %s' % holeCount)
                 t.setMode(TextureStage.MDecal)
                 t.setSort(200)
@@ -177,10 +177,12 @@ class SplattableObject(NodePath):
             hole = self.ship.attachNewNode('hole')
             hole.setPos(pos)
             hole.setHpr(render, hpr[0], hpr[1], 0)
-            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
+            if base.options.getSpecialEffectsSetting(
+            ) >= base.options.SpecialEffectsMedium:
                 pass
 
-            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting(
+            ) >= base.options.SpecialEffectsHigh:
                 holeSize = ShipGlobals.getHoleSizes(self.dna.modelClass)[0]
                 texInfo = random.choice(self.holeTexArray)
                 tex = texInfo[0]
@@ -217,13 +219,15 @@ class SplattableObject(NodePath):
         if not self.projScreens:
             return
 
-        projNode = self.ship.locators.find('**/location_fire_' + str(collIndex) + ';+s')
+        projNode = self.ship.locators.find('**/location_fire_' +
+                                           str(collIndex) + ';+s')
         hole = render.attachNewNode('hole')
         hole.reparentTo(self.ship)
         hole.setPos(render, projNode.getPos(render))
         hole.setHpr(render, projNode.getHpr(render))
         if base.cr.wantSpecialEffects and panel:
-            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting(
+            ) >= base.options.SpecialEffectsHigh:
                 for i in range(random.randint(2, 4)):
                     shipDebrisEffect = ShipDebris.getEffect()
                     if shipDebrisEffect:
@@ -235,7 +239,8 @@ class SplattableObject(NodePath):
             pos = projNode.getPos()
             sfx = random.choice(self.woodBreakSfx)
             base.playSfx(sfx, node=self, cutoff=2500)
-            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
+            if base.options.getSpecialEffectsSetting(
+            ) >= base.options.SpecialEffectsMedium:
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.reparentTo(self.ship.root)
                 cameraShakerEffect.setPos(pos)
@@ -281,31 +286,30 @@ class SplattableObject(NodePath):
             panel.setTexture(t, self.holeTex)
             panel.setTexScale(t, 2, 2)
             panel.setTexOffset(t, u, v)
-            attribList = self.cutGeomTextureStates(panel.node(), [
-                'holeLayer'])
+            attribList = self.cutGeomTextureStates(panel.node(), ['holeLayer'])
             panel.flattenMultitex(useGeom=0, target=self.holeLayer)
             self.copyMultitexLayer(panel, self.panelsHigh[index])
             self.pasteGeomTextureStates(panel.node(), attribList)
             del t
 
     def changeColor(self, geom):
-        suffix = [
-            'A',
-            'B',
-            'C',
-            'D',
-            'E']
+        suffix = ['A', 'B', 'C', 'D', 'E']
         for i in xrange(len(self.dna.hullTextureIndex)):
-            self.configColor(geom, 'hull%s' % suffix[i], self.dna.hullTextureIndex[i], self.dna.hullColorIndex[i],
-                             self.dna.hullHilightColorIndex[i])
+            self.configColor(
+                geom, 'hull%s' % suffix[i], self.dna.hullTextureIndex[i],
+                self.dna.hullColorIndex[i], self.dna.hullHilightColorIndex[i])
 
         for i in xrange(len(self.dna.stripeTextureIndex)):
-            self.configColor(geom, 'stripe%s' % suffix[i], self.dna.stripeTextureIndex[i], self.dna.stripeColorIndex[i],
+            self.configColor(geom, 'stripe%s' % suffix[i],
+                             self.dna.stripeTextureIndex[i],
+                             self.dna.stripeColorIndex[i],
                              self.dna.stripeHilightColorIndex[i])
 
         for i in xrange(len(self.dna.patternTextureIndex)):
-            self.configColor(geom, 'pattern%s' % suffix[i], self.dna.patternTextureIndex[i],
-                             self.dna.patternColorIndex[i], self.dna.patternHilightColorIndex[i])
+            self.configColor(geom, 'pattern%s' % suffix[i],
+                             self.dna.patternTextureIndex[i],
+                             self.dna.patternColorIndex[i],
+                             self.dna.patternHilightColorIndex[i])
 
         self.configColor(geom, 'bottom_hull', 255)
         if self.dna.hullTextureIndex or self.dna.stripeTextureIndex or self.dna.patternTextureIndex:
@@ -314,7 +318,8 @@ class SplattableObject(NodePath):
 
     def configColor(self, geom, prefix, texIndex=0, color=0, hilightColor=0):
         if texIndex:
-            self.setMultitexColorFromRoot(geom, prefix, texIndex, color, hilightColor)
+            self.setMultitexColorFromRoot(geom, prefix, texIndex, color,
+                                          hilightColor)
 
     def reloadPanelTex(self, panels):
         for panel in panels:
@@ -323,7 +328,8 @@ class SplattableObject(NodePath):
                 if texStage:
                     panel.setTextureOff(texStage, 1)
 
-    def setMultitexColorFromRoot(self, root, prefix, texIndex, color, hilightColor):
+    def setMultitexColorFromRoot(self, root, prefix, texIndex, color,
+                                 hilightColor):
         if prefix[0:4] == 'hull' or prefix[0:11] == 'bottom_hull':
             filePrefix = HullDNA.HullTexDict.get(texIndex)
         elif prefix[0:6] == 'stripe':
@@ -335,17 +341,22 @@ class SplattableObject(NodePath):
             return
 
         colorTs = TextureStage(prefix + 'Color')
-        colorTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSConstant, TextureStage.COSrcColor,
-                              TextureStage.CSTexture, TextureStage.COSrcColor)
+        colorTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSConstant,
+                              TextureStage.COSrcColor, TextureStage.CSTexture,
+                              TextureStage.COSrcColor)
         colorTs.setColor(HullDNA.HullColors[color])
         colorTs.setSort(5)
         blendTs = TextureStage(prefix + 'blendTs')
-        blendTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSPrimaryColor, TextureStage.COSrcColor,
-                              TextureStage.CSPrevious, TextureStage.COSrcColor)
+        blendTs.setCombineRgb(TextureStage.CMModulate,
+                              TextureStage.CSPrimaryColor,
+                              TextureStage.COSrcColor, TextureStage.CSPrevious,
+                              TextureStage.COSrcColor)
         blendTs.setSort(30)
-        colorTex = self.shipTextures.find('**/%s' % filePrefix[0]).findTexture('*')
+        colorTex = self.shipTextures.find(
+            '**/%s' % filePrefix[0]).findTexture('*')
         if filePrefix[1]:
-            hilightTex = self.shipTextures.find('**/%s' % filePrefix[1]).findTexture('*')
+            hilightTex = self.shipTextures.find(
+                '**/%s' % filePrefix[1]).findTexture('*')
         else:
             hilightTex = None
         targets = root.findAllMatches('**/%s*' % prefix)
@@ -466,8 +477,10 @@ class SplattableObject(NodePath):
             effect.p0.renderer.getRenderNodePath().show()
 
     def startSmoke(self, collIndex):
-        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
-            projNode = self.ship.locators.find('**/location_fire_' + str(collIndex) + ';+s')
+        if base.options.getSpecialEffectsSetting(
+        ) >= base.options.SpecialEffectsMedium:
+            projNode = self.ship.locators.find('**/location_fire_' +
+                                               str(collIndex) + ';+s')
             pos = projNode.getPos()
             blackSmokeEffect = BlackSmoke.getEffect()
             if blackSmokeEffect:

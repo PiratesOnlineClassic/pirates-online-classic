@@ -11,13 +11,17 @@ from pirates.demo import DemoGlobals
 from pirates.distributed import DistributedTargetableObject
 from pirates.piratesbase import PiratesGlobals
 
-class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, DistributedTargetableObject.DistributedTargetableObject):
-    
+
+class DistributedMovingObject(
+        DistributedSmoothNode.DistributedSmoothNode,
+        DistributedTargetableObject.DistributedTargetableObject):
+
     notify = directNotify.newCategory('DistributedMovingObject')
 
     def __init__(self, cr):
         DistributedSmoothNode.DistributedSmoothNode.__init__(self, cr)
-        DistributedTargetableObject.DistributedTargetableObject.__init__(self, cr)
+        DistributedTargetableObject.DistributedTargetableObject.__init__(
+            self, cr)
         self.maxAISpeed = 0
         self.canMove = True
         self.aggroMode = EnemyGlobals.AGGRO_MODE_FORCED
@@ -35,7 +39,8 @@ class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, Distr
 
     def announceGenerate(self):
         DistributedSmoothNode.DistributedSmoothNode.announceGenerate(self)
-        DistributedTargetableObject.DistributedTargetableObject.announceGenerate(self)
+        DistributedTargetableObject.DistributedTargetableObject.announceGenerate(
+            self)
 
     def disable(self):
         self.stopSmooth()
@@ -50,7 +55,8 @@ class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, Distr
         DistributedTargetableObject.DistributedTargetableObject.delete(self)
 
     def setLocation(self, parentId, zoneId, teleport=0):
-        DistributedSmoothNode.DistributedSmoothNode.setLocation(self, parentId, zoneId, teleport)
+        DistributedSmoothNode.DistributedSmoothNode.setLocation(
+            self, parentId, zoneId, teleport)
 
     def wrtReparentTo(self, parent):
         DistributedSmoothNode.DistributedSmoothNode.wrtReparentTo(self, parent)
@@ -81,7 +87,8 @@ class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, Distr
                 self.debugName = TextNode('NPCName')
                 self.debugName.setAlign(TextNode.ACenter)
                 self.debugName.setTextColor(0, 0, 0, 1)
-            debugNameText = str(self.getDoId()) + ' (Team:' + str(self.getTeam()) + ')'
+            debugNameText = str(self.getDoId()) + ' (Team:' + str(
+                self.getTeam()) + ')'
             if hasattr(self, 'level'):
                 debugNameText += ' (Lvl: ' + str(self.level) + ')'
             self.debugName.setText(debugNameText)
@@ -90,7 +97,8 @@ class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, Distr
             self.debugNameNP.setPos(*posAndScale[0])
             self.debugNameNP.setScale(posAndScale[1])
             self.debugNameNP.setBillboardPointEye(2)
-            CullBinManager.getGlobalPtr().addBin('gui-popup', CullBinManager.BTUnsorted, 60)
+            CullBinManager.getGlobalPtr().addBin('gui-popup',
+                                                 CullBinManager.BTUnsorted, 60)
             self.debugNameNP.setBin('gui-popup', 0)
             self.debugNameNP.setDepthTest(0)
 

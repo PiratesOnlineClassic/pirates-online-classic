@@ -1,9 +1,13 @@
 from pirates.battle import WeaponGlobals
-from pirates.uberdog.UberDogGlobals import (InventoryCategory, InventoryId, InventoryType)
+from pirates.uberdog.UberDogGlobals import (InventoryCategory, InventoryId,
+                                            InventoryType)
 
-__categories = (InventoryType.GeneralRep, InventoryType.MeleeRep, InventoryType.CutlassRep, InventoryType.PistolRep,
-                InventoryType.MusketRep, InventoryType.DaggerRep, InventoryType.GrenadeRep, InventoryType.DollRep,
-                InventoryType.WandRep, InventoryType.KettleRep, InventoryType.CannonRep, InventoryType.SailingRep,
+__categories = (InventoryType.GeneralRep, InventoryType.MeleeRep,
+                InventoryType.CutlassRep, InventoryType.PistolRep,
+                InventoryType.MusketRep, InventoryType.DaggerRep,
+                InventoryType.GrenadeRep, InventoryType.DollRep,
+                InventoryType.WandRep, InventoryType.KettleRep,
+                InventoryType.CannonRep, InventoryType.SailingRep,
                 InventoryType.LockpickRep)
 
 
@@ -20,12 +24,18 @@ def getUnspentCategories():
 
     return listCat
 
-ReputationNeededToLevel = [0, 50, 150, 300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900,
-                           3200, 3500, 3800, 4100, 4400, 4700, 5000, 5300, 0]
 
-GlobalReputationNeeded = [0, 300, 450, 600, 800, 1000, 1300, 1600, 2000, 2400, 2900, 3400, 4000, 4600, 5300, 6000, 6800,
-                          7600, 8500, 9400, 10400, 11400, 12500, 13600, 14800, 16100, 17400, 18800, 20200, 21700, 23300,
-                          24900, 26600, 28400, 30200, 32100, 34100, 36100, 38200, 40400, 42600, 0]
+ReputationNeededToLevel = [
+    0, 50, 150, 300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300,
+    2500, 2700, 2900, 3200, 3500, 3800, 4100, 4400, 4700, 5000, 5300, 0
+]
+
+GlobalReputationNeeded = [
+    0, 300, 450, 600, 800, 1000, 1300, 1600, 2000, 2400, 2900, 3400, 4000, 4600,
+    5300, 6000, 6800, 7600, 8500, 9400, 10400, 11400, 12500, 13600, 14800,
+    16100, 17400, 18800, 20200, 21700, 23300, 24900, 26600, 28400, 30200, 32100,
+    34100, 36100, 38200, 40400, 42600, 0
+]
 LevelCap = 25
 GlobalLevelCap = 40
 TotalReputationAtLevel = []
@@ -44,6 +54,7 @@ def __buildTotalReputationList():
     for rep in GlobalReputationNeeded:
         runningTotal += rep
         GlobalReputationAtLevel.append(runningTotal)
+
 
 __buildTotalReputationList()
 
@@ -111,9 +122,17 @@ def getReputationNeededToLevel(category, level):
         return None
     return ReputationNeededToLevel[level]
 
+
 MonsterRep = 1
-RepIcons = {InventoryType.OverallRep: 'main_gui_game_gui_base', InventoryType.CutlassRep: 'icon_cutlass_rusty',
-            InventoryType.PistolRep: 'icon_pistol_single', InventoryType.MusketRep: 'icon_pistol_single',
-            InventoryType.DaggerRep: 'icon_dagger_small', InventoryType.GrenadeRep: 'icon_grenade',
-            InventoryType.DollRep: 'icon_voodoo_doll_straw', InventoryType.WandRep: 'icon_staff_wood',
-            InventoryType.CannonRep: 'icon_cannon', InventoryType.SailingRep: 'sail_full_sail'}
+RepIcons = {
+    InventoryType.OverallRep: 'main_gui_game_gui_base',
+    InventoryType.CutlassRep: 'icon_cutlass_rusty',
+    InventoryType.PistolRep: 'icon_pistol_single',
+    InventoryType.MusketRep: 'icon_pistol_single',
+    InventoryType.DaggerRep: 'icon_dagger_small',
+    InventoryType.GrenadeRep: 'icon_grenade',
+    InventoryType.DollRep: 'icon_voodoo_doll_straw',
+    InventoryType.WandRep: 'icon_staff_wood',
+    InventoryType.CannonRep: 'icon_cannon',
+    InventoryType.SailingRep: 'sail_full_sail'
+}

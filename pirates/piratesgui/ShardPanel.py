@@ -5,7 +5,9 @@ from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 
-POP_COLORS = (Vec4(0.4, 0.4, 1.0, 1.0), Vec4(0.4, 1.0, 0.4, 1.0), Vec4(1.0, 0.4, 0.4, 1.0))
+POP_COLORS = (Vec4(0.4, 0.4, 1.0, 1.0), Vec4(0.4, 1.0, 0.4, 1.0),
+              Vec4(1.0, 0.4, 0.4, 1.0))
+
 
 class ShardPanel(DirectFrame):
     UPPOS = Vec3(0.55, 0, 1.52)
@@ -18,14 +20,22 @@ class ShardPanel(DirectFrame):
         dotcard = loader.loadModelCopy('models/gui/toplevel_gui')
         self.dot = dotcard.find('**/topgui_icon_ship_hulldot_on')
         self.shards = {}
-        optiondefs = (
-         (
-          'image', gui.find('**/drawer'), None), ('image_scale', 0.32, None), ('pos', ShardPanel.UPPOS, None), ('uppos', ShardPanel.UPPOS, None), ('downpos', ShardPanel.DOWNPOS, None), ('showtime', ShardPanel.SHOWTIME, None), ('shardSelected', self.shardSelected, None), ('inverted', False, None), ('buttonFont', PiratesGlobals.getPirateFont(), None), ('preferredShard', 0, self.setPreferredShard))
+        optiondefs = (('image', gui.find('**/drawer'),
+                       None), ('image_scale', 0.32,
+                               None), ('pos', ShardPanel.UPPOS,
+                                       None), ('uppos', ShardPanel.UPPOS, None),
+                      ('downpos', ShardPanel.DOWNPOS,
+                       None), ('showtime', ShardPanel.SHOWTIME,
+                               None), ('shardSelected', self.shardSelected,
+                                       None), ('inverted', False, None),
+                      ('buttonFont', PiratesGlobals.getPirateFont(),
+                       None), ('preferredShard', 0, self.setPreferredShard))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent, **kw)
         self.initialiseoptions(ShardPanel)
         bounds = self.getBounds()
-        self['frameSize'] = Vec4(bounds[0], bounds[1], bounds[2], bounds[3]) * 1.25
+        self['frameSize'] = Vec4(bounds[0], bounds[1], bounds[2],
+                                 bounds[3]) * 1.25
         self.shards = {}
         self.popTrackerHandle = None
         self.stopLightButtons = {}
@@ -39,33 +49,68 @@ class ShardPanel(DirectFrame):
         self.hideIval = None
         self.showPop = config.GetBool('show-total-population', False)
         self.teleportAll = config.GetBool('teleport-all', False)
-        self.noTeleport = config.GetBool('shard-page-disable', False) and not self.teleportAll
-        self.rotationFrame = DirectFrame(parent=self, relief=None, state=DGG.DISABLED)
+        self.noTeleport = config.GetBool('shard-page-disable',
+                                         False) and not self.teleportAll
+        self.rotationFrame = DirectFrame(
+            parent=self, relief=None, state=DGG.DISABLED)
         if self['inverted']:
             self.rotationFrame.setR(180)
             self.rotationFrame.setPos(-0.02, 0, 0.42)
-        self.titleLabel = DirectLabel(parent=self.rotationFrame, relief=None, text=PLocalizer.ShardActiveWorlds, text_font=PiratesGlobals.getPirateOutlineFont(), text_scale=0.08, text_fg=PiratesGuiGlobals.TextFG2, textMayChange=0, pos=(0,
-                                                                                                                                                                                                                                            0,
-                                                                                                                                                                                                                                            0.545))
+        self.titleLabel = DirectLabel(
+            parent=self.rotationFrame,
+            relief=None,
+            text=PLocalizer.ShardActiveWorlds,
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            text_scale=0.08,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            textMayChange=0,
+            pos=(0, 0, 0.545))
         if self['inverted']:
             self.titleLabel.hide()
-        self.button = DirectButton(parent=self, relief=None, geom=gui.find('**/drawer_button_over'), geom_scale=0.32, command=self.handleButtonPressed)
+        self.button = DirectButton(
+            parent=self,
+            relief=None,
+            geom=gui.find('**/drawer_button_over'),
+            geom_scale=0.32,
+            command=self.handleButtonPressed)
         if self['inverted']:
-            self.button['frameSize'] = (
-             -0.37, 0.35, -0.32, -0.11)
-        self.currentShardLabel = DirectLabel(parent=self.rotationFrame, text='', text_font=self['buttonFont'], text_scale=0.05, text_fg=PiratesGuiGlobals.TextFG2, textMayChange=1, pos=(0, 0, -0.233))
+            self.button['frameSize'] = (-0.37, 0.35, -0.32, -0.11)
+        self.currentShardLabel = DirectLabel(
+            parent=self.rotationFrame,
+            text='',
+            text_font=self['buttonFont'],
+            text_scale=0.05,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            textMayChange=1,
+            pos=(0, 0, -0.233))
         if self['inverted']:
             self.currentShardLabel.setZ(0.605)
             self.currentShardLabel.setAlphaScale(0.9)
-        self.shardScrolledFrame = DirectScrolledFrame(parent=self.rotationFrame, relief=1, state=DGG.NORMAL, frameColor=(1,
-                                                                                                                         1,
-                                                                                                                         1,
-                                                                                                                         0), borderWidth=PiratesGuiGlobals.BorderWidth, frameSize=(0, 0.685, -0.83, -0.125), canvasSize=(0,
-                                                                                                                                                                                                                         0,
-                                                                                                                                                                                                                         0,
-                                                                                                                                                                                                                         0), verticalScroll_frameColor=PiratesGuiGlobals.ScrollbarColor, verticalScroll_borderWidth=(0.005,
-                                                                                                                                                                                                                                                                                                                     0.005), verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0, 0), verticalScroll_thumb_frameColor=PiratesGuiGlobals.ButtonColor2, verticalScroll_incButton_frameColor=PiratesGuiGlobals.ButtonColor2, verticalScroll_decButton_frameColor=PiratesGuiGlobals.ButtonColor2, verticalScroll_scrollSize=0.096, horizontalScroll_frameColor=PiratesGuiGlobals.ScrollbarColor, horizontalScroll_borderWidth=(0.005,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       0.005), horizontalScroll_frameSize=(0, 0, 0, PiratesGuiGlobals.ScrollbarSize), horizontalScroll_thumb_frameColor=PiratesGuiGlobals.ButtonColor2, horizontalScroll_incButton_frameColor=PiratesGuiGlobals.ButtonColor2, horizontalScroll_decButton_frameColor=PiratesGuiGlobals.ButtonColor2, pos=(-0.352, 0, 0.656))
+        self.shardScrolledFrame = DirectScrolledFrame(
+            parent=self.rotationFrame,
+            relief=1,
+            state=DGG.NORMAL,
+            frameColor=(1, 1, 1, 0),
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            frameSize=(0, 0.685, -0.83, -0.125),
+            canvasSize=(0, 0, 0, 0),
+            verticalScroll_frameColor=PiratesGuiGlobals.ScrollbarColor,
+            verticalScroll_borderWidth=(0.005, 0.005),
+            verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0, 0),
+            verticalScroll_thumb_frameColor=PiratesGuiGlobals.ButtonColor2,
+            verticalScroll_incButton_frameColor=PiratesGuiGlobals.ButtonColor2,
+            verticalScroll_decButton_frameColor=PiratesGuiGlobals.ButtonColor2,
+            verticalScroll_scrollSize=0.096,
+            horizontalScroll_frameColor=PiratesGuiGlobals.ScrollbarColor,
+            horizontalScroll_borderWidth=(0.005, 0.005),
+            horizontalScroll_frameSize=(0, 0, 0,
+                                        PiratesGuiGlobals.ScrollbarSize),
+            horizontalScroll_thumb_frameColor=PiratesGuiGlobals.ButtonColor2,
+            horizontalScroll_incButton_frameColor=PiratesGuiGlobals.
+            ButtonColor2,
+            horizontalScroll_decButton_frameColor=PiratesGuiGlobals.
+            ButtonColor2,
+            pos=(-0.352, 0, 0.656))
         self.refreshShardLabels()
         self.accept('shardSwitchComplete', self.refreshCurrentShard)
         return
@@ -102,25 +147,43 @@ class ShardPanel(DirectFrame):
             self['state'] = DGG.NORMAL
             self.syncShardList()
             self.startListening()
-            self.popTrackerHandle = base.cr.addInterest(OtpDoGlobals.OTP_DO_ID_PIRATES, OtpDoGlobals.OTP_ZONE_ID_DISTRICTS_STATS, 'PopulationTracker')
+            self.popTrackerHandle = base.cr.addInterest(
+                OtpDoGlobals.OTP_DO_ID_PIRATES,
+                OtpDoGlobals.OTP_ZONE_ID_DISTRICTS_STATS, 'PopulationTracker')
         return
 
     def getShowIval(self):
         if self.showIval and 0:
             pass
         else:
-            self.showIval = Sequence(Func(self.cancelIval, 'hide'), Func(self.toggleUpState, 0), Parallel(self.gear.hprInterval(self['showtime'], Vec3(0, 0, -180), blendType='easeInOut'), self.posInterval(self['showtime'], self['downpos'], blendType='easeInOut')))
+            self.showIval = Sequence(
+                Func(self.cancelIval, 'hide'), Func(self.toggleUpState, 0),
+                Parallel(
+                    self.gear.hprInterval(
+                        self['showtime'],
+                        Vec3(0, 0, -180),
+                        blendType='easeInOut'),
+                    self.posInterval(
+                        self['showtime'],
+                        self['downpos'],
+                        blendType='easeInOut')))
         return self.showIval
 
     def getHideIval(self):
         if self.hideIval and 0:
             pass
         else:
-            self.hideIval = Sequence(Func(self.cancelIval, 'show'), Func(self.toggleUpState, 1), Parallel(self.gear.hprInterval(self['showtime'], Vec3(0, 0, 0), blendType='easeInOut'), self.posInterval(self['showtime'], self['uppos'], blendType='easeInOut')))
+            self.hideIval = Sequence(
+                Func(self.cancelIval, 'show'), Func(self.toggleUpState, 1),
+                Parallel(
+                    self.gear.hprInterval(
+                        self['showtime'], Vec3(0, 0, 0), blendType='easeInOut'),
+                    self.posInterval(
+                        self['showtime'], self['uppos'],
+                        blendType='easeInOut')))
         return self.hideIval
 
-    def cancelIval(self, type=[
- 'show', 'hide']):
+    def cancelIval(self, type=['show', 'hide']):
         if self.showIval and self.showIval.isPlaying() and 'show' in type:
             self.showIval.pause()
         if self.hideIval and self.hideIval.isPlaying() and 'hide' in type:
@@ -214,14 +277,37 @@ class ShardPanel(DirectFrame):
         return popText
 
     def makeShardButton(self, shardId, shardName):
-        shardButton = DirectButton(parent=self.shardScrolledFrame.getCanvas(), relief=None, borderWidth=(0.001,
-                                                                                                         0.001), frameSize=(0.006, 0.68, -0.01, 0.045), frameColor=(Vec4(0, 0, 0, 0), self.textDownColor, self.textRolloverColor, Vec4(0, 0, 0, 0)), text=shardName, text_scale=0.05, text_font=self['buttonFont'], text_align=TextNode.ALeft, text_fg=PiratesGuiGlobals.TextFG1, text3_fg=self.textDisabledColor, text_pos=(0.01,
-                                                                                                                                                                                                                                                                                                                                                                                                                             0), textMayChange=1, command=self.shardButtonPressed, extraArgs=[shardId])
-        popLabel = DirectLabel(parent=shardButton, relief=None, state=DGG.DISABLED, image=self.dot, image_scale=(0.5,
-                                                                                                                 1,
-                                                                                                                 0.5), image_color=POP_COLORS[0], pos=(0.62,
-                                                                                                                                                       0,
-                                                                                                                                                       0.0125), text='', text_scale=0.05, text_align=TextNode.ARight, text_pos=(-0.03, -0.0125), text_font=self['buttonFont'], text_fg=Vec4(1))
+        shardButton = DirectButton(
+            parent=self.shardScrolledFrame.getCanvas(),
+            relief=None,
+            borderWidth=(0.001, 0.001),
+            frameSize=(0.006, 0.68, -0.01, 0.045),
+            frameColor=(Vec4(0, 0, 0, 0), self.textDownColor,
+                        self.textRolloverColor, Vec4(0, 0, 0, 0)),
+            text=shardName,
+            text_scale=0.05,
+            text_font=self['buttonFont'],
+            text_align=TextNode.ALeft,
+            text_fg=PiratesGuiGlobals.TextFG1,
+            text3_fg=self.textDisabledColor,
+            text_pos=(0.01, 0),
+            textMayChange=1,
+            command=self.shardButtonPressed,
+            extraArgs=[shardId])
+        popLabel = DirectLabel(
+            parent=shardButton,
+            relief=None,
+            state=DGG.DISABLED,
+            image=self.dot,
+            image_scale=(0.5, 1, 0.5),
+            image_color=POP_COLORS[0],
+            pos=(0.62, 0, 0.0125),
+            text='',
+            text_scale=0.05,
+            text_align=TextNode.ARight,
+            text_pos=(-0.03, -0.0125),
+            text_font=self['buttonFont'],
+            text_fg=Vec4(1))
         shardButton.popLabel = popLabel
         shardButton.avCount = 0
         shardButton.min = 0
@@ -233,16 +319,20 @@ class ShardPanel(DirectFrame):
         shardIds.sort()
         startPos = Point3(0, 0, -0.05)
         offset = Point3(0, 0, -0.07)
-        for x, id in enumerate(sorted(shardIds, key=lambda x: self.shards[x]['text'])):
+        for x, id in enumerate(
+                sorted(shardIds, key=lambda x: self.shards[x]['text'])):
             dLabel = self.shards[id]
             dLabel.setPos(startPos + offset * x)
 
         canvasHeight = offset * len(shardIds)
-        self.shardScrolledFrame['canvasSize'] = (0, 0, canvasHeight[2] - 0.005, 0)
+        self.shardScrolledFrame['canvasSize'] = (0, 0, canvasHeight[2] - 0.005,
+                                                 0)
 
     def refreshCurrentShard(self):
         if base.cr.distributedDistrict:
-            self.currentShardLabel['text'] = PLocalizer.ShardCurrentWorld + ' : %s %s' % (base.cr.distributedDistrict.getName(), PLocalizer.Ocean)
+            self.currentShardLabel[
+                'text'] = PLocalizer.ShardCurrentWorld + ' : %s %s' % (
+                    base.cr.distributedDistrict.getName(), PLocalizer.Ocean)
             for id in self.shards:
                 self.shards[id]['state'] = DGG.NORMAL
                 self.shards[id]['relief'] = DGG.RAISED
@@ -256,13 +346,17 @@ class ShardPanel(DirectFrame):
         if self['preferredShard'] in self.shards:
             self.shards[self['preferredShard']]['state'] = DGG.DISABLED
             self.shards[self['preferredShard']]['relief'] = DGG.FLAT
-            self.shards[self['preferredShard']]['text3_fg'] = self.textSelectedColor
+            self.shards[self['preferredShard']][
+                'text3_fg'] = self.textSelectedColor
         if hasattr(self, 'currentShardLabel'):
             district = base.cr.doId2do.get(self['preferredShard'])
             if district:
-                self.currentShardLabel['text'] = '\x01gold\x01' + PLocalizer.ShardPreferredWorld + ' :\x02\n%s %s' % (district.getName(), PLocalizer.Ocean)
+                self.currentShardLabel[
+                    'text'] = '\x01gold\x01' + PLocalizer.ShardPreferredWorld + ' :\x02\n%s %s' % (
+                        district.getName(), PLocalizer.Ocean)
             else:
-                self.currentShardLabel['text'] = '\x01gold\x01' + PLocalizer.ShardPreferredWorld + ' :\x02\n%s' % PLocalizer.ShardNone
+                self.currentShardLabel[
+                    'text'] = '\x01gold\x01' + PLocalizer.ShardPreferredWorld + ' :\x02\n%s' % PLocalizer.ShardNone
 
     def getShardText(self, name, avCount):
         return '%-20s:%8d' % (name, avCount)
@@ -271,11 +365,13 @@ class ShardPanel(DirectFrame):
         sLabel = self.shards.get(id)
         if sLabel:
             sLabel.avCount = avatarCount
-            sLabel.popLabel['image_color'] = self.getPopColor(avatarCount, sLabel.min, sLabel.max)
+            sLabel.popLabel['image_color'] = self.getPopColor(
+                avatarCount, sLabel.min, sLabel.max)
             if self.showPop:
                 sLabel.popLabel['text'] = str(avatarCount)
             else:
-                sLabel.popLabel['text'] = str(self.getPopText(avatarCount, sLabel.min, sLabel.max))
+                sLabel.popLabel['text'] = str(
+                    self.getPopText(avatarCount, sLabel.min, sLabel.max))
             self.updateLabelState(id)
 
     def updatePopLimits(self, id, min, max):
@@ -283,11 +379,13 @@ class ShardPanel(DirectFrame):
         if sLabel:
             sLabel.min = min
             sLabel.max = max
-            sLabel.popLabel['image_color'] = self.getPopColor(sLabel.avCount, min, max)
+            sLabel.popLabel['image_color'] = self.getPopColor(
+                sLabel.avCount, min, max)
             if self.showPop:
                 sLabel.popLabel['text'] = str(sLabel.avCount)
             else:
-                sLabel.popLabel['text'] = str(self.getPopText(sLabel.avCount, min, max))
+                sLabel.popLabel['text'] = str(
+                    self.getPopText(sLabel.avCount, min, max))
             self.updateLabelState(id)
 
     def updateLabelState(self, id):
@@ -324,4 +422,5 @@ class ShardPanel(DirectFrame):
     def shardSelected(self, shardId):
         self.handleButtonPressed()
         localAvatar.guiMgr.hideSeaChest()
-        base.cr.teleportMgr.requestTeleport(PiratesGlobals.INSTANCE_MAIN, 'piratesWorld', shardId)
+        base.cr.teleportMgr.requestTeleport(PiratesGlobals.INSTANCE_MAIN,
+                                            'piratesWorld', shardId)

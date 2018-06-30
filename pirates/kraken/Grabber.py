@@ -10,25 +10,75 @@ from pirates.pirate import AvatarTypes
 
 
 class Grabber(Creature, TentacleUtils):
-    
-    ModelInfo = ('models/char/grabberTentacle_high', 'models/char/grabberTentacle_')
+
+    ModelInfo = ('models/char/grabberTentacle_high',
+                 'models/char/grabberTentacle_')
     SfxNames = dict(Creature.SfxNames)
-    SfxNames.update({'pain': 'sfx_crab_pain.mp3', 'death': 'sfx_crab_death.mp3'})
+    SfxNames.update({
+        'pain': 'sfx_crab_pain.mp3',
+        'death': 'sfx_crab_death.mp3'
+    })
     sfx = {}
-    AnimList = (
-     ('idle_d', 'idle'), ('idle_a', 'idleA'), ('idle_a_to_b', 'idle_a_to_b'), ('idle_b', 'idleB'), ('idle_b_to_c', 'idle_b_to_c'), ('idle_c', 'idleC'), ('idle_c_to_a', 'idle_c_to_a'), ('grab_avatar', 'grab'), ('grab_avatar_idle', 'grab_idle'), ('lift_avatar', 'lift_player'), ('lift_avatar_idle', 'lift_player_idle'), ('lower_avatar', 'lower_player'), ('release_avatar', 'release_player'), ('emerge', 'emerge'), ('grab_mast', 'grab_mast'), ('grab_mast_idle', 'grab_mast_idle'), ('death', 'death'), ('hit_react', 'hit_reaction'), ('smackdown_avatar', 'smackdown_player'))
+    AnimList = (('idle_d', 'idle'), ('idle_a', 'idleA'), ('idle_a_to_b',
+                                                          'idle_a_to_b'),
+                ('idle_b', 'idleB'), ('idle_b_to_c', 'idle_b_to_c'), ('idle_c',
+                                                                      'idleC'),
+                ('idle_c_to_a',
+                 'idle_c_to_a'), ('grab_avatar',
+                                  'grab'), ('grab_avatar_idle',
+                                            'grab_idle'), ('lift_avatar',
+                                                           'lift_player'),
+                ('lift_avatar_idle',
+                 'lift_player_idle'), ('lower_avatar',
+                                       'lower_player'), ('release_avatar',
+                                                         'release_player'),
+                ('emerge', 'emerge'), ('grab_mast',
+                                       'grab_mast'), ('grab_mast_idle',
+                                                      'grab_mast_idle'),
+                ('death', 'death'), ('hit_react',
+                                     'hit_reaction'), ('smackdown_avatar',
+                                                       'smackdown_player'))
 
     class AnimationMixer(Creature.AnimationMixer):
-        
-        notify = DirectNotifyGlobal.directNotify.newCategory('CrabAnimationMixer')
+
+        notify = DirectNotifyGlobal.directNotify.newCategory(
+            'CrabAnimationMixer')
         LOOP = Creature.AnimationMixer.LOOP
         ACTION = Creature.AnimationMixer.ACTION
-        AnimRankings = {'idle_d': (LOOP['LOOP'],), 'idle_a_to_b': (ACTION['ACTION'],), 'idle_b_to_c': (ACTION['ACTION'],), 'idle_c_to_a': (ACTION['ACTION'],), 'idle_a': (LOOP['LOOP'],), 'idle_b': (LOOP['LOOP'],), 'idle_c': (LOOP['LOOP'],), 'grab_avatar': (ACTION['ACTION'],), 'grab_avatar_idle': (LOOP['LOOP'],), 'lift_avatar': (ACTION['ACTION'],), 'lift_avatar_idle': (LOOP['LOOP'],), 'lower_avatar': (ACTION['ACTION'],), 'release_avatar': (ACTION['ACTION'],), 'emerge': (ACTION['ACTION'],), 'grab_mast': (ACTION['ACTION'],), 'grab_mast_idle': (LOOP['LOOP'],), 'death': (ACTION['ACTION'],), 'hit_react': (ACTION['ACTION'],), 'smackdown_avatar': (ACTION['ACTION'],)}
+        AnimRankings = {
+            'idle_d': (LOOP['LOOP'],),
+            'idle_a_to_b': (ACTION['ACTION'],),
+            'idle_b_to_c': (ACTION['ACTION'],),
+            'idle_c_to_a': (ACTION['ACTION'],),
+            'idle_a': (LOOP['LOOP'],),
+            'idle_b': (LOOP['LOOP'],),
+            'idle_c': (LOOP['LOOP'],),
+            'grab_avatar': (ACTION['ACTION'],),
+            'grab_avatar_idle': (LOOP['LOOP'],),
+            'lift_avatar': (ACTION['ACTION'],),
+            'lift_avatar_idle': (LOOP['LOOP'],),
+            'lower_avatar': (ACTION['ACTION'],),
+            'release_avatar': (ACTION['ACTION'],),
+            'emerge': (ACTION['ACTION'],),
+            'grab_mast': (ACTION['ACTION'],),
+            'grab_mast_idle': (LOOP['LOOP'],),
+            'death': (ACTION['ACTION'],),
+            'hit_react': (ACTION['ACTION'],),
+            'smackdown_avatar': (ACTION['ACTION'],)
+        }
 
     @classmethod
     def setupAnimInfo(cls):
-        cls.setupAnimInfoState('LandRoam', (('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', -1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0)))
-        cls.setupAnimInfoState('WaterRoam', (('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', -1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0)))
+        cls.setupAnimInfoState('LandRoam',
+                               (('idle', 1.0), ('idle', 1.0), ('idle', 1.0),
+                                ('idle', -1.0), ('idle', 1.0), ('idle', 1.0),
+                                ('idle', 1.0), ('idle', 1.0), ('idle', 1.0),
+                                ('idle', 1.0), ('idle', 1.0), ('idle', 1.0)))
+        cls.setupAnimInfoState('WaterRoam',
+                               (('idle', 1.0), ('idle', 1.0), ('idle', 1.0),
+                                ('idle', -1.0), ('idle', 1.0), ('idle', 1.0),
+                                ('idle', 1.0), ('idle', 1.0), ('idle', 1.0),
+                                ('idle', 1.0), ('idle', 1.0), ('idle', 1.0)))
 
     def __init__(self, uniqueNameFunc):
         Creature.__init__(self)
@@ -36,7 +86,8 @@ class Grabber(Creature, TentacleUtils):
         self.setAvatarType(AvatarTypes.GrabberTentacle)
         if not Grabber.sfx:
             for name in Grabber.SfxNames:
-                Grabber.sfx[name] = loader.loadSfx('audio/' + Grabber.SfxNames[name])
+                Grabber.sfx[name] = loader.loadSfx('audio/' +
+                                                   Grabber.SfxNames[name])
 
         self.joints = None
         self.idle = None
@@ -58,11 +109,23 @@ class Grabber(Creature, TentacleUtils):
         else:
             hasLOD = False
             self.loadModel(self.ModelInfo[0], copy=1)
-        j = self.exposeJoint(NodePath(ModelRoot('def_tent_03')), 'modelRoot', 'def_tent_03', localTransform=0)
+        j = self.exposeJoint(
+            NodePath(ModelRoot('def_tent_03')),
+            'modelRoot',
+            'def_tent_03',
+            localTransform=0)
         j.reparentTo(self.getChild(0).getChild(0))
-        j = self.exposeJoint(NodePath(ModelRoot('def_tent_06')), 'modelRoot', 'def_tent_06', localTransform=0)
+        j = self.exposeJoint(
+            NodePath(ModelRoot('def_tent_06')),
+            'modelRoot',
+            'def_tent_06',
+            localTransform=0)
         j.reparentTo(self.getChild(0).getChild(0))
-        j = self.exposeJoint(NodePath(ModelRoot('def_tent_09')), 'modelRoot', 'def_tent_09', localTransform=0)
+        j = self.exposeJoint(
+            NodePath(ModelRoot('def_tent_09')),
+            'modelRoot',
+            'def_tent_09',
+            localTransform=0)
         j.reparentTo(self.getChild(0).getChild(0))
         self.setupCollisions()
         CreatureAnimDict = {}
@@ -85,7 +148,7 @@ class Grabber(Creature, TentacleUtils):
 
     def getJoints(self):
         if not self.joints:
-            self.joints = self.findAllMatches('**/def_tent_*') 
+            self.joints = self.findAllMatches('**/def_tent_*')
             self.joints.sort(key=NodePath.getName)
         return self.joints
 
@@ -102,7 +165,16 @@ class Grabber(Creature, TentacleUtils):
         self.findAllMatches('**/tube').detach()
         self.getGrabTipNode().findAllMatches('**/sphere').detach()
         joints = self.getJoints()
-        tubeInfo = ((Point3(0, 0, 0), Point3(35, 0, 0), 10), (Point3(0, 0, 0), Point3(25, 0, 0), 8), (Point3(0, 0, 0), Point3(40, 0, 0), 7), (Point3(-5, 0, 0), Point3(30, 0, 0), 5), (Point3(0, 0, 0), Point3(30, 0, 0), 4), (Point3(0, 0, 0), Point3(20, 0, 0), 4), (Point3(0, 0, 0), Point3(10, 0, 0), 2), (Point3(-3, 0, 0), Point3(8, 0, 0), 2), (Point3(-1, 0, 0), Point3(7, 0, 0), 1.5))
+        tubeInfo = ((Point3(0, 0, 0), Point3(35, 0, 0),
+                     10), (Point3(0, 0, 0), Point3(25, 0, 0), 8), (Point3(
+                         0, 0, 0), Point3(40, 0, 0), 7), (Point3(-5, 0, 0),
+                                                          Point3(30, 0, 0), 5),
+                    (Point3(0, 0, 0), Point3(30, 0, 0),
+                     4), (Point3(0, 0, 0), Point3(20, 0, 0),
+                          4), (Point3(0, 0, 0), Point3(10, 0, 0), 2), (Point3(
+                              -3, 0, 0), Point3(8, 0, 0), 2), (Point3(-1, 0, 0),
+                                                               Point3(7, 0, 0),
+                                                               1.5))
         for x, (a, b, r) in enumerate(tubeInfo):
             cNode = CollisionNode('tube')
             cNode.addSolid(CollisionTube(a, b, r))
@@ -137,16 +209,35 @@ class Grabber(Creature, TentacleUtils):
     def startIdleTask(self):
         self.stopIdleTask()
         if not self.idle:
-            options = [
-             'a', 'b', 'c', 'd']
+            options = ['a', 'b', 'c', 'd']
             self.idle = random.choice(options)
             self.loop('idle_' + self.idle)
-        self.iTask = self.doMethodLater(lerp(5, 20, random.random()), self.chooseIdle, `(random.random())` + '-idle')
+        self.iTask = self.doMethodLater(
+            lerp(5, 20, random.random()), self.chooseIdle, repr(
+            (random.random())) + '-idle')
 
     def chooseIdle(self, task):
-        transInfo = {'a': {'b': ('idle_a_to_b', 1), 'c': ('idle_c_to_a', -1)}, 'b': {'a': ('idle_a_to_b', -1), 'c': ('idle_b_to_c', 1), 'd': ('idle_a_to_b', -1)}, 'c': {'a': ('idle_c_to_a', 1), 'b': ('idle_b_to_c', -1), 'd': ('idle_a_to_b', -1)}, 'd': {'b': ('idle_a_to_b', 1), 'c': ('idle_c_to_a', -1)}}
-        options = [
-         'a', 'b', 'c', 'd']
+        transInfo = {
+            'a': {
+                'b': ('idle_a_to_b', 1),
+                'c': ('idle_c_to_a', -1)
+            },
+            'b': {
+                'a': ('idle_a_to_b', -1),
+                'c': ('idle_b_to_c', 1),
+                'd': ('idle_a_to_b', -1)
+            },
+            'c': {
+                'a': ('idle_c_to_a', 1),
+                'b': ('idle_b_to_c', -1),
+                'd': ('idle_a_to_b', -1)
+            },
+            'd': {
+                'b': ('idle_a_to_b', 1),
+                'c': ('idle_c_to_a', -1)
+            }
+        }
+        options = ['a', 'b', 'c', 'd']
         options.remove(self.idle)
         next = random.choice(options)
         info = transInfo[self.idle].get(next)
@@ -154,7 +245,11 @@ class Grabber(Creature, TentacleUtils):
             transitionAnim, playRate = info
             self.setPlayRate(playRate, transitionAnim)
             self.play(transitionAnim, blendInT=0.5, blendOutT=0)
-            self.loop('idle_' + next, rate=playRate, blendT=0, blendDelay=self.getDuration(transitionAnim))
+            self.loop(
+                'idle_' + next,
+                rate=playRate,
+                blendT=0,
+                blendDelay=self.getDuration(transitionAnim))
         else:
             self.loop('idle_' + next)
         self.idle = next

@@ -11,7 +11,6 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SoulFlay(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -19,7 +18,10 @@ class SoulFlay(PooledEffect, EffectController):
         self.effectModel = loader.loadModelCopy('models/effects/soulflay')
         self.effectModel2 = loader.loadModelCopy('models/effects/soulflay')
         self.effectModel2.reparentTo(self.effectModel)
-        self.effectModel.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+        self.effectModel.node().setAttrib(
+            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                  ColorBlendAttrib.OIncomingAlpha,
+                                  ColorBlendAttrib.OOne))
         self.effectModel.reparentTo(self)
         self.effectModel.setDepthWrite(0)
         self.effectModel.setLightOff()
@@ -36,9 +38,22 @@ class SoulFlay(PooledEffect, EffectController):
         self.effectModel.setTexOffset(textureStage, 0.0, 1.5)
         self.effectModel.setScale(1.0, 1.0, 4.0)
         duration = 1.25
-        posIval = LerpPosInterval(self.effectModel, duration / 2.5, Vec3(0.0, 0.0, 2.0), startPos=Vec3(0.0, 0.0, 0.0))
-        scaleIval = LerpScaleInterval(self.effectModel, duration, Vec3(1.0, 1.0, 4.0), startScale=Vec3(1.0, 1.0, 4.0))
-        uvScroll = LerpFunctionInterval(self.setNewUVs, duration, toData=-1.25, fromData=1.5, extraArgs=[self.effectModel, textureStage])
+        posIval = LerpPosInterval(
+            self.effectModel,
+            duration / 2.5,
+            Vec3(0.0, 0.0, 2.0),
+            startPos=Vec3(0.0, 0.0, 0.0))
+        scaleIval = LerpScaleInterval(
+            self.effectModel,
+            duration,
+            Vec3(1.0, 1.0, 4.0),
+            startScale=Vec3(1.0, 1.0, 4.0))
+        uvScroll = LerpFunctionInterval(
+            self.setNewUVs,
+            duration,
+            toData=-1.25,
+            fromData=1.5,
+            extraArgs=[self.effectModel, textureStage])
         self.startEffect = Sequence(uvScroll)
         self.endEffect = Sequence(Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(duration), self.endEffect)
@@ -64,4 +79,6 @@ class SoulFlay(PooledEffect, EffectController):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
         return
+
+
 # okay decompiling .\pirates\effects\SoulFlay.pyc

@@ -47,9 +47,11 @@ class ClientServicesManager(DistributedObjectGlobal):
             dna = HumanDNA()
             dna.makeFromNetString(avDNA)
 
-            data.append(PotentialAvatar(avNum, names, dna, avPosition, nameOpen))
+            data.append(
+                PotentialAvatar(avNum, names, dna, avPosition, nameOpen))
 
-        avatarList[1] = data + [OTPGlobals.AvatarSlotAvailable] * (4 - len(data))
+        avatarList[
+            1] = data + [OTPGlobals.AvatarSlotAvailable] * (4 - len(data))
         self.cr.handleAvatarsList(avatarList)
 
     def sendCreateAvatar(self, avDNA, _, index, name):
@@ -74,9 +76,11 @@ class ClientServicesManager(DistributedObjectGlobal):
     def setNameTypedResp(self, avId, status):
         self._callback(avId, status)
 
-    def sendSetNamePattern(self, avId, p1, f1, p2, f2, p3, f3, p4, f4, callback):
+    def sendSetNamePattern(self, avId, p1, f1, p2, f2, p3, f3, p4, f4,
+                           callback):
         self._callback = callback
-        self.sendUpdate('setNamePattern', [avId, p1, f1, p2, f2, p3, f3, p4, f4])
+        self.sendUpdate('setNamePattern',
+                        [avId, p1, f1, p2, f2, p3, f3, p4, f4])
 
     def setNamePatternResp(self, avId, status):
         self._callback(avId, status)

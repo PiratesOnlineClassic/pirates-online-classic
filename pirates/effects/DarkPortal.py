@@ -11,7 +11,6 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class DarkPortal(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -34,9 +33,21 @@ class DarkPortal(PooledEffect, EffectController):
     def createTrack(self, rate=1):
         self.explosion.setScale(1)
         self.explosion.setColorScale(1, 1, 1, 0.75)
-        scaleUp = self.explosion.scaleInterval(self.speed, self.size, startScale=0.0, blendType='easeIn', other=render)
-        scaleDown = self.explosion.scaleInterval(self.speed, 0.0, startScale=self.size, blendType='easeIn', other=render)
-        self.track = Sequence(Func(self.show), scaleUp, Wait(self.holdTime), scaleDown, Func(self.hide), Func(self.cleanUpEffect))
+        scaleUp = self.explosion.scaleInterval(
+            self.speed,
+            self.size,
+            startScale=0.0,
+            blendType='easeIn',
+            other=render)
+        scaleDown = self.explosion.scaleInterval(
+            self.speed,
+            0.0,
+            startScale=self.size,
+            blendType='easeIn',
+            other=render)
+        self.track = Sequence(
+            Func(self.show), scaleUp, Wait(self.holdTime), scaleDown,
+            Func(self.hide), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -46,4 +57,6 @@ class DarkPortal(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\DarkPortal.pyc

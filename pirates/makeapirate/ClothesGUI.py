@@ -26,8 +26,9 @@ BELT = 5
 SOCK = 6
 SHOE = 7
 
+
 class ClothesGUI(DirectFrame, StateData.StateData):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('ClothesGUI')
 
     def __init__(self, main=None):
@@ -72,64 +73,149 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         self.loadHatGUI()
 
     def loadShirtGUI(self):
-        self.clothesFrame = DirectFrame(parent=self._parent, relief=None, pos=(0, 0,
-                                                                              0), scale=1)
+        self.clothesFrame = DirectFrame(
+            parent=self._parent, relief=None, pos=(0, 0, 0), scale=1)
         self.clothesFrame.hide()
-        self.genPicsButtonsFrame = DirectFrame(parent=self.clothesFrame, relief=None, pos=(0,
-                                                                                           0,
-                                                                                           0), scale=1)
+        self.genPicsButtonsFrame = DirectFrame(
+            parent=self.clothesFrame, relief=None, pos=(0, 0, 0), scale=1)
         if not base.config.GetBool('want-gen-pics-buttons', 0):
             self.genPicsButtonsFrame.hide()
-        self.shirtPicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingShirtStyle, nextCommand=Functor(self.handleNextClothing, 'SHIRT'), backCommand=Functor(self.handleLastClothing, 'SHIRT'))
+        self.shirtPicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingShirtStyle,
+            nextCommand=Functor(self.handleNextClothing, 'SHIRT'),
+            backCommand=Functor(self.handleLastClothing, 'SHIRT'))
         self.shirtPicker.setPos(-0.3, 0, 0.1)
-        self.shirtGenPics = DirectButton(parent=self.genPicsButtonsFrame, relief=DGG.RAISED, frameSize=(-0.17, 0.17, -0.05, 0.05), borderWidth=(0.008,
-                                                                                                                                                0.008), text=PLocalizer.GeneratePictures, text_pos=(0, -0.015), text_scale=0.08, pos=(-1,
-                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                      0.1), command=self.handleShirtGenPics)
-        self.vestPicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingVestStyle, nextCommand=Functor(self.handleNextClothing, 'VEST'), backCommand=Functor(self.handleLastClothing, 'VEST'))
+        self.shirtGenPics = DirectButton(
+            parent=self.genPicsButtonsFrame,
+            relief=DGG.RAISED,
+            frameSize=(-0.17, 0.17, -0.05, 0.05),
+            borderWidth=(0.008, 0.008),
+            text=PLocalizer.GeneratePictures,
+            text_pos=(0, -0.015),
+            text_scale=0.08,
+            pos=(-1, 0, 0.1),
+            command=self.handleShirtGenPics)
+        self.vestPicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingVestStyle,
+            nextCommand=Functor(self.handleNextClothing, 'VEST'),
+            backCommand=Functor(self.handleLastClothing, 'VEST'))
         self.vestPicker.setPos(-0.3, 0, -0.3)
-        self.vestGenPics = DirectButton(parent=self.genPicsButtonsFrame, relief=DGG.RAISED, frameSize=(-0.17, 0.17, -0.05, 0.05), borderWidth=(0.008,
-                                                                                                                                               0.008), text=PLocalizer.GeneratePictures, text_pos=(0, -0.015), text_scale=0.08, pos=(-1, 0, -0.3), command=self.handleVestGenPics)
-        self.coatPicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingCoatStyle, nextCommand=Functor(self.handleNextClothing, 'COAT'), backCommand=Functor(self.handleLastClothing, 'COAT'))
+        self.vestGenPics = DirectButton(
+            parent=self.genPicsButtonsFrame,
+            relief=DGG.RAISED,
+            frameSize=(-0.17, 0.17, -0.05, 0.05),
+            borderWidth=(0.008, 0.008),
+            text=PLocalizer.GeneratePictures,
+            text_pos=(0, -0.015),
+            text_scale=0.08,
+            pos=(-1, 0, -0.3),
+            command=self.handleVestGenPics)
+        self.coatPicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingCoatStyle,
+            nextCommand=Functor(self.handleNextClothing, 'COAT'),
+            backCommand=Functor(self.handleLastClothing, 'COAT'))
         self.coatPicker.setPos(-0.3, 0, -0.7)
-        self.coatGenPics = DirectButton(parent=self.genPicsButtonsFrame, relief=DGG.RAISED, frameSize=(-0.17, 0.17, -0.05, 0.05), borderWidth=(0.008,
-                                                                                                                                               0.008), text=PLocalizer.GeneratePictures, text_pos=(0, -0.015), text_scale=0.08, pos=(-1, 0, -0.7), command=self.handleCoatGenPics)
+        self.coatGenPics = DirectButton(
+            parent=self.genPicsButtonsFrame,
+            relief=DGG.RAISED,
+            frameSize=(-0.17, 0.17, -0.05, 0.05),
+            borderWidth=(0.008, 0.008),
+            text=PLocalizer.GeneratePictures,
+            text_pos=(0, -0.015),
+            text_scale=0.08,
+            pos=(-1, 0, -0.7),
+            command=self.handleCoatGenPics)
         self.loadTopColorGUI()
         if self.main.wantNPCViewer:
             self.loadTopTextureGUI()
         return
 
     def loadHatGUI(self):
-        self.hatPicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingHatStyle, nextCommand=Functor(self.handleNextClothing, 'HAT'), backCommand=Functor(self.handleLastClothing, 'HAT'))
+        self.hatPicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingHatStyle,
+            nextCommand=Functor(self.handleNextClothing, 'HAT'),
+            backCommand=Functor(self.handleLastClothing, 'HAT'))
         self.hatPicker.setPos(-0.3, 0.0, 0.4)
-        self.hatGenPics = DirectButton(parent=self.genPicsButtonsFrame, relief=DGG.RAISED, frameSize=(-0.17, 0.17, -0.05, 0.05), borderWidth=(0.008,
-                                                                                                                                              0.008), text=PLocalizer.GeneratePictures, text_pos=(0, -0.015), text_scale=0.08, pos=(-1,
-                                                                                                                                                                                                                                    0,
-                                                                                                                                                                                                                                    -1.1), command=self.handleHatGenPics)
+        self.hatGenPics = DirectButton(
+            parent=self.genPicsButtonsFrame,
+            relief=DGG.RAISED,
+            frameSize=(-0.17, 0.17, -0.05, 0.05),
+            borderWidth=(0.008, 0.008),
+            text=PLocalizer.GeneratePictures,
+            text_pos=(0, -0.015),
+            text_scale=0.08,
+            pos=(-1, 0, -1.1),
+            command=self.handleHatGenPics)
 
     def loadPantGUI(self):
-        self.pantPicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingPantStyle, nextCommand=Functor(self.handleNextClothing, 'PANT'), backCommand=Functor(self.handleLastClothing, 'PANT'))
+        self.pantPicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingPantStyle,
+            nextCommand=Functor(self.handleNextClothing, 'PANT'),
+            backCommand=Functor(self.handleLastClothing, 'PANT'))
         self.pantPicker.setPos(-0.3, 0.0, -1.1)
-        self.pantGenPics = DirectButton(parent=self.genPicsButtonsFrame, relief=DGG.RAISED, frameSize=(-0.17, 0.17, -0.05, 0.05), borderWidth=(0.008,
-                                                                                                                                               0.008), text=PLocalizer.GeneratePictures, text_pos=(0, -0.015), text_scale=0.08, pos=(-1,
-                                                                                                                                                                                                                                     0,
-                                                                                                                                                                                                                                     -1.1), command=self.handlePantGenPics)
-        self.beltPicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingBeltStyle, nextCommand=Functor(self.handleNextClothing, 'BELT'), backCommand=Functor(self.handleLastClothing, 'BELT'))
+        self.pantGenPics = DirectButton(
+            parent=self.genPicsButtonsFrame,
+            relief=DGG.RAISED,
+            frameSize=(-0.17, 0.17, -0.05, 0.05),
+            borderWidth=(0.008, 0.008),
+            text=PLocalizer.GeneratePictures,
+            text_pos=(0, -0.015),
+            text_scale=0.08,
+            pos=(-1, 0, -1.1),
+            command=self.handlePantGenPics)
+        self.beltPicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingBeltStyle,
+            nextCommand=Functor(self.handleNextClothing, 'BELT'),
+            backCommand=Functor(self.handleLastClothing, 'BELT'))
         self.beltPicker.setPos(-0.3, 0.0, -1.5)
-        self.beltGenPics = DirectButton(parent=self.genPicsButtonsFrame, relief=DGG.RAISED, frameSize=(-0.17, 0.17, -0.05, 0.05), borderWidth=(0.008,
-                                                                                                                                               0.008), text=PLocalizer.GeneratePictures, text_pos=(0, -0.015), text_scale=0.08, pos=(-1,
-                                                                                                                                                                                                                                     0,
-                                                                                                                                                                                                                                     -1.46), command=self.handleBeltGenPics)
+        self.beltGenPics = DirectButton(
+            parent=self.genPicsButtonsFrame,
+            relief=DGG.RAISED,
+            frameSize=(-0.17, 0.17, -0.05, 0.05),
+            borderWidth=(0.008, 0.008),
+            text=PLocalizer.GeneratePictures,
+            text_pos=(0, -0.015),
+            text_scale=0.08,
+            pos=(-1, 0, -1.46),
+            command=self.handleBeltGenPics)
         self.loadBotColorGUI()
 
     def loadShoeGUI(self):
-        self.shoePicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingShoeStyle, nextCommand=Functor(self.handleNextClothing, 'SHOE'), backCommand=Functor(self.handleLastClothing, 'SHOE'))
+        self.shoePicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingShoeStyle,
+            nextCommand=Functor(self.handleNextClothing, 'SHOE'),
+            backCommand=Functor(self.handleLastClothing, 'SHOE'))
         self.shoePicker.setPos(-0.3, 0.0, -1.75)
-        self.shoeGenPics = DirectButton(parent=self.genPicsButtonsFrame, relief=DGG.RAISED, frameSize=(-0.17, 0.17, -0.05, 0.05), borderWidth=(0.008,
-                                                                                                                                               0.008), text=PLocalizer.GeneratePictures, text_pos=(0, -0.015), text_scale=0.08, pos=(-1,
-                                                                                                                                                                                                                                     0,
-                                                                                                                                                                                                                                     -1.75), command=self.handleShoeGenPics)
-        self.sockPicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingSockStyle, nextCommand=Functor(self.handleNextClothing, 'SHOE'), backCommand=Functor(self.handleLastClothing, 'SHOE'))
+        self.shoeGenPics = DirectButton(
+            parent=self.genPicsButtonsFrame,
+            relief=DGG.RAISED,
+            frameSize=(-0.17, 0.17, -0.05, 0.05),
+            borderWidth=(0.008, 0.008),
+            text=PLocalizer.GeneratePictures,
+            text_pos=(0, -0.015),
+            text_scale=0.08,
+            pos=(-1, 0, -1.75),
+            command=self.handleShoeGenPics)
+        self.sockPicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingSockStyle,
+            nextCommand=Functor(self.handleNextClothing, 'SHOE'),
+            backCommand=Functor(self.handleLastClothing, 'SHOE'))
         self.sockPicker.setPos(-0.3, 0.0, -2.15)
         wantSocks = base.config.GetBool('want-socks', 0)
         if not wantSocks:
@@ -140,7 +226,8 @@ class ClothesGUI(DirectFrame, StateData.StateData):
 
     def loadTopColorGUI(self):
 
-        def makeColorButtons(frame, colorButtons, colors, xOffset, yOffset, a, b):
+        def makeColorButtons(frame, colorButtons, colors, xOffset, yOffset, a,
+                             b):
             lastTotal = len(colorButtons)
             for i in range(lastTotal, lastTotal + len(colors[a:b])):
                 currTotal = i - lastTotal
@@ -148,74 +235,155 @@ class ClothesGUI(DirectFrame, StateData.StateData):
                     xOffset = 0.0
                     yOffset -= 0.1
                 clothesColor = colors[currTotal]
-                clothesTone = (clothesColor[0], clothesColor[1], clothesColor[2], 1.0)
-                colorButtons.append(DirectButton(parent=frame, relief=DGG.RAISED, pos=(xOffset, 0, yOffset), frameSize=(-0.1, 0.1, -0.1, 0.1), borderWidth=(0.008,
-                                                                                                                                                            0.008), frameColor=clothesTone, scale=0.5, command=self.handleSetTopColor, extraArgs=[i]))
+                clothesTone = (clothesColor[0], clothesColor[1],
+                               clothesColor[2], 1.0)
+                colorButtons.append(
+                    DirectButton(
+                        parent=frame,
+                        relief=DGG.RAISED,
+                        pos=(xOffset, 0, yOffset),
+                        frameSize=(-0.1, 0.1, -0.1, 0.1),
+                        borderWidth=(0.008, 0.008),
+                        frameColor=clothesTone,
+                        scale=0.5,
+                        command=self.handleSetTopColor,
+                        extraArgs=[i]))
                 xOffset += 0.1
 
         xOffset = 0.0
         yOffset = 0.0
         self.maleTopColorButtons = []
-        self.maleShirtColorFrameTitle = DirectFrame(parent=self.clothesFrame, relief=None, image=self.main.charGui.find('**/chargui_frame02'), image_scale=(1.1,
-                                                                                                                                                            1,
-                                                                                                                                                            1.2), image_pos=(0.3, 0, -0.1), scale=0.8, pos=(0.35,
-                                                                                                                                                                                                            0,
-                                                                                                                                                                                                            0.15))
-        makeColorButtons(self.maleShirtColorFrameTitle, self.maleTopColorButtons, HumanDNA.clothesTopColors[0], xOffset, yOffset, 0, topNumColor)
+        self.maleShirtColorFrameTitle = DirectFrame(
+            parent=self.clothesFrame,
+            relief=None,
+            image=self.main.charGui.find('**/chargui_frame02'),
+            image_scale=(1.1, 1, 1.2),
+            image_pos=(0.3, 0, -0.1),
+            scale=0.8,
+            pos=(0.35, 0, 0.15))
+        makeColorButtons(self.maleShirtColorFrameTitle,
+                         self.maleTopColorButtons, HumanDNA.clothesTopColors[0],
+                         xOffset, yOffset, 0, topNumColor)
         self.maleShirtColorFrameTitle.hide()
-        self.maleVestColorFrameTitle = DirectFrame(parent=self.clothesFrame, relief=None, image=self.main.charGui.find('**/chargui_frame02'), image_scale=(1.1,
-                                                                                                                                                           1,
-                                                                                                                                                           1.2), image_pos=(0.3, 0, -0.1), scale=0.8, pos=(0.35, 0, -0.25))
-        makeColorButtons(self.maleVestColorFrameTitle, self.maleTopColorButtons, HumanDNA.clothesTopColors[0], xOffset, yOffset, 0, topNumColor)
+        self.maleVestColorFrameTitle = DirectFrame(
+            parent=self.clothesFrame,
+            relief=None,
+            image=self.main.charGui.find('**/chargui_frame02'),
+            image_scale=(1.1, 1, 1.2),
+            image_pos=(0.3, 0, -0.1),
+            scale=0.8,
+            pos=(0.35, 0, -0.25))
+        makeColorButtons(self.maleVestColorFrameTitle, self.maleTopColorButtons,
+                         HumanDNA.clothesTopColors[0], xOffset, yOffset, 0,
+                         topNumColor)
         self.maleVestColorFrameTitle.hide()
-        self.maleCoatColorFrameTitle = DirectFrame(parent=self.clothesFrame, relief=None, image=self.main.charGui.find('**/chargui_frame02'), image_scale=(1.1,
-                                                                                                                                                           1,
-                                                                                                                                                           1.2), image_pos=(0.3, 0, -0.1), scale=0.8, pos=(0.35, 0, -0.65))
-        makeColorButtons(self.maleCoatColorFrameTitle, self.maleTopColorButtons, HumanDNA.clothesTopColors[0], xOffset, yOffset, 0, topNumColor)
+        self.maleCoatColorFrameTitle = DirectFrame(
+            parent=self.clothesFrame,
+            relief=None,
+            image=self.main.charGui.find('**/chargui_frame02'),
+            image_scale=(1.1, 1, 1.2),
+            image_pos=(0.3, 0, -0.1),
+            scale=0.8,
+            pos=(0.35, 0, -0.65))
+        makeColorButtons(self.maleCoatColorFrameTitle, self.maleTopColorButtons,
+                         HumanDNA.clothesTopColors[0], xOffset, yOffset, 0,
+                         topNumColor)
         self.maleCoatColorFrameTitle.hide()
         self.femaleTopColorButtons = []
-        self.femaleShirtColorFrameTitle = DirectFrame(parent=self.clothesFrame, relief=None, image=self.main.charGui.find('**/chargui_frame02'), image_scale=(1.1,
-                                                                                                                                                              1,
-                                                                                                                                                              1.2), image_pos=(0.3, 0, -0.1), scale=0.8, pos=(0.35,
-                                                                                                                                                                                                              0,
-                                                                                                                                                                                                              0.15))
-        makeColorButtons(self.femaleShirtColorFrameTitle, self.femaleTopColorButtons, HumanDNA.clothesTopColors[1], xOffset, yOffset, 0, topNumColor)
+        self.femaleShirtColorFrameTitle = DirectFrame(
+            parent=self.clothesFrame,
+            relief=None,
+            image=self.main.charGui.find('**/chargui_frame02'),
+            image_scale=(1.1, 1, 1.2),
+            image_pos=(0.3, 0, -0.1),
+            scale=0.8,
+            pos=(0.35, 0, 0.15))
+        makeColorButtons(
+            self.femaleShirtColorFrameTitle, self.femaleTopColorButtons,
+            HumanDNA.clothesTopColors[1], xOffset, yOffset, 0, topNumColor)
         self.femaleShirtColorFrameTitle.hide()
-        self.femaleVestColorFrameTitle = DirectFrame(parent=self.clothesFrame, relief=None, image=self.main.charGui.find('**/chargui_frame02'), image_scale=(1.1,
-                                                                                                                                                             1,
-                                                                                                                                                             1.2), image_pos=(0.3, 0, -0.1), scale=0.8, pos=(0.35, 0, -0.25))
-        makeColorButtons(self.femaleVestColorFrameTitle, self.femaleTopColorButtons, HumanDNA.clothesTopColors[1], xOffset, yOffset, 0, topNumColor)
+        self.femaleVestColorFrameTitle = DirectFrame(
+            parent=self.clothesFrame,
+            relief=None,
+            image=self.main.charGui.find('**/chargui_frame02'),
+            image_scale=(1.1, 1, 1.2),
+            image_pos=(0.3, 0, -0.1),
+            scale=0.8,
+            pos=(0.35, 0, -0.25))
+        makeColorButtons(
+            self.femaleVestColorFrameTitle, self.femaleTopColorButtons,
+            HumanDNA.clothesTopColors[1], xOffset, yOffset, 0, topNumColor)
         self.femaleVestColorFrameTitle.hide()
-        self.femaleCoatColorFrameTitle = DirectFrame(parent=self.clothesFrame, relief=None, image=self.main.charGui.find('**/chargui_frame02'), image_scale=(1.1,
-                                                                                                                                                             1,
-                                                                                                                                                             1.2), image_pos=(0.3, 0, -0.1), scale=0.8, pos=(0.35, 0, -0.65))
-        makeColorButtons(self.femaleCoatColorFrameTitle, self.femaleTopColorButtons, HumanDNA.clothesTopColors[1], xOffset, yOffset, 0, topNumColor)
+        self.femaleCoatColorFrameTitle = DirectFrame(
+            parent=self.clothesFrame,
+            relief=None,
+            image=self.main.charGui.find('**/chargui_frame02'),
+            image_scale=(1.1, 1, 1.2),
+            image_pos=(0.3, 0, -0.1),
+            scale=0.8,
+            pos=(0.35, 0, -0.65))
+        makeColorButtons(
+            self.femaleCoatColorFrameTitle, self.femaleTopColorButtons,
+            HumanDNA.clothesTopColors[1], xOffset, yOffset, 0, topNumColor)
         self.femaleCoatColorFrameTitle.hide()
         return
 
     def loadTopTextureGUI(self):
-        self.hatTexturePicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingHatTrend, nextCommand=Functor(self.handleNextTexture, 'HAT'), backCommand=Functor(self.handleLastTexture, 'HAT'))
+        self.hatTexturePicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingHatTrend,
+            nextCommand=Functor(self.handleNextTexture, 'HAT'),
+            backCommand=Functor(self.handleLastTexture, 'HAT'))
         self.hatTexturePicker.setPos(-0.3, 0, 0.25)
-        self.shirtTexturePicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingShirtTrend, nextCommand=Functor(self.handleNextTexture, 'SHIRT'), backCommand=Functor(self.handleLastTexture, 'SHIRT'))
+        self.shirtTexturePicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingShirtTrend,
+            nextCommand=Functor(self.handleNextTexture, 'SHIRT'),
+            backCommand=Functor(self.handleLastTexture, 'SHIRT'))
         self.shirtTexturePicker.setPos(-0.3, 0, -0.05)
-        self.vestTexturePicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingVestTrend, nextCommand=Functor(self.handleNextTexture, 'VEST'), backCommand=Functor(self.handleLastTexture, 'VEST'))
+        self.vestTexturePicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingVestTrend,
+            nextCommand=Functor(self.handleNextTexture, 'VEST'),
+            backCommand=Functor(self.handleLastTexture, 'VEST'))
         self.vestTexturePicker.setPos(-0.3, 0, -0.45)
-        self.coatTexturePicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingCoatTrend, nextCommand=Functor(self.handleNextTexture, 'COAT'), backCommand=Functor(self.handleLastTexture, 'COAT'))
+        self.coatTexturePicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingCoatTrend,
+            nextCommand=Functor(self.handleNextTexture, 'COAT'),
+            backCommand=Functor(self.handleLastTexture, 'COAT'))
         self.coatTexturePicker.setPos(-0.3, 0, -0.85)
 
     def loadBotTextureGUI(self):
-        self.pantTexturePicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingPantTrend, nextCommand=Functor(self.handleNextTexture, 'PANT'), backCommand=Functor(self.handleLastTexture, 'PANT'))
+        self.pantTexturePicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingPantTrend,
+            nextCommand=Functor(self.handleNextTexture, 'PANT'),
+            backCommand=Functor(self.handleLastTexture, 'PANT'))
         self.pantTexturePicker.setPos(-0.3, 0, -1.25)
-        self.shoeTexturePicker = CharGuiPicker(self.main, parent=self.clothesFrame, text=PLocalizer.MakeAPirateClothingShoeTrend, nextCommand=Functor(self.handleNextTexture, 'SHOE'), backCommand=Functor(self.handleLastTexture, 'SHOE'))
+        self.shoeTexturePicker = CharGuiPicker(
+            self.main,
+            parent=self.clothesFrame,
+            text=PLocalizer.MakeAPirateClothingShoeTrend,
+            nextCommand=Functor(self.handleNextTexture, 'SHOE'),
+            backCommand=Functor(self.handleLastTexture, 'SHOE'))
         self.shoeTexturePicker.setPos(-0.3, 0, -1.9)
 
     def loadBotColorGUI(self):
         idx = 0
-        self.maleBotColorFrameTitle = DirectFrame(parent=self.clothesFrame, relief=None, image=self.main.charGui.find('**/chargui_frame02'), image_scale=(1.1,
-                                                                                                                                                          1,
-                                                                                                                                                          1.2), image_pos=(0.3, 0, -0.1), scale=0.8, pos=(0.35,
-                                                                                                                                                                                                          0,
-                                                                                                                                                                                                          -1.05))
+        self.maleBotColorFrameTitle = DirectFrame(
+            parent=self.clothesFrame,
+            relief=None,
+            image=self.main.charGui.find('**/chargui_frame02'),
+            image_scale=(1.1, 1, 1.2),
+            image_pos=(0.3, 0, -0.1),
+            scale=0.8,
+            pos=(0.35, 0, -1.05))
         self.maleBotColorFrameTitle.hide()
         self.maleBotColorButtons = []
         xOffset = 0.0
@@ -226,17 +394,30 @@ class ClothesGUI(DirectFrame, StateData.StateData):
                 xOffset = 0.0
                 yOffset -= 0.1
             clothesColor = HumanDNA.clothesBotColors[idx][currTotal]
-            clothesTone = (clothesColor[0], clothesColor[1], clothesColor[2], 1.0)
-            self.maleBotColorButtons.append(DirectButton(parent=self.maleBotColorFrameTitle, relief=DGG.RAISED, pos=(xOffset, 0, yOffset), frameSize=(-0.1, 0.1, -0.1, 0.1), borderWidth=(0.008,
-                                                                                                                                                                                          0.008), frameColor=clothesTone, scale=0.5, command=self.handleSetBotColor, extraArgs=[i]))
+            clothesTone = (clothesColor[0], clothesColor[1], clothesColor[2],
+                           1.0)
+            self.maleBotColorButtons.append(
+                DirectButton(
+                    parent=self.maleBotColorFrameTitle,
+                    relief=DGG.RAISED,
+                    pos=(xOffset, 0, yOffset),
+                    frameSize=(-0.1, 0.1, -0.1, 0.1),
+                    borderWidth=(0.008, 0.008),
+                    frameColor=clothesTone,
+                    scale=0.5,
+                    command=self.handleSetBotColor,
+                    extraArgs=[i]))
             xOffset += 0.1
 
         idx = 1
-        self.femaleBotColorFrameTitle = DirectFrame(parent=self.clothesFrame, relief=None, image=self.main.charGui.find('**/chargui_frame02'), image_scale=(1.1,
-                                                                                                                                                            1,
-                                                                                                                                                            1.2), image_pos=(0.3, 0, -0.1), scale=0.8, pos=(0.35,
-                                                                                                                                                                                                            0,
-                                                                                                                                                                                                            -1.05))
+        self.femaleBotColorFrameTitle = DirectFrame(
+            parent=self.clothesFrame,
+            relief=None,
+            image=self.main.charGui.find('**/chargui_frame02'),
+            image_scale=(1.1, 1, 1.2),
+            image_pos=(0.3, 0, -0.1),
+            scale=0.8,
+            pos=(0.35, 0, -1.05))
         self.femaleBotColorFrameTitle.hide()
         self.femaleBotColorButtons = []
         xOffset = 0.0
@@ -247,9 +428,19 @@ class ClothesGUI(DirectFrame, StateData.StateData):
                 xOffset = 0.0
                 yOffset -= 0.1
             clothesColor = HumanDNA.clothesBotColors[idx][currTotal]
-            clothesTone = (clothesColor[0], clothesColor[1], clothesColor[2], 1.0)
-            self.femaleBotColorButtons.append(DirectButton(parent=self.femaleBotColorFrameTitle, relief=DGG.RAISED, pos=(xOffset, 0, yOffset), frameSize=(-0.1, 0.1, -0.1, 0.1), borderWidth=(0.008,
-                                                                                                                                                                                              0.008), frameColor=clothesTone, scale=0.5, command=self.handleSetBotColor, extraArgs=[i]))
+            clothesTone = (clothesColor[0], clothesColor[1], clothesColor[2],
+                           1.0)
+            self.femaleBotColorButtons.append(
+                DirectButton(
+                    parent=self.femaleBotColorFrameTitle,
+                    relief=DGG.RAISED,
+                    pos=(xOffset, 0, yOffset),
+                    frameSize=(-0.1, 0.1, -0.1, 0.1),
+                    borderWidth=(0.008, 0.008),
+                    frameColor=clothesTone,
+                    scale=0.5,
+                    command=self.handleSetBotColor,
+                    extraArgs=[i]))
             xOffset += 0.1
 
         return
@@ -289,7 +480,8 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         for i in range(topNumColor * 2, topNumColor * 3):
             colorButtons[i]['relief'] = DGG.RAISED
 
-        colorButtons[topNumColor * 2 + clothesTopColor[2]]['relief'] = DGG.SUNKEN
+        colorButtons[topNumColor * 2 +
+                     clothesTopColor[2]]['relief'] = DGG.SUNKEN
 
     def showBotColorCollections(self):
         clothesBotColor = self.avatar.dna.getClothesBotColor()
@@ -298,7 +490,8 @@ class ClothesGUI(DirectFrame, StateData.StateData):
             for i in range(0, len(self.femaleBotColorButtons)):
                 self.femaleBotColorButtons[i]['relief'] = DGG.RAISED
 
-            self.femaleBotColorButtons[clothesBotColor[0]]['relief'] = DGG.SUNKEN
+            self.femaleBotColorButtons[clothesBotColor[0]][
+                'relief'] = DGG.SUNKEN
         else:
             self.maleBotColorFrameTitle.show()
             for i in range(0, len(self.maleBotColorButtons)):
@@ -358,7 +551,15 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         baseBeltTex = self.avatar.choices['BELT'][baseBelt][0]
         baseShoe = self.avatar.choices['SHOE'].keys()[0]
         baseShoeTex = self.avatar.choices['SHOE'][baseShoe][0]
-        self.avatar.currentClothing = {'HAT': [baseHat, 0], 'SHIRT': [baseShirt, baseShirtTex, 0], 'VEST': [baseVest, baseVestTex, 0], 'COAT': [baseCoat, baseCoatTex, 0], 'BELT': [baseBelt, baseBeltTex, 0], 'PANT': [basePant, basePantTex, 0], 'SHOE': [baseShoe, baseShoeTex, 0]}
+        self.avatar.currentClothing = {
+            'HAT': [baseHat, 0],
+            'SHIRT': [baseShirt, baseShirtTex, 0],
+            'VEST': [baseVest, baseVestTex, 0],
+            'COAT': [baseCoat, baseCoatTex, 0],
+            'BELT': [baseBelt, baseBeltTex, 0],
+            'PANT': [basePant, basePantTex, 0],
+            'SHOE': [baseShoe, baseShoeTex, 0]
+        }
         self.avatar.pirate.setClothesPant(0, 0)
         self.avatar.pirate.setClothesBelt(0, 0)
         self.avatar.pirate.setClothesShirt(0, 0)
@@ -380,19 +581,22 @@ class ClothesGUI(DirectFrame, StateData.StateData):
             self.avatar.pirate.setClothesByType(type, itemId, texId, 0)
 
         if self.avatar.currentClothing['VEST'][0] != 0:
-            self.avatar.currentClothing['COAT'] = [
-             0, 0, 0]
+            self.avatar.currentClothing['COAT'] = [0, 0, 0]
             self.avatar.pirate.setClothesByType(type, itemId, texId, 0)
-        choice = random.choice(range(0, len(HumanDNA.clothesTopColors[genderIdx][:topNumColor])))
+        choice = random.choice(
+            range(0, len(HumanDNA.clothesTopColors[genderIdx][:topNumColor])))
         self.avatar.currentClothing['SHIRT'][2] = choice
         self.handleSetTopColor(choice + topNumColor * 0)
-        choice = random.choice(range(0, len(HumanDNA.clothesTopColors[genderIdx][:topNumColor])))
+        choice = random.choice(
+            range(0, len(HumanDNA.clothesTopColors[genderIdx][:topNumColor])))
         self.avatar.currentClothing['VEST'][2] = choice
         self.handleSetTopColor(choice + topNumColor * 1)
-        choice = random.choice(range(0, len(HumanDNA.clothesTopColors[genderIdx][:topNumColor])))
+        choice = random.choice(
+            range(0, len(HumanDNA.clothesTopColors[genderIdx][:topNumColor])))
         self.avatar.currentClothing['COAT'][2] = choice
         self.handleSetTopColor(choice + topNumColor * 2)
-        choice = random.choice(range(0, len(HumanDNA.clothesBotColors[genderIdx][:botNumColor])))
+        choice = random.choice(
+            range(0, len(HumanDNA.clothesBotColors[genderIdx][:botNumColor])))
         self.avatar.currentClothing['PANT'][2] = choice
         self.handleSetBotColor(choice)
         self.handleClothingChanged()
@@ -406,7 +610,8 @@ class ClothesGUI(DirectFrame, StateData.StateData):
                 clothing = self.getNextClothingItem(type)
             else:
                 clothing = self.getNextClothingModel(type)
-            self.texName = self.avatar.getTextureName(type, clothing[0], clothing[1])[0]
+            self.texName = self.avatar.getTextureName(type, clothing[0],
+                                                      clothing[1])[0]
             self.main.guiTextureInfo[type]['text'] = self.texName
             self.main.guiTextureInfo[type]['text_fg'] = (1, 1, 1, 1)
         self.avatar.pirate.setClothesByType(type, clothing[0], clothing[1])
@@ -445,14 +650,17 @@ class ClothesGUI(DirectFrame, StateData.StateData):
                 clothing = self.getLastClothingItem(type)
             else:
                 clothing = self.getLastClothingModel(type)
-            texName = self.avatar.getTextureName(type, clothing[0], clothing[1])[0]
+            texName = self.avatar.getTextureName(type, clothing[0],
+                                                 clothing[1])[0]
             self.main.guiTextureInfo[type]['text'] = texName
             self.main.guiTextureInfo[type]['text_fg'] = (1, 1, 1, 1)
         self.avatar.pirate.setClothesByType(type, clothing[0], clothing[1])
         self.avatar.currentClothing[type][0] = clothing[0]
         self.avatar.currentClothing[type][1] = clothing[1]
         if self.main.wantNPCViewer:
-            self.texName = self.avatar.getTextureName(SHIRT, self.avatar.clothingShirtIdx, self.avatar.clothingShirtTexture)
+            self.texName = self.avatar.getTextureName(
+                SHIRT, self.avatar.clothingShirtIdx,
+                self.avatar.clothingShirtTexture)
             self.main.guiTextureInfo['text'] = self.texName
             self.main.guiTextureInfo['text_fg'] = (1, 1, 1, 1)
         self.handleClothingChanged()
@@ -487,7 +695,8 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         self.avatar.currentClothing[type][1] = clothing[1]
         self.avatar.pirate.setClothesByType(type, clothing[0], clothing[1])
         if self.main.wantNPCViewer:
-            self.texName = self.avatar.getTextureName(type, clothing[0], clothing[1])[0]
+            self.texName = self.avatar.getTextureName(type, clothing[0],
+                                                      clothing[1])[0]
             self.main.guiTextureInfo[type]['text'] = self.texName
             self.main.guiTextureInfo[type]['text_fg'] = (1, 1, 1, 1)
         self.handleClothingChanged()
@@ -498,7 +707,8 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         self.avatar.currentClothing[type][1] = clothing[1]
         self.avatar.pirate.setClothesByType(type, clothing[0], clothing[1])
         if self.main.wantNPCViewer:
-            self.texName = self.avatar.getTextureName(type, clothing[0], clothing[1])[0]
+            self.texName = self.avatar.getTextureName(type, clothing[0],
+                                                      clothing[1])[0]
             self.main.guiTextureInfo[type]['text'] = self.texName
             self.main.guiTextureInfo[type]['text_fg'] = (1, 1, 1, 1)
         self.handleClothingChanged()
@@ -528,7 +738,8 @@ class ClothesGUI(DirectFrame, StateData.StateData):
                         colorButtons[i]['relief'] = DGG.RAISED
 
                     colorButtons[color]['relief'] = DGG.SUNKEN
-        self.main.pirate.setClothesTopColor(clothesTopColor[0], clothesTopColor[1], clothesTopColor[2])
+        self.main.pirate.setClothesTopColor(
+            clothesTopColor[0], clothesTopColor[1], clothesTopColor[2])
         self.main.pirate.model.handleClothesHiding()
 
     def handleSetBotColor(self, color):
@@ -548,7 +759,8 @@ class ClothesGUI(DirectFrame, StateData.StateData):
             else:
                 if color >= 10 and color < 15:
                     clothesBotColor[2] = color
-        self.main.pirate.setClothesBotColor(clothesBotColor[0], clothesBotColor[1], clothesBotColor[2])
+        self.main.pirate.setClothesBotColor(
+            clothesBotColor[0], clothesBotColor[1], clothesBotColor[2])
         self.main.pirate.model.handleClothesHiding()
 
     def generatePics(self, type):
@@ -559,19 +771,23 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         clothingSize = self.getClothingSize(type)
         for i in range(0, clothingSize):
             if i == 0:
-                self.texName = self.avatar.getTextureName(type, self.avatar.currentClothing[type][0], self.avatar.currentClothing[type][1])[0]
+                self.texName = self.avatar.getTextureName(
+                    type, self.avatar.currentClothing[type][0],
+                    self.avatar.currentClothing[type][1])[0]
             if i < 10:
                 prefix = '0'
             else:
                 prefix = ''
             self.avatar.pirate.setHpr(180, 0, 0)
             self.notify.info('SCREENSHOT %d__%s__FRONT' % (i, self.texName))
-            uFilename = type + '_' + prefix + str(i) + '__' + self.texName + '__FRONT.' + base.screenshotExtension
+            uFilename = type + '_' + prefix + str(
+                i) + '__' + self.texName + '__FRONT.' + base.screenshotExtension
             base.graphicsEngine.renderFrame()
             base.screenshot(namePrefix=uFilename, defaultFilename=0)
             self.avatar.pirate.setHpr(0, 0, 0)
             self.notify.info('SCREENSHOT %d__%s__BACK' % (i, self.texName))
-            uFilename = type + '_' + prefix + str(i) + '__' + self.texName + '__BACK.' + base.screenshotExtension
+            uFilename = type + '_' + prefix + str(
+                i) + '__' + self.texName + '__BACK.' + base.screenshotExtension
             base.graphicsEngine.renderFrame()
             base.screenshot(namePrefix=uFilename, defaultFilename=0)
             self.handleNextClothing(type)
@@ -663,7 +879,8 @@ class ClothesGUI(DirectFrame, StateData.StateData):
     def getNextClothingItem(self, type):
         itemId, textureId, color = self.avatar.currentClothing[type]
         if itemId not in self.avatar.choices[type]:
-            self.notify.error('masad: how did it get here? itemId = %s' % itemId)
+            self.notify.error(
+                'masad: how did it get here? itemId = %s' % itemId)
         itemTextures = self.avatar.choices[type][itemId]
         currentTexIdx = itemTextures.index(textureId)
         texIdx = currentTexIdx + 1
@@ -684,7 +901,8 @@ class ClothesGUI(DirectFrame, StateData.StateData):
     def getLastClothingItem(self, type):
         itemId, textureId, color = self.avatar.currentClothing[type]
         if itemId not in self.avatar.choices[type]:
-            self.notify.error('masad: how did it get here? itemId = %s' % itemId)
+            self.notify.error(
+                'masad: how did it get here? itemId = %s' % itemId)
         itemTextures = self.avatar.choices[type][itemId]
         currentTexIdx = itemTextures.index(textureId)
         texIdx = currentTexIdx - 1
@@ -696,8 +914,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
             textureId = self.avatar.choices[type][itemId][-1]
         else:
             textureId = self.avatar.choices[type][itemId][texIdx]
-        return (
-         itemId, textureId)
+        return (itemId, textureId)
 
     def getNextClothingModel(self, type):
         models = self.avatar.choices[type].keys()
@@ -716,8 +933,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         currIdx = models.index(self.avatar.currentClothing[type][0])
         currIdx -= 1
         itemId = models[currIdx]
-        return (
-         itemId, self.avatar.choices[type][itemId][0])
+        return (itemId, self.avatar.choices[type][itemId][0])
 
     def getNextClothingTexture(self, type):
         itemId = self.avatar.currentClothing[type][0]
@@ -728,8 +944,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
             textureId = itemTextures[0]
         else:
             textureId = itemTextures[texIdx]
-        return (
-         itemId, textureId)
+        return (itemId, textureId)
 
     def getLastClothingTexture(self, type):
         itemId = self.avatar.currentClothing[type][0]
@@ -737,8 +952,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         currTexIdx = itemTextures.index(self.avatar.currentClothing[type][1])
         texIdx = currTexIdx - 1
         textureId = itemTextures[texIdx]
-        return (
-         itemId, textureId)
+        return (itemId, textureId)
 
     def getClothingSize(self, type):
         size = 0
@@ -761,8 +975,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         self.avatar.eyes.show()
 
     def hideOtherClothes(self, type):
-        clothes = [
-         'SHIRT', 'VEST', 'PANT', 'COAT', 'BELT', 'SHOE', 'HAT']
+        clothes = ['SHIRT', 'VEST', 'PANT', 'COAT', 'BELT', 'SHOE', 'HAT']
         clothes.remove(type)
         for i in clothes:
             for k in self.avatar.clothesByType[i]:
@@ -776,12 +989,36 @@ class ClothesGUI(DirectFrame, StateData.StateData):
                 k.show()
 
     def handleClothingChanged(self):
-        self.avatar.currentClothing['HAT'] = self.main.pirate.style.getClothesHat() + [self.main.pirate.style.getHatColor()]
-        self.avatar.currentClothing['SHIRT'] = self.main.pirate.style.getClothesShirt() + [self.main.pirate.style.getClothesTopColor()[0]]
-        self.avatar.currentClothing['VEST'] = self.main.pirate.style.getClothesVest() + [self.main.pirate.style.getClothesTopColor()[1]]
-        self.avatar.currentClothing['COAT'] = self.main.pirate.style.getClothesCoat() + [self.main.pirate.style.getClothesTopColor()[2]]
-        self.avatar.currentClothing['PANT'] = self.main.pirate.style.getClothesPant() + [self.main.pirate.style.getClothesBotColor()[0]]
-        self.avatar.currentClothing['BELT'] = self.main.pirate.style.getClothesBelt() + [self.main.pirate.style.getClothesBotColor()[1]]
-        self.avatar.currentClothing['SHOE'] = self.main.pirate.style.getClothesShoe() + [self.main.pirate.style.getClothesBotColor()[2]]
-        self.avatar.currentClothing['HAIR'] = [self.main.pirate.style.getHairHair(), self.main.pirate.style.getHairColor()]
+        self.avatar.currentClothing[
+            'HAT'] = self.main.pirate.style.getClothesHat() + [
+                self.main.pirate.style.getHatColor()
+            ]
+        self.avatar.currentClothing[
+            'SHIRT'] = self.main.pirate.style.getClothesShirt() + [
+                self.main.pirate.style.getClothesTopColor()[0]
+            ]
+        self.avatar.currentClothing[
+            'VEST'] = self.main.pirate.style.getClothesVest() + [
+                self.main.pirate.style.getClothesTopColor()[1]
+            ]
+        self.avatar.currentClothing[
+            'COAT'] = self.main.pirate.style.getClothesCoat() + [
+                self.main.pirate.style.getClothesTopColor()[2]
+            ]
+        self.avatar.currentClothing[
+            'PANT'] = self.main.pirate.style.getClothesPant() + [
+                self.main.pirate.style.getClothesBotColor()[0]
+            ]
+        self.avatar.currentClothing[
+            'BELT'] = self.main.pirate.style.getClothesBelt() + [
+                self.main.pirate.style.getClothesBotColor()[1]
+            ]
+        self.avatar.currentClothing[
+            'SHOE'] = self.main.pirate.style.getClothesShoe() + [
+                self.main.pirate.style.getClothesBotColor()[2]
+            ]
+        self.avatar.currentClothing['HAIR'] = [
+            self.main.pirate.style.getHairHair(),
+            self.main.pirate.style.getHairColor()
+        ]
         self.avatar.handleClothesHiding()

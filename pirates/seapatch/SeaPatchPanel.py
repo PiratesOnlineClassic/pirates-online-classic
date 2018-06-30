@@ -24,9 +24,7 @@ class SeaPatchPanel(AppShell):
         taskMgr.remove('tkLoop')
         spawnTkLoop()
         DGG.INITOPT = Pmw_INITOPT
-        optiondefs = (
-         (
-          'title', self.appname, None),)
+        optiondefs = (('title', self.appname, None),)
         self.defineoptions(kw, optiondefs)
         AppShell.__init__(self)
         self.initialiseoptions(SeaPatchPanel)
@@ -41,42 +39,96 @@ class SeaPatchPanel(AppShell):
         mainFrame = Frame(interior)
         mainFrame.pack()
         fileMenu = self.menuBar.component('File-menu')
-        fileMenu.insert_command(fileMenu.index('Quit'), label='Save Params', command=self.saveWave)
-        fileMenu.insert_command(fileMenu.index('Quit'), label='Load Params', command=self.loadWave)
+        fileMenu.insert_command(
+            fileMenu.index('Quit'), label='Save Params', command=self.saveWave)
+        fileMenu.insert_command(
+            fileMenu.index('Quit'), label='Load Params', command=self.loadWave)
         self.mainNotebook = Pmw.NoteBook(interior)
         self.mainNotebook.pack(fill=BOTH, expand=1)
         geomPage = self.mainNotebook.add('Geometry')
         UVPage = self.mainNotebook.add('UVs')
         shadingPage = self.mainNotebook.add('Shading')
         multiwavePage = self.mainNotebook.add('Multiwave')
-        geomFloaterDefs = (
-         (
-          'Geom', 'Speed', 'Global control of wave speed', self.setOverallSpeed, 0.0, 0.0001), ('Geom', 'Radius', 'Outer Boundary at which wave will completely fade out in amplitude', self.setRadius, 0.0, 0.1), ('Geom', 'Threshold', 'Inner Boundary at which wave will start to fade out its amplitude', self.setThreshold, 0.0, 0.1), ('Geom', 'Height Damping', 'Damp the Bobbing for all floating objects', self.setHDamping, 0.01, 0.01), ('Geom', 'Normal Damping', 'Damp the Rocking for all floating objects', self.setNDamping, 0.01, 0.01))
-        shadingFloaterDefs = (
-         (
-          'Shading', 'Red High', 'Red Value of the High color', self.setHighColorR, 0.0, 0.1), ('Shading', 'Blue High', 'Blue Value of the High color', self.setHighColorB, 0.0, 0.1), ('Shading', 'Green High', 'Green Value of the High color', self.setHighColorG, 0.0, 0.1), ('Shading', 'Alpha High', 'Alpha Value of the High color', self.setHighColorA, 0.0, 0.1), ('Shading', 'Red Low', 'Red Value of the Low color', self.setLowColorR, 0.0, 0.1), ('Shading', 'Blue Low', 'Blue Value of the Low color', self.setLowColorB, 0.0, 0.1), ('Shading', 'Green Low', 'Green Value of the Low color', self.setLowColorG, 0.0, 0.1), ('Shading', 'Alpha Low', 'Alpha Value of the Low color', self.setLowColorA, 0.0, 0.1))
-        UVFloaterDefs = (
-         (
-          'UV', 'UScale', 'Set the U divisor for UV computation', self.setUScale, 0.1, 0.1), ('UV', 'VScale', 'Set the V divisor for UV computation', self.setVScale, 0.1, 0.1), ('UV', 'USpeed', 'The rate at which the texture slides at rest', self.setUSpeed, -100.0, 0.0001), ('UV', 'VSpeed', 'The rate at which the texture slides at rest', self.setVSpeed, -100.0, 0.0001))
-        multiwaveFloaterDefs = (
-         (
-          'MWave', 'Amplitude', 'Amplitude of the waves', self.setMAmplitude, 0.0, 0.01), ('MWave', 'Wavelength', 'Wavelength', self.setMWavelength, -1000.0, 0.0001), ('MWave', 'Speed', 'Speed', self.setMSpeed, 0.01, 0.01), ('MWave', 'WaveDirX', 'Wave X Direction', self.setWaveXDir, -100, 0.01), ('MWave', 'WaveDirY', 'Wave Y Direction', self.setWaveYDir, -100, 0.01), ('MWave', 'Choppiness', 'Wave Choppy Factor', self.setChoppyK, 0.01, 0.01))
+        geomFloaterDefs = ((
+            'Geom', 'Speed', 'Global control of wave speed',
+            self.setOverallSpeed, 0.0, 0.0001
+        ), (
+            'Geom', 'Radius',
+            'Outer Boundary at which wave will completely fade out in amplitude',
+            self.setRadius, 0.0, 0.1
+        ), ('Geom', 'Threshold',
+            'Inner Boundary at which wave will start to fade out its amplitude',
+            self.setThreshold, 0.0, 0.1),
+                           ('Geom', 'Height Damping',
+                            'Damp the Bobbing for all floating objects',
+                            self.setHDamping, 0.01, 0.01),
+                           ('Geom', 'Normal Damping',
+                            'Damp the Rocking for all floating objects',
+                            self.setNDamping, 0.01, 0.01))
+        shadingFloaterDefs = (('Shading', 'Red High',
+                               'Red Value of the High color',
+                               self.setHighColorR, 0.0,
+                               0.1), ('Shading', 'Blue High',
+                                      'Blue Value of the High color',
+                                      self.setHighColorB, 0.0,
+                                      0.1), ('Shading', 'Green High',
+                                             'Green Value of the High color',
+                                             self.setHighColorG, 0.0, 0.1),
+                              ('Shading', 'Alpha High',
+                               'Alpha Value of the High color',
+                               self.setHighColorA, 0.0,
+                               0.1), ('Shading', 'Red Low',
+                                      'Red Value of the Low color',
+                                      self.setLowColorR, 0.0, 0.1),
+                              ('Shading', 'Blue Low',
+                               'Blue Value of the Low color', self.setLowColorB,
+                               0.0, 0.1), ('Shading', 'Green Low',
+                                           'Green Value of the Low color',
+                                           self.setLowColorG, 0.0, 0.1),
+                              ('Shading', 'Alpha Low',
+                               'Alpha Value of the Low color',
+                               self.setLowColorA, 0.0, 0.1))
+        UVFloaterDefs = (('UV', 'UScale',
+                          'Set the U divisor for UV computation',
+                          self.setUScale, 0.1, 0.1),
+                         ('UV', 'VScale',
+                          'Set the V divisor for UV computation',
+                          self.setVScale, 0.1, 0.1),
+                         ('UV', 'USpeed',
+                          'The rate at which the texture slides at rest',
+                          self.setUSpeed, -100.0, 0.0001),
+                         ('UV', 'VSpeed',
+                          'The rate at which the texture slides at rest',
+                          self.setVSpeed, -100.0, 0.0001))
+        multiwaveFloaterDefs = (('MWave', 'Amplitude', 'Amplitude of the waves',
+                                 self.setMAmplitude, 0.0,
+                                 0.01), ('MWave', 'Wavelength', 'Wavelength',
+                                         self.setMWavelength, -1000.0, 0.0001),
+                                ('MWave', 'Speed', 'Speed', self.setMSpeed,
+                                 0.01, 0.01), ('MWave', 'WaveDirX',
+                                               'Wave X Direction',
+                                               self.setWaveXDir, -100, 0.01),
+                                ('MWave', 'WaveDirY', 'Wave Y Direction',
+                                 self.setWaveYDir, -100, 0.01),
+                                ('MWave', 'Choppiness', 'Wave Choppy Factor',
+                                 self.setChoppyK, 0.01, 0.01))
         self.createFloaters(geomPage, geomFloaterDefs)
         self.createFloaters(UVPage, UVFloaterDefs)
         self.createFloaters(shadingPage, shadingFloaterDefs)
-        self.createOptionMenu(multiwavePage, 'Multiwave', 'Wave Number', 'Select wave number', ('1',
-                                                                                                '2',
-                                                                                                '3',
-                                                                                                '4',
-                                                                                                '5',
-                                                                                                '6'), self.selectWave)
-        self.createCheckbutton(multiwavePage, 'Multiwave', 'Enable', 'Turn On-Off this particular wave', self.switchWaves, 1)
-        self.createOptionMenu(multiwavePage, 'Multiwave', 'Wave Target', "Specify the wave's target", ('Height (Z)',
-                                                                                                       'U',
-                                                                                                       'V'), self.selectWaveTarget)
-        self.createOptionMenu(multiwavePage, 'Multiwave', 'Wave Func', "Specify the wave's function", ('Sin',
-                                                                                                       'Noise'), self.selectWaveFunc)
-        self.createCheckbutton(geomPage, 'Geom', 'WireFrame', 'Toggle WireFrame', self.toggleWF, 0)
+        self.createOptionMenu(multiwavePage, 'Multiwave', 'Wave Number',
+                              'Select wave number',
+                              ('1', '2', '3', '4', '5', '6'), self.selectWave)
+        self.createCheckbutton(multiwavePage, 'Multiwave', 'Enable',
+                               'Turn On-Off this particular wave',
+                               self.switchWaves, 1)
+        self.createOptionMenu(multiwavePage, 'Multiwave', 'Wave Target',
+                              "Specify the wave's target",
+                              ('Height (Z)', 'U', 'V'), self.selectWaveTarget)
+        self.createOptionMenu(multiwavePage, 'Multiwave', 'Wave Func',
+                              "Specify the wave's function", ('Sin', 'Noise'),
+                              self.selectWaveFunc)
+        self.createCheckbutton(geomPage, 'Geom', 'WireFrame',
+                               'Toggle WireFrame', self.toggleWF, 0)
         self.createFloaters(multiwavePage, multiwaveFloaterDefs)
 
     def setPatch(self, patch_var):
@@ -158,17 +210,20 @@ class SeaPatchPanel(AppShell):
             self.patch.patch.setWaveTarget(self.selected_wave, SeaPatchRoot.WTZ)
         else:
             if target == 'U':
-                self.patch.patch.setWaveTarget(self.selected_wave, SeaPatchRoot.WTU)
+                self.patch.patch.setWaveTarget(self.selected_wave,
+                                               SeaPatchRoot.WTU)
             else:
                 if target == 'V':
-                    self.patch.patch.setWaveTarget(self.selected_wave, SeaPatchRoot.WTV)
+                    self.patch.patch.setWaveTarget(self.selected_wave,
+                                                   SeaPatchRoot.WTV)
 
     def selectWaveFunc(self, func):
         if func == 'Sin':
             self.patch.patch.setWaveFunc(self.selected_wave, SeaPatchRoot.WFSin)
         else:
             if func == 'Noise':
-                self.patch.patch.setWaveFunc(self.selected_wave, SeaPatchRoot.WFNoise)
+                self.patch.patch.setWaveFunc(self.selected_wave,
+                                             SeaPatchRoot.WFNoise)
 
     def selectWave(self, type):
         self.selected_wave = int(type) - 1
@@ -192,14 +247,16 @@ class SeaPatchPanel(AppShell):
                 self.patch.patch.disableWave(self.selected_wave)
 
     def loadWave(self):
-        fileName = askopenfilename(filetypes=[('SPF', 'spf')], title='Open SeaPatch File')
+        fileName = askopenfilename(
+            filetypes=[('SPF', 'spf')], title='Open SeaPatch File')
         if not fileName:
             return
         self.patch.loadSeaPatchFile(fileName)
         self.updateWidgets()
 
     def saveWave(self):
-        fileName = asksaveasfilename(filetypes=[('SPF', 'spf')], title='Save SeaPatch File')
+        fileName = asksaveasfilename(
+            filetypes=[('SPF', 'spf')], title='Save SeaPatch File')
         if not fileName:
             return
         out_file = open(fileName + '.spf', 'w')
@@ -294,11 +351,13 @@ class SeaPatchPanel(AppShell):
 
     def setWaveXDir(self, value):
         wd = self.patch.patch.getWaveDirection(self.selected_wave)
-        self.patch.patch.setWaveDirection(self.selected_wave, Vec2(value, wd[1]))
+        self.patch.patch.setWaveDirection(self.selected_wave, Vec2(
+            value, wd[1]))
 
     def setWaveYDir(self, value):
         wd = self.patch.patch.getWaveDirection(self.selected_wave)
-        self.patch.patch.setWaveDirection(self.selected_wave, Vec2(wd[0], value))
+        self.patch.patch.setWaveDirection(self.selected_wave, Vec2(
+            wd[0], value))
 
     def toggleWF(self):
         base.toggleWireframe()
@@ -306,7 +365,14 @@ class SeaPatchPanel(AppShell):
     def SetIt(self):
         pass
 
-    def createCheckbutton(self, parent, category, text, balloonHelp, command, initialState, side='top'):
+    def createCheckbutton(self,
+                          parent,
+                          category,
+                          text,
+                          balloonHelp,
+                          command,
+                          initialState,
+                          side='top'):
         bool = BooleanVar()
         bool.set(initialState)
         widget = Checkbutton(parent, text=text, anchor=W, variable=bool)
@@ -317,8 +383,10 @@ class SeaPatchPanel(AppShell):
         self.variableDict[category + '-' + text] = bool
         return widget
 
-    def createRadiobutton(self, parent, side, category, text, balloonHelp, variable, value, command):
-        widget = Radiobutton(parent, text=text, anchor=W, variable=variable, value=value)
+    def createRadiobutton(self, parent, side, category, text, balloonHelp,
+                          variable, value, command):
+        widget = Radiobutton(
+            parent, text=text, anchor=W, variable=variable, value=value)
         widget['command'] = command
         widget.pack(side=side, fill=X)
         self.bind(widget, balloonHelp)
@@ -328,76 +396,128 @@ class SeaPatchPanel(AppShell):
     def createFloaters(self, parent, widgetDefinitions):
         widgets = []
         for category, label, balloonHelp, command, min, resolution in widgetDefinitions:
-            widgets.append(self.createFloater(parent, category, label, balloonHelp, command, min, resolution))
+            widgets.append(
+                self.createFloater(parent, category, label, balloonHelp,
+                                   command, min, resolution))
 
         return widgets
 
-    def createFloater(self, parent, category, text, balloonHelp, command=None, min=0.0, resolution=None, numDigits=4, **kw):
+    def createFloater(self,
+                      parent,
+                      category,
+                      text,
+                      balloonHelp,
+                      command=None,
+                      min=0.0,
+                      resolution=None,
+                      numDigits=4,
+                      **kw):
         kw['text'] = text
         kw['min'] = min
         kw['resolution'] = resolution
         kw['numDigits'] = numDigits
-        widget = apply(Floater.Floater, (parent,), kw)
+        widget = Floater.Floater(*(parent,), **kw)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget, balloonHelp)
         self.widgetDict[category + '-' + text] = widget
         return widget
 
-    def createAngleDial(self, parent, category, text, balloonHelp, command=None, **kw):
+    def createAngleDial(self,
+                        parent,
+                        category,
+                        text,
+                        balloonHelp,
+                        command=None,
+                        **kw):
         kw['text'] = text
         kw['style'] = 'mini'
-        widget = apply(Dial.AngleDial, (parent,), kw)
+        widget = Dial.AngleDial(*(parent,), **kw)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget, balloonHelp)
         self.widgetDict[category + '-' + text] = widget
         return widget
 
-    def createSlider(self, parent, category, text, balloonHelp, command=None, min=0.0, max=1.0, resolution=0.001, **kw):
+    def createSlider(self,
+                     parent,
+                     category,
+                     text,
+                     balloonHelp,
+                     command=None,
+                     min=0.0,
+                     max=1.0,
+                     resolution=0.001,
+                     **kw):
         kw['text'] = text
         kw['min'] = min
         kw['max'] = max
         kw['resolution'] = resolution
-        widget = apply(Slider.Slider, (parent,), kw)
+        widget = Slider.Slider(*(parent,), **kw)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget, balloonHelp)
         self.widgetDict[category + '-' + text] = widget
         return widget
 
-    def createVector2Entry(self, parent, category, text, balloonHelp, command=None, **kw):
+    def createVector2Entry(self,
+                           parent,
+                           category,
+                           text,
+                           balloonHelp,
+                           command=None,
+                           **kw):
         kw['text'] = text
-        widget = apply(VectorWidgets.Vector2Entry, (parent,), kw)
+        widget = VectorWidgets.Vector2Entry(*(parent,), **kw)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget, balloonHelp)
         self.widgetDict[category + '-' + text] = widget
         return widget
 
-    def createVector3Entry(self, parent, category, text, balloonHelp, command=None, **kw):
+    def createVector3Entry(self,
+                           parent,
+                           category,
+                           text,
+                           balloonHelp,
+                           command=None,
+                           **kw):
         kw['text'] = text
-        widget = apply(VectorWidgets.Vector3Entry, (parent,), kw)
+        widget = VectorWidgets.Vector3Entry(*(parent,), **kw)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget, balloonHelp)
         self.widgetDict[category + '-' + text] = widget
         return widget
 
-    def createColorEntry(self, parent, category, text, balloonHelp, command=None, **kw):
+    def createColorEntry(self,
+                         parent,
+                         category,
+                         text,
+                         balloonHelp,
+                         command=None,
+                         **kw):
         kw['text'] = text
-        widget = apply(VectorWidgets.ColorEntry, (parent,), kw)
+        widget = VectorWidgets.ColorEntry(*(parent,), **kw)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget, balloonHelp)
         self.widgetDict[category + '-' + text] = widget
         return widget
 
-    def createOptionMenu(self, parent, category, text, balloonHelp, items, command):
+    def createOptionMenu(self, parent, category, text, balloonHelp, items,
+                         command):
         optionVar = StringVar()
         if len(items) > 0:
             optionVar.set(items[0])
-        widget = Pmw.OptionMenu(parent, labelpos=W, label_text=text, label_width=12, menu_tearoff=1, menubutton_textvariable=optionVar, items=items)
+        widget = Pmw.OptionMenu(
+            parent,
+            labelpos=W,
+            label_text=text,
+            label_width=12,
+            menu_tearoff=1,
+            menubutton_textvariable=optionVar,
+            items=items)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget.component('menubutton'), balloonHelp)
@@ -405,8 +525,23 @@ class SeaPatchPanel(AppShell):
         self.variableDict[category + '-' + text] = optionVar
         return optionVar
 
-    def createComboBox(self, parent, category, text, balloonHelp, items, command, history=0):
-        widget = Pmw.ComboBox(parent, labelpos=W, label_text=text, label_anchor='w', label_width=12, entry_width=16, history=history, scrolledlist_items=items)
+    def createComboBox(self,
+                       parent,
+                       category,
+                       text,
+                       balloonHelp,
+                       items,
+                       command,
+                       history=0):
+        widget = Pmw.ComboBox(
+            parent,
+            labelpos=W,
+            label_text=text,
+            label_anchor='w',
+            label_width=12,
+            entry_width=16,
+            history=history,
+            scrolledlist_items=items)
         widget.configure(entryfield_entry_state='disabled')
         if len(items) > 0:
             widget.selectitem(items[0])

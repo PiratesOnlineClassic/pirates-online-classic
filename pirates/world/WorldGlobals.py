@@ -26,11 +26,13 @@ GAME_AREA_PVP_GRID_SIZE = 10
 GAME_AREA_PVP_GRID_RADIUS = 2
 PiratesWorldSceneFileBase = config.GetString('default-world', 'piratesWorld')
 PiratesWorldSceneFile = PiratesWorldSceneFileBase + '.py'
-PiratesTutorialSceneFileBase = config.GetString('tutorial-world', 'RambleshackWorld')
+PiratesTutorialSceneFileBase = config.GetString('tutorial-world',
+                                                'RambleshackWorld')
 PiratesTutorialSceneFile = PiratesTutorialSceneFileBase + '.py'
 IslandSceneFiles = {
     'Port Royale': 'PortRoyale.scene.py',
-    'Cuba': 'Cuba.scene.py'}
+    'Cuba': 'Cuba.scene.py'
+}
 OCEAN = 1
 ISLAND = 2
 TOWN = 3
@@ -74,7 +76,8 @@ HOLLOWED_WOODS = 3001
 __locationNames = {
     'PortRoyal': PORT_ROYAL,
     'Bilgewater': BILGEWATER,
-    'TheRock': THE_ROCK}
+    'TheRock': THE_ROCK
+}
 __islandNametagHeight = {
     'Padres Del Fuego': 1200,
     'Port Royal': 1300,
@@ -88,7 +91,8 @@ __islandNametagHeight = {
     'Isla Perdida': 800,
     'Driftwood Island': 200,
     'Isla Tormenta': 200,
-    'Cutthroat Isle': 500}
+    'Cutthroat Isle': 500
+}
 
 
 def getNametagHeight(name):
@@ -98,20 +102,12 @@ def getNametagHeight(name):
 def getNametagScale(name):
     return 35.0
 
+
 ObjectAnimRates = {
-    'Default': [
-        0.8,
-        1.0],
-    'models/vegetation/tree_b_leaf_idle': [
-        0.4,
-        0.7]}
-ObjectAnimRates_new = {
-    'Default': [
-        0.8,
-        1.0],
-    'tree_b': [
-        0.4,
-        0.7]}
+    'Default': [0.8, 1.0],
+    'models/vegetation/tree_b_leaf_idle': [0.4, 0.7]
+}
+ObjectAnimRates_new = {'Default': [0.8, 1.0], 'tree_b': [0.4, 0.7]}
 
 
 def getLocationValue(name):

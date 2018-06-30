@@ -7,12 +7,20 @@ from otp.distributed.OtpDoGlobals import *
 from otp.distributed.OTPInternalRepository import OTPInternalRepository
 from pirates.uberdog.WebhooksUD import PiratesWebhookManager
 
+
 class PiratesInternalRepository(OTPInternalRepository):
     GameGlobalsId = OTP_DO_ID_PIRATES
     dbId = 4003
 
-    def __init__(self, baseChannel, serverId=None, dcFileNames = None, dcSuffix='AI', connectMethod=None, threadedNet=None):
-        OTPInternalRepository.__init__(self, baseChannel, serverId, dcFileNames, dcSuffix, connectMethod, threadedNet)
+    def __init__(self,
+                 baseChannel,
+                 serverId=None,
+                 dcFileNames=None,
+                 dcSuffix='AI',
+                 connectMethod=None,
+                 threadedNet=None):
+        OTPInternalRepository.__init__(self, baseChannel, serverId, dcFileNames,
+                                       dcSuffix, connectMethod, threadedNet)
         self.webhookManager = PiratesWebhookManager(self)
         self._registerNetMessages()
 
@@ -65,14 +73,16 @@ class PiratesInternalRepository(OTPInternalRepository):
         accountId = self.getAccountIdFromSender() or 0
 
         # Log to event logger
-        self.writeServerEvent('suspicious-event',
+        self.writeServerEvent(
+            'suspicious-event',
             message=message,
             avatarId=avatarId,
             accountId=accountId,
             **kwargs)
 
         # Log message to Discord
-        self.webhookManager.logPotentialHacker(avatarId, accountId, message, **kwargs)
+        self.webhookManager.logPotentialHacker(avatarId, accountId, message,
+                                               **kwargs)
 
         if kickChannel:
             self.kickChannel(kickChannel)
@@ -83,7 +93,8 @@ class PiratesInternalRepository(OTPInternalRepository):
         avatarId = self.getAvatarIdFromSender() or 0
         accountId = self.getAccountIdFromSender() or 0
 
-        senderName =  districtName = self.distributedDistrict.getName() if hasattr(self, 'distributedDistrict') else None
+        senderName = districtName = self.distributedDistrict.getName(
+        ) if hasattr(self, 'distributedDistrict') else None
         if not senderName:
             if self.dcSuffix == 'AI':
                 senderName = 'AI'
@@ -91,7 +102,8 @@ class PiratesInternalRepository(OTPInternalRepository):
                 senderName = 'UberDOG'
 
         self.centralLogger.reportException(senderName, trace, False)
-        self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
+        self.notify.warning('internal-exception: %s (%s)' %
+                            (repr(e), self.getAvatarIdFromSender()))
         print(trace)
 
         self.webhookManager.logServerException(e, avatarId, accountId)

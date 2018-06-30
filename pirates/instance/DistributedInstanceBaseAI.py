@@ -6,8 +6,10 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 from pirates.world.ClientAreaBuilderAI import ClientAreaBuilderAI
 
+
 class DistributedInstanceBaseAI(DistributedObjectAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInstanceBaseAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedInstanceBaseAI')
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
@@ -69,7 +71,8 @@ class DistributedInstanceBaseAI(DistributedObjectAI):
         return self.type
 
     def d_setSpawnInfo(self, avatarId, xPos, yPos, zPos, h, spawnZone, parents):
-        self.sendUpdateToAvatarId(avatarId, 'setSpawnInfo', [xPos, yPos, zPos, h, spawnZone, parents])
+        self.sendUpdateToAvatarId(avatarId, 'setSpawnInfo',
+                                  [xPos, yPos, zPos, h, spawnZone, parents])
 
     def addSpawnPt(self, area, spawnPt, index=None):
         self.spawnPts[area] = self.spawnPts.setdefault(area, {})
@@ -102,11 +105,19 @@ class DistributedInstanceBaseAI(DistributedObjectAI):
     def setCanBePrivate(self, instance):
         pass
 
-    def d_sendLocalAvatarToJail(self, avatarId, jailDoId, jailWorldParentId, jailWorldZone):
-        self.sendUpdateToAvatarId(avatarId, 'sendLocalAvatarToJail', [jailDoId, jailWorldParentId, jailWorldZone])
+    def d_sendLocalAvatarToJail(self, avatarId, jailDoId, jailWorldParentId,
+                                jailWorldZone):
+        self.sendUpdateToAvatarId(avatarId, 'sendLocalAvatarToJail',
+                                  [jailDoId, jailWorldParentId, jailWorldZone])
 
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
-        self.generateChildWithRequiredAndId(do, self.air.allocateChannel(), self.doId, zoneId, optionalFields)
+        self.generateChildWithRequiredAndId(do, self.air.allocateChannel(),
+                                            self.doId, zoneId, optionalFields)
 
-    def generateChildWithRequiredAndId(self, do, doId, parentId, zoneId, optionalFields=[]):
+    def generateChildWithRequiredAndId(self,
+                                       do,
+                                       doId,
+                                       parentId,
+                                       zoneId,
+                                       optionalFields=[]):
         do.generateWithRequiredAndId(doId, parentId, zoneId, optionalFields)

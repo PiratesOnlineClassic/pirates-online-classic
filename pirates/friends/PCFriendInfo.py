@@ -7,7 +7,6 @@ from pirates.pirate.PAvatarHandle import PAvatarHandle
 
 
 class PCFriendInfo(FriendInfo, PAvatarHandle):
-    
 
     @classmethod
     def makeFromFriendInfo(cls, info):
@@ -31,8 +30,7 @@ class PCFriendInfo(FriendInfo, PAvatarHandle):
         self.bandId = (0, 0)
 
     def setBandId(self, bandMgrId, bandId):
-        self.bandId = (
-         bandMgrId, bandId)
+        self.bandId = (bandMgrId, bandId)
 
     def getBandId(self):
         return self.bandId
@@ -42,6 +40,14 @@ class PCFriendInfo(FriendInfo, PAvatarHandle):
         localAvatar.sendTeleportQuery(sendToId, localShardId)
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
-    def sendTeleportResponse(self, available, shardId, instanceDoId, areaDoId, sendToId=None):
-        localAvatar.sendTeleportResponse(available, shardId, instanceDoId, areaDoId, sendToId)
+    def sendTeleportResponse(self,
+                             available,
+                             shardId,
+                             instanceDoId,
+                             areaDoId,
+                             sendToId=None):
+        localAvatar.sendTeleportResponse(available, shardId, instanceDoId,
+                                         areaDoId, sendToId)
+
+
 # okay decompiling .\pirates\friends\PCFriendInfo.pyc

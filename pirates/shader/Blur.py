@@ -55,7 +55,14 @@ class DependencyArray:
 
 class RenderToTexture(DirectObject):
 
-    def __init__(self, rtt_name, width=512, height=512, order=0, format=0, clear_color=Vec4(0.0, 0.0, 0.0, 1.0), dependency_array=None):
+    def __init__(self,
+                 rtt_name,
+                 width=512,
+                 height=512,
+                 order=0,
+                 format=0,
+                 clear_color=Vec4(0.0, 0.0, 0.0, 1.0),
+                 dependency_array=None):
         self.rtt_name = rtt_name
         self.width = width
         self.height = height
@@ -118,7 +125,8 @@ class RenderToTexture(DirectObject):
     def __createBuffer(self):
         state = False
         self.__destroyBuffer()
-        texture_buffer = base.win.makeTextureBuffer(self.rtt_name, self.width, self.height)
+        texture_buffer = base.win.makeTextureBuffer(self.rtt_name, self.width,
+                                                    self.height)
         if texture_buffer:
             texture_buffer.setClearColor(self.clear_color)
             texture_buffer.setSort(self.order)
@@ -166,7 +174,8 @@ class Glow(DirectObject):
             if gbuffer:
                 self.success = True
                 self.glow_camera = Camera('glow_camera')
-                self.glow_camera_node_path = self.scene.attachNewNode(self.glow_camera)
+                self.glow_camera_node_path = self.scene.attachNewNode(
+                    self.glow_camera)
                 self.glow_camera_node_path.node().setScene(self.scene)
                 camera_parent = self.camera.getParent()
                 self.glow_camera_node_path.reparentTo(camera_parent)
@@ -186,9 +195,19 @@ class Glow(DirectObject):
                 glow_rtt.saveCard(self.card)
                 if self.add and self.card:
                     self.card.reparentTo(render2d)
-                    self.card.setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
+                    self.card.setAttrib(
+                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
 
-    def __init__(self, width, height, source_rtt, scene, camera, add=0, order=0, format=0, glitter=1):
+    def __init__(self,
+                 width,
+                 height,
+                 source_rtt,
+                 scene,
+                 camera,
+                 add=0,
+                 order=0,
+                 format=0,
+                 glitter=1):
         self.first_tick = True
         dependency_array = DependencyArray(self.createCallback)
         self.dependency_array = dependency_array
@@ -204,7 +223,13 @@ class Glow(DirectObject):
         self.scene = scene
         self.camera = camera
         self.glitter = glitter
-        glow_rtt = RenderToTexture('glow', width, height, order, format, dependency_array=dependency_array)
+        glow_rtt = RenderToTexture(
+            'glow',
+            width,
+            height,
+            order,
+            format,
+            dependency_array=dependency_array)
         self.glow_rtt = glow_rtt
         dependency_array.enable(True)
         dependency_array.checkDependencies()
@@ -228,7 +253,8 @@ class Glow(DirectObject):
         if self.hdr:
             if self.glitter:
                 maximum_range = 0.14
-                factor = 1, 1.0 + (random.random() * maximum_range - maximum_range / 2.0)
+                factor = 1, 1.0 + (
+                    random.random() * maximum_range - maximum_range / 2.0)
             else:
                 angle = distance % 360.0
                 angle *= math.pi / 180.0
@@ -377,7 +403,9 @@ class Blur(DirectObject):
                 lcard.setShader(self.luminance_shader)
                 lcard.reparentTo(lscene)
                 if self.add_glow and self.glow_rtt:
-                    lcard.setShaderInput(self.glow_name, self.glow_rtt.getTextureBuffer().getTexture())
+                    lcard.setShaderInput(
+                        self.glow_name,
+                        self.glow_rtt.getTextureBuffer().getTexture())
                     self.lcard = lcard
                     self.setGlowFactor(self.glow_factor)
                 luminance_rtt.saveCamera(lcamera)
@@ -421,7 +449,9 @@ class Blur(DirectObject):
             tcard.setShaderInput(self.factors_name, self.factors)
             tcard.setShaderInput(self.original_name, original.getTexture())
             if self.average:
-                tcard.setShaderInput(self.average_name, self.a1_rtt.getTextureBuffer().getTexture())
+                tcard.setShaderInput(
+                    self.average_name,
+                    self.a1_rtt.getTextureBuffer().getTexture())
             if self.hdr_output:
                 tcard.reparentTo(render2d)
             if self.debug_keys:
@@ -429,14 +459,25 @@ class Blur(DirectObject):
                 self.accept('shift-9', self.toggleDisplay)
 
             def update_slider(slider, update_function):
-                string = slider.label + ' %.5f' % (slider['value'] * slider.parameter_scale)
+                string = slider.label + ' %.5f' % (
+                    slider['value'] * slider.parameter_scale)
                 slider['text'] = string
                 update_function(slider['value'])
 
-            def create_slider(update_function, default_value, x, y, resolution, label):
-                slider = DirectSlider(parent=None, command=update_slider, thumb_relief=DGG.FLAT, pos=(x, 0.0, y), text_align=TextNode.ARight, text_scale=(0.1,
-                                                                                                                                                          0.1), text_pos=(0.5,
-                                                                                                                                                                          0.1), scale=0.5, pageSize=resolution, text='default', value=default_value)
+            def create_slider(update_function, default_value, x, y, resolution,
+                              label):
+                slider = DirectSlider(
+                    parent=None,
+                    command=update_slider,
+                    thumb_relief=DGG.FLAT,
+                    pos=(x, 0.0, y),
+                    text_align=TextNode.ARight,
+                    text_scale=(0.1, 0.1),
+                    text_pos=(0.5, 0.1),
+                    scale=0.5,
+                    pageSize=resolution,
+                    text='default',
+                    value=default_value)
                 slider.label = label
                 slider['extraArgs'] = [slider, update_function]
                 slider.parameter_scale = 1.0
@@ -447,35 +488,45 @@ class Blur(DirectObject):
             x_increment = 1.1
             y_increment = -0.15
             resolution = 0.02
-            slider = create_slider(self.updateExposure, self.exposure, x, y, resolution, 'exposure')
+            slider = create_slider(self.updateExposure, self.exposure, x, y,
+                                   resolution, 'exposure')
             slider.parameter_scale = self.exposure_scale
             self.slider_array.append(slider)
             y += y_increment
-            slider = create_slider(self.updateExposure2, self.exposure2, x, y, resolution, 'blurred exposure')
+            slider = create_slider(self.updateExposure2, self.exposure2, x, y,
+                                   resolution, 'blurred exposure')
             slider.parameter_scale = self.exposure_scale
             self.slider_array.append(slider)
             y += y_increment
-            slider = create_slider(self.updateGamma, self.gamma, x, y, resolution, 'gamma')
+            slider = create_slider(self.updateGamma, self.gamma, x, y,
+                                   resolution, 'gamma')
             slider.parameter_scale = self.gamma_scale
             self.slider_array.append(slider)
             y += y_increment
-            slider = create_slider(self.updateFactor, self.factor, x, y, resolution, 'factor')
+            slider = create_slider(self.updateFactor, self.factor, x, y,
+                                   resolution, 'factor')
             slider.parameter_scale = self.factor_scale
             self.slider_array.append(slider)
             y += y_increment
-            slider = create_slider(self.updateFactor2, self.factor2, x, y, resolution, 'blurred factor')
+            slider = create_slider(self.updateFactor2, self.factor2, x, y,
+                                   resolution, 'blurred factor')
             slider.parameter_scale = self.factor_scale
             self.slider_array.append(slider)
             y += y_increment
-            slider = create_slider(self.updateMinimumExposure, self.minimum_exposure, x, y, resolution, 'minimum exposure')
+            slider = create_slider(self.updateMinimumExposure,
+                                   self.minimum_exposure, x, y, resolution,
+                                   'minimum exposure')
             slider.parameter_scale = self.minimum_exposure_scale
             self.slider_array.append(slider)
             y += y_increment
-            slider = create_slider(self.updateMaximumExposure, self.maximum_exposure, x, y, resolution, 'maximum exposure')
+            slider = create_slider(self.updateMaximumExposure,
+                                   self.maximum_exposure, x, y, resolution,
+                                   'maximum exposure')
             slider.parameter_scale = self.maximum_exposure_scale
             self.slider_array.append(slider)
             y += y_increment
-            slider = create_slider(self.updateHdrFactor, self.hdr_factor, x, y, resolution, 'hdr factor')
+            slider = create_slider(self.updateHdrFactor, self.hdr_factor, x, y,
+                                   resolution, 'hdr factor')
             slider.parameter_scale = self.hdr_factor_scale
             self.slider_array.append(slider)
             y += y_increment
@@ -488,7 +539,19 @@ class Blur(DirectObject):
         self.displaySliders(self.display_sliders)
         return
 
-    def __init__(self, width, height, source_rtt, luminance=1, add=0, order=-1, format=0, hdr=1, hdr_output=1, add_glow=0, glow_rtt=0, average=0):
+    def __init__(self,
+                 width,
+                 height,
+                 source_rtt,
+                 luminance=1,
+                 add=0,
+                 order=-1,
+                 format=0,
+                 hdr=1,
+                 hdr_output=1,
+                 add_glow=0,
+                 glow_rtt=0,
+                 average=0):
         DirectObject.__init__(self)
         self.debug_keys = base.config.GetInt('want-hdr-development', 0)
         self.display = 1
@@ -571,7 +634,8 @@ class Blur(DirectObject):
         self.luminance_shader = None
         if luminance:
             if add_glow:
-                self.luminance_shader = self.loadShader('luminance_plus_glow.cg')
+                self.luminance_shader = self.loadShader(
+                    'luminance_plus_glow.cg')
             else:
                 self.luminance_shader = self.loadShader('luminance.cg')
             self.shader_array.append(self.luminance_shader)
@@ -587,33 +651,89 @@ class Blur(DirectObject):
         self.average_shader = self.loadShader('average.cg')
         self.shader_array.append(self.average_shader)
         if luminance:
-            self.luminance_rtt = RenderToTexture('luminance', width, height, order - 3, format, dependency_array=dependency_array)
+            self.luminance_rtt = RenderToTexture(
+                'luminance',
+                width,
+                height,
+                order - 3,
+                format,
+                dependency_array=dependency_array)
             self.rtt_array.append(self.luminance_rtt)
-        self.x_rtt = RenderToTexture('xblur', width, height, order - 2, format, dependency_array=dependency_array)
+        self.x_rtt = RenderToTexture(
+            'xblur',
+            width,
+            height,
+            order - 2,
+            format,
+            dependency_array=dependency_array)
         self.rtt_array.append(self.x_rtt)
-        self.b_rtt = RenderToTexture('yblur', width, height, order - 1, format, dependency_array=dependency_array)
+        self.b_rtt = RenderToTexture(
+            'yblur',
+            width,
+            height,
+            order - 1,
+            format,
+            dependency_array=dependency_array)
         self.rtt_array.append(self.b_rtt)
         if hdr:
-            self.t_rtt = RenderToTexture('tonemap', width, height, order, format, dependency_array=dependency_array)
+            self.t_rtt = RenderToTexture(
+                'tonemap',
+                width,
+                height,
+                order,
+                format,
+                dependency_array=dependency_array)
             self.rtt_array.append(self.t_rtt)
         if self.average:
             order -= 5
-            self.a256_rtt = RenderToTexture('a256x256', 256, 256, order - 4, format, dependency_array=dependency_array)
+            self.a256_rtt = RenderToTexture(
+                'a256x256',
+                256,
+                256,
+                order - 4,
+                format,
+                dependency_array=dependency_array)
             self.rtt_array.append(self.a256_rtt)
-            self.a64_rtt = RenderToTexture('a64x64', 64, 64, order - 3, format, dependency_array=dependency_array)
+            self.a64_rtt = RenderToTexture(
+                'a64x64',
+                64,
+                64,
+                order - 3,
+                format,
+                dependency_array=dependency_array)
             self.rtt_array.append(self.a64_rtt)
-            self.a16_rtt = RenderToTexture('a16x16', 16, 16, order - 2, format, dependency_array=dependency_array)
+            self.a16_rtt = RenderToTexture(
+                'a16x16',
+                16,
+                16,
+                order - 2,
+                format,
+                dependency_array=dependency_array)
             self.rtt_array.append(self.a16_rtt)
-            self.a4_rtt = RenderToTexture('a4x4', 4, 4, order - 1, format, dependency_array=dependency_array)
+            self.a4_rtt = RenderToTexture(
+                'a4x4',
+                4,
+                4,
+                order - 1,
+                format,
+                dependency_array=dependency_array)
             self.rtt_array.append(self.a4_rtt)
-            self.a1_rtt = RenderToTexture('a1x1', 1, 1, order - 0, format, dependency_array=dependency_array)
+            self.a1_rtt = RenderToTexture(
+                'a1x1',
+                1,
+                1,
+                order - 0,
+                format,
+                dependency_array=dependency_array)
             self.rtt_array.append(self.a1_rtt)
         dependency_array.enable(True)
         dependency_array.checkDependencies()
         self.displaySliders(self.display_sliders)
         self.enable(0)
         self.enable(1)
-        self.success = self.checkArray(self.shader_array, self.checkShader) and self.checkArray(self.rtt_array, self.checkRtt)
+        self.success = self.checkArray(self.shader_array,
+                                       self.checkShader) and self.checkArray(
+                                           self.rtt_array, self.checkRtt)
         return
 
     def setGlowFactor(self, factor):
@@ -691,17 +811,23 @@ class Blur(DirectObject):
                     dr.disableClears()
 
     def update_parameters(self):
-        self.parameters.set(self.exposure * self.exposure_scale, self.gamma * self.gamma_scale, self.exposure2 * self.exposure_scale, self.average_parameter)
+        self.parameters.set(
+            self.exposure * self.exposure_scale, self.gamma * self.gamma_scale,
+            self.exposure2 * self.exposure_scale, self.average_parameter)
         if self.tcard:
             self.tcard.setShaderInput(self.parameters_name, self.parameters)
 
     def update_parameters2(self):
-        self.parameters2.set(self.hdr_factor * self.hdr_factor_scale, 0.0, 0.0, 0.0)
+        self.parameters2.set(self.hdr_factor * self.hdr_factor_scale, 0.0, 0.0,
+                             0.0)
         if self.tcard:
             self.tcard.setShaderInput(self.parameters2_name, self.parameters2)
 
     def update_factors(self):
-        self.factors.set(self.factor * self.factor_scale, self.factor2 * self.factor_scale, self.minimum_exposure * self.minimum_exposure_scale, self.maximum_exposure * self.maximum_exposure_scale)
+        self.factors.set(self.factor * self.factor_scale,
+                         self.factor2 * self.factor_scale,
+                         self.minimum_exposure * self.minimum_exposure_scale,
+                         self.maximum_exposure * self.maximum_exposure_scale)
         if self.tcard:
             self.tcard.setShaderInput(self.factors_name, self.factors)
 

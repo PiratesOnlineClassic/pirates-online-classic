@@ -11,7 +11,6 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class TentacleWaterDrips(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -20,7 +19,8 @@ class TentacleWaterDrips(PooledEffect, EffectController):
         self.card = model.find('**/particleRockShower')
         self.cardScale = 64.0
         self.effectScale = 1.0
-        self.particleDummy = base.effectsRoot.attachNewNode(ModelNode('WaterDripsParticleDummy'))
+        self.particleDummy = base.effectsRoot.attachNewNode(
+            ModelNode('WaterDripsParticleDummy'))
         self.particleDummy.setDepthWrite(0)
         self.particleDummy.setFogOff()
         self.particleDummy.setLightOff()
@@ -66,9 +66,15 @@ class TentacleWaterDrips(PooledEffect, EffectController):
         self.setEffectLength(self.effectScale)
 
     def createTrack(self):
-        self.decreaseIntensity = LerpFunctionInterval(self.setIntensity, 4.0 * self.effectScale, toData=0, fromData=0.5)
-        self.startEffect = Sequence(Func(self.p0.clearToInitial), Func(self.p0.setBirthRate, 0.02), Func(self.p0.renderer.setUserAlpha, 0.9), Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(self.decreaseIntensity, Func(self.p0.setBirthRate, 10.0), Wait(3.0), Func(self.cleanUpEffect))
+        self.decreaseIntensity = LerpFunctionInterval(
+            self.setIntensity, 4.0 * self.effectScale, toData=0, fromData=0.5)
+        self.startEffect = Sequence(
+            Func(self.p0.clearToInitial), Func(self.p0.setBirthRate, 0.02),
+            Func(self.p0.renderer.setUserAlpha, 0.9),
+            Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(self.decreaseIntensity,
+                                  Func(self.p0.setBirthRate, 10.0), Wait(3.0),
+                                  Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def setEffectLength(self, length):
@@ -94,4 +100,6 @@ class TentacleWaterDrips(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
 # okay decompiling .\pirates\effects\TentacleWaterDrips.pyc

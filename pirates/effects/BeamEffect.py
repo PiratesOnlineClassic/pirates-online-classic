@@ -8,8 +8,8 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect
 
-class BeamEffect(PooledEffect, EffectController):
 
+class BeamEffect(PooledEffect, EffectController):
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -17,7 +17,10 @@ class BeamEffect(PooledEffect, EffectController):
         self.setLightOff()
         self.setDepthWrite(0)
         self.setColorScaleOff()
-        self.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+        self.node().setAttrib(
+            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
+                                  ColorBlendAttrib.OIncomingAlpha,
+                                  ColorBlendAttrib.OOne))
         self.hide()
         self.beams = []
         self.numBeams = 6
@@ -53,7 +56,8 @@ class BeamEffect(PooledEffect, EffectController):
                 newY = self.target.getY()
                 newZ = self.target.getZ()
             else:
-                randomSpread = random.uniform(-avgBeamLength / 2, avgBeamLength / 2)
+                randomSpread = random.uniform(-avgBeamLength / 2,
+                                              avgBeamLength / 2)
                 newX = random.uniform(-2.0, 2.0)
                 newY = avgBeamLength + randomSpread + prevY
                 newZ = random.uniform(-2.0, 2.0)
@@ -76,8 +80,14 @@ class BeamEffect(PooledEffect, EffectController):
             anim.append(Wait(self.duration / self.numPoses))
             anim.append(Func(self.__calculateBeam))
 
-        scroller = LerpFunctionInterval(self.setNewUVs, fromData=0.0, toData=20.0 * self.duration, duration=self.duration)
-        self.track = Sequence(Func(self.showAll), Parallel(anim, scroller), Func(self.hideAll), Func(self.cleanUpEffect))
+        scroller = LerpFunctionInterval(
+            self.setNewUVs,
+            fromData=0.0,
+            toData=20.0 * self.duration,
+            duration=self.duration)
+        self.track = Sequence(
+            Func(self.showAll), Parallel(anim, scroller), Func(self.hideAll),
+            Func(self.cleanUpEffect))
 
     def setNewUVs(self, time):
         for beam in self.beams:

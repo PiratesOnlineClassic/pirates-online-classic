@@ -1,5 +1,6 @@
 from pirates.piratesbase import PiratesGlobals
 
+
 def teamStatus(team1, team2):
     if team1 == team2:
         return PiratesGlobals.FRIEND
@@ -9,6 +10,7 @@ def teamStatus(team1, team2):
         return PiratesGlobals.NEUTRAL
     else:
         return PiratesGlobals.ENEMY
+
 
 def friendOrFoe(thing1, thing2):
     try:
@@ -30,7 +32,9 @@ def friendOrFoe(thing1, thing2):
         pass
 
     try:
-        if thing1.getTeam() == thing2.getTeam() == PiratesGlobals.PLAYER_TEAM and (thing1.isUndead() or thing2.isUndead()):
+        if thing1.getTeam() == thing2.getTeam(
+        ) == PiratesGlobals.PLAYER_TEAM and (thing1.isUndead() or
+                                             thing2.isUndead()):
             return PiratesGlobals.ENEMY
     except AttributeError:
         pass
@@ -41,6 +45,7 @@ def friendOrFoe(thing1, thing2):
         pass
 
     return PiratesGlobals.NEUTRAL
+
 
 def damageAllowed(thing1, thing2):
     status = friendOrFoe(thing1, thing2)

@@ -6,8 +6,9 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class CeilingDebris(PooledEffect, EffectController):
-    
+
     cardScale = 128.0
 
     def __init__(self):
@@ -16,7 +17,8 @@ class CeilingDebris(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleRockShower')
         if not CeilingDebris.particleDummy:
-            CeilingDebris.particleDummy = render.attachNewNode(ModelNode('CeilingDebrisParticleDummy'))
+            CeilingDebris.particleDummy = render.attachNewNode(
+                ModelNode('CeilingDebrisParticleDummy'))
             CeilingDebris.particleDummy.setDepthWrite(0)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
@@ -66,7 +68,12 @@ class CeilingDebris(PooledEffect, EffectController):
         self.p0.emitter.setRadius(100.0)
 
     def createTrack(self):
-        self.track = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.2), Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
+        self.track = Sequence(
+            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy),
+            Func(self.f.reparentTo, self), Wait(0.2),
+            Func(self.p0.setBirthRate, 100), Wait(7.0),
+            Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

@@ -2,10 +2,12 @@ from pirates.holiday.DistributedHolidayObject import DistributedHolidayObject
 from pirates.piratesbase import PLocalizer
 from pirates.effects.FeastFire import FeastFire
 
+
 class DistributedHolidayBonfire(DistributedHolidayObject):
-    
+
     def __init__(self, cr):
-        DistributedHolidayObject.__init__(self, cr, proximityText=PLocalizer.InteractHolidayBonfire)
+        DistributedHolidayObject.__init__(
+            self, cr, proximityText=PLocalizer.InteractHolidayBonfire)
         self.fireStarted = False
 
     def setFireStarted(self, value=False):

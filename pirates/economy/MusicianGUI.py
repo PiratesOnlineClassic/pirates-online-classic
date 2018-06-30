@@ -14,62 +14,64 @@ from pirates.uberdog.UberDogGlobals import *
 
 class MusicianGUI(DirectFrame):
     notify = directNotify.newCategory('MusicianGUI')
-    width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
+    width = (PiratesGuiGlobals.InventoryItemGuiWidth +
+             PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.35
     columnWidth = PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.05
     CoinImage = None
 
     def __init__(self, inventory, name, **kw):
-        optiondefs = (
-         ('relief', None, None), 
-         ('frameSize', (0, self.width, 0, self.height), None), 
-         ('sortOrder', 20, None)
-        )
+        optiondefs = (('relief', None, None), ('frameSize', (0, self.width, 0,
+                                                             self.height),
+                                               None), ('sortOrder', 20, None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, None, **kw)
         self.initialiseoptions(MusicianGUI)
         if not MusicianGUI.CoinImage:
-            MusicianGUI.CoinImage = loader.loadModel('models/gui/toplevel_gui').find('**/treasure_w_coin*')
-        self.panel = GuiPanel.GuiPanel(name, self.width, self.height, parent=self)
+            MusicianGUI.CoinImage = loader.loadModel(
+                'models/gui/toplevel_gui').find('**/treasure_w_coin*')
+        self.panel = GuiPanel.GuiPanel(
+            name, self.width, self.height, parent=self)
         self.panel.closeButton['command'] = self.closePanel
         self.setPos(-0.6, 0, -0.66)
         self.balance = 0
         self.inventory = inventory
-        self.storeInventory = InventoryItemList.InventoryItemList(self.inventory, self.height - 0.15, buy=PiratesGuiGlobals.InventoryAdd, listItemClass=SongItemGui)
+        self.storeInventory = InventoryItemList.InventoryItemList(
+            self.inventory,
+            self.height - 0.15,
+            buy=PiratesGuiGlobals.InventoryAdd,
+            listItemClass=SongItemGui)
         self.storeInventory.reparentTo(self.panel)
         self.storeInventory.setPos(0.03, 0, 0.04)
         self.cartWidth = self.columnWidth - 0.1
         self.cartHeight = self.height - 0.25
         self.cartFrame = DirectFrame(
-            parent=self.panel, 
-            relief=None, 
-            frameSize=(0, self.cartWidth, 0, self.cartHeight)
-        )
+            parent=self.panel,
+            relief=None,
+            frameSize=(0, self.cartWidth, 0, self.cartHeight))
         self.cartFrame.setPos(self.columnWidth + 0.025, 0, 0.08)
         self.myGoldTitle = DirectFrame(
-            parent=self.cartFrame, 
-            relief=None, 
-            text=PLocalizer.YourMoney, 
+            parent=self.cartFrame,
+            relief=None,
+            text=PLocalizer.YourMoney,
             text_fg=PiratesGuiGlobals.TextFG2,
-            text_align=TextNode.ALeft, 
-            text_scale=PiratesGuiGlobals.TextScaleLarge, 
-            text_pos=(0.0, 0.0), 
-            pos=(0.01, 0, 0.155)
-        )
+            text_align=TextNode.ALeft,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_pos=(0.0, 0.0),
+            pos=(0.01, 0, 0.155))
         self.myGold = DirectFrame(
-            parent=self.cartFrame, 
-            relief=None, 
-            text=str(localAvatar.getMoney()), 
-            text_fg=PiratesGuiGlobals.TextFG2, 
-            text_align=TextNode.ARight, 
-            text_scale=PiratesGuiGlobals.TextScaleLarge, 
-            text_pos=(-0.055, 0.0), 
-            textMayChange=1, 
-            image=MusicianGUI.CoinImage, 
-            image_scale=0.15, 
-            image_pos=(-0.025, 0, 0.025), 
-            pos=(self.cartWidth, 0, 0.155)
-        )
+            parent=self.cartFrame,
+            relief=None,
+            text=str(localAvatar.getMoney()),
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_align=TextNode.ARight,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_pos=(-0.055, 0.0),
+            textMayChange=1,
+            image=MusicianGUI.CoinImage,
+            image_scale=0.15,
+            image_pos=(-0.025, 0, 0.025),
+            pos=(self.cartWidth, 0, 0.155))
         self.accept(PiratesGuiGlobals.InventoryBuyEvent, self.handleBuyItem)
         self.acceptOnce('escape', self.closePanel)
         return
@@ -87,10 +89,14 @@ class MusicianGUI(DirectFrame):
             return
         if useCode == PiratesGuiGlobals.InventoryAdd:
             if inventory.getStackQuantity(InventoryType.GoldInPocket) < 5:
-                base.localAvatar.guiMgr.createWarning(PLocalizer.NotEnoughMoneyWarning, PiratesGuiGlobals.TextFG6)
+                base.localAvatar.guiMgr.createWarning(
+                    PLocalizer.NotEnoughMoneyWarning, PiratesGuiGlobals.TextFG6)
                 return
-            if base.musicMgr.current.name not in ['tavern_a', 'tavern_b', 'tavern_c']:
-                base.localAvatar.guiMgr.createWarning(PLocalizer.WaitYourTurnWarning, PiratesGuiGlobals.TextFG6)
+            if base.musicMgr.current.name not in [
+                    'tavern_a', 'tavern_b', 'tavern_c'
+            ]:
+                base.localAvatar.guiMgr.createWarning(
+                    PLocalizer.WaitYourTurnWarning, PiratesGuiGlobals.TextFG6)
                 return
             messenger.send('requestMusic', [itemId])
         elif useCode == PiratesGuiGlobals.InventoryRemove:

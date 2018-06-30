@@ -10,7 +10,6 @@ from pirates.piratesgui import BuffIcon
 
 
 class StatusEffectsPanel(DirectFrame):
-    
 
     def __init__(self, parent, **kw):
         DirectFrame.__init__(self, parent, **kw)
@@ -27,7 +26,8 @@ class StatusEffectsPanel(DirectFrame):
         del self.buffs
         DirectFrame.destroy(self)
 
-    def addStatusEffect(self, effectId, maxDuration, effectDuration, attackerId):
+    def addStatusEffect(self, effectId, maxDuration, effectDuration,
+                        attackerId):
         id = '%s-%s' % (effectId, attackerId)
         myIcon = BuffIcon.BuffIcon(self, effectId, maxDuration, attackerId)
         myIcon.startTimestamp = effectDuration
@@ -50,7 +50,8 @@ class StatusEffectsPanel(DirectFrame):
         for i in range(len(self.buffIcons)):
             self.buffIcons[i].setPos(i * 0.11, 0, 0)
 
-    def updateStatusEffect(self, effectId, maxDuration, effectDuration, attackerId):
+    def updateStatusEffect(self, effectId, maxDuration, effectDuration,
+                           attackerId):
         id = '%s-%s' % (effectId, attackerId)
         if id in self.buffs:
             index = self.buffs.index(id)
@@ -62,4 +63,6 @@ class StatusEffectsPanel(DirectFrame):
     def updateDurations(self):
         for i in self.buffIcons:
             i.updateIconInfo()
+
+
 # okay decompiling .\pirates\piratesgui\StatusEffectsPanel.pyc

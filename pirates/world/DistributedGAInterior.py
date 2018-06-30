@@ -10,7 +10,9 @@ from pirates.world import (ClientArea, DistributedGameArea, DistributedIsland,
                            WorldGlobals)
 
 
-class DistributedGAInterior(DistributedGameArea.DistributedGameArea, DistributedCartesianGrid.DistributedCartesianGrid, ClientArea.ClientArea):
+class DistributedGAInterior(DistributedGameArea.DistributedGameArea,
+                            DistributedCartesianGrid.DistributedCartesianGrid,
+                            ClientArea.ClientArea):
     notify = directNotify.newCategory('DistributedGAInterior')
 
     def __init__(self, cr):
@@ -33,8 +35,8 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         self.loadModel()
         self.setupLODs()
         self.enableFloors()
-        self.cr.distributedDistrict.worldCreator.loadObjectsByUid(self,
-            self.uniqueId, dynamic=0)
+        self.cr.distributedDistrict.worldCreator.loadObjectsByUid(
+            self, self.uniqueId, dynamic=0)
 
         self.loadZoneObjects(-1)
         self.enableFloors()
@@ -88,16 +90,21 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
 
     @report(types=['frameCount'], dConfigParam='want-connector-report')
     def addObjectToGrid(self, av):
-        DistributedCartesianGrid.DistributedCartesianGrid.addObjectToGrid(self, av)
+        DistributedCartesianGrid.DistributedCartesianGrid.addObjectToGrid(
+            self, av)
         if av.isLocal():
             self.updateAvReturnLocation(av)
 
-    @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam=['want-jail-report', 'want-teleport-report'])
     def setLinks(self, links):
         DistributedGameArea.DistributedGameArea.setLinks(self, links)
         self.loadConnectors()
 
-    @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam=['want-jail-report', 'want-teleport-report'])
     def setConnectorId(self, connectorId):
         self.notify.debug('setConnectorId %s' % connectorId)
         self.connectorId = connectorId
@@ -111,9 +118,11 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
             curMask = collNode.node().getIntoCollideMask()
             if curMask.hasBitsInCommon(PiratesGlobals.FloorBitmask):
                 collNode.setName(self.uniqueFloorName)
-                self.setupCannonballLandColl(collNode, PiratesGlobals.TargetBitmask | curMask, 0)
+                self.setupCannonballLandColl(
+                    collNode, PiratesGlobals.TargetBitmask | curMask, 0)
 
-        self.accept('enterFloor' + self.uniqueFloorName, self.handleEnterGameArea)
+        self.accept('enterFloor' + self.uniqueFloorName,
+                    self.handleEnterGameArea)
         self.accept('exitFloor' + self.uniqueFloorName, self.handleExitGameArea)
 
     def disableFloors(self):
@@ -128,12 +137,18 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         self.addObjectToGrid(localAvatar)
         localAvatar.guiMgr.radarGui.loadMap(self.geom)
         for x in range(self.locatorNodes.getNumPaths()):
-            localAvatar.guiMgr.radarGui.addRadarObjectAtLoc(self.locatorNodes[x].getPos(render), objType=RadarGui.RADAR_OBJ_TYPE_EXIT,
+            localAvatar.guiMgr.radarGui.addRadarObjectAtLoc(
+                self.locatorNodes[x].getPos(render),
+                objType=RadarGui.RADAR_OBJ_TYPE_EXIT,
                 targetObjId='exit-' + str(x))
 
-        self.ambientName = base.ambientMgr.calcAmbientNameFromStr(self.modelPath)
-        if not (self.ambientName == 'jungle' or self.ambientName == 'cave' or self.ambientName == 'swamp'):
-            base.ambientMgr.requestFadeIn(self.ambientName, finalVolume=PiratesGlobals.DEFAULT_AMBIENT_VOLUME)
+        self.ambientName = base.ambientMgr.calcAmbientNameFromStr(
+            self.modelPath)
+        if not (self.ambientName == 'jungle' or self.ambientName == 'cave' or
+                self.ambientName == 'swamp'):
+            base.ambientMgr.requestFadeIn(
+                self.ambientName,
+                finalVolume=PiratesGlobals.DEFAULT_AMBIENT_VOLUME)
 
         if self.musicName:
             base.musicMgr.requestFadeOut(self.musicName)
@@ -143,7 +158,8 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
             self.musicName = random.choice(('tavern_a', 'tavern_b', 'tavern_c'))
             base.musicMgr.request(self.musicName)
 
-        DistributedGameArea.DistributedGameArea.handleEnterGameArea(self, collEntry)
+        DistributedGameArea.DistributedGameArea.handleEnterGameArea(
+            self, collEntry)
 
     def setLocation(self, parentId, zoneId, teleport=0):
         DistributedObject.DistributedObject.setLocation(self, parentId, zoneId)
@@ -153,7 +169,8 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
     def handleExitGameArea(self, collEntry):
         self.notify.debug('%s handleExitGameArea' % self.doId)
         if collEntry:
-            self.notify.debug('%s handleExitGameArea - doing nothing' % self.doId)
+            self.notify.debug(
+                '%s handleExitGameArea - doing nothing' % self.doId)
             return
         self.notify.debug('%s handleExitGameArea - doing something' % self.doId)
         self.removeObjectFromGrid(localAvatar)
@@ -163,10 +180,13 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
             localAvatar.guiMgr.radarGui.removeRadarObject('exit-' + str(x))
 
         self.fadeOutAmbientSound()
-        DistributedGameArea.DistributedGameArea.handleExitGameArea(self, collEntry)
+        DistributedGameArea.DistributedGameArea.handleExitGameArea(
+            self, collEntry)
 
     def fadeOutAmbientSound(self):
-        if hasattr(self, 'ambientName') and not (self.ambientName == 'jungle' or self.ambientName == 'cave' or self.ambientName == 'swamp'):
+        if hasattr(self, 'ambientName') and not (self.ambientName == 'jungle' or
+                                                 self.ambientName == 'cave' or
+                                                 self.ambientName == 'swamp'):
             base.ambientMgr.requestFadeOut(self.ambientName)
 
         if self.musicName:
@@ -175,14 +195,16 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
 
     def loadModelParts(self):
         modelBaseName = self.modelPath.split('_zero')[0]
-        terrainModel = loader.loadModel(modelBaseName + '_terrain', okMissing=True)
+        terrainModel = loader.loadModel(
+            modelBaseName + '_terrain', okMissing=True)
         if terrainModel:
             self.geom = terrainModel
         else:
             self.geom = loader.loadModel(self.modelPath)
             return
 
-        terrainDetailModel = loader.loadModel(modelBaseName + '_terrain_detail', okMissing=True)
+        terrainDetailModel = loader.loadModel(
+            modelBaseName + '_terrain_detail', okMissing=True)
         if terrainDetailModel:
             terrainDetailModel.getChild(0).reparentTo(self.geom)
 
@@ -198,7 +220,8 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         if logModel:
             logModel.getChild(0).reparentTo(self.geom)
 
-        vegeWallModel = loader.loadModel(modelBaseName + '_nat_wall', okMissing=True)
+        vegeWallModel = loader.loadModel(
+            modelBaseName + '_nat_wall', okMissing=True)
         if vegeWallModel:
             vegeWallModel.getChild(0).reparentTo(self.geom)
 
@@ -250,12 +273,16 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         self.closeDoorIval = Parallel()
         self.tOpen = 0.5
         if not doorLeft.isEmpty():
-            self.openDoorIval.append(LerpHprInterval(doorLeft, self.tOpen, Vec3(-90, 0, 0)))
-            self.closeDoorIval.append(LerpHprInterval(doorLeft, self.tOpen, Vec3(0, 0, 0)))
+            self.openDoorIval.append(
+                LerpHprInterval(doorLeft, self.tOpen, Vec3(-90, 0, 0)))
+            self.closeDoorIval.append(
+                LerpHprInterval(doorLeft, self.tOpen, Vec3(0, 0, 0)))
 
         if not doorRight.isEmpty():
-            self.openDoorIval.append(LerpHprInterval(doorRight, self.tOpen, Vec3(90, 0, 0)))
-            self.closeDoorIval.append(LerpHprInterval(doorRight, self.tOpen, Vec3(0, 0, 0)))
+            self.openDoorIval.append(
+                LerpHprInterval(doorRight, self.tOpen, Vec3(90, 0, 0)))
+            self.closeDoorIval.append(
+                LerpHprInterval(doorRight, self.tOpen, Vec3(0, 0, 0)))
 
         doorLocator = self.find(self.doorLocatorStr)
         if doorLocator.isEmpty():
@@ -284,29 +311,37 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
             playerStateFunc = Func(Nothing)
 
         if self.autoFadeIn:
-            sf = Sequence(Func(localAvatar.gameFSM.request, 'DoorInteract'), fadeInFunc, self.openDoorIval, self.closeDoorIval,
+            sf = Sequence(
+                Func(localAvatar.gameFSM.request, 'DoorInteract'),
+                fadeInFunc, self.openDoorIval, self.closeDoorIval,
                 Func(self.closeSfx.play), playerStateFunc)
         else:
-            sf = Sequence(Func(localAvatar.gameFSM.request, 'DoorInteract'), fadeInFunc, self.openDoorIval, self.closeDoorIval,
-                playerStateFunc)
+            sf = Sequence(
+                Func(localAvatar.gameFSM.request, 'DoorInteract'), fadeInFunc,
+                self.openDoorIval, self.closeDoorIval, playerStateFunc)
 
         self.fadeInTrack = sf
         self.fadeInTrack.start()
 
     @report(types=['frameCount'], dConfigParam='want-connector-report')
     def handleChildArrive(self, childObj, zoneId):
-        DistributedGameArea.DistributedGameArea.handleChildArrive(self, childObj, zoneId)
+        DistributedGameArea.DistributedGameArea.handleChildArrive(
+            self, childObj, zoneId)
         if childObj.isLocal():
             self.updateAvReturnLocation(childObj)
 
-    @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam=['want-jail-report', 'want-teleport-report'])
     def loadConnectors(self):
         if 'interior' in self.modelPath or 'kingshead_zero' in self.modelPath:
             return
 
         DistributedGameArea.DistributedGameArea.loadConnectors(self)
 
-    @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report', 'want-teleport-report'])
+    @report(
+        types=['frameCount', 'args'],
+        dConfigParam=['want-jail-report', 'want-teleport-report'])
     def unloadConnectors(self):
         if 'interior' in self.modelPath or 'kingshead_zero' in self.modelPath:
             return

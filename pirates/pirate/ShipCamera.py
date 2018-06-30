@@ -16,10 +16,9 @@ from pirates.pirate.OrbitCamera import OrbitCamera
 
 
 class ShipCamera(OrbitCamera):
-    
 
     class ParamSet(OrbitCamera.ParamSet):
-        
+
         Params = {}
 
     def getName(self):
@@ -29,11 +28,13 @@ class ShipCamera(OrbitCamera):
         return 'ShipCam'
 
     def _handleWheelUp(self):
-        self.setIdealDistance(self.idealDistance - (self._maxDistance - self._minDistance) * 0.2)
+        self.setIdealDistance(self.idealDistance -
+                              (self._maxDistance - self._minDistance) * 0.2)
         self.applyIdealDistance()
 
     def _handleWheelDown(self):
-        self.setIdealDistance(self.idealDistance + (self._maxDistance - self._minDistance) * 0.2)
+        self.setIdealDistance(self.idealDistance +
+                              (self._maxDistance - self._minDistance) * 0.2)
         self.applyIdealDistance()
 
     def _startCollisionCheck(self):
@@ -47,9 +48,11 @@ class ShipCamera(OrbitCamera):
         self._scInputState.rmbPressed = False
         self._scInputState.fwdPressed = False
         self._scInputListener = DirectObject.DirectObject()
-        self._scInputListener.accept(inputState.getEventName('RMB'), self._handleRmbEvent)
+        self._scInputListener.accept(
+            inputState.getEventName('RMB'), self._handleRmbEvent)
         self._handleRmbEvent(inputState.isSet('RMB'))
-        self._scInputListener.accept(inputState.getEventName('forward'), self._handleForwardEvent)
+        self._scInputListener.accept(
+            inputState.getEventName('forward'), self._handleForwardEvent)
         self._handleForwardEvent(inputState.isSet('forward'))
 
     def exitActive(self):
@@ -80,9 +83,17 @@ class ShipCamera(OrbitCamera):
         OrbitCamera._stopMouseControlTasks(self)
 
     def _mouseUpdateTask(self, task):
-        if OrbitCamera._mouseUpdateTask(self, task) == task.cont and self.mouseDelta[0] or self.mouseDelta[1]:
+        if OrbitCamera._mouseUpdateTask(
+                self,
+                task) == task.cont and self.mouseDelta[0] or self.mouseDelta[1]:
             sensitivity = 0.5
-            self.setRotation(self.getRotation() - self.mouseDelta[0] * sensitivity)
-            self.setEscapement(clampScalar(self.escapement + self.mouseDelta[1] * sensitivity * 0.6, self._minEsc, self._maxEsc))
+            self.setRotation(self.getRotation() -
+                             self.mouseDelta[0] * sensitivity)
+            self.setEscapement(
+                clampScalar(
+                    self.escapement + self.mouseDelta[1] * sensitivity * 0.6,
+                    self._minEsc, self._maxEsc))
         return task.cont
+
+
 # okay decompiling .\pirates\pirate\ShipCamera.pyc

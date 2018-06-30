@@ -26,16 +26,20 @@ WALK_CUTOFF = 0.5
 ADVANCE_CUTOFF = 0.5
 RUN_CUTOFF = PiratesGlobals.ToonForwardSpeed
 
+
 class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
-    
-    FailsafeAnims = (('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0))
+
+    FailsafeAnims = (('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0),
+                     ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0),
+                     ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0),
+                     ('idle', 1.0), ('idle', 1.0))
     SfxNames = {'death': 'bodyFall-08.mp3'}
     sfx = {}
     actor = None
     animInfo = {}
 
     class AnimationMixer(AnimationMixer):
-        
+
         LOOP = AnimationMixer.LOOP
         ACTION = dict(AnimationMixer.ACTION)
         ACTION['MOVIE'] = AnimationMixer.ACTION_INDEX + 1
@@ -49,7 +53,8 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
         self.avatarType = None
         if not SeaMonster.sfx:
             for name in SeaMonster.SfxNames:
-                SeaMonster.sfx[name] = loader.loadSfx('audio/' + SeaMonster.SfxNames[name])
+                SeaMonster.sfx[name] = loader.loadSfx('audio/' +
+                                                      SeaMonster.SfxNames[name])
 
         OTPRender.renderReflection(False, self, 'p_creature', None)
         animationMixer = self.AnimationMixer
@@ -91,7 +96,13 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
             self.notify.warning('empty iconNodePath in initializeNametag3d')
             return 0
         if not self.nameText:
-            self.nameText = OnscreenText(fg=Vec4(1, 1, 1, 1), bg=Vec4(0, 0, 0, 0), scale=1.1, align=TextNode.ACenter, mayChange=1, font=PiratesGlobals.getPirateBoldOutlineFont())
+            self.nameText = OnscreenText(
+                fg=Vec4(1, 1, 1, 1),
+                bg=Vec4(0, 0, 0, 0),
+                scale=1.1,
+                align=TextNode.ACenter,
+                mayChange=1,
+                font=PiratesGlobals.getPirateBoldOutlineFont())
             self.nameText.reparentTo(self.iconNodePath)
             self.nameText.setTransparency(TransparencyAttrib.MDual, 2)
             self.nameText.setColorScaleOff(100)
@@ -166,7 +177,8 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
                 sfx.play()
 
         def startVFX():
-            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting(
+            ) >= base.options.SpecialEffectsHigh:
                 effectScale = EnemyGlobals.getEnemyScale(self)
                 deathEffect = JRDeathEffect.getEffect()
                 if deathEffect:
@@ -188,7 +200,30 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
                     spiritEffect.setZ(self.getZ(render) + 6.0)
                     Sequence(Wait(0.25), Func(spiritEffect.play)).start()
 
-        return Sequence(Wait(0.5), Parallel(Func(playSfx), Sequence(self.actorInterval(animName, blendOutT=0.0), Func(self.disableMixing), Func(self.pose, animName, frames - 1, blendT=0.0)), Sequence(Wait(duration / 3.0), Func(self.setTransparency, 1), LerpColorScaleInterval(self, duration / 4.0, Vec4(0.55, 0.7, 0.2, 1.0), startColorScale=Vec4(1)), Wait(duration / 3.0), Func(startVFX), LerpColorScaleInterval(self, 0.5, Vec4(0.0, 0.0, 0.0, 0.0), startColorScale=Vec4(0.55, 0.7, 0.2, 1.0)), Func(self.hide), Func(self.clearTransparency), Func(self.clearColorScale)), Func(self.setAllowInteract, False)))
+        return Sequence(
+            Wait(0.5),
+            Parallel(
+                Func(playSfx),
+                Sequence(
+                    self.actorInterval(animName, blendOutT=0.0),
+                    Func(self.disableMixing),
+                    Func(self.pose, animName, frames - 1, blendT=0.0)),
+                Sequence(
+                    Wait(duration / 3.0), Func(self.setTransparency, 1),
+                    LerpColorScaleInterval(
+                        self,
+                        duration / 4.0,
+                        Vec4(0.55, 0.7, 0.2, 1.0),
+                        startColorScale=Vec4(1)), Wait(duration / 3.0),
+                    Func(startVFX),
+                    LerpColorScaleInterval(
+                        self,
+                        0.5,
+                        Vec4(0.0, 0.0, 0.0, 0.0),
+                        startColorScale=Vec4(0.55, 0.7, 0.2, 1.0)),
+                    Func(self.hide), Func(self.clearTransparency),
+                    Func(self.clearColorScale)),
+                Func(self.setAllowInteract, False)))
 
     def getExitDeathTrack(self):
         return Sequence(Func(self.show))
@@ -222,18 +257,15 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
     def setLODs(self):
         avatarDetail = base.config.GetString('avatar-detail', 'high')
         if avatarDetail == 'high':
-            dist = [
-             0, 20, 80, 280]
+            dist = [0, 20, 80, 280]
         else:
             if avatarDetail == 'med':
-                dist = [
-                 0, 10, 40, 280]
+                dist = [0, 10, 40, 280]
             else:
                 if avatarDetail == 'low':
-                    dist = [
-                     0, 6, 20, 280]
+                    dist = [0, 6, 20, 280]
                 else:
-                    raise StandardError, 'Invalid avatar-detail: %s' % avatarDetail
+                    raise Exception('Invalid avatar-detail: %s' % avatarDetail)
         self.addLOD('low', dist[3], dist[2])
         self.addLOD('med', dist[2], dist[1])
         self.addLOD('hi', dist[1], dist[0])
@@ -265,7 +297,7 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
                     if avatarDetail == 'low':
                         dist = [0, 60, 200, 2800]
                     else:
-                        raise StandardError, 'Invalid avatar-detail: %s' % avatarDetail
+                        raise Exception('Invalid avatar-detail: %s' % avatarDetail)
             cls.actor.setLODNode()
             cls.actor.addLOD('low', dist[3], dist[2])
             cls.actor.addLOD('med', dist[2], dist[1])

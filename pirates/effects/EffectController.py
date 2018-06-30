@@ -1,5 +1,6 @@
 from pandac.PandaModules import *
 
+
 class EffectController:
     particleDummy = None
 
@@ -9,7 +10,6 @@ class EffectController:
         self.endEffect = None
         self.f = None
         self.p0 = None
-        
 
     def createTrack(self):
         pass
@@ -27,7 +27,7 @@ class EffectController:
         if self.f:
             self.f.disable()
         self.detachNode()
-        
+
     def setPoolSize(self, size):
         if self.p0:
             self.p0.setPoolSize(int(size))
@@ -40,8 +40,9 @@ class EffectController:
         if lod != None:
             try:
                 self.createTrack(lod)
-            except TypeError, e:
-                raise TypeError('Error loading %s effect.' % self.__class__.__name__)
+            except TypeError as e:
+                raise TypeError(
+                    'Error loading %s effect.' % self.__class__.__name__)
 
         else:
             self.createTrack()
@@ -75,8 +76,9 @@ class EffectController:
         if lod != None:
             try:
                 self.createTrack(lod)
-            except TypeError, e:
-                raise TypeError('Error loading %s effect.' % self.__class__.__name__)
+            except TypeError as e:
+                raise TypeError(
+                    'Error loading %s effect.' % self.__class__.__name__)
 
         else:
             self.createTrack()

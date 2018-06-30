@@ -1,5 +1,3 @@
-
-
 class QuestHolderBase:
 
     def getQuests(self):

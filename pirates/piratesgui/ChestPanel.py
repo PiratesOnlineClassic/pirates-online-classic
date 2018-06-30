@@ -12,10 +12,16 @@ from pirates.piratesgui.TabBar import LeftTab, TabBar
 
 
 class ChestTab(LeftTab):
-    
 
     def __init__(self, tabBar, name, **kw):
-        optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None), ('frameSize', (-0.125, 0.125, -0.1, 0.1), None), ('unfocusSize', (0, 0, 0, 0), None), ('focusSize', (-0.125, 0.125, -0.11, 0.11), None), ('heightFactor', 0.6, None), ('mouseEntered', None, None), ('mouseLeft', None, None))
+        optiondefs = (('suffix', '_d', None), ('borderScale', 0.38,
+                                               None), ('bgBuffer', 0.15, None),
+                      ('frameSize', (-0.125, 0.125, -0.1, 0.1),
+                       None), ('unfocusSize', (0, 0, 0, 0), None),
+                      ('focusSize', (-0.125, 0.125, -0.11, 0.11),
+                       None), ('heightFactor', 0.6,
+                               None), ('mouseEntered', None,
+                                       None), ('mouseLeft', None, None))
         self.defineoptions(kw, optiondefs)
         LeftTab.__init__(self, tabBar, name, **kw)
         self.initialiseoptions(ChestTab)
@@ -24,7 +30,6 @@ class ChestTab(LeftTab):
 
 
 class ChestTabBar(TabBar):
-    
 
     def refreshTabs(self):
         zOffset = 0.0
@@ -48,10 +53,11 @@ class ChestTabBar(TabBar):
 
 
 class ChestPanel(DirectFrame):
-    
 
     def __init__(self, parent, **kw):
-        optiondefs = (('relief', None, None), ('state', DGG.NORMAL, None), ('frameSize', (-0.55, 0.55, -0.82, 0.72), None), ('pos', (-0.55, 0, 0.8), None))
+        optiondefs = (('relief', None, None), ('state', DGG.NORMAL, None),
+                      ('frameSize', (-0.55, 0.55, -0.82, 0.72),
+                       None), ('pos', (-0.55, 0, 0.8), None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent, **kw)
         self.initialiseoptions(ChestPanel)
@@ -107,15 +113,21 @@ class ChestPanel(DirectFrame):
         self.frontTabParent = self.attachNewNode('frontTab', sort=2)
 
     def _getShowIval(self, time=0.2):
-        self.showIval = Sequence(Func(localAvatar.guiMgr.moveLookoutPopup, True), Func(self.show), self.posInterval(time, Point3(-0.55, 0, self.destZ), blendType='easeOut'), Func(self.slideOpenCallback))
+        self.showIval = Sequence(
+            Func(localAvatar.guiMgr.moveLookoutPopup, True), Func(self.show),
+            self.posInterval(
+                time, Point3(-0.55, 0, self.destZ), blendType='easeOut'),
+            Func(self.slideOpenCallback))
         return self.showIval
 
     def _getHideIval(self, time=0.2):
-        self.hideIval = Sequence(Func(self.slideCloseCallback), self.posInterval(time, Point3(-0.55, 0, -1.8), blendType='easeIn'), Func(self.hide), Func(localAvatar.guiMgr.moveLookoutPopup, False))
+        self.hideIval = Sequence(
+            Func(self.slideCloseCallback),
+            self.posInterval(time, Point3(-0.55, 0, -1.8), blendType='easeIn'),
+            Func(self.hide), Func(localAvatar.guiMgr.moveLookoutPopup, False))
         return self.hideIval
 
-    def cancelIval(self, type=[
- 'show', 'hide']):
+    def cancelIval(self, type=['show', 'hide']):
         if self.showIval and self.showIval.isPlaying() and 'show' in type:
             self.showIval.pause()
         if self.hideIval and self.hideIval.isPlaying() and 'hide' in type:
@@ -170,7 +182,8 @@ class ChestPanel(DirectFrame):
 
     def slideOpen(self):
         if not self.isActive():
-            if not self.getCurPage() and localAvatar.guiMgr.tutorialStatus >= PiratesGlobals.TUT_GOT_SEACHEST:
+            if not self.getCurPage(
+            ) and localAvatar.guiMgr.tutorialStatus >= PiratesGlobals.TUT_GOT_SEACHEST:
                 self.setPage(self.pages[0])
             self.cancelIval('hide')
             self.setActive(True)
@@ -179,8 +192,7 @@ class ChestPanel(DirectFrame):
 
     def slideClose(self):
         if self.isActive():
-            (
-             self.cancelIval('show'),)
+            (self.cancelIval('show'),)
             self.setActive(False)
             self._getHideIval().start()
 
@@ -206,5 +218,11 @@ class ChestPanel(DirectFrame):
         return self.active
 
     def makeTabBar(self, offset=0):
-        return ChestTabBar(parent=self, backParent=self.backTabParent, frontParent=self.frontTabParent, offset=offset)
+        return ChestTabBar(
+            parent=self,
+            backParent=self.backTabParent,
+            frontParent=self.frontTabParent,
+            offset=offset)
+
+
 # okay decompiling .\pirates\piratesgui\ChestPanel.pyc

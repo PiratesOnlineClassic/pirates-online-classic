@@ -29,7 +29,8 @@ from otp.otpgui import OTPDialog
 from otp.speedchat import SCDecoders
 from otp.nametag.NametagConstants import CFQuicktalker, CFPageButton, CFQuitButton, CFSpeech, CFThought, CFTimeout
 from panda3d.core import *
-from pirates.battle import (BattleSkillDiary, DistributedBattleAvatar, RangeDetector, WeaponGlobals)
+from pirates.battle import (BattleSkillDiary, DistributedBattleAvatar,
+                            RangeDetector, WeaponGlobals)
 from pirates.chat.PChatAssistant import PChatAssistant
 from pirates.chat.PiratesChatManager import PiratesChatManager
 from pirates.economy import EconomyGlobals
@@ -58,6 +59,7 @@ if base.config.GetBool('want-custom-keys', False):
 else:
     ControlManager.wantCustomKeys = 0
     ControlManager.wantWASD = 1
+
 
 class LocalPirate(LocalAvatar, DistributedPlayerPirate):
     notify = DirectNotifyGlobal.directNotify.newCategory('LocalPirate')
@@ -145,12 +147,17 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
                 self.gmNameTagEnabledLocal = 1
 
         if base.config.GetString('gm-nametag-string', '') != '':
-            self.gmNameTagStringLocal = base.config.GetString('gm-nametag-string')
+            self.gmNameTagStringLocal = base.config.GetString(
+                'gm-nametag-string')
 
         if base.config.GetString('gm-nametag-color', '') != '':
             self.gmNameTagColorLocal = base.config.GetString('gm-nametag-color')
 
-        soundEffects = ['jollyroger_laugh_01.mp3', 'jollyroger_laugh_02.mp3', 'jollyroger_enjoy.mp3', 'jollyroger_submit.mp3', 'jollyroger_joinme.mp3']
+        soundEffects = [
+            'jollyroger_laugh_01.mp3', 'jollyroger_laugh_02.mp3',
+            'jollyroger_enjoy.mp3', 'jollyroger_submit.mp3',
+            'jollyroger_joinme.mp3'
+        ]
         self.jollySfx = loader.loadSfx('audio/' + random.choice(soundEffects))
 
     def startRocketJumpMode(self):
@@ -169,7 +176,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         taskMgr.remove('rocketDelayTask')
         if self.oldGravity != None:
             if self.oldGravity and 0:
-                self.controlManager.get('walk').lifter.setGravity(self.oldGravity)
+                self.controlManager.get('walk').lifter.setGravity(
+                    self.oldGravity)
             else:
                 self.controlManager.get('walk').lifter.setGravity(32.173 * 2.0)
             self.oldGravity = None
@@ -192,30 +200,40 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         if self.isGenerated():
             return DistributedPlayerPirate.sendUpdate(self, *args, **kw)
 
-    def setupWalkControls(self, avatarRadius=1.4, floorOffset=OTPGlobals.FloorOffset, reach=4.0, wallBitmask=OTPGlobals.WallBitmask, floorBitmask=OTPGlobals.FloorBitmask, ghostBitmask=OTPGlobals.GhostBitmask):
+    def setupWalkControls(self,
+                          avatarRadius=1.4,
+                          floorOffset=OTPGlobals.FloorOffset,
+                          reach=4.0,
+                          wallBitmask=OTPGlobals.WallBitmask,
+                          floorBitmask=OTPGlobals.FloorBitmask,
+                          ghostBitmask=OTPGlobals.GhostBitmask):
         walkControls = PiratesGravityWalker(gravity=-32.174 * 2.0)
         walkControls.setWallBitMask(wallBitmask)
         walkControls.setFloorBitMask(floorBitmask)
-        walkControls.initializeCollisions(self.cTrav, self, avatarRadius, floorOffset, reach)
+        walkControls.initializeCollisions(self.cTrav, self, avatarRadius,
+                                          floorOffset, reach)
         walkControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(walkControls, 'walk')
         self.physControls = walkControls
         swimControls = PiratesSwimWalker()
         swimControls.setWallBitMask(wallBitmask)
         swimControls.setFloorBitMask(floorBitmask)
-        swimControls.initializeCollisions(self.cTrav, self, avatarRadius, floorOffset, 4.0)
+        swimControls.initializeCollisions(self.cTrav, self, avatarRadius,
+                                          floorOffset, 4.0)
         swimControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(swimControls, 'swim')
         ghostControls = GhostWalker()
         ghostControls.setWallBitMask(ghostBitmask)
         ghostControls.setFloorBitMask(floorBitmask)
-        ghostControls.initializeCollisions(self.cTrav, self, avatarRadius, floorOffset, reach)
+        ghostControls.initializeCollisions(self.cTrav, self, avatarRadius,
+                                           floorOffset, reach)
         ghostControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(ghostControls, 'ghost')
         observerControls = ObserverWalker()
         observerControls.setWallBitMask(ghostBitmask)
         observerControls.setFloorBitMask(floorBitmask)
-        observerControls.initializeCollisions(self.cTrav, self, avatarRadius, floorOffset, reach)
+        observerControls.initializeCollisions(self.cTrav, self, avatarRadius,
+                                              floorOffset, reach)
         observerControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(observerControls, 'observer')
         self.controlManager.use('walk', self)
@@ -228,9 +246,15 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         DistributedPlayerPirate.updateReputation(self, category, value)
         self.guiMgr.updateReputation(category, value)
 
-    def playSkillMovie(self, skillId, ammoSkillId, skillResult, charge=0, targetId=0):
+    def playSkillMovie(self,
+                       skillId,
+                       ammoSkillId,
+                       skillResult,
+                       charge=0,
+                       targetId=0):
         self.skillDiary.startRecharging(skillId, ammoSkillId)
-        DistributedPlayerPirate.playSkillMovie(self, skillId, ammoSkillId, skillResult, charge, targetId)
+        DistributedPlayerPirate.playSkillMovie(self, skillId, ammoSkillId,
+                                               skillResult, charge, targetId)
 
     def toggleWeapon(self, newWeaponId, fromWheel=0):
         base.richPresence.setCurrentWeapon(newWeaponId)
@@ -257,13 +281,18 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         pass
 
     def l_setCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
-        if not self.gameFSM.isInTransition() and self.getGameState() in ['WaterRoam', 'WaterTreasureRoam']:
+        if not self.gameFSM.isInTransition() and self.getGameState() in [
+                'WaterRoam', 'WaterTreasureRoam'
+        ]:
             return
         if self.currentWeaponId != currentWeaponId or self.isWeaponDrawn != isWeaponDrawn:
-            DistributedPlayerPirate.sendRequestRemoveStickyTargets(self, self.stickyTargets)
+            DistributedPlayerPirate.sendRequestRemoveStickyTargets(
+                self, self.stickyTargets)
             self.setStickyTargets([])
 
-        if WeaponGlobals.getWeaponCategory(currentWeaponId) == WeaponGlobals.VOODOO and isWeaponDrawn == True:
+        if WeaponGlobals.getWeaponCategory(
+                currentWeaponId
+        ) == WeaponGlobals.VOODOO and isWeaponDrawn == True:
             self.guiMgr.attuneSelection.show()
         else:
             self.guiMgr.attuneSelection.hide()
@@ -272,7 +301,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         self.guiMgr.setCurrentWeapon(currentWeaponId, isWeaponDrawn)
 
     def d_requestCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
-        self.sendUpdate('requestCurrentWeapon', [currentWeaponId, isWeaponDrawn])
+        self.sendUpdate('requestCurrentWeapon',
+                        [currentWeaponId, isWeaponDrawn])
 
     def d_requestCurrentAmmo(self, currentAmmoId):
         self.sendUpdate('requestCurrentAmmo', [currentAmmoId])
@@ -310,7 +340,9 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
                     self.guiMgr.messageStack.showLoot([], gold=gain)
         self.money = money
 
-    @report(types=['deltaStamp', 'module', 'args'], dConfigParam='want-shipboard-report')
+    @report(
+        types=['deltaStamp', 'module', 'args'],
+        dConfigParam='want-shipboard-report')
     def _setCrewShip(self, ship):
         crewShip = self.crewShip
         if crewShip and crewShip != ship:
@@ -319,9 +351,12 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
                 self.guiMgr.mapPage.removeShip(crewShip.doId)
         DistributedPlayerPirate._setCrewShip(self, ship)
         if ship:
-            self.b_setTeleportFlag(PiratesGlobals.TFOnShip, self.crewShip.confirmOnShipTeleport)
-            self.b_setTeleportFlag(PiratesGlobals.TFNotSameCrew, self.crewShip.confirmSameCrewTeleport)
-            self.b_setTeleportFlag(PiratesGlobals.TFSiegeCaptain, self.crewShip.confirmSiegeCaptainTeleport)
+            self.b_setTeleportFlag(PiratesGlobals.TFOnShip,
+                                   self.crewShip.confirmOnShipTeleport)
+            self.b_setTeleportFlag(PiratesGlobals.TFNotSameCrew,
+                                   self.crewShip.confirmSameCrewTeleport)
+            self.b_setTeleportFlag(PiratesGlobals.TFSiegeCaptain,
+                                   self.crewShip.confirmSiegeCaptainTeleport)
             ship.showStatusDisplay()
             self.d_requestCurrentIsland(0)
             if self.guiMgr and self.guiMgr.mapPage:
@@ -332,7 +367,9 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         self.b_clearTeleportFlag(PiratesGlobals.TFNotSameCrew)
         self.b_clearTeleportFlag(PiratesGlobals.TFSiegeCaptain)
 
-    @report(types=['deltaStamp', 'module', 'args'], dConfigParam='want-shipboard-report')
+    @report(
+        types=['deltaStamp', 'module', 'args'],
+        dConfigParam='want-shipboard-report')
     def setActiveShipId(self, shipId):
         DistributedPlayerPirate.setActiveShipId(self, shipId)
         messenger.send('activeShipChange', sentArgs=[shipId])
@@ -345,7 +382,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
                 if inventory.getShipDoIdList():
                     self.guiMgr.mapPage.setReturnIsland(returnLocation)
                 else:
-                    self.guiMgr.mapPage.setReturnIsland(LocationIds.PORT_ROYAL_ISLAND)
+                    self.guiMgr.mapPage.setReturnIsland(
+                        LocationIds.PORT_ROYAL_ISLAND)
 
         DistributedInventoryBase.getInventory(self.inventoryId, setIt)
 
@@ -374,7 +412,9 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
 
         self.currentTarget = target
         if target:
-            if (not hasattr(target, 'currentDialogMovie') or target.currentDialogMovie == None) and target.hideHpMeterFlag == 0:
+            if (not hasattr(target, 'currentDialogMovie') or
+                    target.currentDialogMovie == None
+               ) and target.hideHpMeterFlag == 0:
                 target.showHpMeter()
 
             if self.gameFSM.state == 'Battle':
@@ -445,7 +485,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
 
         self.invInterest = self.addInterest(2, 'localAvatar-inventory')
         if self.guildId:
-            self.cr.guildManager.addInterest(self.guildId, self.uniqueName('guild'))
+            self.cr.guildManager.addInterest(self.guildId,
+                                             self.uniqueName('guild'))
 
         self.nametag.manage(base.marginManager)
         self.controlManager.setTag('avId', str(self.getDoId()))
@@ -460,66 +501,131 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         self.acceptOnce('targetMgrCreated', self.targetMgrCreated)
         if base.config.GetBool('osd-anim-blends', 0):
             self.toggleOsdAnimBlends(True)
-        self.acceptOnce('generate-%s' % self.getInventoryId(), self.initInventoryGui)
-        self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), InventoryType.GoldInPocket), self.setMoney)
+        self.acceptOnce('generate-%s' % self.getInventoryId(),
+                        self.initInventoryGui)
+        self.accept(
+            'inventoryQuantity-%s-%s' %
+            (self.getInventoryId(), InventoryType.GoldInPocket), self.setMoney)
         for weaponId in WeaponGlobals.getHumanWeaponTypes():
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), weaponId), self.refreshInventoryWeapons)
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), weaponId),
+                self.refreshInventoryWeapons)
 
-        for skillId in range(InventoryType.begin_WeaponSkillMelee, InventoryType.end_WeaponSkillMelee):
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId), self.guiMgr.updateSkillUnlock, extraArgs=[skillId])
+        for skillId in range(InventoryType.begin_WeaponSkillMelee,
+                             InventoryType.end_WeaponSkillMelee):
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId),
+                self.guiMgr.updateSkillUnlock,
+                extraArgs=[skillId])
 
-        for skillId in range(InventoryType.begin_WeaponSkillCutlass, InventoryType.end_WeaponSkillCutlass):
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId), self.guiMgr.updateSkillUnlock, extraArgs=[skillId])
+        for skillId in range(InventoryType.begin_WeaponSkillCutlass,
+                             InventoryType.end_WeaponSkillCutlass):
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId),
+                self.guiMgr.updateSkillUnlock,
+                extraArgs=[skillId])
 
-        for skillId in range(InventoryType.begin_WeaponSkillPistol, InventoryType.end_WeaponSkillPistol):
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId), self.guiMgr.updateSkillUnlock, extraArgs=[skillId])
+        for skillId in range(InventoryType.begin_WeaponSkillPistol,
+                             InventoryType.end_WeaponSkillPistol):
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId),
+                self.guiMgr.updateSkillUnlock,
+                extraArgs=[skillId])
 
-        for skillId in range(InventoryType.begin_WeaponSkillMusket, InventoryType.end_WeaponSkillMusket):
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId), self.guiMgr.updateSkillUnlock, extraArgs=[skillId])
+        for skillId in range(InventoryType.begin_WeaponSkillMusket,
+                             InventoryType.end_WeaponSkillMusket):
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId),
+                self.guiMgr.updateSkillUnlock,
+                extraArgs=[skillId])
 
-        for skillId in range(InventoryType.begin_WeaponSkillBayonet, InventoryType.end_WeaponSkillBayonet):
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId), self.guiMgr.updateSkillUnlock, extraArgs=[skillId])
+        for skillId in range(InventoryType.begin_WeaponSkillBayonet,
+                             InventoryType.end_WeaponSkillBayonet):
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId),
+                self.guiMgr.updateSkillUnlock,
+                extraArgs=[skillId])
 
-        for skillId in range(InventoryType.begin_WeaponSkillDagger, InventoryType.end_WeaponSkillDagger):
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId), self.guiMgr.updateSkillUnlock, extraArgs=[skillId])
+        for skillId in range(InventoryType.begin_WeaponSkillDagger,
+                             InventoryType.end_WeaponSkillDagger):
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId),
+                self.guiMgr.updateSkillUnlock,
+                extraArgs=[skillId])
 
-        for skillId in range(InventoryType.begin_SkillSailing, InventoryType.end_SkillSailing):
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId), self.guiMgr.updateSkillUnlock, extraArgs=[skillId])
+        for skillId in range(InventoryType.begin_SkillSailing,
+                             InventoryType.end_SkillSailing):
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId),
+                self.guiMgr.updateSkillUnlock,
+                extraArgs=[skillId])
 
-        for skillId in range(InventoryType.begin_WeaponSkillCannon, InventoryType.end_ExtendedWeaponSkillCannon):
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId), self.guiMgr.updateSkillUnlock, extraArgs=[skillId])
+        for skillId in range(InventoryType.begin_WeaponSkillCannon,
+                             InventoryType.end_ExtendedWeaponSkillCannon):
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId),
+                self.guiMgr.updateSkillUnlock,
+                extraArgs=[skillId])
 
-        for skillId in range(InventoryType.begin_WeaponSkillDoll, InventoryType.end_WeaponSkillDoll):
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId), self.guiMgr.updateSkillUnlock, extraArgs=[skillId])
+        for skillId in range(InventoryType.begin_WeaponSkillDoll,
+                             InventoryType.end_WeaponSkillDoll):
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId),
+                self.guiMgr.updateSkillUnlock,
+                extraArgs=[skillId])
 
-        for skillId in range(InventoryType.begin_WeaponSkillWand, InventoryType.end_WeaponSkillWand):
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId), self.guiMgr.updateSkillUnlock, extraArgs=[skillId])
+        for skillId in range(InventoryType.begin_WeaponSkillWand,
+                             InventoryType.end_WeaponSkillWand):
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), skillId),
+                self.guiMgr.updateSkillUnlock,
+                extraArgs=[skillId])
 
-        for teleportTokenId in range(InventoryType.begin_TeleportToken, InventoryType.end_TeleportToken):
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), teleportTokenId), self.guiMgr.mapPage.updateTeleportIsland, extraArgs=[teleportTokenId])
+        for teleportTokenId in range(InventoryType.begin_TeleportToken,
+                                     InventoryType.end_TeleportToken):
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(),
+                                             teleportTokenId),
+                self.guiMgr.mapPage.updateTeleportIsland,
+                extraArgs=[teleportTokenId])
 
         for repCategory in ReputationGlobals.getReputationCategories():
-            self.accept('inventoryAccumulator-%s-%s' % (self.getInventoryId(), repCategory), self.updateReputation, extraArgs=[repCategory])
+            self.accept(
+                'inventoryAccumulator-%s-%s' % (self.getInventoryId(),
+                                                repCategory),
+                self.updateReputation,
+                extraArgs=[repCategory])
 
         for unCat in ReputationGlobals.getUnspentCategories():
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), unCat), self.guiMgr.updateUnspent, extraArgs=[unCat])
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), unCat),
+                self.guiMgr.updateUnspent,
+                extraArgs=[unCat])
 
         for tonicId in InventoryType.Potions:
-            self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), tonicId), self.guiMgr.updateTonic)
+            self.accept(
+                'inventoryQuantity-%s-%s' % (self.getInventoryId(), tonicId),
+                self.guiMgr.updateTonic)
 
         self.guiMgr.combatTray.updateBestTonic()
-        self.accept('inventoryQuantity-%s-%s' % (self.getInventoryId(), InventoryType.ShipRepairKit), self.guiMgr.updateShipRepairKit)
+        self.accept(
+            'inventoryQuantity-%s-%s' % (self.getInventoryId(),
+                                         InventoryType.ShipRepairKit),
+            self.guiMgr.updateShipRepairKit)
         self.guiMgr.combatTray.updateShipRepairKits()
         taskMgr.add(self.shadowReach, 'shadowReach', priority=40)
         self.accept('enterWater', self.handleWaterIn)
         self.accept('againWater', self.handleWaterAgain)
         self.accept('exitWater', self.handleWaterOut)
-        if self.style.getTutorial() < PiratesGlobals.TUT_GOT_COMPASS and not base.config.GetBool('teleport-all', 0):
+        if self.style.getTutorial(
+        ) < PiratesGlobals.TUT_GOT_COMPASS and not base.config.GetBool(
+                'teleport-all', 0):
             self.b_setTeleportFlag(PiratesGlobals.TFNoCompass)
 
         if not base.launcher.getPhaseComplete(5):
             self.b_setTeleportFlag(PiratesGlobals.TFPhaseIncomplete)
-            self.accept('phaseComplete-5', self.handlePhaseComplete, extraArgs=[5])
+            self.accept(
+                'phaseComplete-5', self.handlePhaseComplete, extraArgs=[5])
 
         self.accept('InputState-forward', self.checkInputState)
         self.accept('InputState-reverse', self.checkInputState)
@@ -528,10 +634,14 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
 
     def disable(self):
         self.ignore('generate-%s' % self.getInventoryId())
-        self.ignore('inventoryQuantity-%s-%s' % (self.getInventoryId(), InventoryType.GoldInPocket))
-        self.ignore('inventoryQuantity-%s-%s' % (self.getInventoryId(), InventoryType.Dinghy))
-        self.ignore('inventoryAddDoId-%s-%s' % (self.getInventoryId(), InventoryCategory.SHIPS))
-        self.ignore('inventoryRemoveDoId-%s-%s' % (self.getInventoryId(), InventoryCategory.SHIPS))
+        self.ignore('inventoryQuantity-%s-%s' % (self.getInventoryId(),
+                                                 InventoryType.GoldInPocket))
+        self.ignore('inventoryQuantity-%s-%s' % (self.getInventoryId(),
+                                                 InventoryType.Dinghy))
+        self.ignore('inventoryAddDoId-%s-%s' % (self.getInventoryId(),
+                                                InventoryCategory.SHIPS))
+        self.ignore('inventoryRemoveDoId-%s-%s' % (self.getInventoryId(),
+                                                   InventoryCategory.SHIPS))
         self.ignore('control-f3')
         self.ignore('shift-f12')
         self.ignore('enterWater')
@@ -566,7 +676,9 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         DistributedPlayerPirate.disable(self)
 
     def clearInventoryInterest(self):
-        self.removeInterest(self.invInterest, event=self.uniqueName('localAvatar-close-inventory'))
+        self.removeInterest(
+            self.invInterest,
+            event=self.uniqueName('localAvatar-close-inventory'))
 
     def handlePhaseComplete(self, phase):
         DistributedPlayerPirate.handlePhaseComplete(self, phase)
@@ -687,12 +799,20 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         reach = 8.0
         avatarRadius = 1.4
         controls = BattleWalker.BattleWalker()
-        controls.setWallBitMask(OTPGlobals.WallBitmask | PiratesGlobals.GoldBitmask)
+        controls.setWallBitMask(OTPGlobals.WallBitmask |
+                                PiratesGlobals.GoldBitmask)
         controls.setFloorBitMask(OTPGlobals.FloorBitmask)
-        controls.initializeCollisions(self.cTrav, self, avatarRadius, floorOffset, reach)
+        controls.initializeCollisions(self.cTrav, self, avatarRadius,
+                                      floorOffset, reach)
         controls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(controls, 'battle')
-        self.setupWalkControls(avatarRadius=1.4, floorOffset=OTPGlobals.FloorOffset, reach=reach, wallBitmask=OTPGlobals.WallBitmask | PiratesGlobals.GoldBitmask, floorBitmask=OTPGlobals.FloorBitmask, ghostBitmask=OTPGlobals.GhostBitmask)
+        self.setupWalkControls(
+            avatarRadius=1.4,
+            floorOffset=OTPGlobals.FloorOffset,
+            reach=reach,
+            wallBitmask=OTPGlobals.WallBitmask | PiratesGlobals.GoldBitmask,
+            floorBitmask=OTPGlobals.FloorBitmask,
+            ghostBitmask=OTPGlobals.GhostBitmask)
         self.enableRun()
         self.startListenAutoRun()
 
@@ -774,7 +894,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         if self.aimTubeNodePaths:
             return
         self.aimTubeEvent = self.uniqueName('aimTube')
-        aimTube = CollisionTube(0, 0, 0, 0, 0, self.height, self.battleTubeRadius * 1.5)
+        aimTube = CollisionTube(0, 0, 0, 0, 0, self.height,
+                                self.battleTubeRadius * 1.5)
         aimTube.setTangible(0)
         aimTubeNode = CollisionNode(self.aimTubeEvent)
         aimTubeNode.addSolid(aimTube)
@@ -803,7 +924,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
     def canChat(self):
         if self.cr.allowOpenChat():
             return 1
-        if self.commonChatFlags & (OTPGlobals.CommonChat | OTPGlobals.SuperChat):
+        if self.commonChatFlags & (OTPGlobals.CommonChat |
+                                   OTPGlobals.SuperChat):
             return 1
         return 0
 
@@ -842,7 +964,18 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             elif isinstance(parent, DistributedGameArea.DistributedGameArea):
                 model = parent.modelPath
                 model = model.split('/')[-1]
-        strPos = '\nMaya Pos: \n%.1f, %.1f, %.1f' % (pos[0], pos[2], -pos[1]) + '\nPanda Pos: \n%.1f, %.1f, %.1f' % (pos[0], pos[1], pos[2]) + '\nH: %.1f' % hpr[0] + '\nModel: %s' % model + '\nTexture: %s, Terrain: %s, Avatar: %s' % (base.options.getTextureScaleString(), base.options.getGameOptionString(base.options.terrain_detail_level), base.options.getGameOptionString(base.options.character_detail_level)) + '\nLoc: (%s, %s)' % (str(parentId), str(zoneId)) + ',\nVer: %s, ' % serverVersion + '\nDistrict: %s' % districtName
+        strPos = '\nMaya Pos: \n%.1f, %.1f, %.1f' % (
+            pos[0], pos[2], -pos[1]
+        ) + '\nPanda Pos: \n%.1f, %.1f, %.1f' % (
+            pos[0], pos[1], pos[2]
+        ) + '\nH: %.1f' % hpr[0] + '\nModel: %s' % model + '\nTexture: %s, Terrain: %s, Avatar: %s' % (
+            base.options.getTextureScaleString(),
+            base.options.getGameOptionString(base.options.terrain_detail_level),
+            base.options.getGameOptionString(
+                base.options.character_detail_level)
+        ) + '\nLoc: (%s, %s)' % (
+            str(parentId), str(zoneId)
+        ) + ',\nVer: %s, ' % serverVersion + '\nDistrict: %s' % districtName
         print 'Current position=', strPos.replace('\n', ', ')
         self.setChatAbsolute(strPos, CFThought | CFTimeout)
 
@@ -976,29 +1109,46 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
     def getRemoveInterestEventName(self):
         return self.uniqueName('removeInterest')
 
-    @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
+    @report(
+        types=['deltaStamp', 'module', 'args'],
+        prefix='------',
+        dConfigParam='want-teleport-report')
     def b_setLocation(self, parentId, zoneId, teleport=0):
         self.d_setLocation(parentId, zoneId)
         self.setLocation(parentId, zoneId, teleport)
 
-    @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam=['want-teleport-report', 'want-shipboard-report'])
+    @report(
+        types=['deltaStamp', 'module', 'args'],
+        prefix='------',
+        dConfigParam=['want-teleport-report', 'want-shipboard-report'])
     def setLocation(self, parentId, zoneId, teleport=0):
         messenger.send('localAvatar-setLocation', sentArgs=[parentId, zoneId])
         DistributedPlayerPirate.setLocation(self, parentId, zoneId, teleport)
         if self.isGenerated():
             self.cnode.setCurrL(zoneId)
 
-    @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
+    @report(
+        types=['deltaStamp', 'module', 'args'],
+        prefix='------',
+        dConfigParam='want-teleport-report')
     def teleportToShard(self, shardId, zoneId, callbackEvent):
         self.notify.debug('teleportToShard %s,%s' % (shardId, zoneId))
         self.cr.loadingScreen.show()
         addEvent = self.getAddInterestEventName()
-        self.cr.addTaggedInterest(shardId, zoneId, ['instanceInterest'], addEvent)
-        self.acceptOnce(addEvent, self.handleTeleportToShardDone, extraArgs = [shardId, zoneId, callbackEvent])
+        self.cr.addTaggedInterest(shardId, zoneId, ['instanceInterest'],
+                                  addEvent)
+        self.acceptOnce(
+            addEvent,
+            self.handleTeleportToShardDone,
+            extraArgs=[shardId, zoneId, callbackEvent])
 
-    @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
+    @report(
+        types=['deltaStamp', 'module', 'args'],
+        prefix='------',
+        dConfigParam='want-teleport-report')
     def handleTeleportToShardDone(self, shardId, zoneId, callbackEvent):
-        self.notify.debug('handleTeleportToShardDone %s, %s' % (shardId, zoneId))
+        self.notify.debug(
+            'handleTeleportToShardDone %s, %s' % (shardId, zoneId))
         self.b_setLocation(shardId, zoneId, teleport=1)
         messenger.send(callbackEvent)
 
@@ -1012,10 +1162,21 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             self.av.updatePlayerSpeed()
 
     def printState(self):
-        self.notify.warning('%s\n  %s\n  %s\n  %s\n  %s\n  %s' % (localAvatar, self.gameFSM, self.motionFSM, self.motionFSM.motionAnimFSM, self.cameraFSM, base.cr.interactionMgr))
+        self.notify.warning('%s\n  %s\n  %s\n  %s\n  %s\n  %s' %
+                            (localAvatar, self.gameFSM, self.motionFSM,
+                             self.motionFSM.motionAnimFSM, self.cameraFSM,
+                             base.cr.interactionMgr))
 
-    def playOuch(self, skillId, ammoSkillId, targetEffects, attacker, pos, targetBonus=0):
-        DistributedPlayerPirate.playOuch(self, skillId, ammoSkillId, targetEffects, attacker, pos, targetBonus)
+    def playOuch(self,
+                 skillId,
+                 ammoSkillId,
+                 targetEffects,
+                 attacker,
+                 pos,
+                 targetBonus=0):
+        DistributedPlayerPirate.playOuch(self, skillId, ammoSkillId,
+                                         targetEffects, attacker, pos,
+                                         targetBonus)
         self.setBattleTeleportFlag()
         if attacker and not attacker.isEmpty():
             self.guiMgr.hitFromOffscreen(attacker)
@@ -1024,10 +1185,12 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
                 messenger.send(InteractiveBase.END_INTERACT_EVENT)
                 self.b_setGameState(self.gameFSM.defaultState)
         if WeaponGlobals.getSkillInterrupt(skillId) and self.isWeaponDrawn:
-            if WeaponGlobals.getRepId(self.currentWeaponId) in WeaponGlobals.CHARGEABLE_WEAPONS:
+            if WeaponGlobals.getRepId(
+                    self.currentWeaponId) in WeaponGlobals.CHARGEABLE_WEAPONS:
                 if self.guiMgr.combatTray.chargeTime > 0.8:
                     self.guiMgr.combatTray.interruptCharge()
-                    self.sendUpdate('interrupted', [WeaponGlobals.C_INTERRUPTED])
+                    self.sendUpdate('interrupted',
+                                    [WeaponGlobals.C_INTERRUPTED])
 
     def hasEffect(self, effectId):
         for key in self.skillEffects.keys():
@@ -1039,7 +1202,11 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
     def setBattleTeleportFlag(self):
         self.clearBattleTeleportFlag(send=False)
         self.b_setTeleportFlag(PiratesGlobals.TFInBattle)
-        self.battleTeleportFlagTask = taskMgr.doMethodLater(15, self.clearBattleTeleportFlag, 'battleTeleportFlag', extraArgs=[])
+        self.battleTeleportFlagTask = taskMgr.doMethodLater(
+            15,
+            self.clearBattleTeleportFlag,
+            'battleTeleportFlag',
+            extraArgs=[])
 
     def clearBattleTeleportFlag(self, send=True):
         if self.battleTeleportFlagTask:
@@ -1057,7 +1224,57 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         self.surfaceIndex = PiratesGlobals.SURFACE_DEFAULT
         self.movementIndex = PiratesGlobals.STAND_INDEX
         self.curMoveSound = None
-        self.moveSound = {PiratesGlobals.STAND_INDEX: {PiratesGlobals.SURFACE_DEFAULT: None, PiratesGlobals.SURFACE_WATER: swimSound}, PiratesGlobals.WALK_INDEX: {PiratesGlobals.SURFACE_DEFAULT: walkSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: walkWood}, PiratesGlobals.RUN_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: runWood}, PiratesGlobals.REVERSE_INDEX: {PiratesGlobals.SURFACE_DEFAULT: walkSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: walkWood}, PiratesGlobals.STRAFE_LEFT_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: runWood}, PiratesGlobals.STRAFE_RIGHT_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: runWood}, PiratesGlobals.STRAFE_LEFT_DIAG_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: runWood}, PiratesGlobals.STRAFE_RIGHT_DIAG_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: runWood}, PiratesGlobals.STRAFE_LEFT_DIAG_REV_INDEX: {PiratesGlobals.SURFACE_DEFAULT: walkSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: walkWood}, PiratesGlobals.STRAFE_RIGHT_DIAG_REV_INDEX: {PiratesGlobals.SURFACE_DEFAULT: walkSand, PiratesGlobals.SURFACE_WATER: swimSound, PiratesGlobals.SURFACE_WOOD: walkWood}}
+        self.moveSound = {
+            PiratesGlobals.STAND_INDEX: {
+                PiratesGlobals.SURFACE_DEFAULT: None,
+                PiratesGlobals.SURFACE_WATER: swimSound
+            },
+            PiratesGlobals.WALK_INDEX: {
+                PiratesGlobals.SURFACE_DEFAULT: walkSand,
+                PiratesGlobals.SURFACE_WATER: swimSound,
+                PiratesGlobals.SURFACE_WOOD: walkWood
+            },
+            PiratesGlobals.RUN_INDEX: {
+                PiratesGlobals.SURFACE_DEFAULT: runSand,
+                PiratesGlobals.SURFACE_WATER: swimSound,
+                PiratesGlobals.SURFACE_WOOD: runWood
+            },
+            PiratesGlobals.REVERSE_INDEX: {
+                PiratesGlobals.SURFACE_DEFAULT: walkSand,
+                PiratesGlobals.SURFACE_WATER: swimSound,
+                PiratesGlobals.SURFACE_WOOD: walkWood
+            },
+            PiratesGlobals.STRAFE_LEFT_INDEX: {
+                PiratesGlobals.SURFACE_DEFAULT: runSand,
+                PiratesGlobals.SURFACE_WATER: swimSound,
+                PiratesGlobals.SURFACE_WOOD: runWood
+            },
+            PiratesGlobals.STRAFE_RIGHT_INDEX: {
+                PiratesGlobals.SURFACE_DEFAULT: runSand,
+                PiratesGlobals.SURFACE_WATER: swimSound,
+                PiratesGlobals.SURFACE_WOOD: runWood
+            },
+            PiratesGlobals.STRAFE_LEFT_DIAG_INDEX: {
+                PiratesGlobals.SURFACE_DEFAULT: runSand,
+                PiratesGlobals.SURFACE_WATER: swimSound,
+                PiratesGlobals.SURFACE_WOOD: runWood
+            },
+            PiratesGlobals.STRAFE_RIGHT_DIAG_INDEX: {
+                PiratesGlobals.SURFACE_DEFAULT: runSand,
+                PiratesGlobals.SURFACE_WATER: swimSound,
+                PiratesGlobals.SURFACE_WOOD: runWood
+            },
+            PiratesGlobals.STRAFE_LEFT_DIAG_REV_INDEX: {
+                PiratesGlobals.SURFACE_DEFAULT: walkSand,
+                PiratesGlobals.SURFACE_WATER: swimSound,
+                PiratesGlobals.SURFACE_WOOD: walkWood
+            },
+            PiratesGlobals.STRAFE_RIGHT_DIAG_REV_INDEX: {
+                PiratesGlobals.SURFACE_DEFAULT: walkSand,
+                PiratesGlobals.SURFACE_WATER: swimSound,
+                PiratesGlobals.SURFACE_WOOD: walkWood
+            }
+        }
 
     def setSurfaceIndex(self, surfaceIndex):
         if surfaceIndex != self.surfaceIndex:
@@ -1092,8 +1309,10 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
     def refreshStatusTray(self):
         if self.isGenerated():
             self.guiMgr.gameGui.statusTray.updateHp(self.hp, self.maxHp)
-            self.guiMgr.gameGui.statusTray.updateVoodoo(self.getTotalMojo(), self.maxMojo)
-            self.guiMgr.gameGui.statusTray.updateStatusEffects(self.skillEffects)
+            self.guiMgr.gameGui.statusTray.updateVoodoo(self.getTotalMojo(),
+                                                        self.maxMojo)
+            self.guiMgr.gameGui.statusTray.updateStatusEffects(
+                self.skillEffects)
             self.guiMgr.combatTray.updateBestTonic()
             if self.maxHp:
                 hpFraction = float(self.hp) / float(self.maxHp)
@@ -1105,25 +1324,29 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             return self.cannon.prop.pivot
         return self
 
-    def composeRequestProjectileSkill(self, skillId, ammoSkillId, posHpr, charge=0):
+    def composeRequestProjectileSkill(self,
+                                      skillId,
+                                      ammoSkillId,
+                                      posHpr,
+                                      charge=0):
         timestamp = 0
-        self.sendRequestProjectileSkill(skillId, ammoSkillId, posHpr, charge, timestamp)
+        self.sendRequestProjectileSkill(skillId, ammoSkillId, posHpr, charge,
+                                        timestamp)
         skillResult = WeaponGlobals.RESULT_DELAY
         self.playSkillMovie(skillId, ammoSkillId, skillResult, charge)
 
-    def composeRequestTargetedSkill(self, skillId, ammoSkillId, combo=0, charge=0):
+    def composeRequestTargetedSkill(self,
+                                    skillId,
+                                    ammoSkillId,
+                                    combo=0,
+                                    charge=0):
         newPos = self.cr.targetMgr.getAimHitPos(self)
         if newPos:
-            pos = [
-                newPos[0],
-                newPos[1],
-                newPos[2]]
+            pos = [newPos[0], newPos[1], newPos[2]]
         else:
-            pos = [
-                0,
-                0,
-                0]
-        if WeaponGlobals.getIsShipSkill(skillId) or ammoSkillId == InventoryType.ShipRepairKit:
+            pos = [0, 0, 0]
+        if WeaponGlobals.getIsShipSkill(
+                skillId) or ammoSkillId == InventoryType.ShipRepairKit:
             targetId = self.ship.getDoId()
             areaCenter = self.ship
             areaIdList = []
@@ -1144,7 +1367,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
                     if av:
                         if friendlySkill and TeamUtils.damageAllowed(self, av):
                             toRemove.append(avId)
-                        elif not friendlySkill and not TeamUtils.damageAllowed(self, av):
+                        elif not friendlySkill and not TeamUtils.damageAllowed(
+                                self, av):
                             toRemove.append(avId)
                     else:
                         toRemove.append(avId)
@@ -1153,7 +1377,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
                     areaIdList.remove(currToRemove)
 
             else:
-                if self.currentTarget and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
+                if self.currentTarget and WeaponGlobals.getNeedTarget(
+                        skillId, ammoSkillId):
                     targetId = self.currentTarget.getDoId()
                     areaCenter = self.currentTarget
                 else:
@@ -1161,52 +1386,80 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
                     areaCenter = self
 
                 areaIdList = self.getAreaList(skillId, ammoSkillId, areaCenter,
-                    Point3(*pos), self.doId)
+                                              Point3(*pos), self.doId)
 
-        skillResult = self.cr.battleMgr.doAttack(self, skillId, ammoSkillId, targetId, areaIdList,
-            Point3(*pos), combo, charge)
+        skillResult = self.cr.battleMgr.doAttack(self, skillId, ammoSkillId,
+                                                 targetId, areaIdList,
+                                                 Point3(*pos), combo, charge)
 
-        if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
+        if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE and WeaponGlobals.getNeedTarget(
+                skillId, ammoSkillId):
             messenger.send('skillFinished')
             return
 
         timestamp32 = 0
-        self.sendRequestTargetedSkill(skillId, ammoSkillId, skillResult, targetId,
-            areaIdList, timestamp32, pos, charge)
+        self.sendRequestTargetedSkill(skillId, ammoSkillId, skillResult,
+                                      targetId, areaIdList, timestamp32, pos,
+                                      charge)
 
-        attackerEffects, targetEffects = self.cr.battleMgr.getModifiedSkillEffects(self, self.currentTarget,
-            skillId, ammoSkillId, charge)
+        attackerEffects, targetEffects = self.cr.battleMgr.getModifiedSkillEffects(
+            self, self.currentTarget, skillId, ammoSkillId, charge)
 
         areaEffects = []
         for avId in areaIdList:
             av = base.cr.doId2do.get(avId)
             if av:
-                skillTargetEffects = self.cr.battleMgr.getModifiedSkillEffects(self, av,
-                    skillId, ammoSkillId, charge)[1]
+                skillTargetEffects = self.cr.battleMgr.getModifiedSkillEffects(
+                    self, av, skillId, ammoSkillId, charge)[1]
 
                 areaEffects.append(skillTargetEffects)
 
-        self.useTargetedSkill(skillId, ammoSkillId, skillResult, targetId, areaIdList, attackerEffects,
-            targetEffects, areaEffects, timestamp32, pos, charge, localSignal=1)
+        self.useTargetedSkill(
+            skillId,
+            ammoSkillId,
+            skillResult,
+            targetId,
+            areaIdList,
+            attackerEffects,
+            targetEffects,
+            areaEffects,
+            timestamp32,
+            pos,
+            charge,
+            localSignal=1)
 
         if attackerEffects != [0, 0, 0, 0, 0]:
-            self.targetedWeaponHit(skillId, ammoSkillId, WeaponGlobals.RESULT_HIT,
-                attackerEffects, self, pos)
+            self.targetedWeaponHit(skillId, ammoSkillId,
+                                   WeaponGlobals.RESULT_HIT, attackerEffects,
+                                   self, pos)
 
     def composeRequestShipSkill(self, skillId, ammoSkillId):
         targetId = self.ship.getDoId()
         areaCenter = self.ship
         areaIdList = []
-        skillResult = self.cr.battleMgr.doAttack(self, skillId, ammoSkillId, targetId, areaIdList, Point3(0, 0, 0), 0)
-        if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
+        skillResult = self.cr.battleMgr.doAttack(self, skillId, ammoSkillId,
+                                                 targetId, areaIdList,
+                                                 Point3(0, 0, 0), 0)
+        if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE and WeaponGlobals.getNeedTarget(
+                skillId, ammoSkillId):
             messenger.send('skillFinished')
             return
         timestamp32 = 0
-        self.sendRequestShipSkill(skillId, ammoSkillId, skillResult, targetId, timestamp32)
-        selfEffects, targetEffects = self.cr.battleMgr.getModifiedSkillEffects(self, self.currentTarget, skillId, ammoSkillId)
+        self.sendRequestShipSkill(skillId, ammoSkillId, skillResult, targetId,
+                                  timestamp32)
+        selfEffects, targetEffects = self.cr.battleMgr.getModifiedSkillEffects(
+            self, self.currentTarget, skillId, ammoSkillId)
         target = base.cr.doId2do.get(targetId)
         if target:
-            target.useShipSkill(skillId, ammoSkillId, skillResult, targetId, selfEffects, targetEffects, timestamp32, localSignal=1)
+            target.useShipSkill(
+                skillId,
+                ammoSkillId,
+                skillResult,
+                targetId,
+                selfEffects,
+                targetEffects,
+                timestamp32,
+                localSignal=1)
         self.skillDiary.startRecharging(skillId, ammoSkillId)
 
     def initCombatTray(self, rep):
@@ -1223,14 +1476,17 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
     def startMonitorStickyTargets(self):
         self.lastTick = 0
         if not taskMgr.hasTaskNamed(self.uniqueName('monitorStickyTargets')):
-            taskMgr.add(self.monitorStickyTargets, self.uniqueName('monitorStickyTargets'))
+            taskMgr.add(self.monitorStickyTargets,
+                        self.uniqueName('monitorStickyTargets'))
 
     def monitorStickyTargets(self, task):
         TICK_DELAY = 1.0
         if task.time - self.lastTick > TICK_DELAY:
             for avId in self.stickyTargets:
                 av = base.cr.doId2do.get(avId)
-                if av is None or self.getDistance(av) > WeaponGlobals.getAttackRange(InventoryType.DollPoke):
+                if av is None or self.getDistance(
+                        av) > WeaponGlobals.getAttackRange(
+                            InventoryType.DollPoke):
                     self.sendRequestRemoveStickyTargets([avId])
 
             self.lastTick = task.time
@@ -1244,7 +1500,13 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         jail_door = jail.find('**/jail_door0' + stringIndex)
         jail_lock = jail.find('**/lock0' + stringIndex)
         jail_door_collision = jail.find('**/door_collision_0' + stringIndex)
-        seq = Sequence(LerpHprInterval(jail_door, 1, VBase3(120, jail_door.getP(), jail_door.getR()), blendType='easeInOut'), duration=1.0)
+        seq = Sequence(
+            LerpHprInterval(
+                jail_door,
+                1,
+                VBase3(120, jail_door.getP(), jail_door.getR()),
+                blendType='easeInOut'),
+            duration=1.0)
         seq.start()
         self.openJailDoorTrack = seq
         jail_door_collision.setR(30)
@@ -1322,7 +1584,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             return
         sender = base.cr.identifyAvatar(fromAvId)
         if not sender:
-            self.notify.warning('displayWhisper: fromAvId: %s not found' % fromAvId)
+            self.notify.warning(
+                'displayWhisper: fromAvId: %s not found' % fromAvId)
             return
         if self.soundWhisper:
             base.playSfx(self.soundWhisper)
@@ -1336,8 +1599,7 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         DistributedPlayerPirate.whisperTo(self, chatString, sendToId)
 
     def setKickEvents(self, kickEventStart, kickEventConnect):
-        self.kickEvents = [
-         kickEventStart, kickEventConnect]
+        self.kickEvents = [kickEventStart, kickEventConnect]
 
     def spendSkillPoint(self, skillId):
         self.sendUpdate('spendSkillPoint', [skillId])
@@ -1359,11 +1621,15 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             if questDNA:
                 questTasks = questDNA.getTasks()
             else:
-                self.notify.warning('quest %s: does not contain a dna; is it a rogue quest, given in error?' % currQuest.getQuestId())
+                self.notify.warning(
+                    'quest %s: does not contain a dna; is it a rogue quest, given in error?'
+                    % currQuest.getQuestId())
                 return
             for currTask in questTasks:
                 autoTriggerInfo = currTask.getAutoTriggerInfo()
-                if len(autoTriggerInfo) > 0 and autoTriggerInfo[0] == QuestDB.AUTO_TRIGGER_OBJ_EXISTS:
+                if len(
+                        autoTriggerInfo
+                ) > 0 and autoTriggerInfo[0] == QuestDB.AUTO_TRIGGER_OBJ_EXISTS:
                     firstObjId = autoTriggerInfo[1][0]
                     allObjsPresent = True
                     if objRef.getUniqueId() == firstObjId:
@@ -1376,7 +1642,11 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
                         if allObjsPresent:
                             objRef.handleUseKey()
                         else:
-                            taskMgr.doMethodLater(3, objRef.autoTriggerCheck, objRef.uniqueName('autoTriggerCheck'), extraArgs=[])
+                            taskMgr.doMethodLater(
+                                3,
+                                objRef.autoTriggerCheck,
+                                objRef.uniqueName('autoTriggerCheck'),
+                                extraArgs=[])
 
     def swapFloorCollideMask(self, oldMask, newMask):
         cMask = self.cFloorNodePath.node().getFromCollideMask()
@@ -1388,7 +1658,9 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             if controls:
                 controls.swapFloorBitMask(oldMask, newMask)
 
-    @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
+    @report(
+        types=['frameCount', 'deltaStamp'],
+        dConfigParam='want-shipboard-report')
     def placeOnShip(self, ship, pvp=False):
         messenger.send('islandPlayerBarrier', [0])
         oldParent = self.getParentObj()
@@ -1405,7 +1677,9 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         self.cnode.broadcastPosHprFull()
         ship.sendUpdate('shipBoarded')
 
-    @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
+    @report(
+        types=['frameCount', 'deltaStamp'],
+        dConfigParam='want-shipboard-report')
     def removeFromShip(self, ship):
         ship.disableOnDeckInteractions()
         ship.stashFloorCollisions()
@@ -1439,7 +1713,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
 
     def resetQuestShow(self):
         self.showQuest = False
-        taskMgr.doMethodLater(2.0, self.doShowReset, self.uniqueName('questShow'), extraArgs=[])
+        taskMgr.doMethodLater(
+            2.0, self.doShowReset, self.uniqueName('questShow'), extraArgs=[])
 
     def setGuildId(self, guildId):
         DistributedPlayerPirate.setGuildId(self, guildId)
@@ -1465,7 +1740,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
 
     def setTutorial(self, val):
         DistributedPlayerPirate.setTutorial(self, val)
-        if val >= PiratesGlobals.TUT_GOT_COMPASS or base.config.GetBool('teleport-all', 0):
+        if val >= PiratesGlobals.TUT_GOT_COMPASS or base.config.GetBool(
+                'teleport-all', 0):
             self.b_clearTeleportFlag(PiratesGlobals.TFNoCompass)
         else:
             self.b_setTeleportFlag(PiratesGlobals.TFNoCompass)
@@ -1474,7 +1750,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
 
     def startOceanCheck(self):
         if not taskMgr.hasTaskNamed(self.uniqueName('oceanCheck')):
-            taskMgr.doMethodLater(10, self.checkCurrentOcean, self.uniqueName('oceanCheck'))
+            taskMgr.doMethodLater(10, self.checkCurrentOcean,
+                                  self.uniqueName('oceanCheck'))
 
     def checkCurrentOcean(self, task):
         if self.ship:
@@ -1482,7 +1759,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             newOcean = OceanZone.getOceanZone(pos[0], pos[1])
             if self.currentOcean != newOcean:
                 self.currentOcean = newOcean
-                self.guiMgr.flashOceanMsg(PLocalizer.OceanZoneNames.get(newOcean))
+                self.guiMgr.flashOceanMsg(
+                    PLocalizer.OceanZoneNames.get(newOcean))
             return task.again
         return task.done
 
@@ -1497,7 +1775,9 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             if self.guiMgr.questPage is not None:
                 self.guiMgr.questPage.titleList.showTracked(questId)
 
-    @report(types=['deltaStamp', 'args'], dConfigParam=['want-shipboard-report', 'want-teleport-report'])
+    @report(
+        types=['deltaStamp', 'args'],
+        dConfigParam=['want-shipboard-report', 'want-teleport-report'])
     def wrtReparentTo(self, *args, **kw):
         DistributedPlayerPirate.wrtReparentTo(self, *args, **kw)
 
@@ -1524,7 +1804,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             self.disableQuestArrow()
             return
         if not self.questArrow:
-            self.questArrow = loader.loadModelCopy('models/effects/arrow_ground')
+            self.questArrow = loader.loadModelCopy(
+                'models/effects/arrow_ground')
             g = self.questArrow.getChild(0)
             g.setPos(0, -4, 0)
             g.setHpr(180, 0, 0)
@@ -1533,11 +1814,17 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             self.questArrow.setDepthTest(0)
             self.questArrow.setBin('shadow', 1)
             self.questArrow.setLightOff()
-            self.questArrow.setColorScale(PiratesGuiGlobals.TextFG8[0], PiratesGuiGlobals.TextFG8[1], 0, PiratesGuiGlobals.TextFG8[3])
+            self.questArrow.setColorScale(PiratesGuiGlobals.TextFG8[0],
+                                          PiratesGuiGlobals.TextFG8[1], 0,
+                                          PiratesGuiGlobals.TextFG8[3])
             self.questArrow.node().setBounds(BoundingSphere(Point3(0, 0, 0), 6))
             self.questArrow.flattenStrong()
-            self.arrowPlacer = ShadowPlacer(base.shadowTrav, self.questArrow, OTPGlobals.WallBitmask, OTPGlobals.FloorBitmask)
-        self.questArrow.setEffect(BillboardEffect.make(Vec3(0, 0, 1), False, True, 0, questIndicatorNode, Point3(0)))
+            self.arrowPlacer = ShadowPlacer(base.shadowTrav, self.questArrow,
+                                            OTPGlobals.WallBitmask,
+                                            OTPGlobals.FloorBitmask)
+        self.questArrow.setEffect(
+            BillboardEffect.make(
+                Vec3(0, 0, 1), False, True, 0, questIndicatorNode, Point3(0)))
         self.questArrow.unstash()
         self.arrowPlacer.on()
 
@@ -1578,18 +1865,23 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         questGiver = base.cr.doId2do[questGiverDoId]
         questGiver.setQuestsCompleted(1, [self.activeQuestId], [], [], [])
 
-    @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam=['want-shipboard-report', 'want-teleport-report'])
+    @report(
+        types=['frameCount', 'deltaStamp', 'args'],
+        dConfigParam=['want-shipboard-report', 'want-teleport-report'])
     def leaveZoneLOD(self, zoneLODObj):
         if __dev__:
             import pirates.world.ZoneLOD as ZoneLOD
         zoneLODObj.setZoneLevelOuter()
 
-    @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam=['want-shipboard-report', 'want-teleport-report'])
+    @report(
+        types=['frameCount', 'deltaStamp', 'args'],
+        dConfigParam=['want-shipboard-report', 'want-teleport-report'])
     def enterZoneLOD(self, zoneLODObj):
         if __dev__:
             import pirates.world.ZoneLOD as ZoneLOD
         if self.controlManager.currentControls:
-            collisionsOn = self.controlManager.currentControls.getCollisionsActive()
+            collisionsOn = self.controlManager.currentControls.getCollisionsActive(
+            )
             self.collisionsOn()
             eventMgr.doEvents()
             self.controlManager.currentControls.cTrav.traverse(render)
@@ -1643,7 +1935,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             print x.lastZoneLevel, x.getName(), x.doId
 
     def addStatusEffect(self, effectId, attackerId, duration):
-        DistributedPlayerPirate.addStatusEffect(self, effectId, attackerId, duration)
+        DistributedPlayerPirate.addStatusEffect(self, effectId, attackerId,
+                                                duration)
         if effectId == WeaponGlobals.C_STUN:
             self.motionFSM.off()
 
@@ -1657,7 +1950,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         self.logDefaultShard()
 
     def logDefaultShard(self):
-        pcrCat = DirectNotifyGlobal.directNotify.getCategory('PiratesClientRepository')
+        pcrCat = DirectNotifyGlobal.directNotify.getCategory(
+            'PiratesClientRepository')
         sev = pcrCat.getSeverity()
         pcrCat.info('Current shard is: %s' % self.getDefaultShard())
         pcrCat.setSeverity(sev)
@@ -1675,28 +1969,39 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             self.cloudScudEffect.stopLoop()
             self.cloudScudEffect = None
 
-    @report(types=['deltaStamp'], prefix='------', dConfigParam='want-teleport-report')
+    @report(
+        types=['deltaStamp'],
+        prefix='------',
+        dConfigParam='want-teleport-report')
     def teleportCleanupComplete(self, instanceType):
         if self.getJailCellIndex() == 100:
             self.b_setGameState(self.gameFSM.defaultState)
         self.setLifterDelayFrames(frames=3)
-        self.cr.loadingScreen.scheduleHide(self.cr.getAllInterestsCompleteEvent())
-        self.acceptOnce(self.cr.getAllInterestsCompleteEvent(), taskMgr.doMethodLater, [1, self.doFadeIn, self.taskName('irisIn')])
+        self.cr.loadingScreen.scheduleHide(
+            self.cr.getAllInterestsCompleteEvent())
+        self.acceptOnce(
+            self.cr.getAllInterestsCompleteEvent(), taskMgr.doMethodLater,
+            [1, self.doFadeIn, self.taskName('irisIn')])
         if instanceType == PiratesGlobals.INSTANCE_PVP:
             self.setTeleportFlag(PiratesGlobals.TFInPVP)
         elif instanceType == PiratesGlobals.INSTANCE_TUTORIAL:
             self.setTeleportFlag(PiratesGlobals.TFInTutorial)
 
-    @report(types=['deltaStamp'], prefix='------', dConfigParam='want-teleport-report')
+    @report(
+        types=['deltaStamp'],
+        prefix='------',
+        dConfigParam='want-teleport-report')
     def doFadeIn(self, task):
         try:
             task.fadeInDone
-            if self.getJailCellIndex() == 100 and self.getGameState() not in ('WaterRoam', ):
+            if self.getJailCellIndex() == 100 and self.getGameState() not in (
+                    'WaterRoam',):
                 self.b_setGameState(self.gameFSM.defaultState)
             return task.done
         except AttributeError:
             task.fadeInDone = 1
-            tutorialException = base.cr.tutorial & (self.style.tutorial == PiratesGlobals.TUT_STARTED)
+            tutorialException = base.cr.tutorial & (
+                self.style.tutorial == PiratesGlobals.TUT_STARTED)
             if not tutorialException:
                 base.transitions.fadeIn()
             if self.teleportFriendDoId:
@@ -1718,12 +2023,13 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         pass
 
     def setGameState(self, gameState, timestamp=None, localArgs=[]):
-        DistributedPlayerPirate.setGameState(self, gameState, timestamp, localArgs)
-        if self.getGameState() not in ('LandRoam', ):
+        DistributedPlayerPirate.setGameState(self, gameState, timestamp,
+                                             localArgs)
+        if self.getGameState() not in ('LandRoam',):
             self.cameraFSM.getFPSCamera().ignoreWheel()
 
     def motionFSMEnterState(self, anim):
-        if anim == 'Idle' and self.getGameState() in ('LandRoam', ):
+        if anim == 'Idle' and self.getGameState() in ('LandRoam',):
             self.cameraFSM.getFPSCamera().acceptWheel()
         else:
             self.cameraFSM.getFPSCamera().ignoreWheel()
@@ -1768,7 +2074,8 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             taskMgr.doMethodLater(self.AFKDelay, self.goAFK, 'autoAFK')
 
     def gotWeaponReward(self, rewardType):
-        self.playRewardAnimation = PLocalizer.WeaponReceiveToEmoteCmds[rewardType]
+        self.playRewardAnimation = PLocalizer.WeaponReceiveToEmoteCmds[
+            rewardType]
         self.notify.debug('received Weapon %s' % self.playRewardAnimation)
 
     def addLocalProjectile(self, projectile):
@@ -1800,12 +2107,15 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         DistributedPlayerPirate.setAllowGMNameTag(self, state)
         if self.gmNameTagAllowed:
             if base.config.GetString('gm-nametag-string', '') != '':
-                self.gmNameTagStringLocal = base.config.GetString('gm-nametag-string')
+                self.gmNameTagStringLocal = base.config.GetString(
+                    'gm-nametag-string')
             if base.config.GetString('gm-nametag-color', '') != '':
-                self.gmNameTagColorLocal = base.config.GetString('gm-nametag-color')
+                self.gmNameTagColorLocal = base.config.GetString(
+                    'gm-nametag-color')
             if base.config.GetInt('gm-nametag-enabled', 0):
                 self.gmNameTagEnabledLocal = 1
-                self.b_updateGMNameTag(state, self.gmNameTagColorLocal, self.gmNameTagStringLocal)
+                self.b_updateGMNameTag(state, self.gmNameTagColorLocal,
+                                       self.gmNameTagStringLocal)
 
     def setBadgeIcon(self, titleId, rank):
         DistributedPlayerPirate.setBadgeIcon(self, titleId, rank)
@@ -1832,7 +2142,12 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             self.zombieEffect.reparentTo(self)
             self.zombieEffect.effectScale = 1.0
             self.zombieEffect.setPos(0, 1, 0)
-            self.zombieIval = Sequence(Func(localAvatar.motionFSM.off), Func(self.zombieEffect.play), Func(localAvatar.play, 'death3'), Wait(1.7), Func(self.changeBodyType), Func(localAvatar.play, 'jail_standup', fromFrame=65), Wait(2.25), Func(localAvatar.motionFSM.on))
+            self.zombieIval = Sequence(
+                Func(localAvatar.motionFSM.off), Func(self.zombieEffect.play),
+                Func(localAvatar.play, 'death3'), Wait(1.7),
+                Func(self.changeBodyType),
+                Func(localAvatar.play, 'jail_standup', fromFrame=65),
+                Wait(2.25), Func(localAvatar.motionFSM.on))
             self.zombieIval.start()
 
     def setCursed(self, value):
@@ -1856,11 +2171,13 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
 
     def setShipBadgeIcon(self, titleId, rank):
         DistributedPlayerPirate.setShipBadgeIcon(self, titleId, rank)
-        if self.guiMgr and hasattr(self.guiMgr, 'titlesPage') and self.guiMgr.titlesPage:
+        if self.guiMgr and hasattr(self.guiMgr,
+                                   'titlesPage') and self.guiMgr.titlesPage:
             localAvatar.guiMgr.titlesPage.initSeaTitleActive(titleId)
 
     def getAllowSocialPanel(self):
-        return not hasattr(self, 'allowSocialPanel') or self.allowSocialPanel == True
+        return not hasattr(self,
+                           'allowSocialPanel') or self.allowSocialPanel == True
 
     def setAllowSocialPanel(self, allow):
         self.allowSocialPanel = allow
@@ -1875,7 +2192,11 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         else:
             return
         self.__cleanupMoraleDialog()
-        self.moralePopupDialog = PDialog.PDialog(text=PLocalizer.FirstDeathMsg, style=OTPDialog.Acknowledge, command=self.__cleanupMoraleDialog, destroyedCallback=self.__destroyedMoraleDialog)
+        self.moralePopupDialog = PDialog.PDialog(
+            text=PLocalizer.FirstDeathMsg,
+            style=OTPDialog.Acknowledge,
+            command=self.__cleanupMoraleDialog,
+            destroyedCallback=self.__destroyedMoraleDialog)
 
     def __cleanupMoraleDialog(self, value=None):
         if self.moralePopupDialog:
@@ -1894,7 +2215,11 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
 
     def guildNameReject(self, guildId):
         self.__cleanupGuildDialog()
-        self.guildPopupDialog = PDialog.PDialog(text=PLocalizer.GuildNameDuplicate, style=OTPDialog.Acknowledge, command=self.__cleanupGuildDialog, destroyedCallback=self.__destroyedGuildDialog)
+        self.guildPopupDialog = PDialog.PDialog(
+            text=PLocalizer.GuildNameDuplicate,
+            style=OTPDialog.Acknowledge,
+            command=self.__cleanupGuildDialog,
+            destroyedCallback=self.__destroyedGuildDialog)
 
     def guildNameChange(self, guildName, change):
         if change == 2:
@@ -1904,7 +2229,14 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
             title = PLocalizer.GuildNameApproveTitle
             mess = PLocalizer.GuildNameApprove % guildName
         self.__cleanupGuildDialog()
-        self.guildPopupDialog = PDialog.PDialog(text=mess, title_text=title, text_align=TextNode.ACenter, text_pos=(0, -0.4), style=OTPDialog.Acknowledge, command=self.__cleanupGuildDialog, destroyedCallback=self.__destroyedGuildDialog)
+        self.guildPopupDialog = PDialog.PDialog(
+            text=mess,
+            title_text=title,
+            text_align=TextNode.ACenter,
+            text_pos=(0, -0.4),
+            style=OTPDialog.Acknowledge,
+            command=self.__cleanupGuildDialog,
+            destroyedCallback=self.__destroyedGuildDialog)
 
     def __cleanupGuildDialog(self, value=None):
         if self.guildPopupDialog:
@@ -1913,6 +2245,7 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
 
     def __destroyedGuildDialog(self):
         self.guildPopupDialog = None
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def turbo():
@@ -1924,6 +2257,7 @@ def turbo():
     target.toggleMario()
 
     return 'Toggled mario.'
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def mario():

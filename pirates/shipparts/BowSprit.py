@@ -59,8 +59,7 @@ class BowSprit(NodePath, ShipPart.ShipPart):
 
     def findDebris(self):
         self.break1High = self.controls
-        self.break2High = [
-            self.geom_High]
+        self.break2High = [self.geom_High]
         self.break1Med = None
         self.break2Med = None
         self.break1Low = None
@@ -73,7 +72,8 @@ class BowSprit(NodePath, ShipPart.ShipPart):
         filePrefix = BowSpritDNA.BowSpritDict.get(shipClass)
         return filePrefix
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
+                            targetEffects, pos, normal, codes, attacker):
         pass
 
     def death(self):

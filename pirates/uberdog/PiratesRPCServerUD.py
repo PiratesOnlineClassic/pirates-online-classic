@@ -23,7 +23,10 @@ class PiratesRPCServerUD(Thread):
         self.hostname = config.GetString('rpc-hostname', '127.0.0.1')
         self.port = config.GetInt('rpc-port', 6484)
         self.running = True
-        self.server = SimpleXMLRPCServer((self.hostname, self.port), logRequests=False, requestHandler=PiratesRPCHandler)
+        self.server = SimpleXMLRPCServer(
+            (self.hostname, self.port),
+            logRequests=False,
+            requestHandler=PiratesRPCHandler)
         self.server.register_introspection_functions()
         self.registerCommands()
 
@@ -31,7 +34,8 @@ class PiratesRPCServerUD(Thread):
         self.server.register_function(function, name)
 
     def run(self):
-        self.notify.info('Starting RPC server at %s:%d' % (self.hostname, self.port))
+        self.notify.info(
+            'Starting RPC server at %s:%d' % (self.hostname, self.port))
         self.server.serve_forever()
 
     def stop_Server(self):
@@ -107,7 +111,10 @@ class PiratesRPCServerUD(Thread):
         try:
             self.air.kickChannel(channel, reason, message)
         except Exception as e:
-            return self.formatCallback(code=100, message='Failed to kick channel, An unexpected error occured', error=repr(e))
+            return self.formatCallback(
+                code=100,
+                message='Failed to kick channel, An unexpected error occured',
+                error=repr(e))
 
         return self.formatCallback()
 
@@ -148,7 +155,8 @@ class PiratesRPCServerUD(Thread):
             [bool announce] = Broadcasts to Discord that the holiday started
         """
 
-        self.air.newsManager.startHoliday(int(holidayId), int(time), quietly=not announce)
+        self.air.newsManager.startHoliday(
+            int(holidayId), int(time), quietly=not announce)
 
         return self.formatCallback()
 

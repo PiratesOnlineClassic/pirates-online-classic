@@ -4,8 +4,9 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
+
 class GroundDirt(PooledEffect, EffectController):
-    
+
     cardScale = 128.0
 
     def __init__(self):
@@ -61,11 +62,19 @@ class GroundDirt(PooledEffect, EffectController):
         self.p0.emitter.setRadius(1.5)
 
     def createTrack(self):
-        self.p0.renderer.setInitialXScale(0.005 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalXScale(0.0075 * self.cardScale * self.effectScale)
-        self.p0.renderer.setInitialYScale(0.005 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalYScale(0.0075 * self.cardScale * self.effectScale)
-        self.track = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Wait(0.3), Func(self.p0.setBirthRate, 100), Wait(5.0), Func(self.cleanUpEffect))
+        self.p0.renderer.setInitialXScale(
+            0.005 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalXScale(
+            0.0075 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialYScale(
+            0.005 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalYScale(
+            0.0075 * self.cardScale * self.effectScale)
+        self.track = Sequence(
+            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
+            Func(self.f.start, self, self.particleDummy), Wait(0.3),
+            Func(self.p0.setBirthRate, 100), Wait(5.0),
+            Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

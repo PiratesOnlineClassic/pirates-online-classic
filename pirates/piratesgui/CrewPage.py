@@ -17,7 +17,7 @@ from pirates.uberdog.UberDogGlobals import CrewStatus
 
 
 class CrewPage(SocialPage.SocialPage):
-    
+
     notify = directNotify.newCategory('CrewPage')
 
     def __init__(self):
@@ -43,70 +43,107 @@ class CrewPage(SocialPage.SocialPage):
         self.recruitCrewMatesStatus = 0
         self.joinACrewStatus = 0
         self.joinACrewStatusPVP = 0
-        self.accept('destroyCrewMatchInvite', self.deactivateCrewMatchInviteTeleport)
+        self.accept('destroyCrewMatchInvite',
+                    self.deactivateCrewMatchInviteTeleport)
         self.accept(BandConstance.BandMemberHpChange, self.updateCrewMemberHp)
-        self.accept(BandConstance.BandMemberShipChange, self.updateCrewMemberShip)
+        self.accept(BandConstance.BandMemberShipChange,
+                    self.updateCrewMemberShip)
         self.mainFrame = DirectFrame(relief=None, parent=self)
         self.optionsFrame = DirectFrame(relief=None, parent=self)
-        self.membersList = PirateMemberList.PirateMemberList(6, self.mainFrame, 'FOOLIO HC', height=0.5475, memberHeight=0.08, memberWidth=0.48, memberOffset=0.04, bottom=0.074)
+        self.membersList = PirateMemberList.PirateMemberList(
+            6,
+            self.mainFrame,
+            'FOOLIO HC',
+            height=0.5475,
+            memberHeight=0.08,
+            memberWidth=0.48,
+            memberOffset=0.04,
+            bottom=0.074)
         self.membersList.setPos(0.001, 0.0, 0.123)
-        self.chain = PirateButtonChain.PirateButtonChain(0.49, self.mainFrame, True)
+        self.chain = PirateButtonChain.PirateButtonChain(
+            0.49, self.mainFrame, True)
         self.chain.setPos(-0.012, 0.0, 0.045)
-        self.optionsChain = PirateButtonChain.PirateButtonChain(0.49, self.optionsFrame, True)
+        self.optionsChain = PirateButtonChain.PirateButtonChain(
+            0.49, self.optionsFrame, True)
         self.optionsChain.setPos(-0.012, 0.0, 0.045)
         self.optionsChain.hide()
         self.optionsChain.setPos(-0.012, 0.0, 0.045)
         self.optionsChain.hide()
         self.load()
         self.accept(BandConstance.BandMembershipChange, self.DoUpdateCrewData)
-        self.headingLabel = DirectLabel(parent=self, relief=None, state=DGG.NORMAL, text=PLocalizer.CrewPageTitle, text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.0,
-                                                                                                                                                                                                       0.0), text_fg=PiratesGuiGlobals.TextFG1, pos=(0.23,
-                                                                                                                                                                                                                                                     0,
-                                                                                                                                                                                                                                                     0.694))
+        self.headingLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            state=DGG.NORMAL,
+            text=PLocalizer.CrewPageTitle,
+            text_align=TextNode.ACenter,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_pos=(0.0, 0.0),
+            text_fg=PiratesGuiGlobals.TextFG1,
+            pos=(0.23, 0, 0.694))
         return
 
     def load(self):
-        self.leaveButton = self.chain.premakeButton(PLocalizer.CrewPageLeaveCrew, self.leaveCrew)
+        self.leaveButton = self.chain.premakeButton(
+            PLocalizer.CrewPageLeaveCrew, self.leaveCrew)
         self.leaveButton['state'] = DGG.DISABLED
         if not self.crewHUDToggleButton:
-            self.crewHUDToggleButton = self.chain.premakeButton(PLocalizer.CrewHUDCrewPanelButton, self.toggleCrewHUD)
-        self.optionsButton = self.chain.premakeButton(PLocalizer.CrewOptions, self.crewOptions)
+            self.crewHUDToggleButton = self.chain.premakeButton(
+                PLocalizer.CrewHUDCrewPanelButton, self.toggleCrewHUD)
+        self.optionsButton = self.chain.premakeButton(PLocalizer.CrewOptions,
+                                                      self.crewOptions)
         self.chain.makeButtons()
 
     def loadOptionsPanel(self):
         self.mainFrame.hide()
         if not self.addAvatarToList:
-            self.addAvatarToList = self.optionsChain.premakeButton(PLocalizer.CrewMatchJoinCrewButton, self.toggleAvatarLookout)
+            self.addAvatarToList = self.optionsChain.premakeButton(
+                PLocalizer.CrewMatchJoinCrewButton, self.toggleAvatarLookout)
         if not self.addAvatarToListPVP:
-            self.addAvatarToListPVP = self.optionsChain.premakeButton(PLocalizer.CrewMatchJoinPVPCrewButton, self.toggleAvatarLookoutPVP, textPos=(0.025,
-                                                                                                                                                   0,
-                                                                                                                                                   0))
+            self.addAvatarToListPVP = self.optionsChain.premakeButton(
+                PLocalizer.CrewMatchJoinPVPCrewButton,
+                self.toggleAvatarLookoutPVP,
+                textPos=(0.025, 0, 0))
         if not self.startACrewButton:
-            self.startACrewButton = self.optionsChain.premakeButton(PLocalizer.CrewStartACrewButton, self.toggleStartACrew)
+            self.startACrewButton = self.optionsChain.premakeButton(
+                PLocalizer.CrewStartACrewButton, self.toggleStartACrew)
         if not self.addCrewLookout:
-            self.addCrewLookout = self.optionsChain.premakeButton(PLocalizer.CrewMatchRecruitButton, self.toggleCrewLookout)
+            self.addCrewLookout = self.optionsChain.premakeButton(
+                PLocalizer.CrewMatchRecruitButton, self.toggleCrewLookout)
         if not self.selectCrewIcon:
-            self.selectCrewIcon = self.optionsChain.premakeButton(PLocalizer.CrewIconButton, self.toggleCrewIcon)
+            self.selectCrewIcon = self.optionsChain.premakeButton(
+                PLocalizer.CrewIconButton, self.toggleCrewIcon)
         if not self.lookingForCrewButton:
-            self.lookingForCrewButton = self.optionsChain.premakeButton(PLocalizer.CrewLookingForButton, self.toggleLookingForCrew)
+            self.lookingForCrewButton = self.optionsChain.premakeButton(
+                PLocalizer.CrewLookingForButton, self.toggleLookingForCrew)
         if not self.crewButton:
-            self.crewButton = self.optionsChain.premakeButton(PLocalizer.CrewList, self.showCrewPanel)
+            self.crewButton = self.optionsChain.premakeButton(
+                PLocalizer.CrewList, self.showCrewPanel)
         self.optionsChain.makeButtons()
-        self.onlineIcon = self.icon.find('**/icon_sphere').copyTo(self.lookingForCrewButton)
-        self.onlineIconRing = self.ring.find('**/icon_torus').copyTo(self.lookingForCrewButton)
+        self.onlineIcon = self.icon.find('**/icon_sphere').copyTo(
+            self.lookingForCrewButton)
+        self.onlineIconRing = self.ring.find('**/icon_torus').copyTo(
+            self.lookingForCrewButton)
         self.onlineIconRing.reparentTo(self.onlineIcon, -1)
         self.onlineIconRing.setColor(1, 0.9, 0.7, 1)
-        self.joinACrewIcon = self.icon.find('**/icon_sphere').copyTo(self.addAvatarToList)
-        self.joinACrewIconRing = self.ring.find('**/icon_torus').copyTo(self.addAvatarToList)
+        self.joinACrewIcon = self.icon.find('**/icon_sphere').copyTo(
+            self.addAvatarToList)
+        self.joinACrewIconRing = self.ring.find('**/icon_torus').copyTo(
+            self.addAvatarToList)
         self.joinACrewIconRing.reparentTo(self.joinACrewIcon, -1)
         self.joinACrewIconRing.setColor(1, 0.9, 0.7, 1)
-        self.recruitCrewmatesIcon = self.icon.find('**/icon_sphere').copyTo(self.addCrewLookout)
-        self.recruitCrewmatesIconRing = self.ring.find('**/icon_torus').copyTo(self.addCrewLookout)
+        self.recruitCrewmatesIcon = self.icon.find('**/icon_sphere').copyTo(
+            self.addCrewLookout)
+        self.recruitCrewmatesIconRing = self.ring.find('**/icon_torus').copyTo(
+            self.addCrewLookout)
         self.recruitCrewmatesIconRing.reparentTo(self.recruitCrewmatesIcon, -1)
         self.recruitCrewmatesIconRing.setColor(1, 0.9, 0.7, 1)
-        self.addAvatarToListPVPIcon = self.icon.find('**/icon_sphere').copyTo(self.addAvatarToListPVP)
-        self.addAvatarToListPVPIconRing = self.ring.find('**/icon_torus').copyTo(self.addAvatarToListPVP)
-        self.addAvatarToListPVPIconRing.reparentTo(self.addAvatarToListPVPIcon, -1)
+        self.addAvatarToListPVPIcon = self.icon.find('**/icon_sphere').copyTo(
+            self.addAvatarToListPVP)
+        self.addAvatarToListPVPIconRing = self.ring.find(
+            '**/icon_torus').copyTo(self.addAvatarToListPVP)
+        self.addAvatarToListPVPIconRing.reparentTo(self.addAvatarToListPVPIcon,
+                                                   -1)
         self.addAvatarToListPVPIconRing.setColor(1, 0.9, 0.7, 1)
         self.onlineIcon.setPos(-0.19, 0, 0)
         self.onlineIcon.setScale(0.2)
@@ -145,12 +182,14 @@ class CrewPage(SocialPage.SocialPage):
             if not self.crewIconSelection:
                 self.clearCrewIcon['state'] = DGG.DISABLED
         if self.selectCrewIcon:
-            if self.crew and DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand() == 1:
+            if self.crew and DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand(
+            ) == 1:
                 self.selectCrewIcon['state'] = DGG.NORMAL
             else:
                 self.selectCrewIcon['state'] = DGG.DISABLED
         if self.addCrewLookout:
-            if self.crew and DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand() == 1 or self.startACrewState:
+            if self.crew and DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand(
+            ) == 1 or self.startACrewState:
                 self.addCrewLookout['state'] = DGG.NORMAL
             else:
                 self.addCrewLookout['state'] = DGG.DISABLED
@@ -241,7 +280,8 @@ class CrewPage(SocialPage.SocialPage):
 
     def addCrew(self, member):
         if self.addCrewLookout:
-            if self.crew and DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand() == 1:
+            if self.crew and DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand(
+            ) == 1:
                 self.addCrewLookout['state'] = DGG.NORMAL
             else:
                 self.addCrewLookout['state'] = DGG.DISABLED
@@ -264,10 +304,12 @@ class CrewPage(SocialPage.SocialPage):
 
             return
         if avId not in self.crew:
-            button = self.membersList.addMember(avId, None, PirateMemberList.MODE_CREW, member)
+            button = self.membersList.addMember(
+                avId, None, PirateMemberList.MODE_CREW, member)
             self.crewHUD.addCrew(member)
             self.crew[avId] = button
-            self.crew[avId].updateShip(member.getShipInfo()[0], member.getShipHasSpace())
+            self.crew[avId].updateShip(member.getShipInfo()[0],
+                                       member.getShipHasSpace())
             self.repackCrew()
             localAvatar.guiMgr.radarGui.refreshRadarObject(avId)
             return 1
@@ -307,7 +349,8 @@ class CrewPage(SocialPage.SocialPage):
                 taskMgr.doMethodLater(2, self.delayedHUDOn, 'delayedHUDLoad')
                 self.crewHUD.initialStateSwitch = True
             if self.selectCrewIcon:
-                if DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand() == 1:
+                if DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand(
+                ) == 1:
                     self.selectCrewIcon['state'] = DGG.NORMAL
         else:
             self.leaveButton['state'] = DGG.DISABLED
@@ -321,7 +364,8 @@ class CrewPage(SocialPage.SocialPage):
             self.crewHUD.initialStateSwitch = False
             self.crewHUD.setHUDOff()
         if self.addCrewLookout:
-            if self.crew and DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand() == 1:
+            if self.crew and DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand(
+            ) == 1:
                 self.addCrewLookout['state'] = DGG.NORMAL
             else:
                 self.addCrewLookout['state'] = DGG.DISABLED
@@ -381,7 +425,8 @@ class CrewPage(SocialPage.SocialPage):
     def crewDetails(self, avId):
         avatar = base.cr.doId2do.get(avId)
         if avatar:
-            messenger.send(PiratesGlobals.AvatarDetailsEvent, [avatar.getDoId(), False])
+            messenger.send(PiratesGlobals.AvatarDetailsEvent,
+                           [avatar.getDoId(), False])
             return 1
         crewMember = self.crew.get(avId).getMember()
         if crewMember:
@@ -424,7 +469,8 @@ class CrewPage(SocialPage.SocialPage):
             self.repackCrew()
 
     def loadSelectCrewIcon(self):
-        CrewIconSelector.CrewIconSelector(PLocalizer.CrewIconTitle, self.selectCrewIcon)
+        CrewIconSelector.CrewIconSelector(PLocalizer.CrewIconTitle,
+                                          self.selectCrewIcon)
 
     def enableCrewIcon(self):
         base.cr.PirateBandManager.d_requestCrewIconUpdate(1)
@@ -520,7 +566,8 @@ class CrewPage(SocialPage.SocialPage):
 
     def b_activateCrewLookout(self, range, sailValue=0, cannonValue=0):
         if self.crew or self.startACrewState:
-            base.cr.pirateCrewMatch.addCrewToLookoutList(range, sailValue, cannonValue)
+            base.cr.pirateCrewMatch.addCrewToLookoutList(
+                range, sailValue, cannonValue)
             if self.addCrewLookout:
                 self.addCrewLookout['state'] = DGG.NORMAL
             if self.startACrewState:
@@ -588,7 +635,8 @@ class CrewPage(SocialPage.SocialPage):
         taskName = str(dotObj) + '_blink'
         if state:
             dotObj.setColor(0, 1, 0, 0.6)
-            taskMgr.doMethodLater(1, self.blink, taskName, extraArgs=[dotObj, taskName])
+            taskMgr.doMethodLater(
+                1, self.blink, taskName, extraArgs=[dotObj, taskName])
         else:
             taskMgr.remove(taskName)
             dotObj.setColor(1, 0, 0, 0.6)
@@ -621,4 +669,6 @@ class CrewPage(SocialPage.SocialPage):
     def activateCrewHUDButton(self):
         if self.crewHUDToggleButton:
             self.crewHUDToggleButton['state'] = DGG.NORMAL
+
+
 # okay decompiling .\pirates\piratesgui\CrewPage.pyc

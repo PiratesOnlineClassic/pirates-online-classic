@@ -26,21 +26,59 @@ SX = 6
 SY = 7
 SZ = 8
 AnimDict = {}
-AnimListDict = {'sf': Biped.DefaultAnimList, 'ms': Biped.DefaultAnimList, 'mi': Biped.DefaultAnimList, 'tp': Biped.DefaultAnimList, 'tm': Biped.DefaultAnimList}
-CustomAnimDict = {'msf': Biped.msfCustomAnimList, 'mms': Biped.mmsCustomAnimList, 'mmi': Biped.mmiCustomAnimList, 'mtp': Biped.mtpCustomAnimList, 
-                  'mtm': Biped.mtmCustomAnimList, 'fsf': Biped.fsfCustomAnimList, 'fms': Biped.fmsCustomAnimList, 'fmi': Biped.fmiCustomAnimList, 
-                  'ftp': Biped.ftpCustomAnimList, 'ftm': Biped.ftmCustomAnimList}
-CastAnimDict = {'models/char/js': Biped.jsCustomAnimList, 'models/char/wt': Biped.wtCustomAnimList, 'models/char/es': Biped.esCustomAnimList, 
-                'models/char/td': Biped.tdCustomAnimList, 'models/char/cb': Biped.cbCustomAnimList, 'models/char/jg': Biped.jgCustomAnimList, 
-                'models/char/jr': Biped.jrCustomAnimList, 'models/char/plf': Biped.plfCustomAnimList, 'models/char/pls': Biped.plsCustomAnimList}
+AnimListDict = {
+    'sf': Biped.DefaultAnimList,
+    'ms': Biped.DefaultAnimList,
+    'mi': Biped.DefaultAnimList,
+    'tp': Biped.DefaultAnimList,
+    'tm': Biped.DefaultAnimList
+}
+CustomAnimDict = {
+    'msf': Biped.msfCustomAnimList,
+    'mms': Biped.mmsCustomAnimList,
+    'mmi': Biped.mmiCustomAnimList,
+    'mtp': Biped.mtpCustomAnimList,
+    'mtm': Biped.mtmCustomAnimList,
+    'fsf': Biped.fsfCustomAnimList,
+    'fms': Biped.fmsCustomAnimList,
+    'fmi': Biped.fmiCustomAnimList,
+    'ftp': Biped.ftpCustomAnimList,
+    'ftm': Biped.ftmCustomAnimList
+}
+CastAnimDict = {
+    'models/char/js': Biped.jsCustomAnimList,
+    'models/char/wt': Biped.wtCustomAnimList,
+    'models/char/es': Biped.esCustomAnimList,
+    'models/char/td': Biped.tdCustomAnimList,
+    'models/char/cb': Biped.cbCustomAnimList,
+    'models/char/jg': Biped.jgCustomAnimList,
+    'models/char/jr': Biped.jrCustomAnimList,
+    'models/char/plf': Biped.plfCustomAnimList,
+    'models/char/pls': Biped.plsCustomAnimList
+}
 NewModelDict = {'sf': 'sf', 'ms': 'ms', 'mi': 'mi', 'tp': 'tp', 'tm': 'tm'}
 TempDict = ['sf', 'ms', 'mi', 'tp', 'tm']
 PrebuiltAnimDict = {}
-HeadPositions = [[VBase3(0.0, 0.0, 0.0), VBase3(0.0, 0.0, -0.08), VBase3(0.0, 0.0, 0.0), VBase3(0.0, 0.0, -0.08), VBase3(0.0, 0.0, 0.0)], 
-                 [VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0)]]
+HeadPositions = [[
+    VBase3(0.0, 0.0, 0.0),
+    VBase3(0.0, 0.0, -0.08),
+    VBase3(0.0, 0.0, 0.0),
+    VBase3(0.0, 0.0, -0.08),
+    VBase3(0.0, 0.0, 0.0)
+], [
+    VBase3(0, 0, 0.0),
+    VBase3(0, 0, 0.0),
+    VBase3(0, 0, 0.0),
+    VBase3(0, 0, 0.0),
+    VBase3(0, 0, 0.0)
+]]
 HeadScales = [[1.05, 0.8, 0.85, 0.82, 0.88], [1.1, 0.9, 0.95, 0.97, 0.95]]
-BodyScales = [[ 0.87, 0.98, 1.0, 0.98, 1.05], [0.88, 0.9, 1.02, 1.07, 0.98]]
-PlayerNames = ["Cap'n Bruno Cannonballs", 'Bad-run Thomas', 'Carlos Saggingsails', 'Smugglin Willy Hawkins']
+BodyScales = [[0.87, 0.98, 1.0, 0.98, 1.05], [0.88, 0.9, 1.02, 1.07, 0.98]]
+PlayerNames = [
+    "Cap'n Bruno Cannonballs", 'Bad-run Thomas', 'Carlos Saggingsails',
+    'Smugglin Willy Hawkins'
+]
+
 
 class Human(HumanBase.HumanBase, Biped.Biped):
     notify = DirectNotifyGlobal.directNotify.newCategory('Human')
@@ -68,10 +106,14 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         self.headFudgeHpr = Vec3(0, 0, 0)
         self.randGen = random.Random()
         self.randGen.seed(random.random())
-        self.eyeFSM = ClassicFSM('eyeFSM', [State('off', self.enterEyeFSMOff, self.exitEyeFSMOff, ['open', 'closed']),
-                                            State('open', self.enterEyeFSMOpen, self.exitEyeFSMOpen, ['closed', 'off']),
-                                            State('closed', self.enterEyeFSMClosed, self.exitEyeFSMClosed, ['open', 'off'])], 
-                                            'off', 'off')
+        self.eyeFSM = ClassicFSM('eyeFSM', [
+            State('off', self.enterEyeFSMOff, self.exitEyeFSMOff,
+                  ['open', 'closed']),
+            State('open', self.enterEyeFSMOpen, self.exitEyeFSMOpen,
+                  ['closed', 'off']),
+            State('closed', self.enterEyeFSMClosed, self.exitEyeFSMClosed,
+                  ['open', 'off'])
+        ], 'off', 'off')
         self.eyeFSM.enterInitialState()
         if other != None:
             self.copyHuman(other)
@@ -108,7 +150,7 @@ class Human(HumanBase.HumanBase, Biped.Biped):
             return
         except:
             self.Human_deleted = 1
-            
+
         taskMgr.remove(self.__blinkName)
         if self.dropShadow and not self.dropShadow.isEmpty():
             self.deleteDropShadow()
@@ -134,8 +176,10 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         jointNameScale = 'def_scale_jt'
         lods = self.getLODNames()
         self.headNode = self.controlJoint(None, 'legs', jointName, lods[0])
-        self.extraNode = self.controlJoint(None, 'legs', jointNameExtra, lods[0])
-        self.scaleNode = self.controlJoint(None, 'legs', jointNameScale, lods[0])
+        self.extraNode = self.controlJoint(None, 'legs', jointNameExtra,
+                                           lods[0])
+        self.scaleNode = self.controlJoint(None, 'legs', jointNameScale,
+                                           lods[0])
         self.rootNode = self.getLOD('2000').find('**/dx_root')
         for lod in lods[1:]:
             self.controlJoint(self.headNode, 'legs', jointName, lod)
@@ -214,7 +258,8 @@ class Human(HumanBase.HumanBase, Biped.Biped):
             animSuffix = ''
             for i in range(0, len(CustomAnimDict[genderPrefix + self.type])):
                 if anim[0] == CustomAnimDict[genderPrefix + self.type][i]:
-                    animSuffix = '_' + genderPrefix + NewModelDict.get(self.type)
+                    animSuffix = '_' + genderPrefix + NewModelDict.get(
+                        self.type)
                     break
 
             self.animDict[anim[0]] = filePrefix + '_' + anim[1] + animSuffix
@@ -367,8 +412,8 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         if self.eyeLids:
             self.openEyes()
 
-        taskMgr.doMethodLater(self.randGen.random() * 4.0 + 1,  self.__blinkCloseEyes,
-            self.__blinkName)
+        taskMgr.doMethodLater(self.randGen.random() * 4.0 + 1,
+                              self.__blinkCloseEyes, self.__blinkName)
 
     def stopBlink(self):
         taskMgr.remove(self.__blinkName)
@@ -413,8 +458,8 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         if self.gender == 'f':
             idx = 1
 
-        mappedValue = (0.8 + (1 + self.style.getBodyHeight()) * 0.2) * BodyScales[
-            idx][self.style.getBodyShape()]
+        mappedValue = (0.8 + (1 + self.style.getBodyHeight()) * 0.2
+                      ) * BodyScales[idx][self.style.getBodyShape()]
 
         return mappedValue
 
@@ -436,8 +481,10 @@ class Human(HumanBase.HumanBase, Biped.Biped):
                     animSuffix = '_' + gender + NewModelDict.get(type)
                     break
 
-            cls.prebuiltAnimData[qualifier][anim[0]] = prefix + '_' + anim[1] + animSuffix
+            cls.prebuiltAnimData[qualifier][anim[
+                0]] = prefix + '_' + anim[1] + animSuffix
 
         cls.prebuiltAnimData[qualifier].pop('intro')
+
 
 Human.setupAnimDicts()

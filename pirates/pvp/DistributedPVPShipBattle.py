@@ -5,8 +5,9 @@ from pirates.pvp.DistributedPVPInstance import DistributedPVPInstance
 from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.ship import DistributedShip
 
+
 class DistributedPVPShipBattle(DistributedPVPInstance):
-    
+
     notify = directNotify.newCategory('DistributedPVPShipBattle')
 
     def __init__(self, cr):
@@ -39,7 +40,8 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
 
     def setShipDoId(self, shipId):
         print '_shipId %s' % shipId
-        self.shipRequest = base.cr.relatedObjectMgr.requestObjects([shipId], eachCallback=self._shipArrived)
+        self.shipRequest = base.cr.relatedObjectMgr.requestObjects(
+            [shipId], eachCallback=self._shipArrived)
 
     def _shipArrived(self, ship):
         self.localShip = ship
@@ -47,7 +49,8 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
 
     def _boardShip(self, ship):
         print '_boardShip %s' % ship.doId
-        self.acceptOnce(ship.uniqueName('localAvBoardedShip'), self._boardShipDone)
+        self.acceptOnce(
+            ship.uniqueName('localAvBoardedShip'), self._boardShipDone)
         localAvatar.placeOnShip(ship, pvp=True)
 
     def _boardShipDone(self):
@@ -97,7 +100,12 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
         scoreList.sort(self.sortScores)
         return scoreList
 
-    def createScoreboardItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+    def createScoreboardItem(self,
+                             item,
+                             parent,
+                             itemType=None,
+                             columnWidths=[],
+                             color=None):
         itemColorScale = None
         blink = False
         team = item.get('Team')
@@ -126,10 +134,18 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
         return [PVPGlobals.SCORE, PVPGlobals.DEATHS]
 
     def getColumnLabels(self):
-        return [PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
+        return [
+            PLocalizer.PVPPlayer, PLocalizer.PVPScore,
+            PLocalizer.PVPTimesDefeated
+        ]
 
     def addPlayerStats(self, playerId):
-        self.stats[playerId] = {PVPGlobals.SCORE: 0, PVPGlobals.KILLS: 0, PVPGlobals.DEATHS: 0, PVPGlobals.TEAM: 0}
+        self.stats[playerId] = {
+            PVPGlobals.SCORE: 0,
+            PVPGlobals.KILLS: 0,
+            PVPGlobals.DEATHS: 0,
+            PVPGlobals.TEAM: 0
+        }
 
     def setPlayerStat(self, playerId, stat, value):
         playerName = self.names[playerId]
@@ -139,7 +155,10 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
             self.scoreChanged()
 
     def sortStats(self, stats):
-        return sorted(sorted(stats, key=lambda x: int(x[1][1][1])), key=lambda x: int(x[1][0][1]), reverse=True)
+        return sorted(
+            sorted(stats, key=lambda x: int(x[1][1][1])),
+            key=lambda x: int(x[1][0][1]),
+            reverse=True)
 
     def getStats(self):
         return self.getTeamStats()

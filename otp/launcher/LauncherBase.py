@@ -39,7 +39,12 @@ class LauncherBase(DirectObject):
     LauncherPhases = [1, 2, 3, 4]
     TmpOverallMap = [0.25, 0.25, 0.25, 0.25]
     BANDWIDTH_ARRAY = [
-        1800, 3600, 4200, 6600, 8000, 12000, 16000, 24000, 32000, 48000, 72000, 96000, 128000, 192000, 250000, 500000, 750000, 1000000, 1250000, 1500000, 1750000, 2000000, 3000000, 4000000, 6000000, 8000000, 10000000, 12000000, 14000000, 16000000, 24000000, 32000000, 48000000, 64000000, 96000000, 128000000, 256000000, 512000000, 1024000000]
+        1800, 3600, 4200, 6600, 8000, 12000, 16000, 24000, 32000, 48000, 72000,
+        96000, 128000, 192000, 250000, 500000, 750000, 1000000, 1250000,
+        1500000, 1750000, 2000000, 3000000, 4000000, 6000000, 8000000, 10000000,
+        12000000, 14000000, 16000000, 24000000, 32000000, 48000000, 64000000,
+        96000000, 128000000, 256000000, 512000000, 1024000000
+    ]
     win32con_FILE_PERSISTENT_ACLS = 8
     InstallDirKey = 'INSTALL_DIR'
     GameLogFilenameKey = 'GAMELOG_FILENAME'
@@ -108,14 +113,15 @@ class LauncherBase(DirectObject):
         if 'CONFIG_CONFIG' in os.environ:
             print 'CONFIG_CONFIG is set to: ' + os.environ['CONFIG_CONFIG']
             print 'Resetting CONFIG_CONFIG'
-        os.environ['CONFIG_CONFIG'] = ':_:configdir_.:configpath_:configname_Configrc.exe:configexe_1:configargs_-stdout ' + Configrc_args
+        os.environ[
+            'CONFIG_CONFIG'] = ':_:configdir_.:configpath_:configname_Configrc.exe:configexe_1:configargs_-stdout ' + Configrc_args
         cpMgr = ConfigPageManager.getGlobalPtr()
         cpMgr.reloadImplicitPages()
         launcherConfig = getConfigExpress()
         __builtin__.config = launcherConfig
         self.VerifyFiles = self.getVerifyFiles()
-        self.ServerVersion = launcherConfig.GetString(
-            'server-version', 'no_version_set')
+        self.ServerVersion = launcherConfig.GetString('server-version',
+                                                      'no_version_set')
         self.ServerVersionSuffix = launcherConfig.GetString(
             'server-version-suffix', '')
         self.UserUpdateDelay = launcherConfig.GetFloat(
@@ -145,8 +151,7 @@ class LauncherBase(DirectObject):
         downloadServerString = launcherConfig.GetString('download-server', '')
         if downloadServerString:
             self.notify.info(
-                'Overriding downloadServer to %s.' %
-                downloadServerString)
+                'Overriding downloadServer to %s.' % downloadServerString)
         else:
             downloadServerString = self.getValue('DOWNLOAD_SERVER', '')
         self.notify.info('Download Server List %s' % downloadServerString)
@@ -221,7 +226,8 @@ class LauncherBase(DirectObject):
         self.currentMfname = None
         self.currentPhaseIndex = 0
         self.currentPhase = self.LauncherPhases[self.currentPhaseIndex]
-        self.currentPhaseName = self.Localizer.LauncherPhaseNames[self.currentPhaseIndex]
+        self.currentPhaseName = self.Localizer.LauncherPhaseNames[
+            self.currentPhaseIndex]
         if self.ServerVersion == 'no_version_set':
             self.setPandaErrorCode(10)
             self.notify.info('Aborting, Configrc did not run!')
@@ -235,8 +241,7 @@ class LauncherBase(DirectObject):
         self.notify.info('Proxy spec is: %s' % self.http.getProxySpec())
         if self.http.getDirectHostSpec() != '':
             self.notify.info(
-                'Direct hosts list is: %s' %
-                self.http.getDirectHostSpec())
+                'Direct hosts list is: %s' % self.http.getDirectHostSpec())
         self.httpChannel = self.http.makeChannel(0)
         self.httpChannel.setDownloadThrottle(1)
         connOk = 0
@@ -252,11 +257,9 @@ class LauncherBase(DirectObject):
             statusString = self.httpChannel.getStatusString()
             if not connOk:
                 self.notify.warning(
-                    'Could not contact download server at %s' %
-                    testurl.cStr())
+                    'Could not contact download server at %s' % testurl.cStr())
                 self.notify.warning(
-                    'Status code = %s %s' %
-                    (statusCode, statusString))
+                    'Status code = %s %s' % (statusCode, statusString))
                 if statusCode == 407 or statusCode == 1407 or statusCode == HTTPChannel.SCSocksNoAcceptableLoginMethod:
                     self.setPandaErrorCode(3)
                 else:
@@ -294,10 +297,10 @@ class LauncherBase(DirectObject):
         if self.nextDownloadServerIndex >= len(self.downloadServerList):
             self.downloadServer = None
             return 0
-        self.downloadServer = self.downloadServerList[self.nextDownloadServerIndex]
+        self.downloadServer = self.downloadServerList[
+            self.nextDownloadServerIndex]
         self.notify.info(
-            'Using download server %s.' %
-            self.downloadServer.cStr())
+            'Using download server %s.' % self.downloadServer.cStr())
         self.nextDownloadServerIndex += 1
         return 1
 
@@ -326,43 +329,37 @@ class LauncherBase(DirectObject):
         return
 
     def handleInitiateFatalError(self, errorCode):
-        self.notify.warning(
-            'handleInitiateFatalError: ' +
-            errorToText(errorCode))
+        self.notify.warning('handleInitiateFatalError: ' +
+                            errorToText(errorCode))
         sys.exit()
 
     def handleDecompressFatalError(self, task, errorCode):
-        self.notify.warning(
-            'handleDecompressFatalError: ' +
-            errorToText(errorCode))
+        self.notify.warning('handleDecompressFatalError: ' +
+                            errorToText(errorCode))
         taskMgr.remove(task)
         self.handleGenericMultifileError()
 
     def handleDecompressWriteError(self, task, errorCode):
-        self.notify.warning(
-            'handleDecompressWriteError: ' +
-            errorToText(errorCode))
+        self.notify.warning('handleDecompressWriteError: ' +
+                            errorToText(errorCode))
         taskMgr.remove(task)
         self.handleGenericMultifileError()
 
     def handleDecompressZlibError(self, task, errorCode):
-        self.notify.warning(
-            'handleDecompressZlibError: ' +
-            errorToText(errorCode))
+        self.notify.warning('handleDecompressZlibError: ' +
+                            errorToText(errorCode))
         taskMgr.remove(task)
         self.handleGenericMultifileError()
 
     def handleExtractFatalError(self, task, errorCode):
-        self.notify.warning(
-            'handleExtractFatalError: ' +
-            errorToText(errorCode))
+        self.notify.warning('handleExtractFatalError: ' +
+                            errorToText(errorCode))
         taskMgr.remove(task)
         self.handleGenericMultifileError()
 
     def handleExtractWriteError(self, task, errorCode):
-        self.notify.warning(
-            'handleExtractWriteError: ' +
-            errorToText(errorCode))
+        self.notify.warning('handleExtractWriteError: ' +
+                            errorToText(errorCode))
         taskMgr.remove(task)
         self.handleGenericMultifileError()
 
@@ -377,10 +374,9 @@ class LauncherBase(DirectObject):
         self.handleGenericMultifileError()
 
     def handleDownloadFatalError(self, task):
-        self.notify.warning(
-            'handleDownloadFatalError: status code = %s %s' %
-            (self.httpChannel.getStatusCode(),
-             self.httpChannel.getStatusString()))
+        self.notify.warning('handleDownloadFatalError: status code = %s %s' %
+                            (self.httpChannel.getStatusCode(),
+                             self.httpChannel.getStatusString()))
         taskMgr.remove(task)
         statusCode = self.httpChannel.getStatusCode()
         if statusCode == 404:
@@ -403,20 +399,15 @@ class LauncherBase(DirectObject):
         if not self.currentMfname:
             sys.exit()
         if self.curMultifileRetry < self.multifileRetries:
-            self.notify.info(
-                'recover attempt: %s / %s' %
-                (self.curMultifileRetry, self.multifileRetries))
+            self.notify.info('recover attempt: %s / %s' %
+                             (self.curMultifileRetry, self.multifileRetries))
             self.curMultifileRetry += 1
-            self.notify.info(
-                'downloadPatchDone: Recovering from error.' +
-                ' Deleting files in: ' +
-                self.currentMfname)
+            self.notify.info('downloadPatchDone: Recovering from error.' +
+                             ' Deleting files in: ' + self.currentMfname)
             self.dldb.setClientMultifileIncomplete(self.currentMfname)
             self.dldb.setClientMultifileSize(self.currentMfname, 0)
-            self.notify.info(
-                'downloadPatchDone: Recovering from error.' +
-                ' redownloading: ' +
-                self.currentMfname)
+            self.notify.info('downloadPatchDone: Recovering from error.' +
+                             ' redownloading: ' + self.currentMfname)
             self.httpChannel.reset()
             self.getMultifile(self.currentMfname)
         else:
@@ -445,13 +436,14 @@ class LauncherBase(DirectObject):
         self.notify.info('***' + url.cStr())
         return url
 
-    def download(self, serverFilePath, localFilename,
-                 callback, callbackProgress):
+    def download(self, serverFilePath, localFilename, callback,
+                 callbackProgress):
         self.launcherMessage(
             self.Localizer.LauncherDownloadFile % {
                 'name': self.currentPhaseName,
                 'current': self.currentPhaseIndex,
-                'total': self.numPhases})
+                'total': self.numPhases
+            })
         task = Task(self.downloadTask)
         task.downloadRam = 0
         task.serverFilePath = serverFilePath
@@ -499,14 +491,16 @@ class LauncherBase(DirectObject):
                             'name': self.currentPhaseName,
                             'current': self.currentPhaseIndex,
                             'total': self.numPhases,
-                            'percent': pct})
+                            'percent': pct
+                        })
                 else:
                     self.launcherMessage(
                         self.Localizer.LauncherDownloadFileBytes % {
                             'name': self.currentPhaseName,
                             'current': self.currentPhaseIndex,
                             'total': self.numPhases,
-                            'bytes': bytesWritten})
+                            'bytes': bytesWritten
+                        })
             self.foregroundSleep()
             return Task.cont
         statusCode = self.httpChannel.getStatusCode()
@@ -522,17 +516,18 @@ class LauncherBase(DirectObject):
                         'name': self.currentPhaseName,
                         'current': self.currentPhaseIndex,
                         'total': self.numPhases,
-                        'percent': pct})
+                        'percent': pct
+                    })
             else:
                 self.launcherMessage(
                     self.Localizer.LauncherDownloadFileBytes % {
                         'name': self.currentPhaseName,
                         'current': self.currentPhaseIndex,
                         'total': self.numPhases,
-                        'bytes': bytesWritten})
+                        'bytes': bytesWritten
+                    })
             self.notify.info(
-                'downloadTask: Download done: %s' %
-                task.serverFileURL.cStr())
+                'downloadTask: Download done: %s' % task.serverFileURL.cStr())
             task.callback()
             del task.callback
             return Task.done
@@ -543,35 +538,29 @@ class LauncherBase(DirectObject):
                 if statusCode == HTTPChannel.SCLostConnection:
                     gotBytes = self.httpChannel.getBytesDownloaded()
                     self.notify.info(
-                        'Connection lost while downloading; got %s bytes.  Reconnecting.' %
-                        gotBytes)
+                        'Connection lost while downloading; got %s bytes.  Reconnecting.'
+                        % gotBytes)
                     if task.downloadRam:
                         self.downloadRam(task.serverFilePath, task.callback)
                     else:
-                        self.download(
-                            task.serverFilePath,
-                            task.localFilename,
-                            task.callback,
-                            None)
+                        self.download(task.serverFilePath, task.localFilename,
+                                      task.callback, None)
                 else:
                     if self.httpChannel.isValid():
                         self.notify.info(
-                            'Unexpected situation: no error status, but %s incompletely downloaded.' %
-                            task.serverFileURL.cStr())
+                            'Unexpected situation: no error status, but %s incompletely downloaded.'
+                            % task.serverFileURL.cStr())
                     self.handleDownloadFatalError(task)
                     if task.downloadRam:
                         self.downloadRam(task.serverFilePath, task.callback)
                     else:
-                        self.download(
-                            task.serverFilePath,
-                            task.localFilename,
-                            task.callback,
-                            None)
+                        self.download(task.serverFilePath, task.localFilename,
+                                      task.callback, None)
             return Task.done
         return
 
-    def downloadMultifile(self, serverFilename, localFilename,
-                          mfname, callback, totalSize, currentSize, callbackProgress):
+    def downloadMultifile(self, serverFilename, localFilename, mfname, callback,
+                          totalSize, currentSize, callbackProgress):
         if currentSize != 0 and currentSize == totalSize:
             callback()
             return
@@ -579,7 +568,8 @@ class LauncherBase(DirectObject):
             self.Localizer.LauncherDownloadFile % {
                 'name': self.currentPhaseName,
                 'current': self.currentPhaseIndex,
-                'total': self.numPhases})
+                'total': self.numPhases
+            })
         task = Task(self.downloadMultifileTask)
         mfURL = self.addDownloadVersion(serverFilename)
         task.mfURL = mfURL
@@ -615,15 +605,13 @@ class LauncherBase(DirectObject):
         bytesWritten = startingByte + bytesDownloaded
         totalBytes = self.httpChannel.getFileSize()
         percentPatchComplete = int(
-            round(
-                bytesWritten /
-                float(totalBytes) *
-                self.downloadPercentage))
+            round(bytesWritten / float(totalBytes) * self.downloadPercentage))
         self.setPercentPhaseComplete(self.currentPhase, percentPatchComplete)
 
     def getPercentPatchComplete(self, bytesWritten):
-        return int(round((self.patchDownloadSoFar + bytesWritten) /
-                         float(self.totalPatchDownload) * self.downloadPercentage))
+        return int(
+            round((self.patchDownloadSoFar + bytesWritten) / float(
+                self.totalPatchDownload) * self.downloadPercentage))
 
     def downloadPatchOverallProgress(self, task):
         startingByte = self.httpChannel.getFirstByteDelivered()
@@ -641,11 +629,8 @@ class LauncherBase(DirectObject):
         percentComplete = 0
         if task.totalSize != 0:
             percentComplete = int(
-                round(
-                    bytesWritten /
-                    float(
-                        task.totalSize) *
-                    self.downloadPercentage))
+                round(bytesWritten / float(task.totalSize) *
+                      self.downloadPercentage))
         self.setPercentPhaseComplete(self.currentPhase, percentComplete)
 
     def downloadMultifileTask(self, task):
@@ -663,17 +648,14 @@ class LauncherBase(DirectObject):
                 percentComplete = 0
                 if task.totalSize != 0:
                     percentComplete = int(
-                        round(
-                            100.0 *
-                            bytesWritten /
-                            float(
-                                task.totalSize)))
+                        round(100.0 * bytesWritten / float(task.totalSize)))
                 self.launcherMessage(
                     self.Localizer.LauncherDownloadFilePercent % {
                         'name': self.currentPhaseName,
                         'current': self.currentPhaseIndex,
                         'total': self.numPhases,
-                        'percent': percentComplete})
+                        'percent': percentComplete
+                    })
             self.foregroundSleep()
             return Task.cont
         statusCode = self.httpChannel.getStatusCode()
@@ -697,43 +679,32 @@ class LauncherBase(DirectObject):
                     bytesDownloaded = self.httpChannel.getBytesDownloaded()
                     bytesWritten = startingByte + bytesDownloaded
                     self.notify.info(
-                        'Connection lost while downloading; got %s bytes.  Reconnecting.' %
-                        bytesDownloaded)
-                    self.downloadMultifile(
-                        task.serverFilename,
-                        task.localFilename,
-                        task.mfname,
-                        task.callback,
-                        task.totalSize,
-                        bytesWritten,
-                        task.callbackProgress)
+                        'Connection lost while downloading; got %s bytes.  Reconnecting.'
+                        % bytesDownloaded)
+                    self.downloadMultifile(task.serverFilename,
+                                           task.localFilename, task.mfname,
+                                           task.callback, task.totalSize,
+                                           bytesWritten, task.callbackProgress)
                 else:
-                    if (statusCode == 416 or statusCode ==
-                            HTTPChannel.SCDownloadInvalidRange) and self.httpChannel.getFirstByteRequested() != 0:
+                    if (statusCode == 416 or
+                            statusCode == HTTPChannel.SCDownloadInvalidRange
+                       ) and self.httpChannel.getFirstByteRequested() != 0:
                         self.notify.info(
                             'Invalid subrange; redownloading entire file.')
-                        self.downloadMultifile(
-                            task.serverFilename,
-                            task.localFilename,
-                            task.mfname,
-                            task.callback,
-                            task.totalSize,
-                            0,
-                            task.callbackProgress)
+                        self.downloadMultifile(task.serverFilename,
+                                               task.localFilename, task.mfname,
+                                               task.callback, task.totalSize, 0,
+                                               task.callbackProgress)
                     else:
                         if self.httpChannel.isValid():
                             self.notify.info(
-                                'Unexpected situation: no error status, but %s incompletely downloaded.' %
-                                task.mfname)
+                                'Unexpected situation: no error status, but %s incompletely downloaded.'
+                                % task.mfname)
                         self.handleDownloadFatalError(task)
-                        self.downloadMultifile(
-                            task.serverFilename,
-                            task.localFilename,
-                            task.mfname,
-                            task.callback,
-                            task.totalSize,
-                            0,
-                            task.callbackProgress)
+                        self.downloadMultifile(task.serverFilename,
+                                               task.localFilename, task.mfname,
+                                               task.callback, task.totalSize, 0,
+                                               task.callbackProgress)
             return Task.done
 
     def decompressFile(self, localFilename, callback):
@@ -742,7 +713,8 @@ class LauncherBase(DirectObject):
             self.Localizer.LauncherDecompressingFile % {
                 'name': self.currentPhaseName,
                 'current': self.currentPhaseIndex,
-                'total': self.numPhases})
+                'total': self.numPhases
+            })
         task = Task(self.decompressFileTask)
         task.localFilename = localFilename
         task.callback = callback
@@ -766,9 +738,8 @@ class LauncherBase(DirectObject):
                         'name': self.currentPhaseName,
                         'current': self.currentPhaseIndex,
                         'total': self.numPhases,
-                        'percent': int(
-                            round(
-                                progress * 100))})
+                        'percent': int(round(progress * 100))
+                    })
             self.foregroundSleep()
             return Task.cont
         else:
@@ -778,10 +749,10 @@ class LauncherBase(DirectObject):
                         'name': self.currentPhaseName,
                         'current': self.currentPhaseIndex,
                         'total': self.numPhases,
-                        'percent': 100})
-                self.notify.info(
-                    'decompressTask: Decompress done: ' +
-                    task.localFilename.cStr())
+                        'percent': 100
+                    })
+                self.notify.info('decompressTask: Decompress done: ' +
+                                 task.localFilename.cStr())
                 del task.decompressor
                 task.callback()
                 del task.callback
@@ -801,26 +772,25 @@ class LauncherBase(DirectObject):
                         else:
                             if errorCode > 0:
                                 self.notify.warning(
-                                    'decompressMultifileTask: Unknown success return code: ' +
-                                    errorToText(errorCode))
+                                    'decompressMultifileTask: Unknown success return code: '
+                                    + errorToText(errorCode))
                                 return Task.cont
                             else:
                                 self.notify.warning(
-                                    'decompressMultifileTask: Unknown return code: ' +
-                                    errorToText(errorCode))
-                                self.handleDecompressFatalError(
-                                    task, errorCode)
+                                    'decompressMultifileTask: Unknown return code: '
+                                    + errorToText(errorCode))
+                                self.handleDecompressFatalError(task, errorCode)
                                 return Task.done
 
     def decompressMultifile(self, mfname, localFilename, callback):
-        self.notify.info(
-            'decompressMultifile: request: ' +
-            localFilename.cStr())
+        self.notify.info('decompressMultifile: request: ' +
+                         localFilename.cStr())
         self.launcherMessage(
             self.Localizer.LauncherDecompressingFile % {
                 'name': self.currentPhaseName,
                 'current': self.currentPhaseIndex,
-                'total': self.numPhases})
+                'total': self.numPhases
+            })
         task = Task(self.decompressMultifileTask)
         task.mfname = mfname
         task.localFilename = localFilename
@@ -845,13 +815,10 @@ class LauncherBase(DirectObject):
                         'name': self.currentPhaseName,
                         'current': self.currentPhaseIndex,
                         'total': self.numPhases,
-                        'percent': int(
-                            round(
-                                progress * 100))})
+                        'percent': int(round(progress * 100))
+                    })
                 percentProgress = int(
-                    round(
-                        progress *
-                        self.decompressPercentage))
+                    round(progress * self.decompressPercentage))
                 totalPercent = self.downloadPercentage + percentProgress
                 self.setPercentPhaseComplete(self.currentPhase, totalPercent)
             self.foregroundSleep()
@@ -863,7 +830,8 @@ class LauncherBase(DirectObject):
                         'name': self.currentPhaseName,
                         'current': self.currentPhaseIndex,
                         'total': self.numPhases,
-                        'percent': 100})
+                        'percent': 100
+                    })
                 totalPercent = self.downloadPercentage + self.decompressPercentage
                 self.setPercentPhaseComplete(self.currentPhase, totalPercent)
                 self.notify.info(
@@ -889,28 +857,25 @@ class LauncherBase(DirectObject):
                         else:
                             if errorCode > 0:
                                 self.notify.warning(
-                                    'decompressMultifileTask: Unknown success return code: ' +
-                                    errorToText(errorCode))
+                                    'decompressMultifileTask: Unknown success return code: '
+                                    + errorToText(errorCode))
                                 return Task.cont
                             else:
                                 self.notify.warning(
-                                    'decompressMultifileTask: Unknown return code: ' +
-                                    errorToText(errorCode))
-                                self.handleDecompressFatalError(
-                                    task, errorCode)
+                                    'decompressMultifileTask: Unknown return code: '
+                                    + errorToText(errorCode))
+                                self.handleDecompressFatalError(task, errorCode)
                                 return Task.done
 
     def extract(self, mfname, localFilename, destDir, callback):
-        self.notify.info(
-            'extract: request: ' +
-            localFilename.cStr() +
-            ' destDir: ' +
-            destDir.cStr())
+        self.notify.info('extract: request: ' + localFilename.cStr() +
+                         ' destDir: ' + destDir.cStr())
         self.launcherMessage(
             self.Localizer.LauncherExtractingFile % {
                 'name': self.currentPhaseName,
                 'current': self.currentPhaseIndex,
-                'total': self.numPhases})
+                'total': self.numPhases
+            })
         task = Task(self.extractTask)
         task.mfname = mfname
         task.localFilename = localFilename
@@ -921,9 +886,8 @@ class LauncherBase(DirectObject):
         task.extractor.setExtractDir(task.destDir)
         if not task.extractor.setMultifile(task.localFilename):
             self.setPandaErrorCode(6)
-            self.notify.info(
-                'extract: Unable to open multifile %s' %
-                task.localFilename.cStr())
+            self.notify.info('extract: Unable to open multifile %s' %
+                             task.localFilename.cStr())
             sys.exit()
         numFiles = self.dldb.getServerNumFiles(mfname)
         for i in range(numFiles):
@@ -936,8 +900,7 @@ class LauncherBase(DirectObject):
                 sys.exit()
 
         self.notify.info(
-            'Extracting %d subfiles from multifile %s.' %
-            (numFiles, mfname))
+            'Extracting %d subfiles from multifile %s.' % (numFiles, mfname))
         taskMgr.add(task, 'launcher-extract')
 
     def extractTask(self, task):
@@ -952,9 +915,8 @@ class LauncherBase(DirectObject):
                         'name': self.currentPhaseName,
                         'current': self.currentPhaseIndex,
                         'total': self.numPhases,
-                        'percent': int(
-                            round(
-                                progress * 100.0))})
+                        'percent': int(round(progress * 100.0))
+                    })
                 percentProgress = int(round(progress * self.extractPercentage))
                 totalPercent = self.downloadPercentage + \
                     self.decompressPercentage + percentProgress
@@ -968,13 +930,13 @@ class LauncherBase(DirectObject):
                         'name': self.currentPhaseName,
                         'current': self.currentPhaseIndex,
                         'total': self.numPhases,
-                        'percent': 100})
+                        'percent': 100
+                    })
                 totalPercent = self.downloadPercentage + \
                     self.decompressPercentage + self.extractPercentage
                 self.setPercentPhaseComplete(self.currentPhase, totalPercent)
-                self.notify.info(
-                    'extractTask: Extract multifile done: ' +
-                    task.localFilename.cStr())
+                self.notify.info('extractTask: Extract multifile done: ' +
+                                 task.localFilename.cStr())
                 self.dldb.setClientMultifileExtracted(task.mfname)
                 del task.extractor
                 task.callback()
@@ -995,25 +957,25 @@ class LauncherBase(DirectObject):
                         else:
                             if errorCode > 0:
                                 self.notify.warning(
-                                    'extractTask: Unknown success return code: ' + errorToText(errorCode))
+                                    'extractTask: Unknown success return code: '
+                                    + errorToText(errorCode))
                                 return Task.cont
                             else:
                                 self.notify.warning(
-                                    'extractTask: Unknown error return code: ' + errorToText(errorCode))
+                                    'extractTask: Unknown error return code: ' +
+                                    errorToText(errorCode))
                                 self.handleExtractFatalError(task, errorCode)
                                 return Task.done
 
     def patch(self, patchFile, patcheeFile, callback):
-        self.notify.info(
-            'patch: request: ' +
-            patchFile.cStr() +
-            ' patchee: ' +
-            patcheeFile.cStr())
+        self.notify.info('patch: request: ' + patchFile.cStr() + ' patchee: ' +
+                         patcheeFile.cStr())
         self.launcherMessage(
             self.Localizer.LauncherPatchingFile % {
                 'name': self.currentPhaseName,
                 'current': self.currentPhaseIndex,
-                'total': self.numPhases})
+                'total': self.numPhases
+            })
         task = Task(self.patchTask)
         task.patchFile = patchFile
         task.patcheeFile = patcheeFile
@@ -1038,9 +1000,8 @@ class LauncherBase(DirectObject):
                         'name': self.currentPhaseName,
                         'current': self.currentPhaseIndex,
                         'total': self.numPhases,
-                        'percent': int(
-                            round(
-                                progress * 100.0))})
+                        'percent': int(round(progress * 100.0))
+                    })
             self.foregroundSleep()
             return Task.cont
         else:
@@ -1050,10 +1011,10 @@ class LauncherBase(DirectObject):
                         'name': self.currentPhaseName,
                         'current': self.currentPhaseIndex,
                         'total': self.numPhases,
-                        'percent': 100})
-                self.notify.info(
-                    'patchTask: Patch done: ' +
-                    task.patcheeFile.cStr())
+                        'percent': 100
+                    })
+                self.notify.info('patchTask: Patch done: ' +
+                                 task.patcheeFile.cStr())
                 del task.patcher
                 task.callback()
                 del task.callback
@@ -1073,11 +1034,13 @@ class LauncherBase(DirectObject):
                         else:
                             if errorCode > 0:
                                 self.notify.warning(
-                                    'patchTask: Unknown success return code: ' + errorToText(errorCode))
+                                    'patchTask: Unknown success return code: ' +
+                                    errorToText(errorCode))
                                 return Task.cont
                             else:
                                 self.notify.warning(
-                                    'patchTask: Unknown error return code: ' + errorToText(errorCode))
+                                    'patchTask: Unknown error return code: ' +
+                                    errorToText(errorCode))
                                 self.handlePatchFatalError(task, errorCode)
                                 return Task.done
 
@@ -1095,8 +1058,7 @@ class LauncherBase(DirectObject):
         localFilename = Filename(self.dbDir, Filename(self.progressFilename))
         if not localFilename.exists():
             self.notify.warning(
-                'File does not exist: %s' %
-                localFilename.cStr())
+                'File does not exist: %s' % localFilename.cStr())
             self.linesInProgress = []
         else:
             f = open(localFilename.toOsSpecific())
@@ -1107,40 +1069,33 @@ class LauncherBase(DirectObject):
         token = 'phase_'
         self.progressSum = self.getProgressSum(token)
         self.progressSum -= self.getProgressSum(token + '2')
-        self.notify.info(
-            'total phases to be downloaded = ' +
-            repr(
-                (self.progressSum)))
+        self.notify.info('total phases to be downloaded = ' +
+                         repr((self.progressSum)))
         self.checkClientDbExists()
 
     def prepareClient(self):
         self.notify.info('prepareClient: Preparing client for install')
         if not self.topDir.exists():
-            self.notify.info(
-                'prepareClient: Creating top directory: ' +
-                self.topDir.cStr())
+            self.notify.info('prepareClient: Creating top directory: ' +
+                             self.topDir.cStr())
             os.makedirs(self.topDir.toOsSpecific())
         if not self.dbDir.exists():
-            self.notify.info(
-                'prepareClient: Creating db directory: ' +
-                self.dbDir.cStr())
+            self.notify.info('prepareClient: Creating db directory: ' +
+                             self.dbDir.cStr())
             os.makedirs(self.dbDir.toOsSpecific())
         if not self.patchDir.exists():
-            self.notify.info(
-                'prepareClient: Creating patch directory: ' +
-                self.patchDir.cStr())
+            self.notify.info('prepareClient: Creating patch directory: ' +
+                             self.patchDir.cStr())
             os.makedirs(self.patchDir.toOsSpecific())
         if not self.mfDir.exists():
-            self.notify.info(
-                'prepareClient: Creating mf directory: ' +
-                self.mfDir.cStr())
+            self.notify.info('prepareClient: Creating mf directory: ' +
+                             self.mfDir.cStr())
             os.makedirs(self.mfDir.toOsSpecific())
 
     def downloadLauncherFileDb(self):
         self.notify.info('Downloading launcherFileDb')
-        self.downloadRam(
-            self.launcherFileDbFilename,
-            self.downloadLauncherFileDbDone)
+        self.downloadRam(self.launcherFileDbFilename,
+                         self.downloadLauncherFileDbDone)
 
     def downloadLauncherFileDbDone(self):
         self.launcherFileDbHash = HashVal()
@@ -1195,20 +1150,15 @@ class LauncherBase(DirectObject):
 
     def downloadClientDbStarterFile(self):
         self.notify.info('Downloading Client Db starter file')
-        localFilename = Filename(
-            self.dbDir, Filename(
-                self.compClientDbFilename))
-        self.download(
-            self.clientStarterDbFilePath,
-            localFilename,
-            self.downloadClientDbStarterFileDone,
-            None)
+        localFilename = Filename(self.dbDir,
+                                 Filename(self.compClientDbFilename))
+        self.download(self.clientStarterDbFilePath, localFilename,
+                      self.downloadClientDbStarterFileDone, None)
         return
 
     def downloadClientDbStarterFileDone(self):
-        localFilename = Filename(
-            self.dbDir, Filename(
-                self.compClientDbFilename))
+        localFilename = Filename(self.dbDir,
+                                 Filename(self.compClientDbFilename))
         decompressor = Decompressor()
         decompressor.decompress(localFilename)
         self.createDownloadDb()
@@ -1228,7 +1178,8 @@ class LauncherBase(DirectObject):
         self.launcherMessage(self.Localizer.LauncherFinishedDownloadDb)
         self.currentPhase = self.LauncherPhases[0]
         self.currentPhaseIndex = 1
-        self.currentPhaseName = self.Localizer.LauncherPhaseNames[self.currentPhase]
+        self.currentPhaseName = self.Localizer.LauncherPhaseNames[
+            self.currentPhase]
         self.updatePhase(self.currentPhase)
 
     def maybeStartGame(self):
@@ -1303,10 +1254,8 @@ class LauncherBase(DirectObject):
             vfs = VirtualFileSystem.getGlobalPtr()
             vfs.mount(localFilename, '.', VirtualFileSystem.MFReadOnly)
             self.setPercentPhaseComplete(self.currentPhase, 100)
-            self.notify.info(
-                'Done updating multifiles in phase: ' +
-                repr(
-                    (self.currentPhase)))
+            self.notify.info('Done updating multifiles in phase: ' +
+                             repr((self.currentPhase)))
             self.progressSoFar += int(
                 round(self.phaseOverallMap[self.currentPhase] * 100))
             self.notify.info('progress so far ' + repr((self.progressSoFar)))
@@ -1314,7 +1263,8 @@ class LauncherBase(DirectObject):
             if nextIndex < len(self.LauncherPhases):
                 self.currentPhase = self.LauncherPhases[nextIndex]
                 self.currentPhaseIndex = nextIndex + 1
-                self.currentPhaseName = self.Localizer.LauncherPhaseNames[self.currentPhase]
+                self.currentPhaseName = self.Localizer.LauncherPhaseNames[
+                    self.currentPhase]
                 self.updatePhase(self.currentPhase)
             else:
                 self.notify.info('ALL PHASES COMPLETE')
@@ -1336,10 +1286,8 @@ class LauncherBase(DirectObject):
         self.notify.info('Downloading multifile: ' + mfname)
         if not self.dldb.clientMultifileExists(mfname):
             self.maybeStartGame()
-            self.notify.info(
-                'Multifile does not exist in client db,' +
-                'creating new record: ' +
-                mfname)
+            self.notify.info('Multifile does not exist in client db,' +
+                             'creating new record: ' + mfname)
             self.dldb.addClientMultifile(mfname)
             curHash = self.dldb.getServerMultifileHash(mfname)
             self.dldb.setClientMultifileHash(mfname, curHash)
@@ -1350,8 +1298,8 @@ class LauncherBase(DirectObject):
                 if curSize == self.dldb.getServerMultifileSize(mfname):
                     self.dldb.setClientMultifileComplete(mfname)
         decompressedMfname = os.path.splitext(mfname)[0]
-        decompressedFilename = Filename(
-            self.mfDir, Filename(decompressedMfname))
+        decompressedFilename = Filename(self.mfDir,
+                                        Filename(decompressedMfname))
         if not self.dldb.clientMultifileComplete(
                 mfname) or not self.dldb.clientMultifileDecompressed(mfname):
             if decompressedFilename.exists():
@@ -1361,8 +1309,8 @@ class LauncherBase(DirectObject):
                     Filename(decompressedMfname), clientMd5)
                 if clientVer != -1:
                     self.notify.info(
-                        'Decompressed multifile is already on disk and correct: %s (version %s)' %
-                        (mfname, clientVer))
+                        'Decompressed multifile is already on disk and correct: %s (version %s)'
+                        % (mfname, clientVer))
                     self.dldb.setClientMultifileComplete(mfname)
                     self.dldb.setClientMultifileDecompressed(mfname)
                     compressedFilename = Filename(self.mfDir, Filename(mfname))
@@ -1390,48 +1338,38 @@ class LauncherBase(DirectObject):
             else:
                 currentSize = min(currentSize, localFilename.getFileSize())
             if currentSize == 0:
-                self.notify.info(
-                    'Multifile has not been started, ' +
-                    'downloading new file: ' +
-                    mfname)
+                self.notify.info('Multifile has not been started, ' +
+                                 'downloading new file: ' + mfname)
                 curHash = self.dldb.getServerMultifileHash(mfname)
                 self.dldb.setClientMultifileHash(mfname, curHash)
                 self.phaseNewDownload[self.currentPhase] = 1
-                self.downloadMultifile(
-                    self.contentDir + mfname,
-                    localFilename,
-                    mfname,
-                    self.downloadMultifileDone,
-                    totalSize,
-                    0,
-                    self.downloadMultifileWriteToDisk)
+                self.downloadMultifile(self.contentDir + mfname, localFilename,
+                                       mfname, self.downloadMultifileDone,
+                                       totalSize, 0,
+                                       self.downloadMultifileWriteToDisk)
             else:
                 clientHash = self.dldb.getClientMultifileHash(mfname)
                 serverHash = self.dldb.getServerMultifileHash(mfname)
                 if clientHash.eq(serverHash):
                     self.notify.info(
-                        'Multifile is not complete, finishing download for %s, size = %s / %s' %
-                        (mfname, currentSize, totalSize))
+                        'Multifile is not complete, finishing download for %s, size = %s / %s'
+                        % (mfname, currentSize, totalSize))
                     self.downloadMultifile(
-                        self.contentDir + mfname,
-                        localFilename,
-                        mfname,
-                        self.downloadMultifileDone,
-                        totalSize,
-                        currentSize,
+                        self.contentDir + mfname, localFilename, mfname,
+                        self.downloadMultifileDone, totalSize, currentSize,
                         self.downloadMultifileWriteToDisk)
                 elif self.curMultifileRetry < self.multifileRetries:
                     self.notify.info(
-                        'recover attempt: %s / %s' %
-                        (self.curMultifileRetry, self.multifileRetries))
+                        'recover attempt: %s / %s' % (self.curMultifileRetry,
+                                                      self.multifileRetries))
                     self.curMultifileRetry += 1
                     self.notify.info(
                         'Multifile is not complete, and is out of date. ' +
                         'Restarting download with newest multifile')
                     self.dldb.setClientMultifileIncomplete(self.currentMfname)
                     self.dldb.setClientMultifileSize(self.currentMfname, 0)
-                    self.dldb.setClientMultifileHash(
-                        self.currentMfname, serverHash)
+                    self.dldb.setClientMultifileHash(self.currentMfname,
+                                                     serverHash)
                     self.getMultifile(self.currentMfname)
                 else:
                     self.setPandaErrorCode(6)
@@ -1452,10 +1390,8 @@ class LauncherBase(DirectObject):
         self.notify.info('Downloading multifile: ' + mfname)
         if not self.dldb.clientMultifileExists(mfname):
             self.maybeStartGame()
-            self.notify.info(
-                'Multifile does not exist in client db,' +
-                'creating new record: ' +
-                mfname)
+            self.notify.info('Multifile does not exist in client db,' +
+                             'creating new record: ' + mfname)
             self.dldb.addClientMultifile(mfname)
             if self.DecompressMultifiles:
                 curHash = self.dldb.getServerMultifileHash(mfname)
@@ -1467,19 +1403,20 @@ class LauncherBase(DirectObject):
                     if curSize == self.dldb.getServerMultifileSize(mfname):
                         self.dldb.setClientMultifileComplete(mfname)
         decompressedMfname = os.path.splitext(mfname)[0]
-        decompressedFilename = Filename(
-            self.mfDir, Filename(decompressedMfname))
+        decompressedFilename = Filename(self.mfDir,
+                                        Filename(decompressedMfname))
         if self.DecompressMultifiles:
-            if (not self.dldb.clientMultifileComplete(mfname) or not self.dldb.clientMultifileDecompressed(
-                    mfname)) and decompressedFilename.exists():
+            if (not self.dldb.clientMultifileComplete(mfname) or
+                    not self.dldb.clientMultifileDecompressed(mfname)
+               ) and decompressedFilename.exists():
                 clientMd5 = HashVal()
                 clientMd5.hashFile(decompressedFilename)
                 clientVer = self.dldb.getVersion(
                     Filename(decompressedMfname), clientMd5)
                 if clientVer != -1:
                     self.notify.info(
-                        'Decompressed multifile is already on disk and correct: %s (version %s)' %
-                        (mfname, clientVer))
+                        'Decompressed multifile is already on disk and correct: %s (version %s)'
+                        % (mfname, clientVer))
                     self.dldb.setClientMultifileComplete(mfname)
                     self.dldb.setClientMultifileDecompressed(mfname)
                     compressedFilename = Filename(self.mfDir, Filename(mfname))
@@ -1506,40 +1443,30 @@ class LauncherBase(DirectObject):
             if not localFilename.exists():
                 currentSize = 0
             if currentSize == 0:
-                self.notify.info(
-                    'Multifile has not been started, ' +
-                    'downloading new file: ' +
-                    mfname)
+                self.notify.info('Multifile has not been started, ' +
+                                 'downloading new file: ' + mfname)
                 curHash = self.dldb.getServerMultifileHash(mfname)
                 self.dldb.setClientMultifileHash(mfname, curHash)
                 self.phaseNewDownload[self.currentPhase] = 1
-                self.downloadMultifile(
-                    self.contentDir + mfname,
-                    localFilename,
-                    mfname,
-                    self.downloadMultifileDone,
-                    totalSize,
-                    0,
-                    self.downloadMultifileWriteToDisk)
+                self.downloadMultifile(self.contentDir + mfname, localFilename,
+                                       mfname, self.downloadMultifileDone,
+                                       totalSize, 0,
+                                       self.downloadMultifileWriteToDisk)
             else:
                 clientHash = self.dldb.getClientMultifileHash(mfname)
                 serverHash = self.dldb.getServerMultifileHash(mfname)
                 if clientHash.eq(serverHash):
                     self.notify.info(
-                        'Multifile is not complete, finishing download for %s, size = %s / %s' %
-                        (mfname, currentSize, totalSize))
+                        'Multifile is not complete, finishing download for %s, size = %s / %s'
+                        % (mfname, currentSize, totalSize))
                     self.downloadMultifile(
-                        self.contentDir + mfname,
-                        localFilename,
-                        mfname,
-                        self.downloadMultifileDone,
-                        totalSize,
-                        currentSize,
+                        self.contentDir + mfname, localFilename, mfname,
+                        self.downloadMultifileDone, totalSize, currentSize,
                         self.downloadMultifileWriteToDisk)
                 elif self.curMultifileRetry < self.multifileRetries:
                     self.notify.info(
-                        'recover attempt: %s / %s' %
-                        (self.curMultifileRetry, self.multifileRetries))
+                        'recover attempt: %s / %s' % (self.curMultifileRetry,
+                                                      self.multifileRetries))
                     self.curMultifileRetry += 1
                     self.notify.info(
                         'Multifile is not complete, and is out of date. ' +
@@ -1568,11 +1495,12 @@ class LauncherBase(DirectObject):
                 self.notify.info(
                     'decompressMultifile: Decompressing multifile: ' + mfname)
                 localFilename = Filename(self.mfDir, Filename(mfname))
-                self.decompressMultifile(
-                    mfname, localFilename, self.decompressMultifileDone)
+                self.decompressMultifile(mfname, localFilename,
+                                         self.decompressMultifileDone)
             else:
                 self.notify.info(
-                    'decompressMultifile: Multifile already decompressed: ' + mfname)
+                    'decompressMultifile: Multifile already decompressed: ' +
+                    mfname)
                 self.decompressMultifileDone()
 
     def decompressMultifileDone(self):
@@ -1583,32 +1511,25 @@ class LauncherBase(DirectObject):
     def extractMultifile(self, mfname):
         if not self.dldb.clientMultifileExtracted(mfname):
             self.maybeStartGame()
-            self.notify.info(
-                'extractMultifile: Extracting multifile: ' + mfname)
+            self.notify.info('extractMultifile: Extracting multifile: ' +
+                             mfname)
             decompressedMfname = os.path.splitext(mfname)[0]
             localFilename = Filename(self.mfDir, Filename(decompressedMfname))
             destDir = Filename(self.topDir)
-            self.notify.info(
-                'extractMultifile: Extracting: ' +
-                localFilename.cStr() +
-                ' to: ' +
-                destDir.cStr())
-            self.extract(
-                mfname,
-                localFilename,
-                destDir,
-                self.extractMultifileDone)
+            self.notify.info('extractMultifile: Extracting: ' +
+                             localFilename.cStr() + ' to: ' + destDir.cStr())
+            self.extract(mfname, localFilename, destDir,
+                         self.extractMultifileDone)
         else:
-            self.notify.info(
-                'extractMultifile: Multifile already extracted: ' + mfname)
+            self.notify.info('extractMultifile: Multifile already extracted: ' +
+                             mfname)
             self.extractMultifileDone()
 
     def extractMultifileDone(self):
         if self.phaseNewDownload[self.currentPhase]:
             self.setPercentPhaseComplete(self.currentPhase, 99)
-        self.notify.info(
-            'extractMultifileDone: Finished updating multifile: ' +
-            self.currentMfname)
+        self.notify.info('extractMultifileDone: Finished updating multifile: ' +
+                         self.currentMfname)
         self.patchMultifile()
 
     def getPatchFilename(self, fname, currentVersion):
@@ -1616,7 +1537,8 @@ class LauncherBase(DirectObject):
 
     def downloadPatches(self):
         if len(self.patchList) > 0:
-            self.currentPatch, self.currentPatchee, self.currentPatchVersion = self.patchList.pop()
+            self.currentPatch, self.currentPatchee, self.currentPatchVersion = self.patchList.pop(
+            )
             self.notify.info(self.contentDir)
             self.notify.info(self.currentPatch)
             patchFile = self.currentPatch + '.pz'
@@ -1624,45 +1546,30 @@ class LauncherBase(DirectObject):
             self.notify.info(serverPatchFilePath)
             localPatchFilename = Filename(self.patchDir, Filename(patchFile))
             if self.currentPhase > 3:
-                self.download(
-                    serverPatchFilePath,
-                    localPatchFilename,
-                    self.downloadPatchDone,
-                    self.downloadPatchSimpleProgress)
+                self.download(serverPatchFilePath, localPatchFilename,
+                              self.downloadPatchDone,
+                              self.downloadPatchSimpleProgress)
             else:
-                self.download(
-                    serverPatchFilePath,
-                    localPatchFilename,
-                    self.downloadPatchDone,
-                    self.downloadPatchOverallProgress)
+                self.download(serverPatchFilePath, localPatchFilename,
+                              self.downloadPatchDone,
+                              self.downloadPatchOverallProgress)
         else:
-            self.notify.info(
-                'applyNextPatch: Done patching multifile: ' +
-                repr(
-                    (self.currentPhase)))
+            self.notify.info('applyNextPatch: Done patching multifile: ' +
+                             repr((self.currentPhase)))
             self.patchDone()
 
     def downloadPatchDone(self):
         self.patchDownloadSoFar += self.httpChannel.getBytesDownloaded()
-        self.notify.info(
-            'downloadPatchDone: Decompressing patch file: ' +
-            self.currentPatch +
-            '.pz')
+        self.notify.info('downloadPatchDone: Decompressing patch file: ' +
+                         self.currentPatch + '.pz')
         self.decompressFile(
-            Filename(
-                self.patchDir,
-                Filename(
-                    self.currentPatch +
-                    '.pz')),
+            Filename(self.patchDir, Filename(self.currentPatch + '.pz')),
             self.decompressPatchDone)
 
     def decompressPatchDone(self):
-        self.notify.info(
-            'decompressPatchDone: Patching file: ' +
-            self.currentPatchee +
-            ' from ver: ' +
-            repr(
-                (self.currentPatchVersion)))
+        self.notify.info('decompressPatchDone: Patching file: ' +
+                         self.currentPatchee + ' from ver: ' +
+                         repr((self.currentPatchVersion)))
         patchFile = Filename(self.patchDir, Filename(self.currentPatch))
         patchFile.setBinary()
         patchee = Filename(self.mfDir, Filename(self.currentPatchee))
@@ -1677,27 +1584,18 @@ class LauncherBase(DirectObject):
         decompressedMfname = os.path.splitext(self.currentMfname)[0]
         localFilename = Filename(self.mfDir, Filename(decompressedMfname))
         destDir = Filename(self.topDir)
-        self.extract(
-            self.currentMfname,
-            localFilename,
-            destDir,
-            self.updateMultifileDone)
+        self.extract(self.currentMfname, localFilename, destDir,
+                     self.updateMultifileDone)
 
     def startReextractingFiles(self):
-        self.notify.info(
-            'startReextractingFiles: Reextracting ' +
-            repr(
-                (len(
-                    self.reextractList))) +
-            ' files for multifile: ' +
-            self.currentMfname)
+        self.notify.info('startReextractingFiles: Reextracting ' +
+                         repr((len(self.reextractList))) +
+                         ' files for multifile: ' + self.currentMfname)
         self.launcherMessage(self.Localizer.LauncherRecoverFiles)
         self.currentMfile = Multifile()
         decompressedMfname = os.path.splitext(self.currentMfname)[0]
         self.currentMfile.openRead(
-            Filename(
-                self.mfDir,
-                Filename(decompressedMfname)))
+            Filename(self.mfDir, Filename(decompressedMfname)))
         self.reextractNextFile()
 
     def reextractNextFile(self):
@@ -1706,8 +1604,8 @@ class LauncherBase(DirectObject):
             currentReextractFile = self.reextractList.pop()
             subfileIndex = self.currentMfile.findSubfile(currentReextractFile)
             if subfileIndex >= 0:
-                destFilename = Filename(
-                    self.topDir, Filename(currentReextractFile))
+                destFilename = Filename(self.topDir,
+                                        Filename(currentReextractFile))
                 result = self.currentMfile.extractSubfile(
                     subfileIndex, destFilename)
                 if not result:
@@ -1724,8 +1622,7 @@ class LauncherBase(DirectObject):
             sys.exit()
         self.notify.info(
             'reextractNextFile: Done reextracting files for multifile: ' +
-            repr(
-                (self.currentPhase)))
+            repr((self.currentPhase)))
         del self.currentMfile
         self.updateMultifileDone()
 
@@ -1734,10 +1631,10 @@ class LauncherBase(DirectObject):
             self.Localizer.LauncherCheckUpdates % {
                 'name': self.currentPhaseName,
                 'current': self.currentPhaseIndex,
-                'total': self.numPhases})
-        self.notify.info(
-            'patchMultifile: Checking for patches on multifile: ' +
-            self.currentMfname)
+                'total': self.numPhases
+            })
+        self.notify.info('patchMultifile: Checking for patches on multifile: ' +
+                         self.currentMfname)
         self.patchList = []
         clientMd5 = HashVal()
         decompressedMfname = os.path.splitext(self.currentMfname)[0]
@@ -1750,17 +1647,17 @@ class LauncherBase(DirectObject):
             return
         else:
             if clientVer == -1:
-                self.notify.info(
-                    'patchMultifile: Invalid hash for file: ' +
-                    self.currentMfname)
+                self.notify.info('patchMultifile: Invalid hash for file: ' +
+                                 self.currentMfname)
                 self.maybeStartGame()
                 if self.curMultifileRetry < self.multifileRetries:
                     self.notify.info(
-                        'recover attempt: %s / %s' %
-                        (self.curMultifileRetry, self.multifileRetries))
+                        'recover attempt: %s / %s' % (self.curMultifileRetry,
+                                                      self.multifileRetries))
                     self.curMultifileRetry += 1
                     self.notify.info(
-                        'patchMultifile: Restarting download with newest multifile')
+                        'patchMultifile: Restarting download with newest multifile'
+                    )
                     self.dldb.setClientMultifileIncomplete(self.currentMfname)
                     self.dldb.setClientMultifileSize(self.currentMfname, 0)
                     self.getMultifile(self.currentMfname)
@@ -1774,15 +1671,13 @@ class LauncherBase(DirectObject):
                 if clientVer > 1:
                     self.notify.info(
                         'patchMultifile: Old version for multifile: ' +
-                        self.currentMfname +
-                        ' Client ver: ' +
-                        repr(clientVer))
+                        self.currentMfname + ' Client ver: ' + repr(clientVer))
                     self.maybeStartGame()
                     self.totalPatchDownload = 0
                     self.patchDownloadSoFar = 0
                     for ver in range(1, clientVer):
-                        patch = self.getPatchFilename(
-                            decompressedMfname, ver + 1)
+                        patch = self.getPatchFilename(decompressedMfname,
+                                                      ver + 1)
                         patchee = decompressedMfname
                         patchVersion = ver + 1
                         self.patchList.append((patch, patchee, patchVersion))
@@ -1790,10 +1685,8 @@ class LauncherBase(DirectObject):
                             self.totalPatchDownload += self.getProgressSum(
                                 patch)
 
-                    self.notify.info(
-                        'total patch to be downloaded = ' +
-                        repr(
-                            (self.totalPatchDownload)))
+                    self.notify.info('total patch to be downloaded = ' +
+                                     repr((self.totalPatchDownload)))
                     self.downloadPatches()
                     return
 
@@ -1835,8 +1728,8 @@ class LauncherBase(DirectObject):
             if clientVer == 1:
                 return Task.cont
             else:
-                self.notify.info(
-                    'patchAndHash: Invalid hash for file: ' + fname)
+                self.notify.info('patchAndHash: Invalid hash for file: ' +
+                                 fname)
                 self.reextractList.append(fname)
                 self.PAHClean = 0
         return Task.cont
@@ -1913,12 +1806,14 @@ class LauncherBase(DirectObject):
         oldPercent = self.phaseComplete[phase]
         if oldPercent != percent:
             self.phaseComplete[phase] = percent
-            messenger.send('launcherPercentPhaseComplete', [
-                phase, percent, self.getBandwidth(), self.byteRate])
+            messenger.send('launcherPercentPhaseComplete',
+                           [phase, percent,
+                            self.getBandwidth(), self.byteRate])
             percentPhaseCompleteKey = 'PERCENT_PHASE_COMPLETE_' + repr(phase)
             self.setRegistry(percentPhaseCompleteKey, percent)
             self.overallComplete = int(
-                round(percent * self.phaseOverallMap[phase])) + self.progressSoFar
+                round(
+                    percent * self.phaseOverallMap[phase])) + self.progressSoFar
             self.setRegistry('PERCENT_OVERALL_COMPLETE', self.overallComplete)
 
     def getPercentPhaseComplete(self, phase):
@@ -1954,8 +1849,7 @@ class LauncherBase(DirectObject):
     def increaseBandwidth(self, targetBandwidth=None):
         maxBandwidthIndex = len(self.BANDWIDTH_ARRAY) - 1
         if self.bandwidthIndex == maxBandwidthIndex:
-            self.notify.debug(
-                'increaseBandwidth: Already at maximum bandwidth')
+            self.notify.debug('increaseBandwidth: Already at maximum bandwidth')
             return 0
         self.bandwidthIndex += 1
         self.everIncreasedBandwidth = 1
@@ -1972,8 +1866,8 @@ class LauncherBase(DirectObject):
         else:
             self.bandwidthIndex -= 1
             if targetBandwidth:
-                while self.bandwidthIndex > 0 and self.BANDWIDTH_ARRAY[
-                        self.bandwidthIndex] > targetBandwidth:
+                while self.bandwidthIndex > 0 and self.BANDWIDTH_ARRAY[self.
+                                                                       bandwidthIndex] > targetBandwidth:
                     self.bandwidthIndex -= 1
 
             self.setBandwidth()
@@ -2054,8 +1948,8 @@ class LauncherBase(DirectObject):
         else:
             self.bandwidthIndex -= 1
             if targetBandwidth:
-                while self.bandwidthIndex > 0 and self.BANDWIDTH_ARRAY[
-                        self.bandwidthIndex] > targetBandwidth:
+                while self.bandwidthIndex > 0 and self.BANDWIDTH_ARRAY[self.
+                                                                       bandwidthIndex] > targetBandwidth:
                     self.bandwidthIndex -= 1
 
             self.setBandwidth()
@@ -2104,20 +1998,28 @@ class LauncherBase(DirectObject):
         import _winreg
         hacksInstalled = {}
         hacksRunning = {}
-        hackName = [
-            '!xSpeed.net', 'A Speeder', 'Speed Gear']
+        hackName = ['!xSpeed.net', 'A Speeder', 'Speed Gear']
         knownHacksRegistryKeys = {
-            hackName[0]: [
-                [
-                    _winreg.HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Windows\\CurrentVersion\\Run\\!xSpeed'], [
-                    _winreg.HKEY_CURRENT_USER, 'Software\\!xSpeednethy'], [
-                    _winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MenuOrder\\Start Menu\\Programs\\!xSpeednet'], [
-                        _winreg.HKEY_LOCAL_MACHINE, 'Software\\Gentee\\Paths\\!xSpeednet'], [
-                            _winreg.HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\!xSpeed.net 2.0']], hackName[1]: [
-                                [
-                                    _winreg.HKEY_CURRENT_USER, 'Software\\aspeeder'], [
-                                        _winreg.HKEY_LOCAL_MACHINE, 'Software\\aspeeder'], [
-                                            _winreg.HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\aspeeder']]}
+            hackName[0]: [[
+                _winreg.HKEY_LOCAL_MACHINE,
+                'Software\\Microsoft\\Windows\\CurrentVersion\\Run\\!xSpeed'
+            ], [_winreg.HKEY_CURRENT_USER, 'Software\\!xSpeednethy'], [
+                _winreg.HKEY_CURRENT_USER,
+                'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MenuOrder\\Start Menu\\Programs\\!xSpeednet'
+            ], [
+                _winreg.HKEY_LOCAL_MACHINE,
+                'Software\\Gentee\\Paths\\!xSpeednet'
+            ], [
+                _winreg.HKEY_LOCAL_MACHINE,
+                'Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\!xSpeed.net 2.0'
+            ]],
+            hackName[1]: [[_winreg.HKEY_CURRENT_USER, 'Software\\aspeeder'], [
+                _winreg.HKEY_LOCAL_MACHINE, 'Software\\aspeeder'
+            ], [
+                _winreg.HKEY_LOCAL_MACHINE,
+                'Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\aspeeder'
+            ]]
+        }
         try:
             for prog in knownHacksRegistryKeys.keys():
                 for key in knownHacksRegistryKeys[prog]:
@@ -2135,7 +2037,8 @@ class LauncherBase(DirectObject):
             knownHacksMUI = {
                 '!xspeednet': hackName[0],
                 'aspeeder': hackName[1],
-                'speed gear': hackName[2]}
+                'speed gear': hackName[2]
+            }
             i = 0
             try:
                 rh = _winreg.OpenKey(
@@ -2163,7 +2066,8 @@ class LauncherBase(DirectObject):
                     knownHacksExe = {
                         '!xspeednet.exe': hackName[0],
                         'aspeeder.exe': hackName[1],
-                        'speedgear.exe': hackName[2]}
+                        'speedgear.exe': hackName[2]
+                    }
                     try:
                         for p in procapi.getProcessList():
                             pname = p.name
@@ -2198,4 +2102,6 @@ class LauncherBase(DirectObject):
         if DISLToken == 'NO DISLTOKEN':
             DISLToken = None
         return DISLToken
+
+
 # okay decompiling .\otp\launcher\LauncherBase.pyc

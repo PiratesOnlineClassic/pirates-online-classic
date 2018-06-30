@@ -2,11 +2,13 @@ from pirates.pirate import AvatarTypes
 from Human import Human
 from pirates.piratesbase import PiratesGlobals
 
+
 class Pirate(Human):
 
     def __init__(self, other=None):
         Human.__init__(self, other)
         self.avatarType = AvatarTypes.Pirate
+
 
 class PirateHeadPortrait(Human):
 

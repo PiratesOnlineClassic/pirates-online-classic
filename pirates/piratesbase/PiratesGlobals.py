@@ -14,9 +14,46 @@ for i in range(getModelPath().getNumDirectories()):
 ShipsDatabaseChannelId = 4008
 AvatarsDatabaseChannelId = 4021
 InventoryDatabaseChannelId = 4023
-DatabaseIdFromClassName = {'DistributedPlayerPirate': AvatarsDatabaseChannelId, 'DistributedInventory': InventoryDatabaseChannelId, 'PirateInventory': InventoryDatabaseChannelId, 'DistributedGoldReceipt': InventoryDatabaseChannelId, 'DistributedFlag': InventoryDatabaseChannelId, 'DistributedQuest': InventoryDatabaseChannelId, 'DistributedTreasureMap': InventoryDatabaseChannelId, 'PlayerShip': ShipsDatabaseChannelId, 'DistributedShip': ShipsDatabaseChannelId, 'DistributedHull': ShipsDatabaseChannelId, 'DistributedCabin': ShipsDatabaseChannelId, 'DistributedMast': ShipsDatabaseChannelId, 'DistributedSail': ShipsDatabaseChannelId, 'DistributedBowSprit': ShipsDatabaseChannelId, 'DistributedShipDecor': ShipsDatabaseChannelId, 'DistributedShipCannon': ShipsDatabaseChannelId, 'DistributedSteeringWheel': ShipsDatabaseChannelId}
+DatabaseIdFromClassName = {
+    'DistributedPlayerPirate': AvatarsDatabaseChannelId,
+    'DistributedInventory': InventoryDatabaseChannelId,
+    'PirateInventory': InventoryDatabaseChannelId,
+    'DistributedGoldReceipt': InventoryDatabaseChannelId,
+    'DistributedFlag': InventoryDatabaseChannelId,
+    'DistributedQuest': InventoryDatabaseChannelId,
+    'DistributedTreasureMap': InventoryDatabaseChannelId,
+    'PlayerShip': ShipsDatabaseChannelId,
+    'DistributedShip': ShipsDatabaseChannelId,
+    'DistributedHull': ShipsDatabaseChannelId,
+    'DistributedCabin': ShipsDatabaseChannelId,
+    'DistributedMast': ShipsDatabaseChannelId,
+    'DistributedSail': ShipsDatabaseChannelId,
+    'DistributedBowSprit': ShipsDatabaseChannelId,
+    'DistributedShipDecor': ShipsDatabaseChannelId,
+    'DistributedShipCannon': ShipsDatabaseChannelId,
+    'DistributedSteeringWheel': ShipsDatabaseChannelId
+}
 preLoadSet = [
- 'models/char/fp_2000', 'models/char/fp_1000', 'models/char/fp_500', 'models/char/mp_2000', 'models/char/mp_1000', 'models/char/mp_500', 'models/misc/male_clothes.bam', 'models/misc/female_clothes.bam', 'models/misc/male_body.bam', 'models/misc/female_body.bam', 'models/misc/male_face.bam', 'models/misc/female_face.bam', 'models/char/fp_idle', 'models/char/mp_idle', 'models/char/fp_walk', 'models/char/mp_walk', 'models/char/crab_2000', 'models/char/crab_1000', 'models/char/crab_500', 'models/textureCards/shipTextures', 'models/char/fp_tread_water', 'models/char/mp_tread_water', 'models/char/rooster_hi', 'models/char/rooster_med', 'models/char/rooster_low', 'models/char/pig_hi', 'models/char/pig_med', 'models/char/pig_low', 'models/char/dog_hi', 'models/char/seagull_hi', 'models/sea/wake_zero', 'models/effects/compass_rose', 'models/vegetation/bush_a', 'models/vegetation/bush_b', 'models/vegetation/bush_c', 'models/vegetation/bush_d', 'models/vegetation/bush_e', 'models/vegetation/bush_f', 'models/vegetation/gen_tree_a', 'models/vegetation/gen_tree_b', 'models/vegetation/gen_tree_c', 'models/vegetation/gen_tree_d', 'models/vegetation/gen_tree_e']
+    'models/char/fp_2000', 'models/char/fp_1000', 'models/char/fp_500',
+    'models/char/mp_2000', 'models/char/mp_1000', 'models/char/mp_500',
+    'models/misc/male_clothes.bam', 'models/misc/female_clothes.bam',
+    'models/misc/male_body.bam', 'models/misc/female_body.bam',
+    'models/misc/male_face.bam', 'models/misc/female_face.bam',
+    'models/char/fp_idle', 'models/char/mp_idle', 'models/char/fp_walk',
+    'models/char/mp_walk', 'models/char/crab_2000', 'models/char/crab_1000',
+    'models/char/crab_500', 'models/textureCards/shipTextures',
+    'models/char/fp_tread_water', 'models/char/mp_tread_water',
+    'models/char/rooster_hi', 'models/char/rooster_med',
+    'models/char/rooster_low', 'models/char/pig_hi', 'models/char/pig_med',
+    'models/char/pig_low', 'models/char/dog_hi', 'models/char/seagull_hi',
+    'models/sea/wake_zero', 'models/effects/compass_rose',
+    'models/vegetation/bush_a', 'models/vegetation/bush_b',
+    'models/vegetation/bush_c', 'models/vegetation/bush_d',
+    'models/vegetation/bush_e', 'models/vegetation/bush_f',
+    'models/vegetation/gen_tree_a', 'models/vegetation/gen_tree_b',
+    'models/vegetation/gen_tree_c', 'models/vegetation/gen_tree_d',
+    'models/vegetation/gen_tree_e'
+]
 INVALID_TEAM = -1
 PLAYER_TEAM = 0
 UNDEAD_TEAM = 1
@@ -27,8 +64,7 @@ ISLAND_TEAM = 5
 TUTORIAL_ENEMY_TEAM = 6
 FRENCH_UNDEAD_TEAM = 7
 SPANISH_UNDEAD_TEAM = 8
-NeutralTeams = [
- PLAYER_TEAM, VILLAGER_TEAM]
+NeutralTeams = [PLAYER_TEAM, VILLAGER_TEAM]
 FriendlyTeams = []
 NEUTRAL = 0
 PVP_ENEMY = 1
@@ -45,8 +81,7 @@ ISLAND_TEAM_STR = 'Island'
 TUTORIAL_ENEMY_TEAM_STR = 'TutorialEnemy'
 FRENCH_UNDEAD_TEAM_STR = 'French Undead'
 SPANISH_UNDEAD_TEAM_STR = 'Spanish Undead'
-PLAYER_NAMETAG = (
- 1, 0.8, 0.5, 1)
+PLAYER_NAMETAG = (1, 0.8, 0.5, 1)
 UNDEAD_NAMETAG = (0.6, 0.6, 0.6, 1)
 NAVY_NAMETAG = (1, 0.2, 0.2, 1)
 FRENCH_NAMETAG = (0.1, 0.1, 0.44, 1.0)
@@ -56,8 +91,7 @@ MAX_COMBAT_DAMAGE = 999
 AI_BROADCAST_PERIOD = ConfigVariableDouble('smooth-lag', 0.2).getValue() * 0.9
 AI_MOVEMENT_PERIOD = AI_BROADCAST_PERIOD * 0.9
 AI_EXAMINE_EVERY = ConfigVariableInt('ai-examine-every', 2).getValue()
-IDLES_DONT_EXAMINE = [
- VILLAGER_TEAM, PLAYER_TEAM]
+IDLES_DONT_EXAMINE = [VILLAGER_TEAM, PLAYER_TEAM]
 COLL_MODE_NONE = 0
 COLL_MODE_FLOORS_CL = 1
 COLL_MODE_INTERACT = 2
@@ -96,7 +130,9 @@ ShipZoneSilhouette = InventoryCategory.SHIP_MAINPARTS
 ShipZoneDistance = InventoryCategory.SHIP_ACCESSORIES
 ShipZoneDetails = 1000
 ShipZoneOnDeck = 500
-ShipZones = [OnDeckZoneDist, DetailsZoneDist, DistanceZoneDist, SilhouetteZoneDist]
+ShipZones = [
+    OnDeckZoneDist, DetailsZoneDist, DistanceZoneDist, SilhouetteZoneDist
+]
 COLL_AV = 1
 COLL_SEA = 2
 COLL_LAND = 3
@@ -143,13 +179,15 @@ PirateOutlineFont = None
 PirateBoldFont = None
 PirateBoldOutlineFont = None
 
+
 def getInterfaceOutlineFont():
     global InterfaceOutlineFont
     if InterfaceOutlineFont == None:
         if InterfaceOutlineFontPath == None:
             InterfaceOutlineFont = TextNode.getDefaultFont()
         else:
-            InterfaceOutlineFont = loader.loadFont(InterfaceOutlineFontPath, lineHeight=1.0)
+            InterfaceOutlineFont = loader.loadFont(
+                InterfaceOutlineFontPath, lineHeight=1.0)
             if not InterfaceOutlineFont.isValid():
                 InterfaceOutlineFont = TextNode.getDefaultFont()
     return InterfaceOutlineFont
@@ -189,7 +227,8 @@ def getPirateOutlineFont():
         if PirateOutlineFontPath == None:
             PirateOutlineFont = TextNode.getDefaultFont()
         else:
-            PirateOutlineFont = loader.loadFont(PirateOutlineFontPath, lineHeight=1.0)
+            PirateOutlineFont = loader.loadFont(
+                PirateOutlineFontPath, lineHeight=1.0)
             if not PirateOutlineFont.isValid():
                 PirateOutlineFont = TextNode.getDefaultFont()
     return PirateOutlineFont
@@ -209,7 +248,8 @@ def getPirateBoldOutlineFont():
         if PirateBoldOutlineFontPath == None:
             PirateBoldOutlineFont = TextNode.getDefaultFont()
         else:
-            PirateBoldOutlineFont = loader.loadFont(PirateBoldOutlineFontPath, lineHeight=1.0)
+            PirateBoldOutlineFont = loader.loadFont(
+                PirateBoldOutlineFontPath, lineHeight=1.0)
             if not PirateBoldOutlineFont.isValid():
                 PirateBoldOutlineFont = TextNode.getDefaultFont()
     return PirateBoldOutlineFont
@@ -241,10 +281,8 @@ if ConfigVariableBool('want-dev-hotkeys', False).getValue():
     ShipHotkey = 'f11'
     KrakenHotkey = 'f10'
     SynchronizeHotkey = 'f6'
-GlobalDialogColor = (
- 1, 1, 0.75, 1)
-DefaultBackgroundColor = (
- 0.3, 0.3, 0.3, 1)
+GlobalDialogColor = (1, 1, 0.75, 1)
+DefaultBackgroundColor = (0.3, 0.3, 0.3, 1)
 DynamicZonesBegin = 61000
 DynamicZonesEnd = 1 << 20
 ToonStandableGround = 0.707
@@ -254,9 +292,9 @@ SPEED_FAST_INDEX = 2
 SPEED_SLOW_INDEX = 3
 SPEED_CARRY_INDEX = 4
 SPEED_HEAVY_INDEX = 5
-PirateSpeeds = [
- (
-  24.0, 24.0, 8.0, 120.0), (24.0, 24.0, 8.0, 120.0), (24.0, 24.0, 8.0, 120.0), (6.0, 4.0, 2.5, 33.0), (16.0, 8.0, 8.0, 80.0), (12.0, 8.0, 4.0, 80.0)]
+PirateSpeeds = [(24.0, 24.0, 8.0, 120.0), (24.0, 24.0, 8.0, 120.0),
+                (24.0, 24.0, 8.0, 120.0), (6.0, 4.0, 2.5, 33.0),
+                (16.0, 8.0, 8.0, 80.0), (12.0, 8.0, 4.0, 80.0)]
 ToonForwardFastSpeed = 24.0
 ToonJumpFastForce = 24.0
 ToonReverseFastSpeed = 8.0
@@ -292,7 +330,20 @@ OVER_WATER_INDEX = 11
 SPIN_LEFT_INDEX = 12
 SPIN_RIGHT_INDEX = 13
 SWIM_WALK_TRANSITION_TIME = 0.5
-AnimScaleTable = {'models/char/mp_walk_gp8': 0.35, 'models/char/mp_walk_gp4': 0.35, 'models/char/mp_walk': 0.1, 'models/char/mp_bayonet_walk': 0.2, 'models/char/mp_run_gp8': 0.0971, 'models/char/mp_run': 0.03, 'models/char/mp_bayonet_run_mtm': 0.03, 'models/char/mp_bayonet_run': 0.03, 'models/char/mp_run_mtm': 0.03, 'models/char/mp_run_mtp': 0.03, 'models/char/mp_run_mmi': 0.03}
+AnimScaleTable = {
+    'models/char/mp_walk_gp8': 0.35,
+    'models/char/mp_walk_gp4': 0.35,
+    'models/char/mp_walk': 0.1,
+    'models/char/mp_bayonet_walk': 0.2,
+    'models/char/mp_run_gp8': 0.0971,
+    'models/char/mp_run': 0.03,
+    'models/char/mp_bayonet_run_mtm': 0.03,
+    'models/char/mp_bayonet_run': 0.03,
+    'models/char/mp_run_mtm': 0.03,
+    'models/char/mp_run_mtp': 0.03,
+    'models/char/mp_run_mmi': 0.03
+}
+
 
 def GetAnimScale(animName):
     return AnimScaleTable.get(animName)
@@ -318,8 +369,9 @@ TOD_HALLOWEEN = 12
 TOD_FULLMOON = 13
 TOD_FULL2HALFMOON = 14
 TOD_HALF2FULLMOON = 15
-TOD_ALL = (
- TOD_DAWN, TOD_DAWN2DAY, TOD_DAY, TOD_DAY2DUSK, TOD_DUSK, TOD_DUSK2NIGHT, TOD_NIGHT, TOD_NIGHT2STARS, TOD_STARS, TOD_STARS2DAWN)
+TOD_ALL = (TOD_DAWN, TOD_DAWN2DAY, TOD_DAY, TOD_DAY2DUSK, TOD_DUSK,
+           TOD_DUSK2NIGHT, TOD_NIGHT, TOD_NIGHT2STARS, TOD_STARS,
+           TOD_STARS2DAWN)
 TOD_CYCLE_DURATION = 3600.0
 TUT_STARTED = 0
 TUT_MADE_PIRATE = 1
@@ -357,11 +409,9 @@ EVENT_SPHERE_DOCK = 'ES_DOCK'
 LOCATION_SPHERE = 'LOC_SPHERE'
 SPHERE_ENTER_SUFFIX = '_ENTER'
 SPHERE_EXIT_SUFFIX = '_EXIT'
-IslandPos = [
- (
-  -750, 0, 0, 90, 0, 0), (750, 0, 0, -90, 0, 0), (0, 750, 0, 0, 0, 0), (0, -750, 0, 180, 0, 0)]
-NumIslands = [
- 2, 2, 4]
+IslandPos = [(-750, 0, 0, 90, 0, 0), (750, 0, 0, -90, 0, 0),
+             (0, 750, 0, 0, 0, 0), (0, -750, 0, 180, 0, 0)]
+NumIslands = [2, 2, 4]
 IslandTeams = [[0, -1], [0, 1], [0, 1, 2, 3]]
 LOC_PIRATES = '12345'
 INSTANCE_NONE = 0
@@ -378,9 +428,9 @@ SHARD_MAIN = 1
 SHARD_LOW_LATENCY = 2
 SHARD_WELCOME = 3
 INSTANCE_NO_NEWS_MESSAGES = [
- INSTANCE_TM, INSTANCE_PG, INSTANCE_TUTORIAL, INSTANCE_PVP]
-LowLatencyInstanceTypes = (
- INSTANCE_PVP,)
+    INSTANCE_TM, INSTANCE_PG, INSTANCE_TUTORIAL, INSTANCE_PVP
+]
+LowLatencyInstanceTypes = (INSTANCE_PVP,)
 GAME_TYPE_PG = 0
 GAME_TYPE_PVP = 1
 GAME_TYPE_HSA = 2
@@ -405,7 +455,21 @@ CREW_STYLE_RECRUIT_MEMBERS = 15
 CREW_STYLE_FIND_A_PVP_CREW = 14
 GAME_STYLE_TM_ANY = GAME_STYLE_ANY
 GAME_STYLE_TM_BLACK_PEARL = 0
-DYNAMIC_GAME_STYLE_PROPS = {GAME_TYPE_TM: {GAME_STYLE_TM_BLACK_PEARL: {'Name': PLocalizer.BlackPearlTMName, 'Desc': PLocalizer.BlackPearlTMDesc, 'MapName': 'BlackpearlWorld', 'NumPlayers': [2, 12]}, GAME_STYLE_ANY: {'Name': PLocalizer.AnyTMName, 'Desc': '', 'MapName': ''}}}
+DYNAMIC_GAME_STYLE_PROPS = {
+    GAME_TYPE_TM: {
+        GAME_STYLE_TM_BLACK_PEARL: {
+            'Name': PLocalizer.BlackPearlTMName,
+            'Desc': PLocalizer.BlackPearlTMDesc,
+            'MapName': 'BlackpearlWorld',
+            'NumPlayers': [2, 12]
+        },
+        GAME_STYLE_ANY: {
+            'Name': PLocalizer.AnyTMName,
+            'Desc': '',
+            'MapName': ''
+        }
+    }
+}
 LOOKOUT_INVITE_NONE = 0
 LOOKOUT_INVITE_CREW = 1
 LOOKOUT_INVITE_GUILD = 2
@@ -462,6 +526,7 @@ INTERACT_TYPE_HOSTILE = 1
 INTERACT_TYPE_S2SBOARD = 2
 S2SBOARD_SUCCESS_MSG = 'S2SBoarding complete-'
 
+
 def teamStr2TeamId(typeStr, defaultTeam=PLAYER_TEAM):
     team = defaultTeam
     if typeStr == NAVY_TEAM_STR:
@@ -490,7 +555,18 @@ SearchableDesk = 'Desk'
 SearchableHaystack = 'Haystack'
 SearchableWellA = 'WellA'
 SearchableStove = 'Stove'
-SearchableModels = {SearchableCrate: 'models/props/crate_04', SearchableBarrel: 'models/props/barrel', SearchableCabinet: 'models/props/cabinet_fancy_low', SearchableBookshelf: 'models/props/bookshelf_fancy', SearchableClock: 'models/props/clock_fancy_tall', SearchableDesk: 'models/props/desk_gov', SearchableHaystack: 'models/props/haystack', SearchableHaystack: 'models/props/haystack', SearchableWellA: 'models/props/wellA', SearchableStove: 'models/props/stove_potbelly'}
+SearchableModels = {
+    SearchableCrate: 'models/props/crate_04',
+    SearchableBarrel: 'models/props/barrel',
+    SearchableCabinet: 'models/props/cabinet_fancy_low',
+    SearchableBookshelf: 'models/props/bookshelf_fancy',
+    SearchableClock: 'models/props/clock_fancy_tall',
+    SearchableDesk: 'models/props/desk_gov',
+    SearchableHaystack: 'models/props/haystack',
+    SearchableHaystack: 'models/props/haystack',
+    SearchableWellA: 'models/props/wellA',
+    SearchableStove: 'models/props/stove_potbelly'
+}
 TFFlag = 0
 TFPlayerConfirm = BitMask32.bit(TFFlag)
 TFFlag += 1
@@ -544,8 +620,42 @@ del TFFlag
 TFNoTeleport = TFInPVP | TFInTeleport | TFInTunnel | TFInTutorial | TFInJail | TFFlagshipBattle | TFInInitTeleport | TFTreasureMap | TFZombie
 TFNoTeleportTo = TFNoTeleport | TFIgnore | TFOnShip | TFNotSameCrew | TFInWelcomeWorld
 TFNoTeleportOut = TFNoTeleport | TFNoIslandToken | TFInBattle | TFInWater | TFParlorGame | TFNoCompass | TFPhaseIncomplete | TFLookoutJoined | TFVelvetRope | TFSiegeCaptain
-TFNoTeleportReasons = {TFOnShip: PLocalizer.NoTeleportOnShip, TFNoIslandToken: PLocalizer.NoTeleportIslandToken, TFInBattle: PLocalizer.NoTeleportInBattle, TFInPVP: PLocalizer.NoTeleportInPVP, TFInTutorial: PLocalizer.NoTeleportInTutorial, TFNoCompass: PLocalizer.NoTeleportCompass, TFInTunnel: PLocalizer.NoTeleportInTunnel, TFInTeleport: PLocalizer.NoTeleportInTeleport, TFInInitTeleport: PLocalizer.NoTeleportInTeleport, TFInJail: PLocalizer.NoTeleportInJail, TFInWater: PLocalizer.NoTeleportInWater, TFParlorGame: PLocalizer.NoTeleportParlorGame, TFFlagshipBattle: PLocalizer.NoTeleportFlagshipBattle, TFPhaseIncomplete: PLocalizer.NoTeleportPhaseIncomplete, TFLookoutJoined: PLocalizer.NoTeleportLookoutJoined, TFTreasureMap: PLocalizer.NoTeleportTreasureMap, TFSiegeCaptain: PLocalizer.NoTeleportSiegeCaptain, TFZombie: PLocalizer.NoTeleportZombie}
-TFNoTeleportToReasons = {TFUnavailable: PLocalizer.NoTeleportToUnavailable, TFInPVP: PLocalizer.NoTeleportToInPVP, TFInTutorial: PLocalizer.NoTeleportToInTutorial, TFInTunnel: PLocalizer.NoTeleportToInTunnel, TFInTeleport: PLocalizer.NoTeleportToInTeleport, TFInInitTeleport: PLocalizer.NoTeleportToInTeleport, TFInJail: PLocalizer.NoTeleportToInJail, TFFlagshipBattle: PLocalizer.NoTeleportToFlagshipBattle, TFIgnore: PLocalizer.NoTeleportToIgnore, TFNotSameCrew: PLocalizer.NoTeleportToNotSameCrew, TFOnShip: PLocalizer.NoTeleportToNoSpaceOnShip, TFTreasureMap: PLocalizer.NoTeleportToTreasureMap, TFInWelcomeWorld: PLocalizer.NoTeleportToWelcomeWorld}
+TFNoTeleportReasons = {
+    TFOnShip: PLocalizer.NoTeleportOnShip,
+    TFNoIslandToken: PLocalizer.NoTeleportIslandToken,
+    TFInBattle: PLocalizer.NoTeleportInBattle,
+    TFInPVP: PLocalizer.NoTeleportInPVP,
+    TFInTutorial: PLocalizer.NoTeleportInTutorial,
+    TFNoCompass: PLocalizer.NoTeleportCompass,
+    TFInTunnel: PLocalizer.NoTeleportInTunnel,
+    TFInTeleport: PLocalizer.NoTeleportInTeleport,
+    TFInInitTeleport: PLocalizer.NoTeleportInTeleport,
+    TFInJail: PLocalizer.NoTeleportInJail,
+    TFInWater: PLocalizer.NoTeleportInWater,
+    TFParlorGame: PLocalizer.NoTeleportParlorGame,
+    TFFlagshipBattle: PLocalizer.NoTeleportFlagshipBattle,
+    TFPhaseIncomplete: PLocalizer.NoTeleportPhaseIncomplete,
+    TFLookoutJoined: PLocalizer.NoTeleportLookoutJoined,
+    TFTreasureMap: PLocalizer.NoTeleportTreasureMap,
+    TFSiegeCaptain: PLocalizer.NoTeleportSiegeCaptain,
+    TFZombie: PLocalizer.NoTeleportZombie
+}
+TFNoTeleportToReasons = {
+    TFUnavailable: PLocalizer.NoTeleportToUnavailable,
+    TFInPVP: PLocalizer.NoTeleportToInPVP,
+    TFInTutorial: PLocalizer.NoTeleportToInTutorial,
+    TFInTunnel: PLocalizer.NoTeleportToInTunnel,
+    TFInTeleport: PLocalizer.NoTeleportToInTeleport,
+    TFInInitTeleport: PLocalizer.NoTeleportToInTeleport,
+    TFInJail: PLocalizer.NoTeleportToInJail,
+    TFFlagshipBattle: PLocalizer.NoTeleportToFlagshipBattle,
+    TFIgnore: PLocalizer.NoTeleportToIgnore,
+    TFNotSameCrew: PLocalizer.NoTeleportToNotSameCrew,
+    TFOnShip: PLocalizer.NoTeleportToNoSpaceOnShip,
+    TFTreasureMap: PLocalizer.NoTeleportToTreasureMap,
+    TFInWelcomeWorld: PLocalizer.NoTeleportToWelcomeWorld
+}
+
 
 def encodeTeleportFlag(flag):
     return flag.getHighestOnBit() + 1
@@ -558,8 +668,7 @@ def decodeTeleportFlag(available):
 TAAvailable = 0
 TALater = 1
 TAIgnore = 2
-buf = [
- '        ', '        ']
+buf = ['        ', '        ']
 nicknamesMale = PL.PirateNames_NickNamesGeneric + PL.PirateNames_NickNamesMale
 nicknamesFemale = PL.PirateNames_NickNamesGeneric + PL.PirateNames_NickNamesFemale
 firstNamesMale = PL.PirateNames_FirstNamesGeneric + PL.PirateNames_FirstNamesMale
@@ -586,15 +695,42 @@ lastSuffixesMale = buf + lastSuffixesMale + buf
 lastSuffixesFemale = buf + lastSuffixesFemale + buf
 del buf
 maleNames = [[], firstNamesMale[:], lastPrefixesMale[:], lastSuffixesMale[:]]
-femaleNames = [[], firstNamesFemale[:], lastPrefixesFemale[:], lastSuffixesFemale[:]]
+femaleNames = [[], firstNamesFemale[:], lastPrefixesFemale[:],
+               lastSuffixesFemale[:]]
 lastNamePrefixesCapped = PL.PirateNames_LastNamePrefixesCapped[:]
 TreasureMapReadyTimeout = 45
 DEFAULT_AMBIENT_VOLUME = 1.0
 DEFAULT_AMBIENT_VOLUME_FAINT = DEFAULT_AMBIENT_VOLUME * 0.25
 DEFAULT_AMBIENT_VOLUME_MIDDLE = DEFAULT_AMBIENT_VOLUME * 0.5
 DEFAULT_AMBIENT_VOLUME_NEAR = DEFAULT_AMBIENT_VOLUME * 0.75
-treasureCarryTransforms = {'m': [TransformState.makePosHprScale(Vec3(0.05, 0, -1.1), Vec3(0, 0, -90), Vec3(0.5, 0.5, 0.5)), TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)), TransformState.makePosHprScale(Vec3(0.05, 0, -1.12), Vec3(0, 0, -90), Vec3(0.53, 0.53, 0.53)), TransformState.makePosHprScale(Vec3(0.05, 0, -1.03), Vec3(0, 0, -90), Vec3(0.48, 0.48, 0.48)), TransformState.makePosHprScale(Vec3(0.05, 0, -1.3), Vec3(0, 0, -90), Vec3(0.63, 0.63, 0.63))], 'f': [TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)), TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)), TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)), TransformState.makePosHprScale(Vec3(-0.1, 0, -0.97), Vec3(0, 0, -90), Vec3(0.42, 0.42, 0.42)), TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47))]}
-treasureSwimTransform = TransformState.makePosHprScale(Vec3(0, 0, 5), Vec3(0, 0, 0), Vec3(0.5, 0.5, 0.5))
+treasureCarryTransforms = {
+    'm': [
+        TransformState.makePosHprScale(
+            Vec3(0.05, 0, -1.1), Vec3(0, 0, -90), Vec3(0.5, 0.5, 0.5)),
+        TransformState.makePosHprScale(
+            Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)),
+        TransformState.makePosHprScale(
+            Vec3(0.05, 0, -1.12), Vec3(0, 0, -90), Vec3(0.53, 0.53, 0.53)),
+        TransformState.makePosHprScale(
+            Vec3(0.05, 0, -1.03), Vec3(0, 0, -90), Vec3(0.48, 0.48, 0.48)),
+        TransformState.makePosHprScale(
+            Vec3(0.05, 0, -1.3), Vec3(0, 0, -90), Vec3(0.63, 0.63, 0.63))
+    ],
+    'f': [
+        TransformState.makePosHprScale(
+            Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)),
+        TransformState.makePosHprScale(
+            Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)),
+        TransformState.makePosHprScale(
+            Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)),
+        TransformState.makePosHprScale(
+            Vec3(-0.1, 0, -0.97), Vec3(0, 0, -90), Vec3(0.42, 0.42, 0.42)),
+        TransformState.makePosHprScale(
+            Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47))
+    ]
+}
+treasureSwimTransform = TransformState.makePosHprScale(
+    Vec3(0, 0, 5), Vec3(0, 0, 0), Vec3(0.5, 0.5, 0.5))
 PORT_ROYAL_DEFAULTS = 100
 PORT_ROYAL_ALL = 101
 PRIVATEER_TATTOOS = 102
@@ -641,6 +777,7 @@ WARDROBE_LIMIT_TAILOR = 4
 WARDROBE_LIMIT_TATTOO = 4
 STATUS_AFK = 1
 STATUS_LFG = 2
+
 
 def getShardFromInstance(instanceType):
     if instanceType in LowLatencyInstanceTypes:

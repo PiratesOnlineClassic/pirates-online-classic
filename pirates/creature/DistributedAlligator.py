@@ -3,7 +3,6 @@ from pirates.creature.DistributedCreature import DistributedCreature
 
 
 class DistributedAlligator(DistributedCreature):
-    
 
     def __init__(self, cr):
         DistributedCreature.__init__(self, cr, Alligator())

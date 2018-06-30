@@ -13,7 +13,6 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class PiratesInfoButton(RequestButton):
-    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -21,7 +20,7 @@ class PiratesInfoButton(RequestButton):
 
 
 class PiratesInfo(GuiPanel.GuiPanel):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesInfo')
 
     def __init__(self, title, messageList):
@@ -31,10 +30,19 @@ class PiratesInfo(GuiPanel.GuiPanel):
         self.currentMessage = 0
         text = ' '
         base.me = self
-        self.message = DirectLabel(parent=self, relief=None, text=self.messageList[self.currentMessage], text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ALeft, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=17, pos=(0.0667,
-                                                                                                                                                                                                                                                                                     0,
-                                                                                                                                                                                                                                                                                     0.6), textMayChange=1)
-        self.bOk = PiratesInfoButton(text=PLocalizer.GenericConfirmOK, command=self.__handleOk)
+        self.message = DirectLabel(
+            parent=self,
+            relief=None,
+            text=self.messageList[self.currentMessage],
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_align=TextNode.ALeft,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_wordwrap=17,
+            pos=(0.0667, 0, 0.6),
+            textMayChange=1)
+        self.bOk = PiratesInfoButton(
+            text=PLocalizer.GenericConfirmOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
         self.bOk.setPos(0.35, 0, 0.05)
         self.nextMessage()
@@ -64,4 +72,6 @@ class PiratesInfo(GuiPanel.GuiPanel):
 
     def __handleCancelFromAbove(self):
         self.destroy()
+
+
 # okay decompiling .\pirates\piratesgui\PiratesInfo.pyc

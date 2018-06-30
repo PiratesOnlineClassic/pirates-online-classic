@@ -101,11 +101,13 @@ class Nametag(ClickablePopup):
 
         reversed = (self.IS_3D and (self.chatFlags & CFReversed))
 
-        balloon, frame = balloon.generate(text, self.font, textColor=self.chatFg,
-                                          balloonColor=color,
-                                          wordWrap=self.chatWordWrap or
-                                          self.DEFAULT_CHAT_WORDWRAP,
-                                          reversed=reversed)
+        balloon, frame = balloon.generate(
+            text,
+            self.font,
+            textColor=self.chatFg,
+            balloonColor=color,
+            wordWrap=self.chatWordWrap or self.DEFAULT_CHAT_WORDWRAP,
+            reversed=reversed)
         balloon.reparentTo(self.innerNP)
         self.frame = frame
 

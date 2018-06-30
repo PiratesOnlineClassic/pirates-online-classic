@@ -9,7 +9,9 @@ class DistributedMastDNA(MastDNA):
     def __init__(self):
         MastDNA.__init__(self)
 
-class DistributedMastAI(DistributedShippartAI, DistributedDestructibleArrayAI, DistributedMastDNA):
+
+class DistributedMastAI(DistributedShippartAI, DistributedDestructibleArrayAI,
+                        DistributedMastDNA):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedMastAI')
 
     def __init__(self, air):

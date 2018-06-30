@@ -5,8 +5,10 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesbase import PiratesGlobals
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 
+
 class DistributedJailInteriorAI(DistributedGAInteriorAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedJailInteriorAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory(
+        'DistributedJailInteriorAI')
 
     def __init__(self, air):
         DistributedGAInteriorAI.__init__(self, air)
@@ -14,20 +16,23 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
         self.__cellDoors = {}
 
     def handleChildArrive(self, childObj, zoneId):
-        if isinstance(childObj, DistributedPlayerPirateAI) and not childObj.isNpc:
+        if isinstance(childObj,
+                      DistributedPlayerPirateAI) and not childObj.isNpc:
             if childObj.getJailCellIndex() < 100:
                 childObj.b_setGameState('ThrownInJail')
 
         DistributedGAInteriorAI.handleChildArrive(self, childObj, zoneId)
 
     def handleChildLeave(self, childObj, zoneId):
-        if isinstance(childObj, DistributedPlayerPirateAI) and not childObj.isNpc:
+        if isinstance(childObj,
+                      DistributedPlayerPirateAI) and not childObj.isNpc:
             if childObj.getJailCellIndex() < 100:
                 cellDoor = self.getCellDoor(avatarId=childObj.doId)
 
                 if not cellDoor:
-                    self.notify.warning('Cannot reset cell door for avatar %d, no cell door found!' % (
-                        avatar.doId))
+                    self.notify.warning(
+                        'Cannot reset cell door for avatar %d, no cell door found!'
+                        % (avatar.doId))
 
                     return
 

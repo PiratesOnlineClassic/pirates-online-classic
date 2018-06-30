@@ -16,12 +16,20 @@ from pirates.piratesgui import GuiTray, PiratesGuiGlobals
 
 
 class DiceGameGUI(DirectFrame):
-    
-    HandPos = (
-     Vec3(-4.0, 3.5, DiceGlobals.PIT_HEIGHT), Vec3(-8.0, 0, DiceGlobals.PIT_HEIGHT), Vec3(-4.0, -4.5, DiceGlobals.PIT_HEIGHT), Vec3(0, -4.5, DiceGlobals.PIT_HEIGHT), Vec3(4.0, -4.5, DiceGlobals.PIT_HEIGHT), Vec3(8.0, 0, DiceGlobals.PIT_HEIGHT), Vec3(4.0, 3.5, DiceGlobals.PIT_HEIGHT))
-    ArrowPosHpr = (
-     (
-      Vec3(-0.4, 0, 0.66), Vec3(0, 0, 90)), (Vec3(-0.82, 0, 0.33), Vec3(0, 0, 90)), (Vec3(-0.5, 0, -0.08), Vec3(0, 0, 90)), (Vec3(0, 0, -0.08), Vec3(0, 0, 90)), (Vec3(0.5, 0, -0.08), Vec3(0, 0, 90)), (Vec3(0.82, 0, 0.33), Vec3(0, 0, 90)), (Vec3(0.4, 0, 0.66), Vec3(0, 0, 90)))
+
+    HandPos = (Vec3(-4.0, 3.5, DiceGlobals.PIT_HEIGHT),
+               Vec3(-8.0, 0, DiceGlobals.PIT_HEIGHT),
+               Vec3(-4.0, -4.5, DiceGlobals.PIT_HEIGHT),
+               Vec3(0, -4.5, DiceGlobals.PIT_HEIGHT),
+               Vec3(4.0, -4.5, DiceGlobals.PIT_HEIGHT),
+               Vec3(8.0, 0, DiceGlobals.PIT_HEIGHT),
+               Vec3(4.0, 3.5, DiceGlobals.PIT_HEIGHT))
+    ArrowPosHpr = ((Vec3(-0.4, 0, 0.66), Vec3(
+        0, 0, 90)), (Vec3(-0.82, 0, 0.33), Vec3(0, 0, 90)), (Vec3(
+            -0.5, 0, -0.08), Vec3(0, 0, 90)), (Vec3(0, 0, -0.08), Vec3(
+                0, 0, 90)), (Vec3(0.5, 0, -0.08), Vec3(0, 0, 90)), (Vec3(
+                    0.82, 0, 0.33), Vec3(0, 0, 90)), (Vec3(0.4, 0, 0.66),
+                                                      Vec3(0, 0, 90)))
 
     def __init__(self, table, numDice=12, public_roll=1, name='Dice Game'):
         DirectFrame.__init__(self, relief=None)
@@ -40,52 +48,68 @@ class DiceGameGUI(DirectFrame):
         self.diceval = []
         self.finalPos = []
         self.lerpList = []
-        self.gameLabel = DirectLabel(parent=self, relief=None, text=name, text_align=TextNode.ACenter, text_scale=0.15, pos=(-0.8, 0, 0.7), text_fg=(1,
-                                                                                                                                                     1.0,
-                                                                                                                                                     1.0,
-                                                                                                                                                     1), text_shadow=(0,
-                                                                                                                                                                      0,
-                                                                                                                                                                      1.0,
-                                                                                                                                                                      1))
+        self.gameLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            text=name,
+            text_align=TextNode.ACenter,
+            text_scale=0.15,
+            pos=(-0.8, 0, 0.7),
+            text_fg=(1, 1.0, 1.0, 1),
+            text_shadow=(0, 0, 1.0, 1))
         self.gameLabel.show()
-        self.turnStatus = DirectLabel(parent=self, relief=None, text=PLocalizer.DiceText_Wait, text_align=TextNode.ALeft, text_scale=0.06, pos=(0.28,
-                                                                                                                                                0,
-                                                                                                                                                0.77), text_fg=(1,
-                                                                                                                                                                0.9,
-                                                                                                                                                                0.6,
-                                                                                                                                                                1), text_shadow=(1.0,
-                                                                                                                                                                                 0,
-                                                                                                                                                                                 1.0,
-                                                                                                                                                                                 1))
+        self.turnStatus = DirectLabel(
+            parent=self,
+            relief=None,
+            text=PLocalizer.DiceText_Wait,
+            text_align=TextNode.ALeft,
+            text_scale=0.06,
+            pos=(0.28, 0, 0.77),
+            text_fg=(1, 0.9, 0.6, 1),
+            text_shadow=(1.0, 0, 1.0, 1))
         self.turnStatus.show()
-        self.gameStatus = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ALeft, text_scale=0.06, pos=(0.28,
-                                                                                                                          0,
-                                                                                                                          0.69), text_fg=(1,
-                                                                                                                                          0.9,
-                                                                                                                                          0.6,
-                                                                                                                                          1), text_shadow=(1.0,
-                                                                                                                                                           0,
-                                                                                                                                                           1.0,
-                                                                                                                                                           1))
+        self.gameStatus = DirectLabel(
+            parent=self,
+            relief=None,
+            text='',
+            text_align=TextNode.ALeft,
+            text_scale=0.06,
+            pos=(0.28, 0, 0.69),
+            text_fg=(1, 0.9, 0.6, 1),
+            text_shadow=(1.0, 0, 1.0, 1))
         self.gameStatus.show()
-        self.mainButton = DirectButton(parent=self.menu, relief=DGG.RAISED, state=DGG.NORMAL, text='%s %d' % (PLocalizer.DiceText_Ante, self.table.ante), text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_fg=PiratesGuiGlobals.TextFG2, frameColor=(0.0,
-                                                                                                                                                                                                                                                                                   0.8,
-                                                                                                                                                                                                                                                                                   0.1,
-                                                                                                                                                                                                                                                                                   1), frameSize=(0,
-                                                                                                                                                                                                                                                                                                  0.3,
-                                                                                                                                                                                                                                                                                                  0,
-                                                                                                                                                                                                                                                                                                  0.12), borderWidth=PiratesGuiGlobals.BorderWidth, text_pos=(0.1,
-                                                                                                                                                                                                                                                                                                                                                              0.03), textMayChange=1, pos=(0.18,
-                                                                                                                                                                                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                                                                                                                                                                                           0.05), command=self.table.playerIsReady, extraArgs=[])
-        self.exitButton = DirectButton(parent=self.menu, relief=DGG.RAISED, text='X', text_align=TextNode.ACenter, text_scale=0.04, text_pos=(0.02,
-                                                                                                                                              0.01), text_fg=(0.75,
-                                                                                                                                                              0.75,
-                                                                                                                                                              0.75,
-                                                                                                                                                              1), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=0, frameColor=PiratesGuiGlobals.ButtonColor1, borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameSize=(0,
-                                                                                                                                                                                                                                                                                                                                   0.04,
-                                                                                                                                                                                                                                                                                                                                   0,
-                                                                                                                                                                                                                                                                                                                                   0.04), pos=(0.75 - 0.01 - 0.04, 0, 0.01), command=self.table.guiCallback, extraArgs=[-1])
+        self.mainButton = DirectButton(
+            parent=self.menu,
+            relief=DGG.RAISED,
+            state=DGG.NORMAL,
+            text='%s %d' % (PLocalizer.DiceText_Ante, self.table.ante),
+            text_align=TextNode.ACenter,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            frameColor=(0.0, 0.8, 0.1, 1),
+            frameSize=(0, 0.3, 0, 0.12),
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            text_pos=(0.1, 0.03),
+            textMayChange=1,
+            pos=(0.18, 0, 0.05),
+            command=self.table.playerIsReady,
+            extraArgs=[])
+        self.exitButton = DirectButton(
+            parent=self.menu,
+            relief=DGG.RAISED,
+            text='X',
+            text_align=TextNode.ACenter,
+            text_scale=0.04,
+            text_pos=(0.02, 0.01),
+            text_fg=(0.75, 0.75, 0.75, 1),
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            textMayChange=0,
+            frameColor=PiratesGuiGlobals.ButtonColor1,
+            borderWidth=PiratesGuiGlobals.BorderWidthSmall,
+            frameSize=(0, 0.04, 0, 0.04),
+            pos=(0.75 - 0.01 - 0.04, 0, 0.01),
+            command=self.table.guiCallback,
+            extraArgs=[-1])
         return
 
     def showArrow(self, seatIndex):
@@ -137,7 +161,8 @@ class DiceGameGUI(DirectFrame):
         pos1 = Vec3(startX, startY, DiceGlobals.PIT_HEIGHT)
         self.dice[dienum].setPos(pos1)
         self.dice[dienum].setHpr(self.randomFace())
-        print 'DiceGameGUI:loadDie - loaded die %d with value %d' % (dienum, self.diceval[dienum])
+        print 'DiceGameGUI:loadDie - loaded die %d with value %d' % (
+            dienum, self.diceval[dienum])
 
     def doTheRoll(self):
         if self.table.gameState != DiceGlobals.DSTATE_DOROLL:
@@ -153,7 +178,8 @@ class DiceGameGUI(DirectFrame):
             self.MouseFinalPosY = 0
         self.MouseEndTime = time.time()
         self.MouseTimeDiff = self.MouseEndTime - self.MouseStartTime
-        print 'DiceGameGUI: rolling times %f and %f' % (self.MouseStartTime, self.MouseEndTime)
+        print 'DiceGameGUI: rolling times %f and %f' % (self.MouseStartTime,
+                                                        self.MouseEndTime)
         print 'DiceGameGUI: difference of %f' % self.MouseTimeDiff
         self.table.gameState = DiceGlobals.DSTATE_WAIT
         del self.diceval
@@ -179,7 +205,8 @@ class DiceGameGUI(DirectFrame):
 
         for i in range(self.numDice):
             tmpvec = self.finalRest(i, val1, val2, 0, False)
-            self.diceVectorCalc(i, speed, self.finalPos[i][0], self.finalPos[i][1], self.dice[i].getPos())
+            self.diceVectorCalc(i, speed, self.finalPos[i][0],
+                                self.finalPos[i][1], self.dice[i].getPos())
 
         self.diceSeqs = []
         for i in range(self.numDice):
@@ -195,7 +222,8 @@ class DiceGameGUI(DirectFrame):
         self.hasRolled = True
 
     def sendRoll(self):
-        self.table.sendUpdate('playerHasRolled', [self.table.mySeat, self.diceval])
+        self.table.sendUpdate('playerHasRolled',
+                              [self.table.mySeat, self.diceval])
 
     def randomFace(self):
         tmp1 = random.randint(-179, 180)
@@ -256,7 +284,8 @@ class DiceGameGUI(DirectFrame):
             xforce = 0.01
         if yforce > -0.01 and yforce < 0.01:
             yforce = 0.01
-        distance = math.sqrt((xforce - startPos[0]) * (xforce - startPos[0]) + (yforce - startPos[1]) * (yforce - startPos[1]))
+        distance = math.sqrt((xforce - startPos[0]) * (xforce - startPos[0]) +
+                             (yforce - startPos[1]) * (yforce - startPos[1]))
         Yslope = 0.0 + (yforce - startPos[1]) / (xforce - startPos[0])
         Xslope = 0.0 + (xforce - startPos[0]) / (yforce - startPos[1])
         CY = yforce - Yslope * xforce
@@ -272,7 +301,8 @@ class DiceGameGUI(DirectFrame):
             print 'DiceGameGUI: Die %d Hit Right Wall' % dienum
             oldX = DiceGlobals.PIT_X_MAX
             oldY = 0.0 + Yslope * oldX + CY
-            wallDist = math.sqrt((oldX - startPos[0]) * (oldX - startPos[0]) + (oldY - startPos[1]) * (oldY - startPos[1]))
+            wallDist = math.sqrt((oldX - startPos[0]) * (oldX - startPos[0]) +
+                                 (oldY - startPos[1]) * (oldY - startPos[1]))
             oldTime = timeSlice
             oldTime *= wallDist
             oldTime /= distance
@@ -284,7 +314,9 @@ class DiceGameGUI(DirectFrame):
                 print 'DiceGameGUI: Die %d Hit Left wall' % dienum
                 oldX = DiceGlobals.PIT_X_MIN
                 oldY = 0.0 + Yslope * oldX + CY
-                wallDist = math.sqrt((oldX - startPos[0]) * (oldX - startPos[0]) + (oldY - startPos[1]) * (oldY - startPos[1]))
+                wallDist = math.sqrt(
+                    (oldX - startPos[0]) * (oldX - startPos[0]) +
+                    (oldY - startPos[1]) * (oldY - startPos[1]))
                 oldTime = timeSlice
                 oldTime *= wallDist
                 oldTime /= distance
@@ -294,7 +326,8 @@ class DiceGameGUI(DirectFrame):
         if yforce > DiceGlobals.PIT_Y_MAX:
             possY = DiceGlobals.PIT_Y_MAX
             possX = 0.0 + Xslope * possY + CX
-            possDist = math.sqrt((possX - startPos[0]) * (possX - startPos[0]) + (possY - startPos[1]) * (possY - startPos[1]))
+            possDist = math.sqrt((possX - startPos[0]) * (possX - startPos[0]) +
+                                 (possY - startPos[1]) * (possY - startPos[1]))
             if possDist < wallDist:
                 print 'DiceGameGUI: Die %d Hit Top Wall' % dienum
                 oldX = possX
@@ -310,7 +343,9 @@ class DiceGameGUI(DirectFrame):
             if yforce < DiceGlobals.PIT_Y_MIN:
                 possY = DiceGlobals.PIT_Y_MIN
                 possX = 0.0 + Xslope * possY + CX
-                possDist = math.sqrt((possX - startPos[0]) * (possX - startPos[0]) + (possY - startPos[1]) * (possY - startPos[1]))
+                possDist = math.sqrt(
+                    (possX - startPos[0]) * (possX - startPos[0]) +
+                    (possY - startPos[1]) * (possY - startPos[1]))
                 if possDist < wallDist:
                     print 'DiceGameGUI: Die %d Hit Bottom Wall' % dienum
                     oldX = possX
@@ -325,21 +360,25 @@ class DiceGameGUI(DirectFrame):
         if wallDist != 99999.0:
             pos2 = Vec3(oldX, oldY, DiceGlobals.PIT_HEIGHT)
             hpr = self.randomFace()
-            lerp = LerpPosHprInterval(self.dice[dienum], oldTime, pos2, hpr, blendType='noBlend')
+            lerp = LerpPosHprInterval(
+                self.dice[dienum], oldTime, pos2, hpr, blendType='noBlend')
             self.lerpList[dienum].append(lerp)
             newTime += random.random() * (newTime / 6.0)
             newTime += newTime / 4.0
             self.diceVectorCalc(dienum, newTime, newX, newY, pos2)
         else:
-            pos2 = self.finalRest(dienum, xforce, yforce, DiceGlobals.PIT_HEIGHT)
+            pos2 = self.finalRest(dienum, xforce, yforce,
+                                  DiceGlobals.PIT_HEIGHT)
             hpr = self.dieFace(self.diceval[dienum])
-            lerp = LerpPosHprInterval(self.dice[dienum], timeSlice, pos2, hpr, blendType='easeOut')
+            lerp = LerpPosHprInterval(
+                self.dice[dienum], timeSlice, pos2, hpr, blendType='easeOut')
             self.lerpList[dienum].append(lerp)
             self.lerpList[dienum].append(Wait(2.0))
             leftPt = 0.0 - (self.numDice - 1) / 2
             dieX = dienum + leftPt
             guiPos = Vec3(dieX, 0, DiceGlobals.PIT_HEIGHT + 1)
-            lerp = LerpPosInterval(self.dice[dienum], 1.5, guiPos, blendType='easeOut')
+            lerp = LerpPosInterval(
+                self.dice[dienum], 1.5, guiPos, blendType='easeOut')
             self.lerpList[dienum].append(lerp)
 
     def bounceDie(self):
@@ -411,9 +450,13 @@ class DiceGameGUI(DirectFrame):
             self.turnStatus.setPos(0.28 - 0.01 * self.taskStep, 0, 0.77)
         else:
             if self.taskStep < 20:
-                self.turnStatus['text_scale'] = 0.06 + 0.002 * (19 - self.taskStep)
-                self.turnStatus['text_fg'] = (1, 0.9, 0.6 - (19 - self.taskStep) * 0.05, 1)
-                self.turnStatus.setPos(0.28 - 0.01 * (19 - self.taskStep), 0, 0.77)
+                self.turnStatus[
+                    'text_scale'] = 0.06 + 0.002 * (19 - self.taskStep)
+                self.turnStatus['text_fg'] = (1, 0.9,
+                                              0.6 - (19 - self.taskStep) * 0.05,
+                                              1)
+                self.turnStatus.setPos(0.28 - 0.01 * (19 - self.taskStep), 0,
+                                       0.77)
             else:
                 return Task.done
         self.taskStep += 1
@@ -421,6 +464,9 @@ class DiceGameGUI(DirectFrame):
 
     def updateTurnStatus(self, text):
         self.taskStep = 0
-        taskMgr.add(self.turnStatusStep, self.taskName('turnStatusStep'), priority=40)
+        taskMgr.add(
+            self.turnStatusStep, self.taskName('turnStatusStep'), priority=40)
         self.turnStatus['text'] = text
+
+
 # okay decompiling .\pirates\minigame\DiceGameGUI.pyc

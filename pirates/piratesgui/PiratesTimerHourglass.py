@@ -14,9 +14,15 @@ from pirates.piratesgui import GuiButton, PiratesGuiGlobals
 
 
 class PiratesTimerHourglass(OTPTimer.OTPTimer):
-    
 
-    def __init__(self, showMinutes=0, mode=None, titleText='', titleFg=None, infoText='', cancelText='', cancelCallback=None):
+    def __init__(self,
+                 showMinutes=0,
+                 mode=None,
+                 titleText='',
+                 titleFg=None,
+                 infoText='',
+                 cancelText='',
+                 cancelCallback=None):
         self.showMinutes = showMinutes
         self.mode = mode
         OTPTimer.OTPTimer.__init__(self)
@@ -90,10 +96,30 @@ class PiratesTimerHourglass(OTPTimer.OTPTimer):
         self['text'] = timeStr
 
     def createTimerText(self, titleText, titleFg, infoText):
-        self.titleText = DirectFrame(parent=self, relief=None, text=titleText, text_align=TextNode.ACenter, text_scale=0.15, text_fg=titleFg, text_shadow=PiratesGuiGlobals.TextShadow, text_font=PiratesGlobals.getPirateOutlineFont(), textMayChange=1, text_wordwrap=6, pos=(0,
-                                                                                                                                                                                                                                                                                0,
-                                                                                                                                                                                                                                                                                0.7))
-        self.infoText = DirectFrame(parent=self, relief=None, text=infoText, text_align=TextNode.ACenter, text_scale=0.14, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_font=PiratesGlobals.getPirateOutlineFont(), textMayChange=1, text_wordwrap=6, pos=(0, 0, -0.75))
+        self.titleText = DirectFrame(
+            parent=self,
+            relief=None,
+            text=titleText,
+            text_align=TextNode.ACenter,
+            text_scale=0.15,
+            text_fg=titleFg,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            textMayChange=1,
+            text_wordwrap=6,
+            pos=(0, 0, 0.7))
+        self.infoText = DirectFrame(
+            parent=self,
+            relief=None,
+            text=infoText,
+            text_align=TextNode.ACenter,
+            text_scale=0.14,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            text_font=PiratesGlobals.getPirateOutlineFont(),
+            textMayChange=1,
+            text_wordwrap=6,
+            pos=(0, 0, -0.75))
         return
 
     def createCancelButton(self, cancelCallback, cancelText):
@@ -101,9 +127,20 @@ class PiratesTimerHourglass(OTPTimer.OTPTimer):
             return
         if not base.localAvatar.isCrewCaptain():
             return
-        self.cancelButton = GuiButton.GuiButton(helpText=cancelText, command=cancelCallback, borderWidth=PiratesGuiGlobals.BorderWidth, text=PLocalizer.Cancel, frameColor=PiratesGuiGlobals.ButtonColor3, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0,
-                                                                                                                                                                                                                                                        0.015), frameSize=(-0.09, 0.09, -0.015, 0.065), text_scale=PiratesGuiGlobals.TextScaleLarge, pad=(0.01,
-                                                                                                                                                                                                                                                                                                                                                          0.01), parent=self, pos=(0,
-                                                                                                                                                                                                                                                                                                                                                                                   0,
-                                                                                                                                                                                                                                                                                                                                                                                   -1.55), scale=2.3)
+        self.cancelButton = GuiButton.GuiButton(
+            helpText=cancelText,
+            command=cancelCallback,
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            text=PLocalizer.Cancel,
+            frameColor=PiratesGuiGlobals.ButtonColor3,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_pos=(0, 0.015),
+            frameSize=(-0.09, 0.09, -0.015, 0.065),
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            pad=(0.01, 0.01),
+            parent=self,
+            pos=(0, 0, -1.55),
+            scale=2.3)
+
+
 # okay decompiling .\pirates\piratesgui\PiratesTimerHourglass.pyc

@@ -13,46 +13,71 @@ class CannonGUI(DirectFrame):
 
     def __init__(self, cannon):
         gui = loader.loadModelOnce('models/gui/toplevel_gui')
-        DirectFrame.__init__(self, parent=base.a2dBottomCenter, relief=None, image=gui.find('**/topgui_name_text_box'), image_scale=(0.76,
-                                                                                                                                     1,
-                                                                                                                                     3.2), pos=(0,
-                                                                                                                                                0,
-                                                                                                                                                0.35), scale=0.6)
+        DirectFrame.__init__(
+            self,
+            parent=base.a2dBottomCenter,
+            relief=None,
+            image=gui.find('**/topgui_name_text_box'),
+            image_scale=(0.76, 1, 3.2),
+            pos=(0, 0, 0.35),
+            scale=0.6)
         self.initialiseoptions(CannonGUI)
         self.cannon = cannon
         self.reloadIval = None
-        self.ammoName = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ARight, text_scale=0.05, pos=(0.25, 0, -0.05), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow)
-        self.ammoLeft = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ALeft, text_scale=0.045, pos=(-0.05, 0, 0.09), text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow)
-        self.volleyLabel = DirectLabel(parent=self, relief=None, text='0', text_align=TextNode.ACenter, text_scale=0.16, pos=(0.2,
-                                                                                                                              0,
-                                                                                                                              0.02), text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow)
-        self.reloadBar = DirectWaitBar(parent=self, relief=None, image=gui.find('**/topgui_health_frame'), image_pos=(0.25,
-                                                                                                                      0,
-                                                                                                                      0.02), image_scale=(0.37,
-                                                                                                                                          0.4,
-                                                                                                                                          0.4), borderWidth=(0,
-                                                                                                                                                             0), range=1, value=1, frameColor=(0.05,
-                                                                                                                                                                                               0.35,
-                                                                                                                                                                                               0.05,
-                                                                                                                                                                                               1), barColor=(0.25,
-                                                                                                                                                                                                             1.0,
-                                                                                                                                                                                                             0.1,
-                                                                                                                                                                                                             1), pos=(-0.25, 0, -0.12), frameSize=(0,
-                                                                                                                                                                                                                                                   0.5,
-                                                                                                                                                                                                                                                   0,
-                                                                                                                                                                                                                                                   0.04), text='', text_fg=(0.1,
-                                                                                                                                                                                                                                                                            0.1,
-                                                                                                                                                                                                                                                                            0.1,
-                                                                                                                                                                                                                                                                            1), text_pos=(0.07,
-                                                                                                                                                                                                                                                                                          0.01,
-                                                                                                                                                                                                                                                                                          0.0), text_scale=0.03)
+        self.ammoName = DirectLabel(
+            parent=self,
+            relief=None,
+            text='',
+            text_align=TextNode.ARight,
+            text_scale=0.05,
+            pos=(0.25, 0, -0.05),
+            text_fg=PiratesGuiGlobals.TextFG1,
+            text_shadow=PiratesGuiGlobals.TextShadow)
+        self.ammoLeft = DirectLabel(
+            parent=self,
+            relief=None,
+            text='',
+            text_align=TextNode.ALeft,
+            text_scale=0.045,
+            pos=(-0.05, 0, 0.09),
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow)
+        self.volleyLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            text='0',
+            text_align=TextNode.ACenter,
+            text_scale=0.16,
+            pos=(0.2, 0, 0.02),
+            text_fg=PiratesGuiGlobals.TextFG2,
+            text_shadow=PiratesGuiGlobals.TextShadow)
+        self.reloadBar = DirectWaitBar(
+            parent=self,
+            relief=None,
+            image=gui.find('**/topgui_health_frame'),
+            image_pos=(0.25, 0, 0.02),
+            image_scale=(0.37, 0.4, 0.4),
+            borderWidth=(0, 0),
+            range=1,
+            value=1,
+            frameColor=(0.05, 0.35, 0.05, 1),
+            barColor=(0.25, 1.0, 0.1, 1),
+            pos=(-0.25, 0, -0.12),
+            frameSize=(0, 0.5, 0, 0.04),
+            text='',
+            text_fg=(0.1, 0.1, 0.1, 1),
+            text_pos=(0.07, 0.01, 0.0),
+            text_scale=0.03)
         self.card = loader.loadModelCopy('models/textureCards/cannonAmmo')
-        self.ammoImage = DirectFrame(parent=self, relief=DGG.RIDGE, image_scale=0.18, image_pos=(0.1,
-                                                                                                 0,
-                                                                                                 0.1), frameColor=PiratesGuiGlobals.FrameColor, borderWidth=PiratesGuiGlobals.BorderWidth, pos=(-0.25, 0, -0.07), frameSize=(0,
-                                                                                                                                                                                                                             0.2,
-                                                                                                                                                                                                                             0,
-                                                                                                                                                                                                                             0.2))
+        self.ammoImage = DirectFrame(
+            parent=self,
+            relief=DGG.RIDGE,
+            image_scale=0.18,
+            image_pos=(0.1, 0, 0.1),
+            frameColor=PiratesGuiGlobals.FrameColor,
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            pos=(-0.25, 0, -0.07),
+            frameSize=(0, 0.2, 0, 0.2))
         self.ammoImage.setTransparency(1)
         gui.removeNode()
         return
@@ -80,7 +105,9 @@ class CannonGUI(DirectFrame):
 
     def startReload(self, time, volley, elapsedTime=0, doneCallback=None):
         self.stopReload()
-        self.reloadIval = Sequence(LerpFunctionInterval(self.__updateReloadBar, time), Func(self.__reloadDone))
+        self.reloadIval = Sequence(
+            LerpFunctionInterval(self.__updateReloadBar, time),
+            Func(self.__reloadDone))
         if doneCallback:
             self.reloadIval.append(Func(doneCallback))
         self.reloadBar['text'] = PLocalizer.Reloading

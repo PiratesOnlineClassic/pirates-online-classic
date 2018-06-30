@@ -19,7 +19,6 @@ from pirates.piratesgui import GuiTray, PiratesGuiGlobals
 
 
 class Hand(NodePath):
-    
 
     def __init__(self, *args, **kwargs):
         NodePath.__init__(self, *args, **kwargs)
@@ -33,7 +32,6 @@ class Hand(NodePath):
 
 
 class Burn(DirectFrame):
-    
 
     def __init__(self, *args, **kwargs):
         DirectFrame.__init__(self, *args, **kwargs)
@@ -43,15 +41,15 @@ class Burn(DirectFrame):
         cm.setFrame(-0.5, 0.5, -0.5, 0.5)
         self.rings = []
         for x in range(3):
-            cm.setName(`x` + '-back')
+            cm.setName( repr( x) + '-back')
             c = NodePath(cm.generate())
-            c.setTexture(model.findTexture('BH_burn_' + `(x + 1)` + '_b'))
+            c.setTexture(model.findTexture('BH_burn_' + repr( (x + 1)) + '_b'))
             back = DirectFrame(parent=self, relief=None, geom=c)
             back.setColorScale(1, 1, 1, 0)
             back.setTransparency(True)
-            cm.setName(`x` + '-front')
+            cm.setName( repr( x) + '-front')
             c = NodePath(cm.generate())
-            c.setTexture(model.findTexture('BH_burn_' + `(x + 1)` + '_f'))
+            c.setTexture(model.findTexture('BH_burn_' + repr( (x + 1)) + '_f'))
             front = DirectFrame(parent=self, relief=None, geom=c)
             front.setColorScale(0, 0, 0, 0)
             front.setTransparency(True)
@@ -70,14 +68,26 @@ class Burn(DirectFrame):
             front = self.rings[r][1]
             back = self.rings[r][0]
             seqFront = Sequence()
-            seqFront.append(front.colorScaleInterval(duration=time / 4.0, colorScale=Vec4(0, 0, 0, 1), startColorScale=Vec4(0, 0, 0, 0)))
+            seqFront.append(
+                front.colorScaleInterval(
+                    duration=time / 4.0,
+                    colorScale=Vec4(0, 0, 0, 1),
+                    startColorScale=Vec4(0, 0, 0, 0)))
             seqFront.append(Wait(time / 4.0 * 3.0))
             par.append(seqFront)
             if light:
                 seqBack = Sequence()
-                seqBack.append(back.colorScaleInterval(duration=time / 4.0, colorScale=Vec4(1, 1, 0.5, 0.4), startColorScale=Vec4(1, 0, 0, 0)))
-                seqBack.append(back.colorScaleInterval(duration=time / 4.0, colorScale=Vec4(1, 1, 1, 0.6)))
-                seqBack.append(back.colorScaleInterval(duration=time / 2.0, colorScale=Vec4(1, 1, 0.5, 0)))
+                seqBack.append(
+                    back.colorScaleInterval(
+                        duration=time / 4.0,
+                        colorScale=Vec4(1, 1, 0.5, 0.4),
+                        startColorScale=Vec4(1, 0, 0, 0)))
+                seqBack.append(
+                    back.colorScaleInterval(
+                        duration=time / 4.0, colorScale=Vec4(1, 1, 1, 0.6)))
+                seqBack.append(
+                    back.colorScaleInterval(
+                        duration=time / 2.0, colorScale=Vec4(1, 1, 0.5, 0)))
                 par.append(seqBack)
 
         par.start()
@@ -85,8 +95,7 @@ class Burn(DirectFrame):
 
     def burnOut(self, ring=None, time=0.125):
         if ring != None:
-            rings = [
-             ring]
+            rings = [ring]
         else:
             rings = range(3)
         val = Vec4(0, 0, 0, 0)
@@ -103,14 +112,18 @@ class Burn(DirectFrame):
 
 
 class Burns(DirectFrame):
-    
 
     def __init__(self, *args, **kwargs):
         DirectFrame.__init__(self, *args, **kwargs)
         self.initialiseoptions(Burns)
         self.rings = []
         for x in range(5):
-            burn = Burn(parent=self, relief=None, scale=0.3, hpr=(0, 0, random.randint(0, 359)), pos=BishopsHandGlobals.TARGET_POS[x])
+            burn = Burn(
+                parent=self,
+                relief=None,
+                scale=0.3,
+                hpr=(0, 0, random.randint(0, 359)),
+                pos=BishopsHandGlobals.TARGET_POS[x])
             self.rings.append(burn)
 
         return
@@ -127,21 +140,37 @@ class Burns(DirectFrame):
 
 
 class Knife(DirectFrame):
-    
-    SOUNDS = {'miss': 'src/minigame/peg/m_match_drums.mp3', 'hit': 'src/minigame/peg/AA_slice_only.mp3'}
-    POSHPR = {'neutral': (Vec3(0.12, 0, 1.25), Vec3(0.0, 0.0, 10.0)), 'in': (Vec3(0.03, 0, 1.13), Vec3(0.0, 0.0, 0.0)), 'out': (Vec3(0.12, 0, 1.35), Vec3(0.0, 0.0, 15.0))}
+
+    SOUNDS = {
+        'miss': 'src/minigame/peg/m_match_drums.mp3',
+        'hit': 'src/minigame/peg/AA_slice_only.mp3'
+    }
+    POSHPR = {
+        'neutral': (Vec3(0.12, 0, 1.25), Vec3(0.0, 0.0, 10.0)),
+        'in': (Vec3(0.03, 0, 1.13), Vec3(0.0, 0.0, 0.0)),
+        'out': (Vec3(0.12, 0, 1.35), Vec3(0.0, 0.0, 15.0))
+    }
 
     def __init__(self, *args, **kwargs):
         DirectFrame.__init__(self, *args, **kwargs)
         self.initialiseoptions(Knife)
         model = loader.loadModel('models/props/BH_images')
         self.shadowTurner = DirectFrame(parent=self, relief=None)
-        self.shadow = DirectFrame(parent=self.shadowTurner, relief=None, geom=model.find('**/BH_shadow'), scale=0.075, pos=(0.0,
-                                                                                                                            0.0,
-                                                                                                                            0.8))
+        self.shadow = DirectFrame(
+            parent=self.shadowTurner,
+            relief=None,
+            geom=model.find('**/BH_shadow'),
+            scale=0.075,
+            pos=(0.0, 0.0, 0.8))
         self.shadow.setColorScale(1.0, 0.0, 0.0, 1.0)
         self.knifeTurner = DirectFrame(parent=self, relief=None)
-        self.knife = DirectFrame(parent=self.knifeTurner, relief=None, geom=model.find('**/BH_bone'), scale=0.75, pos=self.POSHPR['neutral'][0], hpr=self.POSHPR['neutral'][1])
+        self.knife = DirectFrame(
+            parent=self.knifeTurner,
+            relief=None,
+            geom=model.find('**/BH_bone'),
+            scale=0.75,
+            pos=self.POSHPR['neutral'][0],
+            hpr=self.POSHPR['neutral'][1])
         self.seq = None
         self.initSounds()
         return
@@ -194,8 +223,7 @@ class Knife(DirectFrame):
                                         else:
                                             mistake = 0
                                             id = 4
-            return (
-             mistake, id)
+            return (mistake, id)
 
         def getSound(checkVal):
             result = check(angle)
@@ -236,26 +264,39 @@ class Knife(DirectFrame):
 
 
 class FaceSpot(DirectFrame):
-    
+
     NUMSTEPS = 24
 
     def __init__(self, faceId, *args, **kwargs):
         DirectFrame.__init__(self, *args, **kwargs)
         self.initialiseoptions(FaceSpot)
         model = loader.loadModel('models/props/BH_images')
-        self.back = DirectFrame(parent=self, relief=None, geom=model.find('**/*bevel'))
-        self.dots = DirectFrame(parent=self, relief=None, geom=model.find('**/*dots'))
+        self.back = DirectFrame(
+            parent=self, relief=None, geom=model.find('**/*bevel'))
+        self.dots = DirectFrame(
+            parent=self, relief=None, geom=model.find('**/*dots'))
         spot = model.find('**/*dot')
-        self.spots = [ DirectFrame(parent=self, relief=None, geom=spot, hpr=(0.0, 0.0, 360.0 / 24.0 * x)) for x in range(self.NUMSTEPS) ]
-        self.face = DirectFrame(parent=self, relief=None, geom=model.find('**/*face_' + `faceId`))
-        self.cross = DirectFrame(parent=self, relief=None, geom=model.find('**/*x'))
-        self.statusLabel = DirectLabel(parent=self, relief=None, pos=(0, 0, 0.5), text_scale=0.25, text='0', text_fg=(1,
-                                                                                                                      1,
-                                                                                                                      1,
-                                                                                                                      1), text_shadow=(0,
-                                                                                                                                       0,
-                                                                                                                                       0,
-                                                                                                                                       1), textMayChange=1, text_font=PiratesGlobals.getPirateOutlineFont())
+        self.spots = [
+            DirectFrame(
+                parent=self,
+                relief=None,
+                geom=spot,
+                hpr=(0.0, 0.0, 360.0 / 24.0 * x)) for x in range(self.NUMSTEPS)
+        ]
+        self.face = DirectFrame(
+            parent=self, relief=None, geom=model.find('**/*face_' + repr( faceId)))
+        self.cross = DirectFrame(
+            parent=self, relief=None, geom=model.find('**/*x'))
+        self.statusLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            pos=(0, 0, 0.5),
+            text_scale=0.25,
+            text='0',
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1),
+            textMayChange=1,
+            text_font=PiratesGlobals.getPirateOutlineFont())
         self.disable()
         return
 
@@ -269,7 +310,7 @@ class FaceSpot(DirectFrame):
             self.spots[x].show()
 
     def setStatus(self, status):
-        self.statusLabel['text'] = `status`
+        self.statusLabel['text'] = repr( status)
 
     def disable(self):
         self.dots.hide()
@@ -290,7 +331,7 @@ class FaceSpot(DirectFrame):
 
 
 class Round(DirectObject.DirectObject):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('BishopsHandRound')
 
     def __init__(self, game, roundNum, sequence):
@@ -305,11 +346,16 @@ class Round(DirectObject.DirectObject):
         self.stepCount = len(sequence)
         self.leadCount = 3
         self.ignoreAll()
-        self.acceptOnce('BishopsHand-hit-0', self.prepStep, [self.leadCount - 1])
-        self.acceptOnce('BishopsHand-hit-1', self.prepStep, [self.leadCount - 1])
-        self.acceptOnce('BishopsHand-hit-2', self.prepStep, [self.leadCount - 1])
-        self.acceptOnce('BishopsHand-hit-3', self.prepStep, [self.leadCount - 1])
-        self.acceptOnce('BishopsHand-hit-4', self.prepStep, [self.leadCount - 1])
+        self.acceptOnce('BishopsHand-hit-0', self.prepStep,
+                        [self.leadCount - 1])
+        self.acceptOnce('BishopsHand-hit-1', self.prepStep,
+                        [self.leadCount - 1])
+        self.acceptOnce('BishopsHand-hit-2', self.prepStep,
+                        [self.leadCount - 1])
+        self.acceptOnce('BishopsHand-hit-3', self.prepStep,
+                        [self.leadCount - 1])
+        self.acceptOnce('BishopsHand-hit-4', self.prepStep,
+                        [self.leadCount - 1])
 
     def updateProgress(self, step=False, misses=False, hits=False):
         dirty = False
@@ -325,7 +371,8 @@ class Round(DirectObject.DirectObject):
         if dirty:
             self.notify.debug('DIRTY')
             self.progress[3] = globalClock.getFrameTime() - self.startTime
-            self.game.gameCallback(BishopsHandGlobals.PLAYER_ACTIONS.Progress, self.progress)
+            self.game.gameCallback(BishopsHandGlobals.PLAYER_ACTIONS.Progress,
+                                   self.progress)
 
     def prepStep(self, countDown):
         self.ignoreAll()
@@ -353,12 +400,15 @@ class Round(DirectObject.DirectObject):
                     nonTargets = range(5)
                     nonTargets.remove(newTarget)
                     self.ignoreAll()
-                    self.acceptOnce('BishopsHand-hit-' + `newTarget`, self.reportTargetHit)
+                    self.acceptOnce('BishopsHand-hit-' + repr( newTarget),
+                                    self.reportTargetHit)
                     for nonTarget in nonTargets:
-                        self.accept('BishopsHand-hit-' + `nonTarget`, self.reportTargetMiss)
+                        self.accept('BishopsHand-hit-' + repr( nonTarget),
+                                    self.reportTargetMiss)
 
         self.step += 1
-        self.notify.debug('\nstep:\t%d\tstepCount\t%d:leadCount:\t%d' % (self.step, self.stepCount, self.leadCount))
+        self.notify.debug('\nstep:\t%d\tstepCount\t%d:leadCount:\t%d' %
+                          (self.step, self.stepCount, self.leadCount))
         if self.step - self.leadCount > 0:
             self.updateProgress(step=True)
         if self.step >= self.stepCount + self.leadCount:
@@ -411,7 +461,7 @@ class Round(DirectObject.DirectObject):
                 result = self.game.knife.strike(danger=False)
             if result[0] > -1:
                 if result[0] == 0:
-                    messenger.send('BishopsHand-hit-' + `(result[1])`)
+                    messenger.send('BishopsHand-hit-' + repr( (result[1])))
                 else:
                     self.updateProgress(hits=True)
                     self.notify.debug('finger hit')
@@ -419,7 +469,7 @@ class Round(DirectObject.DirectObject):
 
 
 class BishopsHandGame(DirectFrame, FSM.FSM):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('BishopsHandGame')
 
     def __init__(self, gameCallback, seatPos):
@@ -433,113 +483,207 @@ class BishopsHandGame(DirectFrame, FSM.FSM):
         self.gameInterface = DirectFrame(parent=self, relief=None)
         self.gameInterface.hide()
         model = loader.loadModel('models/props/BH_images')
-        self.bgImage = DirectFrame(parent=self.gameInterface, relief=None, geom=model.find('**/*table'), scale=(8.0 / 3.0, 2, 2))
-        self.faces = [ FaceSpot(0, parent=self.gameInterface, relief=None, pos=BishopsHandGlobals.FACE_SPOT_POS[p], scale=0.333) for p in BishopsHandGlobals.FACE_SPOT_POS.keys()[1:] ]
+        self.bgImage = DirectFrame(
+            parent=self.gameInterface,
+            relief=None,
+            geom=model.find('**/*table'),
+            scale=(8.0 / 3.0, 2, 2))
+        self.faces = [
+            FaceSpot(
+                0,
+                parent=self.gameInterface,
+                relief=None,
+                pos=BishopsHandGlobals.FACE_SPOT_POS[p],
+                scale=0.333)
+            for p in BishopsHandGlobals.FACE_SPOT_POS.keys()[1:]
+        ]
         base.faces = self.faces
         for f in self.faces:
             f.enable()
 
-        self.dealerFace = FaceSpot(0, parent=self.gameInterface, relief=None, pos=(), scale=0.333)
+        self.dealerFace = FaceSpot(
+            0, parent=self.gameInterface, relief=None, pos=(), scale=0.333)
         self.burns = Burns(parent=self.gameInterface, relief=None)
-        self.hand = DirectFrame(parent=self.gameInterface, relief=None, geom=Hand('Hand'), scale=2.0)
-        self.knife = Knife(parent=self.gameInterface, relief=None, pos=(0.07, 0.0, -0.16))
+        self.hand = DirectFrame(
+            parent=self.gameInterface,
+            relief=None,
+            geom=Hand('Hand'),
+            scale=2.0)
+        self.knife = Knife(
+            parent=self.gameInterface, relief=None, pos=(0.07, 0.0, -0.16))
         self.menu = GuiTray.GuiTray(0.75, 0.2)
         self.menu.setPos(-0.4, 0, -1)
         self.menu.hide()
-        self.joinButton = DirectButton(parent=self.menu, relief=DGG.RAISED, state=DGG.NORMAL, text='Join: 2 Gold', text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_fg=PiratesGuiGlobals.TextFG2, frameColor=PiratesGuiGlobals.ButtonColor1, frameSize=(0,
-                                                                                                                                                                                                                                                                                      0.4,
-                                                                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                                                                      0.08), borderWidth=PiratesGuiGlobals.BorderWidth, text_pos=(0.2,
-                                                                                                                                                                                                                                                                                                                                                  0.03), textMayChange=1, pos=(0.05,
-                                                                                                                                                                                                                                                                                                                                                                               0,
-                                                                                                                                                                                                                                                                                                                                                                               0.1), command=self.gameCallback, extraArgs=[BishopsHandGlobals.PLAYER_ACTIONS.JoinGame])
+        self.joinButton = DirectButton(
+            parent=self.menu,
+            relief=DGG.RAISED,
+            state=DGG.NORMAL,
+            text='Join: 2 Gold',
+            text_align=TextNode.ACenter,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            frameColor=PiratesGuiGlobals.ButtonColor1,
+            frameSize=(0, 0.4, 0, 0.08),
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            text_pos=(0.2, 0.03),
+            textMayChange=1,
+            pos=(0.05, 0, 0.1),
+            command=self.gameCallback,
+            extraArgs=[BishopsHandGlobals.PLAYER_ACTIONS.JoinGame])
         self.joinButton.hide()
-        self.unjoinButton = DirectButton(parent=self.menu, relief=DGG.RAISED, state=DGG.NORMAL, text='Unjoin', text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_fg=PiratesGuiGlobals.TextFG2, frameColor=PiratesGuiGlobals.ButtonColor1, frameSize=(0,
-                                                                                                                                                                                                                                                                                  0.4,
-                                                                                                                                                                                                                                                                                  0,
-                                                                                                                                                                                                                                                                                  0.08), borderWidth=PiratesGuiGlobals.BorderWidth, text_pos=(0.2,
-                                                                                                                                                                                                                                                                                                                                              0.03), textMayChange=1, pos=(0.05,
-                                                                                                                                                                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                                                                                                                                                                           0.1), command=self.gameCallback, extraArgs=[BishopsHandGlobals.PLAYER_ACTIONS.UnjoinGame])
+        self.unjoinButton = DirectButton(
+            parent=self.menu,
+            relief=DGG.RAISED,
+            state=DGG.NORMAL,
+            text='Unjoin',
+            text_align=TextNode.ACenter,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            frameColor=PiratesGuiGlobals.ButtonColor1,
+            frameSize=(0, 0.4, 0, 0.08),
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            text_pos=(0.2, 0.03),
+            textMayChange=1,
+            pos=(0.05, 0, 0.1),
+            command=self.gameCallback,
+            extraArgs=[BishopsHandGlobals.PLAYER_ACTIONS.UnjoinGame])
         self.unjoinButton.hide()
-        self.rejoinButton = DirectButton(parent=self.menu, relief=DGG.RAISED, state=DGG.NORMAL, text='Rejoin: 2 Gold', text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_fg=PiratesGuiGlobals.TextFG2, frameColor=PiratesGuiGlobals.ButtonColor1, frameSize=(0,
-                                                                                                                                                                                                                                                                                          0.4,
-                                                                                                                                                                                                                                                                                          0,
-                                                                                                                                                                                                                                                                                          0.08), borderWidth=PiratesGuiGlobals.BorderWidth, text_pos=(0.2,
-                                                                                                                                                                                                                                                                                                                                                      0.03), textMayChange=1, pos=(0.05,
-                                                                                                                                                                                                                                                                                                                                                                                   0,
-                                                                                                                                                                                                                                                                                                                                                                                   0.1), command=self.gameCallback, extraArgs=[BishopsHandGlobals.PLAYER_ACTIONS.RejoinGame])
+        self.rejoinButton = DirectButton(
+            parent=self.menu,
+            relief=DGG.RAISED,
+            state=DGG.NORMAL,
+            text='Rejoin: 2 Gold',
+            text_align=TextNode.ACenter,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            frameColor=PiratesGuiGlobals.ButtonColor1,
+            frameSize=(0, 0.4, 0, 0.08),
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            text_pos=(0.2, 0.03),
+            textMayChange=1,
+            pos=(0.05, 0, 0.1),
+            command=self.gameCallback,
+            extraArgs=[BishopsHandGlobals.PLAYER_ACTIONS.RejoinGame])
         self.rejoinButton.hide()
-        self.continueButton = DirectButton(parent=self.menu, relief=DGG.RAISED, state=DGG.NORMAL, text='Practice', text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_fg=PiratesGuiGlobals.TextFG2, frameColor=PiratesGuiGlobals.ButtonColor1, frameSize=(0,
-                                                                                                                                                                                                                                                                                      0.4,
-                                                                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                                                                      0.08), borderWidth=PiratesGuiGlobals.BorderWidth, text_pos=(0.2,
-                                                                                                                                                                                                                                                                                                                                                  0.03), textMayChange=1, pos=(0.05,
-                                                                                                                                                                                                                                                                                                                                                                               0,
-                                                                                                                                                                                                                                                                                                                                                                               0.0), command=self.gameCallback, extraArgs=[BishopsHandGlobals.PLAYER_ACTIONS.Continue])
+        self.continueButton = DirectButton(
+            parent=self.menu,
+            relief=DGG.RAISED,
+            state=DGG.NORMAL,
+            text='Practice',
+            text_align=TextNode.ACenter,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            frameColor=PiratesGuiGlobals.ButtonColor1,
+            frameSize=(0, 0.4, 0, 0.08),
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            text_pos=(0.2, 0.03),
+            textMayChange=1,
+            pos=(0.05, 0, 0.0),
+            command=self.gameCallback,
+            extraArgs=[BishopsHandGlobals.PLAYER_ACTIONS.Continue])
         self.continueButton.hide()
-        self.resignButton = DirectButton(parent=self.menu, relief=DGG.RAISED, state=DGG.NORMAL, text='Resign Game', text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_fg=PiratesGuiGlobals.TextFG2, frameColor=PiratesGuiGlobals.ButtonColor1, frameSize=(0,
-                                                                                                                                                                                                                                                                                       0.27,
-                                                                                                                                                                                                                                                                                       0,
-                                                                                                                                                                                                                                                                                       0.08), borderWidth=PiratesGuiGlobals.BorderWidth, text_pos=(0.13,
-                                                                                                                                                                                                                                                                                                                                                   0.03), textMayChange=1, pos=(0.46,
-                                                                                                                                                                                                                                                                                                                                                                                0,
-                                                                                                                                                                                                                                                                                                                                                                                0.1), command=self.gameCallback, extraArgs=[BishopsHandGlobals.PLAYER_ACTIONS.Resign])
+        self.resignButton = DirectButton(
+            parent=self.menu,
+            relief=DGG.RAISED,
+            state=DGG.NORMAL,
+            text='Resign Game',
+            text_align=TextNode.ACenter,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            frameColor=PiratesGuiGlobals.ButtonColor1,
+            frameSize=(0, 0.27, 0, 0.08),
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            text_pos=(0.13, 0.03),
+            textMayChange=1,
+            pos=(0.46, 0, 0.1),
+            command=self.gameCallback,
+            extraArgs=[BishopsHandGlobals.PLAYER_ACTIONS.Resign])
         self.resignButton.hide()
-        self.leaveButton = DirectButton(parent=self.menu, relief=DGG.RAISED, state=DGG.NORMAL, text='Leave with winnings', text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_fg=PiratesGuiGlobals.TextFG2, frameColor=PiratesGuiGlobals.ButtonColor1, frameSize=(0,
-                                                                                                                                                                                                                                                                                              0.27,
-                                                                                                                                                                                                                                                                                              0,
-                                                                                                                                                                                                                                                                                              0.08), borderWidth=PiratesGuiGlobals.BorderWidth, text_pos=(0.13,
-                                                                                                                                                                                                                                                                                                                                                          0.03), textMayChange=1, pos=(0.46,
-                                                                                                                                                                                                                                                                                                                                                                                       0,
-                                                                                                                                                                                                                                                                                                                                                                                       0.1), command=self.gameCallback, extraArgs=[BishopsHandGlobals.PLAYER_ACTIONS.Resign])
+        self.leaveButton = DirectButton(
+            parent=self.menu,
+            relief=DGG.RAISED,
+            state=DGG.NORMAL,
+            text='Leave with winnings',
+            text_align=TextNode.ACenter,
+            text_scale=PiratesGuiGlobals.TextScaleLarge,
+            text_fg=PiratesGuiGlobals.TextFG2,
+            frameColor=PiratesGuiGlobals.ButtonColor1,
+            frameSize=(0, 0.27, 0, 0.08),
+            borderWidth=PiratesGuiGlobals.BorderWidth,
+            text_pos=(0.13, 0.03),
+            textMayChange=1,
+            pos=(0.46, 0, 0.1),
+            command=self.gameCallback,
+            extraArgs=[BishopsHandGlobals.PLAYER_ACTIONS.Resign])
         self.leaveButton.hide()
-        self.exitButton = DirectButton(parent=self.menu, relief=DGG.RAISED, text='X', text_align=TextNode.ACenter, text_scale=0.04, text_pos=(0.02,
-                                                                                                                                              0.01), text_fg=(0.75,
-                                                                                                                                                              0.75,
-                                                                                                                                                              0.75,
-                                                                                                                                                              1), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=0, frameColor=PiratesGuiGlobals.ButtonColor1, borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameSize=(0,
-                                                                                                                                                                                                                                                                                                                                   0.04,
-                                                                                                                                                                                                                                                                                                                                   0,
-                                                                                                                                                                                                                                                                                                                                   0.04), pos=(0.75 - 0.01 - 0.04, 0, 0.01), command=self.gameCallback, extraArgs=[-1])
-        self.roundLabel = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ALeft, text_scale=0.06, pos=(-0.1, 0, 0.45), text_fg=(1,
-                                                                                                                                                   1,
-                                                                                                                                                   1,
-                                                                                                                                                   1), text_shadow=(0,
-                                                                                                                                                                    0,
-                                                                                                                                                                    0,
-                                                                                                                                                                    1), textMayChange=1, text_font=PiratesGlobals.getPirateOutlineFont())
-        self.potSizeLabel = DirectLabel(parent=self, relief=None, text_align=TextNode.ALeft, text_scale=0.08, pos=(-0.1, 0, 0.5), text_fg=(1,
-                                                                                                                                           1,
-                                                                                                                                           1,
-                                                                                                                                           1), text_shadow=(0,
-                                                                                                                                                            0,
-                                                                                                                                                            0,
-                                                                                                                                                            1), textMayChange=1, text_font=PiratesGlobals.getPirateOutlineFont())
-        self.tableStateLabel = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ACenter, text_scale=0.08, pos=(0,
-                                                                                                                                 0,
-                                                                                                                                 0), text_fg=(1,
-                                                                                                                                              1,
-                                                                                                                                              1,
-                                                                                                                                              1), text_shadow=(0,
-                                                                                                                                                               0,
-                                                                                                                                                               0,
-                                                                                                                                                               1), textMayChange=1, text_font=PiratesGlobals.getPirateOutlineFont())
-        self.timerLabel = DirectLabel(parent=self, relief=None, text='', pos=(1, 0,
-                                                                              0.55), scale=0.1, text_fg=(1,
-                                                                                                         1,
-                                                                                                         1,
-                                                                                                         1), text_shadow=(0,
-                                                                                                                          0,
-                                                                                                                          0,
-                                                                                                                          1), textMayChange=1, text_font=PiratesGlobals.getPirateOutlineFont())
+        self.exitButton = DirectButton(
+            parent=self.menu,
+            relief=DGG.RAISED,
+            text='X',
+            text_align=TextNode.ACenter,
+            text_scale=0.04,
+            text_pos=(0.02, 0.01),
+            text_fg=(0.75, 0.75, 0.75, 1),
+            text_shadow=PiratesGuiGlobals.TextShadow,
+            textMayChange=0,
+            frameColor=PiratesGuiGlobals.ButtonColor1,
+            borderWidth=PiratesGuiGlobals.BorderWidthSmall,
+            frameSize=(0, 0.04, 0, 0.04),
+            pos=(0.75 - 0.01 - 0.04, 0, 0.01),
+            command=self.gameCallback,
+            extraArgs=[-1])
+        self.roundLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            text='',
+            text_align=TextNode.ALeft,
+            text_scale=0.06,
+            pos=(-0.1, 0, 0.45),
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1),
+            textMayChange=1,
+            text_font=PiratesGlobals.getPirateOutlineFont())
+        self.potSizeLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            text_align=TextNode.ALeft,
+            text_scale=0.08,
+            pos=(-0.1, 0, 0.5),
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1),
+            textMayChange=1,
+            text_font=PiratesGlobals.getPirateOutlineFont())
+        self.tableStateLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            text='',
+            text_align=TextNode.ACenter,
+            text_scale=0.08,
+            pos=(0, 0, 0),
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1),
+            textMayChange=1,
+            text_font=PiratesGlobals.getPirateOutlineFont())
+        self.timerLabel = DirectLabel(
+            parent=self,
+            relief=None,
+            text='',
+            pos=(1, 0, 0.55),
+            scale=0.1,
+            text_fg=(1, 1, 1, 1),
+            text_shadow=(0, 0, 0, 1),
+            textMayChange=1,
+            text_font=PiratesGlobals.getPirateOutlineFont())
         self.mouseNode = base.mouseWatcherNode
         t = taskMgr.add(self.mouseWatcherTask, 'mouse')
         t.run = True
         self.text = OnscreenText(pos=(-0.75, 0.75), mayChange=True)
         self.text.reparentTo(self)
         localAvatar.guiMgr.hideTrays()
-        buttons = ['normalButton', 'scButton', 'whisperButton', 'whisperCancelButton', 'whisperScButton']
+        buttons = [
+            'normalButton', 'scButton', 'whisperButton', 'whisperCancelButton',
+            'whisperScButton'
+        ]
         for b in buttons:
             button = getattr(localAvatar.chatMgr, b)
             button.reparentTo(button.getParent())
@@ -630,7 +774,9 @@ class BishopsHandGame(DirectFrame, FSM.FSM):
 
             def timerTask(task):
                 if task.time < task.timer:
-                    self.timerLabel['text'] = `(int(PythonUtil.bound(task.timer - task.time, 0, time) + 1.0))`
+                    self.timerLabel['text'] = repr( (int(
+                        PythonUtil.bound(task.timer - task.time, 0, time) +
+                        1.0)))
                     return Task.cont
                 else:
                     self.timerLabel['text'] = ''
@@ -646,7 +792,8 @@ class BishopsHandGame(DirectFrame, FSM.FSM):
             t.timer = 0
 
     def setTableState(self, tableState, oldSeatStatus, newSeatStatus):
-        for face, oldStatus, newStatus in zip(self.faces, oldSeatStatus, newSeatStatus):
+        for face, oldStatus, newStatus in zip(self.faces, oldSeatStatus,
+                                              newSeatStatus):
             if newStatus != oldStatus:
                 avId, status = newStatus
                 face.setStatus(status)
@@ -662,17 +809,17 @@ class BishopsHandGame(DirectFrame, FSM.FSM):
 
     def mouseWatcherTask(self, task):
         if task.run and self.mouseNode.hasMouse():
-            pivot = (
-             0.07, -0.1567)
+            pivot = (0.07, -0.1567)
 
             def turn(a, b):
-                d = [ x - y for x, y in zip(a, b) ]
+                d = [x - y for x, y in zip(a, b)]
                 return atan2(d[0], d[1]) * 180.0 / math.pi
 
-            point = (
-             self.mouseNode.getMouseX() * 4.0 / 3.0, self.mouseNode.getMouseY())
+            point = (self.mouseNode.getMouseX() * 4.0 / 3.0,
+                     self.mouseNode.getMouseY())
             a = turn(point, pivot)
-            self.text['text'] = `(point[0])`[:10] + '\n' + `(point[1])`[:10] + '\n' + `a`[:5]
+            self.text['text'] = repr( (point[0])) [:10] + '\n' + repr( (
+                point[1])) [:10] + '\n' + repr( a) [:5]
             self.text['text'] = ''
             self.knife.turn(PythonUtil.bound(a, -60, 80))
         return Task.cont
@@ -711,4 +858,6 @@ class BishopsHandGame(DirectFrame, FSM.FSM):
         self.tableStateLabel.destroy()
         self.menu.destroy()
         DirectFrame.destroy(self)
+
+
 # okay decompiling .\pirates\minigame\BishopsHandGame.pyc

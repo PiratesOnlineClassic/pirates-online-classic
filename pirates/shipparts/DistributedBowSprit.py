@@ -15,13 +15,15 @@ from pirates.shipparts import DistributedShippart
 from pirates.destructibles import DistributedDestructibleObject
 
 
-class DistributedBowSprit(DistributedShippart.DistributedShippart,
-                          DistributedDestructibleObject.DistributedDestructibleObject):
+class DistributedBowSprit(
+        DistributedShippart.DistributedShippart,
+        DistributedDestructibleObject.DistributedDestructibleObject):
     notify = directNotify.newCategory('DistributedBowSprit')
 
     def __init__(self, cr):
         DistributedShippart.DistributedShippart.__init__(self, cr)
-        DistributedDestructibleObject.DistributedDestructibleObject.__init__(self, cr)
+        DistributedDestructibleObject.DistributedDestructibleObject.__init__(
+            self, cr)
         NodePath.__init__(self, 'bowsprit')
         self.stats = None
         self.hull = None
@@ -30,12 +32,14 @@ class DistributedBowSprit(DistributedShippart.DistributedShippart,
         self.notify.debug('Generate ' + str(self.doId))
         self.setDefaultDNA()
         DistributedShippart.DistributedShippart.generate(self)
-        DistributedDestructibleObject.DistributedDestructibleObject.generate(self)
+        DistributedDestructibleObject.DistributedDestructibleObject.generate(
+            self)
 
     def announceGenerate(self):
         self.notify.debug('Announce Generate ' + str(self.doId))
         DistributedShippart.DistributedShippart.announceGenerate(self)
-        DistributedDestructibleObject.DistributedDestructibleObject.announceGenerate(self)
+        DistributedDestructibleObject.DistributedDestructibleObject.announceGenerate(
+            self)
         if self.Hp <= 0:
             self.prop.hideBreakAll()
         else:
@@ -47,7 +51,8 @@ class DistributedBowSprit(DistributedShippart.DistributedShippart,
     def disable(self):
         self.notify.debug('Disable ' + str(self.doId))
         DistributedShippart.DistributedShippart.disable(self)
-        DistributedDestructibleObject.DistributedDestructibleObject.disable(self)
+        DistributedDestructibleObject.DistributedDestructibleObject.disable(
+            self)
 
     def delete(self):
         self.notify.debug('Delete ' + str(self.doId))
@@ -82,30 +87,29 @@ class DistributedBowSprit(DistributedShippart.DistributedShippart,
         self.prop.shipId = self.shipId
         self.prop.isAlive = 1
         if isRam:
-            self.ship.ram = [
-                self.prop,
-                self]
+            self.ship.ram = [self.prop, self]
             self.prop.hideDebris = 1
         else:
-            self.ship.bowsprit = [
-                self.prop,
-                self]
+            self.ship.bowsprit = [self.prop, self]
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
-        self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
+                            targetEffects, pos, normal, codes, attacker):
+        self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult,
+                                      targetEffects, pos, normal, codes,
+                                      attacker)
 
     def setHp(self, newHp):
-        DistributedDestructibleObject.DistributedDestructibleObject.setHp(self, newHp)
+        DistributedDestructibleObject.DistributedDestructibleObject.setHp(
+            self, newHp)
         if self.ship:
             if self.dna.prowIsRam(self.dna.prowType):
                 messenger.send('setRamHp-%s' % self.ship.doId, self.getHp())
             else:
-                messenger.send('setBowspritHp-%s' % self.ship.doId, self.getHp())
+                messenger.send('setBowspritHp-%s' % self.ship.doId,
+                               self.getHp())
 
     def getHp(self):
-        return [
-            self.Hp,
-            self.maxHp]
+        return [self.Hp, self.maxHp]
 
     def playDeath(self):
         pass
@@ -164,10 +168,8 @@ class DistributedBowSprit(DistributedShippart.DistributedShippart,
         self.prop.geom_Low.setScale(lscl)
         if self.ship:
             if self.dna.prowIsRam(self.dna.prowType):
-                messenger.send('setRamHp-%s' % self.ship.doId, [
-                    self.Hp,
-                    self.maxHp])
+                messenger.send('setRamHp-%s' % self.ship.doId,
+                               [self.Hp, self.maxHp])
             else:
-                messenger.send('setBowspritHp-%s' % self.ship.doId, [
-                    self.Hp,
-                    self.maxHp])
+                messenger.send('setBowspritHp-%s' % self.ship.doId,
+                               [self.Hp, self.maxHp])
