@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class PoisonHit(PooledEffect, EffectController):
-
+    
     cardScale = 128.0
 
     def __init__(self):
@@ -22,8 +22,7 @@ class PoisonHit(PooledEffect, EffectController):
         self.card = model.find('**/particleWhiteSmoke')
         self.speed = 20.0
         if not PoisonHit.particleDummy:
-            PoisonHit.particleDummy = render.attachNewNode(
-                ModelNode('PoisonHitParticleDummy'))
+            PoisonHit.particleDummy = render.attachNewNode(ModelNode('PoisonHitParticleDummy'))
             PoisonHit.particleDummy.setDepthWrite(0)
             PoisonHit.particleDummy.setLightOff()
         self.f = ParticleEffect.ParticleEffect()
@@ -60,11 +59,8 @@ class PoisonHit(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor,
-            ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(0.4, 0.75, 0.3, 1.0), Vec4(0.0, 0.0, 0.0, 0.0), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.4, 0.75, 0.3, 1.0), Vec4(0.0, 0.0, 0.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -74,12 +70,8 @@ class PoisonHit(PooledEffect, EffectController):
         self.p0.emitter.setRadius(2.0)
 
     def createTrack(self):
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100), Wait(7.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def cleanUpEffect(self):
@@ -90,6 +82,4 @@ class PoisonHit(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\PoisonHit.pyc

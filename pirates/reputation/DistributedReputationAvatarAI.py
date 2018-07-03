@@ -4,12 +4,8 @@ from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveA
 from pirates.movement.DistributedMovingObjectAI import DistributedMovingObjectAI
 from pirates.quest.DistributedQuestGiverAI import DistributedQuestGiverAI
 
-
-class DistributedReputationAvatarAI(
-        DistributedAvatarAI, DistributedMovingObjectAI,
-        DistributedInteractiveAI, DistributedQuestGiverAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedReputationAvatarAI')
+class DistributedReputationAvatarAI(DistributedAvatarAI, DistributedMovingObjectAI, DistributedInteractiveAI, DistributedQuestGiverAI):
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedReputationAvatarAI')
 
     def __init__(self, air):
         DistributedAvatarAI.__init__(self, air)

@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class DrainLife(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -21,8 +21,7 @@ class DrainLife(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/candleHalo')
         self.card = model.find('**/effectCandleHalo')
         if not DrainLife.particleDummy:
-            DrainLife.particleDummy = render.attachNewNode(
-                ModelNode('DrainLifeParticleDummy'))
+            DrainLife.particleDummy = render.attachNewNode(ModelNode('DrainLifeParticleDummy'))
             DrainLife.particleDummy.setDepthWrite(0)
             DrainLife.particleDummy.setLightOff()
             DrainLife.particleDummy.setColorScaleOff()
@@ -65,11 +64,8 @@ class DrainLife(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor,
-            ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(1.0, 0.0, 0.0, 1.0), Vec4(0.0, 0.0, 0.0, 0.19), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 0.0, 0.0, 1.0), Vec4(0.0, 0.0, 0.0, 0.19), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -77,12 +73,8 @@ class DrainLife(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.6)
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100), Wait(7.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def cleanUpEffect(self):
@@ -94,6 +86,4 @@ class DrainLife(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\DrainLife.pyc

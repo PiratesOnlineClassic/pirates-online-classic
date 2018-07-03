@@ -23,11 +23,9 @@ MODE_GUILD = 3
 MODE_CREW_HUD = 4
 MODE_CREW_HUD_SEA = 5
 
-
 class PirateMemberButton(GuiButton.GuiButton):
 
-    memberImageColor = (Vec4(0.31, 0.3, 0.3, 1), Vec4(0.41, 0.4, 0.4, 1),
-                        Vec4(0.41, 0.4, 0.4, 1), Vec4(0.21, 0.2, 0.2, 1))
+    memberImageColor = (Vec4(0.31, 0.3, 0.3, 1), Vec4(0.41, 0.4, 0.4, 1), Vec4(0.41, 0.4, 0.4, 1), Vec4(0.21, 0.2, 0.2, 1))
     OnlineTextColor = (1, 1, 1, 1)
     OnlineButtonColor = VBase4(0.7, 0.7, 0.7, 1.0)
     OfflineButtonColor = VBase4(0.3, 0.3, 0.3, 1.0)
@@ -51,156 +49,72 @@ class PirateMemberButton(GuiButton.GuiButton):
             self.hp = modeInfo.hp
             self.maxHp = modeInfo.maxHp
         if self.mode == MODE_CREW_HUD:
-            GuiButton.GuiButton.__init__(
-                self,
-                parent=self.owner.memberFrame.getCanvas(),
-                text='',
-                text_scale=PiratesGuiGlobals.TextScaleMed,
-                text_pos=(0.01, self.owner.memberOffset),
-                text_align=TextNode.ALeft,
-                text_fg=self.OfflineTextColor,
-                text_shadow=PiratesGuiGlobals.TextShadow,
-                textMayChange=1,
-                text_wordwrap=40,
-                image_scale=(self.owner.memberWidth, 1.0,
-                             self.owner.memberHeight * 2.62),
-                image_pos=(0.31, 0.0, self.owner.memberHeight * 0.5),
-                command=self.handlePress,
-                image=None)
-            self.hpMeter = DirectWaitBar(
-                parent=self,
-                relief=DGG.RAISED,
-                borderWidth=(0.004, 0.004),
-                range=self.maxHp,
-                value=self.hp,
-                frameColor=(0.05, 0.05, 0.05, 1),
-                barColor=(0.1, 0.7, 0.1, 1),
-                pos=(0.15, 0, 0.012),
-                frameSize=(0, 0.25, 0, 0.02),
-                text='%s/%s' % (self.hp, self.maxHp),
-                text_align=TextNode.ALeft,
-                text_scale=PiratesGuiGlobals.TextScaleTiny,
-                text_fg=PiratesGuiGlobals.TextFG3,
-                text_shadow=PiratesGuiGlobals.TextShadow,
-                text_pos=(0.27, 0, 0.005),
-                textMayChange=1)
-            self.statusLabel = DirectLabel(
-                parent=self,
-                relief=None,
-                text='',
-                text_align=TextNode.ALeft,
-                text_scale=PiratesGuiGlobals.TextScaleSmall,
-                text_pos=(1.53, 0.02),
-                text_fg=self.OnlineSubtextColor,
-                text_shadow=PiratesGuiGlobals.TextShadow,
-                textMayChange=1)
+            GuiButton.GuiButton.__init__(self, parent=self.owner.memberFrame.getCanvas(), text='', text_scale=PiratesGuiGlobals.TextScaleMed, text_pos=(0.01, self.owner.memberOffset), text_align=TextNode.ALeft, text_fg=self.OfflineTextColor, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, text_wordwrap=40, image_scale=(self.owner.memberWidth, 1.0, self.owner.memberHeight * 2.62), image_pos=(0.31, 0.0, self.owner.memberHeight * 0.5), command=self.handlePress, image=None)
+            self.hpMeter = DirectWaitBar(parent=self, relief=DGG.RAISED, borderWidth=(0.004,
+                                                                                      0.004), range=self.maxHp, value=self.hp, frameColor=(0.05,
+                                                                                                                                           0.05,
+                                                                                                                                           0.05,
+                                                                                                                                           1), barColor=(0.1,
+                                                                                                                                                         0.7,
+                                                                                                                                                         0.1,
+                                                                                                                                                         1), pos=(0.15,
+                                                                                                                                                                  0,
+                                                                                                                                                                  0.012), frameSize=(0,
+                                                                                                                                                                                     0.25,
+                                                                                                                                                                                     0,
+                                                                                                                                                                                     0.02), text='%s/%s' % (self.hp, self.maxHp), text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleTiny, text_fg=PiratesGuiGlobals.TextFG3, text_shadow=PiratesGuiGlobals.TextShadow, text_pos=(0.27,
+                                                                                                                                                                                                                                                                                                                                                                                                0,
+                                                                                                                                                                                                                                                                                                                                                                                                0.005), textMayChange=1)
+            self.statusLabel = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleSmall, text_pos=(1.53,
+                                                                                                                                                                0.02), text_fg=self.OnlineSubtextColor, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1)
         else:
             if self.mode == MODE_CREW_HUD_SEA:
-                GuiButton.GuiButton.__init__(
-                    self,
-                    parent=self.owner.memberFrame.getCanvas(),
-                    text='',
-                    text_scale=PiratesGuiGlobals.TextScaleMed,
-                    text_pos=(0.01, self.owner.memberOffset),
-                    text_align=TextNode.ALeft,
-                    text_fg=self.OfflineTextColor,
-                    text_shadow=PiratesGuiGlobals.TextShadow,
-                    textMayChange=1,
-                    text_wordwrap=40,
-                    image_scale=(self.owner.memberWidth, 1.0,
-                                 self.owner.memberHeight * 2.62),
-                    image_pos=(0.31, 0.0, self.owner.memberHeight * 0.5),
-                    command=self.handlePress,
-                    image=None)
-                self.hpMeter = DirectWaitBar(
-                    parent=self,
-                    relief=DGG.RAISED,
-                    borderWidth=(0.004, 0.004),
-                    range=self.maxHp,
-                    value=self.hp,
-                    frameColor=(0.05, 0.05, 0.05, 1),
-                    barColor=(0.1, 0.7, 0.1, 1),
-                    pos=(0.15, 0, 0.012),
-                    frameSize=(0, 0.25, 0, 0.02),
-                    text='%s/%s' % (self.hp, self.maxHp),
-                    text_align=TextNode.ALeft,
-                    text_scale=PiratesGuiGlobals.TextScaleTiny,
-                    text_fg=PiratesGuiGlobals.TextFG3,
-                    text_shadow=PiratesGuiGlobals.TextShadow,
-                    text_pos=(0.27, 0, 0.005),
-                    textMayChange=1,
-                    scale=0.8)
-                self.statusLabel = DirectLabel(
-                    parent=self,
-                    relief=None,
-                    text='',
-                    text_align=TextNode.ALeft,
-                    text_scale=PiratesGuiGlobals.TextScaleSmall,
-                    text_pos=(1.53, 0.02),
-                    text_fg=self.OnlineSubtextColor,
-                    text_shadow=PiratesGuiGlobals.TextShadow,
-                    textMayChange=1,
-                    scale=0.8)
+                GuiButton.GuiButton.__init__(self, parent=self.owner.memberFrame.getCanvas(), text='', text_scale=PiratesGuiGlobals.TextScaleMed, text_pos=(0.01, self.owner.memberOffset), text_align=TextNode.ALeft, text_fg=self.OfflineTextColor, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, text_wordwrap=40, image_scale=(self.owner.memberWidth, 1.0, self.owner.memberHeight * 2.62), image_pos=(0.31, 0.0, self.owner.memberHeight * 0.5), command=self.handlePress, image=None)
+                self.hpMeter = DirectWaitBar(parent=self, relief=DGG.RAISED, borderWidth=(0.004,
+                                                                                          0.004), range=self.maxHp, value=self.hp, frameColor=(0.05,
+                                                                                                                                               0.05,
+                                                                                                                                               0.05,
+                                                                                                                                               1), barColor=(0.1,
+                                                                                                                                                             0.7,
+                                                                                                                                                             0.1,
+                                                                                                                                                             1), pos=(0.15,
+                                                                                                                                                                      0,
+                                                                                                                                                                      0.012), frameSize=(0,
+                                                                                                                                                                                         0.25,
+                                                                                                                                                                                         0,
+                                                                                                                                                                                         0.02), text='%s/%s' % (self.hp, self.maxHp), text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleTiny, text_fg=PiratesGuiGlobals.TextFG3, text_shadow=PiratesGuiGlobals.TextShadow, text_pos=(0.27,
+                                                                                                                                                                                                                                                                                                                                                                                                    0,
+                                                                                                                                                                                                                                                                                                                                                                                                    0.005), textMayChange=1, scale=0.8)
+                self.statusLabel = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleSmall, text_pos=(1.53,
+                                                                                                                                                                    0.02), text_fg=self.OnlineSubtextColor, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, scale=0.8)
             else:
-                GuiButton.GuiButton.__init__(
-                    self,
-                    parent=self.owner.memberFrame.getCanvas(),
-                    text='',
-                    text_scale=PiratesGuiGlobals.TextScaleMed,
-                    text_pos=(0.01, self.owner.memberOffset),
-                    text_align=TextNode.ALeft,
-                    text_fg=self.OfflineTextColor,
-                    text_shadow=PiratesGuiGlobals.TextShadow,
-                    textMayChange=1,
-                    text_wordwrap=40,
-                    image_scale=(self.owner.memberWidth, 1.0,
-                                 self.owner.memberHeight * 2.62),
-                    image_pos=(0.21, 0.0, self.owner.memberHeight * 0.5),
-                    command=self.handlePress)
-                self.hpMeter = DirectWaitBar(
-                    parent=self,
-                    relief=DGG.RAISED,
-                    borderWidth=(0.004, 0.004),
-                    range=self.maxHp,
-                    value=self.hp,
-                    frameColor=(0.05, 0.05, 0.05, 1),
-                    barColor=(0.1, 0.7, 0.1, 1),
-                    pos=(0.01, 0, 0.012),
-                    frameSize=(0, 0.25, 0, 0.02),
-                    text='%s/%s' % (self.hp, self.maxHp),
-                    text_align=TextNode.ALeft,
-                    text_scale=PiratesGuiGlobals.TextScaleTiny,
-                    text_fg=PiratesGuiGlobals.TextFG3,
-                    text_shadow=PiratesGuiGlobals.TextShadow,
-                    text_pos=(0.256, 0, 0.005),
-                    textMayChange=1)
-                self.statusLabel = DirectLabel(
-                    parent=self,
-                    relief=None,
-                    text='',
-                    text_align=TextNode.ALeft,
-                    text_scale=PiratesGuiGlobals.TextScaleSmall,
-                    text_pos=(0.03, 0.02),
-                    text_fg=self.OnlineSubtextColor,
-                    text_shadow=PiratesGuiGlobals.TextShadow,
-                    textMayChange=1)
+                GuiButton.GuiButton.__init__(self, parent=self.owner.memberFrame.getCanvas(), text='', text_scale=PiratesGuiGlobals.TextScaleMed, text_pos=(0.01, self.owner.memberOffset), text_align=TextNode.ALeft, text_fg=self.OfflineTextColor, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, text_wordwrap=40, image_scale=(self.owner.memberWidth, 1.0, self.owner.memberHeight * 2.62), image_pos=(0.21, 0.0, self.owner.memberHeight * 0.5), command=self.handlePress)
+                self.hpMeter = DirectWaitBar(parent=self, relief=DGG.RAISED, borderWidth=(0.004,
+                                                                                          0.004), range=self.maxHp, value=self.hp, frameColor=(0.05,
+                                                                                                                                               0.05,
+                                                                                                                                               0.05,
+                                                                                                                                               1), barColor=(0.1,
+                                                                                                                                                             0.7,
+                                                                                                                                                             0.1,
+                                                                                                                                                             1), pos=(0.01,
+                                                                                                                                                                      0,
+                                                                                                                                                                      0.012), frameSize=(0,
+                                                                                                                                                                                         0.25,
+                                                                                                                                                                                         0,
+                                                                                                                                                                                         0.02), text='%s/%s' % (self.hp, self.maxHp), text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleTiny, text_fg=PiratesGuiGlobals.TextFG3, text_shadow=PiratesGuiGlobals.TextShadow, text_pos=(0.256,
+                                                                                                                                                                                                                                                                                                                                                                                                    0,
+                                                                                                                                                                                                                                                                                                                                                                                                    0.005), textMayChange=1)
+                self.statusLabel = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleSmall, text_pos=(0.03,
+                                                                                                                                                                    0.02), text_fg=self.OnlineSubtextColor, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1)
         self.initialiseoptions(PirateMemberButton)
         self.hpMeter.hide()
         self.statusLabel.hide()
         gui = loader.loadModel('models/gui/toplevel_gui')
-        shipImage = (gui.find('**/topgui_icon_ship'),
-                     gui.find('**/topgui_icon_ship'),
-                     gui.find('**/topgui_icon_ship'))
-        self.shipIcon = DirectButton(
-            parent=self,
-            relief=None,
-            image=shipImage,
-            image0_color=VBase4(1.0, 1.0, 1.0, 1.0),
-            image1_color=VBase4(0.4, 0.4, 0.4, 1.0),
-            image2_color=VBase4(0.0, 0.9, 0.0, 1.0),
-            image_scale=0.1,
-            pos=(0.35, 0, 0.035),
-            command=self.handleShipPress)
+        shipImage = (
+         gui.find('**/topgui_icon_ship'), gui.find('**/topgui_icon_ship'), gui.find('**/topgui_icon_ship'))
+        self.shipIcon = DirectButton(parent=self, relief=None, image=shipImage, image0_color=VBase4(1.0, 1.0, 1.0, 1.0), image1_color=VBase4(0.4, 0.4, 0.4, 1.0), image2_color=VBase4(0.0, 0.9, 0.0, 1.0), image_scale=0.1, pos=(0.35,
+                                                                                                                                                                                                                                 0,
+                                                                                                                                                                                                                                 0.035), command=self.handleShipPress)
         self.shipIcon.shipId = None
         self.shipIcon.hide()
         icon = loader.loadModel('models/gui/compass_main')
@@ -209,8 +123,7 @@ class PirateMemberButton(GuiButton.GuiButton):
         self.onlineIcon.setScale(0.2)
         self.onlineIcon.hide()
         self.accept('press-wheel_up-%s' % self.guiId, self.owner.mouseWheelUp)
-        self.accept('press-wheel_down-%s' % self.guiId,
-                    self.owner.mouseWheelDown)
+        self.accept('press-wheel_down-%s' % self.guiId, self.owner.mouseWheelDown)
         self.update()
         return
 
@@ -258,9 +171,7 @@ class PirateMemberButton(GuiButton.GuiButton):
     def updateGuild(self):
         if self.mode == MODE_GUILD:
             rank = localAvatar.getGuildRank()
-            self.modeInfo = [
-                self.modeInfo[0], self.modeInfo[1], rank, self.modeInfo[3]
-            ]
+            self.modeInfo = [self.modeInfo[0], self.modeInfo[1], rank, self.modeInfo[3]]
         self.update()
 
     def updateShip(self, shipId, shipHasSpace=0):
@@ -320,8 +231,7 @@ class PirateMemberButton(GuiButton.GuiButton):
                 self.updateShip(None)
         else:
             if self.mode == MODE_FRIEND_PLAYER:
-                friendInfo = base.cr.playerFriendsManager.getFriendInfo(
-                    self.playerId)
+                friendInfo = base.cr.playerFriendsManager.getFriendInfo(self.playerId)
                 text = friendInfo.playerName
                 self.avName = text
                 self.statusLabel.hide()
@@ -345,8 +255,7 @@ class PirateMemberButton(GuiButton.GuiButton):
                 else:
                     if self.mode == MODE_GUILD:
                         if self.avId == localAvatar.doId:
-                            self.accept('Guild Status Updated',
-                                        self.updateGuild)
+                            self.accept('Guild Status Updated', self.updateGuild)
                         text = self.modeInfo[1]
                         statusText = self.getGuildRankName(self.modeInfo[2])
                     else:
@@ -377,27 +286,16 @@ class PirateMemberButton(GuiButton.GuiButton):
                 state = DGG.DISABLED
                 text_fg = self.LocalTextColor
         if self.mode == MODE_CREW_HUD:
-            self.configure(
-                state=state,
-                text=text,
-                text_fg=text_fg,
-                image_color=buttonColor,
-                text_pos=(0.15, 0.04, 3.45))
+            self.configure(state=state, text=text, text_fg=text_fg, image_color=buttonColor, text_pos=(0.15,
+                                                                                                       0.04,
+                                                                                                       3.45))
         else:
             if self.mode == MODE_CREW_HUD_SEA:
-                self.configure(
-                    state=state,
-                    text=text,
-                    text_fg=text_fg,
-                    image_color=buttonColor,
-                    text_pos=(0.15, 0.04, 1.5),
-                    text_scale=0.0375)
+                self.configure(state=state, text=text, text_fg=text_fg, image_color=buttonColor, text_pos=(0.15,
+                                                                                                           0.04,
+                                                                                                           1.5), text_scale=0.0375)
             else:
-                self.configure(
-                    state=state,
-                    text=text,
-                    text_fg=text_fg,
-                    image_color=buttonColor)
+                self.configure(state=state, text=text, text_fg=text_fg, image_color=buttonColor)
         return
 
     def handleShipPress(self):
@@ -408,10 +306,8 @@ class PirateMemberButton(GuiButton.GuiButton):
         if self.mode == MODE_FRIEND_PLAYER:
             messenger.send(PiratesGlobals.PlayerDetailsEvent, [self.playerId])
         else:
-            if self.mode in (MODE_FRIEND_AVATAR, MODE_GUILD, MODE_CREW,
-                             MODE_CREW_HUD, MODE_CREW_HUD_SEA):
-                messenger.send(PiratesGlobals.AvatarDetailsEvent,
-                               [self.avId, False])
+            if self.mode in (MODE_FRIEND_AVATAR, MODE_GUILD, MODE_CREW, MODE_CREW_HUD, MODE_CREW_HUD_SEA):
+                messenger.send(PiratesGlobals.AvatarDetailsEvent, [self.avId, False])
 
     def getGuildRankName(self, rank):
         if rank == 3:
@@ -429,17 +325,8 @@ class PirateMemberButton(GuiButton.GuiButton):
 
 class PirateMemberList(DirectObject):
 
-    def __init__(self,
-                 numShown,
-                 parent,
-                 title=None,
-                 height=0.6,
-                 memberHeight=0.065,
-                 memberOffset=0.021,
-                 memberWidth=0.45,
-                 bottom=0,
-                 hud=False,
-                 width=0.48):
+
+    def __init__(self, numShown, parent, title=None, height=0.6, memberHeight=0.065, memberOffset=0.021, memberWidth=0.45, bottom=0, hud=False, width=0.48):
         if hasattr(self, 'initialized'):
             self.arrangeMembers()
             return
@@ -477,35 +364,16 @@ class PirateMemberList(DirectObject):
 
     def show(self):
         self.baseFrame.show()
-        self.accept('press-wheel_up-%s' % self.memberFrame.guiId,
-                    self.mouseWheelUp)
-        self.accept('press-wheel_down-%s' % self.memberFrame.guiId,
-                    self.mouseWheelDown)
-        self.accept('press-wheel_up-%s' % self.memberFrame.verticalScroll.guiId,
-                    self.mouseWheelUp)
-        self.accept(
-            'press-wheel_down-%s' % self.memberFrame.verticalScroll.guiId,
-            self.mouseWheelDown)
-        self.accept(
-            'press-wheel_up-%s' % self.memberFrame.verticalScroll.thumb.guiId,
-            self.mouseWheelUp)
-        self.accept(
-            'press-wheel_down-%s' % self.memberFrame.verticalScroll.thumb.guiId,
-            self.mouseWheelDown)
-        self.accept(
-            'press-wheel_up-%s' %
-            self.memberFrame.verticalScroll.incButton.guiId, self.mouseWheelUp)
-        self.accept(
-            'press-wheel_down-%s' %
-            self.memberFrame.verticalScroll.incButton.guiId,
-            self.mouseWheelDown)
-        self.accept(
-            'press-wheel_up-%s' %
-            self.memberFrame.verticalScroll.decButton.guiId, self.mouseWheelUp)
-        self.accept(
-            'press-wheel_down-%s' %
-            self.memberFrame.verticalScroll.decButton.guiId,
-            self.mouseWheelDown)
+        self.accept('press-wheel_up-%s' % self.memberFrame.guiId, self.mouseWheelUp)
+        self.accept('press-wheel_down-%s' % self.memberFrame.guiId, self.mouseWheelDown)
+        self.accept('press-wheel_up-%s' % self.memberFrame.verticalScroll.guiId, self.mouseWheelUp)
+        self.accept('press-wheel_down-%s' % self.memberFrame.verticalScroll.guiId, self.mouseWheelDown)
+        self.accept('press-wheel_up-%s' % self.memberFrame.verticalScroll.thumb.guiId, self.mouseWheelUp)
+        self.accept('press-wheel_down-%s' % self.memberFrame.verticalScroll.thumb.guiId, self.mouseWheelDown)
+        self.accept('press-wheel_up-%s' % self.memberFrame.verticalScroll.incButton.guiId, self.mouseWheelUp)
+        self.accept('press-wheel_down-%s' % self.memberFrame.verticalScroll.incButton.guiId, self.mouseWheelDown)
+        self.accept('press-wheel_up-%s' % self.memberFrame.verticalScroll.decButton.guiId, self.mouseWheelUp)
+        self.accept('press-wheel_down-%s' % self.memberFrame.verticalScroll.decButton.guiId, self.mouseWheelDown)
         self.accept('socailPanelWheelUp', self.mouseWheelUp)
         self.accept('socailPanelWheelDown', self.mouseWheelDown)
 
@@ -526,35 +394,13 @@ class PirateMemberList(DirectObject):
 
     def setup(self):
         charGui = loader.loadModel('models/gui/char_gui')
-        knob = (charGui.find('**/chargui_slider_node'),
-                charGui.find('**/chargui_slider_node_down'),
-                charGui.find('**/chargui_slider_node_over'))
-        self.memberFrame = DirectScrolledFrame(
-            parent=self.baseFrame,
-            relief=None,
-            state=DGG.NORMAL,
-            manageScrollBars=0,
-            autoHideScrollBars=1,
-            frameSize=(0, self.width, self.bottom, self.height),
-            canvasSize=(0, self.width - 0.05, self.bottom + 0.025,
-                        self.height - 0.025),
-            verticalScroll_relief=None,
-            verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize,
-                                      self.bottom, self.height),
-            verticalScroll_image=charGui.find('**/chargui_slider_small'),
-            verticalScroll_image_scale=(self.height - self.bottom + 0.05, 1,
-                                        0.75),
-            verticalScroll_image_hpr=(0, 0, 90),
-            verticalScroll_image_pos=(
-                self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.004, 0,
-                (self.bottom + self.height) * 0.5),
-            verticalScroll_image_color=(0.61, 0.6, 0.6, 1),
-            verticalScroll_thumb_image=knob,
-            verticalScroll_thumb_relief=None,
-            verticalScroll_thumb_image_scale=0.3,
-            verticalScroll_resizeThumb=0,
-            horizontalScroll_relief=None,
-            sortOrder=5)
+        knob = (charGui.find('**/chargui_slider_node'), charGui.find('**/chargui_slider_node_down'), charGui.find('**/chargui_slider_node_over'))
+        self.memberFrame = DirectScrolledFrame(parent=self.baseFrame, relief=None, state=DGG.NORMAL, manageScrollBars=0, autoHideScrollBars=1, frameSize=(0, self.width, self.bottom, self.height), canvasSize=(0, self.width - 0.05, self.bottom + 0.025, self.height - 0.025), verticalScroll_relief=None, verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, self.bottom, self.height), verticalScroll_image=charGui.find('**/chargui_slider_small'), verticalScroll_image_scale=(self.height - self.bottom + 0.05, 1, 0.75), verticalScroll_image_hpr=(0,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      90), verticalScroll_image_pos=(self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.004, 0, (self.bottom + self.height) * 0.5), verticalScroll_image_color=(0.61,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    0.6,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    0.6,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    1), verticalScroll_thumb_image=knob, verticalScroll_thumb_relief=None, verticalScroll_thumb_image_scale=0.3, verticalScroll_resizeThumb=0, horizontalScroll_relief=None, sortOrder=5)
         if self.hud:
             self.memberFrame['state'] = DGG.DISABLED
         self.memberFrame.verticalScroll.incButton.destroy()
@@ -616,8 +462,8 @@ class PirateMemberList(DirectObject):
         if numMembers == 0:
             return
         self.members.sort()
-        self.memberFrame['canvasSize'] = (0, 0.0, 0,
-                                          numMembers * self.memberHeight)
+        self.memberFrame['canvasSize'] = (
+         0, 0.0, 0, numMembers * self.memberHeight)
         self.placement = self.memberHeight * numMembers
         for index in range(numMembers):
             self.placement -= self.memberHeight
@@ -627,6 +473,4 @@ class PirateMemberList(DirectObject):
         while len(self.members) > 0:
             self.members[0].destroy()
             del self.members[0]
-
-
 # okay decompiling .\pirates\piratesgui\PirateMemberList.pyc

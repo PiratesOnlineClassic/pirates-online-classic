@@ -3,10 +3,8 @@ import random
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
-
 class DistributedTravelAgentUD(DistributedObjectGlobalUD):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedTravelAgentUD')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTravelAgentUD')
 
     def __init__(self, air):
         DistributedObjectGlobalUD.__init__(self, air)
@@ -45,8 +43,8 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
         channel = self.air.getMsgSender()
 
         if not channel:
-            self.notify.warning(
-                'Cannot register shard %d, invalid channel!' % (shardId))
+            self.notify.warning('Cannot register shard %d, invalid channel!' % (
+                shardId))
 
             return
 
@@ -61,48 +59,41 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
         shardId = shardId or self.getRandomShard()
 
         if not shardId:
-            self.notify.warning(
-                'Cannot initialize loc teleport for avatar %d, no shards are available!'
-                % (avatarId))
+            self.notify.warning('Cannot initialize loc teleport for avatar %d, no shards are available!' % (
+                avatarId))
 
             return
 
         channel = self.getShard(shardId)
 
         if not channel:
-            self.notify.warning(
-                'Cannot initialize loc teleport for avatar %d, unknown shard %d!'
-                % (avatarId, shardId))
+            self.notify.warning('Cannot initialize loc teleport for avatar %d, unknown shard %d!' % (
+                avatarId, shardId))
 
             return
 
         self.sendUpdateToChannel(channel, 'requestInitLocUDtoAI', [avatarId])
 
-    def requestTeleportToShardAItoUD(self, avatarId, shardId, instanceType,
-                                     instanceName, locationUid):
+    def requestTeleportToShardAItoUD(self, avatarId, shardId, instanceType, instanceName, locationUid):
         if not avatarId:
             return
 
         if not shardId:
-            self.notify.warning(
-                'Cannot initialize teleport to shard for avatar %d, invalid shard!'
-                % (avatarId))
+            self.notify.warning('Cannot initialize teleport to shard for avatar %d, invalid shard!' % (
+                avatarId))
 
             return
 
         channel = self.getShard(shardId)
 
         if not channel:
-            self.notify.warning(
-                'Cannot initialize teleport to shard %d for avatar %d, unknown channel!'
-                % (shardId, avatarId))
+            self.notify.warning('Cannot initialize teleport to shard %d for avatar %d, unknown channel!' % (
+                shardId, avatarId))
 
             return
 
         def inventoryArrived(inventoryId):
-            self.sendUpdateToChannel(
-                channel, 'requestTeleportToShardUDtoAI',
-                [avatarId, shardId, instanceType, instanceName, locationUid])
+            self.sendUpdateToChannel(channel, 'requestTeleportToShardUDtoAI', [avatarId, shardId,
+                instanceType, instanceName, locationUid])
 
-        self.air.inventoryManager.initiateInventory(
-            avatarId, callback=inventoryArrived)
+        self.air.inventoryManager.initiateInventory(avatarId, callback=inventoryArrived)

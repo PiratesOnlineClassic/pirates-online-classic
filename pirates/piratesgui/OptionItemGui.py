@@ -13,27 +13,18 @@ from pirates.world import GameTypeGlobals
 
 
 class OptionItemGui(DirectFrame):
-
+    
     Width = PiratesGuiGlobals.OptionItemWidth
     Height = PiratesGuiGlobals.OptionItemHeight
     TOPLEVEL_GUI_FILE = 'models/gui/toplevel_gui'
     CHAR_GUI_FILE = 'models/gui/char_gui'
 
-    def __init__(self,
-                 item,
-                 parent=None,
-                 textScale=None,
-                 itemHeight=None,
-                 frameColor=(0.1, 0.1, 1, 0.08),
-                 titleWrapLen=None,
-                 **kw):
+    def __init__(self, item, parent=None, textScale=None, itemHeight=None, frameColor=(0.1, 0.1, 1, 0.08), titleWrapLen=None, **kw):
         if itemHeight == None:
             itemHeight = OptionItemGui.Height
-        optiondefs = (('state', DGG.NORMAL, None), ('frameColor', frameColor,
-                                                    None),
-                      ('borderWidth', PiratesGuiGlobals.BorderWidth,
-                       None), ('frameSize', (0.0, OptionItemGui.Width, 0.0,
-                                             itemHeight), None))
+        optiondefs = (
+         (
+          'state', DGG.NORMAL, None), ('frameColor', frameColor, None), ('borderWidth', PiratesGuiGlobals.BorderWidth, None), ('frameSize', (0.0, OptionItemGui.Width, 0.0, itemHeight), None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent)
         self.initialiseoptions(OptionItemGui)
@@ -66,30 +57,12 @@ class OptionItemGui(DirectFrame):
         if self.optionType == PiratesGuiGlobals.UIItemType_Choice:
             self.titleWrapLen = None
         textFg = PiratesGuiGlobals.TextFG1
-        self.descText = DirectLabel(
-            parent=self,
-            relief=None,
-            text=self.item['Text'] + ':',
-            text_align=TextNode.ALeft,
-            text_scale=self.textScale,
-            text_fg=textFg,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=self.titleWrapLen,
-            textMayChange=1,
-            pos=(0, 0, self.getHeight() / 2))
+        self.descText = DirectLabel(parent=self, relief=None, text=self.item['Text'] + ':', text_align=TextNode.ALeft, text_scale=self.textScale, text_fg=textFg, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=self.titleWrapLen, textMayChange=1, pos=(0, 0, self.getHeight() / 2))
         return
 
     def _createOptionEntry(self):
         if self.optionType == PiratesGuiGlobals.UIItemType_Label:
-            self.optionUI = DirectLabel(
-                parent=self,
-                relief=None,
-                text=str(self.item['Value']),
-                text_align=TextNode.ALeft,
-                text_scale=self.textScale,
-                text_shadow=PiratesGuiGlobals.TextShadow,
-                textMayChange=1,
-                pos=(0.3, 0, self.getHeight() / 2))
+            self.optionUI = DirectLabel(parent=self, relief=None, text=str(self.item['Value']), text_align=TextNode.ALeft, text_scale=self.textScale, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0.3, 0, self.getHeight() / 2))
         else:
             if self.optionType == PiratesGuiGlobals.UIItemType_Choice:
                 lookoutUI = loader.loadModel('models/gui/lookout_gui')
@@ -97,54 +70,51 @@ class OptionItemGui(DirectFrame):
                 check_off = lookoutUI.find('**/lookout_submit_disabled')
                 if self.value == '':
                     self.value = 0
-                self.optionItems = DirectCheckButton(
-                    parent=self,
-                    scale=0.05,
-                    indicatorValue=self.value,
-                    boxImageScale=4,
-                    command=self.itemChecked,
-                    pos=(0.78, 0, self.getHeight() / 2))
+                self.optionItems = DirectCheckButton(parent=self, scale=0.05, indicatorValue=self.value, boxImageScale=4, command=self.itemChecked, pos=(0.78, 0, self.getHeight() / 2))
             else:
                 if self.optionType == PiratesGuiGlobals.UIItemType_ListItem:
                     lookoutUI = loader.loadModel('models/gui/lookout_gui')
                     charUI = loader.loadModel(self.CHAR_GUI_FILE)
                     charGui_slider = charUI.find('**/chargui_slider_large')
                     charGui_slider_thumb = charUI.find('**/chargui_slider_node')
-                    self.optionItems = ListFrame(
-                        0.4, None, 'blah', self, frameColor=(0, 0, 0, 0))
+                    self.optionItems = ListFrame(0.4, None, 'blah', self, frameColor=(0,
+                                                                                      0,
+                                                                                      0,
+                                                                                      0))
                     self.optionItems.itemBuffer = 0.008
                     self.optionItems.setup()
-                    self.optionUI = DirectScrolledFrame(
-                        parent=self,
-                        frameSize=(0, 0.45, 0, 0.3),
-                        relief=DGG.GROOVE,
-                        state=DGG.NORMAL,
-                        frameColor=(0, 0, 0, 0),
-                        borderWidth=PiratesGuiGlobals.BorderWidth,
-                        canvasSize=(0, 0.38, 0,
-                                    self.optionItems['frameSize'][3]),
-                        verticalScroll_frameColor=(0, 0, 0, 0),
-                        verticalScroll_thumb_frameColor=(0, 0, 0, 0),
-                        verticalScroll_incButton_frameColor=(0, 0, 0, 0),
-                        verticalScroll_decButton_frameColor=(0, 0, 0, 0),
-                        verticalScroll_image=charGui_slider,
-                        verticalScroll_image_scale=(0.12, 1, 0.28),
-                        verticalScroll_image_pos=(0.4195, 0, 0.15),
-                        verticalScroll_image_hpr=(0, 0, 90),
-                        verticalScroll_frameSize=(
-                            0, PiratesGuiGlobals.ScrollbarSize, 0,
-                            OptionItemGui.Height * 3),
-                        verticalScroll_thumb_image=charGui_slider_thumb,
-                        verticalScroll_thumb_image_scale=(0.35, 0.35, 0.35),
-                        sortOrder=5,
-                        pos=(0.3, 0, self.getHeight() / 2 - 0.15))
+                    self.optionUI = DirectScrolledFrame(parent=self, frameSize=(0,
+                                                                                0.45,
+                                                                                0,
+                                                                                0.3), relief=DGG.GROOVE, state=DGG.NORMAL, frameColor=(0,
+                                                                                                                                       0,
+                                                                                                                                       0,
+                                                                                                                                       0), borderWidth=PiratesGuiGlobals.BorderWidth, canvasSize=(0, 0.38, 0, self.optionItems['frameSize'][3]), verticalScroll_frameColor=(0,
+                                                                                                                                                                                                                                                                            0,
+                                                                                                                                                                                                                                                                            0,
+                                                                                                                                                                                                                                                                            0), verticalScroll_thumb_frameColor=(0,
+                                                                                                                                                                                                                                                                                                                 0,
+                                                                                                                                                                                                                                                                                                                 0,
+                                                                                                                                                                                                                                                                                                                 0), verticalScroll_incButton_frameColor=(0,
+                                                                                                                                                                                                                                                                                                                                                          0,
+                                                                                                                                                                                                                                                                                                                                                          0,
+                                                                                                                                                                                                                                                                                                                                                          0), verticalScroll_decButton_frameColor=(0,
+                                                                                                                                                                                                                                                                                                                                                                                                   0,
+                                                                                                                                                                                                                                                                                                                                                                                                   0,
+                                                                                                                                                                                                                                                                                                                                                                                                   0), verticalScroll_image=charGui_slider, verticalScroll_image_scale=(0.12,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        0.28), verticalScroll_image_pos=(0.4195,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         0,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         0.15), verticalScroll_image_hpr=(0,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          0,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          90), verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0, OptionItemGui.Height * 3), verticalScroll_thumb_image=charGui_slider_thumb, verticalScroll_thumb_image_scale=(0.35,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              0.35,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              0.35), sortOrder=5, pos=(0.3, 0, self.getHeight() / 2 - 0.15))
                     self.optionUI.guiItem.getVerticalSlider().clearLeftButton()
                     self.optionUI.guiItem.getVerticalSlider().clearRightButton()
                     self.optionUI.guiItem.getVerticalSlider().setRange(-1, 1)
-                    self.optionUI.guiItem.getHorizontalSlider().clearLeftButton(
-                    )
-                    self.optionUI.guiItem.getHorizontalSlider(
-                    ).clearRightButton()
+                    self.optionUI.guiItem.getHorizontalSlider().clearLeftButton()
+                    self.optionUI.guiItem.getHorizontalSlider().clearRightButton()
                     self.optionUI.guiItem.getHorizontalSlider().setRange(-1, 1)
                     self.createFrame()
                     self.optionItems.reparentTo(self.optionUI.getCanvas())
@@ -156,31 +126,15 @@ class OptionItemGui(DirectFrame):
     def getItemList(self):
         itemList = []
         for currValue in self.item['Values']:
-            itemList.append({
-                'Type': 'Literal',
-                'Text': str(currValue),
-                'Value': currValue
-            })
+            itemList.append({'Type': 'Literal', 'Text': str(currValue), 'Value': currValue})
 
         return itemList
 
-    def createNewItem(self,
-                      item,
-                      parent,
-                      itemType=None,
-                      columnWidths=[],
-                      color=None):
-        newItem = ButtonListItem(
-            item,
-            0.08,
-            0.38,
-            parent,
-            parentList=self,
-            txtColor=color,
-            pressEffect=False,
-            image=GuiButton.GuiButton.genericButton,
-            frameColor=(0, 0, 0, 0),
-            textScale=0.05)
+    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+        newItem = ButtonListItem(item, 0.08, 0.38, parent, parentList=self, txtColor=color, pressEffect=False, image=GuiButton.GuiButton.genericButton, frameColor=(0,
+                                                                                                                                                                    0,
+                                                                                                                                                                    0,
+                                                                                                                                                                    0), textScale=0.05)
         newItem.setup()
         return newItem
 
@@ -215,8 +169,9 @@ class OptionItemGui(DirectFrame):
 
     def createFrame(self):
         self.removeFrame()
-        self.borderFrame = BorderFrame(
-            parent=self, pos=(0.5, 0, 0.15), scale=(0.57, 1, 0.33))
+        self.borderFrame = BorderFrame(parent=self, pos=(0.5, 0, 0.15), scale=(0.57,
+                                                                               1,
+                                                                               0.33))
         self.borderFrame.setBackgroundVisible(False)
 
     def removeFrame(self):
@@ -224,6 +179,4 @@ class OptionItemGui(DirectFrame):
             self.borderFrame.removeNode()
             self.borderFrame = None
         return
-
-
 # okay decompiling .\pirates\piratesgui\OptionItemGui.pyc

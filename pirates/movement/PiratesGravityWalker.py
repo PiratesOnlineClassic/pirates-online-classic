@@ -2,7 +2,6 @@ from panda3d.core import *
 from direct.controls.GravityWalker import GravityWalker
 from direct.showbase.InputStateGlobal import inputState
 
-
 class PiratesGravityWalker(GravityWalker):
     notify = directNotify.newCategory('PiratesGravityWalker')
 
@@ -13,8 +12,7 @@ class PiratesGravityWalker(GravityWalker):
     def handleAvatarControls(self, task):
         # TODO: FIXME!
         from pirates.piratesbase import PiratesGlobals
-        self.setWalkSpeed(
-            *PiratesGlobals.PirateSpeeds[PiratesGlobals.SPEED_NORMAL_INDEX])
+        self.setWalkSpeed(*PiratesGlobals.PirateSpeeds[PiratesGlobals.SPEED_NORMAL_INDEX])
 
         run = inputState.isSet('run')
         forward = inputState.isSet('forward')
@@ -84,8 +82,7 @@ class PiratesGravityWalker(GravityWalker):
                     self.isAirborne = 1
                     self.predicting = 1
 
-                taskMgr.hasTaskNamed('jumpWait') or taskMgr.doMethodLater(
-                    0.2, doJump, 'jumpWait')
+                taskMgr.hasTaskNamed('jumpWait') or taskMgr.doMethodLater(0.2, doJump, 'jumpWait')
                 messenger.send('jumpStart')
         elif self.isAirborne and self.predicting:
             futureHeight, futureVel = predictHeightAndVelocity(2)
@@ -100,15 +97,13 @@ class PiratesGravityWalker(GravityWalker):
         self.__oldPosDelta = self.avatarNodePath.getPosDelta(render)
         self.__oldDt = ClockObject.getGlobalClock().getDt()
         dt = self.__oldDt
-        self.moving = self.speed or self.slideSpeed or self.rotationSpeed or self.priorParent != Vec3.zero(
-        )
+        self.moving = self.speed or self.slideSpeed or self.rotationSpeed or self.priorParent != Vec3.zero()
         if self.moving:
             distance = dt * self.speed
             slideDistance = dt * self.slideSpeed
             rotation = dt * self.rotationSpeed
             if distance or slideDistance or self.priorParent != Vec3.zero():
-                rotMat = Mat3.rotateMatNormaxis(self.avatarNodePath.getH(),
-                                                Vec3.up())
+                rotMat = Mat3.rotateMatNormaxis(self.avatarNodePath.getH(), Vec3.up())
                 if self.isAirborne:
                     forward = Vec3.forward()
                 else:
@@ -128,8 +123,7 @@ class PiratesGravityWalker(GravityWalker):
 
                 self.vel = Vec3(rotMat.xform(self.vel))
                 step = self.vel + (self.priorParent * dt)
-                self.avatarNodePath.setFluidPos(
-                    Point3(self.avatarNodePath.getPos() + step))
+                self.avatarNodePath.setFluidPos(Point3(self.avatarNodePath.getPos() + step))
                 self.vel /= dt
 
             self.avatarNodePath.setH(self.avatarNodePath.getH() + rotation)

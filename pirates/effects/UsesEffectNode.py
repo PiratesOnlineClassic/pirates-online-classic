@@ -1,13 +1,10 @@
 from pandac.PandaModules import *
 
-
 class UsesEffectNode(NodePath):
 
     def __init__(self, offset=3.0):
         self.billboardNode = self.attachNewNode('billboardNode')
-        self.billboardNode.node().setEffect(
-            BillboardEffect.make(
-                Vec3(0, 0, 1), 0, 1, offset, NodePath(), Point3(0, 0, 0)))
+        self.billboardNode.node().setEffect(BillboardEffect.make(Vec3(0, 0, 1), 0, 1, offset, NodePath(), Point3(0, 0, 0)))
         self.effectNode = self.billboardNode.attachNewNode('effectNode')
 
     def getEffectParent(self):

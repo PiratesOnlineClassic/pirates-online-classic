@@ -5,9 +5,8 @@ from panda3d.core import *
 from pirates.interact import InteractiveBase
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
-
 class DistributedWreck(DistributedNode.DistributedNode):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedWreck')
 
     def __init__(self, cr):
@@ -19,8 +18,7 @@ class DistributedWreck(DistributedNode.DistributedNode):
 
     def announceGenerate(self):
         DistributedNode.DistributedNode.announceGenerate(self)
-        self.model = loader.loadModelCopy(
-            'models/shipparts/merchantL2-geometry_High')
+        self.model = loader.loadModelCopy('models/shipparts/merchantL2-geometry_High')
         self.model.reparentTo(self)
         self.model.setColorScale(1, 1, 1, 1, 1)
         self.addCollision()
@@ -39,20 +37,11 @@ class DistributedWreck(DistributedNode.DistributedNode):
         cSphereNode.setTag('avId', str(self.doId))
         cSphereNode.addSolid(cSphere)
         cSphereNode.setFromCollideMask(BitMask32.allOff())
-        cSphereNode.setIntoCollideMask(PiratesGlobals.ShipCollideBitmask |
-                                       PiratesGlobals.RadarShipBitmask)
+        cSphereNode.setIntoCollideMask(PiratesGlobals.ShipCollideBitmask | PiratesGlobals.RadarShipBitmask)
         cSphereNodePath = self.attachNewNode(cSphereNode)
 
     def sink(self):
-        sinking = Sequence(
-            LerpPosInterval(
-                self,
-                duration=10,
-                startPos=self.getPos(),
-                pos=self.getPos() - Point3(0, 0, 70),
-                blendType='easeIn',
-                name='SunkSinkLerp'), Func(self.hide),
-            Func(self.removeNode)).start()
+        sinking = Sequence(LerpPosInterval(self, duration=10, startPos=self.getPos(), pos=self.getPos() - Point3(0, 0, 70), blendType='easeIn', name='SunkSinkLerp'), Func(self.hide), Func(self.removeNode)).start()
 
     def setModelPath(self, modelPath):
         self.modelPath = modelPath

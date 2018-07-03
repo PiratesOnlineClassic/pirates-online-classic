@@ -11,7 +11,7 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 
 class GameFSMShip(FSM.FSM):
-
+    
     def __init__(self, ship):
         FSM.FSM.__init__(self, 'GameFSMShip')
         self.ship = ship
@@ -68,19 +68,14 @@ class GameFSMShip(FSM.FSM):
         self.ship.stopSmooth()
         self.ship.clientSteeringEnd()
 
-    @report(
-        types=['frameCount', 'deltaStamp', 'args'],
-        dConfigParam='want-shipboard-report')
+    @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-shipboard-report')
     def enterClientSteering(self, avId):
-        self.currentMusic = random.choice(('ship-sailing-a', 'ship-sailing-b',
-                                           'ship-sailing-c'))
+        self.currentMusic = random.choice(('ship-sailing-a', 'ship-sailing-b', 'ship-sailing-c'))
         self.ship.clientSteeringBegin(avId)
         if self.ship.isInCrew(localAvatar.doId):
             base.musicMgr.request(self.currentMusic)
 
-    @report(
-        types=['frameCount', 'deltaStamp', 'args'],
-        dConfigParam='want-shipboard-report')
+    @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-shipboard-report')
     def exitClientSteering(self):
         if self.ship.wheel and self.ship.wheel[1]:
             if base.cr.interactionMgr.getCurrentInteractive() is self:
@@ -118,8 +113,7 @@ class GameFSMShip(FSM.FSM):
         if self.risingIval:
             self.risingIval.finish()
             self.risingIval = None
-        sinking = Sequence(
-            LerpPosInterval(self.ship, 1.0, Point3(0.0, 0, -3.0)))
+        sinking = Sequence(LerpPosInterval(self.ship, 1.0, Point3(0.0, 0, -3.0)))
         listing = Sequence(LerpHprInterval(self.ship, 1.0, Vec3(0, 0, 10)))
         self.sinkIval = Parallel(sinking, listing)
         self.sinkIval.start()
@@ -242,11 +236,9 @@ class GameFSMShip(FSM.FSM):
             return
         self.unstashGrappleProximitySphere()
         self.removeTargets()
-        self.pendingAddTarget = base.cr.relatedObjectMgr.requestObjects(
-            [self.ship.boardableShipId], eachCallback=self.addTargets)
+        self.pendingAddTarget = base.cr.relatedObjectMgr.requestObjects([self.ship.boardableShipId], eachCallback=self.addTargets)
         if localAvatar.ship and localAvatar.ship.doId == self.ship.boardableShipId:
-            localAvatar.guiMgr.messageStack.addTextMessage(
-                PLocalizer.FlagshipWaitingForGrappleInstructions)
+            localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.FlagshipWaitingForGrappleInstructions)
         return
 
     def exitWaitingForGrapple(self):
@@ -261,7 +253,7 @@ class GameFSMShip(FSM.FSM):
         if attackX < 0:
             gStr = '**/grapple_left_*'
             xOffset = 5.0
-        locators = self.ship.locators.findAllMatches(gStr + ';+s')
+        locators = self.ship.locators.findAllMatches(gStr + ';+s') 
         for locator in locators:
             target = loader.loadModelCopy('models/effects/selectionCursor')
             target.setColorScale(0, 1, 0, 1)
@@ -274,24 +266,13 @@ class GameFSMShip(FSM.FSM):
             target.setScale(scaleA)
             t = 0.5
             target.wrtReparentTo(self.ship.root)
-            ival = Sequence(
-                LerpScaleInterval(
-                    target,
-                    2 * t,
-                    Vec3(scaleB, scaleB, scaleB),
-                    blendType='easeInOut'),
-                LerpScaleInterval(
-                    target,
-                    t,
-                    Vec3(scaleA, scaleA, scaleA),
-                    blendType='easeInOut'))
+            ival = Sequence(LerpScaleInterval(target, 2 * t, Vec3(scaleB, scaleB, scaleB), blendType='easeInOut'), LerpScaleInterval(target, t, Vec3(scaleA, scaleA, scaleA), blendType='easeInOut'))
             ival.loop()
             collSphere = CollisionSphere(0, 0, 0, 10)
             collSphere.setTangible(1)
             collSphereNode = CollisionNode('grappleTargetSphere')
             collSphereNode.addSolid(collSphere)
-            collSphereNode.setTag('objType',
-                                  str(PiratesGlobals.COLL_GRAPPLE_TARGET))
+            collSphereNode.setTag('objType', str(PiratesGlobals.COLL_GRAPPLE_TARGET))
             collSphereNode.setTag('shipId', str(self.ship.doId))
             collSphereNode.setTag('targetId', locator.getName())
             collSphereNode.setCollideMask(PiratesGlobals.TargetBitmask)
@@ -322,8 +303,7 @@ class GameFSMShip(FSM.FSM):
         self.grappleSfx = loader.loadSfx('audio/grappling_ratchet_groan.mp3')
         base.playSfx(self.grappleSfx, looping=1)
         if localAvatar.ship and localAvatar.ship.doId == self.ship.boardableShipId:
-            localAvatar.guiMgr.messageStack.addTextMessage(
-                PLocalizer.FlagshipGrappleLerpingInstructions)
+            localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.FlagshipGrappleLerpingInstructions)
 
     def exitGrappleLerping(self):
         self.ship.stopSmooth()
@@ -339,12 +319,10 @@ class GameFSMShip(FSM.FSM):
         myShip = localAvatar.getShip()
         if myShip and myShip.doId == self.ship.boardableShipId:
             if myShip.isCaptain(localAvatar.doId):
-                localAvatar.guiMgr.messageStack.addTextMessage(
-                    PLocalizer.FlagshipInPositionInstructionsCaptain)
+                localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.FlagshipInPositionInstructionsCaptain)
                 myShip.showBoardingChoice(self.ship)
             else:
-                localAvatar.guiMgr.messageStack.addTextMessage(
-                    PLocalizer.FlagshipInPositionInstructionsCrew)
+                localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.FlagshipInPositionInstructionsCrew)
 
     def exitInPosition(self):
         self.ship.removeTarget()
@@ -368,8 +346,7 @@ class GameFSMShip(FSM.FSM):
             self.ship.removeTarget()
             if self.ship.hull:
                 pos = self.ship.hull[0].getClosestBoardingPos()
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     explosionEffect = Explosion.getEffect()
                     if explosionEffect:
                         explosionEffect.reparentTo(self.ship.root)
@@ -391,22 +368,7 @@ class GameFSMShip(FSM.FSM):
                         effect2.velocityX = 0
                         effect2.velocityY = 25
                     if explosionEffect and shipSplintersAEffect:
-                        self.explosionIval = Sequence(
-                            Wait(4.0),
-                            Parallel(
-                                Func(explosionEffect.play),
-                                Func(shipSplintersAEffect.play),
-                                Func(effect1.play), Func(effect2.play)),
-                            Wait(2.0),
-                            Parallel(
-                                Func(explosionEffect.play),
-                                Func(shipSplintersAEffect.play),
-                                Func(effect1.play), Func(effect2.play)),
-                            Wait(2.0),
-                            Parallel(
-                                Func(explosionEffect.play),
-                                Func(shipSplintersAEffect.play),
-                                Func(effect1.play), Func(effect2.play)))
+                        self.explosionIval = Sequence(Wait(4.0), Parallel(Func(explosionEffect.play), Func(shipSplintersAEffect.play), Func(effect1.play), Func(effect2.play)), Wait(2.0), Parallel(Func(explosionEffect.play), Func(shipSplintersAEffect.play), Func(effect1.play), Func(effect2.play)), Wait(2.0), Parallel(Func(explosionEffect.play), Func(shipSplintersAEffect.play), Func(effect1.play), Func(effect2.play)))
                         self.explosionIval.start()
         return
 

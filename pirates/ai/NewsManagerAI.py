@@ -10,7 +10,6 @@ from pirates.ai import HolidayGlobals
 from pirates.ai.HolidayDates import HolidayDates
 from pirates.piratesbase import PiratesGlobals, TODGlobals
 
-
 class NewsManagerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('NewsManagerAI')
     notify.setInfo(True)
@@ -97,13 +96,11 @@ class NewsManagerAI(DistributedObjectAI):
         self.processHolidayChange()
 
         if not quietly:
-            self.air.netMessenger.send('uberDOGHolidayStarted',
-                                       [holidayId, quietly])
+            self.air.netMessenger.send('uberDOGHolidayStarted', [holidayId, quietly])
 
     def endHoliday(self, holidayId):
         if not self.isHolidayActive(holidayId):
-            self.notify.warning(
-                'Attempted to stop inactive holiday %d!' % holidayId)
+            self.notify.warning('Attempted to stop inactive holiday %d!' % holidayId)
             return
 
         if holidayId in self.holidayList:
@@ -130,12 +127,10 @@ class NewsManagerAI(DistributedObjectAI):
 
         self.sendUpdate('setHolidayIdList', [holidayList])
 
-
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def stopHoliday(holidayId):
     simbase.air.newsManager.endHoliday(holidayId)
     return 'Stopped Holiday %d' % holidayId
-
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
 def startHoliday(holidayId, time):

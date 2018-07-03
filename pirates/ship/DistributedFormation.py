@@ -4,9 +4,8 @@ from direct.showbase.ShowBaseGlobal import *
 from pandac.PandaModules import NodePath
 
 
-class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode,
-                           FSM.FSM):
-
+class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM):
+    
     def __init__(self, cr):
         DistributedSmoothNode.DistributedSmoothNode.__init__(self, cr)
         FSM.FSM.__init__(self, 'DistributedFormation')
@@ -43,12 +42,10 @@ class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode,
 
     def setupCollisions(self):
         if base.config.GetBool('process-movingObj-collisions', 1) is 0:
-            self.notify.debug(
-                'skipping setting up collision sphere for formation')
+            self.notify.debug('skipping setting up collision sphere for formation')
             return
         self.notify.debug('setting up collision sphere for formation')
-        self.cSphere = CollisionSphere(
-            0.0, 0.0, 0.0, ShipGlobals.FORMATION_AVOID_SPHERE_RADIUS)
+        self.cSphere = CollisionSphere(0.0, 0.0, 0.0, ShipGlobals.FORMATION_AVOID_SPHERE_RADIUS)
         self.cSphere.setTangible(0)
         cSphereNode = CollisionNode(self.uniqueName('FormationSphere'))
         cSphereNode.addSolid(self.cSphere)

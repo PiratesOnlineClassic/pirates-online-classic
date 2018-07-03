@@ -11,22 +11,11 @@ from pirates.ship.ShipMeter import ShipMeter
 
 
 class ShipFrame(DirectFrame):
-
+    
     logos = None
 
     def __init__(self, parent, **kw):
-        optiondefs = (('state', DGG.DISABLED,
-                       None), ('frameSize', (0.0, 1, 0.0, 0.5),
-                               None), ('relief', DGG.FLAT, None),
-                      ('shipId', 0, None), ('shipName', '', None),
-                      ('shipClass', 0, None), ('shipPos', Point3(0, 0, 0),
-                                               None), ('shipHpr',
-                                                       VBase3(-90, 0, 0),
-                                                       None), ('shipScale',
-                                                               VBase3(1), None),
-                      ('shipColorScale', VBase4(1),
-                       self.setShipColorScale), ('siegeTeam', 0,
-                                                 None), ('mastInfo', [], None))
+        optiondefs = (('state', DGG.DISABLED, None), ('frameSize', (0.0, 1, 0.0, 0.5), None), ('relief', DGG.FLAT, None), ('shipId', 0, None), ('shipName', '', None), ('shipClass', 0, None), ('shipPos', Point3(0, 0, 0), None), ('shipHpr', VBase3(-90, 0, 0), None), ('shipScale', VBase3(1), None), ('shipColorScale', VBase4(1), self.setShipColorScale), ('siegeTeam', 0, None), ('mastInfo', [], None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent, **kw)
         self.initialiseoptions(ShipFrame)
@@ -49,11 +38,7 @@ class ShipFrame(DirectFrame):
         self.shipDisplay.setHpr(self['shipHpr'])
         self.shipDisplay.setScale(self['shipScale'])
         self.shipDisplay.setColorScale(self['shipColorScale'])
-        self.shipMeter = ShipMeter(
-            self['shipId'],
-            self['shipClass'],
-            self['mastInfo'],
-            siegeTeam=self['siegeTeam'])
+        self.shipMeter = ShipMeter(self['shipId'], self['shipClass'], self['mastInfo'], siegeTeam=self['siegeTeam'])
         if not ShipFrame.logos:
             ShipFrame.logos = loader.loadModel('models/textureCards/sailLogo')
         if ShipFrame.logos:
@@ -64,11 +49,9 @@ class ShipFrame(DirectFrame):
                 if self['siegeTeam'] == 2:
                     image = ShipFrame.logos.find('**/logo_spanish_flag')
             if image:
-                self.flag = DirectLabel(
-                    parent=self,
-                    image=image,
-                    image_scale=0.08,
-                    image_pos=(0.09, 0, 0.09))
+                self.flag = DirectLabel(parent=self, image=image, image_scale=0.08, image_pos=(0.09,
+                                                                                               0,
+                                                                                               0.09))
         self.shipMeter.reparentTo(self.shipDisplay)
         self.shipMeter.setDepthTest(1)
         self.shipMeter.setDepthWrite(1)
@@ -77,6 +60,4 @@ class ShipFrame(DirectFrame):
     def setShipColorScale(self):
         if self.shipDisplay:
             self.shipDisplay.setColorScale(self['shipColorScale'])
-
-
 # okay decompiling .\pirates\piratesgui\ShipFrame.pyc

@@ -9,24 +9,13 @@ from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 
-
 class MiniScoreItemGui(DirectFrame):
-
+    
     Width = PiratesGuiGlobals.PVPPanelWidth - PiratesGuiGlobals.GridSize
     Height = 0.055
 
-    def __init__(self,
-                 scoreValue,
-                 parent=None,
-                 world=None,
-                 itemColorScale=None,
-                 blink=False,
-                 **kw):
-        optiondefs = (('state', DGG.NORMAL, None), ('frameColor', (1, 1, 1,
-                                                                   0.05), None),
-                      ('borderWidth', PiratesGuiGlobals.BorderWidth,
-                       None), ('frameSize', (0.0, MiniScoreItemGui.Width, 0.0,
-                                             MiniScoreItemGui.Height), None))
+    def __init__(self, scoreValue, parent=None, world=None, itemColorScale=None, blink=False, **kw):
+        optiondefs = (('state', DGG.NORMAL, None), ('frameColor', (1, 1, 1, 0.05), None), ('borderWidth', PiratesGuiGlobals.BorderWidth, None), ('frameSize', (0.0, MiniScoreItemGui.Width, 0.0, MiniScoreItemGui.Height), None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent)
         self.initialiseoptions(MiniScoreItemGui)
@@ -49,61 +38,19 @@ class MiniScoreItemGui(DirectFrame):
             scoreText = self.world.getScoreText(self.scoreValue)
         else:
             scoreText = ''
-        self.descText = DirectLabel(
-            parent=self,
-            relief=None,
-            text=scoreText,
-            text_align=TextNode.ALeft,
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_fg=textFg,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=1,
-            pos=(0.04, 0, 0.015),
-            text_font=PiratesGlobals.getPirateOutlineFont())
+        self.descText = DirectLabel(parent=self, relief=None, text=scoreText, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, 
+                                    text_fg=textFg, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0.04, 0, 0.015), text_font=PiratesGlobals.getPirateOutlineFont())
         if self.itemColorScale:
             self.colorLabel(self.itemColorScale)
         if self.blink:
             textPos = self.descText['text_pos']
             textPosX = textPos[0]
             textPosY = textPos[1]
-            self.scaleSeq = Parallel(
-                Sequence(
-                    LerpFunctionInterval(
-                        self.descText.setScale,
-                        duration=0.2,
-                        toData=1.05,
-                        fromData=1.0,
-                        blendType='easeInOut'),
-                    LerpFunctionInterval(
-                        self.descText.setScale,
-                        duration=0.7,
-                        toData=1.0,
-                        fromData=1.05,
-                        blendType='easeInOut')),
-                Sequence(
-                    Func(self.colorLabel, (1, 1, 1, 1)),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.colorLabel, (1, 0, 0, 1)),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.colorLabel, (1, 1, 1, 1)),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.colorLabel, (1, 0, 0, 1)),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.colorLabel, (1, 1, 1, 1)),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.colorLabel, (1, 0, 0, 1)),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.colorLabel, (1, 1, 1, 1)),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05),
-                    Func(self.colorLabel, PiratesGuiGlobals.TextFG1),
-                    Func(self.moveLabel, (textPosX, textPosY))))
+            self.scaleSeq = Parallel(Sequence(LerpFunctionInterval(self.descText.setScale, duration=0.2, toData=1.05, fromData=1.0, blendType='easeInOut'), LerpFunctionInterval(self.descText.setScale, duration=0.7, toData=1.0, fromData=1.05, blendType='easeInOut')), Sequence(Func(self.colorLabel, (1, 1, 1, 1)), 
+                                     Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), Func(self.colorLabel, (1, 0, 0, 1)), Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), 
+                                     Func(self.colorLabel, (1, 1, 1, 1)), Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), Func(self.colorLabel, (1, 0, 0, 1)), Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), Func(self.moveLabel, (textPosX, textPosY)), 
+                                     Wait(0.05), Func(self.colorLabel, (1, 1, 1, 1)), Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), Func(self.colorLabel, (1, 0, 0, 1)), Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), Func(self.colorLabel, (1, 1, 1, 1)), 
+                                     Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), Func(self.moveLabel, (textPosX, textPosY)), Wait(0.05), Func(self.colorLabel, PiratesGuiGlobals.TextFG1), Func(self.moveLabel, (textPosX, textPosY))))
             self.scaleSeq.start()
 
     def moveLabel(self, xy):
@@ -114,8 +61,7 @@ class MiniScoreItemGui(DirectFrame):
     def colorLabel(self, color):
         self.descText['text_fg'] = color
 
-    def shakeItUp(self, xxx_todo_changeme):
-        (x, y, r, g, b, a) = xxx_todo_changeme
+    def shakeItUp(self, (x, y, r, g, b, a)):
         self.colorLabel((r, g, b, a))
         randX = random.random() * 0.005 + 0.005
         randY = random.random() * 0.005 + 0.005

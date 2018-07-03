@@ -6,7 +6,6 @@ from direct.particles import ForceGroup
 from pirates.effects.PooledEffect import PooledEffect
 from pirates.effects.EffectController import EffectController
 
-
 class HeavySmoke(PooledEffect, EffectController):
     cardScale = 64.0
 
@@ -19,8 +18,7 @@ class HeavySmoke(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleBlackSmoke')
         if not HeavySmoke.particleDummy:
-            HeavySmoke.particleDummy = base.effectsRoot.attachNewNode(
-                ModelNode('HeavySmokeParticleDummy'))
+            HeavySmoke.particleDummy = base.effectsRoot.attachNewNode(ModelNode('HeavySmokeParticleDummy'))
             HeavySmoke.particleDummy.setDepthWrite(0)
             HeavySmoke.particleDummy.setColorScaleOff()
             HeavySmoke.particleDummy.setLightOff()
@@ -51,8 +49,7 @@ class HeavySmoke(PooledEffect, EffectController):
         self.p0.factory.setAngularVelocity(0.0)
         self.p0.factory.setAngularVelocitySpread(0.0)
         self.p0.renderer.setAlphaMode(BaseParticleRenderer.PRALPHAOUT)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 0.25, Vec4(1.0, 0.3, 0.0, 0.5), Vec4(1.0, 1.0, 1.0, 1.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.25, Vec4(1.0, 0.3, 0.0, 0.5), Vec4(1.0, 1.0, 1.0, 1.0), 1)
         self.p0.renderer.setUserAlpha(0.8)
         self.p0.renderer.setFromNode(self.card)
         self.p0.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
@@ -82,20 +79,14 @@ class HeavySmoke(PooledEffect, EffectController):
         self.f.disable()
 
     def createTrack(self, lod=None):
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.25), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100.0), Wait(10.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.25), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(10.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def setScale(self, scale=VBase3(1, 1, 1)):
         self.effectScale = scale[0]
-        self.p0.renderer.setInitialXScale(
-            0.15 * self.cardScale * self.effectScale)
-        self.p0.renderer.setInitialYScale(
-            0.15 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialXScale(0.15 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialYScale(0.15 * self.cardScale * self.effectScale)
         self.p0.renderer.setFinalXScale(0.6 * self.cardScale * self.effectScale)
         self.p0.renderer.setFinalYScale(0.6 * self.cardScale * self.effectScale)
         self.p0.emitter.setOffsetForce(Vec3(2.0, 2.0, 28.0 * self.effectScale))

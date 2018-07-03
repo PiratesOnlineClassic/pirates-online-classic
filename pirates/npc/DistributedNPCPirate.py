@@ -5,9 +5,7 @@ from pirates.battle import DistributedBattleNPC
 from pirates.pirate import DistributedPirateBase
 from pirates.piratesbase import PiratesGlobals
 
-
-class DistributedNPCPirate(DistributedBattleNPC.DistributedBattleNPC,
-                           DistributedPirateBase.DistributedPirateBase):
+class DistributedNPCPirate(DistributedBattleNPC.DistributedBattleNPC, DistributedPirateBase.DistributedPirateBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCPirate')
 
     def __init__(self, cr):
@@ -26,7 +24,7 @@ class DistributedNPCPirate(DistributedBattleNPC.DistributedBattleNPC,
             return
         except:
             self.DistributedNPCPirate_deleted = 1
-
+            
         DistributedBattleNPC.DistributedBattleNPC.delete(self)
         DistributedPirateBase.DistributedPirateBase.delete(self)
 

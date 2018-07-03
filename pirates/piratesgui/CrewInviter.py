@@ -17,6 +17,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class CrewInviterButton(RequestButton):
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -24,90 +25,65 @@ class CrewInviterButton(RequestButton):
 
 
 class CrewInviter(GuiPanel.GuiPanel):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('CrewInviter')
 
     def __init__(self):
-        optiondefs = (('pos', (-0.75, 0, -0.15), None),
-                      ('frameSize', (0, 0.5, 0, 0.5), None))
+        optiondefs = (
+         (
+          'pos', (-0.75, 0, -0.15), None), ('frameSize', (0, 0.5, 0, 0.5), None))
         self.defineoptions({}, optiondefs)
-        GuiPanel.GuiPanel.__init__(
-            self, PLocalizer.CrewInviterTitle, 0.5, 0.5, showClose=False)
+        GuiPanel.GuiPanel.__init__(self, PLocalizer.CrewInviterTitle, 0.5, 0.5, showClose=False)
         self.initialiseoptions(CrewInviter)
         self.avDisableName = ''
         self.fsm = ClassicFSM.ClassicFSM('CrewInviter', [
-            State.State('off', self.enterOff, self.exitOff),
-            State.State('begin', self.enterBegin, self.exitBegin),
-            State.State('tooMany', self.enterTooMany, self.exitTooMany),
-            State.State('notYet', self.enterNotYet, self.exitNotYet),
-            State.State('checkAvailability', self.enterCheckAvailability,
-                        self.exitCheckAvailability),
-            State.State('notAvailable', self.enterNotAvailable,
-                        self.exitNotAvailable),
-            State.State('notAcceptingCrews', self.enterNotAcceptingCrews,
-                        self.exitNotAcceptingCrews),
-            State.State('wentAway', self.enterWentAway, self.exitWentAway),
-            State.State('alreadyCrewed', self.enterAlreadyCrewed,
-                        self.exitAlreadyCrewed),
-            State.State('alreadyInvited', self.enterAlreadyInvited,
-                        self.exitAlreadyInvited),
-            State.State('askingNPC', self.enterAskingNPC, self.exitAskingNPC),
-            State.State('endCrewship', self.enterEndCrewship,
-                        self.exitEndCrewship),
-            State.State('crewedNoMore', self.enterCrewedNoMore,
-                        self.exitCrewedNoMore),
-            State.State('leaveCrew', self.enterLeaveCrew, self.exitLeaveCrew),
-            State.State('leftCrew', self.enterLeftCrew, self.exitLeftCrew),
-            State.State('notCaption', self.enterNotCaption,
-                        self.exitNotCaption),
-            State.State('inOtherCrew', self.enterInOtherCrew,
-                        self.exitInOtherCrew),
-            State.State('self', self.enterSelf, self.exitSelf),
-            State.State('ignored', self.enterIgnored, self.exitIgnored),
-            State.State('asking', self.enterAsking, self.exitAsking),
-            State.State('yes', self.enterYes, self.exitYes),
-            State.State('no', self.enterNo, self.exitNo),
-            State.State('otherTooMany', self.enterOtherTooMany,
-                        self.exitOtherTooMany),
-            State.State('maybe', self.enterMaybe, self.exitMaybe),
-            State.State('down', self.enterDown, self.exitDown),
-            State.State('cancel', self.enterCancel, self.exitCancel)
-        ], 'off', 'off')
-        self.message = DirectLabel(
-            parent=self,
-            relief=None,
-            text='',
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_align=TextNode.ACenter,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=11,
-            pos=(0.25, 0, 0.35),
-            textMayChange=1)
+         State.State('off', self.enterOff, self.exitOff),
+         State.State('begin', self.enterBegin, self.exitBegin),
+         State.State('tooMany', self.enterTooMany, self.exitTooMany),
+         State.State('notYet', self.enterNotYet, self.exitNotYet),
+         State.State('checkAvailability', self.enterCheckAvailability, self.exitCheckAvailability),
+         State.State('notAvailable', self.enterNotAvailable, self.exitNotAvailable),
+         State.State('notAcceptingCrews', self.enterNotAcceptingCrews, self.exitNotAcceptingCrews),
+         State.State('wentAway', self.enterWentAway, self.exitWentAway),
+         State.State('alreadyCrewed', self.enterAlreadyCrewed, self.exitAlreadyCrewed),
+         State.State('alreadyInvited', self.enterAlreadyInvited, self.exitAlreadyInvited),
+         State.State('askingNPC', self.enterAskingNPC, self.exitAskingNPC),
+         State.State('endCrewship', self.enterEndCrewship, self.exitEndCrewship),
+         State.State('crewedNoMore', self.enterCrewedNoMore, self.exitCrewedNoMore),
+         State.State('leaveCrew', self.enterLeaveCrew, self.exitLeaveCrew),
+         State.State('leftCrew', self.enterLeftCrew, self.exitLeftCrew),
+         State.State('notCaption', self.enterNotCaption, self.exitNotCaption),
+         State.State('inOtherCrew', self.enterInOtherCrew, self.exitInOtherCrew),
+         State.State('self', self.enterSelf, self.exitSelf),
+         State.State('ignored', self.enterIgnored, self.exitIgnored),
+         State.State('asking', self.enterAsking, self.exitAsking),
+         State.State('yes', self.enterYes, self.exitYes),
+         State.State('no', self.enterNo, self.exitNo),
+         State.State('otherTooMany', self.enterOtherTooMany, self.exitOtherTooMany),
+         State.State('maybe', self.enterMaybe, self.exitMaybe),
+         State.State('down', self.enterDown, self.exitDown),
+         State.State('cancel', self.enterCancel, self.exitCancel)], 'off', 'off')
+        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.25,
+                                                                                                                                                                                                                                                    0,
+                                                                                                                                                                                                                                                    0.35), textMayChange=1)
         self.context = None
-        self.bOk = CrewInviterButton(
-            text=PLocalizer.CrewInviterOK, command=self.__handleOk)
+        self.bOk = CrewInviterButton(text=PLocalizer.CrewInviterOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
         self.bOk.setPos(0.2, 0, 0.05)
         self.bOk.hide()
-        self.bCancel = CrewInviterButton(
-            text=PLocalizer.CrewInviterCancel, command=self.__handleCancel)
+        self.bCancel = CrewInviterButton(text=PLocalizer.CrewInviterCancel, command=self.__handleCancel)
         self.bCancel.reparentTo(self)
         self.bCancel.setPos(0.2, 0, 0.05)
         self.bCancel.hide()
-        self.bStop = CrewInviterButton(
-            text=PLocalizer.CrewInviterStopBeingCrewed,
-            command=self.__handleStop)
+        self.bStop = CrewInviterButton(text=PLocalizer.CrewInviterStopBeingCrewed, command=self.__handleStop)
         self.bStop.reparentTo(self)
         self.bStop.setPos(0.2, 0, 0.15)
         self.bStop.hide()
-        self.bYes = CrewInviterButton(
-            text=PLocalizer.CrewInviterYes, command=self.__handleYes)
+        self.bYes = CrewInviterButton(text=PLocalizer.CrewInviterYes, command=self.__handleYes)
         self.bYes.reparentTo(self)
         self.bYes.setPos(0.1, 0, 0.05)
         self.bYes.hide()
-        self.bNo = CrewInviterButton(
-            text=PLocalizer.CrewInviterNo, command=self.__handleNo)
+        self.bNo = CrewInviterButton(text=PLocalizer.CrewInviterNo, command=self.__handleNo)
         self.bNo.reparentTo(self)
         self.bNo.setPos(0.3, 0, 0.05)
         self.bNo.hide()
@@ -162,23 +138,18 @@ class CrewInviter(GuiPanel.GuiPanel):
         else:
             if self.bandId and self.bandId[0] != 0 and self.bandId[1] != 0:
                 if self.bandId == localAvatar.getBandId():
-                    if DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand(
-                    ):
+                    if DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand():
                         self.fsm.request('alreadyCrewed')
                     else:
                         self.fsm.request('leaveCrew')
                 else:
                     self.fsm.request('inOtherCrew')
             else:
-                localcrew = DistributedBandMember.DistributedBandMember.getBandSetLocalAvatar(
-                )
+                localcrew = DistributedBandMember.DistributedBandMember.getBandSetLocalAvatar()
                 if len(localcrew) >= BandConstance.MAX_BAND_MEMBERS:
                     self.fsm.request('tooMany')
                 else:
-                    if len(
-                            localcrew
-                    ) > 0 and DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand(
-                    ):
+                    if len(localcrew) > 0 and DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand():
                         self.fsm.request('notYet')
                     else:
                         if len(localcrew) > 0:
@@ -220,11 +191,9 @@ class CrewInviter(GuiPanel.GuiPanel):
                 self.fsm.request('notAvailable')
                 return
         base.cr.PirateBandManager.d_requestInvite(self.avId)
-        self.message[
-            'text'] = PLocalizer.CrewInviterCheckAvailability % self.avName
+        self.message['text'] = PLocalizer.CrewInviterCheckAvailability % self.avName
         self.accept('BandAdded-%s' % (self.avId,), self.__crewAdded)
-        self.accept('BandRequestRejected-%s' % (self.avId,),
-                    self.__crewRejectInvite)
+        self.accept('BandRequestRejected-%s' % (self.avId,), self.__crewRejectInvite)
         self.context = self.avId
         self.bCancel.show()
 
@@ -247,8 +216,7 @@ class CrewInviter(GuiPanel.GuiPanel):
         self.bOk.hide()
 
     def enterNotAcceptingCrews(self):
-        self.message[
-            'text'] = PLocalizer.CrewInviterCrewSaidNoNewCrews % self.avName
+        self.message['text'] = PLocalizer.CrewInviterCrewSaidNoNewCrews % self.avName
         self.context = None
         self.bOk.show()
         return
@@ -281,8 +249,7 @@ class CrewInviter(GuiPanel.GuiPanel):
         self.bCancel.hide()
 
     def enterAlreadyInvited(self):
-        self.message[
-            'text'] = PLocalizer.CrewInviterAlreadyInvited % self.avName
+        self.message['text'] = PLocalizer.CrewInviterAlreadyInvited % self.avName
         self['text_pos'] = (0.0, 0.2)
         self.context = None
         self.bStop.show()
@@ -397,8 +364,7 @@ class CrewInviter(GuiPanel.GuiPanel):
         self.bOk.hide()
 
     def enterOtherTooMany(self):
-        self.message[
-            'text'] = PLocalizer.CrewInviterOtherTooMany % (self.avName,)
+        self.message['text'] = PLocalizer.CrewInviterOtherTooMany % (self.avName,)
         self.context = None
         self.bOk.show()
         return
@@ -416,8 +382,7 @@ class CrewInviter(GuiPanel.GuiPanel):
         self.bOk.hide()
 
     def enterNotCaption(self):
-        mName = DistributedBandMember.DistributedBandMember.getLeaderNameLocalAvatar(
-        )
+        mName = DistributedBandMember.DistributedBandMember.getLeaderNameLocalAvatar()
         if not mName:
             self.message['text'] = PLocalizer.CrewInviterNotCaption
         else:
@@ -510,9 +475,7 @@ class CrewInviter(GuiPanel.GuiPanel):
                                     if yesNoAlready == 13:
                                         self.fsm.request('otherTooMany')
                                     else:
-                                        self.notify.warning(
-                                            'Got unexpected response to crewConsidering: %s'
-                                            % yesNoAlready)
+                                        self.notify.warning('Got unexpected response to crewConsidering: %s' % yesNoAlready)
                                         self.fsm.request('maybe')
 
     def __crewRejectInvite(self, avId, reason):
@@ -531,14 +494,11 @@ class CrewInviter(GuiPanel.GuiPanel):
                         if reason == BandConstance.outcome_declined:
                             self.fsm.request('no')
                         else:
-                            self.notify.warning(
-                                'crewRejectInvite: %s unknown reason: %s.' %
-                                (avId, reason))
+                            self.notify.warning('crewRejectInvite: %s unknown reason: %s.' % (avId, reason))
 
     def __crewResponse(self, yesNoMaybe, context):
         if self.context != context:
-            self.notify.warning('Unexpected change of context from %s to %s.' %
-                                (self.context, context))
+            self.notify.warning('Unexpected change of context from %s to %s.' % (self.context, context))
             self.context = context
         if yesNoMaybe == 1:
             self.fsm.request('yes')
@@ -549,13 +509,9 @@ class CrewInviter(GuiPanel.GuiPanel):
                 if yesNoMaybe == 3:
                     self.fsm.request('otherTooMany')
                 else:
-                    self.notify.warning(
-                        'Got unexpected response to crewResponse: %s' %
-                        yesNoMaybe)
+                    self.notify.warning('Got unexpected response to crewResponse: %s' % yesNoMaybe)
                     self.fsm.request('maybe')
 
     def __handleDisableAvatar(self):
         self.fsm.request('wentAway')
-
-
 # okay decompiling .\pirates\piratesgui\CrewInviter.pyc

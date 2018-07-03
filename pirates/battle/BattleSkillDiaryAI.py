@@ -2,7 +2,6 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from pirates.battle import WeaponGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
-
 class BattleSkillDiaryAI:
     notify = directNotify.newCategory('BattleSkillDiaryAI')
 

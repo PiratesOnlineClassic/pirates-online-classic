@@ -3,10 +3,8 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.battle.ComboDiaryAI import ComboDiaryAI
 from pirates.piratesbase import PiratesGlobals
 
-
 class DistributedTargetableObjectAI(DistributedObjectAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedTargetableObjectAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTargetableObjectAI')
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)

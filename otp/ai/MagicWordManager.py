@@ -41,8 +41,8 @@ class MagicWordManager(DistributedObject.DistributedObject):
 
                 # Log the usage to the event logger
                 self.cr.centralLogger.writeClientEvent(
-                    'magic-word %s used' % magicWord,
-                    targetAvId=base.localAvatar.doId)
+                    'magic-word %s used' %
+                    magicWord, targetAvId=base.localAvatar.doId)
 
                 return
 

@@ -15,7 +15,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class DistributedLock(DistributedInteractive.DistributedInteractive):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLock')
 
     def __init__(self, cr):
@@ -29,10 +29,7 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
         DistributedInteractive.DistributedInteractive.generate(self)
         self.setName(self.uniqueName('DistributedLock'))
         self.loadModel()
-        self.setInteractOptions(
-            proximityText=PLocalizer.InteractLock,
-            sphereScale=12,
-            diskRadius=12)
+        self.setInteractOptions(proximityText=PLocalizer.InteractLock, sphereScale=12, diskRadius=12)
         self.reparentTo(render)
 
     def loadModel(self):
@@ -42,8 +39,7 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
 
     def requestInteraction(self, avId, interactType=0):
         base.localAvatar.motionFSM.off()
-        DistributedInteractive.DistributedInteractive.requestInteraction(
-            self, avId, interactType)
+        DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
 
     def rejectInteraction(self):
         base.localAvatar.motionFSM.on()
@@ -83,18 +79,10 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
         self.gui = LockGUI.LockGUI(self, avId, difficulty)
         camera.setPosHpr(self, 0, -5, 4, 0, -30, 0)
         base.camLens.setMinFov(55)
-        self.accept(
-            'escape', self.guiCallback, extraArgs=[LockGlobals.LGUI_EXIT])
-        self.accept(
-            'arrow_left',
-            self.guiCallback,
-            extraArgs=[LockGlobals.LGUI_MECHLEFT])
-        self.accept(
-            'arrow_right',
-            self.guiCallback,
-            extraArgs=[LockGlobals.LGUI_MECHRIGHT])
-        self.accept(
-            'space', self.guiCallback, extraArgs=[LockGlobals.LGUI_TRYLOCK])
+        self.accept('escape', self.guiCallback, extraArgs=[LockGlobals.LGUI_EXIT])
+        self.accept('arrow_left', self.guiCallback, extraArgs=[LockGlobals.LGUI_MECHLEFT])
+        self.accept('arrow_right', self.guiCallback, extraArgs=[LockGlobals.LGUI_MECHRIGHT])
+        self.accept('space', self.guiCallback, extraArgs=[LockGlobals.LGUI_TRYLOCK])
         taskMgr.add(self.movePick, 'lockpick')
         self.acceptInteraction()
 
@@ -143,6 +131,4 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
         lidopener = LerpHprInterval(self.chestLid, 1, Vec3(0, -40, 0))
         lidopener.start()
         self.setAllowInteract(False)
-
-
 # okay decompiling .\pirates\minigame\DistributedLock.pyc

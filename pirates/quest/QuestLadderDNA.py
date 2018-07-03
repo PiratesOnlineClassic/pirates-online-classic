@@ -13,22 +13,7 @@ from pirates.quest.QuestTaskDNA import VisitTaskDNA
 class QuestContainerDNA(POD):
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestContainerDNA')
     Counter = 1102
-    DataSet = {
-        'name': None,
-        'questInt': -1,
-        'title': '',
-        'description': '',
-        'giverId': None,
-        'firstQuestId': None,
-        'containers': None,
-        'rewards': tuple(),
-        'completeCount': QuestChoice.CompleteAll,
-        'dialogBefore': '',
-        'dialogDuring': '',
-        'dialogAfter': '',
-        'dialogBrushoff': '',
-        'droppable': False
-    }
+    DataSet = {'name': None, 'questInt': -1, 'title': '', 'description': '', 'giverId': None, 'firstQuestId': None, 'containers': None, 'rewards': tuple(), 'completeCount': QuestChoice.CompleteAll, 'dialogBefore': '', 'dialogDuring': '', 'dialogAfter': '', 'dialogBrushoff': '', 'droppable': False}
 
     def hasQuest(self, questId):
         for container in self.getContainers():
@@ -71,12 +56,9 @@ class QuestContainerDNA(POD):
                 title = PLocalizer.ReturnVisitQuestTitle % PLocalizer.NPCNames[giverId]
                 desc = PLocalizer.ReturnVisitQuestDesc % PLocalizer.NPCNames[giverId]
                 dialog = PLocalizer.ReturnVisitQuestDialog
-                PLocalizer.QuestStrings[id] = {
-                    'title': title,
-                    'description': desc,
-                    'dialogAfter': dialog
-                }
-                self.containers = (questDNA,) + self.containers
+                PLocalizer.QuestStrings[id] = {'title': title, 'description': desc, 'dialogAfter': dialog}
+                self.containers = (
+                 questDNA,) + self.containers
             else:
                 self.notify.warning('%s not found in QuestDB!' % id)
         for container in self.getContainers():
@@ -91,12 +73,7 @@ class QuestContainerDNA(POD):
             container.initializeFortune(droppable)
 
     def constructDynamicCopy(self, av, parent=None):
-        dynCopy = self._makeDynamicCopy(self.getName(), self.getTitle(), av,
-                                        self.getQuestInt(), parent,
-                                        self.getGiverId(), self.getRewards(),
-                                        self.getFirstQuestId(),
-                                        self.getDescription(),
-                                        self.getCompleteCount())
+        dynCopy = self._makeDynamicCopy(self.getName(), self.getTitle(), av, self.getQuestInt(), parent, self.getGiverId(), self.getRewards(), self.getFirstQuestId(), self.getDescription(), self.getCompleteCount())
         goal = 0
         for container in self.getContainers():
             dynObj = container.constructDynamicCopy(av, parent=dynCopy)
@@ -155,23 +132,15 @@ class QuestContainerDNA(POD):
 
 class QuestChoiceDNA(QuestContainerDNA):
 
-    def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId,
-                         rewards, firstQuestId, description, completeCount):
-        return QuestChoice(name, title, av, questInt, parent, giverId, rewards,
-                           description, completeCount)
-
+    def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
+        return QuestChoice(name, title, av, questInt, parent, giverId, rewards, description, completeCount)
 
 class QuestChoiceSingleDNA(QuestContainerDNA):
 
-    def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId,
-                         rewards, firstQuestId, description, completeCount):
-        return QuestChoiceSingle(name, title, av, questInt, parent, giverId,
-                                 rewards, firstQuestId, description)
-
+    def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
+        return QuestChoiceSingle(name, title, av, questInt, parent, giverId, rewards, firstQuestId, description)
 
 class QuestLadderDNA(QuestContainerDNA):
 
-    def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId,
-                         rewards, firstQuestId, description, completeCount):
-        return QuestLadder(name, title, av, questInt, parent, giverId, rewards,
-                           firstQuestId, description)
+    def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
+        return QuestLadder(name, title, av, questInt, parent, giverId, rewards, firstQuestId, description)

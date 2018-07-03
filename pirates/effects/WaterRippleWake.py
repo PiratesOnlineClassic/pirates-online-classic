@@ -13,14 +13,14 @@ from pirates.effects.PooledEffect import PooledEffect
 
 class WaterRippleWake(PooledEffect, EffectController):
 
+
     def __init__(self, parent=None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
         if not WaterRippleWake.particleDummy:
-            WaterRippleWake.particleDummy = render.attachNewNode(
-                ModelNode('WaterRippleWakeParticleDummy'))
+            WaterRippleWake.particleDummy = render.attachNewNode(ModelNode('WaterRippleWakeParticleDummy'))
             WaterRippleWake.particleDummy.setDepthWrite(0)
             WaterRippleWake.particleDummy.setFogOff()
             WaterRippleWake.particleDummy.setBin('water', 50)
@@ -69,13 +69,8 @@ class WaterRippleWake(PooledEffect, EffectController):
         self.p1.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p1.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p1.emitter.setRadius(1.0)
-        self.startEffect = Sequence(
-            Func(self.p1.setBirthRate, 0.045), Func(self.p1.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(
-            Func(self.p1.setBirthRate, 100.0), Wait(2.0),
-            Func(self.p1.setBirthRate, 0.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p1.setBirthRate, 0.045), Func(self.p1.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p1.setBirthRate, 100.0), Wait(2.0), Func(self.p1.setBirthRate, 0.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def cleanUpEffect(self):
@@ -86,6 +81,4 @@ class WaterRippleWake(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\WaterRippleWake.pyc

@@ -7,11 +7,8 @@ from pirates.leveleditor import NPCList
 from pirates.pirate import AvatarTypes, DistributedPirateBase, HumanDNA
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
-
-class DistributedNPCNavySailor(DistributedBattleNPC.DistributedBattleNPC,
-                               NavySailor.NavySailor):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedNPCNavySailor')
+class DistributedNPCNavySailor(DistributedBattleNPC.DistributedBattleNPC, NavySailor.NavySailor):
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCNavySailor')
 
     def __init__(self, cr):
         DistributedBattleNPC.DistributedBattleNPC.__init__(self, cr)
@@ -21,8 +18,7 @@ class DistributedNPCNavySailor(DistributedBattleNPC.DistributedBattleNPC,
         DistributedBattleNPC.DistributedBattleNPC.announceGenerate(self)
         if not self.loaded:
             if self.style:
-                NavySailor.NavySailor.generateHuman(self, self.style.gender,
-                                                    base.cr.human)
+                NavySailor.NavySailor.generateHuman(self, self.style.gender, base.cr.human)
         yieldThread('navy done')
 
     def generate(self):
@@ -44,7 +40,7 @@ class DistributedNPCNavySailor(DistributedBattleNPC.DistributedBattleNPC,
         return 1
 
     def setDNAId(self, dnaId):
-        if dnaId and dnaId in NPCList.NPC_LIST:
+        if dnaId and NPCList.NPC_LIST.has_key(dnaId):
             dnaDict = NPCList.NPC_LIST[dnaId]
             customDNA = HumanDNA.HumanDNA()
             customDNA.loadFromNPCDict(dnaDict)

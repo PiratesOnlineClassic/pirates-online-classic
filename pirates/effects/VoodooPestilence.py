@@ -23,8 +23,7 @@ class VoodooPestilence(PooledEffect, EffectController):
         self.card = model.find('**/particleEvilSmoke')
         self.effectScale = 1.0
         if not self.particleDummy:
-            self.particleDummy = render.attachNewNode(
-                ModelNode('selfParticleDummy'))
+            self.particleDummy = render.attachNewNode(ModelNode('selfParticleDummy'))
             self.particleDummy.setDepthWrite(0)
             self.particleDummy.setColorScaleOff()
             self.particleDummy.setLightOff()
@@ -64,18 +63,13 @@ class VoodooPestilence(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha,
-            ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.1, 0.2, 0.1, 0.5), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.1, 0.2, 0.1, 0.5), 1)
 
     def createTrack(self):
-        self.p0.renderer.setInitialXScale(
-            0.003 * self.effectScale * self.cardScale)
+        self.p0.renderer.setInitialXScale(0.003 * self.effectScale * self.cardScale)
         self.p0.renderer.setFinalXScale(0.0001 * self.cardScale)
-        self.p0.renderer.setInitialYScale(
-            0.0015 * self.effectScale * self.cardScale)
+        self.p0.renderer.setInitialYScale(0.0015 * self.effectScale * self.cardScale)
         self.p0.renderer.setFinalYScale(0.0001 * self.cardScale)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(0.3)
@@ -87,12 +81,8 @@ class VoodooPestilence(PooledEffect, EffectController):
         if self.effectScale > 1.0:
             self.p0.emitter.setAmplitude(0.15)
             self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, -0.1))
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100.0), Wait(2.5),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.5), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.25), self.endEffect)
 
     def cleanUpEffect(self):
@@ -104,6 +94,4 @@ class VoodooPestilence(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\VoodooPestilence.pyc

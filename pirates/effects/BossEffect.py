@@ -4,8 +4,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class BossEffect(PooledEffect, EffectController):
+
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -47,9 +47,7 @@ class BossEffect(PooledEffect, EffectController):
         self.p0.renderer.setAnimAngleFlag(0)
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
-                                           ColorBlendAttrib.OIncomingAlpha,
-                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
         self.p0.renderer.setAlphaDisable(0)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
@@ -60,24 +58,16 @@ class BossEffect(PooledEffect, EffectController):
         self.setEffectColor(self.effectColor)
 
     def createTrack(self):
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.5), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100), Wait(2.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.5), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(3.0), self.endEffect)
 
     def setEffectScale(self, scale):
         self.effectScale = scale
-        self.p0.renderer.setInitialXScale(
-            0.04 * self.effectScale * self.cardScale)
-        self.p0.renderer.setFinalXScale(
-            0.08 * self.effectScale * self.cardScale)
-        self.p0.renderer.setInitialYScale(
-            0.04 * self.effectScale * self.cardScale)
-        self.p0.renderer.setFinalYScale(
-            0.08 * self.effectScale * self.cardScale)
+        self.p0.renderer.setInitialXScale(0.04 * self.effectScale * self.cardScale)
+        self.p0.renderer.setFinalXScale(0.08 * self.effectScale * self.cardScale)
+        self.p0.renderer.setInitialYScale(0.04 * self.effectScale * self.cardScale)
+        self.p0.renderer.setFinalYScale(0.08 * self.effectScale * self.cardScale)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 0.2 * self.effectScale))
         self.p0.emitter.setRadius(self.effectScale)
         self.setScale(1, 1, 2)

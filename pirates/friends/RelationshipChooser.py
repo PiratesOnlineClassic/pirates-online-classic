@@ -10,7 +10,6 @@ from pirates.friends import PirateFriendSecret
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiPanel, PirateButtonChain, PiratesGuiGlobals
 
-
 class RelationshipChooser(GuiPanel.GuiPanel):
     notify = DirectNotifyGlobal.directNotify.newCategory('FriendInviter')
 
@@ -20,14 +19,10 @@ class RelationshipChooser(GuiPanel.GuiPanel):
         self.pId = pId
         self.avDisableName = 'disable-%s' % avId
         if not self.pId and self.avId:
-            self.pId = base.cr.playerFriendsManager.findPlayerIdFromAvId(
-                self.avId)
+            self.pId = base.cr.playerFriendsManager.findPlayerIdFromAvId(self.avId)
         if not self.avId and self.pId:
-            self.avId = base.cr.playerFriendsManager.findAvIdFromPlayerId(
-                self.pId)
-        GuiPanel.GuiPanel.__init__(self,
-                                   PLocalizer.RelationshipChooserTitle % avName,
-                                   0.5, 0.25, True, 1)
+            self.avId = base.cr.playerFriendsManager.findAvIdFromPlayerId(self.pId)
+        GuiPanel.GuiPanel.__init__(self, PLocalizer.RelationshipChooserTitle % avName, 0.5, 0.25, True, 1)
         self.initialiseoptions(RelationshipChooser)
         self.setPos(0.15, 0, 0.25)
         self.chain = PirateButtonChain.PirateButtonChain(self.width, self)
@@ -36,14 +31,9 @@ class RelationshipChooser(GuiPanel.GuiPanel):
         self.determineButtonState()
 
     def load(self):
-        self.avFriendButton = self.chain.premakeButton(
-            PLocalizer.RelationshipChooserAvFriendsMake,
-            self.__handleAvatarFriend)
-        self.plFriendButton = self.chain.premakeButton(
-            PLocalizer.RelationshipChooserPlFriendsMake,
-            self.__handlePlayerFriend)
-        self.secretsButton = self.chain.premakeButton(
-            PLocalizer.RelationshipChooserPlSecrets, self.__handleSecrets)
+        self.avFriendButton = self.chain.premakeButton(PLocalizer.RelationshipChooserAvFriendsMake, self.__handleAvatarFriend)
+        self.plFriendButton = self.chain.premakeButton(PLocalizer.RelationshipChooserPlFriendsMake, self.__handlePlayerFriend)
+        self.secretsButton = self.chain.premakeButton(PLocalizer.RelationshipChooserPlSecrets, self.__handleSecrets)
         self.chain.makeButtons()
 
     def destroy(self):
@@ -69,17 +59,13 @@ class RelationshipChooser(GuiPanel.GuiPanel):
         isPlayerFriend = base.cr.playerFriendsManager.isPlayerFriend(self.pId)
         isAvatarFriend = base.cr.avatarFriendsManager.isAvatarFriend(self.avId)
         if isPlayerFriend:
-            self.plFriendButton[
-                'text'] = PLocalizer.RelationshipChooserPlFriendsBreak
+            self.plFriendButton['text'] = PLocalizer.RelationshipChooserPlFriendsBreak
         else:
-            self.plFriendButton[
-                'text'] = PLocalizer.RelationshipChooserPlFriendsMake
+            self.plFriendButton['text'] = PLocalizer.RelationshipChooserPlFriendsMake
         if isAvatarFriend:
-            self.avFriendButton[
-                'text'] = PLocalizer.RelationshipChooserAvFriendsBreak
+            self.avFriendButton['text'] = PLocalizer.RelationshipChooserAvFriendsBreak
         else:
-            self.avFriendButton[
-                'text'] = PLocalizer.RelationshipChooserAvFriendsMake
+            self.avFriendButton['text'] = PLocalizer.RelationshipChooserAvFriendsMake
         self.avFriendButton['state'] = DGG.DISABLED
         self.plFriendButton['state'] = DGG.DISABLED
         self.secretsButton['state'] = DGG.NORMAL

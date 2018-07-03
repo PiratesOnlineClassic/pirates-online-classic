@@ -15,15 +15,10 @@ from pirates.effects.SmokeTrail import SmokeTrail
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect
 
-DebrisDict = {
-    '0': 'models/props/rock_1_floor',
-    '1': 'models/props/rock_2_floor',
-    '2': 'models/props/rock_3_floor',
-    '3': 'models/props/rock_4_floor'
-}
-
+DebrisDict = {'0': 'models/props/rock_1_floor', '1': 'models/props/rock_2_floor', '2': 'models/props/rock_3_floor', '3': 'models/props/rock_4_floor'}
 
 class FlamingDebris(PooledEffect):
+    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -56,30 +51,17 @@ class FlamingDebris(PooledEffect):
 
     def createTrack(self, rate=1):
         if self.velocityX or self.velocityY:
-            self.startVel = Vec3(self.velocityX + random.uniform(-10.0, 10.0),
-                                 self.velocityY + random.uniform(-10.0, 10.0),
-                                 random.uniform(self.minHeight, self.maxHeight))
+            self.startVel = Vec3(self.velocityX + random.uniform(-10.0, 10.0), self.velocityY + random.uniform(-10.0, 10.0), random.uniform(self.minHeight, self.maxHeight))
         else:
-            self.startVel = Vec3(
-                random.uniform(-self.radiusDist, self.radiusDist),
-                random.uniform(-self.radiusDist, self.radiusDist),
-                random.uniform(self.minHeight, self.maxHeight))
+            self.startVel = Vec3(random.uniform(-self.radiusDist, self.radiusDist), random.uniform(-self.radiusDist, self.radiusDist), random.uniform(self.minHeight, self.maxHeight))
         self.velocityX = 0
         self.velocityY = 0
-        playProjectile = ProjectileInterval(
-            self.transNode,
-            startPos=self.startPos,
-            startVel=self.startVel,
-            duration=4,
-            gravityMult=4.0)
+        playProjectile = ProjectileInterval(self.transNode, startPos=self.startPos, startVel=self.startVel, duration=4, gravityMult=4.0)
         randomNumX = random.uniform(360, 2880)
         randomNumY = random.uniform(360, 2880)
         randomNumZ = random.uniform(360, 2880)
-        self.playRotate = self.debris.hprInterval(
-            6, Point3(randomNumX, randomNumY, randomNumZ))
-        enableColl = Sequence(
-            Wait(0.2),
-            Func(self.cnode.setFromCollideMask, PiratesGlobals.TargetBitmask))
+        self.playRotate = self.debris.hprInterval(6, Point3(randomNumX, randomNumY, randomNumZ))
+        enableColl = Sequence(Wait(0.2), Func(self.cnode.setFromCollideMask, PiratesGlobals.TargetBitmask))
         playDebris = Parallel(playProjectile, enableColl)
 
         def startTrail():
@@ -88,9 +70,7 @@ class FlamingDebris(PooledEffect):
                 self.trailEffect.reparentTo(self.transNode)
                 self.trailEffect.play()
 
-        self.track = Sequence(
-            Func(startTrail), Func(self.transNode.reparentTo, self), playDebris,
-            Func(self.cleanUpEffect))
+        self.track = Sequence(Func(startTrail), Func(self.transNode.reparentTo, self), playDebris, Func(self.cleanUpEffect))
 
     def play(self, rate=1):
         self.createTrack()
@@ -135,8 +115,7 @@ class FlamingDebris(PooledEffect):
         if objType == PiratesGlobals.COLL_SEA and base.cr.wantSpecialEffects:
             pos = entry.getSurfacePoint(render)
             if base.cr.activeWorld.getWater():
-                entryWaterHeight = base.cr.activeWorld.getWater().calcHeight(
-                    pos[0], pos[1]) + 7.0
+                entryWaterHeight = base.cr.activeWorld.getWater().calcHeight(pos[0], pos[1]) + 7.0
             else:
                 entryWaterHeight = pos[2]
             splashEffect = SmallSplash.getEffect()
@@ -153,8 +132,5 @@ class FlamingDebris(PooledEffect):
                     dustCloudEffect.wrtReparentTo(render)
                     dustCloudEffect.setPos(pos)
                     dustCloudEffect.play()
-                self.cnode.setFromCollideMask(
-                    PiratesGlobals.TargetBitmask.allOff())
-
-
+                self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
 # okay decompiling .\pirates\effects\FlamingDebris.pyc

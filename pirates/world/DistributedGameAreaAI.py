@@ -5,10 +5,8 @@ from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from pirates.piratesbase import PLocalizer
 
-
 class DistributedGameAreaAI(DistributedNodeAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedGameAreaAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGameAreaAI')
 
     def __init__(self, air):
         DistributedNodeAI.__init__(self, air)
@@ -92,13 +90,7 @@ class DistributedGameAreaAI(DistributedNodeAI):
         return self.jailInterior
 
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
-        self.generateChildWithRequiredAndId(do, self.air.allocateChannel(),
-                                            self.doId, zoneId, optionalFields)
+        self.generateChildWithRequiredAndId(do, self.air.allocateChannel(), self.doId, zoneId, optionalFields)
 
-    def generateChildWithRequiredAndId(self,
-                                       do,
-                                       doId,
-                                       parentId,
-                                       zoneId,
-                                       optionalFields=[]):
+    def generateChildWithRequiredAndId(self, do, doId, parentId, zoneId, optionalFields=[]):
         do.generateWithRequiredAndId(doId, parentId, zoneId, optionalFields)

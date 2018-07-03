@@ -22,8 +22,7 @@ class VoodooAura(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/battleEffects')
         self.card = model.find('**/effectVoodooShockwave')
         if not self.particleDummy:
-            self.particleDummy = self.attachNewNode(
-                ModelNode('VoodooAuraParticleDummy'))
+            self.particleDummy = self.attachNewNode(ModelNode('VoodooAuraParticleDummy'))
             self.particleDummy.setDepthWrite(0)
             self.particleDummy.hide(OTPRender.ShadowCameraBitmask)
         self.effectColor = Vec4(1, 1, 1, 1)
@@ -61,8 +60,7 @@ class VoodooAura(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(0.0, 0.0, 0.0, 0.5), self.effectColor, 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.0, 0.0, 0.0, 0.5), self.effectColor, 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(0.2)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -72,19 +70,9 @@ class VoodooAura(PooledEffect, EffectController):
         self.p0.emitter.setRadius(0.15)
 
     def createTrack(self, rate=1):
-        self.castEffect = Sequence(
-            Func(self.p0.emitter.setRadius, 0.75),
-            Func(self.p0.renderer.setFinalXScale, 0.02 * self.cardScale),
-            Func(self.p0.renderer.setFinalYScale, 0.02 * self.cardScale),
-            Wait(2.0), Func(self.p0.emitter.setRadius, 0.15),
-            Func(self.p0.renderer.setFinalXScale, 0.012 * self.cardScale),
-            Func(self.p0.renderer.setFinalYScale, 0.012 * self.cardScale))
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.03), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100), Wait(7.0),
-            Func(self.cleanUpEffect))
+        self.castEffect = Sequence(Func(self.p0.emitter.setRadius, 0.75), Func(self.p0.renderer.setFinalXScale, 0.02 * self.cardScale), Func(self.p0.renderer.setFinalYScale, 0.02 * self.cardScale), Wait(2.0), Func(self.p0.emitter.setRadius, 0.15), Func(self.p0.renderer.setFinalXScale, 0.012 * self.cardScale), Func(self.p0.renderer.setFinalYScale, 0.012 * self.cardScale))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.03), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def pulseUp(self):
@@ -102,8 +90,7 @@ class VoodooAura(PooledEffect, EffectController):
     def setEffectColor(self, color):
         self.effectColor = color
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(0.0, 0.0, 0.0, 0.5), self.effectColor, 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.0, 0.0, 0.0, 0.5), self.effectColor, 1)
 
     def cleanUpEffect(self):
         self.f.disable()
@@ -114,6 +101,4 @@ class VoodooAura(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\VoodooAura.pyc

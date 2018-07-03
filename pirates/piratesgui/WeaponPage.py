@@ -17,7 +17,6 @@ from pirates.reputation import ReputationGlobals
 
 
 class WeaponPage(InventoryPage.InventoryPage):
-
     def __init__(self):
         InventoryPage.InventoryPage.__init__(self)
         self.initialiseoptions(WeaponPage)
@@ -32,30 +31,12 @@ class WeaponPage(InventoryPage.InventoryPage):
         InventoryPage.InventoryPage.hide(self)
 
     def tonicCallback(self, skillId):
-        localAvatar.guiMgr.combatTray.trySkill(InventoryType.UseItem, skillId,
-                                               0)
+        localAvatar.guiMgr.combatTray.trySkill(InventoryType.UseItem, skillId, 0)
 
     def rePanel(self, inventory):
         weapons = [
-            (InventoryType.CutlassWeaponL1, InventoryType.CutlassWeaponL2,
-             InventoryType.CutlassWeaponL3, InventoryType.CutlassWeaponL4,
-             InventoryType.CutlassWeaponL5, InventoryType.CutlassWeaponL6),
-            (InventoryType.PistolWeaponL1, InventoryType.PistolWeaponL2,
-             InventoryType.PistolWeaponL3, InventoryType.PistolWeaponL4,
-             InventoryType.PistolWeaponL5, InventoryType.PistolWeaponL6),
-            (InventoryType.DollWeaponL1, InventoryType.DollWeaponL2,
-             InventoryType.DollWeaponL3, InventoryType.DollWeaponL4,
-             InventoryType.DollWeaponL5, InventoryType.DollWeaponL6),
-            (InventoryType.DaggerWeaponL1, InventoryType.DaggerWeaponL2,
-             InventoryType.DaggerWeaponL3, InventoryType.DaggerWeaponL4,
-             InventoryType.DaggerWeaponL5, InventoryType.DaggerWeaponL6),
-            (InventoryType.GrenadeWeaponL1, InventoryType.GrenadeWeaponL2,
-             InventoryType.GrenadeWeaponL3, InventoryType.GrenadeWeaponL4,
-             InventoryType.GrenadeWeaponL5, InventoryType.GrenadeWeaponL6),
-            (InventoryType.WandWeaponL1, InventoryType.WandWeaponL2,
-             InventoryType.WandWeaponL3, InventoryType.WandWeaponL4,
-             InventoryType.WandWeaponL5, InventoryType.WandWeaponL6)
-        ]
+         (
+          InventoryType.CutlassWeaponL1, InventoryType.CutlassWeaponL2, InventoryType.CutlassWeaponL3, InventoryType.CutlassWeaponL4, InventoryType.CutlassWeaponL5, InventoryType.CutlassWeaponL6), (InventoryType.PistolWeaponL1, InventoryType.PistolWeaponL2, InventoryType.PistolWeaponL3, InventoryType.PistolWeaponL4, InventoryType.PistolWeaponL5, InventoryType.PistolWeaponL6), (InventoryType.DollWeaponL1, InventoryType.DollWeaponL2, InventoryType.DollWeaponL3, InventoryType.DollWeaponL4, InventoryType.DollWeaponL5, InventoryType.DollWeaponL6), (InventoryType.DaggerWeaponL1, InventoryType.DaggerWeaponL2, InventoryType.DaggerWeaponL3, InventoryType.DaggerWeaponL4, InventoryType.DaggerWeaponL5, InventoryType.DaggerWeaponL6), (InventoryType.GrenadeWeaponL1, InventoryType.GrenadeWeaponL2, InventoryType.GrenadeWeaponL3, InventoryType.GrenadeWeaponL4, InventoryType.GrenadeWeaponL5, InventoryType.GrenadeWeaponL6), (InventoryType.WandWeaponL1, InventoryType.WandWeaponL2, InventoryType.WandWeaponL3, InventoryType.WandWeaponL4, InventoryType.WandWeaponL5, InventoryType.WandWeaponL6)]
         avWeapons = localAvatar.equippedWeapons
         for weaponList in weapons:
             quantity = 0
@@ -70,8 +51,7 @@ class WeaponPage(InventoryPage.InventoryPage):
             if key:
                 panel = WeaponPanel.WeaponPanel((weaponId, quantity), key)
                 panel.reparentTo(self)
-                panel.setZ(PiratesGuiGlobals.InventoryPanelHeight - 0.18 -
-                           key * panel.height)
+                panel.setZ(PiratesGuiGlobals.InventoryPanelHeight - 0.18 - key * panel.height)
                 repCat = WeaponGlobals.getRepId(weaponId)
                 self.weaponPanels[repCat] = panel
 
@@ -79,21 +59,9 @@ class WeaponPage(InventoryPage.InventoryPage):
         for i in range(len(InventoryType.Potions) - 1):
             tonicId = InventoryType.Potions[i]
             if items.get(tonicId):
-                button = SkillButton(
-                    tonicId,
-                    self.tonicCallback,
-                    items.get(tonicId),
-                    showQuantity=True,
-                    showHelp=True,
-                    showRing=True)
+                button = SkillButton(tonicId, self.tonicCallback, items.get(tonicId), showQuantity=True, showHelp=True, showRing=True)
             else:
-                button = SkillButton(
-                    tonicId,
-                    self.tonicCallback,
-                    0,
-                    showQuantity=True,
-                    showHelp=True,
-                    showRing=True)
+                button = SkillButton(tonicId, self.tonicCallback, 0, showQuantity=True, showHelp=True, showRing=True)
             button.skillButton['geom_scale'] = 0.1
             button.reparentTo(self)
             button.setPos(0.18 * i + 0.18, 0, 0.13)
@@ -112,8 +80,7 @@ class WeaponPage(InventoryPage.InventoryPage):
                 self.rePanel(inventory)
             else:
                 self.ignore('inventoryReady-%s' % inventory.getDoId())
-                self.acceptOnce('inventoryReady-%s' % inventory.getDoId(),
-                                self.rePanel)
+                self.acceptOnce('inventoryReady-%s' % inventory.getDoId(), self.rePanel)
 
     def destroy(self):
         InventoryPage.InventoryPage.destroy(self)
@@ -128,6 +95,6 @@ class WeaponPage(InventoryPage.InventoryPage):
         for i in range(len(InventoryType.Potions) - 1):
             tonicId = InventoryType.Potions[i]
             tonicAmt = inv.getStackQuantity(tonicId)
-            if tonicId in self.tonicButtons:
+            if self.tonicButtons.has_key(tonicId):
                 self.tonicButtons[tonicId].updateQuantity(tonicAmt)
                 self.tonicButtons[tonicId].checkAmount()

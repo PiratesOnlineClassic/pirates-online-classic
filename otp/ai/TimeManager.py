@@ -27,7 +27,8 @@ class TimeManager(DistributedObject.DistributedObject):
         self.extraSkew = base.config.GetInt('time-manager-extra-skew', 0)
         if self.extraSkew != 0:
             self.notify.info(
-                'Simulating clock skew of %0.3f s' % self.extraSkew)
+                'Simulating clock skew of %0.3f s' %
+                self.extraSkew)
 
         self.reportFrameRateInterval = base.config.GetDouble(
             'report-frame-rate-interval', 300.0)
@@ -113,20 +114,24 @@ class TimeManager(DistributedObject.DistributedObject):
         aiTimeSkew = timeOfDay - self.cr.getServerTimeOfDay()
         if context != self.thisContext:
             self.notify.info(
-                'Ignoring TimeManager response for old context %d' % context)
+                'Ignoring TimeManager response for old context %d' %
+                context)
             return
 
         elapsed = end - self.start
         self.attemptCount += 1
         self.notify.info(
-            'Clock sync roundtrip took %0.3f ms' % (elapsed * 1000.0))
-        self.notify.info('AI time delta is %s from server delta' %
-                         PythonUtil.formatElapsedSeconds(aiTimeSkew))
+            'Clock sync roundtrip took %0.3f ms' %
+            (elapsed * 1000.0))
+        self.notify.info(
+            'AI time delta is %s from server delta' %
+            PythonUtil.formatElapsedSeconds(aiTimeSkew))
         average = (self.start + end) / 2.0 - self.extraSkew
         uncertainty = (end - self.start) / 2.0 + abs(self.extraSkew)
         globalClockDelta.resynchronize(average, timestamp, uncertainty)
-        self.notify.info('Local clock uncertainty +/- %.3f s' %
-                         globalClockDelta.getUncertainty())
+        self.notify.info(
+            'Local clock uncertainty +/- %.3f s' %
+            globalClockDelta.getUncertainty())
         if globalClockDelta.getUncertainty() > self.maxUncertainty:
             if self.attemptCount < self.maxAttempts:
                 self.notify.info('Uncertainty is too high, trying again.')
@@ -137,10 +142,8 @@ class TimeManager(DistributedObject.DistributedObject):
             self.notify.info('Giving up on uncertainty requirement.')
 
         if self.talkResult:
-            base.localAvatar.setChatAbsolute(
-                'latency %0.0f ms, sync \xc2\xb1%0.0f ms' %
-                (elapsed * 1000.0, globalClockDelta.getUncertainty() * 1000.0),
-                CFSpeech | CFTimeout)
+            base.localAvatar.setChatAbsolute('latency %0.0f ms, sync \xc2\xb1%0.0f ms' % (elapsed * 1000.0,
+                                                                                          globalClockDelta.getUncertainty() * 1000.0), CFSpeech | CFTimeout)
 
         messenger.send('gotTimeSync')
 
@@ -196,53 +199,41 @@ class TimeManager(DistributedObject.DistributedObject):
             pageFileUsage = di.getPageFileUsage() * oomb
             physicalMemory = di.getPhysicalMemory() * oomb
             pageFaultCount = di.getPageFaultCount() / 1000.0
-            osInfo = (os.name, di.getOsPlatformId(), di.getOsVersionMajor(),
-                      di.getOsVersionMinor())
+            osInfo = (
+                os.name,
+                di.getOsPlatformId(),
+                di.getOsVersionMajor(),
+                di.getOsVersionMinor())
             if sys.platform == 'darwin':
                 osInfo = self.getMacOsInfo(osInfo)
 
             di.updateCpuFrequency(0)
             ooghz = 1e-09
-            cpuSpeed = (di.getMaximumCpuFrequency() * ooghz,
-                        di.getCurrentCpuFrequency() * ooghz)
+            cpuSpeed = (
+                di.getMaximumCpuFrequency() * ooghz,
+                di.getCurrentCpuFrequency() * ooghz)
             numCpuCores = di.getNumCpuCores()
             numLogicalCpus = di.getNumLogicalCpus()
             apiName = base.pipe.getInterfaceName()
 
-        self.d_setFrameRate(
-            max(0, globalClock.getAverageFrameRate()),
-            max(0, globalClock.calcFrameRateDeviation()),
-            len(Avatar.ActiveAvatars), base.locationCode or '',
-            max(0,
-                time.time() - base.locationCodeChanged),
-            max(0, globalClock.getRealTime()), base.gameOptionsCode, vendorId,
-            deviceId, processMemory, pageFileUsage, physicalMemory,
-            pageFaultCount, osInfo, cpuSpeed, numCpuCores, numLogicalCpus,
-            apiName)
+        self.d_setFrameRate(max(0, globalClock.getAverageFrameRate()), max(0, globalClock.calcFrameRateDeviation()), len(Avatar.ActiveAvatars), base.locationCode or '',
+                            max(0, time.time() - base.locationCodeChanged), max(
+                                0, globalClock.getRealTime()), base.gameOptionsCode, vendorId, deviceId,
+                            processMemory, pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed, numCpuCores, numLogicalCpus, apiName)
 
         return task.again
 
-    def d_setFrameRate(self, fps, deviation, numAvs, locationCode,
-                       timeInLocation, timeInGame, gameOptionsCode, vendorId,
-                       deviceId, processMemory, pageFileUsage, physicalMemory,
-                       pageFaultCount, osInfo, cpuSpeed, numCpuCores,
-                       numLogicalCpus, apiName):
-        info = '%0.1f fps|%0.3fd|%s avs|%s|%d|%d|%s|0x%04x|0x%04x|%0.1fMB|%0.1fMB|%0.1fMB|%d|%s|%s|%s cpus|%s' % (
-            fps, deviation, numAvs, locationCode, timeInLocation, timeInGame,
-            gameOptionsCode, vendorId, deviceId, processMemory, pageFileUsage,
-            physicalMemory, pageFaultCount, '%s.%d.%d.%d' % osInfo,
-            '%0.03f,%0.03f' % cpuSpeed, '%d,%d' % (numCpuCores, numLogicalCpus),
-            apiName)
+    def d_setFrameRate(self, fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId,
+                       processMemory, pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed, numCpuCores, numLogicalCpus, apiName):
+        info = '%0.1f fps|%0.3fd|%s avs|%s|%d|%d|%s|0x%04x|0x%04x|%0.1fMB|%0.1fMB|%0.1fMB|%d|%s|%s|%s cpus|%s' % (fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode,
+                                                                                                                  vendorId, deviceId, processMemory, pageFileUsage, physicalMemory, pageFaultCount, '%s.%d.%d.%d' % osInfo,
+                                                                                                                  '%0.03f,%0.03f' % cpuSpeed, '%d,%d' % (numCpuCores, numLogicalCpus), apiName)
 
         if base.config.GetBool('want-frame-rate-string', True):
             print 'frame rate: %s' % info
 
-        self.sendUpdate('setFrameRate', [
-            fps, deviation, numAvs, locationCode, timeInLocation, timeInGame,
-            gameOptionsCode, vendorId, deviceId, processMemory, pageFileUsage,
-            physicalMemory, pageFaultCount, osInfo, cpuSpeed, numCpuCores,
-            numLogicalCpus, apiName
-        ])
+        self.sendUpdate('setFrameRate', [fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId, processMemory,
+                                         pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed, numCpuCores, numLogicalCpus, apiName])
 
     def getMacOsInfo(self, defaultOsInfo):
         result = defaultOsInfo
@@ -253,7 +244,8 @@ class TimeManager(DistributedObject.DistributedObject):
 
         key = re.search(
             '<key>ProductUserVisibleVersion</key>\\s*' +
-            '<string>(.*?)</string>', theFile.read())
+            '<string>(.*?)</string>',
+            theFile.read())
         theFile.close()
         if key is not None:
             try:
@@ -262,7 +254,8 @@ class TimeManager(DistributedObject.DistributedObject):
                 major = int(parts[0])
                 minor = int(parts[1])
                 bugfix = int(parts[2])
-                result = (sys.platform, bugfix, major, minor)
+                result = (
+                    sys.platform, bugfix, major, minor)
             except Exception as e:
                 self.notify.debug('getMacOsInfo %s' % str(e))
 

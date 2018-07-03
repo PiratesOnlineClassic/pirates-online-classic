@@ -102,7 +102,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -110,7 +110,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -118,7 +118,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -126,7 +126,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -134,7 +134,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -142,7 +142,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -150,7 +150,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1138399108.42dxschafe'],
         setGender: 'm',
@@ -208,7 +208,7 @@ NPC_LIST = {
         setClothesBelt: 2,
         setClothesTopColor: (11, 9, 10),
         setClothesBotColor: (9, 5, 10),
-    },
+        },
     '1138399108.42dxschafe_type': 'Townsperson',
     '1138401436.53dxschafe': {
         setTattooChest: (
@@ -218,7 +218,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -226,7 +226,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -234,7 +234,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -242,7 +242,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -250,7 +250,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -258,7 +258,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -266,7 +266,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1138401436.53dxschafe'],
         setGender: 'f',
@@ -324,7 +324,7 @@ NPC_LIST = {
         setClothesBelt: 2,
         setClothesTopColor: (1, 13, 10),
         setClothesBotColor: (0, 5, 10),
-    },
+        },
     '1138401436.53dxschafe_type': 'Townsperson',
     '1138402195.63dxschafe': {
         setTattooChest: (
@@ -334,7 +334,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -342,7 +342,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -350,7 +350,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -358,7 +358,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -366,7 +366,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -374,7 +374,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -382,7 +382,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1138402195.63dxschafe'],
         setGender: 'm',
@@ -440,7 +440,7 @@ NPC_LIST = {
         setClothesBelt: 3,
         setClothesTopColor: (3, 5, 8),
         setClothesBotColor: (2, 5, 10),
-    },
+        },
     '1138402195.63dxschafe_type': 'Townsperson',
     '1138403440.64dxschafe': {
         setTattooChest: (
@@ -450,7 +450,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -458,7 +458,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -466,7 +466,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -474,7 +474,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -482,7 +482,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -490,7 +490,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -498,7 +498,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1138403440.64dxschafe'],
         setGender: 'm',
@@ -559,7 +559,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (14, 15, 15),
         setClothesBotColor: (8, 0, 10),
-    },
+        },
     '1138403440.64dxschafe_type': 'Townsperson',
     '1138404604.47dxschafe': {
         setTattooChest: (
@@ -569,7 +569,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -577,7 +577,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -585,7 +585,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -593,7 +593,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -601,7 +601,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -609,7 +609,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -617,7 +617,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1138404604.47dxschafe'],
         setGender: 'm',
@@ -678,7 +678,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (0, 5, 14),
         setClothesBotColor: (1, 5, 10),
-    },
+        },
     '1138404604.47dxschafe_type': 'Townsperson',
     '1138664636.88dxschafe': {
         setTattooChest: (
@@ -688,7 +688,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -696,7 +696,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -704,7 +704,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -712,7 +712,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -720,7 +720,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -728,7 +728,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -736,7 +736,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1138664636.88dxschafe'],
         setGender: 'm',
@@ -794,7 +794,7 @@ NPC_LIST = {
         setClothesBelt: 3,
         setClothesTopColor: (0, 5, 0),
         setClothesBotColor: (1, 5, 10),
-    },
+        },
     '1138664636.88dxschafe_type': 'Townsperson',
     '1138679435.03jubutler': {
         setTattooChest: (
@@ -804,7 +804,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -812,7 +812,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -820,7 +820,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -828,7 +828,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -836,7 +836,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -844,7 +844,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -852,7 +852,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1138679435.03jubutler'],
         setGender: 'm',
@@ -910,7 +910,7 @@ NPC_LIST = {
         setClothesBelt: 3,
         setClothesTopColor: (3, 5, 8),
         setClothesBotColor: (2, 5, 10),
-    },
+        },
     '1138679435.03jubutler_type': 'Townsperson',
     '1138933290.05jubutler': {
         setTattooChest: (
@@ -920,7 +920,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -928,7 +928,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -936,7 +936,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -944,7 +944,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -952,7 +952,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -960,7 +960,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -968,7 +968,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1138933290.05jubutler'],
         setGender: 'm',
@@ -1026,7 +1026,7 @@ NPC_LIST = {
         setClothesBelt: 0,
         setClothesTopColor: (0, 5, 10),
         setClothesBotColor: (0, 5, 10),
-    },
+        },
     '1138933290.05jubutler_type': 'Townsperson',
     '1138936296.39jubutler': {
         setTattooChest: (
@@ -1036,7 +1036,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -1044,7 +1044,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -1052,7 +1052,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -1060,7 +1060,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -1068,7 +1068,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -1076,7 +1076,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -1084,7 +1084,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1138936296.39jubutler'],
         setGender: 'm',
@@ -1142,7 +1142,7 @@ NPC_LIST = {
         setClothesBelt: 3,
         setClothesTopColor: (3, 5, 8),
         setClothesBotColor: (2, 5, 10),
-    },
+        },
     '1138936296.39jubutler_type': 'Townsperson',
     '1138936413.47jubutler': {
         setTattooChest: (
@@ -1152,7 +1152,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -1160,7 +1160,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -1168,7 +1168,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -1176,7 +1176,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -1184,7 +1184,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -1192,7 +1192,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -1200,7 +1200,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1138936413.47jubutler'],
         setGender: 'm',
@@ -1258,7 +1258,7 @@ NPC_LIST = {
         setClothesBelt: 0,
         setClothesTopColor: (6, 5, 4),
         setClothesBotColor: (1, 5, 10),
-    },
+        },
     '1138936413.47jubutler_type': 'Townsperson',
     '1141357391.27sdnaik': {
         setTattooChest: (
@@ -1268,7 +1268,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -1276,7 +1276,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -1284,7 +1284,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -1292,7 +1292,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -1300,7 +1300,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -1308,7 +1308,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -1316,7 +1316,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1141357391.27sdnaik'],
         setGender: 'm',
@@ -1374,7 +1374,7 @@ NPC_LIST = {
         setClothesBelt: 0,
         setClothesTopColor: (0, 5, 10),
         setClothesBotColor: (0, 5, 10),
-    },
+        },
     '1141357391.27sdnaik_type': 'Townsperson',
     '1141415446.44sdnaik': {
         setTattooChest: (
@@ -1384,7 +1384,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -1392,7 +1392,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -1400,7 +1400,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -1408,7 +1408,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -1416,7 +1416,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -1424,7 +1424,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -1432,7 +1432,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1141415446.44sdnaik'],
         setGender: 'm',
@@ -1490,7 +1490,7 @@ NPC_LIST = {
         setClothesBelt: 0,
         setClothesTopColor: (0, 2, 10),
         setClothesBotColor: (0, 5, 10),
-    },
+        },
     '1141415446.44sdnaik_type': 'Townsperson',
     '1141416648.8sdnaik': {
         setTattooChest: (
@@ -1500,7 +1500,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -1508,7 +1508,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -1516,7 +1516,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -1524,7 +1524,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -1532,7 +1532,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -1540,7 +1540,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -1548,7 +1548,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1141416648.8sdnaik'],
         setGender: 'm',
@@ -1606,7 +1606,7 @@ NPC_LIST = {
         setClothesBelt: 0,
         setClothesTopColor: (0, 2, 10),
         setClothesBotColor: (0, 5, 10),
-    },
+        },
     '1141416648.8sdnaik_type': 'Townsperson',
     '1142321958.13sdnaik': {
         setTattooChest: (
@@ -1616,7 +1616,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -1624,7 +1624,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -1632,7 +1632,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -1640,7 +1640,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -1648,7 +1648,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -1656,7 +1656,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -1664,7 +1664,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1142321958.13sdnaik'],
         setGender: 'm',
@@ -1725,7 +1725,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (1, 7, 10),
         setClothesBotColor: (3, 5, 10),
-    },
+        },
     '1142321958.13sdnaik_type': 'Townsperson',
     '1146634932.61jubutler': {
         setTattooChest: (
@@ -1735,7 +1735,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -1743,7 +1743,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -1751,7 +1751,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -1759,7 +1759,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -1767,7 +1767,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -1775,7 +1775,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -1783,7 +1783,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1146634932.61jubutler'],
         setGender: 'm',
@@ -1841,7 +1841,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (8, 11, 15),
         setClothesBotColor: (13, 0, 0),
-    },
+        },
     '1146634932.61jubutler_type': 'Townsperson',
     '1146635159.56jubutler': {
         setTattooChest: (
@@ -1851,7 +1851,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -1859,7 +1859,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -1867,7 +1867,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -1875,7 +1875,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -1883,7 +1883,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -1891,7 +1891,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -1899,7 +1899,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1146635159.56jubutler'],
         setGender: 'f',
@@ -1957,7 +1957,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (7, 1, 12),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1146635159.56jubutler_type': 'Townsperson',
     '1146635362.06jubutler': {
         setTattooChest: (
@@ -1967,7 +1967,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -1975,7 +1975,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -1983,7 +1983,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -1991,7 +1991,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -1999,7 +1999,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -2007,7 +2007,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -2015,7 +2015,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1146635362.06jubutler'],
         setGender: 'm',
@@ -2076,7 +2076,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (16, 18, 20),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1146635362.06jubutler_type': 'Townsperson',
     '1146635785.65jubutler': {
         setTattooChest: (
@@ -2086,7 +2086,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -2094,7 +2094,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -2102,7 +2102,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -2110,7 +2110,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -2118,7 +2118,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -2126,7 +2126,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -2134,7 +2134,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1146635785.65jubutler'],
         setGender: 'm',
@@ -2192,7 +2192,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (15, 2, 8),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1146635785.65jubutler_type': 'Townsperson',
     '1149126938.35MAsaduzz': {
         setTattooChest: (
@@ -2202,7 +2202,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -2210,7 +2210,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -2218,7 +2218,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -2226,7 +2226,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -2234,7 +2234,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -2242,7 +2242,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -2250,7 +2250,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1149126938.35MAsaduzz'],
         setGender: 'f',
@@ -2308,7 +2308,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (1, 13, 10),
         setClothesBotColor: (0, 5, 10),
-    },
+        },
     '1149126938.35MAsaduzz_type': 'Townsperson',
     '1152830677.95jubutler': {
         setTattooChest: (
@@ -2318,7 +2318,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -2326,7 +2326,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -2334,7 +2334,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -2342,7 +2342,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -2350,7 +2350,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -2358,7 +2358,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -2366,7 +2366,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1152830677.95jubutler'],
         setGender: 'm',
@@ -2427,7 +2427,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (2, 2, 16),
         setClothesBotColor: (9, 5, 10),
-    },
+        },
     '1152830677.95jubutler_type': 'Townsperson',
     '1152839242.37jubutler': {
         setTattooChest: (
@@ -2437,7 +2437,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -2445,7 +2445,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -2453,7 +2453,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -2461,7 +2461,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -2469,7 +2469,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -2477,7 +2477,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -2485,7 +2485,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1152839242.37jubutler'],
         setGender: 'm',
@@ -2543,7 +2543,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (18, 15, 12),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1152839242.37jubutler_type': 'Townsperson',
     '1152840295.64jubutler': {
         setTattooChest: (
@@ -2553,7 +2553,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -2561,7 +2561,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -2569,7 +2569,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -2577,7 +2577,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -2585,7 +2585,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -2593,7 +2593,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -2601,7 +2601,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1152840295.64jubutler'],
         setGender: 'f',
@@ -2662,7 +2662,7 @@ NPC_LIST = {
         setClothesBelt: (6, 0),
         setClothesTopColor: (4, 0, 0),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1152840295.64jubutler_type': 'Townsperson',
     '1152841749.39jubutler': {
         setTattooChest: (
@@ -2672,7 +2672,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -2680,7 +2680,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -2688,7 +2688,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -2696,7 +2696,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -2704,7 +2704,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -2712,7 +2712,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -2720,7 +2720,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1152841749.39jubutler'],
         setGender: 'm',
@@ -2778,7 +2778,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (13, 12, 15),
         setClothesBotColor: (9, 0, 0),
-    },
+        },
     '1152841749.39jubutler_type': 'Townsperson',
     '1153439632.21darren': {
         setTattooChest: (
@@ -2788,7 +2788,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -2796,7 +2796,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -2804,7 +2804,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -2812,7 +2812,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -2820,7 +2820,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -2828,7 +2828,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -2836,7 +2836,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1153439632.21darren'],
         setGender: 'm',
@@ -2897,7 +2897,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (0, 10, 8),
         setClothesBotColor: (14, 5, 10),
-    },
+        },
     '1153439632.21darren_type': 'Townsperson',
     '1153441310.96darren': {
         setTattooChest: (
@@ -2907,7 +2907,7 @@ NPC_LIST = {
             17.111488342285156,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             2,
             -6.877093315124512,
@@ -2915,7 +2915,7 @@ NPC_LIST = {
             12.65822696685791,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone3: (
             5,
             -10.066378593444824,
@@ -2923,7 +2923,7 @@ NPC_LIST = {
             12.65822696685791,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone4: (
             21,
             -0.16474241018295288,
@@ -2931,7 +2931,7 @@ NPC_LIST = {
             1.3294848203659058,
             0.0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.13,
@@ -2939,7 +2939,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.5,
@@ -2947,7 +2947,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.5,
@@ -2955,7 +2955,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.5,
@@ -2963,7 +2963,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -2972,104 +2972,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1153441310.96darren'],
-        setGender:
-        'm',
-        setBodyShape:
-        2,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        0,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.0,
-        setHeadWidth:
-        0.0,
-        setHeadHeight:
-        0.0,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        0.0,
-        setJawRoundness:
-        0.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.0,
-        setJawLength:
-        0.0,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        0.0,
-        setMouthFrown:
-        0.5,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.0,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.0,
-        setEyeOpeningSize:
-        -0.5,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        0.0,
-        setNoseLength:
-        0.0,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        0.0,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        0.0,
-        setEarFlapAngle:
-        0.0,
-        setEarPosition:
-        0.0,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        0,
-        setHairHair:
-        0,
-        setHairBeard:
-        0,
-        setHairMustache:
-        0,
-        setHairColor:
-        1,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        0,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1153441310.96darren'],
+        setGender: 'm',
+        setBodyShape: 2,
+        setBodyHeight: 0.0,
+        setBodyColor: 0,
+        setBodySkin: 0,
+        setHeadSize: 0.0,
+        setHeadWidth: 0.0,
+        setHeadHeight: 0.0,
+        setHeadRoundness: 0.0,
+        setJawWidth: 0.0,
+        setJawRoundness: 0.0,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.0,
+        setJawLength: 0.0,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 0.0,
+        setMouthFrown: 0.5,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.0,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.0,
+        setEyeOpeningSize: -0.5,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: 0.0,
+        setNoseLength: 0.0,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: 0.0,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: 0.0,
+        setEarFlapAngle: 0.0,
+        setEarPosition: 0.0,
+        setEarLobe: 0.0,
+        setHeadTexture: 0,
+        setHairHair: 0,
+        setHairBeard: 0,
+        setHairMustache: 0,
+        setHairColor: 1,
+        setHighLightColor: 0,
+        setEyesColor: 0,
         setClothesShirt: (0, 0),
         setClothesPant: (0, 0),
         setClothesHat: (0, 0),
@@ -3080,7 +3031,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1153441310.96darren_type': 'Pirate',
     '1154497329.64jubutler': {
         setTattooChest: (
@@ -3090,7 +3041,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -3098,7 +3049,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -3106,7 +3057,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -3114,7 +3065,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -3122,7 +3073,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -3130,7 +3081,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -3138,7 +3089,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1154497329.64jubutler'],
         setGender: 'm',
@@ -3196,7 +3147,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (2, 2, 16),
         setClothesBotColor: (9, 5, 10),
-    },
+        },
     '1154497329.64jubutler_type': 'Townsperson',
     '1154497344.0jubutler': {
         setTattooChest: (
@@ -3206,7 +3157,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -3214,7 +3165,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -3222,7 +3173,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -3230,7 +3181,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -3238,7 +3189,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -3246,7 +3197,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -3254,7 +3205,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1154497344.0jubutler'],
         setGender: 'f',
@@ -3315,7 +3266,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (7, 0, 15),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1154497344.0jubutlerPR': {
         setTattooChest: (
             0,
@@ -3324,7 +3275,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -3332,7 +3283,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -3340,7 +3291,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -3348,7 +3299,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -3356,7 +3307,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -3364,7 +3315,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -3372,7 +3323,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1154497344.0jubutlerPR'],
         setGender: 'f',
@@ -3433,7 +3384,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (7, 0, 15),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1154497344.0jubutlerPR_type': 'Townsperson',
     '1154497344.0jubutler_type': 'Townsperson',
     '1154500954.5jubutler': {
@@ -3444,7 +3395,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -3452,7 +3403,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -3460,7 +3411,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -3468,7 +3419,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -3476,7 +3427,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -3484,7 +3435,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -3492,7 +3443,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1154500954.5jubutler'],
         setGender: 'm',
@@ -3550,7 +3501,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (18, 15, 12),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1154500954.5jubutler_type': 'Townsperson',
     '1154574164.57jubutler': {
         setTattooChest: (
@@ -3560,7 +3511,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -3568,7 +3519,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -3576,7 +3527,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -3584,7 +3535,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -3592,7 +3543,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -3600,7 +3551,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -3608,7 +3559,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1154574164.57jubutler'],
         setGender: 'm',
@@ -3669,7 +3620,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (5, 3, 20),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1154574164.57jubutler_type': 'Townsperson',
     '1154731709.64jubutler': {
         setTattooChest: (
@@ -3679,7 +3630,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -3687,7 +3638,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -3695,7 +3646,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -3703,7 +3654,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -3711,7 +3662,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -3719,7 +3670,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -3727,7 +3678,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1154731709.64jubutler'],
         setGender: 'm',
@@ -3788,7 +3739,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (8, 18, 2),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1154731709.64jubutler_type': 'Pirate',
     '1155773612.45fxlara': {
         setTattooChest: (
@@ -3798,7 +3749,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -3806,7 +3757,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -3814,7 +3765,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -3822,7 +3773,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -3830,7 +3781,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -3838,7 +3789,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -3846,7 +3797,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -3854,7 +3805,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -3923,7 +3874,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (9, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1155773612.45fxlara_type': 'Building Exterior',
     '1156978503.22jasyeung': {
         setTattooChest: (
@@ -3933,7 +3884,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -3941,7 +3892,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -3949,7 +3900,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -3957,7 +3908,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -3965,7 +3916,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -3973,7 +3924,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -3981,7 +3932,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1156978503.22jasyeung'],
         setGender: 'm',
@@ -4039,7 +3990,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (1, 0, 8),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1156978503.22jasyeung_type': 'Townsperson',
     '1156979153.83jasyeung': {
         setTattooChest: (
@@ -4049,7 +4000,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -4057,7 +4008,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -4065,7 +4016,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -4073,7 +4024,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -4081,7 +4032,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -4089,7 +4040,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -4097,7 +4048,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1156979153.83jasyeung'],
         setGender: 'm',
@@ -4155,7 +4106,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (9, 9, 8),
         setClothesBotColor: (2, 0, 0),
-    },
+        },
     '1156979153.83jasyeung_type': 'Townsperson',
     '1156980166.1jasyeung': {
         setTattooChest: (
@@ -4165,7 +4116,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -4173,7 +4124,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -4181,7 +4132,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -4189,7 +4140,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -4197,7 +4148,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -4205,7 +4156,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -4213,7 +4164,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1156980166.1jasyeung'],
         setGender: 'f',
@@ -4271,7 +4222,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (14, 20, 7),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1156980166.1jasyeung_type': 'Townsperson',
     '1156986020.6jasyeung': {
         setTattooChest: (
@@ -4281,7 +4232,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -4289,7 +4240,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -4297,7 +4248,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -4305,7 +4256,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -4313,7 +4264,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -4321,7 +4272,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -4329,7 +4280,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1156986020.6jasyeung'],
         setGender: 'm',
@@ -4390,7 +4341,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (15, 7, 9),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1156986020.6jasyeung_type': 'Townsperson',
     '1156986071.78jasyeung': {
         setTattooChest: (
@@ -4400,7 +4351,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -4408,7 +4359,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -4416,7 +4367,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -4424,7 +4375,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -4432,7 +4383,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -4440,7 +4391,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -4448,7 +4399,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -4456,7 +4407,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -4524,7 +4475,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (15, 15, 15),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1156986071.78jasyeung_type': 'Townsperson',
     '1156986102.42jasyeung': {
         setTattooChest: (
@@ -4534,7 +4485,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -4542,7 +4493,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -4550,7 +4501,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -4558,7 +4509,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -4566,7 +4517,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -4574,7 +4525,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -4582,7 +4533,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -4590,7 +4541,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -4658,7 +4609,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (20, 10, 9),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1156986102.42jasyeung_type': 'Townsperson',
     '1156986135.88jasyeung': {
         setTattooChest: (
@@ -4668,7 +4619,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -4676,7 +4627,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -4684,7 +4635,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -4692,7 +4643,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -4700,7 +4651,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -4708,7 +4659,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -4716,7 +4667,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -4724,7 +4675,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -4792,7 +4743,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (8, 9, 20),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1156986135.88jasyeung_type': 'Townsperson',
     '1156986185.83jasyeung': {
         setTattooChest: (
@@ -4802,7 +4753,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -4810,7 +4761,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -4818,7 +4769,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -4826,7 +4777,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -4834,7 +4785,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -4842,7 +4793,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -4850,7 +4801,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -4858,7 +4809,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -4926,7 +4877,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (17, 0, 1),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1156986185.83jasyeung_type': 'Townsperson',
     '1156986248.77jasyeung': {
         setTattooChest: (
@@ -4936,7 +4887,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -4944,7 +4895,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -4952,7 +4903,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -4960,7 +4911,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -4968,7 +4919,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -4976,7 +4927,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -4984,7 +4935,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -4992,7 +4943,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -5060,7 +5011,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (15, 16, 3),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1156986248.77jasyeung_type': 'Townsperson',
     '1157048353.58jasyeung': {
         setTattooChest: (
@@ -5070,7 +5021,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -5078,7 +5029,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -5086,7 +5037,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -5094,7 +5045,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -5102,7 +5053,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -5110,7 +5061,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -5118,7 +5069,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1157048353.58jasyeung'],
         setGender: 'm',
@@ -5179,7 +5130,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (9, 8, 5),
         setClothesBotColor: (9, 0, 0),
-    },
+        },
     '1157048353.58jasyeung_type': 'Townsperson',
     '1157094552.02jasyeung': {
         setTattooChest: (
@@ -5189,7 +5140,7 @@ NPC_LIST = {
             0.191,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.203,
@@ -5197,7 +5148,7 @@ NPC_LIST = {
             0.079,
             271.1,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.203,
@@ -5205,7 +5156,7 @@ NPC_LIST = {
             0.079,
             271.1,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.5,
@@ -5213,7 +5164,7 @@ NPC_LIST = {
             1.0,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.13,
@@ -5221,7 +5172,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.5,
@@ -5229,7 +5180,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.5,
@@ -5237,7 +5188,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.5,
@@ -5245,7 +5196,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -5313,7 +5264,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (15, 2, 7),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1157094552.02jasyeung_type': 'Townsperson',
     '1157097728.52jasyeung': {
         setTattooChest: (
@@ -5323,7 +5274,7 @@ NPC_LIST = {
             11.863450050354004,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             10,
             -13.998003959655762,
@@ -5331,7 +5282,7 @@ NPC_LIST = {
             25.19744300842285,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone3: (
             16,
             -10.066378593444824,
@@ -5339,7 +5290,7 @@ NPC_LIST = {
             12.65822696685791,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -5347,7 +5298,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -5355,7 +5306,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -5363,7 +5314,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -5371,7 +5322,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -5379,7 +5330,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -5388,104 +5339,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1157097728.52jasyeung'],
-        setGender:
-        'm',
-        setBodyShape:
-        2,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        11,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.0,
-        setHeadWidth:
-        -0.5,
-        setHeadHeight:
-        -0.44037070870399475,
-        setHeadRoundness:
-        0.022595807909965515,
-        setJawWidth:
-        0.0,
-        setJawRoundness:
-        0.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.3310469388961792,
-        setJawLength:
-        0.8993017673492432,
-        setMouthWidth:
-        -0.7775468826293945,
-        setMouthLipThickness:
-        -0.6126841306686401,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.0,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.502933144569397,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        -0.25,
-        setEyeOpeningSize:
-        0.0,
-        setEyeBulge:
-        0.8868508338928223,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        0.0,
-        setNoseLength:
-        0.0,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        -0.4169076681137085,
-        setNoseNostrilAngle:
-        0.0,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        -0.9911983013153076,
-        setNoseNostrilBroke:
-        -0.2959253787994385,
-        setEarScale:
-        0.0,
-        setEarFlapAngle:
-        -0.5,
-        setEarPosition:
-        0.0,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        5,
-        setHairHair:
-        0,
-        setHairBeard:
-        7,
-        setHairMustache:
-        4,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        2,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1157097728.52jasyeung'],
+        setGender: 'm',
+        setBodyShape: 2,
+        setBodyHeight: 0.0,
+        setBodyColor: 11,
+        setBodySkin: 0,
+        setHeadSize: 0.0,
+        setHeadWidth: -0.5,
+        setHeadHeight: -0.44037070870399475,
+        setHeadRoundness: 0.022595807909965515,
+        setJawWidth: 0.0,
+        setJawRoundness: 0.0,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.3310469388961792,
+        setJawLength: 0.8993017673492432,
+        setMouthWidth: -0.7775468826293945,
+        setMouthLipThickness: -0.6126841306686401,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.0,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.502933144569397,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: -0.25,
+        setEyeOpeningSize: 0.0,
+        setEyeBulge: 0.8868508338928223,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: 0.0,
+        setNoseLength: 0.0,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: -0.4169076681137085,
+        setNoseNostrilAngle: 0.0,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: -0.9911983013153076,
+        setNoseNostrilBroke: -0.2959253787994385,
+        setEarScale: 0.0,
+        setEarFlapAngle: -0.5,
+        setEarPosition: 0.0,
+        setEarLobe: 0.0,
+        setHeadTexture: 5,
+        setHairHair: 0,
+        setHairBeard: 7,
+        setHairMustache: 4,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 2,
         setClothesShirt: (0, 0),
         setClothesPant: (0, 2),
         setClothesHat: (7, 0),
@@ -5496,7 +5398,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (0, 6, 11),
         setClothesBotColor: (6, 0, 0),
-    },
+        },
     '1157097728.52jasyeung_type': 'Townsperson',
     '1157097816.67jasyeung': {
         setTattooChest: (
@@ -5506,7 +5408,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -5514,7 +5416,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -5522,7 +5424,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -5530,7 +5432,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -5538,7 +5440,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -5546,7 +5448,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -5554,7 +5456,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1157097816.67jasyeung'],
         setGender: 'm',
@@ -5615,7 +5517,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (11, 12, 11),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1157097816.67jasyeung_type': 'Townsperson',
     '1157097924.52jasyeung': {
         setTattooChest: (
@@ -5625,7 +5527,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -5633,7 +5535,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -5641,7 +5543,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -5649,7 +5551,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -5657,7 +5559,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -5665,7 +5567,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -5673,7 +5575,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1157097924.52jasyeung'],
         setGender: 'f',
@@ -5734,7 +5636,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (5, 12, 20),
         setClothesBotColor: (13, 0, 0),
-    },
+        },
     '1157097924.52jasyeung_type': 'Townsperson',
     '1157097962.5jasyeung': {
         setTattooChest: (
@@ -5744,7 +5646,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -5752,7 +5654,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -5760,7 +5662,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -5768,7 +5670,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -5776,7 +5678,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -5784,7 +5686,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -5792,7 +5694,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1157097962.5jasyeung'],
         setGender: 'm',
@@ -5853,7 +5755,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (19, 9, 10),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1157097962.5jasyeung_type': 'Townsperson',
     '1157098037.86jasyeung': {
         setTattooChest: (
@@ -5863,7 +5765,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -5871,7 +5773,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -5879,7 +5781,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -5887,7 +5789,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -5895,7 +5797,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -5903,7 +5805,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -5911,7 +5813,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1157098037.86jasyeung'],
         setGender: 'm',
@@ -5972,7 +5874,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (0, 8, 7),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1157098037.86jasyeung_type': 'Townsperson',
     '1157098075.78jasyeung': {
         setTattooChest: (
@@ -5982,7 +5884,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -5990,7 +5892,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -5998,7 +5900,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -6006,7 +5908,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -6014,7 +5916,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -6022,7 +5924,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -6030,7 +5932,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1157098075.78jasyeung'],
         setGender: 'm',
@@ -6091,7 +5993,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (9, 16, 9),
         setClothesBotColor: (9, 0, 0),
-    },
+        },
     '1157098075.78jasyeung_type': 'Townsperson',
     '1157098120.05jasyeung': {
         setTattooChest: (
@@ -6101,7 +6003,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -6109,7 +6011,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -6117,7 +6019,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -6125,7 +6027,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -6133,7 +6035,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -6141,7 +6043,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -6149,7 +6051,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1157098120.05jasyeung'],
         setGender: 'm',
@@ -6210,7 +6112,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (18, 0, 12),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1157098120.05jasyeung_type': 'Townsperson',
     '1157098184.94jasyeung': {
         setTattooChest: (
@@ -6220,7 +6122,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -6228,7 +6130,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -6236,7 +6138,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -6244,7 +6146,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -6252,7 +6154,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -6260,7 +6162,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -6268,7 +6170,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1157098184.94jasyeung'],
         setGender: 'm',
@@ -6329,7 +6231,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (11, 14, 3),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1157098184.94jasyeung_type': 'Townsperson',
     '1157587636.63jasyeung': {
         setTattooChest: (
@@ -6339,7 +6241,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -6347,7 +6249,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -6355,7 +6257,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -6363,7 +6265,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -6371,7 +6273,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -6379,7 +6281,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -6387,7 +6289,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -6395,7 +6297,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -6463,7 +6365,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (18, 12, 12),
         setClothesBotColor: (3, 0, 0),
-    },
+        },
     '1157587636.63jasyeung_type': 'Townsperson',
     '1158013224.89dparis': {
         setTattooChest: (
@@ -6473,7 +6375,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -6481,7 +6383,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -6489,7 +6391,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -6497,7 +6399,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -6505,7 +6407,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -6513,7 +6415,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -6521,7 +6423,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1158013224.89dparis'],
         setGender: 'f',
@@ -6579,7 +6481,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (7, 1, 12),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1158013224.89dparis_type': 'Townsperson',
     '1158013639.31dparis': {
         setTattooChest: (
@@ -6589,7 +6491,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -6597,7 +6499,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -6605,7 +6507,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -6613,7 +6515,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -6621,7 +6523,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -6629,7 +6531,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -6637,7 +6539,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -6645,7 +6547,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -6713,7 +6615,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (7, 1, 12),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1158013639.31dparis_type': 'Townsperson',
     '1161287533.85MAsaduzz': {
         setTattooChest: (
@@ -6723,7 +6625,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -6731,7 +6633,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -6739,7 +6641,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -6747,7 +6649,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -6755,7 +6657,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -6763,7 +6665,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -6771,7 +6673,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1161287533.85MAsaduzz'],
         setGender: 'm',
@@ -6832,7 +6734,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1161287533.85MAsaduzz_type': 'Townsperson',
     '1165199819.22Shochet': {
         setTattooChest: (
@@ -6842,7 +6744,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -6850,7 +6752,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -6858,7 +6760,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -6866,7 +6768,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -6874,7 +6776,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -6882,7 +6784,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -6890,7 +6792,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1165199819.22Shochet'],
         setGender: 'm',
@@ -6951,7 +6853,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (2, 3, 8),
         setClothesBotColor: (2, 0, 0),
-    },
+        },
     '1165199819.22Shochet_type': 'Townsperson',
     '1165199931.31Shochet': {
         setTattooChest: (
@@ -6961,7 +6863,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -6969,7 +6871,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -6977,7 +6879,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -6985,7 +6887,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -6993,7 +6895,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -7001,7 +6903,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -7009,7 +6911,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1165199931.31Shochet'],
         setGender: 'f',
@@ -7070,7 +6972,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 2, 0),
         setClothesBotColor: (2, 0, 0),
-    },
+        },
     '1165199931.31Shochet_type': 'Townsperson',
     '1168022298.47Shochet': {
         setTattooChest: (
@@ -7080,7 +6982,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -7088,7 +6990,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -7096,7 +6998,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -7104,7 +7006,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -7112,7 +7014,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -7120,7 +7022,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -7128,7 +7030,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1168022298.47Shochet'],
         setGender: 'm',
@@ -7189,7 +7091,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (8, 18, 11),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1168022298.47Shochet_type': 'Townsperson',
     '1168022348.66Shochet': {
         setTattooChest: (
@@ -7199,7 +7101,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -7207,7 +7109,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -7215,7 +7117,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -7223,7 +7125,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -7231,7 +7133,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -7239,7 +7141,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -7247,7 +7149,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1168022348.66Shochet'],
         setGender: 'm',
@@ -7308,7 +7210,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (12, 0, 8),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1168022348.66Shochet_type': 'Townsperson',
     '1168052247.45mike': {
         setTattooChest: (
@@ -7318,7 +7220,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -7326,7 +7228,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -7334,7 +7236,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -7342,7 +7244,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -7350,7 +7252,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -7358,7 +7260,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -7366,7 +7268,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1168052247.45mike'],
         setGender: 'f',
@@ -7427,7 +7329,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (18, 19, 1),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1168052247.45mike_type': 'Townsperson',
     '1168748251.22joswilso': {
         setTattooChest: (
@@ -7437,7 +7339,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -7445,7 +7347,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -7453,7 +7355,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -7461,7 +7363,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -7469,7 +7371,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -7477,7 +7379,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -7485,7 +7387,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1168748251.22joswilso'],
         setGender: 'm',
@@ -7546,7 +7448,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (0, 1, 15),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1168748251.22joswilso_type': 'Townsperson',
     '1169060460.13mike': {
         setTattooChest: (
@@ -7556,7 +7458,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -7564,7 +7466,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -7572,7 +7474,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -7580,7 +7482,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -7588,7 +7490,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -7596,7 +7498,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -7604,7 +7506,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169060460.13mike'],
         setGender: 'm',
@@ -7665,7 +7567,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1169060460.13mike_type': 'Townsperson',
     '1169063296.16mike': {
         setTattooChest: (
@@ -7675,7 +7577,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -7683,7 +7585,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -7691,7 +7593,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -7699,7 +7601,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -7707,7 +7609,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -7715,7 +7617,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -7723,7 +7625,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169063296.16mike'],
         setGender: 'f',
@@ -7784,7 +7686,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (20, 0, 0),
         setClothesBotColor: (20, 0, 0),
-    },
+        },
     '1169063296.16mike_type': 'Townsperson',
     '1169067906.19mike': {
         setTattooChest: (
@@ -7794,7 +7696,7 @@ NPC_LIST = {
             14.993154525756836,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -7802,7 +7704,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -7810,7 +7712,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -7818,7 +7720,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -7826,7 +7728,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -7834,7 +7736,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -7842,7 +7744,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -7850,7 +7752,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -7859,104 +7761,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1169067906.19mike'],
-        setGender:
-        'f',
-        setBodyShape:
-        4,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        8,
-        setBodySkin:
-        2,
-        setHeadSize:
-        9.119510650634766e-05,
-        setHeadWidth:
-        0.08962243795394897,
-        setHeadHeight:
-        0.20619070529937744,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        0.0,
-        setJawRoundness:
-        0.4280071258544922,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        -0.6310128569602966,
-        setJawLength:
-        3.719329833984375e-05,
-        setMouthWidth:
-        -0.64188551902771,
-        setMouthLipThickness:
-        -0.22110754251480103,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.0,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.0,
-        setEyeOpeningSize:
-        -0.46287524700164795,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        -0.2634727954864502,
-        setNoseNostrilWidth:
-        -1.0,
-        setNoseLength:
-        -0.9441109299659729,
-        setNoseBump:
-        0.6257480382919312,
-        setNoseNostrilHeight:
-        0.95508873462677,
-        setNoseNostrilAngle:
-        0.9660671949386597,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        -0.37874215841293335,
-        setEarFlapAngle:
-        0.47754448652267456,
-        setEarPosition:
-        -0.23053860664367676,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        3,
-        setHairHair:
-        0,
-        setHairBeard:
-        0,
-        setHairMustache:
-        0,
-        setHairColor:
-        1,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        1,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1169067906.19mike'],
+        setGender: 'f',
+        setBodyShape: 4,
+        setBodyHeight: 0.0,
+        setBodyColor: 8,
+        setBodySkin: 2,
+        setHeadSize: 9.119510650634766e-05,
+        setHeadWidth: 0.08962243795394897,
+        setHeadHeight: 0.20619070529937744,
+        setHeadRoundness: 0.0,
+        setJawWidth: 0.0,
+        setJawRoundness: 0.4280071258544922,
+        setJawChinSize: 0.0,
+        setJawAngle: -0.6310128569602966,
+        setJawLength: 3.719329833984375e-05,
+        setMouthWidth: -0.64188551902771,
+        setMouthLipThickness: -0.22110754251480103,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.0,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.0,
+        setEyeOpeningSize: -0.46287524700164795,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: -0.2634727954864502,
+        setNoseNostrilWidth: -1.0,
+        setNoseLength: -0.9441109299659729,
+        setNoseBump: 0.6257480382919312,
+        setNoseNostrilHeight: 0.95508873462677,
+        setNoseNostrilAngle: 0.9660671949386597,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: -0.37874215841293335,
+        setEarFlapAngle: 0.47754448652267456,
+        setEarPosition: -0.23053860664367676,
+        setEarLobe: 0.0,
+        setHeadTexture: 3,
+        setHairHair: 0,
+        setHairBeard: 0,
+        setHairMustache: 0,
+        setHairColor: 1,
+        setHighLightColor: 0,
+        setEyesColor: 1,
         setClothesShirt: (3, 2),
         setClothesPant: (0, 0),
         setClothesHat: (0, 0),
@@ -7967,7 +7820,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (15, 0, 0),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1169067906.19mike_type': 'Townsperson',
     '1169068641.66mike': {
         setTattooChest: (
@@ -7977,7 +7830,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -7985,7 +7838,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -7993,7 +7846,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -8001,7 +7854,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -8009,7 +7862,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -8017,7 +7870,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -8025,7 +7878,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169068641.66mike'],
         setGender: 'm',
@@ -8086,7 +7939,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (0, 0, 8),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1169068641.66mike_type': 'Townsperson',
     '1169070429.72mike': {
         setTattooChest: (
@@ -8096,7 +7949,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -8104,7 +7957,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -8112,7 +7965,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -8120,7 +7973,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -8128,7 +7981,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -8136,7 +7989,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -8144,7 +7997,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169070429.72mike'],
         setGender: 'm',
@@ -8205,7 +8058,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (10, 16, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1169070429.72mike_type': 'Townsperson',
     '1169071109.22mike': {
         setTattooChest: (
@@ -8215,7 +8068,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -8223,7 +8076,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -8231,7 +8084,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -8239,7 +8092,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -8247,7 +8100,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -8255,7 +8108,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -8263,7 +8116,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169071109.22mike'],
         setGender: 'm',
@@ -8324,7 +8177,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (9, 18, 12),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1169071109.22mike_type': 'Townsperson',
     '1169075008.52mike': {
         setTattooChest: (
@@ -8334,7 +8187,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -8342,7 +8195,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -8350,7 +8203,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -8358,7 +8211,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -8366,7 +8219,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -8374,7 +8227,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -8382,7 +8235,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169075008.52mike'],
         setGender: 'm',
@@ -8443,7 +8296,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1169075008.52mike_type': 'Townsperson',
     '1169075474.72mike': {
         setTattooChest: (
@@ -8453,7 +8306,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -8461,7 +8314,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -8469,7 +8322,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -8477,7 +8330,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -8485,7 +8338,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -8493,7 +8346,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -8501,7 +8354,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169075474.72mike'],
         setGender: 'm',
@@ -8562,7 +8415,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (19, 2, 17),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1169075474.72mike_type': 'Townsperson',
     '1169075683.22mike': {
         setTattooChest: (
@@ -8572,7 +8425,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -8580,7 +8433,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -8588,7 +8441,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -8596,7 +8449,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -8604,7 +8457,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -8612,7 +8465,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -8620,7 +8473,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169075683.22mike'],
         setGender: 'f',
@@ -8681,7 +8534,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 7, 4),
         setClothesBotColor: (7, 0, 0),
-    },
+        },
     '1169075683.22mike_type': 'Townsperson',
     '1169075869.81mike': {
         setTattooChest: (
@@ -8691,7 +8544,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -8699,7 +8552,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -8707,7 +8560,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -8715,7 +8568,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -8723,7 +8576,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -8731,7 +8584,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -8739,7 +8592,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -8747,7 +8600,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -8816,7 +8669,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (4, 19, 7),
         setClothesBotColor: (4, 0, 0),
-    },
+        },
     '1169075869.81mike_type': 'Townsperson',
     '1169076109.16mike': {
         setTattooChest: (
@@ -8826,7 +8679,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -8834,7 +8687,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -8842,7 +8695,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -8850,7 +8703,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -8858,7 +8711,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -8866,7 +8719,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -8874,7 +8727,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169076109.16mike'],
         setGender: 'm',
@@ -8935,7 +8788,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (19, 20, 0),
         setClothesBotColor: (12, 0, 0),
-    },
+        },
     '1169076109.16mike_type': 'Townsperson',
     '1169076368.97mike': {
         setTattooChest: (
@@ -8945,7 +8798,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -8953,7 +8806,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -8961,7 +8814,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -8969,7 +8822,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -8977,7 +8830,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -8985,7 +8838,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -8993,7 +8846,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169076368.97mike'],
         setGender: 'm',
@@ -9054,7 +8907,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (16, 14, 20),
         setClothesBotColor: (4, 0, 0),
-    },
+        },
     '1169076368.97mike_type': 'Townsperson',
     '1169076564.88mike': {
         setTattooChest: (
@@ -9064,7 +8917,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -9072,7 +8925,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -9080,7 +8933,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -9088,7 +8941,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -9096,7 +8949,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -9104,7 +8957,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -9112,7 +8965,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169076564.88mike'],
         setGender: 'm',
@@ -9173,7 +9026,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1169076564.88mike_type': 'Townsperson',
     '1169077081.52mike': {
         setTattooChest: (
@@ -9183,7 +9036,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -9191,7 +9044,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -9199,7 +9052,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -9207,7 +9060,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -9215,7 +9068,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -9223,7 +9076,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -9231,7 +9084,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169077081.52mike'],
         setGender: 'f',
@@ -9292,7 +9145,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (6, 13, 2),
         setClothesBotColor: (3, 0, 0),
-    },
+        },
     '1169077081.52mike_type': 'Townsperson',
     '1169077360.47mike': {
         setTattooChest: (
@@ -9302,7 +9155,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -9310,7 +9163,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -9318,7 +9171,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -9326,7 +9179,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -9334,7 +9187,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -9342,7 +9195,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -9350,7 +9203,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169077360.47mike'],
         setGender: 'f',
@@ -9411,7 +9264,7 @@ NPC_LIST = {
         setClothesBelt: (9, 0),
         setClothesTopColor: (19, 8, 19),
         setClothesBotColor: (13, 0, 0),
-    },
+        },
     '1169077360.47mike_type': 'Townsperson',
     '1169078025.53mike': {
         setTattooChest: (
@@ -9421,7 +9274,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -9429,7 +9282,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -9437,7 +9290,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -9445,7 +9298,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -9453,7 +9306,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -9461,7 +9314,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -9469,7 +9322,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169078025.53mike'],
         setGender: 'm',
@@ -9530,7 +9383,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (2, 9, 14),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1169078025.53mike_type': 'Townsperson',
     '1169078309.55mike': {
         setTattooChest: (
@@ -9540,7 +9393,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -9548,7 +9401,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -9556,7 +9409,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -9564,7 +9417,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -9572,7 +9425,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -9580,7 +9433,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -9588,7 +9441,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169078309.55mike'],
         setGender: 'm',
@@ -9649,7 +9502,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (19, 2, 0),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1169078309.55mike_type': 'Townsperson',
     '1169078705.84mike': {
         setTattooChest: (
@@ -9659,7 +9512,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -9667,7 +9520,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -9675,7 +9528,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -9683,7 +9536,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -9691,7 +9544,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -9699,7 +9552,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -9707,7 +9560,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169078705.84mike'],
         setGender: 'm',
@@ -9768,7 +9621,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (20, 14, 12),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1169078705.84mike_type': 'Townsperson',
     '1169079172.34sdnaik': {
         setTattooChest: (
@@ -9778,7 +9631,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -9786,7 +9639,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -9794,7 +9647,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -9802,7 +9655,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -9810,7 +9663,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -9818,7 +9671,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -9826,7 +9679,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169079172.34sdnaik'],
         setGender: 'm',
@@ -9887,7 +9740,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (12, 14, 8),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1169079172.34sdnaik_type': 'Townsperson',
     '1169081503.72mike': {
         setTattooChest: (
@@ -9897,7 +9750,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -9905,7 +9758,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -9913,7 +9766,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -9921,7 +9774,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -9929,7 +9782,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -9937,7 +9790,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -9945,7 +9798,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169081503.72mike'],
         setGender: 'm',
@@ -10006,7 +9859,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (3, 15, 2),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1169081503.72mike_type': 'Townsperson',
     '1169081738.45mike': {
         setTattooChest: (
@@ -10016,7 +9869,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -10024,7 +9877,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -10032,7 +9885,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -10040,7 +9893,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -10048,7 +9901,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -10056,7 +9909,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -10064,7 +9917,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169081738.45mike'],
         setGender: 'm',
@@ -10125,7 +9978,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (5, 13, 16),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1169081738.45mike_type': 'Townsperson',
     '1169083104.56sdnaik': {
         setTattooChest: (
@@ -10135,7 +9988,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -10143,7 +9996,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -10151,7 +10004,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -10159,7 +10012,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -10167,7 +10020,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -10175,7 +10028,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -10183,7 +10036,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169083104.56sdnaik'],
         setGender: 'm',
@@ -10244,7 +10097,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (4, 12, 4),
         setClothesBotColor: (4, 0, 0),
-    },
+        },
     '1169083104.56sdnaik_type': 'Townsperson',
     '1169088062.75mike': {
         setTattooChest: (
@@ -10254,7 +10107,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -10262,7 +10115,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -10270,7 +10123,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -10278,7 +10131,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -10286,7 +10139,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -10294,7 +10147,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -10302,7 +10155,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169088062.75mike'],
         setGender: 'm',
@@ -10363,7 +10216,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (1, 4, 0),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1169088062.75mike_type': 'Townsperson',
     '1169094482.66mike': {
         setTattooChest: (
@@ -10373,7 +10226,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -10381,7 +10234,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -10389,7 +10242,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -10397,7 +10250,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -10405,7 +10258,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -10413,7 +10266,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -10421,7 +10274,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169094482.66mike'],
         setGender: 'm',
@@ -10482,7 +10335,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (13, 11, 19),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1169094482.66mike_type': 'Townsperson',
     '1169094669.8mike': {
         setTattooChest: (
@@ -10492,7 +10345,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -10500,7 +10353,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -10508,7 +10361,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -10516,7 +10369,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -10524,7 +10377,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -10532,7 +10385,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -10540,7 +10393,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169094669.8mike'],
         setGender: 'm',
@@ -10601,7 +10454,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1169094669.8mike_type': 'Townsperson',
     '1169151219.8mike': {
         setTattooChest: (
@@ -10611,7 +10464,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -10619,7 +10472,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -10627,7 +10480,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -10635,7 +10488,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -10643,7 +10496,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -10651,7 +10504,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -10659,7 +10512,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169151219.8mike'],
         setGender: 'm',
@@ -10720,7 +10573,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (9, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1169151219.8mike_type': 'Townsperson',
     '1169190957.44mike': {
         setTattooChest: (
@@ -10730,7 +10583,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -10738,7 +10591,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -10746,7 +10599,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -10754,7 +10607,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -10762,7 +10615,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -10770,7 +10623,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -10778,7 +10631,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1169190957.44mike'],
         setGender: 'm',
@@ -10839,7 +10692,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1169190957.44mike_type': 'Townsperson',
     '1170739712.0mike': {
         setTattooChest: (
@@ -10849,7 +10702,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -10857,7 +10710,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -10865,7 +10718,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -10873,7 +10726,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -10881,7 +10734,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -10889,7 +10742,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -10897,7 +10750,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1170739712.0mike'],
         setGender: 'f',
@@ -10958,7 +10811,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (9, 16, 2),
         setClothesBotColor: (9, 0, 0),
-    },
+        },
     '1170739712.0mike_type': 'Townsperson',
     '1170739968.0mike': {
         setTattooChest: (
@@ -10968,7 +10821,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -10976,7 +10829,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -10984,7 +10837,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -10992,7 +10845,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -11000,7 +10853,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -11008,7 +10861,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -11016,7 +10869,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1170739968.0mike'],
         setGender: 'm',
@@ -11077,7 +10930,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (20, 19, 11),
         setClothesBotColor: (2, 0, 0),
-    },
+        },
     '1170739968.0mike_type': 'Townsperson',
     '1171238953.92MAsaduzz': {
         setTattooChest: (
@@ -11087,7 +10940,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -11095,7 +10948,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -11103,7 +10956,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -11111,7 +10964,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -11119,7 +10972,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -11127,7 +10980,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -11135,7 +10988,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1171238953.92MAsaduzz'],
         setGender: 'f',
@@ -11196,7 +11049,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1171238953.92MAsaduzz_type': 'Townsperson',
     '1171321221.87MAsaduzz': {
         setTattooChest: (
@@ -11206,7 +11059,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -11214,7 +11067,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -11222,7 +11075,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -11230,7 +11083,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -11238,7 +11091,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -11246,7 +11099,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -11254,7 +11107,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1171321221.87MAsaduzz'],
         setGender: 'n',
@@ -11315,7 +11168,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1171321221.87MAsaduzz_type': 'Townsperson',
     '1171321509.23MAsaduzz': {
         setTattooChest: (
@@ -11325,7 +11178,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -11333,7 +11186,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -11341,7 +11194,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -11349,7 +11202,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -11357,7 +11210,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -11365,7 +11218,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -11373,7 +11226,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1171321509.23MAsaduzz'],
         setGender: 'n',
@@ -11434,7 +11287,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1171321509.23MAsaduzz_type': 'Townsperson',
     '1172276608.0mike': {
         setTattooChest: (
@@ -11444,7 +11297,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -11452,7 +11305,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -11460,7 +11313,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -11468,7 +11321,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -11476,7 +11329,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -11484,7 +11337,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -11492,7 +11345,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1172276608.0mike'],
         setGender: 'm',
@@ -11553,7 +11406,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (3, 15, 12),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1172276608.0mike_type': 'Townsperson',
     '1172630144.0mike': {
         setTattooChest: (
@@ -11563,7 +11416,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -11571,7 +11424,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -11579,7 +11432,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -11587,7 +11440,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -11595,7 +11448,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -11603,7 +11456,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -11611,7 +11464,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1172630144.0mike'],
         setGender: 'm',
@@ -11672,7 +11525,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (10, 5, 5),
         setClothesBotColor: (3, 0, 0),
-    },
+        },
     '1172630144.0mike_type': 'Townsperson',
     '1172887552.0mike': {
         setTattooChest: (
@@ -11682,7 +11535,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -11690,7 +11543,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -11698,7 +11551,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -11706,7 +11559,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -11714,7 +11567,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -11722,7 +11575,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -11730,7 +11583,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1172887552.0mike'],
         setGender: 'm',
@@ -11791,7 +11644,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (7, 20, 18),
         setClothesBotColor: (7, 0, 0),
-    },
+        },
     '1172887552.0mike0': {
         setTattooChest: (
             0,
@@ -11800,7 +11653,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -11808,7 +11661,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -11816,7 +11669,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -11824,7 +11677,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -11832,7 +11685,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -11840,7 +11693,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -11848,7 +11701,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1172887552.0mike0'],
         setGender: 'm',
@@ -11909,7 +11762,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (6, 14, 18),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1172887552.0mike0_type': 'Townsperson',
     '1172887552.0mike_type': 'Townsperson',
     '1173146624.0mike0': {
@@ -11920,7 +11773,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -11928,7 +11781,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -11936,7 +11789,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -11944,7 +11797,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -11952,7 +11805,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -11960,7 +11813,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -11968,7 +11821,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1173146624.0mike0'],
         setGender: 'm',
@@ -12029,7 +11882,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (12, 0, 16),
         setClothesBotColor: (5, 0, 0),
-    },
+        },
     '1173146624.0mike0_type': 'Townsperson',
     '1173147520.0mike': {
         setTattooChest: (
@@ -12039,7 +11892,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -12047,7 +11900,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -12055,7 +11908,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -12063,7 +11916,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -12071,7 +11924,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -12079,7 +11932,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -12087,7 +11940,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1173147520.0mike'],
         setGender: 'm',
@@ -12148,7 +12001,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (14, 2, 13),
         setClothesBotColor: (20, 0, 0),
-    },
+        },
     '1173147520.0mike_type': 'Townsperson',
     '1174342784.0dxschafe': {
         setTattooChest: (
@@ -12158,7 +12011,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -12166,7 +12019,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -12174,7 +12027,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -12182,7 +12035,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -12190,7 +12043,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -12198,7 +12051,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -12206,7 +12059,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1174342784.0dxschafe'],
         setGender: 'f',
@@ -12267,7 +12120,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (7, 5, 3),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1174342784.0dxschafe_type': 'Townsperson',
     '1174343680.0dxschafe': {
         setTattooChest: (
@@ -12277,7 +12130,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -12285,7 +12138,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -12293,7 +12146,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -12301,7 +12154,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -12309,7 +12162,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -12317,7 +12170,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -12325,7 +12178,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1174343680.0dxschafe'],
         setGender: 'm',
@@ -12386,7 +12239,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (14, 0, 15),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1174343680.0dxschafe_type': 'Townsperson',
     '1174344320.0dxschafe': {
         setTattooChest: (
@@ -12396,7 +12249,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -12404,7 +12257,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -12412,7 +12265,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -12420,7 +12273,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -12428,7 +12281,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -12436,7 +12289,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -12444,7 +12297,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1174344320.0dxschafe'],
         setGender: 'm',
@@ -12505,7 +12358,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (10, 16, 0),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1174344320.0dxschafe_type': 'Townsperson',
     '1174345216.0dxschafe': {
         setTattooChest: (
@@ -12515,7 +12368,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -12523,7 +12376,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -12531,7 +12384,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -12539,7 +12392,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -12547,7 +12400,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -12555,7 +12408,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -12563,7 +12416,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1174345216.0dxschafe'],
         setGender: 'm',
@@ -12624,7 +12477,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (5, 7, 6),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1174345216.0dxschafe_type': 'Townsperson',
     '1174345984.0dxschafe': {
         setTattooChest: (
@@ -12634,7 +12487,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -12642,7 +12495,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -12650,7 +12503,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -12658,7 +12511,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -12666,7 +12519,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -12674,7 +12527,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -12682,7 +12535,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1174345984.0dxschafe'],
         setGender: 'm',
@@ -12743,7 +12596,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (1, 15, 9),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1174345984.0dxschafe_type': 'Townsperson',
     '1174350464.0dxschafe': {
         setTattooChest: (
@@ -12753,7 +12606,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -12761,7 +12614,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -12769,7 +12622,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -12777,7 +12630,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -12785,7 +12638,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -12793,7 +12646,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -12801,7 +12654,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1174350464.0dxschafe'],
         setGender: 'm',
@@ -12862,7 +12715,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (1, 1, 1),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1174350464.0dxschafe_type': 'Townsperson',
     '1174351232.0dxschafe': {
         setTattooChest: (
@@ -12872,7 +12725,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -12880,7 +12733,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -12888,7 +12741,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -12896,7 +12749,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -12904,7 +12757,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -12912,7 +12765,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -12920,7 +12773,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1174351232.0dxschafe'],
         setGender: 'm',
@@ -12981,7 +12834,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (2, 5, 12),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1174351232.0dxschafe_type': 'Townsperson',
     '1174351616.0dxschafe': {
         setTattooChest: (
@@ -12991,7 +12844,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -12999,7 +12852,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -13007,7 +12860,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -13015,7 +12868,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -13023,7 +12876,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -13031,7 +12884,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -13039,7 +12892,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1174351616.0dxschafe'],
         setGender: 'm',
@@ -13100,7 +12953,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (16, 0, 17),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1174351616.0dxschafe_type': 'Townsperson',
     '1174352768.0dxschafe': {
         setTattooChest: (
@@ -13110,7 +12963,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -13118,7 +12971,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -13126,7 +12979,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -13134,7 +12987,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -13142,7 +12995,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -13150,7 +13003,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -13158,7 +13011,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1174352768.0dxschafe'],
         setGender: 'm',
@@ -13219,7 +13072,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (7, 0, 18),
         setClothesBotColor: (4, 0, 0),
-    },
+        },
     '1174352768.0dxschafe_type': 'Townsperson',
     '1174353792.0dxschafe': {
         setTattooChest: (
@@ -13229,7 +13082,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -13237,7 +13090,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -13245,7 +13098,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -13253,7 +13106,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -13261,7 +13114,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -13269,7 +13122,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -13277,7 +13130,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1174353792.0dxschafe'],
         setGender: 'm',
@@ -13338,7 +13191,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (13, 18, 16),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1174353792.0dxschafe_type': 'Townsperson',
     '1174954368.0jubutler': {
         setTattooChest: (
@@ -13348,7 +13201,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -13356,7 +13209,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -13364,7 +13217,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -13372,7 +13225,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -13380,7 +13233,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -13388,7 +13241,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -13396,7 +13249,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1174954368.0jubutler'],
         setGender: 'm',
@@ -13457,7 +13310,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (10, 20, 9),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1174954368.0jubutler_type': 'Townsperson',
     '1175101824.0dxschafe': {
         setTattooChest: (
@@ -13467,7 +13320,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -13475,7 +13328,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -13483,7 +13336,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -13491,7 +13344,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -13499,7 +13352,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -13507,7 +13360,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -13515,7 +13368,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175101824.0dxschafe'],
         setGender: 'm',
@@ -13576,7 +13429,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (2, 2, 11),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1175101824.0dxschafe_type': 'Townsperson',
     '1175117568.0dxschafe0': {
         setTattooChest: (
@@ -13586,7 +13439,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -13594,7 +13447,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -13602,7 +13455,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -13610,7 +13463,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -13618,7 +13471,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -13626,7 +13479,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -13634,7 +13487,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175117568.0dxschafe0'],
         setGender: 'm',
@@ -13695,7 +13548,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (5, 15, 10),
         setClothesBotColor: (4, 0, 0),
-    },
+        },
     '1175117568.0dxschafe0_type': 'Townsperson',
     '1175118080.0dxschafe': {
         setTattooChest: (
@@ -13705,7 +13558,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -13713,7 +13566,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -13721,7 +13574,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -13729,7 +13582,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -13737,7 +13590,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -13745,7 +13598,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -13753,7 +13606,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175118080.0dxschafe'],
         setGender: 'm',
@@ -13814,7 +13667,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (16, 5, 4),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1175118080.0dxschafe_type': 'Townsperson',
     '1175119104.0dxschafe1': {
         setTattooChest: (
@@ -13824,7 +13677,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -13832,7 +13685,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -13840,7 +13693,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -13848,7 +13701,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -13856,7 +13709,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -13864,7 +13717,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -13872,7 +13725,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175119104.0dxschafe1'],
         setGender: 'f',
@@ -13933,7 +13786,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (7, 15, 5),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1175119104.0dxschafe1_type': 'Townsperson',
     '1175120896.0dxschafe0': {
         setTattooChest: (
@@ -13943,7 +13796,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -13951,7 +13804,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -13959,7 +13812,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -13967,7 +13820,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -13975,7 +13828,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -13983,7 +13836,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -13991,7 +13844,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175120896.0dxschafe0'],
         setGender: 'm',
@@ -14052,7 +13905,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (0, 4, 6),
         setClothesBotColor: (9, 0, 0),
-    },
+        },
     '1175120896.0dxschafe0_type': 'Townsperson',
     '1175282688.00MAsaduzz': {
         setTattooChest: (
@@ -14062,7 +13915,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -14070,7 +13923,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -14078,7 +13931,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -14086,7 +13939,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -14094,7 +13947,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -14102,7 +13955,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -14110,7 +13963,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175282688.00MAsaduzz'],
         setGender: 'n',
@@ -14171,7 +14024,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1175282688.00MAsaduzz_type': 'Townsperson',
     '1175283200.00MAsaduzz': {
         setTattooChest: (
@@ -14181,7 +14034,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -14189,7 +14042,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -14197,7 +14050,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -14205,7 +14058,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -14213,7 +14066,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -14221,7 +14074,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -14229,7 +14082,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175283200.00MAsaduzz'],
         setGender: 'n',
@@ -14290,7 +14143,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1175283200.00MAsaduzz_type': 'Townsperson',
     '1175283328.00MAsaduzz': {
         setTattooChest: (
@@ -14300,7 +14153,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -14308,7 +14161,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -14316,7 +14169,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -14324,7 +14177,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -14332,7 +14185,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -14340,7 +14193,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -14348,7 +14201,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175283328.00MAsaduzz'],
         setGender: 'n',
@@ -14409,7 +14262,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1175283328.00MAsaduzz_type': 'Townsperson',
     '1175553664.0dxschafe': {
         setTattooChest: (
@@ -14419,7 +14272,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -14427,7 +14280,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -14435,7 +14288,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -14443,7 +14296,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -14451,7 +14304,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -14459,7 +14312,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -14467,7 +14320,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175553664.0dxschafe'],
         setGender: 'f',
@@ -14528,7 +14381,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (18, 1, 5),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1175553664.0dxschafe_type': 'Townsperson',
     '1175554816.0dxschafe': {
         setTattooChest: (
@@ -14538,7 +14391,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -14546,7 +14399,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -14554,7 +14407,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -14562,7 +14415,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -14570,7 +14423,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -14578,7 +14431,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -14586,7 +14439,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175554816.0dxschafe'],
         setGender: 'f',
@@ -14647,7 +14500,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (2, 0, 18),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1175554816.0dxschafe_type': 'Townsperson',
     '1175635584.0dxschafe': {
         setTattooChest: (
@@ -14657,7 +14510,7 @@ NPC_LIST = {
             22.607877731323242,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -14665,7 +14518,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -14673,7 +14526,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -14681,7 +14534,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -14689,7 +14542,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -14697,7 +14550,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -14705,7 +14558,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -14713,7 +14566,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -14722,104 +14575,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1175635584.0dxschafe'],
-        setGender:
-        'f',
-        setBodyShape:
-        3,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        6,
-        setBodySkin:
-        0,
-        setHeadSize:
-        -0.3597591519355774,
-        setHeadWidth:
-        -0.17987963557243347,
-        setHeadHeight:
-        0.5,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        0.32131755352020264,
-        setJawRoundness:
-        0.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.0,
-        setJawLength:
-        0.0,
-        setMouthWidth:
-        -0.9402797818183899,
-        setMouthLipThickness:
-        0.38453102111816406,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        -0.4251699447631836,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.4905807375907898,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        -0.19214412569999695,
-        setEyeOpeningSize:
-        -1.0,
-        setEyeBulge:
-        0.03270542621612549,
-        setNoseBridgeWidth:
-        -0.23027896881103516,
-        setNoseNostrilWidth:
-        0.18051934242248535,
-        setNoseLength:
-        1.0,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        0.23386216163635254,
-        setNoseNostrilAngle:
-        -0.605049729347229,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        -0.12264510989189148,
-        setEarFlapAngle:
-        -0.19498947262763977,
-        setEarPosition:
-        -0.5,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        0,
-        setHairHair:
-        9,
-        setHairBeard:
-        0,
-        setHairMustache:
-        0,
-        setHairColor:
-        3,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        1,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1175635584.0dxschafe'],
+        setGender: 'f',
+        setBodyShape: 3,
+        setBodyHeight: 0.0,
+        setBodyColor: 6,
+        setBodySkin: 0,
+        setHeadSize: -0.3597591519355774,
+        setHeadWidth: -0.17987963557243347,
+        setHeadHeight: 0.5,
+        setHeadRoundness: 0.0,
+        setJawWidth: 0.32131755352020264,
+        setJawRoundness: 0.0,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.0,
+        setJawLength: 0.0,
+        setMouthWidth: -0.9402797818183899,
+        setMouthLipThickness: 0.38453102111816406,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: -0.4251699447631836,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.4905807375907898,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: -0.19214412569999695,
+        setEyeOpeningSize: -1.0,
+        setEyeBulge: 0.03270542621612549,
+        setNoseBridgeWidth: -0.23027896881103516,
+        setNoseNostrilWidth: 0.18051934242248535,
+        setNoseLength: 1.0,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: 0.23386216163635254,
+        setNoseNostrilAngle: -0.605049729347229,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: -0.12264510989189148,
+        setEarFlapAngle: -0.19498947262763977,
+        setEarPosition: -0.5,
+        setEarLobe: 0.0,
+        setHeadTexture: 0,
+        setHairHair: 9,
+        setHairBeard: 0,
+        setHairMustache: 0,
+        setHairColor: 3,
+        setHighLightColor: 0,
+        setEyesColor: 1,
         setClothesShirt: (0, 2),
         setClothesPant: (0, 2),
         setClothesHat: (0, 0),
@@ -14830,7 +14634,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (2, 19, 2),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1175635584.0dxschafe_type': 'Townsperson',
     '1175650176.0dxschafe': {
         setTattooChest: (
@@ -14840,7 +14644,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -14848,7 +14652,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -14856,7 +14660,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -14864,7 +14668,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -14872,7 +14676,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -14880,7 +14684,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -14888,7 +14692,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -14896,7 +14700,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -14965,7 +14769,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (0, 19, 10),
         setClothesBotColor: (7, 0, 0),
-    },
+        },
     '1175650176.0dxschafe_type': 'Townsperson',
     '1175721216.0dxschafe': {
         setTattooChest: (
@@ -14975,7 +14779,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -14983,7 +14787,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -14991,7 +14795,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -14999,7 +14803,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -15007,7 +14811,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -15015,7 +14819,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -15023,7 +14827,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -15031,7 +14835,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -15099,7 +14903,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (3, 10, 4),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1175721216.0dxschafe_type': 'Townsperson',
     '1175730944.0dxschafe': {
         setTattooChest: (
@@ -15109,7 +14913,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -15117,7 +14921,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -15125,7 +14929,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -15133,7 +14937,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -15141,7 +14945,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -15149,7 +14953,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -15157,7 +14961,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175730944.0dxschafe'],
         setGender: 'm',
@@ -15218,7 +15022,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (16, 16, 16),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1175730944.0dxschafe_type': 'Townsperson',
     '1175733248.0dxschafe': {
         setTattooChest: (
@@ -15228,7 +15032,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -15236,7 +15040,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -15244,7 +15048,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -15252,7 +15056,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -15260,7 +15064,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -15268,7 +15072,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -15276,7 +15080,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175733248.0dxschafe'],
         setGender: 'm',
@@ -15337,7 +15141,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (8, 11, 17),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1175733248.0dxschafe_type': 'Townsperson',
     '1175733376.0dxschafe': {
         setTattooChest: (
@@ -15347,7 +15151,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -15355,7 +15159,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -15363,7 +15167,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -15371,7 +15175,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -15379,7 +15183,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -15387,7 +15191,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -15395,7 +15199,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175733376.0dxschafe'],
         setGender: 'm',
@@ -15456,7 +15260,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (13, 7, 5),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1175733376.0dxschafe_type': 'Townsperson',
     '1175792768.0dxschafe': {
         setTattooChest: (
@@ -15466,7 +15270,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -15474,7 +15278,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -15482,7 +15286,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -15490,7 +15294,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -15498,7 +15302,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -15506,7 +15310,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -15514,7 +15318,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175792768.0dxschafe'],
         setGender: 'm',
@@ -15575,7 +15379,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (9, 14, 14),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1175792768.0dxschafe_type': 'Townsperson',
     '1175800576.0dxschafe': {
         setTattooChest: (
@@ -15585,7 +15389,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -15593,7 +15397,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -15601,7 +15405,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -15609,7 +15413,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -15617,7 +15421,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -15625,7 +15429,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -15633,7 +15437,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1175800576.0dxschafe'],
         setGender: 'm',
@@ -15694,7 +15498,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (19, 3, 12),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1175800576.0dxschafe_type': 'Townsperson',
     '1176186151.42mike': {
         setTattooChest: (
@@ -15704,7 +15508,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -15712,7 +15516,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -15720,7 +15524,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -15728,7 +15532,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -15736,7 +15540,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -15744,7 +15548,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -15752,7 +15556,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176186151.42mike'],
         setGender: 'm',
@@ -15813,7 +15617,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (19, 0, 1),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1176186151.42mike_type': 'Townsperson',
     '1176322304.0mike1': {
         setTattooChest: (
@@ -15823,7 +15627,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -15831,7 +15635,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -15839,7 +15643,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -15847,7 +15651,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -15855,7 +15659,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -15863,7 +15667,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -15871,7 +15675,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176322304.0mike1'],
         setGender: 'm',
@@ -15932,7 +15736,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (15, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1176322304.0mike1_type': 'Townsperson',
     '1176322432.0mike': {
         setTattooChest: (
@@ -15942,7 +15746,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -15950,7 +15754,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -15958,7 +15762,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -15966,7 +15770,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -15974,7 +15778,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -15982,7 +15786,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -15990,7 +15794,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176322432.0mike'],
         setGender: 'm',
@@ -16051,7 +15855,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (8, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1176322432.0mike0': {
         setTattooChest: (
             0,
@@ -16060,7 +15864,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -16068,7 +15872,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -16076,7 +15880,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -16084,7 +15888,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -16092,7 +15896,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -16100,7 +15904,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -16108,7 +15912,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176322432.0mike0'],
         setGender: 'm',
@@ -16169,7 +15973,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (13, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1176322432.0mike0_type': 'Townsperson',
     '1176322432.0mike_type': 'Townsperson',
     '1176322560.0mike': {
@@ -16180,7 +15984,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -16188,7 +15992,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -16196,7 +16000,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -16204,7 +16008,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -16212,7 +16016,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -16220,7 +16024,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -16228,7 +16032,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176322560.0mike'],
         setGender: 'm',
@@ -16289,7 +16093,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (19, 2, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1176322560.0mike0': {
         setTattooChest: (
             0,
@@ -16298,7 +16102,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -16306,7 +16110,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -16314,7 +16118,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -16322,7 +16126,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -16330,7 +16134,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -16338,7 +16142,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -16346,7 +16150,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176322560.0mike0'],
         setGender: 'm',
@@ -16407,7 +16211,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (12, 4, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1176322560.0mike0_type': 'Townsperson',
     '1176322560.0mike_type': 'Townsperson',
     '1176322688.0mike': {
@@ -16418,7 +16222,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -16426,7 +16230,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -16434,7 +16238,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -16442,7 +16246,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -16450,7 +16254,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -16458,7 +16262,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -16466,7 +16270,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176322688.0mike'],
         setGender: 'm',
@@ -16527,7 +16331,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (3, 18, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1176322688.0mike0': {
         setTattooChest: (
             0,
@@ -16536,7 +16340,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -16544,7 +16348,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -16552,7 +16356,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -16560,7 +16364,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -16568,7 +16372,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -16576,7 +16380,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -16584,7 +16388,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176322688.0mike0'],
         setGender: 'm',
@@ -16645,7 +16449,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (12, 12, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1176322688.0mike0_type': 'Townsperson',
     '1176322688.0mike_type': 'Townsperson',
     '1176322816.0mike': {
@@ -16656,7 +16460,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -16664,7 +16468,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -16672,7 +16476,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -16680,7 +16484,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -16688,7 +16492,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -16696,7 +16500,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -16704,7 +16508,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176322816.0mike'],
         setGender: 'm',
@@ -16765,7 +16569,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (3, 20, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1176322816.0mike_type': 'Townsperson',
     '1176322944.0mike': {
         setTattooChest: (
@@ -16775,7 +16579,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -16783,7 +16587,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -16791,7 +16595,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -16799,7 +16603,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -16807,7 +16611,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -16815,7 +16619,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -16823,7 +16627,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176322944.0mike'],
         setGender: 'm',
@@ -16884,7 +16688,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (14, 20, 13),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1176322944.0mike_type': 'Townsperson',
     '1176334208.0mike0': {
         setTattooChest: (
@@ -16894,7 +16698,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -16902,7 +16706,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -16910,7 +16714,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -16918,7 +16722,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -16926,7 +16730,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -16934,7 +16738,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -16942,7 +16746,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176334208.0mike0'],
         setGender: 'm',
@@ -17003,7 +16807,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (6, 18, 18),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1176334208.0mike0_type': 'Townsperson',
     '1176744320.0dxschafe': {
         setTattooChest: (
@@ -17013,7 +16817,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -17021,7 +16825,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -17029,7 +16833,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -17037,7 +16841,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -17045,7 +16849,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -17053,7 +16857,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -17061,7 +16865,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176744320.0dxschafe'],
         setGender: 'm',
@@ -17122,7 +16926,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (2, 13, 16),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1176744320.0dxschafe_type': 'Townsperson',
     '1176765184.0dxschafe': {
         setTattooChest: (
@@ -17132,7 +16936,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -17140,7 +16944,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -17148,7 +16952,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -17156,7 +16960,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -17164,7 +16968,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -17172,7 +16976,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -17180,7 +16984,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176765184.0dxschafe'],
         setGender: 'm',
@@ -17241,7 +17045,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (12, 5, 17),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1176765184.0dxschafe_type': 'Townsperson',
     '1176836096.0dxschafe': {
         setTattooChest: (
@@ -17251,7 +17055,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -17259,7 +17063,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -17267,7 +17071,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -17275,7 +17079,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -17283,7 +17087,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -17291,7 +17095,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -17299,7 +17103,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1176836096.0dxschafe'],
         setGender: 'm',
@@ -17360,7 +17164,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (6, 10, 17),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1176836096.0dxschafe_type': 'Townsperson',
     '1177109582.39MAsaduzz': {
         setTattooChest: (
@@ -17370,7 +17174,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -17378,7 +17182,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -17386,7 +17190,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -17394,7 +17198,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -17402,7 +17206,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -17410,7 +17214,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -17418,7 +17222,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1177109582.39MAsaduzz'],
         setGender: 'f',
@@ -17479,7 +17283,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1177109582.39MAsaduzz_type': 'Townsperson',
     '1177714944.0mike': {
         setTattooChest: (
@@ -17489,7 +17293,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -17497,7 +17301,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -17505,7 +17309,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -17513,7 +17317,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -17521,7 +17325,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -17529,7 +17333,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -17537,7 +17341,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1177714944.0mike'],
         setGender: 'f',
@@ -17598,7 +17402,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (3, 16, 16),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1177714944.0mike_type': 'Townsperson',
     '1178233033.58dchiappe': {
         setTattooChest: (
@@ -17608,7 +17412,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -17616,7 +17420,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -17624,7 +17428,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -17632,7 +17436,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -17640,7 +17444,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -17648,7 +17452,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -17656,7 +17460,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -17664,7 +17468,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -17733,7 +17537,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 14),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1178233033.58dchiappe_type': 'Townsperson',
     '1178234368.0dchiappe1': {
         setTattooChest: (
@@ -17743,7 +17547,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -17751,7 +17555,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -17759,7 +17563,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -17767,7 +17571,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -17775,7 +17579,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -17783,7 +17587,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -17791,7 +17595,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1178234368.0dchiappe1'],
         setGender: 'f',
@@ -17852,7 +17656,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (20, 0, 0),
-    },
+        },
     '1178234368.0dchiappe1_type': 'Townsperson',
     '1178320768.0dchiappe': {
         setTattooChest: (
@@ -17862,7 +17666,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -17870,7 +17674,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -17878,7 +17682,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -17886,7 +17690,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -17894,7 +17698,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -17902,7 +17706,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -17910,7 +17714,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1178320768.0dchiappe'],
         setGender: 'm',
@@ -17971,7 +17775,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (17, 0, 6),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1178320768.0dchiappe_type': 'Townsperson',
     '1178654720.0dchiappe': {
         setTattooChest: (
@@ -17981,7 +17785,7 @@ NPC_LIST = {
             0.191,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             1,
             -6.948888301849365,
@@ -17989,7 +17793,7 @@ NPC_LIST = {
             12.65822696685791,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone3: (
             10,
             -9.991825103759766,
@@ -17997,7 +17801,7 @@ NPC_LIST = {
             12.65822696685791,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.5,
@@ -18005,7 +17809,7 @@ NPC_LIST = {
             1.0,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.13,
@@ -18013,7 +17817,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.5,
@@ -18021,7 +17825,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.5,
@@ -18029,7 +17833,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.5,
@@ -18037,7 +17841,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -18046,104 +17850,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1178654720.0dchiappe'],
-        setGender:
-        'm',
-        setBodyShape:
-        4,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        3,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.33046406507492065,
-        setHeadWidth:
-        0.33575236797332764,
-        setHeadHeight:
-        0.0,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        -0.2055322527885437,
-        setJawRoundness:
-        -0.18209236860275269,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.6427348852157593,
-        setJawLength:
-        0.0,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        0.30576419830322266,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.9089781045913696,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.8978786468505859,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.0,
-        setEyeOpeningSize:
-        -0.027847886085510254,
-        setEyeBulge:
-        -0.45075446367263794,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        0.0,
-        setNoseLength:
-        0.0,
-        setNoseBump:
-        -0.9401015043258667,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        0.4895443916320801,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        -0.5548079609870911,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        0.0,
-        setEarFlapAngle:
-        0.04690098762512207,
-        setEarPosition:
-        0.5,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        0,
-        setHairHair:
-        0,
-        setHairBeard:
-        5,
-        setHairMustache:
-        3,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        1,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1178654720.0dchiappe'],
+        setGender: 'm',
+        setBodyShape: 4,
+        setBodyHeight: 0.0,
+        setBodyColor: 3,
+        setBodySkin: 0,
+        setHeadSize: 0.33046406507492065,
+        setHeadWidth: 0.33575236797332764,
+        setHeadHeight: 0.0,
+        setHeadRoundness: 0.0,
+        setJawWidth: -0.2055322527885437,
+        setJawRoundness: -0.18209236860275269,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.6427348852157593,
+        setJawLength: 0.0,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 0.30576419830322266,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.9089781045913696,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.8978786468505859,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.0,
+        setEyeOpeningSize: -0.027847886085510254,
+        setEyeBulge: -0.45075446367263794,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: 0.0,
+        setNoseLength: 0.0,
+        setNoseBump: -0.9401015043258667,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: 0.4895443916320801,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: -0.5548079609870911,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: 0.0,
+        setEarFlapAngle: 0.04690098762512207,
+        setEarPosition: 0.5,
+        setEarLobe: 0.0,
+        setHeadTexture: 0,
+        setHairHair: 0,
+        setHairBeard: 5,
+        setHairMustache: 3,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 1,
         setClothesShirt: (0, 0),
         setClothesPant: (1, 0),
         setClothesHat: (0, 0),
@@ -18154,7 +17909,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (9, 17, 5),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1178654720.0dchiappe_type': 'Townsperson',
     '1179186560.0dchiappe': {
         setTattooChest: (
@@ -18164,7 +17919,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -18172,7 +17927,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -18180,7 +17935,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -18188,7 +17943,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -18196,7 +17951,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -18204,7 +17959,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -18212,7 +17967,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1179186560.0dchiappe'],
         setGender: 'm',
@@ -18273,7 +18028,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (1, 0, 15),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1179186560.0dchiappe_type': 'Townsperson',
     '1179267456.0dchiappe': {
         setTattooChest: (
@@ -18283,7 +18038,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -18291,7 +18046,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -18299,7 +18054,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -18307,7 +18062,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -18315,7 +18070,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -18323,7 +18078,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -18331,7 +18086,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -18339,7 +18094,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -18407,7 +18162,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (17, 17, 17),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1179267456.0dchiappe_type': 'Townsperson',
     '1179269632.0dchiappe': {
         setTattooChest: (
@@ -18417,7 +18172,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -18425,7 +18180,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -18433,7 +18188,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -18441,7 +18196,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -18449,7 +18204,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -18457,7 +18212,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -18465,7 +18220,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -18473,7 +18228,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -18541,7 +18296,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (0, 7, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1179269632.0dchiappe_type': 'Townsperson',
     '1179360256.0dchiappe': {
         setTattooChest: (
@@ -18551,7 +18306,7 @@ NPC_LIST = {
             8.475321769714355,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             10,
             -9.66557788848877,
@@ -18559,7 +18314,7 @@ NPC_LIST = {
             17.68807029724121,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone3: (
             22,
             -9.990446090698242,
@@ -18567,7 +18322,7 @@ NPC_LIST = {
             12.65822696685791,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -18575,7 +18330,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -18583,7 +18338,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -18591,7 +18346,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -18599,7 +18354,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -18607,7 +18362,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -18616,104 +18371,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1179360256.0dchiappe'],
-        setGender:
-        'm',
-        setBodyShape:
-        0,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        0,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.5,
-        setHeadWidth:
-        0.5,
-        setHeadHeight:
-        -0.5,
-        setHeadRoundness:
-        0.38066819310188293,
-        setJawWidth:
-        0.0,
-        setJawRoundness:
-        0.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        -0.48098862171173096,
-        setJawLength:
-        0.5718573331832886,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        0.0,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        1.0,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.25,
-        setEyeOpeningSize:
-        -0.8947360515594482,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        -0.6761559247970581,
-        setNoseNostrilWidth:
-        -0.04324352741241455,
-        setNoseLength:
-        0.0,
-        setNoseBump:
-        0.0025054216384887695,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        0.8036651611328125,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        0.0,
-        setEarFlapAngle:
-        -0.5,
-        setEarPosition:
-        0.5,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        0,
-        setHairHair:
-        9,
-        setHairBeard:
-        4,
-        setHairMustache:
-        6,
-        setHairColor:
-        5,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        3,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1179360256.0dchiappe'],
+        setGender: 'm',
+        setBodyShape: 0,
+        setBodyHeight: 0.0,
+        setBodyColor: 0,
+        setBodySkin: 0,
+        setHeadSize: 0.5,
+        setHeadWidth: 0.5,
+        setHeadHeight: -0.5,
+        setHeadRoundness: 0.38066819310188293,
+        setJawWidth: 0.0,
+        setJawRoundness: 0.0,
+        setJawChinSize: 0.0,
+        setJawAngle: -0.48098862171173096,
+        setJawLength: 0.5718573331832886,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 0.0,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 1.0,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.25,
+        setEyeOpeningSize: -0.8947360515594482,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: -0.6761559247970581,
+        setNoseNostrilWidth: -0.04324352741241455,
+        setNoseLength: 0.0,
+        setNoseBump: 0.0025054216384887695,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: 0.8036651611328125,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: 0.0,
+        setEarFlapAngle: -0.5,
+        setEarPosition: 0.5,
+        setEarLobe: 0.0,
+        setHeadTexture: 0,
+        setHairHair: 9,
+        setHairBeard: 4,
+        setHairMustache: 6,
+        setHairColor: 5,
+        setHighLightColor: 0,
+        setEyesColor: 3,
         setClothesShirt: (0, 0),
         setClothesPant: (0, 2),
         setClothesHat: (8, 0),
@@ -18724,7 +18430,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (1, 9, 15),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1179360256.0dchiappe_type': 'Townsperson',
     '1179523435.84dchiappe': {
         setTattooChest: (
@@ -18734,7 +18440,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -18742,7 +18448,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -18750,7 +18456,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -18758,7 +18464,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -18766,7 +18472,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -18774,7 +18480,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -18782,7 +18488,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1179523435.84dchiappe'],
         setGender: 'f',
@@ -18843,7 +18549,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 3, 16),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1179523435.84dchiappe_type': 'Townsperson',
     '1179961216.0dchiappe': {
         setTattooChest: (
@@ -18853,7 +18559,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -18861,7 +18567,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -18869,7 +18575,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -18877,7 +18583,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -18885,7 +18591,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -18893,7 +18599,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -18901,7 +18607,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1179961216.0dchiappe'],
         setGender: 'm',
@@ -18962,7 +18668,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 4, 1),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1179961216.0dchiappe_type': 'Townsperson',
     '1179966336.0dchiappe': {
         setTattooChest: (
@@ -18972,7 +18678,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -18980,7 +18686,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -18988,7 +18694,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -18996,7 +18702,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -19004,7 +18710,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -19012,7 +18718,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -19020,7 +18726,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -19028,7 +18734,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -19096,7 +18802,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (20, 15, 12),
         setClothesBotColor: (12, 0, 0),
-    },
+        },
     '1179966336.0dchiappe_type': 'Townsperson',
     '1180720000.0dchiappe1': {
         setTattooChest: (
@@ -19106,7 +18812,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -19114,7 +18820,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -19122,7 +18828,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -19130,7 +18836,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -19138,7 +18844,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -19146,7 +18852,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -19154,7 +18860,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -19162,7 +18868,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -19230,7 +18936,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1180720000.0dchiappe1_type': 'Townsperson',
     '1181171584.0dxschafe0': {
         setTattooChest: (
@@ -19240,7 +18946,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -19248,7 +18954,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -19256,7 +18962,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -19264,7 +18970,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -19272,7 +18978,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -19280,7 +18986,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -19288,7 +18994,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181171584.0dxschafe0'],
         setGender: 'm',
@@ -19349,7 +19055,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (2, 16, 7),
         setClothesBotColor: (2, 0, 0),
-    },
+        },
     '1181171584.0dxschafe0_type': 'Townsperson',
     '1181260288.0dxschafe': {
         setTattooChest: (
@@ -19359,7 +19065,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -19367,7 +19073,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -19375,7 +19081,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -19383,7 +19089,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -19391,7 +19097,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -19399,7 +19105,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -19407,7 +19113,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181260288.0dxschafe'],
         setGender: 'm',
@@ -19468,7 +19174,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (2, 19, 11),
         setClothesBotColor: (4, 0, 0),
-    },
+        },
     '1181260288.0dxschafe_type': 'Townsperson',
     '1181260928.0dxschafe': {
         setTattooChest: (
@@ -19478,7 +19184,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -19486,7 +19192,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -19494,7 +19200,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -19502,7 +19208,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -19510,7 +19216,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -19518,7 +19224,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -19526,7 +19232,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181260928.0dxschafe'],
         setGender: 'm',
@@ -19587,7 +19293,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (0, 12, 7),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1181260928.0dxschafe_type': 'Townsperson',
     '1181261824.0dxschafe': {
         setTattooChest: (
@@ -19597,7 +19303,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -19605,7 +19311,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -19613,7 +19319,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -19621,7 +19327,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -19629,7 +19335,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -19637,7 +19343,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -19645,7 +19351,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181261824.0dxschafe'],
         setGender: 'm',
@@ -19706,7 +19412,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (14, 3, 10),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1181261824.0dxschafe_type': 'Townsperson',
     '1181262976.0dxschafe': {
         setTattooChest: (
@@ -19716,7 +19422,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -19724,7 +19430,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -19732,7 +19438,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -19740,7 +19446,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -19748,7 +19454,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -19756,7 +19462,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -19764,7 +19470,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -19772,7 +19478,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -19840,7 +19546,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (17, 16, 4),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1181262976.0dxschafe_type': 'Townsperson',
     '1181263360.0dxschafe': {
         setTattooChest: (
@@ -19850,7 +19556,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -19858,7 +19564,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -19866,7 +19572,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -19874,7 +19580,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -19882,7 +19588,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -19890,7 +19596,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -19898,7 +19604,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181263360.0dxschafe'],
         setGender: 'm',
@@ -19959,7 +19665,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (0, 4, 8),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1181263360.0dxschafe_type': 'Townsperson',
     '1181264512.0dxschafe': {
         setTattooChest: (
@@ -19969,7 +19675,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -19977,7 +19683,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -19985,7 +19691,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -19993,7 +19699,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -20001,7 +19707,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -20009,7 +19715,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -20017,7 +19723,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -20025,7 +19731,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -20093,7 +19799,7 @@ NPC_LIST = {
         setClothesBelt: (8, 0),
         setClothesTopColor: (20, 12, 9),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1181264512.0dxschafe_type': 'Townsperson',
     '1181267712.0dxschafe': {
         setTattooChest: (
@@ -20103,7 +19809,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -20111,7 +19817,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -20119,7 +19825,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -20127,7 +19833,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -20135,7 +19841,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -20143,7 +19849,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -20151,7 +19857,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -20159,7 +19865,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -20227,7 +19933,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (3, 12, 7),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1181267712.0dxschafe_type': 'Townsperson',
     '1181267968.0dxschafe': {
         setTattooChest: (
@@ -20237,7 +19943,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -20245,7 +19951,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -20253,7 +19959,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -20261,7 +19967,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -20269,7 +19975,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -20277,7 +19983,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -20285,7 +19991,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -20293,7 +19999,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -20361,7 +20067,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (0, 12, 1),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1181267968.0dxschafe_type': 'Townsperson',
     '1181348864.0dxschafe': {
         setTattooChest: (
@@ -20371,7 +20077,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -20379,7 +20085,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -20387,7 +20093,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -20395,7 +20101,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -20403,7 +20109,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -20411,7 +20117,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -20419,7 +20125,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181348864.0dxschafe'],
         setGender: 'm',
@@ -20480,7 +20186,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (0, 7, 19),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1181348864.0dxschafe_type': 'Townsperson',
     '1181593472.0dxschafe': {
         setTattooChest: (
@@ -20490,7 +20196,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -20498,7 +20204,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -20506,7 +20212,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -20514,7 +20220,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -20522,7 +20228,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -20530,7 +20236,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -20538,7 +20244,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181593472.0dxschafe'],
         setGender: 'm',
@@ -20599,7 +20305,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (6, 9, 11),
         setClothesBotColor: (4, 0, 0),
-    },
+        },
     '1181593472.0dxschafe_type': 'Townsperson',
     '1181605248.0dxschafe': {
         setTattooChest: (
@@ -20609,7 +20315,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -20617,7 +20323,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -20625,7 +20331,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -20633,7 +20339,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -20641,7 +20347,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -20649,7 +20355,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -20657,7 +20363,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181605248.0dxschafe'],
         setGender: 'm',
@@ -20718,7 +20424,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (19, 20, 14),
         setClothesBotColor: (4, 0, 0),
-    },
+        },
     '1181605248.0dxschafe_type': 'Townsperson',
     '1181606272.0dxschafe': {
         setTattooChest: (
@@ -20728,7 +20434,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -20736,7 +20442,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -20744,7 +20450,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -20752,7 +20458,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -20760,7 +20466,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -20768,7 +20474,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -20776,7 +20482,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181606272.0dxschafe'],
         setGender: 'm',
@@ -20837,7 +20543,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (19, 13, 1),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1181606272.0dxschafe_type': 'Townsperson',
     '1181607808.0dxschafe': {
         setTattooChest: (
@@ -20847,7 +20553,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -20855,7 +20561,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -20863,7 +20569,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -20871,7 +20577,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -20879,7 +20585,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -20887,7 +20593,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -20895,7 +20601,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181607808.0dxschafe'],
         setGender: 'm',
@@ -20956,7 +20662,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (18, 10, 12),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1181607808.0dxschafe_type': 'Townsperson',
     '1181610880.0dchiappe': {
         setTattooChest: (
@@ -20966,7 +20672,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -20974,7 +20680,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -20982,7 +20688,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -20990,7 +20696,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -20998,7 +20704,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -21006,7 +20712,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -21014,7 +20720,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181610880.0dchiappe'],
         setGender: 'm',
@@ -21075,7 +20781,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (2, 4, 6),
         setClothesBotColor: (4, 0, 0),
-    },
+        },
     '1181610880.0dchiappe0': {
         setTattooChest: (
             0,
@@ -21084,7 +20790,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -21092,7 +20798,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -21100,7 +20806,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -21108,7 +20814,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -21116,7 +20822,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -21124,7 +20830,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -21132,7 +20838,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181610880.0dchiappe0'],
         setGender: 'm',
@@ -21193,7 +20899,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (1, 12, 8),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1181610880.0dchiappe0_type': 'Townsperson',
     '1181610880.0dchiappe_type': 'Townsperson',
     '1181683840.0dchiappe0': {
@@ -21204,7 +20910,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -21212,7 +20918,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -21220,7 +20926,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -21228,7 +20934,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -21236,7 +20942,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -21244,7 +20950,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -21252,7 +20958,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181683840.0dchiappe0'],
         setGender: 'f',
@@ -21313,7 +21019,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (8, 3, 4),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1181683840.0dchiappe0_type': 'Townsperson',
     '1181684480.0dchiappe0': {
         setTattooChest: (
@@ -21323,7 +21029,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -21331,7 +21037,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -21339,7 +21045,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -21347,7 +21053,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -21355,7 +21061,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -21363,7 +21069,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -21371,7 +21077,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1181684480.0dchiappe0'],
         setGender: 'm',
@@ -21432,7 +21138,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (14, 17, 11),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1181684480.0dchiappe0_type': 'Townsperson',
     '1182823328.56MAsaduzz': {
         setTattooChest: (
@@ -21442,7 +21148,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -21450,7 +21156,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -21458,7 +21164,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -21466,7 +21172,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -21474,7 +21180,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -21482,7 +21188,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -21490,7 +21196,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1182823328.56MAsaduzz'],
         setGender: 'm',
@@ -21551,7 +21257,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (1, 0, 1),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1182823328.56MAsaduzz_type': 'Townsperson',
     '1185244008.29MAsaduzz': {
         setTattooChest: (
@@ -21561,7 +21267,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -21569,7 +21275,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -21577,7 +21283,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -21585,7 +21291,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -21593,7 +21299,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -21601,7 +21307,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -21609,7 +21315,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1185244008.29MAsaduzz'],
         setGender: 'm',
@@ -21670,7 +21376,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (1, 0, 1),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1185244008.29MAsaduzz_type': 'Townsperson',
     '1185831040.0dxschafe': {
         setTattooChest: (
@@ -21680,7 +21386,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -21688,7 +21394,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -21696,7 +21402,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -21704,7 +21410,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -21712,7 +21418,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -21720,7 +21426,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -21728,7 +21434,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -21736,7 +21442,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -21804,7 +21510,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (11, 13, 5),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1185831040.0dxschafe_type': 'Townsperson',
     '1185831296.0dxschafe': {
         setTattooChest: (
@@ -21814,7 +21520,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -21822,7 +21528,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -21830,7 +21536,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -21838,7 +21544,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -21846,7 +21552,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -21854,7 +21560,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -21862,7 +21568,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1185831296.0dxschafe'],
         setGender: 'm',
@@ -21923,7 +21629,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (20, 12, 3),
         setClothesBotColor: (13, 0, 0),
-    },
+        },
     '1185831296.0dxschafe_type': 'Townsperson',
     '1185831680.0dxschafe0': {
         setTattooChest: (
@@ -21933,7 +21639,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -21941,7 +21647,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -21949,7 +21655,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -21957,7 +21663,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -21965,7 +21671,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -21973,7 +21679,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -21981,7 +21687,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1185831680.0dxschafe0'],
         setGender: 'm',
@@ -22042,7 +21748,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (10, 8, 11),
         setClothesBotColor: (7, 0, 0),
-    },
+        },
     '1185831680.0dxschafe0_type': 'Townsperson',
     '1185832192.0dxschafe1': {
         setTattooChest: (
@@ -22052,7 +21758,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -22060,7 +21766,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -22068,7 +21774,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -22076,7 +21782,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -22084,7 +21790,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -22092,7 +21798,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -22100,7 +21806,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1185832192.0dxschafe1'],
         setGender: 'm',
@@ -22161,7 +21867,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (5, 6, 18),
         setClothesBotColor: (7, 0, 0),
-    },
+        },
     '1185832192.0dxschafe1_type': 'Townsperson',
     '1185832448.0dxschafe': {
         setTattooChest: (
@@ -22171,7 +21877,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -22179,7 +21885,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -22187,7 +21893,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -22195,7 +21901,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -22203,7 +21909,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -22211,7 +21917,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -22219,7 +21925,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1185832448.0dxschafe'],
         setGender: 'm',
@@ -22280,7 +21986,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (16, 12, 5),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1185832448.0dxschafe_type': 'Townsperson',
     '1186098688.0dxschafe': {
         setTattooChest: (
@@ -22290,7 +21996,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -22298,7 +22004,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -22306,7 +22012,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -22314,7 +22020,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -22322,7 +22028,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -22330,7 +22036,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -22338,7 +22044,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1186098688.0dxschafe'],
         setGender: 'm',
@@ -22399,7 +22105,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (11, 17, 18),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1186098688.0dxschafe_type': 'Townsperson',
     '1187219584.0dxschafe0': {
         setTattooChest: (
@@ -22409,7 +22115,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -22417,7 +22123,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -22425,7 +22131,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -22433,7 +22139,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -22441,7 +22147,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -22449,7 +22155,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -22457,7 +22163,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1187219584.0dxschafe0'],
         setGender: 'm',
@@ -22518,7 +22224,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (12, 16, 14),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1187219584.0dxschafe0_type': 'Townsperson',
     '1187306240.0dxschafe': {
         setTattooChest: (
@@ -22528,7 +22234,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -22536,7 +22242,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -22544,7 +22250,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -22552,7 +22258,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -22560,7 +22266,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -22568,7 +22274,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -22576,7 +22282,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1187306240.0dxschafe'],
         setGender: 'm',
@@ -22637,7 +22343,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (10, 17, 17),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1187306240.0dxschafe_type': 'Townsperson',
     '1187658240.0dxschafe': {
         setTattooChest: (
@@ -22647,7 +22353,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -22655,7 +22361,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -22663,7 +22369,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -22671,7 +22377,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -22679,7 +22385,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -22687,7 +22393,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -22695,7 +22401,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1187658240.0dxschafe'],
         setGender: 'm',
@@ -22756,7 +22462,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (14, 6, 19),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1187658240.0dxschafe0': {
         setTattooChest: (
             0,
@@ -22765,7 +22471,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -22773,7 +22479,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -22781,7 +22487,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -22789,7 +22495,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -22797,7 +22503,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -22805,7 +22511,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -22813,7 +22519,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1187658240.0dxschafe0'],
         setGender: 'm',
@@ -22874,7 +22580,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (13, 16, 1),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1187658240.0dxschafe0_type': 'Townsperson',
     '1187658240.0dxschafe1': {
         setTattooChest: (
@@ -22884,7 +22590,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -22892,7 +22598,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -22900,7 +22606,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -22908,7 +22614,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -22916,7 +22622,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -22924,7 +22630,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -22932,7 +22638,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -22940,7 +22646,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -23008,7 +22714,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (11, 0, 9),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1187658240.0dxschafe1_type': 'Townsperson',
     '1187658240.0dxschafe_type': 'Townsperson',
     '1187658368.0dxschafe': {
@@ -23019,7 +22725,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -23027,7 +22733,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -23035,7 +22741,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -23043,7 +22749,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -23051,7 +22757,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -23059,7 +22765,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -23067,7 +22773,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1187658368.0dxschafe'],
         setGender: 'm',
@@ -23128,7 +22834,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (14, 7, 2),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1187658368.0dxschafe0': {
         setTattooChest: (
             0,
@@ -23137,7 +22843,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -23145,7 +22851,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -23153,7 +22859,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -23161,7 +22867,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -23169,7 +22875,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -23177,7 +22883,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -23185,7 +22891,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1187658368.0dxschafe0'],
         setGender: 'm',
@@ -23246,7 +22952,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (1, 16, 0),
         setClothesBotColor: (7, 0, 0),
-    },
+        },
     '1187658368.0dxschafe0_type': 'Townsperson',
     '1187658368.0dxschafe1': {
         setTattooChest: (
@@ -23256,7 +22962,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -23264,7 +22970,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -23272,7 +22978,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -23280,7 +22986,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -23288,7 +22994,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -23296,7 +23002,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -23304,7 +23010,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1187658368.0dxschafe1'],
         setGender: 'm',
@@ -23365,7 +23071,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (3, 20, 2),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1187658368.0dxschafe1_type': 'Townsperson',
     '1187658368.0dxschafe_type': 'Townsperson',
     '1187658496.0dxschafe': {
@@ -23376,7 +23082,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -23384,7 +23090,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -23392,7 +23098,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -23400,7 +23106,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -23408,7 +23114,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -23416,7 +23122,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -23424,7 +23130,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1187658496.0dxschafe'],
         setGender: 'm',
@@ -23485,7 +23191,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (20, 14, 10),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1187658496.0dxschafe0': {
         setTattooChest: (
             0,
@@ -23494,7 +23200,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -23502,7 +23208,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -23510,7 +23216,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -23518,7 +23224,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -23526,7 +23232,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -23534,7 +23240,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -23542,7 +23248,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1187658496.0dxschafe0'],
         setGender: 'm',
@@ -23603,7 +23309,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (20, 12, 17),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1187658496.0dxschafe0_type': 'Townsperson',
     '1187658496.0dxschafe1': {
         setTattooChest: (
@@ -23613,7 +23319,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -23621,7 +23327,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -23629,7 +23335,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -23637,7 +23343,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -23645,7 +23351,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -23653,7 +23359,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -23661,7 +23367,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1187658496.0dxschafe1'],
         setGender: 'm',
@@ -23722,7 +23428,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (6, 16, 0),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1187658496.0dxschafe1_type': 'Townsperson',
     '1187658496.0dxschafe_type': 'Townsperson',
     '1189456447.08kmuller': {
@@ -23733,7 +23439,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -23741,7 +23447,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -23749,7 +23455,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -23757,7 +23463,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -23765,7 +23471,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -23773,7 +23479,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -23781,7 +23487,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1189456447.08kmuller'],
         setGender: 'm',
@@ -23842,7 +23548,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 13, 20),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1189456447.08kmuller_type': 'Townsperson',
     '1190420608.0dxschafe1': {
         setTattooChest: (
@@ -23852,7 +23558,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -23860,7 +23566,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -23868,7 +23574,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -23876,7 +23582,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -23884,7 +23590,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -23892,7 +23598,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -23900,7 +23606,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1190420608.0dxschafe1'],
         setGender: 'm',
@@ -23961,7 +23667,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (11, 16, 8),
         setClothesBotColor: (5, 0, 0),
-    },
+        },
     '1190420608.0dxschafe1_type': 'Townsperson',
     '1190420736.0dxschafe': {
         setTattooChest: (
@@ -23971,7 +23677,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -23979,7 +23685,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -23987,7 +23693,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -23995,7 +23701,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -24003,7 +23709,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -24011,7 +23717,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -24019,7 +23725,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1190420736.0dxschafe'],
         setGender: 'm',
@@ -24080,7 +23786,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (20, 7, 5),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1190420736.0dxschafe_type': 'Townsperson',
     '1190742400.0dxschafe': {
         setTattooChest: (
@@ -24090,7 +23796,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -24098,7 +23804,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -24106,7 +23812,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -24114,7 +23820,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -24122,7 +23828,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -24130,7 +23836,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -24138,7 +23844,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1190742400.0dxschafe'],
         setGender: 'm',
@@ -24199,7 +23905,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (19, 10, 2),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1190742400.0dxschafe_type': 'Townsperson',
     '1190743269.78dxschafe': {
         setTattooChest: (
@@ -24209,7 +23915,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -24217,7 +23923,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -24225,7 +23931,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -24233,7 +23939,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -24241,7 +23947,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -24249,7 +23955,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -24257,7 +23963,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1190743269.78dxschafe'],
         setGender: 'm',
@@ -24318,7 +24024,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (10, 17, 10),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1190743269.78dxschafe_type': 'Townsperson',
     '1190744085.78dxschafe': {
         setTattooChest: (
@@ -24328,7 +24034,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -24336,7 +24042,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -24344,7 +24050,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -24352,7 +24058,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -24360,7 +24066,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -24368,7 +24074,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -24376,7 +24082,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1190744085.78dxschafe'],
         setGender: 'm',
@@ -24437,7 +24143,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (12, 12, 12),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1190744085.78dxschafe_type': 'Townsperson',
     '1190744501.14dxschafe': {
         setTattooChest: (
@@ -24447,7 +24153,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -24455,7 +24161,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -24463,7 +24169,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -24471,7 +24177,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -24479,7 +24185,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -24487,7 +24193,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -24495,7 +24201,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1190744501.14dxschafe'],
         setGender: 'm',
@@ -24556,7 +24262,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (17, 7, 13),
         setClothesBotColor: (9, 0, 0),
-    },
+        },
     '1190744501.14dxschafe_type': 'Townsperson',
     '1190745256.48dxschafe': {
         setTattooChest: (
@@ -24566,7 +24272,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -24574,7 +24280,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -24582,7 +24288,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -24590,7 +24296,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -24598,7 +24304,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -24606,7 +24312,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -24614,7 +24320,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1190745256.48dxschafe'],
         setGender: 'm',
@@ -24675,7 +24381,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (17, 1, 3),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1190745256.48dxschafe_type': 'Townsperson',
     '1192230656.0dchiappe': {
         setTattooChest: (
@@ -24685,7 +24391,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -24693,7 +24399,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -24701,7 +24407,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -24709,7 +24415,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -24717,7 +24423,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -24725,7 +24431,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -24733,7 +24439,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192230656.0dchiappe'],
         setGender: 'm',
@@ -24794,7 +24500,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (1, 0, 15),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1192230656.0dchiappe_type': 'Townsperson',
     '1192233344.0dchiappe': {
         setTattooChest: (
@@ -24804,7 +24510,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -24812,7 +24518,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -24820,7 +24526,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -24828,7 +24534,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -24836,7 +24542,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -24844,7 +24550,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -24852,7 +24558,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192233344.0dchiappe'],
         setGender: 'f',
@@ -24913,7 +24619,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (9, 17, 14),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1192233344.0dchiappe0': {
         setTattooChest: (
             0,
@@ -24922,7 +24628,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -24930,7 +24636,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -24938,7 +24644,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -24946,7 +24652,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -24954,7 +24660,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -24962,7 +24668,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -24970,7 +24676,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192233344.0dchiappe0'],
         setGender: 'm',
@@ -25031,7 +24737,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (1, 8, 1),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1192233344.0dchiappe0_type': 'Townsperson',
     '1192233344.0dchiappe1': {
         setTattooChest: (
@@ -25041,7 +24747,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -25049,7 +24755,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -25057,7 +24763,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -25065,7 +24771,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -25073,7 +24779,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -25081,7 +24787,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -25089,7 +24795,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192233344.0dchiappe1'],
         setGender: 'f',
@@ -25150,7 +24856,7 @@ NPC_LIST = {
         setClothesBelt: (6, 0),
         setClothesTopColor: (9, 10, 18),
         setClothesBotColor: (2, 0, 0),
-    },
+        },
     '1192233344.0dchiappe1_type': 'Townsperson',
     '1192233344.0dchiappe_type': 'Townsperson',
     '1192233472.0dchiappe': {
@@ -25161,7 +24867,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -25169,7 +24875,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -25177,7 +24883,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -25185,7 +24891,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -25193,7 +24899,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -25201,7 +24907,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -25209,7 +24915,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192233472.0dchiappe'],
         setGender: 'm',
@@ -25270,7 +24976,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (16, 5, 12),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1192233472.0dchiappe0': {
         setTattooChest: (
             0,
@@ -25279,7 +24985,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -25287,7 +24993,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -25295,7 +25001,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -25303,7 +25009,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -25311,7 +25017,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -25319,7 +25025,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -25327,7 +25033,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192233472.0dchiappe0'],
         setGender: 'f',
@@ -25388,7 +25094,7 @@ NPC_LIST = {
         setClothesBelt: (7, 0),
         setClothesTopColor: (12, 0, 0),
         setClothesBotColor: (20, 0, 0),
-    },
+        },
     '1192233472.0dchiappe0_type': 'Townsperson',
     '1192233472.0dchiappe1': {
         setTattooChest: (
@@ -25398,7 +25104,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -25406,7 +25112,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -25414,7 +25120,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -25422,7 +25128,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -25430,7 +25136,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -25438,7 +25144,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -25446,7 +25152,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192233472.0dchiappe1'],
         setGender: 'm',
@@ -25507,7 +25213,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (10, 14, 0),
         setClothesBotColor: (13, 0, 0),
-    },
+        },
     '1192233472.0dchiappe1_type': 'Townsperson',
     '1192233472.0dchiappe_type': 'Townsperson',
     '1192233600.0dchiappe': {
@@ -25518,7 +25224,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -25526,7 +25232,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -25534,7 +25240,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -25542,7 +25248,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -25550,7 +25256,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -25558,7 +25264,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -25566,7 +25272,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192233600.0dchiappe'],
         setGender: 'f',
@@ -25627,7 +25333,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (9, 14, 7),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1192233600.0dchiappe_type': 'Townsperson',
     '1192472192.0dchiappe': {
         setTattooChest: (
@@ -25637,7 +25343,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -25645,7 +25351,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -25653,7 +25359,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -25661,7 +25367,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -25669,7 +25375,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -25677,7 +25383,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -25685,7 +25391,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192472192.0dchiappe'],
         setGender: 'm',
@@ -25746,7 +25452,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (18, 12, 1),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1192472192.0dchiappe_type': 'Townsperson',
     '1192472320.0dchiappe': {
         setTattooChest: (
@@ -25756,7 +25462,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -25764,7 +25470,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -25772,7 +25478,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -25780,7 +25486,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -25788,7 +25494,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -25796,7 +25502,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -25804,7 +25510,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192472320.0dchiappe'],
         setGender: 'f',
@@ -25865,7 +25571,7 @@ NPC_LIST = {
         setClothesBelt: (6, 0),
         setClothesTopColor: (16, 16, 7),
         setClothesBotColor: (9, 0, 0),
-    },
+        },
     '1192472320.0dchiappe_type': 'Townsperson',
     '1192472448.0dchiappe0': {
         setTattooChest: (
@@ -25875,7 +25581,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -25883,7 +25589,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -25891,7 +25597,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -25899,7 +25605,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -25907,7 +25613,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -25915,7 +25621,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -25923,7 +25629,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192472448.0dchiappe0'],
         setGender: 'm',
@@ -25984,7 +25690,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (20, 16, 15),
         setClothesBotColor: (20, 0, 0),
-    },
+        },
     '1192472448.0dchiappe0_type': 'Townsperson',
     '1192472576.0dchiappe0': {
         setTattooChest: (
@@ -25994,7 +25700,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -26002,7 +25708,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -26010,7 +25716,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -26018,7 +25724,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -26026,7 +25732,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -26034,7 +25740,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -26042,7 +25748,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192472576.0dchiappe0'],
         setGender: 'm',
@@ -26103,7 +25809,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (7, 10, 8),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1192472576.0dchiappe0_type': 'Townsperson',
     '1192474368.0dchiappe': {
         setTattooChest: (
@@ -26113,7 +25819,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -26121,7 +25827,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -26129,7 +25835,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -26137,7 +25843,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -26145,7 +25851,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -26153,7 +25859,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -26161,7 +25867,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192474368.0dchiappe'],
         setGender: 'f',
@@ -26222,7 +25928,7 @@ NPC_LIST = {
         setClothesBelt: (9, 0),
         setClothesTopColor: (7, 17, 7),
         setClothesBotColor: (20, 0, 0),
-    },
+        },
     '1192474368.0dchiappe_type': 'Townsperson',
     '1192474496.0dchiappe': {
         setTattooChest: (
@@ -26232,7 +25938,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -26240,7 +25946,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -26248,7 +25954,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -26256,7 +25962,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -26264,7 +25970,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -26272,7 +25978,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -26280,7 +25986,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192474496.0dchiappe'],
         setGender: 'f',
@@ -26341,7 +26047,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (12, 0, 0),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1192474496.0dchiappe_type': 'Townsperson',
     '1192474624.0dchiappe': {
         setTattooChest: (
@@ -26351,7 +26057,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -26359,7 +26065,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -26367,7 +26073,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -26375,7 +26081,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -26383,7 +26089,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -26391,7 +26097,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -26399,7 +26105,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192474624.0dchiappe'],
         setGender: 'm',
@@ -26460,7 +26166,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (16, 9, 3),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1192474624.0dchiappe0': {
         setTattooChest: (
             0,
@@ -26469,7 +26175,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -26477,7 +26183,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -26485,7 +26191,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -26493,7 +26199,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -26501,7 +26207,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -26509,7 +26215,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -26517,7 +26223,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192474624.0dchiappe0'],
         setGender: 'm',
@@ -26578,7 +26284,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (15, 7, 17),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1192474624.0dchiappe0_type': 'Townsperson',
     '1192474624.0dchiappe_type': 'Townsperson',
     '1192491904.0dchiappe': {
@@ -26589,7 +26295,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -26597,7 +26303,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -26605,7 +26311,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -26613,7 +26319,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -26621,7 +26327,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -26629,7 +26335,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -26637,7 +26343,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192491904.0dchiappe'],
         setGender: 'm',
@@ -26698,7 +26404,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (14, 8, 6),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1192491904.0dchiappe_type': 'Townsperson',
     '1192494848.0dchiappe0': {
         setTattooChest: (
@@ -26708,7 +26414,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -26716,7 +26422,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -26724,7 +26430,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -26732,7 +26438,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -26740,7 +26446,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -26748,7 +26454,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -26756,7 +26462,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192494848.0dchiappe0'],
         setGender: 'm',
@@ -26817,7 +26523,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (9, 6, 17),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1192494848.0dchiappe0_type': 'Townsperson',
     '1192495488.0dchiappe': {
         setTattooChest: (
@@ -26827,7 +26533,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -26835,7 +26541,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -26843,7 +26549,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -26851,7 +26557,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -26859,7 +26565,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -26867,7 +26573,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -26875,7 +26581,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192495488.0dchiappe'],
         setGender: 'm',
@@ -26936,7 +26642,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (14, 18, 14),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1192495488.0dchiappe0': {
         setTattooChest: (
             0,
@@ -26945,7 +26651,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -26953,7 +26659,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -26961,7 +26667,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -26969,7 +26675,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -26977,7 +26683,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -26985,7 +26691,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -26993,7 +26699,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192495488.0dchiappe0'],
         setGender: 'm',
@@ -27054,7 +26760,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (18, 20, 7),
         setClothesBotColor: (1, 0, 0),
-    },
+        },
     '1192495488.0dchiappe0_type': 'Townsperson',
     '1192495488.0dchiappe_type': 'Townsperson',
     '1192495872.0dchiappe0': {
@@ -27065,7 +26771,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -27073,7 +26779,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -27081,7 +26787,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -27089,7 +26795,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -27097,7 +26803,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -27105,7 +26811,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -27113,7 +26819,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192495872.0dchiappe0'],
         setGender: 'm',
@@ -27174,7 +26880,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (13, 13, 5),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1192495872.0dchiappe0_type': 'Townsperson',
     '1192495872.0dchiappe1': {
         setTattooChest: (
@@ -27184,7 +26890,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -27192,7 +26898,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -27200,7 +26906,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -27208,7 +26914,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -27216,7 +26922,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -27224,7 +26930,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -27232,7 +26938,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192495872.0dchiappe1'],
         setGender: 'm',
@@ -27293,7 +26999,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (0, 16, 14),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1192495872.0dchiappe1_type': 'Townsperson',
     '1192495872.0dchiappe2': {
         setTattooChest: (
@@ -27303,7 +27009,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -27311,7 +27017,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -27319,7 +27025,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -27327,7 +27033,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -27335,7 +27041,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -27343,7 +27049,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -27351,7 +27057,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192495872.0dchiappe2'],
         setGender: 'm',
@@ -27412,7 +27118,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (6, 2, 8),
         setClothesBotColor: (6, 0, 0),
-    },
+        },
     '1192495872.0dchiappe2_type': 'Townsperson',
     '1192496000.0dchiappe': {
         setTattooChest: (
@@ -27422,7 +27128,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -27430,7 +27136,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -27438,7 +27144,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -27446,7 +27152,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -27454,7 +27160,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -27462,7 +27168,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -27470,7 +27176,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192496000.0dchiappe'],
         setGender: 'f',
@@ -27531,7 +27237,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (12, 0, 0),
         setClothesBotColor: (20, 0, 0),
-    },
+        },
     '1192496000.0dchiappe_type': 'Townsperson',
     '1192496640.0dchiappe': {
         setTattooChest: (
@@ -27541,7 +27247,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -27549,7 +27255,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -27557,7 +27263,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -27565,7 +27271,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -27573,7 +27279,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -27581,7 +27287,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -27589,7 +27295,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192496640.0dchiappe'],
         setGender: 'm',
@@ -27650,7 +27356,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (1, 0, 1),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1192496640.0dchiappe_type': 'Townsperson',
     '1192558464.0dchiappe': {
         setTattooChest: (
@@ -27660,7 +27366,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -27668,7 +27374,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -27676,7 +27382,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -27684,7 +27390,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -27692,7 +27398,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -27700,7 +27406,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -27708,7 +27414,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192558464.0dchiappe'],
         setGender: 'f',
@@ -27769,7 +27475,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (2, 11, 12),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1192558464.0dchiappe0': {
         setTattooChest: (
             0,
@@ -27778,7 +27484,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -27786,7 +27492,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -27794,7 +27500,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -27802,7 +27508,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -27810,7 +27516,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -27818,7 +27524,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -27826,7 +27532,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192558464.0dchiappe0'],
         setGender: 'm',
@@ -27887,7 +27593,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (1, 11, 10),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1192558464.0dchiappe0_type': 'Townsperson',
     '1192558464.0dchiappe_type': 'Townsperson',
     '1192558976.0dchiappe': {
@@ -27898,7 +27604,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -27906,7 +27612,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -27914,7 +27620,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -27922,7 +27628,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -27930,7 +27636,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -27938,7 +27644,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -27946,7 +27652,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192558976.0dchiappe'],
         setGender: 'm',
@@ -28007,7 +27713,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (18, 18, 11),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1192558976.0dchiappe0': {
         setTattooChest: (
             0,
@@ -28016,7 +27722,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -28024,7 +27730,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -28032,7 +27738,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -28040,7 +27746,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -28048,7 +27754,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -28056,7 +27762,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -28064,7 +27770,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192558976.0dchiappe0'],
         setGender: 'f',
@@ -28125,7 +27831,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (11, 16, 11),
         setClothesBotColor: (12, 0, 0),
-    },
+        },
     '1192558976.0dchiappe0_type': 'Townsperson',
     '1192558976.0dchiappe_type': 'Townsperson',
     '1192561024.0dchiappe': {
@@ -28136,7 +27842,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -28144,7 +27850,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -28152,7 +27858,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -28160,7 +27866,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -28168,7 +27874,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -28176,7 +27882,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -28184,7 +27890,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1192561024.0dchiappe'],
         setGender: 'm',
@@ -28245,7 +27951,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (6, 4, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1192561024.0dchiappe_type': 'Townsperson',
     '1196893440.0dxschafe': {
         setTattooChest: (
@@ -28255,7 +27961,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -28263,7 +27969,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -28271,7 +27977,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -28279,7 +27985,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -28287,7 +27993,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -28295,7 +28001,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -28303,7 +28009,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1196893440.0dxschafe'],
         setGender: 'm',
@@ -28364,7 +28070,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (2, 14, 0),
         setClothesBotColor: (2, 0, 0),
-    },
+        },
     '1196893440.0dxschafe_type': 'Townsperson',
     '1196894976.0dxschafe': {
         setTattooChest: (
@@ -28374,7 +28080,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -28382,7 +28088,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -28390,7 +28096,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -28398,7 +28104,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -28406,7 +28112,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -28414,7 +28120,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -28422,7 +28128,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1196894976.0dxschafe'],
         setGender: 'f',
@@ -28483,7 +28189,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1196894976.0dxschafe_type': 'Townsperson',
     '1196896512.0dxschafe': {
         setTattooChest: (
@@ -28493,7 +28199,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -28501,7 +28207,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -28509,7 +28215,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -28517,7 +28223,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -28525,7 +28231,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -28533,7 +28239,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -28541,7 +28247,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1196896512.0dxschafe'],
         setGender: 'm',
@@ -28602,7 +28308,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (0, 9, 19),
         setClothesBotColor: (9, 0, 0),
-    },
+        },
     '1196896512.0dxschafe_type': 'Townsperson',
     '1196897792.0dxschafe0': {
         setTattooChest: (
@@ -28612,7 +28318,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -28620,7 +28326,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -28628,7 +28334,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -28636,7 +28342,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -28644,7 +28350,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -28652,7 +28358,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -28660,7 +28366,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1196897792.0dxschafe0'],
         setGender: 'm',
@@ -28721,7 +28427,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 1),
         setClothesBotColor: (2, 0, 0),
-    },
+        },
     '1196897792.0dxschafe0_type': 'Townsperson',
     '1196898944.0dxschafe': {
         setTattooChest: (
@@ -28731,7 +28437,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -28739,7 +28445,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -28747,7 +28453,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -28755,7 +28461,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -28763,7 +28469,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -28771,7 +28477,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -28779,7 +28485,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1196898944.0dxschafe'],
         setGender: 'm',
@@ -28840,7 +28546,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (3, 0, 15),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1196898944.0dxschafe_type': 'Townsperson',
     '1196901888.0dxschafe': {
         setTattooChest: (
@@ -28850,7 +28556,7 @@ NPC_LIST = {
             7.738621711730957,
             28.59147834777832,
             0,
-        ),
+            ),
         setTattooZone2: (
             7,
             -10.945417404174805,
@@ -28858,7 +28564,7 @@ NPC_LIST = {
             19.638996124267578,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone3: (
             16,
             -10.066378593444824,
@@ -28866,7 +28572,7 @@ NPC_LIST = {
             12.65822696685791,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone4: (
             21,
             0.0,
@@ -28874,7 +28580,7 @@ NPC_LIST = {
             1.0,
             0.0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.13,
@@ -28882,7 +28588,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.5,
@@ -28890,7 +28596,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.5,
@@ -28898,7 +28604,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.5,
@@ -28906,7 +28612,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -28915,104 +28621,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1196901888.0dxschafe'],
-        setGender:
-        'm',
-        setBodyShape:
-        4,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        5,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.30494678020477295,
-        setHeadWidth:
-        -0.010695397853851318,
-        setHeadHeight:
-        0.0,
-        setHeadRoundness:
-        0.7739600539207458,
-        setJawWidth:
-        0.6605381965637207,
-        setJawRoundness:
-        1.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        -0.31397080421447754,
-        setJawLength:
-        1.0,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        1.0,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        -0.27908700704574585,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        1.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        -0.25,
-        setEyeOpeningSize:
-        -1.0,
-        setEyeBulge:
-        -0.8853292465209961,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        1.0,
-        setNoseLength:
-        0.7837848663330078,
-        setNoseBump:
-        0.3335357904434204,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        0.0,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        -0.5,
-        setEarFlapAngle:
-        0.5,
-        setEarPosition:
-        -0.5,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        3,
-        setHairHair:
-        12,
-        setHairBeard:
-        5,
-        setHairMustache:
-        3,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        5,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1196901888.0dxschafe'],
+        setGender: 'm',
+        setBodyShape: 4,
+        setBodyHeight: 0.0,
+        setBodyColor: 5,
+        setBodySkin: 0,
+        setHeadSize: 0.30494678020477295,
+        setHeadWidth: -0.010695397853851318,
+        setHeadHeight: 0.0,
+        setHeadRoundness: 0.7739600539207458,
+        setJawWidth: 0.6605381965637207,
+        setJawRoundness: 1.0,
+        setJawChinSize: 0.0,
+        setJawAngle: -0.31397080421447754,
+        setJawLength: 1.0,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 1.0,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: -0.27908700704574585,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 1.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: -0.25,
+        setEyeOpeningSize: -1.0,
+        setEyeBulge: -0.8853292465209961,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: 1.0,
+        setNoseLength: 0.7837848663330078,
+        setNoseBump: 0.3335357904434204,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: 0.0,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: -0.5,
+        setEarFlapAngle: 0.5,
+        setEarPosition: -0.5,
+        setEarLobe: 0.0,
+        setHeadTexture: 3,
+        setHairHair: 12,
+        setHairBeard: 5,
+        setHairMustache: 3,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 5,
         setClothesShirt: (0, 0),
         setClothesPant: (0, 4),
         setClothesHat: (0, 0),
@@ -29023,7 +28680,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1196901888.0dxschafe_type': 'Townsperson',
     '1196904064.0dxschafe': {
         setTattooChest: (
@@ -29033,7 +28690,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -29041,7 +28698,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -29049,7 +28706,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -29057,7 +28714,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -29065,7 +28722,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -29073,7 +28730,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -29081,7 +28738,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1196904064.0dxschafe'],
         setGender: 'm',
@@ -29142,7 +28799,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (2, 0, 0),
-    },
+        },
     '1196904064.0dxschafe_type': 'Townsperson',
     '1196907776.0dxschafe0': {
         setTattooChest: (
@@ -29152,7 +28809,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -29160,7 +28817,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -29168,7 +28825,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -29176,7 +28833,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -29184,7 +28841,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -29192,7 +28849,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -29200,7 +28857,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1196907776.0dxschafe0'],
         setGender: 'm',
@@ -29261,7 +28918,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (0, 12, 3),
         setClothesBotColor: (12, 0, 0),
-    },
+        },
     '1196907776.0dxschafe0_type': 'Townsperson',
     '1196911744.0dxschafe0': {
         setTattooChest: (
@@ -29271,7 +28928,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -29279,7 +28936,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -29287,7 +28944,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -29295,7 +28952,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -29303,7 +28960,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -29311,7 +28968,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -29319,7 +28976,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTutorial: 0,
         setName: PLocalizer.NPCNames['1196911744.0dxschafe0'],
         setGender: 'f',
@@ -29380,7 +29037,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (5, 0, 0),
-    },
+        },
     '1196911744.0dxschafe0_type': 'Townsperson',
     '1201025280.0dxschafe': {
         setTattooChest: (
@@ -29390,7 +29047,7 @@ NPC_LIST = {
             30.303030014038086,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -29398,7 +29055,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             -1.4647408723831177,
@@ -29406,7 +29063,7 @@ NPC_LIST = {
             15.151515007019043,
             0.0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -29414,7 +29071,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -29422,7 +29079,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -29430,7 +29087,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -29438,7 +29095,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -29446,7 +29103,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -29455,104 +29112,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1201025280.0dxschafe'],
-        setGender:
-        'f',
-        setBodyShape:
-        3,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        5,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.5,
-        setHeadWidth:
-        0.5,
-        setHeadHeight:
-        -0.22257909178733826,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        0.6866527795791626,
-        setJawRoundness:
-        0.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.9177205562591553,
-        setJawLength:
-        0.2547677755355835,
-        setMouthWidth:
-        -0.7014619708061218,
-        setMouthLipThickness:
-        -0.05395865440368652,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        -0.046349942684173584,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.8474543690681458,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.0,
-        setEyeOpeningSize:
-        0.0,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        0.6547801494598389,
-        setNoseNostrilWidth:
-        0.0,
-        setNoseLength:
-        1.0,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        -1.0,
-        setNoseNostrilAngle:
-        -0.2704998254776001,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        -0.04286810755729675,
-        setEarFlapAngle:
-        0.0,
-        setEarPosition:
-        0.0,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        3,
-        setHairHair:
-        17,
-        setHairBeard:
-        0,
-        setHairMustache:
-        0,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        2,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1201025280.0dxschafe'],
+        setGender: 'f',
+        setBodyShape: 3,
+        setBodyHeight: 0.0,
+        setBodyColor: 5,
+        setBodySkin: 0,
+        setHeadSize: 0.5,
+        setHeadWidth: 0.5,
+        setHeadHeight: -0.22257909178733826,
+        setHeadRoundness: 0.0,
+        setJawWidth: 0.6866527795791626,
+        setJawRoundness: 0.0,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.9177205562591553,
+        setJawLength: 0.2547677755355835,
+        setMouthWidth: -0.7014619708061218,
+        setMouthLipThickness: -0.05395865440368652,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: -0.046349942684173584,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.8474543690681458,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.0,
+        setEyeOpeningSize: 0.0,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: 0.6547801494598389,
+        setNoseNostrilWidth: 0.0,
+        setNoseLength: 1.0,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: -1.0,
+        setNoseNostrilAngle: -0.2704998254776001,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: -0.04286810755729675,
+        setEarFlapAngle: 0.0,
+        setEarPosition: 0.0,
+        setEarLobe: 0.0,
+        setHeadTexture: 3,
+        setHairHair: 17,
+        setHairBeard: 0,
+        setHairMustache: 0,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 2,
         setClothesShirt: (6, 2),
         setClothesPant: (1, 4),
         setClothesHat: (0, 0),
@@ -29563,7 +29171,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (7, 8, 17),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1201025280.0dxschafe_type': 'Townsperson',
     '1201028352.0dxschafe': {
         setTattooChest: (
@@ -29573,7 +29181,7 @@ NPC_LIST = {
             8.090235710144043,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             20,
             -10.945417404174805,
@@ -29581,7 +29189,7 @@ NPC_LIST = {
             19.638996124267578,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone3: (
             16,
             -10.066378593444824,
@@ -29589,7 +29197,7 @@ NPC_LIST = {
             12.65822696685791,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.5,
@@ -29597,7 +29205,7 @@ NPC_LIST = {
             1.0,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.13,
@@ -29605,7 +29213,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.5,
@@ -29613,7 +29221,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.5,
@@ -29621,7 +29229,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.5,
@@ -29629,7 +29237,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -29638,104 +29246,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1201028352.0dxschafe'],
-        setGender:
-        'm',
-        setBodyShape:
-        2,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        6,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.0,
-        setHeadWidth:
-        0.27176928520202637,
-        setHeadHeight:
-        0.0,
-        setHeadRoundness:
-        0.286838173866272,
-        setJawWidth:
-        -0.1295868158340454,
-        setJawRoundness:
-        -0.8938950896263123,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.0,
-        setJawLength:
-        0.0,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        0.9553768634796143,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.23899102210998535,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.7521714568138123,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.0,
-        setEyeOpeningSize:
-        0.0,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        0.3671971559524536,
-        setNoseNostrilWidth:
-        0.0,
-        setNoseLength:
-        -0.9640942811965942,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        0.0,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        -0.5,
-        setEarFlapAngle:
-        0.11610829830169678,
-        setEarPosition:
-        0.0,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        5,
-        setHairHair:
-        10,
-        setHairBeard:
-        1,
-        setHairMustache:
-        4,
-        setHairColor:
-        4,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        5,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1201028352.0dxschafe'],
+        setGender: 'm',
+        setBodyShape: 2,
+        setBodyHeight: 0.0,
+        setBodyColor: 6,
+        setBodySkin: 0,
+        setHeadSize: 0.0,
+        setHeadWidth: 0.27176928520202637,
+        setHeadHeight: 0.0,
+        setHeadRoundness: 0.286838173866272,
+        setJawWidth: -0.1295868158340454,
+        setJawRoundness: -0.8938950896263123,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.0,
+        setJawLength: 0.0,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 0.9553768634796143,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.23899102210998535,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.7521714568138123,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.0,
+        setEyeOpeningSize: 0.0,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: 0.3671971559524536,
+        setNoseNostrilWidth: 0.0,
+        setNoseLength: -0.9640942811965942,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: 0.0,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: -0.5,
+        setEarFlapAngle: 0.11610829830169678,
+        setEarPosition: 0.0,
+        setEarLobe: 0.0,
+        setHeadTexture: 5,
+        setHairHair: 10,
+        setHairBeard: 1,
+        setHairMustache: 4,
+        setHairColor: 4,
+        setHighLightColor: 0,
+        setEyesColor: 5,
         setClothesShirt: (0, 0),
         setClothesPant: (0, 0),
         setClothesHat: (0, 0),
@@ -29746,7 +29305,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (19, 4, 2),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1201028352.0dxschafe_type': 'Townsperson',
     '1201109074.66dxschafe': {
         setTattooChest: (
@@ -29756,7 +29315,7 @@ NPC_LIST = {
             0.033,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.306,
@@ -29764,7 +29323,7 @@ NPC_LIST = {
             0.066,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.124,
@@ -29772,7 +29331,7 @@ NPC_LIST = {
             0.066,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.5,
@@ -29780,7 +29339,7 @@ NPC_LIST = {
             1.0,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.13,
@@ -29788,7 +29347,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.5,
@@ -29796,7 +29355,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.5,
@@ -29804,7 +29363,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.5,
@@ -29812,7 +29371,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -29880,7 +29439,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 9, 20),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1201109074.66dxschafe_type': 'Townsperson',
     '1201223902.67dxschafe': {
         setTattooChest: (
@@ -29890,7 +29449,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -29898,7 +29457,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -29906,7 +29465,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -29914,7 +29473,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -29922,7 +29481,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -29930,7 +29489,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -29938,7 +29497,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -29946,7 +29505,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -30015,7 +29574,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (17, 17, 3),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1201223902.67dxschafe_type': 'Townsperson',
     '1201224743.34dxschafe': {
         setTattooChest: (
@@ -30025,7 +29584,7 @@ NPC_LIST = {
             13.82872200012207,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -30033,7 +29592,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -30041,7 +29600,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -30049,7 +29608,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -30057,7 +29616,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -30065,7 +29624,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -30073,7 +29632,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -30081,7 +29640,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -30090,104 +29649,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1201224743.34dxschafe'],
-        setGender:
-        'f',
-        setBodyShape:
-        1,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        5,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.5,
-        setHeadWidth:
-        -0.5,
-        setHeadHeight:
-        0.40115630626678467,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        -1.0,
-        setJawRoundness:
-        0.5990602970123291,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        -1.0,
-        setJawLength:
-        -1.0,
-        setMouthWidth:
-        -1.0,
-        setMouthLipThickness:
-        -1.0,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        -1.0,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        1.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        -0.25,
-        setEyeOpeningSize:
-        1.0,
-        setEyeBulge:
-        1.0,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        0.0,
-        setNoseLength:
-        -1.0,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        -1.0,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        -0.5,
-        setEarFlapAngle:
-        0.0,
-        setEarPosition:
-        0.0,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        2,
-        setHairHair:
-        8,
-        setHairBeard:
-        0,
-        setHairMustache:
-        0,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        0,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1201224743.34dxschafe'],
+        setGender: 'f',
+        setBodyShape: 1,
+        setBodyHeight: 0.0,
+        setBodyColor: 5,
+        setBodySkin: 0,
+        setHeadSize: 0.5,
+        setHeadWidth: -0.5,
+        setHeadHeight: 0.40115630626678467,
+        setHeadRoundness: 0.0,
+        setJawWidth: -1.0,
+        setJawRoundness: 0.5990602970123291,
+        setJawChinSize: 0.0,
+        setJawAngle: -1.0,
+        setJawLength: -1.0,
+        setMouthWidth: -1.0,
+        setMouthLipThickness: -1.0,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: -1.0,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 1.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: -0.25,
+        setEyeOpeningSize: 1.0,
+        setEyeBulge: 1.0,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: 0.0,
+        setNoseLength: -1.0,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: -1.0,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: -0.5,
+        setEarFlapAngle: 0.0,
+        setEarPosition: 0.0,
+        setEarLobe: 0.0,
+        setHeadTexture: 2,
+        setHairHair: 8,
+        setHairBeard: 0,
+        setHairMustache: 0,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 0,
         setClothesShirt: (0, 0),
         setClothesPant: (2, 0),
         setClothesHat: (0, 0),
@@ -30198,7 +29708,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (12, 8, 8),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1201224743.34dxschafe_type': 'Townsperson',
     '1201225541.73dxschafe': {
         setTattooChest: (
@@ -30208,7 +29718,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -30216,7 +29726,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -30224,7 +29734,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -30232,7 +29742,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -30240,7 +29750,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -30248,7 +29758,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -30256,7 +29766,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -30264,7 +29774,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -30333,7 +29843,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 0, 0),
         setClothesBotColor: (2, 0, 0),
-    },
+        },
     '1201225541.73dxschafe_type': 'Townsperson',
     '1201226462.13dxschafe': {
         setTattooChest: (
@@ -30343,7 +29853,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -30351,7 +29861,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -30359,7 +29869,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -30367,7 +29877,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -30375,7 +29885,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -30383,7 +29893,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -30391,7 +29901,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -30399,7 +29909,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -30468,7 +29978,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 7, 0),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1201226462.13dxschafe_type': 'Townsperson',
     '1201227181.3dxschafe': {
         setTattooChest: (
@@ -30478,7 +29988,7 @@ NPC_LIST = {
             0.033,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.306,
@@ -30486,7 +29996,7 @@ NPC_LIST = {
             0.066,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.124,
@@ -30494,7 +30004,7 @@ NPC_LIST = {
             0.066,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.5,
@@ -30502,7 +30012,7 @@ NPC_LIST = {
             1.0,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.13,
@@ -30510,7 +30020,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.5,
@@ -30518,7 +30028,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.5,
@@ -30526,7 +30036,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.5,
@@ -30534,7 +30044,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -30602,7 +30112,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (3, 17, 17),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1201227181.3dxschafe_type': 'Townsperson',
     '1201228098.28dxschafe': {
         setTattooChest: (
@@ -30612,7 +30122,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -30620,7 +30130,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -30628,7 +30138,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -30636,7 +30146,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -30644,7 +30154,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -30652,7 +30162,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -30660,7 +30170,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -30668,7 +30178,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -30737,7 +30247,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (0, 0, 19),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1201228098.28dxschafe_type': 'Townsperson',
     '1201229350.47dxschafe': {
         setTattooChest: (
@@ -30747,7 +30257,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -30755,7 +30265,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -30763,7 +30273,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -30771,7 +30281,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -30779,7 +30289,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -30787,7 +30297,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -30795,7 +30305,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -30803,7 +30313,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -30872,7 +30382,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (2, 0, 1),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1201229350.47dxschafe_type': 'Townsperson',
     '1201230131.11dxschafe': {
         setTattooChest: (
@@ -30882,7 +30392,7 @@ NPC_LIST = {
             30.303030014038086,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.306,
@@ -30890,7 +30400,7 @@ NPC_LIST = {
             0.066,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.124,
@@ -30898,7 +30408,7 @@ NPC_LIST = {
             0.066,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.5,
@@ -30906,7 +30416,7 @@ NPC_LIST = {
             1.0,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.13,
@@ -30914,7 +30424,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.5,
@@ -30922,7 +30432,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.5,
@@ -30930,7 +30440,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.5,
@@ -30938,7 +30448,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -30947,104 +30457,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1201230131.11dxschafe'],
-        setGender:
-        'f',
-        setBodyShape:
-        3,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        6,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.0,
-        setHeadWidth:
-        -0.5,
-        setHeadHeight:
-        0.0,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        -0.3103678822517395,
-        setJawRoundness:
-        0.9305027723312378,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.5533326864242554,
-        setJawLength:
-        0.0,
-        setMouthWidth:
-        -1.0,
-        setMouthLipThickness:
-        -0.09627741575241089,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.0,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.25,
-        setEyeOpeningSize:
-        0.0,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        0.21284961700439453,
-        setNoseNostrilWidth:
-        0.0,
-        setNoseLength:
-        0.0,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        0.816055417060852,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        0.0,
-        setEarFlapAngle:
-        0.0,
-        setEarPosition:
-        -0.5,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        3,
-        setHairHair:
-        17,
-        setHairBeard:
-        0,
-        setHairMustache:
-        0,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        5,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1201230131.11dxschafe'],
+        setGender: 'f',
+        setBodyShape: 3,
+        setBodyHeight: 0.0,
+        setBodyColor: 6,
+        setBodySkin: 0,
+        setHeadSize: 0.0,
+        setHeadWidth: -0.5,
+        setHeadHeight: 0.0,
+        setHeadRoundness: 0.0,
+        setJawWidth: -0.3103678822517395,
+        setJawRoundness: 0.9305027723312378,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.5533326864242554,
+        setJawLength: 0.0,
+        setMouthWidth: -1.0,
+        setMouthLipThickness: -0.09627741575241089,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.0,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.25,
+        setEyeOpeningSize: 0.0,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: 0.21284961700439453,
+        setNoseNostrilWidth: 0.0,
+        setNoseLength: 0.0,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: 0.816055417060852,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: 0.0,
+        setEarFlapAngle: 0.0,
+        setEarPosition: -0.5,
+        setEarLobe: 0.0,
+        setHeadTexture: 3,
+        setHairHair: 17,
+        setHairBeard: 0,
+        setHairMustache: 0,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 5,
         setClothesShirt: (2, 0),
         setClothesPant: (3, 0),
         setClothesHat: (0, 0),
@@ -31055,7 +30516,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (13, 7, 3),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1201230131.11dxschafe_type': 'Townsperson',
     '1201548787.04kmuller': {
         setTattooChest: (
@@ -31065,7 +30526,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -31073,7 +30534,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -31081,7 +30542,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -31089,7 +30550,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -31097,7 +30558,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -31105,7 +30566,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -31113,7 +30574,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -31121,7 +30582,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -31189,7 +30650,7 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (2, 16, 3),
         setClothesBotColor: (5, 0, 0),
-    },
+        },
     '1201548787.04kmuller_type': 'Townsperson',
     '1201821619.0dxschafe': {
         setTattooChest: (
@@ -31199,7 +30660,7 @@ NPC_LIST = {
             0.191,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.203,
@@ -31207,7 +30668,7 @@ NPC_LIST = {
             0.079,
             271.1,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.203,
@@ -31215,7 +30676,7 @@ NPC_LIST = {
             0.079,
             271.1,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.5,
@@ -31223,7 +30684,7 @@ NPC_LIST = {
             1.0,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.13,
@@ -31231,7 +30692,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.5,
@@ -31239,7 +30700,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.5,
@@ -31247,7 +30708,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.5,
@@ -31255,7 +30716,7 @@ NPC_LIST = {
             0.1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -31323,7 +30784,7 @@ NPC_LIST = {
         setClothesBelt: (8, 0),
         setClothesTopColor: (0, 3, 8),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1201821619.0dxschafe_type': 'Townsperson',
     '1202419919.16akelts': {
         setTattooChest: (
@@ -31333,7 +30794,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -31341,7 +30802,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -31349,7 +30810,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -31357,7 +30818,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -31365,7 +30826,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -31373,7 +30834,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -31381,7 +30842,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -31389,7 +30850,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -31457,7 +30918,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (9, 7, 9),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1202419919.16akelts_type': 'Townsperson',
     '1202519757.13akelts': {
         setTattooChest: (
@@ -31467,7 +30928,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -31475,7 +30936,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -31483,7 +30944,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -31491,7 +30952,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -31499,7 +30960,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -31507,7 +30968,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -31515,7 +30976,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -31523,7 +30984,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -31591,7 +31052,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (12, 9, 13),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1202519757.13akelts_type': 'Townsperson',
     '1203449603.97akelts': {
         setTattooChest: (
@@ -31601,7 +31062,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -31609,7 +31070,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -31617,7 +31078,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -31625,7 +31086,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -31633,7 +31094,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -31641,7 +31102,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -31649,7 +31110,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -31657,7 +31118,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (2, 2, 8),
         setJewelryZone2: (12, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -31725,7 +31186,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (12, 9, 13),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1203449603.97akelts_type': 'Townsperson',
     '1203451028.89akelts': {
         setTattooChest: (
@@ -31735,7 +31196,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -31743,7 +31204,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             6,
             -23.291034698486328,
@@ -31751,7 +31212,7 @@ NPC_LIST = {
             27.564847946166992,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -31759,7 +31220,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -31767,7 +31228,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -31775,7 +31236,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -31783,7 +31244,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -31791,7 +31252,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -31800,104 +31261,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1203451028.89akelts'],
-        setGender:
-        'm',
-        setBodyShape:
-        2,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        10,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.5,
-        setHeadWidth:
-        0.0,
-        setHeadHeight:
-        0.0,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        0.0,
-        setJawRoundness:
-        -0.10761904716491699,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.0,
-        setJawLength:
-        0.0,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        0.0,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.0,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.25,
-        setEyeOpeningSize:
-        0.0,
-        setEyeBulge:
-        0.3593430519104004,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        0.6983813047409058,
-        setNoseLength:
-        -0.3571738600730896,
-        setNoseBump:
-        -0.07508045434951782,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        -0.19336867332458496,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        -0.30330783128738403,
-        setEarFlapAngle:
-        0.3574488162994385,
-        setEarPosition:
-        0.14700448513031006,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        4,
-        setHairHair:
-        7,
-        setHairBeard:
-        9,
-        setHairMustache:
-        0,
-        setHairColor:
-        5,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        3,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1203451028.89akelts'],
+        setGender: 'm',
+        setBodyShape: 2,
+        setBodyHeight: 0.0,
+        setBodyColor: 10,
+        setBodySkin: 0,
+        setHeadSize: 0.5,
+        setHeadWidth: 0.0,
+        setHeadHeight: 0.0,
+        setHeadRoundness: 0.0,
+        setJawWidth: 0.0,
+        setJawRoundness: -0.10761904716491699,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.0,
+        setJawLength: 0.0,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 0.0,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.0,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.25,
+        setEyeOpeningSize: 0.0,
+        setEyeBulge: 0.3593430519104004,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: 0.6983813047409058,
+        setNoseLength: -0.3571738600730896,
+        setNoseBump: -0.07508045434951782,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: -0.19336867332458496,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: -0.30330783128738403,
+        setEarFlapAngle: 0.3574488162994385,
+        setEarPosition: 0.14700448513031006,
+        setEarLobe: 0.0,
+        setHeadTexture: 4,
+        setHairHair: 7,
+        setHairBeard: 9,
+        setHairMustache: 0,
+        setHairColor: 5,
+        setHighLightColor: 0,
+        setEyesColor: 3,
         setClothesShirt: (9, 0),
         setClothesPant: (6, 0),
         setClothesHat: (0, 0),
@@ -31908,7 +31320,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (11, 11, 9),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1203451028.89akelts_type': 'Townsperson',
     '1203451240.81akelts': {
         setTattooChest: (
@@ -31918,7 +31330,7 @@ NPC_LIST = {
             7.084267616271973,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -31926,7 +31338,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             26,
             -10.327406883239746,
@@ -31934,7 +31346,7 @@ NPC_LIST = {
             12.65822982788086,
             276.2784118652344,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -31942,7 +31354,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -31950,7 +31362,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -31958,7 +31370,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -31966,7 +31378,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -31974,7 +31386,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -31983,104 +31395,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1203451240.81akelts'],
-        setGender:
-        'm',
-        setBodyShape:
-        0,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        19,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.0,
-        setHeadWidth:
-        0.0,
-        setHeadHeight:
-        0.4178580045700073,
-        setHeadRoundness:
-        0.5966473817825317,
-        setJawWidth:
-        0.0,
-        setJawRoundness:
-        0.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.0,
-        setJawLength:
-        0.0,
-        setMouthWidth:
-        -0.6793783903121948,
-        setMouthLipThickness:
-        0.0,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.0,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.25,
-        setEyeOpeningSize:
-        0.0,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        -0.6712678074836731,
-        setNoseLength:
-        0.0,
-        setNoseBump:
-        -0.0907900333404541,
-        setNoseNostrilHeight:
-        0.47664523124694824,
-        setNoseNostrilAngle:
-        0.0,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        1.0,
-        setEarFlapAngle:
-        0.23418688774108887,
-        setEarPosition:
-        -0.05424994230270386,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        5,
-        setHairHair:
-        0,
-        setHairBeard:
-        7,
-        setHairMustache:
-        0,
-        setHairColor:
-        7,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        5,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1203451240.81akelts'],
+        setGender: 'm',
+        setBodyShape: 0,
+        setBodyHeight: 0.0,
+        setBodyColor: 19,
+        setBodySkin: 0,
+        setHeadSize: 0.0,
+        setHeadWidth: 0.0,
+        setHeadHeight: 0.4178580045700073,
+        setHeadRoundness: 0.5966473817825317,
+        setJawWidth: 0.0,
+        setJawRoundness: 0.0,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.0,
+        setJawLength: 0.0,
+        setMouthWidth: -0.6793783903121948,
+        setMouthLipThickness: 0.0,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.0,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.25,
+        setEyeOpeningSize: 0.0,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: -0.6712678074836731,
+        setNoseLength: 0.0,
+        setNoseBump: -0.0907900333404541,
+        setNoseNostrilHeight: 0.47664523124694824,
+        setNoseNostrilAngle: 0.0,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: 1.0,
+        setEarFlapAngle: 0.23418688774108887,
+        setEarPosition: -0.05424994230270386,
+        setEarLobe: 0.0,
+        setHeadTexture: 5,
+        setHairHair: 0,
+        setHairBeard: 7,
+        setHairMustache: 0,
+        setHairColor: 7,
+        setHighLightColor: 0,
+        setEyesColor: 5,
         setClothesShirt: (1, 0),
         setClothesPant: (1, 0),
         setClothesHat: (7, 0),
@@ -32091,7 +31454,7 @@ NPC_LIST = {
         setClothesBelt: (8, 0),
         setClothesTopColor: (9, 10, 7),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1203451240.81akelts_type': 'Townsperson',
     '1207073489.41mtucker': {
         setTattooChest: (
@@ -32101,7 +31464,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -32109,7 +31472,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -32117,7 +31480,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -32125,7 +31488,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -32133,7 +31496,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -32141,7 +31504,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -32149,7 +31512,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -32157,7 +31520,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (2, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -32225,7 +31588,7 @@ NPC_LIST = {
         setClothesBelt: (6, 0),
         setClothesTopColor: (14, 18, 7),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1207073489.41mtucker_type': 'Townsperson',
     '1208537612.06akelts': {
         setTattooChest: (
@@ -32235,7 +31598,7 @@ NPC_LIST = {
             12.800505638122559,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             -6.877093315124512,
@@ -32243,7 +31606,7 @@ NPC_LIST = {
             12.65822696685791,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone3: (
             16,
             -10.066378593444824,
@@ -32251,7 +31614,7 @@ NPC_LIST = {
             12.65822696685791,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -32259,7 +31622,7 @@ NPC_LIST = {
             1.0,
             0.0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -32267,7 +31630,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -32275,7 +31638,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -32283,7 +31646,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -32291,7 +31654,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (11, 5, 3),
         setJewelryZone2: (11, 5, 3),
         setJewelryZone3: (2, 0, 0),
@@ -32300,104 +31663,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1208537612.06akelts'],
-        setGender:
-        'm',
-        setBodyShape:
-        1,
-        setBodyHeight:
-        0.10000000149011612,
-        setBodyColor:
-        12,
-        setBodySkin:
-        0,
-        setHeadSize:
-        -0.39945223927497864,
-        setHeadWidth:
-        0.4268152117729187,
-        setHeadHeight:
-        -0.19345995783805847,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        -0.8563361763954163,
-        setJawRoundness:
-        0.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.8047747611999512,
-        setJawLength:
-        0.5368378162384033,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        -0.027427494525909424,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        -0.9032567739486694,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.2767029404640198,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.07414889335632324,
-        setEyeOpeningSize:
-        0.0008568763732910156,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        0.0,
-        setNoseLength:
-        -0.8447113037109375,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        -0.7621779441833496,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        0.0,
-        setEarFlapAngle:
-        0.2304978370666504,
-        setEarPosition:
-        0.1733936071395874,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        1,
-        setHairHair:
-        7,
-        setHairBeard:
-        5,
-        setHairMustache:
-        5,
-        setHairColor:
-        2,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        3,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1208537612.06akelts'],
+        setGender: 'm',
+        setBodyShape: 1,
+        setBodyHeight: 0.10000000149011612,
+        setBodyColor: 12,
+        setBodySkin: 0,
+        setHeadSize: -0.39945223927497864,
+        setHeadWidth: 0.4268152117729187,
+        setHeadHeight: -0.19345995783805847,
+        setHeadRoundness: 0.0,
+        setJawWidth: -0.8563361763954163,
+        setJawRoundness: 0.0,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.8047747611999512,
+        setJawLength: 0.5368378162384033,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: -0.027427494525909424,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: -0.9032567739486694,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.2767029404640198,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.07414889335632324,
+        setEyeOpeningSize: 0.0008568763732910156,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: 0.0,
+        setNoseLength: -0.8447113037109375,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: -0.7621779441833496,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: 0.0,
+        setEarFlapAngle: 0.2304978370666504,
+        setEarPosition: 0.1733936071395874,
+        setEarLobe: 0.0,
+        setHeadTexture: 1,
+        setHairHair: 7,
+        setHairBeard: 5,
+        setHairMustache: 5,
+        setHairColor: 2,
+        setHighLightColor: 0,
+        setEyesColor: 3,
         setClothesShirt: (0, 0),
         setClothesPant: (2, 3),
         setClothesHat: (0, 0),
@@ -32408,7 +31722,7 @@ NPC_LIST = {
         setClothesBelt: (12, 0),
         setClothesTopColor: (4, 13, 17),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1208537612.06akelts_type': 'Townsperson',
     '1208543583.91akelts': {
         setTattooChest: (
@@ -32418,7 +31732,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -32426,7 +31740,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -32434,7 +31748,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -32442,7 +31756,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -32450,7 +31764,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -32458,7 +31772,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -32466,7 +31780,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -32474,7 +31788,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -32542,7 +31856,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (20, 20, 0),
         setClothesBotColor: (20, 0, 4),
-    },
+        },
     '1208543583.91akelts_type': 'Townsperson',
     '1208544322.67akelts': {
         setTattooChest: (
@@ -32552,7 +31866,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -32560,7 +31874,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -32568,7 +31882,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -32576,7 +31890,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -32584,7 +31898,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -32592,7 +31906,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -32600,7 +31914,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -32608,7 +31922,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -32676,7 +31990,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (12, 16, 0),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1208544322.67akelts_type': 'Townsperson',
     '1208544716.73akelts': {
         setTattooChest: (
@@ -32686,7 +32000,7 @@ NPC_LIST = {
             10.199753761291504,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -32694,7 +32008,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -32702,7 +32016,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -32710,7 +32024,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -32718,7 +32032,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -32726,7 +32040,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -32734,7 +32048,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -32742,7 +32056,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -32751,104 +32065,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1208544716.73akelts'],
-        setGender:
-        'm',
-        setBodyShape:
-        4,
-        setBodyHeight:
-        0.10000000149011612,
-        setBodyColor:
-        7,
-        setBodySkin:
-        0,
-        setHeadSize:
-        -0.09752798080444336,
-        setHeadWidth:
-        -0.5,
-        setHeadHeight:
-        -0.4678103029727936,
-        setHeadRoundness:
-        0.44601893424987793,
-        setJawWidth:
-        0.0,
-        setJawRoundness:
-        0.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        -0.7627373933792114,
-        setJawLength:
-        0.0,
-        setMouthWidth:
-        -0.8600173592567444,
-        setMouthLipThickness:
-        -0.39477694034576416,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.0,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        -0.25,
-        setEyeOpeningSize:
-        0.6957193613052368,
-        setEyeBulge:
-        0.3023374080657959,
-        setNoseBridgeWidth:
-        -0.9099984765052795,
-        setNoseNostrilWidth:
-        0.0,
-        setNoseLength:
-        0.0,
-        setNoseBump:
-        0.2575637102127075,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        -0.9948944449424744,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        -0.7864809632301331,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        0.5,
-        setEarFlapAngle:
-        -0.5,
-        setEarPosition:
-        0.40555208921432495,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        0,
-        setHairHair:
-        6,
-        setHairBeard:
-        1,
-        setHairMustache:
-        0,
-        setHairColor:
-        4,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        3,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1208544716.73akelts'],
+        setGender: 'm',
+        setBodyShape: 4,
+        setBodyHeight: 0.10000000149011612,
+        setBodyColor: 7,
+        setBodySkin: 0,
+        setHeadSize: -0.09752798080444336,
+        setHeadWidth: -0.5,
+        setHeadHeight: -0.4678103029727936,
+        setHeadRoundness: 0.44601893424987793,
+        setJawWidth: 0.0,
+        setJawRoundness: 0.0,
+        setJawChinSize: 0.0,
+        setJawAngle: -0.7627373933792114,
+        setJawLength: 0.0,
+        setMouthWidth: -0.8600173592567444,
+        setMouthLipThickness: -0.39477694034576416,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.0,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: -0.25,
+        setEyeOpeningSize: 0.6957193613052368,
+        setEyeBulge: 0.3023374080657959,
+        setNoseBridgeWidth: -0.9099984765052795,
+        setNoseNostrilWidth: 0.0,
+        setNoseLength: 0.0,
+        setNoseBump: 0.2575637102127075,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: -0.9948944449424744,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: -0.7864809632301331,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: 0.5,
+        setEarFlapAngle: -0.5,
+        setEarPosition: 0.40555208921432495,
+        setEarLobe: 0.0,
+        setHeadTexture: 0,
+        setHairHair: 6,
+        setHairBeard: 1,
+        setHairMustache: 0,
+        setHairColor: 4,
+        setHighLightColor: 0,
+        setEyesColor: 3,
         setClothesShirt: (0, 0),
         setClothesPant: (1, 0),
         setClothesHat: (0, 0),
@@ -32859,7 +32124,7 @@ NPC_LIST = {
         setClothesBelt: (9, 0),
         setClothesTopColor: (1, 8, 16),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1208544716.73akelts_type': 'Townsperson',
     '1208545146.78akelts': {
         setTattooChest: (
@@ -32869,7 +32134,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -32877,7 +32142,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -32885,7 +32150,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -32893,7 +32158,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -32901,7 +32166,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -32909,7 +32174,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -32917,7 +32182,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -32925,7 +32190,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -32993,7 +32258,7 @@ NPC_LIST = {
         setClothesBelt: (7, 0),
         setClothesTopColor: (9, 14, 16),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1208545146.78akelts_type': 'Townsperson',
     '1208546953.92akelts': {
         setTattooChest: (
@@ -33003,7 +32268,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -33011,7 +32276,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -33019,7 +32284,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             77,
             0.0066401660442352295,
@@ -33027,7 +32292,7 @@ NPC_LIST = {
             1.0,
             0.0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -33035,7 +32300,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -33043,7 +32308,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -33051,7 +32316,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -33059,7 +32324,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -33068,104 +32333,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1208546953.92akelts'],
-        setGender:
-        'm',
-        setBodyShape:
-        4,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        19,
-        setBodySkin:
-        0,
-        setHeadSize:
-        -0.17073994874954224,
-        setHeadWidth:
-        0.5,
-        setHeadHeight:
-        0.5,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        0.6703120470046997,
-        setJawRoundness:
-        0.7849942445755005,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.5817804336547852,
-        setJawLength:
-        -0.26559537649154663,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        1.0,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.3920694589614868,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.599318265914917,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.15651604533195496,
-        setEyeOpeningSize:
-        0.43824589252471924,
-        setEyeBulge:
-        -0.16277670860290527,
-        setNoseBridgeWidth:
-        1.0,
-        setNoseNostrilWidth:
-        1.0,
-        setNoseLength:
-        -0.08764910697937012,
-        setNoseBump:
-        0.08764910697937012,
-        setNoseNostrilHeight:
-        0.4132031202316284,
-        setNoseNostrilAngle:
-        0.8264056444168091,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        1.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        0.0,
-        setEarFlapAngle:
-        -0.5,
-        setEarPosition:
-        0.0,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        6,
-        setHairHair:
-        5,
-        setHairBeard:
-        6,
-        setHairMustache:
-        4,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        2,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1208546953.92akelts'],
+        setGender: 'm',
+        setBodyShape: 4,
+        setBodyHeight: 0.0,
+        setBodyColor: 19,
+        setBodySkin: 0,
+        setHeadSize: -0.17073994874954224,
+        setHeadWidth: 0.5,
+        setHeadHeight: 0.5,
+        setHeadRoundness: 0.0,
+        setJawWidth: 0.6703120470046997,
+        setJawRoundness: 0.7849942445755005,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.5817804336547852,
+        setJawLength: -0.26559537649154663,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 1.0,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.3920694589614868,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.599318265914917,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.15651604533195496,
+        setEyeOpeningSize: 0.43824589252471924,
+        setEyeBulge: -0.16277670860290527,
+        setNoseBridgeWidth: 1.0,
+        setNoseNostrilWidth: 1.0,
+        setNoseLength: -0.08764910697937012,
+        setNoseBump: 0.08764910697937012,
+        setNoseNostrilHeight: 0.4132031202316284,
+        setNoseNostrilAngle: 0.8264056444168091,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 1.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: 0.0,
+        setEarFlapAngle: -0.5,
+        setEarPosition: 0.0,
+        setEarLobe: 0.0,
+        setHeadTexture: 6,
+        setHairHair: 5,
+        setHairBeard: 6,
+        setHairMustache: 4,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 2,
         setClothesShirt: (1, 0),
         setClothesPant: (1, 0),
         setClothesHat: (0, 0),
@@ -33176,7 +32392,7 @@ NPC_LIST = {
         setClothesBelt: (6, 0),
         setClothesTopColor: (9, 14, 1),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1208546953.92akelts_type': 'Townsperson',
     '1208548168.92akelts': {
         setTattooChest: (
@@ -33186,7 +32402,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -33194,7 +32410,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             4,
             -18.156410217285156,
@@ -33202,7 +32418,7 @@ NPC_LIST = {
             21.83377456665039,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -33210,7 +32426,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -33218,7 +32434,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -33226,7 +32442,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -33234,7 +32450,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -33242,7 +32458,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -33251,104 +32467,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1208548168.92akelts'],
-        setGender:
-        'm',
-        setBodyShape:
-        0,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        6,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.5,
-        setHeadWidth:
-        -0.5,
-        setHeadHeight:
-        -0.4026851952075958,
-        setHeadRoundness:
-        0.35197094082832336,
-        setJawWidth:
-        0.0,
-        setJawRoundness:
-        -0.010010957717895508,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        -0.5779409408569336,
-        setJawLength:
-        0.0,
-        setMouthWidth:
-        -0.8988053202629089,
-        setMouthLipThickness:
-        0.48585569858551025,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        -0.10491323471069336,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.7244899868965149,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.0,
-        setEyeOpeningSize:
-        0.0,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        -0.34628528356552124,
-        setNoseLength:
-        0.0,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        0.0,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.5802570581436157,
-        setNoseNostrilBroke:
-        0.23739933967590332,
-        setEarScale:
-        0.0,
-        setEarFlapAngle:
-        0.0,
-        setEarPosition:
-        -0.2345602810382843,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        3,
-        setHairHair:
-        2,
-        setHairBeard:
-        9,
-        setHairMustache:
-        5,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        2,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1208548168.92akelts'],
+        setGender: 'm',
+        setBodyShape: 0,
+        setBodyHeight: 0.0,
+        setBodyColor: 6,
+        setBodySkin: 0,
+        setHeadSize: 0.5,
+        setHeadWidth: -0.5,
+        setHeadHeight: -0.4026851952075958,
+        setHeadRoundness: 0.35197094082832336,
+        setJawWidth: 0.0,
+        setJawRoundness: -0.010010957717895508,
+        setJawChinSize: 0.0,
+        setJawAngle: -0.5779409408569336,
+        setJawLength: 0.0,
+        setMouthWidth: -0.8988053202629089,
+        setMouthLipThickness: 0.48585569858551025,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: -0.10491323471069336,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.7244899868965149,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.0,
+        setEyeOpeningSize: 0.0,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: -0.34628528356552124,
+        setNoseLength: 0.0,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: 0.0,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.5802570581436157,
+        setNoseNostrilBroke: 0.23739933967590332,
+        setEarScale: 0.0,
+        setEarFlapAngle: 0.0,
+        setEarPosition: -0.2345602810382843,
+        setEarLobe: 0.0,
+        setHeadTexture: 3,
+        setHairHair: 2,
+        setHairBeard: 9,
+        setHairMustache: 5,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 2,
         setClothesShirt: (9, 0),
         setClothesPant: (6, 0),
         setClothesHat: (0, 0),
@@ -33359,7 +32526,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (16, 13, 16),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1208548168.92akelts_type': 'Townsperson',
     '1208548525.28akelts': {
         setTattooChest: (
@@ -33369,7 +32536,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -33377,7 +32544,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -33385,7 +32552,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -33393,7 +32560,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -33401,7 +32568,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -33409,7 +32576,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -33417,7 +32584,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -33425,7 +32592,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -33493,7 +32660,7 @@ NPC_LIST = {
         setClothesBelt: (17, 0),
         setClothesTopColor: (19, 2, 10),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1208548525.28akelts_type': 'Townsperson',
     '1208548943.97akelts': {
         setTattooChest: (
@@ -33503,7 +32670,7 @@ NPC_LIST = {
             8.025611877441406,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -33511,7 +32678,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -33519,7 +32686,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -33527,7 +32694,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -33535,7 +32702,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -33543,7 +32710,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -33551,7 +32718,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -33559,7 +32726,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -33568,104 +32735,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1208548943.97akelts'],
-        setGender:
-        'm',
-        setBodyShape:
-        3,
-        setBodyHeight:
-        -0.10000000149011612,
-        setBodyColor:
-        4,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.0,
-        setHeadWidth:
-        0.0,
-        setHeadHeight:
-        -0.5,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        0.0,
-        setJawRoundness:
-        0.14991474151611328,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        -0.21945232152938843,
-        setJawLength:
-        0.448284387588501,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        0.0,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        -0.3060976266860962,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.0,
-        setEyeOpeningSize:
-        0.9178104400634766,
-        setEyeBulge:
-        0.6914019584655762,
-        setNoseBridgeWidth:
-        -0.9060108661651611,
-        setNoseNostrilWidth:
-        -0.5686570405960083,
-        setNoseLength:
-        -0.5680465698242188,
-        setNoseBump:
-        -0.9956494569778442,
-        setNoseNostrilHeight:
-        -0.547387957572937,
-        setNoseNostrilAngle:
-        -0.9995061755180359,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.6797084808349609,
-        setNoseNostrilBroke:
-        -0.13206511735916138,
-        setEarScale:
-        -0.13876423239707947,
-        setEarFlapAngle:
-        0.0,
-        setEarPosition:
-        0.0,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        5,
-        setHairHair:
-        11,
-        setHairBeard:
-        4,
-        setHairMustache:
-        2,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        2,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1208548943.97akelts'],
+        setGender: 'm',
+        setBodyShape: 3,
+        setBodyHeight: -0.10000000149011612,
+        setBodyColor: 4,
+        setBodySkin: 0,
+        setHeadSize: 0.0,
+        setHeadWidth: 0.0,
+        setHeadHeight: -0.5,
+        setHeadRoundness: 0.0,
+        setJawWidth: 0.0,
+        setJawRoundness: 0.14991474151611328,
+        setJawChinSize: 0.0,
+        setJawAngle: -0.21945232152938843,
+        setJawLength: 0.448284387588501,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 0.0,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: -0.3060976266860962,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.0,
+        setEyeOpeningSize: 0.9178104400634766,
+        setEyeBulge: 0.6914019584655762,
+        setNoseBridgeWidth: -0.9060108661651611,
+        setNoseNostrilWidth: -0.5686570405960083,
+        setNoseLength: -0.5680465698242188,
+        setNoseBump: -0.9956494569778442,
+        setNoseNostrilHeight: -0.547387957572937,
+        setNoseNostrilAngle: -0.9995061755180359,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.6797084808349609,
+        setNoseNostrilBroke: -0.13206511735916138,
+        setEarScale: -0.13876423239707947,
+        setEarFlapAngle: 0.0,
+        setEarPosition: 0.0,
+        setEarLobe: 0.0,
+        setHeadTexture: 5,
+        setHairHair: 11,
+        setHairBeard: 4,
+        setHairMustache: 2,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 2,
         setClothesShirt: (5, 2),
         setClothesPant: (1, 4),
         setClothesHat: (0, 0),
@@ -33676,7 +32794,7 @@ NPC_LIST = {
         setClothesBelt: (15, 0),
         setClothesTopColor: (15, 15, 10),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1208548943.97akelts_type': 'Townsperson',
     '1208549359.09akelts': {
         setTattooChest: (
@@ -33686,7 +32804,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -33694,7 +32812,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -33702,7 +32820,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -33710,7 +32828,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -33718,7 +32836,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -33726,7 +32844,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -33734,7 +32852,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -33742,7 +32860,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -33810,7 +32928,7 @@ NPC_LIST = {
         setClothesBelt: (8, 0),
         setClothesTopColor: (17, 2, 17),
         setClothesBotColor: (2, 0, 0),
-    },
+        },
     '1208549359.09akelts_type': 'Townsperson',
     '1208549913.56akelts': {
         setTattooChest: (
@@ -33820,7 +32938,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -33828,7 +32946,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -33836,7 +32954,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -33844,7 +32962,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -33852,7 +32970,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -33860,7 +32978,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -33868,7 +32986,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -33876,7 +32994,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -33944,7 +33062,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (8, 14, 7),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1208549913.56akelts_type': 'Townsperson',
     '1208898135.26akelts': {
         setTattooChest: (
@@ -33954,7 +33072,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -33962,7 +33080,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -33970,7 +33088,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -33978,7 +33096,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -33986,7 +33104,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -33994,7 +33112,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -34002,7 +33120,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -34010,7 +33128,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -34078,7 +33196,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (16, 16, 2),
         setClothesBotColor: (3, 0, 0),
-    },
+        },
     '1208898135.26akelts_type': 'Townsperson',
     '1208900438.95akelts': {
         setTattooChest: (
@@ -34088,7 +33206,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -34096,7 +33214,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -34104,7 +33222,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -34112,7 +33230,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -34120,7 +33238,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -34128,7 +33246,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -34136,7 +33254,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -34144,7 +33262,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -34212,7 +33330,7 @@ NPC_LIST = {
         setClothesBelt: (12, 0),
         setClothesTopColor: (0, 0, 1),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1208900438.95akelts_type': 'Townsperson',
     '1208908477.73akelts': {
         setTattooChest: (
@@ -34222,7 +33340,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -34230,7 +33348,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -34238,7 +33356,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -34246,7 +33364,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -34254,7 +33372,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -34262,7 +33380,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -34270,7 +33388,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -34278,7 +33396,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -34346,7 +33464,7 @@ NPC_LIST = {
         setClothesBelt: (12, 0),
         setClothesTopColor: (10, 10, 13),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1208908477.73akelts_type': 'Townsperson',
     '1210018399.53akelts': {
         setTattooChest: (
@@ -34356,7 +33474,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -34364,7 +33482,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -34372,7 +33490,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -34380,7 +33498,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -34388,7 +33506,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -34396,7 +33514,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -34404,7 +33522,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -34412,7 +33530,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -34480,7 +33598,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (1, 16, 0),
         setClothesBotColor: (10, 0, 0),
-    },
+        },
     '1210018399.53akelts_type': 'Townsperson',
     '1211912448.0WDIG1': {
         setTattooChest: (
@@ -34490,7 +33608,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -34498,7 +33616,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -34506,7 +33624,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -34514,7 +33632,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -34522,7 +33640,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -34530,7 +33648,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -34538,7 +33656,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -34546,7 +33664,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -34614,7 +33732,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (13, 9, 0),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1211912448.0WDIG1_type': 'Townsperson',
     '1211925120.0WDIG': {
         setTattooChest: (
@@ -34624,7 +33742,7 @@ NPC_LIST = {
             5.235601902008057,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -34632,7 +33750,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -34640,7 +33758,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -34648,7 +33766,7 @@ NPC_LIST = {
             1.0,
             0.0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -34656,7 +33774,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -34664,7 +33782,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -34672,7 +33790,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -34680,7 +33798,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (4, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -34689,104 +33807,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (4, 0, 0),
         setJewelryZone8: (11, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1211925120.0WDIG'],
-        setGender:
-        'm',
-        setBodyShape:
-        2,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        3,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.0,
-        setHeadWidth:
-        0.5,
-        setHeadHeight:
-        0.0,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        0.3013434410095215,
-        setJawRoundness:
-        0.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.8066586256027222,
-        setJawLength:
-        -0.25524622201919556,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        0.8484756946563721,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        -0.1936396360397339,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.0,
-        setEyeOpeningSize:
-        0.027413606643676758,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        0.0,
-        setNoseLength:
-        -0.38951539993286133,
-        setNoseBump:
-        0.2957785129547119,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        -0.5830323100090027,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        0.11500871181488037,
-        setEarFlapAngle:
-        0.5,
-        setEarPosition:
-        -0.2858540415763855,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        1,
-        setHairHair:
-        5,
-        setHairBeard:
-        0,
-        setHairMustache:
-        5,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        4,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1211925120.0WDIG'],
+        setGender: 'm',
+        setBodyShape: 2,
+        setBodyHeight: 0.0,
+        setBodyColor: 3,
+        setBodySkin: 0,
+        setHeadSize: 0.0,
+        setHeadWidth: 0.5,
+        setHeadHeight: 0.0,
+        setHeadRoundness: 0.0,
+        setJawWidth: 0.3013434410095215,
+        setJawRoundness: 0.0,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.8066586256027222,
+        setJawLength: -0.25524622201919556,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 0.8484756946563721,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: -0.1936396360397339,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.0,
+        setEyeOpeningSize: 0.027413606643676758,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: 0.0,
+        setNoseLength: -0.38951539993286133,
+        setNoseBump: 0.2957785129547119,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: -0.5830323100090027,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: 0.11500871181488037,
+        setEarFlapAngle: 0.5,
+        setEarPosition: -0.2858540415763855,
+        setEarLobe: 0.0,
+        setHeadTexture: 1,
+        setHairHair: 5,
+        setHairBeard: 0,
+        setHairMustache: 5,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 4,
         setClothesShirt: (2, 9),
         setClothesPant: (0, 12),
         setClothesHat: (9, 2),
@@ -34797,7 +33866,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (1, 15, 8),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1211925120.0WDIG_type': 'Townsperson',
     '1211926144.0WDIG': {
         setTattooChest: (
@@ -34807,7 +33876,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             16,
             -7.2022905349731445,
@@ -34815,7 +33884,7 @@ NPC_LIST = {
             13.474042892456055,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -34823,7 +33892,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             131,
             -0.7290115356445312,
@@ -34831,7 +33900,7 @@ NPC_LIST = {
             6.303018093109131,
             21.04323959350586,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -34839,7 +33908,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -34847,7 +33916,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -34855,7 +33924,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -34863,7 +33932,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -34872,104 +33941,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1211926144.0WDIG'],
-        setGender:
-        'm',
-        setBodyShape:
-        3,
-        setBodyHeight:
-        -0.01793579012155533,
-        setBodyColor:
-        4,
-        setBodySkin:
-        0,
-        setHeadSize:
-        -0.20378559827804565,
-        setHeadWidth:
-        0.0,
-        setHeadHeight:
-        0.0,
-        setHeadRoundness:
-        0.9780498147010803,
-        setJawWidth:
-        0.0,
-        setJawRoundness:
-        0.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.0,
-        setJawLength:
-        0.5177342891693115,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        0.36489415168762207,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.0,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.0,
-        setEyeOpeningSize:
-        0.27790868282318115,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        0.38788485527038574,
-        setNoseLength:
-        0.0,
-        setNoseBump:
-        -0.8626935482025146,
-        setNoseNostrilHeight:
-        0.7214255332946777,
-        setNoseNostrilAngle:
-        -0.33580636978149414,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        -0.9672459363937378,
-        setNoseNostrilBroke:
-        -0.8365010023117065,
-        setEarScale:
-        -0.2772291600704193,
-        setEarFlapAngle:
-        0.5,
-        setEarPosition:
-        0.0,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        1,
-        setHairHair:
-        9,
-        setHairBeard:
-        2,
-        setHairMustache:
-        4,
-        setHairColor:
-        5,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        3,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1211926144.0WDIG'],
+        setGender: 'm',
+        setBodyShape: 3,
+        setBodyHeight: -0.01793579012155533,
+        setBodyColor: 4,
+        setBodySkin: 0,
+        setHeadSize: -0.20378559827804565,
+        setHeadWidth: 0.0,
+        setHeadHeight: 0.0,
+        setHeadRoundness: 0.9780498147010803,
+        setJawWidth: 0.0,
+        setJawRoundness: 0.0,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.0,
+        setJawLength: 0.5177342891693115,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 0.36489415168762207,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.0,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.0,
+        setEyeOpeningSize: 0.27790868282318115,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: 0.38788485527038574,
+        setNoseLength: 0.0,
+        setNoseBump: -0.8626935482025146,
+        setNoseNostrilHeight: 0.7214255332946777,
+        setNoseNostrilAngle: -0.33580636978149414,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: -0.9672459363937378,
+        setNoseNostrilBroke: -0.8365010023117065,
+        setEarScale: -0.2772291600704193,
+        setEarFlapAngle: 0.5,
+        setEarPosition: 0.0,
+        setEarLobe: 0.0,
+        setHeadTexture: 1,
+        setHairHair: 9,
+        setHairBeard: 2,
+        setHairMustache: 4,
+        setHairColor: 5,
+        setHighLightColor: 0,
+        setEyesColor: 3,
         setClothesShirt: (1, 0),
         setClothesPant: (0, 3),
         setClothesHat: (8, 0),
@@ -34980,7 +34000,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (6, 7, 9),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1211926144.0WDIG_type': 'Townsperson',
     '1211929216.0WDIG1': {
         setTattooChest: (
@@ -34990,7 +34010,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -34998,7 +34018,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -35006,7 +34026,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -35014,7 +34034,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -35022,7 +34042,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -35030,7 +34050,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -35038,7 +34058,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -35046,7 +34066,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (2, 1, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -35114,7 +34134,7 @@ NPC_LIST = {
         setClothesBelt: (8, 0),
         setClothesTopColor: (14, 14, 9),
         setClothesBotColor: (9, 0, 0),
-    },
+        },
     '1211929216.0WDIG1_type': 'Townsperson',
     '1211929472.0WDIG': {
         setTattooChest: (
@@ -35124,7 +34144,7 @@ NPC_LIST = {
             28.5490665435791,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -35132,7 +34152,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -35140,7 +34160,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             -0.06761199235916138,
@@ -35148,7 +34168,7 @@ NPC_LIST = {
             3.807006359100342,
             0.0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -35156,7 +34176,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -35164,7 +34184,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -35172,7 +34192,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -35180,7 +34200,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (13, 1, 0),
         setJewelryZone3: (0, 0, 0),
@@ -35189,104 +34209,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (3, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1211929472.0WDIG'],
-        setGender:
-        'm',
-        setBodyShape:
-        4,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        14,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.0,
-        setHeadWidth:
-        -0.31890445947647095,
-        setHeadHeight:
-        0.46184396743774414,
-        setHeadRoundness:
-        0.9315371513366699,
-        setJawWidth:
-        0.17937088012695312,
-        setJawRoundness:
-        0.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.0,
-        setJawLength:
-        0.0,
-        setMouthWidth:
-        -0.502159059047699,
-        setMouthLipThickness:
-        0.026456236839294434,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        -0.4753284454345703,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        -0.121317058801651,
-        setEyeOpeningSize:
-        0.0,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        0.8736717700958252,
-        setNoseLength:
-        0.0,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        0.0,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        -0.31934553384780884,
-        setEarFlapAngle:
-        -0.5,
-        setEarPosition:
-        0.0,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        3,
-        setHairHair:
-        5,
-        setHairBeard:
-        4,
-        setHairMustache:
-        2,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        5,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1211929472.0WDIG'],
+        setGender: 'm',
+        setBodyShape: 4,
+        setBodyHeight: 0.0,
+        setBodyColor: 14,
+        setBodySkin: 0,
+        setHeadSize: 0.0,
+        setHeadWidth: -0.31890445947647095,
+        setHeadHeight: 0.46184396743774414,
+        setHeadRoundness: 0.9315371513366699,
+        setJawWidth: 0.17937088012695312,
+        setJawRoundness: 0.0,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.0,
+        setJawLength: 0.0,
+        setMouthWidth: -0.502159059047699,
+        setMouthLipThickness: 0.026456236839294434,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: -0.4753284454345703,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: -0.121317058801651,
+        setEyeOpeningSize: 0.0,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: 0.8736717700958252,
+        setNoseLength: 0.0,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: 0.0,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: -0.31934553384780884,
+        setEarFlapAngle: -0.5,
+        setEarPosition: 0.0,
+        setEarLobe: 0.0,
+        setHeadTexture: 3,
+        setHairHair: 5,
+        setHairBeard: 4,
+        setHairMustache: 2,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 5,
         setClothesShirt: (1, 0),
         setClothesPant: (1, 5),
         setClothesHat: (5, 0),
@@ -35297,7 +34268,7 @@ NPC_LIST = {
         setClothesBelt: (15, 0),
         setClothesTopColor: (16, 18, 16),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1211929472.0WDIG_type': 'Townsperson',
     '1212432000.0WDIG1': {
         setTattooChest: (
@@ -35307,7 +34278,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -35315,7 +34286,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -35323,7 +34294,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             64,
             -0.9074844121932983,
@@ -35331,7 +34302,7 @@ NPC_LIST = {
             2.8149688243865967,
             0.0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -35339,7 +34310,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -35347,7 +34318,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -35355,7 +34326,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -35363,7 +34334,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (13, 3, 1),
         setJewelryZone2: (1, 1, 5),
         setJewelryZone3: (0, 1, 0),
@@ -35372,104 +34343,55 @@ NPC_LIST = {
         setJewelryZone6: (2, 4, 4),
         setJewelryZone7: (2, 1, 4),
         setJewelryZone8: (11, 1, 4),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1212432000.0WDIG1'],
-        setGender:
-        'f',
-        setBodyShape:
-        3,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        19,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.40496826171875,
-        setHeadWidth:
-        0.17104291915893555,
-        setHeadHeight:
-        -0.03214907646179199,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        0.6871559619903564,
-        setJawRoundness:
-        1.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.5772674083709717,
-        setJawLength:
-        1.0,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        -0.2577759027481079,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.5020055770874023,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.36684179306030273,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.0036550164222717285,
-        setEyeOpeningSize:
-        1.0,
-        setEyeBulge:
-        -1.0,
-        setNoseBridgeWidth:
-        0.5029088258743286,
-        setNoseNostrilWidth:
-        0.11696255207061768,
-        setNoseLength:
-        0.24447762966156006,
-        setNoseBump:
-        0.17544400691986084,
-        setNoseNostrilHeight:
-        -0.4551355838775635,
-        setNoseNostrilAngle:
-        0.0,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        -0.029240667819976807,
-        setNoseNostrilBroke:
-        -0.10234272480010986,
-        setEarScale:
-        0.5,
-        setEarFlapAngle:
-        -0.5,
-        setEarPosition:
-        0.5,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        1,
-        setHairHair:
-        4,
-        setHairBeard:
-        0,
-        setHairMustache:
-        0,
-        setHairColor:
-        5,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        0,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1212432000.0WDIG1'],
+        setGender: 'f',
+        setBodyShape: 3,
+        setBodyHeight: 0.0,
+        setBodyColor: 19,
+        setBodySkin: 0,
+        setHeadSize: 0.40496826171875,
+        setHeadWidth: 0.17104291915893555,
+        setHeadHeight: -0.03214907646179199,
+        setHeadRoundness: 0.0,
+        setJawWidth: 0.6871559619903564,
+        setJawRoundness: 1.0,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.5772674083709717,
+        setJawLength: 1.0,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: -0.2577759027481079,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.5020055770874023,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.36684179306030273,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.0036550164222717285,
+        setEyeOpeningSize: 1.0,
+        setEyeBulge: -1.0,
+        setNoseBridgeWidth: 0.5029088258743286,
+        setNoseNostrilWidth: 0.11696255207061768,
+        setNoseLength: 0.24447762966156006,
+        setNoseBump: 0.17544400691986084,
+        setNoseNostrilHeight: -0.4551355838775635,
+        setNoseNostrilAngle: 0.0,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: -0.029240667819976807,
+        setNoseNostrilBroke: -0.10234272480010986,
+        setEarScale: 0.5,
+        setEarFlapAngle: -0.5,
+        setEarPosition: 0.5,
+        setEarLobe: 0.0,
+        setHeadTexture: 1,
+        setHairHair: 4,
+        setHairBeard: 0,
+        setHairMustache: 0,
+        setHairColor: 5,
+        setHighLightColor: 0,
+        setEyesColor: 0,
         setClothesShirt: (4, 6),
         setClothesPant: (0, 6),
         setClothesHat: (0, 0),
@@ -35480,7 +34402,7 @@ NPC_LIST = {
         setClothesBelt: (10, 0),
         setClothesTopColor: (20, 17, 7),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1212432000.0WDIG1_type': 'Townsperson',
     '1213222099.15aapatel': {
         setTattooChest: (
@@ -35490,7 +34412,7 @@ NPC_LIST = {
             5.5628461837768555,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -35498,7 +34420,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -35506,7 +34428,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -35514,7 +34436,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -35522,7 +34444,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -35530,7 +34452,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -35538,7 +34460,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -35546,7 +34468,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (2, 1, 1),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -35555,104 +34477,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1213222099.15aapatel'],
-        setGender:
-        'm',
-        setBodyShape:
-        4,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        19,
-        setBodySkin:
-        0,
-        setHeadSize:
-        -0.5,
-        setHeadWidth:
-        0.5,
-        setHeadHeight:
-        0.5,
-        setHeadRoundness:
-        0.26164308190345764,
-        setJawWidth:
-        1.0,
-        setJawRoundness:
-        1.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        1.0,
-        setJawLength:
-        1.0,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        1.0,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.3078153133392334,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.019338488578796387,
-        setEyeOpeningSize:
-        -1.0,
-        setEyeBulge:
-        -1.0,
-        setNoseBridgeWidth:
-        1.0,
-        setNoseNostrilWidth:
-        1.0,
-        setNoseLength:
-        -0.032319605350494385,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        -1.0,
-        setNoseNostrilAngle:
-        0.0,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.09282374382019043,
-        setNoseNostrilBroke:
-        0.1602860689163208,
-        setEarScale:
-        0.16312885284423828,
-        setEarFlapAngle:
-        0.0,
-        setEarPosition:
-        0.5,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        3,
-        setHairHair:
-        10,
-        setHairBeard:
-        8,
-        setHairMustache:
-        2,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        5,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1213222099.15aapatel'],
+        setGender: 'm',
+        setBodyShape: 4,
+        setBodyHeight: 0.0,
+        setBodyColor: 19,
+        setBodySkin: 0,
+        setHeadSize: -0.5,
+        setHeadWidth: 0.5,
+        setHeadHeight: 0.5,
+        setHeadRoundness: 0.26164308190345764,
+        setJawWidth: 1.0,
+        setJawRoundness: 1.0,
+        setJawChinSize: 0.0,
+        setJawAngle: 1.0,
+        setJawLength: 1.0,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 1.0,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.3078153133392334,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.019338488578796387,
+        setEyeOpeningSize: -1.0,
+        setEyeBulge: -1.0,
+        setNoseBridgeWidth: 1.0,
+        setNoseNostrilWidth: 1.0,
+        setNoseLength: -0.032319605350494385,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: -1.0,
+        setNoseNostrilAngle: 0.0,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.09282374382019043,
+        setNoseNostrilBroke: 0.1602860689163208,
+        setEarScale: 0.16312885284423828,
+        setEarFlapAngle: 0.0,
+        setEarPosition: 0.5,
+        setEarLobe: 0.0,
+        setHeadTexture: 3,
+        setHairHair: 10,
+        setHairBeard: 8,
+        setHairMustache: 2,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 5,
         setClothesShirt: (8, 0),
         setClothesPant: (0, 1),
         setClothesHat: (7, 4),
@@ -35663,7 +34536,7 @@ NPC_LIST = {
         setClothesBelt: (2, 0),
         setClothesTopColor: (15, 4, 15),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1213222099.15aapatel_type': 'Townsperson',
     '1213290094.5aapatel': {
         setTattooChest: (
@@ -35673,7 +34546,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -35681,7 +34554,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -35689,7 +34562,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -35697,7 +34570,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -35705,7 +34578,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -35713,7 +34586,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -35721,7 +34594,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -35729,7 +34602,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -35797,7 +34670,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (17, 7, 0),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1213290094.5aapatel_type': 'Townsperson',
     '1213290386.14aapatel': {
         setTattooChest: (
@@ -35807,7 +34680,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -35815,7 +34688,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -35823,7 +34696,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -35831,7 +34704,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -35839,7 +34712,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -35847,7 +34720,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -35855,7 +34728,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -35863,7 +34736,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -35931,7 +34804,7 @@ NPC_LIST = {
         setClothesBelt: (3, 0),
         setClothesTopColor: (16, 0, 16),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1213290386.14aapatel_type': 'Townsperson',
     '1213290548.56aapatel': {
         setTattooChest: (
@@ -35941,7 +34814,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -35949,7 +34822,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -35957,7 +34830,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -35965,7 +34838,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -35973,7 +34846,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -35981,7 +34854,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -35989,7 +34862,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -35997,7 +34870,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -36065,7 +34938,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (6, 15, 3),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1213290548.56aapatel_type': 'Townsperson',
     '1213290785.14aapatel': {
         setTattooChest: (
@@ -36075,7 +34948,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -36083,7 +34956,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -36091,7 +34964,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -36099,7 +34972,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -36107,7 +34980,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -36115,7 +34988,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -36123,7 +34996,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -36131,7 +35004,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -36199,7 +35072,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (11, 6, 15),
         setClothesBotColor: (13, 0, 0),
-    },
+        },
     '1213290785.14aapatel_type': 'Townsperson',
     '1213291115.62aapatel': {
         setTattooChest: (
@@ -36209,7 +35082,7 @@ NPC_LIST = {
             7.438323020935059,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -36217,7 +35090,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -36225,7 +35098,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -36233,7 +35106,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -36241,7 +35114,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -36249,7 +35122,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -36257,7 +35130,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -36265,7 +35138,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -36274,104 +35147,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1213291115.62aapatel'],
-        setGender:
-        'm',
-        setBodyShape:
-        2,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        18,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.0,
-        setHeadWidth:
-        0.0,
-        setHeadHeight:
-        0.0,
-        setHeadRoundness:
-        0.0,
-        setJawWidth:
-        0.0,
-        setJawRoundness:
-        -0.019138872623443604,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        -0.702299952507019,
-        setJawLength:
-        -0.5373344421386719,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        -0.1158217191696167,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.0,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.25,
-        setEyeOpeningSize:
-        -0.09134131669998169,
-        setEyeBulge:
-        0.941063404083252,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        0.0,
-        setNoseLength:
-        0.836470365524292,
-        setNoseBump:
-        0.9286987781524658,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        -0.05826520919799805,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        -0.03647571802139282,
-        setNoseNostrilBroke:
-        -0.4574360251426697,
-        setEarScale:
-        0.0,
-        setEarFlapAngle:
-        0.4295406937599182,
-        setEarPosition:
-        0.0,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        4,
-        setHairHair:
-        11,
-        setHairBeard:
-        10,
-        setHairMustache:
-        4,
-        setHairColor:
-        3,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        0,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1213291115.62aapatel'],
+        setGender: 'm',
+        setBodyShape: 2,
+        setBodyHeight: 0.0,
+        setBodyColor: 18,
+        setBodySkin: 0,
+        setHeadSize: 0.0,
+        setHeadWidth: 0.0,
+        setHeadHeight: 0.0,
+        setHeadRoundness: 0.0,
+        setJawWidth: 0.0,
+        setJawRoundness: -0.019138872623443604,
+        setJawChinSize: 0.0,
+        setJawAngle: -0.702299952507019,
+        setJawLength: -0.5373344421386719,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: -0.1158217191696167,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.0,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.25,
+        setEyeOpeningSize: -0.09134131669998169,
+        setEyeBulge: 0.941063404083252,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: 0.0,
+        setNoseLength: 0.836470365524292,
+        setNoseBump: 0.9286987781524658,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: -0.05826520919799805,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: -0.03647571802139282,
+        setNoseNostrilBroke: -0.4574360251426697,
+        setEarScale: 0.0,
+        setEarFlapAngle: 0.4295406937599182,
+        setEarPosition: 0.0,
+        setEarLobe: 0.0,
+        setHeadTexture: 4,
+        setHairHair: 11,
+        setHairBeard: 10,
+        setHairMustache: 4,
+        setHairColor: 3,
+        setHighLightColor: 0,
+        setEyesColor: 0,
         setClothesShirt: (0, 0),
         setClothesPant: (0, 2),
         setClothesHat: (2, 0),
@@ -36382,7 +35206,7 @@ NPC_LIST = {
         setClothesBelt: (10, 0),
         setClothesTopColor: (6, 2, 10),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1213291115.62aapatel_type': 'Townsperson',
     '1213737632.73aapatel': {
         setTattooChest: (
@@ -36392,7 +35216,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -36400,7 +35224,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -36408,7 +35232,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -36416,7 +35240,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -36424,7 +35248,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -36432,7 +35256,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -36440,7 +35264,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -36448,7 +35272,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -36516,7 +35340,7 @@ NPC_LIST = {
         setClothesBelt: (14, 0),
         setClothesTopColor: (10, 10, 10),
         setClothesBotColor: (17, 0, 0),
-    },
+        },
     '1213737632.73aapatel_type': 'Townsperson',
     '1213983053.36aapatel': {
         setTattooChest: (
@@ -36526,7 +35350,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -36534,7 +35358,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -36542,7 +35366,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -36550,7 +35374,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -36558,7 +35382,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -36566,7 +35390,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -36574,7 +35398,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -36582,7 +35406,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -36650,7 +35474,7 @@ NPC_LIST = {
         setClothesBelt: (4, 0),
         setClothesTopColor: (2, 7, 4),
         setClothesBotColor: (4, 0, 0),
-    },
+        },
     '1213983053.36aapatel_type': 'Townsperson',
     '1214345458.84WDIG': {
         setTattooChest: (
@@ -36660,7 +35484,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -36668,7 +35492,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             16,
             -7.179819583892822,
@@ -36676,7 +35500,7 @@ NPC_LIST = {
             9.115544319152832,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -36684,7 +35508,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -36692,7 +35516,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -36700,7 +35524,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -36708,7 +35532,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -36716,7 +35540,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -36725,104 +35549,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1214345458.84WDIG'],
-        setGender:
-        'm',
-        setBodyShape:
-        0,
-        setBodyHeight:
-        -0.10000000149011612,
-        setBodyColor:
-        4,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.5,
-        setHeadWidth:
-        -0.03214922547340393,
-        setHeadHeight:
-        0.5,
-        setHeadRoundness:
-        1.0,
-        setJawWidth:
-        0.6725356578826904,
-        setJawRoundness:
-        0.11969375610351562,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        -0.27071017026901245,
-        setJawLength:
-        0.0,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        0.0,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.0,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.0,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.0,
-        setEyeOpeningSize:
-        -0.15738624334335327,
-        setEyeBulge:
-        0.7512521743774414,
-        setNoseBridgeWidth:
-        0.0,
-        setNoseNostrilWidth:
-        0.0,
-        setNoseLength:
-        0.9213085174560547,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        0.0,
-        setNoseNostrilAngle:
-        0.258711576461792,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.6988565921783447,
-        setEarScale:
-        0.12507790327072144,
-        setEarFlapAngle:
-        -0.5,
-        setEarPosition:
-        0.2852935194969177,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        5,
-        setHairHair:
-        12,
-        setHairBeard:
-        7,
-        setHairMustache:
-        3,
-        setHairColor:
-        0,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        0,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1214345458.84WDIG'],
+        setGender: 'm',
+        setBodyShape: 0,
+        setBodyHeight: -0.10000000149011612,
+        setBodyColor: 4,
+        setBodySkin: 0,
+        setHeadSize: 0.5,
+        setHeadWidth: -0.03214922547340393,
+        setHeadHeight: 0.5,
+        setHeadRoundness: 1.0,
+        setJawWidth: 0.6725356578826904,
+        setJawRoundness: 0.11969375610351562,
+        setJawChinSize: 0.0,
+        setJawAngle: -0.27071017026901245,
+        setJawLength: 0.0,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 0.0,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.0,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.0,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.0,
+        setEyeOpeningSize: -0.15738624334335327,
+        setEyeBulge: 0.7512521743774414,
+        setNoseBridgeWidth: 0.0,
+        setNoseNostrilWidth: 0.0,
+        setNoseLength: 0.9213085174560547,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: 0.0,
+        setNoseNostrilAngle: 0.258711576461792,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.6988565921783447,
+        setEarScale: 0.12507790327072144,
+        setEarFlapAngle: -0.5,
+        setEarPosition: 0.2852935194969177,
+        setEarLobe: 0.0,
+        setHeadTexture: 5,
+        setHairHair: 12,
+        setHairBeard: 7,
+        setHairMustache: 3,
+        setHairColor: 0,
+        setHighLightColor: 0,
+        setEyesColor: 0,
         setClothesShirt: (2, 8),
         setClothesPant: (0, 4),
         setClothesHat: (1, 0),
@@ -36833,7 +35608,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (6, 7, 5),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1214345458.84WDIG_type': 'Townsperson',
     '1214345910.48WDIG': {
         setTattooChest: (
@@ -36843,7 +35618,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -36851,7 +35626,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -36859,7 +35634,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -36867,7 +35642,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -36875,7 +35650,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -36883,7 +35658,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -36891,7 +35666,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -36899,7 +35674,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -36967,7 +35742,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (4, 7, 2),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1214345910.48WDIG_type': 'Townsperson',
     '1216249894.26aapatel': {
         setTattooChest: (
@@ -36977,7 +35752,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -36985,7 +35760,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -36993,7 +35768,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -37001,7 +35776,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -37009,7 +35784,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -37017,7 +35792,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -37025,7 +35800,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -37033,7 +35808,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -37101,7 +35876,7 @@ NPC_LIST = {
         setClothesBelt: (9, 0),
         setClothesTopColor: (20, 9, 16),
         setClothesBotColor: (14, 0, 0),
-    },
+        },
     '1216249894.26aapatel_type': 'Townsperson',
     '1216766113.92aapatel': {
         setTattooChest: (
@@ -37111,7 +35886,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -37119,7 +35894,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -37127,7 +35902,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -37135,7 +35910,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -37143,7 +35918,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -37151,7 +35926,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -37159,7 +35934,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -37167,7 +35942,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -37235,7 +36010,7 @@ NPC_LIST = {
         setClothesBelt: (11, 0),
         setClothesTopColor: (0, 10, 20),
         setClothesBotColor: (19, 0, 0),
-    },
+        },
     '1216766113.92aapatel_type': 'Townsperson',
     '1219104942.43mtucker': {
         setTattooChest: (
@@ -37245,7 +36020,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -37253,7 +36028,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -37261,7 +36036,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -37269,7 +36044,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -37277,7 +36052,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -37285,7 +36060,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -37293,7 +36068,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -37301,7 +36076,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -37369,7 +36144,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (1, 0, 1),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1219104942.43mtucker_type': 'Townsperson',
     '1219105162.48mtucker': {
         setTattooChest: (
@@ -37379,7 +36154,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -37387,7 +36162,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -37395,7 +36170,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -37403,7 +36178,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -37411,7 +36186,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -37419,7 +36194,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -37427,7 +36202,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -37435,7 +36210,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -37503,7 +36278,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (1, 0, 1),
         setClothesBotColor: (18, 0, 0),
-    },
+        },
     '1219105162.48mtucker_type': 'Townsperson',
     '1219895971.52mtucker': {
         setTattooChest: (
@@ -37513,7 +36288,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -37521,7 +36296,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -37529,7 +36304,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -37537,7 +36312,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -37545,7 +36320,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -37553,7 +36328,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -37561,7 +36336,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -37569,7 +36344,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -37637,7 +36412,7 @@ NPC_LIST = {
         setClothesBelt: (5, 0),
         setClothesTopColor: (1, 0, 1),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1219895971.52mtucker_type': 'Townsperson',
     '1219965016.25mtucker': {
         setTattooChest: (
@@ -37647,7 +36422,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -37655,7 +36430,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -37663,7 +36438,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -37671,7 +36446,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -37679,7 +36454,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -37687,7 +36462,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -37695,7 +36470,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -37703,7 +36478,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -37771,7 +36546,7 @@ NPC_LIST = {
         setClothesBelt: (0, 0),
         setClothesTopColor: (0, 15, 0),
         setClothesBotColor: (16, 0, 0),
-    },
+        },
     '1219965016.25mtucker_type': 'Townsperson',
     '1219972782.3mtucker': {
         setTattooChest: (
@@ -37781,7 +36556,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -37789,7 +36564,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -37797,7 +36572,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -37805,7 +36580,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -37813,7 +36588,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -37821,7 +36596,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -37829,7 +36604,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -37837,7 +36612,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -37905,7 +36680,7 @@ NPC_LIST = {
         setClothesBelt: (7, 0),
         setClothesTopColor: (0, 0, 3),
         setClothesBotColor: (15, 0, 0),
-    },
+        },
     '1219972782.3mtucker_type': 'Townsperson',
     '1220039541.89mtucker': {
         setTattooChest: (
@@ -37915,7 +36690,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -37923,7 +36698,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -37931,7 +36706,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -37939,7 +36714,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -37947,7 +36722,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -37955,7 +36730,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -37963,7 +36738,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -37971,7 +36746,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -38039,7 +36814,7 @@ NPC_LIST = {
         setClothesBelt: (7, 0),
         setClothesTopColor: (18, 16, 18),
         setClothesBotColor: (11, 0, 0),
-    },
+        },
     '1220039541.89mtucker_type': 'Townsperson',
     '1222295766.63WDIG': {
         setTattooChest: (
@@ -38049,7 +36824,7 @@ NPC_LIST = {
             4.978882789611816,
             79.60784149169922,
             0,
-        ),
+            ),
         setTattooZone2: (
             26,
             -12.746495246887207,
@@ -38057,7 +36832,7 @@ NPC_LIST = {
             16.789430618286133,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone3: (
             126,
             2.908827781677246,
@@ -38065,7 +36840,7 @@ NPC_LIST = {
             3.7649850845336914,
             93.15287017822266,
             0,
-        ),
+            ),
         setTattooZone4: (
             29,
             -1.2869573831558228,
@@ -38073,7 +36848,7 @@ NPC_LIST = {
             3.027026891708374,
             318.4314270019531,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -38081,7 +36856,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -38089,7 +36864,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -38097,7 +36872,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -38105,7 +36880,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -38114,104 +36889,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1222295766.63WDIG'],
-        setGender:
-        'f',
-        setBodyShape:
-        3,
-        setBodyHeight:
-        0.10000000149011612,
-        setBodyColor:
-        19,
-        setBodySkin:
-        0,
-        setHeadSize:
-        -0.5,
-        setHeadWidth:
-        0.5,
-        setHeadHeight:
-        0.5,
-        setHeadRoundness:
-        0.12264518439769745,
-        setJawWidth:
-        0.0,
-        setJawRoundness:
-        0.0,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.0,
-        setJawLength:
-        -0.23930609226226807,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        0.0,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.858875036239624,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.7184562087059021,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.0,
-        setEyeOpeningSize:
-        0.0,
-        setEyeBulge:
-        0.0,
-        setNoseBridgeWidth:
-        -0.040617942810058594,
-        setNoseNostrilWidth:
-        0.8316123485565186,
-        setNoseLength:
-        0.0,
-        setNoseBump:
-        0.0,
-        setNoseNostrilHeight:
-        -0.3152811527252197,
-        setNoseNostrilAngle:
-        0.0,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.0,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        0.5,
-        setEarFlapAngle:
-        -0.5,
-        setEarPosition:
-        -0.5,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        1,
-        setHairHair:
-        0,
-        setHairBeard:
-        0,
-        setHairMustache:
-        0,
-        setHairColor:
-        6,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        2,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1222295766.63WDIG'],
+        setGender: 'f',
+        setBodyShape: 3,
+        setBodyHeight: 0.10000000149011612,
+        setBodyColor: 19,
+        setBodySkin: 0,
+        setHeadSize: -0.5,
+        setHeadWidth: 0.5,
+        setHeadHeight: 0.5,
+        setHeadRoundness: 0.12264518439769745,
+        setJawWidth: 0.0,
+        setJawRoundness: 0.0,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.0,
+        setJawLength: -0.23930609226226807,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 0.0,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.858875036239624,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.7184562087059021,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.0,
+        setEyeOpeningSize: 0.0,
+        setEyeBulge: 0.0,
+        setNoseBridgeWidth: -0.040617942810058594,
+        setNoseNostrilWidth: 0.8316123485565186,
+        setNoseLength: 0.0,
+        setNoseBump: 0.0,
+        setNoseNostrilHeight: -0.3152811527252197,
+        setNoseNostrilAngle: 0.0,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.0,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: 0.5,
+        setEarFlapAngle: -0.5,
+        setEarPosition: -0.5,
+        setEarLobe: 0.0,
+        setHeadTexture: 1,
+        setHairHair: 0,
+        setHairBeard: 0,
+        setHairMustache: 0,
+        setHairColor: 6,
+        setHighLightColor: 0,
+        setEyesColor: 2,
         setClothesShirt: (2, 2),
         setClothesPant: (0, 0),
         setClothesHat: (0, 0),
@@ -38222,7 +36948,7 @@ NPC_LIST = {
         setClothesBelt: (11, 0),
         setClothesTopColor: (8, 15, 8),
         setClothesBotColor: (8, 0, 0),
-    },
+        },
     '1222295766.63WDIG_type': 'Townsperson',
     '1225143157.81caoconno': {
         setTattooChest: (
@@ -38232,7 +36958,7 @@ NPC_LIST = {
             100.0,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             0,
             0.0,
@@ -38240,7 +36966,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -38248,7 +36974,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             61,
             -1.203424096107483,
@@ -38256,7 +36982,7 @@ NPC_LIST = {
             3.777883529663086,
             0.0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -38264,7 +36990,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -38272,7 +36998,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -38280,7 +37006,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -38288,7 +37014,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -38297,104 +37023,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1225143157.81caoconno'],
-        setGender:
-        'm',
-        setBodyShape:
-        1,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        2,
-        setBodySkin:
-        0,
-        setHeadSize:
-        0.015087306499481201,
-        setHeadWidth:
-        0.48374056816101074,
-        setHeadHeight:
-        0.0,
-        setHeadRoundness:
-        1.0,
-        setJawWidth:
-        0.5659397840499878,
-        setJawRoundness:
-        -0.16680675745010376,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        0.6347293853759766,
-        setJawLength:
-        -0.27970123291015625,
-        setMouthWidth:
-        -0.005787491798400879,
-        setMouthLipThickness:
-        0.5380645990371704,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.3591773509979248,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.15610335767269135,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        0.07523748278617859,
-        setEyeOpeningSize:
-        0.029215216636657715,
-        setEyeBulge:
-        1.0,
-        setNoseBridgeWidth:
-        0.20834994316101074,
-        setNoseNostrilWidth:
-        0.4204990863800049,
-        setNoseLength:
-        0.08102500438690186,
-        setNoseBump:
-        -0.017589688301086426,
-        setNoseNostrilHeight:
-        0.34724974632263184,
-        setNoseNostrilAngle:
-        -0.6600838303565979,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        -1.0,
-        setNoseNostrilBroke:
-        -1.0,
-        setEarScale:
-        -0.03472501039505005,
-        setEarFlapAngle:
-        -0.34373757243156433,
-        setEarPosition:
-        -0.39003756642341614,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        1,
-        setHairHair:
-        5,
-        setHairBeard:
-        8,
-        setHairMustache:
-        3,
-        setHairColor:
-        5,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        1,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1225143157.81caoconno'],
+        setGender: 'm',
+        setBodyShape: 1,
+        setBodyHeight: 0.0,
+        setBodyColor: 2,
+        setBodySkin: 0,
+        setHeadSize: 0.015087306499481201,
+        setHeadWidth: 0.48374056816101074,
+        setHeadHeight: 0.0,
+        setHeadRoundness: 1.0,
+        setJawWidth: 0.5659397840499878,
+        setJawRoundness: -0.16680675745010376,
+        setJawChinSize: 0.0,
+        setJawAngle: 0.6347293853759766,
+        setJawLength: -0.27970123291015625,
+        setMouthWidth: -0.005787491798400879,
+        setMouthLipThickness: 0.5380645990371704,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.3591773509979248,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.15610335767269135,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: 0.07523748278617859,
+        setEyeOpeningSize: 0.029215216636657715,
+        setEyeBulge: 1.0,
+        setNoseBridgeWidth: 0.20834994316101074,
+        setNoseNostrilWidth: 0.4204990863800049,
+        setNoseLength: 0.08102500438690186,
+        setNoseBump: -0.017589688301086426,
+        setNoseNostrilHeight: 0.34724974632263184,
+        setNoseNostrilAngle: -0.6600838303565979,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: -1.0,
+        setNoseNostrilBroke: -1.0,
+        setEarScale: -0.03472501039505005,
+        setEarFlapAngle: -0.34373757243156433,
+        setEarPosition: -0.39003756642341614,
+        setEarLobe: 0.0,
+        setHeadTexture: 1,
+        setHairHair: 5,
+        setHairBeard: 8,
+        setHairMustache: 3,
+        setHairColor: 5,
+        setHighLightColor: 0,
+        setEyesColor: 1,
         setClothesShirt: (6, 6),
         setClothesPant: (0, 8),
         setClothesHat: (0, 0),
@@ -38405,7 +37082,7 @@ NPC_LIST = {
         setClothesBelt: (10, 0),
         setClothesTopColor: (1, 2, 4),
         setClothesBotColor: (1, 0, 0),
-    },
+        },
     '1225143157.81caoconno_type': 'Townsperson',
     '1225145929.75caoconno': {
         setTattooChest: (
@@ -38415,7 +37092,7 @@ NPC_LIST = {
             100.0,
             0.0,
             0,
-        ),
+            ),
         setTattooZone2: (
             62,
             -4.970423698425293,
@@ -38423,7 +37100,7 @@ NPC_LIST = {
             6.896579742431641,
             271.1000061035156,
             0,
-        ),
+            ),
         setTattooZone3: (
             0,
             0.0,
@@ -38431,7 +37108,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone4: (
             0,
             0.0,
@@ -38439,7 +37116,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone5: (
             0,
             0.0,
@@ -38447,7 +37124,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone6: (
             0,
             0.0,
@@ -38455,7 +37132,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone7: (
             0,
             0.0,
@@ -38463,7 +37140,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setTattooZone8: (
             0,
             0.0,
@@ -38471,7 +37148,7 @@ NPC_LIST = {
             1,
             0,
             0,
-        ),
+            ),
         setJewelryZone1: (0, 0, 0),
         setJewelryZone2: (0, 0, 0),
         setJewelryZone3: (0, 0, 0),
@@ -38480,104 +37157,55 @@ NPC_LIST = {
         setJewelryZone6: (0, 0, 0),
         setJewelryZone7: (0, 0, 0),
         setJewelryZone8: (0, 0, 0),
-        setTutorial:
-        0,
-        setName:
-        PLocalizer.NPCNames['1225145929.75caoconno'],
-        setGender:
-        'f',
-        setBodyShape:
-        4,
-        setBodyHeight:
-        0.0,
-        setBodyColor:
-        17,
-        setBodySkin:
-        0,
-        setHeadSize:
-        -0.028937548398971558,
-        setHeadWidth:
-        0.23728740215301514,
-        setHeadHeight:
-        0.10417497158050537,
-        setHeadRoundness:
-        0.5671747922897339,
-        setJawWidth:
-        0.4745746850967407,
-        setJawRoundness:
-        0.682924747467041,
-        setJawChinSize:
-        0.0,
-        setJawAngle:
-        1.0,
-        setJawLength:
-        0.7523746490478516,
-        setMouthWidth:
-        0.0,
-        setMouthLipThickness:
-        0.06242549419403076,
-        setMouthFrown:
-        0.0,
-        setCheekBoneHeight:
-        0.0,
-        setCheekBoneWidth:
-        0.0,
-        setCheekFat:
-        0.3420499563217163,
-        setBrowWidth:
-        0.0,
-        setBrowProtruding:
-        0.6496501564979553,
-        setBrowAngle:
-        0.0,
-        setBrowHeight:
-        0.0,
-        setEyeCorner:
-        -0.25,
-        setEyeOpeningSize:
-        1.0,
-        setEyeBulge:
-        -0.254649817943573,
-        setNoseBridgeWidth:
-        0.1620500087738037,
-        setNoseNostrilWidth:
-        0.682924747467041,
-        setNoseLength:
-        0.27779996395111084,
-        setNoseBump:
-        -0.4282747507095337,
-        setNoseNostrilHeight:
-        0.7523746490478516,
-        setNoseNostrilAngle:
-        -1.0,
-        setNoseNostrilIndent:
-        0.0,
-        setNoseBridgeBroke:
-        0.05787503719329834,
-        setNoseNostrilBroke:
-        0.0,
-        setEarScale:
-        -0.005787551403045654,
-        setEarFlapAngle:
-        0.0,
-        setEarPosition:
-        0.0,
-        setEarLobe:
-        0.0,
-        setHeadTexture:
-        2,
-        setHairHair:
-        13,
-        setHairBeard:
-        0,
-        setHairMustache:
-        0,
-        setHairColor:
-        5,
-        setHighLightColor:
-        0,
-        setEyesColor:
-        5,
+        setTutorial: 0,
+        setName: PLocalizer.NPCNames['1225145929.75caoconno'],
+        setGender: 'f',
+        setBodyShape: 4,
+        setBodyHeight: 0.0,
+        setBodyColor: 17,
+        setBodySkin: 0,
+        setHeadSize: -0.028937548398971558,
+        setHeadWidth: 0.23728740215301514,
+        setHeadHeight: 0.10417497158050537,
+        setHeadRoundness: 0.5671747922897339,
+        setJawWidth: 0.4745746850967407,
+        setJawRoundness: 0.682924747467041,
+        setJawChinSize: 0.0,
+        setJawAngle: 1.0,
+        setJawLength: 0.7523746490478516,
+        setMouthWidth: 0.0,
+        setMouthLipThickness: 0.06242549419403076,
+        setMouthFrown: 0.0,
+        setCheekBoneHeight: 0.0,
+        setCheekBoneWidth: 0.0,
+        setCheekFat: 0.3420499563217163,
+        setBrowWidth: 0.0,
+        setBrowProtruding: 0.6496501564979553,
+        setBrowAngle: 0.0,
+        setBrowHeight: 0.0,
+        setEyeCorner: -0.25,
+        setEyeOpeningSize: 1.0,
+        setEyeBulge: -0.254649817943573,
+        setNoseBridgeWidth: 0.1620500087738037,
+        setNoseNostrilWidth: 0.682924747467041,
+        setNoseLength: 0.27779996395111084,
+        setNoseBump: -0.4282747507095337,
+        setNoseNostrilHeight: 0.7523746490478516,
+        setNoseNostrilAngle: -1.0,
+        setNoseNostrilIndent: 0.0,
+        setNoseBridgeBroke: 0.05787503719329834,
+        setNoseNostrilBroke: 0.0,
+        setEarScale: -0.005787551403045654,
+        setEarFlapAngle: 0.0,
+        setEarPosition: 0.0,
+        setEarLobe: 0.0,
+        setHeadTexture: 2,
+        setHairHair: 13,
+        setHairBeard: 0,
+        setHairMustache: 0,
+        setHairColor: 5,
+        setHighLightColor: 0,
+        setEyesColor: 5,
         setClothesShirt: (5, 0),
         setClothesPant: (0, 1),
         setClothesHat: (0, 0),
@@ -38588,6 +37216,6 @@ NPC_LIST = {
         setClothesBelt: (1, 0),
         setClothesTopColor: (9, 0, 0),
         setClothesBotColor: (0, 0, 0),
-    },
+        },
     '1225145929.75caoconno_type': 'Townsperson',
-}
+    }

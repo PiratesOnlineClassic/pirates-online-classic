@@ -34,9 +34,8 @@ def getEnsnareSfx():
 
 
 def getSmashSfx():
-    return cacheSfx('smash',
-                    ('audio/wood_impact_1.mp3', 'audio/wood_impact_3.mp3',
-                     'audio/wood_impact_4.mp3'))
+    return cacheSfx('smash', ('audio/wood_impact_1.mp3', 'audio/wood_impact_3.mp3',
+                              'audio/wood_impact_4.mp3'))
 
 
 def getWaspStingSfx():
@@ -52,13 +51,11 @@ def getBatAttackSfx():
 
 
 def getAlligatorAttackLeftSfx():
-    return cacheSfx('alligatorAttackLeft',
-                    'audio/sfx_alligator_attack_left.mp3')
+    return cacheSfx('alligatorAttackLeft', 'audio/sfx_alligator_attack_left.mp3')
 
 
 def getAlligatorAttackStraightSfx():
-    return cacheSfx('alligatorAttackStraight',
-                    'audio/sfx_alligator_attack_straight.mp3')
+    return cacheSfx('alligatorAttackStraight', 'audio/sfx_alligator_attack_straight.mp3')
 
 
 def getScorpionAttackLeftSfx():
@@ -70,8 +67,7 @@ def getScorpionAttackBothSfx():
 
 
 def getScorpionAttackTailStingSfx():
-    return cacheSfx('scorpionAttackTailSting',
-                    'audio/sfx_scorp_attack_tail.mp3')
+    return cacheSfx('scorpionAttackTailSting', 'audio/sfx_scorp_attack_tail.mp3')
 
 
 def getScorpionPickUpHumanSfx():
@@ -123,17 +119,11 @@ def getMossmanAttackJumpSfx():
 
 
 class MonsterMelee(Weapon.Weapon):
-
+    
     vertex_list = [
-        Vec4(0.0, 0.4, 0.0, 1.0),
-        Vec4(0.0, 2.0, 0.0, 1.0),
-        Vec4(-0.55, 2.95, 0.0, 1.0)
-    ]
+     Vec4(0.0, 0.4, 0.0, 1.0), Vec4(0.0, 2.0, 0.0, 1.0), Vec4(-0.55, 2.95, 0.0, 1.0)]
     motion_color = [
-        Vec4(0.1, 0.2, 0.4, 0.5),
-        Vec4(0.25, 0.5, 1.0, 0.5),
-        Vec4(0.5, 0.5, 0.6, 0.5)
-    ]
+     Vec4(0.1, 0.2, 0.4, 0.5), Vec4(0.25, 0.5, 1.0, 0.5), Vec4(0.5, 0.5, 0.6, 0.5)]
 
     def __init__(self, itemId):
         Weapon.Weapon.__init__(self, itemId, 'monsterMelee')
@@ -155,22 +145,17 @@ class MonsterMelee(Weapon.Weapon):
         return
 
     def changeStance(self, av):
-        if av.avatarType.isA(AvatarTypes.Wasp) or av.avatarType.isA(
-                AvatarTypes.AngryWasp):
+        if av.avatarType.isA(AvatarTypes.Wasp) or av.avatarType.isA(AvatarTypes.AngryWasp):
             self.walkAnim = 'idle_flying'
             self.neutralAnim = 'idle_flying'
         av.setWalkForWeapon()
 
     def getDrawIval(self, av, ammoSkillId=0, blendInT=0.1, blendOutT=0):
-        if av.avatarType.isA(AvatarTypes.Bat) or av.avatarType.isA(
-                AvatarTypes.VampireBat):
+        if av.avatarType.isA(AvatarTypes.Bat) or av.avatarType.isA(AvatarTypes.VampireBat):
             av.show()
-            track = Parallel(
-                Func(self.attachTo, av), Func(self.changeStance, av),
-                av.actorInterval('spawn', playRate=1.0))
+            track = Parallel(Func(self.attachTo, av), Func(self.changeStance, av), av.actorInterval('spawn', playRate=1.0))
         else:
-            track = Parallel(
-                Func(self.attachTo, av), Func(self.changeStance, av))
+            track = Parallel(Func(self.attachTo, av), Func(self.changeStance, av))
         return track
 
     def getReturnIval(self, av, blendInT=0, blendOutT=0.1):
@@ -178,22 +163,15 @@ class MonsterMelee(Weapon.Weapon):
         def hideEnemy():
             av.hide()
 
-        if av.avatarType.isA(AvatarTypes.Bat) or av.avatarType.isA(
-                AvatarTypes.VampireBat):
-            track = Parallel(
-                Func(self.detachFrom, av), Func(self.changeStance, av),
-                av.actorInterval(
-                    'spawn', playRate=1.0, startFrame=100, endFrame=20),
-                Func(hideEnemy))
+        if av.avatarType.isA(AvatarTypes.Bat) or av.avatarType.isA(AvatarTypes.VampireBat):
+            track = Parallel(Func(self.detachFrom, av), Func(self.changeStance, av), av.actorInterval('spawn', playRate=1.0, startFrame=100, endFrame=20), Func(hideEnemy))
         else:
-            track = Parallel(
-                Func(self.detachFrom, av), Func(self.changeStance, av))
+            track = Parallel(Func(self.detachFrom, av), Func(self.changeStance, av))
         return track
 
     def createTrail(self, target):
         if not self.motion_trail:
-            self.motion_trail = PolyTrail.PolyTrail(target, self.vertex_list,
-                                                    self.motion_color)
+            self.motion_trail = PolyTrail.PolyTrail(target, self.vertex_list, self.motion_color)
             self.motion_trail.reparentTo(self)
             self.motion_trail.setUseNurbs(1)
             card = loader.loadModelCopy('models/effects/swordtrail_effects')

@@ -1,6 +1,5 @@
 from pirates.pirate.AvatarType import AvatarType
 
-
 class AvatarTypeSet(AvatarType):
 
     def __init__(self, strings, *avatarTypes):
@@ -52,8 +51,7 @@ class AvatarTypeSet(AvatarType):
         h = hash(tuple(self._sortedTypes))
         if hasattr(self, '_hash'):
             if h != self._hash:
-                raise 'inconsistent AvatarType hash values: %s, %s' % (
-                    h, self._hash)
+                raise 'inconsistent AvatarType hash values: %s, %s' % (h, self._hash)
         else:
             self._hash = h
         return h

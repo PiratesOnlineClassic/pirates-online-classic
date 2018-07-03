@@ -6,9 +6,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class Pestilence(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -18,8 +17,7 @@ class Pestilence(PooledEffect, EffectController):
         self.card = model.find('**/particleGreenBlood')
         self.speed = 20.0
         if not Pestilence.particleDummy:
-            Pestilence.particleDummy = render.attachNewNode(
-                ModelNode('PestilenceParticleDummy'))
+            Pestilence.particleDummy = render.attachNewNode(ModelNode('PestilenceParticleDummy'))
             Pestilence.particleDummy.setDepthWrite(0)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
@@ -65,11 +63,8 @@ class Pestilence(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferColor,
-            ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(0.8, 0.8, 0.8, 1.0), Vec4(0.0, 0.0, 0.0, 0.5), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferColor, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.8, 0.8, 0.8, 1.0), Vec4(0.0, 0.0, 0.0, 0.5), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(5.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -79,13 +74,8 @@ class Pestilence(PooledEffect, EffectController):
         self.p0.emitter.setRadius(0.1)
 
     def createTrack(self):
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100.0), Wait(1.5),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(1.5), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def cleanUpEffect(self):

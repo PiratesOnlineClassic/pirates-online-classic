@@ -4,27 +4,19 @@ from panda3d.core import *
 from pirates.cutscene import Cutscene, CutsceneActor, CutsceneData
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import NewTutorialPanel, PiratesGuiGlobals, RadarGui
-from pirates.quest import (Quest, QuestBase, QuestConstants, QuestDB,
-                           QuestTaskDNA)
+from pirates.quest import (Quest, QuestBase, QuestConstants, QuestDB, QuestTaskDNA)
 
 QuestPopupDict = {
-    'c2_visit_will_turner': ['showBlacksmith', 'closeShowBlacksmith'],
-    'c2.2defeatSkeletons': ['showSkeleton', 'closeShowSkeleton'],
-    'c2_visit_tia_dalma': ['showJungleTia', 'closeShowJungleTia'],
-    'c2.4recoverOrders': ['showNavy', 'closeShowNavy'],
-    'c2.5deliverOrders': ['showGovMansion', 'closeShowGovMansion'],
-    'c2.9visitDarby': ['showDarby', 'closeShowDarby'],
-    'c2.10visitDockworker': ['showDinghy', 'closeShowDinghy'],
-    'c2.11visitBarbossa': ['showBarbossa', 'closeShowbarbossa'],
-    'c3visitJack': ['showTortugaJack', 'closeShowTortugaJack']
-}
+    'c2_visit_will_turner': ['showBlacksmith', 'closeShowBlacksmith'], 'c2.2defeatSkeletons': ['showSkeleton', 'closeShowSkeleton'],
+    'c2_visit_tia_dalma': ['showJungleTia', 'closeShowJungleTia'], 'c2.4recoverOrders': ['showNavy', 'closeShowNavy'],
+    'c2.5deliverOrders': ['showGovMansion', 'closeShowGovMansion'], 'c2.9visitDarby': ['showDarby', 'closeShowDarby'],
+    'c2.10visitDockworker': ['showDinghy', 'closeShowDinghy'], 'c2.11visitBarbossa': ['showBarbossa', 'closeShowbarbossa'],
+    'c3visitJack': ['showTortugaJack', 'closeShowTortugaJack']}
 
 QUEST_TYPE_AVATAR = 0
 QUEST_TYPE_TM = 1
 
-
-class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
-                       Quest.Quest):
+class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase, Quest.Quest):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedQuest')
 
     def __init__(self, cr):
@@ -49,8 +41,7 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
         if popupDialogText:
             if base.localAvatar.showQuest:
                 base.localAvatar.resetQuestShow()
-                self.popupDialog = NewTutorialPanel.NewTutorialPanel(
-                    popupDialogText)
+                self.popupDialog = NewTutorialPanel.NewTutorialPanel(popupDialogText)
                 self.popupDialog.activate()
 
                 def closeTutorialWindow():
@@ -81,16 +72,14 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
         if self.isGenerated():
             for task, taskState in zip(self.questDNA.tasks, oldTaskStates):
                 if task.__class__ in QuestTaskDNA.RecoverItemClasses:
-                    lookingForItems[task.item] = (taskState.getAttempts(),
-                                                  taskState.getProgress(),
-                                                  taskState.getGoal())
+                    lookingForItems[task.item] = (
+                     taskState.getAttempts(), taskState.getProgress(), taskState.getGoal())
 
         Quest.Quest.setTaskStates(self, taskStates)
         if self.isGenerated():
             for task, taskState in zip(self.questDNA.tasks, self.taskStates):
                 if task.__class__ in QuestTaskDNA.RecoverItemClasses:
-                    oldAttempts, oldProgress, oldGoal = lookingForItems[
-                        task.item]
+                    oldAttempts, oldProgress, oldGoal = lookingForItems[task.item]
                     newProgress = taskState.getProgress()
                     newAttempts = taskState.getAttempts()
                     newGoal = taskState.getGoal()
@@ -105,8 +94,7 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
                         note = QuestConstants.QuestItemNotification.ValidAttempt
                     else:
                         note = QuestConstants.QuestItemNotification.InvalidAttempt
-                    messenger.send('localAvatarQuestItemUpdate',
-                                   [self, task.item, note])
+                    messenger.send('localAvatarQuestItemUpdate', [self, task.item, note])
 
         if self.isGenerated():
             if self.isComplete():
@@ -137,8 +125,7 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
         if sceneToPlay.get('type') == 'dialog':
             npc = base.cr.doId2do.get(giverId)
             dialogId = sceneToPlay.get('sceneId')
-            npc.playDialogMovie(dialogId, self.doneFinalizeScene,
-                                self.prevLocalAvState)
+            npc.playDialogMovie(dialogId, self.doneFinalizeScene, self.prevLocalAvState)
             if self.prevLocalAvState == None:
                 self.prevLocalAvState = npc.currentDialogMovie.oldGameState
         else:
@@ -151,8 +138,7 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
 
                 plCutscene = base.cr.getPreloadedCutsceneInfo(name)
                 if plCutscene == None:
-                    self.sceneObj = Cutscene.Cutscene(
-                        self.cr, name, self.doneFinalizeScene, giverId)
+                    self.sceneObj = Cutscene.Cutscene(self.cr, name, self.doneFinalizeScene, giverId)
                     self.sceneObj.play()
                 else:
                     self.sceneObj = plCutscene
@@ -161,8 +147,7 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
                 if self.prevLocalAvState == None:
 
                     def cutsceneStarted():
-                        localCutActor = self.sceneObj.getActor(
-                            CutsceneActor.CutLocalPirate.getActorKey())
+                        localCutActor = self.sceneObj.getActor(CutsceneActor.CutLocalPirate.getActorKey())
                         self.prevLocalAvState = localCutActor.oldParams.gameState
 
                     self.sceneObj.setStartCallback(cutsceneStarted)
@@ -184,13 +169,10 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
     def setInactive(self):
         if self.setAsActive == True:
             if not hasattr(base, 'localAvatar'):
-                self.notify.warning(
-                    'Uh oh, tried to delete active questdoId %s when localAvatar was not present'
-                    % self.doId)
+                self.notify.warning('Uh oh, tried to delete active questdoId %s when localAvatar was not present' % self.doId)
                 return
             for currObj in self.targetObjIds:
-                localAvatar.guiMgr.radarGui.convertRadarObject(
-                    RadarGui.RADAR_OBJ_TYPE_DEFAULT, currObj)
+                localAvatar.guiMgr.radarGui.convertRadarObject(RadarGui.RADAR_OBJ_TYPE_DEFAULT, currObj)
 
             self.targetObjIds = []
             self.setAsActive = False

@@ -7,12 +7,7 @@ from panda3d.core import *
 
 class SceneBuffer(DirectObject):
 
-    def __init__(self,
-                 name,
-                 size=Vec2(512, 512) * 2.0,
-                 camAspectRatio=1.0,
-                 clearColor=Vec4(0.85, 0.85, 0.85, 1.0),
-                 sceneGraph=None):
+    def __init__(self, name, size=Vec2(512, 512) * 2.0, camAspectRatio=1.0, clearColor=Vec4(0.85, 0.85, 0.85, 1.0), sceneGraph=None):
         DirectObject.__init__(self)
         self.name = name
         self.size = size
@@ -20,8 +15,7 @@ class SceneBuffer(DirectObject):
             self.__sceneGraph = NodePath(self.name + '-render')
         else:
             self.__sceneGraph = sceneGraph
-        self.camera = self.__sceneGraph.attachNewNode(
-            Camera(self.name + 'camera'))
+        self.camera = self.__sceneGraph.attachNewNode(Camera(self.name + 'camera'))
         self.camNode = self.camera.node()
         self.camLens = PerspectiveLens()
         self.camLens.setFov(30, 30)
@@ -41,8 +35,7 @@ class SceneBuffer(DirectObject):
 
     def __createBuffer(self):
         self.__destroyBuffer()
-        self.__buffer = base.win.makeTextureBuffer(
-            self.name, self.size[0], self.size[1], tex=self.__texture)
+        self.__buffer = base.win.makeTextureBuffer(self.name, self.size[0], self.size[1], tex=self.__texture)
         dr = self.__buffer.makeDisplayRegion()
         dr.setCamera(self.camera)
 

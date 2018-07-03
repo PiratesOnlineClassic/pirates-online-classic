@@ -10,22 +10,22 @@ from pirates.piratesgui import (InventoryItemList, PiratesGuiGlobals,
 
 
 class ShipItemList(InventoryItemList.InventoryItemList):
+    
 
     def __init__(self, inventory, height, trade=0, buy=0, sell=0, use=0):
-        InventoryItemList.InventoryItemList.__init__(self, inventory, height,
-                                                     trade, buy, sell, use)
+        InventoryItemList.InventoryItemList.__init__(self, inventory, height, trade, buy, sell, use)
         self.initialiseoptions(ShipItemList)
 
     def loadInventoryPanels(self):
         for item in self.inventory:
-            data = [item, 1]
+            data = [
+             item, 1]
             self.addPanel(data, repack=0)
 
         self.repackPanels()
 
     def addPanel(self, data, repack=1):
-        panel = ShipItemGUI.ShipItemGUI(
-            data, trade=self.trade, buy=self.buy, sell=self.sell, use=self.use)
+        panel = ShipItemGUI.ShipItemGUI(data, trade=self.trade, buy=self.buy, sell=self.sell, use=self.use)
         panel.reparentTo(self.getCanvas())
         self.panels.append(panel)
         if repack:
@@ -39,8 +39,6 @@ class ShipItemList(InventoryItemList.InventoryItemList):
             self.panels[i].setPos(0.01, 0, -z * (i + 1))
             self.panels[i].origionalPos = self.panels[i].getPos(render2d)
 
-        self['canvasSize'] = (0, PiratesGuiGlobals.ShipItemGuiWidth - 0.09,
-                              -z * (i + 1), 0)
-
-
+        self['canvasSize'] = (
+         0, PiratesGuiGlobals.ShipItemGuiWidth - 0.09, -z * (i + 1), 0)
 # okay decompiling .\pirates\piratesgui\ShipItemList.pyc

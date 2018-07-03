@@ -121,14 +121,7 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
     def cleanupOuchIval(self):
         pass
 
-    def playOuch(self,
-                 skillId,
-                 ammoSkillId,
-                 targetEffects,
-                 attacker,
-                 pos,
-                 multihit=0,
-                 targetBonus=0):
+    def playOuch(self, skillId, ammoSkillId, targetEffects, attacker, pos, multihit=0, targetBonus=0):
         targetHp, targetPower, targetEffect, targetMojo, targetSwiftness = targetEffects
         if attacker:
             self.addCombo(attacker.getDoId(), skillId, -targetHp)
@@ -139,51 +132,35 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
             else:
                 effectId = WeaponGlobals.getHitEffect(skillId)
         if not targetBonus and not self.NoPain and targetEffects[0] < 0:
-            if self.gameFSM.state not in ('Ensnared', 'Knockdown', 'Stunned',
-                                          'Rooted', 'NPCInteract',
-                                          'ShipBoarding'):
+            if self.gameFSM.state not in ('Ensnared', 'Knockdown', 'Stunned', 'Rooted',
+                                          'NPCInteract', 'ShipBoarding'):
                 ouchSfx = None
                 if self.currentWeapon:
-                    if not self.avatarType.isA(
-                            AvatarTypes.Creature
-                    ) and effectId == WeaponGlobals.VFX_BLIND:
-                        actorIval = self.actorInterval(
-                            'sand_in_eyes_holdweapon_noswing',
-                            playRate=random.uniform(0.7, 1.5))
+                    if not self.avatarType.isA(AvatarTypes.Creature) and effectId == WeaponGlobals.VFX_BLIND:
+                        actorIval = self.actorInterval('sand_in_eyes_holdweapon_noswing', playRate=random.uniform(0.7, 1.5))
                     else:
-                        actorIval = self.actorInterval(
-                            self.currentWeapon.painAnim,
-                            playRate=random.uniform(0.7, 1.5))
+                        actorIval = self.actorInterval(self.currentWeapon.painAnim, playRate=random.uniform(0.7, 1.5))
                         if WeaponGlobals.getIsStaffAttackSkill(skillId):
                             skillInfo = WeaponGlobals.getSkillAnimInfo(skillId)
-                            getOuchSfxFunc = skillInfo[
-                                WeaponGlobals.OUCH_SFX_INDEX]
+                            getOuchSfxFunc = skillInfo[WeaponGlobals.OUCH_SFX_INDEX]
                             if getOuchSfxFunc:
                                 ouchSfx = getOuchSfxFunc()
                         else:
                             ouchSfx = self.getSfx('pain')
                 else:
-                    if not self.avatarType.isA(
-                            AvatarTypes.Creature
-                    ) and effectId == WeaponGlobals.VFX_BLIND:
-                        actorIval = self.actorInterval(
-                            'sand_in_eyes', playRate=random.uniform(0.7, 1.5))
+                    if not self.avatarType.isA(AvatarTypes.Creature) and effectId == WeaponGlobals.VFX_BLIND:
+                        actorIval = self.actorInterval('sand_in_eyes', playRate=random.uniform(0.7, 1.5))
                     else:
-                        actorIval = self.actorInterval(
-                            'boxing_hit_head_right',
-                            playRate=random.uniform(0.7, 1.5))
+                        actorIval = self.actorInterval('boxing_hit_head_right', playRate=random.uniform(0.7, 1.5))
                 if ouchSfx:
-                    self.ouchAnim = Sequence(
-                        Func(base.playSfx, ouchSfx, node=self, cutoff=100),
-                        actorIval)
+                    self.ouchAnim = Sequence(Func(base.playSfx, ouchSfx, node=self, cutoff=100), actorIval)
                 else:
                     self.ouchAnim = actorIval
                 self.ouchAnim.start()
         effect = CombatEffect.CombatEffect(effectId, multihit, attacker)
         effect.reparentTo(self)
         effect.setPos(self, pos[0], pos[1], pos[2])
-        if not WeaponGlobals.getIsDollAttackSkill(
-                skillId) and not WeaponGlobals.getIsStaffAttackSkill(skillId):
+        if not WeaponGlobals.getIsDollAttackSkill(skillId) and not WeaponGlobals.getIsStaffAttackSkill(skillId):
             if attacker and not attacker.isEmpty():
                 effect.lookAt(attacker)
             effect.setH(effect, 180)
@@ -208,23 +185,10 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
         for i in range(numHits - 2):
             multiHitEffects.append([divDamage, 0, 0, 0, 0])
 
-        multiHitEffects.append(
-            [targetEffects[0] - divDamage * (numHits - 1), 0, 0, 0, 0])
+        multiHitEffects.append([targetEffects[0] - divDamage * (numHits - 1), 0, 0, 0, 0])
         return multiHitEffects
 
-    def useTargetedSkill(self,
-                         skillId,
-                         ammoSkillId,
-                         skillResult,
-                         targetId,
-                         areaIdList,
-                         attackerEffects,
-                         targetEffects,
-                         areaIdEffects,
-                         timestamp,
-                         pos,
-                         charge=0,
-                         localSignal=0):
+    def useTargetedSkill(self, skillId, ammoSkillId, skillResult, targetId, areaIdList, attackerEffects, targetEffects, areaIdEffects, timestamp, pos, charge=0, localSignal=0):
         if not self.isLocal() or localSignal:
             multiHits = []
             numHits = WeaponGlobals.getNumHits(skillId)
@@ -237,45 +201,30 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
                 if hitTiming:
                     multiHits += hitTiming
             if not targetId and areaIdList:
-                self.playSkillMovie(skillId, ammoSkillId, skillResult, charge,
-                                    areaIdList[0])
+                self.playSkillMovie(skillId, ammoSkillId, skillResult, charge, areaIdList[0])
             else:
-                self.playSkillMovie(skillId, ammoSkillId, skillResult, charge,
-                                    targetId)
+                self.playSkillMovie(skillId, ammoSkillId, skillResult, charge, targetId)
             if self.currentTarget and targetId:
                 if multiHits and numHits:
-                    multiHitEffects = self.packMultiHitEffects(
-                        targetEffects, numHits)
+                    multiHitEffects = self.packMultiHitEffects(targetEffects, numHits)
                     for i in range(numHits):
-                        self.currentTarget.targetedWeaponHit(
-                            skillId, ammoSkillId, skillResult,
-                            multiHitEffects[i], self, pos, charge, multiHits[i],
-                            i)
+                        self.currentTarget.targetedWeaponHit(skillId, ammoSkillId, skillResult, multiHitEffects[i], self, pos, charge, multiHits[i], i)
 
                 else:
-                    self.currentTarget.targetedWeaponHit(
-                        skillId, ammoSkillId, skillResult, targetEffects, self,
-                        pos, charge)
+                    self.currentTarget.targetedWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, self, pos, charge)
             for targetId, areaEffects in zip(areaIdList, areaIdEffects):
                 target = self.cr.doId2do.get(targetId)
                 if target:
                     if multiHits and numHits:
-                        multiHitEffects = self.packMultiHitEffects(
-                            areaEffects, numHits)
+                        multiHitEffects = self.packMultiHitEffects(areaEffects, numHits)
                         for i in range(numHits):
-                            target.targetedWeaponHit(
-                                skillId, ammoSkillId, skillResult,
-                                multiHitEffects[i], self, pos, charge,
-                                multiHits[i], i)
+                            target.targetedWeaponHit(skillId, ammoSkillId, skillResult, multiHitEffects[i], self, pos, charge, multiHits[i], i)
 
                     else:
-                        target.targetedWeaponHit(skillId, ammoSkillId,
-                                                 skillResult, areaEffects, self,
-                                                 pos, charge)
+                        target.targetedWeaponHit(skillId, ammoSkillId, skillResult, areaEffects, self, pos, charge)
 
             if not self.currentTarget and not areaIdList:
-                self.playHitSound(skillId, ammoSkillId,
-                                  WeaponGlobals.RESULT_MISS)
+                self.playHitSound(skillId, ammoSkillId, WeaponGlobals.RESULT_MISS)
 
     def getProjectileInfo(self, skillId, target):
         throwSpeed = WeaponGlobals.getProjectileSpeed(skillId)
@@ -300,36 +249,23 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
             impactT += animT
         targetPos = placeHolder.getPos(render)
         placeHolder.removeNode()
-        return (targetPos, time, impactT)
+        return (
+         targetPos, time, impactT)
 
-    def targetedWeaponHit(self,
-                          skillId,
-                          ammoSkillId,
-                          skillResult,
-                          targetEffects,
-                          attacker,
-                          pos,
-                          charge=0,
-                          delay=None,
-                          multihit=0):
-        if self == attacker and not (targetEffects[0] or targetEffects[1] or
-                                     targetEffects[2] or targetEffects[4]):
+    def targetedWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, attacker, pos, charge=0, delay=None, multihit=0):
+        if self == attacker and not (targetEffects[0] or targetEffects[1] or targetEffects[2] or targetEffects[4]):
             return
         if not delay:
             targetPos, time, impactT = self.getProjectileInfo(skillId, attacker)
             if impactT:
                 delay = impactT
             else:
-                delay = WeaponGlobals.getAttackReactionDelay(
-                    skillId, ammoSkillId)
+                delay = WeaponGlobals.getAttackReactionDelay(skillId, ammoSkillId)
         if WeaponGlobals.getIsDollAttackSkill(skillId):
             delay += random.uniform(0.0, 0.5)
         if attacker and attacker.isLocal():
             centerEffect = WeaponGlobals.getCenterEffect(skillId, ammoSkillId)
-            if centerEffect == 2 or not (
-                    self.avatarType.isA(AvatarTypes.Stump) or
-                    self.avatarType.isA(AvatarTypes.FlyTrap) or
-                    self.avatarType.isA(AvatarTypes.GiantCrab)):
+            if centerEffect == 2 or not (self.avatarType.isA(AvatarTypes.Stump) or self.avatarType.isA(AvatarTypes.FlyTrap) or self.avatarType.isA(AvatarTypes.GiantCrab)):
                 pos = Vec3(0, 0, self.height * 0.666)
             elif centerEffect == 1:
                 newZ = attacker.getZ(self)
@@ -343,11 +279,7 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
             if centerEffect >= 1:
                 pos = Vec3(0, 0, self.height * 0.666)
         if delay > 0.0:
-            taskMgr.doMethodLater(
-                delay,
-                self.playHitSound,
-                self.taskName('playHitSoundTask'),
-                extraArgs=[skillId, ammoSkillId, skillResult])
+            taskMgr.doMethodLater(delay, self.playHitSound, self.taskName('playHitSoundTask'), extraArgs=[skillId, ammoSkillId, skillResult])
         else:
             self.playHitSound(skillId, ammoSkillId, skillResult)
         if skillResult == WeaponGlobals.RESULT_HIT:
@@ -355,41 +287,20 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
             if bonus:
                 targetEffects[0] -= bonus
             if delay > 0.0:
-                taskMgr.doMethodLater(
-                    delay,
-                    self.playOuch,
-                    self.taskName('playOuchTask'),
-                    extraArgs=[
-                        skillId, ammoSkillId, targetEffects, attacker, pos,
-                        multihit
-                    ])
+                taskMgr.doMethodLater(delay, self.playOuch, self.taskName('playOuchTask'), extraArgs=[skillId, ammoSkillId, targetEffects, attacker, pos, multihit])
             else:
-                self.playOuch(skillId, ammoSkillId, targetEffects, attacker,
-                              pos, multihit)
+                self.playOuch(skillId, ammoSkillId, targetEffects, attacker, pos, multihit)
             if bonus:
-                taskMgr.doMethodLater(
-                    WeaponGlobals.COMBO_DAMAGE_DELAY,
-                    self.playOuch,
-                    self.taskName('playBonusOuchTask'),
-                    extraArgs=[
-                        skillId, ammoSkillId, [bonus, 0, 0, 0, 0], attacker,
-                        pos, multihit, 1
-                    ])
+                taskMgr.doMethodLater(WeaponGlobals.COMBO_DAMAGE_DELAY, self.playOuch, self.taskName('playBonusOuchTask'), extraArgs=[skillId, ammoSkillId, [bonus, 0, 0, 0, 0], attacker, pos, multihit, 1])
             if skillId in InventoryType.BackstabSkills and charge:
                 if attacker and attacker.isLocal():
-                    messenger.send(('').join(['trackBackstab-',
-                                              str(self.doId)]))
+                    messenger.send(('').join(['trackBackstab-', str(self.doId)]))
         else:
             if skillResult == WeaponGlobals.RESULT_MISS or skillResult == WeaponGlobals.RESULT_DODGE or skillResult == WeaponGlobals.RESULT_PARRY or skillResult == WeaponGlobals.RESULT_RESIST:
                 resultString = WeaponGlobals.getSkillResultName(skillResult)
-                delay = WeaponGlobals.getAttackReactionDelay(
-                    skillId, ammoSkillId)
+                delay = WeaponGlobals.getAttackReactionDelay(skillId, ammoSkillId)
                 if delay > 0.0:
-                    taskMgr.doMethodLater(
-                        delay,
-                        self.showHpString,
-                        self.taskName('showMissTask'),
-                        extraArgs=[resultString, pos])
+                    taskMgr.doMethodLater(delay, self.showHpString, self.taskName('showMissTask'), extraArgs=[resultString, pos])
                 else:
                     self.showHpString(resultString, pos)
             else:
@@ -398,21 +309,16 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
                 else:
                     if skillResult == WeaponGlobals.RESULT_AGAINST_PIRATE_CODE:
                         if attacker and attacker.isLocal():
-                            resultString = WeaponGlobals.getSkillResultName(
-                                skillResult)
+                            resultString = WeaponGlobals.getSkillResultName(skillResult)
                             self.showHpString(resultString, pos)
                     else:
                         if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE:
-                            self.notify.warning(
-                                'WeaponGlobals.RESULT_NOT_AVAILABLE')
+                            self.notify.warning('WeaponGlobals.RESULT_NOT_AVAILABLE')
                         else:
-                            self.notify.error(
-                                'unknown skillResult: %d' % skillResult)
+                            self.notify.error('unknown skillResult: %d' % skillResult)
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
-                            targetEffects, pos, normal, codes, attacker):
-        self.targetedWeaponHit(skillId, ammoSkillId, skillResult, targetEffects,
-                               attacker, pos)
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
+        self.targetedWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, attacker, pos)
 
     def takeDamage(self, hpLost, pos, bonus=0):
         shipId = 0

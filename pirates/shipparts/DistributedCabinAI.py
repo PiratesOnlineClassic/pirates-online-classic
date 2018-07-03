@@ -10,9 +10,7 @@ class DistributedCabinDNA(CabinDNA):
     def __init__(self):
         CabinDNA.__init__(self)
 
-
-class DistributedCabinAI(DistributedShippartAI, DistributedDestructibleArrayAI,
-                         DistributedCabinDNA):
+class DistributedCabinAI(DistributedShippartAI, DistributedDestructibleArrayAI, DistributedCabinDNA):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCabinAI')
 
     def __init__(self, air):

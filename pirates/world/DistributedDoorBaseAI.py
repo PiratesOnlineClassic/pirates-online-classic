@@ -6,10 +6,8 @@ from direct.distributed.ClockDelta import globalClockDelta
 from direct.fsm.FSM import FSM
 from pirates.piratesbase import PiratesGlobals
 
-
 class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedDoorBaseAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDoorBaseAI')
 
     def __init__(self, air):
         DistributedInteractiveAI.__init__(self, air)
@@ -35,15 +33,13 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
         avatarParentObj = avatar.getParentObj()
 
         if not avatarParentObj:
-            self.notify.warning(
-                'Cannot handle interaction for avatar %d, doesn\'t have an valid parent object!'
-                % (avatar.doId))
+            self.notify.warning('Cannot handle interaction for avatar %d, doesn\'t have an valid parent object!' % (
+                avatar.doId))
 
             return self.DENY
 
         if self.getParentObj().doId == avatarParentObj.doId:
-            self.otherDoor.handleRequestInteraction(avatar, interactType,
-                                                    instant)
+            self.otherDoor.handleRequestInteraction(avatar, interactType, instant)
 
         return self.ACCEPT
 
@@ -58,8 +54,7 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
         self.avatarId = avatarId
 
     def d_setDoorState(self, doorState, avatarId):
-        self.d_setMovie(
-            doorState, avatarId, globalClockDelta.getFrameNetworkTime(bits=16))
+        self.d_setMovie(doorState, avatarId, globalClockDelta.getFrameNetworkTime(bits=16))
 
     def b_setDoorState(self, doorState, avatarId):
         self.setDoorState(doorState, avatarId)
@@ -80,8 +75,7 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
 
     def enterOpened(self, avatarId):
         self.b_setDoorState(PiratesGlobals.DOOR_OPEN, avatarId)
-        self.doorTask = taskMgr.doMethodLater(2.0, self.__close,
-                                              self.uniqueName('door-opened'))
+        self.doorTask = taskMgr.doMethodLater(2.0, self.__close, self.uniqueName('door-opened'))
 
     def exitOpened(self):
         if self.doorTask:

@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class JRTeleportEffect(PooledEffect, EffectController):
-
+    
     card2Scale = 32.0
     cardScale = 32.0
 
@@ -22,8 +22,7 @@ class JRTeleportEffect(PooledEffect, EffectController):
         if parent is not None:
             self.reparentTo(parent)
         if not JRTeleportEffect.particleDummy:
-            JRTeleportEffect.particleDummy = render.attachNewNode(
-                ModelNode('JRTeleportEffectParticleDummy'))
+            JRTeleportEffect.particleDummy = render.attachNewNode(ModelNode('JRTeleportEffectParticleDummy'))
             JRTeleportEffect.particleDummy.setColorScaleOff()
             JRTeleportEffect.particleDummy.setLightOff()
             JRTeleportEffect.particleDummy.setFogOff()
@@ -81,13 +80,9 @@ class JRTeleportEffect(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
-                                           ColorBlendAttrib.OIncomingAlpha,
-                                           ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 0.6, Vec4(1.0, 1.0, 0.2, 1.0), Vec4(0.8, 0.6, 0.25, 0.75), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.6, 1.0, Vec4(0.8, 0.6, 0.25, 0.75), Vec4(0.5, 0.25, 0.0, 0.0), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.6, Vec4(1.0, 1.0, 0.2, 1.0), Vec4(0.8, 0.6, 0.25, 0.75), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.6, 1.0, Vec4(0.8, 0.6, 0.25, 0.75), Vec4(0.5, 0.25, 0.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -123,13 +118,9 @@ class JRTeleportEffect(PooledEffect, EffectController):
         self.p1.renderer.setNonanimatedTheta(0.0)
         self.p1.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p1.renderer.setAlphaDisable(0)
-        self.p1.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
-                                           ColorBlendAttrib.OIncomingAlpha,
-                                           ColorBlendAttrib.OOne)
-        self.p1.renderer.getColorInterpolationManager().addLinear(
-            0.0, 0.5, Vec4(1.0, 1.0, 0.2, 1.0), Vec4(0.8, 0.6, 0.25, 0.75), 1)
-        self.p1.renderer.getColorInterpolationManager().addLinear(
-            0.5, 1.0, Vec4(0.8, 0.6, 0.25, 0.75), Vec4(0.5, 0.25, 0.0, 0.5), 1)
+        self.p1.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
+        self.p1.renderer.getColorInterpolationManager().addLinear(0.0, 0.5, Vec4(1.0, 1.0, 0.2, 1.0), Vec4(0.8, 0.6, 0.25, 0.75), 1)
+        self.p1.renderer.getColorInterpolationManager().addLinear(0.5, 1.0, Vec4(0.8, 0.6, 0.25, 0.75), Vec4(0.5, 0.25, 0.0, 0.5), 1)
         self.p1.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p1.emitter.setAmplitude(1.0)
         self.p1.emitter.setAmplitudeSpread(0.0)
@@ -139,32 +130,18 @@ class JRTeleportEffect(PooledEffect, EffectController):
         return
 
     def createTrack(self):
-        self.p0.renderer.setInitialXScale(
-            0.03 * self.effectScale * self.cardScale)
-        self.p0.renderer.setFinalXScale(
-            0.015 * self.effectScale * self.cardScale)
-        self.p0.renderer.setInitialYScale(
-            0.015 * self.effectScale * self.cardScale)
-        self.p0.renderer.setFinalYScale(
-            0.06 * self.effectScale * self.cardScale)
-        self.p1.renderer.setInitialXScale(
-            0.015 * self.effectScale * self.cardScale)
-        self.p1.renderer.setFinalXScale(
-            0.03 * self.effectScale * self.cardScale)
-        self.p1.renderer.setInitialYScale(
-            0.015 * self.effectScale * self.cardScale)
-        self.p1.renderer.setFinalYScale(
-            0.05 * self.effectScale * self.cardScale)
+        self.p0.renderer.setInitialXScale(0.03 * self.effectScale * self.cardScale)
+        self.p0.renderer.setFinalXScale(0.015 * self.effectScale * self.cardScale)
+        self.p0.renderer.setInitialYScale(0.015 * self.effectScale * self.cardScale)
+        self.p0.renderer.setFinalYScale(0.06 * self.effectScale * self.cardScale)
+        self.p1.renderer.setInitialXScale(0.015 * self.effectScale * self.cardScale)
+        self.p1.renderer.setFinalXScale(0.03 * self.effectScale * self.cardScale)
+        self.p1.renderer.setInitialYScale(0.015 * self.effectScale * self.cardScale)
+        self.p1.renderer.setFinalYScale(0.05 * self.effectScale * self.cardScale)
         self.p1.emitter.setRadius(self.radius)
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.1), Func(self.p0.clearToInitial),
-            Func(self.p1.setBirthRate, 0.015), Func(self.p1.clearToInitial),
-            Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100), Func(self.p1.setBirthRate, 100),
-            Wait(2.0), Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(self.duration),
-                              self.endEffect)
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.1), Func(self.p0.clearToInitial), Func(self.p1.setBirthRate, 0.015), Func(self.p1.clearToInitial), Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Func(self.p1.setBirthRate, 100), Wait(2.0), Func(self.cleanUpEffect))
+        self.track = Sequence(self.startEffect, Wait(self.duration), self.endEffect)
 
     def reSize(self, t):
         self.p1.emitter.setRadius(self.radius * t)
@@ -177,6 +154,4 @@ class JRTeleportEffect(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\JRTeleportEffect.pyc

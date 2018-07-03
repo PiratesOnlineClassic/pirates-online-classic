@@ -13,7 +13,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class HairGUI(DirectFrame, StateData.StateData):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('HairGUI')
 
     def __init__(self, main=None):
@@ -51,33 +51,13 @@ class HairGUI(DirectFrame, StateData.StateData):
         self.loadColorGUI()
 
     def loadGUI(self):
-        self.hairPicker = CharGuiPicker(
-            self.main,
-            parent=self._parent,
-            text=PLocalizer.MakeAPirateHairHair,
-            nextCommand=self.handleNextHair,
-            backCommand=self.handleLastHair)
+        self.hairPicker = CharGuiPicker(self.main, parent=self._parent, text=PLocalizer.MakeAPirateHairHair, nextCommand=self.handleNextHair, backCommand=self.handleLastHair)
         self.hairPicker.setPos(0, 0, 0.1)
-        self.beardPicker = CharGuiPicker(
-            self.main,
-            parent=self._parent,
-            text=PLocalizer.MakeAPirateHairBeard,
-            nextCommand=self.handleNextBeard,
-            backCommand=self.handleLastBeard)
+        self.beardPicker = CharGuiPicker(self.main, parent=self._parent, text=PLocalizer.MakeAPirateHairBeard, nextCommand=self.handleNextBeard, backCommand=self.handleLastBeard)
         self.beardPicker.setPos(0, 0, -0.1)
-        self.mustachePicker = CharGuiPicker(
-            self.main,
-            parent=self._parent,
-            text=PLocalizer.MakeAPirateHairMustache,
-            nextCommand=self.handleNextMustache,
-            backCommand=self.handleLastMustache)
+        self.mustachePicker = CharGuiPicker(self.main, parent=self._parent, text=PLocalizer.MakeAPirateHairMustache, nextCommand=self.handleNextMustache, backCommand=self.handleLastMustache)
         self.mustachePicker.setPos(0, 0, -0.3)
-        self.eyeBrowPicker = CharGuiPicker(
-            self.main,
-            parent=self._parent,
-            text=PLocalizer.MakeAPirateHairEyeBrow,
-            nextCommand=self.handleNextEyeBrow,
-            backCommand=self.handleLastEyeBrow)
+        self.eyeBrowPicker = CharGuiPicker(self.main, parent=self._parent, text=PLocalizer.MakeAPirateHairEyeBrow, nextCommand=self.handleNextEyeBrow, backCommand=self.handleLastEyeBrow)
         self.eyeBrowPicker.setPos(0, 0, -0.5)
         self.hairPicker.hide()
         self.beardPicker.hide()
@@ -85,18 +65,12 @@ class HairGUI(DirectFrame, StateData.StateData):
         self.eyeBrowPicker.hide()
 
     def loadColorGUI(self):
-        self.baseColorFrameTitle = DirectFrame(
-            parent=self._parent,
-            relief=None,
-            image=self.main.charGui.find('**/chargui_frame01'),
-            image_pos=(0, 0, -0.3),
-            image_scale=(2.13, 1.6, 1.6),
-            text=PLocalizer.HairColorFrameTitle,
-            text_fg=(1, 1, 1, 1),
-            text_scale=0.18,
-            text_pos=(0, -0.05),
-            pos=(0, 0, -0.6),
-            scale=0.7)
+        self.baseColorFrameTitle = DirectFrame(parent=self._parent, relief=None, image=self.main.charGui.find('**/chargui_frame01'), image_pos=(0, 0, -0.3), image_scale=(2.13,
+                                                                                                                                                                         1.6,
+                                                                                                                                                                         1.6), text=PLocalizer.HairColorFrameTitle, text_fg=(1,
+                                                                                                                                                                                                                             1,
+                                                                                                                                                                                                                             1,
+                                                                                                                                                                                                                             1), text_scale=0.18, text_pos=(0, -0.05), pos=(0, 0, -0.6), scale=0.7)
         self.baseColorFrameTitle.hide()
         self.baseColorButtons = []
         xOffset = -0.7
@@ -107,16 +81,8 @@ class HairGUI(DirectFrame, StateData.StateData):
                 yOffset -= 0.3
             hairColor = HumanDNA.hairColors[i]
             hairTone = (hairColor[0], hairColor[1], hairColor[2], 1.0)
-            self.baseColorButtons.append(
-                DirectButton(
-                    parent=self.baseColorFrameTitle,
-                    relief=DGG.RAISED,
-                    pos=(xOffset, 0, yOffset),
-                    frameSize=(-0.1, 0.1, -0.1, 0.1),
-                    borderWidth=(0.008, 0.008),
-                    frameColor=hairTone,
-                    command=self.handleSetBaseColor,
-                    extraArgs=[i]))
+            self.baseColorButtons.append(DirectButton(parent=self.baseColorFrameTitle, relief=DGG.RAISED, pos=(xOffset, 0, yOffset), frameSize=(-0.1, 0.1, -0.1, 0.1), borderWidth=(0.008,
+                                                                                                                                                                                    0.008), frameColor=hairTone, command=self.handleSetBaseColor, extraArgs=[i]))
             xOffset += 0.2
 
         return
@@ -143,8 +109,7 @@ class HairGUI(DirectFrame, StateData.StateData):
 
     def showColorCollections(self):
         self.baseColorFrameTitle.show()
-        self.baseColorButtons[self.main.pirate.style.head.hair.color][
-            'relief'] = DGG.SUNKEN
+        self.baseColorButtons[self.main.pirate.style.head.hair.color]['relief'] = DGG.SUNKEN
 
     def hideColorCollections(self):
         self.baseColorFrameTitle.hide()
@@ -189,8 +154,7 @@ class HairGUI(DirectFrame, StateData.StateData):
             self.avatar.showFacialHair()
 
     def handleNextHair(self):
-        self.notify.debug(
-            '--------------------------current hair---------------------')
+        self.notify.debug('--------------------------current hair---------------------')
         self.avatar.hideHair()
         currIdx = self.avatar.choices['HAIR'].index(self.avatar.hairIdx)
         currIdx += 1
@@ -202,8 +166,7 @@ class HairGUI(DirectFrame, StateData.StateData):
         self.playJackDialog()
 
     def handleLastHair(self):
-        self.notify.debug(
-            '--------------------------current hair---------------------')
+        self.notify.debug('--------------------------current hair---------------------')
         self.avatar.hideHair()
         currIdx = self.avatar.choices['HAIR'].index(self.avatar.hairIdx)
         currIdx -= 1

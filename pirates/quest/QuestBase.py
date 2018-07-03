@@ -13,5 +13,4 @@ class QuestBase:
         return 'quest-deleted-%d' % self.doId
 
     def delete(self):
-        messenger.send(self.getDeletedEventString(),
-                       [self.getDeletedEventString()])
+        messenger.send(self.getDeletedEventString(), [self.getDeletedEventString()])

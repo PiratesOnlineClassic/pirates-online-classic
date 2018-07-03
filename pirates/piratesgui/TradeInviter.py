@@ -15,27 +15,21 @@ from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 
 
 class TradeInviterButton(DirectButton):
+    
 
     def __init__(self, text, command):
-        DirectButton.__init__(
-            self,
-            relief=DGG.RAISED,
-            borderWidth=PiratesGuiGlobals.BorderWidthSmall,
-            pos=(0, 0, 0),
-            text=text,
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_align=TextNode.ACenter,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_pos=(0.04, 0.025),
-            frameSize=(0, 0.08, 0, 0.08),
-            frameColor=PiratesGuiGlobals.ButtonColor2,
-            command=command)
+        DirectButton.__init__(self, relief=DGG.RAISED, borderWidth=PiratesGuiGlobals.BorderWidthSmall, pos=(0,
+                                                                                                            0,
+                                                                                                            0), text=text, text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_pos=(0.04,
+                                                                                                                                                                                                                                                                                            0.025), frameSize=(0,
+                                                                                                                                                                                                                                                                                                               0.08,
+                                                                                                                                                                                                                                                                                                               0,
+                                                                                                                                                                                                                                                                                                               0.08), frameColor=PiratesGuiGlobals.ButtonColor2, command=command)
         self.initialiseoptions(TradeInviterButton)
 
 
 class TradeInviter(GuiPanel.GuiPanel):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('TradeInviter')
 
     def __init__(self, avId, avName):
@@ -45,69 +39,48 @@ class TradeInviter(GuiPanel.GuiPanel):
         self.avName = avName
         self.avDisableName = 'disable-%s' % self.avId
         self.fsm = ClassicFSM.ClassicFSM('TradeInviter', [
-            State.State('off', self.enterOff, self.exitOff),
-            State.State('getNewTrade', self.enterGetNewTrade,
-                        self.exitGetNewTrade),
-            State.State('begin', self.enterBegin, self.exitBegin),
-            State.State('notYet', self.enterNotYet, self.exitNotYet),
-            State.State('checkAvailability', self.enterCheckAvailability,
-                        self.exitCheckAvailability),
-            State.State('notAvailable', self.enterNotAvailable,
-                        self.exitNotAvailable),
-            State.State('notAcceptingTrades', self.enterNotAcceptingTrades,
-                        self.exitNotAcceptingTrades),
-            State.State('wentAway', self.enterWentAway, self.exitWentAway),
-            State.State('alreadyTrading', self.enterAlreadyTrading,
-                        self.exitAlreadyTrading),
-            State.State('alreadyInvited', self.enterAlreadyInvited,
-                        self.exitAlreadyInvited),
-            State.State('askingNPC', self.enterAskingNPC, self.exitAskingNPC),
-            State.State('endTrade', self.enterEndTrade, self.exitEndTrade),
-            State.State('tradeNoMore', self.enterTradeNoMore,
-                        self.exitTradeNoMore),
-            State.State('self', self.enterSelf, self.exitSelf),
-            State.State('ignored', self.enterIgnored, self.exitIgnored),
-            State.State('asking', self.enterAsking, self.exitAsking),
-            State.State('yes', self.enterYes, self.exitYes),
-            State.State('no', self.enterNo, self.exitNo),
-            State.State('maybe', self.enterMaybe, self.exitMaybe),
-            State.State('down', self.enterDown, self.exitDown),
-            State.State('cancel', self.enterCancel, self.exitCancel)
-        ], 'off', 'off')
-        self.message = DirectLabel(
-            parent=self,
-            relief=None,
-            text='',
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_align=TextNode.ACenter,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=11,
-            pos=(0.25, 0, 0.35),
-            textMayChange=1)
+         State.State('off', self.enterOff, self.exitOff),
+         State.State('getNewTrade', self.enterGetNewTrade, self.exitGetNewTrade),
+         State.State('begin', self.enterBegin, self.exitBegin),
+         State.State('notYet', self.enterNotYet, self.exitNotYet),
+         State.State('checkAvailability', self.enterCheckAvailability, self.exitCheckAvailability),
+         State.State('notAvailable', self.enterNotAvailable, self.exitNotAvailable),
+         State.State('notAcceptingTrades', self.enterNotAcceptingTrades, self.exitNotAcceptingTrades),
+         State.State('wentAway', self.enterWentAway, self.exitWentAway),
+         State.State('alreadyTrading', self.enterAlreadyTrading, self.exitAlreadyTrading),
+         State.State('alreadyInvited', self.enterAlreadyInvited, self.exitAlreadyInvited),
+         State.State('askingNPC', self.enterAskingNPC, self.exitAskingNPC),
+         State.State('endTrade', self.enterEndTrade, self.exitEndTrade),
+         State.State('tradeNoMore', self.enterTradeNoMore, self.exitTradeNoMore),
+         State.State('self', self.enterSelf, self.exitSelf),
+         State.State('ignored', self.enterIgnored, self.exitIgnored),
+         State.State('asking', self.enterAsking, self.exitAsking),
+         State.State('yes', self.enterYes, self.exitYes),
+         State.State('no', self.enterNo, self.exitNo),
+         State.State('maybe', self.enterMaybe, self.exitMaybe),
+         State.State('down', self.enterDown, self.exitDown),
+         State.State('cancel', self.enterCancel, self.exitCancel)], 'off', 'off')
+        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.25,
+                                                                                                                                                                                                                                                    0,
+                                                                                                                                                                                                                                                    0.35), textMayChange=1)
         self.context = None
-        self.bOk = TradeInviterButton(
-            text=PLocalizer.TradeInviterOK, command=self.__handleOk)
+        self.bOk = TradeInviterButton(text=PLocalizer.TradeInviterOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
         self.bOk.setPos(0.2, 0, 0.05)
         self.bOk.hide()
-        self.bCancel = TradeInviterButton(
-            text=PLocalizer.TradeInviterCancel, command=self.__handleCancel)
+        self.bCancel = TradeInviterButton(text=PLocalizer.TradeInviterCancel, command=self.__handleCancel)
         self.bCancel.reparentTo(self)
         self.bCancel.setPos(0.2, 0, 0.05)
         self.bCancel.hide()
-        self.bStop = TradeInviterButton(
-            text=PLocalizer.TradeInviterStopTrading, command=self.__handleStop)
+        self.bStop = TradeInviterButton(text=PLocalizer.TradeInviterStopTrading, command=self.__handleStop)
         self.bStop.reparentTo(self)
         self.bStop.setPos(0.2, 0, 0.15)
         self.bStop.hide()
-        self.bYes = TradeInviterButton(
-            text=PLocalizer.TradeInviterYes, command=self.__handleYes)
+        self.bYes = TradeInviterButton(text=PLocalizer.TradeInviterYes, command=self.__handleYes)
         self.bYes.reparentTo(self)
         self.bYes.setPos(0.1, 0, 0.05)
         self.bYes.hide()
-        self.bNo = TradeInviterButton(
-            text=PLocalizer.TradeInviterNo, command=self.__handleNo)
+        self.bNo = TradeInviterButton(text=PLocalizer.TradeInviterNo, command=self.__handleNo)
         self.bNo.reparentTo(self)
         self.bNo.setPos(0.3, 0, 0.05)
         self.bNo.hide()
@@ -179,11 +152,9 @@ class TradeInviter(GuiPanel.GuiPanel):
             self.fsm.request('askingNPC')
             return
         base.cr.tradeManager.sendRequestCreateTrade(self.avId)
-        self.message[
-            'text'] = PLocalizer.TradeInviterCheckAvailability % self.avName
+        self.message['text'] = PLocalizer.TradeInviterCheckAvailability % self.avName
         self.accept(PiratesGlobals.TradeIncomingEvent, self.__tradeCreated)
-        self.accept(PiratesGlobals.TradeRejectInviteEvent,
-                    self.__tradeRejectInvite)
+        self.accept(PiratesGlobals.TradeRejectInviteEvent, self.__tradeRejectInvite)
         self.bCancel.show()
 
     def __tradeCreated(self, trade):
@@ -205,8 +176,7 @@ class TradeInviter(GuiPanel.GuiPanel):
         self.bOk.hide()
 
     def enterNotAcceptingTrades(self):
-        self.message[
-            'text'] = PLocalizer.TradeInviterTradeSaidNoNewTrades % self.avName
+        self.message['text'] = PLocalizer.TradeInviterTradeSaidNoNewTrades % self.avName
         self.context = None
         self.bOk.show()
         return
@@ -239,8 +209,7 @@ class TradeInviter(GuiPanel.GuiPanel):
         self.bCancel.hide()
 
     def enterAlreadyInvited(self):
-        self.message[
-            'text'] = PLocalizer.TradeInviterAlreadyInvited % self.avName
+        self.message['text'] = PLocalizer.TradeInviterAlreadyInvited % self.avName
         self['text_pos'] = (0.0, 0.2)
         self.context = None
         self.bStop.show()
@@ -280,7 +249,7 @@ class TradeInviter(GuiPanel.GuiPanel):
     def enterTradeNoMore(self):
         self.message['text'] = PLocalizer.TradeInviterTradeNoMore % self.avName
         self.bOk.show()
-        if self.avId not in base.cr.doId2do:
+        if not base.cr.doId2do.has_key(self.avId):
             messenger.send(self.avDisableName)
 
     def exitTradeNoMore(self):
@@ -407,9 +376,7 @@ class TradeInviter(GuiPanel.GuiPanel):
                                 if yesNoAlready == 10:
                                     self.fsm.request('no')
                                 else:
-                                    self.notify.warning(
-                                        'Got unexpected response to tradeConsidering: %s'
-                                        % yesNoAlready)
+                                    self.notify.warning('Got unexpected response to tradeConsidering: %s' % yesNoAlready)
                                     self.fsm.request('maybe')
 
     def __tradeRejectInvite(self, avId, reason):
@@ -428,14 +395,11 @@ class TradeInviter(GuiPanel.GuiPanel):
                         if reason == RejectCode.ALREADY_YOUR_TRADE:
                             self.fsm.request('alreadyTrading')
                         else:
-                            self.notify.warning(
-                                'tradeRejectInvite: %s unknown reason: %s.' %
-                                (avId, reason))
+                            self.notify.warning('tradeRejectInvite: %s unknown reason: %s.' % (avId, reason))
 
     def __tradeResponse(self, yesNoMaybe, context):
         if self.context != context:
-            self.notify.warning('Unexpected change of context from %s to %s.' %
-                                (self.context, context))
+            self.notify.warning('Unexpected change of context from %s to %s.' % (self.context, context))
             self.context = context
         if yesNoMaybe == 1:
             self.fsm.request('yes')
@@ -443,12 +407,9 @@ class TradeInviter(GuiPanel.GuiPanel):
             if yesNoMaybe == 0:
                 self.fsm.request('no')
             else:
-                self.notify.warning(
-                    'Got unexpected response to tradeResponse: %s' % yesNoMaybe)
+                self.notify.warning('Got unexpected response to tradeResponse: %s' % yesNoMaybe)
                 self.fsm.request('maybe')
 
     def __handleDisableAvatar(self):
         self.fsm.request('wentAway')
-
-
 # okay decompiling .\pirates\piratesgui\TradeInviter.pyc

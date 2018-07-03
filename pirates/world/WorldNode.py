@@ -14,8 +14,7 @@ class WorldNode(NodePath):
     def delete(self):
         self.removeNode()
         del self.playerControlledObj
-        if self.cr.activeWorld and (self.cr.activeWorld.isEmpty() or
-                                    self.cr.activeWorld.compareTo(self) == 0):
+        if self.cr.activeWorld and (self.cr.activeWorld.isEmpty() or self.cr.activeWorld.compareTo(self) == 0):
             self.cr.setActiveWorld(None)
 
         self.ignoreAll()

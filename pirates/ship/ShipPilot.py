@@ -6,17 +6,13 @@ from direct.showbase.InputStateGlobal import inputState
 from direct.task.Task import Task
 from direct.controls.PhysicsWalker import PhysicsWalker
 
-
 class ShipPilot(PhysicsWalker):
     notify = directNotify.newCategory('ShipPilot')
     wantDebugIndicator = base.config.GetBool('want-avatar-physics-indicator', 0)
     MAX_STRAIGHT_SAIL_BONUS = 1.25
     STRAIGHT_SAIL_BONUS_TIME = 10.0
 
-    def __init__(self,
-                 gravity=-32.174,
-                 standableGround=0.707,
-                 hardLandingForce=16.0):
+    def __init__(self, gravity=-32.174, standableGround=0.707, hardLandingForce=16.0):
         PhysicsWalker.__init__(self, gravity, standableGround, hardLandingForce)
         self.__speed = 0.0
         self.__rotationSpeed = 0.0
@@ -48,8 +44,7 @@ class ShipPilot(PhysicsWalker):
 
     def setAvatar(self, ship):
         if ship is None:
-            if self.ship is not None and base.controlForce.getPhysicsObject(
-            ) == self.ship.node().getPhysicsObject():
+            if self.ship is not None and base.controlForce.getPhysicsObject() == self.ship.node().getPhysicsObject():
                 base.controlForce.clearPhysicsObject()
                 base.controlForce.setVector(Vec3(0))
             self.takedownPhysics()
@@ -62,8 +57,7 @@ class ShipPilot(PhysicsWalker):
             self.setCollisionsActive(1)
         return
 
-    def initializeCollisions(self, collisionTraverser, cRootNodePath, bow,
-                             stern, starboard, port):
+    def initializeCollisions(self, collisionTraverser, cRootNodePath, bow, stern, starboard, port):
         self.cTrav = collisionTraverser
         self.cRootNodePath = cRootNodePath
         self.bowPos = bow.getPos(cRootNodePath)
@@ -84,8 +78,7 @@ class ShipPilot(PhysicsWalker):
         cBowSphere = CollisionSphere(0.0, frontPos, 0.0, sRadius)
         cSternSphere = CollisionSphere(0.0, rearPos, 0.0, sRadius)
         midSphereRadius = max(sRadius, (rearPos - frontPos - sRadius * 2) / 2)
-        cMidSphere = CollisionSphere(0.0, frontPos + (rearPos - frontPos) / 2,
-                                     0.0, midSphereRadius)
+        cMidSphere = CollisionSphere(0.0, frontPos + (rearPos - frontPos) / 2, 0.0, midSphereRadius)
         cNode.addSolid(cBowSphere)
         cNode.addSolid(cMidSphere)
         cNode.addSolid(cSternSphere)
@@ -179,17 +172,13 @@ class ShipPilot(PhysicsWalker):
         onScreenDebug.add('w controls', 'ShipPilot')
         onScreenDebug.add('w ship', self.ship)
         onScreenDebug.add('w isAirborne', self.isAirborne)
-        onScreenDebug.add('posDelta1',
-                          self.shipNodePath.getPosDelta(render).pPrintValues())
+        onScreenDebug.add('posDelta1', self.shipNodePath.getPosDelta(render).pPrintValues())
         physObject = self.actorNode.getPhysicsObject()
         physObject = physObject.getVelocity()
         onScreenDebug.add('w physObject vec', physObject.pPrintValues())
         onScreenDebug.add('w physObject len', '% 10.4f' % physObject.length())
-        onScreenDebug.add(
-            'orientation',
-            self.actorNode.getPhysicsObject().getOrientation().pPrintValues())
-        onScreenDebug.add('w contact',
-                          self.actorNode.getContactVector().pPrintValues())
+        onScreenDebug.add('orientation', self.actorNode.getPhysicsObject().getOrientation().pPrintValues())
+        onScreenDebug.add('w contact', self.actorNode.getContactVector().pPrintValues())
 
     def handleAvatarControls(self, task):
         physObject = self.actorNode.getPhysicsObject()
@@ -197,8 +186,7 @@ class ShipPilot(PhysicsWalker):
         forward = inputState.isSet('forward')
         reverse = inputState.isSet('reverse')
         turnLeft = inputState.isSet('slideLeft') or inputState.isSet('turnLeft')
-        turnRight = inputState.isSet('slideRight') or inputState.isSet(
-            'turnRight')
+        turnRight = inputState.isSet('slideRight') or inputState.isSet('turnRight')
         slide = inputState.isSet('slide')
         slideLeft = 0
         slideRight = 0
@@ -215,20 +203,13 @@ class ShipPilot(PhysicsWalker):
             self.straightHeading += dt
         straightSailBonus = 0.0
         if self.straightHeading > self.STRAIGHT_SAIL_BONUS_TIME * 0.5:
-            straightSailBonus = (
-                self.straightHeading - self.STRAIGHT_SAIL_BONUS_TIME * 0.5
-            ) / self.STRAIGHT_SAIL_BONUS_TIME * 0.5
-        straightSailBonus = min(
-            self.MAX_STRAIGHT_SAIL_BONUS,
-            straightSailBonus * self.MAX_STRAIGHT_SAIL_BONUS)
+            straightSailBonus = (self.straightHeading - self.STRAIGHT_SAIL_BONUS_TIME * 0.5) / self.STRAIGHT_SAIL_BONUS_TIME * 0.5
+        straightSailBonus = min(self.MAX_STRAIGHT_SAIL_BONUS, straightSailBonus * self.MAX_STRAIGHT_SAIL_BONUS)
         straightSailBonus += 1.0
         self.__speed = forward and self.ship.acceleration * straightSailBonus or reverse and -self.ship.reverseAcceleration
         avatarSlideSpeed = self.ship.acceleration * 0.5 * straightSailBonus
-        self.__slideSpeed = (forward or
-                             reverse) and (slideLeft and -avatarSlideSpeed or
-                                           slideRight and avatarSlideSpeed)
-        self.__rotationSpeed = not slide and (turnLeft and self.ship.turnRate or
-                                              turnRight and -self.ship.turnRate)
+        self.__slideSpeed = (forward or reverse) and (slideLeft and -avatarSlideSpeed or slideRight and avatarSlideSpeed)
+        self.__rotationSpeed = not slide and (turnLeft and self.ship.turnRate or turnRight and -self.ship.turnRate)
         self.__speed *= straightSailBonus
         self.__slideSpeed *= straightSailBonus
         maxSpeed = self.ship.maxSpeed * straightSailBonus
@@ -262,9 +243,7 @@ class ShipPilot(PhysicsWalker):
             self.needToDeltaPos = 0
         physVel = physObject.getVelocity()
         physVelLen = physVel.length()
-        if not physVel.almostEqual(
-                Vec3(0), 0.1
-        ) or self.__speed or self.__slideSpeed or self.__rotationSpeed:
+        if not physVel.almostEqual(Vec3(0), 0.1) or self.__speed or self.__slideSpeed or self.__rotationSpeed:
             distance = self.__speed
             goForward = True
             if distance < 0:
@@ -273,8 +252,7 @@ class ShipPilot(PhysicsWalker):
             rotation = self.__rotationSpeed
             if debugRunning:
                 rotation *= 4
-            self.__vel = Vec3(Vec3.forward() * distance +
-                              Vec3.right() * slideDistance)
+            self.__vel = Vec3(Vec3.forward() * distance + Vec3.right() * slideDistance)
             rotMat = Mat3.rotateMatNormaxis(self.shipNodePath.getH(), Vec3.up())
             step = rotMat.xform(self.__vel)
             newVector = Vec3(step)
@@ -282,8 +260,7 @@ class ShipPilot(PhysicsWalker):
                 maxLen = self.ship.acceleration * straightSailBonus
             else:
                 maxLen = self.ship.reverseAcceleration
-            if newVector.length() > maxLen and not (
-                    debugRunning or base.localAvatar.getTurbo()):
+            if newVector.length() > maxLen and not (debugRunning or base.localAvatar.getTurbo()):
                 newVector.normalize()
                 newVector *= maxLen
             base.controlForce.setVector(newVector)
@@ -313,13 +290,10 @@ class ShipPilot(PhysicsWalker):
             self.ship.worldVelocity = oldPosDelta * (1 / oldDt)
         if self.wantDebugIndicator:
             onScreenDebug.add('w __oldPosDelta vec', oldPosDelta.pPrintValues())
-            onScreenDebug.add('w __oldPosDelta len',
-                              '% 10.4f' % oldPosDelta.length())
+            onScreenDebug.add('w __oldPosDelta len', '% 10.4f' % oldPosDelta.length())
             onScreenDebug.add('w __oldDt', '% 10.4f' % oldDt)
-            onScreenDebug.add('w worldVelocity vec',
-                              self.ship.worldVelocity.pPrintValues())
-            onScreenDebug.add('w worldVelocity len',
-                              '% 10.4f' % self.ship.worldVelocity.length())
+            onScreenDebug.add('w worldVelocity vec', self.ship.worldVelocity.pPrintValues())
+            onScreenDebug.add('w worldVelocity len', '% 10.4f' % self.ship.worldVelocity.length())
         if hasattr(self.ship, 'currentTurning'):
             self.ship.currentTurning = self.currentTurning
         return Task.cont
@@ -333,8 +307,7 @@ class ShipPilot(PhysicsWalker):
         taskMgr.remove(taskName)
         taskMgr.add(self.handleAvatarControls, taskName, 25)
         if self.physVelocityIndicator:
-            taskMgr.add(self.avatarPhysicsIndicator,
-                        'ShipControlsIndicator%s' % (id(self),), 35)
+            taskMgr.add(self.avatarPhysicsIndicator, 'ShipControlsIndicator%s' % (id(self),), 35)
 
     def disableAvatarControls(self):
         base.controlForce.setVector(Vec3(0))

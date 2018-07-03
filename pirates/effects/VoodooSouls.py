@@ -21,8 +21,7 @@ class VoodooSouls(PooledEffect, EffectController):
         model = loader.loadModelCopy('models/effects/particleMaps')
         self.card = model.find('**/particleDarkSmoke')
         if not VoodooSouls.particleDummy:
-            VoodooSouls.particleDummy = render.attachNewNode(
-                ModelNode('VoodooSoulsParticleDummy'))
+            VoodooSouls.particleDummy = render.attachNewNode(ModelNode('VoodooSoulsParticleDummy'))
             VoodooSouls.particleDummy.setDepthWrite(0)
             VoodooSouls.particleDummy.setColorScaleOff()
             VoodooSouls.particleDummy.setLightOff()
@@ -56,13 +55,9 @@ class VoodooSouls(PooledEffect, EffectController):
         self.p0.factory.setAngularVelocitySpread(100.0)
         self.p0.renderer.setAlphaMode(BaseParticleRenderer.PRALPHAINOUT)
         self.p0.renderer.setUserAlpha(1.0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
-                                           ColorBlendAttrib.OIncomingAlpha,
-                                           ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 0.25, Vec4(1.0, 1.0, 1.0, 0.0), Vec4(1.0, 1.0, 1.0, 0.5), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.25, 1.0, Vec4(1.0, 1.0, 1.0, 0.5), Vec4(0.5, 0.2, 1.0, 0.0), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.25, Vec4(1.0, 1.0, 1.0, 0.0), Vec4(1.0, 1.0, 1.0, 0.5), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.25, 1.0, Vec4(1.0, 1.0, 1.0, 0.5), Vec4(0.5, 0.2, 1.0, 0.0), 1)
         self.p0.renderer.setFromNode(self.card)
         self.p0.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
         self.p0.renderer.setXScaleFlag(1)
@@ -84,22 +79,15 @@ class VoodooSouls(PooledEffect, EffectController):
         self.p0.emitter.setRadius(1.0)
 
     def createTrack(self):
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100), Wait(2.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def setEffectColor(self, color):
         self.effectColor = Vec4(1, 1, 1, 0) - (Vec4(1, 1, 1, 1) - color) / 1.75
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 0.25, Vec4(1.0, 1.0, 1.0, 0.0), Vec4(1.0, 1.0, 1.0, 0.5), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.25, 1.0, Vec4(1.0, 1.0, 1.0, 0.5), self.effectColor, 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.25, Vec4(1.0, 1.0, 1.0, 0.0), Vec4(1.0, 1.0, 1.0, 0.5), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.25, 1.0, Vec4(1.0, 1.0, 1.0, 0.5), self.effectColor, 1)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -109,6 +97,4 @@ class VoodooSouls(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\VoodooSouls.pyc

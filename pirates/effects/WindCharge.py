@@ -7,8 +7,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class WindCharge(PooledEffect, EffectController):
+
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -30,23 +30,12 @@ class WindCharge(PooledEffect, EffectController):
         self.effectModel.setScale(0.5, 0.5, 0.5)
         self.duration = 2.0
         self.setColorScale(0.0, 0.0, 0.0, 0.0)
-        fadeIn = LerpColorScaleInterval(
-            self,
-            3.0,
-            Vec4(1.0, 1.0, 1.0, 0.75),
-            startColorScale=Vec4(0.0, 0.0, 0.0, 0.0))
-        fadeOut = LerpColorScaleInterval(
-            self,
-            1.0,
-            Vec4(0.0, 0.0, 0.0, 0.0),
-            startColorScale=Vec4(1.0, 1.0, 1.0, 0.75))
-        rotate = LerpHprInterval(
-            self.effectModel, 0.5, Vec3(-360, 0, 0), startHpr=Vec3(0, 0, 0))
+        fadeIn = LerpColorScaleInterval(self, 3.0, Vec4(1.0, 1.0, 1.0, 0.75), startColorScale=Vec4(0.0, 0.0, 0.0, 0.0))
+        fadeOut = LerpColorScaleInterval(self, 1.0, Vec4(0.0, 0.0, 0.0, 0.0), startColorScale=Vec4(1.0, 1.0, 1.0, 0.75))
+        rotate = LerpHprInterval(self.effectModel, 0.5, Vec3(-360, 0, 0), startHpr=Vec3(0, 0, 0))
         self.startEffect = Sequence(Func(rotate.loop), fadeIn)
-        self.endEffect = Sequence(fadeOut, Func(rotate.finish),
-                                  Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(self.duration),
-                              self.endEffect)
+        self.endEffect = Sequence(fadeOut, Func(rotate.finish), Func(self.cleanUpEffect))
+        self.track = Sequence(self.startEffect, Wait(self.duration), self.endEffect)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

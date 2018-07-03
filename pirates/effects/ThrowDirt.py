@@ -6,9 +6,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class ThrowDirt(PooledEffect, EffectController):
-
+    
     cardScale = 128.0
 
     def __init__(self):
@@ -18,8 +17,7 @@ class ThrowDirt(PooledEffect, EffectController):
         self.card = model.find('**/particleRockShower')
         self.speed = 20.0
         if not ThrowDirt.particleDummy:
-            ThrowDirt.particleDummy = render.attachNewNode(
-                ModelNode('ThrowDirtParticleDummy'))
+            ThrowDirt.particleDummy = render.attachNewNode(ModelNode('ThrowDirtParticleDummy'))
             ThrowDirt.particleDummy.setDepthWrite(0)
             ThrowDirt.particleDummy.setLightOff()
             ThrowDirt.particleDummy.setColorScaleOff()
@@ -72,11 +70,7 @@ class ThrowDirt(PooledEffect, EffectController):
         self.p0.emitter.setRadius(1.0)
 
     def createTrack(self):
-        self.track = Sequence(
-            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy), Wait(0.3),
-            Func(self.p0.setBirthRate, 100), Wait(7.0),
-            Func(self.cleanUpEffect))
+        self.track = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Wait(0.3), Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

@@ -1,7 +1,6 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-
 class DistributedLockAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLockAI')
 

@@ -15,48 +15,28 @@ from pirates.ship import ShipGlobals
 
 
 class ShipDeployPanel(ShipSelectionPanel):
-
+    
     notify = directNotify.newCategory('ShipDeployPanel')
 
     def __init__(self, title, doneCallback, siegeTeam=0):
-        ShipSelectionPanel.__init__(
-            self,
-            title,
-            doneCallback,
-            pages=[self.OWN, self.FRIEND, self.CREW, self.GUILD, self.PUBLIC])
+        ShipSelectionPanel.__init__(self, title, doneCallback, pages=[self.OWN, self.FRIEND, self.CREW, self.GUILD, self.PUBLIC])
         self.initialiseoptions(ShipDeployPanel)
         self._siegeTeam = siegeTeam
-        if localAvatar.style.getTutorial(
-        ) < PiratesGlobals.TUT_GOT_SHIP and localAvatar.getCurrentIsland(
-        ) != QuestConstants.LocationIds.PORT_ROYAL_ISLAND:
-            text = PLocalizer.DinghyNeedFirstShip % PLocalizer.LocationNames[QuestConstants.
-                                                                             LocationIds.
-                                                                             PORT_ROYAL_ISLAND]
+        if localAvatar.style.getTutorial() < PiratesGlobals.TUT_GOT_SHIP and localAvatar.getCurrentIsland() != QuestConstants.LocationIds.PORT_ROYAL_ISLAND:
+            text = PLocalizer.DinghyNeedFirstShip % PLocalizer.LocationNames[QuestConstants.LocationIds.PORT_ROYAL_ISLAND]
         else:
             text = PLocalizer.DinghyNeedShip
-        self.noShipHint = DirectLabel(
-            parent=self,
-            relief=None,
-            text=text,
-            text_font=PiratesGlobals.getPirateFont(),
-            text_scale=0.08,
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_wordwrap=10,
-            textMayChange=1,
-            pos=(0.55, 0, 0.8))
+        self.noShipHint = DirectLabel(parent=self, relief=None, text=text, text_font=PiratesGlobals.getPirateFont(), text_scale=0.08, text_fg=PiratesGuiGlobals.TextFG1, text_wordwrap=10, textMayChange=1, pos=(0.55,
+                                                                                                                                                                                                                 0,
+                                                                                                                                                                                                                 0.8))
         return
 
     def setPage(self, pageId):
         ShipSelectionPanel.setPage(self, pageId)
         if not self.shipFrames[pageId]:
             if pageId == self.OWN:
-                if localAvatar.style.getTutorial(
-                ) < PiratesGlobals.TUT_GOT_SHIP and localAvatar.getCurrentIsland(
-                ) != QuestConstants.LocationIds.PORT_ROYAL_ISLAND:
-                    self.noShipHint[
-                        'text'] = PLocalizer.DinghyNeedFirstShip % PLocalizer.LocationNames[QuestConstants.
-                                                                                            LocationIds.
-                                                                                            PORT_ROYAL_ISLAND]
+                if localAvatar.style.getTutorial() < PiratesGlobals.TUT_GOT_SHIP and localAvatar.getCurrentIsland() != QuestConstants.LocationIds.PORT_ROYAL_ISLAND:
+                    self.noShipHint['text'] = PLocalizer.DinghyNeedFirstShip % PLocalizer.LocationNames[QuestConstants.LocationIds.PORT_ROYAL_ISLAND]
                 else:
                     self.noShipHint['text'] = PLocalizer.DinghyNeedShip
             else:
@@ -67,36 +47,21 @@ class ShipDeployPanel(ShipSelectionPanel):
                         self.noShipHint['text'] = PLocalizer.DinghyNoCrewShip
                     else:
                         if pageId == self.GUILD:
-                            self.noShipHint[
-                                'text'] = PLocalizer.DinghyNoGuildShip
+                            self.noShipHint['text'] = PLocalizer.DinghyNoGuildShip
                         else:
                             if pageId == self.PUBLIC:
-                                self.noShipHint[
-                                    'text'] = PLocalizer.DinghyNoPublicShip
+                                self.noShipHint['text'] = PLocalizer.DinghyNoPublicShip
             self.noShipHint.show()
         else:
             self.noShipHint.hide()
 
-    def _makeFrame(self, shipId, shipName, shipClass, mastInfo, shipHp, shipSp,
-                   cargo, crew, time, siegeTeam, avatarName, callback):
+    def _makeFrame(self, shipId, shipName, shipClass, mastInfo, shipHp, shipSp, cargo, crew, time, siegeTeam, avatarName, callback):
         shipFrame = self.getFrame(shipId)
         if shipFrame:
             shipFrame.addCrewMemberName(avatarName)
         else:
-            shipFrame = ShipFrameDeploy(
-                parent=None,
-                relief=None,
-                shipId=shipId,
-                shipName=shipName,
-                shipClass=shipClass,
-                mastInfo=mastInfo,
-                shipType=ShipFrameDeploy.STFriend,
-                siegeTeam=siegeTeam,
-                avatarName=avatarName,
-                command=callback,
-                extraArgs=[shipId])
-            shipFrame.enableStats(shipName, shipClass, mastInfo, shipHp, shipSp,
-                                  cargo, crew, time)
+            shipFrame = ShipFrameDeploy(parent=None, relief=None, shipId=shipId, shipName=shipName, shipClass=shipClass, mastInfo=mastInfo, shipType=ShipFrameDeploy.STFriend, siegeTeam=siegeTeam, avatarName=avatarName, command=callback, extraArgs=[shipId])
+            shipFrame.enableStats(shipName, shipClass, mastInfo, shipHp, shipSp, cargo, crew, time)
         return shipFrame
 
     def addOwnShip(self, shipId, callback):
@@ -106,20 +71,9 @@ class ShipDeployPanel(ShipSelectionPanel):
         shipFrame = self.getFrame(shipId)
         if not shipFrame:
             mastInfo = ShipGlobals.getMastInfo(shipOV.shipClass)
-            shipFrame = ShipFrameDeploy(
-                parent=None,
-                shipId=shipId,
-                shipName=shipOV.name,
-                shipClass=shipOV.shipClass,
-                mastInfo=mastInfo,
-                shipType=ShipFrameDeploy.STOwn,
-                siegeTeam=self._siegeTeam,
-                command=callback,
-                extraArgs=[shipId])
+            shipFrame = ShipFrameDeploy(parent=None, shipId=shipId, shipName=shipOV.name, shipClass=shipOV.shipClass, mastInfo=mastInfo, shipType=ShipFrameDeploy.STOwn, siegeTeam=self._siegeTeam, command=callback, extraArgs=[shipId])
             shipFrame.enableStatsOV(shipOV)
-            if not Freebooter.getPaidStatus(
-                    base.localAvatar.getDoId()
-            ) and shipOV.shipClass != ShipGlobals.INTERCEPTORL1 and shipOV.shipClass != ShipGlobals.MERCHANTL1:
+            if not Freebooter.getPaidStatus(base.localAvatar.getDoId()) and shipOV.shipClass != ShipGlobals.INTERCEPTORL1 and shipOV.shipClass != ShipGlobals.MERCHANTL1:
                 shipFrame.nameLabel['text'] = PLocalizer.noFreebooterCap
                 shipFrame.nameLabel['text_fg'] = (1, 0.7, 0.7, 1)
         self.addFrameOwn(shipFrame)
@@ -132,38 +86,24 @@ class ShipDeployPanel(ShipSelectionPanel):
             shipInfo = bandMember.getShipInfo()
             if shipInfo and shipInfo[0] == shipId:
                 shipId, shipName, shipClass, mastInfo = shipInfo
-                shipFrame = self._makeFrame(shipId, shipName, shipClass,
-                                            ShipGlobals.getMastInfo(shipClass),
-                                            shipHp, shipSp, cargo, crew, time,
-                                            siegeTeam, avatarName, callback)
+                shipFrame = self._makeFrame(shipId, shipName, shipClass, ShipGlobals.getMastInfo(shipClass), shipHp, shipSp, cargo, crew, time, siegeTeam, avatarName, callback)
                 shipFrame.addCrewMemberName(avatarName)
                 self.addFrameCrew(shipFrame)
 
     def addFriendShip(self, shipInfo, callback):
         friendId, shipId, shipHp, shipSp, cargo, crew, time, shipClass, shipName, siegeTeam, avatarName = shipInfo
-        shipFrame = self._makeFrame(shipId, shipName, shipClass,
-                                    ShipGlobals.getMastInfo(shipClass), shipHp,
-                                    shipSp, cargo, crew, time, siegeTeam,
-                                    avatarName, callback)
+        shipFrame = self._makeFrame(shipId, shipName, shipClass, ShipGlobals.getMastInfo(shipClass), shipHp, shipSp, cargo, crew, time, siegeTeam, avatarName, callback)
         shipFrame.addCrewMemberName(avatarName)
         self.addFrameFriend(shipFrame)
 
     def addGuildShip(self, shipInfo, callback):
         guildmateId, shipId, shipHp, shipSp, cargo, crew, time, shipClass, shipName, siegeTeam, avatarName = shipInfo
-        shipFrame = self._makeFrame(shipId, shipName, shipClass,
-                                    ShipGlobals.getMastInfo(shipClass), shipHp,
-                                    shipSp, cargo, crew, time, siegeTeam,
-                                    avatarName, callback)
+        shipFrame = self._makeFrame(shipId, shipName, shipClass, ShipGlobals.getMastInfo(shipClass), shipHp, shipSp, cargo, crew, time, siegeTeam, avatarName, callback)
         shipFrame.addCrewMemberName(avatarName)
         self.addFrameGuild(shipFrame)
 
     def addPublicShip(self, shipInfo, callback):
         ownerId, shipId, shipHp, shipSp, cargo, crew, time, shipClass, shipName, siegeTeam, avatarName = shipInfo
-        shipFrame = self._makeFrame(shipId, shipName, shipClass,
-                                    ShipGlobals.getMastInfo(shipClass), shipHp,
-                                    shipSp, cargo, crew, time, siegeTeam,
-                                    avatarName, callback)
+        shipFrame = self._makeFrame(shipId, shipName, shipClass, ShipGlobals.getMastInfo(shipClass), shipHp, shipSp, cargo, crew, time, siegeTeam, avatarName, callback)
         self.addFramePublic(shipFrame)
-
-
 # okay decompiling .\pirates\piratesgui\ShipDeployPanel.pyc

@@ -13,17 +13,10 @@ from pandac.PandaModules import *
 
 
 class ShipFog(NodePath):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('ShipFog')
 
-    def __init__(self,
-                 parent,
-                 psbskp,
-                 bin,
-                 binPriority,
-                 camera,
-                 renderParent=None,
-                 color=Vec4(1)):
+    def __init__(self, parent, psbskp, bin, binPriority, camera, renderParent=None, color=Vec4(1)):
         NodePath.__init__(self, 'ShipFog')
         self.assign(parent.attachNewNode('fog'))
         self.ival = None
@@ -33,11 +26,9 @@ class ShipFog(NodePath):
             self.renderParent = parent.attachNewNode('fog-renderParent')
         self.renderParent.setColorScale(color, 100)
         self.renderParent.setLightOff(base.cr.timeOfDayManager.dlight)
-        self.frontRenderParent = self.renderParent.attachNewNode(
-            'frontRenderParent')
+        self.frontRenderParent = self.renderParent.attachNewNode('frontRenderParent')
         self.frontRenderParent.setBin('fixed', bin + 1, binPriority)
-        self.backRenderParent = self.renderParent.attachNewNode(
-            'backRenderParent')
+        self.backRenderParent = self.renderParent.attachNewNode('backRenderParent')
         self.backRenderParent.setBin('fixed', bin - 1, binPriority)
         self.setupParticles(parent, psbskp, camera)
         return
@@ -45,10 +36,8 @@ class ShipFog(NodePath):
     def setupParticles(self, parent, psbskp, camera):
         particleSearchPath = DSearchPath()
         basePath = os.path.expandvars('$PIRATES') or './pirates'
-        particleSearchPath.appendDirectory(
-            Filename.fromOsSpecific(basePath + '/src/effects'))
-        particleSearchPath.appendDirectory(
-            Filename.fromOsSpecific(basePath + '/effects'))
+        particleSearchPath.appendDirectory(Filename.fromOsSpecific(basePath + '/src/effects'))
+        particleSearchPath.appendDirectory(Filename.fromOsSpecific(basePath + '/effects'))
         particleSearchPath.appendDirectory(Filename('etc'))
         pfile = Filename('shipFogWall.ptf')
         found = vfs.resolveFilename(pfile, particleSearchPath)
@@ -72,8 +61,7 @@ class ShipFog(NodePath):
         self.frontEffect = ParticleEffect.ParticleEffect()
         self.frontEffect.loadConfig(pfile)
         particleSystem = self.frontEffect.getParticlesNamed('particles-1')
-        particleSystem.getRenderer().setTextureFromNode(
-            'models/misc/volcanoParticles', '**/volcanoSmoke')
+        particleSystem.getRenderer().setTextureFromNode('models/misc/volcanoParticles', '**/volcanoSmoke')
         particleSystem.getRenderer().setInitialXScale(cloudScale)
         particleSystem.getRenderer().setInitialYScale(cloudScale)
         particleSystem.getFactory().setLifespanBase(lifespan)
@@ -85,8 +73,7 @@ class ShipFog(NodePath):
         self.backEffect = ParticleEffect.ParticleEffect()
         self.backEffect.loadConfig(pfile)
         particleSystem = self.backEffect.getParticlesNamed('particles-1')
-        particleSystem.getRenderer().setTextureFromNode(
-            'models/misc/volcanoParticles', '**/volcanoSmoke')
+        particleSystem.getRenderer().setTextureFromNode('models/misc/volcanoParticles', '**/volcanoSmoke')
         particleSystem.getRenderer().setInitialXScale(cloudScale)
         particleSystem.getRenderer().setInitialYScale(cloudScale)
         particleSystem.getFactory().setLifespanBase(lifespan)
@@ -102,32 +89,7 @@ class ShipFog(NodePath):
                 self.ival.finish()
                 self.ival = None
         if not self.ival:
-            self.ival = Parallel(
-                ParticleInterval(
-                    self.frontEffect,
-                    self,
-                    worldRelative=0,
-                    renderParent=self.frontRenderParent,
-                    duration=duration + self.lifespan,
-                    softStopT=-self.lifespan),
-                ParticleInterval(
-                    self.backEffect,
-                    self,
-                    worldRelative=0,
-                    renderParent=self.backRenderParent,
-                    duration=duration + self.lifespan,
-                    softStopT=-self.lifespan),
-                Sequence(
-                    LerpFunc(
-                        self.renderParent.setAlphaScale,
-                        1,
-                        fromData=0.0,
-                        toData=1.0), Wait(duration - 2 + self.lifespan),
-                    LerpFunc(
-                        self.renderParent.setAlphaScale,
-                        1,
-                        fromData=1.0,
-                        toData=0.0)))
+            self.ival = Parallel(ParticleInterval(self.frontEffect, self, worldRelative=0, renderParent=self.frontRenderParent, duration=duration + self.lifespan, softStopT=-self.lifespan), ParticleInterval(self.backEffect, self, worldRelative=0, renderParent=self.backRenderParent, duration=duration + self.lifespan, softStopT=-self.lifespan), Sequence(LerpFunc(self.renderParent.setAlphaScale, 1, fromData=0.0, toData=1.0), Wait(duration - 2 + self.lifespan), LerpFunc(self.renderParent.setAlphaScale, 1, fromData=1.0, toData=0.0)))
         return self.ival
 
     def delete(self):
@@ -147,6 +109,4 @@ class ShipFog(NodePath):
         self.backEffect = None
         self.removeNode()
         return
-
-
 # okay decompiling .\pirates\effects\ShipFog.pyc

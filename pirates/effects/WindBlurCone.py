@@ -7,8 +7,8 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class WindBlurCone(PooledEffect, EffectController):
+
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -31,43 +31,23 @@ class WindBlurCone(PooledEffect, EffectController):
     def createTrack(self):
         self.flash.setColorScale(self.fadeColor)
         self.flash.setScale(1)
-        fadeIn = self.flash.colorScaleInterval(
-            self.fadeTime / 3, self.fadeColor, startColorScale=Vec4(0, 0, 0, 0))
-        fadeOut = self.flash.colorScaleInterval(
-            self.fadeTime / 3, Vec4(0, 0, 0, 0), startColorScale=self.fadeColor)
-        scaleBlast = self.flash.scaleInterval(
-            self.fadeTime,
-            self.endScale,
-            startScale=self.startScale,
-            blendType='easeOut')
+        fadeIn = self.flash.colorScaleInterval(self.fadeTime / 3, self.fadeColor, startColorScale=Vec4(0, 0, 0, 0))
+        fadeOut = self.flash.colorScaleInterval(self.fadeTime / 3, Vec4(0, 0, 0, 0), startColorScale=self.fadeColor)
+        scaleBlast = self.flash.scaleInterval(self.fadeTime, self.endScale, startScale=self.startScale, blendType='easeOut')
         texStage = self.flash.findAllTextureStages()[0]
-        self.scroller = LerpFunctionInterval(
-            self.setNewUVs,
-            fromData=0.0,
-            toData=3.0,
-            duration=self.fadeTime,
-            extraArgs=[texStage])
-        self.startEffect = Parallel(fadeIn, scaleBlast,
-                                    Func(self.scroller.loop),
-                                    Func(self.flashDummy.show))
-        self.endEffect = Sequence(fadeOut, Func(self.flashDummy.hide),
-                                  Func(self.scroller.pause),
-                                  Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(self.fadeTime / 3),
-                              self.endEffect)
+        self.scroller = LerpFunctionInterval(self.setNewUVs, fromData=0.0, toData=3.0, duration=self.fadeTime, extraArgs=[texStage])
+        self.startEffect = Parallel(fadeIn, scaleBlast, Func(self.scroller.loop), Func(self.flashDummy.show))
+        self.endEffect = Sequence(fadeOut, Func(self.flashDummy.hide), Func(self.scroller.pause), Func(self.cleanUpEffect))
+        self.track = Sequence(self.startEffect, Wait(self.fadeTime / 3), self.endEffect)
 
     def setNewUVs(self, time, texStage):
         self.flash.setTexOffset(texStage, 0, time)
 
     def setBlendModeOn(self):
-        self.flash.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingAlpha,
-                                  ColorBlendAttrib.OOne))
+        self.flash.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
 
     def setBlendModeOff(self):
-        self.flash.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MNone))
+        self.flash.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MNone))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

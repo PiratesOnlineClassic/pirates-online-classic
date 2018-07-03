@@ -7,7 +7,6 @@ from pirates.effects.FireSplats import FireSplats
 from pirates.effects.HeavySmoke import HeavySmoke
 from pirates.effects.FeastSmoke import FeastSmoke
 
-
 class FeastFire(NodePath):
 
     def __init__(self, effectParent=None):
@@ -68,8 +67,7 @@ class FeastFire(NodePath):
         if self._smoke:
             self._smoke.enable()
         if self.fireSfx:
-            self.fireSfxIval = SoundInterval(
-                self.fireSfx, node=self, seamlessLoop=False)
+            self.fireSfxIval = SoundInterval(self.fireSfx, node=self, seamlessLoop=False)
             self.fireSfxIval.loop()
 
     def stopMainEffects(self):

@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SmokeBomb(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -23,8 +23,7 @@ class SmokeBomb(PooledEffect, EffectController):
         self.speed = 20.0
         self.radius = 8.0
         if not SmokeBomb.particleDummy:
-            SmokeBomb.particleDummy = render.attachNewNode(
-                ModelNode('SmokeBombParticleDummy'))
+            SmokeBomb.particleDummy = render.attachNewNode(ModelNode('SmokeBombParticleDummy'))
             SmokeBomb.particleDummy.setDepthWrite(0)
             SmokeBomb.particleDummy.setLightOff()
             SmokeBomb.particleDummy.setFogOff()
@@ -75,13 +74,9 @@ class SmokeBomb(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha,
-            ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 0.8, Vec4(0.75, 0.75, 0.75, 1.0), Vec4(0.4, 0.4, 0.2, 0.5), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.8, 1.0, Vec4(0.4, 0.4, 0.2, 0.5), Vec4(0.0, 0.0, 0.0, 0.0), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.8, Vec4(0.75, 0.75, 0.75, 1.0), Vec4(0.4, 0.4, 0.2, 0.5), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.8, 1.0, Vec4(0.4, 0.4, 0.2, 0.5), Vec4(0.0, 0.0, 0.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(10.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -91,12 +86,7 @@ class SmokeBomb(PooledEffect, EffectController):
         self.p0.emitter.setRadius(8.0)
 
     def createTrack(self):
-        self.track = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self), Wait(0.5),
-            Func(self.p0.setBirthRate, 100), Wait(10.0),
-            Func(self.cleanUpEffect))
+        self.track = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.5), Func(self.p0.setBirthRate, 100), Wait(10.0), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -106,6 +96,4 @@ class SmokeBomb(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\SmokeBomb.pyc

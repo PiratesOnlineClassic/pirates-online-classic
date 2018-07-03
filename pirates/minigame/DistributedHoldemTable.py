@@ -11,10 +11,10 @@ from pirates.piratesbase import PLocalizer
 
 
 class DistributedHoldemTable(DistributedPokerTable.DistributedPokerTable):
+    
 
     def __init__(self, cr):
-        DistributedPokerTable.DistributedPokerTable.__init__(
-            self, cr, 'holdem', numRounds=5)
+        DistributedPokerTable.DistributedPokerTable.__init__(self, cr, 'holdem', numRounds=5)
         self.maxCommunityCards = 5
         self.maxHandCards = 2
         self.gameType = 0
@@ -45,6 +45,4 @@ class DistributedHoldemTable(DistributedPokerTable.DistributedPokerTable):
             else:
                 deals.append(self.dealCommunityCards(numCards=1))
         return deals
-
-
 # okay decompiling .\pirates\minigame\DistributedHoldemTable.pyc

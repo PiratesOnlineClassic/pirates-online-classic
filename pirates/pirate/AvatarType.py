@@ -1,7 +1,6 @@
 import random
 from pirates.piratesbase import PLocalizer
 
-
 class AvatarType:
     Unspecified = -1
     Any = 0
@@ -126,13 +125,10 @@ class AvatarType:
             try:
                 PLocalizer.AvatarNames[self.faction][self.track][self.id]
             except:
-                self.notify.error('getShortName(%s,%s,%s)' %
-                                  (self.faction, self.track, self.id))
+                self.notify.error('getShortName(%s,%s,%s)' % (self.faction, self.track, self.id))
             else:
-                if len(PLocalizer.AvatarNames[self.faction][self.track]
-                       [self.id]) >= 3:
-                    return PLocalizer.AvatarNames[self.faction][self.track][
-                        self.id][2]
+                if len(PLocalizer.AvatarNames[self.faction][self.track][self.id]) >= 3:
+                    return PLocalizer.AvatarNames[self.faction][self.track][self.id][2]
         return self.getName()
 
     def getStrings(self):
@@ -150,8 +146,7 @@ class AvatarType:
         h = hash((self.faction, self.track, self.id))
         if hasattr(self, '_hash'):
             if h != self._hash:
-                raise 'inconsistent AvatarType hash values: %s, %s' % (
-                    h, self._hash)
+                raise 'inconsistent AvatarType hash values: %s, %s' % (h, self._hash)
         else:
             self._setMutable(True)
             self._hash = h
@@ -162,18 +157,13 @@ class AvatarType:
         return 'AvatarType(%s)' % self.getName()
 
     def __repr__(self):
-        return "AvatarType(name='%s', faction=%s, track=%s, id=%s, boss=%s)" % (
-            self.getName(), self.faction, self.track, self.id, self.boss)
+        return "AvatarType(name='%s', faction=%s, track=%s, id=%s, boss=%s)" % (self.getName(), self.faction, self.track, self.id, self.boss)
 
     def getRandomBossType(self):
         if self.boss:
             return self
-        if self.faction in PLocalizer.BossNames and self.track in PLocalizer.BossNames[self.
-                                                                                       faction] and self.id in PLocalizer.BossNames[self.
-                                                                                                                                    faction][self.
-                                                                                                                                             track]:
-            bossLen = len(
-                PLocalizer.BossNames[self.faction][self.track][self.id])
+        if self.faction in PLocalizer.BossNames and self.track in PLocalizer.BossNames[self.faction] and self.id in PLocalizer.BossNames[self.faction][self.track]:
+            bossLen = len(PLocalizer.BossNames[self.faction][self.track][self.id])
         else:
             bossLen = 0
         whichBoss = random.randint(0, bossLen)

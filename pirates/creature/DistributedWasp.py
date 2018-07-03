@@ -7,9 +7,8 @@ from pirates.creature.Wasp import Wasp
 
 
 class DistributedWasp(DistributedCreature):
+    
 
     def __init__(self, cr):
         DistributedCreature.__init__(self, cr, Wasp())
-
-
 # okay decompiling .\pirates\creature\DistributedWasp.pyc

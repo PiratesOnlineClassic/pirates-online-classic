@@ -12,7 +12,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class GenderGUI(DirectFrame, StateData.StateData):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('GenderGUI')
 
     def __init__(self, main=None):
@@ -74,33 +74,17 @@ class GenderGUI(DirectFrame, StateData.StateData):
         self.genderFemaleButton.hide()
 
     def setupButtons(self):
-        self.genderFrameTitle = DirectFrame(
-            parent=self._parent,
-            relief=None,
-            text=PLocalizer.GenderFrameTitle,
-            text_scale=0.18,
-            text_pos=(0, 0),
-            text_fg=(1, 1, 1, 1),
-            pos=(0, 0, 0.4),
-            scale=0.7)
+        self.genderFrameTitle = DirectFrame(parent=self._parent, relief=None, text=PLocalizer.GenderFrameTitle, text_scale=0.18, text_pos=(0,
+                                                                                                                                          0), text_fg=(1,
+                                                                                                                                                       1,
+                                                                                                                                                       1,
+                                                                                                                                                       1), pos=(0,
+                                                                                                                                                                0,
+                                                                                                                                                                0.4), scale=0.7)
         self.genderFrameTitle.hide()
-        self.genderMaleButton = DirectButton(
-            parent=self.genderFrameTitle,
-            relief=None,
-            pos=(-0.3, 0, -0.25),
-            image=(self.main.charGui.find('**/chargui_male'),
-                   self.main.charGui.find('**/chargui_male_down'),
-                   self.main.charGui.find('**/chargui_male_over')),
-            command=self.handleMale)
+        self.genderMaleButton = DirectButton(parent=self.genderFrameTitle, relief=None, pos=(-0.3, 0, -0.25), image=(self.main.charGui.find('**/chargui_male'), self.main.charGui.find('**/chargui_male_down'), self.main.charGui.find('**/chargui_male_over')), command=self.handleMale)
         self.genderMaleButton.hide()
-        self.genderFemaleButton = DirectButton(
-            parent=self.genderFrameTitle,
-            relief=None,
-            pos=(0.3, 0, -0.25),
-            image=(self.main.charGui.find('**/chargui_female'),
-                   self.main.charGui.find('**/chargui_female_down'),
-                   self.main.charGui.find('**/chargui_female_over')),
-            command=self.handleFemale)
+        self.genderFemaleButton = DirectButton(parent=self.genderFrameTitle, relief=None, pos=(0.3, 0, -0.25), image=(self.main.charGui.find('**/chargui_female'), self.main.charGui.find('**/chargui_female_down'), self.main.charGui.find('**/chargui_female_over')), command=self.handleFemale)
         self.genderFemaleButton.hide()
         return
 

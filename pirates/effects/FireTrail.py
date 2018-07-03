@@ -7,9 +7,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class FireTrail(PooledEffect, EffectController):
-
+    
     cardScale = 128.0
 
     def __init__(self):
@@ -20,13 +19,9 @@ class FireTrail(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleVolcanoLava')
         if not FireTrail.particleDummy:
-            FireTrail.particleDummy = render.attachNewNode(
-                ModelNode('FireTrailParticleDummy'))
+            FireTrail.particleDummy = render.attachNewNode(ModelNode('FireTrailParticleDummy'))
             FireTrail.particleDummy.setDepthWrite(0)
-            FireTrail.particleDummy.node().setAttrib(
-                ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                      ColorBlendAttrib.OIncomingAlpha,
-                                      ColorBlendAttrib.OOne))
+            FireTrail.particleDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
             FireTrail.particleDummy.setFogOff()
             FireTrail.particleDummy.setLightOff()
             FireTrail.particleDummy.setColorScaleOff()
@@ -70,11 +65,8 @@ class FireTrail(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPNOBLEND)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha,
-            ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0, 0, 0, 0.0), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0, 0, 0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(-2.0)
         self.p0.emitter.setAmplitudeSpread(0.5)
@@ -85,8 +77,7 @@ class FireTrail(PooledEffect, EffectController):
     def loadGlow(self):
         if not self.glow and self.wantGlow:
             self.glow = loader.loadModelCopy('models/effects/flareGlow')
-            self.glow.node().setAttrib(
-                ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
+            self.glow.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
             self.glow.setDepthWrite(0)
             self.glow.setFogOff()
             self.glow.setLightOff()
@@ -108,22 +99,15 @@ class FireTrail(PooledEffect, EffectController):
         if self.wantGlow:
             self.loadGlow()
             randomness = random.random() / 20
-            scaleUp = self.glow.scaleInterval(
-                0.05, 15, startScale=17, blendType='easeInOut')
-            scaleDown = self.glow.scaleInterval(
-                0.05, 17, startScale=15, blendType='easeInOut')
+            scaleUp = self.glow.scaleInterval(0.05, 15, startScale=17, blendType='easeInOut')
+            scaleDown = self.glow.scaleInterval(0.05, 17, startScale=15, blendType='easeInOut')
             self.pulseTrack = Sequence(scaleUp, scaleDown)
         else:
             if self.glow:
                 self.glow.removeNode()
                 self.glow = None
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self), Func(self.startPulseTrack))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 2.0), Wait(1.5),
-            Func(self.stopPulseTrack), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Func(self.startPulseTrack))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.stopPulseTrack), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(6.0), self.endEffect)
 
     def cleanUpEffect(self):

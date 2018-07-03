@@ -4,7 +4,6 @@ from direct.distributed.DistributedObject import DistributedObject
 from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.UberDogGlobals import *
 
-
 class Trade(DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('Trade')
 

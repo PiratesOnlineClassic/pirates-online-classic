@@ -1,6 +1,5 @@
 from pirates.ship.DistributedShip import DistributedShip
 
-
 class BlackPearlShip(DistributedShip):
 
     def __init__(self, cr):

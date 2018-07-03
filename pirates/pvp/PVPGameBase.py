@@ -10,8 +10,8 @@ from pirates.piratesgui.StatRowGui import StatRowGui
 from pirates.piratesgui.StatRowHeadingGui import StatRowHeadingGui
 from pirates.pvp import PVPGlobals
 
-
 class ScoreboardHolder:
+
 
     def __init__(self, gameRules):
         self.gameRules = gameRules
@@ -22,42 +22,20 @@ class ScoreboardHolder:
     def getItemChangeMsg(self):
         return self.gameRules.taskName('scoreChanged')
 
-    def createNewItem(self,
-                      item,
-                      parent,
-                      itemType=None,
-                      columnWidths=[],
-                      color=None):
-        return self.gameRules.createScoreboardItem(
-            item, parent, itemType=None, columnWidths=[], color=None)
-
+    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+        return self.gameRules.createScoreboardItem(item, parent, itemType=None, columnWidths=[], color=None)
 
 class StatsHolder:
+
 
     def __init__(self, gameRules):
         self.gameRules = gameRules
 
-    def createNewItem(self,
-                      item,
-                      parent,
-                      itemType=None,
-                      columnWidths=[],
-                      color=None):
+    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
         if itemType == PiratesGuiGlobals.UIListItemType_ColumHeadings:
-            newItem = StatRowHeadingGui(
-                item,
-                self.gameRules.getColumnLabels(),
-                parent,
-                itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16,
-                itemWidths=columnWidths)
+            newItem = StatRowHeadingGui(item, self.gameRules.getColumnLabels(), parent, itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16, itemWidths=columnWidths)
         else:
-            newItem = StatRowGui(
-                item,
-                self.gameRules.getColumnLabels(),
-                parent,
-                itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16,
-                itemWidths=columnWidths,
-                txtColor=color)
+            newItem = StatRowGui(item, self.gameRules.getColumnLabels(), parent, itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16, itemWidths=columnWidths, txtColor=color)
         newItem.setup()
         return newItem
 
@@ -104,9 +82,7 @@ class PVPGameBase(DistributedObject, FSM.FSM):
         pass
 
     def showRules(self):
-        self.rulesPanel = PVPRulesPanel.PVPRulesPanel('PVPRulesPanel',
-                                                      self.getTitle(),
-                                                      self.getInstructions())
+        self.rulesPanel = PVPRulesPanel.PVPRulesPanel('PVPRulesPanel', self.getTitle(), self.getInstructions())
 
     def hideRules(self):
         self.rulesPanel.hide()
@@ -229,10 +205,7 @@ class PVPGameBase(DistributedObject, FSM.FSM):
         return [PVPGlobals.KILLS, PVPGlobals.DEATHS]
 
     def getColumnLabels(self):
-        return [
-            PLocalizer.PVPPlayer, PLocalizer.PVPEnemiesDefeated,
-            PLocalizer.PVPTimesDefeated
-        ]
+        return [PLocalizer.PVPPlayer, PLocalizer.PVPEnemiesDefeated, PLocalizer.PVPTimesDefeated]
 
     def addPlayer(self, playerId):
         if playerId in base.cr.doId2do:
@@ -278,16 +251,13 @@ class PVPGameBase(DistributedObject, FSM.FSM):
                 playerTeam = 0
             playerStats = []
             for stat in self.getColumnStats():
-                playerStats.append(
-                    [PVPGlobals.statText[stat],
-                     str(stats[stat])])
+                playerStats.append([PVPGlobals.statText[stat], str(stats[stat])])
 
             if playerId == localAvatar.doId:
                 playerColor = (1, 1, 1, 1)
             else:
                 playerColor = PVPGlobals.TEAM_COLOR[playerTeam]
-            displayStats.append(
-                [playerName, playerStats, ['color', playerColor]])
+            displayStats.append([playerName, playerStats, ['color', playerColor]])
 
         displayStats = self.sortStats(displayStats)
         displayStats.insert(0, self.getColumnLabels())
@@ -306,16 +276,13 @@ class PVPGameBase(DistributedObject, FSM.FSM):
                 teams[stats[PVPGlobals.TEAM]] = []
             playerStats = []
             for stat in self.getColumnStats():
-                playerStats.append(
-                    [PVPGlobals.statText[stat],
-                     str(stats[stat])])
+                playerStats.append([PVPGlobals.statText[stat], str(stats[stat])])
 
             if playerId == localAvatar.doId:
                 playerColor = (1, 1, 1, 1)
             else:
                 playerColor = None
-            teams[stats[PVPGlobals.TEAM]].append(
-                [playerName, playerStats, ['color', playerColor]])
+            teams[stats[PVPGlobals.TEAM]].append([playerName, playerStats, ['color', playerColor]])
 
         for team, teamStats in teams.items():
             teamTotals = []
@@ -324,13 +291,9 @@ class PVPGameBase(DistributedObject, FSM.FSM):
 
             for playerName, playerStats, color in teamStats:
                 for i in range(len(playerStats)):
-                    teamTotals[i][1] = str(
-                        int(teamTotals[i][1]) + int(playerStats[i][1]))
+                    teamTotals[i][1] = str(int(teamTotals[i][1]) + int(playerStats[i][1]))
 
-            teamStat = [
-                'Team %s' % team, teamTotals,
-                ['color', PVPGlobals.TEAM_COLOR[team]]
-            ]
+            teamStat = ['Team %s' % team, teamTotals, ['color', PVPGlobals.TEAM_COLOR[team]]]
             teamStats = self.sortStats(teamStats)
             teamStats.insert(0, teamStat)
             displayStats += teamStats
@@ -347,15 +310,18 @@ class PVPGameBase(DistributedObject, FSM.FSM):
         if defeaterId == defeatedId:
             thirdPersonMsgs = [PLocalizer.PVPSuicide]
             if defeatedId == localAvatar.doId:
-                firstPersonMsgs = [PLocalizer.PVPYouSuicide]
+                firstPersonMsgs = [
+                 PLocalizer.PVPYouSuicide]
             else:
                 firstPersonMsgs = None
         else:
             thirdPersonMsgs = [PLocalizer.PVPDefeat]
             if defeatedId == localAvatar.doId:
-                firstPersonMsgs = [PLocalizer.PVPYouWereDefeated]
+                firstPersonMsgs = [
+                 PLocalizer.PVPYouWereDefeated]
             elif defeaterId == localAvatar.doId:
-                firstPersonMsgs = [PLocalizer.PVPYouDefeated]
+                firstPersonMsgs = [
+                 PLocalizer.PVPYouDefeated]
             else:
                 firstPersonMsgs = None
         firstPersonMsg = None

@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SmokeExplosion(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -22,8 +22,7 @@ class SmokeExplosion(PooledEffect, EffectController):
         self.card = model.find('**/particleSmoke')
         self.spriteScale = 1.0
         if not SmokeExplosion.particleDummy:
-            SmokeExplosion.particleDummy = render.attachNewNode(
-                ModelNode('SmokeExplosionParticleDummy'))
+            SmokeExplosion.particleDummy = render.attachNewNode(ModelNode('SmokeExplosionParticleDummy'))
             SmokeExplosion.particleDummy.setDepthWrite(0)
             SmokeExplosion.particleDummy.setColorScaleOff()
         self.f = ParticleEffect.ParticleEffect()
@@ -64,14 +63,10 @@ class SmokeExplosion(PooledEffect, EffectController):
         self.p0.renderer.setXScaleFlag(1)
         self.p0.renderer.setYScaleFlag(1)
         self.p0.renderer.setAnimAngleFlag(1)
-        self.p0.renderer.setInitialXScale(
-            0.075 * self.spriteScale * self.cardScale)
-        self.p0.renderer.setFinalXScale(
-            0.25 * self.spriteScale * self.cardScale)
-        self.p0.renderer.setInitialYScale(
-            0.075 * self.spriteScale * self.cardScale)
-        self.p0.renderer.setFinalYScale(
-            0.25 * self.spriteScale * self.cardScale)
+        self.p0.renderer.setInitialXScale(0.075 * self.spriteScale * self.cardScale)
+        self.p0.renderer.setFinalXScale(0.25 * self.spriteScale * self.cardScale)
+        self.p0.renderer.setInitialYScale(0.075 * self.spriteScale * self.cardScale)
+        self.p0.renderer.setFinalYScale(0.25 * self.spriteScale * self.cardScale)
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPNOBLEND)
         self.p0.renderer.setAlphaDisable(0)
@@ -84,12 +79,7 @@ class SmokeExplosion(PooledEffect, EffectController):
         self.p0.emitter.setRadius(10.0)
 
     def createTrack(self):
-        self.track = Sequence(
-            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self), Wait(0.3),
-            Func(self.p0.setBirthRate, 100), Wait(7.0),
-            Func(self.cleanUpEffect))
+        self.track = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.3), Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -99,6 +89,4 @@ class SmokeExplosion(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\SmokeExplosion.pyc

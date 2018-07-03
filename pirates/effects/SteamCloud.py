@@ -13,7 +13,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SteamCloud(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self, parent=None):
@@ -61,8 +61,7 @@ class SteamCloud(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.25, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.25, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -74,12 +73,8 @@ class SteamCloud(PooledEffect, EffectController):
         return
 
     def createTrack(self, lod=Options.SpecialEffectsHigh):
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.75), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.0), Wait(1.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.75), Func(self.p0.clearToInitial), Func(self.f.start, self, self), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 0.0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def cleanUpEffect(self):
@@ -90,6 +85,4 @@ class SteamCloud(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\SteamCloud.pyc

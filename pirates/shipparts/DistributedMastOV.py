@@ -45,5 +45,7 @@ class DistributedMastOV(DistributedObjectOV.DistributedObjectOV):
 
     def sendMessage(self):
         if not self.stopSend:
-            messenger.send('setMastType-%s' % self.shipId,
-                           [self.mastType, self.posIndex, self.sailConfig])
+            messenger.send('setMastType-%s' % self.shipId, [
+                self.mastType,
+                self.posIndex,
+                self.sailConfig])

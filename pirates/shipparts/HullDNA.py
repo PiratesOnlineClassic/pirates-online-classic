@@ -26,44 +26,25 @@ HullDict = {
     ShipGlobals.BLACK_PEARL: 'models/shipparts/blackpearl',
     ShipGlobals.GOLIATH: 'models/shipparts/goliath',
     ShipGlobals.SKEL_WARSHIPL3: 'models/shipparts/skeletonWarshipL3',
-    ShipGlobals.SKEL_INTERCEPTORL3: 'models/shipparts/skeletonInterceptorL3'
-}
+    ShipGlobals.SKEL_INTERCEPTORL3: 'models/shipparts/skeletonInterceptorL3'}
 HullFlatDict = {
-    ShipGlobals.DINGHY:
-    'models/shipparts/dingy',
-    ShipGlobals.WARSHIPL1:
-    'models/shipparts/warship-geometry_Flat',
-    ShipGlobals.WARSHIPL2:
-    'models/shipparts/warship-geometry_Flat',
-    ShipGlobals.WARSHIPL3:
-    'models/shipparts/warship-geometry_Flat',
-    ShipGlobals.WARSHIPL4:
-    'models/shipparts/warship-geometry_Flat',
-    ShipGlobals.MERCHANTL1:
-    'models/shipparts/merchant-geometry_Flat',
-    ShipGlobals.MERCHANTL2:
-    'models/shipparts/merchant-geometry_Flat',
-    ShipGlobals.MERCHANTL3:
-    'models/shipparts/merchant-geometry_Flat',
-    ShipGlobals.MERCHANTL4:
-    'models/shipparts/merchant-geometry_Flat',
-    ShipGlobals.INTERCEPTORL1:
-    'models/shipparts/interceptor-geometry_Flat',
-    ShipGlobals.INTERCEPTORL2:
-    'models/shipparts/interceptor-geometry_Flat',
-    ShipGlobals.INTERCEPTORL3:
-    'models/shipparts/interceptor-geometry_Flat',
-    ShipGlobals.INTERCEPTORL4:
-    'models/shipparts/interceptor-geometry_Flat',
-    ShipGlobals.BLACK_PEARL:
-    'models/shipparts/blackpearl-geometry_Low',
-    ShipGlobals.GOLIATH:
-    'models/shipparts/warship-geometry_Flat',
-    ShipGlobals.SKEL_WARSHIPL3:
-    'models/shipparts/skeletonWarshipL3-geometry_Flat',
-    ShipGlobals.SKEL_INTERCEPTORL3:
-    'models/shipparts/skeletonInterceptorL3-geometry_Flat'
-}
+    ShipGlobals.DINGHY: 'models/shipparts/dingy',
+    ShipGlobals.WARSHIPL1: 'models/shipparts/warship-geometry_Flat',
+    ShipGlobals.WARSHIPL2: 'models/shipparts/warship-geometry_Flat',
+    ShipGlobals.WARSHIPL3: 'models/shipparts/warship-geometry_Flat',
+    ShipGlobals.WARSHIPL4: 'models/shipparts/warship-geometry_Flat',
+    ShipGlobals.MERCHANTL1: 'models/shipparts/merchant-geometry_Flat',
+    ShipGlobals.MERCHANTL2: 'models/shipparts/merchant-geometry_Flat',
+    ShipGlobals.MERCHANTL3: 'models/shipparts/merchant-geometry_Flat',
+    ShipGlobals.MERCHANTL4: 'models/shipparts/merchant-geometry_Flat',
+    ShipGlobals.INTERCEPTORL1: 'models/shipparts/interceptor-geometry_Flat',
+    ShipGlobals.INTERCEPTORL2: 'models/shipparts/interceptor-geometry_Flat',
+    ShipGlobals.INTERCEPTORL3: 'models/shipparts/interceptor-geometry_Flat',
+    ShipGlobals.INTERCEPTORL4: 'models/shipparts/interceptor-geometry_Flat',
+    ShipGlobals.BLACK_PEARL: 'models/shipparts/blackpearl-geometry_Low',
+    ShipGlobals.GOLIATH: 'models/shipparts/warship-geometry_Flat',
+    ShipGlobals.SKEL_WARSHIPL3: 'models/shipparts/skeletonWarshipL3-geometry_Flat',
+    ShipGlobals.SKEL_INTERCEPTORL3: 'models/shipparts/skeletonInterceptorL3-geometry_Flat'}
 HullTexDict = {
     2: ('ship_hull_wood_1_dirty', 'ship_grunge_lichen_multi'),
     101: ('ship_hull_wood_1_dirty', None),
@@ -75,8 +56,7 @@ HullTexDict = {
     252: ('ship_bp_hull_wood_2', None),
     253: ('ship_hull_wood_3_unsat', None),
     254: ('ship_wood_gold', None),
-    255: ('ship_hull_wood_3_dirty', None)
-}
+    255: ('ship_hull_wood_3_dirty', None)}
 StripeTexDict = {
     1: ('ship_trim_red', None),
     2: ('ship_trim_red', None),
@@ -88,39 +68,16 @@ StripeTexDict = {
     203: ('ship_trim_navy_window', None),
     204: ('ship_et_trim_A', None),
     205: ('ship_et_trim_B', None),
-    206: ('ship_et_trim_C', None)
-}
+    206: ('ship_et_trim_C', None)}
 PatternTexDict = {
     1: ('ship_pattern_r_b', None),
     200: ('ship_pattern_navy', None),
-    208: ('ship_et_pattern_A', None)
-}
+    208: ('ship_et_pattern_A', None)}
 HullColors = [
-    VBase4(1.0, 1.0, 1.0, 1.0),
-    VBase4(0.0, 0.0, 0.0, 1.0),
-    VBase4(0.933594, 0.265625, 0.28125, 1.0),
-    VBase4(0.863281, 0.40625, 0.417969, 1.0),
-    VBase4(1.0, 0.0, 0.0, 1.0),
-    VBase4(0.7, 0.5, 0.3, 1.0),
-    VBase4(0.6, 0.0, 0.0, 1.0),
-    VBase4(0.710938, 0.234375, 0.4375, 1.0),
-    VBase4(0.992188, 0.480469, 0.167969, 1.0),
-    VBase4(0.996094, 0.898438, 0.320312, 1.0),
-    VBase4(0.550781, 0.824219, 0.324219, 1.0),
-    VBase4(0.242188, 0.742188, 0.515625, 1.0),
-    VBase4(0.433594, 0.90625, 0.835938, 1.0),
-    VBase4(0.347656, 0.820312, 0.953125, 1.0),
-    VBase4(0.191406, 0.5625, 0.773438, 1.0),
-    VBase4(0.63, 0.172, 0.088, 1.0),
-    VBase4(1.0, 0.272, 0.139, 1.0),
-    VBase4(0.4, 0.4, 0.4, 1.0),
-    VBase4(0.2, 0.2, 0.2, 1.0),
-    VBase4(0.4, 0.5, 0.8, 1.0)
-]
+ VBase4(1.0, 1.0, 1.0, 1.0), VBase4(0.0, 0.0, 0.0, 1.0), VBase4(0.933594, 0.265625, 0.28125, 1.0), VBase4(0.863281, 0.40625, 0.417969, 1.0), VBase4(1.0, 0.0, 0.0, 1.0), VBase4(0.7, 0.5, 0.3, 1.0), VBase4(0.6, 0.0, 0.0, 1.0), VBase4(0.710938, 0.234375, 0.4375, 1.0), VBase4(0.992188, 0.480469, 0.167969, 1.0), VBase4(0.996094, 0.898438, 0.320312, 1.0), VBase4(0.550781, 0.824219, 0.324219, 1.0), VBase4(0.242188, 0.742188, 0.515625, 1.0), VBase4(0.433594, 0.90625, 0.835938, 1.0), VBase4(0.347656, 0.820312, 0.953125, 1.0), VBase4(0.191406, 0.5625, 0.773438, 1.0), VBase4(0.63, 0.172, 0.088, 1.0), VBase4(1.0, 0.272, 0.139, 1.0), VBase4(0.4, 0.4, 0.4, 1.0), VBase4(0.2, 0.2, 0.2, 1.0), VBase4(0.4, 0.5, 0.8, 1.0)]
 
 
 class HullDNA(AvatarDNA.AvatarDNA):
-
     def __init__(self):
         self.shipClass = 0
         self.modelClass = 0
@@ -165,17 +122,12 @@ class HullDNA(AvatarDNA.AvatarDNA):
 
     def __str__(self):
         string = 'shipClass %s, hullTextureColor %s:%s:%s, stripeTextureColor %s:%s:%s, patternTextureColor %s:%s:%s, mastConfig1 %s:%s, mastConfig2 %s:%s, mastConfig3 %s:%s, foremastConfig %s:%s, aftmastConfig %s:%s, cannonConfig %s, leftBroadsideConfig %s, rightBroadsideConfig %s, wallDecorConfig %s, floorDecorConfig %s, prowType %s, ramType %s, cabinType %s' % (
-            self.shipClass, self.hullTextureIndex, self.hullColorIndex,
-            self.hullHilightColorIndex, self.stripeTextureIndex,
-            self.stripeColorIndex, self.stripeHilightColorIndex,
-            self.patternTextureIndex, self.patternColorIndex,
-            self.patternHilightColorIndex, self.mastConfig1, self.sailConfig1,
-            self.mastConfig2, self.sailConfig2, self.mastConfig3,
-            self.sailConfig3, self.foremastConfig, self.foresailConfig,
-            self.aftmastConfig, self.aftsailConfig, self.cannonConfig,
-            self.leftBroadsideConfig, self.rightBroadsideConfig,
-            self.wallDecorConfig, self.floorDecorConfig, self.prowType,
-            self.ramType, self.cabinType)
+        self.shipClass, self.hullTextureIndex, self.hullColorIndex, self.hullHilightColorIndex, self.stripeTextureIndex,
+        self.stripeColorIndex, self.stripeHilightColorIndex, self.patternTextureIndex, self.patternColorIndex,
+        self.patternHilightColorIndex, self.mastConfig1, self.sailConfig1, self.mastConfig2, self.sailConfig2,
+        self.mastConfig3, self.sailConfig3, self.foremastConfig, self.foresailConfig, self.aftmastConfig,
+        self.aftsailConfig, self.cannonConfig, self.leftBroadsideConfig, self.rightBroadsideConfig,
+        self.wallDecorConfig, self.floorDecorConfig, self.prowType, self.ramType, self.cabinType)
         return string
 
     def setShipClass(self, val):

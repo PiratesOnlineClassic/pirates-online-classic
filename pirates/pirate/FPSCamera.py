@@ -3,8 +3,9 @@ import math
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.showbase.InputStateGlobal import inputState
-from direct.showbase.PythonUtil import (ParamObj, clampScalar, fitSrcAngle2Dest,
-                                        getSetter, reduceAngle)
+from direct.showbase.PythonUtil import (ParamObj, clampScalar,
+                                        fitSrcAngle2Dest, getSetter,
+                                        reduceAngle)
 from direct.task import Task
 from otp.otpbase import OTPGlobals
 from panda3d.core import *
@@ -134,9 +135,7 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
             self.cTravOnFloor.traverse(render)
 
         subjectMoving = self.isSubjectMoving()
-        subjectTurning = (inputState.isSet('turnRight') or
-                          inputState.isSet('turnLeft')
-                         ) and self.subject.controlManager.isEnabled
+        subjectTurning = (inputState.isSet('turnRight') or inputState.isSet('turnLeft')) and self.subject.controlManager.isEnabled
         weaponEquipped = self.isWeaponEquipped()
         if subjectMoving or weaponEquipped:
             hNode = self.subject
@@ -243,22 +242,16 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
         return camera.getPos(self).length()
 
     def _startCollisionCheck(self):
-        self._collSolid = CollisionSegment(0, 0, 0, 0,
-                                           -(self._maxDistance + 1.0), 0)
+        self._collSolid = CollisionSegment(0, 0, 0, 0, -(self._maxDistance + 1.0), 0)
         collSolidNode = CollisionNode('FPSCam.CollSolid')
         collSolidNode.addSolid(self._collSolid)
-        collSolidNode.setFromCollideMask(OTPGlobals.CameraBitmask |
-                                         OTPGlobals.CameraTransparentBitmask |
-                                         OTPGlobals.FloorBitmask)
+        collSolidNode.setFromCollideMask(OTPGlobals.CameraBitmask | OTPGlobals.CameraTransparentBitmask | OTPGlobals.FloorBitmask)
         collSolidNode.setIntoCollideMask(BitMask32.allOff())
         self._collSolidNp = self.attachNewNode(collSolidNode)
         self._cHandlerQueue = CollisionHandlerQueue()
         self._cTrav = CollisionTraverser('FPSCam.cTrav')
         self._cTrav.addCollider(self._collSolidNp, self._cHandlerQueue)
-        taskMgr.add(
-            self._collisionCheckTask,
-            FPSCamera.CollisionCheckTaskName,
-            priority=45)
+        taskMgr.add(self._collisionCheckTask, FPSCamera.CollisionCheckTaskName, priority=45)
 
     def _collisionCheckTask(self, task=None):
         if hasattr(base, 'oobeMode'):
@@ -301,10 +294,7 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
         if self.zIval:
             self.zIval.finish()
 
-        self.zIval = LerpFunc(
-            self.setZ,
-            duration,
-            fromData=z + self.camOffset[2],
+        self.zIval = LerpFunc(self.setZ, duration, fromData=z + self.camOffset[2],
             toData=self.camOffset[2])
 
         self.zIval.start()

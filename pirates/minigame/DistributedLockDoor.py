@@ -7,6 +7,7 @@ from pirates.minigame import DistributedLock
 
 
 class DistributedLockDoor(DistributedLock.DistributedLock):
+    
 
     def __init__(self, cr):
         DistributedLock.DistributedLock.__init__(self, cr)
@@ -24,6 +25,4 @@ class DistributedLockDoor(DistributedLock.DistributedLock):
         lidopener = LerpHprInterval(self.hinge, 1, Vec3(-140, 0, 0))
         lidopener.start()
         self.setAllowInteract(False)
-
-
 # okay decompiling .\pirates\minigame\DistributedLockDoor.pyc

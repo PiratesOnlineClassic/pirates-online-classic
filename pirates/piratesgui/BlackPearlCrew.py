@@ -25,16 +25,14 @@ from pirates.seapatch.Water import Water
 
 
 class BlackPearlCrew(DirectFrame):
+    
 
     def __init__(self):
         DirectFrame.__init__(self, relief=None)
         self.width = 2.0
         self.height = 1.5
         guiModel = loader.loadModel('models/gui/toplevel_gui')
-        self.levelCapScroll = DirectFrame(
-            parent=self,
-            relief=None,
-            image=guiModel.find('**/main_gui_quest_scroll'))
+        self.levelCapScroll = DirectFrame(parent=self, relief=None, image=guiModel.find('**/main_gui_quest_scroll'))
         scroll_x = 0.0
         scroll_y = 0.0
         scroll_z = 0.0
@@ -43,30 +41,13 @@ class BlackPearlCrew(DirectFrame):
         self.levelCapScroll.setPos(scroll_x, scroll_y, scroll_z)
         self.levelCapScroll.setScale(scale_x, 1.0, scale_z)
         self.buttonText = PLocalizer.GameOptionsClose
-        self.closeButton = DialogButton(
-            self,
-            buttonStyle=DialogButton.YES,
-            command=self.close_button_function)
+        self.closeButton = DialogButton(self, buttonStyle=DialogButton.YES, command=self.close_button_function)
         self.button_x = 0.39
         self.button_z = -0.25
-        self.closeButton.configure(
-            text=self.buttonText,
-            text_fg=(1.0, 1.0, 1.0, 1.0),
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_wordwrap=0)
+        self.closeButton.configure(text=self.buttonText, text_fg=(1.0, 1.0, 1.0, 1.0), text_scale=PiratesGuiGlobals.TextScaleLarge, text_wordwrap=0)
         self.closeButton.setPos(self.button_x, 0.0, self.button_z)
         self.closeButton.reparentTo(self)
-        self.titleText = DirectLabel(
-            parent=base.a2dTopRight,
-            relief=None,
-            text=PLocalizer.BPCrewTitle,
-            text_font=PiratesGlobals.PirateFont,
-            text_fg=PiratesGuiGlobals.TextFG0,
-            text_scale=PiratesGuiGlobals.TextScaleTitleMed,
-            text_align=TextNode.ALeft,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=12,
-            pos=(-0.25, 0, 0.21))
+        self.titleText = DirectLabel(parent=base.a2dTopRight, relief=None, text=PLocalizer.BPCrewTitle, text_font=PiratesGlobals.PirateFont, text_fg=PiratesGuiGlobals.TextFG0, text_scale=PiratesGuiGlobals.TextScaleTitleMed, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=12, pos=(-0.25, 0, 0.21))
         self.titleText.reparentTo(self)
         self.bp_crew = loader.loadModel('models/gui/gui_bpcrew.bam')
         self.tempX = 0.2
@@ -78,111 +59,43 @@ class BlackPearlCrew(DirectFrame):
         self.hendry = self.bp_crew.find('**/crew_3_HendryCutts')
         self.hendry.setScale(self.tempX, self.tempY, self.tempZ)
         self.hendry.setColor(0.0, 0.0, 0.0, 1.0)
-        self.hendryJoinedText = DirectLabel(
-            parent=base.a2dTopRight,
-            relief=None,
-            text=PLocalizer.HendryAcquired,
-            text_font=PiratesGlobals.PirateFont,
-            text_fg=PiratesGuiGlobals.TextFG8,
-            text_scale=PiratesGuiGlobals.TextScaleTitleSmall,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=12,
-            pos=(-0.45, 0, -0.4))
+        self.hendryJoinedText = DirectLabel(parent=base.a2dTopRight, relief=None, text=PLocalizer.HendryAcquired, text_font=PiratesGlobals.PirateFont, text_fg=PiratesGuiGlobals.TextFG8, text_scale=PiratesGuiGlobals.TextScaleTitleSmall, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=12, pos=(-0.45, 0, -0.4))
         self.hendryJoinedText.reparentTo(self)
         self.hendryJoinedText.hide()
-        self.hendryButton = GuiButton(
-            parent=self,
-            pos=(self.posX, self.posY, self.posZ),
-            state=DGG.DISABLED,
-            image=self.hendry,
-            geom_pos=(self.posX, self.posY, self.posZ),
-            helpText=PLocalizer.HendryName,
-            helpDelay=PiratesGuiGlobals.HelpPopupTime,
-            helpPos=(0.1, 0, 0.65))
-        self.hendryButton.helpWatcher['frameSize'] = Vec4(
-            0.25, 0.37, 0.35, 0.58)
+        self.hendryButton = GuiButton(parent=self, pos=(self.posX, self.posY, self.posZ), state=DGG.DISABLED, image=self.hendry, geom_pos=(self.posX, self.posY, self.posZ), helpText=PLocalizer.HendryName, helpDelay=PiratesGuiGlobals.HelpPopupTime, helpPos=(0.1,
+                                                                                                                                                                                                                                                                 0,
+                                                                                                                                                                                                                                                                 0.65))
+        self.hendryButton.helpWatcher['frameSize'] = Vec4(0.25, 0.37, 0.35, 0.58)
         self.carver = self.bp_crew.find('**/crew_1_CarverPidgeley')
         self.carver.setScale(self.tempX, self.tempY, self.tempZ)
         self.carver.setColor(0.0, 0.0, 0.0, 1.0)
-        self.carverJoinedText = DirectLabel(
-            parent=base.a2dTopRight,
-            relief=None,
-            text=PLocalizer.CarverAcquired,
-            text_font=PiratesGlobals.PirateFont,
-            text_fg=PiratesGuiGlobals.TextFG8,
-            text_scale=PiratesGuiGlobals.TextScaleTitleSmall,
-            text_align=TextNode.ALeft,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=20,
-            pos=(-0.45, 0, -0.4))
+        self.carverJoinedText = DirectLabel(parent=base.a2dTopRight, relief=None, text=PLocalizer.CarverAcquired, text_font=PiratesGlobals.PirateFont, text_fg=PiratesGuiGlobals.TextFG8, text_scale=PiratesGuiGlobals.TextScaleTitleSmall, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=20, pos=(-0.45, 0, -0.4))
         self.carverJoinedText.reparentTo(self)
         self.carverJoinedText.hide()
-        self.carverButton = GuiButton(
-            parent=self,
-            pos=(self.posX, self.posY, self.posZ),
-            state=DGG.DISABLED,
-            image=self.carver,
-            geom_pos=(self.posX, self.posY, self.posZ),
-            helpText=PLocalizer.CarverName,
-            helpDelay=PiratesGuiGlobals.HelpPopupTime,
-            helpPos=(-0.1, 0, 0.2))
+        self.carverButton = GuiButton(parent=self, pos=(self.posX, self.posY, self.posZ), state=DGG.DISABLED, image=self.carver, geom_pos=(self.posX, self.posY, self.posZ), helpText=PLocalizer.CarverName, helpDelay=PiratesGuiGlobals.HelpPopupTime, helpPos=(-0.1, 0, 0.2))
         self.carverButton.helpWatcher['frameSize'] = Vec4(0.15, 0.25, 0.15, 0.5)
         self.leCerdo = self.bp_crew.find('**/crew_5_LeCerdo')
         self.leCerdo.setScale(self.tempX, self.tempY, self.tempZ)
         self.leCerdo.setPos(self.posX, self.posY, self.posZ)
         self.leCerdo.setColor(0.0, 0.0, 0.0, 1.0)
-        self.leCerdoJoinedText = DirectLabel(
-            parent=base.a2dTopRight,
-            relief=None,
-            text=PLocalizer.LeCerdoAcquired,
-            text_font=PiratesGlobals.PirateFont,
-            text_fg=PiratesGuiGlobals.TextFG8,
-            text_scale=PiratesGuiGlobals.TextScaleTitleSmall,
-            text_align=TextNode.ALeft,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=12,
-            pos=(-0.45, 0, -0.4))
+        self.leCerdoJoinedText = DirectLabel(parent=base.a2dTopRight, relief=None, text=PLocalizer.LeCerdoAcquired, text_font=PiratesGlobals.PirateFont, text_fg=PiratesGuiGlobals.TextFG8, text_scale=PiratesGuiGlobals.TextScaleTitleSmall, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=12, pos=(-0.45, 0, -0.4))
         self.leCerdoJoinedText.reparentTo(self)
         self.leCerdoJoinedText.hide()
-        self.leCerdoButton = GuiButton(
-            parent=self,
-            pos=(self.posX, self.posY, self.posZ),
-            state=DGG.DISABLED,
-            image=self.leCerdo,
-            geom_pos=(self.posX, self.posY, self.posZ),
-            helpText=PLocalizer.LeCerdoName,
-            helpDelay=PiratesGuiGlobals.HelpPopupTime,
-            helpPos=(0.2, 0, 0.55))
-        self.leCerdoButton.helpWatcher['frameSize'] = Vec4(
-            0.35, 0.45, 0.25, 0.52)
+        self.leCerdoButton = GuiButton(parent=self, pos=(self.posX, self.posY, self.posZ), state=DGG.DISABLED, image=self.leCerdo, geom_pos=(self.posX, self.posY, self.posZ), helpText=PLocalizer.LeCerdoName, helpDelay=PiratesGuiGlobals.HelpPopupTime, helpPos=(0.2,
+                                                                                                                                                                                                                                                                    0,
+                                                                                                                                                                                                                                                                    0.55))
+        self.leCerdoButton.helpWatcher['frameSize'] = Vec4(0.35, 0.45, 0.25, 0.52)
         self.gunner = self.bp_crew.find('**/crew_6_Gunner')
         self.gunner.setScale(self.tempX, self.tempY, self.tempZ)
         self.gunner.setPos(self.posX, self.posY, self.posZ)
         self.gunner.setColor(0.0, 0.0, 0.0, 1.0)
-        self.gunnerJoinedText = DirectLabel(
-            parent=base.a2dTopRight,
-            relief=None,
-            text=PLocalizer.GunnerAcquired,
-            text_font=PiratesGlobals.PirateFont,
-            text_fg=PiratesGuiGlobals.TextFG8,
-            text_scale=PiratesGuiGlobals.TextScaleTitleSmall,
-            text_align=TextNode.ALeft,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=12,
-            pos=(-0.45, 0, -0.4))
+        self.gunnerJoinedText = DirectLabel(parent=base.a2dTopRight, relief=None, text=PLocalizer.GunnerAcquired, text_font=PiratesGlobals.PirateFont, text_fg=PiratesGuiGlobals.TextFG8, text_scale=PiratesGuiGlobals.TextScaleTitleSmall, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=12, pos=(-0.45, 0, -0.4))
         self.gunnerJoinedText.reparentTo(self)
         self.gunnerJoinedText.hide()
-        self.gunnerButton = GuiButton(
-            parent=self,
-            pos=(self.posX, self.posY, self.posZ),
-            state=DGG.DISABLED,
-            image=self.gunner,
-            geom_pos=(self.posX, self.posY, self.posZ),
-            helpText=PLocalizer.GunnerName,
-            helpDelay=PiratesGuiGlobals.HelpPopupTime,
-            helpPos=(0.65, 0, 0.6))
-        self.gunnerButton.helpWatcher['frameSize'] = Vec4(
-            0.75, 0.85, 0.25, 0.52)
+        self.gunnerButton = GuiButton(parent=self, pos=(self.posX, self.posY, self.posZ), state=DGG.DISABLED, image=self.gunner, geom_pos=(self.posX, self.posY, self.posZ), helpText=PLocalizer.GunnerName, helpDelay=PiratesGuiGlobals.HelpPopupTime, helpPos=(0.65,
+                                                                                                                                                                                                                                                                 0,
+                                                                                                                                                                                                                                                                 0.6))
+        self.gunnerButton.helpWatcher['frameSize'] = Vec4(0.75, 0.85, 0.25, 0.52)
         self.greer = self.bp_crew.find('**/crew_2_GordenGreer')
         self.greer.setScale(self.tempX, self.tempY, self.tempZ)
         self.greer_x = 1.0
@@ -190,55 +103,23 @@ class BlackPearlCrew(DirectFrame):
         self.greer_z = 1.0
         self.greer.setPos(self.posX, self.posY, self.posZ)
         self.greer.setColor(0.0, 0.0, 0.0, 1.0)
-        self.gordonJoinedText = DirectLabel(
-            parent=base.a2dTopRight,
-            relief=None,
-            text=PLocalizer.GordonAcquired,
-            text_font=PiratesGlobals.PirateFont,
-            text_fg=PiratesGuiGlobals.TextFG8,
-            text_scale=PiratesGuiGlobals.TextScaleTitleSmall,
-            text_align=TextNode.ALeft,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=12,
-            pos=(-0.45, 0, -0.4))
+        self.gordonJoinedText = DirectLabel(parent=base.a2dTopRight, relief=None, text=PLocalizer.GordonAcquired, text_font=PiratesGlobals.PirateFont, text_fg=PiratesGuiGlobals.TextFG8, text_scale=PiratesGuiGlobals.TextScaleTitleSmall, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=12, pos=(-0.45, 0, -0.4))
         self.gordonJoinedText.reparentTo(self)
         self.gordonJoinedText.hide()
-        self.gordonButton = GuiButton(
-            parent=self,
-            pos=(self.posX, self.posY, self.posZ),
-            state=DGG.DISABLED,
-            image=self.greer,
-            geom_pos=(self.posX, self.posY, self.posZ),
-            helpText=PLocalizer.GordonName,
-            helpDelay=PiratesGuiGlobals.HelpPopupTime,
-            helpPos=(0.95, 0, 0.55))
+        self.gordonButton = GuiButton(parent=self, pos=(self.posX, self.posY, self.posZ), state=DGG.DISABLED, image=self.greer, geom_pos=(self.posX, self.posY, self.posZ), helpText=PLocalizer.GordonName, helpDelay=PiratesGuiGlobals.HelpPopupTime, helpPos=(0.95,
+                                                                                                                                                                                                                                                                0,
+                                                                                                                                                                                                                                                                0.55))
         self.gordonButton.helpWatcher['frameSize'] = Vec4(0.92, 1.1, 0.35, 0.5)
         self.john = self.bp_crew.find('**/crew_9_JohnSmith')
         self.john.setScale(self.tempX, self.tempY, self.tempZ)
         self.john.setPos(self.posX, self.posY, self.posZ)
         self.john.setColor(0.0, 0.0, 0.0, 1.0)
-        self.johnJoinedText = DirectLabel(
-            parent=base.a2dTopRight,
-            relief=None,
-            text=PLocalizer.JohnAcquired,
-            text_font=PiratesGlobals.PirateFont,
-            text_fg=PiratesGuiGlobals.TextFG8,
-            text_scale=PiratesGuiGlobals.TextScaleTitleSmall,
-            text_align=TextNode.ALeft,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=12,
-            pos=(-0.45, 0, -0.4))
+        self.johnJoinedText = DirectLabel(parent=base.a2dTopRight, relief=None, text=PLocalizer.JohnAcquired, text_font=PiratesGlobals.PirateFont, text_fg=PiratesGuiGlobals.TextFG8, text_scale=PiratesGuiGlobals.TextScaleTitleSmall, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=12, pos=(-0.45, 0, -0.4))
         self.johnJoinedText.reparentTo(self)
         self.johnJoinedText.hide()
-        self.johnButton = GuiButton(
-            parent=self,
-            pos=(self.posX, self.posY, self.posZ),
-            state=DGG.DISABLED,
-            image=self.john,
-            geom_pos=(self.posX, self.posY, self.posZ),
-            helpText=PLocalizer.JohnName,
-            helpDelay=PiratesGuiGlobals.HelpPopupTime,
-            helpPos=(0.45, 0, 0.6))
+        self.johnButton = GuiButton(parent=self, pos=(self.posX, self.posY, self.posZ), state=DGG.DISABLED, image=self.john, geom_pos=(self.posX, self.posY, self.posZ), helpText=PLocalizer.JohnName, helpDelay=PiratesGuiGlobals.HelpPopupTime, helpPos=(0.45,
+                                                                                                                                                                                                                                                           0,
+                                                                                                                                                                                                                                                           0.6))
         self.johnButton.helpWatcher['frameSize'] = Vec4(0.5, 0.7, 0.35, 0.52)
         self.nill = self.bp_crew.find('**/crew_4_NillOffrill')
         self.nill.setScale(self.tempX, self.tempY, self.tempZ)
@@ -247,84 +128,34 @@ class BlackPearlCrew(DirectFrame):
         self.nill_z = 1.0
         self.nill.setPos(self.posX, self.posY, self.posZ)
         self.nill.setColor(0.0, 0.0, 0.0, 1.0)
-        self.nillJoinedText = DirectLabel(
-            parent=base.a2dTopRight,
-            relief=None,
-            text=PLocalizer.NillAcquired,
-            text_font=PiratesGlobals.PirateFont,
-            text_fg=PiratesGuiGlobals.TextFG8,
-            text_scale=PiratesGuiGlobals.TextScaleTitleSmall,
-            text_align=TextNode.ALeft,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=12,
-            pos=(-0.45, 0, -0.4))
+        self.nillJoinedText = DirectLabel(parent=base.a2dTopRight, relief=None, text=PLocalizer.NillAcquired, text_font=PiratesGlobals.PirateFont, text_fg=PiratesGuiGlobals.TextFG8, text_scale=PiratesGuiGlobals.TextScaleTitleSmall, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=12, pos=(-0.45, 0, -0.4))
         self.nillJoinedText.reparentTo(self)
         self.nillJoinedText.hide()
-        self.nillButton = GuiButton(
-            parent=self,
-            pos=(self.posX, self.posY, self.posZ),
-            state=DGG.DISABLED,
-            image=self.nill,
-            geom_pos=(self.posX, self.posY, self.posZ),
-            helpText=PLocalizer.NillName,
-            helpDelay=PiratesGuiGlobals.HelpPopupTime,
-            helpPos=(0.85, 0, 0.2))
+        self.nillButton = GuiButton(parent=self, pos=(self.posX, self.posY, self.posZ), state=DGG.DISABLED, image=self.nill, geom_pos=(self.posX, self.posY, self.posZ), helpText=PLocalizer.NillName, helpDelay=PiratesGuiGlobals.HelpPopupTime, helpPos=(0.85,
+                                                                                                                                                                                                                                                           0,
+                                                                                                                                                                                                                                                           0.2))
         self.nillButton.helpWatcher['frameSize'] = Vec4(0.85, 0.92, 0.15, 0.5)
         self.scaryMary = self.bp_crew.find('**/crew_7_ScaryMary')
         self.scaryMary.setScale(self.tempX, self.tempY, self.tempZ)
         self.scaryMary.setPos(self.posX, self.posY, self.posZ)
         self.scaryMary.setColor(0.0, 0.0, 0.0, 1.0)
-        self.scaryMaryJoinedText = DirectLabel(
-            parent=base.a2dTopRight,
-            relief=None,
-            text=PLocalizer.ScaryMaryAcquired,
-            text_font=PiratesGlobals.PirateFont,
-            text_fg=PiratesGuiGlobals.TextFG8,
-            text_scale=PiratesGuiGlobals.TextScaleTitleSmall,
-            text_align=TextNode.ALeft,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=12,
-            pos=(-0.45, 0, -0.4))
+        self.scaryMaryJoinedText = DirectLabel(parent=base.a2dTopRight, relief=None, text=PLocalizer.ScaryMaryAcquired, text_font=PiratesGlobals.PirateFont, text_fg=PiratesGuiGlobals.TextFG8, text_scale=PiratesGuiGlobals.TextScaleTitleSmall, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=12, pos=(-0.45, 0, -0.4))
         self.scaryMaryJoinedText.hide()
-        self.scaryMaryButton = GuiButton(
-            parent=self,
-            pos=(self.posX, self.posY, self.posZ),
-            state=DGG.DISABLED,
-            image=self.scaryMary,
-            geom_pos=(self.posX, self.posY, self.posZ),
-            helpText=PLocalizer.ScaryMaryName,
-            helpDelay=PiratesGuiGlobals.HelpPopupTime,
-            helpPos=(0.7, 0, 0.1))
-        self.scaryMaryButton.helpWatcher['frameSize'] = Vec4(
-            0.6, 0.75, 0.1, 0.45)
+        self.scaryMaryButton = GuiButton(parent=self, pos=(self.posX, self.posY, self.posZ), state=DGG.DISABLED, image=self.scaryMary, geom_pos=(self.posX, self.posY, self.posZ), helpText=PLocalizer.ScaryMaryName, helpDelay=PiratesGuiGlobals.HelpPopupTime, helpPos=(0.7,
+                                                                                                                                                                                                                                                                          0,
+                                                                                                                                                                                                                                                                          0.1))
+        self.scaryMaryButton.helpWatcher['frameSize'] = Vec4(0.6, 0.75, 0.1, 0.45)
         self.giladoga = self.bp_crew.find('**/crew_8_Giladoga')
         self.giladoga.setScale(self.tempX, self.tempY, self.tempZ)
         self.giladoga.setPos(self.posX, self.posY, self.posZ)
         self.giladoga.setColor(0.0, 0.0, 0.0, 1.0)
-        self.giladogaJoinedText = DirectLabel(
-            parent=base.a2dTopRight,
-            relief=None,
-            text=PLocalizer.GiladogaAcquired,
-            text_font=PiratesGlobals.PirateFont,
-            text_fg=PiratesGuiGlobals.TextFG8,
-            text_scale=PiratesGuiGlobals.TextScaleTitleSmall,
-            text_align=TextNode.ALeft,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=12,
-            pos=(-0.45, 0, -0.4))
+        self.giladogaJoinedText = DirectLabel(parent=base.a2dTopRight, relief=None, text=PLocalizer.GiladogaAcquired, text_font=PiratesGlobals.PirateFont, text_fg=PiratesGuiGlobals.TextFG8, text_scale=PiratesGuiGlobals.TextScaleTitleSmall, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=12, pos=(-0.45, 0, -0.4))
         self.giladogaJoinedText.reparentTo(self)
         self.giladogaJoinedText.hide()
-        self.giladogaButton = GuiButton(
-            parent=self,
-            pos=(self.posX, self.posY, self.posZ),
-            state=DGG.DISABLED,
-            image=self.giladoga,
-            geom_pos=(self.posX, self.posY, self.posZ),
-            helpText=PLocalizer.GiladogaName,
-            helpDelay=PiratesGuiGlobals.HelpPopupTime,
-            helpPos=(0.15, 0, 0.1))
-        self.giladogaButton.helpWatcher['frameSize'] = Vec4(
-            0.4, 0.53, 0.07, 0.42)
+        self.giladogaButton = GuiButton(parent=self, pos=(self.posX, self.posY, self.posZ), state=DGG.DISABLED, image=self.giladoga, geom_pos=(self.posX, self.posY, self.posZ), helpText=PLocalizer.GiladogaName, helpDelay=PiratesGuiGlobals.HelpPopupTime, helpPos=(0.15,
+                                                                                                                                                                                                                                                                       0,
+                                                                                                                                                                                                                                                                       0.1))
+        self.giladogaButton.helpWatcher['frameSize'] = Vec4(0.4, 0.53, 0.07, 0.42)
         self.hide()
         self.carverAquired = False
         self.gordonAquired = False
@@ -347,8 +178,7 @@ class BlackPearlCrew(DirectFrame):
         startColor = Vec4(0.0, 0.0, 0.0, 1.0)
         endColor = Vec4(1.0, 1.0, 1.0, 1.0)
         duration = 2.5
-        fade = LerpColorScaleInterval(
-            crewMember, duration, endColor, startColorScale=startColor)
+        fade = LerpColorScaleInterval(crewMember, duration, endColor, startColorScale=startColor)
         fade.start()
 
     def showCrewStatus(self):
@@ -613,6 +443,4 @@ class BlackPearlCrew(DirectFrame):
         self.john.setColor(1.0, 1.0, 1.0, 1.0)
         self.johnButton['image'] = self.john
         self.johnJoinedText.show()
-
-
 # okay decompiling .\pirates\piratesgui\BlackPearlCrew.pyc

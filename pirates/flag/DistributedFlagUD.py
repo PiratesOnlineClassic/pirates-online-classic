@@ -1,7 +1,6 @@
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
-
 class DistributedFlagUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedFlagUD')
 

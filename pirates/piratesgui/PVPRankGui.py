@@ -19,8 +19,8 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 SHIP_RENOWN_DISPLAY = 0
 LAND_RENOWN_DISPLAY = 1
 
-
 class PVPRankGui(DirectFrame):
+    
 
     def __init__(self, parent, displayType, **kw):
         DirectFrame.__init__(self, parent, **kw)
@@ -49,25 +49,19 @@ class PVPRankGui(DirectFrame):
         if self.displayType == SHIP_RENOWN_DISPLAY:
             self.titleMap = PLocalizer.PVPTitleSeaRanks
             self.renownName = PLocalizer.PVPInfamySea
-            self.breakPoints = TitleGlobals.getBreakpoints(
-                TitleGlobals.ShipPVPTitle)
+            self.breakPoints = TitleGlobals.getBreakpoints(TitleGlobals.ShipPVPTitle)
             self.maxRank = TitleGlobals.getMaxRank(TitleGlobals.ShipPVPTitle)
             self.rankIcons = TitleGlobals.getIconList(TitleGlobals.ShipPVPTitle)
-            self.iconsModel = loader.loadModel(
-                TitleGlobals.getModelPath(TitleGlobals.ShipPVPTitle))
+            self.iconsModel = loader.loadModel(TitleGlobals.getModelPath(TitleGlobals.ShipPVPTitle))
             self.titleId = TitleGlobals.ShipPVPTitle
         else:
             if self.displayType == LAND_RENOWN_DISPLAY:
                 self.titleMap = PLocalizer.PVPTitleLandRanks
                 self.renownName = PLocalizer.PVPInfamyLand
-                self.breakPoints = TitleGlobals.getBreakpoints(
-                    TitleGlobals.LandPVPTitle)
-                self.maxRank = TitleGlobals.getMaxRank(
-                    TitleGlobals.LandPVPTitle)
-                self.rankIcons = TitleGlobals.getIconList(
-                    TitleGlobals.LandPVPTitle)
-                self.iconsModel = loader.loadModel(
-                    TitleGlobals.getModelPath(TitleGlobals.LandPVPTitle))
+                self.breakPoints = TitleGlobals.getBreakpoints(TitleGlobals.LandPVPTitle)
+                self.maxRank = TitleGlobals.getMaxRank(TitleGlobals.LandPVPTitle)
+                self.rankIcons = TitleGlobals.getIconList(TitleGlobals.LandPVPTitle)
+                self.iconsModel = loader.loadModel(TitleGlobals.getModelPath(TitleGlobals.LandPVPTitle))
                 self.titleId = TitleGlobals.LandPVPTitle
             else:
                 self.titleMap = {0: 'Unknown'}
@@ -123,8 +117,7 @@ class PVPRankGui(DirectFrame):
                 renown = inv.getStackQuantity(InventoryType.PVPTotalInfamyLand)
             else:
                 renown = 0
-        self.spendableRenown = inv.getStackQuantity(
-            InventoryType.PVPCurrentInfamy)
+        self.spendableRenown = inv.getStackQuantity(InventoryType.PVPCurrentInfamy)
         self.setRenown(renown)
 
     def updateRank(self, extraRenown):
@@ -137,63 +130,31 @@ class PVPRankGui(DirectFrame):
         else:
             if self.displayType == LAND_RENOWN_DISPLAY:
                 limit = inv.getStackLimit(InventoryType.PVPTotalInfamyLand)
-        self.spendableRenown = max(
-            min(self.spendableRenown + extraRenown,
-                inv.getStackLimit(InventoryType.PVPCurrentInfamy)), 0)
+        self.spendableRenown = max(min(self.spendableRenown + extraRenown, inv.getStackLimit(InventoryType.PVPCurrentInfamy)), 0)
         renown = max(min(self.renown + extraRenown, limit), 0)
         self.setRenown(renown)
 
     def loadGUI(self):
         sort = 1
-        self.dummyFrame = DirectFrame(
-            parent=self, relief=None, pos=(-0.51, 0, 0.48), sortOrder=sort)
-        self.rankBox = DirectFrame(
-            parent=self.dummyFrame,
-            relief=None,
-            pos=(0.17, 0, -0.1),
-            text=self.titleMap[self.rank],
-            text_align=TextNode.ALeft,
-            text_scale=0.045,
-            text_pos=(-0.02, -0.01),
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_wordwrap=15,
-            text_shadow=(0, 0, 0, 1),
-            textMayChange=1,
-            text_font=PiratesGlobals.getInterfaceFont(),
-            sortOrder=sort)
-        self.renownBox = DirectFrame(
-            parent=self.dummyFrame,
-            relief=None,
-            pos=(0.0, 0, -0.27),
-            text=PLocalizer.PVPInfamySpendable + ':',
-            text_align=TextNode.ALeft,
-            text_scale=0.04,
-            text_pos=(0.02, -0.01),
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_wordwrap=15,
-            text_shadow=(0, 0, 0, 1),
-            textMayChange=1,
-            text_font=PiratesGlobals.getInterfaceFont(),
-            sortOrder=sort)
+        self.dummyFrame = DirectFrame(parent=self, relief=None, pos=(-0.51, 0, 0.48), sortOrder=sort)
+        self.rankBox = DirectFrame(parent=self.dummyFrame, relief=None, pos=(0.17, 0, -0.1), text=self.titleMap[self.rank], text_align=TextNode.ALeft, text_scale=0.045, text_pos=(-0.02, -0.01), text_fg=PiratesGuiGlobals.TextFG2, text_wordwrap=15, text_shadow=(0,
+                                                                                                                                                                                                                                                                    0,
+                                                                                                                                                                                                                                                                    0,
+                                                                                                                                                                                                                                                                    1), textMayChange=1, text_font=PiratesGlobals.getInterfaceFont(), sortOrder=sort)
+        self.renownBox = DirectFrame(parent=self.dummyFrame, relief=None, pos=(0.0, 0, -0.27), text=PLocalizer.PVPInfamySpendable + ':', text_align=TextNode.ALeft, text_scale=0.04, text_pos=(0.02, -0.01), text_fg=PiratesGuiGlobals.TextFG2, text_wordwrap=15, text_shadow=(0,
+                                                                                                                                                                                                                                                                               0,
+                                                                                                                                                                                                                                                                               0,
+                                                                                                                                                                                                                                                                               1), textMayChange=1, text_font=PiratesGlobals.getInterfaceFont(), sortOrder=sort)
         skullModel = loader.loadModel('models/gui/avatar_chooser_rope')
         renownImage = skullModel.find('**/avatar_c_B_delete')
-        self.renownSpendable = DirectFrame(
-            parent=self.dummyFrame,
-            relief=None,
-            pos=(0.38, 0, -0.27),
-            text=str(self.spendableRenown),
-            text_align=TextNode.ARight,
-            text_scale=0.035,
-            text_pos=(0, -0.01),
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_wordwrap=15,
-            text_shadow=(0, 0, 0, 1),
-            textMayChange=1,
-            text_font=PiratesGlobals.getInterfaceFont(),
-            image=renownImage,
-            image_scale=(0.15, 1, 0.15),
-            image_pos=(0.04, 0, 0.01),
-            sortOrder=sort)
+        self.renownSpendable = DirectFrame(parent=self.dummyFrame, relief=None, pos=(0.38, 0, -0.27), text=str(self.spendableRenown), text_align=TextNode.ARight, text_scale=0.035, text_pos=(0, -0.01), text_fg=PiratesGuiGlobals.TextFG2, text_wordwrap=15, text_shadow=(0,
+                                                                                                                                                                                                                                                                           0,
+                                                                                                                                                                                                                                                                           0,
+                                                                                                                                                                                                                                                                           1), textMayChange=1, text_font=PiratesGlobals.getInterfaceFont(), image=renownImage, image_scale=(0.15,
+                                                                                                                                                                                                                                                                                                                                                                             1,
+                                                                                                                                                                                                                                                                                                                                                                             0.15), image_pos=(0.04,
+                                                                                                                                                                                                                                                                                                                                                                                               0,
+                                                                                                                                                                                                                                                                                                                                                                                               0.01), sortOrder=sort)
         if self.displayType == SHIP_RENOWN_DISPLAY:
             titleStr = PLocalizer.PVPPrivateeringTitle
         else:
@@ -201,61 +162,32 @@ class PVPRankGui(DirectFrame):
                 titleStr = PLocalizer.PVPLandTitle
             else:
                 titleStr = ''
-        self.titleFrame = DirectFrame(
-            parent=self.dummyFrame,
-            relief=None,
-            pos=(0.0, 0, -0.02),
-            text=titleStr + ':',
-            text_align=TextNode.ALeft,
-            text_scale=0.05,
-            text_pos=(0, -0.01),
-            text_fg=PiratesGuiGlobals.TextFG13,
-            text_wordwrap=15,
-            text_shadow=(0, 0, 0, 1),
-            textMayChange=0,
-            text_font=PiratesGlobals.getInterfaceFont(),
-            sortOrder=sort)
+        self.titleFrame = DirectFrame(parent=self.dummyFrame, relief=None, pos=(0.0, 0, -0.02), text=titleStr + ':', text_align=TextNode.ALeft, text_scale=0.05, text_pos=(0, -0.01), text_fg=PiratesGuiGlobals.TextFG13, text_wordwrap=15, text_shadow=(0,
+                                                                                                                                                                                                                                                         0,
+                                                                                                                                                                                                                                                         0,
+                                                                                                                                                                                                                                                         1), textMayChange=0, text_font=PiratesGlobals.getInterfaceFont(), sortOrder=sort)
         shipcard = loader.loadModel('models/gui/ship_battle')
         tex = shipcard.find('**/ship_battle_speed_bar*')
-        self.renownFrame = DirectFrame(
-            parent=self.dummyFrame,
-            pos=(0.3, 0, -0.15),
-            relief=None,
-            image=tex,
-            image_scale=(0.23, 1, 0.5),
-            scale=(0.88, 1, 1.2),
-            sortOrder=sort)
-        self.renownMeter = DirectWaitBar(
-            parent=self.renownFrame,
-            relief=DGG.RAISED,
-            borderWidth=(0.004, 0.004),
-            range=100,
-            value=100,
-            frameColor=(0, 0, 0, 0),
-            barColor=(0.1, 0.7, 0.1, 1),
-            frameSize=(-0.222, 0.084, -0.012, 0.012),
-            pos=(0.069, 0, 0.0))
-        self.renownMeterText = DirectFrame(
-            parent=self.dummyFrame,
-            relief=None,
-            pos=(0.44, 0, -0.19),
-            text='%s / %s' % (self.renownBase, self.renownTarget),
-            text_align=TextNode.ARight,
-            text_scale=0.028,
-            text_pos=(0, -0.01),
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_wordwrap=15,
-            text_shadow=(0, 0, 0, 1),
-            textMayChange=1,
-            text_font=PiratesGlobals.getInterfaceFont(),
-            sortOrder=sort)
-        self.iconFrame = DirectFrame(
-            parent=self.dummyFrame,
-            pos=(0.06, 0, -0.13),
-            relief=None,
-            image=self.rankIcon,
-            image_scale=self.iconImageScale,
-            sortOrder=sort)
+        self.renownFrame = DirectFrame(parent=self.dummyFrame, pos=(0.3, 0, -0.15), relief=None, image=tex, image_scale=(0.23,
+                                                                                                                         1,
+                                                                                                                         0.5), scale=(0.88,
+                                                                                                                                      1,
+                                                                                                                                      1.2), sortOrder=sort)
+        self.renownMeter = DirectWaitBar(parent=self.renownFrame, relief=DGG.RAISED, borderWidth=(0.004,
+                                                                                                  0.004), range=100, value=100, frameColor=(0,
+                                                                                                                                            0,
+                                                                                                                                            0,
+                                                                                                                                            0), barColor=(0.1,
+                                                                                                                                                          0.7,
+                                                                                                                                                          0.1,
+                                                                                                                                                          1), frameSize=(-0.222, 0.084, -0.012, 0.012), pos=(0.069,
+                                                                                                                                                                                                             0,
+                                                                                                                                                                                                             0.0))
+        self.renownMeterText = DirectFrame(parent=self.dummyFrame, relief=None, pos=(0.44, 0, -0.19), text='%s / %s' % (self.renownBase, self.renownTarget), text_align=TextNode.ARight, text_scale=0.028, text_pos=(0, -0.01), text_fg=PiratesGuiGlobals.TextFG1, text_wordwrap=15, text_shadow=(0,
+                                                                                                                                                                                                                                                                                                  0,
+                                                                                                                                                                                                                                                                                                  0,
+                                                                                                                                                                                                                                                                                                  1), textMayChange=1, text_font=PiratesGlobals.getInterfaceFont(), sortOrder=sort)
+        self.iconFrame = DirectFrame(parent=self.dummyFrame, pos=(0.06, 0, -0.13), relief=None, image=self.rankIcon, image_scale=self.iconImageScale, sortOrder=sort)
         return
 
     def loadRankIcon(self):
@@ -288,8 +220,7 @@ class PVPRankGui(DirectFrame):
         if self.renownMeter:
             value = 0
             if self.rank < self.maxRank and self.renownTarget - self.renownBase > 0:
-                value = int((self.renown - self.renownBase) * 100 /
-                            (self.renownTarget - self.renownBase))
+                value = int((self.renown - self.renownBase) * 100 / (self.renownTarget - self.renownBase))
             self.renownMeter['value'] = value
         if self.renownMeterText:
             if self.rank >= self.maxRank:
@@ -297,10 +228,7 @@ class PVPRankGui(DirectFrame):
                 self.renownTarget = 0
             text = '0 / 0'
             if self.rank < self.maxRank and self.renownTarget - self.renownBase > 0:
-                text = '%s / %s' % (self.renown - self.renownBase,
-                                    self.renownTarget - self.renownBase)
+                text = '%s / %s' % (self.renown - self.renownBase, self.renownTarget - self.renownBase)
             self.renownMeterText['text'] = text
         self.loadRankIcon()
-
-
 # okay decompiling .\pirates\piratesgui\PVPRankGui.pyc

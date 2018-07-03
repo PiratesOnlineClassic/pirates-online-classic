@@ -15,6 +15,7 @@ from pirates.reputation import DistributedReputationAvatar
 
 
 class LockGUI(DirectFrame):
+    
 
     def __init__(self, table, avId, difficulty=10):
         DirectFrame.__init__(self, relief=None)
@@ -51,15 +52,13 @@ class LockGUI(DirectFrame):
         self.layerImage.setPos(0, 50, 0)
         self.layerImage.setScale(1.0)
         self.layerImage.show()
-        self.mechLabel = DirectLabel(
-            parent=self,
-            relief=None,
-            text=PLocalizer.LockMechanism,
-            text_align=TextNode.ALeft,
-            text_scale=0.09,
-            pos=(-0.4, 0, -0.7),
-            text_fg=(1, 0.9, 0.6, 1),
-            text_shadow=(0, 0, 0, 1))
+        self.mechLabel = DirectLabel(parent=self, relief=None, text=PLocalizer.LockMechanism, text_align=TextNode.ALeft, text_scale=0.09, pos=(-0.4, 0, -0.7), text_fg=(1,
+                                                                                                                                                                        0.9,
+                                                                                                                                                                        0.6,
+                                                                                                                                                                        1), text_shadow=(0,
+                                                                                                                                                                                         0,
+                                                                                                                                                                                         0,
+                                                                                                                                                                                         1))
         self.mechNode = self.attachNewNode('mechNode')
         self.mechNode.setScale(0.5)
         self.mechNode.setPos(0, 0, 0.2)
@@ -72,45 +71,27 @@ class LockGUI(DirectFrame):
         self.mechTool.setPos(self.mechXPos, 0, self.mechZPos)
         self.mechTool.show()
         self.lockImage = {}
-        self.lockImage[self.currentLayer] = PlayingCard.PlayingCardNodePath(
-            'standard', 13)
+        self.lockImage[self.currentLayer] = PlayingCard.PlayingCardNodePath('standard', 13)
         self.lockImage[self.currentLayer].reparentTo(self.mechNode)
-        self.lockImage[self.currentLayer].setPos(LockGlobals.LockXPos, 0,
-                                                 LockGlobals.LockZPos)
+        self.lockImage[self.currentLayer].setPos(LockGlobals.LockXPos, 0, LockGlobals.LockZPos)
         self.setLockMech(random.randint(0, LockGlobals.MaxTool))
         self.lockImage[self.currentLayer].show()
-        self.mechLeftButton = DirectButton(
-            parent=self,
-            relief=DGG.RAISED,
-            text='<',
-            text_align=TextNode.ACenter,
-            text_scale=0.05,
-            text_pos=(0.02, 0.01),
-            text_fg=(0, 0, 0, 1),
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=0,
-            frameColor=PiratesGuiGlobals.ButtonColor2,
-            borderWidth=PiratesGuiGlobals.BorderWidthSmall,
-            frameSize=(0, 0.05, 0, 0.05),
-            pos=(0.13, 0, -0.7),
-            command=self.table.guiCallback,
-            extraArgs=[LockGlobals.LGUI_MECHLEFT])
-        self.mechRightButton = DirectButton(
-            parent=self,
-            relief=DGG.RAISED,
-            text='>',
-            text_align=TextNode.ACenter,
-            text_scale=0.05,
-            text_pos=(0.02, 0.01),
-            text_fg=(0, 0, 0, 1),
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=0,
-            frameColor=PiratesGuiGlobals.ButtonColor2,
-            borderWidth=PiratesGuiGlobals.BorderWidthSmall,
-            frameSize=(0, 0.05, 0, 0.05),
-            pos=(0.42, 0, -0.7),
-            command=self.table.guiCallback,
-            extraArgs=[LockGlobals.LGUI_MECHRIGHT])
+        self.mechLeftButton = DirectButton(parent=self, relief=DGG.RAISED, text='<', text_align=TextNode.ACenter, text_scale=0.05, text_pos=(0.02,
+                                                                                                                                             0.01), text_fg=(0,
+                                                                                                                                                             0,
+                                                                                                                                                             0,
+                                                                                                                                                             1), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=0, frameColor=PiratesGuiGlobals.ButtonColor2, borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameSize=(0,
+                                                                                                                                                                                                                                                                                                                                  0.05,
+                                                                                                                                                                                                                                                                                                                                  0,
+                                                                                                                                                                                                                                                                                                                                  0.05), pos=(0.13, 0, -0.7), command=self.table.guiCallback, extraArgs=[LockGlobals.LGUI_MECHLEFT])
+        self.mechRightButton = DirectButton(parent=self, relief=DGG.RAISED, text='>', text_align=TextNode.ACenter, text_scale=0.05, text_pos=(0.02,
+                                                                                                                                              0.01), text_fg=(0,
+                                                                                                                                                              0,
+                                                                                                                                                              0,
+                                                                                                                                                              1), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=0, frameColor=PiratesGuiGlobals.ButtonColor2, borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameSize=(0,
+                                                                                                                                                                                                                                                                                                                                   0.05,
+                                                                                                                                                                                                                                                                                                                                   0,
+                                                                                                                                                                                                                                                                                                                                   0.05), pos=(0.42, 0, -0.7), command=self.table.guiCallback, extraArgs=[LockGlobals.LGUI_MECHRIGHT])
         self.timer = PiratesTimer.PiratesTimer()
         self.timer.posInTopRightCorner()
         self.timer.show()
@@ -139,15 +120,15 @@ class LockGUI(DirectFrame):
         print 'LockGUI:gameTimerExpired'
         if self.toolState != LockGlobals.LSTATE_OPEN:
             self.toolState = LockGlobals.LSTATE_DONE
-            self.solveLabel = DirectLabel(
-                parent=self,
-                relief=None,
-                text=PLocalizer.LockpickFailed,
-                text_align=TextNode.ACenter,
-                text_scale=0.2,
-                pos=(0, 0, 0),
-                text_fg=(1, 1, 1, 1),
-                text_shadow=(0, 0, 0, 1))
+            self.solveLabel = DirectLabel(parent=self, relief=None, text=PLocalizer.LockpickFailed, text_align=TextNode.ACenter, text_scale=0.2, pos=(0,
+                                                                                                                                                      0,
+                                                                                                                                                      0), text_fg=(1,
+                                                                                                                                                                   1,
+                                                                                                                                                                   1,
+                                                                                                                                                                   1), text_shadow=(0,
+                                                                                                                                                                                    0,
+                                                                                                                                                                                    0,
+                                                                                                                                                                                    1))
             self.solveLabel.show()
         return
 
@@ -206,35 +187,31 @@ class LockGUI(DirectFrame):
                             self.mechZPos -= 0.01
                         else:
                             self.mechMove()
-                        self.lockImage[self.currentLayer].setPos(
-                            self.lockXPos, 0, self.lockZPos)
-                        self.lockImage[self.currentLayer - 1].setPos(
-                            self.layerXPos, 0, self.layerZPos)
+                        self.lockImage[self.currentLayer].setPos(self.lockXPos, 0, self.lockZPos)
+                        self.lockImage[self.currentLayer - 1].setPos(self.layerXPos, 0, self.layerZPos)
         self.mechTool.setPos(self.mechXPos, 0, self.mechZPos)
 
     def lockOpen(self, name):
         print 'LockGUI:lockOpen'
         base.musicMgr.requestFadeOut('lockpick')
         self.timer.stop()
-        self.solveLabel = DirectLabel(
-            parent=self,
-            relief=None,
-            text=PLocalizer.UnlockedBy,
-            text_align=TextNode.ACenter,
-            text_scale=0.2,
-            pos=(0, 0, 0),
-            text_fg=(1, 1, 1, 1),
-            text_shadow=(0, 0, 0, 1))
+        self.solveLabel = DirectLabel(parent=self, relief=None, text=PLocalizer.UnlockedBy, text_align=TextNode.ACenter, text_scale=0.2, pos=(0,
+                                                                                                                                              0,
+                                                                                                                                              0), text_fg=(1,
+                                                                                                                                                           1,
+                                                                                                                                                           1,
+                                                                                                                                                           1), text_shadow=(0,
+                                                                                                                                                                            0,
+                                                                                                                                                                            0,
+                                                                                                                                                                            1))
         self.solveLabel.show()
-        self.solveLabel2 = DirectLabel(
-            parent=self,
-            relief=None,
-            text=name,
-            text_align=TextNode.ACenter,
-            text_scale=0.2,
-            pos=(0, 0, -0.3),
-            text_fg=(1, 1, 1, 1),
-            text_shadow=(0, 0, 0, 1))
+        self.solveLabel2 = DirectLabel(parent=self, relief=None, text=name, text_align=TextNode.ACenter, text_scale=0.2, pos=(0, 0, -0.3), text_fg=(1,
+                                                                                                                                                    1,
+                                                                                                                                                    1,
+                                                                                                                                                    1), text_shadow=(0,
+                                                                                                                                                                     0,
+                                                                                                                                                                     0,
+                                                                                                                                                                     1))
         self.solveLabel2.show()
         self.toolState = LockGlobals.LSTATE_OPEN
         return
@@ -254,11 +231,9 @@ class LockGUI(DirectFrame):
             self.layerXPos = LockGlobals.LockXPos
             self.layerZPos = LockGlobals.LockZPos
             self.currentLayer += 1
-            self.lockImage[self.currentLayer] = PlayingCard.PlayingCardNodePath(
-                'standard', 13 + self.lockMech)
+            self.lockImage[self.currentLayer] = PlayingCard.PlayingCardNodePath('standard', 13 + self.lockMech)
             self.lockImage[self.currentLayer].reparentTo(self.mechNode)
-            self.lockImage[self.currentLayer].setPos(LockGlobals.NewXPos, 0,
-                                                     LockGlobals.NewZPos)
+            self.lockImage[self.currentLayer].setPos(LockGlobals.NewXPos, 0, LockGlobals.NewZPos)
             self.setLockMech(random.randint(0, LockGlobals.MaxTool))
             self.lockImage[self.currentLayer].show()
 
@@ -270,6 +245,4 @@ class LockGUI(DirectFrame):
         del self.missSound
         del self.trySound
         DirectFrame.destroy(self)
-
-
 # okay decompiling .\pirates\minigame\LockGUI.pyc

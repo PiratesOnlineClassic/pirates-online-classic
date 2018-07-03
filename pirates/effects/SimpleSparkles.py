@@ -6,8 +6,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class SimpleSparkles(PooledEffect, EffectController):
+    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -52,9 +52,7 @@ class SimpleSparkles(PooledEffect, EffectController):
         self.p0.factory.setAngularVelocitySpread(10.0)
         self.p0.renderer.setAlphaMode(BaseParticleRenderer.PRALPHAOUT)
         self.p0.renderer.setUserAlpha(1.0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
-                                           ColorBlendAttrib.OIncomingAlpha,
-                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
         self.p0.renderer.setFromNode(self.card)
         self.p0.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
         self.p0.renderer.setXScaleFlag(1)
@@ -73,12 +71,8 @@ class SimpleSparkles(PooledEffect, EffectController):
         self.setEffectColor(self.effectColor)
 
     def createTrack(self):
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.03), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100.0), Wait(2.5),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.03), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.5), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def setEffectScale(self, scale):

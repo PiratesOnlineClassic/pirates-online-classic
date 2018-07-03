@@ -9,12 +9,8 @@ class DistributedDecorDNA(DecorDNA):
     def __init__(self):
         DecorDNA.__init__(self)
 
-
-class DistributedShipDecorAI(DistributedShippartAI,
-                             DistributedDestructibleArrayAI,
-                             DistributedDecorDNA):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedShipDecorAI')
+class DistributedShipDecorAI(DistributedShippartAI, DistributedDestructibleArrayAI, DistributedDecorDNA):
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipDecorAI')
 
     def __init__(self, air):
         DistributedShippartAI.__init__(self, air)

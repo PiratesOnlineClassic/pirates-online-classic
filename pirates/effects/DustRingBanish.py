@@ -7,9 +7,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class DustRingBanish(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -57,8 +56,7 @@ class DustRingBanish(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPNOBLEND)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETCUSTOM)
         self.p0.emitter.setAmplitude(25.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -68,11 +66,7 @@ class DustRingBanish(PooledEffect, EffectController):
         self.p0.emitter.setRadius(1.0)
 
     def createTrack(self):
-        self.track = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self), Func(self.f.reparentTo, self),
-            Wait(0.1), Func(self.p0.setBirthRate, 100), Wait(4.0),
-            Func(self.cleanUpEffect))
+        self.track = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self), Func(self.f.reparentTo, self), Wait(0.1), Func(self.p0.setBirthRate, 100), Wait(4.0), Func(self.cleanUpEffect))
 
     def setEffectColor(self, color):
         self.effectColor = Vec4(1, 1, 1, 1) - (Vec4(1, 1, 1, 1) - color) / 2.0

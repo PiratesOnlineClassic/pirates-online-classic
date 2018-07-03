@@ -6,9 +6,7 @@ from pirates.quest.QuestHolder import QuestHolder
 from pirates.uberdog.DistributedInventory import DistributedInventory
 from pirates.world import GameTypeGlobals
 
-
-class DistributedTreasureMap(DistributedObject.DistributedObject,
-                             DistributedInventory, QuestHolder):
+class DistributedTreasureMap(DistributedObject.DistributedObject, DistributedInventory, QuestHolder):
     notify = DirectNotifyGlobal.directNotify.newCategory('TreasureMapManager')
 
     def __init__(self, cr):
@@ -30,21 +28,13 @@ class DistributedTreasureMap(DistributedObject.DistributedObject,
 
     def requestTreasureMapGo(self, quick=True):
         if quick:
-
             def teleportConfirm(confirmed):
                 if confirmed:
                     self.teleportStarted()
-
             localAvatar.confirmTeleport(teleportConfirm, feedback=True)
             return
         localAvatar.guiMgr.showLookoutPanel()
-        localAvatar.guiMgr.lookoutPage.displayLookout(
-            gameStyle=self.mapId,
-            inviteOptions=[PiratesGlobals.LOOKOUT_INVITE_CREW],
-            additionalOptions=[[
-                str(GameTypeGlobals.GAME_OPTION_TM_ID),
-                str(self.getDoId())
-            ]])
+        localAvatar.guiMgr.lookoutPage.displayLookout(gameStyle=self.mapId, inviteOptions=[PiratesGlobals.LOOKOUT_INVITE_CREW], additionalOptions=[[str(GameTypeGlobals.GAME_OPTION_TM_ID), str(self.getDoId())]])
 
     def teleportStarted(self):
         base.cr.loadingScreen.showTarget()
@@ -57,8 +47,7 @@ class DistributedTreasureMap(DistributedObject.DistributedObject,
         self.quests = questIds
 
     def getOptions(self):
-        tmInfo = PiratesGlobals.DYNAMIC_GAME_STYLE_PROPS[
-            PiratesGlobals.GAME_TYPE_TM].get(self.mapId)
+        tmInfo = PiratesGlobals.DYNAMIC_GAME_STYLE_PROPS[PiratesGlobals.GAME_TYPE_TM].get(self.mapId)
         numPlayersList = []
         numPlayers = tmInfo.get('NumPlayers')
         if numPlayers:
@@ -66,12 +55,7 @@ class DistributedTreasureMap(DistributedObject.DistributedObject,
                 numPlayersList.append(str(currPlayer))
 
         if numPlayersList:
-            return {
-                'options': {
-                    GameTypeGlobals.GAME_OPTION_MIN_PLAYERS:
-                    [PiratesGuiGlobals.UIItemType_ListItem, numPlayersList]
-                }
-            }
+            return {'options': {GameTypeGlobals.GAME_OPTION_MIN_PLAYERS: [PiratesGuiGlobals.UIItemType_ListItem, numPlayersList]}}
         return {'options': {}}
 
     def setMapId(self, mapId):

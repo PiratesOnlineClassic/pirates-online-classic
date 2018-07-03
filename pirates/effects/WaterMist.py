@@ -11,6 +11,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 class WaterMist(PooledEffect, EffectController):
 
+
     def __init__(self, parent=None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -59,12 +60,8 @@ class WaterMist(PooledEffect, EffectController):
 
     def createTrack(self):
         self.setEffectScale(self.effectScale)
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.2), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100.0), Wait(3.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.2), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(3.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def setEffectScale(self, scale):
@@ -84,6 +81,4 @@ class WaterMist(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\WaterMist.pyc

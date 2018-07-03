@@ -92,8 +92,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
         self.seatLocatorArray = []
         self.maximum_stacks = 5
         if type == 1:
-            self.tableModel = loader.loadModel(
-                'models/props/table_bar_round_parlor')
+            self.tableModel = loader.loadModel('models/props/table_bar_round_parlor')
             self.tableModel.setH(11)
             self.tableModel.flattenStrong()
             self.seatLocatorArray.append(self.tableModel.find('**/seat_1'))
@@ -137,9 +136,9 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
                             stack.hide()
 
             text = self.getInteractText()
-            self.setInteractOptions(
-                proximityText=text, sphereScale=9, diskRadius=12)
-            self.DealerPos = (Vec3(0, 6.5, 0), Vec3(180, 0, 0))
+            self.setInteractOptions(proximityText=text, sphereScale=9, diskRadius=12)
+            self.DealerPos = (
+             Vec3(0, 6.5, 0), Vec3(180, 0, 0))
             self.HandPos = (Vec3(0, 1, 0), Vec3(0, -1, 0))
             self.NumSeats = 7
             self.SeatInfo = []
@@ -271,8 +270,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
 
     def requestInteraction(self, avId, interactType=0):
         base.localAvatar.motionFSM.off()
-        DistributedInteractive.DistributedInteractive.requestInteraction(
-            self, avId, interactType)
+        DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
 
     def rejectInteraction(self):
         base.localAvatar.motionFSM.on()
@@ -296,10 +294,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
             self.localAvatarGotUp(seatIndex)
         elif answer == 3:
             self.deleteRequestDialogs()
-            self.requestDialog = PDialog.PDialog(
-                text=PLocalizer.TableIsFullMessage,
-                style=OTPDialog.Acknowledge,
-                command=self.requestCommand)
+            self.requestDialog = PDialog.PDialog(text=PLocalizer.TableIsFullMessage, style=OTPDialog.Acknowledge, command=self.requestCommand)
             self.setDialogBin(self.requestDialog)
             localAvatar.motionFSM.on()
             self.cr.interactionMgr.start()
@@ -344,14 +339,9 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
             localAvatar.enableMixing()
             localAvatar.loop('idle')
             localAvatar.b_setGameState(localAvatar.gameFSM.defaultState)
-            self.reparentAndMoveInRelationTo(
-                localAvatar, self.getParent(),
-                self.SeatInfo[seatIndex].getPos(self.getParent()))
+            self.reparentAndMoveInRelationTo(localAvatar, self.getParent(), self.SeatInfo[seatIndex].getPos(self.getParent()))
 
-        sittingSeq = Sequence(
-            Func(self.gotUp, seatIndex), Func(localAvatar.disableMixing),
-            localAvatar.actorInterval('sit', playRate=-1, mixingWanted=False),
-            Func(restore), Func(self.setSeatsLOD, False))
+        sittingSeq = Sequence(Func(self.gotUp, seatIndex), Func(localAvatar.disableMixing), localAvatar.actorInterval('sit', playRate=-1, mixingWanted=False), Func(restore), Func(self.setSeatsLOD, False))
         self.saveSequence(sittingSeq, localAvatar)
         sittingSeq.start()
 
@@ -398,16 +388,12 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
             if avatar:
                 self.SeatAnim[seatIndex] = 1
                 avatar.disableMixing()
-                stand = avatar.actorInterval(
-                    'sit', playRate=-1, mixingWanted=False)
+                stand = avatar.actorInterval('sit', playRate=-1, mixingWanted=False)
                 enableMixing = Func(avatar.enableMixing)
                 idle = Func(avatar.loop, 'idle')
                 setAnim = Func(self.setSeatAnim, seatIndex, 0)
-                relocate = Func(
-                    self.reparentAndMoveInRelationTo, avatar, self.getParent(),
-                    self.SeatInfo[seatIndex].getPos(self.getParent()))
-                standSeq = Sequence(stand, enableMixing, idle, setAnim,
-                                    relocate)
+                relocate = Func(self.reparentAndMoveInRelationTo, avatar, self.getParent(), self.SeatInfo[seatIndex].getPos(self.getParent()))
+                standSeq = Sequence(stand, enableMixing, idle, setAnim, relocate)
                 self.saveSequence(standSeq, avatar)
                 standSeq.start()
 
@@ -453,8 +439,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
         self.removeNode()
 
     def isLocalAvatarPlaying(self):
-        self.notify.warning(
-            'isLocalAvatarPlaying() is deprecated. See isLocalAvatarSeated().')
+        self.notify.warning('isLocalAvatarPlaying() is deprecated. See isLocalAvatarSeated().')
         return self.isLocalAvatarSeated()
 
     def isLocalAvatarSeated(self):
@@ -472,20 +457,14 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
     def setDialogBin(self, dialog):
         dialog.setBin('gui-fixed', 10, 10)
 
-    display_1 = [[0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [1, 0, 0, 0, 0], [
-        1, 1, 0, 0, 0
-    ], [0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [0, 1, 1, 0, 0], [1, 0, 1, 0, 0], [
-        0, 1, 1, 0, 0
-    ], [1, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 1, 0, 1, 0], [1, 0, 0, 1, 0],
-                 [0, 0, 1, 1, 0], [0, 1, 1, 1, 0], [1, 0, 1, 1, 0]]
-    display_2 = [[1, 1, 1, 1, 0], [0, 0, 0, 0, 1], [0, 1, 0, 0, 1], [
-        1, 0, 0, 0, 1
-    ], [1, 1, 0, 0, 1], [0, 0, 1, 0, 1], [0, 0, 1, 0, 1], [0, 1, 1, 0, 1], [
-        1, 0, 1, 0, 1
-    ], [0, 1, 1, 0, 1], [1, 0, 1, 0, 1], [0, 0, 0, 1, 1], [0, 1, 0, 1, 1],
-                 [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 1, 1, 1,
-                                                    1], [1, 0, 1, 1, 1]]
-    display_3 = [1, 1, 1, 1, 1]
+    display_1 = [
+     [
+      0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [1, 0, 0, 0, 0], [1, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [0, 1, 1, 0, 0], [1, 0, 1, 0, 0], [0, 1, 1, 0, 0], [1, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 1, 0, 1, 0], [1, 0, 0, 1, 0], [0, 0, 1, 1, 0], [0, 1, 1, 1, 0], [1, 0, 1, 1, 0]]
+    display_2 = [
+     [
+      1, 1, 1, 1, 0], [0, 0, 0, 0, 1], [0, 1, 0, 0, 1], [1, 0, 0, 0, 1], [1, 1, 0, 0, 1], [0, 0, 1, 0, 1], [0, 0, 1, 0, 1], [0, 1, 1, 0, 1], [1, 0, 1, 0, 1], [0, 1, 1, 0, 1], [1, 0, 1, 0, 1], [0, 0, 0, 1, 1], [0, 1, 0, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 1, 1, 1]]
+    display_3 = [
+     1, 1, 1, 1, 1]
 
     def numberToStackDisplay(self, number):
         stack_display = self.display_1[0]
@@ -515,6 +494,4 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
     def updateStacks(self, chipsArray):
         for seat in range(self.NumSeats):
             self.displayStacks(seat, chipsArray[seat])
-
-
 # okay decompiling .\pirates\minigame\DistributedGameTable.pyc

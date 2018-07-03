@@ -1,6 +1,5 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-
 class DistrictTrackerUD:
     notify = directNotify.newCategory('DistrictTrackerUD')
 
@@ -8,13 +7,11 @@ class DistrictTrackerUD:
         self.air = air
         self.shards = {}
 
-        self.air.netMessenger.accept('districtStatus', self,
-                                     self.handleDistrictStatus)
+        self.air.netMessenger.accept('districtStatus', self, self.handleDistrictStatus)
         self.requestStatus()
-
+        
     def handleDistrictStatus(self, channel, status):
-        self.notify.debug(
-            'Received update for channel %d; %s' % (channel, str(status)))
+        self.notify.debug('Received update for channel %d; %s' % (channel, str(status)))
         self.shards.setdefault(channel, {}).update(status)
 
     def getShards(self):

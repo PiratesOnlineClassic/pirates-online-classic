@@ -1,10 +1,8 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.destructibles.DistributedDestructibleObjectAI import DistributedDestructibleObjectAI
 
-
 class DistributedDestructibleArrayAI(DistributedDestructibleObjectAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedDestructibleArrayAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDestructibleArrayAI')
 
     def __init__(self, air):
         DistributedDestructibleObjectAI.__init__(self, air)

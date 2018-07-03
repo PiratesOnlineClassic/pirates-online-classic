@@ -1,10 +1,8 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.minigame.DistributedGameTableAI import DistributedGameTableAI
 
-
 class DistributedBlackjackTableAI(DistributedGameTableAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedBlackjackTableAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBlackjackTableAI')
 
     def __init__(self, air):
         DistributedGameTableAI.__init__(self, air, numberAI=0)

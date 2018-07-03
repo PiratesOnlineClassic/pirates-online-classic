@@ -2,7 +2,6 @@ from direct.task import Task
 
 
 class TextureFlattenManager:
-
     def __init__(self):
         self.splattableObjects = {}
         self.sailObjects = {}
@@ -19,8 +18,7 @@ class TextureFlattenManager:
         return holeCount
 
     def clearSplattables(self, objToClear):
-        self.splattabeObjects = dict(
-            filter(lambda x: x[0] != objToClear, self.splattableObjects))
+        self.splattabeObjects = dict(filter(lambda x: x[0] != objToClear, self.splattableObjects))
 
     def addSail(self, obj):
         holeCount = self.sailObjects.get(obj, 0)

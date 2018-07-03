@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SoulHarvest(PooledEffect, EffectController):
-
+    
     cardScale = 128.0
 
     def __init__(self):
@@ -21,8 +21,7 @@ class SoulHarvest(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/sigils')
         self.card = model.find('**/effectSkull')
         if not SoulHarvest.particleDummy:
-            SoulHarvest.particleDummy = render.attachNewNode(
-                ModelNode('SoulHarvestParticleDummy'))
+            SoulHarvest.particleDummy = render.attachNewNode(ModelNode('SoulHarvestParticleDummy'))
             SoulHarvest.particleDummy.setDepthWrite(0)
             SoulHarvest.particleDummy.setLightOff()
         self.radius = 8.0
@@ -61,11 +60,8 @@ class SoulHarvest(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha,
-            ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.59, 0.78, 0.7, 0.4), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.59, 0.78, 0.7, 0.4), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -75,18 +71,12 @@ class SoulHarvest(PooledEffect, EffectController):
 
     def createTrack(self):
         self.p0.emitter.setRadius(self.radius)
-        self.track = Sequence(
-            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self), Wait(3.0),
-            Func(self.p0.setBirthRate, 100), Wait(7.0),
-            Func(self.cleanUpEffect))
+        self.track = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(3.0), Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
 
     def setEffectColor(self, color):
         self.effectColor = Vec4(1, 1, 1, 0) - (Vec4(1, 1, 1, 1) - color) / 2.0
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, self.effectColor, Vec4(0.59, 0.78, 0.7, 0.4), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, self.effectColor, Vec4(0.59, 0.78, 0.7, 0.4), 1)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -96,6 +86,4 @@ class SoulHarvest(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\SoulHarvest.pyc

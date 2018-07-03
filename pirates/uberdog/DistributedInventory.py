@@ -34,7 +34,7 @@ class DistributedInventory(DistributedInventoryBase, DistributedObject):
                 oldHp = limit
 
         self.stackLimits[stackType] = limit
-        messenger.send('inventoryLimit-%s-%s' % (self.doId, stackType), [limit])
+        messenger.send('inventoryLimit-%s-%s' % (self.doId,stackType), [limit])
         messenger.send('inventoryChanged-%s' % self.doId)
         if stackType == InventoryType.Hp:
             base.localAvatar.setMaxHp(limit)
@@ -56,13 +56,10 @@ class DistributedInventory(DistributedInventoryBase, DistributedObject):
         else:
             category.pop(stackType, None)
 
-        messenger.send('inventoryQuantity-%s-%s' % (self.doId, stackType),
-                       [quantity])
+        messenger.send('inventoryQuantity-%s-%s' % (self.doId, stackType), [quantity])
         messenger.send('inventoryChanged-%s' % self.doId)
         if stackType == InventoryType.Vitae_Level or stackType == InventoryType.Vitae_Cost or stackType == InventoryType.Vitae_Left:
-            localAvatar.guiMgr.gameGui.updateVitae(
-                self.getStackQuantity(InventoryType.Vitae_Level),
-                self.getStackQuantity(InventoryType.Vitae_Cost),
+            localAvatar.guiMgr.gameGui.updateVitae(self.getStackQuantity(InventoryType.Vitae_Level), self.getStackQuantity(InventoryType.Vitae_Cost),
                 self.getStackQuantity(InventoryType.Vitae_Left))
 
         if stackType == InventoryType.DollToken or stackType == InventoryType.WandToken or stackType == InventoryType.DaggerToken or \
@@ -77,9 +74,7 @@ class DistributedInventory(DistributedInventoryBase, DistributedObject):
 
     def accumulator(self, accumulatorType, quantity):
         self.accumulators[accumulatorType] = quantity
-        messenger.send(
-            'inventoryAccumulator-%s-%s' % (self.doId, accumulatorType),
-            [quantity])
+        messenger.send('inventoryAccumulator-%s-%s' % (self.doId, accumulatorType), [quantity])
         messenger.send('inventoryChanged-%s' % self.doId)
 
     def sendRequestDestroy(self, category, doId, context):

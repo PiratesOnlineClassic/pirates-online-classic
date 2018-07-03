@@ -6,6 +6,7 @@ from pirates.piratesgui.SheetFrame import SheetFrame
 
 
 class ScoreFrame(SheetFrame):
+    
 
     def __init__(self, w, h, holder, team, **kw):
         self.team = team
@@ -25,6 +26,4 @@ class ScoreFrame(SheetFrame):
             self.scoreChanged = False
             self.redraw()
         SheetFrame.show(self)
-
-
 # okay decompiling .\pirates\piratesgui\ScoreFrame.pyc

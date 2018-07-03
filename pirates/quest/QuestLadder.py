@@ -9,19 +9,10 @@ from pirates.quest.QuestTaskDNA import (RandomizedDefeatShipTaskDNA,
 
 
 class QuestContainer(DirectObject.DirectObject):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestContainer')
 
-    def __init__(self,
-                 name,
-                 title,
-                 av,
-                 questInt,
-                 parent=None,
-                 giverId=None,
-                 rewards=(),
-                 firstQuestId=None,
-                 description=''):
+    def __init__(self, name, title, av, questInt, parent=None, giverId=None, rewards=(), firstQuestId=None, description=''):
         self.name = name
         self.questInt = questInt
         if giverId:
@@ -119,8 +110,7 @@ class QuestContainer(DirectObject.DirectObject):
 
     def unlinkQuest(self, questId):
         if not self.hasQuest(questId):
-            self.notify.warning(
-                "tried to unlink quest: %s I don't have" % questId)
+            self.notify.warning("tried to unlink quest: %s I don't have" % questId)
             return False
         for container in self.containers:
             if container.unlinkQuest(questId):
@@ -141,15 +131,15 @@ class QuestContainer(DirectObject.DirectObject):
         else:
             if self.getQuestInt() in history:
                 self.complete = True
-                return (self.goal, self.goal)
+                return (
+                 self.goal, self.goal)
         goal = self.goal
         containers = self.getContainers()
         if containers and isinstance(containers[0], QuestStub):
             quest = containers[0].quest
             if quest and hasattr(quest, 'tasks') and quest.tasks:
                 taskDNA = quest.tasks[0]
-                if isinstance(taskDNA, RandomizedDefeatTaskDNA) or isinstance(
-                        taskDNA, RandomizedDefeatShipTaskDNA):
+                if isinstance(taskDNA, RandomizedDefeatTaskDNA) or isinstance(taskDNA, RandomizedDefeatShipTaskDNA):
                     goal = self.getContainers()[0].quest.taskStates[0].getGoal()
         totCompCont = 0
         for container in self.getContainers():
@@ -172,61 +162,37 @@ class QuestContainer(DirectObject.DirectObject):
         self.containers[0].assignFirstQuest(completedQuests)
 
     def updateCompletedQuests(self, completedQuest, prevCompletedQuests=[]):
-        self.notify.debug('QContainer.updateCompletedQuests.SELF.QUEST_INT: %s'
-                          % self.questInt)
-        self.notify.debug('QContainer.updateCompletedQuests.COMPLETED_QUEST: %s'
-                          % completedQuest)
-        self.notify.debug(
-            'QContainer.updateCompletedQuests.COMPLETED_QUESTS: %s' %
-            self.completedQuests)
-        self.notify.debug(
-            'QContainer.updateCompletedQuests.PREV_COMPLETED_QUESTS: %s' %
-            prevCompletedQuests)
+        self.notify.debug('QContainer.updateCompletedQuests.SELF.QUEST_INT: %s' % self.questInt)
+        self.notify.debug('QContainer.updateCompletedQuests.COMPLETED_QUEST: %s' % completedQuest)
+        self.notify.debug('QContainer.updateCompletedQuests.COMPLETED_QUESTS: %s' % self.completedQuests)
+        self.notify.debug('QContainer.updateCompletedQuests.PREV_COMPLETED_QUESTS: %s' % prevCompletedQuests)
         if len(self.completedQuests) == 0:
             if len(prevCompletedQuests) > 0:
-                self.notify.warning(
-                    'QContainer SELF( %s ).COMPLETED_QUESTS is SET to: %s' %
-                    (self.questInt, prevCompletedQuests))
+                self.notify.warning('QContainer SELF( %s ).COMPLETED_QUESTS is SET to: %s' % (self.questInt, prevCompletedQuests))
                 self.completedQuests = prevCompletedQuests
         if completedQuest in self.completedQuests:
-            self.notify.warning('Quest: %s already in completedQuests!' %
-                                completedQuest.getQuestId())
+            self.notify.warning('Quest: %s already in completedQuests!' % completedQuest.getQuestId())
         else:
-            self.notify.warning(
-                'QContainer SELF( %s ).COMPLETED_QUESTS is APPENDED with: %s' %
-                (self.questInt, completedQuest))
+            self.notify.warning('QContainer SELF( %s ).COMPLETED_QUESTS is APPENDED with: %s' % (self.questInt, completedQuest))
             self.completedQuests.append(completedQuest)
 
-    def handleQuestComplete(self,
-                            completedQuest,
-                            completedContainer,
-                            prevCompletedQuests=[]):
-        self.notify.debug(
-            'QC.handleQuestComplete.SELF.QUEST_INT: %s' % self.questInt)
-        self.notify.debug(
-            'QC.handleQuestComplete.COMPLETED_QUEST: %s' % completedQuest)
-        self.notify.debug('QC.handleQuestComplete.COMPLETED_CONTAINER: %s' %
-                          completedContainer.questInt)
-        self.notify.debug(
-            'QC.handleQuestComplete.COMPLETED_CONTAINER.COMPLETED_QUESTS: %s' %
-            completedContainer.completedQuests)
-        self.notify.debug('QC.handleQuestComplete.PREV_COMPLETED_QUESTS: %s' %
-                          prevCompletedQuests)
-        self.notify.debug(
-            'QC.handleQuestComplete.IS_COMPLETE: %s' % self.isComplete())
-        self.notify.debug('QC.handleQuestComplete.SELF.COMPLETED_QUESTS: %s' %
-                          self.completedQuests)
+    def handleQuestComplete(self, completedQuest, completedContainer, prevCompletedQuests=[]):
+        self.notify.debug('QC.handleQuestComplete.SELF.QUEST_INT: %s' % self.questInt)
+        self.notify.debug('QC.handleQuestComplete.COMPLETED_QUEST: %s' % completedQuest)
+        self.notify.debug('QC.handleQuestComplete.COMPLETED_CONTAINER: %s' % completedContainer.questInt)
+        self.notify.debug('QC.handleQuestComplete.COMPLETED_CONTAINER.COMPLETED_QUESTS: %s' % completedContainer.completedQuests)
+        self.notify.debug('QC.handleQuestComplete.PREV_COMPLETED_QUESTS: %s' % prevCompletedQuests)
+        self.notify.debug('QC.handleQuestComplete.IS_COMPLETE: %s' % self.isComplete())
+        self.notify.debug('QC.handleQuestComplete.SELF.COMPLETED_QUESTS: %s' % self.completedQuests)
         if self.isComplete():
             if self.parent:
                 self.updateCompletedQuests(completedQuest, prevCompletedQuests)
-                self.parent.handleQuestComplete(completedQuest, self,
-                                                self.completedQuests)
+                self.parent.handleQuestComplete(completedQuest, self, self.completedQuests)
             else:
                 self.av.questStatus.updateHistory(self)
                 self.updateCompletedQuests(completedQuest)
                 quests = completedContainer.completedQuests
-                self.av._swapQuest(
-                    oldQuests=quests, giverId=None, questIds=None, rewards=None)
+                self.av._swapQuest(oldQuests=quests, giverId=None, questIds=None, rewards=None)
                 self.av.questStatus.handleLadderComplete(self)
         else:
             self.av.questStatus.updateHistory(completedContainer)
@@ -243,10 +209,8 @@ class QuestContainer(DirectObject.DirectObject):
 
     def advance(self, completedContainer):
         self.notify.debug('QC.advance() called. QUEST_INT: %s' % self.questInt)
-        self.notify.debug(
-            'QC.advance().completedContainer: %s' % completedContainer.name)
-        self.notify.debug('QC.advance().completedContainer.completedQuests: %s'
-                          % completedContainer.completedQuests)
+        self.notify.debug('QC.advance().completedContainer: %s' % completedContainer.name)
+        self.notify.debug('QC.advance().completedContainer.completedQuests: %s' % completedContainer.completedQuests)
         nextIndex = self.containers.index(completedContainer) + 1
         nextContainer = self.containers[nextIndex]
         nextContainer.assignFirstQuest(completedContainer.completedQuests)
@@ -256,19 +220,12 @@ class QuestContainer(DirectObject.DirectObject):
 
         completedContainer.completedQuests = []
 
-    def assignQuest(self,
-                    quests,
-                    giverId,
-                    nextQuestIds,
-                    rewards=[],
-                    callback=None):
+    def assignQuest(self, quests, giverId, nextQuestIds, rewards=[], callback=None):
         for quest in quests:
             if hasattr(quest, 'questDNA'):
                 questDNA = quest.getQuestDNA()
                 if questDNA:
-                    if questDNA.getProgressBlock() and (
-                            questDNA.getFinalQuest() or
-                            self.av.getAccess() != 2):
+                    if questDNA.getProgressBlock() and (questDNA.getFinalQuest() or self.av.getAccess() != 2):
                         nextQuestId = nextQuestIds[0]
                         self.av.d_popupProgressBlocker(nextQuestId)
                 else:
@@ -281,8 +238,7 @@ class QuestContainer(DirectObject.DirectObject):
             self.av._swapQuest(quests, giverId, nextQuestIds, rewards)
         else:
             if len(nextQuestIds) > 1:
-                self.notify.warning(
-                    'attempted to assign multiple quests: %s' % nextQuestIds)
+                self.notify.warning('attempted to assign multiple quests: %s' % nextQuestIds)
             self.av._acceptQuest(nextQuestId, giverId, rewards)
 
         def handleQuestsAvailable(callback, av, quests):
@@ -297,10 +253,7 @@ class QuestContainer(DirectObject.DirectObject):
             if callback:
                 callback(av.getDoId())
 
-        self.acceptOnce(
-            'quest-available-%s-%d' % (nextQuestId, self.av.getDoId()),
-            handleQuestsAvailable,
-            extraArgs=[callback])
+        self.acceptOnce('quest-available-%s-%d' % (nextQuestId, self.av.getDoId()), handleQuestsAvailable, extraArgs=[callback])
 
     def updateHistory(self, completedContainer):
         self.av.questStatus.updateHistory(completedContainer)
@@ -419,8 +372,7 @@ class QuestContainer(DirectObject.DirectObject):
                     self.containers[idx].completeChildContainers()
 
             else:
-                self.notify.warning(
-                    "%s not in parent's container list!" % container.getName())
+                self.notify.warning("%s not in parent's container list!" % container.getName())
 
     def printLine(self, indent, text):
         for i in range(0, indent):
@@ -430,9 +382,7 @@ class QuestContainer(DirectObject.DirectObject):
 
     def printAll(self, indent=0):
         self.printLine(indent, 'Name: %s Title: %s' % (self.name, self.title))
-        self.printLine(
-            indent,
-            'Giver: %s FirstQuestId: %s' % (self.giverId, self.firstQuestId))
+        self.printLine(indent, 'Giver: %s FirstQuestId: %s' % (self.giverId, self.firstQuestId))
         self.printLine(indent, 'Description: %s' % self.description)
         self.printLine(indent, '--------------------------------------------')
         for container in self.containers:
@@ -440,31 +390,12 @@ class QuestContainer(DirectObject.DirectObject):
 
 
 class QuestStub(QuestContainer):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestStub')
 
-    def __init__(self,
-                 name,
-                 av,
-                 questInt,
-                 parent,
-                 giverId,
-                 rewards,
-                 complete=False,
-                 description='',
-                 goal=1):
+    def __init__(self, name, av, questInt, parent, giverId, rewards, complete=False, description='', goal=1):
         title = name
-        QuestContainer.__init__(
-            self,
-            name,
-            title,
-            av,
-            questInt,
-            parent,
-            giverId,
-            rewards,
-            firstQuestId=name,
-            description=description)
+        QuestContainer.__init__(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId=name, description=description)
         self.quest = None
         self.goal = goal
         self.complete = complete
@@ -480,8 +411,7 @@ class QuestStub(QuestContainer):
         if quest.getQuestId() == self.name:
             self.quest = quest
             if quest.isDroppable():
-                self.acceptOnce(quest.getDroppedEventString(),
-                                self.handleQuestDropped)
+                self.acceptOnce(quest.getDroppedEventString(), self.handleQuestDropped)
             self.complete = False
             return True
         else:
@@ -490,8 +420,7 @@ class QuestStub(QuestContainer):
     def unlinkQuest(self, questId):
         if questId == self.name:
             if self.quest == None:
-                self.notify.warning(
-                    'Unlinking empty quest stub: %s' % self.name)
+                self.notify.warning('Unlinking empty quest stub: %s' % self.name)
             self.ignore(self.quest.getDroppedEventString())
             self.quest = None
             return True
@@ -506,31 +435,23 @@ class QuestStub(QuestContainer):
         if not self.name:
             self.notify.warning('QuestStub no quest to assignFirstQuest!')
             return
-        self.assignQuest(completedQuests, self.giverId, [self.name],
-                         [self.rewards])
+        self.assignQuest(completedQuests, self.giverId, [self.name], [self.rewards])
 
     def handleQuestComplete(self, quest, prevCompletedQuests=[]):
-        self.notify.debug(
-            'QStub.handleQuestComplete.SELF.QUEST_INT: %s' % self.questInt)
+        self.notify.debug('QStub.handleQuestComplete.SELF.QUEST_INT: %s' % self.questInt)
         self.notify.debug('QS.handleQuestComplete.quest: %s' % quest)
-        self.notify.debug('QS.handleQuestComplete.PREV_COMPLETED_QUESTS: %s' %
-                          prevCompletedQuests)
-        self.notify.debug('QS.handleQuestComplete.SELF.COMPLETED_QUESTS: %s' %
-                          self.completedQuests)
-        self.notify.debug(
-            'QS.handleQuestComplete.IS_COMPLETE: %s' % self.isComplete())
-        self.notify.debug(
-            'QS.handleQuestComplete.SELF.av.queststatus.NPC_Interact_Mode: %s' %
-            self.av.questStatus.getNPCInteractMode())
+        self.notify.debug('QS.handleQuestComplete.PREV_COMPLETED_QUESTS: %s' % prevCompletedQuests)
+        self.notify.debug('QS.handleQuestComplete.SELF.COMPLETED_QUESTS: %s' % self.completedQuests)
+        self.notify.debug('QS.handleQuestComplete.IS_COMPLETE: %s' % self.isComplete())
+        self.notify.debug('QS.handleQuestComplete.SELF.av.queststatus.NPC_Interact_Mode: %s' % self.av.questStatus.getNPCInteractMode())
         if self.complete:
             return False
         if self.av.questStatus.getNPCInteractMode() == False:
             self.complete = True
             if len(self.completedQuests) > 0:
-                self.notify.warning(
-                    'self.completedQuests is not empty after getNPCInteractMode is reset False (interaction with npc is done)'
-                )
-            self.completedQuests = [quest]
+                self.notify.warning('self.completedQuests is not empty after getNPCInteractMode is reset False (interaction with npc is done)')
+            self.completedQuests = [
+             quest]
             self.processed = True
             self.parent.handleQuestComplete(quest, self, self.completedQuests)
         return True
@@ -545,7 +466,8 @@ class QuestStub(QuestContainer):
         else:
             if self.getQuestInt() in history:
                 self.complete = True
-                return (self.goal, self.goal)
+                return (
+                 self.goal, self.goal)
         totProg = 0
         totGoal = 0
         if self.quest:
@@ -554,7 +476,8 @@ class QuestStub(QuestContainer):
                 totProg += progress
                 totGoal += goal
 
-        return (totProg, totGoal)
+        return (
+         totProg, totGoal)
 
     def isComplete(self, showComplete=False):
         if showComplete:
@@ -579,23 +502,13 @@ class QuestStub(QuestContainer):
 
 
 class QuestChoice(QuestContainer):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestChoice')
     CompleteAll = -1
 
-    def __init__(self,
-                 name,
-                 title,
-                 av,
-                 questInt,
-                 parent,
-                 giverId,
-                 rewards,
-                 description='',
-                 completeCount=-1):
+    def __init__(self, name, title, av, questInt, parent, giverId, rewards, description='', completeCount=-1):
         firstQuestId = None
-        QuestContainer.__init__(self, name, title, av, questInt, parent,
-                                giverId, rewards, firstQuestId, description)
+        QuestContainer.__init__(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description)
         self.revisitQuestId = '%s-revisit' % self.name
         self.completeCount = completeCount
         self.completeCountVerified = False
@@ -617,11 +530,11 @@ class QuestChoice(QuestContainer):
         if self.av:
             history = self.av.getQuestLadderHistory()
         for container in self.getContainers():
-            if container.isComplete(
-                    showComplete) or container.getQuestInt() in history:
+            if container.isComplete(showComplete) or container.getQuestInt() in history:
                 compCont += 1
 
-        return (compCont, self.completeCount, len(self.getContainers()))
+        return (
+         compCont, self.completeCount, len(self.getContainers()))
 
     def getValidContainers(self):
         quests = self.av.questStatus.getCurrentQuests()
@@ -654,12 +567,7 @@ class QuestChoice(QuestContainer):
         container = self.getContainer(nextQuestId)
         if container:
             nextQuestId = container.getFirstQuestId()
-        self.assignQuest(
-            self.completedQuests,
-            self.giverId,
-            nextQuestId,
-            rewards=rewards,
-            callback=callback)
+        self.assignQuest(self.completedQuests, self.giverId, nextQuestId, rewards=rewards, callback=callback)
         self.completedQuests = []
 
     def assignFirstQuest(self, completedQuests):
@@ -672,13 +580,10 @@ class QuestChoice(QuestContainer):
         self.assignQuest(completedQuests, self.giverId, nextQuestIds, rewards)
 
     def updateCompletedQuests(self, completedQuest, prevCompletedQuests=[]):
-        self.notify.debug(
-            'QChoice.updateCompletedQuests.SELF.QUEST_INT: %s' % self.questInt)
-        self.notify.debug(
-            'QChoice.updateCompletedQuests.completedQuest: %s' % completedQuest)
+        self.notify.debug('QChoice.updateCompletedQuests.SELF.QUEST_INT: %s' % self.questInt)
+        self.notify.debug('QChoice.updateCompletedQuests.completedQuest: %s' % completedQuest)
         if completedQuest in self.completedQuests:
-            self.notify.warning('Quest: %s already in completedQuests!' %
-                                completedQuest.getQuestId())
+            self.notify.warning('Quest: %s already in completedQuests!' % completedQuest.getQuestId())
         else:
             self.completedQuests.append(completedQuest)
 
@@ -691,25 +596,22 @@ class QuestChoice(QuestContainer):
         if quests:
             droppedQuestId = droppedQuest.getQuestId()
             for quest in quests:
-                if quest.getQuestId() != droppedQuestId and self.hasQuest(
-                        quest.getQuestId()):
+                if quest.getQuestId() != droppedQuestId and self.hasQuest(quest.getQuestId()):
                     found = 1
                     break
 
         if not found:
             if self.revisitQuestId:
-                self.assignQuest([droppedQuest], self.giverId,
-                                 self.revisitQuestId, self.rewards)
+                self.assignQuest([droppedQuest], self.giverId, self.revisitQuestId, self.rewards)
             else:
-                self.notify.warning(
-                    'RevisitQuestId not defined for: %s' % self.getName())
+                self.notify.warning('RevisitQuestId not defined for: %s' % self.getName())
                 self.av._dropQuest(droppedQuest)
         else:
             self.av._dropQuest(droppedQuest)
 
 
 class QuestLadder(QuestContainer):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestLadder')
 
     def isComplete(self, showComplete=False):
@@ -734,12 +636,11 @@ class QuestLadder(QuestContainer):
 
                 break
 
-        return (totCompCont, totCont)
+        return (
+         totCompCont, totCont)
 
 
 class QuestChoiceSingle(QuestLadder):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestChoiceSingle')
-
-
 # okay decompiling .\pirates\quest\QuestLadder.pyc

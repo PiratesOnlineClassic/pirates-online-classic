@@ -15,7 +15,8 @@ def rgb2hsv(r, g, b):
     else:
         s = 0.0
         h = -1.0
-        return (h, s, v)
+        return (
+            h, s, v)
     if r == _max:
         h = (g - b) / delta
     else:
@@ -31,7 +32,8 @@ def rgb2hsv(r, g, b):
 
 def hsv2rgb(h, s, v):
     if s == 0.0:
-        return (v, v, v)
+        return (
+            v, v, v)
     h %= 360.0
     h /= 60.0
     i = int(math.floor(h))
@@ -54,7 +56,8 @@ def hsv2rgb(h, s, v):
                     if i == 4:
                         return (t, p, v)
                     else:
-                        return (v, p, q)
+                        return (
+                            v, p, q)
 
 
 def rgb2yuv(r, g, b):
@@ -69,6 +72,4 @@ def yuv2rgb(y, u, v):
     g = y - 0.3436954 * (u - 0.5) - 0.714169 * (v - 0.5)
     b = y + 1.7721604 * (u - 0.5) + 0.0009902 * (v - 0.5)
     return tuple(map(lambda x: min(max(x, 0), 1), (r, g, b)))
-
-
 # okay decompiling .\otp\speedchat\ColorSpace.pyc

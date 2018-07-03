@@ -1,8 +1,6 @@
 from pirates.creature.Creature import Creature
 
-
 class Animal(Creature):
-
     def __init__(self, animationMixer=None):
         Creature.__init__(self, animationMixer)
 

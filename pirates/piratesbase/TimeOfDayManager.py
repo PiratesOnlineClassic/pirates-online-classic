@@ -11,7 +11,7 @@ from pirates.piratesbase import (AvatarShadowCaster, PiratesGlobals, SkyGroup,
 
 
 class TimeOfDayManager(FSM.FSM):
-
+    
     notify = directNotify.newCategory('TimeOfDayManager')
 
     def __init__(self):
@@ -47,8 +47,7 @@ class TimeOfDayManager(FSM.FSM):
 
     def enableAvatarShadows(self):
         if not self.avatarShadowCaster:
-            self.avatarShadowCaster = AvatarShadowCaster.AvatarShadowCaster(
-                self.sunLight)
+            self.avatarShadowCaster = AvatarShadowCaster.AvatarShadowCaster(self.sunLight)
         self.avatarShadowCaster.enable()
         self.skyGroup.shadowCaster = self.avatarShadowCaster
 
@@ -101,13 +100,11 @@ class TimeOfDayManager(FSM.FSM):
     def _computeCurrentState(self):
         if self.cycleDuration == 0:
             return (self.startingState, 0.0)
-        elapsedTime = globalClockDelta.localElapsedTime(
-            self.startingTime, bits=32)
+        elapsedTime = globalClockDelta.localElapsedTime(self.startingTime, bits=32)
         remTime = elapsedTime % self.cycleDuration
         stateId = self.startingState
         while 1:
-            stateDuration = self.cycleDuration * TODGlobals.getStateDuration(
-                self.cycleType, stateId)
+            stateDuration = self.cycleDuration * TODGlobals.getStateDuration(self.cycleType, stateId)
             if remTime < stateDuration:
                 return (stateId, remTime)
             else:
@@ -120,11 +117,9 @@ class TimeOfDayManager(FSM.FSM):
             return 0
         nextStateId = TODGlobals.getNextStateId(self.cycleType, stateId)
         nextStateName = TODGlobals.getStateName(nextStateId)
-        stateDuration = self.cycleDuration * TODGlobals.getStateDuration(
-            self.cycleType, stateId)
+        stateDuration = self.cycleDuration * TODGlobals.getStateDuration(self.cycleType, stateId)
         delayTime = stateDuration - elapsedTime
-        self.nextDoLater = taskMgr.doMethodLater(
-            delayTime, self._doLaterRequest, self.waitTaskName, extraArgs=[])
+        self.nextDoLater = taskMgr.doMethodLater(delayTime, self._doLaterRequest, self.waitTaskName, extraArgs=[])
         return stateDuration
 
     def _doLaterRequest(self):
@@ -149,79 +144,21 @@ class TimeOfDayManager(FSM.FSM):
             environment = TODGlobals.ENV_DEFAULT
         else:
             environment = self.environment
-        ival = Parallel(
-            LerpFunctionInterval(
-                self.alight.node().setColor,
-                duration=t,
-                toData=TODGlobals.AmbientLightColors[environment][toState],
-                fromData=TODGlobals.AmbientLightColors[environment][fromState],
-                name='TOD_aLightColor-%d'),
-            LerpFunctionInterval(
-                self.grassLight.node().setColor,
-                duration=t,
-                toData=TODGlobals.GrassLightColors[toState],
-                fromData=TODGlobals.GrassLightColors[fromState],
-                name='TOD_grassLightColor-%d'),
-            LerpFunctionInterval(
-                self.fog.setColor,
-                duration=t,
-                toData=TODGlobals.FogColors[environment][toState],
-                fromData=TODGlobals.FogColors[environment][fromState],
-                name='TOD_fogColor-%d'),
-            LerpFunctionInterval(
-                self.fog.setExpDensity,
-                duration=t,
-                toData=TODGlobals.FogExps[environment][toState],
-                fromData=TODGlobals.FogExps[environment][fromState],
-                name='TOD_fogExp-%d'),
-            name='TOD_transitionTimeOfDay')
+        ival = Parallel(LerpFunctionInterval(self.alight.node().setColor, duration=t, toData=TODGlobals.AmbientLightColors[environment][toState], fromData=TODGlobals.AmbientLightColors[environment][fromState], name='TOD_aLightColor-%d'), LerpFunctionInterval(self.grassLight.node().setColor, duration=t, toData=TODGlobals.GrassLightColors[toState], fromData=TODGlobals.GrassLightColors[fromState], name='TOD_grassLightColor-%d'), LerpFunctionInterval(self.fog.setColor, duration=t, toData=TODGlobals.FogColors[environment][toState], fromData=TODGlobals.FogColors[environment][fromState], name='TOD_fogColor-%d'), LerpFunctionInterval(self.fog.setExpDensity, duration=t, toData=TODGlobals.FogExps[environment][toState], fromData=TODGlobals.FogExps[environment][fromState], name='TOD_fogExp-%d'), name='TOD_transitionTimeOfDay')
         if not self.fixedSky:
             fromSkyColor = TODGlobals.SkyColors[fromState]
             toSkyColor = TODGlobals.SkyColors[toState]
-            ival.append(
-                LerpFunctionInterval(
-                    base.win.setClearColor,
-                    duration=t,
-                    fromData=fromSkyColor,
-                    toData=toSkyColor))
+            ival.append(LerpFunctionInterval(base.win.setClearColor, duration=t, fromData=fromSkyColor, toData=toSkyColor))
             if hasattr(base, 'pe'):
-                ival.append(
-                    LerpFunctionInterval(
-                        base.setBackgroundColor,
-                        duration=t,
-                        fromData=fromSkyColor,
-                        toData=toSkyColor))
-            ival.append(
-                self.skyGroup.transitionSky(fromState, toState, duration=t))
+                ival.append(LerpFunctionInterval(base.setBackgroundColor, duration=t, fromData=fromSkyColor, toData=toSkyColor))
+            ival.append(self.skyGroup.transitionSky(fromState, toState, duration=t))
         self.currLight = self.skyGroup.getLight(fromState)
         self.dLight = self.skyGroup.getLight(toState)
         if self.currLight != self.dLight:
-            ival.append(
-                LerpFunctionInterval(
-                    self.currLight.node().setColor,
-                    duration=t,
-                    fromData=TODGlobals.DirectionalLightColors[environment][
-                        fromState],
-                    toData=Vec4(0, 0, 0, 0),
-                    name='TOD_dLightColorA-%d'))
-            ival.append(
-                LerpFunctionInterval(
-                    self.dLight.node().setColor,
-                    duration=t,
-                    toData=TODGlobals.DirectionalLightColors[environment][
-                        toState],
-                    fromData=Vec4(0, 0, 0, 0),
-                    name='TOD_dLightColorB-%d'))
+            ival.append(LerpFunctionInterval(self.currLight.node().setColor, duration=t, fromData=TODGlobals.DirectionalLightColors[environment][fromState], toData=Vec4(0, 0, 0, 0), name='TOD_dLightColorA-%d'))
+            ival.append(LerpFunctionInterval(self.dLight.node().setColor, duration=t, toData=TODGlobals.DirectionalLightColors[environment][toState], fromData=Vec4(0, 0, 0, 0), name='TOD_dLightColorB-%d'))
         else:
-            ival.append(
-                LerpFunctionInterval(
-                    self.dlight.node().setColor,
-                    duration=t,
-                    toData=TODGlobals.DirectionalLightColors[environment][
-                        toState],
-                    fromData=TODGlobals.DirectionalLightColors[environment][
-                        fromState],
-                    name='TOD_dLightColor-%d'))
+            ival.append(LerpFunctionInterval(self.dlight.node().setColor, duration=t, toData=TODGlobals.DirectionalLightColors[environment][toState], fromData=TODGlobals.DirectionalLightColors[environment][fromState], name='TOD_dLightColor-%d'))
         return ival
 
     def _prepareState(self, stateId):
@@ -234,8 +171,7 @@ class TimeOfDayManager(FSM.FSM):
             if hasattr(base, 'pe'):
                 base.setBackgroundColor(base.win.getClearColor())
             self.skyGroup.setSky(stateId)
-        self.alight.node().setColor(
-            TODGlobals.AmbientLightColors[environment][stateId])
+        self.alight.node().setColor(TODGlobals.AmbientLightColors[environment][stateId])
         self.grassLight.node().setColor(TODGlobals.GrassLightColors[stateId])
         self.fog.setColor(TODGlobals.FogColors[environment][stateId])
         self.fog.setExpDensity(TODGlobals.FogExps[environment][stateId])
@@ -243,26 +179,21 @@ class TimeOfDayManager(FSM.FSM):
         self.moonLight.node().setColor(Vec4(0, 0, 0, 0))
         self.dlight = self.skyGroup.getLight(stateId)
         render.setLight(self.dlight)
-        self.dlight.node().setColor(
-            TODGlobals.DirectionalLightColors[environment][stateId])
+        self.dlight.node().setColor(TODGlobals.DirectionalLightColors[environment][stateId])
         if self.avatarShadowCaster:
             self.avatarShadowCaster.setLightSrc(self.dlight)
 
     def enterDawn(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_DAWN
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
         self._prepareState(self.currentState)
-        beginTime = TODGlobals.getStateBeginTime(self.cycleType,
-                                                 self.currentState)
+        beginTime = TODGlobals.getStateBeginTime(self.cycleType, self.currentState)
         endTime = beginTime + stateDuration / max(1.0, self.cycleDuration)
-        self.transitionIval = self.skyGroup.transitionSun(
-            beginTime, endTime, stateDuration)
+        self.transitionIval = self.skyGroup.transitionSun(beginTime, endTime, stateDuration)
         self.transitionIval.start(elapsedTime)
         self.skyGroup.unstashSun()
         self.skyGroup.stashMoon()
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitDawn(self):
         taskMgr.remove(self.waitTaskName)
@@ -270,20 +201,15 @@ class TimeOfDayManager(FSM.FSM):
 
     def enterDawn2Day(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_DAWN2DAY
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
-        self.transitionIval = self._transitionTimeOfDay(
-            PiratesGlobals.TOD_DAWN, PiratesGlobals.TOD_DAY, stateDuration)
-        beginTime = TODGlobals.getStateBeginTime(self.cycleType,
-                                                 self.currentState)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
+        self.transitionIval = self._transitionTimeOfDay(PiratesGlobals.TOD_DAWN, PiratesGlobals.TOD_DAY, stateDuration)
+        beginTime = TODGlobals.getStateBeginTime(self.cycleType, self.currentState)
         endTime = beginTime + stateDuration / max(1.0, self.cycleDuration)
-        self.transitionIval.append(
-            self.skyGroup.transitionSun(beginTime, endTime, stateDuration))
+        self.transitionIval.append(self.skyGroup.transitionSun(beginTime, endTime, stateDuration))
         self.transitionIval.start(elapsedTime)
         self.skyGroup.unstashSun()
         self.skyGroup.stashMoon()
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitDawn2Day(self):
         taskMgr.remove(self.waitTaskName)
@@ -291,19 +217,15 @@ class TimeOfDayManager(FSM.FSM):
 
     def enterDay(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_DAY
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
         self._prepareState(self.currentState)
-        beginTime = TODGlobals.getStateBeginTime(self.cycleType,
-                                                 self.currentState)
+        beginTime = TODGlobals.getStateBeginTime(self.cycleType, self.currentState)
         endTime = beginTime + stateDuration / max(1.0, self.cycleDuration)
-        self.transitionIval = self.skyGroup.transitionSun(
-            beginTime, endTime, stateDuration)
+        self.transitionIval = self.skyGroup.transitionSun(beginTime, endTime, stateDuration)
         self.transitionIval.start(elapsedTime)
         self.skyGroup.unstashSun()
         self.skyGroup.stashMoon()
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitDay(self):
         taskMgr.remove(self.waitTaskName)
@@ -311,20 +233,15 @@ class TimeOfDayManager(FSM.FSM):
 
     def enterDay2Dusk(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_DAY2DUSK
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
-        self.transitionIval = self._transitionTimeOfDay(
-            PiratesGlobals.TOD_DAY, PiratesGlobals.TOD_DUSK, stateDuration)
-        beginTime = TODGlobals.getStateBeginTime(self.cycleType,
-                                                 self.currentState)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
+        self.transitionIval = self._transitionTimeOfDay(PiratesGlobals.TOD_DAY, PiratesGlobals.TOD_DUSK, stateDuration)
+        beginTime = TODGlobals.getStateBeginTime(self.cycleType, self.currentState)
         endTime = beginTime + stateDuration / max(1.0, self.cycleDuration)
-        self.transitionIval.append(
-            self.skyGroup.transitionSun(beginTime, endTime, stateDuration))
+        self.transitionIval.append(self.skyGroup.transitionSun(beginTime, endTime, stateDuration))
         self.transitionIval.start(elapsedTime)
         self.skyGroup.unstashSun()
         self.skyGroup.stashMoon()
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitDay2Dusk(self):
         taskMgr.remove(self.waitTaskName)
@@ -332,19 +249,15 @@ class TimeOfDayManager(FSM.FSM):
 
     def enterDusk(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_DUSK
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
         self._prepareState(self.currentState)
-        beginTime = TODGlobals.getStateBeginTime(self.cycleType,
-                                                 self.currentState)
+        beginTime = TODGlobals.getStateBeginTime(self.cycleType, self.currentState)
         endTime = beginTime + stateDuration / max(1.0, self.cycleDuration)
-        self.transitionIval = self.skyGroup.transitionSun(
-            beginTime, endTime, stateDuration)
+        self.transitionIval = self.skyGroup.transitionSun(beginTime, endTime, stateDuration)
         self.transitionIval.start(elapsedTime)
         self.skyGroup.unstashSun()
         self.skyGroup.stashMoon()
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitDusk(self):
         taskMgr.remove(self.waitTaskName)
@@ -352,23 +265,18 @@ class TimeOfDayManager(FSM.FSM):
 
     def enterDusk2Night(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_DUSK2NIGHT
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
-        self.transitionIval = self._transitionTimeOfDay(
-            PiratesGlobals.TOD_DUSK, PiratesGlobals.TOD_NIGHT, stateDuration)
-        beginTime = TODGlobals.getStateBeginTime(self.cycleType,
-                                                 self.currentState)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
+        self.transitionIval = self._transitionTimeOfDay(PiratesGlobals.TOD_DUSK, PiratesGlobals.TOD_NIGHT, stateDuration)
+        beginTime = TODGlobals.getStateBeginTime(self.cycleType, self.currentState)
         endTime = beginTime + stateDuration / max(1.0, self.cycleDuration)
-        self.transitionIval.append(
-            self.skyGroup.transitionSun(beginTime, endTime, stateDuration))
+        self.transitionIval.append(self.skyGroup.transitionSun(beginTime, endTime, stateDuration))
         self.transitionIval.append(self.skyGroup.fadeOutSun(stateDuration))
         self.transitionIval.append(self.skyGroup.fadeInMoon(stateDuration))
         self.transitionIval.append(self.skyGroup.fadeInStars(stateDuration))
         self.transitionIval.start(elapsedTime)
         self.skyGroup.unstashSun()
         self.skyGroup.unstashMoon()
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitDusk2Night(self):
         taskMgr.remove(self.waitTaskName)
@@ -376,31 +284,26 @@ class TimeOfDayManager(FSM.FSM):
 
     def enterNight(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_NIGHT
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
         self._prepareState(self.currentState)
         self.skyGroup.setSunAngle(0)
         self.skyGroup.stashSun()
         self.skyGroup.unstashMoon()
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitNight(self):
         taskMgr.remove(self.waitTaskName)
 
     def enterNight2Stars(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_NIGHT2STARS
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
-        self.transitionIval = self._transitionTimeOfDay(
-            PiratesGlobals.TOD_NIGHT, PiratesGlobals.TOD_STARS, stateDuration)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
+        self.transitionIval = self._transitionTimeOfDay(PiratesGlobals.TOD_NIGHT, PiratesGlobals.TOD_STARS, stateDuration)
         self.transitionIval.append(self.skyGroup.fadeInStarsMore(stateDuration))
         self.transitionIval.start(elapsedTime)
         self.skyGroup.setSunAngle(0)
         self.skyGroup.stashSun()
         self.skyGroup.unstashMoon()
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitNight2Stars(self):
         taskMgr.remove(self.waitTaskName)
@@ -408,14 +311,12 @@ class TimeOfDayManager(FSM.FSM):
 
     def enterStars(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_STARS
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
         self._prepareState(self.currentState)
         self.skyGroup.setSunAngle(0)
         self.skyGroup.stashSun()
         self.skyGroup.unstashMoon()
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
         if base.cr.activeWorld:
             base.cr.activeWorld.enableFireworkShow(elapsedTime)
 
@@ -426,23 +327,18 @@ class TimeOfDayManager(FSM.FSM):
 
     def enterStars2Dawn(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_STARS2DAWN
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
-        self.transitionIval = self._transitionTimeOfDay(
-            PiratesGlobals.TOD_STARS, PiratesGlobals.TOD_DAWN, stateDuration)
-        beginTime = TODGlobals.getStateBeginTime(self.cycleType,
-                                                 self.currentState)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
+        self.transitionIval = self._transitionTimeOfDay(PiratesGlobals.TOD_STARS, PiratesGlobals.TOD_DAWN, stateDuration)
+        beginTime = TODGlobals.getStateBeginTime(self.cycleType, self.currentState)
         endTime = beginTime + stateDuration / max(1.0, self.cycleDuration)
-        self.transitionIval.append(
-            self.skyGroup.transitionSun(beginTime, endTime, stateDuration))
+        self.transitionIval.append(self.skyGroup.transitionSun(beginTime, endTime, stateDuration))
         self.transitionIval.append(self.skyGroup.fadeInSun(stateDuration))
         self.transitionIval.append(self.skyGroup.fadeOutMoon(stateDuration))
         self.transitionIval.append(self.skyGroup.fadeOutStars(stateDuration))
         self.transitionIval.start(elapsedTime)
         self.skyGroup.unstashSun()
         self.skyGroup.unstashMoon()
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitStars2Dawn(self):
         taskMgr.remove(self.waitTaskName)
@@ -450,24 +346,21 @@ class TimeOfDayManager(FSM.FSM):
 
     def enterHalloweenNight(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_HALLOWEEN
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
         self._prepareState(self.currentState)
         self.skyGroup.setSunAngle(0)
         self.skyGroup.stashSun()
         self.skyGroup.unstashMoonBig()
         self.skyGroup.moonOverlay.stash()
         self.skyGroup.setMoonState(0.0)
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitHalloweenNight(self):
         taskMgr.remove(self.waitTaskName)
 
     def enterFullMoon(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_FULLMOON
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
         self._prepareState(PiratesGlobals.TOD_HALLOWEEN)
         self.skyGroup.setSunAngle(0)
         self.skyGroup.stashSun()
@@ -475,8 +368,7 @@ class TimeOfDayManager(FSM.FSM):
         self.skyGroup.unstashMoonBig()
         self.transitionIval = self.skyGroup.fadeInMoonOverlay()
         self.transitionIval.start()
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitFullMoon(self):
         taskMgr.remove(self.waitTaskName)
@@ -484,17 +376,14 @@ class TimeOfDayManager(FSM.FSM):
 
     def enterHalf2FullMoon(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_HALF2FULLMOON
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
         self._prepareState(PiratesGlobals.TOD_HALLOWEEN)
         self.skyGroup.setSunAngle(0)
         self.skyGroup.stashSun()
         self.skyGroup.unstashMoonBig()
-        self.transitionIval = self.skyGroup.transitionMoon(
-            0.0, 0.95, stateDuration)
+        self.transitionIval = self.skyGroup.transitionMoon(0.0, 0.95, stateDuration)
         self.transitionIval.start(elapsedTime)
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitHalf2FullMoon(self):
         taskMgr.remove(self.waitTaskName)
@@ -502,18 +391,14 @@ class TimeOfDayManager(FSM.FSM):
 
     def enterFull2HalfMoon(self, elapsedTime=0.0):
         self.currentState = PiratesGlobals.TOD_FULL2HALFMOON
-        stateDuration = self._waitForNextStateRequest(self.currentState,
-                                                      elapsedTime)
+        stateDuration = self._waitForNextStateRequest(self.currentState, elapsedTime)
         self._prepareState(PiratesGlobals.TOD_HALLOWEEN)
         self.skyGroup.setSunAngle(0)
         self.skyGroup.stashSun()
         self.skyGroup.unstashMoonBig()
-        self.transitionIval = Parallel(
-            self.skyGroup.fadeOutMoonOverlay(),
-            self.skyGroup.transitionMoon(1.0, 0.0, stateDuration))
+        self.transitionIval = Parallel(self.skyGroup.fadeOutMoonOverlay(), self.skyGroup.transitionMoon(1.0, 0.0, stateDuration))
         self.transitionIval.start(elapsedTime)
-        messenger.send('timeOfDayChange',
-                       [self.currentState, stateDuration, elapsedTime])
+        messenger.send('timeOfDayChange', [self.currentState, stateDuration, elapsedTime])
 
     def exitFull2HalfMoon(self):
         taskMgr.remove(self.waitTaskName)
@@ -564,14 +449,9 @@ class TimeOfDayManager(FSM.FSM):
     def setEnvironment(self, envId, geom=None):
         if envId == TODGlobals.ENV_OFF:
             self.request('Off')
-        elif envId == TODGlobals.ENV_SWAMP and self.currentState not in [
-                PiratesGlobals.TOD_HALLOWEEN, PiratesGlobals.TOD_FULLMOON,
-                PiratesGlobals.TOD_HALF2FULLMOON,
-                PiratesGlobals.TOD_FULL2HALFMOON
-        ]:
+        elif envId == TODGlobals.ENV_SWAMP and self.currentState not in [PiratesGlobals.TOD_HALLOWEEN, PiratesGlobals.TOD_FULLMOON, PiratesGlobals.TOD_HALF2FULLMOON, PiratesGlobals.TOD_FULL2HALFMOON]:
             self.fixedSky = True
-            base.win.setClearColor(
-                TODGlobals.SkyColors[PiratesGlobals.TOD_SWAMP])
+            base.win.setClearColor(TODGlobals.SkyColors[PiratesGlobals.TOD_SWAMP])
             self.skyGroup.setSky(PiratesGlobals.TOD_SWAMP)
         elif envId == TODGlobals.ENV_CAVE:
             self._prepareState(PiratesGlobals.TOD_NIGHT)

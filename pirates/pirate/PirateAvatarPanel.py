@@ -13,7 +13,6 @@ GUILDRANK_GM = 3
 GUILDRANK_OFFICER = 2
 GUILDRANK_MEMBER = 1
 
-
 class PirateAvatarPanel(IdentityPanel.IdentityPanel):
 
     def __init__(self, avId):
@@ -32,8 +31,7 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
             self.avName = self.avName + '\n\n' + info.playerName
         elif av:
             self.pId = av.DISLid
-        IdentityPanel.IdentityPanel.__init__(self, avId, self.avName,
-                                             self.width, 0.2)
+        IdentityPanel.IdentityPanel.__init__(self, avId, self.avName, self.width, 0.2)
         self.initialiseoptions(PirateAvatarPanel)
         self.avDisableName = 'disable-%s' % self.avId
         self.accept(self.avDisableName, self.determineButtonState)
@@ -49,11 +47,9 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
             if Freebooter.getPaidStatus(avId):
                 if Freebooter.getFounderStatus(avId):
                     self.titleLabel['text_fg'] = (1, 1, 1, 1)
-                    self.titleLabel[
-                        'text_font'] = PiratesGlobals.getPirateOutlineFont()
+                    self.titleLabel['text_font'] = PiratesGlobals.getPirateOutlineFont()
                     oldNameText = self.titleLabel['text']
-                    self.titleLabel[
-                        'text'] = '\x05goldFounderIcon\x05 \x01goldFounder\x01%s\x02' % oldNameText
+                    self.titleLabel['text'] = '\x05goldFounderIcon\x05 \x01goldFounder\x01%s\x02' % oldNameText
                 else:
                     self.titleLabel['text_fg'] = (0.4, 0.3, 0.95, 1)
             else:
@@ -62,38 +58,23 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
 
     def load(self):
         IdentityPanel.IdentityPanel.load(self)
-        self.crewButton = self.chain.premakeButton(PLocalizer.AvatarPanelCrew,
-                                                   self.__handleCrew)
-        self.friendStart = self.chain.premakeButton(
-            PLocalizer.AvatarPanelRelationships, self.__handleAvatarFriend)
-        self.goToButton = self.chain.premakeButton(PLocalizer.AvatarPanelGoTo,
-                                                   self.__handleGoto)
-        self.guildButton = self.chain.premakeButton(PLocalizer.AvatarPanelGuild,
-                                                    self.__handleGuild)
-        self.ignoreButton = self.chain.premakeButton(
-            PLocalizer.AvatarPanelIgnore, self.__handleIgnore)
-        self.reportButton = self.chain.premakeButton(
-            PLocalizer.AvatarPanelReport, self.__handleReport)
-        self.showPlayerButton = self.chain.premakeButton(
-            PLocalizer.AvatarPanelPlayer, self.__handleShowPlayer)
-        self.challengeButton = self.chain.premakeButton(
-            PLocalizer.AvatarPanelSkirmish, self.__handleChallenge)
-        self.whisperButton = self.chain.premakeButton(
-            PLocalizer.AvatarPanelWhisper, self.__handleWhisper)
-        self.closeButton = self.chain.premakeButton(PLocalizer.lClose,
-                                                    self.hide)
+        self.crewButton = self.chain.premakeButton(PLocalizer.AvatarPanelCrew, self.__handleCrew)
+        self.friendStart = self.chain.premakeButton(PLocalizer.AvatarPanelRelationships, self.__handleAvatarFriend)
+        self.goToButton = self.chain.premakeButton(PLocalizer.AvatarPanelGoTo, self.__handleGoto)
+        self.guildButton = self.chain.premakeButton(PLocalizer.AvatarPanelGuild, self.__handleGuild)
+        self.ignoreButton = self.chain.premakeButton(PLocalizer.AvatarPanelIgnore, self.__handleIgnore)
+        self.reportButton = self.chain.premakeButton(PLocalizer.AvatarPanelReport, self.__handleReport)
+        self.showPlayerButton = self.chain.premakeButton(PLocalizer.AvatarPanelPlayer, self.__handleShowPlayer)
+        self.challengeButton = self.chain.premakeButton(PLocalizer.AvatarPanelSkirmish, self.__handleChallenge)
+        self.whisperButton = self.chain.premakeButton(PLocalizer.AvatarPanelWhisper, self.__handleWhisper)
+        self.closeButton = self.chain.premakeButton(PLocalizer.lClose, self.hide)
         self.chain.makeButtons()
         self.showPlayerButton['state'] = DGG.DISABLED
         self.crewButton['state'] = DGG.DISABLED
         self.guildButton['state'] = DGG.DISABLED
         gui = loader.loadModel('models/gui/toplevel_gui')
         self.x = gui.find('**/generic_x')
-        xLabel = DirectLabel(
-            parent=self.closeButton,
-            relief=None,
-            image=self.x,
-            image_scale=0.35,
-            image_color=PiratesGuiGlobals.ButtonColor3[0])
+        xLabel = DirectLabel(parent=self.closeButton, relief=None, image=self.x, image_scale=0.35, image_color=PiratesGuiGlobals.ButtonColor3[0])
         xLabel.setPos(-0.09, 0.0, 0.036)
 
     def destroy(self):
@@ -138,9 +119,7 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
     def __handleGuild(self):
         options = base.cr.guildManager.getOptionsFor(self.avId)
         if options:
-            base.localAvatar.guiMgr.handleGuildMember(
-                self.avId, self.avName, localAvatar.guildId, options[0],
-                options[1], options[2])
+            base.localAvatar.guiMgr.handleGuildMember(self.avId, self.avName, localAvatar.guildId, options[0], options[1], options[2])
         else:
             base.localAvatar.guiMgr.handleGuildInvite(self.avId, self.avName)
 
@@ -200,8 +179,7 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
     def determineButtonState(self, extra=None):
         IdentityPanel.IdentityPanel.determineButtonState(self)
         if self.avId:
-            infoPlayer = base.cr.playerFriendsManager.findPlayerInfoFromAvId(
-                self.avId)
+            infoPlayer = base.cr.playerFriendsManager.findPlayerInfoFromAvId(self.avId)
             if infoPlayer:
                 self.showPlayerButton['state'] = DGG.NORMAL
             handle = base.cr.identifyAvatar(self.avId)
@@ -212,10 +190,8 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
                 self.goToButton['state'] = DGG.NORMAL
                 self.challengeButton['state'] = DGG.NORMAL
                 self.checkGuildRank()
-                inPVP = base.cr.activeWorld and base.cr.activeWorld.getType(
-                ) == PiratesGlobals.INSTANCE_PVP
-                inSameCrew = DistributedBandMember.DistributedBandMember.areSameCrew(
-                    localAvatar.doId, self.avId)
+                inPVP = base.cr.activeWorld and base.cr.activeWorld.getType() == PiratesGlobals.INSTANCE_PVP
+                inSameCrew = DistributedBandMember.DistributedBandMember.areSameCrew(localAvatar.doId, self.avId)
                 if not online:
                     self.crewButton['state'] = DGG.DISABLED
                     self.guildButton['state'] = DGG.DISABLED
@@ -242,8 +218,7 @@ class PirateAvatarPanel(IdentityPanel.IdentityPanel):
             self.showPlayerButton['state'] = DGG.DISABLED
 
     def checkGuildRank(self, onlyDisable=False):
-        if not base.localAvatar.getGuildId(
-        ) or base.localAvatar.getGuildRank() < GUILDRANK_OFFICER:
+        if not base.localAvatar.getGuildId() or base.localAvatar.getGuildRank() < GUILDRANK_OFFICER:
             self.guildButton['state'] = DGG.DISABLED
         elif not onlyDisable:
             self.guildButton['state'] = DGG.NORMAL

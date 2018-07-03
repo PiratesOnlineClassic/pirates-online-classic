@@ -2,12 +2,10 @@ from pirates.minigame import PlayingCardGlobals
 
 
 class PokerBase:
-
+    
     debug = False
     handCodeArray = [
-        'Nothing', 'NoPair', 'OnePair', 'TwoPair', 'Trips', 'Straight', 'Flush',
-        'FlHouse', 'Quads', 'StFlush'
-    ]
+     'Nothing', 'NoPair', 'OnePair', 'TwoPair', 'Trips', 'Straight', 'Flush', 'FlHouse', 'Quads', 'StFlush']
 
     def __init__(self):
         self.debug = PokerBase.debug
@@ -80,7 +78,8 @@ class PokerBase:
             for hand in hands:
                 length = len(hand)
                 if length >= 4:
-                    rank_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    rank_array = [
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                     if length >= 7:
                         length = 6
                     i = 2

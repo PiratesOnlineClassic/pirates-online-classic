@@ -6,9 +6,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class DirtClod(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -17,8 +16,7 @@ class DirtClod(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleDirtClod')
         if not DirtClod.particleDummy:
-            DirtClod.particleDummy = render.attachNewNode(
-                ModelNode('DirtClodParticleDummy'))
+            DirtClod.particleDummy = render.attachNewNode(ModelNode('DirtClodParticleDummy'))
             DirtClod.particleDummy.setDepthWrite(0)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
@@ -73,12 +71,7 @@ class DirtClod(PooledEffect, EffectController):
         self.p0.emitter.setOuterMagnitude(1.0)
         self.p0.emitter.setInnerMagnitude(0.0)
         self.p0.emitter.setCubicLerping(0)
-        self.track = Sequence(
-            Func(self.p0.setBirthRate, 0.03), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self), Wait(0.1),
-            Func(self.p0.setBirthRate, 100), Wait(3.0),
-            Func(self.cleanUpEffect))
+        self.track = Sequence(Func(self.p0.setBirthRate, 0.03), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.1), Func(self.p0.setBirthRate, 100), Wait(3.0), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

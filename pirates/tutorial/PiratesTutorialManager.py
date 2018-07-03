@@ -1,6 +1,5 @@
 from direct.distributed import DistributedObject
 
-
 class PiratesTutorialManager(DistributedObject.DistributedObject):
     notify = directNotify.newCategory('PiratesTutorialManager')
     neverDisable = 1
@@ -33,3 +32,4 @@ class PiratesTutorialManager(DistributedObject.DistributedObject):
 
     def d_toonArrived(self):
         self.sendUpdate('toonArrived', [])
+        

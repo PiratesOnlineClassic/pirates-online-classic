@@ -8,7 +8,6 @@ from pirates.creature.DistributedCreature import DistributedCreature
 from pirates.kraken.Grabber import Grabber
 from pirates.kraken.GrabberGameFSM import GrabberGameFSM
 
-
 class GrabberTentacle(DistributedCreature):
 
     def __init__(self, cr):
@@ -31,8 +30,7 @@ class GrabberTentacle(DistributedCreature):
         self.creature.reparentTo(self.slider)
 
     def announceGenerate(self):
-        print 'announceGenerate - GrabberTentacle', self.doId, self.getLocation(
-        )
+        print 'announceGenerate - GrabberTentacle', self.doId, self.getLocation()
         DistributedCreature.announceGenerate(self)
         self.accept('f8', self.grabAvatar, extraArgs=[localAvatar])
         self.creature.startIdleTask()
@@ -101,13 +99,12 @@ class GrabberTentacle(DistributedCreature):
 
     def setLocatorId(self, locatorId):
         self.locatorId = locatorId
-
+        
         def krakenArrived(kraken):
             self.krakenRequest = None
             kraken.addGrabberTentacle(self.locatorId, self)
 
-        self.krakenRequest = self.cr.relatedObjectMgr.requestObjects(
-            (self.krakenId,), eachCallback=krakenArrived)
+        self.krakenRequest = self.cr.relatedObjectMgr.requestObjects((self.krakenId,), eachCallback=krakenArrived)
 
     def setRockingDampen(self, val):
         self.rockingDampen = val
@@ -116,7 +113,6 @@ class GrabberTentacle(DistributedCreature):
         return self.rockingDampen
 
     def attachToShipLocator(self, time=0, pos=Point3(0), wrt=False):
-
         def shipArrived(ship):
             self.shipRequest = None
             locator = ship.getKrakenGrabberLocator(self.locatorId)
@@ -131,11 +127,9 @@ class GrabberTentacle(DistributedCreature):
         if self.shipRequest:
             self.cr.relatedObjectMgr.abortRequest(self.shipRequest)
             self.shipRequest = None
-        self.shipRequest = self.cr.relatedObjectMgr.requestObjects(
-            (kraken.getShipId(),), eachCallback=shipArrived)
+        self.shipRequest = self.cr.relatedObjectMgr.requestObjects((kraken.getShipId(),), eachCallback=shipArrived)
 
     def attachToShipModel(self):
-
         def shipArrived(ship):
             self.shipRequest = None
             self.wrtSetBase(ship.getModelRoot())
@@ -144,8 +138,7 @@ class GrabberTentacle(DistributedCreature):
         if self.shipRequest:
             self.cr.relatedObjectMgr.abortRequest(self.shipRequest)
             self.shipRequest = None
-        self.shipRequest = self.cr.relatedObjectMgr.requestObjects(
-            (kraken.getShipId(),), eachCallback=shipArrived)
+        self.shipRequest = self.cr.relatedObjectMgr.requestObjects((kraken.getShipId(),), eachCallback=shipArrived)
 
     def setBase(self, node, scale=0):
         self.slideBase.reparentTo(node)
@@ -158,11 +151,9 @@ class GrabberTentacle(DistributedCreature):
             self.slideBase.setScale(scale)
 
     def loop(self, *args, **kw):
-        if args and args[0] == 'idle' or kw.get('animName') == 'idle' or kw.get(
-                'newAnim') == 'idle':
+        if args and args[0] == 'idle' or kw.get('animName') == 'idle' or kw.get('newAnim') == 'idle':
             kw['restart'] = 0
-            self.pose('idle',
-                      random.choice(xrange(self.creature.getNumFrames('idle'))))
+            self.pose('idle', random.choice(xrange(self.creature.getNumFrames('idle'))))
         DistributedCreature.loop(self, *args, **kw)
 
     def emerge(self, emerge):
@@ -171,17 +162,10 @@ class GrabberTentacle(DistributedCreature):
             self.emergeIval = None
         if emerge:
             self.setPlayRate(0.75, 'emerge')
-            self.emergeIval = Sequence(
-                Wait(random.random()), Func(self.creature.show),
-                Func(self.play, 'emerge', blendInT=0))
+            self.emergeIval = Sequence(Wait(random.random()), Func(self.creature.show), Func(self.play, 'emerge', blendInT=0))
         else:
             self.setPlayRate(-1, 'emerge')
-            self.emergeIval = Sequence(
-                Wait(random.random()), Func(self.play, 'emerge', blendOutT=0),
-                Wait(
-                    self.creature.getDuration('emerge') /
-                    abs(self.creature.getPlayRate('emerge')) - 0.1),
-                Func(self.creature.hide))
+            self.emergeIval = Sequence(Wait(random.random()), Func(self.play, 'emerge', blendOutT=0), Wait(self.creature.getDuration('emerge') / abs(self.creature.getPlayRate('emerge')) - 0.1), Func(self.creature.hide))
         self.emergeIval.start()
 
     def setEmerged(self, val):
@@ -199,10 +183,9 @@ class GrabberTentacle(DistributedCreature):
                 self.avRequest = None
                 self.l_grabAvatar(av)
 
-            self.avRequest = self.cr.relatedObjectMgr.requestObjects(
-                (avId,), eachCallback=avatarArrived)
+            self.avRequest = self.cr.relatedObjectMgr.requestObjects((avId,), eachCallback=avatarArrived)
             return
-
+            
         if self.avatarId:
             if self.avRequest:
                 self.cr.relatedObjectMgr.abortRequest(self.avRequest)
@@ -212,11 +195,9 @@ class GrabberTentacle(DistributedCreature):
                 self.avRequest = None
                 self.l_releaseAvatar(av)
 
-            self.avRequest = self.cr.relatedObjectMgr.requestObjects(
-                (self.avatarId,), eachCallback=avatarArrived)
+            self.avRequest = self.cr.relatedObjectMgr.requestObjects((self.avatarId,), eachCallback=avatarArrived)
 
     def l_grabAvatar(self, av):
-
         def moveComplete(completed):
             if completed:
                 self.attachToShipModel()
@@ -225,11 +206,7 @@ class GrabberTentacle(DistributedCreature):
                     self.reparentNodeToTip(av)
                     av.setY(-4)
                     av.loop('tentacle_struggle')
-                    taskMgr.doMethodLater(
-                        2,
-                        self.setAvatarToGrabbedState,
-                        self.uniqueName('grabDelay'),
-                        extraArgs=[av])
+                    taskMgr.doMethodLater(2, self.setAvatarToGrabbedState, self.uniqueName('grabDelay'), extraArgs=[av])
                 return
             print 'move interrupted'
 
@@ -237,8 +214,7 @@ class GrabberTentacle(DistributedCreature):
         blendDelay = 0.5
         self.creature.setPlayRate(1, 'grab_avatar')
         self.creature.play('grab_avatar')
-        self.creature.loop(
-            'grab_avatar_idle', blendT=time - blendDelay, blendDelay=blendDelay)
+        self.creature.loop('grab_avatar_idle', blendT=time - blendDelay, blendDelay=blendDelay)
         targetNode = av.find('grab_offset')
         if targetNode.isEmpty():
             targetNode = av.attachNewNode('grab_offset')
@@ -255,8 +231,7 @@ class GrabberTentacle(DistributedCreature):
         blendDelay = 0.5
         self.creature.setPlayRate(-1, 'grab_avatar')
         self.creature.play('grab_avatar')
-        self.creature.loop(
-            'idle_d', blendT=time - blendDelay, blendDelay=blendDelay)
+        self.creature.loop('idle_d', blendT=time - blendDelay, blendDelay=blendDelay)
         self.attachToShipLocator(3, pos=self.getRandomPos(), wrt=True)
         av.wrtReparentTo(self.getShip().getModelRoot())
         if av.isLocal():
@@ -290,18 +265,15 @@ class GrabberTentacle(DistributedCreature):
         if self.avRequest:
             self.cr.relatedObjectMgr.abortRequest(self.avRequest)
             self.avRequest = None
-        self.avRequest = self.cr.relatedObjectMgr.requestObjects(
-            (avId,), eachCallback=avatarArrived)
+        self.avRequest = self.cr.relatedObjectMgr.requestObjects((avId,), eachCallback=avatarArrived)
 
-    def moveToTarget(self, targetNode, time, dampenRocking=False,
-                     callback=None):
+    def moveToTarget(self, targetNode, time, dampenRocking=False, callback=None):
         self.stopMove()
         task = taskMgr.add(self.targetMoveTask, self.uniqueName('move'))
         task.targetNode = targetNode
         task.tFinal = time
         task.dampenRocking = dampenRocking
-        distance = self.creature.getGrabTargetNode().getPos(
-            self.slideBase) - task.targetNode.getPos(self.slideBase)
+        distance = self.creature.getGrabTargetNode().getPos(self.slideBase) - task.targetNode.getPos(self.slideBase)
         task.z0 = distance.getZ()
         distance.setZ(0)
         task.d0 = distance.length()
@@ -319,13 +291,11 @@ class GrabberTentacle(DistributedCreature):
             self.setRockingDampen(min(1, task.time / task.tFinal))
         distance = max(0, lerp(task.d0, 0, min(1, task.time / task.tFinal)))
         zDistance = lerp(task.z0, 0, min(1, task.time / task.tFinal))
-        vTargetToTip = self.creature.getGrabTargetNode().getPos(
-            self.slideBase) - task.targetNode.getPos(self.slideBase)
+        vTargetToTip = self.creature.getGrabTargetNode().getPos(self.slideBase) - task.targetNode.getPos(self.slideBase)
         flatTargetToTip = Point3(vTargetToTip)
         flatTargetToTip.setZ(0)
         flatTargetToTip.normalize()
-        tipPos = flatTargetToTip * distance + task.targetNode.getPos(
-            self.slideBase)
+        tipPos = flatTargetToTip * distance + task.targetNode.getPos(self.slideBase)
         creatureTipPos = self.creature.getRelativePoint(self.slideBase, tipPos)
         lam = math.atan2(creatureTipPos[0], -creatureTipPos[1])
         deltaTheta = lam - task.lam
@@ -423,8 +393,7 @@ class GrabberTentacle(DistributedCreature):
         self.rangeCollisions.hide()
 
     def getRandomPos(self):
-        return Point3(0, lerp(0, 60, random.random()),
-                      lerp(-10, -40, random.random()))
+        return Point3(0, lerp(0, 60, random.random()), lerp(-10, -40, random.random()))
 
     @staticmethod
     def showAllVis():

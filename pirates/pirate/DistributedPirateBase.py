@@ -7,8 +7,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedPirateBase(DistributedObject.DistributedObject, Pirate.Pirate):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedPirateBase')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPirateBase')
 
     def __init__(self, cr):
         self.notify.debug('__init__')
@@ -34,8 +33,7 @@ class DistributedPirateBase(DistributedObject.DistributedObject, Pirate.Pirate):
             self.beacon = Beacon.getBeacon(self.beaconNodePath)
             self.beacon.setZ(2)
             self.beacon.setBillboardPointWorld()
-            self.exposeJoint(self.beaconNodePath, 'modelRoot', 'name_tag',
-                             '2000')
+            self.exposeJoint(self.beaconNodePath, 'modelRoot', 'name_tag', '2000')
             self.beacon.setColor(PVPGlobals.getTeamColor(team))
 
     def hideBeacon(self):

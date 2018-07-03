@@ -35,17 +35,10 @@ class CannonExplosion(PooledEffect, EffectController):
 
     def createTrack(self):
         animDuration = 0.35
-        fadeOut = self.splash.colorInterval(
-            0.8, Vec4(1, 1, 1, 0), startColor=Vec4(1, 1, 1, 1))
-        animateSplash = Sequence(
-            Func(self.splash.pose, 'splashdown', 0), Func(self.splash.show),
-            Func(self.splash.setColor, Vec4(1, 1, 1, 1)),
-            Func(self.splash.play, 'splashdown'), Wait(animDuration), fadeOut,
-            Wait(1.0), Func(self.splash.stop), Func(self.splash.hide),
-            Func(self.cleanUpEffect))
+        fadeOut = self.splash.colorInterval(0.8, Vec4(1, 1, 1, 0), startColor=Vec4(1, 1, 1, 1))
+        animateSplash = Sequence(Func(self.splash.pose, 'splashdown', 0), Func(self.splash.show), Func(self.splash.setColor, Vec4(1, 1, 1, 1)), Func(self.splash.play, 'splashdown'), Wait(animDuration), fadeOut, Wait(1.0), Func(self.splash.stop), Func(self.splash.hide), Func(self.cleanUpEffect))
         sfx = random.choice(self.splashSfx)
-        self.track = Parallel(
-            animateSplash, Func(base.playSfx, sfx, volume=1, node=self.splash))
+        self.track = Parallel(animateSplash, Func(base.playSfx, sfx, volume=1, node=self.splash))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -57,6 +50,4 @@ class CannonExplosion(PooledEffect, EffectController):
         del self.splash
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\CannonExplosion.pyc

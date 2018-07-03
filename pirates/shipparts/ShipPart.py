@@ -25,23 +25,17 @@ class ShipPart:
         self.zoneLevel = 99
         self.loaded = False
         if not self.woodBreakSfx:
-            ShipPart.woodBreakSfx = (loader.loadSfx('audio/wood_impact_1.mp3'),
-                                     loader.loadSfx('audio/wood_impact_2.mp3'),
-                                     loader.loadSfx('audio/wood_impact_3.mp3'),
-                                     loader.loadSfx('audio/wood_impact_4.mp3'))
+            ShipPart.woodBreakSfx = (
+            loader.loadSfx('audio/wood_impact_1.mp3'), loader.loadSfx('audio/wood_impact_2.mp3'),
+            loader.loadSfx('audio/wood_impact_3.mp3'), loader.loadSfx('audio/wood_impact_4.mp3'))
 
         if not self.distantBreakSfx:
             ShipPart.distantBreakSfx = (
-                loader.loadSfx('audio/dist_cannon_01.mp3'),
-                loader.loadSfx('audio/dist_cannon_02.mp3'),
-                loader.loadSfx('audio/dist_cannon_03.mp3'),
-                loader.loadSfx('audio/dist_cannon_04.mp3'),
-                loader.loadSfx('audio/dist_cannon_05.mp3'),
-                loader.loadSfx('audio/dist_cannon_06.mp3'),
-                loader.loadSfx('audio/dist_cannon_07.mp3'),
-                loader.loadSfx('audio/dist_cannon_08.mp3'),
-                loader.loadSfx('audio/dist_cannon_09.mp3'),
-                loader.loadSfx('audio/dist_cannon_10.mp3'))
+            loader.loadSfx('audio/dist_cannon_01.mp3'), loader.loadSfx('audio/dist_cannon_02.mp3'),
+            loader.loadSfx('audio/dist_cannon_03.mp3'), loader.loadSfx('audio/dist_cannon_04.mp3'),
+            loader.loadSfx('audio/dist_cannon_05.mp3'), loader.loadSfx('audio/dist_cannon_06.mp3'),
+            loader.loadSfx('audio/dist_cannon_07.mp3'), loader.loadSfx('audio/dist_cannon_08.mp3'),
+            loader.loadSfx('audio/dist_cannon_09.mp3'), loader.loadSfx('audio/dist_cannon_10.mp3'))
 
     def disable(self):
         pass

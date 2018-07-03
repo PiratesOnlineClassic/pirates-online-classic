@@ -8,10 +8,9 @@ from pirates.piratesgui import InventoryPage, PiratesGuiGlobals
 
 
 class ClothingPage(InventoryPage.InventoryPage):
+    
 
     def __init__(self):
         InventoryPage.InventoryPage.__init__(self)
         self.initialiseoptions(ClothingPage)
-
-
 # okay decompiling .\pirates\piratesgui\ClothingPage.pyc

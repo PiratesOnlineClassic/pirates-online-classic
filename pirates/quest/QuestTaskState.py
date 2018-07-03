@@ -6,19 +6,11 @@ from direct.showbase.PythonUtil import ParamObj
 
 
 class QuestTaskState(ParamObj):
+    
 
     class ParamSet(ParamObj.ParamSet):
-
-        Params = {
-            'taskType': None,
-            'progress': 0,
-            'goal': 1,
-            'attempts': 0,
-            'enemyType': None,
-            'faction': None,
-            'hull': None,
-            'containersSearched': None
-        }
+        
+        Params = {'taskType': None, 'progress': 0, 'goal': 1, 'attempts': 0, 'enemyType': None, 'faction': None, 'hull': None, 'containersSearched': None}
 
     def acquire(self):
         if not hasattr(self, '_refcount'):
@@ -59,6 +51,4 @@ class QuestTaskState(ParamObj):
                 return False
         self.containersSearched.append(containerId)
         return True
-
-
 # okay decompiling .\pirates\quest\QuestTaskState.pyc

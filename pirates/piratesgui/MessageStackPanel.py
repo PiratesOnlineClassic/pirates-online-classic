@@ -14,7 +14,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class StackMessage(BorderFrame):
-
+    
     guiLoaded = False
     corner = None
     popupSfx = None
@@ -41,15 +41,8 @@ class StackMessage(BorderFrame):
             StackMessage.popupSfx = loader.loadSfx('audio/sfx_gui_zoom-io.mp3')
             StackMessage.lootSfx = loader.loadSfx('audio/treasure_hit_1.mp3')
             StackMessage.lootSfx.setVolume(0.75)
-        optiondefs = (('relief', None, None), ('frameSize', (0, 0.8, -0.18, 0),
-                                               None), ('state', DGG.DISABLED,
-                                                       None), ('time', 7, None),
-                      ('priority', 0, None), ('suffix', '_b',
-                                              None), ('borderScale', 0.7, None),
-                      ('icon', (), self.setIcon), ('buttonStyle', None, None),
-                      ('noCallback', None, None), ('yesCallback', None,
-                                                   None), ('cancelCallback',
-                                                           None, None))
+        optiondefs = (
+         ('relief', None, None), ('frameSize', (0, 0.8, -0.18, 0), None), ('state', DGG.DISABLED, None), ('time', 7, None), ('priority', 0, None), ('suffix', '_b', None), ('borderScale', 0.7, None), ('icon', (), self.setIcon), ('buttonStyle', None, None), ('noCallback', None, None), ('yesCallback', None, None), ('cancelCallback', None, None))
         self.defineoptions(kwargs, optiondefs, dynamicGroups=())
         BorderFrame.__init__(self, parent, **kwargs)
         self.initialiseoptions(StackMessage)
@@ -81,8 +74,7 @@ class StackMessage(BorderFrame):
     def loadModels(self):
         if StackMessage.guiLoaded:
             return
-        StackMessage.TopLevel = gui = loader.loadModel(
-            'models/gui/toplevel_gui')
+        StackMessage.TopLevel = gui = loader.loadModel('models/gui/toplevel_gui')
         StackMessage.corner = gui.find('**/topgui_general_corner')
         StackMessage.CoinTex = gui.find('**/treasure_w_coin*')
         StackMessage.SkillTex = gui.find('**/topgui_icon_skills')
@@ -95,13 +87,10 @@ class StackMessage(BorderFrame):
         StackMessage.ChestTex = card.find('**/icon_chest*')
         StackMessage.RoyalChestTex = card.find('**/topgui_icon_ship_chest03*')
         StackMessage.HatTex = card.find('**/icon_bandana')
-        StackMessage.SkillIcons = loader.loadModel(
-            'models/textureCards/skillIcons')
-        StackMessage.PorkChunkTex = StackMessage.SkillIcons.find(
-            '**/pir_t_gui_pot_porkTonic')
+        StackMessage.SkillIcons = loader.loadModel('models/textureCards/skillIcons')
+        StackMessage.PorkChunkTex = StackMessage.SkillIcons.find('**/pir_t_gui_pot_porkTonic')
         StackMessage.TreasureGui = loader.loadModel('models/gui/treasure_gui')
-        StackMessage.WeaponIcons = loader.loadModel(
-            'models/textureCards/weapon_icons')
+        StackMessage.WeaponIcons = loader.loadModel('models/textureCards/weapon_icons')
         StackMessage.guiLoaded = True
         adminGui = loader.loadModel('models/gui/chat_frame_skull')
         StackMessage.AdminTex = adminGui.find('**/chat_frame_skull_over')
@@ -112,8 +101,8 @@ class StackMessage(BorderFrame):
         BorderFrame.setText(self)
         lines = self.component('text0').textNode.getHeight()
         textSpace = (0.0348 * lines - 0.0276) * self['text_scale'][1] / 0.035
-        self['frameSize'] = (0, 0.8,
-                             -0.028 - 0.044 - 0.044 - max(0.042, textSpace), 0)
+        self['frameSize'] = (
+         0, 0.8, -0.028 - 0.044 - 0.044 - max(0.042, textSpace), 0)
 
     def setIcon(self):
         if self.icon:
@@ -207,14 +196,7 @@ class StackMessage(BorderFrame):
                 imageScale = 0.1
                 imagePos = (0.1, 0, -0.08)
                 command = localAvatar.guiMgr.showNonPayer
-            self.icon = DirectButton(
-                parent=self,
-                relief=None,
-                image=image,
-                image_scale=imageScale,
-                pos=imagePos,
-                command=command,
-                extraArgs=extraArgs)
+            self.icon = DirectButton(parent=self, relief=None, image=image, image_scale=imageScale, pos=imagePos, command=command, extraArgs=extraArgs)
         return
 
     def getIval(self):
@@ -224,15 +206,7 @@ class StackMessage(BorderFrame):
         if not self.ival:
             baseColor = Vec4(1)
             baseTransp = VBase4(baseColor[0], baseColor[1], baseColor[2], 0)
-            self.ival = Sequence(
-                LerpColorScaleInterval(
-                    self,
-                    fadeTime,
-                    baseColor,
-                    startColorScale=baseTransp,
-                    blendType='easeIn'),
-                Wait(max(0.0, self['time'] - 2 * fadeTime)),
-                LerpColorScaleInterval(self, fadeTime, baseTransp))
+            self.ival = Sequence(LerpColorScaleInterval(self, fadeTime, baseColor, startColorScale=baseTransp, blendType='easeIn'), Wait(max(0.0, self['time'] - 2 * fadeTime)), LerpColorScaleInterval(self, fadeTime, baseTransp))
             if doneFunc:
                 self.ival.append(Func(doneFunc))
         return self.ival
@@ -267,38 +241,24 @@ class ModalStackMessage(StackMessage):
 
     def setupButtons(self):
         if self['buttonStyle'] == OTPDialog.YesNo:
-            self.yesButton = GuiButton(
-                parent=self,
-                image_scale=(0.22, 0.22, 0.15),
-                pos=(0.275, 0, -0.1),
-                text=PLocalizer.DialogYes,
-                command=self.handleYes)
-            self.noButton = GuiButton(
-                parent=self,
-                image_scale=(0.22, 0.22, 0.15),
-                pos=(0.55, 0, -0.1),
-                text=PLocalizer.DialogNo,
-                command=self.handleNo)
+            self.yesButton = GuiButton(parent=self, image_scale=(0.22, 0.22, 0.15), pos=(0.275,
+                                                                                         0,
+                                                                                         -0.1), text=PLocalizer.DialogYes, command=self.handleYes)
+            self.noButton = GuiButton(parent=self, image_scale=(0.22, 0.22, 0.15), pos=(0.55,
+                                                                                        0,
+                                                                                        -0.1), text=PLocalizer.DialogNo, command=self.handleNo)
             self.adjustFrameForButtons()
         else:
             if self['buttonStyle'] == OTPDialog.CancelOnly:
                 lookoutUI = loader.loadModel('models/gui/lookout_gui')
-                self.cancelButton = DirectButton(
-                    parent=self,
-                    relief=None,
-                    image=(lookoutUI.find('**/lookout_close_window'),
-                           lookoutUI.find('**/lookout_close_window_down'),
-                           lookoutUI.find('**/lookout_close_window_over'),
-                           lookoutUI.find('**/lookout_close_window_disabled')),
-                    pos=(0.75, 0, -0.05),
-                    scale=0.12,
-                    command=self.handleCancel)
+                self.cancelButton = DirectButton(parent=self, relief=None, image=(lookoutUI.find('**/lookout_close_window'), lookoutUI.find('**/lookout_close_window_down'), lookoutUI.find('**/lookout_close_window_over'), lookoutUI.find('**/lookout_close_window_disabled')), pos=(0.75,
+                                                                                                                                                                                                                                                                                       0,
+                                                                                                                                                                                                                                                                                       -0.05), scale=0.12, command=self.handleCancel)
         return
 
     def adjustFrameForButtons(self):
         zOffset = self['frameSize'][2]
-        self['frameSize'] = (self['frameSize'][0], self['frameSize'][1],
-                             zOffset - 0.06, self['frameSize'][3])
+        self['frameSize'] = (self['frameSize'][0], self['frameSize'][1], zOffset - 0.06, self['frameSize'][3])
         self.yesButton.setZ(zOffset)
         self.noButton.setZ(zOffset)
 
@@ -343,26 +303,17 @@ class ModalStackMessage(StackMessage):
 
 
 class MessageStackPanel(DirectFrame):
-
+    
     popupSfx = None
 
     def __init__(self, parent=None, **kwargs):
-        optiondefs = (('relief', None, None), ('state', DGG.DISABLED, None),
-                      ('maxMessages', 3,
-                       self.setMaxMessages), ('messageBorder', 0.005,
-                                              self.setMessageBorder),
-                      ('posLerpTime', 0.25,
-                       self.setPosLerpTime), ('fadeLerpTime', 0.25,
-                                              self.setFadeLerpTime))
-        self.defineoptions(
-            kwargs,
-            optiondefs,
-            dynamicGroups=('posLerpTime', 'fadeLerpTime', 'messageBorder'))
+        optiondefs = (('relief', None, None), ('state', DGG.DISABLED, None), ('maxMessages', 3, self.setMaxMessages), ('messageBorder', 0.005, self.setMessageBorder), ('posLerpTime', 0.25, self.setPosLerpTime), ('fadeLerpTime', 0.25, self.setFadeLerpTime))
+        self.defineoptions(kwargs, optiondefs, dynamicGroups=('posLerpTime', 'fadeLerpTime',
+                                                              'messageBorder'))
         DirectFrame.__init__(self, parent, **kwargs)
         self.initialiseoptions(MessageStackPanel)
         if not MessageStackPanel.popupSfx:
-            MessageStackPanel.popupSfx = loader.loadSfx(
-                'audio/sfx_gui_zoom-io.mp3')
+            MessageStackPanel.popupSfx = loader.loadSfx('audio/sfx_gui_zoom-io.mp3')
         self.setTransparency(True)
         self.msgStack = []
         self.msgIvals = {}
@@ -438,8 +389,7 @@ class MessageStackPanel(DirectFrame):
 
     def _startMessageTask(self):
         self._stopMessageTask()
-        self.task = taskMgr.add(self._messageTask,
-                                self.uniqueName('MessageStack'))
+        self.task = taskMgr.add(self._messageTask, self.uniqueName('MessageStack'))
 
     def _messageTask(self, task):
         for x, msg in enumerate(self.msgStack):
@@ -459,9 +409,7 @@ class MessageStackPanel(DirectFrame):
 
     def _startMsgSlideIval(self, msg, slot):
         self._removeMsgIval(msg)
-        ival = Sequence(
-            LerpPosInterval(msg, self['posLerpTime'], self._getSlotPos(slot)),
-            Func(self._removeMsgIval, msg))
+        ival = Sequence(LerpPosInterval(msg, self['posLerpTime'], self._getSlotPos(slot)), Func(self._removeMsgIval, msg))
         self.msgIvals[msg] = ival
         ival.start()
 
@@ -485,8 +433,7 @@ class MessageStackPanel(DirectFrame):
         if numMessages:
             ival.append(Func(self._startMessageTask))
             ival.append(Func(self.unstash))
-        ival.append(
-            LerpPosInterval(self, self['posLerpTime'], self._getSlidePos()))
+        ival.append(LerpPosInterval(self, self['posLerpTime'], self._getSlidePos()))
         if not numMessages:
             ival.append(Func(self._stopMessageTask))
             ival.append(Func(self.stash))
@@ -498,9 +445,7 @@ class MessageStackPanel(DirectFrame):
         self.msgStack.sort()
         index = self._getMessageIndex(message)
         message.setPos(self._getSlotPos(index))
-        message.createIval(self['fadeLerpTime'],
-                           Functor(self.removeMessage, message,
-                                   autoDestroy)).start()
+        message.createIval(self['fadeLerpTime'], Functor(self.removeMessage, message, autoDestroy)).start()
         self._adjustStack(index + 1)
         self._startSlideIval()
         self.popupSfx.play()
@@ -520,80 +465,26 @@ class MessageStackPanel(DirectFrame):
         message.destroy(autoDestroy)
         return
 
-    def showLoot(self,
-                 plunder=[],
-                 gold=0,
-                 collect=0,
-                 card=0,
-                 cloth=0,
-                 color=0,
-                 jewel=None,
-                 tattoo=None,
-                 weapon=None,
-                 bounty=0):
+    def showLoot(self, plunder=[], gold=0, collect=0, card=0, cloth=0, color=0, jewel=None, tattoo=None, weapon=None, bounty=0):
         from pirates.piratesgui.LootPopupPanel import LootPopupPanel
         msg = LootPopupPanel()
         msg.reparentTo(self)
-        msg.showLoot(plunder, gold, collect, card, cloth, color, jewel, tattoo,
-                     weapon, bounty)
+        msg.showLoot(plunder, gold, collect, card, cloth, color, jewel, tattoo, weapon, bounty)
         self.addMessage(msg)
 
-    def addTextMessage(self,
-                       text,
-                       seconds=7,
-                       priority=0,
-                       color=(0, 0, 0, 1),
-                       icon=(),
-                       suffix='_b'):
+    def addTextMessage(self, text, seconds=7, priority=0, color=(0, 0, 0, 1), icon=(), suffix='_b'):
         if self.lastMessage == text:
             return
-        msg = StackMessage(
-            parent=self,
-            text=text,
-            text_wordwrap=16.5,
-            text_align=TextNode.ALeft,
-            text_scale=0.035,
-            text_fg=color,
-            text_pos=(0.17, -0.072, 0),
-            textMayChange=1,
-            time=seconds,
-            priority=priority,
-            icon=icon,
-            suffix=suffix)
+        msg = StackMessage(parent=self, text=text, text_wordwrap=16.5, text_align=TextNode.ALeft, text_scale=0.035, text_fg=color, text_pos=(0.17, -0.072, 0), textMayChange=1, time=seconds, priority=priority, icon=icon, suffix=suffix)
         self.addMessage(msg)
         self.lastMessage = text
         return msg
 
-    def addModalTextMessage(self,
-                            text,
-                            buttonStyle=OTPDialog.CancelOnly,
-                            noCallback=None,
-                            yesCallback=None,
-                            cancelCallback=None,
-                            seconds=120,
-                            priority=0,
-                            color=(1, 1, 1, 1),
-                            icon=(),
-                            suffix='_f'):
+    def addModalTextMessage(self, text, buttonStyle=OTPDialog.CancelOnly, noCallback=None, yesCallback=None, cancelCallback=None, seconds=120, priority=0, color=(1, 1, 1, 1), icon=(), suffix='_f'):
         if self.lastMessage == text:
             return
-        msg = ModalStackMessage(
-            parent=self,
-            buttonStyle=buttonStyle,
-            noCallback=noCallback,
-            yesCallback=yesCallback,
-            cancelCallback=cancelCallback,
-            text=text,
-            text_wordwrap=16.5,
-            text_align=TextNode.ALeft,
-            text_scale=0.035,
-            text_fg=color,
-            text_pos=(0.17, -0.072, 0),
-            textMayChange=1,
-            time=seconds,
-            priority=priority,
-            icon=icon,
-            suffix=suffix)
+        msg = ModalStackMessage(parent=self, buttonStyle=buttonStyle, noCallback=noCallback, yesCallback=yesCallback, cancelCallback=cancelCallback, text=text, text_wordwrap=16.5, text_align=TextNode.ALeft, text_scale=0.035, text_fg=color, text_pos=(0.17, -0.072, 0), textMayChange=1, time=seconds, priority=priority, icon=icon, suffix=suffix)
         self.addMessage(msg)
         self.lastMessage = text
         return msg
+

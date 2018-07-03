@@ -10,23 +10,12 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class ButtonListItem(DirectButton):
+    
 
-    def __init__(self,
-                 item,
-                 itemHeight,
-                 itemWidth,
-                 parent=None,
-                 parentList=None,
-                 textScale=None,
-                 txtColor=None,
-                 **kw):
-        optiondefs = (('state', DGG.NORMAL, None), ('image', None, None),
-                      ('image_scale', (0.24, 0.22, 0.22),
-                       None), ('image_pos', (0.185, 0, 0.043),
-                               None), ('frameColor', (0.1, 0.1, 1, 0.08), None),
-                      ('borderWidth', PiratesGuiGlobals.BorderWidth,
-                       None), ('frameSize', (0.0, itemWidth, 0.0, itemHeight),
-                               None))
+    def __init__(self, item, itemHeight, itemWidth, parent=None, parentList=None, textScale=None, txtColor=None, **kw):
+        optiondefs = (
+         (
+          'state', DGG.NORMAL, None), ('image', None, None), ('image_scale', (0.24, 0.22, 0.22), None), ('image_pos', (0.185, 0, 0.043), None), ('frameColor', (0.1, 0.1, 1, 0.08), None), ('borderWidth', PiratesGuiGlobals.BorderWidth, None), ('frameSize', (0.0, itemWidth, 0.0, itemHeight), None))
         self.defineoptions(kw, optiondefs)
         DirectButton.__init__(self, parent)
         self.initialiseoptions(ButtonListItem)
@@ -89,6 +78,4 @@ class ButtonListItem(DirectButton):
         else:
             self.setColorScale(*self.defaultColorScale)
             self['image_scale'] = self.prevImageScale
-
-
 # okay decompiling .\pirates\piratesgui\ButtonListItem.pyc

@@ -2,7 +2,6 @@ from panda3d.core import *
 
 
 class MarginCell(NodePath):
-
     def __init__(self, manager):
         NodePath.__init__(self, 'cell')
 

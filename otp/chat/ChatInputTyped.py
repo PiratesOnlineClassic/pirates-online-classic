@@ -17,7 +17,8 @@ class ChatInputTyped(DirectObject.DirectObject):
         wantHistory = 0
         if __dev__:
             wantHistory = 1
-        self.wantHistory = base.config.GetBool('want-chat-history', wantHistory)
+        self.wantHistory = base.config.GetBool(
+            'want-chat-history', wantHistory)
         self.history = ['']
         self.historySize = base.config.GetInt('chat-history-size', 10)
         self.historyIndex = 0
@@ -45,8 +46,7 @@ class ChatInputTyped(DirectObject.DirectObject):
             self.whisperName = base.chatAssistant.findName(whisperId, toPlayer)
             if hasattr(self, 'whisperPos'):
                 self.chatFrame.setPos(self.whisperPos)
-            self.whisperLabel[
-                'text'] = OTPLocalizer.ChatInputWhisperLabel % self.whisperName
+            self.whisperLabel['text'] = OTPLocalizer.ChatInputWhisperLabel % self.whisperName
             self.whisperLabel.show()
         else:
             if hasattr(self, 'normalPos'):
@@ -90,8 +90,7 @@ class ChatInputTyped(DirectObject.DirectObject):
                         self.whisperId):
                     messenger.send('Chat-Failed player typed chat test')
                     self.deactivate()
-            elif not base.chatAssistant.checkWhisperTypedChatAvatar(
-                    self.whisperId):
+            elif not base.chatAssistant.checkWhisperTypedChatAvatar(self.whisperId):
                 messenger.send('Chat-Failed avatar typed chat test')
                 self.deactivate()
         else:
@@ -172,7 +171,8 @@ class ChatInputTyped(DirectObject.DirectObject):
         pass
 
     def addToHistory(self, text):
-        self.history = [text] + self.history[:self.historySize - 1]
+        self.history = [
+            text] + self.history[:self.historySize - 1]
         self.historyIndex = 0
 
     def getPrevHistory(self):

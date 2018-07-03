@@ -6,7 +6,6 @@ from panda3d.core import *
 from pirates.destructibles import ShatterableObject
 from pirates.effects.ProjectileArc import ProjectileArc
 
-
 class ShatterableSkeleton(ShatterableObject.ShatterableObject, NodePath):
 
     def __init__(self):
@@ -25,9 +24,7 @@ class ShatterableSkeleton(ShatterableObject.ShatterableObject, NodePath):
     def breakMe(self, debrisNode):
         projDummy = ProjectileArc(self.wantRotate, self.wantColl)
         projDummy.reparentTo(self.prop)
-        projDummy.startVel = Vec3(
-            random.uniform(-10, 10), random.uniform(-10, 10),
-            random.uniform(20, 40))
+        projDummy.startVel = Vec3(random.uniform(-10, 10), random.uniform(-10, 10), random.uniform(20, 40))
         projDummy.gravityMult = 2.0
         projDummy.rotateMin = 90
         projDummy.rotateMax = 200

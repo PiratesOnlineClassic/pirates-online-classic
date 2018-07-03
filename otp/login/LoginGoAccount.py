@@ -55,12 +55,10 @@ class LoginGoAccount(LoginBase.LoginBase):
     def supportsAuthenticateDelete(self):
         return 0
 
-    def enableSecretFriends(self, loginName, password, parentPassword,
-                            enable=1):
+    def enableSecretFriends(self, loginName, password,
+                            parentPassword, enable=1):
         return (0, None)
 
     def __addTokenType(self, datagram):
         datagram.addInt32(CLIENT_LOGIN_2_BLUE)
-
-
 # okay decompiling .\otp\login\LoginGoAccount.pyc

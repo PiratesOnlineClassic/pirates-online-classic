@@ -15,8 +15,8 @@ from otp.speedchat.SCObject import SCObject
 
 class SCMenu(SCObject, NodePath):
 
-    SpeedChatRolloverTolerance = config.GetFloat('speedchat-rollover-tolerance',
-                                                 0.08)
+    SpeedChatRolloverTolerance = config.GetFloat(
+        'speedchat-rollover-tolerance', 0.08)
     WantFade = config.GetBool('want-speedchat-fade', 0)
     FadeDuration = config.GetFloat('speedchat-fade-duration', 0.2)
     SerialNum = 0
@@ -46,8 +46,7 @@ class SCMenu(SCObject, NodePath):
             return results
 
         self.bgTop, self.bgBottom, self.bgLeft, self.bgRight, self.bgMiddle, self.bgTopLeft, self.bgBottomLeft, self.bgTopRight, self.bgBottomRight = findNodes(
-            [('top', 'top1'), 'bottom', 'left', 'right', 'middle', 'topLeft',
-             'bottomLeft', 'topRight', 'bottomRight'])
+            [('top', 'top1'), 'bottom', 'left', 'right', 'middle', 'topLeft', 'bottomLeft', 'topRight', 'bottomRight'])
         self.bg.reparentTo(self, -1)
         self.__members = []
         self.activeMember = None
@@ -164,10 +163,7 @@ class SCMenu(SCObject, NodePath):
             else:
                 self.stopFade()
                 self.fadeIval = LerpFunctionInterval(
-                    self.fadeFunc,
-                    fromData=0.0,
-                    toData=1.0,
-                    duration=SCMenu.FadeDuration)
+                    self.fadeFunc, fromData=0.0, toData=1.0, duration=SCMenu.FadeDuration)
                 self.fadeIval.play()
                 if parentMenu is not None:
                     parentMenu.childHasFaded = 1
@@ -224,9 +220,10 @@ class SCMenu(SCObject, NodePath):
 
             minFrameRate = 1.0 / SCMenu.SpeedChatRolloverTolerance
             if globalClock.getAverageFrameRate() > minFrameRate:
-                taskMgr.doMethodLater(SCMenu.SpeedChatRolloverTolerance,
-                                      doActiveMemberSwitch,
-                                      self.ActiveMemberSwitchTaskName)
+                taskMgr.doMethodLater(
+                    SCMenu.SpeedChatRolloverTolerance,
+                    doActiveMemberSwitch,
+                    self.ActiveMemberSwitchTaskName)
                 self.activeCandidate = member
             else:
                 self.__setActiveMember(member)
@@ -460,6 +457,4 @@ class SCMenu(SCObject, NodePath):
 
     def __str__(self):
         return '%s: menu%s' % (self.__class__.__name__, self.SerialNum)
-
-
 # okay decompiling .\otp\speedchat\SCMenu.pyc

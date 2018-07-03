@@ -27,53 +27,40 @@ class PokerStatusPanel(DirectFrame):
         self.cardScaler.setScale(0.5)
         for i in range(maxHandCards):
             left = 0.06 * maxHandCards * 0.5
-            card = PlayingCard.PlayingCardNodePath('standard',
-                                                   PlayingCardGlobals.Unknown)
+            card = PlayingCard.PlayingCardNodePath('standard', PlayingCardGlobals.Unknown)
             card.reparentTo(self.cardScaler)
             card.setPos(i * 0.06 - left, 0, 0)
             card.hide()
             self.hand.append(card)
 
-        self.actionLabel = DirectLabel(
-            parent=self,
-            relief=None,
-            text='',
-            text_align=TextNode.ACenter,
-            text_scale=0.04,
-            pos=(0, 0, 0.15),
-            text_fg=(1, 1, 1, 1),
-            text_shadow=(0, 0, 0, 1))
-        self.handNameLabel = DirectLabel(
-            parent=self,
-            relief=None,
-            text='',
-            text_align=TextNode.ACenter,
-            text_scale=0.04,
-            pos=(0, 0, -0.13),
-            text_fg=(1, 1, 1, 1),
-            text_shadow=(0, 0, 0, 1))
+        self.actionLabel = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ACenter, text_scale=0.04, pos=(0,
+                                                                                                                             0,
+                                                                                                                             0.15), text_fg=(1,
+                                                                                                                                             1,
+                                                                                                                                             1,
+                                                                                                                                             1), text_shadow=(0,
+                                                                                                                                                              0,
+                                                                                                                                                              0,
+                                                                                                                                                              1))
+        self.handNameLabel = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ACenter, text_scale=0.04, pos=(0, 0, -0.13), text_fg=(1,
+                                                                                                                                                      1,
+                                                                                                                                                      1,
+                                                                                                                                                      1), text_shadow=(0,
+                                                                                                                                                                       0,
+                                                                                                                                                                       0,
+                                                                                                                                                                       1))
         self.dealerButton = loader.loadModel('models/gui/dealer_button')
         self.dealerButton.reparentTo(self)
         self.dealerButton.setPos(-0.12, 0, 0)
         self.dealerButton.setScale(0.08)
         self.dealerButton.hide()
-        self.anteLabel = DirectLabel(
-            parent=self.dealerButton,
-            relief=None,
-            text='',
-            text_align=TextNode.ACenter,
-            text_scale=0.8,
-            pos=(0, 0, -0.3),
-            text_fg=(0, 0, 0, 1))
+        self.anteLabel = DirectLabel(parent=self.dealerButton, relief=None, text='', text_align=TextNode.ACenter, text_scale=0.8, pos=(0, 0, -0.3), text_fg=(0,
+                                                                                                                                                             0,
+                                                                                                                                                             0,
+                                                                                                                                                             1))
         self.anteLabel.setColor(0, 0, 0, 1, 100)
         self.actionLabel.setTransparency(1)
-        self.fadeActionLabel = Sequence(
-            Func(self.actionLabel.show),
-            LerpColorScaleInterval(self.actionLabel, 0.1, Vec4(1, 1, 1, 1),
-                                   Vec4(1, 1, 1, 0)), Wait(2.0),
-            LerpColorScaleInterval(self.actionLabel, 1.0, Vec4(1, 1, 1, 0),
-                                   Vec4(1, 1, 1, 1)),
-            Func(self.actionLabel.hide))
+        self.fadeActionLabel = Sequence(Func(self.actionLabel.show), LerpColorScaleInterval(self.actionLabel, 0.1, Vec4(1, 1, 1, 1), Vec4(1, 1, 1, 0)), Wait(2.0), LerpColorScaleInterval(self.actionLabel, 1.0, Vec4(1, 1, 1, 0), Vec4(1, 1, 1, 1)), Func(self.actionLabel.hide))
         self.handId = PlayingCardGlobals.Nothing
         self.sortedCards = None
         return
@@ -109,10 +96,9 @@ class PokerTellMeter(DirectFrame):
 
 
 class PokerTableGUI(DirectFrame, TableGUI):
-
-    HandPos = (Vec3(0, 0, 0.4), Vec3(0.38, 0, 0.33), Vec3(0.65, 0, 0.1),
-               Vec3(0.45, 0, -0.26), Vec3(0, 0, -0.3), Vec3(-0.45, 0, -0.26),
-               Vec3(-0.65, 0, 0.1), Vec3(-0.38, 0, 0.33))
+    
+    HandPos = (
+     Vec3(0, 0, 0.4), Vec3(0.38, 0, 0.33), Vec3(0.65, 0, 0.1), Vec3(0.45, 0, -0.26), Vec3(0, 0, -0.3), Vec3(-0.45, 0, -0.26), Vec3(-0.65, 0, 0.1), Vec3(-0.38, 0, 0.33))
     LocalAvatarGuiIndex = 4
 
     def __init__(self, table, maxCommunityCards, maxHandCards):
@@ -126,19 +112,12 @@ class PokerTableGUI(DirectFrame, TableGUI):
         self.destroyed = False
         self.playerActions = []
         width = 1.0
-        self.menu = BorderFrame(
-            parent=base.a2dBottomCenter,
-            frameSize=(-width / 2.0, width / 2.0, 0, 0.25),
-            pos=(0, 0, 0))
-        self.disableReason = DirectLabel(
-            parent=self.menu,
-            text='',
-            text_align=TextNode.ACenter,
-            text_scale=0.04,
-            pos=(0, 0, 0.175),
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=1)
+        self.menu = BorderFrame(parent=base.a2dBottomCenter, frameSize=(-width / 2.0, width / 2.0, 0, 0.25), pos=(0,
+                                                                                                                  0,
+                                                                                                                  0))
+        self.disableReason = DirectLabel(parent=self.menu, text='', text_align=TextNode.ACenter, text_scale=0.04, pos=(0,
+                                                                                                                       0,
+                                                                                                                       0.175), text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1)
         self.disableReason.hide()
         self.initializeTableInterface()
         x = -0.36
@@ -147,44 +126,26 @@ class PokerTableGUI(DirectFrame, TableGUI):
         helpText = PLocalizer.TableCardsHelp
         helpPos = (0.0, 0.0, 0.24)
         text = PLocalizer.PokerCheat1
-        button = GuiButton(
-            parent=self.menu,
-            command=self.cardIndexSelection,
-            helpText=helpText,
-            helpPos=helpPos,
-            pos=(x, 0, y),
-            canReposition=True)
-        self.setButtonSettings2Lines(button, (x, 0, y), text,
-                                     [PlayingCardGlobals.Cheat1])
+        button = GuiButton(parent=self.menu, command=self.cardIndexSelection, helpText=helpText, helpPos=helpPos, pos=(x, 0, y), canReposition=True)
+        self.setButtonSettings2Lines(button, (x, 0, y), text, [PlayingCardGlobals.Cheat1])
         self.cheat1Button = button
         self.buttonArray = self.buttonArray + [button]
         x = x + x_increment
         text = PLocalizer.PokerCheat2
-        button = GuiButton(
-            parent=self.menu,
-            command=self.cardIndexSelection,
-            helpText=helpText,
-            helpPos=helpPos,
-            pos=(x, 0, y),
-            canReposition=True)
-        self.setButtonSettings2Lines(button, (x, 0, y), text,
-                                     [PlayingCardGlobals.Cheat2])
+        button = GuiButton(parent=self.menu, command=self.cardIndexSelection, helpText=helpText, helpPos=helpPos, pos=(x, 0, y), canReposition=True)
+        self.setButtonSettings2Lines(button, (x, 0, y), text, [PlayingCardGlobals.Cheat2])
         self.cheat2Button = button
         self.buttonArray = self.buttonArray + [button]
         x = x + x_increment
         text = PLocalizer.PokerCheck
-        button = GuiButton(
-            parent=self.menu, command=self.playerAction, canReposition=True)
-        self.setButtonSettings(button, (x, 0, y), text,
-                               [PlayingCardGlobals.CheckCall])
+        button = GuiButton(parent=self.menu, command=self.playerAction, canReposition=True)
+        self.setButtonSettings(button, (x, 0, y), text, [PlayingCardGlobals.CheckCall])
         self.passButton = button
         self.buttonArray = self.buttonArray + [button]
         x = x + x_increment
         text = PLocalizer.PokerBet
-        button = GuiButton(
-            parent=self.menu, command=self.playerAction, canReposition=True)
-        self.setButtonSettings(button, (x, 0, y), text,
-                               [PlayingCardGlobals.BetRaise])
+        button = GuiButton(parent=self.menu, command=self.playerAction, canReposition=True)
+        self.setButtonSettings(button, (x, 0, y), text, [PlayingCardGlobals.BetRaise])
         self.betButton = button
         self.buttonArray = self.buttonArray + [button]
         x = x + x_increment
@@ -195,22 +156,18 @@ class PokerTableGUI(DirectFrame, TableGUI):
         x = x + x_increment
         x = x + x_increment
         text = PLocalizer.PokerFold
-        button = GuiButton(
-            parent=self.menu, command=self.playerAction, canReposition=True)
-        self.setButtonSettings(button, (x, 0, y), text,
-                               [PlayingCardGlobals.Fold])
+        button = GuiButton(parent=self.menu, command=self.playerAction, canReposition=True)
+        self.setButtonSettings(button, (x, 0, y), text, [PlayingCardGlobals.Fold])
         self.foldButton = button
         self.buttonArray = self.buttonArray + [button]
         x = x + x_increment
-        self.potSizeLabel = DirectLabel(
-            parent=self,
-            relief=None,
-            text='',
-            text_align=TextNode.ACenter,
-            text_scale=0.05,
-            pos=(-0.15, 0.0, 0.17),
-            text_fg=(1, 0.9, 0.6, 1),
-            text_shadow=(0, 0, 0, 1))
+        self.potSizeLabel = DirectLabel(parent=self, relief=None, text='', text_align=TextNode.ACenter, text_scale=0.05, pos=(-0.15, 0.0, 0.17), text_fg=(1,
+                                                                                                                                                          0.9,
+                                                                                                                                                          0.6,
+                                                                                                                                                          1), text_shadow=(0,
+                                                                                                                                                                           0,
+                                                                                                                                                                           0,
+                                                                                                                                                                           1))
         if table.wantMeter == 1:
             cardMaker = CardMaker('tellMeter')
             cardMaker.setFrame(-1, 1, -1, 1)
@@ -260,8 +217,7 @@ class PokerTableGUI(DirectFrame, TableGUI):
         self.communityCardNode.setPos(0, 0, 0.04)
         self.communityCards = []
         for i in range(self.maxCommunityCards):
-            card = PlayingCard.PlayingCardNodePath('standard',
-                                                   PlayingCardGlobals.Unknown)
+            card = PlayingCard.PlayingCardNodePath('standard', PlayingCardGlobals.Unknown)
             card.reparentTo(self.communityCardNode)
             card.setPos(i * 0.3 - 0.6, 0, 0)
             card.hide()
@@ -275,88 +231,48 @@ class PokerTableGUI(DirectFrame, TableGUI):
             statusPanel.setPos(pos)
             self.playerStatusPanels.append(statusPanel)
 
-        self.localStatusPanel = self.playerStatusPanels[
-            self.LocalAvatarGuiIndex]
+        self.localStatusPanel = self.playerStatusPanels[self.LocalAvatarGuiIndex]
         gui = loader.loadModel('models/gui/toplevel_gui')
         goldCoin = gui.find('**/treasure_w_coin*')
         scale = 0.32
         currentMoney = self.table.getPlayerChips()
         x_increment = 0.24
-        self.moneyDisplay = DirectLabel(
-            parent=self.menu,
-            relief=None,
-            pos=(-0.3 + x_increment, 0, 0.075),
-            geom=goldCoin,
-            geom_scale=(scale, scale, scale),
-            geom_pos=(0, 0, 0),
-            text='%s' % currentMoney,
-            text_align=TextNode.ALeft,
-            text_scale=0.04,
-            text_pos=(0.05, -0.01),
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=1,
-            scale=1.1)
-        self.accept(
-            'inventoryQuantity-%s-%s' % (localAvatar.getInventoryId(),
-                                         InventoryType.GoldInPocket),
-            self.setMoney)
+        self.moneyDisplay = DirectLabel(parent=self.menu, relief=None, pos=(-0.3 + x_increment, 0, 0.075), geom=goldCoin, geom_scale=(scale, scale, scale), geom_pos=(0,
+                                                                                                                                                                      0,
+                                                                                                                                                                      0), text='%s' % currentMoney, text_align=TextNode.ALeft, text_scale=0.04, text_pos=(0.05, -0.01), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, scale=1.1)
+        self.accept('inventoryQuantity-%s-%s' % (localAvatar.getInventoryId(), InventoryType.GoldInPocket), self.setMoney)
         this = self
         identifier = 0
         this.sfxArray = []
         this.shuffleIdentifier = identifier
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_shuffle.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_shuffle.mp3')]
         identifier += 1
         this.startDealIdentifier = identifier
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_deal_01.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_deal_01.mp3')]
         identifier += 1
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_deal_02.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_deal_02.mp3')]
         identifier += 1
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_deal_03.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_deal_03.mp3')]
         identifier += 1
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_deal_04.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_deal_04.mp3')]
         identifier += 1
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_deal_05.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_deal_05.mp3')]
         identifier += 1
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_deal_06.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_deal_06.mp3')]
         identifier += 1
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_deal_07.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_deal_07.mp3')]
         identifier += 1
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_deal_08.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_deal_08.mp3')]
         identifier += 1
         this.totalDealIdentifiers = identifier - this.startDealIdentifier
         this.foldIdentifier = identifier
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_fold.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_fold.mp3')]
         identifier += 1
         this.flipIdentifier = identifier
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_flip.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_flip.mp3')]
         identifier += 1
         this.pickupIdentifier = identifier
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_pickup.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_pickup.mp3')]
         identifier += 1
         this.checkIdentifier = identifier
         check = loader.loadSfx('audio/sfx_cards_check.mp3')
@@ -364,19 +280,13 @@ class PokerTableGUI(DirectFrame, TableGUI):
         this.sfxArray = this.sfxArray + [check]
         identifier += 1
         this.betIdentifier = identifier
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_chips-bet.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_chips-bet.mp3')]
         identifier += 1
         this.collectIdentifier = identifier
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_chips-collect.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_chips-collect.mp3')]
         identifier += 1
         this.allInIdentifier = identifier
-        this.sfxArray = this.sfxArray + [
-            loader.loadSfx('audio/sfx_cards_chips-all.mp3')
-        ]
+        this.sfxArray = this.sfxArray + [loader.loadSfx('audio/sfx_cards_chips-all.mp3')]
         identifier += 1
         return
 
@@ -404,18 +314,15 @@ class PokerTableGUI(DirectFrame, TableGUI):
 
     def leaveAction(self, action, allin_amount=0):
         self.deleteLeaveDialog()
-        self.leaveDialog = PDialog.PDialog(
-            text=PLocalizer.PokerLeaveConfirmMessage,
-            style=OTPDialog.YesNo,
-            giveMouse=False,
-            command=self.leaveCallback)
+        self.leaveDialog = PDialog.PDialog(text=PLocalizer.PokerLeaveConfirmMessage, style=OTPDialog.YesNo, giveMouse=False, command=self.leaveCallback)
         self.table.setDialogBin(self.leaveDialog)
 
     def timeoutAction(self, action):
         self.table.guiCallback(action)
 
     def setMoney(self, money):
-        self.moneyDisplay['text'] = ('%s' % money,)
+        self.moneyDisplay['text'] = (
+         '%s' % money,)
         self.table.displayStacks(self.table.localAvatarSeat, money)
 
     def showArrow(self, seatIndex):
@@ -432,8 +339,7 @@ class PokerTableGUI(DirectFrame, TableGUI):
         self.playerActions = playerActions
         oldMaxBet = self.maxBet
         self.maxBet = maxBet
-        for i, oldAction, newAction in zip(
-                range(len(playerActions)), oldActions, playerActions):
+        for i, oldAction, newAction in zip(range(len(playerActions)), oldActions, playerActions):
             if oldAction != newAction:
                 action, amount = newAction
                 panel = self.playerStatusPanels[self.getGuiIndex(i)]
@@ -474,8 +380,7 @@ class PokerTableGUI(DirectFrame, TableGUI):
                 panel.displayAction(actionText, self.table, i)
 
     def getGuiIndex(self, seatIndex):
-        return (self.LocalAvatarGuiIndex - self.table.localAvatarSeat +
-                seatIndex) % (self.table.NumSeats + 1)
+        return (self.LocalAvatarGuiIndex - self.table.localAvatarSeat + seatIndex) % (self.table.NumSeats + 1)
 
     def clearTable(self):
         for panel in self.playerStatusPanels:
@@ -491,12 +396,10 @@ class PokerTableGUI(DirectFrame, TableGUI):
             card = self.communityCards[i]
             card.hide()
 
-    def setTableState(self, round, buttonSeat, communityCardValues,
-                      playerHandValues, totalWinningsArray):
+    def setTableState(self, round, buttonSeat, communityCardValues, playerHandValues, totalWinningsArray):
         self.clearTable()
         self.playerStatusPanels[self.getGuiIndex(buttonSeat)].anteLabel.show()
-        self.playerStatusPanels[self.getGuiIndex(
-            buttonSeat)].dealerButton.show()
+        self.playerStatusPanels[self.getGuiIndex(buttonSeat)].dealerButton.show()
         for i in range(len(self.communityCards)):
             card = self.communityCards[i]
             if i < len(communityCardValues):
@@ -535,8 +438,7 @@ class PokerTableGUI(DirectFrame, TableGUI):
                     handId = self.table.handIdArray[seat]
                     if handId > PlayingCardGlobals.Nothing:
                         sortedHand = self.table.sortedCardsArray[seat]
-                        handName = PLocalizer.getHandNameFull(
-                            self.table.handIdToHandCode(handId), sortedHand)
+                        handName = PLocalizer.getHandNameFull(self.table.handIdToHandCode(handId), sortedHand)
                         handNameLabel['text'] = handName
                         handNameLabel.show()
 
@@ -554,11 +456,9 @@ class PokerTableGUI(DirectFrame, TableGUI):
                     if actor:
                         name = actor.getName()
                         win = totalWinningsArray[i]
-                        message = PLocalizer.PokerChatWinGoldMessage % (name,
-                                                                        win)
+                        message = PLocalizer.PokerChatWinGoldMessage % (name, win)
                         base.chatAssistant.receiveGameMessage(message)
-                if totalWinningsArray[
-                        i] == PlayingCardGlobals.PlayerCaughtCheating:
+                if totalWinningsArray[i] == PlayingCardGlobals.PlayerCaughtCheating:
                     actor = self.table.actors[i]
                     if actor:
                         name = actor.getName()
@@ -575,16 +475,12 @@ class PokerTableGUI(DirectFrame, TableGUI):
                 card.turnUp()
 
         handNameLabel = self.localStatusPanel.handNameLabel
-        communityCardValues = map(lambda card: card.getValue(),
-                                  self.communityCards)
+        communityCardValues = map(lambda card: card.getValue(), self.communityCards)
         if cardValues:
-            if PlayingCardGlobals.Unknown not in cardValues and (
-                    self.handId == PlayingCardGlobals.Nothing or
-                    self.sortedCards == None):
+            if PlayingCardGlobals.Unknown not in cardValues and (self.handId == PlayingCardGlobals.Nothing or self.sortedCards == None):
                 handNameLabel.hide()
             else:
-                handName = PLocalizer.getHandNameFull(
-                    self.table.handIdToHandCode(self.handId), self.sortedCards)
+                handName = PLocalizer.getHandNameFull(self.table.handIdToHandCode(self.handId), self.sortedCards)
                 handNameLabel['text'] = handName
                 handNameLabel.show()
         else:
@@ -620,41 +516,27 @@ class PokerTableGUI(DirectFrame, TableGUI):
                     self.betButton['extraArgs'] = [PlayingCardGlobals.BetRaise]
                 else:
                     self.betButton['text'] = PLocalizer.PokerAllInAmount % chips
-                    self.betButton['extraArgs'] = [
-                        PlayingCardGlobals.AllIn, chips
-                    ]
+                    self.betButton['extraArgs'] = [PlayingCardGlobals.AllIn, chips]
             else:
                 callAmount = self.table.getCallAmount()
                 raiseAmount = self.table.maxBet + minimum
                 if chips > callAmount:
                     if callAmount == 0:
                         self.passButton['text'] = PLocalizer.PokerCheck
-                        self.passButton['extraArgs'] = [
-                            PlayingCardGlobals.Check
-                        ]
+                        self.passButton['extraArgs'] = [PlayingCardGlobals.Check]
                     else:
-                        self.passButton[
-                            'text'] = PLocalizer.PokerCallAmount % callAmount
-                        self.passButton['extraArgs'] = [
-                            PlayingCardGlobals.CheckCall
-                        ]
+                        self.passButton['text'] = PLocalizer.PokerCallAmount % callAmount
+                        self.passButton['extraArgs'] = [PlayingCardGlobals.CheckCall]
                 else:
-                    self.passButton[
-                        'text'] = PLocalizer.PokerAllInAmount % chips
-                    self.passButton['extraArgs'] = [
-                        PlayingCardGlobals.AllIn, chips
-                    ]
+                    self.passButton['text'] = PLocalizer.PokerAllInAmount % chips
+                    self.passButton['extraArgs'] = [PlayingCardGlobals.AllIn, chips]
                     self.betButton.hide()
                 if chips > callAmount + minimum:
-                    self.betButton[
-                        'text'] = PLocalizer.PokerRaiseAmount % raiseAmount
+                    self.betButton['text'] = PLocalizer.PokerRaiseAmount % raiseAmount
                     self.betButton['extraArgs'] = [PlayingCardGlobals.BetRaise]
                 else:
-                    self.betButton['text'] = PLocalizer.PokerAllInAmount % (
-                        callAmount + chips)
-                    self.betButton['extraArgs'] = [
-                        PlayingCardGlobals.AllIn, chips
-                    ]
+                    self.betButton['text'] = PLocalizer.PokerAllInAmount % (callAmount + chips)
+                    self.betButton['extraArgs'] = [PlayingCardGlobals.AllIn, chips]
             self.startTimer(PlayingCardGlobals.SecondsPerHand)
 
     def timeoutFold(self):
@@ -756,8 +638,7 @@ class PokerTableGUI(DirectFrame, TableGUI):
 
     def setMeterPercent(self, percent):
         curScale = self.meter.getScale()
-        self.meter.setScale(self.meterMax * (percent / 100.0), curScale[1],
-                            curScale[2])
+        self.meter.setScale(self.meterMax * (percent / 100.0), curScale[1], curScale[2])
 
     def getBalanceAngle(self):
         return self.balance.getR()

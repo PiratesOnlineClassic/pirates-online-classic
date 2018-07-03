@@ -10,43 +10,28 @@ from pirates.minigame.Distributed7StudTableAI import Distributed7StudTableAI
 from pirates.minigame.DistributedBishopsHandTableAI import DistributedBishopsHandTableAI
 from pirates.minigame.DistributedLiarsDiceAI import DistributedLiarsDiceAI
 
-
 class InteriorAreaBuilderAI(GameAreaBuilderAI):
     notify = directNotify.newCategory('InteriorAreaBuilderAI')
 
     def __init__(self, air, parent):
         GameAreaBuilderAI.__init__(self, air, parent)
 
-        self.wantDoorLocatorNodes = config.GetBool('want-door-locator-nodes',
-                                                   True)
+        self.wantDoorLocatorNodes = config.GetBool('want-door-locator-nodes', True)
         self.wantJailCellDoors = config.GetBool('want-jail-cell-doors', True)
         self.wantParlorGames = config.GetBool('want-parlor-games', True)
 
-    def createObject(self,
-                     objType,
-                     objectData,
-                     parent,
-                     parentUid,
-                     objKey,
-                     dynamic,
-                     parentIsObj=False,
-                     fileName=None,
-                     actualParentObj=None):
+    def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
 
         if objType == ObjectList.DOOR_LOCATOR_NODE and self.wantDoorLocatorNodes:
-            newObj = self.__createDoorLocatorNode(parent, parentUid, objKey,
-                                                  objectData)
+            newObj = self.__createDoorLocatorNode(parent, parentUid, objKey, objectData)
         elif objType == 'Jail Cell Door' and self.wantJailCellDoors:
-            newObj = self.__createCellDoor(parent, parentUid, objKey,
-                                           objectData)
+            newObj = self.__createCellDoor(parent, parentUid, objKey, objectData)
         elif objType == 'Parlor Game' and self.wantParlorGames:
-            newObj = self.__createParlorTable(objectData, parent, parentUid,
-                                              objKey)
+            newObj = self.__createParlorTable(objectData, parent, parentUid, objKey)
         else:
-            newObj = GameAreaBuilderAI.createObject(
-                self, objType, objectData, parent, parentUid, objKey, dynamic,
-                parentIsObj, fileName, actualParentObj)
+            newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey,
+                dynamic, parentIsObj, fileName, actualParentObj)
 
         return newObj
 
@@ -59,7 +44,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         doorLocatorNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
         doorLocatorNode.setScale(objectData.get('Scale', (1, 1, 1)))
         doorLocatorNode.setInteriorId(self.parent.doId, self.parent.parentId,
-                                      self.parent.zoneId)
+            self.parent.zoneId)
 
         if not self.parent.getInteriorFrontDoor():
             self.parent.setInteriorFrontDoor(doorLocatorNode)
@@ -70,33 +55,30 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
             exteriorDoor = self.parent.getExteriorBackDoor()
 
         if not exteriorDoor:
-            self.notify.debug(
-                'Cannot generate interior door %s, cant find other exterior door!'
-                % (objKey))
+            self.notify.debug('Cannot generate interior door %s, cant find other exterior door!' % (
+                objKey))
 
             return
 
         exteriorWorld = self.parent.getParentObj()
 
         if not exteriorWorld:
-            self.notify.debug(
-                'Cannot create interior door %s, for exterior with no parent!' %
-                (objKey))
+            self.notify.debug('Cannot create interior door %s, for exterior with no parent!' % (
+                objKey))
 
             return
 
         exterior = exteriorDoor.getParentObj()
 
         if not exterior:
-            self.notify.debug(
-                'Cannot create interior door %s, no exterior found!' % (objKey))
+            self.notify.debug('Cannot create interior door %s, no exterior found!' % (
+                objKey))
 
             return
 
         doorLocatorNode.setBuildingUid(exteriorDoor.getBuildingUid())
         doorLocatorNode.setOtherDoor(exteriorDoor)
-        doorLocatorNode.setExteriorId(exterior.doId, exteriorWorld.doId,
-                                      exterior.zoneId)
+        doorLocatorNode.setExteriorId(exterior.doId, exteriorWorld.doId, exterior.zoneId)
 
         zoneId = self.parent.getZoneFromXYZ(doorLocatorNode.getPos())
         self.parent.generateChildWithRequired(doorLocatorNode, zoneId)
@@ -140,9 +122,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         elif gameTable == 'LiarsDice':
             tableCls = DistributedLiarsDiceAI
         else:
-            self.notify.warning(
-                'Failed to generate Parlor Table %s; %s is not a valid game type'
-                % (objKey, gameType))
+            self.notify.warning('Failed to generate Parlor Table %s; %s is not a valid game type' % (objKey, gameType))
             return
 
         gameTable = tableCls(self.air)
@@ -156,8 +136,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
             gameTable.setGameType(gameType)
 
         if hasattr(gameTable, 'setBetMultiplier'):
-            gameTable.setBetMultiplier(
-                int(objectData.get('BetMultiplier', '1')))
+            gameTable.setBetMultiplier(int(objectData.get('BetMultiplier', '1')))
 
         zoneId = self.parent.getZoneFromXYZ(gameTable.getPos())
         self.parent.generateChildWithRequired(gameTable, zoneId)

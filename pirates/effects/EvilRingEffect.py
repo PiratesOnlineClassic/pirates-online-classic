@@ -6,9 +6,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class EvilRingEffect(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self, parent=None):
@@ -17,16 +16,14 @@ class EvilRingEffect(PooledEffect, EffectController):
         if parent is not None:
             self.reparentTo(parent)
         if not EvilRingEffect.particleDummy:
-            EvilRingEffect.particleDummy = render.attachNewNode(
-                ModelNode('EvilRingEffectParticleDummy'))
+            EvilRingEffect.particleDummy = render.attachNewNode(ModelNode('EvilRingEffectParticleDummy'))
             EvilRingEffect.particleDummy.setColorScaleOff()
             EvilRingEffect.particleDummy.setLightOff()
             EvilRingEffect.particleDummy.setFogOff()
             EvilRingEffect.particleDummy.setDepthWrite(0)
             EvilRingEffect.particleDummy.setDepthTest(0)
             EvilRingEffect.particleDummy.setBin('shadow', 0)
-            EvilRingEffect.particleDummy.setTransparency(
-                TransparencyAttrib.MAlpha)
+            EvilRingEffect.particleDummy.setTransparency(TransparencyAttrib.MAlpha)
         self.effectScale = 1.0
         self.effectColor = Vec4(1, 1, 1, 1)
         self.duration = 4.0
@@ -70,11 +67,8 @@ class EvilRingEffect(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha,
-            ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.6, 0.8, 0.7, 0.4), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusFbufferAlpha, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.6, 0.8, 0.7, 0.4), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -85,17 +79,11 @@ class EvilRingEffect(PooledEffect, EffectController):
         self.p0.emitter.setRadiusSpread(0.0)
 
     def createTrack(self):
-        expand = LerpFunctionInterval(
-            self.reSize, 0.5, toData=1.0, fromData=0.0)
-        shrink = LerpFunctionInterval(
-            self.reSize, 0.75, toData=0.0, fromData=1.0)
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy), expand)
-        self.endEffect = Sequence(shrink, Func(self.p0.setBirthRate, 100),
-                                  Wait(2.0), Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(self.duration),
-                              self.endEffect)
+        expand = LerpFunctionInterval(self.reSize, 0.5, toData=1.0, fromData=0.0)
+        shrink = LerpFunctionInterval(self.reSize, 0.75, toData=0.0, fromData=1.0)
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), expand)
+        self.endEffect = Sequence(shrink, Func(self.p0.setBirthRate, 100), Wait(2.0), Func(self.cleanUpEffect))
+        self.track = Sequence(self.startEffect, Wait(self.duration), self.endEffect)
 
     def reSize(self, t):
         self.p0.emitter.setRadius(self.effectScale * t)
@@ -103,8 +91,7 @@ class EvilRingEffect(PooledEffect, EffectController):
     def setEffectColor(self, color):
         self.effectColor = Vec4(1, 1, 1, 0) - (Vec4(1, 1, 1, 1) - color) / 2.0
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, self.effectColor, Vec4(0.6, 0.8, 0.7, 0.4), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, self.effectColor, Vec4(0.6, 0.8, 0.7, 0.4), 1)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

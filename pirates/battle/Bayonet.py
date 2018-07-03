@@ -5,28 +5,18 @@ from direct.interval.IntervalGlobal import *
 from panda3d.core import *
 from pirates.uberdog.UberDogGlobals import InventoryType
 
-
 def beginInterrupt(av):
     if av.isLocal():
         messenger.send('skillFinished')
 
-
 class Bayonet(Weapon.Weapon):
 
-    modelTypes = {
-        InventoryType.BayonetWeaponL1: ('models/handheld/musket_bayonet',
-                                        Vec4(1, 1, 1, 1)),
-        InventoryType.BayonetWeaponL2: ('models/handheld/musket_bayonet',
-                                        Vec4(0.6, 0.6, 1, 1)),
-        InventoryType.BayonetWeaponL3: ('models/handheld/musket_bayonet',
-                                        Vec4(1, 0.6, 0.6, 1)),
-        InventoryType.MusketWeaponL1: ('models/handheld/musket_bayonet',
-                                       Vec4(1, 1, 1, 1)),
-        InventoryType.MusketWeaponL2: ('models/handheld/musket_bayonet',
-                                       Vec4(0.6, 0.6, 1, 1)),
-        InventoryType.MusketWeaponL3: ('models/handheld/musket_bayonet',
-                                       Vec4(1, 0.6, 0.6, 1))
-    }
+    modelTypes = {InventoryType.BayonetWeaponL1: ('models/handheld/musket_bayonet', Vec4(1, 1, 1, 1)),
+                  InventoryType.BayonetWeaponL2: ('models/handheld/musket_bayonet', Vec4(0.6, 0.6, 1, 1)),
+                  InventoryType.BayonetWeaponL3: ('models/handheld/musket_bayonet', Vec4(1, 0.6, 0.6, 1)),
+                  InventoryType.MusketWeaponL1: ('models/handheld/musket_bayonet', Vec4(1, 1, 1, 1)),
+                  InventoryType.MusketWeaponL2: ('models/handheld/musket_bayonet', Vec4(0.6, 0.6, 1, 1)),
+                  InventoryType.MusketWeaponL3: ('models/handheld/musket_bayonet', Vec4(1, 0.6, 0.6, 1))}
 
     walkAnim = 'bayonet_walk'
     runAnim = 'bayonet_run'
@@ -59,25 +49,11 @@ class Bayonet(Weapon.Weapon):
         return bullet
 
     def getDrawIval(self, av, ammoSkillId=0, blendInT=0.1, blendOutT=0):
-        track = Parallel(
-            av.actorInterval(
-                'bayonet_idle_to_fight_idle',
-                playRate=1.5,
-                endFrame=35,
-                blendInT=blendInT,
-                blendOutT=blendOutT),
-            Sequence(Wait(0.625), Func(self.attachTo, av)))
+        track = Parallel(av.actorInterval('bayonet_idle_to_fight_idle', playRate=1.5, endFrame=35, blendInT=blendInT, blendOutT=blendOutT), Sequence(Wait(0.625), Func(self.attachTo, av)))
         return track
 
     def getReturnIval(self, av, blendInT=0, blendOutT=0.1):
-        track = Parallel(
-            av.actorInterval(
-                'bayonet_idle_to_idle',
-                playRate=2,
-                endFrame=37,
-                blendInT=blendInT,
-                blendOutT=blendOutT),
-            Sequence(Wait(0.6), Func(self.detachFrom, av)))
+        track = Parallel(av.actorInterval('bayonet_idle_to_idle', playRate=2, endFrame=37, blendInT=blendInT, blendOutT=blendOutT), Sequence(Wait(0.6), Func(self.detachFrom, av)))
         if base.cr.targetMgr:
             track.append(Func(base.cr.targetMgr.setWantAimAssist, 0))
         return track
@@ -90,32 +66,25 @@ class Bayonet(Weapon.Weapon):
     @classmethod
     def setupSounds(cls):
         Bayonet.hitSfxs = (loader.loadSfx('audio/sfx_dagger_impact.mp3'),)
-        Bayonet.aimSfxs = (None,)
-        Bayonet.gunCockSfxs = (None,)
-        Bayonet.reloadSfxs = (None,)
-        Bayonet.missSfxs = (loader.loadSfx('audio/whoosh-10.mp3'),
-                            loader.loadSfx('audio/arm-Whoosh-05.mp3'))
-
+        Bayonet.aimSfxs = (None, )
+        Bayonet.gunCockSfxs = (None, )
+        Bayonet.reloadSfxs = (None, )
+        Bayonet.missSfxs = (loader.loadSfx('audio/whoosh-10.mp3'), loader.loadSfx('audio/arm-Whoosh-05.mp3'))
 
 def getShootSfx():
     return Bayonet.hitSfxs
 
-
 def getHitSfx():
     return Bayonet.hitSfxs
-
 
 def getMissSfx():
     return Bayonet.missSfxs
 
-
 def getAimSfx():
     return Bayonet.aimSfxs
 
-
 def getReloadSfx():
     return Bayonet.reloadSfxs
-
 
 def getGunCockSfx():
     return Bayonet.gunCockSfxs

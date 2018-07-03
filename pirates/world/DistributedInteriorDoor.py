@@ -12,8 +12,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
     notify = directNotify.newCategory('DistributedInteriorDoor')
 
     def __init__(self, cr):
-        DistributedDoorBase.DistributedDoorBase.__init__(
-            self, cr, 'DistributedInteriorDoor')
+        DistributedDoorBase.DistributedDoorBase.__init__(self, cr, 'DistributedInteriorDoor')
         self.islandRequest = None
         self.doorDisableDialog = None
 
@@ -38,8 +37,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         self.interiorZoneId = interiorZoneId
         self.interior = base.cr.doId2do[self.interiorDoId]
 
-    def setExteriorId(self, exteriorDoId, exteriorWorldParentId,
-                      exteriorWorldZoneId):
+    def setExteriorId(self, exteriorDoId, exteriorWorldParentId, exteriorWorldZoneId):
         self.exteriorDoId = exteriorDoId
         self.exteriorWorldParentId = exteriorWorldParentId
         self.exteriorWorldZoneId = exteriorWorldZoneId
@@ -56,16 +54,15 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         return building
 
     def loadOtherSide(self):
-        base.cr.addTaggedInterest(self.exteriorWorldParentId,
-                                  self.exteriorWorldZoneId,
-                                  ['instanceInterest-Door'])
+        base.cr.addTaggedInterest(self.exteriorWorldParentId, self.exteriorWorldZoneId, [
+            'instanceInterest-Door'])
 
         def extFinishedCallback(ext):
             self.islandRequest = None
             self.loadExteriorFinished()
 
-        self.islandRequest = base.cr.relatedObjectMgr.requestObjects(
-            [self.exteriorDoId], eachCallback=extFinishedCallback)
+        self.islandRequest = base.cr.relatedObjectMgr.requestObjects([self.exteriorDoId],
+            eachCallback=extFinishedCallback)
 
     def cleanupDoorDisableDialog(self, extraArgs=None):
         if self.doorDisableDialog:
@@ -75,9 +72,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
     def requestInteraction(self, avId, interactType=0):
         if not base.launcher.getPhaseComplete(3):
             if not self.doorDisableDialog:
-                self.doorDisableDialog = PDialog.PDialog(
-                    text=PLocalizer.NoRambleshack,
-                    style=OTPDialog.Acknowledge,
+                self.doorDisableDialog = PDialog.PDialog(text=PLocalizer.NoRambleshack, style=OTPDialog.Acknowledge,
                     command=self.cleanupDoorDisableDialog)
 
             return
@@ -86,8 +81,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
             if avId == base.localAvatar.doId:
                 base.transitions.fadeOut(self.tOpen)
                 self.openDoorIval.start()
-                base.cr.teleportMgr.initiateTeleport(
-                    PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
+                base.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
                 return
 
         #buildingUid = None
@@ -95,8 +89,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         #if exterior:
         #    buildingUid = exterior.getUniqueId()
         #base.richPresence.setLocation(buildingUid)
-        DistributedDoorBase.DistributedDoorBase.requestInteraction(
-            self, avId, interactType)
+        DistributedDoorBase.DistributedDoorBase.requestInteraction(self, avId, interactType)
 
     def loadExteriorFinished(self):
         self.interior.handleExitGameArea(None)
@@ -104,8 +97,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         world = self.interior.getParentObj()
         world.removeWorldInterest()
         base.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
-        base.cr.replaceTaggedInterestTag('instanceInterest-Door',
-                                         'instanceInterest')
+        base.cr.replaceTaggedInterestTag('instanceInterest-Door', 'instanceInterest')
         island = base.cr.doId2do.get(self.exteriorDoId)
         areaParentWorld = island.getParentObj()
         areaParentWorld.addWorldInterest(island)
@@ -128,5 +120,4 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         localAvatar.guiMgr.radarGui.showLocation(locationUid)
 
     def handleEnterProximity(self, collEntry):
-        DistributedDoorBase.DistributedDoorBase.handleEnterProximity(
-            self, collEntry)
+        DistributedDoorBase.DistributedDoorBase.handleEnterProximity(self, collEntry)

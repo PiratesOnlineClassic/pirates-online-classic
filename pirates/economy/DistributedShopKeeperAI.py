@@ -5,10 +5,8 @@ from pirates.economy import EconomyGlobals
 from pirates.makeapirate import BarberGlobals
 from pirates.uberdog import UberDogGlobals
 
-
 class DistributedShopKeeperAI(DistributedObjectAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedShopKeeperAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShopKeeperAI')
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
@@ -22,12 +20,12 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         if itemPrice > currentGold:
 
             self.air.logPotentialHacker(
-                message=
-                'Received makeSale buy for an item the avatar can not afford!',
+                message='Received makeSale buy for an item the avatar can not afford!',
                 currentGold=currentGold,
                 itemId=itemId,
                 itemQuantity=itemQuantity,
-                itemPrice=itemPrice)
+                itemPrice=itemPrice
+            )
 
             return RejectCode.TIMEOUT
 
@@ -49,7 +47,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         # Process stack limit changes
         stackBonus = EconomyGlobals.getInventoryBonus(itemId)
         if stackBonus:
-            pass  #TODO: write me!
+            pass #TODO: write me!
 
         return 2
 
@@ -63,11 +61,11 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
         if currentStack < itemQuantity:
             self.air.logPotentialHacker(
-                message=
-                'Received makeSale sell for an item the avatar does not have!',
+                message='Received makeSale sell for an item the avatar does not have!',
                 itemId=itemId,
                 itemQuantity=itemQuantity,
-                currentStack=currentStack)
+                 currentStack=currentStack
+            )
 
             return RejectCode.TIMEOUT
 
@@ -79,22 +77,18 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
-            self.notify.warning(
-                'Failed to process make sale for non-existant avatar %d!' %
+            self.notify.warning('Failed to process make sale for non-existant avatar %d!' %
                 avatar.doId)
 
-            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse',
-                                      [RejectCode.TIMEOUT])
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
 
         inventory = self.air.inventoryManager.getInventory(avatar.doId)
         if not inventory:
-            self.notify.debug(
-                'Cannot process sale for avatar %d, unknown inventory!' %
+            self.notify.debug('Cannot process sale for avatar %d, unknown inventory!' %
                 avatar.doId)
 
-            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse',
-                                      [RejectCode.TIMEOUT])
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
 
         response = 2
@@ -122,22 +116,18 @@ class DistributedShopKeeperAI(DistributedObjectAI):
     def requestMusic(self, songId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
-            self.notify.warning(
-                'Failed to process make sale for non-existant avatar %d!' %
+            self.notify.warning('Failed to process make sale for non-existant avatar %d!' %
                 avatar.doId)
 
-            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse',
-                                      [RejectCode.TIMEOUT])
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
 
         inventory = self.air.inventoryManager.getInventory(avatar.doId)
         if not inventory:
-            self.notify.debug(
-                'Cannot process sale for avatar %d, unknown inventory!' %
+            self.notify.debug('Cannot process sale for avatar %d, unknown inventory!' %
                 avatar.doId)
 
-            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse',
-                                      [RejectCode.TIMEOUT])
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
 
         currentGold = inventory.getGoldInPocket()
@@ -147,21 +137,19 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         if itemPrice > currentGold:
 
             self.air.logPotentialHacker(
-                message=
-                'Received requestMusic for a song the avatar can not afford!',
+                message='Received requestMusic for a song the avatar can not afford!',
                 currentGold=currentGold,
                 songId=songId,
-                itemPrice=itemPrice)
+                itemPrice=itemPrice
+            )
 
-            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse',
-                                      [RejectCode.TIMEOUT])
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
 
         inventory.setGoldInPocket(currentGold - itemPrice)
 
         # Log transaction for analytics and GM purposes
-        self.air.writeServerEvent(
-            'shopkeep-transaction',
+        self.air.writeServerEvent('shopkeep-transaction',
             type='requestMusic',
             songId=songId,
             price=5,
@@ -200,22 +188,18 @@ class DistributedShopKeeperAI(DistributedObjectAI):
     def requestBarber(self, idx, color):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
-            self.notify.warning(
-                'Failed to process make sale for non-existant avatar %d!' %
+            self.notify.warning('Failed to process make sale for non-existant avatar %d!' %
                 avatar.doId)
 
-            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse',
-                                      [RejectCode.TIMEOUT])
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
 
         inventory = self.air.inventoryManager.getInventory(avatar.doId)
         if not inventory:
-            self.notify.debug(
-                'Cannot process sale for avatar %d, unknown inventory!' %
+            self.notify.debug('Cannot process sale for avatar %d, unknown inventory!' %
                 avatar.doId)
 
-            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse',
-                                      [RejectCode.TIMEOUT])
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
 
         currentGold = inventory.getGoldInPocket()
@@ -223,8 +207,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         if item is None:
             self.notify.warning('Unknown barber id: %s!' % idx)
 
-            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse',
-                                      [RejectCode.TIMEOUT])
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
 
         itemId = item[0]
@@ -233,15 +216,14 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         if itemPrice > currentGold:
 
             self.air.logPotentialHacker(
-                message=
-                'Received requestBarber for a style the avatar can not afford!',
+                message='Received requestBarber for a style the avatar can not afford!',
                 currentGold=currentGold,
                 itemId=itemId,
                 itemType=itemType,
-                itemPrice=itemPrice)
+                itemPrice=itemPrice
+            )
 
-            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse',
-                                      [RejectCode.TIMEOUT])
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
 
         inventory.setGoldInPocket(currentGold - itemPrice)
@@ -254,18 +236,15 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         elif itemType == BarberGlobals.MUSTACHE:
             avatar.setHairMustache(itemId)
         else:
-            self.notify.warning(
-                'Received invalid barber hair type: %s!' % itemType)
-            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse',
-                                      [RejectCode.TIMEOUT])
+            self.notify.warning('Received invalid barber hair type: %s!' % itemType)
+            self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
 
         avatar.setHairColor(color)
         avatar.sendDNAUpdate()
 
         # Log transaction for analytics and GM purposes
-        self.air.writeServerEvent(
-            'shopkeep-transaction',
+        self.air.writeServerEvent('shopkeep-transaction',
             type='requestBarber',
             idx=idx,
             color=color,

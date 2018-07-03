@@ -7,7 +7,6 @@ from direct.particles.ParticleEffect import *
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class Twister(PooledEffect):
 
     particleDummy = None
@@ -39,20 +38,7 @@ class Twister(PooledEffect):
 
     def getParticleInterval(self, duration):
         if not self.pIval:
-            self.pIval = Sequence(
-                Parallel(
-                    ParticleInterval(
-                        self.dust,
-                        parent=self.psParent,
-                        worldRelative=0,
-                        duration=duration,
-                        softStopT=-3.0),
-                    ParticleInterval(
-                        self.dirt,
-                        parent=self.psParent,
-                        worldRelative=0,
-                        duration=duration,
-                        softStopT=-3.0)))
+            self.pIval = Sequence(Parallel(ParticleInterval(self.dust, parent=self.psParent, worldRelative=0, duration=duration, softStopT=-3.0), ParticleInterval(self.dirt, parent=self.psParent, worldRelative=0, duration=duration, softStopT=-3.0)))
         return self.pIval
 
     def start(self):

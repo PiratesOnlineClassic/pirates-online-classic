@@ -1,7 +1,6 @@
 from pirates.pirate.BattleAvatarGameFSMAI import BattleAvatarGameFSMAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-
 class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     notify = directNotify.newCategory('BattleNPCGameFSMAI')
 

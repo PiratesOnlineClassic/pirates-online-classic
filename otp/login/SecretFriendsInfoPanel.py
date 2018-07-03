@@ -14,18 +14,9 @@ class SecretFriendsInfoPanel(getGlobalDialogClass()):
 
     def __init__(self, doneEvent, hidePageNum=0, pageChangeCallback=None):
         dialogClass = getGlobalDialogClass()
-        dialogClass.__init__(
-            self,
-            parent=aspect2d,
-            dialogName='secretFriendsInfoDialog',
-            doneEvent=doneEvent,
-            okButtonText=OTPLocalizer.SecretFriendsInfoPanelClose,
-            style=OTPDialog.Acknowledge,
-            text='',
-            topPad=1.5,
-            sidePad=1.2,
-            pos=(0, 0, 0.1),
-            scale=0.9)
+        dialogClass.__init__(self, parent=aspect2d, dialogName='secretFriendsInfoDialog', doneEvent=doneEvent, okButtonText=OTPLocalizer.SecretFriendsInfoPanelClose, style=OTPDialog.Acknowledge, text='', topPad=1.5, sidePad=1.2, pos=(0,
+                                                                                                                                                                                                                                          0,
+                                                                                                                                                                                                                                          0.1), scale=0.9)
         self.textPanel = MultiPageTextFrame(
             parent=self,
             textList=OTPLocalizer.SecretFriendsInfoPanelText,
@@ -36,6 +27,4 @@ class SecretFriendsInfoPanel(getGlobalDialogClass()):
         self['image_scale'] = (2, 1, 1.3)
         closeButton = self.getChild(0)
         closeButton.setZ(-0.56)
-
-
 # okay decompiling .\otp\login\SecretFriendsInfoPanel.pyc

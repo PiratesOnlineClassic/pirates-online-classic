@@ -29,8 +29,8 @@ from otp.ai.MagicWordGlobal import *
 class LocalAvatar(DistributedAvatar.DistributedAvatar,
                   DistributedSmoothNode.DistributedSmoothNode):
     notify = DirectNotifyGlobal.directNotify.newCategory('LocalAvatar')
-    wantDevCameraPositions = base.config.GetBool('want-dev-camera-positions',
-                                                 True)
+    wantDevCameraPositions = base.config.GetBool(
+        'want-dev-camera-positions', True)
     wantMouse = base.config.GetBool('want-mouse', False)
     sleepTimeout = base.config.GetInt('sleep-timeout', 120)
     swimTimeout = base.config.GetInt('afk-timeout', 600)
@@ -165,47 +165,42 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             base.localAvatar.getAirborneHeight() + 4.0)
         return Task.cont
 
-    def setupControls(self,
-                      avatarRadius=1.4,
-                      floorOffset=OTPGlobals.FloorOffset,
-                      reach=4.0,
-                      wallBitmask=OTPGlobals.WallBitmask,
-                      floorBitmask=OTPGlobals.FloorBitmask,
-                      ghostBitmask=OTPGlobals.GhostBitmask):
+    def setupControls(self, avatarRadius=1.4, floorOffset=OTPGlobals.FloorOffset, reach=4.0,
+                      wallBitmask=OTPGlobals.WallBitmask, floorBitmask=OTPGlobals.FloorBitmask, ghostBitmask=OTPGlobals.GhostBitmask):
         walkControls = GravityWalker(gravity=-32.174 * 2.0)
         walkControls.setWallBitMask(wallBitmask)
         walkControls.setFloorBitMask(floorBitmask)
-        walkControls.initializeCollisions(self.cTrav, self, avatarRadius,
-                                          floorOffset, reach)
+        walkControls.initializeCollisions(
+            self.cTrav, self, avatarRadius, floorOffset, reach)
         walkControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(walkControls, 'walk')
         self.physControls = walkControls
         twoDControls = TwoDWalker(gravity=-32.174 * 2.0)
         twoDControls.setWallBitMask(wallBitmask)
         twoDControls.setFloorBitMask(floorBitmask)
-        twoDControls.initializeCollisions(self.cTrav, self, avatarRadius,
-                                          floorOffset, reach)
+        twoDControls.initializeCollisions(
+            self.cTrav, self, avatarRadius, floorOffset, reach)
         twoDControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(twoDControls, 'twoD')
         swimControls = SwimWalker()
         swimControls.setWallBitMask(wallBitmask)
         swimControls.setFloorBitMask(floorBitmask)
-        swimControls.initializeCollisions(self.cTrav, self, avatarRadius,
-                                          floorOffset, reach)
+        swimControls.initializeCollisions(
+            self.cTrav, self, avatarRadius, floorOffset, reach)
         swimControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(swimControls, 'swim')
         ghostControls = GhostWalker()
         ghostControls.setWallBitMask(ghostBitmask)
         ghostControls.setFloorBitMask(floorBitmask)
-        ghostControls.initializeCollisions(self.cTrav, self, avatarRadius,
-                                           floorOffset, reach)
+        ghostControls.initializeCollisions(
+            self.cTrav, self, avatarRadius, floorOffset, reach)
         ghostControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(ghostControls, 'ghost')
         observerControls = ObserverWalker()
         observerControls.setWallBitMask(ghostBitmask)
         observerControls.setFloorBitMask(floorBitmask)
-        observerControls.initializeCollisions(self.cTrav, self, avatarRadius,
-                                              floorOffset, reach)
+        observerControls.initializeCollisions(
+            self.cTrav, self, avatarRadius, floorOffset, reach)
         observerControls.setAirborneHeightFunc(self.getAirborneHeight)
         self.controlManager.add(observerControls, 'observer')
         self.controlManager.use('walk', self)
@@ -260,8 +255,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.ccRayNode.setIntoCollideMask(BitMask32.allOff())
         self.ccTravFloor = CollisionTraverser('LocalAvatar.ccTravFloor')
         self.camFloorCollisionQueue = CollisionHandlerQueue()
-        self.ccTravFloor.addCollider(self.ccRayNodePath,
-                                     self.camFloorCollisionQueue)
+        self.ccTravFloor.addCollider(
+            self.ccRayNodePath,
+            self.camFloorCollisionQueue)
         self.ccTravOnFloor = CollisionTraverser('LocalAvatar.ccTravOnFloor')
         self.ccRay2 = CollisionRay(0.0, 0.0, 0.0, 0.0, 0.0, -1.0)
         self.ccRay2Node = CollisionNode('ccRay2Node')
@@ -275,8 +271,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.camFloorCollisionBroadcaster = CollisionHandlerFloor()
         self.camFloorCollisionBroadcaster.setInPattern('on-floor')
         self.camFloorCollisionBroadcaster.setOutPattern('off-floor')
-        self.camFloorCollisionBroadcaster.addCollider(self.ccRay2NodePath,
-                                                      self.ccRay2MoveNodePath)
+        self.camFloorCollisionBroadcaster.addCollider(
+            self.ccRay2NodePath, self.ccRay2MoveNodePath)
 
     def deleteSmartCameraCollisions(self):
         del self.ccTrav
@@ -324,12 +320,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         hOff = nearPlaneDist * math.tan(deg2Rad(hFov / 2.0))
         vOff = nearPlaneDist * math.tan(deg2Rad(vFov / 2.0))
         camPnts = [
-            Point3(hOff, nearPlaneDist, vOff),
-            Point3(-hOff, nearPlaneDist, vOff),
-            Point3(hOff, nearPlaneDist, -vOff),
-            Point3(-hOff, nearPlaneDist, -vOff),
-            Point3(0.0, 0.0, 0.0)
-        ]
+            Point3(hOff, nearPlaneDist, vOff), Point3(-hOff, nearPlaneDist, vOff), Point3(hOff, nearPlaneDist, -vOff), Point3(-hOff, nearPlaneDist, -vOff), Point3(0.0, 0.0, 0.0)]
         avgPnt = Point3(0.0, 0.0, 0.0)
         for camPnt in camPnts:
             avgPnt = avgPnt + camPnt
@@ -386,8 +377,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def jumpLandAnimFix(self, jumpTime):
         if self.playingAnim != 'run' and self.playingAnim != 'walk':
-            return taskMgr.doMethodLater(jumpTime, self.returnToWalk,
-                                         self.uniqueName('walkReturnTask'))
+            return taskMgr.doMethodLater(
+                jumpTime, self.returnToWalk, self.uniqueName('walkReturnTask'))
 
     def jumpHardLand(self):
         if self.allowHardLand():
@@ -446,13 +437,17 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def setWalkSpeedNormal(self):
         self.controlManager.setSpeeds(
-            OTPGlobals.ToonForwardSpeed, OTPGlobals.ToonJumpForce,
-            OTPGlobals.ToonReverseSpeed, OTPGlobals.ToonRotateSpeed)
+            OTPGlobals.ToonForwardSpeed,
+            OTPGlobals.ToonJumpForce,
+            OTPGlobals.ToonReverseSpeed,
+            OTPGlobals.ToonRotateSpeed)
 
     def setWalkSpeedSlow(self):
         self.controlManager.setSpeeds(
-            OTPGlobals.ToonForwardSlowSpeed, OTPGlobals.ToonJumpSlowForce,
-            OTPGlobals.ToonReverseSlowSpeed, OTPGlobals.ToonRotateSlowSpeed)
+            OTPGlobals.ToonForwardSlowSpeed,
+            OTPGlobals.ToonJumpSlowForce,
+            OTPGlobals.ToonReverseSlowSpeed,
+            OTPGlobals.ToonRotateSlowSpeed)
 
     def pageUp(self):
         if not self.avatarControlsEnabled:
@@ -505,48 +500,92 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         heightScaleFactor = camHeight * 0.3333333333
         defLookAt = Point3(0.0, 1.5, camHeight)
         scXoffset = 3.0
-        scPosition = (Point3(scXoffset - 1, -10.0, camHeight + 5.0),
-                      Point3(scXoffset, 2.0, camHeight))
+        scPosition = (
+            Point3(scXoffset - 1, -10.0, camHeight + 5.0), Point3(scXoffset, 2.0, camHeight))
         self.cameraPositions = [
-            (Point3(0.0, -9.0 * heightScaleFactor, camHeight), defLookAt,
-             Point3(0.0, camHeight, camHeight * 4.0),
-             Point3(0.0, camHeight, camHeight * -1.0), 0),
-            (Point3(0.0, 0.5, camHeight), defLookAt,
-             Point3(0.0, camHeight, camHeight * 1.33),
-             Point3(0.0, camHeight, camHeight * 0.66), 1),
-            (Point3(5.7 * heightScaleFactor, 7.65 * heightScaleFactor,
-                    camHeight + 2.0), Point3(0.0, 1.0, camHeight),
-             Point3(0.0, 1.0, camHeight * 4.0),
-             Point3(0.0, 1.0, camHeight * -1.0), 0),
-            (Point3(0.0, -24.0 * heightScaleFactor, camHeight + 4.0), defLookAt,
-             Point3(0.0, 1.5, camHeight * 4.0),
-             Point3(0.0, 1.5, camHeight * -1.0), 0),
-            (Point3(0.0, -12.0 * heightScaleFactor, camHeight + 4.0), defLookAt,
-             Point3(0.0, 1.5, camHeight * 4.0),
-             Point3(0.0, 1.5, camHeight * -1.0), 0)
-        ] + self.auxCameraPositions
+            (
+                Point3(0.0, -9.0 * heightScaleFactor, camHeight), defLookAt, Point3(0.0, camHeight, camHeight * 4.0), Point3(0.0, camHeight, camHeight * -1.0), 0), (Point3(0.0, 0.5, camHeight), defLookAt, Point3(0.0, camHeight, camHeight * 1.33), Point3(0.0, camHeight, camHeight * 0.66), 1),
+            (
+                Point3(5.7 * heightScaleFactor, 7.65 * heightScaleFactor, camHeight + 2.0), Point3(0.0, 1.0, camHeight), Point3(0.0, 1.0, camHeight * 4.0), Point3(0.0, 1.0, camHeight * -1.0), 0), (Point3(0.0, -24.0 * heightScaleFactor, camHeight + 4.0), defLookAt, Point3(0.0, 1.5, camHeight * 4.0), Point3(0.0, 1.5, camHeight * -1.0), 0), (Point3(0.0, -12.0 * heightScaleFactor, camHeight + 4.0), defLookAt, Point3(0.0, 1.5, camHeight * 4.0), Point3(0.0, 1.5, camHeight * -1.0), 0)] + self.auxCameraPositions
         if self.wantDevCameraPositions:
-            self.cameraPositions += [
-                (Point3(0.0, 0.0, camHeight * 3), Point3(0.0, 0.0, 0.0),
-                 Point3(0.0, camHeight * 2, 0.0),
-                 Point3(0.0, -camHeight * 2, 0.0),
-                 1), (Point3(camHeight * 3, 0.0, camHeight),
-                      Point3(0.0, 0.0, camHeight),
-                      Point3(0.0, camHeight, camHeight * 1.1),
-                      Point3(0.0, camHeight, camHeight * 0.9),
-                      1), (Point3(camHeight * 3, 0.0, 0.0),
-                           Point3(0.0, 0.0, camHeight),
-                           Point3(0.0, camHeight, camHeight * 1.1),
-                           Point3(0.0, camHeight, camHeight * 0.9),
-                           1), (Point3(-camHeight * 3, 0.0, camHeight),
-                                Point3(0.0, 0.0, camHeight),
-                                Point3(0.0, camHeight, camHeight * 1.1),
-                                Point3(0.0, camHeight, camHeight * 0.9), 1),
-                (Point3(0.0, -60, 60), defLookAt + Point3(0, 15, 0),
-                 defLookAt + Point3(0, 15, 0), defLookAt + Point3(0, 15, 0), 1),
-                (Point3(0.0, -20, 20), defLookAt + Point3(0, 5, 0),
-                 defLookAt + Point3(0, 5, 0), defLookAt + Point3(0, 5, 0), 1)
-            ]
+            self.cameraPositions += [(Point3(0.0,
+                                             0.0,
+                                             camHeight * 3),
+                                      Point3(0.0,
+                                             0.0,
+                                             0.0),
+                                      Point3(0.0,
+                                             camHeight * 2,
+                                             0.0),
+                                      Point3(0.0,
+                                             -camHeight * 2,
+                                             0.0),
+                                      1),
+                                     (Point3(camHeight * 3,
+                                             0.0,
+                                             camHeight),
+                                      Point3(0.0,
+                                             0.0,
+                                             camHeight),
+                                      Point3(0.0,
+                                             camHeight,
+                                             camHeight * 1.1),
+                                      Point3(0.0,
+                                             camHeight,
+                                             camHeight * 0.9),
+                                      1),
+                                     (Point3(camHeight * 3,
+                                             0.0,
+                                             0.0),
+                                      Point3(0.0,
+                                             0.0,
+                                             camHeight),
+                                      Point3(0.0,
+                                             camHeight,
+                                             camHeight * 1.1),
+                                      Point3(0.0,
+                                             camHeight,
+                                             camHeight * 0.9),
+                                      1),
+                                     (Point3(-camHeight * 3,
+                                             0.0,
+                                             camHeight),
+                                      Point3(0.0,
+                                             0.0,
+                                             camHeight),
+                                      Point3(0.0,
+                                             camHeight,
+                                             camHeight * 1.1),
+                                      Point3(0.0,
+                                             camHeight,
+                                             camHeight * 0.9),
+                                      1),
+                                     (Point3(0.0,
+                                             -60,
+                                             60),
+                                      defLookAt + Point3(0,
+                                                         15,
+                                                         0),
+                                      defLookAt + Point3(0,
+                                                         15,
+                                                         0),
+                                      defLookAt + Point3(0,
+                                                         15,
+                                                         0),
+                                      1),
+                                     (Point3(0.0,
+                                             -20,
+                                             20),
+                                      defLookAt + Point3(0,
+                                                         5,
+                                                         0),
+                                      defLookAt + Point3(0,
+                                                         5,
+                                                         0),
+                                      defLookAt + Point3(0,
+                                                         5,
+                                                         0),
+                                      1)]
 
     def addCameraPosition(self, camPos=None):
         if camPos is None:
@@ -554,9 +593,18 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             lookAtNP.setPos(base.cam, 0, 1, 0)
             lookAtPos = lookAtNP.getPos()
             camHeight = self.getClampedAvatarHeight()
-            camPos = (base.cam.getPos(self), lookAtPos,
-                      Point3(0.0, 1.5, camHeight * 4.0),
-                      Point3(0.0, 1.5, camHeight * -1.0), 1)
+            camPos = (
+                base.cam.getPos(self),
+                lookAtPos,
+                Point3(
+                    0.0,
+                    1.5,
+                    camHeight * 4.0),
+                Point3(
+                    0.0,
+                    1.5,
+                    camHeight * -1.0),
+                1)
             lookAtNP.removeNode()
         self.auxCameraPositions.append(camPos)
         self.cameraPositions.append(camPos)
@@ -594,8 +642,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def posCamera(self, lerp, time):
         if not lerp:
-            self.positionCameraWithPusher(self.getCompromiseCameraPos(),
-                                          self.getLookAtPoint())
+            self.positionCameraWithPusher(
+                self.getCompromiseCameraPos(),
+                self.getLookAtPoint())
         else:
             camPos = self.getCompromiseCameraPos()
             savePos = camera.getPos()
@@ -679,8 +728,12 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             compromisePos = idealPos * ratio + visPnt * (1 - ratio)
             liftMult = 1.0 - ratio * ratio
             compromisePos = Point3(
-                compromisePos[0], compromisePos[1],
-                compromisePos[2] + self.getHeight() * 0.4 * liftMult)
+                compromisePos[0],
+                compromisePos[1],
+                compromisePos[2] +
+                self.getHeight() *
+                0.4 *
+                liftMult)
         compromisePos.setZ(compromisePos[2] + self.cameraZOffset)
         return compromisePos
 
@@ -733,8 +786,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         self.__instantaneousCamPos = camera.getPos()
         if push:
             self.cTrav.addCollider(self.ccSphereNodePath, self.camPusher)
-            self.ccTravOnFloor.addCollider(self.ccRay2NodePath,
-                                           self.camFloorCollisionBroadcaster)
+            self.ccTravOnFloor.addCollider(
+                self.ccRay2NodePath, self.camFloorCollisionBroadcaster)
             self.__disableSmartCam = 0
         else:
             self.__disableSmartCam = 1
@@ -772,7 +825,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             self.ccTrav.traverse(self.__geom)
             if self.camCollisionQueue.getNumEntries() > 0:
                 self.camCollisionQueue.sortEntries()
-                self.handleCameraObstruction(self.camCollisionQueue.getEntry(0))
+                self.handleCameraObstruction(
+                    self.camCollisionQueue.getEntry(0))
             if not self.__onLevelGround:
                 self.handleCameraFloorInteraction()
         if not self.__idealCameraObstructed:
@@ -841,8 +895,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             return
         self.camFloorCollisionQueue.sortEntries()
         camObstrCollisionEntry = self.camFloorCollisionQueue.getEntry(0)
-        camHeightFromFloor = camObstrCollisionEntry.getSurfacePoint(
-            self.ccRayNodePath)[2]
+        camHeightFromFloor = camObstrCollisionEntry.getSurfacePoint(self.ccRayNodePath)[
+            2]
         self.cameraZOffset = camera.getPos()[2] + camHeightFromFloor
         if self.cameraZOffset < 0:
             self.cameraZOffset = 0
@@ -859,11 +913,7 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
                 base.camLens.setFov(fov)
 
             self.camLerpInterval = LerpFunctionInterval(
-                setCamFov,
-                fromData=oldFov,
-                toData=fov,
-                duration=time,
-                name='cam-fov-lerp')
+                setCamFov, fromData=oldFov, toData=fov, duration=time, name='cam-fov-lerp')
             self.camLerpInterval.start()
 
     def setCameraFov(self, fov):
@@ -872,16 +922,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             base.camLens.setFov(self.fov)
 
     def gotoNode(self, node, eyeHeight=3):
-        possiblePoints = (Point3(3, 6, 0), Point3(-3, 6, 0), Point3(6, 6, 0),
-                          Point3(-6, 6, 0), Point3(3, 9, 0), Point3(-3, 9, 0),
-                          Point3(6, 9, 0), Point3(-6, 9, 0), Point3(9, 9, 0),
-                          Point3(-9, 9, 0), Point3(6, 0, 0), Point3(-6, 0, 0),
-                          Point3(6, 3, 0), Point3(-6, 3, 0), Point3(9, 9, 0),
-                          Point3(-9, 9, 0), Point3(0, 12, 0), Point3(3, 12, 0),
-                          Point3(-3, 12, 0), Point3(6, 12, 0), Point3(
-                              -6, 12, 0), Point3(9, 12, 0), Point3(-9, 12, 0),
-                          Point3(0, -6, 0), Point3(-3, -6, 0), Point3(0, -9, 0),
-                          Point3(-6, -9, 0))
+        possiblePoints = (
+            Point3(3, 6, 0), Point3(-3, 6, 0), Point3(6, 6, 0), Point3(-6, 6, 0), Point3(3, 9, 0), Point3(-3, 9, 0), Point3(6, 9, 0), Point3(-6, 9, 0), Point3(9, 9, 0), Point3(-9, 9, 0), Point3(6, 0, 0), Point3(-6, 0, 0), Point3(6, 3, 0), Point3(-6, 3, 0), Point3(9, 9, 0), Point3(-9, 9, 0), Point3(0, 12, 0), Point3(3, 12, 0), Point3(-3, 12, 0), Point3(6, 12, 0), Point3(-6, 12, 0), Point3(9, 12, 0), Point3(-9, 12, 0), Point3(0, -6, 0), Point3(-3, -6, 0), Point3(0, -9, 0), Point3(-6, -9, 0))
         for point in possiblePoints:
             pos = self.positionExaminer.consider(node, point, eyeHeight)
             if pos:
@@ -903,8 +945,10 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
             if sender is None:
                 return
             chatString = sender.getName() + ': ' + chatString
-        whisper = WhisperPopup(chatString, OTPGlobals.getInterfaceFont(),
-                               whisperType)
+        whisper = WhisperPopup(
+            chatString,
+            OTPGlobals.getInterfaceFont(),
+            whisperType)
         if sender is not None:
             whisper.setClickable(sender.getName(), fromId)
         whisper.manage(base.marginManager)
@@ -922,8 +966,10 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         senderName = playerInfo.playerName
         if whisperType == WhisperPopup.WTNormal or whisperType == WhisperPopup.WTQuickTalker:
             chatString = senderName + ': ' + chatString
-        whisper = WhisperPopup(chatString, OTPGlobals.getInterfaceFont(),
-                               whisperType)
+        whisper = WhisperPopup(
+            chatString,
+            OTPGlobals.getInterfaceFont(),
+            whisperType)
         if sender is not None:
             whisper.setClickable(senderName, fromId)
         whisper.manage(base.marginManager)
@@ -962,8 +1008,10 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         def setRun(ignored):
             messenger.send('running-on')
 
-        taskMgr.doMethodLater(self.runTimeout, setRun,
-                              self.uniqueName('runWatch'))
+        taskMgr.doMethodLater(
+            self.runTimeout,
+            setRun,
+            self.uniqueName('runWatch'))
         return Task.cont
 
     def stopRunWatch(self):
@@ -1004,8 +1052,10 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def startSleepWatch(self, callback):
         self.sleepCallback = callback
-        taskMgr.doMethodLater(self.sleepTimeout, callback,
-                              self.uniqueName('sleepwatch'))
+        taskMgr.doMethodLater(
+            self.sleepTimeout,
+            callback,
+            self.uniqueName('sleepwatch'))
 
     def stopSleepWatch(self):
         taskMgr.remove(self.uniqueName('sleepwatch'))
@@ -1096,7 +1146,13 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
                 node = self.getGeomNode().getChild(0)
                 lerp = Sequence(
                     LerpHprInterval(
-                        node, 0.5, Vec3(needH, 0, 0), blendType='easeInOut'),
+                        node,
+                        0.5,
+                        Vec3(
+                            needH,
+                            0,
+                            0),
+                        blendType='easeInOut'),
                     name='cheesy-lerp-hpr',
                     autoPause=1)
                 lerp.start()
@@ -1139,8 +1195,9 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
 
     def startChat(self):
         self.chatMgr.start()
-        self.accept(OTPGlobals.WhisperIncomingEvent,
-                    self.handlePlayerFriendWhisper)
+        self.accept(
+            OTPGlobals.WhisperIncomingEvent,
+            self.handlePlayerFriendWhisper)
         self.accept(OTPGlobals.ThinkPosHotkey, self.thinkPos)
         self.accept(OTPGlobals.PrintCamPosHotkey, self.printCamPos)
         if self.__enableMarkerPlacement:
@@ -1192,14 +1249,16 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         friend = base.cr.identifyFriend(doId)
         if friend is not None:
             self.setSystemMessage(
-                doId, OTPLocalizer.WhisperFriendComingOnline % friend.getName())
+                doId, OTPLocalizer.WhisperFriendComingOnline %
+                friend.getName())
         return
 
     def __friendOffline(self, doId):
         friend = base.cr.identifyFriend(doId)
         if friend is not None:
             self.setSystemMessage(
-                0, OTPLocalizer.WhisperFriendLoggedOut % friend.getName())
+                0, OTPLocalizer.WhisperFriendLoggedOut %
+                friend.getName())
         return
 
     def __playerOnline(self, playerId):
@@ -1213,8 +1272,8 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar,
         playerInfo = base.cr.playerFriendsManager.playerId2Info[playerId]
         if playerInfo:
             self.setSystemMessage(
-                playerId,
-                OTPLocalizer.WhisperPlayerOffline % playerInfo.playerName)
+                playerId, OTPLocalizer.WhisperPlayerOffline %
+                playerInfo.playerName)
 
     def __clickedWhisper(self, doId, isPlayer=None):
         if not isPlayer:

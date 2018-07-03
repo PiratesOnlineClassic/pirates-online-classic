@@ -6,9 +6,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class LevelUpEffect(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -16,16 +15,12 @@ class LevelUpEffect(PooledEffect, EffectController):
         EffectController.__init__(self)
         model = loader.loadModel('models/effects/candleFlame')
         self.card = model.find('**/effectCandle')
-        self.particleDummy = render.attachNewNode(
-            ModelNode('LevelUpEffectParticleDummy'))
+        self.particleDummy = render.attachNewNode(ModelNode('LevelUpEffectParticleDummy'))
         self.particleDummy.setDepthWrite(0)
         self.particleDummy.setLightOff()
         self.particleDummy.setFogOff()
         self.particleDummy.setColorScaleOff()
-        self.particleDummy.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingAlpha,
-                                  ColorBlendAttrib.OOne))
+        self.particleDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1', 128)
@@ -69,15 +64,9 @@ class LevelUpEffect(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(2.0)
-        self.startEffect = Sequence(
-            Func(self.p0.softStart), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(
-            Func(self.p0.softStop), Wait(2.0), Func(self.cleanUpEffect))
-        self.track = Sequence(
-            Func(self.p0.softStart), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy), Wait(2.5),
-            Func(self.p0.softStop), Wait(2.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.softStart), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(Func(self.p0.softStop), Wait(2.0), Func(self.cleanUpEffect))
+        self.track = Sequence(Func(self.p0.softStart), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Wait(2.5), Func(self.p0.softStop), Wait(2.0), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

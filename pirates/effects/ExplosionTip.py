@@ -5,9 +5,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class ExplosionTip(PooledEffect, EffectController):
-
+    
     NUM_PARTS = 10
 
     def __init__(self):
@@ -32,22 +31,13 @@ class ExplosionTip(PooledEffect, EffectController):
             self.parts[i].setPos(0, 0, 0)
             self.parts[i].setHpr(i * (360 / self.NUM_PARTS), 15, 0)
             speed = self.speed + random.uniform(0.0, self.speedSpread)
-            fadeBlast = self.parts[i].colorScaleInterval(
-                speed * 0.5, Vec4(0, 0, 0, 0))
+            fadeBlast = self.parts[i].colorScaleInterval(speed * 0.5, Vec4(0, 0, 0, 0))
             waitFade = Sequence(Wait(speed), fadeBlast)
-            scaleBlast = self.parts[i].scaleInterval(
-                speed, self.size, blendType='easeIn')
-            moveBlast = self.parts[i].posInterval(
-                speed,
-                Vec3(1, 0, 4),
-                startPos=Vec3(0, 0, 0),
-                blendType='easeOut',
-                other=self.parts[i])
+            scaleBlast = self.parts[i].scaleInterval(speed, self.size, blendType='easeIn')
+            moveBlast = self.parts[i].posInterval(speed, Vec3(1, 0, 4), startPos=Vec3(0, 0, 0), blendType='easeOut', other=self.parts[i])
             subTracks.append(Parallel(scaleBlast, moveBlast, waitFade))
 
-        self.track = Sequence(
-            Func(self.showAll), subTracks, Func(self.hideAll),
-            Func(self.cleanUpEffect))
+        self.track = Sequence(Func(self.showAll), subTracks, Func(self.hideAll), Func(self.cleanUpEffect))
 
     def hideAll(self):
         for part in self.parts:

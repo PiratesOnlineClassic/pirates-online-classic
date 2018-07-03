@@ -4,8 +4,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class BlastEffect(PooledEffect, EffectController):
+
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -19,24 +19,15 @@ class BlastEffect(PooledEffect, EffectController):
         self.effectModel.setBillboardPointWorld()
         self.effectModel.reparentTo(self)
         self.effectModel.setColorScale(0, 0, 0, 0)
-        self.effectModel.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingAlpha,
-                                  ColorBlendAttrib.OOne))
+        self.effectModel.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.setDepthWrite(0)
         self.setFogOff()
 
     def createTrack(self):
         self.effectModel.setColorScale(0, 0, 0, 0)
-        fadeBlast = self.effectModel.colorScaleInterval(
-            self.fadeTime,
-            Vec4(0, 0, 0, 0),
-            startColorScale=Vec4(self.effectColor),
-            blendType='easeOut')
-        scaleBlast = self.effectModel.scaleInterval(
-            self.fadeTime, 4, startScale=1.0, blendType='easeIn')
-        self.track = Sequence(
-            Parallel(fadeBlast, scaleBlast), Func(self.cleanUpEffect))
+        fadeBlast = self.effectModel.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale=Vec4(self.effectColor), blendType='easeOut')
+        scaleBlast = self.effectModel.scaleInterval(self.fadeTime, 4, startScale=1.0, blendType='easeIn')
+        self.track = Sequence(Parallel(fadeBlast, scaleBlast), Func(self.cleanUpEffect))
 
     def setEffectColor(self, color):
         self.effectColor = color

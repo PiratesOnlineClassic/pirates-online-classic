@@ -7,8 +7,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 
-
 class CandleFlame(EffectController, NodePath):
+
 
     def __init__(self, newParent=render, billboardOffset=1.0):
         NodePath.__init__(self, 'CandleFlame')
@@ -18,10 +18,7 @@ class CandleFlame(EffectController, NodePath):
         self.setBillboardPointEye(billboardOffset)
         self.haloTrack = None
         self.glow = loader.loadModelCopy('models/effects/candleFlame')
-        self.glow.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingAlpha,
-                                  ColorBlendAttrib.OOne))
+        self.glow.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.glow.setDepthWrite(0)
         self.glow.setFogOff()
         self.glow.setLightOff()
@@ -30,10 +27,7 @@ class CandleFlame(EffectController, NodePath):
         self.glow.setPos(0, 0, 0.15)
         self.glow.reparentTo(self)
         self.glowHalo = loader.loadModelCopy('models/effects/candleHalo')
-        self.glowHalo.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingAlpha,
-                                  ColorBlendAttrib.OOne))
+        self.glowHalo.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.glowHalo.setDepthWrite(0)
         self.glowHalo.setFogOff()
         self.glowHalo.setLightOff()
@@ -48,43 +42,16 @@ class CandleFlame(EffectController, NodePath):
         randomness1 = random.random() / 10
         randomness2 = random.random() / 10
         randomness3 = random.random() / 10
-        scaleUp1 = self.glow.scaleInterval(
-            0.1 + randomness1,
-            endScale,
-            startScale=baseScale,
-            blendType='easeInOut')
-        scaleDown1 = self.glow.scaleInterval(
-            0.1 + randomness1,
-            baseScale,
-            startScale=endScale,
-            blendType='easeInOut')
-        scaleUp2 = self.glow.scaleInterval(
-            0.1 + randomness2,
-            endScale,
-            startScale=baseScale,
-            blendType='easeInOut')
-        scaleDown2 = self.glow.scaleInterval(
-            0.1 + randomness2,
-            baseScale,
-            startScale=endScale,
-            blendType='easeInOut')
-        scaleUp3 = self.glow.scaleInterval(
-            0.1 + randomness3,
-            endScale,
-            startScale=baseScale,
-            blendType='easeInOut')
-        scaleDown3 = self.glow.scaleInterval(
-            0.1 + randomness3,
-            baseScale,
-            startScale=endScale,
-            blendType='easeInOut')
-        self.track = Sequence(scaleUp1, scaleDown1, scaleUp2, scaleDown2,
-                              scaleUp3, scaleDown3)
+        scaleUp1 = self.glow.scaleInterval(0.1 + randomness1, endScale, startScale=baseScale, blendType='easeInOut')
+        scaleDown1 = self.glow.scaleInterval(0.1 + randomness1, baseScale, startScale=endScale, blendType='easeInOut')
+        scaleUp2 = self.glow.scaleInterval(0.1 + randomness2, endScale, startScale=baseScale, blendType='easeInOut')
+        scaleDown2 = self.glow.scaleInterval(0.1 + randomness2, baseScale, startScale=endScale, blendType='easeInOut')
+        scaleUp3 = self.glow.scaleInterval(0.1 + randomness3, endScale, startScale=baseScale, blendType='easeInOut')
+        scaleDown3 = self.glow.scaleInterval(0.1 + randomness3, baseScale, startScale=endScale, blendType='easeInOut')
+        self.track = Sequence(scaleUp1, scaleDown1, scaleUp2, scaleDown2, scaleUp3, scaleDown3)
         randomness = random.random() / 20
-        scaleUpHalo = self.glowHalo.scaleInterval(
-            0.1 + randomness, 2.0, startScale=2.2, blendType='easeInOut')
-        scaleDownHalo = self.glowHalo.scaleInterval(
-            0.1 + randomness, 2.2, startScale=2.0, blendType='easeInOut')
+        scaleUpHalo = self.glowHalo.scaleInterval(0.1 + randomness, 2.0, startScale=2.2, blendType='easeInOut')
+        scaleDownHalo = self.glowHalo.scaleInterval(0.1 + randomness, 2.2, startScale=2.0, blendType='easeInOut')
         self.haloTrack = Sequence(scaleUpHalo, scaleDownHalo)
         self.reparentTo(self.newParent)
 

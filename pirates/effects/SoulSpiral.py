@@ -11,6 +11,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SoulSpiral(PooledEffect, EffectController):
+    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -25,14 +26,8 @@ class SoulSpiral(PooledEffect, EffectController):
         self.effectModel2.reparentTo(self)
         self.effectModel3.reparentTo(self.effectModel)
         self.effectModel4.reparentTo(self.effectModel2)
-        self.effectModel.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingAlpha,
-                                  ColorBlendAttrib.OOne))
-        self.effectModel2.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingAlpha,
-                                  ColorBlendAttrib.OOne))
+        self.effectModel.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+        self.effectModel2.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.effectModel.setScale(0.2, 0.2, 0.2)
         self.effectModel2.setTwoSided(1)
         self.effectModel2.setScale(0.16, 0.16, 0.18)
@@ -52,34 +47,12 @@ class SoulSpiral(PooledEffect, EffectController):
         self.effectModel2.setTexOffset(textureStage, 0.0, 1.0)
         duration = 1.5
         self.setColorScale(1.0, 1.0, 1.0, 0.75)
-        fadeOut = LerpColorScaleInterval(
-            self,
-            0.5,
-            Vec4(0.0, 0.0, 0.0, 0.0),
-            startColorScale=Vec4(1.0, 1.0, 1.0, 0.75))
-        uvScrollA = LerpFunctionInterval(
-            self.setNewUVs,
-            duration,
-            toData=-2.5,
-            fromData=1.0,
-            extraArgs=[self.effectModel2, textureStage])
-        uvScrollB = LerpFunctionInterval(
-            self.setNewUVs,
-            duration,
-            toData=-2.5,
-            fromData=1.0,
-            extraArgs=[self.effectModel, textureStage])
-        rotate = LerpHprInterval(
-            self.effectModel,
-            1.5 * duration,
-            Vec3(360, 0, 0),
-            startHpr=Vec3(0, 0, 0))
-        self.startEffect = Sequence(
-            Func(rotate.loop), Func(uvScrollA.loop), Wait(duration / 2.0),
-            Func(uvScrollB.loop))
-        self.endEffect = Sequence(fadeOut, Func(uvScrollA.finish),
-                                  Func(uvScrollB.finish), Func(rotate.finish),
-                                  Func(self.cleanUpEffect))
+        fadeOut = LerpColorScaleInterval(self, 0.5, Vec4(0.0, 0.0, 0.0, 0.0), startColorScale=Vec4(1.0, 1.0, 1.0, 0.75))
+        uvScrollA = LerpFunctionInterval(self.setNewUVs, duration, toData=-2.5, fromData=1.0, extraArgs=[self.effectModel2, textureStage])
+        uvScrollB = LerpFunctionInterval(self.setNewUVs, duration, toData=-2.5, fromData=1.0, extraArgs=[self.effectModel, textureStage])
+        rotate = LerpHprInterval(self.effectModel, 1.5 * duration, Vec3(360, 0, 0), startHpr=Vec3(0, 0, 0))
+        self.startEffect = Sequence(Func(rotate.loop), Func(uvScrollA.loop), Wait(duration / 2.0), Func(uvScrollB.loop))
+        self.endEffect = Sequence(fadeOut, Func(uvScrollA.finish), Func(uvScrollB.finish), Func(rotate.finish), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(duration), self.endEffect)
 
     def setNewUVs(self, offset, part, ts):
@@ -103,6 +76,4 @@ class SoulSpiral(PooledEffect, EffectController):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
         return
-
-
 # okay decompiling .\pirates\effects\SoulSpiral.pyc

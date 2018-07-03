@@ -14,6 +14,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class MuzzleFlash(PooledEffect, EffectController):
+    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -22,10 +23,7 @@ class MuzzleFlash(PooledEffect, EffectController):
         self.startCol = Vec4(0.5, 0.5, 0.5, 1)
         self.fadeTime = 0.15
         self.flash = loader.loadModelCopy('models/effects/lanternGlow')
-        self.flash.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingAlpha,
-                                  ColorBlendAttrib.OOne))
+        self.flash.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.flash.setDepthWrite(0)
         self.flash.setFogOff()
         self.flash.setColorScale(self.startCol)
@@ -36,18 +34,9 @@ class MuzzleFlash(PooledEffect, EffectController):
         self.flash.hide()
 
     def createTrack(self):
-        fadeBlast = self.flash.colorScaleInterval(
-            self.fadeTime,
-            Vec4(0, 0, 0, 0),
-            startColorScale=self.startCol,
-            blendType='easeOut')
-        scaleBlast = self.flash.scaleInterval(
-            self.fadeTime, 10, blendType='easeIn')
-        self.track = Sequence(
-            Func(self.flash.show), Parallel(fadeBlast, scaleBlast),
-            Func(self.flash.hide),
-            Func(self.flash.setColorScale, Vec4(1, 1, 1, 1)),
-            Func(self.cleanUpEffect))
+        fadeBlast = self.flash.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale=self.startCol, blendType='easeOut')
+        scaleBlast = self.flash.scaleInterval(self.fadeTime, 10, blendType='easeIn')
+        self.track = Sequence(Func(self.flash.show), Parallel(fadeBlast, scaleBlast), Func(self.flash.hide), Func(self.flash.setColorScale, Vec4(1, 1, 1, 1)), Func(self.cleanUpEffect))
         self.reparentTo(render)
 
     def cleanUpEffect(self):
@@ -82,6 +71,4 @@ class MuzzleFlash(PooledEffect, EffectController):
                 self.startCol = Vec4(1, 1, 1, 1)
             elif stateId == PiratesGlobals.TOD_STARS:
                 self.startCol = Vec4(1, 1, 1, 1)
-
-
 # okay decompiling .\pirates\effects\MuzzleFlash.pyc

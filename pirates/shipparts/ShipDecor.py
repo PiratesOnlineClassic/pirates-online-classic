@@ -89,8 +89,7 @@ class ShipDecor(NodePath, ShipPart.ShipPart):
             filePrefix = DecorDNA.DecorDict.get(shipClass)
         return filePrefix
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
-                            targetEffects, pos, normal, codes, attacker):
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         if base.cr.wantSpecialEffects and self.ship:
             shipSplintersAEffect = ShipSplintersA.getEffect()
             if shipSplintersAEffect:
@@ -119,15 +118,7 @@ class ShipDecor(NodePath, ShipPart.ShipPart):
             self.flash.finish()
             self.flash = None
 
-        self.flash = Sequence(
-            Func(self.hideBaseTexture),
-            Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03),
-            Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03),
-            Func(self.prop.setColorOff), Func(self.showBaseTexture), Wait(0.1),
-            Func(self.hideBaseTexture),
-            Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03),
-            Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03),
-            Func(self.prop.setColorOff), Func(self.showBaseTexture))
+        self.flash = Sequence(Func(self.hideBaseTexture), Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03), Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03), Func(self.prop.setColorOff), Func(self.showBaseTexture), Wait(0.1), Func(self.hideBaseTexture), Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03), Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03), Func(self.prop.setColorOff), Func(self.showBaseTexture))
         self.flash.start()
 
     def hideBaseTexture(self):

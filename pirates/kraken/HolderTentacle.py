@@ -4,6 +4,7 @@ from pirates.kraken.HolderGameFSM import HolderGameFSM
 
 
 class HolderTentacle(DistributedCreature):
+    
 
     def __init__(self, cr):
         DistributedCreature.__init__(self, cr, Holder())
@@ -33,15 +34,8 @@ class HolderTentacle(DistributedCreature):
             self.emergeIval = None
         if emerge:
             self.setPlayRate(0.75, 'emerge')
-            self.emergeIval = Sequence(
-                Wait(random.random()), Func(self.creature.show),
-                Func(self.play, 'emerge', blendInT=0))
+            self.emergeIval = Sequence(Wait(random.random()), Func(self.creature.show), Func(self.play, 'emerge', blendInT=0))
         else:
             self.setPlayRate(-1, 'emerge')
-            self.emergeIval = Sequence(
-                Wait(random.random()), Func(self.play, 'emerge', blendOutT=0),
-                Wait(
-                    self.creature.getDuration('emerge') /
-                    abs(self.creature.getPlayRate('emerge')) - 0.1),
-                Func(self.creature.hide))
+            self.emergeIval = Sequence(Wait(random.random()), Func(self.play, 'emerge', blendOutT=0), Wait(self.creature.getDuration('emerge') / abs(self.creature.getPlayRate('emerge')) - 0.1), Func(self.creature.hide))
         self.emergeIval.start()

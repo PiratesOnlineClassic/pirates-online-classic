@@ -21,8 +21,7 @@ class VoodooFire(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleEvilSmoke')
         if not VoodooFire.particleDummy:
-            VoodooFire.particleDummy = render.attachNewNode(
-                ModelNode('VoodooFireParticleDummy'))
+            VoodooFire.particleDummy = render.attachNewNode(ModelNode('VoodooFireParticleDummy'))
             VoodooFire.particleDummy.setDepthWrite(0)
             VoodooFire.particleDummy.setLightOff()
             VoodooFire.particleDummy.setColorScaleOff()
@@ -71,9 +70,7 @@ class VoodooFire(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(1)
-        self.p0.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusConstantColor,
-            ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOneMinusConstantColor, ColorBlendAttrib.OOneMinusIncomingAlpha)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -81,12 +78,8 @@ class VoodooFire(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(1.5)
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100), Wait(7.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def cleanUpEffect(self):
@@ -98,6 +91,4 @@ class VoodooFire(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\VoodooFire.pyc

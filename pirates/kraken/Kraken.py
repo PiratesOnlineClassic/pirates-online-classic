@@ -11,6 +11,7 @@ from pirates.ship import ShipGlobals
 
 
 class Kraken(DistributedNode):
+    
 
     def __init__(self, cr):
         DistributedNode.__init__(self, cr)
@@ -62,8 +63,7 @@ class Kraken(DistributedNode):
                 grabber.attachToShipLocator()
                 grabber.setupCollisions()
 
-        self.shipRomRequest = self.cr.relatedObjectMgr.requestObjects(
-            (shipId,), eachCallback=shipArrived)
+        self.shipRomRequest = self.cr.relatedObjectMgr.requestObjects((shipId,), eachCallback=shipArrived)
 
     def getShipId(self):
         return self.shipId
@@ -83,10 +83,7 @@ class Kraken(DistributedNode):
         self.grabberTentacles.discard(grabber)
 
     def getRollAngle(self):
-        dampen = max([
-            grabber.getRockingDampen()
-            for grabber in self.grabberTentacles.itervalues()
-        ])
+        dampen = max([ grabber.getRockingDampen() for grabber in self.grabberTentacles.itervalues() ])
         if dampen:
             frameTime = globalClock.getFrameTime()
             self.dampen[1] = frameTime
@@ -128,12 +125,8 @@ class Kraken(DistributedNode):
             self.doomTentacle = DoomTentacle(self.uniqueName)
             self.doomTentacle.reparentTo(self)
             self.doomTentacle.setScale(self.getShip().dimensions[1] / 400)
-            self.doomTentacle.setEffectsScale(
-                self.getShip().dimensions[1] / 100)
-            self.doomTentacle.setPos(
-                self.getShip(), -self.getShip().dimensions[0] / 1.3,
-                -1 * ShipGlobals.getShipSplitOffset(self.getShip().shipClass) +
-                2, -15)
+            self.doomTentacle.setEffectsScale(self.getShip().dimensions[1] / 100)
+            self.doomTentacle.setPos(self.getShip(), -self.getShip().dimensions[0] / 1.3, -1 * ShipGlobals.getShipSplitOffset(self.getShip().shipClass) + 2, -15)
             self.doomTentacle.setHpr(self.getShip(), 90, 0, 0)
         self.doomTentacle.setPlayRate(1.2, 'emerge')
         self.doomTentacle.play('emerge')

@@ -41,8 +41,7 @@ class PlayerShip(DistributedShip):
         if __dev__ and config.GetBool('want-broadside-assist', 0):
             self.startMonitorBroadside()
         if self.ownerId:
-            self.inventoryInterest = self.addInterest(
-                2, self.uniqueName('ship-inventory'))
+            self.inventoryInterest = self.addInterest(2, self.uniqueName('ship-inventory'))
         self.registerMainBuiltFunction(self._doSiegeAndPVPTeamColors)
         self._respawnLocation = None
         self._respawnResponseDelayedCall = None
@@ -158,20 +157,17 @@ class PlayerShip(DistributedShip):
 
     def canTakeWheel(self, wheel, av):
         available = True
-        if self.queryGameState() in ('Pinned',):
-            base.localAvatar.guiMgr.createWarning(PLocalizer.ShipPinnedWarning,
-                                                  PiratesGuiGlobals.TextFG6)
+        if self.queryGameState() in ('Pinned', ):
+            base.localAvatar.guiMgr.createWarning(PLocalizer.ShipPinnedWarning, PiratesGuiGlobals.TextFG6)
             available = False
         else:
             if wheel.getUserId() and base.localAvatar.getDoId() != self.ownerId:
-                base.localAvatar.guiMgr.createWarning(
-                    PLocalizer.AlreadyInUseWarning, PiratesGuiGlobals.TextFG6)
+                base.localAvatar.guiMgr.createWarning(PLocalizer.AlreadyInUseWarning, PiratesGuiGlobals.TextFG6)
                 available = False
         return available
 
     def startMonitorBroadside(self):
-        taskMgr.doMethodLater(0.5, self.monitorBroadsideAim,
-                              self.uniqueName('monitorBroadside'))
+        taskMgr.doMethodLater(0.5, self.monitorBroadsideAim, self.uniqueName('monitorBroadside'))
 
     def stopMonitorBroadside(self):
         taskMgr.remove(self.uniqueName('monitorBroadside'))
@@ -204,34 +200,25 @@ class PlayerShip(DistributedShip):
         if self.getSiegeTeam() or self.getPVPTeam():
             allowed = True
         else:
-            if self.ownerID and DistributedBandMember.areSameCrew(
-                    avId, self.ownerId):
-                if self.captainId not in self.getCrew() and len(self.getCrew(
-                )) >= self.maxCrew - 1 and avId != self.captainId:
-                    base.localAvatar.guiMgr.createWarning(
-                        PLocalizer.NoBoardingCaptainReserved,
-                        PiratesGuiGlobals.TextFG6)
+            if self.ownerID and DistributedBandMember.areSameCrew(avId, self.ownerId):
+                if self.captainId not in self.getCrew() and len(self.getCrew()) >= self.maxCrew - 1 and avId != self.captainId:
+                    base.localAvatar.guiMgr.createWarning(PLocalizer.NoBoardingCaptainReserved, PiratesGuiGlobals.TextFG6)
                 else:
                     allowed = True
             else:
-                base.localAvatar.guiMgr.createWarning(
-                    PLocalizer.NoBoardingPermissionWarning,
-                    PiratesGuiGlobals.TextFG6)
+                base.localAvatar.guiMgr.createWarning(PLocalizer.NoBoardingPermissionWarning, PiratesGuiGlobals.TextFG6)
         return allowed
 
     def setRespawnLocation(self, parentId, zoneId):
-        self._respawnLocation = (parentId, zoneId)
+        self._respawnLocation = (
+         parentId, zoneId)
 
     def setLocation(self, parentId, zoneId):
         DistributedShip.setLocation(self, parentId, zoneId)
-        if self._respawnLocation is not None and self._respawnLocation == (
-                parentId, zoneId):
+        if self._respawnLocation is not None and self._respawnLocation == (parentId, zoneId):
             self._respawnLocation = None
             if not self._respawnResponseDelayedCall:
-                self._respawnResponseDelayedCall = FrameDelayedCall(
-                    'PlayerShip-respawnLocation-gridInterestComplete',
-                    Functor(base.cr.setAllInterestsCompleteCallback,
-                            self._sendRespawnLocationResponse))
+                self._respawnResponseDelayedCall = FrameDelayedCall('PlayerShip-respawnLocation-gridInterestComplete', Functor(base.cr.setAllInterestsCompleteCallback, self._sendRespawnLocationResponse))
         if self.isGenerated():
             self.cnode.setCurrL(zoneId)
         return
@@ -267,12 +254,8 @@ class PlayerShip(DistributedShip):
                     remaining = self.attackTimerRemaining()
                     if self.getSiegeTeam() and remaining > 0:
                         self.shipStatusDisplay.disableAnchorButton()
-                        localAvatar.guiMgr.createWarning(
-                            PLocalizer.CannotDockYet % remaining,
-                            PiratesGuiGlobals.TextFG6)
-                        self.checkAnchor = taskMgr.doMethodLater(
-                            remaining, self.__recheckAbleDropAnchor,
-                            'checkAnchor')
+                        localAvatar.guiMgr.createWarning(PLocalizer.CannotDockYet % remaining, PiratesGuiGlobals.TextFG6)
+                        self.checkAnchor = taskMgr.doMethodLater(remaining, self.__recheckAbleDropAnchor, 'checkAnchor')
                     else:
                         self.shipStatusDisplay.enableAnchorButton()
                 else:
@@ -280,24 +263,19 @@ class PlayerShip(DistributedShip):
 
     def _addRepairSpotModels(self):
         if not self._repairSpotWoodPile:
-            self._repairSpotWoodPile = loader.loadModel(
-                'models/props/repair_spot_wood')
+            self._repairSpotWoodPile = loader.loadModel('models/props/repair_spot_wood')
             collFloors = self._repairSpotWoodPile.find('**/collision_floor')
             if not collFloors.isEmpty():
                 collideMask = collFloors.getCollideMask()
                 collideMask ^= PiratesGlobals.FloorBitmask
                 collideMask |= PiratesGlobals.ShipFloorBitmask
                 collFloors.setCollideMask(collideMask)
-        for locIndex in PVPGlobals.ShipClass2repairLocators[
-                self.shipClass].getValue():
+        for locIndex in PVPGlobals.ShipClass2repairLocators[self.shipClass].getValue():
             locName = PVPGlobals.RepairSpotLocatorNames[locIndex]
-            self._repairSpotWoodPiles[locName] = self.root.attachNewNode(
-                'repairSpotWoodPile-%s' % locName)
-            self._repairSpotWoodPile.instanceTo(
-                self._repairSpotWoodPiles[locName])
+            self._repairSpotWoodPiles[locName] = self.root.attachNewNode('repairSpotWoodPile-%s' % locName)
+            self._repairSpotWoodPile.instanceTo(self._repairSpotWoodPiles[locName])
             locator = self.getLocator(locName)
-            self._repairSpotWoodPiles[locName].setPosHpr(
-                locator.getPos(), locator.getHpr())
+            self._repairSpotWoodPiles[locName].setPosHpr(locator.getPos(), locator.getHpr())
 
     def _removeRepairSpotModels(self):
         for woodPile in self._repairSpotWoodPiles.itervalues():
@@ -323,38 +301,26 @@ class PlayerShip(DistributedShip):
         if locIndex in self._repairSpotIvals:
             self._repairSpotIvals[locIndex].pause()
         self._repairSpotHoles[locIndex].setTransparency(1, 100)
-        ival = IG.Sequence(
-            IG.Wait(PlayerShip.RepairSpotFadeAfter),
-            IG.LerpColorScaleInterval(
-                self._repairSpotHoles[locIndex],
-                PlayerShip.RepairSpotFadeDur,
-                Vec4(1.0, 1.0, 1.0, 0.0),
-                blendType='easeInOut'))
+        ival = IG.Sequence(IG.Wait(PlayerShip.RepairSpotFadeAfter), IG.LerpColorScaleInterval(self._repairSpotHoles[locIndex], PlayerShip.RepairSpotFadeDur, Vec4(1.0, 1.0, 1.0, 0.0), blendType='easeInOut'))
         ival.start()
         self._repairSpotIvals[locIndex] = ival
 
     def _addRepairSpotHoles(self):
         if not self._repairSpotHole:
-            repairSpotHoleModels = loader.loadModel(
-                'models/props/repair_spot_hole')
+            repairSpotHoleModels = loader.loadModel('models/props/repair_spot_hole')
             self._repairSpotHole = repairSpotHoleModels.find('**/floor_hole')
-            self._repairSpotHoleFixed = repairSpotHoleModels.find(
-                '**/floor_hole_fixed')
-        for locIndex in PVPGlobals.ShipClass2repairLocators[
-                self.shipClass].getValue():
+            self._repairSpotHoleFixed = repairSpotHoleModels.find('**/floor_hole_fixed')
+        for locIndex in PVPGlobals.ShipClass2repairLocators[self.shipClass].getValue():
             self._removeRepairSpotModel(locIndex)
             self._placeRepairSpotModel(locIndex, self._repairSpotHole)
 
     def _removeRepairSpotHoles(self):
-        for locIndex in PVPGlobals.ShipClass2repairLocators[
-                self.shipClass].getValue():
+        for locIndex in PVPGlobals.ShipClass2repairLocators[self.shipClass].getValue():
             self._removeRepairSpotModel(locIndex)
             if self._repairSpotHoleFixed:
                 self._placeRepairSpotModel(locIndex, self._repairSpotHoleFixed)
                 self._fadeOutRepairSpotModel(locIndex)
-                self._repairSpotIvals[locIndex] = IG.Sequence(
-                    self._repairSpotIvals[locIndex],
-                    IG.Func(self._removeRepairSpotModel, locIndex))
+                self._repairSpotIvals[locIndex] = IG.Sequence(self._repairSpotIvals[locIndex], IG.Func(self._removeRepairSpotModel, locIndex))
 
     def setSiegeBounty(self, bounty):
         self.bounty = bounty

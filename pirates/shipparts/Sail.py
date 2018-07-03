@@ -20,8 +20,21 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.shipparts import ShipPart
 from pirates.shipparts import SplattableObject
 
-NavySailDict = {0: [2, 1, 1, 2], 1: [2, 1, 2, 1]}
-teamToLetter = ['_a_', '_b_', '_c_']
+NavySailDict = {
+    0: [
+        2,
+        1,
+        1,
+        2],
+    1: [
+        2,
+        1,
+        2,
+        1]}
+teamToLetter = [
+    '_a_',
+    '_b_',
+    '_c_']
 
 
 class Sail(NodePath, ShipPart.ShipPart):
@@ -111,17 +124,14 @@ class Sail(NodePath, ShipPart.ShipPart):
         self.currPrefix = filePrefix
         self.prop = self.attachNewNode('prop')
         self.propCollisions = self.ship.modelCollisions.attachNewNode(
-            ModelNode(
-                'sail-%d-%d' % (self.dna.mastPosIndex, self.dna.posIndex)))
+            ModelNode('sail-%d-%d' % (self.dna.mastPosIndex, self.dna.posIndex)))
         textureType = SailDNA.SailTextureDict.get(self.dna.textureIndex)
         if textureType and self.card:
-            self.sailTexture = self.card.find(
-                '**/%s' % textureType).findTexture('*')
+            self.sailTexture = self.card.find('**/%s' % textureType).findTexture('*')
 
         fileName = SailDNA.LogoDict.get(self.dna.logoIndex)
         if fileName:
-            self.logoTexture = self.logoCard.find(
-                '**/%s' % fileName).findTexture('*')
+            self.logoTexture = self.logoCard.find('**/%s' % fileName).findTexture('*')
             self.logoTexture.setMinfilter(Texture.FTLinearMipmapLinear)
             self.logoTexture.setMagfilter(Texture.FTLinear)
             if self.dna.logoIndex != 201:
@@ -130,34 +140,22 @@ class Sail(NodePath, ShipPart.ShipPart):
 
         self.baseLayer = TextureStage('baseLayer')
         self.baseLayer.setSort(5)
-        self.baseLayer.setCombineRgb(
-            TextureStage.CMModulate, TextureStage.CSConstant,
-            TextureStage.COSrcColor, TextureStage.CSTexture,
-            TextureStage.COSrcColor)
-        self.baseLayer.setCombineAlpha(
-            TextureStage.CMModulate, TextureStage.CSConstant,
-            TextureStage.COSrcAlpha, TextureStage.CSTexture,
-            TextureStage.COSrcAlpha)
+        self.baseLayer.setCombineRgb(TextureStage.CMModulate, TextureStage.CSConstant, TextureStage.COSrcColor,
+                                     TextureStage.CSTexture, TextureStage.COSrcColor)
+        self.baseLayer.setCombineAlpha(TextureStage.CMModulate, TextureStage.CSConstant, TextureStage.COSrcAlpha,
+                                       TextureStage.CSTexture, TextureStage.COSrcAlpha)
         self.baseLayer.setColor(VBase4(1.0, 1.0, 1.0, 1.0))
         self.logoLayer = TextureStage('logoLayer')
-        self.logoLayer.setCombineRgb(
-            TextureStage.CMModulate, TextureStage.CSPrevious,
-            TextureStage.COSrcColor, TextureStage.CSTexture,
-            TextureStage.COSrcColor)
-        self.logoLayer.setCombineAlpha(TextureStage.CMReplace,
-                                       TextureStage.CSPrevious,
-                                       TextureStage.COSrcAlpha)
+        self.logoLayer.setCombineRgb(TextureStage.CMModulate, TextureStage.CSPrevious, TextureStage.COSrcColor,
+                                     TextureStage.CSTexture, TextureStage.COSrcColor)
+        self.logoLayer.setCombineAlpha(TextureStage.CMReplace, TextureStage.CSPrevious, TextureStage.COSrcAlpha)
         self.logoLayer.setSort(12)
         self.logoLayer.setTexcoordName('uvLogo')
         self.blendTs = TextureStage('blendTs')
-        self.blendTs.setCombineRgb(
-            TextureStage.CMModulate, TextureStage.CSPrimaryColor,
-            TextureStage.COSrcColor, TextureStage.CSPrevious,
-            TextureStage.COSrcColor)
-        self.blendTs.setCombineAlpha(
-            TextureStage.CMModulate, TextureStage.CSPrimaryColor,
-            TextureStage.COSrcAlpha, TextureStage.CSPrevious,
-            TextureStage.COSrcAlpha)
+        self.blendTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSPrimaryColor, TextureStage.COSrcColor,
+                                   TextureStage.CSPrevious, TextureStage.COSrcColor)
+        self.blendTs.setCombineAlpha(TextureStage.CMModulate, TextureStage.CSPrimaryColor, TextureStage.COSrcAlpha,
+                                     TextureStage.CSPrevious, TextureStage.COSrcAlpha)
         self.blendTs.setSort(30)
         self.holeLayer = TextureStage('holeLayer')
         self.holeLayer.setMode(TextureStage.MModulate)
@@ -166,12 +164,10 @@ class Sail(NodePath, ShipPart.ShipPart):
         self.holeTex = self.holeCard.find('**/effectSailHoleA').findTexture('*')
         self.holeTex.setWrapU(Texture.WMClamp)
         self.holeTex.setWrapV(Texture.WMClamp)
-        self.holeTex2 = self.holeCard.find('**/effectSailHoleB').findTexture(
-            '*')
+        self.holeTex2 = self.holeCard.find('**/effectSailHoleB').findTexture('*')
         self.holeTex2.setWrapU(Texture.WMClamp)
         self.holeTex2.setWrapV(Texture.WMClamp)
-        self.breakTex = self.holeCard.find('**/effectHullBreach').findTexture(
-            '*')
+        self.breakTex = self.holeCard.find('**/effectHullBreach').findTexture('*')
         self.breakTex.setWrapU(Texture.WMClamp)
         self.breakTex.setWrapV(Texture.WMClamp)
         self.blankTex = self.holeCard.find('**/hullBlank').findTexture('*')
@@ -193,25 +189,21 @@ class Sail(NodePath, ShipPart.ShipPart):
         self.sailActor.loadModel(filePrefix + fileSuffix + '_h')
         self.sailActor.loadAnims(self.SailAnimDict)
         sailNodePrefix = 'sail_%d' % self.dna.posIndex
-        self.sailActor.makeSubpart(
-            'mast', ['def_mast_base', 'def_mast_0', 'def_mast_1'], [])
+        self.sailActor.makeSubpart('mast', [
+            'def_mast_base',
+            'def_mast_0',
+            'def_mast_1'], [])
         self.sailActor.setSubpartsComplete(True)
         self.sailActor.findAllMatches('**/+ModelNode').detach()
         if self.dna.baseTeam == PiratesGlobals.PLAYER_TEAM:
-            self.sailActor.findAllMatches(
-                '**/%s_b_high' % sailNodePrefix).detach()
-            self.sailActor.findAllMatches(
-                '**/%s_c_high' % sailNodePrefix).detach()
+            self.sailActor.findAllMatches('**/%s_b_high' % sailNodePrefix).detach()
+            self.sailActor.findAllMatches('**/%s_c_high' % sailNodePrefix).detach()
         elif self.dna.baseTeam == PiratesGlobals.NAVY_TEAM:
-            self.sailActor.findAllMatches(
-                '**/%s_a_high' % sailNodePrefix).detach()
-            self.sailActor.findAllMatches(
-                '**/%s_c_high' % sailNodePrefix).detach()
+            self.sailActor.findAllMatches('**/%s_a_high' % sailNodePrefix).detach()
+            self.sailActor.findAllMatches('**/%s_c_high' % sailNodePrefix).detach()
         elif self.dna.baseTeam == PiratesGlobals.TRADING_CO_TEAM:
-            self.sailActor.findAllMatches(
-                '**/%s_a_high' % sailNodePrefix).detach()
-            self.sailActor.findAllMatches(
-                '**/%s_b_high' % sailNodePrefix).detach()
+            self.sailActor.findAllMatches('**/%s_a_high' % sailNodePrefix).detach()
+            self.sailActor.findAllMatches('**/%s_b_high' % sailNodePrefix).detach()
 
         self.sailActor.flattenStrong()
         self.character = self.sailActor.find('**/+Character')
@@ -242,9 +234,10 @@ class Sail(NodePath, ShipPart.ShipPart):
             else:
                 fileName = SailDNA.LogoDict.get(logoIndex)
             if fileName:
-                self.logoTexture = self.logoCard.find(
-                    '**/%s' % fileName).findTexture('*')
-                if logoIndex not in [210, 211]:
+                self.logoTexture = self.logoCard.find('**/%s' % fileName).findTexture('*')
+                if logoIndex not in [
+                    210,
+                    211]:
                     self.logoTexture.setMinfilter(Texture.FTLinearMipmapLinear)
                     self.logoTexture.setMagfilter(Texture.FTLinear)
                 else:
@@ -316,8 +309,7 @@ class Sail(NodePath, ShipPart.ShipPart):
         else:
             fileSuffix = 'sail_' + str(self.dna.posIndex)
         filePrefix = self.currPrefix
-        self.collisions = loader.loadModel(filePrefix + 'zero_coll_' +
-                                           fileSuffix)
+        self.collisions = loader.loadModel(filePrefix + 'zero_coll_' + fileSuffix)
         self.collisions.reparentTo(self.propCollisions)
         self.coll = self.collisions.findAllMatches('**/collision*')
         for c in self.coll:
@@ -359,15 +351,14 @@ class Sail(NodePath, ShipPart.ShipPart):
             gs = geomNode.getGeomState(i).setAttrib(attribList[i])
             geomNode.setGeomState(i, gs)
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
-                            targetEffects, pos, normal, codes, attacker):
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         if self.cr and self.cr.wantSpecialEffects:
             pass
         self.alreadyPlayed = 0
         if self.dna.baseTeam not in [
-                PiratesGlobals.UNDEAD_TEAM, PiratesGlobals.FRENCH_UNDEAD_TEAM,
-                PiratesGlobals.SPANISH_UNDEAD_TEAM
-        ]:
+            PiratesGlobals.UNDEAD_TEAM,
+            PiratesGlobals.FRENCH_UNDEAD_TEAM,
+            PiratesGlobals.SPANISH_UNDEAD_TEAM]:
             self.playHoleSplat(pos, normal, ammoSkillId)
 
     def resetFlashing(self):
@@ -380,19 +371,13 @@ class Sail(NodePath, ShipPart.ShipPart):
             self.flash.finish()
 
         self.resetFlashing()
-        self.flash = Sequence(
-            Func(self.hideBaseTexture),
-            Func(self.sailActor.setColor, Vec4(1, 1, 0, 1)),
-            Wait(0.029999999999999999),
-            Func(self.sailActor.setColor, Vec4(1, 0, 0, 1)),
-            Wait(0.029999999999999999), Func(self.sailActor.setColorOff),
-            Func(self.showBaseTexture), Wait(0.10000000000000001),
-            Func(self.hideBaseTexture),
-            Func(self.sailActor.setColor, Vec4(1, 1, 0, 1)),
-            Wait(0.029999999999999999),
-            Func(self.sailActor.setColor, Vec4(1, 0, 0, 1)),
-            Wait(0.029999999999999999), Func(self.sailActor.setColorOff),
-            Func(self.showBaseTexture))
+        self.flash = Sequence(Func(self.hideBaseTexture), Func(self.sailActor.setColor, Vec4(1, 1, 0, 1)),
+                              Wait(0.029999999999999999), Func(self.sailActor.setColor, Vec4(1, 0, 0, 1)),
+                              Wait(0.029999999999999999), Func(self.sailActor.setColorOff), Func(self.showBaseTexture),
+                              Wait(0.10000000000000001), Func(self.hideBaseTexture),
+                              Func(self.sailActor.setColor, Vec4(1, 1, 0, 1)), Wait(0.029999999999999999),
+                              Func(self.sailActor.setColor, Vec4(1, 0, 0, 1)), Wait(0.029999999999999999),
+                              Func(self.sailActor.setColorOff), Func(self.showBaseTexture))
         self.flash.start()
 
     def setProjScreen(self, projScreen):
@@ -413,10 +398,8 @@ class Sail(NodePath, ShipPart.ShipPart):
                 for i in xrange(sailNode.getNumGeoms()):
                     geomState = sailNode.getGeomState(i)
                     geomIndex = i
-                    texAttrib = geomState.getAttrib(
-                        TextureAttrib.getClassType())
-                    defaultTex = texAttrib.getOnTexture(
-                        TextureStage.getDefault())
+                    texAttrib = geomState.getAttrib(TextureAttrib.getClassType())
+                    defaultTex = texAttrib.getOnTexture(TextureStage.getDefault())
                     if defaultTex:
                         if defaultTex.getName() != 'ab_ship_rigging_alpha':
                             foundState = True
@@ -434,15 +417,13 @@ class Sail(NodePath, ShipPart.ShipPart):
             texAttrib = texAttrib.addOnStage(self.baseLayer, self.sailTexture)
             texAttrib = texAttrib.addOnStage(self.blendTs, self.blankTex)
             if self.logoTexture:
-                texAttrib = texAttrib.addOnStage(self.logoLayer,
-                                                 self.logoTexture)
+                texAttrib = texAttrib.addOnStage(self.logoLayer, self.logoTexture)
                 if self.dna.logoIndex == 201:
                     val = random.uniform(0, 360)
                     r = Mat4.rotateMat(val, Vec3(0, 0, 1))
                     s = Mat4.scaleMat(Vec3(1.7, 1, 1.7))
                     tma = TexMatrixAttrib.make()
-                    tma = tma.addStage(self.logoLayer,
-                                       TransformState.makeMat(r * s))
+                    tma = tma.addStage(self.logoLayer, TransformState.makeMat(r * s))
                     geomState = geomState.addAttrib(tma)
 
             geomState = geomState.addAttrib(texAttrib)
@@ -450,16 +431,13 @@ class Sail(NodePath, ShipPart.ShipPart):
 
     def playHoleSplat(self, pos, normal, ammoSkillId):
         self.notify.debug('START POKE HOLE')
-        if base.options.getSpecialEffectsSetting(
-        ) >= base.options.SpecialEffectsMedium:
+        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
             if self.cr and self.cr.wantSpecialEffects and self.destructIndex is not None:
                 holeCount = base.textureFlattenMgr.addSail(self)
-                t = TextureStage(
-                    'sailHoleStage-%s-%s' % (self.dna.posIndex, holeCount))
+                t = TextureStage('sailHoleStage-%s-%s' % (self.dna.posIndex, holeCount))
                 t.setMode(TextureStage.MModulate)
                 t.setSort(27)
-                t.setTexcoordName(
-                    'sailHole-%s-%s' % (self.dna.posIndex, holeCount))
+                t.setTexcoordName('sailHole-%s-%s' % (self.dna.posIndex, holeCount))
                 n = render.attachNewNode('dummy')
                 n.lookAt(Point3(normal))
                 hpr = n.getHpr()
@@ -468,8 +446,12 @@ class Sail(NodePath, ShipPart.ShipPart):
                 hole = self.ship.attachNewNode('hole')
                 hole.setPos(pos)
                 hole.setHpr(render, hpr[0], hpr[1], 0)
-                self.holeLocations.append(
-                    ('3d', [pos[0], pos[1], pos[2], hpr[0], hpr[1]]))
+                self.holeLocations.append(('3d', [
+                    pos[0],
+                    pos[1],
+                    pos[2],
+                    hpr[0],
+                    hpr[1]]))
                 holeSize = ShipGlobals.getHoleSizes(self.dna.mastType)[0]
                 l = OrthographicLens()
                 if ammoSkillId == InventoryType.CannonChainShot:
@@ -484,8 +466,7 @@ class Sail(NodePath, ShipPart.ShipPart):
                 else:
                     self.sailGeom.setTexture(t, self.holeTex)
                 self.projNode.setProjector(holeLocation)
-                self.projNode.setTexcoordName(
-                    'sailHole-%s-%s' % (self.dna.posIndex, holeCount))
+                self.projNode.setTexcoordName('sailHole-%s-%s' % (self.dna.posIndex, holeCount))
                 self.projNode.recompute()
                 sfx = random.choice(self.sailTearSfx)
                 base.playSfx(sfx, node=self.sailGeom, cutoff=2000)
@@ -505,17 +486,15 @@ class Sail(NodePath, ShipPart.ShipPart):
             t.setMode(TextureStage.MModulate)
             t.setSort(200)
             self.sailActor.setTexture(t, self.breakTex)
-            self.sailActor.setTexScale(t, 0.80000000000000004,
-                                       0.80000000000000004)
+            self.sailActor.setTexScale(t, 0.80000000000000004, 0.80000000000000004)
             if self.flash:
                 self.flash.pause()
 
-            cutStates = SplattableObject.cutGeomTextureStates(
-                self.sailGeom.node(), ['holeLayer'])
+            cutStates = SplattableObject.cutGeomTextureStates(self.sailGeom.node(), [
+                'holeLayer'])
             self.sailGeom.flattenMultitex(useGeom=0, target=self.holeLayer)
             holeTex = self.sailGeom.findTexture(self.holeLayer)
-            SplattableObject.pasteGeomTextureStates(self.sailGeom.node(),
-                                                    cutStates)
+            SplattableObject.pasteGeomTextureStates(self.sailGeom.node(), cutStates)
             self.sailGeom.setTexture(self.holeLayer, holeTex)
             if self.flash:
                 self.flash.resume()
@@ -574,18 +553,15 @@ class Sail(NodePath, ShipPart.ShipPart):
     def addNavyColors(self, config):
         self.navyColors = config
         for i in range(4):
-            sailquad = self.sailActor.find('**/sail_' + str(self.dna.posIndex) +
-                                           '_quad_' + str(i) + '_high')
+            sailquad = self.sailActor.find('**/sail_' + str(self.dna.posIndex) + '_quad_' + str(i) + '_high')
             if not sailquad.isEmpty():
                 self.colorateQuad(sailquad, config, i)
 
-            sailquad = self.sailActor.find('**/sail_' + str(self.dna.posIndex) +
-                                           '_quad_' + str(i) + '_med')
+            sailquad = self.sailActor.find('**/sail_' + str(self.dna.posIndex) + '_quad_' + str(i) + '_med')
             if not sailquad.isEmpty():
                 self.colorateQuad(sailquad, config, i)
 
-            sailquad = self.sailActor.find('**/sail_' + str(self.dna.posIndex) +
-                                           '_quad_' + str(i) + '_low')
+            sailquad = self.sailActor.find('**/sail_' + str(self.dna.posIndex) + '_quad_' + str(i) + '_low')
             if not sailquad.isEmpty():
                 self.colorateQuad(sailquad, config, i)
 
@@ -626,8 +602,7 @@ class Sail(NodePath, ShipPart.ShipPart):
         if id == ShipGlobals.FOREMAST:
             locator = self.ship.locators.find('**/location_foremast;+s')
         elif id == ShipGlobals.MAINMAST:
-            locator = self.ship.locators.find(
-                '**/location_mainmast_' + str(self.dna.mastPosIndex) + ';+s')
+            locator = self.ship.locators.find('**/location_mainmast_' + str(self.dna.mastPosIndex) + ';+s')
         elif id == ShipGlobals.AFTMAST:
             locator = self.ship.locators.find('**/location_aftmast;+s')
 
@@ -665,8 +640,7 @@ class SailFSM(FSM.FSM):
         self.oldBound = None
         self.billowAmount = 0
         if not self.sailUnfoldSfx:
-            self.sailUnfoldSfx = loader.loadSfx(
-                'audio/sfx_ship_sails-unfurl.mp3')
+            self.sailUnfoldSfx = loader.loadSfx('audio/sfx_ship_sails-unfurl.mp3')
 
         if not self.sailFoldSfx:
             self.sailFoldSfx = loader.loadSfx('audio/sfx_ship_sails-furl.mp3')
@@ -731,18 +705,9 @@ class SailFSM(FSM.FSM):
             self.sailIval.pause()
             self.sailIval = None
 
-        self.sailIval = ActorInterval(
-            self.sail.sailActor,
-            'Rolldown',
-            playRate=2.0,
-            startFrame=80,
-            endFrame=0)
-        self.ival = Sequence(
-            Func(
-                base.playSfx,
-                self.sailFoldSfx,
-                node=self.sail.sailGeom,
-                cutoff=1000), self.sailIval, Func(self.demand, 'TiedUp'))
+        self.sailIval = ActorInterval(self.sail.sailActor, 'Rolldown', playRate=2.0, startFrame=80, endFrame=0)
+        self.ival = Sequence(Func(base.playSfx, self.sailFoldSfx, node=self.sail.sailGeom, cutoff=1000), self.sailIval,
+                             Func(self.demand, 'TiedUp'))
         self.ival.start()
         self.sail.sailActor.update()
         if not config.GetBool('enable-sail-colls-in-port', 0):
@@ -774,18 +739,9 @@ class SailFSM(FSM.FSM):
             self.sailIval.pause()
             self.sailIval = None
 
-        self.sailIval = ActorInterval(
-            self.sail.sailActor,
-            'Rolldown',
-            playRate=1.5,
-            startFrame=0,
-            endFrame=80)
-        self.ival = Sequence(
-            Func(
-                base.playSfx,
-                self.sailUnfoldSfx,
-                node=self.sail.sailGeom,
-                cutoff=1000), self.sailIval, Func(self.demand, 'Idle'))
+        self.sailIval = ActorInterval(self.sail.sailActor, 'Rolldown', playRate=1.5, startFrame=0, endFrame=80)
+        self.ival = Sequence(Func(base.playSfx, self.sailUnfoldSfx, node=self.sail.sailGeom, cutoff=1000),
+                             self.sailIval, Func(self.demand, 'Idle'))
         self.ival.start()
         self.sail.sailActor.update()
 
@@ -808,10 +764,7 @@ class SailFSM(FSM.FSM):
         if self.ival:
             self.ival.pause()
 
-        self.ival = Parallel(
-            Sequence(
-                ActorInterval(self.sail.sailActor, 'Hit'),
-                Func(self.demand, 'Idle')))
+        self.ival = Parallel(Sequence(ActorInterval(self.sail.sailActor, 'Hit'), Func(self.demand, 'Idle')))
         self.ival.start()
         self.sail.sailActor.update()
 
@@ -833,9 +786,8 @@ class SailFSM(FSM.FSM):
         if self.ival:
             self.ival.pause()
 
-        self.ival = Sequence(
-            Func(self.sail.sailActor.play, args, partName='mast'), Wait(10.0),
-            Func(self.demand, 'Dead'))
+        self.ival = Sequence(Func(self.sail.sailActor.play, args, partName='mast'), Wait(10.0),
+                             Func(self.demand, 'Dead'))
         self.ival.start()
         self.sail.disableCollisions()
 
@@ -873,9 +825,7 @@ class SailFSM(FSM.FSM):
 
     def exitDead(self):
         self.notify.debug('exitDead %s' % self.parentDoId)
-        if hasattr(
-                base, 'localAvatar'
-        ) and base.localAvatar and base.localAvatar.ship != self.sail.ship:
+        if hasattr(base, 'localAvatar') and base.localAvatar and base.localAvatar.ship != self.sail.ship:
             self.sail.setTargetBitmask(1)
 
         self.sail.respawn()

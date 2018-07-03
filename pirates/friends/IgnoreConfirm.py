@@ -10,13 +10,10 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.RequestButton import RequestButton
 
-
 class IgnoreConfirmButton(RequestButton):
-
     def __init__(self, text, command, width=1.0):
         RequestButton.__init__(self, text, command, width)
         self.initialiseoptions(IgnoreConfirmButton)
-
 
 class IgnoreConfirm(GuiPanel.GuiPanel):
     notify = DirectNotifyGlobal.directNotify.newCategory('IgnoreConfirm')
@@ -28,55 +25,35 @@ class IgnoreConfirm(GuiPanel.GuiPanel):
         self.avId = avId
         self.avName = avName
         self.fsm = ClassicFSM.ClassicFSM('IgnoreConfirm', [
-            State.State('off', self.enterOff, self.exitOff),
-            State.State('begin', self.enterBegin, self.exitBegin),
-            State.State('notYet', self.enterNotYet, self.exitNotYet),
-            State.State('alreadyIgnored', self.enterAlreadyIgnored,
-                        self.exitAlreadyIgnored),
-            State.State('self', self.enterSelf, self.exitSelf),
-            State.State('startIgnore', self.enterStartIgnore,
-                        self.exitStartIgnore),
-            State.State('endIgnore', self.enterEndIgnore, self.exitEndIgnore),
-            State.State('cancel', self.enterCancel, self.exitCancel)
-        ], 'off', 'off')
-        self.message = DirectLabel(
-            parent=self,
-            relief=None,
-            text='',
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_align=TextNode.ACenter,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=11,
-            pos=(0.25, 0, 0.35),
-            textMayChange=1)
+         State.State('off', self.enterOff, self.exitOff),
+         State.State('begin', self.enterBegin, self.exitBegin),
+         State.State('notYet', self.enterNotYet, self.exitNotYet),
+         State.State('alreadyIgnored', self.enterAlreadyIgnored, self.exitAlreadyIgnored),
+         State.State('self', self.enterSelf, self.exitSelf),
+         State.State('startIgnore', self.enterStartIgnore, self.exitStartIgnore),
+         State.State('endIgnore', self.enterEndIgnore, self.exitEndIgnore),
+         State.State('cancel', self.enterCancel, self.exitCancel)], 'off', 'off')
+        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, 
+                                   text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, 
+                                   pos=(0.25, 0, 0.35), textMayChange=1)
         self.context = None
-        self.bOk = IgnoreConfirmButton(
-            text=OTPLocalizer.FriendInviterOK, command=self.__handleOk)
+        self.bOk = IgnoreConfirmButton(text=OTPLocalizer.FriendInviterOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
         self.bOk.setPos(0.2, 0, 0.05)
         self.bOk.hide()
-        self.bCancel = IgnoreConfirmButton(
-            text=OTPLocalizer.FriendInviterCancel,
-            command=self.__handleCancel,
-            width=1.5)
+        self.bCancel = IgnoreConfirmButton(text=OTPLocalizer.FriendInviterCancel, command=self.__handleCancel, width=1.5)
         self.bCancel.reparentTo(self)
         self.bCancel.setPos(0.2, 0, 0.05)
         self.bCancel.hide()
-        self.bStop = IgnoreConfirmButton(
-            text=OTPLocalizer.AvatarPanelStopIgnore,
-            command=self.__handleStop,
-            width=1.5)
+        self.bStop = IgnoreConfirmButton(text=OTPLocalizer.AvatarPanelStopIgnore, command=self.__handleStop, width=1.5)
         self.bStop.reparentTo(self)
         self.bStop.setPos(0.2, 0, 0.15)
         self.bStop.hide()
-        self.bYes = IgnoreConfirmButton(
-            text=OTPLocalizer.FriendInviterYes, command=self.__handleYes)
+        self.bYes = IgnoreConfirmButton(text=OTPLocalizer.FriendInviterYes, command=self.__handleYes)
         self.bYes.reparentTo(self)
         self.bYes.setPos(0.1, 0, 0.05)
         self.bYes.hide()
-        self.bNo = IgnoreConfirmButton(
-            text=OTPLocalizer.FriendInviterNo, command=self.__handleNo)
+        self.bNo = IgnoreConfirmButton(text=OTPLocalizer.FriendInviterNo, command=self.__handleNo)
         self.bNo.reparentTo(self)
         self.bNo.setPos(0.3, 0, 0.05)
         self.bNo.hide()
@@ -122,8 +99,7 @@ class IgnoreConfirm(GuiPanel.GuiPanel):
         self.bNo.hide()
 
     def enterAlreadyIgnored(self):
-        self.message[
-            'text'] = OTPLocalizer.IgnoreConfirmRemoveIgnore % self.avName
+        self.message['text'] = OTPLocalizer.IgnoreConfirmRemoveIgnore % self.avName
         self['text_pos'] = (0.0, 0.2)
         self.context = None
         self.bStop.show()

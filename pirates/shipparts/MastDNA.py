@@ -46,8 +46,7 @@ MastDict = {
     ShipGlobals.SKEL_FOREMASTL3: 'models/char/foremastA_ghost_',
     ShipGlobals.SKEL_AFTMASTL1: 'models/char/aftmastA_ghost_',
     ShipGlobals.SKEL_AFTMASTL2: 'models/char/aftmastA_ghost_',
-    ShipGlobals.SKEL_AFTMASTL3: 'models/char/aftmastA_ghost_'
-}
+    ShipGlobals.SKEL_AFTMASTL3: 'models/char/aftmastA_ghost_'}
 MastFlatDict = {
     ShipGlobals.MAINMASTL1: 'models/shipparts/flat_mainmast_square',
     ShipGlobals.MAINMASTL2: 'models/shipparts/flat_mainmast_square',
@@ -85,19 +84,40 @@ MastFlatDict = {
     ShipGlobals.SKEL_FOREMASTL3: 'models/shipparts/flat_foremastA_ghost',
     ShipGlobals.SKEL_AFTMASTL1: 'models/shipparts/flat_aftmastA_ghost',
     ShipGlobals.SKEL_AFTMASTL2: 'models/shipparts/flat_aftmastA_ghost',
-    ShipGlobals.SKEL_AFTMASTL3: 'models/shipparts/flat_aftmastA_ghost'
-}
+    ShipGlobals.SKEL_AFTMASTL3: 'models/shipparts/flat_aftmastA_ghost'}
 MastSegment0Anims = (('break0A', 'break0A'),)
 MastSegment1Anims = (('break1A', 'break1A'),)
 MastSegment2Anims = (('break2A', 'break2A'),)
 MastSegment3Anims = (('break3A', 'break3A'),)
 MastSegment4Anims = (('break4A', 'break4A'),)
-MastAnimListByHeight = [['break0A'], ['break0A', 'break1A'], [
-    'break0A', 'break1A', 'break2A'
-], ['break0A', 'break1A', 'break2A', 'break3A'],
-                        ['break0A', 'break1A', 'break2A', 'break3A', 'break4A']]
+MastAnimListByHeight = [
+    [
+        'break0A'],
+    [
+        'break0A',
+        'break1A'],
+    [
+        'break0A',
+        'break1A',
+        'break2A'],
+    [
+        'break0A',
+        'break1A',
+        'break2A',
+        'break3A'],
+    [
+        'break0A',
+        'break1A',
+        'break2A',
+        'break3A',
+        'break4A']]
 DefaultAnimDict = (('Idle', 'idle'), ('Hidden', 'hidden'))
-AllMastAnims = ['break0A', 'break1A', 'break2A', 'break3A', 'break4A']
+AllMastAnims = [
+    'break0A',
+    'break1A',
+    'break2A',
+    'break3A',
+    'break4A']
 RiggingDict = {
     ShipGlobals.WARSHIPL1: 'models/char/warshipL1-rigging_',
     ShipGlobals.WARSHIPL2: 'models/char/warshipL2-rigging_',
@@ -112,27 +132,13 @@ RiggingDict = {
     ShipGlobals.INTERCEPTORL3: 'models/char/interceptorL3-rigging_',
     ShipGlobals.INTERCEPTORL4: 'models/char/interceptorL4-rigging_',
     ShipGlobals.BLACK_PEARL: 'models/char/blackpearl-rigging_',
-    ShipGlobals.GOLIATH: 'models/char/goliath-rigging_'
-}
+    ShipGlobals.GOLIATH: 'models/char/goliath-rigging_'}
 MastColors = [
-    VBase4(1.0, 1.0, 1.0, 1.0),
-    VBase4(0.0, 0.0, 0.0, 1.0),
-    VBase4(0.933594, 0.265625, 0.28125, 1.0),
-    VBase4(0.863281, 0.40625, 0.417969, 1.0),
-    VBase4(0.710938, 0.234375, 0.4375, 1.0),
-    VBase4(0.992188, 0.480469, 0.167969, 1.0),
-    VBase4(0.996094, 0.898438, 0.320312, 1.0),
-    VBase4(0.550781, 0.824219, 0.324219, 1.0),
-    VBase4(0.242188, 0.742188, 0.515625, 1.0),
-    VBase4(0.433594, 0.90625, 0.835938, 1.0),
-    VBase4(0.347656, 0.820312, 0.953125, 1.0),
-    VBase4(0.191406, 0.5625, 0.773438, 1.0)
-]
+ VBase4(1.0, 1.0, 1.0, 1.0), VBase4(0.0, 0.0, 0.0, 1.0), VBase4(0.933594, 0.265625, 0.28125, 1.0), VBase4(0.863281, 0.40625, 0.417969, 1.0), VBase4(0.710938, 0.234375, 0.4375, 1.0), VBase4(0.992188, 0.480469, 0.167969, 1.0), VBase4(0.996094, 0.898438, 0.320312, 1.0), VBase4(0.550781, 0.824219, 0.324219, 1.0), VBase4(0.242188, 0.742188, 0.515625, 1.0), VBase4(0.433594, 0.90625, 0.835938, 1.0), VBase4(0.347656, 0.820312, 0.953125, 1.0), VBase4(0.191406, 0.5625, 0.773438, 1.0)]
 TextureDict = {200: 'ad_ship_bp_mast_composite'}
 
 
 class MastDNA(AvatarDNA.AvatarDNA):
-
     def __init__(self):
         self.shipClass = 0
         self.modelClass = 0
@@ -147,8 +153,7 @@ class MastDNA(AvatarDNA.AvatarDNA):
 
     def __str__(self):
         string = 'shipClass %s, mastType %s, posIndex %s, colorIndex %s, sailConfig %s' % (
-            self.shipClass, self.mastType, self.posIndex, self.colorIndex,
-            self.sailConfig)
+        self.shipClass, self.mastType, self.posIndex, self.colorIndex, self.sailConfig)
         return string
 
     def setShipClass(self, val):

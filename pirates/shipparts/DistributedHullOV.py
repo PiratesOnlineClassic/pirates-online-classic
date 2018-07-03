@@ -2,7 +2,6 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObjectOV
 from pirates.ship import ShipGlobals
 
-
 class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedHullOV')
 
@@ -52,7 +51,8 @@ class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
 
     def setShipClass(self, val):
         self.shipClass = val
-        messenger.send('setShipClass-%s' % self.shipId, [self.shipClass])
+        messenger.send('setShipClass-%s' % self.shipId, [
+            self.shipClass])
 
     def setBaseTeam(self, val):
         pass

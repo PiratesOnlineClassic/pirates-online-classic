@@ -10,10 +10,8 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 
 
-class DistributedSearchableContainer(
-        DistributedInteractive.DistributedInteractive):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedSearchableContainer')
+class DistributedSearchableContainer(DistributedInteractive.DistributedInteractive):
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSearchableContainer')
 
     def __init__(self, cr):
         NodePath.__init__(self, 'DistributedSearchableContainer')
@@ -47,11 +45,7 @@ class DistributedSearchableContainer(
         DistributedInteractive.DistributedInteractive.generate(self)
 
     def announceGenerate(self):
-        self.setInteractOptions(
-            proximityText=PLocalizer.InteractSearchableContainer,
-            sphereScale=self.getSphereScale(),
-            diskRadius=10,
-            exclusive=0)
+        self.setInteractOptions(proximityText=PLocalizer.InteractSearchableContainer, sphereScale=self.getSphereScale(), diskRadius=10, exclusive=0)
         DistributedInteractive.DistributedInteractive.announceGenerate(self)
         self.loadContainer()
 
@@ -67,19 +61,16 @@ class DistributedSearchableContainer(
     def loadContainer(self):
         if self.container:
             return
-        modelPath = PiratesGlobals.SearchableModels.get(
-            self.type, 'models/props/crate_04')
+        modelPath = PiratesGlobals.SearchableModels.get(self.type, 'models/props/crate_04')
         container = loader.loadModel(modelPath)
         containerColor = self.getContainerColor()
-        container.setColorScale(containerColor[0], containerColor[1],
-                                containerColor[2], containerColor[3])
+        container.setColorScale(containerColor[0], containerColor[1], containerColor[2], containerColor[3])
         container.reparentTo(self)
         container.flattenStrong()
 
     def requestInteraction(self, avId, interactType=0):
         localAvatar.motionFSM.off()
-        DistributedInteractive.DistributedInteractive.requestInteraction(
-            self, avId, interactType)
+        DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
 
     def rejectInteraction(self):
         localAvatar.guiMgr.createWarning(PLocalizer.AlreadySearched)
@@ -94,9 +85,7 @@ class DistributedSearchableContainer(
         pos = localAvatar.getPos(self)
         angle = math.atan2(pos[0], pos[1])
         radius = 4
-        localAvatar.setPos(self,
-                           math.sin(angle) * radius,
-                           math.cos(angle) * radius, 0)
+        localAvatar.setPos(self, math.sin(angle) * radius, math.cos(angle) * radius, 0)
         localAvatar.headsUp(self)
         localAvatar.setH(localAvatar, 0)
 
@@ -118,5 +107,4 @@ class DistributedSearchableContainer(
         self.containerColorA = a
 
     def getContainerColor(self):
-        return (self.containerColorR, self.containerColorG,
-                self.containerColorB, self.containerColorA)
+        return (self.containerColorR, self.containerColorG, self.containerColorB, self.containerColorA)

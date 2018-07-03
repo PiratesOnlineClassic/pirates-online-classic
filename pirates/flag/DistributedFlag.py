@@ -3,7 +3,6 @@ from direct.distributed.DistributedObject import DistributedObject
 from pirates.flag import FlagGlobals
 from pirates.flag.Flag import Flag
 
-
 class DistributedFlag(DistributedObject, Flag):
 
     notify = directNotify.newCategory('DistributedFlag')
@@ -13,12 +12,12 @@ class DistributedFlag(DistributedObject, Flag):
         Flag.__init__(self, 'flag')
 
     def setDNAString(self, dnaStr):
-        self.notify.debug('setDNAString: ' + repr( dnaStr))
+        self.notify.debug('setDNAString: ' + `dnaStr`)
         Flag.setDNAString(self, dnaStr)
         self.flatten()
 
     def d_requestDNAString(self, dnaStr):
-        self.notify.debug('d_requestDNAString: ' + repr( dnaStr))
+        self.notify.debug('d_requestDNAString: ' + `dnaStr`)
         self.sendUpdate('requestDNAString', [dnaStr])
 
     def announceGenerate(self):

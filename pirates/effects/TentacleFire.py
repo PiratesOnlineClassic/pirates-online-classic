@@ -11,7 +11,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class TentacleFire(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self, effectParent=None):
@@ -23,18 +23,14 @@ class TentacleFire(PooledEffect, EffectController):
         self.card = model.find('**/particleFire2')
         self.effectScale = 1.0
         if not TentacleFire.particleDummy:
-            TentacleFire.particleDummy = base.effectsRoot.attachNewNode(
-                ModelNode('FireParticleDummy'))
+            TentacleFire.particleDummy = base.effectsRoot.attachNewNode(ModelNode('FireParticleDummy'))
             TentacleFire.particleDummy.setDepthWrite(0)
             TentacleFire.particleDummy.setFogOff()
             TentacleFire.particleDummy.setLightOff()
             TentacleFire.particleDummy.setColorScaleOff()
             TentacleFire.particleDummy.setBin('fixed', 120)
             TentacleFire.particleDummy.setTwoSided(1)
-            TentacleFire.particleDummy.setAttrib(
-                ColorWriteAttrib.make(ColorWriteAttrib.CRed |
-                                      ColorWriteAttrib.CGreen |
-                                      ColorWriteAttrib.CBlue))
+            TentacleFire.particleDummy.setAttrib(ColorWriteAttrib.make(ColorWriteAttrib.CRed | ColorWriteAttrib.CGreen | ColorWriteAttrib.CBlue))
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -70,11 +66,8 @@ class TentacleFire(PooledEffect, EffectController):
         self.p0.renderer.setAnimAngleFlag(1)
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPNOBLEND)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
-                                           ColorBlendAttrib.OIncomingAlpha,
-                                           ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(1.0, 0.6, 0.2, 1.0), Vec4(0.5, 0.2, 0.2, 0.5), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 0.6, 0.2, 1.0), Vec4(0.5, 0.2, 0.2, 0.5), 1)
         self.p0.renderer.setAlphaDisable(0)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(-1.0)
@@ -85,12 +78,8 @@ class TentacleFire(PooledEffect, EffectController):
         self.setEffectScale(self.effectScale)
 
     def createTrack(self):
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 4.0), Wait(2.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 4.0), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(3.0), self.endEffect)
 
     def setEffectLength(self, length):
@@ -112,6 +101,4 @@ class TentacleFire(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\TentacleFire.pyc

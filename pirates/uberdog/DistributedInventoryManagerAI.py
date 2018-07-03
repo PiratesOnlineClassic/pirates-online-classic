@@ -5,8 +5,7 @@ from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, Inventory
 
 
 class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedInventoryManagerAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryManagerAI')
 
     def __init__(self, air):
         DistributedObjectGlobalAI.__init__(self, air)
@@ -17,26 +16,22 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
     def announceGenerate(self):
         DistributedObjectGlobalAI.announceGenerate(self)
 
-        self.air.netMessenger.accept('hasInventory', self,
-                                     self.sendHasInventory)
+        self.air.netMessenger.accept('hasInventory', self, self.sendHasInventory)
         self.air.netMessenger.accept('addInventory', self, self.addInventory)
-        self.air.netMessenger.accept('removeInventory', self,
-                                     self.removeInventory)
-        self.air.netMessenger.accept('getInventory', self,
-                                     self.sendGetInventory)
+        self.air.netMessenger.accept('removeInventory', self, self.removeInventory)
+        self.air.netMessenger.accept('getInventory', self, self.sendGetInventory)
 
     def hasInventory(self, inventoryId):
         return inventoryId in self.inventories
 
     def sendHasInventory(self, inventoryId, callback):
-        self.air.netMessenger.send(
-            'hasInventoryResponse',
-            [callback, self.hasInventory(inventoryId)])
+        self.air.netMessenger.send('hasInventoryResponse', [callback,
+            self.hasInventory(inventoryId)])
 
     def addInventory(self, inventory):
         if self.hasInventory(inventory.doId):
-            self.notify.debug('Tried to add an already existing inventory %d!' %
-                              (inventory.doId))
+            self.notify.debug('Tried to add an already existing inventory %d!' % (
+                inventory.doId))
 
             return
 
@@ -44,8 +39,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
     def removeInventory(self, inventory):
         if not self.hasInventory(inventory.doId):
-            self.notify.debug('Tried to remove a non-existant inventory %d!' %
-                              (inventory.doId))
+            self.notify.debug('Tried to remove a non-existant inventory %d!' % (
+                inventory.doId))
 
             return
 
@@ -60,9 +55,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         return None
 
     def sendGetInventory(self, avatarId, callback):
-        self.air.netMessenger.send(
-            'getInventoryResponse',
-            [callback, self.getInventory(avatarId)])
+        self.air.netMessenger.send('getInventoryResponse', [callback,
+            self.getInventory(avatarId)])
 
     def requestInventory(self):
         avatarId = self.air.getAvatarIdFromSender()
@@ -76,22 +70,22 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         def queryResponse(dclass, fields):
             if not dclass or not fields:
-                self.notify.debug('Failed to query avatar %d!' % (avatarId))
+                self.notify.debug('Failed to query avatar %d!' % (
+                    avatarId))
 
                 return
 
             inventoryId, = fields.get('setInventoryId', (0,))
 
             if not inventoryId:
-                self.notify.warning(
-                    'Avatar %d does not have an inventory!' % (avatarId))
+                self.notify.warning('Avatar %d does not have an inventory!' % (
+                    avatarId))
 
                 return
 
             self.__sendInventory(avatarId, inventoryId)
 
-        self.air.dbInterface.queryObject(
-            self.air.dbId,
+        self.air.dbInterface.queryObject(self.air.dbId,
             avatarId,
             callback=queryResponse,
             dclass=self.air.dclassesByName['DistributedPlayerPirateAI'])
@@ -100,8 +94,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         inventory = self.inventories.get(inventoryId)
 
         if not inventory:
-            self.notify.debug('Failed to retrieve inventory %d for avatar %d!' %
-                              (inventoryId, avatarId))
+            self.notify.debug('Failed to retrieve inventory %d for avatar %d!' % (
+                inventoryId, avatarId))
 
             return task.done
 
@@ -124,14 +118,12 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         if not inventory:
             if avatarId in self.pendingInventories:
-                self.notify.debug(
-                    'Cannot retrieve inventory for avatar %d, already trying to get inventory!'
-                    % (avatarId))
+                self.notify.debug('Cannot retrieve inventory for avatar %d, already trying to get inventory!' % (
+                    avatarId))
 
                 return
 
-            self.pendingInventories[avatarId] = taskMgr.doMethodLater(
-                5.0,
+            self.pendingInventories[avatarId] = taskMgr.doMethodLater(5.0,
                 self.__waitForInventory,
                 self.uniqueName('waitForInventory-%d' % avatarId),
                 appendTask=True,
@@ -146,8 +138,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         def inventoryResponseCalback(dclass, fields):
             if not dclass or not fields:
-                self.notify.debug('Failed to query inventory %d for avatar %d!'
-                                  % (inventoryId, avatarId))
+                self.notify.debug('Failed to query inventory %d for avatar %d!' % (
+                    inventoryId, avatarId))
 
                 return
 
@@ -176,8 +168,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
             inventory.d_requestInventoryComplete()
 
-        self.air.dbInterface.queryObject(
-            self.air.dbId,
+        self.air.dbInterface.queryObject(self.air.dbId,
             inventoryId,
             callback=inventoryResponseCalback,
             dclass=self.air.dclassesByName['DistributedInventoryAI'])
@@ -188,7 +179,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
             return
 
         self.notify.warning('No valid callback for a callback response!'
-                            'What was the purpose of that?')
+            'What was the purpose of that?')
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
@@ -283,8 +274,7 @@ def gold(amount):
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
     inventory.setGoldInPocket(inventory.getGoldInPocket() + amount)
-    return 'Received Gold Amount %s | Current Gold Amount: %s' % (min(
-        amount, 65000), inventory.getGoldInPocket())
+    return 'Received Gold Amount %s | Current Gold Amount: %s' % (min(amount, 65000), inventory.getGoldInPocket())
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])

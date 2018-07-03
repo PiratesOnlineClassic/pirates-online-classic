@@ -60,8 +60,7 @@ if want_fifothreads:
     class ClientNetworkReader(PythonThread):
 
         def __init__(self, repository):
-            PythonThread.__init__(self, self.run, None, 'ClientNetworkReader',
-                                  'ClientNetworkReader')
+            PythonThread.__init__(self, self.run, None, 'ClientNetworkReader', 'ClientNetworkReader')
             self.repository = repository
             self.keeprunning = 1
             self.verbose = base.config.GetBool('network-thread-verbose', 0)
@@ -92,43 +91,23 @@ class PiratesClientRepository(OTPClientRepository):
     StopVisibilityEvent = 'pirates-stop-visibility'
 
     def __init__(self, serverVersion, launcher=None):
-        OTPClientRepository.__init__(
-            self, serverVersion, launcher, playGame=PlayGame.PlayGame)
+        OTPClientRepository.__init__(self, serverVersion, launcher, playGame=PlayGame.PlayGame)
         self.createAvatarClass = DistributedPlayerPirate.DistributedPlayerPirate
         self.tradeManager = None
         self.pvpManager = None
-        self.avatarManager = self.generateGlobalObject(
-            OtpDoGlobals.OTP_DO_ID_PIRATES_AVATAR_MANAGER,
-            'DistributedAvatarManager')
-        self.chatManager = self.generateGlobalObject(
-            OtpDoGlobals.OTP_DO_ID_CHAT_MANAGER, 'DistributedChatManager')
-        self.avatarFriendsManager = self.generateGlobalObject(
-            OtpDoGlobals.OTP_DO_ID_AVATAR_FRIENDS_MANAGER,
-            'PCAvatarFriendsManager')
-        self.playerFriendsManager = self.generateGlobalObject(
-            OtpDoGlobals.OTP_DO_ID_PLAYER_FRIENDS_MANAGER,
-            'PCPlayerFriendsManager')
-        self.guildManager = self.generateGlobalObject(
-            OtpDoGlobals.OTP_DO_ID_PIRATES_GUILD_MANAGER, 'GuildManager')
-        self.shipLoader = self.generateGlobalObject(
-            OtpDoGlobals.OTP_DO_ID_PIRATES_SHIP_MANAGER,
-            'DistributedShipLoader')
-        self.matchMaker = self.generateGlobalObject(
-            OtpDoGlobals.OTP_DO_ID_PIRATES_MATCH_MAKER, 'DistributedMatchMaker')
-        self.codeRedemption = self.generateGlobalObject(
-            OtpDoGlobals.OTP_DO_ID_PIRATES_CODE_REDEMPTION, 'CodeRedemption')
-        self.settingsMgr = self.generateGlobalObject(
-            OtpDoGlobals.OTP_DO_ID_PIRATES_SETTINGS_MANAGER,
-            'PiratesSettingsMgr')
-        self.csm = self.generateGlobalObject(
-            OtpDoGlobals.OTP_DO_ID_CLIENT_SERVICES_MANAGER,
-            'ClientServicesManager')
-        self.inventoryManager = self.generateGlobalObject(
-            OtpDoGlobals.OTP_DO_ID_PIRATES_INVENTORY_MANAGER,
-            'DistributedInventoryManager')
+        self.avatarManager = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_AVATAR_MANAGER, 'DistributedAvatarManager')
+        self.chatManager = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_CHAT_MANAGER, 'DistributedChatManager')
+        self.avatarFriendsManager = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_AVATAR_FRIENDS_MANAGER, 'PCAvatarFriendsManager')
+        self.playerFriendsManager = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PLAYER_FRIENDS_MANAGER, 'PCPlayerFriendsManager')
+        self.guildManager = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_GUILD_MANAGER, 'GuildManager')
+        self.shipLoader = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_SHIP_MANAGER, 'DistributedShipLoader')
+        self.matchMaker = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_MATCH_MAKER, 'DistributedMatchMaker')
+        self.codeRedemption = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_CODE_REDEMPTION, 'CodeRedemption')
+        self.settingsMgr = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_SETTINGS_MANAGER, 'PiratesSettingsMgr')
+        self.csm = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
+        self.inventoryManager = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')
         self.wantSeapatch = base.config.GetBool('want-seapatch', True)
-        self.wantSpecialEffects = base.config.GetBool('want-special-effects',
-                                                      True)
+        self.wantSpecialEffects = base.config.GetBool('want-special-effects', True)
         self.wantMakeAPirate = base.config.GetBool('want-make-a-pirate', False)
         self.forceTutorial = base.config.GetBool('force-tutorial', False)
         self.skipTutorial = base.config.GetBool('skip-tutorial', False)
@@ -152,7 +131,9 @@ class PiratesClientRepository(OTPClientRepository):
         self.fakeMSP = None
         self.questDynMap = QuestLadderDynMap.QuestLadderDynMap()
         self.questDependency = QuestLadderDependency()
-        self.human = [MasterHuman.MasterHuman(), MasterHuman.MasterHuman()]
+        self.human = [
+            MasterHuman.MasterHuman(),
+            MasterHuman.MasterHuman()]
 
         self.human[0].billboardNode.removeNode()
         self.human[1].billboardNode.removeNode()
@@ -251,8 +232,8 @@ class PiratesClientRepository(OTPClientRepository):
             self.loginFSM.request('waitForSetAvatarResponse', [av])
         else:
             if done == 'create':
-                self.loginFSM.request('createAvatar',
-                                      [self.avList[subId], slot, subId])
+                self.loginFSM.request('createAvatar', [self.avList[subId],
+                    slot, subId])
 
     def exitChooseAvatar(self):
         self.handler = None
@@ -264,8 +245,7 @@ class PiratesClientRepository(OTPClientRepository):
     def enterCreateAvatar(self, avList, index, subId):
         if self.skipTutorial:
             self.tutorial = 0
-            self.avCreate = MakeAPirate(avList, 'makeAPirateComplete', subId,
-                                        index, self.isPaid())
+            self.avCreate = MakeAPirate(avList, 'makeAPirateComplete', subId, index, self.isPaid())
             self.avCreate.load()
             self.avCreate.enter()
             self.accept('makeAPirateComplete', self.__handleMakeAPirate)
@@ -274,8 +254,7 @@ class PiratesClientRepository(OTPClientRepository):
             dna = HumanDNA.HumanDNA()
             newPotAv = PotentialAvatar(0, ['dbp', '', '', ''], dna, index, 0)
             self.csm.sendCreateAvatar(newPotAv.dna, '', newPotAv.position)
-            self.accept('createdNewAvatar', self.handleAvatarCreated,
-                        [newPotAv])
+            self.accept('createdNewAvatar', self.handleAvatarCreated, [newPotAv])
 
     def handleAvatarCreated(self, newPotAv, avatarId, subId):
         newPotAv.id = avatarId
@@ -287,11 +266,9 @@ class PiratesClientRepository(OTPClientRepository):
             self.avCreate.exit()
             self.loginFSM.request('chooseAvatar', [self.avList])
         elif done == 'created':
-            self.handleAvatarCreated(self.avCreate.newPotAv, self.avCreate.avId,
-                                     self.avCreate.subId)
+            self.handleAvatarCreated(self.avCreate.newPotAv, self.avCreate.avId, self.avCreate.subId)
         else:
-            self.notify.error('Invalid doneStatus from MakeAPirate: ' +
-                              str(done))
+            self.notify.error('Invalid doneStatus from MakeAPirate: ' + str(done))
 
     def exitCreateAvatar(self):
         if self.skipTutorial:
@@ -314,11 +291,7 @@ class PiratesClientRepository(OTPClientRepository):
         self.ignore('avatarListFailed')
         self.ignore('avatarList')
         dialogClass = OTPGlobals.getGlobalDialogClass()
-        self.avatarListFailedBox = dialogClass(
-            message=PLocalizer.CRAvatarListFailed,
-            doneEvent='avatarListFailedAck',
-            text_wordwrap=18,
-            style=OTPDialog.Acknowledge)
+        self.avatarListFailedBox = dialogClass(message=PLocalizer.CRAvatarListFailed, doneEvent='avatarListFailedAck', text_wordwrap=18, style=OTPDialog.Acknowledge)
         self.avatarListFailedBox.show()
         self.acceptOnce('avatarListFailedAck', self.__handleAvatarListFailedAck)
 
@@ -345,19 +318,9 @@ class PiratesClientRepository(OTPClientRepository):
                     avNames = [av['name'], av['wishName'], '', '']
 
                     aName = 0
-                    pa = PotentialAvatar(
-                        av['id'],
-                        avNames,
-                        av['dna'],
-                        av['slot'],
-                        aName,
-                        av['creator'],
-                        av['shared'],
-                        av['online'],
-                        wishState=av['wishState'],
-                        wishName=av['wishName'],
-                        defaultShard=av['defaultShard'],
-                        lastLogout=av['lastLogout'])
+                    pa = PotentialAvatar(av['id'], avNames, av['dna'], av['slot'], aName, av['creator'], av['shared'],
+                        av['online'], wishState=av['wishState'], wishName=av['wishName'],
+                        defaultShard=av['defaultShard'], lastLogout=av['lastLogout'])
 
                     data.append(pa)
 
@@ -406,30 +369,24 @@ class PiratesClientRepository(OTPClientRepository):
         self.loginFSM.request('playingGame')
 
     def generateWithRequiredOtherFieldsOwner(self, dclass, doId, di):
-        if self.loginFSM.getCurrentState().getName(
-        ) == 'waitForSetAvatarResponse':
+        if self.loginFSM.getCurrentState().getName() == 'waitForSetAvatarResponse':
             self.handleAvatarResponseMsg(doId, di)
         else:
-            OTPClientRepository.generateWithRequiredOtherFieldsOwner(
-                self, dclass, doId, di)
+            OTPClientRepository.generateWithRequiredOtherFieldsOwner(self, dclass, doId, di)
 
     def enterWaitForDeleteAvatarResponse(self, potentialAvatar):
-        raise Exception('This should be handled within AvatarChooser.py')
+        raise StandardError, 'This should be handled within AvatarChooser.py'
 
     def exitWaitForDeleteAvatarResponse(self):
-        raise Exception('This should be handled within AvatarChooser.py')
+        raise StandardError, 'This should be handled within AvatarChooser.py'
 
     def sendMsgToTravelAgent(self, fieldName, args):
         dcfile = self.getDcFile()
         dclass = dcfile.getClassByName('DistributedTravelAgent')
-        dg = dclass.clientFormatUpdate(
-            fieldName, OtpDoGlobals.OTP_DO_ID_PIRATES_TRAVEL_AGENT, args)
+        dg = dclass.clientFormatUpdate(fieldName, OtpDoGlobals.OTP_DO_ID_PIRATES_TRAVEL_AGENT, args)
         self.send(dg)
 
-    @report(
-        types=['deltaStamp', 'module'],
-        prefix='------',
-        dConfigParam='want-teleport-report')
+    @report(types=['deltaStamp', 'module'], prefix='------', dConfigParam='want-teleport-report')
     def enterPlayingGame(self):
         OTPClientRepository.enterPlayingGame(self)
         if __dev__ and config.GetBool('want-dev-hotkeys', False):
@@ -437,10 +394,7 @@ class PiratesClientRepository(OTPClientRepository):
             def toggleKraken():
                 if base.localAvatar:
                     if base.localAvatar.ship:
-                        messenger.send('magicWord', [
-                            '~kraken',
-                            base.localAvatar.getDoId(), base.localAvatar.zoneId
-                        ])
+                        messenger.send('magicWord', ['~kraken', base.localAvatar.getDoId(), base.localAvatar.zoneId])
 
             self.accept(PiratesGlobals.KrakenHotkey, toggleKraken)
 
@@ -453,20 +407,15 @@ class PiratesClientRepository(OTPClientRepository):
         if __dev__ and config.GetBool('want-dev-hotkeys', False):
 
             def deployShip():
-                messenger.send('magicWord', [
-                    '~deployShip',
-                    base.localAvatar.getDoId(), base.localAvatar.zoneId
-                ])
+                messenger.send('magicWord', ['~deployShip', base.localAvatar.getDoId(), base.localAvatar.zoneId])
 
             self.accept(PiratesGlobals.ShipHotkey, deployShip)
 
-        if localAvatar.style.getTutorial(
-        ) < PiratesGlobals.TUT_MET_JOLLY_ROGER and self.skipTutorial == 0:
+        if localAvatar.style.getTutorial() < PiratesGlobals.TUT_MET_JOLLY_ROGER and self.skipTutorial == 0:
             localAvatar.teleportToType = PiratesGlobals.INSTANCE_TUTORIAL
             localAvatar.teleportToName = WorldGlobals.PiratesTutorialSceneFileBase
             self.sendMsgToTravelAgent('requestInitLocUD', ['unused', 0])
-        elif localAvatar.onWelcomeWorld and self.defaultShard != 0 and config.GetBool(
-                'want-welcome-worlds', 0):
+        elif localAvatar.onWelcomeWorld and self.defaultShard != 0 and config.GetBool('want-welcome-worlds', 0):
             localAvatar.teleportToType = PiratesGlobals.INSTANCE_WELCOME
             localAvatar.teleportToName = 'Welcome World'
             self.sendMsgToTravelAgent('requestInitLocUD', ['unused', 0])
@@ -474,12 +423,11 @@ class PiratesClientRepository(OTPClientRepository):
             desiredShard = self.defaultShard
             localAvatar.teleportToType = PiratesGlobals.INSTANCE_MAIN
             localAvatar.teleportToName = WorldGlobals.PiratesWorldSceneFileBase
-            self.sendMsgToTravelAgent('requestInitLocUD',
-                                      ['unused', desiredShard])
+            self.sendMsgToTravelAgent('requestInitLocUD', ['unused', desiredShard])
 
     def playingGameLocReceived(self, shardId, zoneId):
-        self.gameFSM.request('waitOnEnterResponses',
-                             [shardId, zoneId, zoneId, -1])
+        self.gameFSM.request('waitOnEnterResponses', [shardId, zoneId,
+            zoneId, -1])
 
     def exitPlayingGame(self):
         self.notify.info('exitPlayingGame')
@@ -497,8 +445,7 @@ class PiratesClientRepository(OTPClientRepository):
             self.distributedDistrict.worldCreator.cleanupAllAreas()
 
         for doId, obj in self.doId2do.items():
-            if not isinstance(obj, LocalPirate) and not isinstance(
-                    obj, DistributedDistrict.DistributedDistrict):
+            if not isinstance(obj, LocalPirate) and not isinstance(obj, DistributedDistrict.DistributedDistrict):
                 if hasattr(self, 'disableObject'):
                     self.disableObject(doId)
 
@@ -509,17 +456,15 @@ class PiratesClientRepository(OTPClientRepository):
 
         base.transitions.noTransitions()
         if self._userLoggingOut:
-            self.detectLeaks(
-                okTasks=[
-                    'physics-avatar', 'memory-monitor-task', 'multitexFlatten'
-                ],
-                okEvents=[
-                    'destroy-ToontownLoadingScreenTitle',
-                    'destroy-ToontownLoadingScreenTip',
-                    'destroy-ToontownLoadingScreenWaitBar', 'f12', 'f7',
-                    'close_main_window', 'open_main_window',
-                    PiratesGlobals.LogoutHotkey
-                ])
+            self.detectLeaks(okTasks=['physics-avatar', 'memory-monitor-task', 'multitexFlatten'], okEvents=[
+                'destroy-ToontownLoadingScreenTitle',
+                'destroy-ToontownLoadingScreenTip',
+                'destroy-ToontownLoadingScreenWaitBar',
+                'f12',
+                'f7',
+                'close_main_window',
+                'open_main_window',
+                PiratesGlobals.LogoutHotkey])
 
         OTPClientRepository.exitPlayingGame(self)
 
@@ -547,20 +492,21 @@ class PiratesClientRepository(OTPClientRepository):
         taskMgr.remove('waitingForTutorial')
 
     def __requestTutorial(self, hoodId, zoneId, avId):
-        self.acceptOnce('startTutorial', self.__handleStartTutorial, [avId])
+        self.acceptOnce('startTutorial', self.__handleStartTutorial, [
+            avId])
 
         messenger.send('requestTutorial')
 
     def __handleStartTutorial(self, avId, zoneId):
         self.gameFSM.request('playGame', [Tutorial, zoneId, avId])
 
-    @report(
-        types=['deltaStamp', 'module'],
-        prefix='------',
-        dConfigParam='want-teleport-report')
+    @report(types=['deltaStamp', 'module'], prefix='------', dConfigParam='want-teleport-report')
     def enterWaitOnEnterResponses(self, shardId, hoodId, zoneId, avId):
         self.cleanGameExit = False
-        self.handlerArgs = {'hoodId': hoodId, 'zoneId': zoneId, 'avId': avId}
+        self.handlerArgs = {
+            'hoodId': hoodId,
+            'zoneId': zoneId,
+            'avId': avId}
 
         if shardId is not None:
             district = self.activeDistrictMap.get(shardId)
@@ -579,29 +525,23 @@ class PiratesClientRepository(OTPClientRepository):
         self.waitForDatabaseTimeout(requestName='WaitOnEnterResponses')
         self.handleSetShardComplete()
 
-    @report(
-        types=['deltaStamp', 'module'],
-        prefix='------',
-        dConfigParam='want-teleport-report')
+    @report(types=['deltaStamp', 'module'], prefix='------', dConfigParam='want-teleport-report')
     def handleSetShardComplete(self):
         self.cleanupWaitingForDatabase()
         hoodId = self.handlerArgs['hoodId']
         zoneId = self.handlerArgs['zoneId']
         avId = self.handlerArgs['avId']
-        self.uberZoneInterest = self.addInterest(
-            base.localAvatar.getDefaultShard(), OTPGlobals.UberZone, 'uberZone',
-            'uberZoneInterestComplete')
+        self.uberZoneInterest = self.addInterest(base.localAvatar.getDefaultShard(), OTPGlobals.UberZone,
+            'uberZone', 'uberZoneInterestComplete')
 
-        self.acceptOnce('uberZoneInterestComplete',
-                        self.uberZoneInterestComplete)
+        self.acceptOnce('uberZoneInterestComplete', self.uberZoneInterestComplete)
         self.waitForDatabaseTimeout(20, requestName='waitingForUberZone')
 
     def getFriendFlags(self, doId):
         return 0
 
     def isFriend(self, doId):
-        return self.avatarFriendsManager.isFriend(
-            doId) or self.playerFriendsManager.isFriend(doId)
+        return self.avatarFriendsManager.isFriend(doId) or self.playerFriendsManager.isFriend(doId)
 
     def isFriendOnline(self, doId):
         info = self.identifyFriend(doId)
@@ -621,7 +561,7 @@ class PiratesClientRepository(OTPClientRepository):
             return self.doId2do[doId]
 
     def identifyAvatar(self, doId):
-        pass  #return self.crewMatchManager.getHandle(doId) # TODO
+        pass#return self.crewMatchManager.getHandle(doId) # TODO
 
     def identifyPlayer(self, playerId):
         return self.playerFriendsManager.getFriendInfo(playerId)
@@ -697,12 +637,8 @@ class PiratesClientRepository(OTPClientRepository):
         else:
             objType = DistributedShip.DistributedShip
 
-        taskMgr.doMethodLater(
-            0.5,
-            self.cycleCameraObjects,
-            self.getCycleCamTaskName(),
-            extraArgs=[delay, objType],
-            appendTask=True)
+        taskMgr.doMethodLater(0.5, self.cycleCameraObjects, self.getCycleCamTaskName(),
+            extraArgs=[delay, objType], appendTask=True)
 
     def performCamReparent(self, objDoId=None):
         selectedObj = localAvatar.currentTarget
@@ -716,8 +652,7 @@ class PiratesClientRepository(OTPClientRepository):
             self.currCamParent = selectedObj.getDoId()
             self.setViewpoint(selectedObj)
         elif self.currCamParent is not None:
-            if selectedObj is None or selectedObj.compareTo(
-                    camera.getParent()) is 0:
+            if selectedObj is None or selectedObj.compareTo(camera.getParent()) is 0:
                 camera.reparentTo(base.localAvatar)
                 self.currCamParent = None
                 try:
@@ -736,8 +671,8 @@ class PiratesClientRepository(OTPClientRepository):
 
         self.deleteObject(doId)
 
-    def deleteObject(self, doId, ownerView=False):
-        if doId in self.doId2do:
+    def deleteObject(self, doId, ownerView = False):
+        if self.doId2do.has_key(doId):
             obj = self.doId2do[doId]
             del self.doId2do[doId]
             obj.deleteOrDelay()
@@ -746,14 +681,13 @@ class PiratesClientRepository(OTPClientRepository):
         elif self.cache.contains(doId):
             self.cache.delete(doId)
         else:
-            self.notify.warning('Asked to delete non-existent DistObj ' +
-                                str(doId))
+            self.notify.warning('Asked to delete non-existent DistObj ' + str(doId))
 
     def enterCloseShard(self, loginState=None):
         self.loadingScreen.show()
         self._processVisStopIW = InterestWatcher(self, 'stopProcessViz')
-        self.acceptOnce(self._processVisStopIW.getDoneEvent(),
-                        Functor(self._removeShardObjects, loginState))
+        self.acceptOnce(self._processVisStopIW.getDoneEvent(), Functor(self._removeShardObjects,
+            loginState))
 
         messenger.send(PiratesClientRepository.StopVisibilityEvent)
         self._processVisStopIW.stopCollect()
@@ -764,9 +698,8 @@ class PiratesClientRepository(OTPClientRepository):
         self.cache.turnOff()
         localAvatar.clearInventoryInterest()
         if base.slowCloseShard:
-            taskMgr.doMethodLater(base.slowCloseShardDelay * 0.5,
-                                  Functor(self.removeShardInterest, callback),
-                                  'slowCloseShard')
+            taskMgr.doMethodLater(base.slowCloseShardDelay * 0.5, Functor(self.removeShardInterest,
+                callback), 'slowCloseShard')
         else:
             self.removeShardInterest(callback)
 
@@ -783,10 +716,8 @@ class PiratesClientRepository(OTPClientRepository):
             base.localAvatar.logDefaultShard()
 
     def _disableLocalAv(self, loginState):
-        self._localAvDisableIW = InterestWatcher(
-            self, 'disableLocalAv', mustCollect=True)
-        self.acceptOnce(self._localAvDisableIW.getDoneEvent(),
-                        self._removeLocalAvFromStateServer)
+        self._localAvDisableIW = InterestWatcher(self, 'disableLocalAv', mustCollect=True)
+        self.acceptOnce(self._localAvDisableIW.getDoneEvent(), self._removeLocalAvFromStateServer)
         self.disableDoId(localAvatar.doId)
         self._localAvDisableIW.stopCollect()
 
@@ -823,8 +754,7 @@ class PiratesClientRepository(OTPClientRepository):
 
         for handle in parentId2handles.get(parentId, tuple()):
             if not self._interests[handle].isPendingDelete():
-                self.removeInterest(
-                    DoInterestManager.InterestHandle(handle),
+                self.removeInterest(DoInterestManager.InterestHandle(handle),
                     self.closeShardEGroup.newEvent('handle-%s' % handle))
 
     def exitCloseShard(self):
@@ -848,16 +778,12 @@ class PiratesClientRepository(OTPClientRepository):
     def startReaderPollTask(self):
         print '########## startReaderPollTask Pirate'
         self.stopReaderPollTask()
-        self.accept(CConnectionRepository.getOverflowEventName(),
-                    self.handleReaderOverflow)
+        self.accept(CConnectionRepository.getOverflowEventName(), self.handleReaderOverflow)
         if want_fifothreads:
             self.ClientNetworkReader = ClientNetworkReader(self)
             self.ClientNetworkReader.start(TPLow, False)
         else:
-            taskMgr.add(
-                self.readerPollUntilEmpty,
-                self.uniqueName('readerPollTask'),
-                priority=self.taskPriority)
+            taskMgr.add(self.readerPollUntilEmpty, self.uniqueName('readerPollTask'), priority=self.taskPriority)
 
     def stopReaderPollTask(self):
         print '########## stopReaderPollTask Pirate'
@@ -883,14 +809,8 @@ class PiratesClientRepository(OTPClientRepository):
         else:
             if self.fakeMSP is None:
                 from pirates.piratesgui.MessageStackPanel import MessageStackPanel
-                self.fakeMSP = MessageStackPanel(
-                    parent=base.a2dBottomLeft, relief=None, pos=(1.75, 0, 1.3))
-            self.fakeMSP.addTextMessage(
-                message,
-                seconds=20,
-                priority=0,
-                color=(0.5, 0, 0, 1),
-                icon=('admin', ''))
+                self.fakeMSP = MessageStackPanel(parent=base.a2dBottomLeft, relief=None, pos=(1.75, 0, 1.3))
+            self.fakeMSP.addTextMessage(message, seconds=20, priority=0, color=(0.5, 0, 0, 1), icon=('admin', ''))
 
             def cleanupFakeMSP(task):
                 if self.fakeMSP is not None:
@@ -901,8 +821,7 @@ class PiratesClientRepository(OTPClientRepository):
             taskMgr.doMethodLater(25.0, cleanupFakeMSP, 'cleanupFakeMSP')
 
         if not self.systemMessageSfx:
-            self.systemMessageSfx = base.loader.loadSfx(
-                'phase_3.5/audio/sfx/GUI_whisper_3.mp3')
+            self.systemMessageSfx = base.loader.loadSfx('phase_3.5/audio/sfx/GUI_whisper_3.mp3')
 
         if self.systemMessageSfx:
             base.playSfx(self.systemMessageSfx)
@@ -910,25 +829,19 @@ class PiratesClientRepository(OTPClientRepository):
     def setDistrict(self, district):
         self.district = district
 
-    @report(
-        types=['deltaStamp', 'module', 'args'],
-        prefix='------',
-        dConfigParam='want-teleport-report')
+    @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def addTaggedInterest(self, parentId, zone, interestTags, event=None):
         context = self.addInterest(parentId, zone, interestTags[0], event)
         if context:
-            self.notify.debug(
-                'adding interest %d: %d %d' % (context.asInt(), parentId, zone))
+            self.notify.debug('adding interest %d: %d %d' % (context.asInt(),
+                parentId, zone))
 
             self.interestHandles.append([interestTags, context])
             return
 
         self.notify.warning('Tried to set interest when shard was closed')
 
-    @report(
-        types=['deltaStamp', 'module', 'args'],
-        prefix='------',
-        dConfigParam='want-teleport-report')
+    @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def clearTaggedInterest(self, event):
         if len(self.interestHandles) > 0:
             contextInfo = self.interestHandles[0]
@@ -936,10 +849,7 @@ class PiratesClientRepository(OTPClientRepository):
             self.removeInterest(contextInfo[1], event)
             self.interestHandles.remove(contextInfo)
 
-    @report(
-        types=['deltaStamp', 'module', 'args'],
-        prefix='------',
-        dConfigParam='want-teleport-report')
+    @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def clearTaggedInterestNamed(self, callback, interestTags):
         toBeRemoved = []
         numInterests = 0
@@ -965,10 +875,7 @@ class PiratesClientRepository(OTPClientRepository):
 
         return numInterests
 
-    @report(
-        types=['deltaStamp', 'module', 'args'],
-        prefix='------',
-        dConfigParam='want-teleport-report')
+    @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def replaceTaggedInterestTag(self, oldTag, newTag):
         for tags, handle in self.interestHandles:
             if oldTag in tags:

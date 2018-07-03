@@ -9,24 +9,21 @@ from pirates.quest.QuestIndicatorGridNode import QuestIndicatorGridNode
 
 
 class QuestIndicatorNodeExtDoor(QuestIndicatorGridNode):
+    
 
     def __init__(self, questStep):
         self.nearEffect = None
-        QuestIndicatorGridNode.__init__(self, 'ExtDoorIndicator', [10, 150],
-                                        questStep)
+        QuestIndicatorGridNode.__init__(self, 'ExtDoorIndicator', [
+         10, 150], questStep)
         return
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam='want-quest-indicator-report')
+    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def delete(self):
         QuestIndicatorGridNode.delete(self)
         self.nearEffect = None
         return
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam='want-quest-indicator-report')
+    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def enterOff(self):
         if self.nearEffect:
             self.nearEffect.reallyCleanUpEffect()
@@ -43,18 +40,14 @@ class QuestIndicatorNodeExtDoor(QuestIndicatorGridNode):
         self.stopNearEffect()
         QuestIndicatorGridNode.exitNear(self)
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam='want-quest-indicator-report')
+    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def stepObjArrived(self, stepObj):
         QuestIndicatorGridNode.stepObjArrived(self, stepObj)
         localAvatar.enableQuestArrow(stepObj)
-        if self.getCurrentOrNextState() in ('Near',):
+        if self.getCurrentOrNextState() in ('Near', ):
             self.startNearEffect()
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam='want-quest-indicator-report')
+    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def stepObjLeft(self):
         QuestIndicatorGridNode.stepObjLeft(self)
         self.stopNearEffect()
@@ -69,9 +62,7 @@ class QuestIndicatorNodeExtDoor(QuestIndicatorGridNode):
         if self.nearEffect:
             self.nearEffect.hideEffect()
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam='want-quest-indicator-report')
+    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def startNearEffect(self):
         if self.nearEffect:
             self.nearEffect.reallyCleanUpEffect()
@@ -84,12 +75,8 @@ class QuestIndicatorNodeExtDoor(QuestIndicatorGridNode):
         if self.muted:
             self.hideEffect()
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam='want-quest-indicator-report')
+    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def stopNearEffect(self):
         if self.nearEffect:
             self.nearEffect.stopLoop()
-
-
 # okay decompiling .\pirates\quest\QuestIndicatorNodeExtDoor.pyc

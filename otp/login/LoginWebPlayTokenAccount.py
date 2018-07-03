@@ -52,6 +52,4 @@ class LoginWebPlayTokenAccount(LoginTTAccount.LoginTTAccount):
 
     def needToSetParentPassword(self):
         return 0
-
-
 # okay decompiling .\otp\login\LoginWebPlayTokenAccount.pyc

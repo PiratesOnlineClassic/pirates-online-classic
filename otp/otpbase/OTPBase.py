@@ -11,10 +11,8 @@ class OTPBase(ShowBase):
         ShowBase.__init__(self)
         self.wantNametags = self.config.GetBool('want-nametags', True)
         self.slowCloseShard = self.config.GetBool('slow-close-shard', False)
-        self.slowCloseShardDelay = self.config.GetFloat(
-            'slow-close-shard-delay', 10.0)
-        self.fillShardsToIdealPop = self.config.GetBool(
-            'fill-shards-to-ideal-pop', True)
+        self.slowCloseShardDelay = self.config.GetFloat('slow-close-shard-delay', 10.0)
+        self.fillShardsToIdealPop = self.config.GetBool('fill-shards-to-ideal-pop', True)
         self.wantDynamicShadows = 1
         self.gameOptionsCode = ''
         self.locationCode = ''
@@ -30,7 +28,6 @@ class OTPBase(ShowBase):
             self.locationCode = locationCode
             self.locationCodeChanged = time.time()
 
-
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def oobe():
     """
@@ -39,7 +36,6 @@ def oobe():
 
     base.oobe()
     return 'Toggled oobe.'
-
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def oobeCull():
@@ -50,7 +46,6 @@ def oobeCull():
     base.oobeCull()
     return 'Toggled oobe culling.'
 
-
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def wire():
     """
@@ -59,7 +54,6 @@ def wire():
 
     base.toggleWireframe()
     return 'Toggled wireframe.'
-
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def textures():
@@ -70,7 +64,6 @@ def textures():
     base.toggleTexture()
     return 'Toggled textures.'
 
-
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def fps():
     """
@@ -79,7 +72,6 @@ def fps():
 
     base.setFrameRateMeter(not base.frameRateMeter)
     return 'Toggled framerate meter.'
-
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def showAvIds():
@@ -90,7 +82,6 @@ def showAvIds():
     messenger.send('nameTagShowAvId')
     return 'Enabled avId nametags.'
 
-
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def showNames():
     """
@@ -100,7 +91,6 @@ def showNames():
     messenger.send('nameTagShowName')
     return 'Disabled avId nametags.'
 
-
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def showAccess():
     """
@@ -109,7 +99,6 @@ def showAccess():
 
     target = spellbook.getTarget()
     return "Access level: %d" % target.getAdminAccess()
-
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def toggle2d():
@@ -124,7 +113,6 @@ def toggle2d():
 
     return 'Toggled aspect2d.'
 
-
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def placer():
     """
@@ -134,7 +122,6 @@ def placer():
     base.camera.place()
     return 'Toggled placer.'
 
-
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def explorer():
     """
@@ -143,7 +130,6 @@ def explorer():
 
     base.render.explore()
     return 'Toggled explorer.'
-
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def analyze():

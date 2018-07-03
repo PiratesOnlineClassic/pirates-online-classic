@@ -20,15 +20,13 @@ from pirates.shipparts import DistributedShippart
 from pirates.destructibles import DistributedDestructibleArray
 
 
-class DistributedHull(
-        DistributedShippart.DistributedShippart,
-        DistributedDestructibleArray.DistributedDestructibleArray):
+class DistributedHull(DistributedShippart.DistributedShippart,
+                      DistributedDestructibleArray.DistributedDestructibleArray):
     notify = directNotify.newCategory('DistributedHull')
 
     def __init__(self, cr):
         DistributedShippart.DistributedShippart.__init__(self, cr)
-        DistributedDestructibleArray.DistributedDestructibleArray.__init__(
-            self, cr)
+        DistributedDestructibleArray.DistributedDestructibleArray.__init__(self, cr)
         NodePath.__init__(self, 'DistributedHull')
         self.stats = None
         self.hackHullTransform = {
@@ -40,8 +38,7 @@ class DistributedHull(
             5: 1,
             6: 2,
             7: 7,
-            8: 8
-        }
+            8: 8}
         self.prop = None
         self.listingThreshold = 2
         self.listingIncrement = 5
@@ -64,8 +61,7 @@ class DistributedHull(
     def announceGenerate(self):
         self.notify.debug('AnnounceGenerate ' + str(self.doId))
         DistributedShippart.DistributedShippart.announceGenerate(self)
-        DistributedDestructibleArray.DistributedDestructibleArray.announceGenerate(
-            self)
+        DistributedDestructibleArray.DistributedDestructibleArray.announceGenerate(self)
 
     def createProp(self):
         hull = self.ship.hull
@@ -79,7 +75,9 @@ class DistributedHull(
         self.prop = Hull.Hull(self.ship, base.cr)
         self.prop.shipId = self.shipId
         self.prop.doId = self.doId
-        self.ship.hull = [self.prop, self]
+        self.ship.hull = [
+            self.prop,
+            self]
         self.stashFloorCollisions()
 
     def propLoaded(self):
@@ -115,20 +113,16 @@ class DistributedHull(
 
     def getArmorStatus(self):
         if len(self.arrayHp) % 2 == 1:
-            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]
-                         ) / float(self.maxArrayHp[1] + self.maxArrayHp[3] +
-                                   self.maxArrayHp[5])
+            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]) / float(
+                self.maxArrayHp[1] + self.maxArrayHp[3] + self.maxArrayHp[5])
             rear = 1.0 - self.arrayHp[0] / float(self.maxArrayHp[0])
-            right = 1.0 - (self.arrayHp[2] + self.arrayHp[4] + self.arrayHp[6]
-                          ) / float(self.maxArrayHp[2] + self.maxArrayHp[4] +
-                                    self.maxArrayHp[6])
+            right = 1.0 - (self.arrayHp[2] + self.arrayHp[4] + self.arrayHp[6]) / float(
+                self.maxArrayHp[2] + self.maxArrayHp[4] + self.maxArrayHp[6])
         else:
-            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]
-                         ) / float(self.maxArrayHp[1] + self.maxArrayHp[3] +
-                                   self.maxArrayHp[5])
+            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]) / float(
+                self.maxArrayHp[1] + self.maxArrayHp[3] + self.maxArrayHp[5])
             rear = 1.0 - self.arrayHp[0] / float(self.maxArrayHp[0])
-            right = 1.0 - (self.arrayHp[2] + self.arrayHp[4]
-                          ) / float(self.maxArrayHp[2] + self.maxArrayHp[4])
+            right = 1.0 - (self.arrayHp[2] + self.arrayHp[4]) / float(self.maxArrayHp[2] + self.maxArrayHp[4])
         return (left, rear, right)
 
     def setArrayHp(self, hpArray):
@@ -168,16 +162,15 @@ class DistributedHull(
             self.respawnAll()
 
     def getArrayHp(self):
-        return [self.arrayHp, self.maxArrayHp]
+        return [
+            self.arrayHp,
+            self.maxArrayHp]
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
-                            targetEffects, pos, normal, codes, attacker):
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         if self.ship.invulnerable():
             return
 
-        self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult,
-                                      targetEffects, pos, normal, codes,
-                                      attacker)
+        self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
 
     def playDeath(self, index=None):
         if self.prop:
@@ -204,8 +197,7 @@ class DistributedHull(
 
     def startRiggingConstraint(self):
         if base.cr.config.GetBool('want-ship-rigging', 0) is 1:
-            taskMgr.add(self.riggingConstraintTask,
-                        self.uniqueName('riggingConstraint'))
+            taskMgr.add(self.riggingConstraintTask, self.uniqueName('riggingConstraint'))
 
     def loadStats(self, ship):
         if self.stats:
@@ -241,8 +233,8 @@ class DistributedHull(
         if self.pendingLoadStats:
             base.cr.relatedObjectMgr.abortRequest(self.pendingLoadStats)
 
-        self.pendingLoadStats = base.cr.relatedObjectMgr.requestObjects(
-            [self.shipId], eachCallback=self.loadStats)
+        self.pendingLoadStats = base.cr.relatedObjectMgr.requestObjects([
+            self.shipId], eachCallback=self.loadStats)
 
     def setShipClass(self, val):
         self.dna.setShipClass(val)

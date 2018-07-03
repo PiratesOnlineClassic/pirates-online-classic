@@ -73,8 +73,7 @@ class VoodooExplosion(PooledEffect, EffectController):
         self.p0.renderer.setFinalYScale(0.4 * self.cardScale)
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(0.0, 0.0, 0.0, 1.0), Vec4(0.2, 0.1, 0.6, 0.4), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.0, 0.0, 0.0, 1.0), Vec4(0.2, 0.1, 0.6, 0.4), 1)
         self.p0.renderer.setAlphaDisable(0)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETCUSTOM)
         self.p0.emitter.setAmplitude(1.0)
@@ -120,11 +119,8 @@ class VoodooExplosion(PooledEffect, EffectController):
         self.p1.renderer.setNonanimatedTheta(0.0)
         self.p1.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p1.renderer.setAlphaDisable(0)
-        self.p1.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor,
-            ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p1.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 0.2), Vec4(0.75, 0.6, 1.0, 0), 1)
+        self.p1.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p1.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 0.2), Vec4(0.75, 0.6, 1.0, 0), 1)
         self.p1.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p1.emitter.setAmplitude(1.0)
         self.p1.emitter.setAmplitudeSpread(0.0)
@@ -134,24 +130,16 @@ class VoodooExplosion(PooledEffect, EffectController):
         self.p1.emitter.setRadius(0.1)
 
     def createTrack(self, rate=1):
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.p1.setBirthRate, 0.01), Func(self.p1.clearToInitial),
-            Func(self.f.start, self, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100), Func(self.p1.setBirthRate, 100),
-            Wait(4.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.p1.setBirthRate, 0.01), Func(self.p1.clearToInitial), Func(self.f.start, self, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Func(self.p1.setBirthRate, 100), Wait(4.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(0.5), self.endEffect)
 
     def setEffectColor(self, color):
         self.effectColor = Vec4(1, 1, 1, 1) - (Vec4(1, 1, 1, 1) - color) / 2.0
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(0.0, 0.0, 0.0, 1.0), self.effectColor / 2.0, 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.0, 0.0, 0.0, 1.0), self.effectColor / 2.0, 1)
         self.p1.renderer.getColorInterpolationManager().clearToInitial()
-        self.p1.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 0.2),
-            self.effectColor - Vec4(0, 0, 0, 1), 1)
+        self.p1.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 0.2), self.effectColor - Vec4(0, 0, 0, 1), 1)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -161,6 +149,4 @@ class VoodooExplosion(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\VoodooExplosion.pyc

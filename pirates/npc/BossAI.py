@@ -2,7 +2,6 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.npc.BossBase import BossBase
 from pirates.npc.BossNPCList import BOSS_NPC_LIST
 
-
 class BossAI(BossBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('BossAI')
 

@@ -8,9 +8,8 @@ from pirates.creature.Stump import Stump
 
 
 class DistributedStump(DistributedCreature):
+    
 
     def __init__(self, cr):
         DistributedCreature.__init__(self, cr, Stump())
-
-
 # okay decompiling .\pirates\creature\DistributedStump.pyc

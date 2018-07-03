@@ -1,7 +1,6 @@
 from otp.friends.GuildManager import GuildManager
 from pirates.piratesbase import PLocalizer
 
-
 class PCGuildManager(GuildManager):
 
     def sendSCQuest(self, questInt, msgType, taskNum):
@@ -14,8 +13,7 @@ class PCGuildManager(GuildManager):
         senderName = self.id2Name.get(senderId, None)
         message = decodeSCQuestMsgInt(questInt, msgType, taskNum)
         if senderName:
-            displayMess = '%s %s %s' % (senderName, OTPLocalizer.GuildPrefix,
-                                        message)
+            displayMess = '%s %s %s' % (senderName, OTPLocalizer.GuildPrefix, message)
             base.chatAssistant.receiveGuildMessage(displayMess)
             return
         self.pendingMsgs.append([senderId, message])

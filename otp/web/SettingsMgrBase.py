@@ -56,7 +56,8 @@ class SettingsMgrBase:
             val = eval(valueStr)
         except BaseException:
             self.notify.warning(
-                'error evaling "%s" for setting "%s"' % (valueStr, settingName))
+                'error evaling "%s" for setting "%s"' %
+                (valueStr, settingName))
             return
         else:
             try:

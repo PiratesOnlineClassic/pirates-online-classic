@@ -65,17 +65,18 @@ class LoginGSAccount(LoginBase.LoginBase):
         return 1
 
     def authenticateParentPassword(self, loginName, password, parentPassword):
-        return (password == parentPassword, None)
+        return (
+            password == parentPassword, None)
 
     def supportsAuthenticateDelete(self):
         return 1
 
     def authenticateDelete(self, loginName, password):
-        return (password == self.cr.password, None)
+        return (
+            password == self.cr.password, None)
 
-    def enableSecretFriends(self, loginName, password, parentPassword,
-                            enable=1):
-        return (password == parentPassword, None)
-
-
+    def enableSecretFriends(self, loginName, password,
+                            parentPassword, enable=1):
+        return (
+            password == parentPassword, None)
 # okay decompiling .\otp\login\LoginGSAccount.pyc

@@ -9,13 +9,11 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesbase.PiratesGlobals import *
 
 
-class DistributedBarrel(
-        DistributedDestructibleObject.DistributedDestructibleObject):
+class DistributedBarrel(DistributedDestructibleObject.DistributedDestructibleObject):
     notify = directNotify.newCategory('DistributedBarrel')
 
     def __init__(self, cr):
-        DistributedDestructibleObject.DistributedDestructibleObject.__init__(
-            self, cr)
+        DistributedDestructibleObject.DistributedDestructibleObject.__init__(self, cr)
         NodePath.__init__(self)
         self.assign(hidden.attachNewNode('barrel'))
         self.Hp = 0
@@ -31,7 +29,7 @@ class DistributedBarrel(
 
     def loadModel(self):
         self.prop = loader.loadModel('models/props/barrel')
-        self.coll = self.prop.findAllMatches('**/collision*')
+        self.coll = self.prop.findAllMatches('**/collision*') 
         for c in self.coll:
             self.curMask = c.node().getIntoCollideMask()
             c.setCollideMask(PiratesGlobals.AmmoBitmask | self.curMask)

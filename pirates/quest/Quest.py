@@ -12,23 +12,12 @@ from pirates.quest.QuestDNA import QuestDNA
 
 
 class Quest(POD):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('Quest')
-    DataSet = {
-        'questId': None,
-        'giverId': None,
-        'combineOp': None,
-        'tasks': None,
-        'rewards': None,
-        'taskStates': []
-    }
+    DataSet = {'questId': None, 'giverId': None, 'combineOp': None, 'tasks': None, 'rewards': None, 'taskStates': []}
     SerialNum = 0
 
-    def __init__(self,
-                 questId=None,
-                 giverId=None,
-                 initialTaskStates=None,
-                 rewards=None):
+    def __init__(self, questId=None, giverId=None, initialTaskStates=None, rewards=None):
         self.questDNA = None
         self._serialNum = Quest.SerialNum
         Quest.SerialNum += 1
@@ -37,6 +26,7 @@ class Quest(POD):
             self.setupQuest(questId, giverId, initialTaskStates, rewards)
         self.__finished = False
         self.__finalized = False
+        return
 
     def destroy(self):
         del self.questDNA
@@ -63,14 +53,16 @@ class Quest(POD):
                 self.setTasks(self.questDNA.getTasks())
         else:
             self.questDNA = None
+        return
 
     def getQuestDNA(self):
         return self.questDNA
 
     def getQuestGoalUid(self):
-        for taskState, taskDNA in zip(self.taskStates,
-                                      self.questDNA.getTasks()):
+        for taskState, taskDNA in zip(self.taskStates, self.questDNA.getTasks()):
             return taskDNA.getGoalUid()
+
+        return
 
     def getChangeEvent(self):
         return 'Quest.questChange-%s' % self._serialNum
@@ -108,13 +100,11 @@ class Quest(POD):
 
     def handleEvent(self, holder, questEvent):
         modified = 0
-        for taskState, taskDNA in zip(self.taskStates,
-                                      self.questDNA.getTasks()):
+        for taskState, taskDNA in zip(self.taskStates, self.questDNA.getTasks()):
             if taskDNA.locationMatches(questEvent):
                 taskState.resetModified()
                 if questEvent.applyTo(taskState, taskDNA):
-                    if holder.getAccess() != 2 and self.questDNA.getVelvetRoped(
-                    ):
+                    if holder.getAccess() != 2 and self.questDNA.getVelvetRoped():
                         holder.d_popupProgressBlocker(self.getQuestId())
                     else:
                         questEvent.complete(taskState, taskDNA)
@@ -238,21 +228,13 @@ class Quest(POD):
             npcNames = map(lambda id: PLocalizer.NPCNames.get(id, PLocalizer.DefaultTownfolkName), returnGiverIds)
             if len(returnGiverIds) == 1:
                 if choice and not choiceComplete:
-                    return PLocalizer.SingleChoiceQuestReturnId % {
-                        'npcName': npcNames[0]
-                    }
+                    return PLocalizer.SingleChoiceQuestReturnId % {'npcName': npcNames[0]}
                 else:
-                    return PLocalizer.SingleQuestReturnId % {
-                        'npcName': npcNames[0]
-                    }
+                    return PLocalizer.SingleQuestReturnId % {'npcName': npcNames[0]}
             elif choice and not choiceComplete:
-                return PLocalizer.MultipleChoiceQuestReturnIds % {
-                    'npcNames': npcNames
-                }
+                return PLocalizer.MultipleChoiceQuestReturnIds % {'npcNames': npcNames}
             else:
-                return PLocalizer.MultipleQuestReturnIds % {
-                    'npcNames': npcNames
-                }
+                return PLocalizer.MultipleQuestReturnIds % {'npcNames': npcNames}
         else:
             giverId = ''
             if self.getGiverId() != '1152839242.37jubutler':
@@ -264,12 +246,9 @@ class Quest(POD):
                         giverId = task.getReturnGiverIds()[0]
                         break
 
-            npcName = PLocalizer.NPCNames.get(giverId,
-                                              PLocalizer.DefaultTownfolkName)
+            npcName = PLocalizer.NPCNames.get(giverId, PLocalizer.DefaultTownfolkName)
             if choice and not choiceComplete:
-                return PLocalizer.SingleChoiceQuestReturnId % {
-                    'npcName': npcName
-                }
+                return PLocalizer.SingleChoiceQuestReturnId % {'npcName': npcName}
             else:
                 return PLocalizer.SingleQuestReturnId % {'npcName': npcName}
 
@@ -285,8 +264,7 @@ class Quest(POD):
         return progressList
 
     def getStatusText(self):
-        if self.questDNA.getVelvetRoped(
-        ) and base.localAvatar.getAccess() != OTPGlobals.AccessFull:
+        if self.questDNA.getVelvetRoped() and base.localAvatar.getAccess() != OTPGlobals.AccessFull:
             if not Freebooter.AllAccessHoliday:
                 return PLocalizer.VelvetRopeQuestBlock
         taskDNAs = self.questDNA.getTaskDNAs()
@@ -298,37 +276,20 @@ class Quest(POD):
             progressStr = ''
             if progress < goal:
                 if goal > 1:
-                    progressStr = PLocalizer.QuestTaskProgress % {
-                        'prog': progress,
-                        'goal': goal
-                    }
+                    progressStr = PLocalizer.QuestTaskProgress % {'prog': progress, 'goal': goal}
             else:
                 progressStr = PLocalizer.QuestProgressComplete
-            return format % {
-                'task': taskDNA.getDescriptionText(taskState),
-                'prog': progressStr
-            }
+            return format % {'task': taskDNA.getDescriptionText(taskState), 'prog': progressStr}
 
         if len(taskDNAs) == 1:
-            str = PLocalizer.QuestStrOneTask % {
-                'task':
-                getTaskText(taskDNAs[0], taskStates[0],
-                            PLocalizer.QuestStatusTaskSingle)
-            }
+            str = PLocalizer.QuestStrOneTask % {'task': getTaskText(taskDNAs[0], taskStates[0], PLocalizer.QuestStatusTaskSingle)}
         else:
-            headingStr = {
-                QuestDNA.OR: PLocalizer.QuestMultiHeadingOr,
-                QuestDNA.AND: PLocalizer.QuestMultiHeadingAnd
-            }[self.getCombineOp()]
+            headingStr = {QuestDNA.OR: PLocalizer.QuestMultiHeadingOr, QuestDNA.AND: PLocalizer.QuestMultiHeadingAnd}[self.getCombineOp()]
             tasksStr = ''
             for taskDNA, taskState in zip(taskDNAs, taskStates):
-                tasksStr += getTaskText(taskDNA, taskState,
-                                        PLocalizer.QuestStatusTaskMulti)
+                tasksStr += getTaskText(taskDNA, taskState, PLocalizer.QuestStatusTaskMulti)
 
-            str = PLocalizer.QuestStrMultiTask % {
-                'heading': headingStr,
-                'tasks': tasksStr
-            }
+            str = PLocalizer.QuestStrMultiTask % {'heading': headingStr, 'tasks': tasksStr}
         return str
 
     def __repr__(self):
@@ -337,6 +298,4 @@ class Quest(POD):
     def handleStart(self, avId):
         for currTask in self.tasks:
             currTask.handleStart(avId)
-
-
 # okay decompiling .\pirates\quest\Quest.pyc

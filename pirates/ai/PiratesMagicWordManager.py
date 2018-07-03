@@ -29,8 +29,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'PiratesMagicWordManager')
+    notify = DirectNotifyGlobal.directNotify.newCategory('PiratesMagicWordManager')
     neverDisable = 1
     GameAvatarClass = DistributedPlayerPirate.DistributedPlayerPirate
 
@@ -57,8 +56,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         if base.config.GetBool('want-chat', 0):
             self.d_setMagicWord('~chat', localAvatar.doId, 0)
 
-        if base.config.GetBool('want-run', 0) or base.config.GetBool(
-                'want-pirates-run', 0):
+        if base.config.GetBool('want-run', 0) or base.config.GetBool('want-pirates-run', 0):
             self.toggleRun()
 
         if base.config.GetBool('immortal-mode', 0):
@@ -78,8 +76,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         def wordIs(w, word=word):
             return word[:len(w) + 1] == '%s ' % w or word == w
 
-        if MagicWordManager.MagicWordManager.doMagicWord(
-                self, word, avId, zoneId) == 1:
+        if MagicWordManager.MagicWordManager.doMagicWord(self, word, avId, zoneId) == 1:
             pass
 
         if word == '~walk':
@@ -100,9 +97,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         elif wordIs('~pilot'):
             ships = base.cr.doFindAll('ship-')
             from pirates.ship.DistributedShip import DistributedShip
-            ships = [
-                ship for ship in ships if isinstance(ship, DistributedShip)
-            ]
+            ships = [ship for ship in ships if isinstance(ship, DistributedShip)]
             print ships
             closestShip = ships[0]
             closestDist = Vec3(closestShip.getPos(localAvatar)).lengthSquared()
@@ -121,8 +116,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             bf.reparentTo(render)
             bf.setPos(localAvatar, 0, 0, 0)
             bf.startLoop()
-            print 'bonfire at %s, %s' % (localAvatar.getPos(),
-                                         localAvatar.getHpr())
+            print 'bonfire at %s, %s' % (localAvatar.getPos(), localAvatar.getHpr())
         elif __dev__ and wordIs('~mario'):
             localAvatar.toggleMario()
         elif wordIs('~islandShips'):
@@ -222,8 +216,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             args = word.split()
             if len(args) >= 2:
                 level = int(args[1])
-                base.cr.timeOfDayManager.skyGroup.transitionClouds(
-                    level).start()
+                base.cr.timeOfDayManager.skyGroup.transitionClouds(level).start()
 
         elif wordIs('~storm'):
             if self.stormEye:
@@ -239,10 +232,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 if len(args) > 1:
                     grid = int(args[1])
 
-                pos = Vec3(
-                    base.cr.doId2do[201100017].getZoneCellOrigin(grid)[0],
-                    base.cr.doId2do[201100017].getZoneCellOrigin(grid)[1],
-                    base.cr.doId2do[201100017].getZoneCellOrigin(grid)[2])
+                pos = Vec3(base.cr.doId2do[201100017].getZoneCellOrigin(grid)[0], base.cr.doId2do[201100017].getZoneCellOrigin(grid)[1], base.cr.doId2do[201100017].getZoneCellOrigin(grid)[2])
                 from pirates.effects.StormEye import StormEye
                 self.stormEye = StormEye()
                 self.stormEye.reparentTo(render)
@@ -281,98 +271,67 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         elif __dev__ and wordIs('~joincrew'):
             base.cr.crewManager.requestNewCrew()
         elif wordIs('~tm'):
-            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_TM,
-                                                 'treasureMapCove')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_TM, 'treasureMapCove')
         elif wordIs('~tml'):
-            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN,
-                                                 'mainWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
         elif wordIs('~pg'):
-            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_PG,
-                                                 'ParlorWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_PG, 'ParlorWorld')
         elif wordIs('~pgvip'):
-            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_PG,
-                                                 'ParlorVIPWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_PG, 'ParlorVIPWorld')
         elif wordIs('~pgl'):
-            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN,
-                                                 'mainWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
         elif wordIs('~tutorial'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_TUTORIAL, 'RambleshackWorld',
-                self.cr.playGame.handleTutorialGeneration)
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_TUTORIAL, 'RambleshackWorld', self.cr.playGame.handleTutorialGeneration)
         elif wordIs('~tutoriall'):
-            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN,
-                                                 'mainWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
         elif wordIs('~pvp'):
-            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_PVP,
-                                                 'pvp_captureWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_PVP, 'pvp_captureWorld')
         elif wordIs('~pirateer'):
-            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_PVP,
-                                                 'pirateerMap')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_PVP, 'pirateerMap')
         elif wordIs('~pvpl'):
-            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN,
-                                                 'mainWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
         elif wordIs('~tortuga'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'TortugaWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'TortugaWorld')
         elif wordIs('~portRoyal'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'PortRoyalWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'PortRoyalWorld')
         elif wordIs('~delFuego'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'DelFuegoWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'DelFuegoWorld')
         elif wordIs('~bilgewater'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'BilgewaterWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'BilgewaterWorld')
         elif wordIs('~kingshead'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'KingsheadWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'KingsheadWorld')
         elif wordIs('~cuba'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'CubaWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'CubaWorld')
         elif wordIs('~rumrunner'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'RumrunnerWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'RumrunnerWorld')
         elif wordIs('~wildisland'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'WildIslandWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'WildIslandWorld')
         elif wordIs('~caveA'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'CaveAWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'CaveAWorld')
         elif wordIs('~caveB'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'CaveBWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'CaveBWorld')
         elif wordIs('~caveC'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'CaveCWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'CaveCWorld')
         elif wordIs('~caveD'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'CaveDWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'CaveDWorld')
         elif wordIs('~caveE'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'CaveEWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'CaveEWorld')
         elif wordIs('~jungleA'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'JungleTestWorldA')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'JungleTestWorldA')
         elif wordIs('~jungleB'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'JungleTestWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'JungleTestWorld')
         elif wordIs('~jungleC'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'JungleTestWorldC')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'JungleTestWorldC')
         elif wordIs('~swampA'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'SwampTestWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'SwampTestWorld')
         elif wordIs('~mainWorld'):
-            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN,
-                                                 'mainWorld')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
         elif wordIs('~gameArea'):
-            self.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_GENERIC, 'GameAreaSandbox')
+            self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_GENERIC, 'GameAreaSandbox')
         elif wordIs('~blackpearl'):
             args = word.split()
             if len(args) == 1:
-                self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_TM,
-                                                     'BlackpearlWorld')
+                self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_TM, 'BlackpearlWorld')
 
         elif wordIs('~fireworks'):
             showType = FireworkShowType.FourthOfJuly
@@ -449,12 +408,17 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             elif activityName == 'hsa':
                 localAvatar.requestActivity(PiratesGlobals.GAME_TYPE_HSA)
             elif activityName == 'mmp':
-                self.cr.teleportMgr.initiateTeleport(
-                    PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
+                self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
 
         elif wordIs('~term') or wordIs('terminator'):
-            localAvatar.setEquippedWeapons([10103, 10106, 10115])
-            localAvatar.d_requestEquipWeapons([10103, 10106, 10115])
+            localAvatar.setEquippedWeapons([
+                10103,
+                10106,
+                10115])
+            localAvatar.d_requestEquipWeapons([
+                10103,
+                10106,
+                10115])
         elif wordIs('~battleRandom'):
             args = word.split()
             if len(args) >= 2:
@@ -479,12 +443,10 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             name = CutsceneData.CutsceneNames[int(csId)]
             cs = PythonUtil.ScratchPad()
 
-            def destroyCutscene(cs=cs):
+            def destroyCutscene(cs = cs):
                 cs.cutscene.destroy()
 
-            c = Cutscene.Cutscene(
-                self.cr, name,
-                PythonUtil.DelayedFunctor(destroyCutscene, '~cutscene-destroy'))
+            c = Cutscene.Cutscene(self.cr, name, PythonUtil.DelayedFunctor(destroyCutscene, '~cutscene-destroy'))
             cs.cutscene = c
             c.play()
             destroyCutscene = None
@@ -502,15 +464,10 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 while numWaves > 0:
                     if patch.isWaveEnabled(num):
                         numWaves -= 1
-                        if patch.getWaveTarget(
-                                num) != SeaPatchRoot.WTZ or patch.getWaveFunc(
-                                    num) != SeaPatchRoot.WFSin:
+                        if patch.getWaveTarget(num) != SeaPatchRoot.WTZ or patch.getWaveFunc(num) != SeaPatchRoot.WFSin:
                             response = '%s\n%s NON-SINE-WAVE' % (response, num)
                         else:
-                            response = '%s\n%s amp=%s len=%s spd=%s' % (
-                                response, num, patch.getWaveAmplitude(num),
-                                patch.getWaveLength(num),
-                                patch.getWaveSpeed(num))
+                            response = '%s\n%s amp=%s len=%s spd=%s' % (response, num, patch.getWaveAmplitude(num), patch.getWaveLength(num), patch.getWaveSpeed(num))
 
                     num += 1
             else:
@@ -540,8 +497,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             response = 'rolling!'
             self.setMagicWordResponse(response)
         elif wordIs('~ru'):
-            if hasattr(self, 'radarUtil'
-                      ) and self.radarUtil and not self.radarUtil.isDestroyed():
+            if hasattr(self, 'radarUtil') and self.radarUtil and not self.radarUtil.isDestroyed():
                 self.radarUtil.destroy()
             else:
                 self.radarUtil = RadarUtil()
@@ -558,21 +514,13 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
 
         elif wordIs('~pvpmoney') or wordIs('~pvpinfamy'):
             if localAvatar.ship and localAvatar.ship.renownDisplay:
-                taskMgr.doMethodLater(2.0,
-                                      localAvatar.ship.renownDisplay.loadRank,
-                                      'pvp-infamy-display', [])
+                taskMgr.doMethodLater(2.0, localAvatar.ship.renownDisplay.loadRank, 'pvp-infamy-display', [])
 
-            if localAvatar.guiMgr and localAvatar.guiMgr.pvpPanel and hasattr(
-                    localAvatar.guiMgr.pvpPanel, 'renownDisplay'
-            ) and localAvatar.guiMgr.pvpPanel.renownDisplay:
-                taskMgr.doMethodLater(
-                    2.0, localAvatar.guiMgr.pvpPanel.renownDisplay.loadRank,
-                    'pvp-infamy-display', [])
+            if localAvatar.guiMgr and localAvatar.guiMgr.pvpPanel and hasattr(localAvatar.guiMgr.pvpPanel, 'renownDisplay') and localAvatar.guiMgr.pvpPanel.renownDisplay:
+                taskMgr.doMethodLater(2.0, localAvatar.guiMgr.pvpPanel.renownDisplay.loadRank, 'pvp-infamy-display', [])
 
             if localAvatar.guiMgr and localAvatar.guiMgr.titlesPage:
-                taskMgr.doMethodLater(2.0,
-                                      localAvatar.guiMgr.titlesPage.refresh,
-                                      'titles-refresh', [])
+                taskMgr.doMethodLater(2.0, localAvatar.guiMgr.titlesPage.refresh, 'titles-refresh', [])
 
         elif wordIs('~gmNameTag'):
             args = word.split()
@@ -600,38 +548,18 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                     localAvatar.setGMNameTagColor(args[2])
 
         elif wordIs('~liveCam'):
-            LiveCamTransforms = {
-                '1': [
-                    Vec3(-385.776, -2369.64, 52.4644),
-                    Vec3(-18.0412, -3.24766, 0), 39.3076, 0
-                ],
-                '2': [
-                    Vec3(79.1195, -2521.26, 52.4644),
-                    Vec3(-18.0412, -3.24766, 0), 39.3076, 0
-                ],
-                '3': [
-                    Vec3(2858.35, 931.111, 37.9564),
-                    Vec3(-29.8904, -7.12525, 0), 39.3076, 1
-                ],
-                '4': [
-                    Vec3(3551.93, 532.437, 37.9564),
-                    Vec3(-29.8904, -7.12525, 0), 39.3076, 1
-                ],
-                '5': [
-                    Vec3(4245.52, 133.763, 37.9564),
-                    Vec3(-29.8904, -7.12525, 0), 39.3076, 1
-                ],
-                '6': [
-                    Vec3(4939.1, -264.911, 37.9564),
-                    Vec3(-29.8904, -7.12525, 0), 39.3076, 1
-                ]
-            }
+            LiveCamTransforms = {'1': [Vec3(-385.776, -2369.64, 52.4644), Vec3(-18.0412, -3.24766, 0), 39.3076, 0],
+                                 '2': [Vec3(79.1195, -2521.26, 52.4644), Vec3(-18.0412, -3.24766, 0), 39.3076, 0],
+                                 '3': [Vec3(2858.35, 931.111, 37.9564), Vec3(-29.8904, -7.12525, 0), 39.3076, 1],
+                                 '4': [Vec3(3551.93, 532.437, 37.9564), Vec3(-29.8904, -7.12525, 0), 39.3076, 1],
+                                 '5': [Vec3(4245.52, 133.763, 37.9564), Vec3(-29.8904, -7.12525, 0), 39.3076, 1],
+                                 '6': [Vec3(4939.1, -264.911, 37.9564), Vec3(-29.8904, -7.12525, 0), 39.3076, 1]}
             lodNodes = render.findAllMatches('**/+LODNode')
             for i in xrange(0, lodNodes.getNumPaths()):
-                lodNodes[i].node().forceSwitch(
-                    lodNodes[i].node().getHighestSwitch())
+                lodNodes[i].node().forceSwitch(lodNodes[i].node().getHighestSwitch())
 
-            localAvatar.clearInterestNamed(None, ['liveCam'])
+            localAvatar.clearInterestNamed(None, [
+                'liveCam'])
             localAvatar.getParentObj().setOceanVisEnabled(0)
             args = word.split()
             if len(args) > 1:
@@ -648,25 +576,145 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 base.camLens.setFov(camData[2])
                 if camData[3] == 0:
                     localAvatar.setInterest(localAvatar.getParentObj().doId, [
-                        11622, 11621, 11443, 11442, 11620, 11619, 11441, 11086,
-                        11085, 11263, 11264, 11265, 11444, 11266, 11267, 11445,
-                        11446, 11268, 11269, 11447, 11449, 11270, 11448, 11271,
-                        11272, 11450, 11451, 11273, 11095, 11093, 11094, 11092,
-                        11091, 11090, 11089, 11088, 11087, 11623, 11624, 11625,
-                        11626, 11627, 11628, 11629, 11807, 11630, 11452, 11274,
-                        11096, 11275, 11277, 11276, 11099, 11098, 11097, 11455,
-                        11454, 11453, 11631, 11632, 11633, 11100, 11278, 11456,
-                        11634, 11990, 11812, 11811, 11989, 11988, 11987, 11809,
-                        11810, 11808, 11986, 11985, 12164, 12163, 12162, 11984,
-                        11806, 11805, 11983, 12161, 12160, 11982, 11804, 11803,
-                        11981, 11980, 12159, 11802, 11801, 11979, 12158, 12157,
-                        12156, 11978, 11799, 11800, 11977, 11798, 11976, 11975,
-                        11797, 11796, 11974, 11084, 11262, 11440, 11618, 11795,
-                        11617, 11439, 11261, 11083, 11082, 11260, 11438, 11616,
-                        11794, 11793, 11615, 11437, 11081, 11259, 11080, 11258,
-                        11436, 11614, 11435, 11257, 11079, 11973, 11972, 12155,
-                        12154, 12153
-                    ], ['liveCam'])
+                        11622,
+                        11621,
+                        11443,
+                        11442,
+                        11620,
+                        11619,
+                        11441,
+                        11086,
+                        11085,
+                        11263,
+                        11264,
+                        11265,
+                        11444,
+                        11266,
+                        11267,
+                        11445,
+                        11446,
+                        11268,
+                        11269,
+                        11447,
+                        11449,
+                        11270,
+                        11448,
+                        11271,
+                        11272,
+                        11450,
+                        11451,
+                        11273,
+                        11095,
+                        11093,
+                        11094,
+                        11092,
+                        11091,
+                        11090,
+                        11089,
+                        11088,
+                        11087,
+                        11623,
+                        11624,
+                        11625,
+                        11626,
+                        11627,
+                        11628,
+                        11629,
+                        11807,
+                        11630,
+                        11452,
+                        11274,
+                        11096,
+                        11275,
+                        11277,
+                        11276,
+                        11099,
+                        11098,
+                        11097,
+                        11455,
+                        11454,
+                        11453,
+                        11631,
+                        11632,
+                        11633,
+                        11100,
+                        11278,
+                        11456,
+                        11634,
+                        11990,
+                        11812,
+                        11811,
+                        11989,
+                        11988,
+                        11987,
+                        11809,
+                        11810,
+                        11808,
+                        11986,
+                        11985,
+                        12164,
+                        12163,
+                        12162,
+                        11984,
+                        11806,
+                        11805,
+                        11983,
+                        12161,
+                        12160,
+                        11982,
+                        11804,
+                        11803,
+                        11981,
+                        11980,
+                        12159,
+                        11802,
+                        11801,
+                        11979,
+                        12158,
+                        12157,
+                        12156,
+                        11978,
+                        11799,
+                        11800,
+                        11977,
+                        11798,
+                        11976,
+                        11975,
+                        11797,
+                        11796,
+                        11974,
+                        11084,
+                        11262,
+                        11440,
+                        11618,
+                        11795,
+                        11617,
+                        11439,
+                        11261,
+                        11083,
+                        11082,
+                        11260,
+                        11438,
+                        11616,
+                        11794,
+                        11793,
+                        11615,
+                        11437,
+                        11081,
+                        11259,
+                        11080,
+                        11258,
+                        11436,
+                        11614,
+                        11435,
+                        11257,
+                        11079,
+                        11973,
+                        11972,
+                        12155,
+                        12154,
+                        12153], [
+                        'liveCam'])
                 else:
                     localAvatar.getParentObj().setOceanVisEnabled(1)
                     localAvatar.getParentObj().setFlatShips(0)
@@ -678,32 +726,12 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 base.camLens.setFov(63.742)
         elif wordIs('~showCams'):
             render.findAllMatches('**/liveCamParent*').detach()
-            LiveCamTransforms = {
-                '1': [
-                    Vec3(-385.776, -2369.64, 52.4644),
-                    Vec3(-18.0412, -3.24766, 0), 39.3076, 0
-                ],
-                '2': [
-                    Vec3(79.1195, -2521.26, 52.4644),
-                    Vec3(-18.0412, -3.24766, 0), 39.3076, 0
-                ],
-                '3': [
-                    Vec3(2858.35, 931.111, 37.9564),
-                    Vec3(-29.8904, -7.12525, 0), 39.3076, 1
-                ],
-                '4': [
-                    Vec3(3551.93, 532.437, 37.9564),
-                    Vec3(-29.8904, -7.12525, 0), 39.3076, 1
-                ],
-                '5': [
-                    Vec3(4245.52, 133.763, 37.9564),
-                    Vec3(-29.8904, -7.12525, 0), 39.3076, 1
-                ],
-                '6': [
-                    Vec3(4939.1, -264.911, 37.9564),
-                    Vec3(-29.8904, -7.12525, 0), 39.3076, 1
-                ]
-            }
+            LiveCamTransforms = {'1': [Vec3(-385.776, -2369.64, 52.4644), Vec3(-18.0412, -3.24766, 0), 39.3076, 0],
+                                 '2': [Vec3(79.1195, -2521.26, 52.4644), Vec3(-18.0412, -3.24766, 0), 39.3076, 0],
+                                 '3': [Vec3(2858.35, 931.111, 37.9564), Vec3(-29.8904, -7.12525, 0), 39.3076, 1],
+                                 '4': [Vec3(3551.93, 532.437, 37.9564), Vec3(-29.8904, -7.12525, 0), 39.3076, 1],
+                                 '5': [Vec3(4245.52, 133.763, 37.9564), Vec3(-29.8904, -7.12525, 0), 39.3076, 1],
+                                 '6': [Vec3(4939.1, -264.911, 37.9564), Vec3(-29.8904, -7.12525, 0), 39.3076, 1]}
             camModel = NodePath('camera')
             lens = PerspectiveLens()
             lens.setFov(base.camLens.getFov())
@@ -715,8 +743,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             if not localAvatar.getShip():
                 for camNum in range(1, 3):
                     camData = LiveCamTransforms[str(camNum)]
-                    camParent = localAvatar.getParentObj().attachNewNode(
-                        'liveCamParent-%s' % camNum)
+                    camParent = localAvatar.getParentObj().attachNewNode('liveCamParent-%s' % camNum)
                     camParent.setPos(camData[0])
                     camParent.setHpr(camData[1])
                     camParent.setScale(10)
@@ -725,8 +752,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             else:
                 for camNum in range(3, 7):
                     camData = LiveCamTransforms[str(camNum)]
-                    camParent = render.attachNewNode(
-                        'liveCamParent-%s' % camNum)
+                    camParent = render.attachNewNode('liveCamParent-%s' % camNum)
                     camParent.setPos(camData[0])
                     camParent.setHpr(camData[1])
                     camParent.setScale(10)
@@ -756,21 +782,17 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         if self.originalLocation == None:
             self.originalLocation = [
                 localAvatar.getLocation(),
-                localAvatar.getPos()
-            ]
+                localAvatar.getPos()]
 
-        if targetParentId not in base.cr.doId2do:
-            self.notify.debug(
-                'Parent of target object to reparent avatar/camera to does not yet exist, skipping reparent request'
-            )
+        if not base.cr.doId2do.has_key(targetParentId):
+            self.notify.debug('Parent of target object to reparent avatar/camera to does not yet exist, skipping reparent request')
             return None
 
-        if isinstance(base.cr.doId2do[targetParentId],
-                      DistributedCartesianGrid.DistributedCartesianGrid):
+        if isinstance(base.cr.doId2do[targetParentId], DistributedCartesianGrid.DistributedCartesianGrid):
             base.cr.doId2do[targetParentId].visAvatar = localAvatar
 
-        localAvatar.b_setLocation(targetParentId, zoneId, teleport=1)
-        if targetId in base.cr.doId2do:
+        localAvatar.b_setLocation(targetParentId, zoneId, teleport = 1)
+        if base.cr.doId2do.has_key(targetId):
             self.cameraFollowTgt(base.cr.doId2do[targetId], targetParentId)
         else:
             self.pendingCameraReparent = base.cr.relatedObjectMgr.requestObjects([
@@ -789,5 +811,4 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         self.sendUpdate('requestServerTime', [])
 
     def recvServerTime(self, sinceEpoch):
-        base.chatAssistant.receiveGameMessage(
-            PLocalizer.getServerTimeString(sinceEpoch))
+        base.chatAssistant.receiveGameMessage(PLocalizer.getServerTimeString(sinceEpoch))

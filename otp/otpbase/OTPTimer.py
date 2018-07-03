@@ -14,18 +14,12 @@ class OTPTimer(DirectFrame):
     TimerId = 0
 
     def __init__(self):
-        DirectFrame.__init__(
-            self,
-            state=DGG.DISABLED,
-            relief=None,
-            scale=0.45,
-            image=self.getImage(),
-            image_pos=(0, 0, 0),
-            text='0',
-            text_fg=(0, 0, 0, 1),
-            text_font=getInterfaceFont(),
-            text_pos=(-0.01, -0.15),
-            text_scale=0.35)
+        DirectFrame.__init__(self, state=DGG.DISABLED, relief=None, scale=0.45, image=self.getImage(), image_pos=(0,
+                                                                                                                  0,
+                                                                                                                  0), text='0', text_fg=(0,
+                                                                                                                                         0,
+                                                                                                                                         0,
+                                                                                                                                         1), text_font=getInterfaceFont(), text_pos=(-0.01, -0.15), text_scale=0.35)
         self.initialiseoptions(OTPTimer)
         self.countdownTask = None
         self.currentTime = 0
@@ -66,8 +60,8 @@ class OTPTimer(DirectFrame):
         timeStrLen = len(timeStr)
         if timeStrLen == 1:
             if time <= 5:
-                self.setTimeStr(timeStr, 0.34, (-0.025, -0.125), Vec4(
-                    1, 0, 0, 1))
+                self.setTimeStr(
+                    timeStr, 0.34, (-0.025, -0.125), Vec4(1, 0, 0, 1))
             else:
                 self.setTimeStr(timeStr, 0.34, (-0.025, -0.125))
         else:
@@ -128,6 +122,4 @@ class OTPTimer(DirectFrame):
     def cleanup(self):
         self.destroy()
         self.notify.warning('Call destroy, not cleanup')
-
-
 # okay decompiling .\otp\otpbase\OTPTimer.pyc

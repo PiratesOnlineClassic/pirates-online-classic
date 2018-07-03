@@ -7,9 +7,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class DesolationSmoke(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -65,13 +64,8 @@ class DesolationSmoke(PooledEffect, EffectController):
         self.p0.emitter.setAmplitude(20.0)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 3.0))
         self.p0.emitter.setRadius(1.5)
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self), Wait(0.1), Func(self.reconfigure))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100.0), Wait(4.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.1), Func(self.reconfigure))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(4.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(3.5), self.endEffect)
 
     def reconfigure(self):

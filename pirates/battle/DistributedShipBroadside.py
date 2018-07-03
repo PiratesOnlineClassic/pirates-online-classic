@@ -30,16 +30,9 @@ from pirates.shipparts.DistributedShippart import DistributedShippart
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 localFireSfxNames = [
-    'cball_fire_1.mp3', 'cball_fire_2.mp3', 'cball_fire_3.mp3',
-    'cball_fire_4.mp3', 'cball_fire_5.mp3'
-]
+ 'cball_fire_1.mp3', 'cball_fire_2.mp3', 'cball_fire_3.mp3', 'cball_fire_4.mp3', 'cball_fire_5.mp3']
 distFireSfxNames = [
-    'dist_cannon_01.mp3', 'dist_cannon_02.mp3', 'dist_cannon_03.mp3',
-    'dist_cannon_04.mp3', 'dist_cannon_05.mp3', 'dist_cannon_06.mp3',
-    'dist_cannon_07.mp3', 'dist_cannon_08.mp3', 'dist_cannon_09.mp3',
-    'dist_cannon_10.mp3'
-]
-
+ 'dist_cannon_01.mp3', 'dist_cannon_02.mp3', 'dist_cannon_03.mp3', 'dist_cannon_04.mp3', 'dist_cannon_05.mp3', 'dist_cannon_06.mp3', 'dist_cannon_07.mp3', 'dist_cannon_08.mp3', 'dist_cannon_09.mp3', 'dist_cannon_10.mp3']
 
 class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
 
@@ -69,18 +62,15 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         if not self.localFireSfx:
             for filename in localFireSfxNames:
                 audioPath = 'audio/'
-                self.localFireSfx.append(
-                    base.loader.loadSfx('audio/' + filename))
+                self.localFireSfx.append(base.loader.loadSfx('audio/' + filename))
 
         if not self.distFireSfx:
             for filename in distFireSfxNames:
-                self.distFireSfx.append(
-                    base.loader.loadSfx('audio/' + filename))
+                self.distFireSfx.append(base.loader.loadSfx('audio/' + filename))
 
         self.aimAITrack = None
         if __dev__ and config.GetBool('want-broadside-assist', 0):
-            self.tracker = loader.loadModelCopy(
-                'models/effects/explosion_sphere')
+            self.tracker = loader.loadModelCopy('models/effects/explosion_sphere')
             self.tracker.reparentTo(render)
             self.tracker.setScale(30)
         return
@@ -103,8 +93,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         DistributedShippart.generate(self)
 
     def announceGenerate(self):
-        self.effectNode = NodePath(
-            ModelNode('broadside-%d-effects' % self.doId))
+        self.effectNode = NodePath(ModelNode('broadside-%d-effects' % self.doId))
         self.effectNode.reparentTo(self)
         DistributedWeapon.announceGenerate(self)
         DistributedShippart.announceGenerate(self)
@@ -145,11 +134,8 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
     def loadModel(self):
         for i in range(len(self.leftBroadsideConfig)):
             if self.leftBroadsideConfig[i] > 0:
-                locator = self.ship.locators.find('**/broadsides_left').find(
-                    'broadside_left_%s;+s' % i)
-                cannon = CannonPort.CannonPort(self.leftBroadsideConfig[i],
-                                               self, locator, 0,
-                                               len(self.leftBroadside))
+                locator = self.ship.locators.find('**/broadsides_left').find('broadside_left_%s;+s' % i)
+                cannon = CannonPort.CannonPort(self.leftBroadsideConfig[i], self, locator, 0, len(self.leftBroadside))
                 cannon.setEnabled(self.leftBroadsideEnabledState[i])
                 lpos = locator.getPos()
                 lhpr = locator.getHpr()
@@ -168,11 +154,8 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
 
         for i in range(len(self.rightBroadsideConfig)):
             if self.rightBroadsideConfig[i] > 0:
-                locator = self.ship.locators.find('**/broadsides_right').find(
-                    'broadside_right_%s;+s' % i)
-                cannon = CannonPort.CannonPort(self.rightBroadsideConfig[i],
-                                               self, locator, 1,
-                                               len(self.rightBroadside))
+                locator = self.ship.locators.find('**/broadsides_right').find('broadside_right_%s;+s' % i)
+                cannon = CannonPort.CannonPort(self.rightBroadsideConfig[i], self, locator, 1, len(self.rightBroadside))
                 cannon.setEnabled(self.rightBroadsideEnabledState[i])
                 lpos = locator.getPos()
                 lhpr = locator.getHpr()
@@ -217,18 +200,14 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
             dist = self.ship.getDistance(target)
             spread = max(0.5, dist / 1000.0)
             flightTime = dist / CannonGlobals.CLIENT_BROADSIDE_FIRE_VELOCITY
-        broadsideMaxDelay = ShipGlobals.getBroadsideMaxDelay(
-            self.ship.modelClass)
+        broadsideMaxDelay = ShipGlobals.getBroadsideMaxDelay(self.ship.modelClass)
         targetShipVel = 0
         if target:
             fvel = target.smoother.getSmoothForwardVelocity()
             faxis = target.smoother.getForwardAxis()
-            targetShipVel = faxis * fvel * (
-                flightTime + broadsideMaxDelay / 2.0)
+            targetShipVel = faxis * fvel * (flightTime + broadsideMaxDelay / 2.0)
         if targetShipVel:
-            targetPos = Vec3(targetPos[0] + targetShipVel[0],
-                             targetPos[1] + targetShipVel[1],
-                             targetPos[2] + targetShipVel[2])
+            targetPos = Vec3(targetPos[0] + targetShipVel[0], targetPos[1] + targetShipVel[1], targetPos[2] + targetShipVel[2])
             if __dev__ and config.GetBool('want-broadside-assist', 0):
                 self.tracker.setPos(render, targetPos)
         delays = []
@@ -244,10 +223,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
                         cannonPos = cannonList[i].locator.getPos(render)
                         diffX = shipPos[0] - cannonPos[0]
                         diffY = shipPos[1] - cannonPos[1]
-                        hitPosList.append(
-                            (targetPos[0] - zonePos[0] + randX - diffX,
-                             targetPos[1] - zonePos[1] + randY - diffY,
-                             targetPos[2] - zonePos[2] + randZ))
+                        hitPosList.append((targetPos[0] - zonePos[0] + randX - diffX, targetPos[1] - zonePos[1] + randY - diffY, targetPos[2] - zonePos[2] + randZ))
                     else:
                         hitPosList.append((100, 100, 100))
                 else:
@@ -266,10 +242,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
                             cannonPos = cannonList[i].locator.getPos(render)
                             diffX = shipPos[0] - cannonPos[0]
                             diffY = shipPos[1] - cannonPos[1]
-                            hitPosList.append(
-                                (targetPos[0] - zonePos[0] + randX - diffX,
-                                 targetPos[1] - zonePos[1] + randY - diffY,
-                                 targetPos[2] - zonePos[2] + randZ))
+                            hitPosList.append((targetPos[0] - zonePos[0] + randX - diffX, targetPos[1] - zonePos[1] + randY - diffY, targetPos[2] - zonePos[2] + randZ))
                         else:
                             hitPosList.append((100, 100, 100))
                     else:
@@ -280,19 +253,10 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         if len(delays) > 4:
             delays[1] = 0.0
         random.shuffle(delays)
-        self.doBroadside(
-            side, delays, hitPosList, zoneId, flightTime, clientFire=1)
-        self.sendUpdate('requestBroadside',
-                        [side, delays, hitPosList, zoneId, flightTime])
+        self.doBroadside(side, delays, hitPosList, zoneId, flightTime, clientFire=1)
+        self.sendUpdate('requestBroadside', [side, delays, hitPosList, zoneId, flightTime])
 
-    def doBroadside(self,
-                    side,
-                    delays,
-                    hitPosList,
-                    zoneId,
-                    flightTime,
-                    timestamp=None,
-                    clientFire=0):
+    def doBroadside(self, side, delays, hitPosList, zoneId, flightTime, timestamp=None, clientFire=0):
         if not clientFire:
             if self.localAvatarUsingWeapon:
                 return
@@ -315,15 +279,8 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
                     targetPos = 0
                     if hitPosList[index] != (100, 100, 100):
                         tPos = hitPosList[index]
-                        targetPos = Vec3(tPos[0] + zonePos[0],
-                                         tPos[1] + zonePos[1],
-                                         tPos[2] + zonePos[2])
-                    playShot = Sequence(
-                        Wait(delays[index]),
-                        Func(self.setCannonAnim, index, 0, 0), Wait(0.5),
-                        Func(self.__requestAttack, index, side, targetPos,
-                             flightTime), Wait(3.0),
-                        Func(self.setCannonAnim, index, 0, 1))
+                        targetPos = Vec3(tPos[0] + zonePos[0], tPos[1] + zonePos[1], tPos[2] + zonePos[2])
+                    playShot = Sequence(Wait(delays[index]), Func(self.setCannonAnim, index, 0, 0), Wait(0.5), Func(self.__requestAttack, index, side, targetPos, flightTime), Wait(3.0), Func(self.setCannonAnim, index, 0, 1))
                     playShot.start(ts)
                     self.leftPlayShots.append(playShot)
 
@@ -340,15 +297,8 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
                         targetPos = 0
                         if hitPosList[index] != (100, 100, 100):
                             tPos = hitPosList[index]
-                            targetPos = Vec3(tPos[0] + zonePos[0],
-                                             tPos[1] + zonePos[1],
-                                             tPos[2] + zonePos[2])
-                        playShot = Sequence(
-                            Wait(delays[index]),
-                            Func(self.setCannonAnim, index, 1, 0), Wait(0.5),
-                            Func(self.__requestAttack, index, side, targetPos,
-                                 flightTime), Wait(3.0),
-                            Func(self.setCannonAnim, index, 1, 1))
+                            targetPos = Vec3(tPos[0] + zonePos[0], tPos[1] + zonePos[1], tPos[2] + zonePos[2])
+                        playShot = Sequence(Wait(delays[index]), Func(self.setCannonAnim, index, 1, 0), Wait(0.5), Func(self.__requestAttack, index, side, targetPos, flightTime), Wait(3.0), Func(self.setCannonAnim, index, 1, 1))
                         playShot.start(ts)
                         self.rightPlayShots.append(playShot)
 
@@ -376,16 +326,10 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
                 return
             pos = cballSpawnPoint.getPos(render) + Vec3(0, -25, 0)
             if targetPos:
-                self.playAttack(
-                    skillId,
-                    ammoSkillId,
-                    pos,
-                    targetPos=targetPos,
-                    flightTime=flightTime)
+                self.playAttack(skillId, ammoSkillId, pos, targetPos=targetPos, flightTime=flightTime)
             else:
                 m = cballSpawnPoint.getMat(self)
-                power = WeaponGlobals.getAttackProjectilePower(
-                    ammoSkillId) * CannonGlobals.BROADSIDE_POWERMOD
+                power = WeaponGlobals.getAttackProjectilePower(ammoSkillId) * CannonGlobals.BROADSIDE_POWERMOD
                 if side == 1:
                     startVel = m.xformVec(Vec3(0, -power, 90))
                 else:
@@ -393,18 +337,11 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
                 self.playAttack(skillId, ammoSkillId, pos, startVel)
 
     def getProjectile(self, skillId, projectileHitEvent, buffs):
-        cannonball = CannonballProjectile(self.cr, skillId, projectileHitEvent,
-                                          buffs)
+        cannonball = CannonballProjectile(self.cr, skillId, projectileHitEvent, buffs)
         cannonball.reparentTo(render)
         return cannonball
 
-    def playAttack(self,
-                   skillId,
-                   ammoSkillId,
-                   pos=0,
-                   startVel=0,
-                   targetPos=None,
-                   flightTime=0):
+    def playAttack(self, skillId, ammoSkillId, pos=0, startVel=0, targetPos=None, flightTime=0):
         if not WeaponGlobals.isProjectileSkill(skillId, ammoSkillId):
             if self.localAvatarUsingWeapon:
                 localAvatar.composeRequestTargetedSkill(skillId, ammoSkillId)
@@ -441,38 +378,13 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
             return
         if targetPos is None:
             startVel += self.baseVel
-            pi = ProjectileInterval(
-                ammo,
-                startPos=startPos,
-                startVel=startVel,
-                endZ=endPlaneZ,
-                gravityMult=2.0,
-                collNode=collNode)
+            pi = ProjectileInterval(ammo, startPos=startPos, startVel=startVel, endZ=endPlaneZ, gravityMult=2.0, collNode=collNode)
         else:
             if self.ship.getNPCship():
-                pi = ProjectileInterval(
-                    ammo,
-                    endZ=endPlaneZ,
-                    startPos=startPos,
-                    wayPoint=targetPos,
-                    timeToWayPoint=flightTime,
-                    gravityMult=0.5,
-                    collNode=collNode)
+                pi = ProjectileInterval(ammo, endZ=endPlaneZ, startPos=startPos, wayPoint=targetPos, timeToWayPoint=flightTime, gravityMult=0.5, collNode=collNode)
             else:
-                pi = ProjectileInterval(
-                    ammo,
-                    endZ=endPlaneZ,
-                    startPos=startPos,
-                    wayPoint=targetPos,
-                    timeToWayPoint=flightTime,
-                    gravityMult=1.2,
-                    collNode=collNode)
-        s = Parallel(
-            Sequence(
-                Wait(0.1),
-                Func(base.cTrav.addCollider, collNode, ammo.collHandler)),
-            Sequence(pi, Func(ammo.destroy),
-                     Func(base.cTrav.removeCollider, collNode)))
+                pi = ProjectileInterval(ammo, endZ=endPlaneZ, startPos=startPos, wayPoint=targetPos, timeToWayPoint=flightTime, gravityMult=1.2, collNode=collNode)
+        s = Parallel(Sequence(Wait(0.1), Func(base.cTrav.addCollider, collNode, ammo.collHandler)), Sequence(pi, Func(ammo.destroy), Func(base.cTrav.removeCollider, collNode)))
         ammo.setIval(s, start=True)
         return
 
@@ -482,8 +394,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         else:
             boomSfx = random.choice(self.distFireSfx)
         base.playSfx(boomSfx, node=spawnNode, cutoff=3000)
-        if base.options.getSpecialEffectsSetting(
-        ) >= base.options.SpecialEffectsMedium:
+        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
             cannonSmokeEffect = CannonBlastSmoke.getEffect()
             if cannonSmokeEffect:
                 cannonSmokeEffect.reparentTo(self.effectNode)
@@ -491,8 +402,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
                 cannonSmokeEffect.setPosHpr(spawnNode, 0, -8, 0, 180, 0, 0)
                 cannonSmokeEffect.particleDummy.setHpr(spawnNode, 180, 0, 0)
                 cannonSmokeEffect.play()
-        if base.options.getSpecialEffectsSetting(
-        ) >= base.options.SpecialEffectsMedium:
+        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
             flashEffect = MuzzleFlash.getEffect()
             if flashEffect:
                 flashEffect.reparentTo(self.effectNode)
@@ -501,8 +411,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
                 flashEffect.startCol = Vec4(1, 1, 1, 1)
                 flashEffect.fadeTime = 0.2
                 flashEffect.play()
-        if base.options.getSpecialEffectsSetting(
-        ) >= base.options.SpecialEffectsHigh:
+        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
             explosionEffect = ExplosionFlip.getEffect()
             if explosionEffect:
                 explosionEffect.reparentTo(self.effectNode)
@@ -510,8 +419,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
                 explosionEffect.setPos(spawnNode, pos)
                 explosionEffect.setScale(0.6)
                 explosionEffect.play()
-        if base.options.getSpecialEffectsSetting(
-        ) >= base.options.SpecialEffectsLow:
+        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
             muzzleFlameEffect = MuzzleFlame.getEffect()
             if muzzleFlameEffect:
                 muzzleFlameEffect.reparentTo(self.effectNode)
@@ -521,8 +429,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
                 muzzleFlameEffect.setPosHpr(spawnNode, 0, -8, 0, 180, 0, 0)
                 muzzleFlameEffect.particleDummy.setHpr(spawnNode, 180, 0, 0)
                 muzzleFlameEffect.play()
-        if base.options.getSpecialEffectsSetting(
-        ) >= base.options.SpecialEffectsLow:
+        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
             if ammoSkillId == InventoryType.CannonGrapeShot:
                 effect = GrapeshotEffect.getEffect()
                 if effect:
@@ -542,13 +449,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         timestamp = globalClockDelta.getFrameNetworkTime()
         self.sendUpdate('setCannonAnim', [index, side, anim, timestamp])
 
-    def setCannonAnim(self,
-                      index,
-                      side,
-                      anim,
-                      timestamp=None,
-                      callback=None,
-                      extraArgs=[]):
+    def setCannonAnim(self, index, side, anim, timestamp=None, callback=None, extraArgs=[]):
         if timestamp == None:
             ts = 0.0
         else:

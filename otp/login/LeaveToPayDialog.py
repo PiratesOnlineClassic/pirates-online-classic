@@ -29,9 +29,7 @@ class LeaveToPayDialog:
     def show(self):
         if self.paidUser:
             if base.cr.productName in [
-                    'DisneyOnline-AP', 'DisneyOnline-UK', 'ES', 'JP',
-                    'T-Online', 'Wanadoo'
-            ]:
+                    'DisneyOnline-AP', 'DisneyOnline-UK', 'ES', 'JP', 'T-Online', 'Wanadoo']:
                 directFrameText = OTPLocalizer.LeaveToEnableChatUK
                 directButtonYesText = OTPLocalizer.LeaveToEnableChatUKYes
                 directButtonNoText = OTPLocalizer.LeaveToEnableChatUKNo
@@ -46,45 +44,19 @@ class LeaveToPayDialog:
         if self.dialog is None:
             buttons = loader.loadModelOnce(
                 'phase_3/models/gui/dialog_box_buttons_gui')
-            okButtonImage = (buttons.find('**/ChtBx_OKBtn_UP'),
-                             buttons.find('**/ChtBx_OKBtn_DN'),
-                             buttons.find('**/ChtBx_OKBtn_Rllvr'))
-            cancelButtonImage = (buttons.find('**/CloseBtn_UP'),
-                                 buttons.find('**/CloseBtn_DN'),
-                                 buttons.find('**/CloseBtn_Rllvr'))
-            self.dialog = DirectFrame(
-                parent=aspect2dp,
-                pos=(0.0, 0.0, 0.0),
-                relief=None,
-                image=DGG.getDefaultDialogGeom(),
-                image_color=OTPGlobals.GlobalDialogColor,
-                image_scale=(0.9, 1.0, 0.5),
-                text=directFrameText,
-                text_align=TextNode.ALeft,
-                text_wordwrap=14,
-                text_scale=0.06,
-                text_pos=(-0.4, 0.15),
-                textMayChange=0)
-            DirectButton(
-                self.dialog,
-                image=okButtonImage,
-                relief=None,
-                text=directButtonYesText,
-                text_scale=0.05,
-                text_pos=(0.0, -0.1),
-                textMayChange=0,
-                pos=(-0.23, 0.0, -0.1),
-                command=self.okHandler)
-            DirectButton(
-                self.dialog,
-                image=cancelButtonImage,
-                relief=None,
-                text=directButtonNoText,
-                text_scale=0.05,
-                text_pos=(0.0, -0.1),
-                textMayChange=0,
-                pos=(0.23, 0.0, -0.1),
-                command=self.cancelHandler)
+            okButtonImage = (
+                buttons.find('**/ChtBx_OKBtn_UP'),
+                buttons.find('**/ChtBx_OKBtn_DN'),
+                buttons.find('**/ChtBx_OKBtn_Rllvr'))
+            cancelButtonImage = (
+                buttons.find('**/CloseBtn_UP'), buttons.find('**/CloseBtn_DN'), buttons.find('**/CloseBtn_Rllvr'))
+            self.dialog = DirectFrame(parent=aspect2dp, pos=(0.0, 0.0, 0.0), relief=None, image=DGG.getDefaultDialogGeom(), image_color=OTPGlobals.GlobalDialogColor, image_scale=(0.9,
+                                                                                                                                                                                   1.0,
+                                                                                                                                                                                   0.5), text=directFrameText, text_align=TextNode.ALeft, text_wordwrap=14, text_scale=0.06, text_pos=(-0.4, 0.15), textMayChange=0)
+            DirectButton(self.dialog, image=okButtonImage, relief=None, text=directButtonYesText, text_scale=0.05, text_pos=(
+                0.0, -0.1), textMayChange=0, pos=(-0.23, 0.0, -0.1), command=self.okHandler)
+            DirectButton(self.dialog, image=cancelButtonImage, relief=None, text=directButtonNoText, text_scale=0.05, text_pos=(
+                0.0, -0.1), textMayChange=0, pos=(0.23, 0.0, -0.1), command=self.cancelHandler)
             buttons.removeNode()
         self.dialog.show()
         return
@@ -115,9 +87,7 @@ class LeaveToPayDialog:
         errorCode = None
         if self.paidUser:
             if base.cr.productName in [
-                    'DisneyOnline-AP', 'DisneyOnline-UK', 'ES', 'JP',
-                    'T-Online', 'Wanadoo'
-            ]:
+                    'DisneyOnline-AP', 'DisneyOnline-UK', 'ES', 'JP', 'T-Online', 'Wanadoo']:
                 errorCode = OTPLauncherGlobals.ExitEnableChat
             else:
                 errorCode = OTPLauncherGlobals.ExitSetParentPassword
@@ -131,6 +101,4 @@ class LeaveToPayDialog:
         if self.doneFunc:
             self.doneFunc()
         self.destroy()
-
-
 # okay decompiling .\otp\login\LeaveToPayDialog.pyc

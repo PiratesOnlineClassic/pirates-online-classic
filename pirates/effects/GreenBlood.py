@@ -7,9 +7,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class GreenBlood(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
     SfxNames = ('wood_impact_1.mp3', 'wood_impact_3.mp3', 'wood_impact_4.mp3')
     splashSfx = []
@@ -24,8 +23,7 @@ class GreenBlood(PooledEffect, EffectController):
                 self.splashSfx.append(base.loader.loadSfx('audio/' + filename))
 
         if not GreenBlood.particleDummy:
-            GreenBlood.particleDummy = render.attachNewNode(
-                ModelNode('GreenBloodParticleDummy'))
+            GreenBlood.particleDummy = render.attachNewNode(ModelNode('GreenBloodParticleDummy'))
             GreenBlood.particleDummy.setDepthWrite(0)
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
@@ -76,14 +74,8 @@ class GreenBlood(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.5))
         self.p0.emitter.setRadius(2.0)
         sfx = random.choice(self.splashSfx)
-        particleSpray = Sequence(
-            Func(self.p0.setBirthRate, 0.4), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self), Wait(0.3),
-            Func(self.p0.setBirthRate, 100), Wait(3.0),
-            Func(self.cleanUpEffect))
-        self.track = Parallel(particleSpray,
-                              Func(base.playSfx, sfx, volume=1, node=self))
+        particleSpray = Sequence(Func(self.p0.setBirthRate, 0.4), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.3), Func(self.p0.setBirthRate, 100), Wait(3.0), Func(self.cleanUpEffect))
+        self.track = Parallel(particleSpray, Func(base.playSfx, sfx, volume=1, node=self))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

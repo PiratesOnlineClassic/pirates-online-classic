@@ -5,8 +5,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class WindWave(PooledEffect, EffectController):
+
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -25,38 +25,14 @@ class WindWave(PooledEffect, EffectController):
         self.effectModel.setTexOffset(textureStage, 0.0, 1.0)
         self.duration = 2.0
         self.setColorScale(1.0, 1.0, 1.0, 0.0)
-        fadeIn = LerpColorScaleInterval(
-            self,
-            1.5,
-            Vec4(1.0, 1.0, 1.0, 1.0),
-            startColorScale=Vec4(0.0, 0.0, 0.0, 0.0))
-        fadeOut = LerpColorScaleInterval(
-            self,
-            1.5,
-            Vec4(0.0, 0.0, 0.0, 0.0),
-            startColorScale=Vec4(1.0, 1.0, 1.0, 1.0))
-        scaleIval = LerpScaleInterval(
-            self.effectModel,
-            self.duration / 1.5,
-            Vec3(1.0, 1.0, 4.0),
-            startScale=Vec3(1.0, 1.0, 4.0))
-        uvScroll = LerpFunctionInterval(
-            self.setNewUVs,
-            self.duration / 1.5,
-            toData=-1.0,
-            fromData=1.0,
-            extraArgs=[textureStage])
-        rotate = LerpHprInterval(
-            self.effectModel,
-            self.duration,
-            Vec3(360.0, 0.0, 0.0),
-            startHpr=Vec3(0.0, 0.0, 0.0))
-        self.startEffect = Sequence(
-            Func(uvScroll.loop), Func(rotate.loop), fadeIn)
-        self.endEffect = Sequence(fadeOut, Func(uvScroll.finish),
-                                  Func(rotate.finish), Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(self.duration),
-                              self.endEffect)
+        fadeIn = LerpColorScaleInterval(self, 1.5, Vec4(1.0, 1.0, 1.0, 1.0), startColorScale=Vec4(0.0, 0.0, 0.0, 0.0))
+        fadeOut = LerpColorScaleInterval(self, 1.5, Vec4(0.0, 0.0, 0.0, 0.0), startColorScale=Vec4(1.0, 1.0, 1.0, 1.0))
+        scaleIval = LerpScaleInterval(self.effectModel, self.duration / 1.5, Vec3(1.0, 1.0, 4.0), startScale=Vec3(1.0, 1.0, 4.0))
+        uvScroll = LerpFunctionInterval(self.setNewUVs, self.duration / 1.5, toData=-1.0, fromData=1.0, extraArgs=[textureStage])
+        rotate = LerpHprInterval(self.effectModel, self.duration, Vec3(360.0, 0.0, 0.0), startHpr=Vec3(0.0, 0.0, 0.0))
+        self.startEffect = Sequence(Func(uvScroll.loop), Func(rotate.loop), fadeIn)
+        self.endEffect = Sequence(fadeOut, Func(uvScroll.finish), Func(rotate.finish), Func(self.cleanUpEffect))
+        self.track = Sequence(self.startEffect, Wait(self.duration), self.endEffect)
 
     def setNewUVs(self, offset, ts):
         self.inner.setTexOffset(ts, 0.0, -offset)

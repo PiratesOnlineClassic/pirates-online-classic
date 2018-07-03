@@ -6,8 +6,10 @@ from direct.fsm import ClassicFSM, State
 from direct.fsm.FSM import FSM
 from direct.gui.DirectGui import *
 from direct.showbase import DirectObject
-from otp.login import (LeaveToPayDialog, PrivacyPolicyPanel,
-                       SecretFriendsInfoPanel)
+from otp.login import (
+    LeaveToPayDialog,
+    PrivacyPolicyPanel,
+    SecretFriendsInfoPanel)
 from otp.otpbase import OTPGlobals, OTPLocalizer
 from panda3d.core import *
 
@@ -30,39 +32,61 @@ class ChatManagerV2(DirectObject.DirectObject):
         self.fsm = ClassicFSM.ClassicFSM('chatManager', [
             State.State('off', self.enterOff, self.exitOff),
             State.State('mainMenu', self.enterMainMenu, self.exitMainMenu),
-            State.State('openChatWarning', self.enterOpenChatWarning,
-                        self.exitOpenChatWarning),
-            State.State('leaveToPayDialog', self.enterLeaveToPayDialog,
-                        self.exitLeaveToPayDialog),
-            State.State('unpaidChatWarning', self.enterUnpaidChatWarning,
-                        self.exitUnpaidChatWarning),
-            State.State('noSecretChatAtAll', self.enterNoSecretChatAtAll,
-                        self.exitNoSecretChatAtAll),
-            State.State('noSecretChatWarning', self.enterNoSecretChatWarning,
-                        self.exitNoSecretChatWarning),
-            State.State('noFriendsWarning', self.enterNoFriendsWarning,
-                        self.exitNoFriendsWarning),
-            State.State('otherDialog', self.enterOtherDialog,
-                        self.exitOtherDialog),
-            State.State('activateChat', self.enterActivateChat,
-                        self.exitActivateChat),
-            State.State('chatMoreInfo', self.enterChatMoreInfo,
-                        self.exitChatMoreInfo),
-            State.State('chatPrivacyPolicy', self.enterChatPrivacyPolicy,
-                        self.exitChatPrivacyPolicy),
-            State.State('secretChatActivated', self.enterSecretChatActivated,
-                        self.exitSecretChatActivated),
-            State.State('problemActivatingChat',
-                        self.enterProblemActivatingChat,
-                        self.exitProblemActivatingChat)
-        ], 'off', 'off')
+            State.State(
+                'openChatWarning',
+                self.enterOpenChatWarning,
+                self.exitOpenChatWarning),
+            State.State(
+                'leaveToPayDialog',
+                self.enterLeaveToPayDialog,
+                self.exitLeaveToPayDialog),
+            State.State(
+                'unpaidChatWarning',
+                self.enterUnpaidChatWarning,
+                self.exitUnpaidChatWarning),
+            State.State(
+                'noSecretChatAtAll',
+                self.enterNoSecretChatAtAll,
+                self.exitNoSecretChatAtAll),
+            State.State(
+                'noSecretChatWarning',
+                self.enterNoSecretChatWarning,
+                self.exitNoSecretChatWarning),
+            State.State(
+                'noFriendsWarning',
+                self.enterNoFriendsWarning,
+                self.exitNoFriendsWarning),
+            State.State(
+                'otherDialog',
+                self.enterOtherDialog,
+                self.exitOtherDialog),
+            State.State(
+                'activateChat',
+                self.enterActivateChat,
+                self.exitActivateChat),
+            State.State(
+                'chatMoreInfo',
+                self.enterChatMoreInfo,
+                self.exitChatMoreInfo),
+            State.State(
+                'chatPrivacyPolicy',
+                self.enterChatPrivacyPolicy,
+                self.exitChatPrivacyPolicy),
+            State.State(
+                'secretChatActivated',
+                self.enterSecretChatActivated,
+                self.exitSecretChatActivated),
+            State.State('problemActivatingChat', self.enterProblemActivatingChat, self.exitProblemActivatingChat)], 'off', 'off')
         self.fsm.enterInitialState()
-        self.accept('Chat-Failed open typed chat test',
-                    self.__handleFailOpenTypedChat)
-        self.accept('Chat-Failed player typed chat test',
-                    self.__handleFailPlayerTypedWhsiper)
-        self.accept('Chat-Failed avatar typed chat test',
-                    self.__handleFailAvatarTypedWhsiper)
+        self.accept(
+            'Chat-Failed open typed chat test',
+            self.__handleFailOpenTypedChat)
+        self.accept(
+            'Chat-Failed player typed chat test',
+            self.__handleFailPlayerTypedWhsiper)
+        self.accept(
+            'Chat-Failed avatar typed chat test',
+            self.__handleFailAvatarTypedWhsiper)
 
     def delete(self):
         self.ignoreAll()
@@ -117,7 +141,8 @@ class ChatManagerV2(DirectObject.DirectObject):
         self.notify.error('called exitSecretChatActivated() on parent class')
 
     def enterProblemActivatingChat(self):
-        self.notify.error('called enterProblemActivatingChat() on parent class')
+        self.notify.error(
+            'called enterProblemActivatingChat() on parent class')
 
     def exitProblemActivatingChat(self):
         self.notify.error('called exitProblemActivatingChat() on parent class')

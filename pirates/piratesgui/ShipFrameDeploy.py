@@ -12,42 +12,19 @@ from pirates.ship import ShipGlobals
 
 
 class ShipFrameDeploy(ShipFrameSelect):
+    
 
     def __init__(self, parent, **kw):
-        optiondefs = (('avatarName', '', None),)
+        optiondefs = (('avatarName', '', None), )
         self.defineoptions(kw, optiondefs)
         ShipFrameSelect.__init__(self, parent, **kw)
         self.initialiseoptions(ShipFrameDeploy)
         return
 
-    def enableStats(self,
-                    shipName='',
-                    shipClass=0,
-                    mastInfo=[],
-                    hp=0,
-                    sp=0,
-                    cargo=0,
-                    crew=0,
-                    time=0):
+    def enableStats(self, shipName='', shipClass=0, mastInfo=[], hp=0, sp=0, cargo=0, crew=0, time=0):
         hullInfo = ShipGlobals.getHullStats(shipClass)
         self.shipClass = shipClass
-        self.snapShot = ShipSnapshot(
-            self,
-            None,
-            self['siegeTeam'],
-            shipName,
-            shipClass,
-            mastInfo,
-            hp,
-            hullInfo['maxHp'],
-            sp,
-            hullInfo['maxSp'],
-            cargo,
-            hullInfo['maxCargo'],
-            crew,
-            hullInfo['maxCrew'],
-            time,
-            pos=self['snapShotPos'])
+        self.snapShot = ShipSnapshot(self, None, self['siegeTeam'], shipName, shipClass, mastInfo, hp, hullInfo['maxHp'], sp, hullInfo['maxSp'], cargo, hullInfo['maxCargo'], crew, hullInfo['maxCrew'], time, pos=self['snapShotPos'])
         typeStr = self['avatarName']
         if self['shipType'] is ShipFrameSelect.STBand:
             self.button['text'] = PLocalizer.BoardShip
@@ -79,8 +56,7 @@ class ShipFrameDeploy(ShipFrameSelect):
         return
 
     def enableStatsOV(self, shipOV):
-        self.snapShot = ShipSnapshot(
-            self, shipOV, self['siegeTeam'], pos=self['snapShotPos'])
+        self.snapShot = ShipSnapshot(self, shipOV, self['siegeTeam'], pos=self['snapShotPos'])
         typeStr = ''
         if self['siegeTeam']:
             hp = shipOV.maxHp
@@ -93,8 +69,7 @@ class ShipFrameDeploy(ShipFrameSelect):
             self.button['text'] = PLocalizer.DeployShip
             stateStr = '\x01Ired\x01%s\x02' % PLocalizer.ShipSunk
             self['shipColorScale'] = VBase4(1, 0.4, 0.4, 1)
-            self.button['image3_color'] = VBase4(
-                *PiratesGuiGlobals.ButtonColor3[2])
+            self.button['image3_color'] = VBase4(*PiratesGuiGlobals.ButtonColor3[2])
             self.button['geom3_color'] = VBase4(0.4, 0.4, 0.4, 0.4)
             self.button['text3_color'] = VBase4(0.4, 0.4, 0.4, 0.4)
             self.button['helpText'] = PLocalizer.ShipSunk
@@ -106,8 +81,7 @@ class ShipFrameDeploy(ShipFrameSelect):
                 stateStr = '\x01red\x01%s\x02' % (PLocalizer.ShipFull,)
                 self['shipColorScale'] = VBase4(0.4, 0.4, 0.4, 1)
             else:
-                if localAvatar.getActiveShipId(
-                ) and shipOV.doId != localAvatar.getActiveShipId():
+                if localAvatar.getActiveShipId() and shipOV.doId != localAvatar.getActiveShipId():
                     self.button['state'] = DGG.DISABLED
                     self.button['text'] = PLocalizer.DeployShip
                     self.button['helpText'] = PLocalizer.OtherShipOut
@@ -124,9 +98,7 @@ class ShipFrameDeploy(ShipFrameSelect):
                         self.button['text'] = PLocalizer.BoardShip
                         stateStr = PLocalizer.ShipAtSea
                         self.button['helpText'] = PLocalizer.ShipAtSea
-        if not Freebooter.getPaidStatus(
-                base.localAvatar.getDoId()
-        ) and shipOV.shipClass != ShipGlobals.INTERCEPTORL1 and shipOV.shipClass != ShipGlobals.MERCHANTL1:
+        if not Freebooter.getPaidStatus(base.localAvatar.getDoId()) and shipOV.shipClass != ShipGlobals.INTERCEPTORL1 and shipOV.shipClass != ShipGlobals.MERCHANTL1:
             self.button['command'] = base.localAvatar.guiMgr.showNonPayer
             self.button['extraArgs'] = ['Restricted_ShipFrame_Deploy', 3]
             self.button['text'] = PLocalizer.Locked
@@ -142,6 +114,4 @@ class ShipFrameDeploy(ShipFrameSelect):
     def addCrewMemberName(self, name):
         if name not in self.snapShot['crewNames']:
             self.snapShot['crewNames'] += [name]
-
-
 # okay decompiling .\pirates\piratesgui\ShipFrameDeploy.pyc

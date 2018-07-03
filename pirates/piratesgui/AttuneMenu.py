@@ -14,8 +14,8 @@ from pirates.reputation import ReputationGlobals
 
 
 class AvatarInfoButton(GuiButton):
-    memberImageColor = (Vec4(0.31, 0.3, 0.3, 1), Vec4(0.41, 0.4, 0.4, 1),
-                        Vec4(0.41, 0.4, 0.4, 1), Vec4(0.21, 0.2, 0.2, 1))
+    memberImageColor = (
+     Vec4(0.31, 0.3, 0.3, 1), Vec4(0.41, 0.4, 0.4, 1), Vec4(0.41, 0.4, 0.4, 1), Vec4(0.21, 0.2, 0.2, 1))
     OnlineTextColor = (1, 1, 1, 1)
     WIDTH = 0.38
     HEIGHT = 0.035
@@ -25,40 +25,39 @@ class AvatarInfoButton(GuiButton):
         self.avId = avId
         self.hp = 0
         self.maxHp = 0
-        GuiButton.__init__(
-            self,
-            text='',
-            text_scale=PiratesGuiGlobals.TextScaleSmall,
-            text_pos=(0.025, 0.085),
-            text_align=TextNode.ALeft,
-            text_fg=self.OnlineTextColor,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=1,
-            text_wordwrap=14,
-            relief=None,
-            borderWidth=PiratesGuiGlobals.BorderWidthSmall,
-            frameColor=(0.45, 0.45, 0.35, 1.0),
-            image_scale=(0.45, 1, 0.2),
-            image_pos=(0.215, 0.0, 0.08),
-            command=self.select)
+        GuiButton.__init__(self, text='', text_scale=PiratesGuiGlobals.TextScaleSmall, text_pos=(0.025,
+                                                                                                 0.085),
+                           text_align=TextNode.ALeft, text_fg=self.OnlineTextColor,
+                           text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, text_wordwrap=14, relief=None,
+                           borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameColor=(0.45,
+                                                                                       0.45,
+                                                                                       0.35,
+                                                                                       1.0), image_scale=(0.45,
+                                                                                                          1,
+                                                                                                          0.2),
+                           image_pos=(0.215,
+                                      0.0,
+                                      0.08), command=self.select)
         self.initialiseoptions(AvatarInfoButton)
-        self.hpMeter = DirectWaitBar(
-            parent=self,
-            relief=DGG.RAISED,
-            borderWidth=(0.004, 0.004),
-            range=50,
-            value=20,
-            frameColor=(0.05, 0.35, 0.05, 1),
-            barColor=(0.1, 0.7, 0.1, 1),
-            pos=(0.015, 0, 0.06),
-            frameSize=(0, 0.25, 0, 0.018),
-            text='%s/%s' % (self.hp, self.maxHp),
-            text_align=TextNode.ALeft,
-            text_scale=PiratesGuiGlobals.TextScaleMicro,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_pos=(0.256, 0, 0.005),
-            textMayChange=1)
+        self.hpMeter = DirectWaitBar(parent=self, relief=DGG.RAISED, borderWidth=(0.004,
+                                                                                  0.004), range=50, value=20,
+                                     frameColor=(0.05,
+                                                 0.35,
+                                                 0.05,
+                                                 1), barColor=(0.1,
+                                                               0.7,
+                                                               0.1,
+                                                               1), pos=(0.015,
+                                                                        0,
+                                                                        0.06), frameSize=(0,
+                                                                                          0.25,
+                                                                                          0,
+                                                                                          0.018),
+                                     text='%s/%s' % (self.hp, self.maxHp), text_align=TextNode.ALeft,
+                                     text_scale=PiratesGuiGlobals.TextScaleMicro, text_fg=PiratesGuiGlobals.TextFG2,
+                                     text_shadow=PiratesGuiGlobals.TextShadow, text_pos=(0.256,
+                                                                                         0,
+                                                                                         0.005), textMayChange=1)
         return
 
     def destroy(self):
@@ -67,12 +66,10 @@ class AvatarInfoButton(GuiButton):
     def updateItem(self, avatar):
         self.avatar = avatar
         if self.avatar:
-            color = base.cr.battleMgr.getExperienceColor(
-                base.localAvatar, avatar)
+            color = base.cr.battleMgr.getExperienceColor(base.localAvatar, avatar)
             try:
-                name = '%s\x02  %s\x01smallCaps\x01%s%s\x02\x02' % (
-                    avatar.getShortName(), color, PLocalizer.Lv, avatar.level)
-            except Exception as e:
+                name = '%s\x02  %s\x01smallCaps\x01%s%s\x02\x02' % (avatar.getShortName(), color, PLocalizer.Lv, avatar.level)
+            except StandardError, e:
                 self.notify.error('updateItem(%s, %s)' % (str(avatar), str(e)))
 
             self['text'] = name
@@ -100,13 +97,8 @@ class AttuneMenu(DirectFrame):
     WIDTH = 0.45
     HEIGHT = 0.09
 
-    def __init__(self,
-                 parent=base.a2dRightCenter,
-                 command=None,
-                 draggable=0,
-                 **kw):
-        optiondefs = (('relief', None, None), ('state', DGG.DISABLED, None),
-                      ('frameSize', (0, self.WIDTH, 0, self.HEIGHT), None))
+    def __init__(self, parent=base.a2dRightCenter, command=None, draggable=0, **kw):
+        optiondefs = (('relief', None, None), ('state', DGG.DISABLED, None), ('frameSize', (0, self.WIDTH, 0, self.HEIGHT), None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent, relief=None)
         self.initialiseoptions(AttuneMenu)
@@ -114,20 +106,8 @@ class AttuneMenu(DirectFrame):
         textColor = PiratesGuiGlobals.TextFG1
         textShadow = PiratesGuiGlobals.TextShadow
         wordwrap = 13
-        self.titleLabel = DirectLabel(
-            parent=self,
-            relief=None,
-            pos=(0.05, 0, self.HEIGHT - PiratesGuiGlobals.TextScaleMed * 2.5),
-            text=PLocalizer.UnattuneGui,
-            text_align=TextNode.ALeft,
-            text_scale=titleFont,
-            text_pos=(0.015, 0.05),
-            text_fg=textColor,
-            text_shadow=textShadow,
-            text_font=PiratesGlobals.getPirateOutlineFont(),
-            textMayChange=1,
-            text_wordwrap=wordwrap,
-            sortOrder=21)
+        self.titleLabel = DirectLabel(parent=self, relief=None, pos=(0.05, 0, self.HEIGHT - PiratesGuiGlobals.TextScaleMed * 2.5), text=PLocalizer.UnattuneGui, text_align=TextNode.ALeft, text_scale=titleFont, text_pos=(0.015,
+                                                                                                                                                                                                                           0.05), text_fg=textColor, text_shadow=textShadow, text_font=PiratesGlobals.getPirateOutlineFont(), textMayChange=1, text_wordwrap=wordwrap, sortOrder=21)
         self.buttons = {}
         self.updateButton(0)
         self.hide()
@@ -160,8 +140,7 @@ class AttuneMenu(DirectFrame):
             self.updateSize()
 
     def updateSize(self):
-        self['frameSize'] = (0, self.WIDTH, 0,
-                             self.HEIGHT * len(self.buttons) + 0.09)
+        self['frameSize'] = (0, self.WIDTH, 0, self.HEIGHT * len(self.buttons) + 0.09)
         self.titleLabel.setZ(self.HEIGHT * len(self.buttons) + 0.02)
 
     def update(self):
@@ -195,3 +174,4 @@ class AttuneMenu(DirectFrame):
 
     def unattuneAll(self):
         localAvatar.sendRequestRemoveStickyTargets(self.buttons.keys())
+

@@ -189,7 +189,8 @@ def checkName(name, otherCheckFuncs=[]):
             if numPeriods == 2:
                 if not (word[1] == '.' and word[3] == '.'):
                     notify.info(
-                        'word "%s" does not fit the J.T. pattern' % word)
+                        'word "%s" does not fit the J.T. pattern' %
+                        word)
                     return OTPLocalizer.NCPeriodUsage
 
         return
@@ -253,10 +254,7 @@ def checkName(name, otherCheckFuncs=[]):
         return
 
     checks = [
-        longEnough, emptyName, printableChars, badCharacters, hasLetters,
-        hasVowels, monoLetter, checkDashes, checkCommas, checkPeriods,
-        checkApostrophes, tooManyWords, allCaps, mixedCase, repeatedChars
-    ] + otherCheckFuncs
+        longEnough, emptyName, printableChars, badCharacters, hasLetters, hasVowels, monoLetter, checkDashes, checkCommas, checkPeriods, checkApostrophes, tooManyWords, allCaps, mixedCase, repeatedChars] + otherCheckFuncs
     symmetricChecks = []
     notify.info('checking name "%s"...' % name)
     for check in checks:
@@ -274,6 +272,4 @@ def checkName(name, otherCheckFuncs=[]):
             return problem
 
     return
-
-
 # okay decompiling .\otp\namepanel\NameCheck.pyc

@@ -2,7 +2,6 @@ from panda3d.core import *
 from direct.showbase.DirectObject import DirectObject
 from otp.nametag import NametagGlobals
 
-
 class ClickablePopup(PandaNode, DirectObject):
     CS_NORMAL = 0
     CS_CLICK = 1
@@ -35,15 +34,10 @@ class ClickablePopup(PandaNode, DirectObject):
         self.__mwn.setButtonDownPattern('button-down-%r')
         self.__mwn.setButtonUpPattern('button-up-%r')
 
-        self.accept(
-            self.__getEvent(self.__mwn.getEnterPattern()), self.__mouseEnter)
-        self.accept(
-            self.__getEvent(self.__mwn.getLeavePattern()), self.__mouseLeave)
-        self.accept(
-            self.__getEvent(self.__mwn.getButtonDownPattern()),
-            self.__buttonDown)
-        self.accept(
-            self.__getEvent(self.__mwn.getButtonUpPattern()), self.__buttonUp)
+        self.accept(self.__getEvent(self.__mwn.getEnterPattern()), self.__mouseEnter)
+        self.accept(self.__getEvent(self.__mwn.getLeavePattern()), self.__mouseLeave)
+        self.accept(self.__getEvent(self.__mwn.getButtonDownPattern()), self.__buttonDown)
+        self.accept(self.__getEvent(self.__mwn.getButtonUpPattern()), self.__buttonUp)
 
     def destroy(self):
         self.__mwn.removeRegion(self.__region)
@@ -66,7 +60,7 @@ class ClickablePopup(PandaNode, DirectObject):
         return self.__clickState
 
     def clickStateChanged(self):
-        pass  # Intended for subclasses.
+        pass # Intended for subclasses.
 
     def __getEvent(self, pattern):
         return pattern.replace('%r', self.__name)
@@ -136,9 +130,9 @@ class ClickablePopup(PandaNode, DirectObject):
 
         # Shift along the offset while in camspace, not worldspace.
         if offset:
-            mid = mat.xformPoint(Point3(0, 0, 0))
+            mid = mat.xformPoint(Point3(0,0,0))
             length = mid.length()
-            shift = mid * (length - offset) / length - mid
+            shift = mid*(length - offset)/length - mid
             cTopLeft += shift
             cBottomRight += shift
 

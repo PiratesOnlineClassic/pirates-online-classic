@@ -7,9 +7,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class FuryTrail(PooledEffect, EffectController):
-
+    
     faceCardScale = 64.0
     cardScale = 128.0
 
@@ -25,8 +24,7 @@ class FuryTrail(PooledEffect, EffectController):
         self.card = model.find('**/particleGlowBlue')
         self.faceCard = model.find('**/effectFury')
         if not FuryTrail.particleDummy:
-            FuryTrail.particleDummy = render.attachNewNode(
-                ModelNode('FuryTrailParticleDummy'))
+            FuryTrail.particleDummy = render.attachNewNode(ModelNode('FuryTrailParticleDummy'))
             FuryTrail.particleDummy.setDepthWrite(0)
             FuryTrail.particleDummy.setFogOff()
             FuryTrail.particleDummy.setLightOff()
@@ -73,9 +71,7 @@ class FuryTrail(PooledEffect, EffectController):
         self.p0.emitter.setAmplitude(-2.0)
         self.p0.emitter.setAmplitudeSpread(0.5)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 10.0))
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
-                                           ColorBlendAttrib.OIncomingAlpha,
-                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(1.0)
@@ -113,11 +109,9 @@ class FuryTrail(PooledEffect, EffectController):
             self.p1.renderer.setFinalXScale(0.01 * self.faceCardScale)
             self.p1.renderer.setFinalYScale(0.01 * self.faceCardScale)
             self.p1.renderer.setNonanimatedTheta(0.0)
-            self.p1.renderer.setAlphaBlendMethod(
-                BaseParticleRenderer.PPBLENDLINEAR)
+            self.p1.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
             self.p1.renderer.setAlphaDisable(0)
-            self.p1.renderer.getColorInterpolationManager().addConstant(
-                0.0, 1.0, Vec4(0.0, 0.0, 0.0, 1.0), 1)
+            self.p1.renderer.getColorInterpolationManager().addConstant(0.0, 1.0, Vec4(0.0, 0.0, 0.0, 1.0), 1)
             self.p1.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
             self.p1.emitter.setAmplitude(0.5)
             self.p1.emitter.setAmplitudeSpread(0.0)
@@ -160,10 +154,8 @@ class FuryTrail(PooledEffect, EffectController):
         if self.wantGlow:
             self.loadGlow()
             randomness = random.random() / 20
-            scaleUp = self.glow.scaleInterval(
-                0.05, 7, startScale=9, blendType='easeInOut')
-            scaleDown = self.glow.scaleInterval(
-                0.05, 9, startScale=7, blendType='easeInOut')
+            scaleUp = self.glow.scaleInterval(0.05, 7, startScale=9, blendType='easeInOut')
+            scaleDown = self.glow.scaleInterval(0.05, 9, startScale=7, blendType='easeInOut')
             self.pulseTrack = Sequence(scaleUp, scaleDown)
         elif self.glow:
             self.glow.removeNode()
@@ -175,14 +167,8 @@ class FuryTrail(PooledEffect, EffectController):
                 self.g.disable()
                 self.g.cleanup()
                 self.g = None
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self), Func(self.startBlur),
-            Func(self.startGlow))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 2.0), Func(self.stopBlur),
-            Func(self.stopGlow), Wait(1.5), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Func(self.startBlur), Func(self.startGlow))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Func(self.stopBlur), Func(self.stopGlow), Wait(1.5), Func(self.cleanUpEffect))
         self.track = Parallel(self.startEffect, Wait(6.0), self.endEffect)
 
     def cleanUpEffect(self):

@@ -10,8 +10,7 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
     notify = directNotify.newCategory('DistributedBuildingDoor')
 
     def __init__(self, cr):
-        DistributedDoorBase.DistributedDoorBase.__init__(
-            self, cr, 'DistributedBuildingDoor')
+        DistributedDoorBase.DistributedDoorBase.__init__(self, cr, 'DistributedBuildingDoor')
         self.areaRequest = None
         self.privateInteriorId = 0
 
@@ -28,8 +27,7 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
         self.notify.debug('%s DistributedBuildingDoor.delete' % self.doId)
         DistributedDoorBase.DistributedDoorBase.delete(self)
 
-    def setInteriorId(self, interiorDoId, interiorUid, interiorWorldParentId,
-                      interiorWorldZoneId):
+    def setInteriorId(self, interiorDoId, interiorUid, interiorWorldParentId, interiorWorldZoneId):
         self.interiorDoId = interiorDoId
         self.interiorUid = interiorUid
         self.interiorWorldParentId = interiorWorldParentId
@@ -65,11 +63,7 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
     def requestPrivateInteriorInstance(self):
         self.sendUpdate('requestPrivateInteriorInstance')
 
-    def setPrivateInteriorInstance(self,
-                                   worldId,
-                                   worldZoneId,
-                                   interiorId,
-                                   autoFadeIn=True):
+    def setPrivateInteriorInstance(self, worldId, worldZoneId, interiorId, autoFadeIn=True):
         if worldId == 0 and worldZoneId == 0:
             worldId = self.interiorWorldParentId
             worldZoneId = self.interiorWorldZoneId
@@ -87,19 +81,17 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
             self.loadInteriorAreaFinished(interior, autoFadeIn)
             return
 
-        self.areaRequest = base.cr.relatedObjectMgr.requestObjects(
-            [interiorId], eachCallback=areaFinishedCallback)
+        self.areaRequest = base.cr.relatedObjectMgr.requestObjects([interiorId],
+            eachCallback=areaFinishedCallback)
 
-        base.cr.addTaggedInterest(worldId, worldZoneId,
-                                  ['instanceInterest-Door'])
+        base.cr.addTaggedInterest(worldId, worldZoneId, ['instanceInterest-Door'])
 
     def loadInteriorAreaFinished(self, interior, autoFadeIn):
         oldParent = self.getParentObj()
         oldWorld = oldParent.getParentObj()
         oldWorld.removeWorldInterest(oldParent)
         base.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
-        base.cr.replaceTaggedInterestTag('instanceInterest-Door',
-                                         'instanceInterest')
+        base.cr.replaceTaggedInterestTag('instanceInterest-Door', 'instanceInterest')
         world = interior.getParentObj()
         world.addWorldInterest(interior)
         self.setupOtherSideDoors()
@@ -109,10 +101,8 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
 
     def requestInteraction(self, avId, interactType=0):
         if avId == localAvatar.doId and localAvatar.zombie and self.buildingUid != '1189479168.0sdnaik':
-            localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoDoors,
-                                             PiratesGuiGlobals.TextFG6)
+            localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoDoors, PiratesGuiGlobals.TextFG6)
             return
 
         base.richPresence.setLocation(self.interiorUid, interior=True)
-        DistributedDoorBase.DistributedDoorBase.requestInteraction(
-            self, avId, interactType)
+        DistributedDoorBase.DistributedDoorBase.requestInteraction(self, avId, interactType)

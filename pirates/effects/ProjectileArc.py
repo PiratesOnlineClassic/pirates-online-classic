@@ -14,6 +14,7 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class ProjectileArc(DirectObject, NodePath):
+    
 
     def __init__(self, wantRotate=1, wantColl=0):
         NodePath.__init__(self, 'projectileArcRenderParent')
@@ -21,9 +22,7 @@ class ProjectileArc(DirectObject, NodePath):
         self.wantColl = wantColl
         self.collSphereRadius = 3.0
         self.startPos = Vec3(0, 0, 0)
-        self.startVel = Vec3(
-            random.uniform(-20, 20), random.uniform(20, 60),
-            random.uniform(10, 110))
+        self.startVel = Vec3(random.uniform(-20, 20), random.uniform(20, 60), random.uniform(10, 110))
         self.endPlaneZ = -100
         self.gravityMult = 2.0
         self.rotateMin = 360
@@ -47,22 +46,13 @@ class ProjectileArc(DirectObject, NodePath):
             randomNumX = random.uniform(self.rotateMin, self.rotateMax)
             randomNumY = random.uniform(self.rotateMin, self.rotateMax)
             randomNumZ = 0
-            self.playRotate = self.rotateNode.hprInterval(
-                6, Point3(randomNumX, randomNumY, randomNumZ))
+            self.playRotate = self.rotateNode.hprInterval(6, Point3(randomNumX, randomNumY, randomNumZ))
         return
 
     def createTrack(self, rate=1):
         if self.wantColl:
-            enableColl = Sequence(
-                Wait(0.2),
-                Func(self.cnode.setFromCollideMask,
-                     PiratesGlobals.TargetBitmask))
-        self.playProjectile = ProjectileInterval(
-            self.transNode,
-            startPos=self.startPos,
-            startVel=self.startVel,
-            endZ=self.endPlaneZ,
-            gravityMult=self.gravityMult)
+            enableColl = Sequence(Wait(0.2), Func(self.cnode.setFromCollideMask, PiratesGlobals.TargetBitmask))
+        self.playProjectile = ProjectileInterval(self.transNode, startPos=self.startPos, startVel=self.startVel, endZ=self.endPlaneZ, gravityMult=self.gravityMult)
         if self.wantColl:
             playDebris = Parallel(self.playProjectile, enableColl)
         else:
@@ -127,8 +117,7 @@ class ProjectileArc(DirectObject, NodePath):
         if objType == PiratesGlobals.COLL_SEA and base.cr.wantSpecialEffects:
             pos = entry.getSurfacePoint(render)
             if base.cr.activeWorld.getWater():
-                entryWaterHeight = base.cr.activeWorld.getWater().calcHeight(
-                    pos[0], pos[1]) + 7.0
+                entryWaterHeight = base.cr.activeWorld.getWater().calcHeight(pos[0], pos[1]) + 7.0
             else:
                 entryWaterHeight = pos[2]
             if self.bigSplash:
@@ -152,8 +141,5 @@ class ProjectileArc(DirectObject, NodePath):
                     dustRingEffect.reparentTo(render)
                     dustRingEffect.setPos(pos)
                     dustRingEffect.play()
-                self.cnode.setFromCollideMask(
-                    PiratesGlobals.TargetBitmask.allOff())
-
-
+                self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
 # okay decompiling .\pirates\effects\ProjectileArc.pyc

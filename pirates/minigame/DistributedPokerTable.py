@@ -14,10 +14,8 @@ from pirates.piratesgui import PDialog
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
-class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
-                            PokerBase.PokerBase):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedPokerTable')
+class DistributedPokerTable(DistributedGameTable.DistributedGameTable, PokerBase.PokerBase):
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPokerTable')
 
     def __init__(self, cr, evaluatorGame, numRounds):
         DistributedGameTable.DistributedGameTable.__init__(self, cr)
@@ -52,14 +50,9 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
         self.leaveReason = PlayingCardGlobals.PlayerStateUndefined
         self.swapResultDialog = None
         self.pickupCardsIvalArray = [
-            None, None, None, None, None, None, None, None, None, None
-        ]
-        self.playSequenceArray = [
-            None, None, None, None, None, None, None, None, None, None
-        ]
-        self.actionSequenceArray = [
-            None, None, None, None, None, None, None, None, None, None
-        ]
+         None, None, None, None, None, None, None, None, None, None]
+        self.playSequenceArray = [None, None, None, None, None, None, None, None, None, None]
+        self.actionSequenceArray = [None, None, None, None, None, None, None, None, None, None]
         self.totalWinningsArray = []
         self.intervalList = []
         self.endOfHand = False
@@ -131,10 +124,8 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
             cos = math.cos(math.radians(currentAngle))
             spring = self.springConst
             friction = self.friction
-            I = left * math.pow(0 - fulcrumPos, 2) + right * math.pow(
-                0.5 - fulcrumPos, 2)
-            Tgrav = self.gravity * (left * (0 - fulcrumPos) * cos + right *
-                                    (0.5 - fulcrumPos) * cos)
+            I = left * math.pow(0 - fulcrumPos, 2) + right * math.pow(0.5 - fulcrumPos, 2)
+            Tgrav = self.gravity * (left * (0 - fulcrumPos) * cos + right * (0.5 - fulcrumPos) * cos)
             Trestore = -spring * currentAngle
             T = Tgrav + Trestore
             A = T / I
@@ -212,11 +203,8 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
 
     def createGui(self):
         if not self.hasGui:
-            self.gui = PokerTableGUI.PokerTableGUI(self, self.maxCommunityCards,
-                                                   self.maxHandCards)
-            self.gui.setTableState(self.round, self.buttonSeat,
-                                   self.communityCards, self.playerHands,
-                                   self.totalWinningsArray)
+            self.gui = PokerTableGUI.PokerTableGUI(self, self.maxCommunityCards, self.maxHandCards)
+            self.gui.setTableState(self.round, self.buttonSeat, self.communityCards, self.playerHands, self.totalWinningsArray)
             self.radarState = localAvatar.guiMgr.radarGui.state
             localAvatar.guiMgr.radarGui.request('Off')
             localAvatar.guiMgr.gameGui.hide()
@@ -227,8 +215,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
         if self.wantMeter == 1:
             self.gui.setMeterPercent(0)
         if self.wantMeter == 1:
-            self.excitementT = taskMgr.add(self.excitementTask,
-                                           'PokerExcitement')
+            self.excitementT = taskMgr.add(self.excitementTask, 'PokerExcitement')
             self.excitementT.initialStart = 1
         if self.wantMeter == 2:
             self.balanceT = taskMgr.add(self.balanceTask, 'PokerBalance')
@@ -312,11 +299,9 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
                 self.gui.disableAction()
             self.requestExit()
         elif action == PlayingCardGlobals.Cheat1:
-            self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardOneCheat,
-                                 self.card_id)
+            self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardOneCheat, self.card_id)
         elif action == PlayingCardGlobals.Cheat2:
-            self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardTwoCheat,
-                                 self.card_id)
+            self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardTwoCheat, self.card_id)
         else:
             self.notify.error('guiCallback: unknown action: %s' % action)
 
@@ -369,8 +354,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
         if interval in self.intervalList:
             self.intervalList.remove(interval)
 
-    def setTableState(self, round, buttonSeat, communityCards, playerHands,
-                      totalWinningsArray, chipsCount):
+    def setTableState(self, round, buttonSeat, communityCards, playerHands, totalWinningsArray, chipsCount):
         self.updateStacks(chipsCount)
         self.round = round
         if self.round == 0:
@@ -439,8 +423,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
                         if total_active == 1:
                             self.playActorAnimation(actor, 'cards_set_down_win')
                         else:
-                            self.playActorAnimation(actor,
-                                                    'cards_set_down_win_show')
+                            self.playActorAnimation(actor, 'cards_set_down_win_show')
                     if totalWinningsArray[i] == PlayingCardGlobals.PlayerLost:
                         self.endActionSequence(i)
                         self.playActorAnimation(actor, 'cards_set_down_lose')
@@ -450,18 +433,15 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
                             color = Vec4(0.2, 0.4, 0.8, 1.0)
                             position = Vec3(0.0, 0.0, -0.65)
                             self.gui.showWinText(text, color, position)
-                    if totalWinningsArray[
-                            i] == PlayingCardGlobals.PlayerInactive:
+                    if totalWinningsArray[i] == PlayingCardGlobals.PlayerInactive:
                         pass
-                    if totalWinningsArray[
-                            i] == PlayingCardGlobals.PlayerOutOfChips:
+                    if totalWinningsArray[i] == PlayingCardGlobals.PlayerOutOfChips:
                         self.endActionSequence(i)
                         self.playActorAnimation(actor, 'cards_set_down_lose')
                         if actor.isLocal():
                             reason = PlayingCardGlobals.PlayerOutOfChips
                             self.playerMustLeave(reason)
-                    if totalWinningsArray[
-                            i] == PlayingCardGlobals.PlayerCaughtCheating:
+                    if totalWinningsArray[i] == PlayingCardGlobals.PlayerCaughtCheating:
                         self.endActionSequence(i)
                         self.playActorAnimation(actor, 'cards_set_down_lose')
                         if actor.isLocal():
@@ -485,17 +465,11 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
         self.deleteDialogs()
         if self.leaveReason == PlayingCardGlobals.PlayerCaughtCheating:
             string = PLocalizer.PokerCaughtCheatingMessage % PlayingCardGlobals.CheatingFine
-            self.dialog = PDialog.PDialog(
-                text=string,
-                style=OTPDialog.Acknowledge,
-                command=self.dialogCallback)
+            self.dialog = PDialog.PDialog(text=string, style=OTPDialog.Acknowledge, command=self.dialogCallback)
             self.setDialogBin(self.dialog)
         else:
             if self.leaveReason == PlayingCardGlobals.PlayerOutOfChips:
-                self.dialog = PDialog.PDialog(
-                    text=PLocalizer.PokerOutOfChipsMessage,
-                    style=OTPDialog.Acknowledge,
-                    command=self.dialogCallback)
+                self.dialog = PDialog.PDialog(text=PLocalizer.PokerOutOfChipsMessage, style=OTPDialog.Acknowledge, command=self.dialogCallback)
                 self.setDialogBin(self.dialog)
         self.guiCallback(PlayingCardGlobals.Leave)
         self.removeCardsFromHand(localAvatar)
@@ -503,8 +477,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
     def playerMustLeave(self, reason):
         delay = 5.0
         self.leaveReason = reason
-        taskMgr.doMethodLater(delay, self.delayedPlayerLeave,
-                              self.uniqueName('delayedPlayerLeave'))
+        taskMgr.doMethodLater(delay, self.delayedPlayerLeave, self.uniqueName('delayedPlayerLeave'))
         self.gui.menu.hide()
 
     def updateGui(self):
@@ -515,9 +488,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
             else:
                 self.gui.handId = self.handId
                 self.gui.sortedCards = self.sortedCards
-            self.gui.setTableState(self.round, self.buttonSeat,
-                                   self.communityCards, self.playerHands,
-                                   self.totalWinningsArray)
+            self.gui.setTableState(self.round, self.buttonSeat, self.communityCards, self.playerHands, self.totalWinningsArray)
             self.gui.setLocalAvatarHand(self.localAvatarHand)
         return
 
@@ -547,9 +518,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
         audio = self.getAudio()
         if audio:
             sfx = audio.sfxArray[audio.betIdentifier]
-        actionSequence = Parallel(
-            actor.actorInterval('cards_bet'),
-            Sequence(Wait(1.0), Func(self.playSoundEffect, sfx)))
+        actionSequence = Parallel(actor.actorInterval('cards_bet'), Sequence(Wait(1.0), Func(self.playSoundEffect, sfx)))
         actionSequence.start()
         self.actionSequenceArray[i] = actionSequence
         return
@@ -560,9 +529,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
         audio = self.getAudio()
         if audio:
             sfx = audio.sfxArray[audio.checkIdentifier]
-        actionSequence = Parallel(
-            actor.actorInterval('cards_check'),
-            Sequence(Wait(1.0), Func(self.playSoundEffect, sfx)))
+        actionSequence = Parallel(actor.actorInterval('cards_check'), Sequence(Wait(1.0), Func(self.playSoundEffect, sfx)))
         actionSequence.start()
         self.actionSequenceArray[i] = actionSequence
         return
@@ -573,13 +540,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
         audio = self.getAudio()
         if audio:
             sfx = audio.sfxArray[audio.foldIdentifier]
-        actionSequence = Sequence(
-            actor.actorInterval(
-                'cards_set_down', endFrame=50, mixingWanted=False),
-            Func(self.playSoundEffect, sfx),
-            Func(self.removeCardsFromHand, actor),
-            actor.actorInterval(
-                'cards_set_down', startFrame=50, mixingWanted=False))
+        actionSequence = Sequence(actor.actorInterval('cards_set_down', endFrame=50, mixingWanted=False), Func(self.playSoundEffect, sfx), Func(self.removeCardsFromHand, actor), actor.actorInterval('cards_set_down', startFrame=50, mixingWanted=False))
         actionSequence.start()
         self.actionSequenceArray[i] = actionSequence
         return
@@ -590,8 +551,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
         oldPlayerActions = self.playerActions
         self.playerActions = playerActions
         i = 0
-        for actor, newAction, oldAction in zip(self.actors, playerActions,
-                                               oldPlayerActions):
+        for actor, newAction, oldAction in zip(self.actors, playerActions, oldPlayerActions):
             if actor and newAction != oldAction:
                 mostRecentAction, amount = newAction
                 if mostRecentAction == PlayingCardGlobals.CheckCall or mostRecentAction == PlayingCardGlobals.Check:
@@ -676,11 +636,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
                     string = PLocalizer.PokerSwapSuccessMessage
                 else:
                     string = PLocalizer.PokerSwapFailureMessage
-                self.swapResultDialog = PDialog.PDialog(
-                    text=string,
-                    style=OTPDialog.Acknowledge,
-                    giveMouse=False,
-                    command=self.swapResultCallback)
+                self.swapResultDialog = PDialog.PDialog(text=string, style=OTPDialog.Acknowledge, giveMouse=False, command=self.swapResultCallback)
                 position = self.swapResultDialog.getPos()
                 position.setZ(position[2] + 0.35)
                 self.swapResultDialog.setPos(position)
@@ -736,14 +692,12 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
         audio = self.getAudio()
         sfx = None
         if audio:
-            sfx = audio.sfxArray[audio.startDealIdentifier + int(
-                random.random() * audio.totalDealIdentifiers)]
-        dealOutwards = self.dealer.actorInterval(
-            'deal', endFrame=11, playRate=1.5, mixingWanted=False)
-        dealInwards = self.dealer.actorInterval(
-            'deal', startFrame=11, playRate=3.0, mixingWanted=False)
+            sfx = audio.sfxArray[audio.startDealIdentifier + int(random.random() * audio.totalDealIdentifiers)]
+        dealOutwards = self.dealer.actorInterval('deal', endFrame=11, playRate=1.5, mixingWanted=False)
+        dealInwards = self.dealer.actorInterval('deal', startFrame=11, playRate=3.0, mixingWanted=False)
         for i in range(numCards):
-            (dealCards.append(Func(self.playSoundEffect, sfx)),)
+            (
+             dealCards.append(Func(self.playSoundEffect, sfx)),)
             dealCards.append(dealOutwards)
             dealCards.append(dealInwards)
 
@@ -764,14 +718,11 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
                 actor = self.actors[player]
                 if actor:
                     playSequence = Sequence()
-                    playSequence.append(
-                        actor.actorInterval('cards_hide', playRate=-1.0))
+                    playSequence.append(actor.actorInterval('cards_hide', playRate=-1.0))
                     if tell_action == PlayingCardGlobals.GoodTell:
-                        playSequence.append(
-                            actor.actorInterval('cards_good_tell'))
+                        playSequence.append(actor.actorInterval('cards_good_tell'))
                     else:
-                        playSequence.append(
-                            actor.actorInterval('cards_bad_tell'))
+                        playSequence.append(actor.actorInterval('cards_bad_tell'))
                     playSequence.append(actor.actorInterval('cards_hide'))
                     playSequence.append(Func(actor.loop, 'cards_hide_idle'))
                     playSequence.start()
@@ -794,18 +745,12 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
                     deals.append(Wait(sfx.length()))
         dealerSeat = self.SeatInfo[-1]
         getCards = self.dealer.actorInterval('into_deal', mixingWanted=False)
-        dealOutwards = self.dealer.actorInterval(
-            'deal', endFrame=10, playRate=1.4, mixingWanted=False)
-        dealInwards = self.dealer.actorInterval(
-            'deal', startFrame=10, playRate=2.0, mixingWanted=False)
-        dealLeftOutwards = self.dealer.actorInterval(
-            'deal_left', endFrame=7, playRate=1.4, mixingWanted=False)
-        dealLeftInwards = self.dealer.actorInterval(
-            'deal_left', startFrame=7, playRate=2.0, mixingWanted=False)
-        dealRightOutwards = self.dealer.actorInterval(
-            'deal_right', endFrame=7, playRate=1.4, mixingWanted=False)
-        dealRightInwards = self.dealer.actorInterval(
-            'deal_right', startFrame=7, playRate=2.0, mixingWanted=False)
+        dealOutwards = self.dealer.actorInterval('deal', endFrame=10, playRate=1.4, mixingWanted=False)
+        dealInwards = self.dealer.actorInterval('deal', startFrame=10, playRate=2.0, mixingWanted=False)
+        dealLeftOutwards = self.dealer.actorInterval('deal_left', endFrame=7, playRate=1.4, mixingWanted=False)
+        dealLeftInwards = self.dealer.actorInterval('deal_left', startFrame=7, playRate=2.0, mixingWanted=False)
+        dealRightOutwards = self.dealer.actorInterval('deal_right', endFrame=7, playRate=1.4, mixingWanted=False)
+        dealRightInwards = self.dealer.actorInterval('deal_right', startFrame=7, playRate=2.0, mixingWanted=False)
         cardNum = 0
         dealtCards = []
         for player in range(len(self.playerHands)):
@@ -839,37 +784,21 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
                     card.setPosHpr(0, 0, 0, 0, 0, 0)
                     card.setScale(render, 1.2)
                     endCardH = -(180.0 + random.random() * 360.0)
-                    distance = card.getDistance(
-                        self.PocketCardPositions[player])
+                    distance = card.getDistance(self.PocketCardPositions[player])
                     duration = distance / 9.0
-                    throwCard = LerpPosHprInterval(
-                        card,
-                        duration=duration,
-                        pos=Point3(0, 0, 0),
-                        hpr=Vec3(endCardH, 0, 0),
-                        startPos=None,
-                        startHpr=None,
-                        blendType='easeOut')
+                    throwCard = LerpPosHprInterval(card, duration=duration, pos=Point3(0, 0, 0), hpr=Vec3(endCardH, 0, 0), startPos=None, startHpr=None, blendType='easeOut')
                     self.intervalList.append(throwCard)
                     sfx = None
                     if audio:
-                        sfx = audio.sfxArray[audio.startDealIdentifier + int(
-                            random.random() * audio.totalDealIdentifiers)]
-                    dealCard = Sequence(
-                        Func(card.show), dealOutIval,
-                        Func(self.playSoundEffect, sfx),
-                        Func(card.wrtReparentTo,
-                             self.PocketCardPositions[player]),
-                        Func(throwCard.start), dealInIval,
-                        Func(self.removeInterval, throwCard))
+                        sfx = audio.sfxArray[audio.startDealIdentifier + int(random.random() * audio.totalDealIdentifiers)]
+                    dealCard = Sequence(Func(card.show), dealOutIval, Func(self.playSoundEffect, sfx), Func(card.wrtReparentTo, self.PocketCardPositions[player]), Func(throwCard.start), dealInIval, Func(self.removeInterval, throwCard))
                     deals.append(dealCard)
 
         deals.append(Func(self.dealer.loop, 'deal_idle'))
         finishDeal = Parallel()
         for player in range(len(self.playerHands)):
             if self.playerHands[player] != [] and self.actors[player]:
-                finishDeal.append(
-                    Func(self.pickupCards, player, dealtCards[player]))
+                finishDeal.append(Func(self.pickupCards, player, dealtCards[player]))
 
         deals.append(finishDeal)
         return deals
@@ -889,13 +818,7 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
         if pickupCardsIval:
             pickupCardsIval.pause()
             del pickupCardsIval
-        pickupCardsIval = Sequence(
-            Wait(random.random() * 1.0),
-            actor.actorInterval(
-                'cards_pick_up', endFrame=17, mixingWanted=False),
-            Func(__reparentCards),
-            actor.actorInterval(
-                'cards_pick_up', startFrame=17, mixingWanted=False))
+        pickupCardsIval = Sequence(Wait(random.random() * 1.0), actor.actorInterval('cards_pick_up', endFrame=17, mixingWanted=False), Func(__reparentCards), actor.actorInterval('cards_pick_up', startFrame=17, mixingWanted=False))
         tell_action = 0
         enable_tells = False
         if player <= len(self.totalWinningsArray):
@@ -921,24 +844,18 @@ class DistributedPokerTable(DistributedGameTable.DistributedGameTable,
     def requestSeatResponse(self, answer, seatIndex):
         if answer == 4:
             self.deleteRequestDialogs()
-            message = PLocalizer.PokerInsufficientChipsMessage % self.minimumChipsToSitDown(
-            )
-            self.requestDialog = PDialog.PDialog(
-                text=message,
-                style=OTPDialog.Acknowledge,
-                command=self.requestCommand)
+            message = PLocalizer.PokerInsufficientChipsMessage % self.minimumChipsToSitDown()
+            self.requestDialog = PDialog.PDialog(text=message, style=OTPDialog.Acknowledge, command=self.requestCommand)
             self.setDialogBin(self.requestDialog)
             localAvatar.motionFSM.on()
             self.cr.interactionMgr.start()
         else:
-            DistributedGameTable.DistributedGameTable.requestSeatResponse(
-                self, answer, seatIndex)
+            DistributedGameTable.DistributedGameTable.requestSeatResponse(self, answer, seatIndex)
 
     def getPlayerInventoryCardCount(self, card_id):
         inventory = localAvatar.getInventory()
         if inventory:
-            amount = inventory.getStackQuantity(InventoryType.begin_Cards +
-                                                card_id)
+            amount = inventory.getStackQuantity(InventoryType.begin_Cards + card_id)
         else:
             amount = 0
         return amount

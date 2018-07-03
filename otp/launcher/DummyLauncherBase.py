@@ -31,8 +31,8 @@ class DummyLauncherBase:
         if ConfigVariableBool('fake-downloads', 0).getValue():
             from direct.showbase import Loader
             Loader.phaseChecker = self.loaderPhaseChecker
-            duration = ConfigVariableDouble('fake-download-duration',
-                                            60).getValue()
+            duration = ConfigVariableDouble(
+                'fake-download-duration', 60).getValue()
             self.fakeDownload(duration)
         else:
             for phase in self.LauncherPhases:
@@ -104,8 +104,9 @@ class DummyLauncherBase:
         percentComplete = min(
             100, int(round(task.time / float(task.timePerPhase) * 100)))
         self.setPhaseComplete(task.phase, percentComplete)
-        messenger.send('launcherPercentPhaseComplete',
-                       [task.phase, percentComplete, 0, 0])
+        messenger.send(
+            'launcherPercentPhaseComplete', [
+                task.phase, percentComplete, 0, 0])
         if percentComplete >= 100.0:
             messenger.send('phaseComplete-' + repr((task.phase)))
             return Task.done
@@ -132,13 +133,13 @@ class DummyLauncherBase:
             9: 0,
             10: 0,
             11: 0,
-            12: 0
-        }
+            12: 0}
         phaseTaskList = []
         firstPhaseIndex = self.LauncherPhases.index(self.firstPhase)
         for phase in self.LauncherPhases[firstPhaseIndex:]:
-            phaseTask = Task(self.fakeDownloadPhaseTask,
-                             'phaseDownload' + str(phase))
+            phaseTask = Task(
+                self.fakeDownloadPhaseTask,
+                'phaseDownload' + str(phase))
             phaseTask.timePerPhase = timePerPhase
             phaseTask.phase = phase
             phaseTaskList.append(phaseTask)
@@ -161,8 +162,8 @@ class DummyLauncherBase:
         if path.find('phase_') != -1:
             phaseStr = path[path.find('phase_') + 6]
             if path[path.find('phase_') + 7] == '.':
-                phaseStr = path[path.find('phase_') + 6] + path[path.find(
-                    'phase_') + 7] + path[path.find('phase_') + 8]
+                phaseStr = path[path.find(
+                    'phase_') + 6] + path[path.find('phase_') + 7] + path[path.find('phase_') + 8]
             phase = float(phaseStr)
             if phase in self.LauncherPhases:
                 if self.getPhaseComplete(phase):

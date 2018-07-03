@@ -8,9 +8,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 
-
 class DarkWaterFog(EffectController, NodePath):
-
+    
     cardScale = 64.0
 
     def __init__(self, radius=700, radiusSpread=300, lifespan=4.0):
@@ -22,8 +21,7 @@ class DarkWaterFog(EffectController, NodePath):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleGunSmoke')
         if not DarkWaterFog.particleDummy:
-            DarkWaterFog.particleDummy = render.attachNewNode(
-                ModelNode('DarkWaterFogParticleDummy'))
+            DarkWaterFog.particleDummy = render.attachNewNode(ModelNode('DarkWaterFogParticleDummy'))
             DarkWaterFog.particleDummy.setDepthWrite(0)
             DarkWaterFog.particleDummy.setColorScaleOff()
             DarkWaterFog.particleDummy.setLightOff()
@@ -62,8 +60,7 @@ class DarkWaterFog(EffectController, NodePath):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addConstant(
-            0.0, 1.0, Vec4(0.2, 0.3, 0.5, 0.3), 1)
+        self.p0.renderer.getColorInterpolationManager().addConstant(0.0, 1.0, Vec4(0.2, 0.3, 0.5, 0.3), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(-20.0)
         self.p0.emitter.setAmplitudeSpread(10.0)
@@ -74,14 +71,8 @@ class DarkWaterFog(EffectController, NodePath):
         self.p0.emitter.setRadiusSpread(self.radiusSpread)
 
     def createTrack(self):
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.02), Func(self.setPoolSize, 512),
-            Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(
-                self.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.setPoolSize, 512), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(self.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def tuneFog(self, alpha):

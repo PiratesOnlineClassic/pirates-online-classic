@@ -13,14 +13,14 @@ from pirates.effects.PooledEffect import PooledEffect
 
 class WaterRipple(PooledEffect, EffectController):
 
+
     def __init__(self, parent=None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
         if not WaterRipple.particleDummy:
-            WaterRipple.particleDummy = render.attachNewNode(
-                ModelNode('DarkAuraParticleDummy'))
+            WaterRipple.particleDummy = render.attachNewNode(ModelNode('DarkAuraParticleDummy'))
             WaterRipple.particleDummy.setDepthWrite(0)
             WaterRipple.particleDummy.setFogOff()
             WaterRipple.particleDummy.setBin('water', 50)
@@ -65,20 +65,9 @@ class WaterRipple(PooledEffect, EffectController):
         return
 
     def createTrack(self):
-        self.disturb = Sequence(
-            Func(self.p0.setEmitter, 'DiscEmitter'),
-            Func(self.p0.setBirthRate, 0.2),
-            Func(self.p0.factory.setLifespanBase, 2.5), Wait(1.0),
-            Func(self.p0.setEmitter, 'PointEmitter'),
-            Func(self.p0.setBirthRate, 1.0),
-            Func(self.p0.factory.setLifespanBase, 4.0))
-        self.startEffect = Sequence(
-            Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self), self.disturb)
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100.0), Wait(3.0),
-            Func(self.p0.setBirthRate, 0.0), Func(self.cleanUpEffect))
+        self.disturb = Sequence(Func(self.p0.setEmitter, 'DiscEmitter'), Func(self.p0.setBirthRate, 0.2), Func(self.p0.factory.setLifespanBase, 2.5), Wait(1.0), Func(self.p0.setEmitter, 'PointEmitter'), Func(self.p0.setBirthRate, 1.0), Func(self.p0.factory.setLifespanBase, 4.0))
+        self.startEffect = Sequence(Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), self.disturb)
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(3.0), Func(self.p0.setBirthRate, 0.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(2.0), self.endEffect)
 
     def setEffectScale(self, scale):
@@ -98,6 +87,4 @@ class WaterRipple(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\WaterRipple.pyc

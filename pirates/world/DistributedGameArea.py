@@ -29,7 +29,6 @@ from pirates.swamp.Swamp import Swamp
 from pirates.ai import HolidayGlobals
 from otp.ai.MagicWordGlobal import *
 
-
 class DistributedGameArea(DistributedNode.DistributedNode):
     notify = directNotify.newCategory('DistributedGameArea')
 
@@ -55,8 +54,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         self.timeCheck = 0
 
     def __repr__(self):
-        return '%s (%s)' % (DistributedNode.DistributedNode.__repr__(self),
-                            self.getName())
+        return '%s (%s)' % (DistributedNode.DistributedNode.__repr__(self), self.getName())
 
     def disable(self):
         taskMgr.remove('showEnterMessage')
@@ -89,7 +87,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             self.swamp_water.delete()
             del self.swamp_water
 
-    def setLocation(self, parentId, zoneId, teleport=0):
+    def setLocation(self, parentId, zoneId, teleport = 0):
         DistributedObject.DistributedObject.setLocation(self, parentId, zoneId)
         if parentId != 0:
             parentObj = self.cr.doId2do.get(parentId)
@@ -102,8 +100,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         self.modelPath = modelPath
 
     def handleChildArrive(self, childObj, zoneId):
-        DistributedNode.DistributedNode.handleChildArrive(
-            self, childObj, zoneId)
+        DistributedNode.DistributedNode.handleChildArrive(self, childObj, zoneId)
         if childObj.isLocal():
             childObj.refreshActiveQuestStep()
 
@@ -120,12 +117,14 @@ class DistributedGameArea(DistributedNode.DistributedNode):
     def loadModel(self):
         pass
 
-    @report(types=['frameCount', 'args'], dConfigParam=['want-jail-report'])
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report'])
     def setLinks(self, links):
         for link in links:
-            (areaNode, connId, areaUid, connParent, connZone, connNode,
-             connWorld, connWorldZone) = link
-            self.links.append([connId, connParent, connZone])
+            (areaNode, connId, areaUid, connParent, connZone, connNode, connWorld, connWorldZone) = link
+            self.links.append([
+                connId,
+                connParent,
+                connZone])
 
             def setupConnector(connector):
                 connector.interior = self
@@ -144,13 +143,11 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                     request = self.pendingSetupConnector.pop(connId)
                     self.cr.relatedObjectMgr.abortRequest(request)
 
-                request = self.cr.relatedObjectMgr.requestObjects(
-                    [connId], eachCallback=setupConnector)
+                request = self.cr.relatedObjectMgr.requestObjects([
+                    connId], eachCallback = setupConnector)
                 self.pendingSetupConnector[connId] = request
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam=['want-jail-report', 'want-teleport-report'])
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
     def loadConnectors(self):
         for link in self.links:
             if link:
@@ -160,19 +157,12 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                     parentId = link[1]
                     zoneId = link[2]
                     connectorEvent = 'connector-%s' % connectorId
-                    self.acceptOnce(
-                        connectorEvent,
-                        self.reparentConnector,
-                        extraArgs=[connectorId])
-                    self.cr.addTaggedInterest(parentId, zoneId,
-                                              ['Connectors-%s' % self.doId],
-                                              connectorEvent)
+                    self.acceptOnce(connectorEvent, self.reparentConnector, extraArgs = [connectorId])
+                    self.cr.addTaggedInterest(parentId, zoneId,['Connectors-%s' % self.doId], connectorEvent)
 
                 self.reparentConnector(connectorId)
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam=['want-jail-report', 'want-teleport-report'])
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
     def unloadConnectors(self):
         for (connectorId, connector) in self.connectors.iteritems():
             if connector:
@@ -180,14 +170,12 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 connector.turnOff()
 
         self.connectors = {}
-        self.cr.clearTaggedInterestNamed('connectorInterestCleared',
-                                         ['Connectors-%s' % self.doId])
+        self.cr.clearTaggedInterestNamed('connectorInterestCleared', [
+            'Connectors-%s' % self.doId])
 
         self.connectorInterests = set()
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam=['want-jail-report', 'want-teleport-report'])
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
     def reparentConnector(self, connectorId):
         connector = self.cr.doId2do.get(connectorId)
         if connector:
@@ -200,12 +188,9 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             else:
                 connector.turnOff()
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam=['want-jail-report', 'want-teleport-report'])
-    def handleEnterGameArea(self, collEntry=None):
-        if localAvatar.style.getTutorial(
-        ) == PiratesGlobals.TUT_CHAPTER3_STARTED:
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
+    def handleEnterGameArea(self, collEntry = None):
+        if localAvatar.style.getTutorial() == PiratesGlobals.TUT_CHAPTER3_STARTED:
             if localAvatar.chatMgr.noChat:
                 ct = ChatTutorialAlt.ChatTutorialAlt()
             else:
@@ -233,29 +218,23 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         self.displayGameAreaName(displayName)
         localAvatar.guiMgr.radarGui.showLocation(self.uniqueId)
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam=['want-jail-report', 'want-teleport-report'])
-    def handleExitGameArea(self, collEntry=None):
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
+    def handleExitGameArea(self, collEntry = None):
         UserFunnel.logSubmit(0, 'EXITING_' + str(self.funnelDisplayName))
         UserFunnel.logSubmit(1, 'EXITING_' + str(self.funnelDisplayName))
         self.previousDisplayName = None
         displayName = str(self.funnelDisplayName)
         timeSpent = int(time.time()) - int(self.readLocationTime())
-        if int(self.timeCheck) + 1 == int(timeSpent) or int(
-                self.timeCheck) - 1 == int(timeSpent) or int(
-                    self.timeCheck) == int(timeSpent):
+        if int(self.timeCheck) + 1 == int(timeSpent) or int(self.timeCheck) - 1 == int(timeSpent) or int(self.timeCheck) == int(timeSpent):
             return
-        self.cr.centralLogger.writeClientEvent(
-            'EXITING_AREA|%s|%d' % (displayName, timeSpent))
+        self.cr.centralLogger.writeClientEvent('EXITING_AREA|%s|%d' % (displayName, timeSpent))
         self.timeCheck = timeSpent
 
     def displayGameAreaName(self, displayName):
         self.funnelDisplayName = displayName
         if self.previousDisplayName != displayName:
             self.previousDisplayName = displayName
-            base.localAvatar.guiMgr.createTitle(displayName,
-                                                PiratesGuiGlobals.TextFG2)
+            base.localAvatar.guiMgr.createTitle(displayName, PiratesGuiGlobals.TextFG2)
 
     def setPlayerBarrier(self, isOn):
         pass
@@ -267,11 +246,10 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             collNode.setTag('groundCode', str(index))
             collNode.setTag('groundId', str(self.doId))
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
-                            targetEffects, pos, normal, codes, attacker):
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         pass
 
-    def startCustomEffects(self, interior=True):
+    def startCustomEffects(self, interior = True):
         if self.envEffects:
             self.envEffects.delete()
             self.envEffects = None
@@ -288,15 +266,13 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         elif self.uniqueId == '1189479168.0sdnaik0':
             r = Reflection.getGlobalReflection()
             saintPatricksDay = base.saintPatricksDay
-            water = SeaPatch(
-                self, reflection=r, saintPatricksDay=saintPatricksDay)
+            water = SeaPatch(self, reflection = r, saintPatricksDay = saintPatricksDay)
             water.loadSeaPatchFile('out.spf')
             self.water = water
             self.initializeIslandWaterParameters()
             self.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_DEFAULT)
         else:
-            self.envEffects = EnvironmentEffects.EnvironmentEffects(
-                self, self.modelPath)
+            self.envEffects = EnvironmentEffects.EnvironmentEffects(self, self.modelPath)
             if interior:
                 self.cr.timeOfDayManager.request('NoLighting')
 
@@ -322,9 +298,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
     def updateAvReturnLocation(self, av, uniqueId):
         pass
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam=['want-jail-report', 'want-teleport-report'])
+    @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
     def quickLoadOtherSide(self):
         connector = self.connectors.get(localAvatar.lastConnectorId)
         if connector:
@@ -339,10 +313,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             objectSphereNode.addSolid(objectSphere)
             objectSphereNode.setIntoCollideMask(PiratesGlobals.WallBitmask)
             objectSphereNodePath = self.attachNewNode(objectSphereNode)
-            self.accept(
-                'enter' + objectName,
-                self.handleEnterSphere,
-                extraArgs=[spawnPtId])
+            self.accept('enter' + objectName, self.handleEnterSphere, extraArgs = [spawnPtId])
             self.spawnTriggers.append(objectSphereNodePath)
 
     def handleEnterSphere(self, spawnPtId, entry):
@@ -390,39 +361,33 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         questId = localAvatar.activeQuestId
         if base.localAvatar.style.getTutorial() < PiratesGlobals.TUT_GOT_CUTLASS:
             questId = 'c2_visit_will_turner'
-            localAvatar.guiMgr.messageStack.addTextMessage(
-                PLocalizer.QuestStrings[questId]['blockerMessage'])
+            localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.QuestStrings[questId]['blockerMessage'])
         else:
             self.stashAllBlockers()
 
     def handleBlockerCollision(self, entry):
         questId = localAvatar.activeQuestId
         if base.localAvatar.style.getTutorial() < PiratesGlobals.TUT_GOT_CUTLASS:
-            localAvatar.guiMgr.messageStack.addTextMessage(
-                PLocalizer.QuestStrings[questId]['description'])
-        elif base.localAvatar.style.getTutorial(
-        ) < PiratesGlobals.TUT_KILLED_1_SKELETON:
+            localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.QuestStrings[questId]['description'])
+        elif base.localAvatar.style.getTutorial() < PiratesGlobals.TUT_KILLED_1_SKELETON:
             questId = 'c2.2defeatSkeletons'
-            localAvatar.guiMgr.messageStack.addTextMessage(
-                PLocalizer.QuestStrings[questId]['blockerMessage'])
-        elif base.localAvatar.style.getTutorial(
-        ) < PiratesGlobals.TUT_GOT_COMPASS:
+            localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.QuestStrings[questId]['blockerMessage'])
+        elif base.localAvatar.style.getTutorial() < PiratesGlobals.TUT_GOT_COMPASS:
             questId = 'c2_visit_tia_dalma'
             self.stashSpecificBlocker('blocker_0')
             if entry.getIntoNodePath().getName() != 'blocker_0':
-                localAvatar.guiMgr.messageStack.addTextMessage(
-                    PLocalizer.QuestStrings[questId]['blockerMessage'])
+                localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.QuestStrings[questId]['blockerMessage'])
         else:
             self.stashAllBlockers()
 
-    @report(types=['frameCount'], dConfigParam='want-connector-report')
-    def turnOn(self, av=None):
+    @report(types = ['frameCount'], dConfigParam = 'want-connector-report')
+    def turnOn(self, av = None):
         self.__onOffState = True
         for (id, connector) in self.connectors.iteritems():
             if connector:
                 connector.turnOn()
 
-    @report(types=['frameCount'], dConfigParam='want-connector-report')
+    @report(types = ['frameCount'], dConfigParam = 'want-connector-report')
     def turnOff(self):
         self.__onOffState = False
         for (id, connector) in self.connectors.iteritems():
@@ -432,15 +397,13 @@ class DistributedGameArea(DistributedNode.DistributedNode):
     def getOnOffState(self):
         return self.__onOffState
 
-    def getTeleportDestPosH(self, index=0):
+    def getTeleportDestPosH(self, index = 0):
         pt = self._getTunnelSpawnPos(index)
         return (pt[0], pt[1], pt[2], 0)
 
-    def _getTunnelSpawnPos(self, index=0):
-        connectorNodes = self.findAllMatches(
-            '**/portal_exterior*') + self.findAllMatches('**/portal_interior*')
-        return self.getRelativePoint(
-            connectorNodes[index % len(connectorNodes)], Point3(40, 0, 0))
+    def _getTunnelSpawnPos(self, index = 0):
+        connectorNodes = self.findAllMatches('**/portal_exterior*') + self.findAllMatches('**/portal_interior*')
+        return self.getRelativePoint(connectorNodes[index % len(connectorNodes)], Point3(40, 0, 0))
 
     def initializeIslandWaterParameters(self):
         debug = False
@@ -478,8 +441,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             island_water_parameters.map_x_scale = x_size
             island_water_parameters.map_y_scale = y_size
             if debug:
-                print 'X, Y, X SIZE, Y SIZE = ', min_point[0], min_point[
-                    1], x_size, y_size
+                print 'X, Y, X SIZE, Y SIZE = ', min_point[0], min_point[1], x_size, y_size
 
             texture = model.findTexture('*')
             if texture:
@@ -515,8 +477,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             island_water_parameters.alpha_map_x_scale = x_size
             island_water_parameters.alpha_map_y_scale = y_size
             if debug:
-                print 'ALPHA X, Y, X SIZE, Y SIZE = ', min_point[0], min_point[
-                    1], x_size, y_size
+                print 'ALPHA X, Y, X SIZE, Y SIZE = ', min_point[0], min_point[1], x_size, y_size
 
             texture = model.findTexture('*')
             if texture:
@@ -528,10 +489,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             print '*** water_alpha NODE NOT FOUND'
 
         use_shader = False
-        if base.config.GetBool(
-                'want-shaders',
-                1) and base.win and base.win.getGsg() and base.win.getGsg(
-                ).getShaderModel() >= GraphicsStateGuardian.SM20:
+        if base.config.GetBool('want-shaders', 1) and base.win and base.win.getGsg() and base.win.getGsg().getShaderModel() >= GraphicsStateGuardian.SM20:
             use_shader = True
 
         model_ns = self.geom.find('**/water_swamp_ns')
@@ -547,10 +505,8 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 stencil_one_node_path = NodePath('stencil_one')
                 stencil_one_node_path.reparentTo(parent)
                 model.instanceTo(stencil_one_node_path)
-                mask = 0xFFFFFFFF
-                stencil_one = StencilAttrib.make(
-                    1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep,
-                    StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
+                mask = 0xFFFFFFFFL
+                stencil_one = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
                 stencil_one_node_path.setAttrib(stencil_one, 100)
                 stencil_one_node_path.setDepthTest(0)
 
@@ -567,8 +523,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 card_x_size = 0.5
                 card_y_size = 0.5
                 card = CardMaker('test_texture_card')
-                card.setFrame(-card_x_size, card_x_size, -card_y_size,
-                              card_y_size)
+                card.setFrame(-card_x_size, card_x_size, -card_y_size, card_y_size)
                 card_node_path = NodePath(card.generate())
                 card_node_path.setTexture(texture, 1)
                 card_node_path.node().setBounds(OmniBoundingVolume())
@@ -590,10 +545,8 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 stencil_one_node_path = NodePath('stencil_one')
                 stencil_one_node_path.reparentTo(parent)
                 model.instanceTo(stencil_one_node_path)
-                mask = 0xFFFFFFFF
-                stencil_one = StencilAttrib.make(
-                    1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep,
-                    StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
+                mask = 0xFFFFFFFFL
+                stencil_one = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
                 stencil_one_node_path.setAttrib(stencil_one, 100)
                 stencil_one_node_path.setDepthTest(0)
                 min_point = Point3(0)
@@ -615,8 +568,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 island_water_parameters.swamp_map_x_scale = x_size
                 island_water_parameters.swamp_map_y_scale = y_size
                 if debug:
-                    print 'X, Y, X SIZE, Y SIZE = ', min_point[0], min_point[
-                        1], x_size, y_size
+                    print 'X, Y, X SIZE, Y SIZE = ', min_point[0], min_point[1], x_size, y_size
 
                 texture = model.findTexture('*')
                 if texture:
@@ -629,16 +581,11 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 opacity_texture_file_path = None
                 shader_file_path = 'models/swamps/cuba_swamp001_2X.cg'
                 reflection = Reflection.getGlobalReflection()
-                self.swamp_water = Swamp(None, None, reflection, model,
-                                         shader_file_path)
+                self.swamp_water = Swamp(None, None, reflection, model, shader_file_path)
                 island_water_parameters.swamp_water = self.swamp_water
                 unload_previous_texture = True
-                self.swamp_water.set_water_color_texture(
-                    water_color_file_path, unload_previous_texture,
-                    model_texture)
-                self.swamp_water.set_water_alpha_texture(
-                    alpha_texture_file_path, unload_previous_texture,
-                    model_alpha_texture)
+                self.swamp_water.set_water_color_texture(water_color_file_path, unload_previous_texture, model_texture)
+                self.swamp_water.set_water_alpha_texture(alpha_texture_file_path, unload_previous_texture, model_alpha_texture)
                 self.swamp_water.set_wrap_or_clamp(True)
                 r = 37.0
                 g = 62.0
@@ -665,7 +612,6 @@ class DistributedGameArea(DistributedNode.DistributedNode):
 
     def getLevel(self):
         return 1
-
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def visualizeGrid():

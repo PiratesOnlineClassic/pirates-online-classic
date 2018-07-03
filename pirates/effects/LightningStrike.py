@@ -14,7 +14,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class LightningStrike(PooledEffect, EffectController):
-
+    
     soundFx = []
     soundFxNames = ('thunderclap.mp3', 'thunder-start.mp3')
 
@@ -39,10 +39,7 @@ class LightningStrike(PooledEffect, EffectController):
         self.flashDummy.reparentTo(self)
         self.flashDummy.setScale(self.startScale)
         self.flashDummy.hide()
-        self.flashDummy.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingAlpha,
-                                  ColorBlendAttrib.OOne))
+        self.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.flasha = loader.loadModelCopy('models/effects/lightning_strike')
         self.flasha.reparentTo(self.flashDummy)
         self.flashb = loader.loadModelCopy('models/effects/lightning_strike')
@@ -55,23 +52,11 @@ class LightningStrike(PooledEffect, EffectController):
             self.flasha.setH(random.uniform(-60.0, 60.0))
         else:
             self.flasha.setH(random.uniform(120.0, 240.0))
-        fadeOut = self.flashDummy.colorScaleInterval(
-            self.fadeTime, Vec4(0, 0, 0, 0), startColorScale=self.fadeColor)
-        scaleBlast = self.flashDummy.scaleInterval(
-            self.fadeTime * 2 + self.waitTime,
-            self.endScale,
-            startScale=self.startScale,
-            blendType='easeOut')
+        fadeOut = self.flashDummy.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale=self.fadeColor)
+        scaleBlast = self.flashDummy.scaleInterval(self.fadeTime * 2 + self.waitTime, self.endScale, startScale=self.startScale, blendType='easeOut')
         sfx = random.choice(self.soundFx)
         sfx.setVolume(1.0)
-        self.track = Sequence(
-            Func(self.flashDummy.show),
-            Parallel(
-                SoundInterval(sfx), Sequence(Wait(self.waitTime), fadeOut),
-                scaleBlast), Func(self.flashDummy.hide),
-            Func(self.flashDummy.setScale, 1.0),
-            Func(self.flashDummy.setColorScale, Vec4(1, 1, 1, 1)),
-            Func(self.cleanUpEffect))
+        self.track = Sequence(Func(self.flashDummy.show), Parallel(SoundInterval(sfx), Sequence(Wait(self.waitTime), fadeOut), scaleBlast), Func(self.flashDummy.hide), Func(self.flashDummy.setScale, 1.0), Func(self.flashDummy.setColorScale, Vec4(1, 1, 1, 1)), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -81,6 +66,4 @@ class LightningStrike(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\LightningStrike.pyc

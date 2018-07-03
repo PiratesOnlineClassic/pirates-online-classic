@@ -16,8 +16,7 @@ class QuestStatus:
         self.av = av
         self.ladders = {}
         self.choiceContainers = {}
-        self.invRequest = DistributedInventoryBase.DistributedInventoryBase.getInventory(
-            self.av.inventoryId, self.createLadders)
+        self.invRequest = DistributedInventoryBase.DistributedInventoryBase.getInventory(self.av.inventoryId, self.createLadders)
         self.NPCInteractMode = False
         self.cacheHistoryMode = False
         self.ladderDeleteList = []
@@ -35,8 +34,7 @@ class QuestStatus:
             self.ladders = {}
             self.ladderDeleteList = []
             self.av = None
-            DistributedInventoryBase.DistributedInventoryBase.cancelGetInventory(
-                self.invRequest)
+            DistributedInventoryBase.DistributedInventoryBase.cancelGetInventory(self.invRequest)
 
         return
 
@@ -68,9 +66,8 @@ class QuestStatus:
         questId = quest.getQuestId()
         for ladderId, ladderDNA in QuestLadderDB.FameQuestLadderDict.items():
             if ladderDNA.hasQuest(questId):
-                if ladderId not in self.ladders:
-                    self.ladders[ladderId] = ladderDNA.constructDynamicCopy(
-                        self.av)
+                if not self.ladders.has_key(ladderId):
+                    self.ladders[ladderId] = ladderDNA.constructDynamicCopy(self.av)
                 ladder = self.ladders[ladderId]
                 if ladder.linkQuest(quest):
                     if populateHistory:
@@ -81,9 +78,8 @@ class QuestStatus:
 
         for ladderId, ladderDNA in QuestLadderDB.FortuneQuestLadderDict.items():
             if ladderDNA.hasQuest(questId):
-                if ladderId not in self.ladders:
-                    self.ladders[ladderId] = ladderDNA.constructDynamicCopy(
-                        self.av)
+                if not self.ladders.has_key(ladderId):
+                    self.ladders[ladderId] = ladderDNA.constructDynamicCopy(self.av)
                 ladder = self.ladders[ladderId]
                 if ladder.linkQuest(quest):
                     if populateHistory:
@@ -107,28 +103,27 @@ class QuestStatus:
 
         if not ladderActive:
             ladderName = ladder.getName()
-            if ladderName in QuestLadderDB.FortuneQuestLadderDict:
+            if QuestLadderDB.FortuneQuestLadderDict.has_key(ladderName):
                 ladder.destroy()
-                if ladderName in self.ladders:
+                if self.ladders.has_key(ladderName):
                     del self.ladders[ladderName]
                 else:
                     self.notify.warning('%s not in ladders dict!' % ladderName)
-            elif ladderName in QuestLadderDB.FameQuestLadderDict:
+            elif QuestLadderDB.FameQuestLadderDict.has_key(ladderName):
                 self.notify.warning('%s: final quest dropped!' % ladderName)
             else:
-                self.notify.warning(
-                    '%s not in fame or fortune dict!' % ladderName)
+                self.notify.warning('%s not in fame or fortune dict!' % ladderName)
 
     def handleLadderComplete(self, ladder):
         ladderName = ladder.getName()
-        if ladderName not in self.ladders:
+        if not self.ladders.has_key(ladderName):
             self.notify.warning('%s not in ladders dict!' % ladderName)
             ladder.destroy()
         else:
             self.ladderDeleteList.append(ladderName)
 
     def deleteLadder(self, ladderName):
-        if ladderName in self.ladders:
+        if self.ladders.has_key(ladderName):
             self.ladders[ladderName].destroy()
             del self.ladders[ladderName]
         else:
@@ -141,8 +136,7 @@ class QuestStatus:
             return
         quests = inventory.getQuestList()
         if len(quests) == 0:
-            self.notify.warning(
-                'av: %s has no active quests!' % self.av.getDoId())
+            self.notify.warning('av: %s has no active quests!' % self.av.getDoId())
             return
         return quests
 
@@ -158,8 +152,7 @@ class QuestStatus:
         nameInt = container.getQuestInt()
         containers = self.av.getCurrentQuestChoiceContainers()
         if nameInt in containers:
-            self.notify.warning(
-                '%d already in choice container list!' % nameInt)
+            self.notify.warning('%d already in choice container list!' % nameInt)
             return
         containers.append(nameInt)
         if self.cacheHistoryMode == False:
@@ -178,7 +171,7 @@ class QuestStatus:
         else:
             self.av.setCurrentQuestChoiceContainers(containers)
         name = container.getName()
-        if name in self.choiceContainers:
+        if self.choiceContainers.has_key(name):
             del self.choiceContainers[name]
 
     def clearHistory(self):
@@ -209,8 +202,7 @@ class QuestStatus:
             questInt = container.getQuestInt()
             print 'QuestInt in question: %s' % questInt
             if questInt in ladderHistory:
-                self.notify.warning('For avatar: %s; Purging child questInt: %s'
-                                    % (self.av.doId, questInt))
+                self.notify.warning('For avatar: %s; Purging child questInt: %s' % (self.av.doId, questInt))
                 ladderHistory.remove(questInt)
 
         newQuestInt = completedContainer.getQuestInt()
@@ -243,7 +235,8 @@ class QuestStatus:
         completedLadders = self.av.getQuestLadderHistory()
         for offer in offers:
             if offer.getQuestInt() not in completedLadders:
-                finalOffers = [offer] + finalOffers
+                finalOffers = [
+                 offer] + finalOffers
 
         totalOffers = container.getContainers()
         numIncomplete = 0
@@ -254,7 +247,8 @@ class QuestStatus:
         numAssignedIncomplete = numIncomplete - len(finalOffers)
         if len(finalOffers) == 0:
             pass
-        return (finalOffers, container, numAssignedIncomplete)
+        return (
+         finalOffers, container, numAssignedIncomplete)
 
     def hasLadderQuest(self, quest):
         return self.hasLadderQuestId(quest.getQuestId())
@@ -320,22 +314,15 @@ class QuestStatus:
                     includeSelf = True
                     if completedStubCount > 1:
                         if questId == container.getName():
-                            self.notify.debug(
-                                'getCompletedContainer().questId Excluded: %s' %
-                                questId)
-                            self.notify.debug(
-                                'getCompletedContainer().completedStubCount: %s'
-                                % completedStubCount)
+                            self.notify.debug('getCompletedContainer().questId Excluded: %s' % questId)
+                            self.notify.debug('getCompletedContainer().completedStubCount: %s' % completedStubCount)
                             includeSelf = False
-                    if container and container.hasQuest(
-                            questId) and includeSelf:
+                    if container and container.hasQuest(questId) and includeSelf:
                         ladderName = ladder.getName()
                         if ladderName in self.ladderDeleteList:
                             self.deleteLadder(ladderName)
                             self.ladderDeleteList.remove(ladderName)
-                        self.notify.debug(
-                            'getCompletedContainer().container.getName() Returned: %s'
-                            % container.getName())
+                        self.notify.debug('getCompletedContainer().container.getName() Returned: %s' % container.getName())
                         return container
 
         return
@@ -373,6 +360,4 @@ class QuestStatus:
                 offers.append(ladder)
 
         return offers
-
-
 # okay decompiling .\pirates\quest\QuestStatus.pyc

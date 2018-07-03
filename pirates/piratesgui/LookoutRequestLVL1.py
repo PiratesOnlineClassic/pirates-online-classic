@@ -21,7 +21,7 @@ from pirates.world import GameTypeGlobals
 
 
 class LookoutRequestLVL1(InventoryPage):
-
+    
     notify = directNotify.newCategory('LookoutRequestLVL1')
     ICON_2D_ROTATE = 0
     ICON_2D_FLASH = 1
@@ -65,7 +65,8 @@ class LookoutRequestLVL1(InventoryPage):
         self.searchIconImg = 0
         self.searchParams = {}
         self.iconAnimType = self.ICON_2D_ROTATE
-        self.inviteModes = [PiratesGlobals.LOOKOUT_INVITE_NONE]
+        self.inviteModes = [
+         PiratesGlobals.LOOKOUT_INVITE_NONE]
         self.additionalAvs = []
         self.invited = None
         self.timerTask = None
@@ -84,22 +85,19 @@ class LookoutRequestLVL1(InventoryPage):
         self.additionalAvs = additionalAvs
 
     def clearInviteOptions(self):
-        self.inviteModes = [PiratesGlobals.LOOKOUT_INVITE_NONE]
+        self.inviteModes = [
+         PiratesGlobals.LOOKOUT_INVITE_NONE]
         self.additionalAvs = []
 
-    def setSearchActive(self,
-                        active,
-                        newMode=PiratesGuiGlobals.REQUEST_CAT_MODE):
+    def setSearchActive(self, active, newMode=PiratesGuiGlobals.REQUEST_CAT_MODE):
         self.searchActive = active
         mode = newMode
         if active:
-            taskMgr.doMethodLater(0.1, self.updateActiveLookout,
-                                  self.getUpdateActiveLookoutTaskName())
+            taskMgr.doMethodLater(0.1, self.updateActiveLookout, self.getUpdateActiveLookoutTaskName())
             self.guiMgr.chestTray.buildShowHideButtonsIvals(includeSticky=False)
         else:
             if hasattr(base, 'localAvatar'):
-                self.guiMgr.chestTray.buildShowHideButtonsIvals(
-                    includeSticky=True)
+                self.guiMgr.chestTray.buildShowHideButtonsIvals(includeSticky=True)
                 self.searchIconImg = 0
             if taskMgr.hasTaskNamed(self.getUpdateActiveLookoutTaskName()):
                 taskMgr.remove(self.getUpdateActiveLookoutTaskName())
@@ -153,14 +151,12 @@ class LookoutRequestLVL1(InventoryPage):
         self.updateMode(PiratesGuiGlobals.REQUEST_CAT_MODE)
 
     def showStatus(self):
-        if self.foundType and 'type' in self.searchParams:
+        if self.foundType and self.searchParams.has_key('type'):
             self.foundType.show()
-            self.foundType[
-                'text'] = PLocalizer.LookoutFoundStatusType % self.searchParams['type']
-        if self.foundCat and 'cat' in self.searchParams:
+            self.foundType['text'] = PLocalizer.LookoutFoundStatusType % self.searchParams['type']
+        if self.foundCat and self.searchParams.has_key('cat'):
             self.foundCat.show()
-            self.foundCat[
-                'text'] = PLocalizer.LookoutFoundStatusCat % self.searchParams['cat']
+            self.foundCat['text'] = PLocalizer.LookoutFoundStatusCat % self.searchParams['cat']
         if self.SearchContButton:
             self.SearchContButton.show()
         if self.SearchCancelButton:
@@ -263,58 +259,35 @@ class LookoutRequestLVL1(InventoryPage):
                         if tm.mapId == PiratesGlobals.GAME_STYLE_TM_BLACK_PEARL:
                             tm.requestTreasureMapGo(quickStart)
 
-            DistributedInventoryBase.DistributedInventoryBase.getInventory(
-                localAvatar.inventoryId, beginTreasureMap)
+            DistributedInventoryBase.DistributedInventoryBase.getInventory(localAvatar.inventoryId, beginTreasureMap)
             del beginTreasureMap
             return
         inviting = self.inviteModes != [PiratesGlobals.LOOKOUT_INVITE_NONE]
-        if inviting == False and self.invited == None and DistributedBandMember.DistributedBandMember.getBandMember(
-                localAvatar.doId):
+        if inviting == False and self.invited == None and DistributedBandMember.DistributedBandMember.getBandMember(localAvatar.doId):
             inviting = True
             self.setInviteOptions([PiratesGlobals.LOOKOUT_INVITE_CREW])
         if inviting:
-            options.append([
-                str(GameTypeGlobals.GAME_OPTION_VIP_PASS),
-                str(localAvatar.doId)
-            ])
+            options.append([str(GameTypeGlobals.GAME_OPTION_VIP_PASS), str(localAvatar.doId)])
         else:
             if self.invited:
                 self.notify.debug('I was invited')
                 beingInvited = True
                 for currOption in self.invited[2]:
-                    if currOption[0] == str(
-                            GameTypeGlobals.GAME_OPTION_VIP_PASS
-                    ) or currOption[0] == str(
-                            GameTypeGlobals.GAME_OPTION_DESIRED_PLAYERS):
+                    if currOption[0] == str(GameTypeGlobals.GAME_OPTION_VIP_PASS) or currOption[0] == str(GameTypeGlobals.GAME_OPTION_DESIRED_PLAYERS):
                         options.append([currOption[0], currOption[1]])
 
                 self.invitedTimedOut()
 
         def finishSubmitRequest(options, shipIds):
-            self.searchParams = {
-                'cat':
-                GameTypeGlobals.getGameTypeString(gameCat, 'type'),
-                'type':
-                GameTypeGlobals.getGameTypeString(
-                    gameType, 'style', category=gameCat),
-                'catId':
-                gameCat,
-                'typeId':
-                gameType,
-                'opts':
-                options
-            }
+            self.searchParams = {'cat': GameTypeGlobals.getGameTypeString(gameCat, 'type'), 'type': GameTypeGlobals.getGameTypeString(gameType, 'style', category=gameCat), 'catId': gameCat, 'typeId': gameType, 'opts': options}
             selectedVal = self.getSelectedValue()
             if inviting:
                 self.notify.debug('sending invites %s' % self.inviteModes)
-                localAvatar.sendUpdate('requestInvites', [
-                    self.inviteModes, selectedVal, gameType, options,
-                    self.additionalAvs
-                ])
-                self.invitesParams = [gameType, selectedVal, options, shipIds]
+                localAvatar.sendUpdate('requestInvites', [self.inviteModes, selectedVal, gameType, options, self.additionalAvs])
+                self.invitesParams = [
+                 gameType, selectedVal, options, shipIds]
             else:
-                localAvatar.requestActivity(gameType, selectedVal, options,
-                                            shipIds)
+                localAvatar.requestActivity(gameType, selectedVal, options, shipIds)
                 self.invitesParams = None
             if self.PANEL_AUTO_HIDE:
                 self.toggleVis()
@@ -347,9 +320,7 @@ class LookoutRequestLVL1(InventoryPage):
                 shipIds = inventory.getShipDoIdList()
             else:
                 shipIds = []
-                self.notify.warning(
-                    'could not find inventory in addShipOptions, avId = %s, inventoryId = %s'
-                    % (localAvatar.doId, localAvatar.inventoryId))
+                self.notify.warning('could not find inventory in addShipOptions, avId = %s, inventoryId = %s' % (localAvatar.doId, localAvatar.inventoryId))
             for currShipId in shipIds:
                 shipView = base.cr.getOwnerView(currShipId)
                 if not shipView:
@@ -360,13 +331,10 @@ class LookoutRequestLVL1(InventoryPage):
                     maxCrew = newMaxCrew
                     maxShip = [currShipId]
 
-            options.append(
-                [str(GameTypeGlobals.GAME_OPTION_MAX_CREW_SIZE),
-                 str(maxCrew)])
+            options.append([str(GameTypeGlobals.GAME_OPTION_MAX_CREW_SIZE), str(maxCrew)])
             callback(options, maxShip)
 
-        DistributedInventoryBase.DistributedInventoryBase.getInventory(
-            localAvatar.inventoryId, receiveInventory)
+        DistributedInventoryBase.DistributedInventoryBase.getInventory(localAvatar.inventoryId, receiveInventory)
 
     def requestJoin(self):
 
@@ -384,8 +352,7 @@ class LookoutRequestLVL1(InventoryPage):
         self.toggleVis()
         self.mm.requestJoin(self.joinId)
         description = PLocalizer.LookoutJoinMsg
-        self.guiMgr.messageStack.addTextMessage(
-            description, icon=('lookout', None))
+        self.guiMgr.messageStack.addTextMessage(description, icon=('lookout', None))
         self.setSearchActive(False, newMode=PiratesGuiGlobals.REQUEST_JOIN_MODE)
         localAvatar.b_setTeleportFlag(PiratesGlobals.TFLookoutJoined)
         return
@@ -410,45 +377,21 @@ class LookoutRequestLVL1(InventoryPage):
         for currGameType in allGameTypes:
             if GameTypeGlobals.GameTypes[currGameType].get('hidden'):
                 continue
-            itemList.append({
-                'Text':
-                GameTypeGlobals.getGameTypeString(currGameType, 'type'),
-                'Icon':
-                GameTypeGlobals.getGameTypeString(currGameType, 'icon'),
-                'Value':
-                currGameType
-            })
+            itemList.append({'Text': GameTypeGlobals.getGameTypeString(currGameType, 'type'), 'Icon': GameTypeGlobals.getGameTypeString(currGameType, 'icon'), 'Value': currGameType})
 
         return itemList
 
-    def createNewItem(self,
-                      item,
-                      parent,
-                      itemType=None,
-                      columnWidths=[],
-                      color=None):
+    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
         if self.UI_VERSION == 0:
-            newItem = ButtonListItem(
-                item,
-                0.08,
-                0.75,
-                parent,
-                parentList=self,
-                txtColor=color,
-                pressEffect=False,
-                frameColor=(0, 0, 0, 0))
+            newItem = ButtonListItem(item, 0.08, 0.75, parent, parentList=self, txtColor=color, pressEffect=False, frameColor=(0,
+                                                                                                                               0,
+                                                                                                                               0,
+                                                                                                                               0))
         else:
-            newItem = LookoutListItem(
-                item,
-                self.TOPLEVEL_GUI_FILE,
-                0.16,
-                0.75,
-                parent,
-                parentList=self,
-                txtColor=color,
-                pressEffect=False,
-                frameColor=(0, 0, 0, 0),
-                wantFrame=True)
+            newItem = LookoutListItem(item, self.TOPLEVEL_GUI_FILE, 0.16, 0.75, parent, parentList=self, txtColor=color, pressEffect=False, frameColor=(0,
+                                                                                                                                                        0,
+                                                                                                                                                        0,
+                                                                                                                                                        0), wantFrame=True)
         newItem.setup()
         return newItem
 
@@ -458,21 +401,10 @@ class LookoutRequestLVL1(InventoryPage):
             availItems = []
             if gameStylz:
                 for currStyle in gameStylz:
-                    styleName = (GameTypeGlobals.getGameTypeString(
-                        currStyle, 'style', category),)
-                    desc = (GameTypeGlobals.getGameTypeString(
-                        currStyle, 'descriptionStyle', category),)
-                    availItems.append({
-                        'Text':
-                        styleName,
-                        'Desc':
-                        desc,
-                        'Icon':
-                        GameTypeGlobals.getGameTypeString(
-                            currStyle, 'iconStyle'),
-                        'Value':
-                        currStyle
-                    })
+                    styleName = (
+                     GameTypeGlobals.getGameTypeString(currStyle, 'style', category),)
+                    desc = (GameTypeGlobals.getGameTypeString(currStyle, 'descriptionStyle', category),)
+                    availItems.append({'Text': styleName, 'Desc': desc, 'Icon': GameTypeGlobals.getGameTypeString(currStyle, 'iconStyle'), 'Value': currStyle})
 
             callback(availItems)
 
@@ -527,11 +459,7 @@ class LookoutRequestLVL1(InventoryPage):
         def buildLvl2(itemList):
             if itemList and len(itemList) > 0:
                 gameCatStr = GameTypeGlobals.getGameTypeString(gameCat, 'type')
-                self.typePanel = LookoutRequestLVL2(
-                    gameCatStr,
-                    titleTextScale=0.05,
-                    itemList=itemList,
-                    parentPanel=self)
+                self.typePanel = LookoutRequestLVL2(gameCatStr, titleTextScale=0.05, itemList=itemList, parentPanel=self)
                 self.typePanel.reparentTo(self)
                 self.typePanel.setPos(0, 0, 0)
             else:
@@ -614,20 +542,17 @@ class LookoutRequestLVL1(InventoryPage):
     def showRequestFound(self):
         if self.foundType:
             self.foundType.show()
-            self.foundType[
-                'text'] = PLocalizer.LookoutFoundStatusType % self.searchParams['type']
+            self.foundType['text'] = PLocalizer.LookoutFoundStatusType % self.searchParams['type']
         if self.foundCat:
             self.foundCat.show()
-            self.foundCat[
-                'text'] = PLocalizer.LookoutFoundStatusCat % self.searchParams['cat']
+            self.foundCat['text'] = PLocalizer.LookoutFoundStatusCat % self.searchParams['cat']
         if self.foundJoinButton:
             self.foundJoinButton.show()
         if self.foundDontJoinButton:
             self.foundDontJoinButton.show()
         if self.SearchCancelButton:
             self.SearchCancelButton.show()
-        self.startTimer(
-            self.joinTimeout, autoHide=self.TIMER_AUTO_HIDE_MODE_PAGECHANGE)
+        self.startTimer(self.joinTimeout, autoHide=self.TIMER_AUTO_HIDE_MODE_PAGECHANGE)
 
     def hideJoinMode(self):
         if self.foundType:
@@ -640,27 +565,18 @@ class LookoutRequestLVL1(InventoryPage):
     def showJoinMode(self):
         if self.foundType:
             self.foundType.show()
-            self.foundType[
-                'text'] = PLocalizer.LookoutFoundStatusType % self.searchParams['type']
+            self.foundType['text'] = PLocalizer.LookoutFoundStatusType % self.searchParams['type']
         if self.foundCat:
             self.foundCat.show()
-            self.foundCat[
-                'text'] = PLocalizer.LookoutFoundStatusCat % self.searchParams['cat']
+            self.foundCat['text'] = PLocalizer.LookoutFoundStatusCat % self.searchParams['cat']
         taskMgr.remove('joinedGameAbandon')
         if base.config.GetBool('disable-cancel-join-delay', False):
             numMinutes = 0
         else:
             numMinutes = 2
-        taskMgr.doMethodLater(
-            60 * numMinutes,
-            self._showJoinedAbandon,
-            'joinedGameAbandon',
-            extraArgs=[])
+        taskMgr.doMethodLater(60 * numMinutes, self._showJoinedAbandon, 'joinedGameAbandon', extraArgs=[])
 
-    def startTimer(self,
-                   time,
-                   callback=None,
-                   autoHide=TIMER_AUTO_HIDE_MODE_TIMEOUT):
+    def startTimer(self, time, callback=None, autoHide=TIMER_AUTO_HIDE_MODE_TIMEOUT):
         if self.timerTask:
             taskMgr.remove(self.timerTask)
         self.timerTask = taskMgr.add(self._updateTimer, 'lookoutTimer')
@@ -772,19 +688,16 @@ class LookoutRequestLVL1(InventoryPage):
     def createButtonAndText(self, imageInfo=None, textInfo=None):
         if imageInfo == None:
             lookoutUI = loader.loadModel(self.LOOKOUT_GUI_FILE)
-            images = (lookoutUI.find('**/lookout_submit'),
-                      lookoutUI.find('**/lookout_submit_down'),
-                      lookoutUI.find('**/lookout_submit_over'),
-                      lookoutUI.find('**/lookout_submit_disabled'))
+            images = (lookoutUI.find('**/lookout_submit'), lookoutUI.find('**/lookout_submit_down'), lookoutUI.find('**/lookout_submit_over'), lookoutUI.find('**/lookout_submit_disabled'))
             buttonPos = (0.83, 0, 0.15)
         else:
             uiTexture = imageInfo.get('textureCard')
             buttonImage = imageInfo.get('imageName')
-            imagePostfixes = ['', '_down', '_over', '_disabled']
+            imagePostfixes = [
+             '', '_down', '_over', '_disabled']
             images = []
             for currImagePostfix in imagePostfixes:
-                imageFound = uiTexture.find('**/' + buttonImage +
-                                            currImagePostfix)
+                imageFound = uiTexture.find('**/' + buttonImage + currImagePostfix)
                 if imageFound and not imageFound.isEmpty():
                     images.append(imageFound)
                 else:
@@ -795,76 +708,29 @@ class LookoutRequestLVL1(InventoryPage):
             buttonScale = imageInfo.get('buttonScale')
             command = imageInfo.get('clickCommand')
             buttonParent = imageInfo.get('parent', self)
-        button = DirectButton(
-            parent=buttonParent,
-            relief=None,
-            image=images,
-            command=command,
-            pos=buttonPos,
-            scale=buttonScale,
-            image_hpr=buttonHpr)
+        button = DirectButton(parent=buttonParent, relief=None, image=images, command=command, pos=buttonPos, scale=buttonScale, image_hpr=buttonHpr)
         text = None
         if textInfo:
-            text = DirectLabel(
-                parent=button,
-                state=DGG.DISABLED,
-                relief=None,
-                text=textInfo,
-                text_align=TextNode.ACenter,
-                text_scale=0.18,
-                text_fg=PiratesGuiGlobals.TextFG1,
-                text_shadow=PiratesGuiGlobals.TextShadow,
-                textMayChange=1,
-                pos=(0, 0, -0.35))
-        return [button, text]
+            text = DirectLabel(parent=button, state=DGG.DISABLED, relief=None, text=textInfo, text_align=TextNode.ACenter, text_scale=0.18, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0, 0, -0.35))
+        return [
+         button, text]
 
     def createRequestIface(self):
         if self.UI_VERSION == 0:
             lookoutUI = loader.loadModel(self.LOOKOUT_GUI_FILE)
-            self.submitButton, self.submitButtonText = self.createButtonAndText(
-                imageInfo={
-                    'textureCard': lookoutUI,
-                    'imageName': 'lookout_submit',
-                    'buttonPos': (0.88, 0, 0.15),
-                    'buttonScale': 0.3,
-                    'clickCommand': self.submitRequest
-                },
-                textInfo=PLocalizer.LookoutSubmit)
+            self.submitButton, self.submitButtonText = self.createButtonAndText(imageInfo={'textureCard': lookoutUI, 'imageName': 'lookout_submit', 'buttonPos': (0.88, 0, 0.15), 'buttonScale': 0.3, 'clickCommand': self.submitRequest}, textInfo=PLocalizer.LookoutSubmit)
             self.submitButton['state'] = DGG.DISABLED
-            self.nextButton, self.nextButtonText = self.createButtonAndText(
-                imageInfo={
-                    'textureCard': lookoutUI,
-                    'imageName': 'lookout_forward',
-                    'buttonPos': (0.88, 0, 0.15),
-                    'buttonHpr': (0, 0, 180),
-                    'buttonScale': 0.3,
-                    'clickCommand': self.nextClick
-                },
-                textInfo=PLocalizer.LookoutNext)
+            self.nextButton, self.nextButtonText = self.createButtonAndText(imageInfo={'textureCard': lookoutUI, 'imageName': 'lookout_forward', 'buttonPos': (0.88, 0, 0.15), 'buttonHpr': (0, 0, 180), 'buttonScale': 0.3, 'clickCommand': self.nextClick}, textInfo=PLocalizer.LookoutNext)
             self.nextButton['state'] = DGG.DISABLED
-            self.backButton, self.backButtonText = self.createButtonAndText(
-                imageInfo={
-                    'textureCard': lookoutUI,
-                    'imageName': 'lookout_forward',
-                    'buttonPos': (0.69, 0, 0.15),
-                    'buttonScale': 0.3,
-                    'clickCommand': self.backClick
-                },
-                textInfo=PLocalizer.LookoutBack)
+            self.backButton, self.backButtonText = self.createButtonAndText(imageInfo={'textureCard': lookoutUI, 'imageName': 'lookout_forward', 'buttonPos': (0.69, 0, 0.15), 'buttonScale': 0.3, 'clickCommand': self.backClick}, textInfo=PLocalizer.LookoutBack)
         else:
             lookoutUI = loader.loadModel(self.LOOKOUT_GUI_FILE)
             self.updateTitle()
-            self.backButton, self.backButtonText = self.createButtonAndText(
-                imageInfo={
-                    'textureCard': lookoutUI,
-                    'imageName': 'lookout_forward',
-                    'buttonPos': (0.69, 0, 0.15),
-                    'buttonScale': 0.3,
-                    'clickCommand': self.backClick
-                },
-                textInfo=PLocalizer.LookoutBack)
-        self.activityListItems = ListFrame(
-            0.8, None, 'blah', self, frameColor=(0, 0, 0, 0))
+            self.backButton, self.backButtonText = self.createButtonAndText(imageInfo={'textureCard': lookoutUI, 'imageName': 'lookout_forward', 'buttonPos': (0.69, 0, 0.15), 'buttonScale': 0.3, 'clickCommand': self.backClick}, textInfo=PLocalizer.LookoutBack)
+        self.activityListItems = ListFrame(0.8, None, 'blah', self, frameColor=(0,
+                                                                                0,
+                                                                                0,
+                                                                                0))
         self.activityListItems.setup()
         if self.UI_VERSION == 0:
             size = (0, 0.82, 0, 0.5)
@@ -875,20 +741,10 @@ class LookoutRequestLVL1(InventoryPage):
         charUI = loader.loadModel(self.CHAR_GUI_FILE)
         charGui_slider = charUI.find('**/chargui_slider_large')
         charGui_slider_thumb = charUI.find('**/chargui_slider_node')
-        self.activityList = DirectScrolledFrame(
-            parent=self,
-            frameSize=size,
-            relief=DGG.GROOVE,
-            state=DGG.NORMAL,
-            frameColor=(0, 0, 0, 0),
-            borderWidth=PiratesGuiGlobals.BorderWidth,
-            canvasSize=(0, 0.7, 0, self.activityListItems['frameSize'][3]),
-            verticalScroll_image=charGui_slider,
-            verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0,
-                                      self.height * 0.8),
-            verticalScroll_thumb_image=charGui_slider_thumb,
-            sortOrder=5,
-            pos=pos)
+        self.activityList = DirectScrolledFrame(parent=self, frameSize=size, relief=DGG.GROOVE, state=DGG.NORMAL, frameColor=(0,
+                                                                                                                              0,
+                                                                                                                              0,
+                                                                                                                              0), borderWidth=PiratesGuiGlobals.BorderWidth, canvasSize=(0, 0.7, 0, self.activityListItems['frameSize'][3]), verticalScroll_image=charGui_slider, verticalScroll_frameSize=(0, PiratesGuiGlobals.ScrollbarSize, 0, self.height * 0.8), verticalScroll_thumb_image=charGui_slider_thumb, sortOrder=5, pos=pos)
         if self.UI_VERSION == 0:
             self.createListFrame(self.activityList, lookoutUI)
         self.activityListItems.reparentTo(self.activityList.getCanvas())
@@ -901,66 +757,53 @@ class LookoutRequestLVL1(InventoryPage):
     def _determineTitle(self, mode):
         selectedVal = self.getSelectedValue()
         if mode == PiratesGuiGlobals.SEARCH_MODE:
-            iconName = GameTypeGlobals.GameTypeStrings['icon'][
-                self.searchParams['catId']]
-            return (PLocalizer.LookoutPanelStatus,
-                    PLocalizer.LookoutPanelStatusDesc, iconName)
+            iconName = GameTypeGlobals.GameTypeStrings['icon'][self.searchParams['catId']]
+            return (
+             PLocalizer.LookoutPanelStatus, PLocalizer.LookoutPanelStatusDesc, iconName)
         else:
             if mode == PiratesGuiGlobals.INVITE_MODE:
-                iconName = GameTypeGlobals.GameTypeStrings['icon'][
-                    self.searchParams['catId']]
-                return (PLocalizer.LookoutPanelInvite,
-                        PLocalizer.LookoutPanelInviteDesc, iconName)
+                iconName = GameTypeGlobals.GameTypeStrings['icon'][self.searchParams['catId']]
+                return (
+                 PLocalizer.LookoutPanelInvite, PLocalizer.LookoutPanelInviteDesc, iconName)
             else:
                 if mode == PiratesGuiGlobals.REQUEST_OPT_MODE:
-                    iconName = GameTypeGlobals.GameTypeStrings['icon'][
-                        selectedVal]
-                    return (PLocalizer.LookoutOptionsTitle,
-                            PLocalizer.LookoutOptionsDesc, iconName)
+                    iconName = GameTypeGlobals.GameTypeStrings['icon'][selectedVal]
+                    return (
+                     PLocalizer.LookoutOptionsTitle, PLocalizer.LookoutOptionsDesc, iconName)
                 else:
                     if mode == PiratesGuiGlobals.REQUEST_FOUND_MODE:
-                        iconName = GameTypeGlobals.GameTypeStrings['icon'][
-                            selectedVal]
-                        return (PLocalizer.LookoutPanelJoin,
-                                PLocalizer.LookoutPanelJoinDesc, iconName)
+                        iconName = GameTypeGlobals.GameTypeStrings['icon'][selectedVal]
+                        return (
+                         PLocalizer.LookoutPanelJoin, PLocalizer.LookoutPanelJoinDesc, iconName)
                     else:
                         if mode == PiratesGuiGlobals.REQUEST_JOIN_MODE:
-                            iconName = GameTypeGlobals.GameTypeStrings['icon'][
-                                selectedVal]
-                            return (PLocalizer.LookoutPanelJoined,
-                                    PLocalizer.LookoutPanelJoinedDesc, iconName)
+                            iconName = GameTypeGlobals.GameTypeStrings['icon'][selectedVal]
+                            return (
+                             PLocalizer.LookoutPanelJoined, PLocalizer.LookoutPanelJoinedDesc, iconName)
                         else:
                             if mode == PiratesGuiGlobals.REQUEST_TYPE_DIRECT_MODE:
-                                iconName = GameTypeGlobals.GameTypeStrings[
-                                    'icon'][selectedVal]
-                                return (PLocalizer.LookoutChallengeTitle,
-                                        PLocalizer.LookoutChallengeDesc,
-                                        iconName)
+                                iconName = GameTypeGlobals.GameTypeStrings['icon'][selectedVal]
+                                return (
+                                 PLocalizer.LookoutChallengeTitle, PLocalizer.LookoutChallengeDesc, iconName)
                             else:
                                 if mode == PiratesGuiGlobals.CHALLENGE_MODE:
-                                    iconName = GameTypeGlobals.GameTypeStrings[
-                                        'icon'][selectedVal]
-                                    return (PLocalizer.LookoutSkirmishTitle,
-                                            PLocalizer.LookoutSkirmishDesc,
-                                            iconName)
+                                    iconName = GameTypeGlobals.GameTypeStrings['icon'][selectedVal]
+                                    return (
+                                     PLocalizer.LookoutSkirmishTitle, PLocalizer.LookoutSkirmishDesc, iconName)
                                 else:
                                     if mode == PiratesGuiGlobals.INVITE_ACCEPTED_MODE:
-                                        iconName = GameTypeGlobals.GameTypeStrings[
-                                            'icon'][selectedVal]
-                                        return (PLocalizer.LookoutPanelJoined,
-                                                PLocalizer.LookoutJoinStatus,
-                                                iconName)
+                                        iconName = GameTypeGlobals.GameTypeStrings['icon'][selectedVal]
+                                        return (
+                                         PLocalizer.LookoutPanelJoined, PLocalizer.LookoutJoinStatus, iconName)
                                     else:
                                         if self.selectedItem:
-                                            iconName = GameTypeGlobals.GameTypeStrings[
-                                                'icon'][self.selectedItem.value]
+                                            iconName = GameTypeGlobals.GameTypeStrings['icon'][self.selectedItem.value]
                                         else:
                                             iconName = 'lookout_win_logo'
                                         title = PLocalizer.LookoutPanelTitle
                                         titleDesc = PLocalizer.LookoutPanelTitleDesc
                                         if mode == PiratesGuiGlobals.REQUEST_TYPE_MODE:
-                                            gameTitle = GameTypeGlobals.getGameTypeString(
-                                                selectedVal, 'type')
+                                            gameTitle = GameTypeGlobals.getGameTypeString(selectedVal, 'type')
                                             titleDesc = PLocalizer.LookoutPanelTitleDescGame
                                             title = gameTitle
                                         return (title, titleDesc, iconName)
@@ -969,137 +812,55 @@ class LookoutRequestLVL1(InventoryPage):
         titleText, titleDesc, iconName = self._determineTitle(mode)
         if self.titleText:
             self.titleText.removeNode()
-        self.titleText = DirectLabel(
-            parent=self,
-            relief=None,
-            text=titleText,
-            text_align=TextNode.ALeft,
-            text_scale=0.09,
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=1,
-            pos=(0.36, 0, 1.17))
+        self.titleText = DirectLabel(parent=self, relief=None, text=titleText, text_align=TextNode.ALeft, text_scale=0.09, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0.36,
+                                                                                                                                                                                                                              0,
+                                                                                                                                                                                                                              1.17))
         toplevelUI = loader.loadModel(self.TOPLEVEL_GUI_FILE)
         if self.titleImage:
             self.titleImage.removeNode()
-        self.titleImage = OnscreenImage(
-            image=toplevelUI.find('**/' + iconName),
-            pos=(0.25, 0, 1.2),
-            scale=(0.6, 0.6, 0.6),
-            parent=self)
+        self.titleImage = OnscreenImage(image=toplevelUI.find('**/' + iconName), pos=(0.25,
+                                                                                      0,
+                                                                                      1.2), scale=(0.6,
+                                                                                                   0.6,
+                                                                                                   0.6), parent=self)
         if self.descText:
             self.descText.removeNode()
-        self.descText = DirectLabel(
-            parent=self,
-            relief=None,
-            text=titleDesc,
-            text_align=TextNode.ALeft,
-            text_scale=0.045,
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=15,
-            textMayChange=1,
-            pos=(0.235, 0, 1.06))
+        self.descText = DirectLabel(parent=self, relief=None, text=titleDesc, text_align=TextNode.ALeft, text_scale=0.045, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=15, textMayChange=1, pos=(0.235,
+                                                                                                                                                                                                                                                0,
+                                                                                                                                                                                                                                                1.06))
         return
 
     def createListFrame(self, list, lookoutUI=None):
-        self.activityListBorderFrame = BorderFrame(
-            parent=list, pos=(0.4, 0, 0.265), scale=(0.8, 1, 0.6))
+        self.activityListBorderFrame = BorderFrame(parent=list, pos=(0.4, 0, 0.265), scale=(0.8,
+                                                                                            1,
+                                                                                            0.6))
         self.activityListBorderFrame.setBackgroundVisible(False)
 
     def createSearchIface(self):
         lookoutUI = loader.loadModel(self.LOOKOUT_GUI_FILE)
-        self.SearchContButton, self.SearchContButtonText = self.createButtonAndText(
-            imageInfo={
-                'textureCard': lookoutUI,
-                'imageName': 'lookout_submit',
-                'buttonPos': (0.8, 0, 0.15),
-                'buttonScale': 0.3,
-                'clickCommand': self.continueSearch
-            },
-            textInfo=PLocalizer.LookoutSearchContinue)
-        self.SearchCancelButton, self.SearchCancelButtonText = self.createButtonAndText(
-            imageInfo={
-                'textureCard': lookoutUI,
-                'imageName': 'lookout_stop_looking',
-                'buttonPos': (0.25, 0, 0.15),
-                'buttonScale': 0.3,
-                'clickCommand': self.cancelSearch
-            },
-            textInfo=PLocalizer.LookoutSearchCancel)
-        self.InviteCloseButton, self.InviteCloseButtonText = self.createButtonAndText(
-            imageInfo={
-                'textureCard': lookoutUI,
-                'imageName': 'lookout_skip',
-                'buttonPos': (0.25, 0, 0.15),
-                'buttonScale': 0.3,
-                'clickCommand': self.close
-            },
-            textInfo=PLocalizer.LookoutInviteSkip)
+        self.SearchContButton, self.SearchContButtonText = self.createButtonAndText(imageInfo={'textureCard': lookoutUI, 'imageName': 'lookout_submit', 'buttonPos': (0.8, 0, 0.15), 'buttonScale': 0.3, 'clickCommand': self.continueSearch}, textInfo=PLocalizer.LookoutSearchContinue)
+        self.SearchCancelButton, self.SearchCancelButtonText = self.createButtonAndText(imageInfo={'textureCard': lookoutUI, 'imageName': 'lookout_stop_looking', 'buttonPos': (0.25, 0, 0.15), 'buttonScale': 0.3, 'clickCommand': self.cancelSearch}, textInfo=PLocalizer.LookoutSearchCancel)
+        self.InviteCloseButton, self.InviteCloseButtonText = self.createButtonAndText(imageInfo={'textureCard': lookoutUI, 'imageName': 'lookout_skip', 'buttonPos': (0.25, 0, 0.15), 'buttonScale': 0.3, 'clickCommand': self.close}, textInfo=PLocalizer.LookoutInviteSkip)
         self.InviteCloseButton.hide()
         if self.currMode != PiratesGuiGlobals.SEARCH_MODE and self.currMode != PiratesGuiGlobals.INVITE_MODE and self.currMode != PiratesGuiGlobals.CHALLENGE_MODE and self.currMode != PiratesGuiGlobals.INVITE_ACCEPTED_MODE:
             self.hideStatus()
 
     def createFoundIface(self):
-        self.foundCat = DirectLabel(
-            parent=self,
-            relief=None,
-            text=PLocalizer.LookoutFoundStatusCat,
-            text_align=TextNode.ACenter,
-            text_scale=0.055,
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=1,
-            pos=(0.52, 0, 0.9))
-        self.foundType = DirectLabel(
-            parent=self,
-            relief=None,
-            text=PLocalizer.LookoutFoundStatusType,
-            text_align=TextNode.ACenter,
-            text_scale=0.05,
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=1,
-            pos=(0.52, 0, 0.82))
-        self.foundChance = DirectLabel(
-            parent=self,
-            relief=None,
-            text=PLocalizer.LookoutFoundStatusChance,
-            text_align=TextNode.ACenter,
-            text_scale=0.045,
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=1,
-            pos=(0.52, 0, 0.4))
+        self.foundCat = DirectLabel(parent=self, relief=None, text=PLocalizer.LookoutFoundStatusCat, text_align=TextNode.ACenter, text_scale=0.055, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0.52,
+                                                                                                                                                                                                                                                       0,
+                                                                                                                                                                                                                                                       0.9))
+        self.foundType = DirectLabel(parent=self, relief=None, text=PLocalizer.LookoutFoundStatusType, text_align=TextNode.ACenter, text_scale=0.05, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0.52,
+                                                                                                                                                                                                                                                        0,
+                                                                                                                                                                                                                                                        0.82))
+        self.foundChance = DirectLabel(parent=self, relief=None, text=PLocalizer.LookoutFoundStatusChance, text_align=TextNode.ACenter, text_scale=0.045, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0.52,
+                                                                                                                                                                                                                                                             0,
+                                                                                                                                                                                                                                                             0.4))
         lookoutUI = loader.loadModel(self.LOOKOUT_GUI_FILE)
-        self.foundJoinButton, self.foundJoinButtonText = self.createButtonAndText(
-            imageInfo={
-                'textureCard': lookoutUI,
-                'imageName': 'lookout_join_game',
-                'buttonPos': (0.88, 0, 0.15),
-                'buttonScale': 0.3,
-                'clickCommand': self.requestJoin
-            },
-            textInfo=PLocalizer.LookoutFoundJoin)
-        self.foundDontJoinButton, self.foundDontJoinButtonText = self.createButtonAndText(
-            imageInfo={
-                'textureCard': lookoutUI,
-                'imageName': 'lookout_skip',
-                'buttonPos': (0.5, 0, 0.15),
-                'buttonScale': 0.3,
-                'clickCommand': self.skipGame
-            },
-            textInfo=PLocalizer.LookoutFoundSkip)
-        self.TimerDisplay = DirectLabel(
-            parent=self,
-            relief=None,
-            text=PLocalizer.LookoutTimer % self.joinTimeout,
-            text_align=TextNode.ACenter,
-            text_scale=0.055,
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=1,
-            pos=(0.57, 0, 0.4))
+        self.foundJoinButton, self.foundJoinButtonText = self.createButtonAndText(imageInfo={'textureCard': lookoutUI, 'imageName': 'lookout_join_game', 'buttonPos': (0.88, 0, 0.15), 'buttonScale': 0.3, 'clickCommand': self.requestJoin}, textInfo=PLocalizer.LookoutFoundJoin)
+        self.foundDontJoinButton, self.foundDontJoinButtonText = self.createButtonAndText(imageInfo={'textureCard': lookoutUI, 'imageName': 'lookout_skip', 'buttonPos': (0.5, 0, 0.15), 'buttonScale': 0.3, 'clickCommand': self.skipGame}, textInfo=PLocalizer.LookoutFoundSkip)
+        self.TimerDisplay = DirectLabel(parent=self, relief=None, text=PLocalizer.LookoutTimer % self.joinTimeout, text_align=TextNode.ACenter, text_scale=0.055, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0.57,
+                                                                                                                                                                                                                                                                     0,
+                                                                                                                                                                                                                                                                     0.4))
         self.TimerDisplay.hide()
         return
 
@@ -1124,8 +885,7 @@ class LookoutRequestLVL1(InventoryPage):
             self.toggleVis()
         if local == False:
             description = PLocalizer.LookoutCancelMsg
-            self.guiMgr.messageStack.addTextMessage(
-                description, icon=('lookout', None))
+            self.guiMgr.messageStack.addTextMessage(description, icon=('lookout', None))
         localAvatar.b_clearTeleportFlag(PiratesGlobals.TFLookoutJoined)
         return
 
@@ -1145,13 +905,10 @@ class LookoutRequestLVL1(InventoryPage):
 
     def requestActivityAccepted(self):
         description = PLocalizer.LookoutStartMsg
-        self.guiMgr.messageStack.addTextMessage(
-            description, icon=('lookout', None))
+        self.guiMgr.messageStack.addTextMessage(description, icon=('lookout', None))
         return
 
-    def matchFound(self,
-                   matchId,
-                   timeToJoin=PiratesGlobals.LOOKOUT_JOIN_TIMEOUT):
+    def matchFound(self, matchId, timeToJoin=PiratesGlobals.LOOKOUT_JOIN_TIMEOUT):
         if self.currMode == PiratesGuiGlobals.SEARCH_MODE or self.currMode == PiratesGuiGlobals.INVITE_MODE or self.currMode == PiratesGuiGlobals.CHALLENGE_MODE or self.currMode == PiratesGuiGlobals.INVITE_ACCEPTED_MODE:
             inviting = self.currMode == PiratesGuiGlobals.INVITE_MODE or self.currMode == PiratesGuiGlobals.CHALLENGE_MODE or self.currMode == PiratesGuiGlobals.INVITE_ACCEPTED_MODE
             if inviting == False and self.guiMgr.isSeaChestAllowed():
@@ -1176,8 +933,7 @@ class LookoutRequestLVL1(InventoryPage):
             else:
                 self.updateMode(PiratesGuiGlobals.REQUEST_CAT_MODE)
                 description = PLocalizer.LookoutAbortedMsg
-            self.guiMgr.messageStack.addTextMessage(
-                description, icon=('lookout', None))
+            self.guiMgr.messageStack.addTextMessage(description, icon=('lookout', None))
             localAvatar.b_clearTeleportFlag(PiratesGlobals.TFLookoutJoined)
             if self.confirmMsg:
                 self.confirmMsg.messageDone()
@@ -1195,30 +951,24 @@ class LookoutRequestLVL1(InventoryPage):
                     matchChanceText = PLocalizer.LookoutFoundStatusChanceModerate
                 else:
                     matchChanceText = PLocalizer.LookoutFoundStatusChanceHigh
-            self.foundChance[
-                'text'] = PLocalizer.LookoutFoundStatusChance % matchChanceText
+            self.foundChance['text'] = PLocalizer.LookoutFoundStatusChance % matchChanceText
 
-    def requestInvite(self, inviterName, activityCategory, activityType,
-                      options):
-        gameCatDesc = GameTypeGlobals.getGameTypeString(activityCategory,
-                                                        'typeBrief')
+    def requestInvite(self, inviterName, activityCategory, activityType, options):
+        gameCatDesc = GameTypeGlobals.getGameTypeString(activityCategory, 'typeBrief')
         if inviterName == '':
             description = PLocalizer.LookoutInviteMsg % gameCatDesc
         else:
-            description = PLocalizer.LookoutInviteFromMsg % (inviterName,
-                                                             gameCatDesc)
+            description = PLocalizer.LookoutInviteFromMsg % (inviterName, gameCatDesc)
         if self.guiMgr.isSeaChestAllowed():
             if self.confirmMsg:
                 self.confirmMsg.messageDone()
                 self.confirmMsg = None
             self.confirmMsg = self.guiMgr.messageStack.addModalTextMessage(description, buttonStyle=OTPDialog.YesNo, yesCallback=lambda param1=True, param2=activityType: self.quickConfirm(param1, param2), noCallback=lambda param1=False: self.quickConfirm(param1), icon=('lookout',
                                                                                                                                                                                                                                                                               None))
-        self.invited = [activityCategory, activityType, options]
+        self.invited = [
+         activityCategory, activityType, options]
         self.displayLookout(gameType=self.invited[0], gameStyle=self.invited[1])
-        self.startTimer(
-            PiratesGlobals.LOOKOUT_JOIN_TIMEOUT_INVITE,
-            lambda param1=False: self.invitedTimedOut(param1),
-            self.TIMER_AUTO_HIDE_MODE_PAGECHANGE)
+        self.startTimer(PiratesGlobals.LOOKOUT_JOIN_TIMEOUT_INVITE, lambda param1=False: self.invitedTimedOut(param1), self.TIMER_AUTO_HIDE_MODE_PAGECHANGE)
         return
 
     def quickConfirm(self, yes, activityType=None):
@@ -1239,12 +989,7 @@ class LookoutRequestLVL1(InventoryPage):
         self.TimerDisplay['text_fg'] = PiratesGuiGlobals.TextFG6
         return
 
-    def displayLookout(self,
-                       gameType=PiratesGlobals.GAME_TYPE_TM,
-                       gameStyle=PiratesGlobals.GAME_STYLE_TM_BLACK_PEARL,
-                       inviteOptions=[PiratesGlobals.LOOKOUT_INVITE_NONE],
-                       additionalAvs=[],
-                       additionalOptions=[]):
+    def displayLookout(self, gameType=PiratesGlobals.GAME_TYPE_TM, gameStyle=PiratesGlobals.GAME_STYLE_TM_BLACK_PEARL, inviteOptions=[PiratesGlobals.LOOKOUT_INVITE_NONE], additionalAvs=[], additionalOptions=[]):
         printStack()
         nextDone = self.itemSelectByValue(gameType, gameStyle)
         if nextDone == False:
@@ -1274,10 +1019,7 @@ class LookoutRequestLVL1(InventoryPage):
                     if currInvitee != localAvatar.doId:
                         inviteesStr = inviteesStr + ',' + str(currInvitee)
 
-                options.append([
-                    str(GameTypeGlobals.GAME_OPTION_DESIRED_PLAYERS),
-                    inviteesStr
-                ])
+                options.append([str(GameTypeGlobals.GAME_OPTION_DESIRED_PLAYERS), inviteesStr])
             for currOption in options:
                 if currOption[0] == str(GameTypeGlobals.GAME_OPTION_VIP_PASS):
                     options.remove(currOption)
@@ -1299,8 +1041,5 @@ class LookoutRequestLVL1(InventoryPage):
     def handleChildChange(self):
         newHeight = self.activityListItems['frameSize'][3]
         currCanvasSize = self.activityList['canvasSize']
-        self.activityList['canvasSize'] = (currCanvasSize[0], currCanvasSize[1],
-                                           currCanvasSize[2], newHeight)
-
-
+        self.activityList['canvasSize'] = (currCanvasSize[0], currCanvasSize[1], currCanvasSize[2], newHeight)
 # okay decompiling .\pirates\piratesgui\LookoutRequestLVL1.pyc

@@ -23,9 +23,7 @@ from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.battle.WeaponBase import WeaponBase
 
-
-class DistributedWeapon(WeaponBase,
-                        DistributedInteractive.DistributedInteractive):
+class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractive):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedWeapon')
 
     def __init__(self, cr):
@@ -45,8 +43,7 @@ class DistributedWeapon(WeaponBase,
         DistributedInteractive.DistributedInteractive.announceGenerate(self)
         WeaponBase.announceGenerate(self)
         if __dev__ and base.config.GetBool('show-ai-cannon-targets', False):
-            self.tracker = loader.loadModelCopy(
-                'models/effects/explosion_sphere')
+            self.tracker = loader.loadModelCopy('models/effects/explosion_sphere')
             self.tracker.reparentTo(render)
             self.tracker.setScale(30)
 
@@ -76,7 +73,6 @@ class DistributedWeapon(WeaponBase,
         pass
 
     def setMovie(self, mode, avId):
-
         def doMovie(av):
             if mode == WeaponGlobals.WEAPON_MOVIE_START:
                 self.startWeapon(av)
@@ -89,8 +85,8 @@ class DistributedWeapon(WeaponBase,
             base.cr.relatedObjectMgr.abortRequest(self.pendingDoMovie)
             self.pendingDoMovie = None
 
-        self.pendingDoMovie = base.cr.relatedObjectMgr.requestObjects(
-            [avId], eachCallback=doMovie, timeout=60)
+        self.pendingDoMovie = base.cr.relatedObjectMgr.requestObjects([avId],
+            eachCallback=doMovie, timeout=60)
 
     def rejectInteraction(self):
         base.localAvatar.motionFSM.on()

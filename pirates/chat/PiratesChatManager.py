@@ -30,22 +30,18 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
         self.whiteListActive = False
         self.active = False
         self.lastWhisper = None
-        self.whiteListEnabled = base.config.GetBool('whitelist-chat-enabled',
-                                                    False)
+        self.whiteListEnabled = base.config.GetBool('whitelist-chat-enabled', False)
         self.openChatEnabled = base.config.GetBool('open-chat-enabled', True)
         self.toggleEnabled = self.whiteListEnabled and self.openChatEnabled
         self.noChat = not (self.whiteListEnabled or self.openChatEnabled)
         if self.toggleEnabled:
-            self.chatEntry = PChatInputTyped(
-                frameSize=(-0.2, 23.1, -0.5, 1.2), width=23)
-            self.whiteListEntry = PChatInputWhiteList(
-                frameSize=(-0.2, 23.1, -0.5, 1.2), width=23)
+            self.chatEntry = PChatInputTyped(frameSize=(-0.2, 23.1, -0.5, 1.2), width=23)
+            self.whiteListEntry = PChatInputWhiteList(frameSize=(-0.2, 23.1, -0.5, 1.2), width=23)
         else:
             self.chatEntry = PChatInputTyped()
             self.whiteListEntry = PChatInputWhiteList()
         self.speedEntry = PChatInputSpeedChat()
-        self.chatPanel = ChatPanel.ChatPanel(
-            self, self.chatEntry, self.whiteListEntry, self.speedEntry)
+        self.chatPanel = ChatPanel.ChatPanel(self, self.chatEntry, self.whiteListEntry, self.speedEntry)
         if self.whiteListEnabled and not self.openChatEnabled:
             self.whiteListActive = True
             self.chatEntry.requestMode('Off')
@@ -102,15 +98,9 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
         if not isinstance(preferred, str):
             if isinstance(preferred, CollisionEntry):
                 self.notify.warning("'preferred' is a CollisionEntry")
-                self.notify.warning(
-                    'from mask: %s' %
-                    (preferred.getFromNode().getFromCollideMask(),))
-                self.notify.warning(
-                    'into mask: %s' %
-                    (preferred.getIntoNode().getIntoCollideMask(),))
-            self.notify.warning(
-                'Calling PiratesChatManager.activateChat with non-string preferred argument: %s'
-                % (preferred,))
+                self.notify.warning('from mask: %s' % (preferred.getFromNode().getFromCollideMask(),))
+                self.notify.warning('into mask: %s' % (preferred.getIntoNode().getIntoCollideMask(),))
+            self.notify.warning('Calling PiratesChatManager.activateChat with non-string preferred argument: %s' % (preferred,))
             return
         messenger.send('openedChat')
         self.stopFadeTimer()
@@ -214,7 +204,7 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
         if not self.toggleEnabled:
             return
         if not isinstance(self.preferredMode, str):
-            raise TypeError('preferredMode was non-string in toggleWhiteListChat')
+            raise TypeError, 'preferredMode was non-string in toggleWhiteListChat'
         self.whiteListActive = not self.whiteListActive
         if not self.active:
             self.activateChat()
@@ -272,17 +262,13 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
 
     def startFadeTimer(self):
         self.stopFadeTimer()
-        taskMgr.doMethodLater(3, self.deactivateChat, 'ChatManager-fadeTimer',
-                              [])
+        taskMgr.doMethodLater(3, self.deactivateChat, 'ChatManager-fadeTimer', [])
 
     def stopFadeTimer(self):
         taskMgr.remove('ChatManager-fadeTimer')
 
     def enterOpenChatWarning(self):
-        self.warningDialog = PDialog.PDialog(
-            text=PLocalizer.ChatManagerNeedParentWarning,
-            style=OTPDialog.Acknowledge,
-            command=self.openChatWarningAck)
+        self.warningDialog = PDialog.PDialog(text=PLocalizer.ChatManagerNeedParentWarning, style=OTPDialog.Acknowledge, command=self.openChatWarningAck)
 
     def openChatWarningAck(self, value):
         self.fsm.request('mainMenu')
@@ -293,10 +279,7 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
         return
 
     def enterNoFriendsWarning(self):
-        self.warningDialog = PDialog.PDialog(
-            text=PLocalizer.ChatManagerNoFriendsWarning,
-            style=OTPDialog.Acknowledge,
-            command=self.noFriendsWarningAck)
+        self.warningDialog = PDialog.PDialog(text=PLocalizer.ChatManagerNoFriendsWarning, style=OTPDialog.Acknowledge, command=self.noFriendsWarningAck)
 
     def noFriendsWarningAck(self, value):
         self.fsm.request('mainMenu')
@@ -310,40 +293,22 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
         if self.noSecretChatAtAll == None:
             offX = -0.75
             offZ = -0.45
-            self.noSecretChatAtAll = GuiPanel.GuiPanel('Secret Codes!!! Arg!!',
-                                                       1.6, 1.2)
+            self.noSecretChatAtAll = GuiPanel.GuiPanel('Secret Codes!!! Arg!!', 1.6, 1.2)
             self.noSecretChatAtAll.setPos(offX, 0, offZ)
-            DirectLabel(
-                parent=self.noSecretChatAtAll,
-                relief=None,
-                pos=(-offX, 0, 0.95),
-                text_fg=(0.9, 0.9, 0.9, 1),
-                text=OTPLocalizer.NoSecretChatAtAllTitle,
-                textMayChange=0,
-                text_scale=0.08)
-            DirectLabel(
-                parent=self.noSecretChatAtAll,
-                relief=None,
-                pos=(-offX, 0, 0.8),
-                text_fg=(0.9, 0.9, 0.9, 1),
-                text=PLocalizer.NoSecretChatAtAll,
-                text_wordwrap=20,
-                textMayChange=0,
-                text_scale=0.07)
+            DirectLabel(parent=self.noSecretChatAtAll, relief=None, pos=(-offX, 0, 0.95), text_fg=(0.9,
+                                                                                                   0.9,
+                                                                                                   0.9,
+                                                                                                   1), text=OTPLocalizer.NoSecretChatAtAllTitle, textMayChange=0, text_scale=0.08)
+            DirectLabel(parent=self.noSecretChatAtAll, relief=None, pos=(-offX, 0, 0.8), text_fg=(0.9,
+                                                                                                  0.9,
+                                                                                                  0.9,
+                                                                                                  1), text=PLocalizer.NoSecretChatAtAll, text_wordwrap=20, textMayChange=0, text_scale=0.07)
 
             def handleNoSecretChatAtAllOK(value):
                 self.fsm.request('mainMenu')
 
-            DirectButton(
-                self.noSecretChatAtAll,
-                relief=None,
-                text_fg=(0.9, 0.9, 0.9, 1),
-                text=OTPLocalizer.NoSecretChatAtAllOK,
-                text_scale=0.05,
-                text_pos=(0.0, -0.1),
-                textMayChange=0,
-                pos=(-offX, 0.0, 0.15),
-                command=handleNoSecretChatAtAllOK)
+            DirectButton(self.noSecretChatAtAll, relief=None, text_fg=(0.9, 0.9, 0.9,
+                                                                       1), text=OTPLocalizer.NoSecretChatAtAllOK, text_scale=0.05, text_pos=(0.0, -0.1), textMayChange=0, pos=(-offX, 0.0, 0.15), command=handleNoSecretChatAtAllOK)
         self.noSecretChatAtAll.show()
         return
 
@@ -351,10 +316,7 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
         self.noSecretChatAtAll.hide()
 
     def enterUnpaidChatWarning(self):
-        self.unpaidWarningDialog = PDialog.PDialog(
-            text=PLocalizer.ChatManagerUnpaidWarning,
-            style=OTPDialog.Acknowledge,
-            command=self.unpaidChatWarningAck)
+        self.unpaidWarningDialog = PDialog.PDialog(text=PLocalizer.ChatManagerUnpaidWarning, style=OTPDialog.Acknowledge, command=self.unpaidChatWarningAck)
 
     def unpaidChatWarningAck(self, value):
         self.fsm.request('mainMenu')
@@ -401,8 +363,7 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
 
     def enterLeaveToPayDialog(self):
         if self.leaveToPayDialog == None:
-            self.leaveToPayDialog = LeaveToPayDialog.LeaveToPayDialog(
-                self.paidNoParentPassword)
+            self.leaveToPayDialog = LeaveToPayDialog.LeaveToPayDialog(self.paidNoParentPassword)
             self.leaveToPayDialog.setCancel(self.__handleLeaveToPayCancel)
         self.leaveToPayDialog.show()
         return
@@ -414,10 +375,7 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
         return
 
     def enterNoSecretChatWarning(self):
-        self.warningDialog = PDialog.PDialog(
-            text=PLocalizer.ChatManagerNoFriendsWarning,
-            style=OTPDialog.Acknowledge,
-            command=self.noSecretChatWarningAck)
+        self.warningDialog = PDialog.PDialog(text=PLocalizer.ChatManagerNoFriendsWarning, style=OTPDialog.Acknowledge, command=self.noSecretChatWarningAck)
 
     def noSecretChatWarningAck(self, value):
         self.fsm.request('mainMenu')
@@ -429,8 +387,7 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
 
     def enterChatMoreInfo(self):
         if self.chatMoreInfo == None:
-            self.chatMoreInfo = SecretFriendsInfoPanel.SecretFriendsInfoPanel(
-                'secretFriendsInfoDone')
+            self.chatMoreInfo = SecretFriendsInfoPanel.SecretFriendsInfoPanel('secretFriendsInfoDone')
         self.chatMoreInfo.show()
         self.accept('secretFriendsInfoDone', self.__secretFriendsInfoDone)
         return
@@ -441,8 +398,7 @@ class PiratesChatManager(ChatManagerV2.ChatManagerV2):
 
     def enterChatPrivacyPolicy(self):
         if self.chatPrivacyPolicy == None:
-            self.chatPrivacyPolicy = PrivacyPolicyPanel.PrivacyPolicyPanel(
-                'privacyPolicyDone')
+            self.chatPrivacyPolicy = PrivacyPolicyPanel.PrivacyPolicyPanel('privacyPolicyDone')
         self.chatPrivacyPolicy.show()
         self.accept('privacyPolicyDone', self.__privacyPolicyDone)
         return

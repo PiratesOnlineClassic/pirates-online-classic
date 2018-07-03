@@ -25,42 +25,13 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.GameOptions import Options
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class EnvironmentEffects(DirectObject):
-    effectDict = {
-        'effect_gypsyball': [(GypsyBallGlow, Options.SpecialEffectsLow)],
-        'candle_effect': [(CandleFlame, Options.SpecialEffectsLow)],
-        'torch_effect': [(TorchFire, Options.SpecialEffectsLow)],
-        'no_glow_effect': [(TorchFire, Options.SpecialEffectsLow)],
-        'lantern_effect': [(LanternGlow, Options.SpecialEffectsLow)],
-        'bonfire_effect': [(Bonfire, Options.SpecialEffectsMedium)],
-        'fireplace_effect': [(Fire, Options.SpecialEffectsLow)],
-        'watersplash_effect': [(WaterSplash, Options.SpecialEffectsMedium)],
-        'steam_effect': [(SteamEffect, Options.SpecialEffectsHigh)],
-        'darksteam_effect': [(DarkSteamEffect, Options.SpecialEffectsMedium)],
-        'steamcloud_effect': [(SteamCloud, Options.SpecialEffectsMedium)],
-        'cratersmoke_effect': [(CraterSmoke, Options.SpecialEffectsHigh)],
-        'lavaburst_effect': [(LavaBurst, Options.SpecialEffectsHigh)],
-        'blacksmoke_effect': [(BlackSmoke, Options.SpecialEffectsMedium)],
-        'lightsmoke_effect': [(LightSmoke, Options.SpecialEffectsMedium)],
-        'mysticsmoke_effect': [(MysticSmoke, Options.SpecialEffectsHigh)],
-        'mysticfire_effect': [(MysticFire, Options.SpecialEffectsHigh)]
-    }
-    soundDict = {
-        'waterfall_sound': 'audio/sfx_waterfall_small.wav',
-        'waterfall_cave_sound': 'audio/sfx_cave_waterfall.wav'
-    }
+    effectDict = {'effect_gypsyball': [(GypsyBallGlow, Options.SpecialEffectsLow)], 'candle_effect': [(CandleFlame, Options.SpecialEffectsLow)], 'torch_effect': [(TorchFire, Options.SpecialEffectsLow)], 'no_glow_effect': [(TorchFire, Options.SpecialEffectsLow)], 'lantern_effect': [(LanternGlow, Options.SpecialEffectsLow)], 'bonfire_effect': [(Bonfire, Options.SpecialEffectsMedium)], 'fireplace_effect': [(Fire, Options.SpecialEffectsLow)], 'watersplash_effect': [(WaterSplash, Options.SpecialEffectsMedium)], 'steam_effect': [(SteamEffect, Options.SpecialEffectsHigh)], 'darksteam_effect': [(DarkSteamEffect, Options.SpecialEffectsMedium)], 'steamcloud_effect': [(SteamCloud, Options.SpecialEffectsMedium)], 'cratersmoke_effect': [(CraterSmoke, Options.SpecialEffectsHigh)], 'lavaburst_effect': [(LavaBurst, Options.SpecialEffectsHigh)], 'blacksmoke_effect': [(BlackSmoke, Options.SpecialEffectsMedium)], 'lightsmoke_effect': [(LightSmoke, Options.SpecialEffectsMedium)], 'mysticsmoke_effect': [(MysticSmoke, Options.SpecialEffectsHigh)], 'mysticfire_effect': [(MysticFire, Options.SpecialEffectsHigh)]}
+    soundDict = {'waterfall_sound': 'audio/sfx_waterfall_small.wav', 'waterfall_cave_sound': 'audio/sfx_cave_waterfall.wav'}
     particleDict = {}
     EffectNodeNames = effectDict.keys()
     EffectNodeNames.extend(particleDict.keys())
-    animPartsDict = {
-        'chandelier': [('Hpr', 2, Point3(2, 2, 0), Point3(-2, -2, 0))],
-        'hanging_pot': [('Hpr', 2, Point3(20, 20, 0), Point3(-20, -20, 0))],
-        'lightstream':
-        [('UVOverlayScroll', 40, 0.15, 0.3, 'models/effects/cloudOverlay'),
-         ('UVScroll', 1200, 1, 0), ('DelayColorFade', 2, Vec4(0.3, 0.3, 0.4, 1),
-                                    Vec4(0.6, 0.6, 0.7, 1), 10), 'Unlit']
-    }
+    animPartsDict = {'chandelier': [('Hpr', 2, Point3(2, 2, 0), Point3(-2, -2, 0))], 'hanging_pot': [('Hpr', 2, Point3(20, 20, 0), Point3(-20, -20, 0))], 'lightstream': [('UVOverlayScroll', 40, 0.15, 0.3, 'models/effects/cloudOverlay'), ('UVScroll', 1200, 1, 0), ('DelayColorFade', 2, Vec4(0.3, 0.3, 0.4, 1), Vec4(0.6, 0.6, 0.7, 1), 10), 'Unlit']}
 
     def __init__(self, parent, modelPath):
         self.parent = parent
@@ -194,15 +165,17 @@ class EnvironmentEffects(DirectObject):
                             if effectEntry != 'candle_effect':
                                 effect.setScale(locatorScale)
                             effect.startLoop(effectSetting)
-                            if holidayName not in self.holidayEffects:
-                                self.holidayEffects[holidayName] = [effect]
+                            if not self.holidayEffects.has_key(holidayName):
+                                self.holidayEffects[holidayName] = [
+                                 effect]
                             else:
                                 list = self.holidayEffects.get(holidayName)
                                 list.append(effect)
                                 self.holidayEffects[holidayName] = list
 
+
     def stopHolidayEffects(self, holidayName):
-        if holidayName not in self.holidayEffects:
+        if not self.holidayEffects.has_key(holidayName):
             return
         for effect in self.holidayEffects.get(holidayName):
             effect.stop()
@@ -269,55 +242,29 @@ class EnvironmentEffects(DirectObject):
                         for effect in effects:
                             if effect[0] == 'Hpr':
                                 randomness = random.random() / 10
-                                rotate1 = myPart.hprInterval(
-                                    effect[1] + randomness,
-                                    effect[3],
-                                    startHpr=effect[2],
-                                    blendType='easeInOut')
-                                rotate2 = myPart.hprInterval(
-                                    effect[1] + randomness,
-                                    effect[2],
-                                    startHpr=effect[3],
-                                    blendType='easeInOut')
+                                rotate1 = myPart.hprInterval(effect[1] + randomness, effect[3], startHpr=effect[2], blendType='easeInOut')
+                                rotate2 = myPart.hprInterval(effect[1] + randomness, effect[2], startHpr=effect[3], blendType='easeInOut')
                                 anim = Sequence(rotate1, rotate2)
                                 anim.loop()
                                 self.intervals.append(anim)
                             elif effect[0] == 'ColorFade':
                                 randomness = random.random() / 10
-                                fadeIn = myPart.colorInterval(
-                                    effect[1] + randomness,
-                                    effect[3],
-                                    startColor=effect[2])
-                                fadeOut = myPart.colorInterval(
-                                    effect[1] + randomness,
-                                    effect[2],
-                                    startColor=effect[3])
+                                fadeIn = myPart.colorInterval(effect[1] + randomness, effect[3], startColor=effect[2])
+                                fadeOut = myPart.colorInterval(effect[1] + randomness, effect[2], startColor=effect[3])
                                 anim = Sequence(fadeIn, fadeOut)
                                 anim.loop()
                                 self.intervals.append(anim)
                             elif effect[0] == 'DelayColorFade':
                                 randomness = random.random() / 10
-                                fadeIn = myPart.colorInterval(
-                                    effect[1] + randomness,
-                                    effect[3],
-                                    startColor=effect[2])
-                                fadeOut = myPart.colorInterval(
-                                    effect[1] + randomness,
-                                    effect[2],
-                                    startColor=effect[3])
-                                anim = Sequence(fadeIn, Wait(effect[4]),
-                                                fadeOut, Wait(effect[4]))
+                                fadeIn = myPart.colorInterval(effect[1] + randomness, effect[3], startColor=effect[2])
+                                fadeOut = myPart.colorInterval(effect[1] + randomness, effect[2], startColor=effect[3])
+                                anim = Sequence(fadeIn, Wait(effect[4]), fadeOut, Wait(effect[4]))
                                 anim.loop()
                                 self.intervals.append(anim)
                             elif effect[0] == 'UVScroll':
                                 t = myPart.findAllTextureStages()[0]
                                 randomness = random.random() / 10
-                                anim = LerpFunctionInterval(
-                                    self.setNewUVs,
-                                    fromData=0.0,
-                                    toData=10.0,
-                                    duration=effect[1] + randomness,
-                                    extraArgs=[myPart, t, effect])
+                                anim = LerpFunctionInterval(self.setNewUVs, fromData=0.0, toData=10.0, duration=effect[1] + randomness, extraArgs=[myPart, t, effect])
                                 anim.loop()
                                 self.intervals.append(anim)
                             elif effect[0] == 'UVOverlayScroll':
@@ -329,12 +276,7 @@ class EnvironmentEffects(DirectObject):
                                 myPart.setTexture(t, tex)
                                 myPart.setTexScale(t, 2, 2)
                                 randomness = random.random() / 10
-                                anim = LerpFunctionInterval(
-                                    self.setNewUVs,
-                                    fromData=0.0,
-                                    toData=10.0,
-                                    duration=effect[1] + randomness,
-                                    extraArgs=[myPart, t, effect])
+                                anim = LerpFunctionInterval(self.setNewUVs, fromData=0.0, toData=10.0, duration=effect[1] + randomness, extraArgs=[myPart, t, effect])
                                 anim.loop()
                                 self.intervals.append(anim)
                             elif effect[0] == 'Unlit':
@@ -352,14 +294,12 @@ class EnvironmentEffects(DirectObject):
                 plNode.setFlickerType(PolylightNode.FSIN)
                 plNode.setAttenuation(PolylightNode.AQUADRATIC)
                 plNode.setRadius(20)
-                effect = base.localAvatar.node().getEffect(
-                    PolylightEffect.getClassType()).addLight(light)
+                effect = base.localAvatar.node().getEffect(PolylightEffect.getClassType()).addLight(light)
                 base.localAvatar.node().setEffect(effect)
                 self.lights.append(light)
 
     def loadGrass(self):
-        if base.config.GetBool('want-grass', 0) and Grass.HasGrass(
-                self.modelPath):
+        if base.config.GetBool('want-grass', 0) and Grass.HasGrass(self.modelPath):
             self.grass = Grass.Grass(self.parent)
             self.grass.reparentTo(self.parent)
 
@@ -421,8 +361,7 @@ class EnvironmentEffects(DirectObject):
                         ts = tc[k]
                         mesh.setTexProjector(ts, joint, render)
                     if tc[k].getTexcoordName().getName().find('Bottom') != -1:
-                        joint = pt.findAllMatches('**/uvj_WaterBottomTexture')[
-                            0]
+                        joint = pt.findAllMatches('**/uvj_WaterBottomTexture')[0]
                         ts = tc[k]
                         mesh.setTexProjector(ts, joint, self.parent)
 

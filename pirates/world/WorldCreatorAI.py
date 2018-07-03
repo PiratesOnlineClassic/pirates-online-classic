@@ -5,7 +5,6 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.leveleditor import ObjectList
 from pirates.instance.DistributedMainWorldAI import DistributedMainWorldAI
 
-
 class WorldCreatorAI(WorldCreatorBase, DirectObject):
     notify = directNotify.newCategory('WorldCreatorAI')
 
@@ -45,20 +44,15 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         fileDict = self.openFile(file + '.py')
         return fileDict['Objects'].values()[0]['Visual']['Model']
 
-    def loadObjectsFromFile(self,
-                            filename,
-                            parent=None,
-                            zoneLevel=0,
-                            startTime=None,
-                            parentIsObj=False):
+    def loadObjectsFromFile(self, filename, parent=None, zoneLevel=0, startTime=None, parentIsObj=False):
         # load the object data recursive into the file dictionary,
         # so we have the file data and files before any object is created...
         self.loadFileDataRecursive(filename)
 
         # now load the objects from the file in which will utilize the data
         # stored from other files as seem above...
-        return WorldCreatorBase.loadObjectsFromFile(
-            self, filename, parent, zoneLevel, startTime, parentIsObj)
+        return WorldCreatorBase.loadObjectsFromFile(self, filename, parent, zoneLevel,
+            startTime, parentIsObj)
 
     def getObjectParentUid(self, objKey):
         found = None
@@ -82,19 +76,8 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
     def getIslandWorldDataByUid(self, uid):
         return self.worldDict['Objects'].get(uid, None)
 
-    def createObject(self,
-                     object,
-                     parent,
-                     parentUid,
-                     objKey,
-                     dynamic,
-                     zoneLevel=0,
-                     startTime=None,
-                     parentIsObj=False,
-                     fileName=None,
-                     actualParentObj=None):
-        objType = WorldCreatorBase.createObject(
-            self, object, parent, parentUid, objKey, dynamic, zoneLevel,
+    def createObject(self, object, parent, parentUid, objKey, dynamic, zoneLevel=0, startTime=None, parentIsObj=False, fileName=None, actualParentObj=None):
+        objType = WorldCreatorBase.createObject(self, object, parent, parentUid, objKey, dynamic, zoneLevel,
             startTime, parentIsObj, fileName, actualParentObj)
 
         if not objType:
@@ -104,17 +87,14 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         objParent = None
 
         if objType == ObjectList.AREA_TYPE_WORLD_REGION:
-            objParent = self.__createWorldInstance(object, parent, parentUid,
-                                                   objKey, dynamic)
+            objParent = self.__createWorldInstance(object, parent, parentUid, objKey, dynamic)
         else:
-            newObj = self.world.builder.createObject(
-                objType, object, parent, parentUid, objKey, dynamic,
+            newObj = self.world.builder.createObject(objType, object, parent, parentUid, objKey, dynamic,
                 parentIsObj, fileName, actualParentObj)
 
         return (newObj, objParent)
 
-    def __createWorldInstance(self, objectData, parent, parentUid, objKey,
-                              dynamic):
+    def __createWorldInstance(self, objectData, parent, parentUid, objKey, dynamic):
         self.world = DistributedMainWorldAI(self.air)
         self.world.setUniqueId(objKey)
         self.world.setName(objectData.get('Name', 'default'))

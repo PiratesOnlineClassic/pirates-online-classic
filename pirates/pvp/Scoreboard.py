@@ -5,8 +5,8 @@ from pirates.piratesgui.StatRowGui import StatRowGui
 from pirates.piratesgui.StatRowHeadingGui import StatRowHeadingGui
 from pirates.pvp import PVPGlobals
 
-
 class Scoreboard(DistributedObject):
+    
 
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)
@@ -95,39 +95,22 @@ class Scoreboard(DistributedObject):
         return PVPGlobals.siegeTeamNames[team]
 
     def getColumnLabels(self):
-        columns = [PLocalizer.PVPShip, PLocalizer.PVPScore]
+        columns = [
+         PLocalizer.PVPShip, PLocalizer.PVPScore]
         for stat in self._stats.keys():
             columns.append(PVPGlobals.statText[stat])
 
         return columns
 
-    def createNewItem(self,
-                      item,
-                      parent,
-                      itemType=None,
-                      columnWidths=[],
-                      color=None):
+    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
         if itemType == PiratesGuiGlobals.UIListItemType_ColumHeadings:
-            newItem = StatRowHeadingGui(
-                item,
-                self.getColumnLabels(),
-                parent,
-                itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16,
-                itemWidth=columnWidths[0] + columnWidths[1] * 2 -
-                PiratesGuiGlobals.BorderWidth[0] * 2,
-                itemWidths=columnWidths,
-                frameColor=(0.2, 0.2, 0.2, 0.9))
+            newItem = StatRowHeadingGui(item, self.getColumnLabels(), parent, itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16, 
+                                        itemWidth=columnWidths[0] + columnWidths[1] * 2 - PiratesGuiGlobals.BorderWidth[0] * 2, 
+                                        itemWidths=columnWidths, frameColor=(0.2, 0.2, 0.2, 0.9))
         else:
-            newItem = StatRowGui(
-                item,
-                self.getColumnLabels(),
-                parent,
-                itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16,
-                itemWidth=columnWidths[0] + columnWidths[1] * 2 -
-                PiratesGuiGlobals.BorderWidth[0] * 2,
-                itemWidths=columnWidths,
-                txtColor=color,
-                frameColor=(0.2, 0.2, 0.2, 0.9))
+            newItem = StatRowGui(item, self.getColumnLabels(), parent, itemHeight=PiratesGuiGlobals.TMCompletePageHeight / 16, 
+                                 itemWidth=columnWidths[0] + columnWidths[1] * 2 - PiratesGuiGlobals.BorderWidth[0] * 2, 
+                                 itemWidths=columnWidths, txtColor=color, frameColor=(0.2, 0.2, 0.2, 0.9))
         newItem.setup()
         return newItem
 
@@ -145,14 +128,9 @@ class Scoreboard(DistributedObject):
                 stats.append([PVPGlobals.statText[stat], str(dict.get(id))])
 
             if localAvatar.getShip() and localAvatar.getShip().doId == id:
-                displayScores.append(
-                    [self._names[id], stats, ['color', (1, 1, 1, 1)]])
+                displayScores.append([self._names[id], stats, ['color', (1, 1, 1, 1)]])
             else:
-                displayScores.append([
-                    self._names[id], stats,
-                    ['color',
-                     PVPGlobals.getSiegeColor(self._teams[id])]
-                ])
+                displayScores.append([self._names[id], stats, ['color', PVPGlobals.getSiegeColor(self._teams[id])]])
 
         displayScores.insert(0, self.getColumnLabels())
         return displayScores

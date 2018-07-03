@@ -93,15 +93,18 @@ Hearts = 0
 Diamonds = 1
 Clubs = 2
 Spades = 3
-Suits = [Hearts, Diamonds, Clubs, Spades]
+Suits = [
+ Hearts, Diamonds, Clubs, Spades]
 AceOfSpades = 51
 Unknown = 255
 UpColor = Vec4(1, 1, 1, 1)
 RolloverColor = Vec4(1, 1, 0.5, 1)
 DownColor = Vec4(1, 0.9, 0.9, 1)
 DisabledColor = Vec4(1, 1, 1, 0.5)
-CardColors = (UpColor, DownColor, RolloverColor, DisabledColor)
-Styles = ['standard']
+CardColors = (
+ UpColor, DownColor, RolloverColor, DisabledColor)
+Styles = [
+ 'standard']
 _modelPathBase = 'models/handheld/playing_cards_'
 _prefix = 'PC_'
 CardImages = {}
@@ -174,8 +177,8 @@ def getRank(value):
 def initCardImages():
     global _cardImagesInitialized
     suitCodes = ('h', 'd', 'c', 's')
-    rankCodes = ('02', '03', '04', '05', '06', '07', '08', '09', '10', '11',
-                 '12', '13', '01')
+    rankCodes = ('02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12',
+                 '13', '01')
     for style in Styles:
         modelPath = _modelPathBase + style
         cardModel = loader.loadModel(modelPath)

@@ -7,20 +7,12 @@ from pirates.map.ArcBall import ArcBall
 
 class MapBall(ArcBall):
 
-    def __init__(self,
-                 name,
-                 worldMap,
-                 maxTilt=math.pi / 4,
-                 mapSize=2.0,
-                 *args,
-                 **kwargs):
+    def __init__(self, name, worldMap, maxTilt=math.pi / 4, mapSize=2.0, *args, **kwargs):
         ArcBall.__init__(self, name, *args, **kwargs)
         self.worldMap = worldMap
         maxTilt = clampScalar(0, math.pi / 4.0, maxTilt)
         _maxDist = math.tan(maxTilt * 2)
-        self.tsMat = Mat3(
-            TransformState.makeScale2d(Vec2(
-                _maxDist / (mapSize / 2.0))).getMat3())
+        self.tsMat = Mat3(TransformState.makeScale2d(Vec2(_maxDist / (mapSize / 2.0))).getMat3())
         self.tsMatInv = invert(self.tsMat)
         self._mapOrigin = self.mapPosToSpherePt(Point2(0))
         self._worldNorth = Point3(0, 1, 0)

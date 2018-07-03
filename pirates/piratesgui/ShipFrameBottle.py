@@ -11,15 +11,10 @@ from pirates.piratesgui.ShipStatFrame import ShipStatFrame
 
 
 class ShipFrameBottle(ShipFrame):
+    
 
     def __init__(self, parent, **kw):
-        optiondefs = (('frameSize', (0, 0.9, 0.0, 0.53),
-                       None), ('frameColor', PiratesGuiGlobals.ButtonColor1,
-                               None), ('relief', DGG.FLAT, None),
-                      ('shipPos', VBase3(0.58, 0, 0.13),
-                       None), ('shipHpr', VBase3(-70, 6, 15), None),
-                      ('shipScale', VBase3(0.65), None), ('inBottle', True,
-                                                          self.setInBottle))
+        optiondefs = (('frameSize', (0, 0.9, 0.0, 0.53), None), ('frameColor', PiratesGuiGlobals.ButtonColor1, None), ('relief', DGG.FLAT, None), ('shipPos', VBase3(0.58, 0, 0.13), None), ('shipHpr', VBase3(-70, 6, 15), None), ('shipScale', VBase3(0.65), None), ('inBottle', True, self.setInBottle))
         self.nameLabel = None
         self.classLabel = None
         self.statFrame = None
@@ -49,36 +44,13 @@ class ShipFrameBottle(ShipFrame):
     def createGui(self):
         ShipFrame.createGui(self)
         if self['shipName']:
-            self.nameLabel = DirectLabel(
-                parent=self,
-                relief=DGG.FLAT,
-                state=DGG.DISABLED,
-                text=self['shipName'],
-                text_font=PiratesGlobals.getInterfaceFont(),
-                text_align=TextNode.ALeft,
-                text_scale=PiratesGuiGlobals.TextScaleMed,
-                text_pos=(0.04, 0.015),
-                text_fg=PiratesGuiGlobals.TextFG1,
-                text_shadow=PiratesGuiGlobals.TextShadow,
-                textMayChange=1,
-                frameColor=PiratesGuiGlobals.ButtonColor1[3],
-                frameSize=(self['frameSize'][0] + 0.02,
-                           self['frameSize'][1] - 0.02, 0, 0.05),
-                pos=(0, 0, self['frameSize'][3] - 0.06))
+            self.nameLabel = DirectLabel(parent=self, relief=DGG.FLAT, state=DGG.DISABLED, text=self['shipName'], text_font=PiratesGlobals.getInterfaceFont(), text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleMed, text_pos=(0.04,
+                                                                                                                                                                                                                                               0.015), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, frameColor=PiratesGuiGlobals.ButtonColor1[3], frameSize=(self['frameSize'][0] + 0.02, self['frameSize'][1] - 0.02, 0, 0.05), pos=(0, 0, self['frameSize'][3] - 0.06))
         if self['shipClass']:
-            self.classLabel = DirectLabel(
-                parent=self.nameLabel,
-                relief=None,
-                state=DGG.DISABLED,
-                text=PLocalizer.ShipClassNames.get(self['shipClass']),
-                text_scale=PiratesGuiGlobals.TextScaleMed,
-                text_align=TextNode.ARight,
-                text_fg=PiratesGuiGlobals.TextFG2,
-                text_shadow=(0, 0, 0, 1),
-                text_wordwrap=15,
-                textMayChange=0,
-                text_pos=(self.nameLabel['frameSize'][1] - 0.02, 0.015),
-                text_font=PiratesGlobals.getInterfaceFont())
+            self.classLabel = DirectLabel(parent=self.nameLabel, relief=None, state=DGG.DISABLED, text=PLocalizer.ShipClassNames.get(self['shipClass']), text_scale=PiratesGuiGlobals.TextScaleMed, text_align=TextNode.ARight, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=(0,
+                                                                                                                                                                                                                                                                                0,
+                                                                                                                                                                                                                                                                                0,
+                                                                                                                                                                                                                                                                                1), text_wordwrap=15, textMayChange=0, text_pos=(self.nameLabel['frameSize'][1] - 0.02, 0.015), text_font=PiratesGlobals.getInterfaceFont())
         return
 
     def setPos(self, *args, **kwargs):
@@ -98,22 +70,8 @@ class ShipFrameBottle(ShipFrame):
                 self.shipMeter.setColorScale(1, 1, 1, 0)
                 self.shipMeter.setTransparency(1)
 
-    def enableStats(self,
-                    shipName='',
-                    shipClass=0,
-                    mastInfo=[],
-                    hp=0,
-                    maxHp=0,
-                    sp=0,
-                    maxSp=0,
-                    cargo=0,
-                    maxCargo=0,
-                    crew=0,
-                    maxCrew=0,
-                    time=0):
-        self.statFrame = ShipStatFrame(self, None, shipName, shipClass,
-                                       mastInfo, hp, maxHp, sp, maxSp, cargo,
-                                       maxCargo, crew, maxCrew, time)
+    def enableStats(self, shipName='', shipClass=0, mastInfo=[], hp=0, maxHp=0, sp=0, maxSp=0, cargo=0, maxCargo=0, crew=0, maxCrew=0, time=0):
+        self.statFrame = ShipStatFrame(self, None, shipName, shipClass, mastInfo, hp, maxHp, sp, maxSp, cargo, maxCargo, crew, maxCrew, time)
         self.__enableStats()
         return
 
@@ -123,13 +81,10 @@ class ShipFrameBottle(ShipFrame):
 
     def __enableStats(self):
         self.statFrame.hide()
-        self.statTrigger = DirectFrame(
-            parent=self,
-            relief=DGG.FLAT,
-            frameSize=self.statFrame['frameSize'],
-            frameColor=(1, 1, 1, 0),
-            pos=self.statFrame.getPos(),
-            suppressMouse=False)
+        self.statTrigger = DirectFrame(parent=self, relief=DGG.FLAT, frameSize=self.statFrame['frameSize'], frameColor=(1,
+                                                                                                                        1,
+                                                                                                                        1,
+                                                                                                                        0), pos=self.statFrame.getPos(), suppressMouse=False)
         self.accept('within-%s' % self.statTrigger.guiId, self.mouseOverStat)
         self.accept('without-%s' % self.statTrigger.guiId, self.mouseOffStat)
 
@@ -148,6 +103,4 @@ class ShipFrameBottle(ShipFrame):
     def mouseOffStat(self, *args):
         if self.statFrame:
             self.statFrame.hide()
-
-
 # okay decompiling .\pirates\piratesgui\ShipFrameBottle.pyc

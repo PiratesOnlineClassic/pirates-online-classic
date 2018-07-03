@@ -4,9 +4,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class StunEffect(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -51,11 +50,8 @@ class StunEffect(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(1)
-        self.p0.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OOne,
-            ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.75, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0, 0, 0, 0), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOne, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.75, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0, 0, 0, 0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(0.1)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -66,39 +62,17 @@ class StunEffect(PooledEffect, EffectController):
         self.p0.emitter.setRadiusSpread(0.0)
 
     def createTrack(self):
-        self.p0.renderer.setInitialXScale(
-            0.001 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalXScale(
-            0.006 * self.cardScale * self.effectScale)
-        self.p0.renderer.setInitialYScale(
-            0.001 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalYScale(
-            0.0075 * self.cardScale * self.effectScale)
-        rotateOne = LerpHprInterval(
-            self.dummy,
-            self.duration,
-            Vec3(0, 10, -10),
-            startHpr=Vec3(0, -10, 10))
-        rotateTwo = LerpHprInterval(
-            self.dummy,
-            self.duration,
-            Vec3(0, -10, 10),
-            startHpr=Vec3(0, 10, -10))
+        self.p0.renderer.setInitialXScale(0.001 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalXScale(0.006 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialYScale(0.001 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalYScale(0.0075 * self.cardScale * self.effectScale)
+        rotateOne = LerpHprInterval(self.dummy, self.duration, Vec3(0, 10, -10), startHpr=Vec3(0, -10, 10))
+        rotateTwo = LerpHprInterval(self.dummy, self.duration, Vec3(0, -10, 10), startHpr=Vec3(0, 10, -10))
         rotate = Sequence(rotateOne, rotateTwo)
-        rotateH = LerpHprInterval(
-            self.dummy2,
-            self.duration,
-            Vec3(0, 0, 0),
-            startHpr=Vec3(self.direction * 360, 0, 0))
-        self.startEffect = Sequence(
-            Func(self.p0.clearToInitial), Func(self.p0.setBirthRate, 0.2),
-            Func(self.f.start, self, self.dummy2), Func(rotate.loop),
-            Func(rotateH.loop))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100.0), Wait(1.25), Func(rotate.finish),
-            Func(rotateH.finish), Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(2.0 * self.duration),
-                              self.endEffect)
+        rotateH = LerpHprInterval(self.dummy2, self.duration, Vec3(0, 0, 0), startHpr=Vec3(self.direction * 360, 0, 0))
+        self.startEffect = Sequence(Func(self.p0.clearToInitial), Func(self.p0.setBirthRate, 0.2), Func(self.f.start, self, self.dummy2), Func(rotate.loop), Func(rotateH.loop))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(1.25), Func(rotate.finish), Func(rotateH.finish), Func(self.cleanUpEffect))
+        self.track = Sequence(self.startEffect, Wait(2.0 * self.duration), self.endEffect)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

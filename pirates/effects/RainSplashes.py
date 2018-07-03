@@ -6,7 +6,6 @@ from direct.particles import Particles
 from pirates.effects.EffectController import EffectController
 import random
 
-
 class RainSplashes(EffectController, NodePath):
     cardScale = 32.0
 
@@ -16,16 +15,13 @@ class RainSplashes(EffectController, NodePath):
         model = loader.loadModel('models/effects/particleCards')
         self.card = model.find('**/particleSplash2')
         if not RainSplashes.particleDummy:
-            RainSplashes.particleDummy = render.attachNewNode(
-                ModelNode('RainSplashesParticleDummy'))
+            RainSplashes.particleDummy = render.attachNewNode(ModelNode('RainSplashesParticleDummy'))
             RainSplashes.particleDummy.setDepthWrite(0)
             RainSplashes.particleDummy.setColorScale(1.0, 1.0, 1.0, 1)
             RainSplashes.particleDummy.setLightOff()
             RainSplashes.particleDummy.setBin('water', 10)
             mask = 16777215
-            stencil = StencilAttrib.make(
-                1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep,
-                StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
+            stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
             RainSplashes.particleDummy.setAttrib(stencil)
         self.reference = reference
         self.f = ParticleEffect.ParticleEffect('RainSplashes')
@@ -62,9 +58,7 @@ class RainSplashes(EffectController, NodePath):
         self.p0.renderer.setInitialYScale(0.01 * self.cardScale)
         self.p0.renderer.setFinalYScale(0.07 * self.cardScale)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
-                                           ColorBlendAttrib.OIncomingAlpha,
-                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
         self.p0.renderer.setAlphaDisable(0)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETEXPLICIT)
         self.p0.emitter.setAmplitude(1.0)
@@ -77,12 +71,8 @@ class RainSplashes(EffectController, NodePath):
 
     def createTrack(self):
         posUpdate = LerpFunctionInterval(self.updatePos, 1.0)
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy), Func(posUpdate.loop))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100.0), Wait(1.0),
-            Func(posUpdate.finish), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(posUpdate.loop))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(1.0), Func(posUpdate.finish), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def updatePos(self, t):

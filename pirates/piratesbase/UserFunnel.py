@@ -15,7 +15,6 @@ from panda3d.core import PandaSystem
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.task import Task
 
-
 class UserFunnel:
     notify = directNotify.newCategory('UserFunnel')
 
@@ -44,13 +43,13 @@ class UserFunnel:
             self.__initialize()
 
     def __get_platform(self):
-        return 'windows'  #TODO
+        return 'windows' #TODO
 
     def __get_os_version(self):
-        return 'windows 10'  #TODO
+        return 'windows 10' #TODO
 
     def __getManufacturer(self):
-        return 'microsoft'  #TODO
+        return 'microsoft' #TODO
 
     def __request_init(self):
         init_payload = {
@@ -62,18 +61,15 @@ class UserFunnel:
         init_payload_json = json.dumps(init_payload)
 
         headers = {
-            'Authorization':
-            self.__hmac_hash_with_secret(init_payload_json, self.secret_key),
-            'Content-Type':
-            'application/json'
+            'Authorization': self.__hmac_hash_with_secret(init_payload_json, self.secret_key),
+            'Content-Type': 'application/json'
         }
 
         response_dict = None
         status_code = None
 
         try:
-            init_response = requests.post(
-                self.url_init, data=init_payload_json, headers=headers)
+            init_response = requests.post(self.url_init, data=init_payload_json, headers=headers)
         except:
             self.notify.warning('Failed to initialize UserFunnel')
             return (None, 0)
@@ -85,15 +81,13 @@ class UserFunnel:
         except:
             response_dict = None
 
-        if not isinstance(status_code,
-                          (long, int)) and self.GetBool('want-dev', __dev__):
+        if not isinstance(status_code, (long, int)) and self.GetBool('want-dev', __dev__):
             print "---- Submit Init ERROR ----"
             print "URL: " + str(url_init)
             print "Payload JSON: " + str(init_payload_json)
-            print "Headers: " + str(headers)
+            print "Headers: " + str(headers)          
 
-        response_string = ('' if status_code is None else
-                           'Returned: ' + str(status_code) + ' response code.')
+        response_string = ('' if status_code is None else 'Returned: ' + str(status_code) + ' response code.')
 
         if status_code == 401:
             self.notify.warning('Failed to submit events; UNAUTHORIZED')
@@ -111,8 +105,7 @@ class UserFunnel:
                     print 'Response contents: %s' % init_response.text
             return (None, None)
 
-        if 'server_ts' not in response_dict or not isinstance(
-                response_dict['server_ts'], (int, long)):
+        if 'server_ts' not in response_dict or not isinstance(response_dict['server_ts'], (int, long)):
             self.notify.warning('Init failed; Did not return proper ts')
             return (None, None)
 
@@ -135,8 +128,8 @@ class UserFunnel:
         if offset < 10:
             self.client_ts_offset = 0
         else:
-            self.client_ts_offset = offset
-        self.notify.debug('Client TS offset calculated to: %s' % str(offset))
+            self.client_ts_offset = offset  
+        self.notify.debug('Client TS offset calculated to: %s' % str(offset))      
 
     def __initialize(self):
         init_response, init_response_code = self.__request_init()
@@ -154,12 +147,10 @@ class UserFunnel:
         self.__generate_new_session_id()
 
         self.__submitEvents()
-        self.submit_task = taskMgr.doMethodLater(5, self.__submitEvents,
-                                                 'submit-events')
+        self.submit_task = taskMgr.doMethodLater(5, self.__submitEvents, 'submit-events')
 
     def __hmac_hash_with_secret(self, message, key):
-        return base64.b64encode(
-            hmac.new(key, message, digestmod=hashlib.sha256).digest())
+        return base64.b64encode(hmac.new(key, message, digestmod=hashlib.sha256).digest())
 
     def __annotate_event_with_default_values(self, event_dict):
         now_ts = datetime.utcnow()
@@ -183,19 +174,24 @@ class UserFunnel:
         event_dict.update(default_annotations)
 
     def get_session_start_event(self):
-        event_dict = {'category': 'user'}
+        event_dict = {
+            'category': 'user'
+        }
         return event_dict
 
     def start_session(self):
         if not self.ready:
             return
-
+        
         self.add_to_event_queue(self.get_session_start_event())
         self.session_start_time = time.time()
         self.notify.debug('Starting session')
 
     def get_session_end_event(self, length=0):
-        event_dict = {'category': 'session_end', 'length': length}
+        event_dict = {
+            'category': 'session_end',
+            'length': length
+        }
         return event_dict
 
     def end_session(self):
@@ -248,18 +244,15 @@ class UserFunnel:
             event_list_json = self.__get_gzip_string(event_list_json)
 
         headers = {
-            'Authorization':
-            self.__hmac_hash_with_secret(event_list_json, self.secret_key),
-            'Content-Type':
-            'application/json'
+            'Authorization': self.__hmac_hash_with_secret(event_list_json, self.secret_key),
+            'Content-Type': 'application/json'
         }
 
         if self.use_gzip:
             headers['Content-Encoding'] = 'gzip'
 
         try:
-            events_response = requests.post(
-                self.url_events, data=event_list_json, headers=headers)
+            events_response = requests.post(self.url_events, data=event_list_json, headers=headers)
         except Exception as e:
             self.notify.warning('Failed to submit events')
             if config.GetBool('want-dev', __dev__):
@@ -275,8 +268,7 @@ class UserFunnel:
         self.notify.debug('Submit events response: %s' % str(response_dict))
 
         if not isinstance(response_dict, dict):
-            self.notify.warning(
-                'Submit events succeeded, but JSON decode failed.')
+            self.notify.warning('Submit events succeeded, but JSON decode failed.')
             self.notify.debug(events_response.text)
             return (None, None)
 
@@ -293,8 +285,7 @@ class UserFunnel:
                 if isinstance(response_dict, dict):
                     self.notify.debug(response_dict)
                 elif isinstance(init_response.text, basestring):
-                    self.notify.debug(
-                        'Response contents: %s' % init_response.text)
+                    self.notify.debug('Response contents: %s' % init_response.text)
             return (None, None)
 
         if status_code == 200:
@@ -317,7 +308,7 @@ class UserFunnel:
         if isinstance(value, (int, long, float)):
             event_dict['value'] = value
 
-        return event_dict
+        return event_dict        
 
 
 def logSubmit(setHostID, setMileStone):
@@ -325,5 +316,4 @@ def logSubmit(setHostID, setMileStone):
         return None
 
     print ':Userfunnel: use of logSubmit is deprecated; Please switch to add_event.'
-    base.funnel.add_to_event_queue(
-        base.funnel.get_design_event(setHostID, setMileStone))
+    base.funnel.add_to_event_queue(base.funnel.get_design_event(setHostID, setMileStone))

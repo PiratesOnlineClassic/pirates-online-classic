@@ -6,8 +6,9 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State
 from direct.interval.IntervalGlobal import *
 from direct.showbase.InputStateGlobal import inputState
-from direct.showbase.PythonUtil import (ParamObj, clampScalar, fitSrcAngle2Dest,
-                                        getSetter, reduceAngle)
+from direct.showbase.PythonUtil import (ParamObj, clampScalar,
+                                        fitSrcAngle2Dest, getSetter,
+                                        reduceAngle)
 from direct.task import Task
 from otp.otpbase import OTPGlobals
 from panda3d.core import *
@@ -16,21 +17,15 @@ from pirates.piratesbase import PiratesGlobals
 
 
 class CannonCamera(CameraMode.CameraMode, NodePath, ParamObj):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('CannonCamera')
 
     class ParamSet(ParamObj.ParamSet):
+        
+        Params = {'minH': -60.0, 'maxH': 60.0, 'minP': -12.0, 'maxP': 24, 'sensitivityH': 0.07, 'sensitivityP': 0.03}
 
-        Params = {
-            'minH': -60.0,
-            'maxH': 60.0,
-            'minP': -12.0,
-            'maxP': 24,
-            'sensitivityH': 0.07,
-            'sensitivityP': 0.03
-        }
-
-    CamParentPos = (Vec3(0, -6, 3), Vec3(0, -2, 0))
+    CamParentPos = (
+     Vec3(0, -6, 3), Vec3(0, -2, 0))
 
     def __init__(self, params=None):
         ParamObj.__init__(self)
@@ -130,40 +125,17 @@ class CannonCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self._stopKeyboardUpdateTask()
         self.inputStateTokens = []
         ist = self.inputStateTokens
-        ist.append(
-            inputState.watchWithModifiers(
-                'forward', 'arrow_up', inputSource=inputState.ArrowKeys))
-        ist.append(
-            inputState.watchWithModifiers(
-                'reverse', 'arrow_down', inputSource=inputState.ArrowKeys))
-        ist.append(
-            inputState.watchWithModifiers(
-                'turnLeft', 'arrow_left', inputSource=inputState.ArrowKeys))
-        ist.append(
-            inputState.watchWithModifiers(
-                'turnRight', 'arrow_right', inputSource=inputState.ArrowKeys))
-        ist.append(
-            inputState.watchWithModifiers(
-                'forward', 'w', inputSource=inputState.WASD))
-        ist.append(
-            inputState.watchWithModifiers(
-                'reverse', 's', inputSource=inputState.WASD))
-        ist.append(
-            inputState.watchWithModifiers(
-                'turnLeft', 'a', inputSource=inputState.WASD))
-        ist.append(
-            inputState.watchWithModifiers(
-                'turnRight', 'd', inputSource=inputState.WASD))
-        ist.append(
-            inputState.watchWithModifiers(
-                'turnLeft', 'q', inputSource=inputState.QE))
-        ist.append(
-            inputState.watchWithModifiers(
-                'turnRight', 'e', inputSource=inputState.QE))
-        taskMgr.add(
-            self._keyboardUpdateTask,
-            '%s-KeyboardUpdate' % self._getTopNodeName(),
-            priority=40)
+        ist.append(inputState.watchWithModifiers('forward', 'arrow_up', inputSource=inputState.ArrowKeys))
+        ist.append(inputState.watchWithModifiers('reverse', 'arrow_down', inputSource=inputState.ArrowKeys))
+        ist.append(inputState.watchWithModifiers('turnLeft', 'arrow_left', inputSource=inputState.ArrowKeys))
+        ist.append(inputState.watchWithModifiers('turnRight', 'arrow_right', inputSource=inputState.ArrowKeys))
+        ist.append(inputState.watchWithModifiers('forward', 'w', inputSource=inputState.WASD))
+        ist.append(inputState.watchWithModifiers('reverse', 's', inputSource=inputState.WASD))
+        ist.append(inputState.watchWithModifiers('turnLeft', 'a', inputSource=inputState.WASD))
+        ist.append(inputState.watchWithModifiers('turnRight', 'd', inputSource=inputState.WASD))
+        ist.append(inputState.watchWithModifiers('turnLeft', 'q', inputSource=inputState.QE))
+        ist.append(inputState.watchWithModifiers('turnRight', 'e', inputSource=inputState.QE))
+        taskMgr.add(self._keyboardUpdateTask, '%s-KeyboardUpdate' % self._getTopNodeName(), priority=40)
 
     def _stopKeyboardUpdateTask(self):
         taskMgr.remove('%s-KeyboardUpdate' % self._getTopNodeName())
@@ -223,22 +195,16 @@ class CannonCamera(CameraMode.CameraMode, NodePath, ParamObj):
                 else:
                     self.cannonProp.shipH += shipH - self.cannonProp.oldShipH
             self.cannonProp.oldShipH = shipH
-            newH = min(
-                max(curH + -dx * self.sensitivityH,
-                    self.minH + self.cannonProp.shipH),
-                self.maxH + self.cannonProp.shipH)
-            newP = min(
-                max(curP + -dy * self.sensitivityP, self.minP), self.maxP)
+            newH = min(max(curH + -dx * self.sensitivityH, self.minH + self.cannonProp.shipH), self.maxH + self.cannonProp.shipH)
+            newP = min(max(curP + -dy * self.sensitivityP, self.minP), self.maxP)
             relH = newH - self.cannonProp.shipH
             ship.avCannonRotate.setH(relH)
             ship.avCannonRotate.setP(newP)
             ship.avCannonRotate.setR(render, 0)
             if localAvatar.cannon:
                 cannonDressingNode = localAvatar.cannon.cannonDressingNode
-                cannonDressingNode.setPos(
-                    self.cannonProp.cannonExitPoint.getPos())
-                cannonDressingNode.setHpr(
-                    self.cannonProp.cannonExitPoint.getHpr())
+                cannonDressingNode.setPos(self.cannonProp.cannonExitPoint.getPos())
+                cannonDressingNode.setHpr(self.cannonProp.cannonExitPoint.getHpr())
             self.cannonProp.pivot.setH(0.0)
             self.cannonProp.pivot.setP(newP)
             self.cannonProp.pivot.setR(render, 0.0)
@@ -249,8 +215,7 @@ class CannonCamera(CameraMode.CameraMode, NodePath, ParamObj):
             curH = self.cannonProp.hNode.getH(render)
             curP = self.cannonProp.currentHpr[1]
             newH = curH + -dx * self.sensitivityH
-            newP = min(
-                max(curP + -dy * self.sensitivityP, self.minP), self.maxP)
+            newP = min(max(curP + -dy * self.sensitivityP, self.minP), self.maxP)
             self.cannonProp.hNode.setH(render, newH)
             h = self.cannonProp.hNode.getH()
             h = min(max(h, self.minH), self.maxH)
@@ -259,7 +224,6 @@ class CannonCamera(CameraMode.CameraMode, NodePath, ParamObj):
             self.camParent.setR(render, 0.0)
             self.cannonProp.pivot.setH(0.0)
             self.cannonProp.pivot.setP(newP)
-            self.cannonProp.currentHpr = (newH, newP, 0)
-
-
+            self.cannonProp.currentHpr = (
+             newH, newP, 0)
 # okay decompiling .\pirates\pirate\CannonCamera.pyc

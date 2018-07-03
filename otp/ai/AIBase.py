@@ -19,15 +19,14 @@ from direct.showbase import EventManager
 from direct.showbase import ExceptionVarDump
 
 
-class AIBase:
+class AIBase():
     notify = directNotify.newCategory('AIBase')
 
     def __init__(self):
         self.config = getConfigShowbase()
         __builtins__['__dev__'] = self.config.GetBool('want-dev', False)
-        logStackDump = self.config.GetBool('log-stack-dump',
-                                           not __dev__) or self.config.GetBool(
-                                               'ai-log-stack-dump', not __dev__)
+        logStackDump = self.config.GetBool('log-stack-dump', not __dev__) or self.config.GetBool(
+            'ai-log-stack-dump', not __dev__)
 
         uploadStackDump = self.config.GetBool('upload-stack-dump', False)
         if logStackDump or uploadStackDump:
@@ -40,17 +39,14 @@ class AIBase:
 
         self.wantTk = self.config.GetBool('want-tk', False)
         self.AISleep = self.config.GetFloat('ai-sleep', 0.04)
-        self.AIRunningNetYield = self.config.GetBool('ai-running-net-yield',
-                                                     False)
+        self.AIRunningNetYield = self.config.GetBool('ai-running-net-yield', False)
         self.AIForceSleep = self.config.GetBool('ai-force-sleep', False)
         self.eventMgr = eventMgr
         self.messenger = messenger
         self.bboard = bulletinBoard
         self.taskMgr = taskMgr
-        Task.TaskManager.taskTimerVerbose = self.config.GetBool(
-            'task-timer-verbose', False)
-        Task.TaskManager.extendedExceptions = self.config.GetBool(
-            'extended-exceptions', False)
+        Task.TaskManager.taskTimerVerbose = self.config.GetBool('task-timer-verbose', False)
+        Task.TaskManager.extendedExceptions = self.config.GetBool('extended-exceptions', False)
         self.sfxManagerList = None
         self.musicManager = None
         self.jobMgr = jobMgr
@@ -69,18 +65,15 @@ class AIBase:
         __builtins__['hidden'] = self.hidden
         __builtins__['render'] = self.render
         AIBase.notify.info('__dev__ == %s' % __dev__)
-        __builtins__['wantTestObject'] = self.config.GetBool(
-            'want-test-object', False)
+        __builtins__['wantTestObject'] = self.config.GetBool('want-test-object', False)
         self.wantStats = self.config.GetBool('want-pstats', False)
-        Task.TaskManager.pStatsTasks = self.config.GetBool(
-            'pstats-tasks', False)
+        Task.TaskManager.pStatsTasks = self.config.GetBool('pstats-tasks', False)
         taskMgr.resumeFunc = PStatClient.resumeAfterPause
         defaultValue = 1
         if __dev__:
             defaultValue = 0
 
-        wantFakeTextures = self.config.GetBool('want-fake-textures-ai',
-                                               defaultValue)
+        wantFakeTextures = self.config.GetBool('want-fake-textures-ai', defaultValue)
         if wantFakeTextures:
             loadPrcFileData('aibase', 'textures-header-only #t')
 
@@ -88,30 +81,21 @@ class AIBase:
         if self.wantPets:
             if game.name == 'toontown':
                 from toontown.pets import PetConstants
-                self.petMoodTimescale = self.config.GetFloat(
-                    'pet-mood-timescale', 1.0)
-                self.petMoodDriftPeriod = self.config.GetFloat(
-                    'pet-mood-drift-period', PetConstants.MoodDriftPeriod)
-                self.petThinkPeriod = self.config.GetFloat(
-                    'pet-think-period', PetConstants.ThinkPeriod)
-                self.petMovePeriod = self.config.GetFloat(
-                    'pet-move-period', PetConstants.MovePeriod)
-                self.petPosBroadcastPeriod = self.config.GetFloat(
-                    'pet-pos-broadcast-period', PetConstants.PosBroadcastPeriod)
+                self.petMoodTimescale = self.config.GetFloat('pet-mood-timescale', 1.0)
+                self.petMoodDriftPeriod = self.config.GetFloat('pet-mood-drift-period', PetConstants.MoodDriftPeriod)
+                self.petThinkPeriod = self.config.GetFloat('pet-think-period', PetConstants.ThinkPeriod)
+                self.petMovePeriod = self.config.GetFloat('pet-move-period', PetConstants.MovePeriod)
+                self.petPosBroadcastPeriod = self.config.GetFloat('pet-pos-broadcast-period', PetConstants.PosBroadcastPeriod)
 
         self.wantBingo = self.config.GetBool('want-fish-bingo', True)
         self.wantKarts = self.config.GetBool('wantKarts', True)
-        self.newDBRequestGen = self.config.GetBool(
-            'new-database-request-generate', True)
+        self.newDBRequestGen = self.config.GetBool('new-database-request-generate', True)
         self.waitShardDelete = self.config.GetBool('wait-shard-delete', True)
         self.blinkTrolley = self.config.GetBool('blink-trolley', False)
-        self.fakeDistrictPopulations = self.config.GetBool(
-            'fake-district-populations', False)
+        self.fakeDistrictPopulations = self.config.GetBool('fake-district-populations', False)
         self.wantSwitchboard = self.config.GetBool('want-switchboard', False)
-        self.wantSwitchboardHacks = self.config.GetBool(
-            'want-switchboard-hacks', False)
-        self.GEMdemoWhisperRecipientDoid = self.config.GetBool(
-            'gem-demo-whisper-recipient-doid', False)
+        self.wantSwitchboardHacks = self.config.GetBool('want-switchboard-hacks', False)
+        self.GEMdemoWhisperRecipientDoid = self.config.GetBool('gem-demo-whisper-recipient-doid', False)
         self.sqlAvailable = self.config.GetBool('sql-available', True)
         self.createStats()
         self.restart()
@@ -124,8 +108,7 @@ class AIBase:
         if affinityMask != -1:
             TrueClock.getGlobalPtr().setCpuAffinity(affinityMask)
         else:
-            autoAffinity = self.config.GetBool('auto-single-cpu-affinity',
-                                               False)
+            autoAffinity = self.config.GetBool('auto-single-cpu-affinity', False)
             if game.name == 'uberDog':
                 affinity = self.config.GetInt('uberdog-cpu-affinity', -1)
                 if autoAffinity and affinity == -1:
@@ -194,12 +177,10 @@ class AIBase:
 
     def restart(self):
         self.shutdown()
-        self.taskMgr.add(
-            self.__resetPrevTransform, 'resetPrevTransform', priority=-51)
+        self.taskMgr.add(self.__resetPrevTransform, 'resetPrevTransform', priority=-51)
         self.taskMgr.add(self.__ivalLoop, 'ivalLoop', priority=20)
         self.taskMgr.add(self.__igLoop, 'igLoop', priority=50)
-        if self.AISleep >= 0 and (not self.AIRunningNetYield or
-                                  self.AIForceSleep):
+        if self.AISleep >= 0 and (not self.AIRunningNetYield or self.AIForceSleep):
             self.taskMgr.add(self.__sleepCycleTask, 'aiSleep', priority=55)
 
         self.eventMgr.restart()

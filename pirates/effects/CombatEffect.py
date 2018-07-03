@@ -48,9 +48,8 @@ from pirates.effects.WaspCloud import WaspCloud
 from pirates.effects.WitherStar import WitherStar
 from pirates.piratesbase import PiratesGlobals
 
-
 class CombatEffect(NodePath):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('CombatEffect')
     MAX_DURATION = 10.0
 
@@ -70,10 +69,8 @@ class CombatEffect(NodePath):
             return
         self.ival = Sequence()
         effectAnims = Parallel()
-        if self.attacker and self.attacker.currentWeapon and hasattr(
-                self.attacker.currentWeapon, 'colorAndOffset'):
-            self.colorEffect = self.attacker.currentWeapon.getEffectColor(
-                self.attacker.currentWeapon.itemId)
+        if self.attacker and self.attacker.currentWeapon and hasattr(self.attacker.currentWeapon, 'colorAndOffset'):
+            self.colorEffect = self.attacker.currentWeapon.getEffectColor(self.attacker.currentWeapon.itemId)
         if self.effectId == WeaponGlobals.VFX_HACK:
             effect = HitFlashA.getEffect()
             if effect:
@@ -85,13 +82,9 @@ class CombatEffect(NodePath):
                 effect.rayFlareValue = 2.0
                 effect.setColor(1, 1, 1, 1)
                 effect.setPos(0, 0, 0.5)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 effect = SparkBurst.getEffect()
                 if effect:
                     effect.reparentTo(self)
@@ -109,13 +102,9 @@ class CombatEffect(NodePath):
                 effect.rayFlareValue = 2.0
                 effect.setColor(1, 1, 1, 1)
                 effect.setPos(0, 0, 1.0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 effect = SparkBurst.getEffect()
                 if effect:
                     effect.reparentTo(self)
@@ -133,13 +122,9 @@ class CombatEffect(NodePath):
                 effect.rayFlareValue = 2.5
                 effect.setColor(1, 1, 1, 1)
                 effect.setPos(0, 0, 1.0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
@@ -148,24 +133,17 @@ class CombatEffect(NodePath):
                     shockwaveHitEffect.loadExplosion(Point3(0, 80, 0), 'Hit')
                     shockwaveHitEffect.setColor(1, 1, 1, 1)
                     shockwaveHitEffect.setPos(0, 0, 0)
-                    shockwaveHitEffect.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(shockwaveHitEffect.play))
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
                     shockwaveHitEffect.size = 15
                     shockwaveHitEffect.speed = 0.2
-                    shockwaveHitEffect.loadExplosion(
-                        Point3(-45, -45, 0), 'HitRay')
+                    shockwaveHitEffect.loadExplosion(Point3(-45, -45, 0), 'HitRay')
                     shockwaveHitEffect.setColor(1, 1, 1, 1)
                     shockwaveHitEffect.setPos(0, 0, 0)
-                    shockwaveHitEffect.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(shockwaveHitEffect.play))
                 effect = SparkBurst.getEffect()
                 if effect:
@@ -185,13 +163,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 2.0
                     effect.setColor(1, 1, 1, 1)
                     effect.setPos(0.5, 0, 0)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -209,13 +183,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 2.0
                     effect.setColor(1, 1, 1, 1)
                     effect.setPos(-0.5, 0, 2.0)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -233,13 +203,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 3.0
                     effect.setColor(1, 1, 1, 1)
                     effect.setPos(0, 0, -2.0)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -251,30 +217,20 @@ class CombatEffect(NodePath):
                         shockwaveHitEffect.reparentTo(self)
                         shockwaveHitEffect.size = 13
                         shockwaveHitEffect.speed = 0.2
-                        shockwaveHitEffect.loadExplosion(
-                            Point3(-45, 45, 0), 'Hit')
+                        shockwaveHitEffect.loadExplosion(Point3(-45, 45, 0), 'Hit')
                         shockwaveHitEffect.setColor(1, 1, 1, 1)
                         shockwaveHitEffect.setPos(0, 0, 0)
-                        shockwaveHitEffect.node().setAttrib(
-                            ColorBlendAttrib.make(
-                                ColorBlendAttrib.MAdd,
-                                ColorBlendAttrib.OIncomingAlpha,
-                                ColorBlendAttrib.OOne))
+                        shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                         effectAnims.append(Func(shockwaveHitEffect.play))
                     shockwaveHitEffect = ShockwaveHit.getEffect()
                     if shockwaveHitEffect:
                         shockwaveHitEffect.reparentTo(self)
                         shockwaveHitEffect.size = 20
                         shockwaveHitEffect.speed = 0.2
-                        shockwaveHitEffect.loadExplosion(
-                            Point3(-45, -45, 0), 'HitRay')
+                        shockwaveHitEffect.loadExplosion(Point3(-45, -45, 0), 'HitRay')
                         shockwaveHitEffect.setColor(1, 1, 1, 1)
                         shockwaveHitEffect.setPos(0, 0, 0)
-                        shockwaveHitEffect.node().setAttrib(
-                            ColorBlendAttrib.make(
-                                ColorBlendAttrib.MAdd,
-                                ColorBlendAttrib.OIncomingAlpha,
-                                ColorBlendAttrib.OOne))
+                        shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                         effectAnims.append(Func(shockwaveHitEffect.play))
         elif self.effectId == WeaponGlobals.VFX_STAB:
             effect = HitFlashA.getEffect()
@@ -287,13 +243,9 @@ class CombatEffect(NodePath):
                 effect.rayFlareValue = 3.5
                 effect.setColor(1, 1, 1, 1)
                 effect.setPos(0, 0, 0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
@@ -302,24 +254,17 @@ class CombatEffect(NodePath):
                     shockwaveHitEffect.loadExplosion(Point3(-45, 45, 0), 'Hit')
                     shockwaveHitEffect.setColor(1, 1, 1, 1)
                     shockwaveHitEffect.setPos(0, 0, 0)
-                    shockwaveHitEffect.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(shockwaveHitEffect.play))
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
                     shockwaveHitEffect.size = 20
                     shockwaveHitEffect.speed = 0.2
-                    shockwaveHitEffect.loadExplosion(
-                        Point3(-45, -45, 0), 'HitRay')
+                    shockwaveHitEffect.loadExplosion(Point3(-45, -45, 0), 'HitRay')
                     shockwaveHitEffect.setColor(1, 1, 1, 1)
                     shockwaveHitEffect.setPos(0, 0, 0)
-                    shockwaveHitEffect.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(shockwaveHitEffect.play))
                 effect = SparkBurst.getEffect()
                 if effect:
@@ -339,13 +284,9 @@ class CombatEffect(NodePath):
                 effect.rayFlareValue = 0.35
                 effect.setColor(1, 1, 1, 1)
                 effect.setPos(0, 0, 0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
@@ -354,24 +295,17 @@ class CombatEffect(NodePath):
                     shockwaveHitEffect.loadExplosion(Point3(-45, 45, 0), 'Hit')
                     shockwaveHitEffect.setColor(1, 1, 1, 1)
                     shockwaveHitEffect.setPos(0, 0, 0)
-                    shockwaveHitEffect.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(shockwaveHitEffect.play))
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
                     shockwaveHitEffect.size = 20
                     shockwaveHitEffect.speed = 0.2
-                    shockwaveHitEffect.loadExplosion(
-                        Point3(-45, -45, 0), 'HitRay')
+                    shockwaveHitEffect.loadExplosion(Point3(-45, -45, 0), 'HitRay')
                     shockwaveHitEffect.setColor(1, 1, 1, 1)
                     shockwaveHitEffect.setPos(0, 0, 0)
-                    shockwaveHitEffect.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(shockwaveHitEffect.play))
         elif self.effectId == WeaponGlobals.VFX_SWEEP:
             effect = HitFlashA.getEffect()
@@ -384,13 +318,9 @@ class CombatEffect(NodePath):
                 effect.rayFlareValue = 2.5
                 effect.setColor(1, 1, 1, 1)
                 effect.setPos(0, 0, 0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
@@ -399,24 +329,17 @@ class CombatEffect(NodePath):
                     shockwaveHitEffect.loadExplosion(Point3(-45, 45, 0), 'Hit')
                     shockwaveHitEffect.setColor(1, 1, 1, 1)
                     shockwaveHitEffect.setPos(0, 0, 0)
-                    shockwaveHitEffect.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(shockwaveHitEffect.play))
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
                     shockwaveHitEffect.size = 20
                     shockwaveHitEffect.speed = 0.2
-                    shockwaveHitEffect.loadExplosion(
-                        Point3(-45, -45, 0), 'HitRay')
+                    shockwaveHitEffect.loadExplosion(Point3(-45, -45, 0), 'HitRay')
                     shockwaveHitEffect.setColor(1, 1, 1, 1)
                     shockwaveHitEffect.setPos(0, 0, 0)
-                    shockwaveHitEffect.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(shockwaveHitEffect.play))
                 effect = SparkBurst.getEffect()
                 if effect:
@@ -436,13 +359,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 2.0
                     effect.setColor(1, 1, 1, 1)
                     effect.setPos(-0.5, 0, 1.5)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -460,13 +379,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 2.5
                     effect.setColor(1, 1, 1, 1)
                     effect.setPos(0.5, 0, 0.5)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -484,13 +399,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 3.0
                     effect.setColor(1, 1, 1, 1)
                     effect.setPos(0.5, 0, -2.0)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -508,13 +419,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 3.0
                     effect.setColor(1, 1, 1, 1)
                     effect.setPos(-1.5, 0, -1.0)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -532,13 +439,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 4.0
                     effect.setColor(1, 1, 1, 1)
                     effect.setPos(0, 0, 0)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -550,30 +453,20 @@ class CombatEffect(NodePath):
                         shockwaveHitEffect.reparentTo(self)
                         shockwaveHitEffect.size = 16
                         shockwaveHitEffect.speed = 0.2
-                        shockwaveHitEffect.loadExplosion(
-                            Point3(-45, 45, 0), 'Hit')
+                        shockwaveHitEffect.loadExplosion(Point3(-45, 45, 0), 'Hit')
                         shockwaveHitEffect.setColor(1, 1, 1, 1)
                         shockwaveHitEffect.setPos(0, 0, 0)
-                        shockwaveHitEffect.node().setAttrib(
-                            ColorBlendAttrib.make(
-                                ColorBlendAttrib.MAdd,
-                                ColorBlendAttrib.OIncomingAlpha,
-                                ColorBlendAttrib.OOne))
+                        shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                         effectAnims.append(Func(shockwaveHitEffect.play))
                     shockwaveHitEffect = ShockwaveHit.getEffect()
                     if shockwaveHitEffect:
                         shockwaveHitEffect.reparentTo(self)
                         shockwaveHitEffect.size = 22
                         shockwaveHitEffect.speed = 0.2
-                        shockwaveHitEffect.loadExplosion(
-                            Point3(-45, -45, 0), 'HitRay')
+                        shockwaveHitEffect.loadExplosion(Point3(-45, -45, 0), 'HitRay')
                         shockwaveHitEffect.setColor(1, 1, 1, 1)
                         shockwaveHitEffect.setPos(0, 0, 0)
-                        shockwaveHitEffect.node().setAttrib(
-                            ColorBlendAttrib.make(
-                                ColorBlendAttrib.MAdd,
-                                ColorBlendAttrib.OIncomingAlpha,
-                                ColorBlendAttrib.OOne))
+                        shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                         effectAnims.append(Func(shockwaveHitEffect.play))
         elif self.effectId == WeaponGlobals.VFX_CUT:
             effect = HitFlashA.getEffect()
@@ -586,13 +479,9 @@ class CombatEffect(NodePath):
                 effect.rayFlareValue = 2.0
                 effect.setColor(0.2, 0.5, 1, 1)
                 effect.setPos(0, 0, 0.8)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 effect = SparkBurst.getEffect()
                 if effect:
                     effect.reparentTo(self)
@@ -611,13 +500,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 2.5
                     effect.setColor(0.2, 0.5, 1, 1)
                     effect.setPos(-0.5, 0, 0.8)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -635,13 +520,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 2.5
                     effect.setColor(0.2, 0.5, 1, 1)
                     effect.setPos(0.5, 0, -0.5)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -659,13 +540,9 @@ class CombatEffect(NodePath):
                 effect.rayFlareValue = 2.5
                 effect.setColor(0.2, 0.5, 1, 1)
                 effect.setPos(0, 0, 0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
@@ -674,24 +551,17 @@ class CombatEffect(NodePath):
                     shockwaveHitEffect.loadExplosion(Point3(0, 80, 0), 'Hit')
                     shockwaveHitEffect.setColor(0.3, 0.2, 1, 1)
                     shockwaveHitEffect.setPos(0, 0, 0)
-                    shockwaveHitEffect.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(shockwaveHitEffect.play))
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
                     shockwaveHitEffect.size = 13
                     shockwaveHitEffect.speed = 0.2
-                    shockwaveHitEffect.loadExplosion(
-                        Point3(-45, -45, 0), 'HitRay')
+                    shockwaveHitEffect.loadExplosion(Point3(-45, -45, 0), 'HitRay')
                     shockwaveHitEffect.setColor(0.3, 0.2, 1, 1)
                     shockwaveHitEffect.setPos(0, 0, 0)
-                    shockwaveHitEffect.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(shockwaveHitEffect.play))
                 effect = SparkBurst.getEffect()
                 if effect:
@@ -711,42 +581,28 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 3.0
                     effect.setColor(0.2, 0.5, 1, 1)
                     effect.setPos(0, 0, 0.5)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     shockwaveHitEffect = ShockwaveHit.getEffect()
                     if shockwaveHitEffect:
                         shockwaveHitEffect.reparentTo(self)
                         shockwaveHitEffect.size = 8
                         shockwaveHitEffect.speed = 0.2
-                        shockwaveHitEffect.loadExplosion(
-                            Point3(0, 80, 0), 'Hit')
+                        shockwaveHitEffect.loadExplosion(Point3(0, 80, 0), 'Hit')
                         shockwaveHitEffect.setColor(0.3, 0.2, 1, 1)
                         shockwaveHitEffect.setPos(0, 0, 0)
-                        shockwaveHitEffect.node().setAttrib(
-                            ColorBlendAttrib.make(
-                                ColorBlendAttrib.MAdd,
-                                ColorBlendAttrib.OIncomingAlpha,
-                                ColorBlendAttrib.OOne))
+                        shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                         effectAnims.append(Func(shockwaveHitEffect.play))
                     shockwaveHitEffect = ShockwaveHit.getEffect()
                     if shockwaveHitEffect:
                         shockwaveHitEffect.reparentTo(self)
                         shockwaveHitEffect.size = 13
                         shockwaveHitEffect.speed = 0.2
-                        shockwaveHitEffect.loadExplosion(
-                            Point3(-45, -45, 0), 'HitRay')
+                        shockwaveHitEffect.loadExplosion(Point3(-45, -45, 0), 'HitRay')
                         shockwaveHitEffect.setColor(0.3, 0.2, 1, 1)
                         shockwaveHitEffect.setPos(0, 0, 0)
-                        shockwaveHitEffect.node().setAttrib(
-                            ColorBlendAttrib.make(
-                                ColorBlendAttrib.MAdd,
-                                ColorBlendAttrib.OIncomingAlpha,
-                                ColorBlendAttrib.OOne))
+                        shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                         effectAnims.append(Func(shockwaveHitEffect.play))
                     effect = SparkBurst.getEffect()
                     if effect:
@@ -765,42 +621,28 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 3.0
                     effect.setColor(0.2, 0.5, 1, 1)
                     effect.setPos(0, 0, 0.5)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     shockwaveHitEffect = ShockwaveHit.getEffect()
                     if shockwaveHitEffect:
                         shockwaveHitEffect.reparentTo(self)
                         shockwaveHitEffect.size = 8
                         shockwaveHitEffect.speed = 0.2
-                        shockwaveHitEffect.loadExplosion(
-                            Point3(0, 80, 0), 'Hit')
+                        shockwaveHitEffect.loadExplosion(Point3(0, 80, 0), 'Hit')
                         shockwaveHitEffect.setColor(0.3, 0.2, 1, 1)
                         shockwaveHitEffect.setPos(0, 0, 0)
-                        shockwaveHitEffect.node().setAttrib(
-                            ColorBlendAttrib.make(
-                                ColorBlendAttrib.MAdd,
-                                ColorBlendAttrib.OIncomingAlpha,
-                                ColorBlendAttrib.OOne))
+                        shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                         effectAnims.append(Func(shockwaveHitEffect.play))
                     shockwaveHitEffect = ShockwaveHit.getEffect()
                     if shockwaveHitEffect:
                         shockwaveHitEffect.reparentTo(self)
                         shockwaveHitEffect.size = 13
                         shockwaveHitEffect.speed = 0.2
-                        shockwaveHitEffect.loadExplosion(
-                            Point3(-45, -45, 0), 'HitRay')
+                        shockwaveHitEffect.loadExplosion(Point3(-45, -45, 0), 'HitRay')
                         shockwaveHitEffect.setColor(0.3, 0.2, 1, 1)
                         shockwaveHitEffect.setPos(0, 0, 0)
-                        shockwaveHitEffect.node().setAttrib(
-                            ColorBlendAttrib.make(
-                                ColorBlendAttrib.MAdd,
-                                ColorBlendAttrib.OIncomingAlpha,
-                                ColorBlendAttrib.OOne))
+                        shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                         effectAnims.append(Func(shockwaveHitEffect.play))
                     effect = SparkBurst.getEffect()
                     if effect:
@@ -819,42 +661,28 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 3.0
                     effect.setColor(0.2, 0.5, 1, 1)
                     effect.setPos(0, 0, 0.5)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     shockwaveHitEffect = ShockwaveHit.getEffect()
                     if shockwaveHitEffect:
                         shockwaveHitEffect.reparentTo(self)
                         shockwaveHitEffect.size = 8
                         shockwaveHitEffect.speed = 0.2
-                        shockwaveHitEffect.loadExplosion(
-                            Point3(0, 80, 0), 'Hit')
+                        shockwaveHitEffect.loadExplosion(Point3(0, 80, 0), 'Hit')
                         shockwaveHitEffect.setColor(0.3, 0.2, 1, 1)
                         shockwaveHitEffect.setPos(0, 0, 0)
-                        shockwaveHitEffect.node().setAttrib(
-                            ColorBlendAttrib.make(
-                                ColorBlendAttrib.MAdd,
-                                ColorBlendAttrib.OIncomingAlpha,
-                                ColorBlendAttrib.OOne))
+                        shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                         effectAnims.append(Func(shockwaveHitEffect.play))
                     shockwaveHitEffect = ShockwaveHit.getEffect()
                     if shockwaveHitEffect:
                         shockwaveHitEffect.reparentTo(self)
                         shockwaveHitEffect.size = 13
                         shockwaveHitEffect.speed = 0.2
-                        shockwaveHitEffect.loadExplosion(
-                            Point3(-45, -45, 0), 'HitRay')
+                        shockwaveHitEffect.loadExplosion(Point3(-45, -45, 0), 'HitRay')
                         shockwaveHitEffect.setColor(0.3, 0.2, 1, 1)
                         shockwaveHitEffect.setPos(0, 0, 0)
-                        shockwaveHitEffect.node().setAttrib(
-                            ColorBlendAttrib.make(
-                                ColorBlendAttrib.MAdd,
-                                ColorBlendAttrib.OIncomingAlpha,
-                                ColorBlendAttrib.OOne))
+                        shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                         effectAnims.append(Func(shockwaveHitEffect.play))
                     effect = SparkBurst.getEffect()
                     if effect:
@@ -873,26 +701,18 @@ class CombatEffect(NodePath):
                 effect.rayFlareValue = 2.5
                 effect.setColor(1, 1, 1, 1)
                 effect.setPos(0, 0, 0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
                     shockwaveHitEffect.size = 13
                     shockwaveHitEffect.speed = 0.2
-                    shockwaveHitEffect.loadExplosion(
-                        Point3(-45, -45, 0), 'HitRay')
+                    shockwaveHitEffect.loadExplosion(Point3(-45, -45, 0), 'HitRay')
                     shockwaveHitEffect.setColor(1, 1, 1, 1)
                     shockwaveHitEffect.setPos(0, 0, 0)
-                    shockwaveHitEffect.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(shockwaveHitEffect.play))
                 effect = SparkBurst.getEffect()
                 if effect:
@@ -911,13 +731,9 @@ class CombatEffect(NodePath):
                 effect.rayFlareValue = 2.5
                 effect.setColor(1, 1, 1, 1)
                 effect.setPos(0, 0, 0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsMedium:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 effect = PoisonHit.getEffect()
                 if effect:
                     effect.reparentTo(self)
@@ -933,10 +749,7 @@ class CombatEffect(NodePath):
                 effect.rayFlareValue = 2.0
                 effect.setColor(1, 1, 1, 1)
                 effect.setPos(0, 0, 0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
         elif self.effectId == WeaponGlobals.VFX_WOUND:
             effect = HitFlashA.getEffect()
@@ -949,13 +762,9 @@ class CombatEffect(NodePath):
                 effect.rayFlareValue = 3.0
                 effect.setColor(1, 0.4, 0.4, 1)
                 effect.setPos(0, 0, 0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 effect = HitFlashA.getEffect()
                 if effect:
                     effect.reparentTo(self)
@@ -966,24 +775,17 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 3.0
                     effect.setColor(1, 0.5, 0.5, 1)
                     effect.setPos(0, 0, 0)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
                     shockwaveHitEffect.size = 15
                     shockwaveHitEffect.speed = 0.5
-                    shockwaveHitEffect.loadExplosion(
-                        Point3(-45, -45, 0), 'HitRay')
+                    shockwaveHitEffect.loadExplosion(Point3(-45, -45, 0), 'HitRay')
                     shockwaveHitEffect.setColor(1.0, 1.0, 1, 1)
                     shockwaveHitEffect.setPos(0, 0, 0)
-                    shockwaveHitEffect.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    shockwaveHitEffect.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(shockwaveHitEffect.play))
         elif self.effectId == WeaponGlobals.VFX_TRIPLEHIT:
             hitNum = random.randint(0, 2)
@@ -998,13 +800,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 3.5
                     effect.setColor(0.2, 0.5, 1, 1)
                     effect.setPos(-0.5, 0, 0.8)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -1022,13 +820,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 3.5
                     effect.setColor(0.2, 0.5, 1, 1)
                     effect.setPos(0.5, 0, -0.5)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -1046,13 +840,9 @@ class CombatEffect(NodePath):
                     effect.rayFlareValue = 3.5
                     effect.setColor(0.2, 0.5, 1, 1)
                     effect.setPos(-0.5, 0, 0)
-                    effect.flashDummy.node().setAttrib(
-                        ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                              ColorBlendAttrib.OIncomingAlpha,
-                                              ColorBlendAttrib.OOne))
+                    effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                     effectAnims.append(Func(effect.play))
-                if base.options.getSpecialEffectsSetting(
-                ) >= base.options.SpecialEffectsHigh:
+                if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                     effect = SparkBurst.getEffect()
                     if effect:
                         effect.reparentTo(self)
@@ -1070,8 +860,7 @@ class CombatEffect(NodePath):
             elif self.hitNum == 1:
                 pass
         elif self.effectId == WeaponGlobals.VFX_CURSE:
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 effect = CurseHit.getEffect()
                 if effect:
                     effect.reparentTo(self)
@@ -1094,21 +883,16 @@ class CombatEffect(NodePath):
                 effect.splatScale = 15
                 effect.setColor(0.2, 0.2, 1, 1)
                 effect.setPos(0, 0, 0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsMedium:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 effect = HealSmoke.getEffect()
                 if effect:
                     effect.reparentTo(self)
                     effect.setPos(self, 0, 0, -2.0)
                     effect.setEffectColor(Vec4(0.2, 0.2, 1, 1))
                     effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 effect = HealRays.getEffect()
                 if effect:
                     effect.reparentTo(self)
@@ -1125,21 +909,16 @@ class CombatEffect(NodePath):
                 effect.splatScale = 15
                 effect.setColor(0.2, 0.5, 0.5, 1)
                 effect.setPos(0, 0, 0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsMedium:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 effect = HealSmoke.getEffect()
                 if effect:
                     effect.reparentTo(self)
                     effect.setPos(self, 0, 0, -2.0)
                     effect.setEffectColor(Vec4(0, 1, 0, 1))
                     effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 effect = HealSparks.getEffect()
                 if effect:
                     effect.reparentTo(self)
@@ -1162,13 +941,9 @@ class CombatEffect(NodePath):
                 effect.useSpark = 1
                 effect.splatScale = 20
                 effect.setColor(0.3, 0.75, 1, 1)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 effect = HealSparks.getEffect()
                 if effect:
                     effect.reparentTo(self)
@@ -1198,10 +973,7 @@ class CombatEffect(NodePath):
                 effect.splatScale = 10
                 effect.setColor(0.3, 0.2, 0.75, 1)
                 effect.setPos(0, 0, 0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(
-                        ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor,
-                        ColorBlendAttrib.OOneMinusIncomingAlpha))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha))
                 effectAnims.append(Func(effect.play))
         elif self.effectId == WeaponGlobals.VFX_POKE:
             effect = FlashStar.getEffect()
@@ -1226,8 +998,7 @@ class CombatEffect(NodePath):
                 if self.colorEffect:
                     effect.setEffectColor(self.colorEffect)
                 effectAnims.append(Func(effect.play, 0.3))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 effect = SparkBurst.getEffect()
                 if effect:
                     effect.reparentTo(self)
@@ -1247,8 +1018,7 @@ class CombatEffect(NodePath):
                         shockwaveHitEffect.setColor(self.colorEffect)
                     effectAnims.append(Func(shockwaveHitEffect.play))
         elif self.effectId == WeaponGlobals.VFX_PESTILENCE:
-            effectActor = Actor.Actor('models/effects/mopath_none',
-                                      {'spin': 'models/effects/mopath_spiral'})
+            effectActor = Actor.Actor('models/effects/mopath_none', {'spin': 'models/effects/mopath_spiral'})
             joint = effectActor.find('**/joint1')
             effectActor.setScale(4.0, 3.5, 4.0)
             effectActor.setP(-90)
@@ -1262,8 +1032,7 @@ class CombatEffect(NodePath):
                 effect.reparentTo(joint)
                 effect.effectScale = 4.0
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsMedium:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 shockwaveHitEffect = ShockwaveHit.getEffect()
                 if shockwaveHitEffect:
                     shockwaveHitEffect.reparentTo(self)
@@ -1292,8 +1061,7 @@ class CombatEffect(NodePath):
                 if self.colorEffect:
                     shockwaveHitEffect.setColor(self.colorEffect)
                 effectAnims.append(Func(shockwaveHitEffect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsMedium:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 explosionEffect = VoodooExplosion.getEffect()
                 if explosionEffect:
                     explosionEffect.reparentTo(self)
@@ -1301,8 +1069,7 @@ class CombatEffect(NodePath):
                     if self.colorEffect:
                         explosionEffect.setEffectColor(self.colorEffect)
                     effectAnims.append(Func(explosionEffect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 dustRing = DustRingBanish.getEffect()
                 if dustRing:
                     dustRing.reparentTo(self)
@@ -1325,8 +1092,7 @@ class CombatEffect(NodePath):
                 if self.colorEffect:
                     effect.setEffectColor(self.colorEffect)
                 effectAnims.append(Func(effect.play, 0.2))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 effect = SparkBurst.getEffect()
                 if effect:
                     effect.reparentTo(self)
@@ -1346,14 +1112,12 @@ class CombatEffect(NodePath):
                     shockwaveHitEffect.setPos(0, 0, 0)
                     effectAnims.append(Func(shockwaveHitEffect.play))
         elif self.effectId == WeaponGlobals.VFX_HELLFIRE:
-            if base.options.getSpecialEffectsSetting(
-            ) == base.options.SpecialEffectsLow:
+            if base.options.getSpecialEffectsSetting() == base.options.SpecialEffectsLow:
                 effect = FireballHit.getEffect()
                 if effect:
                     effect.reparentTo(self)
                     effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsMedium:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 effect = HellFire.getEffect()
                 if effect:
                     effect.reparentTo(self)
@@ -1368,13 +1132,9 @@ class CombatEffect(NodePath):
                 effect.splatScale = 10
                 effect.setColor(1, 1, 1, 1)
                 effect.setPos(0, 0, 0)
-                effect.flashDummy.node().setAttrib(
-                    ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                          ColorBlendAttrib.OIncomingAlpha,
-                                          ColorBlendAttrib.OOne))
+                effect.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
                 effectAnims.append(Func(effect.play))
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 effect = HitStar.getEffect()
                 if effect:
                     effect.reparentTo(self)

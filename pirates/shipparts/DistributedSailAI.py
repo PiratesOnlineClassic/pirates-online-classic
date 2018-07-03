@@ -9,9 +9,7 @@ class DistributedSailDNA(SailDNA):
     def __init__(self):
         SailDNA.__init__(self)
 
-
-class DistributedSailAI(DistributedShippartAI, DistributedDestructibleArrayAI,
-                        DistributedSailDNA):
+class DistributedSailAI(DistributedShippartAI, DistributedDestructibleArrayAI, DistributedSailDNA):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSailAI')
 
     def __init__(self, air):

@@ -35,16 +35,12 @@ class DistributedDinghy(DistributedInteractive):
 
     def generate(self):
         DistributedInteractive.generate(self)
-        self.setInteractOptions(
-            proximityText=PLocalizer.DeployShipInstructions,
-            sphereScale=self.interactRadius,
-            diskRadius=self.diskRadius)
+        self.setInteractOptions(proximityText=PLocalizer.DeployShipInstructions, sphereScale=self.interactRadius, diskRadius=self.diskRadius)
 
     def disable(self):
         DistributedInteractive.disable(self)
         if self.invReq:
-            DistributedInventoryBase.cancelGetInventory(
-                localAvatar.getInventoryId())
+            DistributedInventoryBase.cancelGetInventory(localAvatar.getInventoryId())
             self.invReq = None
         self.get_children().detach()
         return
@@ -93,19 +89,14 @@ class DistributedDinghy(DistributedInteractive):
             return
         self.cleanupDinghyDisabledDialog()
         if localAvatar.zombie and avId == localAvatar.doId:
-            localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoBoats,
-                                             PiratesGuiGlobals.TextFG6)
+            localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoBoats, PiratesGuiGlobals.TextFG6)
             return
-        DistributedInteractive.requestInteraction(self, avId, interactType,
-                                                  instant)
+        DistributedInteractive.requestInteraction(self, avId, interactType, instant)
         return
 
     def showDownloadAcknowledge(self):
         if not self.dinghyDisabledDialog:
-            self.dinghyDisabledDialog = PDialog.PDialog(
-                text=PLocalizer.NoMainWorld,
-                style=OTPDialog.Acknowledge,
-                command=self.cleanupDinghyDisabledDialog)
+            self.dinghyDisabledDialog = PDialog.PDialog(text=PLocalizer.NoMainWorld, style=OTPDialog.Acknowledge, command=self.cleanupDinghyDisabledDialog)
 
     def cleanupDinghyDisabledDialog(self, extraArgs=None):
         if self.dinghyDisabledDialog:
@@ -115,17 +106,11 @@ class DistributedDinghy(DistributedInteractive):
 
     def showTeamFullAcknowledge(self):
         if not self.teamFullDialog:
-            self.teamFullDialog = PDialog.PDialog(
-                text=PLocalizer.PrivateerAllTeamsFull,
-                style=OTPDialog.YesNo,
-                command=self.handleTeamFullAcknowledge)
+            self.teamFullDialog = PDialog.PDialog(text=PLocalizer.PrivateerAllTeamsFull, style=OTPDialog.YesNo, command=self.handleTeamFullAcknowledge)
 
     def showSingleTeamFullAcknowledge(self):
         if not self.teamFullDialog:
-            self.teamFullDialog = PDialog.PDialog(
-                text=PLocalizer.PrivateerSingleTeamFull,
-                style=OTPDialog.YesNo,
-                command=self.handleSingleTeamFullConfirmation)
+            self.teamFullDialog = PDialog.PDialog(text=PLocalizer.PrivateerSingleTeamFull, style=OTPDialog.YesNo, command=self.handleSingleTeamFullConfirmation)
 
     def handleTeamFullAcknowledge(self, value):
         if value == 1:
@@ -165,8 +150,7 @@ class DistributedDinghy(DistributedInteractive):
                     self.cr.interactionMgr.start()
             self.avGameState = None
         if self.invReq:
-            DistributedInventoryBase.cancelGetInventory(
-                localAvatar.getInventoryId())
+            DistributedInventoryBase.cancelGetInventory(localAvatar.getInventoryId())
             self.invReq = None
         return
 
@@ -177,12 +161,10 @@ class DistributedDinghy(DistributedInteractive):
         elif type == PiratesGlobals.PrivateerSingleTeamFull:
             self.showSingleTeamFullAcknowledge()
         elif type == PiratesGlobals.ZombieNoBoats:
-            localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoBoats,
-                                             PiratesGuiGlobals.TextFG6)
+            localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoBoats, PiratesGuiGlobals.TextFG6)
 
     def offerOptions(self):
-        self.invReq = DistributedInventoryBase.getInventory(
-            localAvatar.getInventoryId(), self.invArrived, 10)
+        self.invReq = DistributedInventoryBase.getInventory(localAvatar.getInventoryId(), self.invArrived, 10)
 
     def invArrived(self, inv):
         self.invReq = None
@@ -196,10 +178,7 @@ class DistributedDinghy(DistributedInteractive):
         DistributedInteractive.enterUse(self)
         if self.shipSelection:
             self.shipSelection.destroy()
-        self.shipSelection = ShipDeployPanel(
-            PLocalizer.ChooseShipTitle,
-            self.requestExit,
-            siegeTeam=self._siegeTeam)
+        self.shipSelection = ShipDeployPanel(PLocalizer.ChooseShipTitle, self.requestExit, siegeTeam=self._siegeTeam)
         self.shipSelection.hide()
         self.selectionSent = False
         self.startCamIval()
@@ -240,28 +219,23 @@ class DistributedDinghy(DistributedInteractive):
         if self.shipSelection:
             optionsSorted = sorted(options, key=itemgetter(5))
             for shipInfo in optionsSorted:
-                self.shipSelection.addFriendShip(shipInfo,
-                                                 self.friendShipSelected)
+                self.shipSelection.addFriendShip(shipInfo, self.friendShipSelected)
 
     def offerGuildOptions(self, options):
         if self.shipSelection:
             optionsSorted = sorted(options, key=itemgetter(5))
             for shipInfo in optionsSorted:
-                self.shipSelection.addGuildShip(shipInfo,
-                                                self.guildShipSelected)
+                self.shipSelection.addGuildShip(shipInfo, self.guildShipSelected)
 
     def offerPublicOptions(self, publicOptions):
         if self.shipSelection:
             publicOptionsSorted = sorted(publicOptions, key=itemgetter(5))
             for shipInfo in publicOptionsSorted:
-                self.shipSelection.addPublicShip(shipInfo,
-                                                 self.publicShipSelected)
+                self.shipSelection.addPublicShip(shipInfo, self.publicShipSelected)
 
     def ownShipSelected(self, shipId, teamSpec=0):
-        if localAvatar.getWorld().getParentObj(
-        ).shardType == PiratesGlobals.SHARD_WELCOME:
-            self.cr.teleportMgr.initiateCrossShardDeploy(
-                0, localAvatar.getParentObj().uniqueId, shipId, doEffect=False)
+        if localAvatar.getWorld().getParentObj().shardType == PiratesGlobals.SHARD_WELCOME:
+            self.cr.teleportMgr.initiateCrossShardDeploy(0, localAvatar.getParentObj().uniqueId, shipId, doEffect=False)
             self.selectionMade()
             return
         if shipId >= 0:
@@ -348,9 +322,7 @@ class DistributedDinghy(DistributedInteractive):
         self.camIval.start()
         return
 
-    @report(
-        types=['frameCount', 'deltaStamp', 'args'],
-        dConfigParam='want-shipboard-report')
+    @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-shipboard-report')
     def sendAvatarToShip(self, shipId):
         self.requestExit()
         if shipId:
@@ -358,8 +330,7 @@ class DistributedDinghy(DistributedInteractive):
             self.cr.loadingScreen.showHint(ocean=True)
             self.cr.loadingScreen.show()
             base.richPresence.setSailing()
-            self.cr.teleportMgr.localTeleportToId(
-                shipId, localAvatar, showLoadingScreen=False)
+            self.cr.teleportMgr.localTeleportToId(shipId, localAvatar, showLoadingScreen=False)
             self.ownShipSelection = None
         else:
             localAvatar.guiMgr.createWarning('Ship was not available')

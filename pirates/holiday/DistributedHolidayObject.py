@@ -1,7 +1,6 @@
 from pandac.PandaModules import NodePath
 from pirates.distributed.DistributedInteractive import DistributedInteractive
 
-
 class DistributedHolidayObject(DistributedInteractive):
 
     def __init__(self, cr, proximityText):
@@ -24,9 +23,6 @@ class DistributedHolidayObject(DistributedInteractive):
 
     def setInteractMode(self, mode):
         if mode == 1 or mode == 2 and localAvatar.gmNameTagAllowed:
-            self.setInteractOptions(
-                proximityText=self.proximityText,
-                sphereScale=self.interactRadius,
-                diskRadius=self.diskRadius)
+            self.setInteractOptions(proximityText=self.proximityText, sphereScale=self.interactRadius, diskRadius=self.diskRadius)
             return
         self.setInteractOptions(allowInteract=False)

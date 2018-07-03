@@ -30,12 +30,10 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 CannonDistance = 200
 CannonballHitEvent = 'tutorialCannonballHit'
 
-
 def _playHitEffect(pos, hitObject, skillId, task=None):
     attackerId = 0
     objType = None
-    ProjectileEffect(base.cr, attackerId, hitObject, objType, pos, skillId,
-                     InventoryType.GrenadeExplosion)
+    ProjectileEffect(base.cr, attackerId, hitObject, objType, pos, skillId, InventoryType.GrenadeExplosion)
     shakeCamera = False
     if localAvatar.ship:
         shakeCamera = False
@@ -77,8 +75,7 @@ class TutorialInteriorEffects:
         if self._cannonDelay is None:
             self._shootTask()
         else:
-            taskMgr.doMethodLater(self._cannonDelay, self._shootTask,
-                                  uniqueName(self._shootTaskString))
+            taskMgr.doMethodLater(self._cannonDelay, self._shootTask, uniqueName(self._shootTaskString))
         self._fireSound = None
         if self._startFire:
             self._startFireSound()
@@ -99,16 +96,10 @@ class TutorialInteriorEffects:
     def _shootTask(self, task=None):
         targetPos = self._target.getPos()
         flightTime = 4.0
-        self.currSnd = base.loader.loadSfx(
-            'audio/%s' % distFireSfxNames[random.randint(
-                0,
-                len(distFireSfxNames) - 1)])
+        self.currSnd = base.loader.loadSfx('audio/%s' % distFireSfxNames[random.randint(0, len(distFireSfxNames) - 1)])
         self.currSnd.play()
-        taskMgr.doMethodLater(flightTime,
-                              Functor(self._handleCannonballHit, targetPos),
-                              uniqueName(self._hitTaskString))
-        taskMgr.doMethodLater(1.0 + random.random() * 15.0, self._shootTask,
-                              uniqueName(self._shootTaskString))
+        taskMgr.doMethodLater(flightTime, Functor(self._handleCannonballHit, targetPos), uniqueName(self._hitTaskString))
+        taskMgr.doMethodLater(1.0 + random.random() * 15.0, self._shootTask, uniqueName(self._shootTaskString))
 
     def _handleCannonballHit(self, targetPos, task=None):
         _playHitEffect(targetPos, self._target, self._skillId)
@@ -116,10 +107,7 @@ class TutorialInteriorEffects:
 
     def _startFireSound(self):
         if self._fireSound is None:
-            self._fireSound = SoundInterval(
-                base.loader.loadSfx('audio/bonfire.wav'),
-                node=self._target,
-                volume=0.2)
+            self._fireSound = SoundInterval(base.loader.loadSfx('audio/bonfire.wav'), node=self._target, volume=0.2)
             self._fireSound.loop(stagger=True)
         return
 
@@ -169,25 +157,14 @@ class PhantomCannon(Cannon):
 
     def _shootTask(self, time, task):
         maxDistance = time * 12.0
-        self._pivotNode.setH(self._pivotNode.getH() +
-                             random.random() * maxDistance)
+        self._pivotNode.setH(self._pivotNode.getH() + random.random() * maxDistance)
         target = random.choice(self._targetNps)
         targetPos = target.getPos(render)
         flightTime = 5.0
-        self.playAttack(
-            self._skillId,
-            self._ammoSkillId,
-            'PhantomCannonballHit',
-            targetPos=targetPos,
-            flightTime=flightTime,
-            preciseHit=True)
-        taskMgr.doMethodLater(
-            flightTime,
-            Functor(_playHitEffect, targetPos, self._island, self._skillId),
-            uniqueName(self._hitTaskString))
+        self.playAttack(self._skillId, self._ammoSkillId, 'PhantomCannonballHit', targetPos=targetPos, flightTime=flightTime, preciseHit=True)
+        taskMgr.doMethodLater(flightTime, Functor(_playHitEffect, targetPos, self._island, self._skillId), uniqueName(self._hitTaskString))
         delay = 1.0 + random.random() * 15.0
-        taskMgr.doMethodLater(delay, Functor(self._shootTask, delay),
-                              uniqueName(self._shootTaskString))
+        taskMgr.doMethodLater(delay, Functor(self._shootTask, delay), uniqueName(self._shootTaskString))
 
 
 class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
@@ -231,8 +208,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
     def announceGenerate(self):
         DistributedObject.DistributedObject.announceGenerate(self)
         if localAvatar.style.getTutorial() == 0:
-            self.map = MakeAPirate.MakeAPirate([base.localAvatar],
-                                               'makeAPirateComplete')
+            self.map = MakeAPirate.MakeAPirate([base.localAvatar], 'makeAPirateComplete')
             self.map.load()
         self.acceptOnce('localAvTeleportFinished', self.getStarted)
         messenger.send('localAvTeleportFinishedRequest')
@@ -319,40 +295,30 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
 
         def stumpyBoatHere(stumpyBoatId):
             self.BoatStumpyDoId = stumpyBoatId
-            self.pendingStumpyBoatRequest = base.cr.relatedObjectMgr.requestObjects(
-                [self.BoatStumpyDoId], eachCallback=self.doStumpyBoatIntro)
+            self.pendingStumpyBoatRequest = base.cr.relatedObjectMgr.requestObjects([self.BoatStumpyDoId], eachCallback=self.doStumpyBoatIntro)
 
         def navyBoatHere(navyBoatId):
             self.BoatNavyDoId = navyBoatId
-            self.pendingNavyBoatRequest = base.cr.relatedObjectMgr.requestObjects(
-                [self.BoatNavyDoId], eachCallback=self.setupNavyBoat)
+            self.pendingNavyBoatRequest = base.cr.relatedObjectMgr.requestObjects([self.BoatNavyDoId], eachCallback=self.setupNavyBoat)
 
         def danHere(danId):
             self.DanDoId = danId
-            self.pendingDanRequest = base.cr.relatedObjectMgr.requestObjects(
-                [self.DanDoId], eachCallback=self.doDanIntro)
+            self.pendingDanRequest = base.cr.relatedObjectMgr.requestObjects([self.DanDoId], eachCallback=self.doDanIntro)
 
         def nellHere(nellId):
             self.NellDoId = nellId
-            self.pendingNellRequest = base.cr.relatedObjectMgr.requestObjects(
-                [self.NellDoId], eachCallback=self.doNellIntro)
+            self.pendingNellRequest = base.cr.relatedObjectMgr.requestObjects([self.NellDoId], eachCallback=self.doNellIntro)
 
         def islandHere(islandId):
             self.IslandDoId = islandId
-            self.pendingIslandRequest = base.cr.relatedObjectMgr.requestObjects(
-                [self.IslandDoId], eachCallback=self.handleIslandGenerate)
+            self.pendingIslandRequest = base.cr.relatedObjectMgr.requestObjects([self.IslandDoId], eachCallback=self.handleIslandGenerate)
 
         self.cr.uidMgr.addUidCallback(TutorialGlobals.STUMPY_UID, stumpyHere)
-        self.cr.uidMgr.addUidCallback(
-            TutorialGlobals.NELL_UID, nellHere, onlyOnce=False)
-        self.cr.uidMgr.addUidCallback(
-            TutorialGlobals.DAN_UID, danHere, onlyOnce=False)
-        self.cr.uidMgr.addUidCallback(
-            TutorialGlobals.STUMPY_BOAT_UID, stumpyBoatHere, onlyOnce=False)
-        self.cr.uidMgr.addUidCallback(TutorialGlobals.NAVY_BOAT_UID,
-                                      navyBoatHere)
-        self.cr.uidMgr.addUidCallback(TutorialGlobals.RAMBLESHACK_ISLE_UID,
-                                      islandHere)
+        self.cr.uidMgr.addUidCallback(TutorialGlobals.NELL_UID, nellHere, onlyOnce=False)
+        self.cr.uidMgr.addUidCallback(TutorialGlobals.DAN_UID, danHere, onlyOnce=False)
+        self.cr.uidMgr.addUidCallback(TutorialGlobals.STUMPY_BOAT_UID, stumpyBoatHere, onlyOnce=False)
+        self.cr.uidMgr.addUidCallback(TutorialGlobals.NAVY_BOAT_UID, navyBoatHere)
+        self.cr.uidMgr.addUidCallback(TutorialGlobals.RAMBLESHACK_ISLE_UID, islandHere)
         self.accept('doneJackIntro', self.doneJackIntro)
         self.accept('doorToExteriorFadeIn', self.handleGoOutside)
         self.accept('doorToInteriorFadeIn', self.handleGoInside)
@@ -370,8 +336,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         self._jie = TutorialInteriorEffects(startFire, cannonDelay)
         self._jie.start()
         isJail = not startFire
-        self.accept(CannonballHitEvent,
-                    Functor(self._handleInteriorCannonballHit, isJail))
+        self.accept(CannonballHitEvent, Functor(self._handleInteriorCannonballHit, isJail))
 
     def _stopTutorialInteriorEffects(self):
         self.ignore(CannonballHitEvent)
@@ -396,15 +361,12 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             self._stopTutorialInteriorEffects()
             self.island.setZoneLevel(0)
             self._targetNps = self.island.findAllMatches('**/TorchFire')
-            self._phantomCannon = PhantomCannon(self.cr, self.island,
-                                                CannonDistance, 50,
-                                                self._targetNps, self.island)
+            self._phantomCannon = PhantomCannon(self.cr, self.island, CannonDistance, 50, self._targetNps, self.island)
             self._phantomCannon.start()
 
     def generateShipWreck(self, island):
         objNP = island.find('**/=uid=%s' % TutorialGlobals.SHIP_WRECK_UID)
-        self.shipWreck = ShipWreck.ShipWreck(objNP,
-                                             TutorialGlobals.SHIP_WRECK_UID)
+        self.shipWreck = ShipWreck.ShipWreck(objNP, TutorialGlobals.SHIP_WRECK_UID)
         self.shipWreck.tutorial = self
         self.shipWreck.makeTargetableCollision(island.doId)
         island.shipWreck = self.shipWreck
@@ -419,13 +381,10 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         def setupTalkToDan(talkToDan):
             if talkToDan == False:
                 self.notify.debug('stumpyBoat: talkToDan is False')
-                self.accept(stumpyBoat.proximityCollisionEnterEvent,
-                            self.triggerBoBeckCut)
+                self.accept(stumpyBoat.proximityCollisionEnterEvent, self.triggerBoBeckCut)
                 self.acceptOnce('enableBoatBoarding', self.enableBoatBoarding)
-                self.notify.debug(
-                    'stumpyBoat:waiting for stumpy %s' % self.StumpyDoId)
-                self.pendingStumpyRequest = base.cr.relatedObjectMgr.requestObjects(
-                    [self.StumpyDoId], eachCallback=self.doStumpyIntro)
+                self.notify.debug('stumpyBoat:waiting for stumpy %s' % self.StumpyDoId)
+                self.pendingStumpyRequest = base.cr.relatedObjectMgr.requestObjects([self.StumpyDoId], eachCallback=self.doStumpyIntro)
             else:
                 self.notify.debug('stumpyBoat:talkToDan is True')
 
@@ -488,19 +447,15 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
                 self.acceptOnce('avatarPopulated', self.avatarPopulated)
                 if self.map.nameGui.customName:
                     localAvatar.setWishName()
-                    base.cr.avatarManager.sendRequestPopulateAvatar(
-                        localAvatar.doId, localAvatar.style, 0, 0, 0, 0, 0)
+                    base.cr.avatarManager.sendRequestPopulateAvatar(localAvatar.doId, localAvatar.style, 0, 0, 0, 0, 0)
                 else:
                     name = self.map.nameGui.getNumericName()
-                    base.cr.avatarManager.sendRequestPopulateAvatar(
-                        localAvatar.doId, localAvatar.style, 1, name[0],
-                        name[1], name[2], name[3])
+                    base.cr.avatarManager.sendRequestPopulateAvatar(localAvatar.doId, localAvatar.style, 1, name[0], name[1], name[2], name[3])
                 self.map.exit()
                 self.map.unload()
                 self.map = 0
             else:
-                self.notify.error('Invalid doneStatus from MakeAPirate: ' +
-                                  str(done))
+                self.notify.error('Invalid doneStatus from MakeAPirate: ' + str(done))
         localAvatar.gameFSM.lockFSM = False
         ga = localAvatar.getParentObj()
         if ga is not None:
@@ -525,9 +480,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         self.ignore(CannonballHitEvent)
         base.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_DEFAULT)
         if base.cr.timeOfDayManager.cycleType == TODGlobals.TOD_REGULAR_CYCLE:
-            base.cr.timeOfDayManager.request(
-                base.cr.timeOfDayManager.getStateName(PiratesGlobals.TOD_NIGHT),
-                0)
+            base.cr.timeOfDayManager.request(base.cr.timeOfDayManager.getStateName(PiratesGlobals.TOD_NIGHT), 0)
         base.cr.timeOfDayManager.pause()
         self._startFog()
         self.handleWalkedOutToIsland()
@@ -538,8 +491,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             self._fireSound.pause()
         self._stopFog()
         isJail = False
-        self.accept(CannonballHitEvent,
-                    Functor(self._handleInteriorCannonballHit, isJail))
+        self.accept(CannonballHitEvent, Functor(self._handleInteriorCannonballHit, isJail))
         self._startTutorialInteriorEffects(True, random.random() * 3.0)
         return
 
@@ -599,8 +551,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         UserFunnel.logSubmit(1, 'CUTSCENE_ONE_END')
         UserFunnel.logSubmit(0, 'CUTSCENE_ONE_END')
         base.cr.centralLogger.writeClientEvent('CUTSCENE_ONE_END')
-        self.acceptOnce('startTutorialCannons',
-                        Functor(self._startTutorialInteriorEffects, False))
+        self.acceptOnce('startTutorialCannons', Functor(self._startTutorialInteriorEffects, False))
 
     def exitEscapeFromLA(self):
         pass
@@ -663,8 +614,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
     def playNellAnimationDan_a(self):
         self.notify.debug('startNellAnimationDan_a')
         self.NPCNell.play('tut_1_1_5_a_dan')
-        self.accept('loopNellAnimationDan_a_idle',
-                    self.loopNellAnimationDan_a_idle)
+        self.accept('loopNellAnimationDan_a_idle', self.loopNellAnimationDan_a_idle)
         self.accept('playNellAnimationDan_b', self.playNellAnimationDan_b)
 
     def playNellAnimationDan_b(self):
@@ -691,8 +641,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
 
             callback(talkToDan)
 
-        DistributedInventoryBase.DistributedInventoryBase.getInventory(
-            localAvatar.inventoryId, talkToDanCallback)
+        DistributedInventoryBase.DistributedInventoryBase.getInventory(localAvatar.inventoryId, talkToDanCallback)
 
     def doneDanIntro(self, collEntry):
         self.notify.debug('Done Introducing Doggerel Dan')
@@ -726,12 +675,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         localAvatar.setPos(stage, 9.561, 26.215, 1.0)
         self._seachest = localAvatar.tutObject
         localAvatar.tutObject = None
-        t = Parallel(
-            Sequence(
-                LerpPosInterval(self._seachest, 10, VBase3(15, -10, 3.0)),
-                Func(self._seachest.removeNode)),
-            Sequence(
-                LerpScaleInterval(self._seachest, 1, VBase3(0.1, 0.1, 0.1))))
+        t = Parallel(Sequence(LerpPosInterval(self._seachest, 10, VBase3(15, -10, 3.0)), Func(self._seachest.removeNode)), Sequence(LerpScaleInterval(self._seachest, 1, VBase3(0.1, 0.1, 0.1))))
         t.start()
         return
 
@@ -766,12 +710,8 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             self.stageStumpyPositionOnBoat()
             self.acceptOnce('usedCannon', self.startShipMovement)
             stumpyBoat.cannons.values()[0][1].setIgnoreProximity(False)
-            dialogue = base.loader.loadSfx(
-                'audio/beck_cs12_4_4c_tell_to_shoot.mp3')
-            localAvatar.guiMgr.subtitler.showText(
-                PLocalizer.QuestScriptTutorialStumpy_1,
-                sfx=dialogue,
-                timeout=dialogue.length() + 1.0)
+            dialogue = base.loader.loadSfx('audio/beck_cs12_4_4c_tell_to_shoot.mp3')
+            localAvatar.guiMgr.subtitler.showText(PLocalizer.QuestScriptTutorialStumpy_1, sfx=dialogue, timeout=dialogue.length() + 1.0)
             localAvatar.guiMgr.subtitler.clearTextOverride = True
 
     def doStumpyIntro(self, object):
@@ -786,13 +726,10 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         self.NPCStumpy.setIgnoreProximity(True)
         self.NPCStumpy.disableBodyCollisions()
         self.NPCStumpy.setZ(9)
-        self.notify.debug('collision event for Stumpy %s' %
-                          self.NPCStumpy.proximityCollisionEvent)
+        self.notify.debug('collision event for Stumpy %s' % self.NPCStumpy.proximityCollisionEvent)
         if self.BoatStumpyDoId:
             stumpyBoat = base.cr.doId2do[self.BoatStumpyDoId]
-            self.acceptOnce(
-                stumpyBoat.uniqueName('localAvBoardedShip'),
-                self.doneStumpyIntro)
+            self.acceptOnce(stumpyBoat.uniqueName('localAvBoardedShip'), self.doneStumpyIntro)
 
     def doneStumpyIntro(self, task=None):
         self.notify.debug('Done Introducing Stumpy McGee')
@@ -828,16 +765,11 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         if self.shipWreckHitCount > 2 and self.shipWreckState == 0:
             self.shipWreckState = 1
             print 'ship wreck hit count %s' % self.shipWreckHitCount
-            localAvatar.cannon.fireCannonPanel.setWreckButtonText(
-                self.shipWreckHitCount)
+            localAvatar.cannon.fireCannonPanel.setWreckButtonText(self.shipWreckHitCount)
             localAvatar.gameFSM.lockFSM = False
             self.showCannonExitPanel()
-            dialogue = base.loader.loadSfx(
-                'audio/beck_cs12_5_5a_tell_praise.mp3')
-            localAvatar.guiMgr.subtitler.showText(
-                PLocalizer.QuestScriptTutorialStumpy_6,
-                sfx=dialogue,
-                timeout=dialogue.length() + 1.0)
+            dialogue = base.loader.loadSfx('audio/beck_cs12_5_5a_tell_praise.mp3')
+            localAvatar.guiMgr.subtitler.showText(PLocalizer.QuestScriptTutorialStumpy_6, sfx=dialogue, timeout=dialogue.length() + 1.0)
         else:
             if self.shipWreckHitCount > 5 and self.shipWreckState == 1:
                 self.shipWreckState = 2
@@ -845,8 +777,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             else:
                 if self.shipWreckState == 0:
                     print 'ship wreck hit count %s' % self.shipWreckHitCount
-                    localAvatar.cannon.fireCannonPanel.setWreckButtonText(
-                        self.shipWreckHitCount)
+                    localAvatar.cannon.fireCannonPanel.setWreckButtonText(self.shipWreckHitCount)
 
     def showCannonExitPanel(self):
         self.notify.debug('showCannonExitPanel')
@@ -905,8 +836,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         base.cr.centralLogger.writeClientEvent('CUTSCENE_FOUR_END')
 
     def enterAct4BackToMain(self):
-        taskMgr.doMethodLater(0.0001, self.goBackToMain,
-                              self.taskName('goBackToMain'))
+        taskMgr.doMethodLater(0.0001, self.goBackToMain, self.taskName('goBackToMain'))
 
     def exitAct4BackToMain(self):
         pass
@@ -937,15 +867,9 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         if base.downloadWatcher:
             base.downloadWatcher.background()
         if config.GetBool('want-welcome-worlds', 0):
-            base.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_WELCOME,
-                'welcomeWorld',
-                doneCallback=self.handleBackToMain)
+            base.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_WELCOME, 'welcomeWorld', doneCallback=self.handleBackToMain)
         else:
-            base.cr.teleportMgr.initiateTeleport(
-                PiratesGlobals.INSTANCE_MAIN,
-                'mainWorld',
-                doneCallback=self.handleBackToMain)
+            base.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld', doneCallback=self.handleBackToMain)
 
     def exitAct4DoneTutorial(self):
         pass

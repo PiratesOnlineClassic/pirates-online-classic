@@ -38,7 +38,8 @@ class PickANamePattern:
             return
         for permutation in self._genWordListSplitPermutations(words[1:]):
             yield [words[0]] + permutation
-            yield [words[0] + ' ' + permutation[0]] + permutation[1:]
+            yield [
+                words[0] + ' ' + permutation[0]] + permutation[1:]
 
     def _genNameSplitPermutations(self, name):
         for splitName in self._genWordListSplitPermutations(name.split()):
@@ -65,12 +66,13 @@ class PickANamePattern:
             return
         if words[wi] in nameParts[nwli]:
             if pattern is None:
-                pattern = [-1] * len(nameParts)
+                pattern = [
+                    -1] * len(nameParts)
             word2index = nameParts[nwli]
             newPattern = pattern[:]
             newPattern[nwli] = word2index[words[wi]]
-            result = self._recursiveCompute(words, nameParts, wi + 1, nwli + 1,
-                                            newPattern)
+            result = self._recursiveCompute(
+                words, nameParts, wi + 1, nwli + 1, newPattern)
             if result:
                 return result
         return self._recursiveCompute(words, nameParts, wi, nwli + 1, pattern)
@@ -116,7 +118,8 @@ class PickANamePatternTwoPartLastName(PickANamePattern):
                 else:
                     combinedLastName += second
                 combinedNameParts[-1][combinedLastName] = k
-                combinedIndex2indices[k] = (i, j)
+                combinedIndex2indices[k] = (
+                    i, j)
                 k += 1
 
         pattern = self._computeWithNameParts(nameStr, combinedNameParts)
@@ -129,6 +132,4 @@ class PickANamePatternTwoPartLastName(PickANamePattern):
                 pattern[-2] = combinedIndex2indices[combinedIndex][0]
                 pattern[-1] = combinedIndex2indices[combinedIndex][1]
         return pattern
-
-
 # okay decompiling .\otp\namepanel\PickANamePattern.pyc

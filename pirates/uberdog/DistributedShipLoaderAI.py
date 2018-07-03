@@ -6,7 +6,6 @@ from pirates.uberdog import UberDogGlobals
 from direct.distributed.MsgTypes import *
 from direct.distributed.PyDatagram import PyDatagram
 
-
 class ShipFSM(FSM):
 
     def __init__(self, manager, avatar, callback=None):
@@ -48,9 +47,8 @@ class CreateShipFSM(ShipFSM):
             inventory = self.avatar.getInventory()
 
             if not inventory:
-                self.notify.warning(
-                    'Failed to create ship %d, avatar %d has no inventory!' %
-                    (shipId, self.avatar.doId))
+                self.notify.warning('Failed to create ship %d, avatar %d has no inventory!' % (
+                    shipId, self.avatar.doId))
 
                 return
 
@@ -87,8 +85,7 @@ class CreateShipFSM(ShipFSM):
             'setWishNameState': ('',),
         }
 
-        self.manager.air.dbInterface.createObject(
-            self.manager.air.dbId,
+        self.manager.air.dbInterface.createObject(self.manager.air.dbId,
             self.manager.air.dclassesByName['PlayerShipAI'],
             fields=fields,
             callback=shipCreatedCallback)
@@ -108,9 +105,8 @@ class LoadShipsFSM(ShipFSM):
         inventory = self.avatar.getInventory()
 
         if not inventory:
-            self.notify.warning(
-                'Cannot load ships for avatar %d, unknown inventory!' %
-                (self.avatar.doId))
+            self.notify.warning('Cannot load ships for avatar %d, unknown inventory!' % (
+                self.avatar.doId))
 
             self.demand('Stop')
             return
@@ -127,8 +123,7 @@ class LoadShipsFSM(ShipFSM):
 
         def shipLoadedCallback(dclass, fields):
             self.pendingShips.remove(shipId)
-            self.manager.air.sendActivate(
-                shipId,
+            self.manager.air.sendActivate(shipId,
                 self.manager.air.districtId,
                 0,
                 dclass=self.manager.air.dclassesByName['PlayerShipAI'])
@@ -147,21 +142,24 @@ class LoadShipsFSM(ShipFSM):
             # set a post remove for the ship object so that if the client
             # disconnects, their ships will be deleted...
             datagramCleanup = PyDatagram()
-            datagramCleanup.addServerHeader(shipId, channel,
-                                            STATESERVER_OBJECT_DELETE_RAM)
+            datagramCleanup.addServerHeader(
+                shipId,
+                channel,
+                STATESERVER_OBJECT_DELETE_RAM)
             datagramCleanup.addUint32(shipId)
 
             datagram = PyDatagram()
-            datagram.addServerHeader(channel, self.manager.air.ourChannel,
-                                     CLIENTAGENT_ADD_POST_REMOVE)
+            datagram.addServerHeader(
+                channel,
+                self.manager.air.ourChannel,
+                CLIENTAGENT_ADD_POST_REMOVE)
             datagram.addString(datagramCleanup.getMessage())
             self.manager.air.send(datagram)
 
             if not self.pendingShips:
                 self.cleanup()
 
-        self.manager.air.dbInterface.queryObject(
-            self.manager.air.dbId,
+        self.manager.air.dbInterface.queryObject(self.manager.air.dbId,
             shipId,
             shipLoadedCallback,
             dclass=self.manager.air.dclassesByName['PlayerShipAI'])
@@ -171,8 +169,7 @@ class LoadShipsFSM(ShipFSM):
 
 
 class DistributedShipLoaderAI(DistributedObjectGlobalAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedShipLoaderAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipLoaderAI')
 
     def __init__(self, air):
         DistributedObjectGlobalAI.__init__(self, air)
@@ -181,9 +178,8 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
 
     def runShipFSM(self, fsmType, avatar, *args):
         if avatar.doId in self.avatar2fsm:
-            self.notify.warning(
-                'Cannot start shipFSM, an FSM is already running for avatar %d!'
-                % (avatar.doId))
+            self.notify.warning('Cannot start shipFSM, an FSM is already running for avatar %d!' % (
+                avatar.doId))
 
             return
 

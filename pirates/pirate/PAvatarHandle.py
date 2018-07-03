@@ -14,11 +14,6 @@ class PAvatarHandle(AvatarHandle):
             pass
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
-    def sendTeleportResponse(self,
-                             available,
-                             shardId,
-                             instanceDoId,
-                             areaDoId,
-                             sendToId=None):
+    def sendTeleportResponse(self, available, shardId, instanceDoId, areaDoId, sendToId=None):
         if __dev__:
             pass

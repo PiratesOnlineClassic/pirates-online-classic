@@ -1,18 +1,15 @@
 from direct.distributed import DistributedObjectGlobal
 
-
 class DistributedMatchMaker(DistributedObjectGlobal.DistributedObjectGlobal):
-
+    
     notify = directNotify.newCategory('DistributedMatchMaker')
 
     def __init__(self, cr):
         DistributedObjectGlobal.DistributedObjectGlobal.__init__(self, cr)
 
-    def requestActivity(self, gameType, gameCategory=-1, options=[],
-                        shipIds=[]):
+    def requestActivity(self, gameType, gameCategory=-1, options=[], shipIds=[]):
         self.notify.debug('requestActivity...')
-        self.sendUpdate('requestActivity',
-                        [gameType, gameCategory, options, shipIds])
+        self.sendUpdate('requestActivity', [gameType, gameCategory, options, shipIds])
 
     def requestJoin(self, matchId):
         self.notify.debug('requestJoin...')

@@ -5,8 +5,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class ExplosionFlip(PooledEffect, EffectController):
+    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -16,8 +16,7 @@ class ExplosionFlip(PooledEffect, EffectController):
         self.explosion = loader.loadModelOnce('models/effects/explosion.bam')
         self.explosion.setBillboardPointWorld()
         self.explosion.setDepthWrite(0)
-        self.explosion.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
+        self.explosion.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
         self.explosion.setLightOff()
         self.explosion.setFogOff()
         self.explosion.setColorScaleOff()
@@ -25,9 +24,7 @@ class ExplosionFlip(PooledEffect, EffectController):
         self.explosion.hide()
 
     def createTrack(self, rate=1):
-        self.track = Sequence(
-            Func(self.explosion.show), Wait(0.3), Func(self.explosion.hide),
-            Func(self.cleanUpEffect))
+        self.track = Sequence(Func(self.explosion.show), Wait(0.3), Func(self.explosion.hide), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

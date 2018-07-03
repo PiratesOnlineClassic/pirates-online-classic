@@ -13,9 +13,8 @@ from pirates.piratesbase import PLocalizer
 damper = 0.5
 sliderRange = (-0.5, 0.5)
 
-
 class Nose(DirectObject.DirectObject):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('Nose')
 
     def __init__(self, main=None):
@@ -45,66 +44,24 @@ class Nose(DirectObject.DirectObject):
 
     def loadGUI(self):
         customRange = (-1.0, 1.0)
-        self.pgs1 = CharGuiSlider(
-            self.main,
-            parent=self.noseFrame,
-            text=PLocalizer.NoseBridgeWidth,
-            range=customRange,
-            command=self.updateControlShape)
+        self.pgs1 = CharGuiSlider(self.main, parent=self.noseFrame, text=PLocalizer.NoseBridgeWidth, range=customRange, command=self.updateControlShape)
         self.pgs1.setPos(-0.4, 0, -0.3)
-        self.pgs2 = CharGuiSlider(
-            self.main,
-            parent=self.noseFrame,
-            text=PLocalizer.NoseNostrilWidth,
-            range=customRange,
-            command=self.updateControlShape)
+        self.pgs2 = CharGuiSlider(self.main, parent=self.noseFrame, text=PLocalizer.NoseNostrilWidth, range=customRange, command=self.updateControlShape)
         self.pgs2.setPos(-0.4, 0, -0.55)
-        self.pgs3 = CharGuiSlider(
-            self.main,
-            parent=self.noseFrame,
-            text=PLocalizer.NoseLength,
-            range=customRange,
-            command=self.updateControlShape)
+        self.pgs3 = CharGuiSlider(self.main, parent=self.noseFrame, text=PLocalizer.NoseLength, range=customRange, command=self.updateControlShape)
         self.pgs3.setPos(-0.4, 0, -0.8)
-        self.pgs4 = CharGuiSlider(
-            self.main,
-            parent=self.noseFrame,
-            text=PLocalizer.NoseBump,
-            range=customRange,
-            command=self.updateControlShape)
+        self.pgs4 = CharGuiSlider(self.main, parent=self.noseFrame, text=PLocalizer.NoseBump, range=customRange, command=self.updateControlShape)
         self.pgs4.setPos(-0.4, 0, -1.05)
-        self.pgs5 = CharGuiSlider(
-            self.main,
-            parent=self.noseFrame,
-            text=PLocalizer.NoseNostrilAngle,
-            range=customRange,
-            command=self.updateControlShape)
+        self.pgs5 = CharGuiSlider(self.main, parent=self.noseFrame, text=PLocalizer.NoseNostrilAngle, range=customRange, command=self.updateControlShape)
         self.pgs5.setPos(-0.4, 0, -1.3)
-        self.pgs6 = CharGuiSlider(
-            self.main,
-            parent=self.noseFrame,
-            text=PLocalizer.NoseNostrilHeight,
-            range=customRange,
-            command=self.updateControlShape)
+        self.pgs6 = CharGuiSlider(self.main, parent=self.noseFrame, text=PLocalizer.NoseNostrilHeight, range=customRange, command=self.updateControlShape)
         self.pgs6.setPos(-0.4, 0, -1.55)
-        self.pgs7 = CharGuiSlider(
-            self.main,
-            parent=self.noseFrame,
-            text=PLocalizer.NoseBridgeBroke,
-            range=customRange,
-            command=self.updateControlShape)
+        self.pgs7 = CharGuiSlider(self.main, parent=self.noseFrame, text=PLocalizer.NoseBridgeBroke, range=customRange, command=self.updateControlShape)
         self.pgs7.setPos(-0.4, 0, -1.8)
-        self.pgs8 = CharGuiSlider(
-            self.main,
-            parent=self.noseFrame,
-            text=PLocalizer.NoseNostrilBroke,
-            range=customRange,
-            command=self.updateControlShape)
+        self.pgs8 = CharGuiSlider(self.main, parent=self.noseFrame, text=PLocalizer.NoseNostrilBroke, range=customRange, command=self.updateControlShape)
         self.pgs8.setPos(-0.4, 0, -2.05)
         self.pgs = [
-            self.pgs1, self.pgs2, self.pgs3, self.pgs4, self.pgs5, self.pgs6,
-            self.pgs7, self.pgs8
-        ]
+         self.pgs1, self.pgs2, self.pgs3, self.pgs4, self.pgs5, self.pgs6, self.pgs7, self.pgs8]
 
     def unload(self):
         self.notify.debug('called Nose unload')
@@ -113,7 +70,8 @@ class Nose(DirectObject.DirectObject):
         del self.avatar
 
     def loadExtraArgs(self):
-        self.pgs1['extraArgs'] = [self.pgs1, 'noseBridgeWidth']
+        self.pgs1['extraArgs'] = [
+         self.pgs1, 'noseBridgeWidth']
         self.pgs2['extraArgs'] = [self.pgs2, 'noseNostrilWidth']
         self.pgs3['extraArgs'] = [self.pgs3, 'noseLength', 135]
         self.pgs4['extraArgs'] = [self.pgs4, 'noseBump', 135]
@@ -133,15 +91,12 @@ class Nose(DirectObject.DirectObject):
         self.saveDNA()
 
     def setupButtons(self):
-        self.noseFrame = DirectFrame(
-            parent=self._parent,
-            relief=None,
-            text=PLocalizer.NoseFrameTitle,
-            text_fg=(1, 1, 1, 1),
-            text_scale=0.18,
-            text_pos=(0, -0.05),
-            pos=(0, 0, 0.2),
-            scale=0.7)
+        self.noseFrame = DirectFrame(parent=self._parent, relief=None, text=PLocalizer.NoseFrameTitle, text_fg=(1,
+                                                                                                               1,
+                                                                                                               1,
+                                                                                                               1), text_scale=0.18, text_pos=(0, -0.05), pos=(0,
+                                                                                                                                                              0,
+                                                                                                                                                              0.2), scale=0.7)
         self.noseFrame.hide()
         return
 
@@ -201,7 +156,6 @@ class Nose(DirectObject.DirectObject):
 
     def updateControlShape(self, pgs, extraArgs1=None, extraArgs2=None):
         if extraArgs1 != None:
-            self.avatar.pirate.setControlValue(pgs.node().getValue(),
-                                               extraArgs1)
+            self.avatar.pirate.setControlValue(pgs.node().getValue(), extraArgs1)
         self.main.handleQuarterView(extraArgs2)
         return

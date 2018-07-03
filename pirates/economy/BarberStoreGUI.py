@@ -23,8 +23,7 @@ FACE_CAMERA = 0
 class BarberStoreTab(LeftTab):
 
     def __init__(self, tabBar, name, **kw):
-        optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None),
-                      ('bgBuffer', 0.15, None))
+        optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None))
         self.defineoptions(kw, optiondefs)
         LeftTab.__init__(self, tabBar, name, **kw)
         self.initialiseoptions(BarberStoreTab)
@@ -54,16 +53,14 @@ class BarberStoreTabBar(TabBar):
 
 class BarberStoreGUI(DirectFrame):
     notify = directNotify.newCategory('BarberStoreGUI')
-    width = (PiratesGuiGlobals.InventoryItemGuiWidth +
-             PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
+    width = (PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.06) * 2
     height = 1.5
     columnWidth = PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.05
     holidayIdList = []
 
     def __init__(self, npc, shopId, **kw):
-        optiondefs = (('relief', None, None), ('frameSize', (0, self.width, 0,
-                                                             self.height),
-                                               None), ('sortOrder', 20, None))
+        optiondefs = (
+         ('relief', None, None), ('frameSize', (0, self.width, 0, self.height), None), ('sortOrder', 20, None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, None, **kw)
         self.initialiseoptions(BarberStoreGUI)
@@ -81,14 +78,11 @@ class BarberStoreGUI(DirectFrame):
         self.CoinImage = gui.find('**/treasure_w_coin*')
         self.ParchmentIcon = gui.find('**/main_gui_quest_scroll')
         self.barberIconsA = loader.loadModelOnce('models/gui/char_gui')
-        self.barberIconsB = loader.loadModelOnce(
-            'models/textureCards/shopIcons')
-        self.ShirtIcon = loader.loadModelOnce('models/gui/char_gui').find(
-            '**/chargui_cloth')
+        self.barberIconsB = loader.loadModelOnce('models/textureCards/shopIcons')
+        self.ShirtIcon = loader.loadModelOnce('models/gui/char_gui').find('**/chargui_cloth')
         self.LockIcon = gui.find('**/subscribers_lock')
         self.backTabParent = self.attachNewNode('backTabs', sort=0)
-        self.panel = GuiPanel.GuiPanel(
-            None, self.width, self.height, parent=self, showClose=False)
+        self.panel = GuiPanel.GuiPanel(None, self.width, self.height, parent=self, showClose=False)
         self.setPos(0.0, 0, -0.75)
         self.balance = 0
         self.npc = npc
@@ -106,114 +100,43 @@ class BarberStoreGUI(DirectFrame):
         self.initialPirateH = 0
         self.cartWidth = self.columnWidth - 0.1
         self.cartHeight = self.height - 0.25
-        self.cartFrame = DirectFrame(
-            parent=self.panel,
-            relief=None,
-            frameSize=(0, self.cartWidth, 0, self.cartHeight))
+        self.cartFrame = DirectFrame(parent=self.panel, relief=None, frameSize=(0, self.cartWidth, 0, self.cartHeight))
         self.cartFrame.setPos(self.columnWidth + 0.025, 0, 0.08)
-        self.categoryText = [[PLocalizer.Hat, PLocalizer.Hats], [
-            PLocalizer.Shirt, PLocalizer.Shirts
-        ], [PLocalizer.Vest,
-            PLocalizer.Vests], [PLocalizer.Coat, PLocalizer.Coats], [
-                PLocalizer.Pants, PLocalizer.Pants
-            ], [PLocalizer.Belt, PLocalizer.Belts], [None, None],
-                             [PLocalizer.Shoe, PLocalizer.Shoes]]
+        self.categoryText = [
+         [
+          PLocalizer.Hat, PLocalizer.Hats], [PLocalizer.Shirt, PLocalizer.Shirts], [PLocalizer.Vest, PLocalizer.Vests], [PLocalizer.Coat, PLocalizer.Coats], [PLocalizer.Pants, PLocalizer.Pants], [PLocalizer.Belt, PLocalizer.Belts], [None, None], [PLocalizer.Shoe, PLocalizer.Shoes]]
         self.frontTabParent = self.panel.attachNewNode('frontTab', sort=2)
-        self.myGoldTitle = DirectFrame(
-            parent=self.cartFrame,
-            relief=None,
-            text=PLocalizer.YourMoney,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_align=TextNode.ALeft,
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            pos=(-0.375, 0, 0.175))
-        self.myGold = DirectFrame(
-            parent=self.cartFrame,
-            relief=None,
-            text=str(localAvatar.getMoney()),
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_align=TextNode.ARight,
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=1,
-            image=self.CoinImage,
-            image_scale=0.15,
-            image_pos=(0.03, 0, 0.015),
-            pos=(-0.06, 0, 0.175))
-        self.closeButton = DialogButton.DialogButton(
-            command=self.closePanel,
-            parent=self.cartFrame,
-            text=PLocalizer.lClose,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_pos=(0.02, -PiratesGuiGlobals.TextScaleLarge * 0.25),
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            buttonStyle=DialogButton.DialogButton.NO)
+        self.myGoldTitle = DirectFrame(parent=self.cartFrame, relief=None, text=PLocalizer.YourMoney, text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_shadow=PiratesGuiGlobals.TextShadow, pos=(-0.375, 0, 0.175))
+        self.myGold = DirectFrame(parent=self.cartFrame, relief=None, text=str(localAvatar.getMoney()), text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ARight, text_scale=PiratesGuiGlobals.TextScaleLarge, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, image=self.CoinImage, image_scale=0.15, image_pos=(0.03,
+                                                                                                                                                                                                                                                                                                                                  0,
+                                                                                                                                                                                                                                                                                                                                  0.015), pos=(-0.06, 0, 0.175))
+        self.closeButton = DialogButton.DialogButton(command=self.closePanel, parent=self.cartFrame, text=PLocalizer.lClose, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0.02, -PiratesGuiGlobals.TextScaleLarge * 0.25), text_scale=PiratesGuiGlobals.TextScaleLarge, text_shadow=PiratesGuiGlobals.TextShadow, buttonStyle=DialogButton.DialogButton.NO)
         self.closeButton.setPos(0, 0, 0.005)
         tGui = loader.loadModel('models/gui/triangle')
-        triangle = (tGui.find('**/triangle'), tGui.find('**/triangle_down'),
-                    tGui.find('**/triangle_over'))
-        self.nextPageButton = DirectButton(
-            parent=self.cartFrame,
-            relief=None,
-            state=DGG.DISABLED,
-            image=triangle,
-            image_scale=0.065,
-            pos=(0.18, 0.0, 0.1),
-            rolloverSound=None,
-            command=self.nextPage)
-        self.prevPageButton = DirectButton(
-            parent=self.cartFrame,
-            relief=None,
-            state=DGG.DISABLED,
-            image=triangle,
-            image_scale=-0.065,
-            pos=(-0.18, 0.0, 0.1),
-            rolloverSound=None,
-            command=self.previousPage)
-        self.pageNumber = DirectFrame(
-            parent=self.cartFrame,
-            relief=None,
-            text='',
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_align=TextNode.ACenter,
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_pos=(0.0, 0.0),
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            pos=(0, 0, 0.09))
-        self.titleLabel = DirectLabel(
-            parent=self,
-            relief=None,
-            text='',
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_align=TextNode.ACenter,
-            text_scale=PiratesGuiGlobals.TextScaleLarge * 1.3,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            pos=(0.62, 0.0, 1.33))
+        triangle = (tGui.find('**/triangle'), tGui.find('**/triangle_down'), tGui.find('**/triangle_over'))
+        self.nextPageButton = DirectButton(parent=self.cartFrame, relief=None, state=DGG.DISABLED, image=triangle, image_scale=0.065, pos=(0.18,
+                                                                                                                                           0.0,
+                                                                                                                                           0.1), rolloverSound=None, command=self.nextPage)
+        self.prevPageButton = DirectButton(parent=self.cartFrame, relief=None, state=DGG.DISABLED, image=triangle, image_scale=-0.065, pos=(-0.18, 0.0, 0.1), rolloverSound=None, command=self.previousPage)
+        self.pageNumber = DirectFrame(parent=self.cartFrame, relief=None, text='', text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.0,
+                                                                                                                                                                                                          0.0), text_shadow=PiratesGuiGlobals.TextShadow, pos=(0,
+                                                                                                                                                                                                                                                               0,
+                                                                                                                                                                                                                                                               0.09))
+        self.titleLabel = DirectLabel(parent=self, relief=None, text='', text_fg=PiratesGuiGlobals.TextFG1, text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge * 1.3, text_shadow=PiratesGuiGlobals.TextShadow, pos=(0.62,
+                                                                                                                                                                                                                                           0.0,
+                                                                                                                                                                                                                                           1.33))
         self.titleLabel.setBin('gui-fixed', 1)
         self.createPirate()
         charGui = loader.loadModel('models/gui/char_gui')
-        self.rotateSlider = DirectSlider(
-            parent=base.a2dBottomLeft,
-            relief=None,
-            command=self.rotatePirate,
-            image=charGui.find('**/chargui_slider_small'),
-            image_scale=(2.15, 2.15, 1.5),
-            thumb_relief=None,
-            thumb_image=(charGui.find('**/chargui_slider_node'),
-                         charGui.find('**/chargui_slider_node_down'),
-                         charGui.find('**/chargui_slider_node_over')),
-            pos=(0.8, 0.0, 0.09),
-            text_align=TextNode.ACenter,
-            text_scale=(0.1, 0.1),
-            text_pos=(0.0, 0.1),
-            text_fg=PiratesGuiGlobals.TextFG1,
-            scale=0.43,
-            text=PLocalizer.RotateSlider,
-            value=0.5,
-            sortOrder=-1)
-        self.rotateSlider['extraArgs'] = [self.rotateSlider]
+        self.rotateSlider = DirectSlider(parent=base.a2dBottomLeft, relief=None, command=self.rotatePirate, image=charGui.find('**/chargui_slider_small'), image_scale=(2.15,
+                                                                                                                                                                        2.15,
+                                                                                                                                                                        1.5), thumb_relief=None, thumb_image=(charGui.find('**/chargui_slider_node'), charGui.find('**/chargui_slider_node_down'), charGui.find('**/chargui_slider_node_over')), pos=(0.8,
+                                                                                                                                                                                                                                                                                                                                                      0.0,
+                                                                                                                                                                                                                                                                                                                                                      0.09), text_align=TextNode.ACenter, text_scale=(0.1,
+                                                                                                                                                                                                                                                                                                                                                                                                      0.1), text_pos=(0.0,
+                                                                                                                                                                                                                                                                                                                                                                                                                      0.1), text_fg=PiratesGuiGlobals.TextFG1, scale=0.43, text=PLocalizer.RotateSlider, value=0.5, sortOrder=-1)
+        self.rotateSlider['extraArgs'] = [
+         self.rotateSlider]
         self.rotateSliderOrigin = 0.5
         self.accept('mouse1', self._startMouseReadTask)
         self.accept('mouse1-up', self._stopMouseReadTask)
@@ -270,11 +193,9 @@ class BarberStoreGUI(DirectFrame):
         for id in range(len(self.buttons)):
             button = self.buttons[id]
             displayRegion = self.clothWindows[id]
-            p = button.getPos(render2d) - Point3(width + offsetX, 0,
-                                                 height + offsetY)
+            p = button.getPos(render2d) - Point3(width + offsetX, 0, height + offsetY)
             pv = Point3((p[0] + 1) / 2.0, 0.0, (p[2] + 1) / 2.0)
-            displayRegion.setDimensions(pv[0], pv[0] + width, pv[2],
-                                        pv[2] + height)
+            displayRegion.setDimensions(pv[0], pv[0] + width, pv[2], pv[2] + height)
 
     def rotatePirate(self, slider):
         if self.pirate and slider:
@@ -317,8 +238,7 @@ class BarberStoreGUI(DirectFrame):
             self.ShirtIcon = None
         if self.alertDialog:
             self.alertDialog.destroy()
-        if localAvatar.guiMgr.questPage and len(
-                localAvatar.guiMgr.questPage.trackedQuestLabel['text']):
+        if localAvatar.guiMgr.questPage and len(localAvatar.guiMgr.questPage.trackedQuestLabel['text']):
             localAvatar.guiMgr.questPage.trackedQuestLabel.show()
         localAvatar.guiMgr.chatPanel.hide()
         return
@@ -360,15 +280,12 @@ class BarberStoreGUI(DirectFrame):
         self.rotateSlider['value'] = self.rotateSliderOrigin = 0.5
         dummy = self.pirate.attachNewNode('dummy')
         if cameraId == FACE_CAMERA:
-            dummy.setPos(dummy, 0, 3,
-                         self.pirate.headNode.getZ(self.pirate) * 1.1)
+            dummy.setPos(dummy, 0, 3, self.pirate.headNode.getZ(self.pirate) * 1.1)
         else:
             dummy.setPos(dummy, 0, 0, 0)
         dummy.wrtReparentTo(render)
         if cameraId == FACE_CAMERA:
-            dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate),
-                         self.pirate.headNode.getY(self.pirate),
-                         self.pirate.headNode.getZ(self.pirate) * 1.1)
+            dummy.lookAt(self.pirate, self.pirate.headNode.getX(self.pirate), self.pirate.headNode.getY(self.pirate), self.pirate.headNode.getZ(self.pirate) * 1.1)
         else:
             dummy.lookAt(0, 0, 0, 0)
         dummy.setH(dummy, -17)
@@ -386,8 +303,7 @@ class BarberStoreGUI(DirectFrame):
         camHpr.setX(h)
         camera.setH(camH)
         t = 1.5
-        self.camIval = camera.posHprInterval(
-            t, pos=camPos, hpr=camHpr, blendType='easeOut')
+        self.camIval = camera.posHprInterval(t, pos=camPos, hpr=camHpr, blendType='easeOut')
         localAvatar.cameraFSM.request('Control')
         self.camIval.start()
         return
@@ -411,23 +327,21 @@ class BarberStoreGUI(DirectFrame):
             type = item[1]
             currentColor = localAvatar.style.getHairColor()
             if type == BarberGlobals.HAIR:
-                current = [localAvatar.style.getHairHair(), itemColor]
+                current = [
+                 localAvatar.style.getHairHair(), itemColor]
             elif type == BarberGlobals.BEARD:
-                current = [localAvatar.style.getHairBeard(), itemColor]
+                current = [
+                    localAvatar.style.getHairBeard(), itemColor]
             elif type == BarberGlobals.MUSTACHE:
-                current = [localAvatar.style.getHairMustache(), itemColor]
+                current = [
+                    localAvatar.style.getHairMustache(), itemColor]
             else:
                 current = 0
             if current == [itemId, currentColor]:
                 self.showCurrentlyOwnedAlert()
             text = PLocalizer.BarberConfirm % (str(item[3]), str(item[4]))
-            self.confirmBox = PiratesConfirm.PiratesConfirm(
-                PLocalizer.BarberPurchase,
-                text,
-                self.buyItem,
-                barber=[uid, button, True])
-            self.confirmBox.setPos(-self.confirmBox.getWidth() / 2, 0,
-                                   -self.confirmBox.getHeight() / 2)
+            self.confirmBox = PiratesConfirm.PiratesConfirm(PLocalizer.BarberPurchase, text, self.buyItem, barber=[uid, button, True])
+            self.confirmBox.setPos(-self.confirmBox.getWidth() / 2, 0, -self.confirmBox.getHeight() / 2)
 
     def applyItem(self, pirate, type, uid, button=None):
         if not hasattr(pirate, 'style'):
@@ -473,11 +387,8 @@ class BarberStoreGUI(DirectFrame):
         self.setPage(self.currentPage, self.buttonIndex)
 
     def initTabs(self):
-        self.tabBar = BarberStoreTabBar(
-            parent=self,
-            backParent=self.backTabParent,
-            frontParent=self.frontTabParent,
-            offset=0)
+        self.tabBar = BarberStoreTabBar(parent=self, backParent=self.backTabParent,
+            frontParent=self.frontTabParent, offset=0)
 
         self.pageNames = []
         self.createTabs()
@@ -509,15 +420,8 @@ class BarberStoreGUI(DirectFrame):
             tabScale = 0.0
 
         tabText = PLocalizer.barberNames.get(id)
-        newTab.nameTag = DirectLabel(
-            parent=newTab,
-            relief=None,
-            state=DGG.DISABLED,
-            pos=(0.06, 0, -0.035),
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_scale=0.2,
-            image=tabIcon,
-            image_scale=tabScale)
+        newTab.nameTag = DirectLabel(parent=newTab, relief=None, state=DGG.DISABLED, pos=(0.06, 0, -0.035),
+            text_fg=PiratesGuiGlobals.TextFG1, text_scale=0.2, image=tabIcon, image_scale=tabScale)
 
         self.pageNames.append(id)
 
@@ -656,20 +560,10 @@ class BarberStoreGUI(DirectFrame):
             helpText = longDesc
             if type == BarberGlobals.MUSTACHE:
                 if currentBeard in [1, 2, 3]:
-                    itemButton = GuiButton.GuiButton(
-                        parent=self.panel,
-                        state=DGG.DISABLED,
-                        text=PLocalizer.BarberNoMustache,
-                        text_fg=PiratesGuiGlobals.TextFG2,
-                        text_pos=(0.0, 0.05),
-                        text_scale=PiratesGuiGlobals.TextScaleLarge,
-                        text_align=TextNode.ACenter,
-                        text_shadow=PiratesGuiGlobals.TextShadow,
-                        pos=startPos,
-                        image_scale=buttonScale)
+                    itemButton = GuiButton.GuiButton(parent=self.panel, state=DGG.DISABLED, text=PLocalizer.BarberNoMustache, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0.0,
+                                                                                                                                                                           0.05), text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_shadow=PiratesGuiGlobals.TextShadow, pos=startPos, image_scale=buttonScale)
                     self.buttons.append(itemButton)
-                    self.pageNumber[
-                        'text'] = '%s %s / %s' % (PLocalizer.TailorPage, 1, 1)
+                    self.pageNumber['text'] = '%s %s / %s' % (PLocalizer.TailorPage, 1, 1)
                     self.numPages = 1
                     for item in self.clothRenders:
                         item.hide()
@@ -677,59 +571,16 @@ class BarberStoreGUI(DirectFrame):
                     return
 
             if self.itemAmount - startIndex < self.buttonsPerPage and self.itemAmount >= startIndex:
-                itemButton = GuiButton.GuiButton(
-                    command=self.applyItem,
-                    parent=self.panel,
-                    state=DGG.NORMAL,
-                    text=text,
-                    text_fg=PiratesGuiGlobals.TextFG2,
-                    text_pos=(-0.04, 0.07),
-                    text_scale=PiratesGuiGlobals.TextScaleLarge,
-                    text_align=TextNode.ALeft,
-                    text_shadow=PiratesGuiGlobals.TextShadow,
-                    pos=startPos,
-                    image_scale=buttonScale,
-                    helpText=helpText,
-                    helpDelay=0,
-                    helpPos=(0.0, 0.0, -0.12),
-                    helpLeftAlign=True,
-                    sortOrder=1)
+                itemButton = GuiButton.GuiButton(command=self.applyItem, parent=self.panel, state=DGG.NORMAL, text=text, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(-0.04, 0.07), text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, pos=startPos, image_scale=buttonScale, helpText=helpText, helpDelay=0, helpPos=(0.0, 0.0, -0.12), helpLeftAlign=True, sortOrder=1)
                 itemButton['extraArgs'] = [
-                    self.pirate, type, itemId, itemButton
-                ]
-                itemButton.cost = DirectFrame(
-                    parent=itemButton,
-                    relief=None,
-                    text='%s%s' % (PLocalizer.Cost, str(cost)),
-                    text_fg=PiratesGuiGlobals.TextFG2,
-                    text_align=TextNode.ARight,
-                    text_scale=PiratesGuiGlobals.TextScaleLarge,
-                    text_pos=(-0.055, 0.0),
-                    text_shadow=PiratesGuiGlobals.TextShadow,
-                    image=self.CoinImage,
-                    image_scale=0.15,
-                    image_pos=(-0.025, 0, 0.015),
-                    pos=(0.3, 0, -0.08))
-                itemButton.previewText = DirectFrame(
-                    parent=itemButton,
-                    relief=None,
-                    text=PLocalizer.TailorPreview,
-                    text_fg=PiratesGuiGlobals.TextFG1,
-                    text_align=TextNode.ARight,
-                    text_scale=PiratesGuiGlobals.TextScaleSmall,
-                    text_shadow=PiratesGuiGlobals.TextShadow,
-                    pos=(-0.09, 0, -0.115))
-                itemButton.buy = GuiButton.GuiButton(
-                    command=self.buyItem,
-                    parent=itemButton,
-                    text=PLocalizer.PurchaseCommit,
-                    text_fg=PiratesGuiGlobals.TextFG2,
-                    text_pos=(0.0, -0.01),
-                    text_scale=PiratesGuiGlobals.TextScaleLarge,
-                    text_align=TextNode.ACenter,
-                    text_shadow=PiratesGuiGlobals.TextShadow,
-                    pos=(0.25, 0.0, 0.09),
-                    extraArgs=[uid, itemButton])
+                 self.pirate, type, itemId, itemButton]
+                itemButton.cost = DirectFrame(parent=itemButton, relief=None, text='%s%s' % (PLocalizer.Cost, str(cost)), text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ARight, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(-0.055, 0.0), text_shadow=PiratesGuiGlobals.TextShadow, image=self.CoinImage, image_scale=0.15, image_pos=(-0.025,
+                                                                                                                                                                                                                                                                                                                                                           0,
+                                                                                                                                                                                                                                                                                                                                                           0.015), pos=(0.3, 0, -0.08))
+                itemButton.previewText = DirectFrame(parent=itemButton, relief=None, text=PLocalizer.TailorPreview, text_fg=PiratesGuiGlobals.TextFG1, text_align=TextNode.ARight, text_scale=PiratesGuiGlobals.TextScaleSmall, text_shadow=PiratesGuiGlobals.TextShadow, pos=(-0.09, 0, -0.115))
+                itemButton.buy = GuiButton.GuiButton(command=self.buyItem, parent=itemButton, text=PLocalizer.PurchaseCommit, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0.0, -0.01), text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_shadow=PiratesGuiGlobals.TextShadow, pos=(0.25,
+                                                                                                                                                                                                                                                                                                                 0.0,
+                                                                                                                                                                                                                                                                                                                 0.09), extraArgs=[uid, itemButton])
                 startPos -= Vec3(0.0, 0.0, itemButton.getHeight() - 0.03)
                 itemButton.helpWatcher.setPos(itemButton.getPos())
                 self.buttons.append(itemButton)
@@ -751,18 +602,9 @@ class BarberStoreGUI(DirectFrame):
                         choices.insert(0, 8)
                     for i in choices:
                         hairColor = hairColors[i]
-                        hairTone = (hairColor[0], hairColor[1], hairColor[2],
-                                    1.0)
-                        button = DirectButton(
-                            parent=itemButton,
-                            relief=DGG.RAISED,
-                            pos=(xOffset, 0, yOffset),
-                            frameSize=(-0.024, 0.024, -0.025, 0.025),
-                            borderWidth=(0.004, 0.004),
-                            frameColor=hairTone,
-                            command=self.handleSetBaseColor,
-                            extraArgs=[self.itemAmount, type, i, itemButton],
-                            sortOrder=2)
+                        hairTone = (hairColor[0], hairColor[1], hairColor[2], 1.0)
+                        button = DirectButton(parent=itemButton, relief=DGG.RAISED, pos=(xOffset, 0, yOffset), frameSize=(-0.024, 0.024, -0.025, 0.025), borderWidth=(0.004,
+                                                                                                                                                                      0.004), frameColor=hairTone, command=self.handleSetBaseColor, extraArgs=[self.itemAmount, type, i, itemButton], sortOrder=2)
                         xOffset += 0.048
 
                 if self.paid == OTPGlobals.AccessVelvetRope:
@@ -799,14 +641,12 @@ class BarberStoreGUI(DirectFrame):
         if startIndex + self.buttonsPerPage < self.itemAmount:
             self.nextPageButton['state'] = DGG.NORMAL
             self.prevPageButton['state'] = DGG.NORMAL
-        self.pageNumber['text'] = '%s %s / %s' % (PLocalizer.TailorPage, page,
-                                                  int(numPages))
+        self.pageNumber['text'] = '%s %s / %s' % (PLocalizer.TailorPage, page, int(numPages))
         self.numPages = numPages
         return
 
     def handleSetBaseColor(self, humanId, type, color, button):
-        self.clothHumans[humanId %
-                         self.buttonsPerPage].style.setHairColor(color)
+        self.clothHumans[humanId % self.buttonsPerPage].style.setHairColor(color)
         self.clothHumans[humanId % self.buttonsPerPage].model.handleHeadHiding()
         button.color = color
         self.applyItem(self.pirate, button.type, button.itemId, button)
@@ -824,7 +664,8 @@ class BarberStoreGUI(DirectFrame):
         if not base.mouseWatcherNode.hasMouse():
             pass
         else:
-            winSize = (base.win.getXSize(), base.win.getYSize())
+            winSize = (
+             base.win.getXSize(), base.win.getYSize())
             mouseData = base.win.getPointer(0)
             if mouseData.getX() > winSize[0] or mouseData.getY() > winSize[1]:
                 pass
@@ -864,8 +705,7 @@ class BarberStoreGUI(DirectFrame):
     def createDisplayRegions(self):
         startRegion = Vec4(0.526, 0.596, 0.62, 0.69)
         for x in range(self.buttonsPerPage):
-            clothWindow = base.win.makeDisplayRegion(
-                startRegion[0], startRegion[1], startRegion[2], startRegion[3])
+            clothWindow = base.win.makeDisplayRegion(startRegion[0], startRegion[1], startRegion[2], startRegion[3])
             clothWindow.setSort(10)
             clothCamera = Camera('clothCamera' + str(x))
             clothRender = NodePath('clothRender' + str(x))
@@ -912,8 +752,7 @@ class BarberStoreGUI(DirectFrame):
         x = 0
         for x in range(len(regionData)):
             if headPos is None:
-                source.getLOD('2000').getChild(0).node().findJoint(
-                    'def_head01').getNetTransform(m)
+                source.getLOD('2000').getChild(0).node().findJoint('def_head01').getNetTransform(m)
                 headPos = TransformState.makeMat(m).getPos().getZ()
             if pageName == BarberGlobals.HAIR:
                 if gender == 'f':
@@ -946,12 +785,7 @@ class BarberStoreGUI(DirectFrame):
     def showCurrentlyOwnedAlert(self):
         self.removeAlertDialog()
         text = PLocalizer.ShopOwnedBarber
-        self.alertDialog = PDialog.PDialog(
-            text=text,
-            text_align=TextNode.ACenter,
-            style=OTPDialog.Acknowledge,
-            pos=(-0.65, 0.0, 0.0),
-            command=self.removeAlertDialog)
+        self.alertDialog = PDialog.PDialog(text=text, text_align=TextNode.ACenter, style=OTPDialog.Acknowledge, pos=(-0.65, 0.0, 0.0), command=self.removeAlertDialog)
         self.alertDialog.setBin('gui-fixed', 20, 20)
 
     def removeAlertDialog(self, value=None):

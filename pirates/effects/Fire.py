@@ -10,7 +10,6 @@ from pirates.effects.PooledEffect import PooledEffect
 from pirates.effects.EffectController import EffectController
 import random
 
-
 class Fire(PooledEffect, EffectController):
     cardScale = 64.0
     burningSfx = None
@@ -23,11 +22,9 @@ class Fire(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleFire2')
         if not self.burningSfx:
-            self.burningSfx = base.loader.loadSfx(
-                'audio/sfx_grenade_impact_firebomb_loop.mp3')
+            self.burningSfx = base.loader.loadSfx('audio/sfx_grenade_impact_firebomb_loop.mp3')
         if not Fire.particleDummy:
-            Fire.particleDummy = base.effectsRoot.attachNewNode(
-                ModelNode('FireParticleDummy'))
+            Fire.particleDummy = base.effectsRoot.attachNewNode(ModelNode('FireParticleDummy'))
             Fire.particleDummy.setDepthWrite(0)
             Fire.particleDummy.setFogOff()
             Fire.particleDummy.setLightOff()
@@ -68,11 +65,8 @@ class Fire(PooledEffect, EffectController):
         self.p0.renderer.setAnimAngleFlag(1)
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
-                                           ColorBlendAttrib.OIncomingAlpha,
-                                           ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(1.0, 0.6, 0.2, 1.0), Vec4(0.5, 0.2, 0.2, 0.5), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 0.6, 0.2, 1.0), Vec4(0.5, 0.2, 0.2, 0.5), 1)
         self.p0.renderer.setAlphaDisable(0)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(-0.75)
@@ -98,34 +92,21 @@ class Fire(PooledEffect, EffectController):
             self.p0.setPoolSize(48)
             self.p0.setLitterSize(2)
             self.p0.factory.enableAngularVelocity(0)
-        shrinkSize = LerpFunctionInterval(
-            self.setNewSize, 2.5, toData=0.001, fromData=1.0)
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(shrinkSize, Func(self.p0.setBirthRate, 100.0),
-                                  Wait(2.0), Func(self.cleanUpEffect))
-        self.track = Sequence(
-            self.startEffect,
-            SoundInterval(self.burningSfx, loop=1, duration=self.duration),
-            self.endEffect)
+        shrinkSize = LerpFunctionInterval(self.setNewSize, 2.5, toData=0.001, fromData=1.0)
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(shrinkSize, Func(self.p0.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
+        self.track = Sequence(self.startEffect, SoundInterval(self.burningSfx, loop=1, duration=self.duration), self.endEffect)
 
     def setNewSize(self, time):
-        self.p0.emitter.setOffsetForce(
-            Vec3(0.0, 0.0, 15.0 * self.effectScale * time))
+        self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 15.0 * self.effectScale * time))
         self.p0.renderer.setUserAlpha(1.0 * time)
 
     def setScale(self, scale=VBase3(1, 1, 1)):
         self.effectScale = scale[0]
-        self.p0.renderer.setInitialXScale(
-            0.05 * self.cardScale * self.effectScale)
-        self.p0.renderer.setInitialYScale(
-            0.05 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalXScale(
-            0.03 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalYScale(
-            0.045 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialXScale(0.05 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialYScale(0.05 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalXScale(0.03 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalYScale(0.045 * self.cardScale * self.effectScale)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 15.0 * self.effectScale))
         self.p0.emitter.setRadius(6.0 * self.effectScale)
 

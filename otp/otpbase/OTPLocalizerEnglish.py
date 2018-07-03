@@ -49,7 +49,8 @@ SCEmoteNoAccessMsg = 'You do not have access\nto this emotion yet.'
 SCEmoteNoAccessOK = lOK
 ParentLogin = 'Parent Login'
 ParentPassword = 'Parent Password'
-ChatGarblerDefault = ['blah']
+ChatGarblerDefault = [
+    'blah']
 ChatManagerChat = 'Chat'
 ChatManagerWhisperTo = 'Whisper to:'
 ChatManagerWhisperToName = 'Whisper To:\n%s'
@@ -121,8 +122,7 @@ SecretFriendsInfoPanelText = [
     "\nTrue Friends feature by going to the Account Options area within the Service and following the steps set forth there.\n\nA True Friend Code is a computer-generated random code assigned to a particular member. The True Friend Code must be used to activate a True Friend connection within 48 hours of the time that the member requests the True Friend Code; otherwise, the True Friend Code expires and cannot be used.  Moreover, a single True Friend Code can only be used to establish one True Friend connection.  To make additional True Friend connections, a member must request an additional True Friend Code for each additional True Friend.\n\nTrue Friendships do not transfer.  For example, if Sally becomes a True Friend of Mike, and Mike becomes a True Friend of Jessica, Sally does not automatically become Jessica's True Friend.  In order for Sally and Jessica to\n",
     '\nbecome True Friends, one of them must request a new True Friend Code from the Service and communicate it to the other.\n\nTrue Friends communicate with one another in a free-form interactive open chat.  The content of this chat is directly entered by the participating member and is processed through the Service, which is operated by the Walt Disney Internet Group ("WDIG"), 500 S. Buena Vista St., Burbank, CA 91521-7691.  While we advise members not to exchange personal information such as first and last names, e-mail addresses, postal addresses, or phone numbers while using Open Chat with True Friends, we cannot guarantee that such exchanges of personal information will not happen. Although the True Friends chat is automatically filtered for most bad words, Open Chat with True Friends may be moderated, and Disney reserves the right to moderate any part of the Service that Disney,\n',
     "\nin its sole and absolute discretion, deems necessary. However, because Open Chat with True Friends will not always be moderated, if the Parent Account allows a child to use his or her account with the Open Chat with True Friends feature enabled, we strongly encourage parents to supervise their child or children while they play in the Service. By enabling the Open Chat with True Friends feature, the Parent Account acknowledges that there are some risks inherent in the Open Chat with True Friends feature and that the Parent Account has been informed of, and agrees to accept, any such risks, whether foreseeable or otherwise. \n\nWDIG does not use the content of True Friends chat for any purpose other than communicating that content to the member's true friend, and does not disclose that content to any third party except: (1) if required by law, for example, to comply with a court order or subpoena; (2) to enforce the Terms of Use\n",
-    "\napplicable to the Service (which may be accessed on the home page of the Service); or, (3) to protect the safety and security of Members of the Service and the Service itself. In accordance with the Children's Online Privacy Protection Act, we are prohibited from conditioning, and do not condition, a child's participation in any activity (including Open Chat with True Friends) on the child's disclosing more personal information than is reasonably necessary to participate in such activity.\n\nIn addition, as noted above, we recognize the right of a parent to refuse to permit us to continue to allow a child to use the True Friends feature. By enabling the Open Chat with True Friends feature, you acknowledge that there are some risks inherent in the ability of members to open chat with one another through the Open Chat with True Friends feature, and that you have been informed of, and agree to accept, any such risks, whether foreseeable or otherwise.\n"
-]
+    "\napplicable to the Service (which may be accessed on the home page of the Service); or, (3) to protect the safety and security of Members of the Service and the Service itself. In accordance with the Children's Online Privacy Protection Act, we are prohibited from conditioning, and do not condition, a child's participation in any activity (including Open Chat with True Friends) on the child's disclosing more personal information than is reasonably necessary to participate in such activity.\n\nIn addition, as noted above, we recognize the right of a parent to refuse to permit us to continue to allow a child to use the True Friends feature. By enabling the Open Chat with True Friends feature, you acknowledge that there are some risks inherent in the ability of members to open chat with one another through the Open Chat with True Friends feature, and that you have been informed of, and agree to accept, any such risks, whether foreseeable or otherwise.\n"]
 LeaveToPay = 'In order to purchase, the game will exit to the Toontown website.'
 LeaveToPayYes = 'Purchase'
 LeaveToPayNo = lCancel
@@ -166,31 +166,18 @@ CRNoDistrictsTryAgain = 'No Districts are available. Try again?'
 CRRejectRemoveAvatar = 'The avatar was not able to be deleted, try again another time.'
 CRLostConnection = 'Your internet connection to the servers has been unexpectedly broken.'
 CRBootedReasons = {
-    1:
-    'An unexpected problem has occurred.  Your connection has been lost, but you should be able to connect again and go right back into the game.',
-    100:
-    'You have been disconnected because someone else just logged in using your account on another computer.',
-    120:
-    'You have been disconnected because of a problem with your authorization to use keyboard chat.',
-    122:
-    'There has been an unexpected problem logging you in.  Please contact customer support.',
-    125:
-    'Your installed files appear to be invalid.  Please use the Play button on the official website to run.',
-    126:
-    'You are not authorized to use administrator privileges.',
-    151:
-    'You have been logged out by an administrator working on the servers.',
-    152:
-    "There has been a reported violation of our Terms of Use connected to '%(name)s'. For safety purposes, we have placed a temporary hold on the account. For more details, please review the message sent to the e-mail address associated with '%(name)s'.",
-    153:
-    'The district you were playing on has been reset.  Everyone who was playing on that district has been disconnected.  However, you should be able to connect again and go right back into the game.',
-    154:
-    'The district you were playing on has been reset. However, you should be able to connect agan and go right back into the game',
-    288:
-    'Sorry, you have used up all of your available minutes this month.',
-    349:
-    'Sorry, you have used up all of your available minutes this month.'
-}
+    1: 'An unexpected problem has occurred.  Your connection has been lost, but you should be able to connect again and go right back into the game.',
+    100: 'You have been disconnected because someone else just logged in using your account on another computer.',
+    120: 'You have been disconnected because of a problem with your authorization to use keyboard chat.',
+    122: 'There has been an unexpected problem logging you in.  Please contact customer support.',
+    125: 'Your installed files appear to be invalid.  Please use the Play button on the official website to run.',
+    126: 'You are not authorized to use administrator privileges.',
+    151: 'You have been logged out by an administrator working on the servers.',
+    152: "There has been a reported violation of our Terms of Use connected to '%(name)s'. For safety purposes, we have placed a temporary hold on the account. For more details, please review the message sent to the e-mail address associated with '%(name)s'.",
+    153: 'The district you were playing on has been reset.  Everyone who was playing on that district has been disconnected.  However, you should be able to connect again and go right back into the game.',
+    154: 'The district you were playing on has been reset. However, you should be able to connect agan and go right back into the game',
+    288: 'Sorry, you have used up all of your available minutes this month.',
+    349: 'Sorry, you have used up all of your available minutes this month.'}
 CRBootedReasonUnknownCode = 'An unexpected problem has occurred (error code %s).  Your connection has been lost, but you should be able to connect again and go right back into the game.'
 CRTryConnectAgain = '\n\nTry to connect again?'
 CRToontownUnavailable = 'The server appears to be temporarily unavailable, still trying...'
@@ -385,20 +372,9 @@ IgnoreConfirmNewIgnore = 'You are ignoring %s.'
 IgnoreConfirmEndIgnore = 'You are no longer ignoring %s.'
 IgnoreConfirmRemoveIgnore = 'Stop ignoring %s?'
 EmoteList = [
-    'Wave', 'Happy', 'Sad', 'Angry', 'Sleepy', 'Shrug', 'Dance', 'Think',
-    'Bored', 'Applause', 'Cringe', 'Confused', 'Belly Flop', 'Bow',
-    'Banana Peel', 'Resistance Salute', 'Laugh', lYes, lNo, lOK, 'Surprise',
-    'Cry', 'Delighted', 'Furious', 'Laugh'
-]
+    'Wave', 'Happy', 'Sad', 'Angry', 'Sleepy', 'Shrug', 'Dance', 'Think', 'Bored', 'Applause', 'Cringe', 'Confused', 'Belly Flop', 'Bow', 'Banana Peel', 'Resistance Salute', 'Laugh', lYes, lNo, lOK, 'Surprise', 'Cry', 'Delighted', 'Furious', 'Laugh']
 EmoteWhispers = [
-    '%s waves.', '%s is happy.', '%s is sad.', '%s is angry.', '%s is sleepy.',
-    '%s shrugs.', '%s dances.', '%s thinks.', '%s is bored.', '%s applauds.',
-    '%s cringes.', '%s is confused.', '%s does a belly flop.',
-    '%s bows to you.', '%s slips on a banana peel.',
-    '%s gives the resistance salute.', '%s laughs.', "%s says '" + lYes + "'.",
-    "%s says '" + lNo + "'.", "%s says '" + lOK + "'.", '%s is surprised.',
-    '%s is crying.', '%s is delighted.', '%s is furious.', '%s is laughing.'
-]
+    '%s waves.', '%s is happy.', '%s is sad.', '%s is angry.', '%s is sleepy.', '%s shrugs.', '%s dances.', '%s thinks.', '%s is bored.', '%s applauds.', '%s cringes.', '%s is confused.', '%s does a belly flop.', '%s bows to you.', '%s slips on a banana peel.', '%s gives the resistance salute.', '%s laughs.', "%s says '" + lYes + "'.", "%s says '" + lNo + "'.", "%s says '" + lOK + "'.", '%s is surprised.', '%s is crying.', '%s is delighted.', '%s is furious.', '%s is laughing.']
 EmoteFuncDict = {
     'Wave': 0,
     'Happy': 1,
@@ -424,153 +400,191 @@ EmoteFuncDict = {
     'Cry': 21,
     'Delighted': 22,
     'Furious': 23,
-    'Laugh': 24
-}
+    'Laugh': 24}
 SuitBrushOffs = {
     'f': ["I'm late for a meeting."],
     'p': ['Push off.'],
     'ym': ['Yes Man says NO.'],
     None: [
-        "It's my day off.", "I believe you're in the wrong office.",
+        "It's my day off.",
+        "I believe you're in the wrong office.",
         'Have your people call my people.',
-        "You're in no position to meet with me.", 'Talk to my assistant.'
-    ]
-}
+        "You're in no position to meet with me.",
+        'Talk to my assistant.']}
 SuitFaceoffTaunts = {
     'b': [
-        'Do you have a donation for me?', "I'm going to make you a sore loser.",
+        'Do you have a donation for me?',
+        "I'm going to make you a sore loser.",
         "I'm going to leave you high and dry.",
-        'I\'m "A Positive" I\'m going to win.', '"O" don\'t be so "Negative".',
+        'I\'m "A Positive" I\'m going to win.',
+        '"O" don\'t be so "Negative".',
         "I'm surprised you found me, I'm very mobile.",
         "I'm going to need to do a quick count on you.",
         "You're soon going to need a cookie and some juice.",
         "When I'm through you'll need to lie down.",
-        'This will only hurt for a second.', "I'm going to make you dizzy.",
-        "Good timing, I'm a pint low."
-    ],
+        'This will only hurt for a second.',
+        "I'm going to make you dizzy.",
+        "Good timing, I'm a pint low."],
     'm': [
         "You don't know who you're mingling with.",
-        'Ever mingle with the likes of me?', 'Good, it takes two to mingle.',
-        "Let's mingle.", 'This looks like a good place to mingle.',
-        "Well,isn't this cozy?", "You're mingling with defeat.",
+        'Ever mingle with the likes of me?',
+        'Good, it takes two to mingle.',
+        "Let's mingle.",
+        'This looks like a good place to mingle.',
+        "Well,isn't this cozy?",
+        "You're mingling with defeat.",
         "I'm going to mingle in your business.",
-        "Are you sure you're ready to mingle?"
-    ],
+        "Are you sure you're ready to mingle?"],
     'ms': [
-        'Get ready for a shake down.', 'You had better move out of the way.',
-        'Move it or lose it.', "I believe it's my move.",
-        'This should shake you up.', 'Prepare to be moved.',
-        "I'm ready to make my move.", "Watch out toon, you're on shaky ground.",
-        'This should be a moving moment.', 'I feel moved to defeat you.',
-        'Are you shaking yet?'
-    ],
+        'Get ready for a shake down.',
+        'You had better move out of the way.',
+        'Move it or lose it.',
+        "I believe it's my move.",
+        'This should shake you up.',
+        'Prepare to be moved.',
+        "I'm ready to make my move.",
+        "Watch out toon, you're on shaky ground.",
+        'This should be a moving moment.',
+        'I feel moved to defeat you.',
+        'Are you shaking yet?'],
     'hh': [
-        "I'm way ahead of you.", "You're headed for big trouble.",
+        "I'm way ahead of you.",
+        "You're headed for big trouble.",
         "You'll wish this was all in your head.",
-        "Oh good, I've been hunting for you.", "I'll have your head for this.",
-        'Heads up!', "Looks like you've got a head for trouble.",
-        'Headed my way?', 'A perfect trophy for my collection.',
+        "Oh good, I've been hunting for you.",
+        "I'll have your head for this.",
+        'Heads up!',
+        "Looks like you've got a head for trouble.",
+        'Headed my way?',
+        'A perfect trophy for my collection.',
         'You are going to have such a headache.',
-        "Don't lose your head over me."
-    ],
+        "Don't lose your head over me."],
     'tbc': [
-        "Watch out, I'm gouda getcha.", 'You can call me Jack.',
+        "Watch out, I'm gouda getcha.",
+        'You can call me Jack.',
         'Are you sure?  I can be such a Muenster at times.',
         'Well finally, I was afraid you were stringing me along.',
-        "I'm going to cream you.", "Don't you think I've aged well?",
+        "I'm going to cream you.",
+        "Don't you think I've aged well?",
         "I'm going to make mozzarella outta ya.",
         "I've been told I'm very strong.",
         'Careful, I know your expiration date.',
-        "Watch out, I'm a whiz at this game.", 'Beating you will be a brieeze.'
-    ],
+        "Watch out, I'm a whiz at this game.",
+        'Beating you will be a brieeze.'],
     'cr': [
-        'RAID!', "You don't fit in my corporation.", 'Prepare to be raided.',
+        'RAID!',
+        "You don't fit in my corporation.",
+        'Prepare to be raided.',
         "Looks like you're primed for a take-over.",
         'That is not proper corporate attire.',
-        "You're looking rather vulnerable.", 'Time to sign over your assets.',
+        "You're looking rather vulnerable.",
+        'Time to sign over your assets.',
         "I'm on a toon removal crusade.",
         'You are defenseless against my ideas.',
-        "Relax, you'll find this is for the best."
-    ],
+        "Relax, you'll find this is for the best."],
     'mh': [
-        'Are you ready for my take?', 'Lights, camera, action!',
+        'Are you ready for my take?',
+        'Lights, camera, action!',
         "Let's start rolling.",
         'Today the role of defeated toon, will be played by - YOU!',
         'This scene will go on the cutting room floor.',
         'I already know my motivation for this scene.',
         'Are you ready for your final scene?',
-        "I'm ready to roll your end credits.", 'I told you not to call me.',
-        "Let's get on with the show.", "There's no business like it!",
-        "I hope you don't forget your lines."
-    ],
+        "I'm ready to roll your end credits.",
+        'I told you not to call me.',
+        "Let's get on with the show.",
+        "There's no business like it!",
+        "I hope you don't forget your lines."],
     'nc': [
-        'Looks like your number is up.', 'I hope you prefer extra crunchy.',
-        "Now you're really in a crunch.", 'Is it time for crunch already?',
-        "Let's do crunch.", 'Where would you like to have your crunch today?',
-        "You've given me something to crunch on.", 'This will not be smooth.',
+        'Looks like your number is up.',
+        'I hope you prefer extra crunchy.',
+        "Now you're really in a crunch.",
+        'Is it time for crunch already?',
+        "Let's do crunch.",
+        'Where would you like to have your crunch today?',
+        "You've given me something to crunch on.",
+        'This will not be smooth.',
         'Go ahead, try and take a number.',
-        'I could do with a nice crunch about now.'
-    ],
+        'I could do with a nice crunch about now.'],
     'ls': [
-        "It's time to collect on your loan.", "You've been on borrowed time.",
-        'Your loan is now due.', 'Time to pay up.',
+        "It's time to collect on your loan.",
+        "You've been on borrowed time.",
+        'Your loan is now due.',
+        'Time to pay up.',
         'Well you asked for an advance and you got it.',
-        "You're going to pay for this.", "It's pay back time.",
-        'Can you lend me an ear?', "Good thing you're here,  I'm in a frenzy.",
-        'Shall we have a quick bite?', 'Let me take a bite at it.'
-    ],
+        "You're going to pay for this.",
+        "It's pay back time.",
+        'Can you lend me an ear?',
+        "Good thing you're here,  I'm in a frenzy.",
+        'Shall we have a quick bite?',
+        'Let me take a bite at it.'],
     'mb': [
-        'Time to bring in the big bags.', 'I can bag this.',
-        'Paper or plastic?', 'Do you have your baggage claim?',
+        'Time to bring in the big bags.',
+        'I can bag this.',
+        'Paper or plastic?',
+        'Do you have your baggage claim?',
         "Remember, money won't make you happy.",
         'Careful, I have some serious baggage.',
         "You're about to have money trouble.",
-        'Money will make your world go around.', "I'm too rich for your blood.",
-        'You can never have too much money!'
-    ],
+        'Money will make your world go around.',
+        "I'm too rich for your blood.",
+        'You can never have too much money!'],
     'rb': [
-        "You've been robbed.", "I'll rob you of this victory.",
-        "I'm a royal pain!", 'Hope you can grin and baron.',
-        "You'll need to report this robbery.", "Stick 'em up.",
-        "I'm a noble adversary.", "I'm going to take everything you have.",
+        "You've been robbed.",
+        "I'll rob you of this victory.",
+        "I'm a royal pain!",
+        'Hope you can grin and baron.',
+        "You'll need to report this robbery.",
+        "Stick 'em up.",
+        "I'm a noble adversary.",
+        "I'm going to take everything you have.",
         'You could call this neighborhood robbery.',
-        'You should know not to talk to strangers.'
-    ],
+        'You should know not to talk to strangers.'],
     'bs': [
-        'Never turn your back on me.', "You won't be coming back.",
-        'Take that back or else!', "I'm good at cutting costs.",
-        'I have lots of back up.', "There's no backing down now.",
-        "I'm the best and I can back that up.", 'Whoa, back up there toon.',
+        'Never turn your back on me.',
+        "You won't be coming back.",
+        'Take that back or else!',
+        "I'm good at cutting costs.",
+        'I have lots of back up.',
+        "There's no backing down now.",
+        "I'm the best and I can back that up.",
+        'Whoa, back up there toon.',
         'Let me get your back.',
         "You're going to have a stabbing headache soon.",
-        'I have perfect puncture.'
-    ],
+        'I have perfect puncture.'],
     'bw': [
-        "Don't brush me aside.", 'You make my hair curl.',
+        "Don't brush me aside.",
+        'You make my hair curl.',
         'I can make this permanent if you want.',
         "It looks like you're going to have some split ends.",
-        "You can't handle the truth.", "I think it's your turn to be dyed.",
-        "I'm so glad you're on time for your cut.", "You're in big trouble.",
-        "I'm going to wig out on you.", "I'm a big deal little toon."
-    ],
+        "You can't handle the truth.",
+        "I think it's your turn to be dyed.",
+        "I'm so glad you're on time for your cut.",
+        "You're in big trouble.",
+        "I'm going to wig out on you.",
+        "I'm a big deal little toon."],
     'le': [
-        "Careful, my legal isn't very tender.", 'I soar, then I score.',
+        "Careful, my legal isn't very tender.",
+        'I soar, then I score.',
         "I'm bringing down the law on you.",
         'You should know, I have some killer instincts.',
-        "I'm going to give you legal nightmares.", "You won't win this battle.",
+        "I'm going to give you legal nightmares.",
+        "You won't win this battle.",
         'This is so much fun it should be illegal.',
         "Legally, you're too small to fight me.",
-        'There is no limit to my talons.', "I call this a citizen's arrest."
-    ],
+        'There is no limit to my talons.',
+        "I call this a citizen's arrest."],
     'sd': [
-        "You'll never know when I'll stop.", 'Let me take you for a spin.',
-        'The doctor will see you now.', "I'm going to put you into a spin.",
+        "You'll never know when I'll stop.",
+        'Let me take you for a spin.',
+        'The doctor will see you now.',
+        "I'm going to put you into a spin.",
         'You look like you need a doctor.',
-        'The doctor is in, the Toon is out.', "You won't like my spin on this.",
+        'The doctor is in, the Toon is out.',
+        "You won't like my spin on this.",
         'You are going to spin out of control.',
         'Care to take a few turns with me?',
-        'I have my own special spin on the subject.'
-    ],
+        'I have my own special spin on the subject.'],
     'f': [
         "I'm gonna tell the boss about you!",
         "I may be just a flunky - But I'm real spunky.",
@@ -580,141 +594,178 @@ SuitFaceoffTaunts = {
         "You're going to look good on my resume.",
         "You'll have to go through me first.",
         "Let's see how you rate my job performance.",
-        'I excel at Toon disposal.', "You're never going to meet my boss.",
-        "I'm sending you back to the Playground."
-    ],
+        'I excel at Toon disposal.',
+        "You're never going to meet my boss.",
+        "I'm sending you back to the Playground."],
     'p': [
-        "I'm gonna rub you out!", "Hey, you can't push me around.", "I'm No.2!",
+        "I'm gonna rub you out!",
+        "Hey, you can't push me around.",
+        "I'm No.2!",
         "I'm going to scratch you out.",
         "I'll have to make my point more clear.",
-        'Let me get right to the point.', "Let's hurry, I bore easily.",
-        'I hate it when things get dull.', 'So you want to push your luck?',
-        'Did you pencil me in?', 'Careful, I may leave a mark.'
-    ],
+        'Let me get right to the point.',
+        "Let's hurry, I bore easily.",
+        'I hate it when things get dull.',
+        'So you want to push your luck?',
+        'Did you pencil me in?',
+        'Careful, I may leave a mark.'],
     'ym': [
         "I'm positive you're not going to like this.",
-        "I don't know the meaning of no.", 'Want to meet?  I say yes, anytime.',
+        "I don't know the meaning of no.",
+        'Want to meet?  I say yes, anytime.',
         'You need some positive enforcement.',
-        "I'm going to make a positive impression.", "I haven't been wrong yet.",
-        "Yes, I'm ready for you.", 'Are you positive you want to do this?',
+        "I'm going to make a positive impression.",
+        "I haven't been wrong yet.",
+        "Yes, I'm ready for you.",
+        'Are you positive you want to do this?',
         "I'll be sure to end this on a positive note.",
-        "I'm confirming our meeting time.", "I won't take no for an answer."
-    ],
+        "I'm confirming our meeting time.",
+        "I won't take no for an answer."],
     'mm': [
         "I'm going to get into your business!",
         'Sometimes big hurts come in small packages.',
         'No job is too small for me.',
         "I want the job done right, so I'll do it myself.",
-        'You need someone to manage your assets.', 'Oh good, a project.',
-        "Well, you've managed to find me.", 'I think you need some managing.',
+        'You need someone to manage your assets.',
+        'Oh good, a project.',
+        "Well, you've managed to find me.",
+        'I think you need some managing.',
         "I'll take care of you in no time.",
         "I'm watching every move you make.",
-        'Are you sure you want to do this?', "We're going to do this my way.",
+        'Are you sure you want to do this?',
+        "We're going to do this my way.",
         "I'm going to be breathing down your neck.",
-        'I can be very intimidating.'
-    ],
+        'I can be very intimidating.'],
     'ds': [
-        "You're going down!", 'Your options are shrinking.',
-        'Expect diminishing returns.', "You've just become expendable.",
-        "Don't ask me to lay off.", 'I might have to make a few cutbacks.',
-        'Things are looking down for you.', 'Why do you look so down?'
-    ],
+        "You're going down!",
+        'Your options are shrinking.',
+        'Expect diminishing returns.',
+        "You've just become expendable.",
+        "Don't ask me to lay off.",
+        'I might have to make a few cutbacks.',
+        'Things are looking down for you.',
+        'Why do you look so down?'],
     'cc': [
-        'Surprised to hear from me?', 'You rang?',
-        'Are you ready to accept my charges?', 'This caller always collects.',
-        "I'm one smooth operator.", "Hold the phone -- I'm here.",
+        'Surprised to hear from me?',
+        'You rang?',
+        'Are you ready to accept my charges?',
+        'This caller always collects.',
+        "I'm one smooth operator.",
+        "Hold the phone -- I'm here.",
         'Have you been waiting for my call?',
         "I was hoping you'd answer my call.",
         "I'm going to cause a ringing sensation.",
         'I always make my calls direct.',
         'Boy, did you get your wires crossed.',
-        'This call is going to cost you.', "You've got big trouble on the line."
-    ],
+        'This call is going to cost you.',
+        "You've got big trouble on the line."],
     'tm': [
         'I plan on making this inconvenient for you.',
         'Can I interest you in an insurance plan?',
         'You should have missed my call.',
-        "You won't be able to get rid of me now.", 'This a bad time?  Good.',
+        "You won't be able to get rid of me now.",
+        'This a bad time?  Good.',
         'I was planning on running into you.',
         'I will be reversing the charges for this call.',
         'I have some costly items for you today.',
         'Too bad for you - I make house calls.',
         "I'm prepared to close this deal quickly.",
-        "I'm going to use up a lot of your resources."
-    ],
+        "I'm going to use up a lot of your resources."],
     'nd': [
         'In my opinion, your name is mud.',
-        "I hope you don't mind if I drop your name.", "Haven't we met before?",
+        "I hope you don't mind if I drop your name.",
+        "Haven't we met before?",
         "Let's hurry, I'm having lunch with 'Mr. Hollywood.'",
-        "Have I mentioned I know 'The Mingler?'", "You'll never forget me.",
+        "Have I mentioned I know 'The Mingler?'",
+        "You'll never forget me.",
         'I know all the right people to bring you down.',
-        "I think I'll just drop in.", "I'm in the mood to drop some Toons.",
-        "You name it, I've dropped it."
-    ],
+        "I think I'll just drop in.",
+        "I'm in the mood to drop some Toons.",
+        "You name it, I've dropped it."],
     'gh': [
-        'Put it there, Toon.', "Let's shake on it.", "I'm going to enjoy this.",
-        "You'll notice I have a very firm grip.", "Let's seal the deal.",
+        'Put it there, Toon.',
+        "Let's shake on it.",
+        "I'm going to enjoy this.",
+        "You'll notice I have a very firm grip.",
+        "Let's seal the deal.",
         "Let's get right to the business at hand.",
         "Off handedly I'd say, you're in trouble.",
-        "You'll find I'm a handful.", 'I can be quite handy.',
-        "I'm a very hands-on kinda guy.", 'Would you like some hand-me-downs?',
+        "You'll find I'm a handful.",
+        'I can be quite handy.',
+        "I'm a very hands-on kinda guy.",
+        'Would you like some hand-me-downs?',
         'Let me show you some of my handiwork.',
-        'I think the handwriting is on the wall.'
-    ],
+        'I think the handwriting is on the wall.'],
     'sc': [
-        'I will make short work of you.', "You're about to have money trouble.",
+        'I will make short work of you.',
+        "You're about to have money trouble.",
         "You're about to be overcharged.",
         'This will be a short-term assignment.',
         "I'll be done with you in short order.",
-        "You'll soon experience a shortfall.", "Let's make this a short stop.",
-        "I think you've come up short.", 'I have a short temper for Toons.',
-        "I'll be with you shortly.", "You're about to be shorted."
-    ],
+        "You'll soon experience a shortfall.",
+        "Let's make this a short stop.",
+        "I think you've come up short.",
+        'I have a short temper for Toons.',
+        "I'll be with you shortly.",
+        "You're about to be shorted."],
     'pp': [
         'This is going to sting a little.',
         "I'm going to give you a pinch for luck.",
         "You don't want to press your luck with me.",
         "I'm going to put a crimp in your smile.",
-        'Perfect, I have an opening for you.', 'Let me add my two cents.',
-        "I've been asked to pinch-hit.", "I'll prove you're not dreaming.",
-        'Heads you lose, tails I win.', 'A Penny for your gags.'
-    ],
+        'Perfect, I have an opening for you.',
+        'Let me add my two cents.',
+        "I've been asked to pinch-hit.",
+        "I'll prove you're not dreaming.",
+        'Heads you lose, tails I win.',
+        'A Penny for your gags.'],
     'tw': [
-        'Things are about to get very tight.', "That's Mr. Tightwad to you.",
+        'Things are about to get very tight.',
+        "That's Mr. Tightwad to you.",
         "I'm going to cut off your funding.",
         'Is this the best deal you can offer?',
-        "Let's get going - time is money.", "You'll find I'm very tightfisted.",
-        "You're in a tight spot.", 'Prepare to walk a tight rope.',
+        "Let's get going - time is money.",
+        "You'll find I'm very tightfisted.",
+        "You're in a tight spot.",
+        'Prepare to walk a tight rope.',
         'I hope you can afford this.',
         "I'm going to make this a tight squeeze.",
-        "I'm going to make a big dent in your budget."
-    ],
+        "I'm going to make a big dent in your budget."],
     'bc': [
-        'I enjoy subtracting Toons.', 'You can count on me to make you pay.',
-        'Bean there, done that.', 'I can hurt you where it counts.',
-        'I make every bean count.', 'Your expense report is overdue.',
-        'Time for an audit.', "Let's step into my office.",
-        'Where have you bean?', "I've bean waiting for you.",
-        "I'm going to bean you."
-    ],
+        'I enjoy subtracting Toons.',
+        'You can count on me to make you pay.',
+        'Bean there, done that.',
+        'I can hurt you where it counts.',
+        'I make every bean count.',
+        'Your expense report is overdue.',
+        'Time for an audit.',
+        "Let's step into my office.",
+        'Where have you bean?',
+        "I've bean waiting for you.",
+        "I'm going to bean you."],
     'bf': [
-        "Looks like you've hit rock bottom.", "I'm ready to feast.",
-        "I'm a sucker for Toons.", 'Oh goody, lunch time.',
+        "Looks like you've hit rock bottom.",
+        "I'm ready to feast.",
+        "I'm a sucker for Toons.",
+        'Oh goody, lunch time.',
         'Perfect timing, I need a quick bite.',
         "I'd like some feedback on my performance.",
         "Let's talk about the bottom line.",
         "You'll find my talents are bottomless.",
-        'Good, I need a little pick-me-up.', "I'd love to have you for lunch."
-    ],
+        'Good, I need a little pick-me-up.',
+        "I'd love to have you for lunch."],
     'tf': [
-        "It's time to face-off!", 'You had better face up to defeat.',
+        "It's time to face-off!",
+        'You had better face up to defeat.',
         'Prepare to face your worst nightmare!',
-        "Face it, I'm better than you.", 'Two heads are better than one.',
+        "Face it, I'm better than you.",
+        'Two heads are better than one.',
         'It takes two to tango, you wanna tango?',
         "You're in for two times the trouble.",
-        'Which face would you like to defeat you?', "I'm 'two' much for you.",
-        "You don't know who you're facing.", 'Are you ready to face your doom?'
-    ],
+        'Which face would you like to defeat you?',
+        "I'm 'two' much for you.",
+        "You don't know who you're facing.",
+        'Are you ready to face your doom?'],
     'dt': [
         "I'm gonna give you double the trouble.",
         'See if you can stop my double cross.',
@@ -722,19 +773,23 @@ SuitFaceoffTaunts = {
         "It's time to do some double-dealing.",
         'I plan to do some double DIPPING.',
         "You're not going to like my double play.",
-        'You may want to double think this.', 'Get ready for a double TAKE.',
-        'You may want to double up against me.', 'Doubles anyone??'
-    ],
+        'You may want to double think this.',
+        'Get ready for a double TAKE.',
+        'You may want to double up against me.',
+        'Doubles anyone??'],
     'ac': [
-        "I'm going to chase you out of town!", 'Do you hear a siren?',
-        "I'm going to enjoy this.", 'I love the thrill of the chase.',
-        'Let me give you the run down.', 'Do you have insurance?',
+        "I'm going to chase you out of town!",
+        'Do you hear a siren?',
+        "I'm going to enjoy this.",
+        'I love the thrill of the chase.',
+        'Let me give you the run down.',
+        'Do you have insurance?',
         'I hope you brought a stretcher with you.',
-        'I doubt you can keep up with me.', "It's all uphill from here.",
+        'I doubt you can keep up with me.',
+        "It's all uphill from here.",
         "You're going to need some urgent care soon.",
-        'This is no laughing matter.', "I'm going to give you the business."
-    ]
-}
+        'This is no laughing matter.',
+        "I'm going to give you the business."]}
 SpeedChatStaticText = {
     1: lYes,
     2: lNo,
@@ -823,7 +878,8 @@ SpeedChatStaticText = {
     807: "Sorry, I can't.",
     808: "I couldn't wait any longer.",
     809: "I can't understand you.",
-    810: 'Use the %s.' % GlobalSpeedChatName,
+    810: 'Use the %s.' %
+    GlobalSpeedChatName,
     811: "Sorry, I'm busy fishing!",
     812: "Sorry, I'm in a building!",
     813: "Sorry, I'm helping a friend!",
@@ -860,16 +916,25 @@ SpeedChatStaticText = {
     1017: "Let's catch the next one.",
     1100: "Let's go on the trolley!",
     1101: "Let's go back to the playground!",
-    1102: "Let's go fight the %s!" % Cogs,
-    1103: "Let's go take over a %s building!" % Cog,
+    1102: "Let's go fight the %s!" %
+    Cogs,
+    1103: "Let's go take over a %s building!" %
+    Cog,
     1104: "Let's go in the elevator!",
-    1105: "Let's go to %s!" % lToontownCentral,
-    1106: "Let's go to %s!" % lDonaldsDock,
-    1107: "Let's go to %s!" % lMinniesMelodyland,
-    1108: "Let's go to %s!" % lDaisyGardens,
-    1109: "Let's go to %s!" % lTheBrrrgh,
-    1110: "Let's go to %s!" % lDonaldsDreamland,
-    1111: "Let's go to %s!" % lGoofySpeedway,
+    1105: "Let's go to %s!" %
+    lToontownCentral,
+    1106: "Let's go to %s!" %
+    lDonaldsDock,
+    1107: "Let's go to %s!" %
+    lMinniesMelodyland,
+    1108: "Let's go to %s!" %
+    lDaisyGardens,
+    1109: "Let's go to %s!" %
+    lTheBrrrgh,
+    1110: "Let's go to %s!" %
+    lDonaldsDreamland,
+    1111: "Let's go to %s!" %
+    lGoofySpeedway,
     1112: "Let's go to my house!",
     1113: "Let's go to your house!",
     1114: "Let's go to Sellbot HQ!",
@@ -883,8 +948,10 @@ SpeedChatStaticText = {
     1122: "Let's go to Lawbot HQ!",
     1123: "Let's go fight the Chief Justice!",
     1124: "Let's go in the District Attorney's Office!",
-    1125: "Let's go to %s!" % lOutdoorZone,
-    1126: "Let's go to %s!" % lGolfZone,
+    1125: "Let's go to %s!" %
+    lOutdoorZone,
+    1126: "Let's go to %s!" %
+    lGolfZone,
     1127: "Let's go to Bossbot HQ!",
     1128: "Let's go fight the CEO!",
     1129: "Let's go in the Cog Golf Courses!",
@@ -1772,15 +1839,13 @@ SpeedChatStaticText = {
     60670: 'Dance',
     60676: 'Flirt',
     60677: 'Zombie dance',
-    60671:
-    'Hello, I\xc2\x92m a Pirate, and I\xc2\x92m here to steal your heart.',
+    60671: 'Hello, I\xc2\x92m a Pirate, and I\xc2\x92m here to steal your heart.',
     60672: 'I just found the treasure I\xc2\x92ve been searching for.',
     60673: 'If you were a booger, I\xc2\x92d pick you first.',
     60674: 'Come to Tortuga often?',
     60675: 'Do you have a map?  I just keep getting lost in your eyes.',
     65000: 'Yes',
-    65001: 'No'
-}
+    65001: 'No'}
 Emotes_Root = 'EMOTES'
 Emotes_Dances = 'Dances'
 Emotes_General = 'General'
@@ -1792,14 +1857,53 @@ Emote_CombatDenied = 'Cannot emote while in combat.'
 Emote_CannonDenied = 'Cannot emote while using a cannon.'
 Emote_SwimDenied = 'Cannot emote while swimming.'
 Emote_ParlorGameDenied = 'Cannot emote while playing a parlor game.'
-Emotes = (60505, 60506, 60509, 60510, 60511, 60516, 60519, 60520, 60521, 60522,
-          60523, 60524, 60525, 60526, 60527, 60528, 60529, 60530, 60602, 60668,
-          60614, 60622, 60640, 60644, 60652, 60657, 60664, 60665, 60666, 60669,
-          60612, 60661, 60645, 60629, 60641, 60654, 60630, 60670, 60633, 60676,
-          60677, 65000, 65001, 60517)
-SCFactoryMeetMenuIndexes = (1903, 1904, 1906, 1907, 1908, 1910, 1913, 1915,
-                            1916, 1917, 1919, 1922, 1923, 1924, 1932, 1940,
-                            1941)
+Emotes = (
+    60505,
+    60506,
+    60509,
+    60510,
+    60511,
+    60516,
+    60519,
+    60520,
+    60521,
+    60522,
+    60523,
+    60524,
+    60525,
+    60526,
+    60527,
+    60528,
+    60529,
+    60530,
+    60602,
+    60668,
+    60614,
+    60622,
+    60640,
+    60644,
+    60652,
+    60657,
+    60664,
+    60665,
+    60666,
+    60669,
+    60612,
+    60661,
+    60645,
+    60629,
+    60641,
+    60654,
+    60630,
+    60670,
+    60633,
+    60676,
+    60677,
+    65000,
+    65001,
+    60517)
+SCFactoryMeetMenuIndexes = (
+    1903, 1904, 1906, 1907, 1908, 1910, 1913, 1915, 1916, 1917, 1919, 1922, 1923, 1924, 1932, 1940, 1941)
 CustomSCStrings = {
     10: 'Oh, well.',
     20: 'Why not?',
@@ -2217,43 +2321,43 @@ CustomSCStrings = {
     14008: 'Cannon Pinball rocks!',
     14009: 'Your Estate rocks!',
     14010: 'Your Garden is cool!',
-    14011: 'Your Estate is cool!'
-}
-SCMenuCommonCogIndices = (20000, 20004)
+    14011: 'Your Estate is cool!'}
+SCMenuCommonCogIndices = (
+    20000, 20004)
 SCMenuCustomCogIndices = {
-    'bf': (20005, 20014),
-    'nc': (20015, 20024),
-    'ym': (20025, 20035),
-    'ms': (20036, 20046),
-    'bc': (20047, 20057),
-    'cc': (20058, 20070),
-    'nd': (20071, 20080),
-    'ac': (20081, 20092),
-    'tf': (20093, 20103),
-    'hh': (20104, 20114),
-    'le': (20115, 20124),
-    'bs': (20125, 20135),
-    'cr': (20136, 20145),
-    'tbc': (20146, 20156),
-    'ds': (20157, 20164),
-    'gh': (20165, 20177),
-    'pp': (20178, 20187),
-    'b': (20188, 20199),
-    'f': (20200, 20210),
-    'mm': (20211, 20224),
-    'tw': (20225, 20235),
-    'mb': (20236, 20245),
-    'm': (20246, 20254),
-    'mh': (20255, 20266),
-    'dt': (20267, 20276),
-    'p': (20277, 20287),
-    'tm': (20288, 20298),
-    'bw': (20299, 20308),
-    'ls': (20309, 20319),
-    'rb': (20320, 20329),
-    'sc': (20330, 20331),
-    'sd': (20341, 20350)
-}
+    'bf': (
+        20005, 20014), 'nc': (
+            20015, 20024), 'ym': (
+                20025, 20035), 'ms': (
+                    20036, 20046), 'bc': (
+                        20047, 20057), 'cc': (
+                            20058, 20070), 'nd': (
+                                20071, 20080), 'ac': (
+                                    20081, 20092), 'tf': (
+                                        20093, 20103), 'hh': (
+                                            20104, 20114), 'le': (
+                                                20115, 20124), 'bs': (
+                                                    20125, 20135), 'cr': (
+                                                        20136, 20145), 'tbc': (
+                                                            20146, 20156), 'ds': (
+                                                                20157, 20164), 'gh': (
+                                                                    20165, 20177), 'pp': (
+                                                                        20178, 20187), 'b': (
+                                                                            20188, 20199), 'f': (
+                                                                                20200, 20210), 'mm': (
+                                                                                    20211, 20224), 'tw': (
+                                                                                        20225, 20235), 'mb': (
+                                                                                            20236, 20245), 'm': (
+                                                                                                20246, 20254), 'mh': (
+                                                                                                    20255, 20266), 'dt': (
+                                                                                                        20267, 20276), 'p': (
+                                                                                                            20277, 20287), 'tm': (
+                                                                                                                20288, 20298), 'bw': (
+                                                                                                                    20299, 20308), 'ls': (
+                                                                                                                        20309, 20319), 'rb': (
+                                                                                                                            20320, 20329), 'sc': (
+                                                                                                                                20330, 20331), 'sd': (
+                                                                                                                                    20341, 20350)}
 PSCMenuExpressions = 'EXPRESSIONS'
 PSCMenuGreetings = 'GREETINGS'
 PSCMenuGoodbyes = 'GOODBYES'
@@ -2313,9 +2417,18 @@ PeriodOnlyAfterLetter = 'You can use a period in your name, but only after a let
 ApostropheOnlyAfterLetter = 'You can use an apostrophe in your name, but only after a letter.'
 NoNumbersInTheMiddle = 'Numeric digits may not appear in the middle of a word.'
 ThreeWordsOrLess = 'Your name must be three words or fewer.'
-CopyrightedNames = ('mickey', 'mickey mouse', 'mickeymouse', 'minnie',
-                    'minnie mouse', 'minniemouse', 'donald', 'donald duck',
-                    'donaldduck', 'pluto', 'goofy')
+CopyrightedNames = (
+    'mickey',
+    'mickey mouse',
+    'mickeymouse',
+    'minnie',
+    'minnie mouse',
+    'minniemouse',
+    'donald',
+    'donald duck',
+    'donaldduck',
+    'pluto',
+    'goofy')
 NCTooShort = 'That name is too short.'
 NCNoDigits = 'Your name cannot contain numbers.'
 NCNeedLetters = 'Each word in your name must contain some letters.'
@@ -2364,10 +2477,11 @@ TeleportPanelUnavailableHood = '%s is not available right now; try again later.'
 TeleportPanelDenySelf = "You can't go to yourself!"
 TeleportPanelOtherShard = "%(avName)s is in district %(shardName)s, and you're in district %(myShardName)s.  Do you want to switch to %(shardName)s?"
 KartRacingMenuSections = [
-    -1, 'PLACES', 'RACES', 'TRACKS', 'COMPLIMENTS', 'TAUNTS'
-]
-GolfMenuSections = [-1, 'COURSES', 'TIPS', 'COMMENTS']
-WhiteListMenu = [-1, 'WHITELIST']
+    -1, 'PLACES', 'RACES', 'TRACKS', 'COMPLIMENTS', 'TAUNTS']
+GolfMenuSections = [
+    -1, 'COURSES', 'TIPS', 'COMMENTS']
+WhiteListMenu = [
+    -1, 'WHITELIST']
 TTAccountCallCustomerService = 'Please call Customer Service at %s.'
 TTAccountCustomerServiceHelp = '\nIf you need help, please call Customer Service at %s.'
 TTAccountIntractibleError = 'An error occurred.'

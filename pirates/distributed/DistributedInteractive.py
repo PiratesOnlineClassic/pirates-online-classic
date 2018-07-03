@@ -6,11 +6,8 @@ from pirates.piratesgui import InteractGUI
 from pirates.world import DistributedLocatableObject
 
 
-class DistributedInteractive(
-        DistributedNode.DistributedNode, InteractiveBase.InteractiveBase,
-        DistributedLocatableObject.DistributedLocatableObject):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedInteractive')
+class DistributedInteractive(DistributedNode.DistributedNode, InteractiveBase.InteractiveBase, DistributedLocatableObject.DistributedLocatableObject):
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInteractive')
 
     def __init__(self, cr):
         DistributedNode.DistributedNode.__init__(self, cr)
@@ -39,18 +36,14 @@ class DistributedInteractive(
 
     def announceGenerate(self):
         DistributedNode.DistributedNode.announceGenerate(self)
-        DistributedLocatableObject.DistributedLocatableObject.announceGenerate(
-            self)
+        DistributedLocatableObject.DistributedLocatableObject.announceGenerate(self)
 
     def isBattleable(self):
         return 0
 
-    @report(
-        types=['frameCount', 'deltaStamp'],
-        dConfigParam='want-shipboard-report')
+    @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def requestInteraction(self, avId, interactType=0, instant=0):
-        self.sendUpdate('requestInteraction',
-                        [base.localAvatar.doId, interactType, instant])
+        self.sendUpdate('requestInteraction', [base.localAvatar.doId, interactType, instant])
         self.cr.interactionMgr.stop()
         self.request('Waiting')
 
@@ -66,8 +59,7 @@ class DistributedInteractive(
         self.refreshState()
 
     def refreshState(self):
-        if self.hasProximityCollision and self.allowInteract and not self.ignoreProximity and not self.proximityCollisionNodePath.isEmpty(
-        ):
+        if self.hasProximityCollision and self.allowInteract and not self.ignoreProximity and not self.proximityCollisionNodePath.isEmpty():
             distance = self.proximityCollisionNodePath.getDistance(localAvatar)
             proxSphereRadius = self.proximityCollisionNodePath.getScale()[0]
             avRadius = 1.4
@@ -96,8 +88,7 @@ class DistributedInteractive(
 
         self.interactGUI = InteractGUI.InteractGUI()
         title = self.getMenuTitle()
-        self.interactGUI.setOptions(title, optionIds, statusCodes,
-                                    self.b_selectOption)
+        self.interactGUI.setOptions(title, optionIds, statusCodes, self.b_selectOption)
 
     def b_selectOption(self, optionId):
         self.d_selectOption(optionId)

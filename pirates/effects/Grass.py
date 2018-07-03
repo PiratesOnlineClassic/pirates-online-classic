@@ -14,18 +14,13 @@ from pirates.pirate import AvatarTypes
 from pirates.piratesbase import PiratesGlobals
 
 TWO_PI = math.pi * 2.0
-GrassProfiles = {
-    'models/islands/bilgewater_zero': 'bilgewaterGrass.dat',
-    'models/props/bilgewater_gameArea_test': 'bilgewaterGrass.dat',
-    'models/jungles/jungle_b': 'jungle_b_grass.dat'
-}
-
+GrassProfiles = {'models/islands/bilgewater_zero': 'bilgewaterGrass.dat', 'models/props/bilgewater_gameArea_test': 'bilgewaterGrass.dat', 'models/jungles/jungle_b': 'jungle_b_grass.dat'}
 
 def HasGrass(modelPath):
     return GrassProfiles.get(modelPath)
 
-
 class Grass(DirectObject, NodePath):
+    
 
     def __init__(self, parent):
         NodePath.__init__(self, 'grass')
@@ -53,8 +48,7 @@ class Grass(DirectObject, NodePath):
         del self.clumps
 
     def createActor(self):
-        models = [(loader.loadModelCopy('models/vegetation/Grass_huge_zero'),
-                   'models/vegetation/Grass_huge_idle', 1.0)]
+        models = [(loader.loadModelCopy('models/vegetation/Grass_huge_zero'), 'models/vegetation/Grass_huge_idle', 1.0)]
         ga = Actor.Actor()
         model, anim, scale = random.choice(models)
         ga.loadModel(model)
@@ -109,10 +103,8 @@ class Grass(DirectObject, NodePath):
     def readGrassSamples(self):
         filename = self.__grassDataFile
         spfSearchPath = DSearchPath()
-        spfSearchPath.appendDirectory(
-            Filename.fromOsSpecific(os.path.expandvars('$PIRATES/src/effects')))
-        spfSearchPath.appendDirectory(
-            Filename.fromOsSpecific(os.path.expandvars('pirates/src/effects')))
+        spfSearchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$PIRATES/src/effects')))
+        spfSearchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('pirates/src/effects')))
         spfSearchPath.appendDirectory(Filename('.'))
         pfile = Filename(filename)
         if vfs:
@@ -192,12 +184,9 @@ class Grass(DirectObject, NodePath):
                                 clump = self.getAvailableClump()
                                 if clump:
                                     clump.setPos(samplePos)
-                                    clump.headsUp(
-                                        Point3(samplePos), sampleNormal)
+                                    clump.headsUp(Point3(samplePos), sampleNormal)
                                     k = 1.5
-                                    clump.setColorScale(k * sample[7],
-                                                        k * sample[8],
-                                                        k * sample[9], 1)
+                                    clump.setColorScale(k * sample[7], k * sample[8], k * sample[9], 1)
                                     clump.show()
                                     sample[0] = clump
                             else:

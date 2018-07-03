@@ -26,879 +26,42 @@ SX = 6
 SY = 7
 SZ = 8
 AnimDict = {}
-AnimListDict = {
-    'sf': Biped.DefaultAnimList,
-    'ms': Biped.DefaultAnimList,
-    'mi': Biped.DefaultAnimList,
-    'tp': Biped.DefaultAnimList,
-    'tm': Biped.DefaultAnimList
-}
-CustomAnimDict = {
-    'msf': Biped.msfCustomAnimList,
-    'mms': Biped.mmsCustomAnimList,
-    'mmi': Biped.mmiCustomAnimList,
-    'mtp': Biped.mtpCustomAnimList,
-    'mtm': Biped.mtmCustomAnimList,
-    'fsf': Biped.fsfCustomAnimList,
-    'fms': Biped.fmsCustomAnimList,
-    'fmi': Biped.fmiCustomAnimList,
-    'ftp': Biped.ftpCustomAnimList,
-    'ftm': Biped.ftmCustomAnimList
-}
+AnimListDict = {'sf': Biped.DefaultAnimList, 'ms': Biped.DefaultAnimList, 'mi': Biped.DefaultAnimList, 'tp': Biped.DefaultAnimList, 'tm': Biped.DefaultAnimList}
+CustomAnimDict = {'msf': Biped.msfCustomAnimList, 'mms': Biped.mmsCustomAnimList, 'mmi': Biped.mmiCustomAnimList, 'mtp': Biped.mtpCustomAnimList, 'mtm': Biped.mtmCustomAnimList, 'fsf': Biped.fsfCustomAnimList, 'fms': Biped.fmsCustomAnimList, 'fmi': Biped.fmiCustomAnimList, 'ftp': Biped.ftpCustomAnimList, 'ftm': Biped.ftmCustomAnimList}
 NewModelDict = {'sf': 'sf', 'ms': 'ms', 'mi': 'mi', 'tp': 'tp', 'tm': 'tm'}
-TempDict = ['sf', 'ms', 'mi', 'tp', 'tm']
+TempDict = [
+ 'sf', 'ms', 'mi', 'tp', 'tm']
 PrebuiltAnimDict = {}
-HeadPositions = [[
-    VBase3(0.0, 0.0, 0.0),
-    VBase3(0.0, 0.0, -0.08),
-    VBase3(0.0, 0.0, 0.0),
-    VBase3(0.0, 0.0, -0.08),
-    VBase3(0.0, 0.0, 0.0)
-], [
-    VBase3(0, 0, 0.0),
-    VBase3(0, 0, 0.0),
-    VBase3(0, 0, 0.0),
-    VBase3(0, 0, 0.0),
-    VBase3(0, 0, 0.0)
-]]
-HeadScales = [[1.05, 0.8, 0.85, 0.82, 0.88], [1.1, 0.9, 0.95, 0.97, 0.95]]
-BodyScales = [[0.87, 0.98, 1.0, 0.98, 1.05], [0.88, 0.9, 1.02, 1.07, 0.98]]
-PlayerHeight = [5, 6, 6, 6, 7]
+HeadPositions = [
+ [
+  VBase3(0.0, 0.0, 0.0), VBase3(0.0, 0.0, -0.08), VBase3(0.0, 0.0, 0.0), VBase3(0.0, 0.0, -0.08), VBase3(0.0, 0.0, 0.0)], [VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0)]]
+HeadScales = [
+ [
+  1.05, 0.8, 0.85, 0.82, 0.88], [1.1, 0.9, 0.95, 0.97, 0.95]]
+BodyScales = [
+ [
+  0.87, 0.98, 1.0, 0.98, 1.05], [0.88, 0.9, 1.02, 1.07, 0.98]]
+PlayerHeight = [
+ 5, 6, 6, 6, 7]
 MaleBodyShapeControlJoints = (
-    'def_spine02', 'def_spine03', 'def_spine04', 'def_shoulders', 'def_neck',
-    'def_left_clav', 'def_left_shoulder', 'def_left_elbow', 'def_left_wrist',
-    'def_left_thumb01', 'def_left_thumb02', 'def_left_thumb03',
-    'def_left_finger01', 'def_left_finger02', 'def_left_index01',
-    'def_left_index02', 'def_right_clav', 'def_right_shoulder',
-    'def_right_elbow', 'def_right_wrist', 'def_right_thumb01',
-    'def_right_thumb02', 'def_right_thumb03', 'def_right_finger01',
-    'def_right_finger02', 'def_right_index01', 'def_right_index02',
-    'tr_left_clav', 'tr_left_thumb01', 'tr_right_clav', 'tr_right_thumb01',
-    'def_hips', 'def_left_thigh', 'def_left_knee', 'def_left_ankle',
-    'def_left_ball', 'def_right_thigh', 'def_right_knee', 'def_right_ankle',
-    'def_right_ball', 'tr_sash01', 'tr_left_thigh', 'tr_right_thigh')
-MaleBodyShapeControlJointMatrix = {
-    'def_spine02': [
-        VBase3(1, 1.9, 1.9),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.3, 1),
-        VBase3(1, 1.52, 1.4),
-        VBase3(1, 1.5, 1.17)
-    ],
-    'def_spine03': [
-        VBase3(1, 1.7, 1.6),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.4, 1.16),
-        VBase3(1, 1.33, 1.2),
-        VBase3(1, 1.7, 1.25)
-    ],
-    'def_spine04': [
-        VBase3(1, 1.5, 1.3),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.4, 1.2),
-        VBase3(1, 1.1, 1.0),
-        VBase3(1, 1.7, 1.4)
-    ],
-    'def_shoulders': [
-        VBase3(1, 1.5, 1.5),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.5, 1.1),
-        VBase3(1, 1, 1),
-        VBase3(1.3, 1.5, 1.45)
-    ],
-    'def_neck': [
-        VBase3(1, 2, 1.1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.5, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.5, 1)
-    ],
-    'def_left_clav': [
-        VBase3(1, 1.4, 1.4),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.3, 1.3),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.6, 1.5)
-    ],
-    'def_left_shoulder': [
-        VBase3(1, 1.9, 1.9),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.68, 1.68),
-        VBase3(1, 1.3, 1.3),
-        VBase3(1, 2.0, 2.0)
-    ],
-    'def_left_elbow': [
-        VBase3(1, 2, 1.62),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.74, 1.46),
-        VBase3(1, 1.3, 1.3),
-        VBase3(1, 1.7, 1.7)
-    ],
-    'def_left_wrist': [
-        VBase3(1, 1.3, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.15, 1.15)
-    ],
-    'def_left_thumb01': [
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_thumb02': [
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_thumb03': [
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_finger01': [
-        VBase3(1, 1.2, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.25, 1.25)
-    ],
-    'def_left_finger02': [
-        VBase3(1, 1.15, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.15, 1.15)
-    ],
-    'def_left_index01': [
-        VBase3(1, 1.75, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.2, 1.2)
-    ],
-    'def_left_index02': [
-        VBase3(1, 1.6, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.2, 1.2)
-    ],
-    'def_right_clav': [
-        VBase3(1, 1.4, 1.4),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.3, 1.3),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.6, 1.5)
-    ],
-    'def_right_shoulder': [
-        VBase3(1, 1.9, 1.9),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.68, 1.68),
-        VBase3(1, 1.3, 1.3),
-        VBase3(1, 2.0, 2.0)
-    ],
-    'def_right_elbow': [
-        VBase3(1, 2, 1.62),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.74, 1.46),
-        VBase3(1, 1.3, 1.3),
-        VBase3(1, 1.7, 1.7)
-    ],
-    'def_right_wrist': [
-        VBase3(1, 1.3, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.15, 1.15)
-    ],
-    'def_right_thumb01': [
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_thumb02': [
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_thumb03': [
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_finger01': [
-        VBase3(1, 1.2, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.25, 1.25)
-    ],
-    'def_right_finger02': [
-        VBase3(1, 1.15, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.15, 1.15)
-    ],
-    'def_right_index01': [
-        VBase3(1, 1.75, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.2, 1.2)
-    ],
-    'def_right_index02': [
-        VBase3(1, 1.6, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.2, 1.2)
-    ],
-    'tr_left_clav': [
-        VBase3(0.12, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0.147, 0, 0),
-        VBase3(0.0, 0.0, 0.0),
-        VBase3(0.32, 0, 0)
-    ],
-    'tr_left_thumb01': [
-        VBase3(0, -0.07, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, -0.075, 0)
-    ],
-    'tr_right_clav': [
-        VBase3(0.12, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0.147, 0, 0),
-        VBase3(0.0, 0.0, 0.0),
-        VBase3(0.32, 0, 0)
-    ],
-    'tr_right_thumb01': [
-        VBase3(0, 0.07, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0.075, 0)
-    ],
-    'def_hips': [
-        VBase3(1.9, 1.9, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1.6, 1.4, 1),
-        VBase3(1.15, 1.15, 1)
-    ],
-    'def_left_thigh': [
-        VBase3(1, 1.9, 1.5),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.2, 1.1),
-        VBase3(1, 1.4, 1.4),
-        VBase3(1, 1.4, 1.4)
-    ],
-    'def_left_knee': [
-        VBase3(1, 1.6, 1.5),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.2, 1.1),
-        VBase3(1, 1.2, 1.1),
-        VBase3(1, 1.4, 1.2)
-    ],
-    'def_left_ankle': [
-        VBase3(1, 1, 1.38),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_ball': [
-        VBase3(1, 1.4, 1.44),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.1, 1)
-    ],
-    'def_right_thigh': [
-        VBase3(1, 1.9, 1.5),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.2, 1.1),
-        VBase3(1, 1.4, 1.4),
-        VBase3(1, 1.4, 1.4)
-    ],
-    'def_right_knee': [
-        VBase3(1, 1.6, 1.5),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.2, 1.1),
-        VBase3(1, 1.2, 1.1),
-        VBase3(1, 1.4, 1.2)
-    ],
-    'def_right_ankle': [
-        VBase3(1, 1, 1.38),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_ball': [
-        VBase3(1, 1.4, 1.44),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.1, 1)
-    ],
-    'tr_sash01': [
-        VBase3(0.1, -0.08, 0.33),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0.1, 0.085, 0.263),
-        VBase3(0.049, 0.037, 0.128)
-    ],
-    'tr_left_thigh': [
-        VBase3(0, 0.2, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0.1, 0),
-        VBase3(0, 0.08, 0)
-    ],
-    'tr_right_thigh': [
-        VBase3(0, -0.2, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, -0.1, 0),
-        VBase3(0, -0.08, 0)
-    ]
-}
+ 'def_spine02', 'def_spine03', 'def_spine04', 'def_shoulders', 'def_neck', 'def_left_clav', 'def_left_shoulder', 'def_left_elbow', 'def_left_wrist', 'def_left_thumb01', 'def_left_thumb02', 'def_left_thumb03', 'def_left_finger01', 'def_left_finger02', 'def_left_index01', 'def_left_index02', 'def_right_clav', 'def_right_shoulder', 'def_right_elbow', 'def_right_wrist', 'def_right_thumb01', 'def_right_thumb02', 'def_right_thumb03', 'def_right_finger01', 'def_right_finger02', 'def_right_index01', 'def_right_index02', 'tr_left_clav', 'tr_left_thumb01', 'tr_right_clav', 'tr_right_thumb01', 'def_hips', 'def_left_thigh', 'def_left_knee', 'def_left_ankle', 'def_left_ball', 'def_right_thigh', 'def_right_knee', 'def_right_ankle', 'def_right_ball', 'tr_sash01', 'tr_left_thigh', 'tr_right_thigh')
+MaleBodyShapeControlJointMatrix = {'def_spine02': [VBase3(1, 1.9, 1.9), VBase3(1, 1, 1), VBase3(1, 1.3, 1), VBase3(1, 1.52, 1.4), VBase3(1, 1.5, 1.17)], 'def_spine03': [VBase3(1, 1.7, 1.6), VBase3(1, 1, 1), VBase3(1, 1.4, 1.16), VBase3(1, 1.33, 1.2), VBase3(1, 1.7, 1.25)], 'def_spine04': [VBase3(1, 1.5, 1.3), VBase3(1, 1, 1), VBase3(1, 1.4, 1.2), VBase3(1, 1.1, 1.0), VBase3(1, 1.7, 1.4)], 'def_shoulders': [VBase3(1, 1.5, 1.5), VBase3(1, 1, 1), VBase3(1, 1.5, 1.1), VBase3(1, 1, 1), VBase3(1.3, 1.5, 1.45)], 'def_neck': [VBase3(1, 2, 1.1), VBase3(1, 1, 1), VBase3(1, 1.5, 1), VBase3(1, 1, 1), VBase3(1, 1.5, 1)], 'def_left_clav': [VBase3(1, 1.4, 1.4), VBase3(1, 1, 1), VBase3(1, 1.3, 1.3), VBase3(1, 1, 1), VBase3(1, 1.6, 1.5)], 'def_left_shoulder': [VBase3(1, 1.9, 1.9), VBase3(1, 1, 1), VBase3(1, 1.68, 1.68), VBase3(1, 1.3, 1.3), VBase3(1, 2.0, 2.0)], 'def_left_elbow': [VBase3(1, 2, 1.62), VBase3(1, 1, 1), VBase3(1, 1.74, 1.46), VBase3(1, 1.3, 1.3), VBase3(1, 1.7, 1.7)], 'def_left_wrist': [VBase3(1, 1.3, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.15, 1.15)], 'def_left_thumb01': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_thumb02': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_thumb03': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_finger01': [VBase3(1, 1.2, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.25, 1.25)], 'def_left_finger02': [VBase3(1, 1.15, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.15, 1.15)], 'def_left_index01': [VBase3(1, 1.75, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2)], 'def_left_index02': [VBase3(1, 1.6, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2)], 'def_right_clav': [VBase3(1, 1.4, 1.4), VBase3(1, 1, 1), VBase3(1, 1.3, 1.3), VBase3(1, 1, 1), VBase3(1, 1.6, 1.5)], 'def_right_shoulder': [VBase3(1, 1.9, 1.9), VBase3(1, 1, 1), VBase3(1, 1.68, 1.68), VBase3(1, 1.3, 1.3), VBase3(1, 2.0, 2.0)], 'def_right_elbow': [VBase3(1, 2, 1.62), VBase3(1, 1, 1), VBase3(1, 1.74, 1.46), VBase3(1, 1.3, 1.3), VBase3(1, 1.7, 1.7)], 'def_right_wrist': [VBase3(1, 1.3, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.15, 1.15)], 'def_right_thumb01': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_thumb02': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_thumb03': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_finger01': [VBase3(1, 1.2, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.25, 1.25)], 'def_right_finger02': [VBase3(1, 1.15, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.15, 1.15)], 'def_right_index01': [VBase3(1, 1.75, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2)], 'def_right_index02': [VBase3(1, 1.6, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2)], 'tr_left_clav': [VBase3(0.12, 0, 0), VBase3(0, 0, 0), VBase3(0.147, 0, 0), VBase3(0.0, 0.0, 0.0), VBase3(0.32, 0, 0)], 'tr_left_thumb01': [VBase3(0, -0.07, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, -0.075, 0)], 'tr_right_clav': [VBase3(0.12, 0, 0), VBase3(0, 0, 0), VBase3(0.147, 0, 0), VBase3(0.0, 0.0, 0.0), VBase3(0.32, 0, 0)], 'tr_right_thumb01': [VBase3(0, 0.07, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0.075, 0)], 'def_hips': [VBase3(1.9, 1.9, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1.6, 1.4, 1), VBase3(1.15, 1.15, 1)], 'def_left_thigh': [VBase3(1, 1.9, 1.5), VBase3(1, 1, 1), VBase3(1, 1.2, 1.1), VBase3(1, 1.4, 1.4), VBase3(1, 1.4, 1.4)], 'def_left_knee': [VBase3(1, 1.6, 1.5), VBase3(1, 1, 1), VBase3(1, 1.2, 1.1), VBase3(1, 1.2, 1.1), VBase3(1, 1.4, 1.2)], 'def_left_ankle': [VBase3(1, 1, 1.38), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_ball': [VBase3(1, 1.4, 1.44), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.1, 1)], 'def_right_thigh': [VBase3(1, 1.9, 1.5), VBase3(1, 1, 1), VBase3(1, 1.2, 1.1), VBase3(1, 1.4, 1.4), VBase3(1, 1.4, 1.4)], 'def_right_knee': [VBase3(1, 1.6, 1.5), VBase3(1, 1, 1), VBase3(1, 1.2, 1.1), VBase3(1, 1.2, 1.1), VBase3(1, 1.4, 1.2)], 'def_right_ankle': [VBase3(1, 1, 1.38), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_ball': [VBase3(1, 1.4, 1.44), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.1, 1)], 'tr_sash01': [VBase3(0.1, -0.08, 0.33), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0.1, 0.085, 0.263), VBase3(0.049, 0.037, 0.128)], 'tr_left_thigh': [VBase3(0, 0.2, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0.1, 0), VBase3(0, 0.08, 0)], 'tr_right_thigh': [VBase3(0, -0.2, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, -0.1, 0), VBase3(0, -0.08, 0)]}
 FemaleBodyShapeControlJoints = (
-    'def_spine02', 'def_spine03', 'def_spine04', 'def_shoulders', 'def_neck',
-    'def_left_clav', 'def_left_chest', 'def_left_shoulder', 'def_left_elbow',
-    'def_left_wrist', 'def_left_thumb01', 'def_left_thumb02',
-    'def_left_thumb03', 'def_left_finger01', 'def_left_finger02',
-    'def_left_index01', 'def_left_index02', 'def_right_clav', 'def_right_chest',
-    'def_right_shoulder', 'def_right_elbow', 'def_right_wrist',
-    'def_right_thumb01', 'def_right_thumb02', 'def_right_thumb03',
-    'def_right_finger01', 'def_right_finger02', 'def_right_index01',
-    'def_right_index02', 'tr_left_clav', 'tr_left_chest', 'tr_right_clav',
-    'tr_right_chest', 'def_hips', 'def_hips_waistline',
-    'def_hips_waistline_back', 'tr_sash01', 'def_left_thigh', 'def_left_knee',
-    'def_left_ankle', 'def_left_ball', 'def_right_thigh', 'def_right_knee',
-    'def_right_ankle', 'def_right_ball', 'tr_left_thigh', 'tr_right_thigh')
-FemaleBodyShapeControlJointMatrix = {
-    'def_spine02': [
-        VBase3(1, 2.05, 1.8),
-        VBase3(1, 0.85, 0.87),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.1, 1.1),
-        VBase3(1, 1, 1)
-    ],
-    'def_spine03': [
-        VBase3(1, 1.5, 1.4),
-        VBase3(1, 0.94, 0.85),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1)
-    ],
-    'def_spine04': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 0.87, 0.94),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.14, 1.31),
-        VBase3(1, 1, 1)
-    ],
-    'def_shoulders': [
-        VBase3(1.2, 1.0, 1.0),
-        VBase3(1, 0.87, 0.87),
-        VBase3(1, 1, 1),
-        VBase3(1.15, 1.06, 1.15),
-        VBase3(1, 1, 1)
-    ],
-    'def_neck': [
-        VBase3(1, 1.3, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_clav': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 0.87, 0.87),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.25, 1.25),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_shoulder': [
-        VBase3(1, 1.6, 1.6),
-        VBase3(1, 0.8, 0.8),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.3, 1.3),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_elbow': [
-        VBase3(1, 1.4, 1.4),
-        VBase3(1, 0.75, 0.75),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.22, 1.22),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_wrist': [
-        VBase3(1, 1.2, 1.1),
-        VBase3(1, 1.1, 1.1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_chest': [
-        VBase3(1.7, 1.9, 1.4),
-        VBase3(0.81, 0.4, 0.74),
-        VBase3(1.65, 1, 1.2),
-        VBase3(1.59, 1.53, 1.59),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_thumb01': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_thumb02': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_thumb03': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_finger01': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_finger02': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_index01': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_index02': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_clav': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 0.87, 0.87),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.25, 1.25),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_shoulder': [
-        VBase3(1, 1.6, 1.6),
-        VBase3(1, 0.8, 0.8),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.3, 1.3),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_elbow': [
-        VBase3(1, 1.4, 1.4),
-        VBase3(1, 0.75, 0.75),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.22, 1.22),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_wrist': [
-        VBase3(1, 1.2, 1.1),
-        VBase3(1, 1.1, 1.1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_chest': [
-        VBase3(1.7, 1.9, 1.4),
-        VBase3(0.81, 0.4, 0.74),
-        VBase3(1.65, 1, 1.2),
-        VBase3(1.59, 1.53, 1.59),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_thumb01': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_thumb02': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_thumb03': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_finger01': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_finger02': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_index01': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_index02': [
-        VBase3(1, 1.2, 1.2),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'tr_left_clav': [
-        VBase3(0.075, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0)
-    ],
-    'tr_left_chest': [
-        VBase3(0, -0.05, 0.02),
-        VBase3(-0.04, -0.045, 0),
-        VBase3(0.005, -0.066, 0.053),
-        VBase3(0.056, -0.078, -0.016),
-        VBase3(0, 0, 0)
-    ],
-    'tr_right_clav': [
-        VBase3(0.075, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0, 0)
-    ],
-    'tr_right_chest': [
-        VBase3(0, -0.05, 0.02),
-        VBase3(0.04, -0.045, 0),
-        VBase3(0.005, -0.066, 0.053),
-        VBase3(-0.056, -0.078, -0.016),
-        VBase3(0, 0, 0)
-    ],
-    'def_hips': [
-        VBase3(1.55, 1.5, 1),
-        VBase3(0.84, 0.79, 1),
-        VBase3(0.85, 1, 1),
-        VBase3(1.15, 1.13, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_hips_waistline': [
-        VBase3(2.0, 1.7, 1),
-        VBase3(0.997, 0.868, 1),
-        VBase3(1, 1, 1),
-        VBase3(1.3, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_hips_waistline_back': [
-        VBase3(2.5, 2.5, 1),
-        VBase3(1, 0.87, 1),
-        VBase3(1, 1, 1),
-        VBase3(1.6, 1.3, 1),
-        VBase3(1, 1, 1)
-    ],
-    'tr_sash01': [
-        VBase3(0.088, 0.195, 0.113),
-        VBase3(-0.013, -0.053, -0.07),
-        VBase3(0, -0.03, 0),
-        VBase3(0.007, 0.031, 0.038),
-        VBase3(0, 0, 0)
-    ],
-    'def_left_thigh': [
-        VBase3(1, 1.5, 1.5),
-        VBase3(1, 0.75, 0.75),
-        VBase3(1, 0.85, 0.95),
-        VBase3(1, 1.16, 1.15),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_knee': [
-        VBase3(1, 1.4, 1.4),
-        VBase3(1, 0.87, 0.87),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.1, 1.1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_ankle': [
-        VBase3(1, 1.38, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_left_ball': [
-        VBase3(1, 1.4, 1.44),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_thigh': [
-        VBase3(1, 1.5, 1.5),
-        VBase3(1, 0.75, 0.75),
-        VBase3(1, 0.85, 0.95),
-        VBase3(1, 1.16, 1.15),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_knee': [
-        VBase3(1, 1.4, 1.4),
-        VBase3(1, 0.87, 0.87),
-        VBase3(1, 1, 1),
-        VBase3(1, 1.1, 1.1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_ankle': [
-        VBase3(1, 1.38, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'def_right_ball': [
-        VBase3(1, 1.4, 1.44),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1),
-        VBase3(1, 1, 1)
-    ],
-    'tr_left_thigh': [
-        VBase3(0, -0.05, 0),
-        VBase3(0, 0.035, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, -0.04, 0),
-        VBase3(0, 0, 0)
-    ],
-    'tr_right_thigh': [
-        VBase3(0, 0.05, 0),
-        VBase3(0, -0.035, 0),
-        VBase3(0, 0, 0),
-        VBase3(0, 0.04, 0),
-        VBase3(0, 0, 0)
-    ]
-}
+ 'def_spine02', 'def_spine03', 'def_spine04', 'def_shoulders', 'def_neck', 'def_left_clav', 'def_left_chest', 'def_left_shoulder', 'def_left_elbow', 'def_left_wrist', 'def_left_thumb01', 'def_left_thumb02', 'def_left_thumb03', 'def_left_finger01', 'def_left_finger02', 'def_left_index01', 'def_left_index02', 'def_right_clav', 'def_right_chest', 'def_right_shoulder', 'def_right_elbow', 'def_right_wrist', 'def_right_thumb01', 'def_right_thumb02', 'def_right_thumb03', 'def_right_finger01', 'def_right_finger02', 'def_right_index01', 'def_right_index02', 'tr_left_clav', 'tr_left_chest', 'tr_right_clav', 'tr_right_chest', 'def_hips', 'def_hips_waistline', 'def_hips_waistline_back', 'tr_sash01', 'def_left_thigh', 'def_left_knee', 'def_left_ankle', 'def_left_ball', 'def_right_thigh', 'def_right_knee', 'def_right_ankle', 'def_right_ball', 'tr_left_thigh', 'tr_right_thigh')
+FemaleBodyShapeControlJointMatrix = {'def_spine02': [VBase3(1, 2.05, 1.8), VBase3(1, 0.85, 0.87), VBase3(1, 1, 1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1)], 'def_spine03': [VBase3(1, 1.5, 1.4), VBase3(1, 0.94, 0.85), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2), VBase3(1, 1, 1)], 'def_spine04': [VBase3(1, 1.2, 1.2), VBase3(1, 0.87, 0.94), VBase3(1, 1, 1), VBase3(1, 1.14, 1.31), VBase3(1, 1, 1)], 'def_shoulders': [VBase3(1.2, 1.0, 1.0), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1.15, 1.06, 1.15), VBase3(1, 1, 1)], 'def_neck': [VBase3(1, 1.3, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_clav': [VBase3(1, 1.2, 1.2), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1, 1.25, 1.25), VBase3(1, 1, 1)], 'def_left_shoulder': [VBase3(1, 1.6, 1.6), VBase3(1, 0.8, 0.8), VBase3(1, 1, 1), VBase3(1, 1.3, 1.3), VBase3(1, 1, 1)], 'def_left_elbow': [VBase3(1, 1.4, 1.4), VBase3(1, 0.75, 0.75), VBase3(1, 1, 1), VBase3(1, 1.22, 1.22), VBase3(1, 1, 1)], 'def_left_wrist': [VBase3(1, 1.2, 1.1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_chest': [VBase3(1.7, 1.9, 1.4), VBase3(0.81, 0.4, 0.74), VBase3(1.65, 1, 1.2), VBase3(1.59, 1.53, 1.59), VBase3(1, 1, 1)], 'def_left_thumb01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_thumb02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_thumb03': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_finger01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_finger02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_index01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_index02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_clav': [VBase3(1, 1.2, 1.2), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1, 1.25, 1.25), VBase3(1, 1, 1)], 'def_right_shoulder': [VBase3(1, 1.6, 1.6), VBase3(1, 0.8, 0.8), VBase3(1, 1, 1), VBase3(1, 1.3, 1.3), VBase3(1, 1, 1)], 'def_right_elbow': [VBase3(1, 1.4, 1.4), VBase3(1, 0.75, 0.75), VBase3(1, 1, 1), VBase3(1, 1.22, 1.22), VBase3(1, 1, 1)], 'def_right_wrist': [VBase3(1, 1.2, 1.1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_chest': [VBase3(1.7, 1.9, 1.4), VBase3(0.81, 0.4, 0.74), VBase3(1.65, 1, 1.2), VBase3(1.59, 1.53, 1.59), VBase3(1, 1, 1)], 'def_right_thumb01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_thumb02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_thumb03': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_finger01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_finger02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_index01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_index02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'tr_left_clav': [VBase3(0.075, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0)], 'tr_left_chest': [VBase3(0, -0.05, 0.02), VBase3(-0.04, -0.045, 0), VBase3(0.005, -0.066, 0.053), VBase3(0.056, -0.078, -0.016), VBase3(0, 0, 0)], 'tr_right_clav': [VBase3(0.075, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0)], 'tr_right_chest': [VBase3(0, -0.05, 0.02), VBase3(0.04, -0.045, 0), VBase3(0.005, -0.066, 0.053), VBase3(-0.056, -0.078, -0.016), VBase3(0, 0, 0)], 'def_hips': [VBase3(1.55, 1.5, 1), VBase3(0.84, 0.79, 1), VBase3(0.85, 1, 1), VBase3(1.15, 1.13, 1), VBase3(1, 1, 1)], 'def_hips_waistline': [VBase3(2.0, 1.7, 1), VBase3(0.997, 0.868, 1), VBase3(1, 1, 1), VBase3(1.3, 1, 1), VBase3(1, 1, 1)], 'def_hips_waistline_back': [VBase3(2.5, 2.5, 1), VBase3(1, 0.87, 1), VBase3(1, 1, 1), VBase3(1.6, 1.3, 1), VBase3(1, 1, 1)], 'tr_sash01': [VBase3(0.088, 0.195, 0.113), VBase3(-0.013, -0.053, -0.07), VBase3(0, -0.03, 0), VBase3(0.007, 0.031, 0.038), VBase3(0, 0, 0)], 'def_left_thigh': [VBase3(1, 1.5, 1.5), VBase3(1, 0.75, 0.75), VBase3(1, 0.85, 0.95), VBase3(1, 1.16, 1.15), VBase3(1, 1, 1)], 'def_left_knee': [VBase3(1, 1.4, 1.4), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1)], 'def_left_ankle': [VBase3(1, 1.38, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_left_ball': [VBase3(1, 1.4, 1.44), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_thigh': [VBase3(1, 1.5, 1.5), VBase3(1, 0.75, 0.75), VBase3(1, 0.85, 0.95), VBase3(1, 1.16, 1.15), VBase3(1, 1, 1)], 'def_right_knee': [VBase3(1, 1.4, 1.4), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1)], 'def_right_ankle': [VBase3(1, 1.38, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'def_right_ball': [VBase3(1, 1.4, 1.44), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 'tr_left_thigh': [VBase3(0, -0.05, 0), VBase3(0, 0.035, 0), VBase3(0, 0, 0), VBase3(0, -0.04, 0), VBase3(0, 0, 0)], 'tr_right_thigh': [VBase3(0, 0.05, 0), VBase3(0, -0.035, 0), VBase3(0, 0, 0), VBase3(0, 0.04, 0), VBase3(0, 0, 0)]}
 MaleHeadShapeControlJoints = (
-    'def_trs_forehead', 'def_trs_left_forehead', 'def_trs_right_forehead',
-    'def_trs_left_cheek', 'def_trs_right_cheek', 'trs_face_bottom',
-    'def_trs_mid_jaw', 'def_trs_left_jaw1', 'def_trs_left_jaw2',
-    'def_trs_right_jaw1', 'def_trs_right_jaw2', 'def_trs_mid_nose_top',
-    'def_trs_mid_nose_bot', 'def_trs_left_ear', 'def_trs_right_ear',
-    'trs_left_eyebrow', 'trs_left_eyeball', 'trs_left_eyelid',
-    'trs_left_eyesocket', 'trs_right_eyebrow', 'trs_right_eyeball',
-    'trs_right_eyelid', 'trs_right_eyesocket', 'trs_lips_top', 'trs_lips_bot',
-    'trs_lip_top', 'trs_lip_bot', 'trs_lip_left1', 'trs_lip_left2',
-    'trs_lip_left3', 'trs_lip_right1', 'trs_lip_right2', 'trs_lip_right3')
-MaleHeadShapeControlJointMatrix = {
-    'def_trs_forehead': [],
-    'def_trs_left_forehead': [],
-    'def_trs_right_forehead': [],
-    'def_trs_left_cheek': [],
-    'def_trs_right_cheek': [],
-    'def_trs_mid_jaw': [],
-    'def_trs_left_jaw1': [],
-    'def_trs_left_jaw2': [],
-    'def_trs_right_jaw1': [],
-    'def_trs_right_jaw2': [],
-    'def_trs_mid_nose_top': [],
-    'def_trs_mid_nose_bot': [],
-    'def_trs_left_ear': [],
-    'def_trs_right_ear': [],
-    'trs_face_bottom': [],
-    'trs_left_eyebrow': [],
-    'trs_left_eyeball': [],
-    'trs_left_eyelid': [],
-    'trs_left_eyesocket': [],
-    'trs_right_eyebrow': [],
-    'trs_right_eyeball': [],
-    'trs_right_eyelid': [],
-    'trs_right_eyesocket': [],
-    'trs_lips_top': [],
-    'trs_lips_bot': [],
-    'trs_lip_top': [],
-    'trs_lip_bot': [],
-    'trs_lip_left1': [],
-    'trs_lip_left2': [],
-    'trs_lip_left3': [],
-    'trs_lip_right1': [],
-    'trs_lip_right2': [],
-    'trs_lip_right3': [],
-    'initialized': []
-}
-MaleHeadShapeInitialControlJointMatrix = {
-    'def_trs_forehead': [],
-    'def_trs_left_forehead': [],
-    'def_trs_right_forehead': [],
-    'def_trs_left_cheek': [],
-    'def_trs_right_cheek': [],
-    'def_trs_mid_jaw': [],
-    'def_trs_left_jaw1': [],
-    'def_trs_left_jaw2': [],
-    'def_trs_right_jaw1': [],
-    'def_trs_right_jaw2': [],
-    'def_trs_mid_nose_top': [],
-    'def_trs_mid_nose_bot': [],
-    'def_trs_left_ear': [],
-    'def_trs_right_ear': [],
-    'trs_face_bottom': [],
-    'trs_left_eyebrow': [],
-    'trs_left_eyeball': [],
-    'trs_left_eyelid': [],
-    'trs_left_eyesocket': [],
-    'trs_right_eyebrow': [],
-    'trs_right_eyeball': [],
-    'trs_right_eyelid': [],
-    'trs_right_eyesocket': [],
-    'trs_lips_top': [],
-    'trs_lips_bot': [],
-    'trs_lip_top': [],
-    'trs_lip_bot': [],
-    'trs_lip_left1': [],
-    'trs_lip_left2': [],
-    'trs_lip_left3': [],
-    'trs_lip_right1': [],
-    'trs_lip_right2': [],
-    'trs_lip_right3': [],
-    'initialized': []
-}
+ 'def_trs_forehead', 'def_trs_left_forehead', 'def_trs_right_forehead', 'def_trs_left_cheek', 'def_trs_right_cheek', 'trs_face_bottom', 'def_trs_mid_jaw', 'def_trs_left_jaw1', 'def_trs_left_jaw2', 'def_trs_right_jaw1', 'def_trs_right_jaw2', 'def_trs_mid_nose_top', 'def_trs_mid_nose_bot', 'def_trs_left_ear', 'def_trs_right_ear', 'trs_left_eyebrow', 'trs_left_eyeball', 'trs_left_eyelid', 'trs_left_eyesocket', 'trs_right_eyebrow', 'trs_right_eyeball', 'trs_right_eyelid', 'trs_right_eyesocket', 'trs_lips_top', 'trs_lips_bot', 'trs_lip_top', 'trs_lip_bot', 'trs_lip_left1', 'trs_lip_left2', 'trs_lip_left3', 'trs_lip_right1', 'trs_lip_right2', 'trs_lip_right3')
+MaleHeadShapeControlJointMatrix = {'def_trs_forehead': [], 'def_trs_left_forehead': [], 'def_trs_right_forehead': [], 'def_trs_left_cheek': [], 'def_trs_right_cheek': [], 'def_trs_mid_jaw': [], 'def_trs_left_jaw1': [], 'def_trs_left_jaw2': [], 'def_trs_right_jaw1': [], 'def_trs_right_jaw2': [], 'def_trs_mid_nose_top': [], 'def_trs_mid_nose_bot': [], 'def_trs_left_ear': [], 'def_trs_right_ear': [], 'trs_face_bottom': [], 'trs_left_eyebrow': [], 'trs_left_eyeball': [], 'trs_left_eyelid': [], 'trs_left_eyesocket': [], 'trs_right_eyebrow': [], 'trs_right_eyeball': [], 'trs_right_eyelid': [], 'trs_right_eyesocket': [], 'trs_lips_top': [], 'trs_lips_bot': [], 'trs_lip_top': [], 'trs_lip_bot': [], 'trs_lip_left1': [], 'trs_lip_left2': [], 'trs_lip_left3': [], 'trs_lip_right1': [], 'trs_lip_right2': [], 'trs_lip_right3': [], 'initialized': []}
+MaleHeadShapeInitialControlJointMatrix = {'def_trs_forehead': [], 'def_trs_left_forehead': [], 'def_trs_right_forehead': [], 'def_trs_left_cheek': [], 'def_trs_right_cheek': [], 'def_trs_mid_jaw': [], 'def_trs_left_jaw1': [], 'def_trs_left_jaw2': [], 'def_trs_right_jaw1': [], 'def_trs_right_jaw2': [], 'def_trs_mid_nose_top': [], 'def_trs_mid_nose_bot': [], 'def_trs_left_ear': [], 'def_trs_right_ear': [], 'trs_face_bottom': [], 'trs_left_eyebrow': [], 'trs_left_eyeball': [], 'trs_left_eyelid': [], 'trs_left_eyesocket': [], 'trs_right_eyebrow': [], 'trs_right_eyeball': [], 'trs_right_eyelid': [], 'trs_right_eyesocket': [], 'trs_lips_top': [], 'trs_lips_bot': [], 'trs_lip_top': [], 'trs_lip_bot': [], 'trs_lip_left1': [], 'trs_lip_left2': [], 'trs_lip_left3': [], 'trs_lip_right1': [], 'trs_lip_right2': [], 'trs_lip_right3': [], 'initialized': []}
 FemaleHeadShapeControlJoints = (
-    'def_trs_forehead', 'def_trs_left_forehead', 'def_trs_right_forehead',
-    'def_trs_left_cheek', 'def_trs_right_cheek', 'trs_face_bottom',
-    'def_trs_mid_jaw', 'def_trs_left_jaw1', 'def_trs_left_jaw2',
-    'def_trs_right_jaw1', 'def_trs_right_jaw2', 'def_trs_mid_nose_top',
-    'def_trs_mid_nose_bot', 'def_trs_left_ear', 'def_trs_right_ear',
-    'trs_left_eyebrow', 'trs_left_eyeball', 'trs_left_eyelid',
-    'trs_left_eyesocket', 'trs_right_eyebrow', 'trs_right_eyeball',
-    'trs_right_eyelid', 'trs_right_eyesocket', 'trs_lips_top', 'trs_lips_bot',
-    'trs_lip_top', 'trs_lip_bot', 'trs_lip_left1', 'trs_lip_left2',
-    'trs_lip_left3', 'trs_lip_right1', 'trs_lip_right2', 'trs_lip_right3')
-FemaleHeadShapeControlJointMatrix = {
-    'def_trs_forehead': [],
-    'def_trs_left_forehead': [],
-    'def_trs_right_forehead': [],
-    'def_trs_left_cheek': [],
-    'def_trs_right_cheek': [],
-    'def_trs_mid_jaw': [],
-    'def_trs_left_jaw1': [],
-    'def_trs_left_jaw2': [],
-    'def_trs_right_jaw1': [],
-    'def_trs_right_jaw2': [],
-    'def_trs_mid_nose_top': [],
-    'def_trs_mid_nose_bot': [],
-    'def_trs_left_ear': [],
-    'def_trs_right_ear': [],
-    'trs_face_bottom': [],
-    'trs_left_eyebrow': [],
-    'trs_left_eyeball': [],
-    'trs_left_eyelid': [],
-    'trs_left_eyesocket': [],
-    'trs_right_eyebrow': [],
-    'trs_right_eyeball': [],
-    'trs_right_eyelid': [],
-    'trs_right_eyesocket': [],
-    'trs_lips_top': [],
-    'trs_lips_bot': [],
-    'trs_lip_top': [],
-    'trs_lip_bot': [],
-    'trs_lip_left1': [],
-    'trs_lip_left2': [],
-    'trs_lip_left3': [],
-    'trs_lip_right1': [],
-    'trs_lip_right2': [],
-    'trs_lip_right3': [],
-    'initialized': []
-}
-FemaleHeadShapeInitialControlJointMatrix = {
-    'def_trs_forehead': [],
-    'def_trs_left_forehead': [],
-    'def_trs_right_forehead': [],
-    'def_trs_left_cheek': [],
-    'def_trs_right_cheek': [],
-    'def_trs_mid_jaw': [],
-    'def_trs_left_jaw1': [],
-    'def_trs_left_jaw2': [],
-    'def_trs_right_jaw1': [],
-    'def_trs_right_jaw2': [],
-    'def_trs_mid_nose_top': [],
-    'def_trs_mid_nose_bot': [],
-    'def_trs_left_ear': [],
-    'def_trs_right_ear': [],
-    'trs_face_bottom': [],
-    'trs_left_eyebrow': [],
-    'trs_left_eyeball': [],
-    'trs_left_eyelid': [],
-    'trs_left_eyesocket': [],
-    'trs_right_eyebrow': [],
-    'trs_right_eyeball': [],
-    'trs_right_eyelid': [],
-    'trs_right_eyesocket': [],
-    'trs_lips_top': [],
-    'trs_lips_bot': [],
-    'trs_lip_top': [],
-    'trs_lip_bot': [],
-    'trs_lip_left1': [],
-    'trs_lip_left2': [],
-    'trs_lip_left3': [],
-    'trs_lip_right1': [],
-    'trs_lip_right2': [],
-    'trs_lip_right3': [],
-    'initialized': []
-}
+ 'def_trs_forehead', 'def_trs_left_forehead', 'def_trs_right_forehead', 'def_trs_left_cheek', 'def_trs_right_cheek', 'trs_face_bottom', 'def_trs_mid_jaw', 'def_trs_left_jaw1', 'def_trs_left_jaw2', 'def_trs_right_jaw1', 'def_trs_right_jaw2', 'def_trs_mid_nose_top', 'def_trs_mid_nose_bot', 'def_trs_left_ear', 'def_trs_right_ear', 'trs_left_eyebrow', 'trs_left_eyeball', 'trs_left_eyelid', 'trs_left_eyesocket', 'trs_right_eyebrow', 'trs_right_eyeball', 'trs_right_eyelid', 'trs_right_eyesocket', 'trs_lips_top', 'trs_lips_bot', 'trs_lip_top', 'trs_lip_bot', 'trs_lip_left1', 'trs_lip_left2', 'trs_lip_left3', 'trs_lip_right1', 'trs_lip_right2', 'trs_lip_right3')
+FemaleHeadShapeControlJointMatrix = {'def_trs_forehead': [], 'def_trs_left_forehead': [], 'def_trs_right_forehead': [], 'def_trs_left_cheek': [], 'def_trs_right_cheek': [], 'def_trs_mid_jaw': [], 'def_trs_left_jaw1': [], 'def_trs_left_jaw2': [], 'def_trs_right_jaw1': [], 'def_trs_right_jaw2': [], 'def_trs_mid_nose_top': [], 'def_trs_mid_nose_bot': [], 'def_trs_left_ear': [], 'def_trs_right_ear': [], 'trs_face_bottom': [], 'trs_left_eyebrow': [], 'trs_left_eyeball': [], 'trs_left_eyelid': [], 'trs_left_eyesocket': [], 'trs_right_eyebrow': [], 'trs_right_eyeball': [], 'trs_right_eyelid': [], 'trs_right_eyesocket': [], 'trs_lips_top': [], 'trs_lips_bot': [], 'trs_lip_top': [], 'trs_lip_bot': [], 'trs_lip_left1': [], 'trs_lip_left2': [], 'trs_lip_left3': [], 'trs_lip_right1': [], 'trs_lip_right2': [], 'trs_lip_right3': [], 'initialized': []}
+FemaleHeadShapeInitialControlJointMatrix = {'def_trs_forehead': [], 'def_trs_left_forehead': [], 'def_trs_right_forehead': [], 'def_trs_left_cheek': [], 'def_trs_right_cheek': [], 'def_trs_mid_jaw': [], 'def_trs_left_jaw1': [], 'def_trs_left_jaw2': [], 'def_trs_right_jaw1': [], 'def_trs_right_jaw2': [], 'def_trs_mid_nose_top': [], 'def_trs_mid_nose_bot': [], 'def_trs_left_ear': [], 'def_trs_right_ear': [], 'trs_face_bottom': [], 'trs_left_eyebrow': [], 'trs_left_eyeball': [], 'trs_left_eyelid': [], 'trs_left_eyesocket': [], 'trs_right_eyebrow': [], 'trs_right_eyeball': [], 'trs_right_eyelid': [], 'trs_right_eyesocket': [], 'trs_lips_top': [], 'trs_lips_bot': [], 'trs_lip_top': [], 'trs_lip_bot': [], 'trs_lip_left1': [], 'trs_lip_left2': [], 'trs_lip_left3': [], 'trs_lip_right1': [], 'trs_lip_right2': [], 'trs_lip_right3': [], 'initialized': []}
 PlayerNames = [
-    "Cap'n Bruno Cannonballs", 'Bad-run Thomas', 'Carlos Saggingsails',
-    'Smugglin Willy Hawkins'
-]
-
+ "Cap'n Bruno Cannonballs", 'Bad-run Thomas', 'Carlos Saggingsails', 'Smugglin Willy Hawkins']
 
 class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('Human')
 
     def __init__(self, other=None):
@@ -930,13 +93,14 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
         self.randGen = random.Random()
         self.randGen.seed(random.random())
         self.eyeFSM = ClassicFSM('eyeFSM', [
-            State('off', self.enterEyeFSMOff, self.exitEyeFSMOff,
-                  ['open', 'closed']),
-            State('open', self.enterEyeFSMOpen, self.exitEyeFSMOpen,
-                  ['closed', 'off']),
-            State('closed', self.enterEyeFSMClosed, self.exitEyeFSMClosed,
-                  ['open', 'off'])
-        ], 'off', 'off')
+         State('off', self.enterEyeFSMOff, self.exitEyeFSMOff, [
+            'open', 'closed']),
+
+         State('open', self.enterEyeFSMOpen, self.exitEyeFSMOpen, [
+            'closed', 'off']),
+
+         State('closed', self.enterEyeFSMClosed, self.exitEyeFSMClosed, [
+            'open', 'off'])], 'off', 'off')
 
         self.eyeFSM.enterInitialState()
         self.isPaid = True
@@ -1000,10 +164,8 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
         jointNameScale = 'def_scale_jt'
         lods = self.getLODNames()
         self.headNode = self.controlJoint(None, 'legs', jointName, lods[0])
-        self.extraNode = self.controlJoint(None, 'legs', jointNameExtra,
-                                           lods[0])
-        self.scaleNode = self.controlJoint(None, 'legs', jointNameScale,
-                                           lods[0])
+        self.extraNode = self.controlJoint(None, 'legs', jointNameExtra, lods[0])
+        self.scaleNode = self.controlJoint(None, 'legs', jointNameScale, lods[0])
         self.rootNode = self.getLOD('2000').find('**/dx_root')
         self.floorOffsetZ = self.rootNode.getZ()
         for lod in lods[1:]:
@@ -1057,8 +219,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
     def generateSkinColor(self):
         skinColor = self.style.getSkinColor()
         lowColor = self.model.lowLODSkinColor
-        color = VBase4(lowColor[0] * skinColor[0], lowColor[1] * skinColor[1],
-                       lowColor[2] * skinColor[2], 1.0)
+        color = VBase4(lowColor[0] * skinColor[0], lowColor[1] * skinColor[1], lowColor[2] * skinColor[2], 1.0)
         self.model.faces[0].setColorScale(skinColor)
         if self.model.newAvatars:
             self.model.currentBody.setColorScale(skinColor)
@@ -1082,9 +243,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
                 self.model.body.setColorScale(skinColor)
                 lowColor = self.model.lowLODSkinColor
                 if self.optimizeLOD:
-                    color = VBase4(lowColor[0] * skinColor[0],
-                                   lowColor[1] * skinColor[1],
-                                   lowColor[2] * skinColor[2], 1.0)
+                    color = VBase4(lowColor[0] * skinColor[0], lowColor[1] * skinColor[1], lowColor[2] * skinColor[2], 1.0)
                     self.model.faces[0][2].setColorScale(color)
                     for i in xrange(lowIdx, numPaths):
                         self.model.body[i].setColorScale(color)
@@ -1192,8 +351,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
                     lowIdx = numPaths / 3 * 2
                     if j >= lowIdx:
                         cl = parts[j].getColorScale()
-                        compoundColor = VBase4(cl[0] * ct[0], cl[1] * ct[1],
-                                               cl[2] * ct[2], 1.0)
+                        compoundColor = VBase4(cl[0] * ct[0], cl[1] * ct[1], cl[2] * ct[2], 1.0)
                         parts[j].setColorScale(compoundColor)
                     else:
                         parts[j].setColorScale(ct)
@@ -1253,8 +411,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
             animSuffix = ''
             for customAnim in CustomAnimDict[genderPrefix + self.type]:
                 if anim[0] == customAnim:
-                    animSuffix = '_' + genderPrefix + NewModelDict.get(
-                        self.type)
+                    animSuffix = '_' + genderPrefix + NewModelDict.get(self.type)
                     break
 
             AnimDict[anim[0]] = filePrefix + '_' + anim[1] + animSuffix
@@ -1269,13 +426,11 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
         lodString = '2000'
         self.loadModel(filePrefix + '_' + lodString, 'modelRoot', '2000', copy)
         self.loadAnims(AnimDict, 'modelRoot', 'all')
-        if loader.loadModel(
-                filePrefix + '_' + '1000', allowInstance=True) != None:
+        if loader.loadModel(filePrefix + '_' + '1000', allowInstance=True) != None:
             lodString = '1000'
 
         self.loadModel(filePrefix + '_' + lodString, 'modelRoot', '1000', copy)
-        if loader.loadModel(
-                filePrefix + '_' + '500', allowInstance=True) != None:
+        if loader.loadModel(filePrefix + '_' + '500', allowInstance=True) != None:
             lodString = '500'
 
         self.loadModel(filePrefix + '_' + lodString, 'modelRoot', '500', copy)
@@ -1317,15 +472,18 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
         self.setLODNode()
         avatarDetail = base.config.GetString('avatar-detail', 'high')
         if avatarDetail == 'high':
-            dist = [0, 20, 80, 280]
+            dist = [
+             0, 20, 80, 280]
         else:
             if avatarDetail == 'med':
-                dist = [0, 10, 40, 280]
+                dist = [
+                 0, 10, 40, 280]
             else:
                 if avatarDetail == 'low':
-                    dist = [0, 5, 20, 280]
+                    dist = [
+                     0, 5, 20, 280]
                 else:
-                    raise Exception('Invalid avatar-detail: %s' % avatarDetail)
+                    raise StandardError, 'Invalid avatar-detail: %s' % avatarDetail
 
         self.addLOD(500, dist[3], dist[2])
         if self.optimizeLOD:
@@ -1377,11 +535,9 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
             pirate.loadAnimatedHead = True
             pirate.generateBody()
             if pirate.gender == 'f':
-                pirate.model = self.pirateFemale = PirateFemale.PirateFemale(
-                    pirate, pirate.style)
+                pirate.model = self.pirateFemale = PirateFemale.PirateFemale(pirate, pirate.style)
             else:
-                pirate.model = self.pirateMale = PirateMale.PirateMale(
-                    pirate, pirate.style)
+                pirate.model = self.pirateMale = PirateMale.PirateMale(pirate, pirate.style)
 
             if base.config.GetBool('debug-dynamic-human', 0):
                 pirate.model.newAvatars = True
@@ -1531,8 +687,8 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
         if self.eyeLids:
             self.openEyes()
 
-        taskMgr.doMethodLater(self.randGen.random() * 4.0 + 1,
-                              self.__blinkCloseEyes, self.__blinkName)
+        taskMgr.doMethodLater(self.randGen.random() * 4.0 + 1, self.__blinkCloseEyes,
+            self.__blinkName)
 
     def stopBlink(self):
         taskMgr.remove(self.__blinkName)
@@ -1607,65 +763,46 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
                 for jointIdx in xrange(0, len(jointSet)):
                     if jointSet[jointIdx][0] == jointName:
                         if jointSet[jointIdx][1] == TX:
-                            posDelta.setX(posDelta.getX() +
-                                          jointSet[jointIdx][5])
+                            posDelta.setX(posDelta.getX() + jointSet[jointIdx][5])
                         elif jointSet[jointIdx][1] == TY:
-                            posDelta.setY(posDelta.getY() +
-                                          jointSet[jointIdx][5])
+                            posDelta.setY(posDelta.getY() + jointSet[jointIdx][5])
                         elif jointSet[jointIdx][1] == TZ:
-                            posDelta.setZ(posDelta.getZ() +
-                                          jointSet[jointIdx][5])
+                            posDelta.setZ(posDelta.getZ() + jointSet[jointIdx][5])
                         elif jointSet[jointIdx][1] == RX:
-                            hprDelta.setX(hprDelta.getX() +
-                                          jointSet[jointIdx][5])
+                            hprDelta.setX(hprDelta.getX() + jointSet[jointIdx][5])
                         elif jointSet[jointIdx][1] == RY:
-                            hprDelta.setY(hprDelta.getY() +
-                                          jointSet[jointIdx][5])
+                            hprDelta.setY(hprDelta.getY() + jointSet[jointIdx][5])
                         elif jointSet[jointIdx][1] == RZ:
-                            hprDelta.setZ(hprDelta.getZ() +
-                                          jointSet[jointIdx][5])
+                            hprDelta.setZ(hprDelta.getZ() + jointSet[jointIdx][5])
                         elif jointSet[jointIdx][1] == SX:
                             if r < 0.0:
-                                sclDelta.setX(sclDelta.getX() +
-                                              jointSet[jointIdx][5] /
-                                              jointSet[jointIdx][2])
+                                sclDelta.setX(sclDelta.getX() + jointSet[jointIdx][5] / jointSet[jointIdx][2])
                             else:
-                                sclDelta.setX(sclDelta.getX() +
-                                              jointSet[jointIdx][5])
+                                sclDelta.setX(sclDelta.getX() + jointSet[jointIdx][5])
                         elif jointSet[jointIdx][1] == SY:
                             if r < 0.0:
-                                sclDelta.setY(sclDelta.getY() +
-                                              jointSet[jointIdx][5] /
-                                              jointSet[jointIdx][2])
+                                sclDelta.setY(sclDelta.getY() + jointSet[jointIdx][5] / jointSet[jointIdx][2])
                             else:
-                                sclDelta.setY(sclDelta.getY() +
-                                              jointSet[jointIdx][5])
+                                sclDelta.setY(sclDelta.getY() + jointSet[jointIdx][5])
                         elif jointSet[jointIdx][1] == SZ:
                             if r < 0.0:
-                                sclDelta.setZ(sclDelta.getZ() +
-                                              jointSet[jointIdx][5] /
-                                              jointSet[jointIdx][2])
+                                sclDelta.setZ(sclDelta.getZ() + jointSet[jointIdx][5] / jointSet[jointIdx][2])
                             else:
-                                sclDelta.setZ(sclDelta.getZ() +
-                                              jointSet[jointIdx][5])
+                                sclDelta.setZ(sclDelta.getZ() + jointSet[jointIdx][5])
                         else:
-                            self.notify.warning('scv:wrong element = %s' %
-                                                jointSet[jointIdx][1])
+                            self.notify.warning('scv:wrong element = %s' % jointSet[jointIdx][1])
 
-            self.notify.debug(
-                'scv: %s composite posDelta = %s' % (jointName, posDelta))
+            self.notify.debug('scv: %s composite posDelta = %s' % (jointName, posDelta))
             posF.setX(posI[0] + posDelta[0])
             posF.setY(posI[1] + posDelta[1])
             posF.setZ(posI[2] + posDelta[2])
             self.notify.debug('scv: %s final posDelta%s' % (jointName, posF))
-            self.notify.debug(
-                'scv: %s composite hprDelta = %s' % (jointName, hprDelta))
+            self.notify.debug('scv: %s composite hprDelta = %s' % (jointName, hprDelta))
             hprF.setX(hprI[0] + hprDelta[0])
             hprF.setY(hprI[1] + hprDelta[1])
             hprF.setZ(hprI[2] + hprDelta[2])
             self.notify.debug('scv: %s final hprDelta%s' % (jointName, hprF))
-            self.notify.debug(
-                'scv: %s composite sclDelta = %s' % (jointName, sclDelta))
+            self.notify.debug('scv: %s composite sclDelta = %s' % (jointName, sclDelta))
             sclF.setX(sclI[0] + sclDelta[0])
             sclF.setY(sclI[1] + sclDelta[1])
             sclF.setZ(sclI[2] + sclDelta[2])
@@ -1745,8 +882,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
         initializedMatrixI = len(matrixI['initialized'])
         initializedMatrixF = len(matrixF['initialized'])
         for jointName in cjs:
-            transform = TransformState.makeMat(
-                self.getJointTransform('legs', jointName, '2000'))
+            transform = TransformState.makeMat(self.getJointTransform('legs', jointName, '2000'))
             pos = Vec3(transform.getPos())
             hpr = Vec3(transform.getHpr())
             scale = Vec3(transform.getScale())
@@ -1806,25 +942,20 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
         self.setControlValue(self.style.getJawChinSize(), 'jawChinSize')
         self.setControlValue(self.style.getJawLength(), 'jawLength')
         self.setControlValue(self.style.getMouthWidth(), 'mouthWidth')
-        self.setControlValue(self.style.getMouthLipThickness(),
-                             'mouthLipThickness')
+        self.setControlValue(self.style.getMouthLipThickness(), 'mouthLipThickness')
         self.setControlValue(self.style.getCheekFat(), 'cheekFat')
         self.setControlValue(self.style.getBrowProtruding(), 'browProtruding')
         self.setControlValue(self.style.getEyeCorner(), 'eyeCorner')
         self.setControlValue(self.style.getEyeOpeningSize(), 'eyeOpeningSize')
         self.setControlValue(self.style.getEyeBulge(), 'eyeSpacing')
         self.setControlValue(self.style.getNoseBridgeWidth(), 'noseBridgeWidth')
-        self.setControlValue(self.style.getNoseNostrilWidth(),
-                             'noseNostrilWidth')
+        self.setControlValue(self.style.getNoseNostrilWidth(), 'noseNostrilWidth')
         self.setControlValue(self.style.getNoseLength(), 'noseLength')
         self.setControlValue(self.style.getNoseBump(), 'noseBump')
-        self.setControlValue(self.style.getNoseNostrilHeight(),
-                             'noseNostrilHeight')
-        self.setControlValue(self.style.getNoseNostrilAngle(),
-                             'noseNostrilAngle')
+        self.setControlValue(self.style.getNoseNostrilHeight(), 'noseNostrilHeight')
+        self.setControlValue(self.style.getNoseNostrilAngle(), 'noseNostrilAngle')
         self.setControlValue(self.style.getNoseBridgeBroke(), 'noseBridgeBroke')
-        self.setControlValue(self.style.getNoseNostrilBroke(),
-                             'noseNostrilBroke')
+        self.setControlValue(self.style.getNoseNostrilBroke(), 'noseNostrilBroke')
         self.setControlValue(self.style.getEarScale(), 'earScale')
         self.setControlValue(self.style.getEarFlapAngle(), 'earFlap')
         self.setControlValue(self.style.getEarPosition(), 'earPosition')
@@ -1841,8 +972,8 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
         if self.gender == 'f':
             idx = 1
 
-        mappedValue = (0.8 + (1 + self.style.getBodyHeight()) * 0.2
-                      ) * BodyScales[idx][self.style.getBodyShape()]
+        mappedValue = (0.8 + (1 + self.style.getBodyHeight()) * 0.2) * BodyScales[
+            idx][self.style.getBodyShape()]
 
         return mappedValue
 
@@ -1917,29 +1048,20 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
         self.setControlValue_new(self.style.getJawChinSize(), 'jawChinSize')
         self.setControlValue_new(self.style.getJawLength(), 'jawLength')
         self.setControlValue_new(self.style.getMouthWidth(), 'mouthWidth')
-        self.setControlValue_new(self.style.getMouthLipThickness(),
-                                 'mouthLipThickness')
+        self.setControlValue_new(self.style.getMouthLipThickness(), 'mouthLipThickness')
         self.setControlValue_new(self.style.getCheekFat(), 'cheekFat')
-        self.setControlValue_new(self.style.getBrowProtruding(),
-                                 'browProtruding')
+        self.setControlValue_new(self.style.getBrowProtruding(), 'browProtruding')
         self.setControlValue_new(self.style.getEyeCorner(), 'eyeCorner')
-        self.setControlValue_new(self.style.getEyeOpeningSize(),
-                                 'eyeOpeningSize')
+        self.setControlValue_new(self.style.getEyeOpeningSize(), 'eyeOpeningSize')
         self.setControlValue_new(self.style.getEyeBulge(), 'eyeSpacing')
-        self.setControlValue_new(self.style.getNoseBridgeWidth(),
-                                 'noseBridgeWidth')
-        self.setControlValue_new(self.style.getNoseNostrilWidth(),
-                                 'noseNostrilWidth')
+        self.setControlValue_new(self.style.getNoseBridgeWidth(), 'noseBridgeWidth')
+        self.setControlValue_new(self.style.getNoseNostrilWidth(), 'noseNostrilWidth')
         self.setControlValue_new(self.style.getNoseLength(), 'noseLength')
         self.setControlValue_new(self.style.getNoseBump(), 'noseBump')
-        self.setControlValue_new(self.style.getNoseNostrilHeight(),
-                                 'noseNostrilHeight')
-        self.setControlValue_new(self.style.getNoseNostrilAngle(),
-                                 'noseNostrilAngle')
-        self.setControlValue_new(self.style.getNoseBridgeBroke(),
-                                 'noseBridgeBroke')
-        self.setControlValue_new(self.style.getNoseNostrilBroke(),
-                                 'noseNostrilBroke')
+        self.setControlValue_new(self.style.getNoseNostrilHeight(), 'noseNostrilHeight')
+        self.setControlValue_new(self.style.getNoseNostrilAngle(), 'noseNostrilAngle')
+        self.setControlValue_new(self.style.getNoseBridgeBroke(), 'noseBridgeBroke')
+        self.setControlValue_new(self.style.getNoseNostrilBroke(), 'noseNostrilBroke')
         self.setControlValue_new(self.style.getEarScale(), 'earScale')
         self.setControlValue_new(self.style.getEarFlapAngle(), 'earFlap')
         self.setControlValue_new(self.style.getEarPosition(), 'earPosition')
@@ -1978,8 +1100,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
             5: hprDelta.addZ,
             6: sclDelta.addX,
             7: sclDelta.addY,
-            8: sclDelta.addZ
-        }
+            8: sclDelta.addZ}
 
         for jointName in cjs:
             posDelta.assign(matrixI[jointName][0])

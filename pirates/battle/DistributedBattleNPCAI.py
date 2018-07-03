@@ -3,10 +3,8 @@ from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from direct.distributed.ClockDelta import globalClockDelta
 from pirates.pirate.BattleNPCGameFSMAI import BattleNPCGameFSMAI
 
-
 class DistributedBattleNPCAI(DistributedBattleAvatarAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedBattleNPCAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleNPCAI')
 
     def __init__(self, air):
         DistributedBattleAvatarAI.__init__(self, air)
@@ -39,9 +37,7 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     def getName(self):
         return self.name
 
-    def setSpawnPosHpr(self, xxx_todo_changeme, xxx_todo_changeme1):
-        (x, y, z) = xxx_todo_changeme
-        (h, p, r) = xxx_todo_changeme1
+    def setSpawnPosHpr(self, (x, y, z), (h, p, r)):
         self.spawnPos = [x, y, z, h, p, r]
 
     def d_setSpawnPosHpr(self, x, y, z, h, p, r):
@@ -99,8 +95,7 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         pass
 
     def d_setSpawnIn(self):
-        self.sendUpdate(
-            'setSpawnIn', [globalClockDelta.getRealNetworkTime(bits=32)])
+        self.sendUpdate('setSpawnIn', [globalClockDelta.getRealNetworkTime(bits=32)])
 
     def delete(self):
         self.air.battleMgr.removeTarget(self)

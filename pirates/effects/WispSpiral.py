@@ -8,8 +8,8 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class WispSpiral(PooledEffect, EffectController):
+
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -24,10 +24,7 @@ class WispSpiral(PooledEffect, EffectController):
         self.flashDummy = self.attachNewNode('FlashDummy')
         self.flashDummy.reparentTo(self)
         self.flashDummy.hide()
-        self.flashDummy.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingColor,
-                                  ColorBlendAttrib.OOneMinusIncomingAlpha))
+        self.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha))
         for i in range(self.numWisps):
             flash = loader.loadModelCopy('models/effects/wisp_cylinder')
             flash.setDepthWrite(0)
@@ -40,37 +37,17 @@ class WispSpiral(PooledEffect, EffectController):
     def createTrack(self):
         animation = Parallel()
         for i in range(self.numWisps):
-            fadeBlast = self.wisps[i].colorScaleInterval(
-                self.fadeTime,
-                Vec4(0.5, 0.5, 0.5, 0),
-                startColorScale=self.startCol,
-                blendType='easeOut')
+            fadeBlast = self.wisps[i].colorScaleInterval(self.fadeTime, Vec4(0.5, 0.5, 0.5, 0), startColorScale=self.startCol, blendType='easeOut')
             offset = random.uniform(0.0, 2.0)
-            endScale = Vec3(self.endScale[0] * offset,
-                            self.endScale[1] * offset,
-                            self.endScale[2] * offset)
-            scaleBlast = self.wisps[i].scaleInterval(
-                self.fadeTime,
-                endScale,
-                startScale=self.startScale,
-                blendType='easeOut')
+            endScale = Vec3(self.endScale[0] * offset, self.endScale[1] * offset, self.endScale[2] * offset)
+            scaleBlast = self.wisps[i].scaleInterval(self.fadeTime, endScale, startScale=self.startScale, blendType='easeOut')
             randVal = random.uniform(0.0, 360.0)
-            rotateBlast = self.wisps[i].hprInterval(
-                self.fadeTime,
-                Vec3(450 + randVal, 0, 0),
-                startHpr=Vec3(randVal, 0, 0))
+            rotateBlast = self.wisps[i].hprInterval(self.fadeTime, Vec3(450 + randVal, 0, 0), startHpr=Vec3(randVal, 0, 0))
             randtime = random.uniform(0.0, 0.5)
-            anim = Sequence(
-                Func(self.wisps[i].hide), Wait(randtime * i),
-                Func(self.wisps[i].show),
-                Parallel(fadeBlast, scaleBlast, rotateBlast),
-                Func(self.wisps[i].hide), Func(self.wisps[i].setScale, 1.0),
-                Func(self.wisps[i].setColorScale, Vec4(1, 1, 1, 1)))
+            anim = Sequence(Func(self.wisps[i].hide), Wait(randtime * i), Func(self.wisps[i].show), Parallel(fadeBlast, scaleBlast, rotateBlast), Func(self.wisps[i].hide), Func(self.wisps[i].setScale, 1.0), Func(self.wisps[i].setColorScale, Vec4(1, 1, 1, 1)))
             animation.append(anim)
 
-        self.track = Sequence(
-            Func(self.flashDummy.show), animation, Func(self.flashDummy.hide),
-            Func(self.cleanUpEffect))
+        self.track = Sequence(Func(self.flashDummy.show), animation, Func(self.flashDummy.hide), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

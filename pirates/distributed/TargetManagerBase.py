@@ -1,3 +1,4 @@
+
 class TargetManagerBase:
 
     def __init__(self):
@@ -13,7 +14,7 @@ class TargetManagerBase:
         self.objectDict[nodePathId] = obj
 
     def removeTarget(self, nodePathId):
-        if nodePathId in self.objectDict:
+        if self.objectDict.has_key(nodePathId):
             del self.objectDict[nodePathId]
 
     def getObjectFromNodepath(self, nodePath):

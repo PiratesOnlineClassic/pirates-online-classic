@@ -5,7 +5,6 @@ from direct.distributed.GridParent import GridParent
 from pirates.leveleditor import ObjectList
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
-
 class ClientAreaBuilderAI(DirectObject):
     notify = directNotify.newCategory('ClientAreaBuilderAI')
 
@@ -19,8 +18,8 @@ class ClientAreaBuilderAI(DirectObject):
             return
 
         if object.doId in self.objectList:
-            self.notify.warning(
-                'Cannot add an already existing object %d!' % (object.doId))
+            self.notify.warning('Cannot add an already existing object %d!' % (
+                object.doId))
 
             return
 
@@ -32,8 +31,8 @@ class ClientAreaBuilderAI(DirectObject):
             return
 
         if object.doId not in self.objectList:
-            self.notify.warning(
-                'Cannot remove a non-existant object %d!' % (object.doId))
+            self.notify.warning('Cannot remove a non-existant object %d!' % (
+                object.doId))
 
             return
 
@@ -130,30 +129,20 @@ class ClientAreaBuilderAI(DirectObject):
 
             parentObject.setHpr(parentData.get('Hpr', Point3(0, 0, 0)))
 
-            objectPos = objectData.get('GridPos',
-                                       objectData.get('Pos', Point3(0, 0, 0)))
+            objectPos = objectData.get('GridPos', objectData.get('Pos', Point3(0, 0, 0)))
             return objectPos, parentObject
 
         return objectData.get('Pos'), NodePath('')
 
-    def createObject(self,
-                     objType,
-                     objectData,
-                     parent,
-                     parentUid,
-                     objKey,
-                     dynamic,
-                     parentIsObj=False,
-                     fileName=None,
-                     actualParentObj=None):
+    def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
 
         if objType == ObjectList.AREA_TYPE_ISLAND:
-            newObj = self.__createIsland(objectData, parent, parentUid, objKey,
-                                         dynamic)
+            newObj = self.__createIsland(objectData, parent, parentUid,
+                objKey, dynamic)
         elif objType == ObjectList.AREA_TYPE_ISLAND_REGION:
             newObj = self.__createGameArea(objectData, parent, parentUid,
-                                           objKey, dynamic)
+                objKey, dynamic)
         else:
             if not parent or not hasattr(parent, 'builder'):
                 parent = self.air.worldCreator.world.uidMgr.justGetMeMeObject(
@@ -163,7 +152,7 @@ class ClientAreaBuilderAI(DirectObject):
                     return newObj
 
             newObj = parent.builder.createObject(objType, objectData, parent,
-                                                 parentUid, objKey, dynamic)
+                parentUid, objKey, dynamic)
 
         return newObj
 
@@ -190,8 +179,7 @@ class ClientAreaBuilderAI(DirectObject):
                     island.setZoneSphereSize(*obj['Radi'])
                     island.setZoneSphereCenter(sphereCenter[0], sphereCenter[1])
 
-        self.parent.generateChildWithRequired(
-            island, PiratesGlobals.IslandAvailableZoneStart)
+        self.parent.generateChildWithRequired(island, PiratesGlobals.IslandAvailableZoneStart)
         self.addObject(island)
 
         return island

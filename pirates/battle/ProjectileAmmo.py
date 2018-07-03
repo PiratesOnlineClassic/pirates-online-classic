@@ -88,11 +88,9 @@ class ProjectileAmmo(DirectObject, NodePath):
             return
         objType = int(objType)
         if objType == PiratesGlobals.COLL_FORT:
-            if fromNodePath.getNetTag('fortId') == hitObject.getNetTag(
-                    'fortId'):
+            if fromNodePath.getNetTag('fortId') == hitObject.getNetTag('fortId'):
                 return
-        if fromNodePath.getNetTag('shipId') and fromNodePath.getNetTag(
-                'shipId') == hitObject.getNetTag('shipId'):
+        if fromNodePath.getNetTag('shipId') and fromNodePath.getNetTag('shipId') == hitObject.getNetTag('shipId'):
             return
         skillId = int(fromNodePath.getNetTag('skillId'))
         ammoSkillId = int(fromNodePath.getNetTag('ammoSkillId'))
@@ -106,8 +104,7 @@ class ProjectileAmmo(DirectObject, NodePath):
         if attackerStr:
             attackerId = int(attackerStr)
         if cannonPass != '1':
-            ProjectileEffect(self.cr, attackerId, hitObject, objType, pos,
-                             skillId, ammoSkillId, normal)
+            ProjectileEffect(self.cr, attackerId, hitObject, objType, pos, skillId, ammoSkillId, normal)
             self.destroy()
         return
 

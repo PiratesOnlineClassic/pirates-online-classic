@@ -1,9 +1,7 @@
 import copy
 from pirates.pirate.HumanDNA import HumanDNA
 
-
 class HumanBase:
-
     def setDNA(self, dna=None):
         self.setDNAString(dna)
 
@@ -602,12 +600,10 @@ class HumanBase:
 
     def setTattooChest(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooChest = [
-            tattoo, offsetX, offsetY, scale, rotate, color
-        ]
+         tattoo, offsetX, offsetY, scale, rotate, color]
 
     def d_setTattooChest(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooChest',
-                        [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooChest', [tattoo, offsetX, offsetY, scale, rotate, color])
 
     def b_setTattooChest(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooChest(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -615,12 +611,10 @@ class HumanBase:
 
     def setTattooZone2(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone2 = [
-            tattoo, offsetX, offsetY, scale, rotate, color
-        ]
+         tattoo, offsetX, offsetY, scale, rotate, color]
 
     def d_setTattooZone2(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone2',
-                        [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone2', [tattoo, offsetX, offsetY, scale, rotate, color])
 
     def b_setTattooZone2(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone2(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -628,12 +622,10 @@ class HumanBase:
 
     def setTattooZone3(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone3 = [
-            tattoo, offsetX, offsetY, scale, rotate, color
-        ]
+         tattoo, offsetX, offsetY, scale, rotate, color]
 
     def d_setTattooZone3(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone3',
-                        [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone3', [tattoo, offsetX, offsetY, scale, rotate, color])
 
     def b_setTattooZone3(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone3(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -641,12 +633,10 @@ class HumanBase:
 
     def setTattooZone4(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone4 = [
-            tattoo, offsetX, offsetY, scale, rotate, color
-        ]
+         tattoo, offsetX, offsetY, scale, rotate, color]
 
     def d_setTattooZone4(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone4',
-                        [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone4', [tattoo, offsetX, offsetY, scale, rotate, color])
 
     def b_setTattooZone4(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone4(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -654,12 +644,10 @@ class HumanBase:
 
     def setTattooZone5(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone5 = [
-            tattoo, offsetX, offsetY, scale, rotate, color
-        ]
+         tattoo, offsetX, offsetY, scale, rotate, color]
 
     def d_setTattooZone5(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone5',
-                        [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone5', [tattoo, offsetX, offsetY, scale, rotate, color])
 
     def b_setTattooZone5(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone5(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -667,12 +655,10 @@ class HumanBase:
 
     def setTattooZone6(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone6 = [
-            tattoo, offsetX, offsetY, scale, rotate, color
-        ]
+         tattoo, offsetX, offsetY, scale, rotate, color]
 
     def d_setTattooZone6(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone6',
-                        [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone6', [tattoo, offsetX, offsetY, scale, rotate, color])
 
     def b_setTattooZone6(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone6(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -680,12 +666,10 @@ class HumanBase:
 
     def setTattooZone7(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone7 = [
-            tattoo, offsetX, offsetY, scale, rotate, color
-        ]
+         tattoo, offsetX, offsetY, scale, rotate, color]
 
     def d_setTattooZone7(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone7',
-                        [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone7', [tattoo, offsetX, offsetY, scale, rotate, color])
 
     def b_setTattooZone7(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone7(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -693,12 +677,10 @@ class HumanBase:
 
     def setTattooZone8(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone8 = [
-            tattoo, offsetX, offsetY, scale, rotate, color
-        ]
+         tattoo, offsetX, offsetY, scale, rotate, color]
 
     def d_setTattooZone8(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone8',
-                        [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone8', [tattoo, offsetX, offsetY, scale, rotate, color])
 
     def b_setTattooZone8(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone8(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -831,17 +813,12 @@ class HumanBase:
         self.b_setHatIdx(dna.getHatIdx())
         self.b_setHatColor(dna.getHatColor())
         self.b_setEyesColor(dna.getEyesColor())
-        self.b_setClothesShirt(dna.getClothesShirt()[0],
-                               dna.getClothesShirt()[1])
+        self.b_setClothesShirt(dna.getClothesShirt()[0], dna.getClothesShirt()[1])
         self.b_setClothesPant(dna.getClothesPant()[0], dna.getClothesPant()[1])
         self.b_setClothesSock(dna.getClothesSock()[0], dna.getClothesSock()[1])
         self.b_setClothesShoe(dna.getClothesShoe()[0], dna.getClothesShoe()[1])
         self.b_setClothesVest(dna.getClothesVest()[0], dna.getClothesVest()[1])
         self.b_setClothesCoat(dna.getClothesCoat()[0], dna.getClothesCoat()[1])
         self.b_setClothesBelt(dna.getClothesBelt()[0], dna.getClothesBelt()[1])
-        self.b_setClothesTopColor(dna.getClothesTopColor()[0],
-                                  dna.getClothesTopColor()[1],
-                                  dna.getClothesTopColor()[2])
-        self.b_setClothesBotColor(dna.getClothesBotColor()[0],
-                                  dna.getClothesBotColor()[1],
-                                  dna.getClothesBotColor()[2])
+        self.b_setClothesTopColor(dna.getClothesTopColor()[0], dna.getClothesTopColor()[1], dna.getClothesTopColor()[2])
+        self.b_setClothesBotColor(dna.getClothesBotColor()[0], dna.getClothesBotColor()[1], dna.getClothesBotColor()[2])

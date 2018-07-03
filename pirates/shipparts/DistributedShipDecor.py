@@ -17,29 +17,25 @@ from pirates.shipparts import DistributedShippart
 from pirates.destructibles import DistributedDestructibleObject
 
 
-class DistributedShipDecor(
-        DistributedShippart.DistributedShippart,
-        DistributedDestructibleObject.DistributedDestructibleObject):
+class DistributedShipDecor(DistributedShippart.DistributedShippart,
+                           DistributedDestructibleObject.DistributedDestructibleObject):
     notify = directNotify.newCategory('DistributedShipDecor')
 
     def __init__(self, cr):
         DistributedShippart.DistributedShippart.__init__(self, cr)
-        DistributedDestructibleObject.DistributedDestructibleObject.__init__(
-            self, cr)
+        DistributedDestructibleObject.DistributedDestructibleObject.__init__(self, cr)
         NodePath.__init__(self, 'shipDecor')
 
     def generate(self):
         self.notify.debug('Generate ' + str(self.doId))
         self.setDefaultDNA()
         DistributedShippart.DistributedShippart.generate(self)
-        DistributedDestructibleObject.DistributedDestructibleObject.generate(
-            self)
+        DistributedDestructibleObject.DistributedDestructibleObject.generate(self)
 
     def announceGenerate(self):
         self.notify.debug('Announce Generate ' + str(self.doId))
         DistributedShippart.DistributedShippart.announceGenerate(self)
-        DistributedDestructibleObject.DistributedDestructibleObject.announceGenerate(
-            self)
+        DistributedDestructibleObject.DistributedDestructibleObject.announceGenerate(self)
         if self.Hp <= 0:
             self.prop.showBrokenState()
 
@@ -64,13 +60,14 @@ class DistributedShipDecor(
 
         self.prop.shipId = self.shipId
         self.prop.doId = self.doId
-        self.ship.decors[decorIndex][self.dna.posIndex] = [self.prop, self]
+        self.ship.decors[decorIndex][self.dna.posIndex] = [
+            self.prop,
+            self]
 
     def disable(self):
         self.notify.debug('Disable ' + str(self.doId))
         DistributedShippart.DistributedShippart.disable(self)
-        DistributedDestructibleObject.DistributedDestructibleObject.disable(
-            self)
+        DistributedDestructibleObject.DistributedDestructibleObject.disable(self)
 
     def delete(self):
         self.notify.debug('Delete ' + str(self.doId))
@@ -83,11 +80,8 @@ class DistributedShipDecor(
         DistributedShippart.DistributedShippart.delete(self)
         DistributedDestructibleObject.DistributedDestructibleObject.delete(self)
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
-                            targetEffects, pos, normal, codes, attacker):
-        self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult,
-                                      targetEffects, pos, normal, codes,
-                                      attacker)
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
+        self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
 
     def playDeath(self):
         if self.prop:
@@ -126,14 +120,11 @@ class DistributedShipDecor(
     def addPropToShip(self):
         decorPlacement = DecorDNA.DecorDict.get(self.dna.decorType)
         if decorPlacement[1] == DecorDNA.WALL:
-            locator = self.ship.locators.find('**/wall_decor_' +
-                                              str(self.dna.posIndex) + ';+s')
+            locator = self.ship.locators.find('**/wall_decor_' + str(self.dna.posIndex) + ';+s')
         elif decorPlacement[1] == DecorDNA.FLOOR:
-            locator = self.ship.locators.find('**/floor_decor_' +
-                                              str(self.dna.posIndex) + ';+s')
+            locator = self.ship.locators.find('**/floor_decor_' + str(self.dna.posIndex) + ';+s')
         elif decorPlacement[1] == DecorDNA.WINDOW:
-            locator = self.ship.locators.find('**/window_' +
-                                              str(self.dna.posIndex) + ';+s')
+            locator = self.ship.locators.find('**/window_' + str(self.dna.posIndex) + ';+s')
 
         self.prop.propCollisions.reparentTo(self.ship.modelCollisions)
         self.prop.propCollisions.setPos(locator.getPos(self.ship.root))

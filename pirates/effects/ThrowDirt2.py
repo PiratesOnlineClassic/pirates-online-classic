@@ -6,9 +6,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class ThrowDirt2(PooledEffect, EffectController):
-
+    
     cardScale = 128.0
 
     def __init__(self, parent=None):
@@ -17,8 +16,7 @@ class ThrowDirt2(PooledEffect, EffectController):
         if parent is not None:
             self.reparentTo(parent)
         if not self.particleDummy:
-            self.particleDummy = render.attachNewNode(
-                ModelNode('ThrowDirtParticleDummy'))
+            self.particleDummy = render.attachNewNode(ModelNode('ThrowDirtParticleDummy'))
             self.particleDummy.setDepthWrite(0)
             self.particleDummy.setLightOff()
             self.particleDummy.setColorScaleOff()
@@ -74,11 +72,7 @@ class ThrowDirt2(PooledEffect, EffectController):
         self.p0.emitter.setMaxBound(Point2(0.25, 0.25))
 
     def createTrack(self):
-        self.startEffect = Sequence(
-            Wait(0.65), Func(self.p0.setBirthRate, 0.02),
-            Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self))
+        self.startEffect = Sequence(Wait(0.65), Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.destroy))
         self.track = Sequence(self.startEffect, Wait(2.0), self.endEffect)
 

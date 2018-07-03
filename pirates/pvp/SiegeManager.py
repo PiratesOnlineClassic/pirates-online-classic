@@ -5,9 +5,8 @@ from pirates.piratesbase import PLocalizer
 from pirates.pvp.SiegeManagerBase import SiegeManagerBase
 from pirates.speedchat import PSCDecoders
 
-
 class SiegeManager(DistributedObject, SiegeManagerBase):
-
+    
     TeamJoinableChangedEvent = 'PVPTeamJoinableChanged'
 
     def __init__(self, cr):
@@ -17,8 +16,7 @@ class SiegeManager(DistributedObject, SiegeManagerBase):
     def generate(self):
         self._announcerInterest = None
         self._siegeTeam = 0
-        self._siegeTeamUpdater = FunctionCall(self._setSiegeTeam,
-                                              localAvatar._siegeTeamSV)
+        self._siegeTeamUpdater = FunctionCall(self._setSiegeTeam, localAvatar._siegeTeamSV)
         DistributedObject.generate(self)
         self._pvpTeamJoinable = {}
         base.cr.distributedDistrict.siegeManager = self
@@ -59,23 +57,17 @@ class SiegeManager(DistributedObject, SiegeManagerBase):
 
     def recvChat(self, avatarId, message, chatFlags, DISLid, name):
         if not self.cr.avatarFriendsManager.checkIgnored(avatarId):
-            displayMess = '%s %s %s' % (
-                name, self.getPVPChatTeamName(
-                    localAvatar.getSiegeTeam()), message)
+            displayMess = '%s %s %s' % (name, self.getPVPChatTeamName(localAvatar.getSiegeTeam()), message)
             base.chatAssistant.receiveShipPVPMessage(displayMess)
 
     def recvWLChat(self, avatarId, message, chatFlags, DISLid, name):
         if not self.cr.avatarFriendsManager.checkIgnored(avatarId):
-            displayMess = '%s %s %s' % (
-                name, self.getPVPChatTeamName(
-                    localAvatar.getSiegeTeam()), message)
+            displayMess = '%s %s %s' % (name, self.getPVPChatTeamName(localAvatar.getSiegeTeam()), message)
             base.chatAssistant.receiveShipPVPMessage(displayMess)
 
     def recvSpeedChat(self, avatarId, msgIndex, name):
         if not self.cr.avatarFriendsManager.checkIgnored(avatarId):
-            displayMess = '%s %s %s' % (
-                name, self.getPVPChatTeamName(localAvatar.getSiegeTeam()),
-                SCDecoders.decodeSCStaticTextMsg(msgIndex))
+            displayMess = '%s %s %s' % (name, self.getPVPChatTeamName(localAvatar.getSiegeTeam()), SCDecoders.decodeSCStaticTextMsg(msgIndex))
             base.chatAssistant.receiveShipPVPMessage(displayMess)
 
     def getPVPChatTeamName(self, teamId):

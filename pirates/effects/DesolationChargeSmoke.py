@@ -7,9 +7,8 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class DesolationChargeSmoke(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -18,8 +17,7 @@ class DesolationChargeSmoke(PooledEffect, EffectController):
         model = loader.loadModelCopy('models/effects/particleMaps')
         self.card = model.find('**/particleWhiteSmoke')
         if not self.particleDummy:
-            self.particleDummy = render.attachNewNode(
-                ModelNode('selfParticleDummy'))
+            self.particleDummy = render.attachNewNode(ModelNode('selfParticleDummy'))
             self.particleDummy.setDepthWrite(0)
             self.particleDummy.setColorScaleOff()
             self.particleDummy.setLightOff()
@@ -64,13 +62,8 @@ class DesolationChargeSmoke(PooledEffect, EffectController):
         self.p0.emitter.setRadius(0.1)
 
     def createTrack(self):
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100.0), Wait(2.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(4.0), self.endEffect)
 
     def cleanUpEffect(self):

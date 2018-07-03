@@ -13,7 +13,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class Flame(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -62,11 +62,8 @@ class Flame(PooledEffect, EffectController):
         self.p0.renderer.setAnimAngleFlag(1)
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
-                                           ColorBlendAttrib.OIncomingAlpha,
-                                           ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(1.0, 0.6, 0.2, 1.0), Vec4(0.6, 0.2, 0.2, 0.5), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 0.6, 0.2, 1.0), Vec4(0.6, 0.2, 0.2, 0.5), 1)
         self.p0.renderer.setAlphaDisable(0)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(-0.75)
@@ -78,35 +75,22 @@ class Flame(PooledEffect, EffectController):
 
     def createTrack(self):
         self.p0.renderer.setUserAlpha(1.0)
-        self.p0.renderer.setInitialXScale(
-            0.045 * self.cardScale * self.effectScale)
-        self.p0.renderer.setInitialYScale(
-            0.04 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalXScale(
-            0.02 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalYScale(
-            0.035 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialXScale(0.045 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialYScale(0.04 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalXScale(0.02 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalYScale(0.035 * self.cardScale * self.effectScale)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 15.0 * self.effectScale))
         self.p0.emitter.setRadius(5.0 * self.effectScale)
-        shrinkSize = LerpFunctionInterval(
-            self.setNewSize, 2.5, toData=0.001, fromData=1.0)
+        shrinkSize = LerpFunctionInterval(self.setNewSize, 2.5, toData=0.001, fromData=1.0)
         moveUp = LerpPosInterval(self, 3.5, Vec3(0, 0, 0))
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self))
-        self.endEffect = Sequence(
-            Parallel(shrinkSize, moveUp), Func(self.p0.setBirthRate, 100.0),
-            Wait(1.0), Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(self.duration),
-                              self.endEffect)
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
+        self.endEffect = Sequence(Parallel(shrinkSize, moveUp), Func(self.p0.setBirthRate, 100.0), Wait(1.0), Func(self.cleanUpEffect))
+        self.track = Sequence(self.startEffect, Wait(self.duration), self.endEffect)
 
     def setNewSize(self, time):
-        self.p0.renderer.setFinalXScale(
-            0.02 * self.cardScale * self.effectScale * time)
-        self.p0.renderer.setFinalYScale(
-            0.035 * self.cardScale * self.effectScale * time)
-        self.p0.emitter.setOffsetForce(
-            Vec3(0.0, 0.0, 15.0 * self.effectScale * time))
+        self.p0.renderer.setFinalXScale(0.02 * self.cardScale * self.effectScale * time)
+        self.p0.renderer.setFinalYScale(0.035 * self.cardScale * self.effectScale * time)
+        self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 15.0 * self.effectScale * time))
         self.p0.renderer.setUserAlpha(2.0 * time)
 
     def cleanUpEffect(self):
@@ -117,6 +101,4 @@ class Flame(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\Flame.pyc

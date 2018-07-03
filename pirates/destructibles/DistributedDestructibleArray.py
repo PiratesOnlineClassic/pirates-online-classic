@@ -10,13 +10,11 @@ from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesbase.PiratesGlobals import *
 
 
-class DistributedDestructibleArray(
-        DistributedDestructibleObject.DistributedDestructibleObject):
+class DistributedDestructibleArray(DistributedDestructibleObject.DistributedDestructibleObject):
     notify = directNotify.newCategory('DistributedDestructibleArray')
 
     def __init__(self, cr):
-        DistributedDestructibleObject.DistributedDestructibleObject.__init__(
-            self, cr)
+        DistributedDestructibleObject.DistributedDestructibleObject.__init__(self, cr)
         NodePath.__init__(self, 'DistributedDestructibleArray')
         self.maxArrayHp = []
         self.arrayHp = []
@@ -69,19 +67,15 @@ class DistributedDestructibleArray(
         self.damageDummy[index] = self.attachNewNode('damageDummy' + str(index))
         self.damageDummy[index].reparentTo(self.arrayObjects[index])
         self.damageDummy[index].setBillboardPointEye()
-        self.HpDisplay[index] = DirectLabel(
-            text='HP: ' + str(self.arrayHp[index]) + '/' + str(self.maxHp),
-            scale=3.0,
-            relief=None,
-            text_fg=(1, 1, 1, 1))
+        self.HpDisplay[index] = DirectLabel(text='HP: ' + str(self.arrayHp[index]) + '/' + str(self.maxHp), 
+                                            scale=3.0, relief=None, text_fg=(1, 1, 1, 1))
         self.HpDisplay[index].reparentTo(self.damageDummy[index])
         self.HpDisplay[index].setBin('fixed', 0)
         self.HpDisplay[index].setDepthTest(0)
 
     def updateHpDisplay(self, index):
         if self.hasHpMeter:
-            self.HpDisplay[index]['text'] = 'Hp: ' + str(
-                self.arrayHp[index]) + '/' + str(self.maxHp)
+            self.HpDisplay[index]['text'] = 'Hp: ' + str(self.arrayHp[index]) + '/' + str(self.maxHp)
 
     def destroyHpDisplay(self):
         if self.hasHpMeter:

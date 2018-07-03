@@ -2,8 +2,9 @@ import math
 
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import (ParamObj, clampScalar, fitSrcAngle2Dest,
-                                        getSetter, reduceAngle)
+from direct.showbase.PythonUtil import (ParamObj, clampScalar,
+                                        fitSrcAngle2Dest, getSetter,
+                                        reduceAngle)
 from direct.task import Task
 from otp.otpbase import OTPGlobals
 from panda3d.core import *
@@ -16,21 +17,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
 
     class ParamSet(ParamObj.ParamSet):
 
-        Params = {
-            'lookAtOffset': Vec3(0, 0, 0),
-            'escapement': 10.0,
-            'rotation': 0.0,
-            'fadeGeom': False,
-            'idealDistance': 25.0,
-            'minDistance': 3.0,
-            'maxDistance': 40.0,
-            'minEsc': -20.0,
-            'maxEsc': 25.0,
-            'minDomeEsc': 0.0,
-            'maxCamtiltEsc': 0.0,
-            'autoFaceForward': True,
-            'autoFaceForwardMaxDur': 14.0
-        }
+        Params = {'lookAtOffset': Vec3(0, 0, 0), 'escapement': 10.0, 'rotation': 0.0, 'fadeGeom': False, 'idealDistance': 25.0, 'minDistance': 3.0, 'maxDistance': 40.0, 'minEsc': -20.0, 'maxEsc': 25.0, 'minDomeEsc': 0.0, 'maxCamtiltEsc': 0.0, 'autoFaceForward': True, 'autoFaceForwardMaxDur': 14.0}
 
     UpdateTaskName = 'OrbitCamUpdateTask'
     CollisionCheckTaskName = 'OrbitCamCollisionTask'
@@ -127,17 +114,10 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         escapement = clampScalar(escapement, self._minEsc, self._maxEsc)
         if duration is None:
             diff = abs(curEsc - escapement)
-            speed = (
-                max(curEsc, self._maxEsc) - min(curEsc, self._minEsc)) * 0.025
+            speed = (max(curEsc, self._maxEsc) - min(curEsc, self._minEsc)) * 0.025
             duration = diff / speed
         self._stopEscapementLerp()
-        self._escLerpIval = LerpFunctionInterval(
-            self.setEscapement,
-            fromData=curEsc,
-            toData=escapement,
-            duration=duration,
-            blendType='easeOut',
-            name='OrbitCamera.escapementLerp')
+        self._escLerpIval = LerpFunctionInterval(self.setEscapement, fromData=curEsc, toData=escapement, duration=duration, blendType='easeOut', name='OrbitCamera.escapementLerp')
         self._escLerpIval.start()
         return
 
@@ -178,8 +158,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
 
     def applyIdealDistance(self):
         if self.isActive():
-            self.idealDistance = clampScalar(
-                self.idealDistance, self._minDistance, self._maxDistance)
+            self.idealDistance = clampScalar(self.idealDistance, self._minDistance, self._maxDistance)
             if self._practicalDistance is None:
                 self._zoomToDistance(self.idealDistance)
         return
@@ -224,8 +203,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         if self.isActive():
             self.setIdealDistance(self.idealDistance)
             if hasattr(self, '_collSolid'):
-                self._collSolid.setPointB(
-                    0, -(self._maxDistance + OrbitCamera.PullFwdDist), 0)
+                self._collSolid.setPointB(0, -(self._maxDistance + OrbitCamera.PullFwdDist), 0)
 
     def getMinEsc(self):
         return self._minEsc
@@ -320,13 +298,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
                         duration = self._autoFaceForwardMaxDur * absRelH / 180.0
                         targetH = curSubjectH
                         startH = fitSrcAngle2Dest(self.getH(render), targetH)
-                        self._rotateToRearIval = LerpHprInterval(
-                            self,
-                            duration,
-                            Point3(targetH, 0, 0),
-                            startHpr=Point3(startH, 0, 0),
-                            other=render,
-                            blendType='easeOut')
+                        self._rotateToRearIval = LerpHprInterval(self, duration, Point3(targetH, 0, 0), startHpr=Point3(startH, 0, 0), other=render, blendType='easeOut')
                         self._rotateToRearIval.start()
         self.lastSubjectH = curSubjectH
         self.setP(0)
@@ -359,12 +331,10 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self._rotateToRearEnabled = False
 
     def _rotateToRearIvalIsPlaying(self):
-        return self._rotateToRearIval is not None and self._rotateToRearIval.isPlaying(
-        )
+        return self._rotateToRearIval is not None and self._rotateToRearIval.isPlaying()
 
     def _stopRotateToRearIval(self):
-        if self._rotateToRearIval is not None and self._rotateToRearIval.isPlaying(
-        ):
+        if self._rotateToRearIval is not None and self._rotateToRearIval.isPlaying():
             self._rotateToRearIval.pause()
             self._rotateToRearIval = None
         return
@@ -381,16 +351,10 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         if diff < 0.01:
             self._setCurDistance(distance)
             return
-        speed = (max(curDistance, self._maxDistance) - min(
-            curDistance, self._minDistance)) * 0.5
+        speed = (max(curDistance, self._maxDistance) - min(curDistance, self._minDistance)) * 0.5
         duration = diff / speed
         self._stopZoomIval()
-        self._zoomIval = LerpPosInterval(
-            self.camParent,
-            duration,
-            Point3(0, -distance, 0),
-            blendType='easeOut',
-            name='orbitCamZoom')
+        self._zoomIval = LerpPosInterval(self.camParent, duration, Point3(0, -distance, 0), blendType='easeOut', name='orbitCamZoom')
         self._zoomIval.start()
 
     def _stopZoomIval(self):
@@ -400,17 +364,13 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         return
 
     def _startCollisionCheck(self, shipBarrier=0):
-        self._collSolid = CollisionSegment(
-            0, 0, 0, 0, -(self._maxDistance + OrbitCamera.PullFwdDist), 0)
+        self._collSolid = CollisionSegment(0, 0, 0, 0, -(self._maxDistance + OrbitCamera.PullFwdDist), 0)
         collSolidNode = CollisionNode('OrbitCam.CollSolid')
         collSolidNode.addSolid(self._collSolid)
         if shipBarrier:
-            collSolidNode.setFromCollideMask(
-                PiratesGlobals.ShipCameraBarrierBitmask)
+            collSolidNode.setFromCollideMask(PiratesGlobals.ShipCameraBarrierBitmask)
         else:
-            collSolidNode.setFromCollideMask(
-                OTPGlobals.CameraBitmask | OTPGlobals.CameraTransparentBitmask |
-                OTPGlobals.FloorBitmask)
+            collSolidNode.setFromCollideMask(OTPGlobals.CameraBitmask | OTPGlobals.CameraTransparentBitmask | OTPGlobals.FloorBitmask)
         collSolidNode.setIntoCollideMask(BitMask32.allOff())
         self._collSolidNp = self.escapementNode.attachNewNode(collSolidNode)
         self._cHandlerQueue = CollisionHandlerQueue()
@@ -419,10 +379,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self._hiddenGeoms = {}
         self._fadeOutIvals = {}
         self._fadeInIvals = {}
-        taskMgr.add(
-            self._collisionCheckTask,
-            OrbitCamera.CollisionCheckTaskName,
-            priority=45)
+        taskMgr.add(self._collisionCheckTask, OrbitCamera.CollisionCheckTaskName, priority=45)
 
     def _collisionCheckTask(self, task=None):
         self._cTrav.traverse(render)
@@ -437,16 +394,14 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
                     collEntry = self._cHandlerQueue.getEntry(i)
                     intoNode = collEntry.getIntoNodePath()
                     cMask = intoNode.node().getIntoCollideMask()
-                    if not (cMask &
-                            OTPGlobals.CameraTransparentBitmask).isZero():
+                    if not (cMask & OTPGlobals.CameraTransparentBitmask).isZero():
                         if intoNode in nonObstrGeoms:
                             del nonObstrGeoms[intoNode]
                         self._fadeGeom(intoNode)
                     else:
                         cPoint = collEntry.getSurfacePoint(self.escapementNode)
                         distance = Vec3(cPoint).length()
-                        self.setPracticalDistance(distance -
-                                                  OrbitCamera.PullFwdDist)
+                        self.setPracticalDistance(distance - OrbitCamera.PullFwdDist)
                         break
                     i += 1
 
@@ -486,14 +441,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
             del self._fadeInIvals[np]
         if np not in self._hiddenGeoms:
             hadTransparency = np.getTransparency()
-            fadeIval = Sequence(
-                Func(np.setTransparency, 1),
-                LerpColorScaleInterval(
-                    np,
-                    OrbitCamera.GeomFadeLerpDur,
-                    VBase4(1, 1, 1, 0),
-                    blendType='easeInOut'),
-                name='OrbitCamFadeGeomOut')
+            fadeIval = Sequence(Func(np.setTransparency, 1), LerpColorScaleInterval(np, OrbitCamera.GeomFadeLerpDur, VBase4(1, 1, 1, 0), blendType='easeInOut'), name='OrbitCamFadeGeomOut')
             self._hiddenGeoms[np] = hadTransparency
             self._fadeOutIvals[np] = fadeIval
             fadeIval.start()
@@ -503,14 +451,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
             if np in self._fadeOutIvals:
                 self._fadeOutIvals[np].pause()
                 del self._fadeOutIvals[np]
-            fadeIval = Sequence(
-                LerpColorScaleInterval(
-                    np,
-                    OrbitCamera.GeomFadeLerpDur,
-                    VBase4(1, 1, 1, 1),
-                    blendType='easeInOut'),
-                Func(np.setTransparency, self._hiddenGeoms[np]),
-                name='OrbitCamFadeGeomIn')
+            fadeIval = Sequence(LerpColorScaleInterval(np, OrbitCamera.GeomFadeLerpDur, VBase4(1, 1, 1, 1), blendType='easeInOut'), Func(np.setTransparency, self._hiddenGeoms[np]), name='OrbitCamFadeGeomIn')
             del self._hiddenGeoms[np]
             self._fadeInIvals[np] = fadeIval
             fadeIval.start()

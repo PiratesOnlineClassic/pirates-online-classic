@@ -8,17 +8,10 @@ from pirates.piratesgui import PiratesGuiGlobals, StatRowGui
 
 
 class StatRowHeadingGui(StatRowGui.StatRowGui):
+    
 
-    def __init__(self,
-                 item,
-                 columnHeadings,
-                 parent=None,
-                 textScale=None,
-                 itemHeight=None,
-                 itemWidths=[],
-                 **kw):
-        StatRowGui.StatRowGui.__init__(self, item, columnHeadings, parent,
-                                       textScale, itemHeight, **kw)
+    def __init__(self, item, columnHeadings, parent=None, textScale=None, itemHeight=None, itemWidths=[], **kw):
+        StatRowGui.StatRowGui.__init__(self, item, columnHeadings, parent, textScale, itemHeight, **kw)
         self.initialiseoptions(StatRowHeadingGui)
         self.columnWidths = itemWidths
         self.headings = []
@@ -36,17 +29,7 @@ class StatRowHeadingGui(StatRowGui.StatRowGui):
             currColWidth = self.columnWidths.pop(0)
         currValueX = currColWidth / 2.0
         for currValueItem in self.item:
-            self.headings.append(
-                DirectLabel(
-                    parent=self,
-                    relief=None,
-                    text=str(currValueItem),
-                    text_align=TextNode.ACenter,
-                    text_scale=self.textScale,
-                    text_fg=textFg,
-                    text_shadow=PiratesGuiGlobals.TextShadow,
-                    textMayChange=1,
-                    pos=(currValueX, 0, self.getHeight() / 2)))
+            self.headings.append(DirectLabel(parent=self, relief=None, text=str(currValueItem), text_align=TextNode.ACenter, text_scale=self.textScale, text_fg=textFg, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(currValueX, 0, self.getHeight() / 2)))
             currValueX += currColWidth / 2.0
             if len(self.columnWidths) > 0:
                 currColWidth = self.columnWidths.pop(0)
@@ -60,6 +43,4 @@ class StatRowHeadingGui(StatRowGui.StatRowGui):
             currHeadingText.destroy()
 
         self.headings = []
-
-
 # okay decompiling .\pirates\piratesgui\StatRowHeadingGui.pyc

@@ -8,31 +8,18 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class StatRowGui(DirectFrame):
-
+    
     Width = PiratesGuiGlobals.TMCompletePanelWidth - PiratesGuiGlobals.GridSize
     Height = PiratesGuiGlobals.TMCompletePageHeight / 7
 
-    def __init__(self,
-                 item,
-                 columnHeadings,
-                 parent=None,
-                 textScale=None,
-                 itemHeight=None,
-                 itemWidth=None,
-                 itemWidths=[],
-                 txtColor=None,
-                 frameColor=(1, 1, 1, 0.05),
-                 **kw):
+    def __init__(self, item, columnHeadings, parent=None, textScale=None, itemHeight=None, itemWidth=None, itemWidths=[], txtColor=None, frameColor=(1, 1, 1, 0.05), **kw):
         if itemHeight == None:
             itemHeight = self.Height
         if itemWidth == None:
             itemWidth = self.Width
         self.columnHeadings = columnHeadings
         self.columnWidths = itemWidths
-        optiondefs = (('state', DGG.NORMAL, None), ('frameColor', frameColor,
-                                                    None),
-                      ('borderWidth', PiratesGuiGlobals.BorderWidth, None),
-                      ('frameSize', (0.0, itemWidth, 0.0, itemHeight), None))
+        optiondefs = (('state', DGG.NORMAL, None), ('frameColor', frameColor, None), ('borderWidth', PiratesGuiGlobals.BorderWidth, None), ('frameSize', (0.0, itemWidth, 0.0, itemHeight), None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent)
         self.initialiseoptions(StatRowGui)
@@ -63,34 +50,14 @@ class StatRowGui(DirectFrame):
         rowHeading = str(self.item[0])
         if self.textColor:
             textFg = self.textColor
-        self.descText = DirectLabel(
-            parent=self,
-            relief=None,
-            text=rowHeading,
-            text_align=TextNode.ACenter,
-            text_scale=self.textScale,
-            text_fg=textFg,
-            text_wordwrap=14,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=1,
-            pos=(currValueX, 0, self.getHeight() / 2))
+        self.descText = DirectLabel(parent=self, relief=None, text=rowHeading, text_align=TextNode.ACenter, text_scale=self.textScale, text_fg=textFg, text_wordwrap=14, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(currValueX, 0, self.getHeight() / 2))
         for currValueItem in self.item[1]:
             if currValueItem[0] in self.columnHeadings:
                 currValueX += currColWidth / 2.0
                 if len(self.columnWidths) > 0:
                     currColWidth = self.columnWidths.pop(0)
                 currValueX += currColWidth / 2.0
-                self.valueTexts.append(
-                    DirectLabel(
-                        parent=self,
-                        relief=None,
-                        text=str(currValueItem[1]),
-                        text_align=TextNode.ACenter,
-                        text_scale=self.textScale,
-                        text_fg=textFg,
-                        text_shadow=PiratesGuiGlobals.TextShadow,
-                        textMayChange=1,
-                        pos=(currValueX, 0, self.getHeight() / 2)))
+                self.valueTexts.append(DirectLabel(parent=self, relief=None, text=str(currValueItem[1]), text_align=TextNode.ACenter, text_scale=self.textScale, text_fg=textFg, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(currValueX, 0, self.getHeight() / 2)))
 
         return
 
@@ -107,6 +74,4 @@ class StatRowGui(DirectFrame):
     def _handleItemChange(self):
         self._destroyIface()
         self._createIface()
-
-
 # okay decompiling .\pirates\piratesgui\StatRowGui.pyc

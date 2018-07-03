@@ -38,11 +38,16 @@ CycleStateTimeList = {
         (PiratesGlobals.TOD_NIGHT2STARS, 2),
         (PiratesGlobals.TOD_STARS, 4),
         (PiratesGlobals.TOD_STARS2DAWN, 1),
+    ], 
+    TOD_HALLOWEEN_CYCLE: [
+        (PiratesGlobals.TOD_HALLOWEEN, 24)
     ],
-    TOD_HALLOWEEN_CYCLE: [(PiratesGlobals.TOD_HALLOWEEN, 24)],
-    TOD_JOLLYCURSE_CYCLE:
-    [(PiratesGlobals.TOD_HALF2FULLMOON, 2), (PiratesGlobals.TOD_FULLMOON, 4),
-     (PiratesGlobals.TOD_FULL2HALFMOON, 2), (PiratesGlobals.TOD_HALLOWEEN, 16)]
+    TOD_JOLLYCURSE_CYCLE: [
+        (PiratesGlobals.TOD_HALF2FULLMOON, 2),
+        (PiratesGlobals.TOD_FULLMOON, 4),
+        (PiratesGlobals.TOD_FULL2HALFMOON, 2),
+        (PiratesGlobals.TOD_HALLOWEEN, 16)
+    ]
 }
 StateBreakdownList = {}
 StateBeginTimeList = {}

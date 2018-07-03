@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class ShipSinkSplashes(PooledEffect, EffectController):
-
+    
     card2Scale = 64.0
     cardScale = 64.0
 
@@ -60,8 +60,7 @@ class ShipSinkSplashes(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.25, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.25, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -100,16 +99,9 @@ class ShipSinkSplashes(PooledEffect, EffectController):
 
     def createTrack(self):
         self.setEffectScale(self.effectScale)
-        shrink = LerpFunctionInterval(
-            self.resize, 2.5, fromData=1.0, toData=0.25)
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.1), Func(self.p0.clearToInitial),
-            Func(self.p1.setBirthRate, 0.01), Func(self.p1.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(shrink, Func(self.p0.setBirthRate, 100.0),
-                                  Func(self.p1.setBirthRate, 100.0), Wait(2.0),
-                                  Func(self.cleanUpEffect))
+        shrink = LerpFunctionInterval(self.resize, 2.5, fromData=1.0, toData=0.25)
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.1), Func(self.p0.clearToInitial), Func(self.p1.setBirthRate, 0.01), Func(self.p1.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(shrink, Func(self.p0.setBirthRate, 100.0), Func(self.p1.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(7.0), self.endEffect)
 
     def setEffectScale(self, scale):
@@ -137,6 +129,4 @@ class ShipSinkSplashes(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\ShipSinkSplashes.pyc

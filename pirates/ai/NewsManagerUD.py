@@ -1,7 +1,6 @@
 from direct.directnotify import DirectNotifyGlobal
 import datetime
 
-
 class NewsManagerUD:
     """
     Simple UD class to communicate globally with all AI newsManagers through the 
@@ -12,10 +11,8 @@ class NewsManagerUD:
 
     def __init__(self, air):
         self.air = air
-        self.air.netMessenger.accept('uberDOGHolidayStarted', self,
-                                     self.handleHolidayStarted)
-        self.pastBroadcastCacheDelay = config.GetInt(
-            'news-manager-past-broadcast-cache', 5)
+        self.air.netMessenger.accept('uberDOGHolidayStarted', self, self.handleHolidayStarted)
+        self.pastBroadcastCacheDelay = config.GetInt('news-manager-past-broadcast-cache', 5)
         self.__broadcastedHolidays = {}
         self.__lastBroadcast = None
 
@@ -37,14 +34,12 @@ class NewsManagerUD:
             success = self.air.webhookManager.logHolidayMessage(holidayId)
             if success:
                 self.notify.info('Broadcasted holiday message to Discord')
-                expireTime = datetime.datetime.now() + datetime.timedelta(
-                    minutes=self.pastBroadcastCacheDelay)
+                expireTime = datetime.datetime.now() + datetime.timedelta(minutes=self.pastBroadcastCacheDelay)
                 self.__broadcastedHolidays[holidayId] = expireTime
                 self.__lastBroadcast = holidayId
 
     def startHoliday(self, holidayId, time, quietly=False):
-        self.notify.info('Starting Holiday %s across the network for %s seconds'
-                         % (holidayId, time))
+        self.notify.info('Starting Holiday %s across the network for %s seconds' % (holidayId, time))
         self.air.netMessenger.send('startHoliday', [holidayId, time, quietly])
 
     def stopHoliday(self, holidayId):

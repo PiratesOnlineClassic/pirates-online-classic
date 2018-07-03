@@ -9,7 +9,6 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.GameOptions import Options
 
-
 class GroundFog(EffectController, NodePath):
     cardScale = 64.0
 
@@ -19,8 +18,7 @@ class GroundFog(EffectController, NodePath):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleGroundFog')
         if not GroundFog.particleDummy:
-            GroundFog.particleDummy = render.attachNewNode(
-                ModelNode('GroundFogParticleDummy'))
+            GroundFog.particleDummy = render.attachNewNode(ModelNode('GroundFogParticleDummy'))
             GroundFog.particleDummy.setDepthWrite(0)
             GroundFog.particleDummy.setColorScale(1.0, 1.0, 1.0, 1)
             GroundFog.particleDummy.setLightOff()
@@ -66,8 +64,7 @@ class GroundFog(EffectController, NodePath):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addConstant(
-            0.0, 1.0, Vec4(0.6, 0.8, 1.0, 0.5), 1)
+        self.p0.renderer.getColorInterpolationManager().addConstant(0.0, 1.0, Vec4(0.6, 0.8, 1.0, 0.5), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETEXPLICIT)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -75,12 +72,6 @@ class GroundFog(EffectController, NodePath):
         self.p0.emitter.setExplicitLaunchVector(Vec3(0.2, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(200.0)
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.02), Func(self.setPoolSize, 128),
-            Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100.0), Wait(4.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.setPoolSize, 128), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(4.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)

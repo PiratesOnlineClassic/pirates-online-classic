@@ -22,6 +22,4 @@ class SCStaticTextTerminal(SCTerminal):
     def handleSelect(self):
         SCTerminal.handleSelect(self)
         messenger.send(self.getEventName(SCStaticTextMsgEvent), [self.textId])
-
-
 # okay decompiling .\otp\speedchat\SCStaticTextTerminal.pyc

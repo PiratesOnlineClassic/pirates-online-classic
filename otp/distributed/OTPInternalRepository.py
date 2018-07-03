@@ -7,19 +7,10 @@ from otp.distributed.OtpDoGlobals import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.MsgTypes import *
 
-
 class OTPInternalRepository(AstronInternalRepository):
 
-    def __init__(self,
-                 baseChannel,
-                 serverId=None,
-                 dcFileNames=None,
-                 dcSuffix='AI',
-                 connectMethod=None,
-                 threadedNet=None):
-        AstronInternalRepository.__init__(self, baseChannel, serverId,
-                                          dcFileNames, dcSuffix, connectMethod,
-                                          threadedNet)
+    def __init__(self, baseChannel, serverId=None, dcFileNames = None, dcSuffix='AI', connectMethod=None, threadedNet=None):
+        AstronInternalRepository.__init__(self, baseChannel, serverId, dcFileNames, dcSuffix, connectMethod, threadedNet)
         self._netMessageCounter = 0
 
     def _registerInternalNetMessage(self, message):
@@ -27,7 +18,7 @@ class OTPInternalRepository(AstronInternalRepository):
         self._netMessageCounter += 1
 
     def _registerNetMessages(self):
-        pass  # Override me!
+        pass # Override me!
 
     def getAvatarIdFromSender(self):
         return self.getMsgSender() & 0xFFFFFFFF
@@ -40,9 +31,7 @@ class OTPInternalRepository(AstronInternalRepository):
 
     def setAllowClientSend(self, avId, distObj, fieldNameList=[]):
         dg = PyDatagram()
-        dg.addServerHeader(
-            distObj.GetPuppetConnectionChannel(avId), self.ourChannel,
-            CLIENTAGENT_SET_FIELDS_SENDABLE)
+        dg.addServerHeader(distObj.GetPuppetConnectionChannel(avId), self.ourChannel, CLIENTAGENT_SET_FIELDS_SENDABLE)
         fieldIds = []
         for fieldName in fieldNameList:
             field = distObj.dclass.getFieldByName(fieldName)
@@ -64,8 +53,7 @@ class OTPInternalRepository(AstronInternalRepository):
         msgDg.addUint16(10)
         msgDg.addString(message)
 
-        self.writeServerEvent(
-            'system-message',
+        self.writeServerEvent('system-message',
             sourceChannel=self.ourChannel,
             message=message,
             targetChannel=channel)
@@ -75,10 +63,7 @@ class OTPInternalRepository(AstronInternalRepository):
         dg.addString(msgDg.getMessage())
         self.send(dg)
 
-    def kickChannel(self,
-                    channel,
-                    reason=1,
-                    message='An unexpected problem has occured.'):
+    def kickChannel(self, channel, reason=1, message='An unexpected problem has occured.'):
         dg = PyDatagram()
         dg.addServerHeader(channel, self.ourChannel, CLIENTAGENT_EJECT)
         dg.addUint16(reason)
@@ -88,7 +73,7 @@ class OTPInternalRepository(AstronInternalRepository):
     def readerPollOnce(self):
         try:
             return AstronInternalRepository.readerPollOnce(self)
-        except SystemExit as KeyboardInterrupt:
+        except SystemExit, KeyboardInterrupt:
             raise
         except Exception as e:
 

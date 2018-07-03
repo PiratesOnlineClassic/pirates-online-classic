@@ -75,8 +75,7 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
             return
 
         if parentObjId > 0:
-            self.pendingPlacement = base.cr.relatedObjectMgr.requestObjects(
-                [self.parentObjId], eachCallback=putObjOnParent)
+            self.pendingPlacement = base.cr.relatedObjectMgr.requestObjects([self.parentObjId], eachCallback=putObjOnParent)
 
     def setLocation(self, parentId, zoneId, teleport=0):
         pass
@@ -104,26 +103,18 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
         currH = currHpr[0]
         currP = currHpr[1]
         currR = currHpr[2]
-        self.interactSeq = Sequence(
-            Func(self.moveSelf, (currPosX, currPosY, currPosZ)), Wait(0.05),
-            Func(self.moveSelf, (currPosX, currPosY, currPosZ)), Wait(0.05),
-            Func(self.moveSelf, (currPosX, currPosY, currPosZ)), Wait(0.05),
-            Func(self.moveSelf, (currPosX, currPosY, currPosZ)), Wait(0.05),
-            Func(self.moveSelf, (currPosX, currPosY, currPosZ)), Wait(0.05),
-            Func(self.moveSelf, (currPosX, currPosY, currPosZ)), Wait(0.05),
-            Func(self.finishInteraction, (VBase3(currPosX, currPosY, currPosZ),
-                                          (currH, currP, currR))))
+        self.interactSeq = Sequence(Func(self.moveSelf, (currPosX, currPosY, currPosZ)), Wait(0.05), Func(self.moveSelf, (currPosX, currPosY, currPosZ)), Wait(0.05), Func(self.moveSelf, (currPosX, currPosY, currPosZ)), Wait(0.05), Func(self.moveSelf, (currPosX, currPosY, currPosZ)), Wait(0.05), Func(self.moveSelf, (currPosX, currPosY, currPosZ)), Wait(0.05), Func(self.moveSelf, (currPosX, currPosY, currPosZ)), Wait(0.05), Func(self.finishInteraction, (VBase3(currPosX, currPosY, currPosZ), (currH, currP, currR))))
         self.interactSeq.start()
 
     def setMovie(self, avId):
         av = self.cr.doId2do.get(avId)
         if av:
-            availAnims = ['boxing_kick', 'boxing_punch']
+            availAnims = [
+             'boxing_kick', 'boxing_punch']
             anim = random.choice(availAnims)
             av.play(anim)
             if anim == 'boxing_kick':
                 reactDelay = 0.43
             else:
                 reactDelay = 0.4
-            taskMgr.doMethodLater(reactDelay, self.playInteraction,
-                                  self.uniqueName('playReact'))
+            taskMgr.doMethodLater(reactDelay, self.playInteraction, self.uniqueName('playReact'))

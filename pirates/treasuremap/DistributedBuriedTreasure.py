@@ -6,10 +6,8 @@ from panda3d.core import *
 from pirates.distributed import DistributedInteractive
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
-
 class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedBuriedTreasure')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBuriedTreasure')
     UpdateDelay = 2.0
 
     def __init__(self, cr):
@@ -23,11 +21,7 @@ class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
     def generate(self):
         DistributedInteractive.DistributedInteractive.generate(self)
         self.chest = None
-        self.setInteractOptions(
-            proximityText=PLocalizer.InteractBuriedTreasure,
-            sphereScale=10,
-            diskRadius=10,
-            exclusive=0)
+        self.setInteractOptions(proximityText=PLocalizer.InteractBuriedTreasure, sphereScale=10, diskRadius=10, exclusive=0)
 
     def disable(self):
         DistributedInteractive.DistributedInteractive.disable(self)
@@ -56,17 +50,14 @@ class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
         self.dirt.flattenStrong()
 
     def handleEnterProximity(self, collEntry):
-        DistributedInteractive.DistributedInteractive.handleEnterProximity(
-            self, collEntry)
+        DistributedInteractive.DistributedInteractive.handleEnterProximity(self, collEntry)
 
     def handleExitProximity(self, collEntry):
-        DistributedInteractive.DistributedInteractive.handleExitProximity(
-            self, collEntry)
+        DistributedInteractive.DistributedInteractive.handleExitProximity(self, collEntry)
 
     def requestInteraction(self, avId, interactType=0):
         localAvatar.motionFSM.off()
-        DistributedInteractive.DistributedInteractive.requestInteraction(
-            self, avId, interactType)
+        DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
 
     def rejectInteraction(self):
         localAvatar.guiMgr.createWarning(PLocalizer.AlreadySearched)
@@ -77,14 +68,11 @@ class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
         self.acceptInteraction()
         localAvatar.b_setGameState('Digging')
         localAvatar.guiMgr.workMeter.updateText(PLocalizer.InteractDigging)
-        localAvatar.guiMgr.workMeter.startTimer(self.startingDepth,
-                                                self.currentDepth)
+        localAvatar.guiMgr.workMeter.startTimer(self.startingDepth, self.currentDepth)
         pos = localAvatar.getPos(self)
         angle = math.atan2(pos[0], pos[1])
         radius = 5
-        localAvatar.setPos(self,
-                           math.sin(angle) * radius,
-                           math.cos(angle) * radius, 0)
+        localAvatar.setPos(self, math.sin(angle) * radius, math.cos(angle) * radius, 0)
         localAvatar.headsUp(self)
         localAvatar.setH(localAvatar, -90)
 
@@ -134,30 +122,12 @@ class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
         self.dirt.unstash()
         if self.raiseTreasureIval:
             self.raiseTreasureIval.pause()
-        self.raiseTreasureIval = Parallel(
-            LerpPosInterval(
-                self.chest,
-                self.UpdateDelay,
-                Vec3(0, 0, z),
-                startPos=Vec3(0, 0, oldZ)),
-            LerpPosInterval(
-                self.dirt,
-                self.UpdateDelay,
-                Vec3(0, 0, dirtZ),
-                startPos=Vec3(0, 0, dirtOldZ)))
+        self.raiseTreasureIval = Parallel(LerpPosInterval(self.chest, self.UpdateDelay, Vec3(0, 0, z), startPos=Vec3(0, 0, oldZ)), LerpPosInterval(self.dirt, self.UpdateDelay, Vec3(0, 0, dirtZ), startPos=Vec3(0, 0, dirtOldZ)))
         self.raiseTreasureIval.start()
         if self.state == 'Use':
-            localAvatar.guiMgr.workMeter.startTimer(self.startingDepth,
-                                                    self.currentDepth)
+            localAvatar.guiMgr.workMeter.startTimer(self.startingDepth, self.currentDepth)
 
     def showTreasure(self, gold):
         self.loadChest()
-        self.showTreasureIval = Sequence(
-            Parallel(
-                LerpHprInterval(self.chestLidHigh, 1, Vec3(0, -40, 0)),
-                LerpHprInterval(self.chestLidMed, 1, Vec3(0, -40, 0)),
-                LerpHprInterval(self.chestLidLow, 1, Vec3(0, -40, 0))),
-            Wait(3.0), Func(self.setTransparency, 1),
-            LerpColorScaleInterval(self, 0.5, Vec4(1, 1, 1, 0)),
-            Func(self.chest.stash))
+        self.showTreasureIval = Sequence(Parallel(LerpHprInterval(self.chestLidHigh, 1, Vec3(0, -40, 0)), LerpHprInterval(self.chestLidMed, 1, Vec3(0, -40, 0)), LerpHprInterval(self.chestLidLow, 1, Vec3(0, -40, 0))), Wait(3.0), Func(self.setTransparency, 1), LerpColorScaleInterval(self, 0.5, Vec4(1, 1, 1, 0)), Func(self.chest.stash))
         self.showTreasureIval.start()

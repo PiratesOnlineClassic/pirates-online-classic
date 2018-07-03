@@ -24,16 +24,14 @@ from pirates.destructibles import DistributedDestructibleObject
 import random
 
 
-class DistributedCabin(
-        DistributedShippart.DistributedShippart,
-        DistributedDestructibleObject.DistributedDestructibleObject):
+class DistributedCabin(DistributedShippart.DistributedShippart,
+                       DistributedDestructibleObject.DistributedDestructibleObject):
     notify = directNotify.newCategory('DistributedCabin')
     woodBreakSfx = None
 
     def __init__(self, cr):
         DistributedShippart.DistributedShippart.__init__(self, cr)
-        DistributedDestructibleObject.DistributedDestructibleObject.__init__(
-            self, cr)
+        DistributedDestructibleObject.DistributedDestructibleObject.__init__(self, cr)
         NodePath.__init__(self, 'DistributedCabin')
         self.shipId = 0
         self.doId = 0
@@ -45,14 +43,12 @@ class DistributedCabin(
         self.notify.debug('Generate ' + str(self.doId))
         self.setDefaultDNA()
         DistributedShippart.DistributedShippart.generate(self)
-        DistributedDestructibleObject.DistributedDestructibleObject.generate(
-            self)
+        DistributedDestructibleObject.DistributedDestructibleObject.generate(self)
 
     def announceGenerate(self):
         self.notify.debug('Announce Generate ' + str(self.doId))
         DistributedShippart.DistributedShippart.announceGenerate(self)
-        DistributedDestructibleObject.DistributedDestructibleObject.announceGenerate(
-            self)
+        DistributedDestructibleObject.DistributedDestructibleObject.announceGenerate(self)
 
     def createProp(self):
         cabin = self.ship.cabin
@@ -65,7 +61,9 @@ class DistributedCabin(
         self.prop = Cabin.Cabin(base.cr)
         self.prop.shipId = self.shipId
         self.prop.doId = self.doId
-        self.ship.cabin = [self.prop, self]
+        self.ship.cabin = [
+            self.prop,
+            self]
 
     def propLoaded(self):
         pass
@@ -77,8 +75,7 @@ class DistributedCabin(
             self.pendingSetupCollisions = None
 
         DistributedShippart.DistributedShippart.disable(self)
-        DistributedDestructibleObject.DistributedDestructibleObject.disable(
-            self)
+        DistributedDestructibleObject.DistributedDestructibleObject.disable(self)
 
     def delete(self):
         self.notify.debug('Delete ' + str(self.doId))
@@ -89,20 +86,18 @@ class DistributedCabin(
         DistributedShippart.DistributedShippart.delete(self)
         DistributedDestructibleObject.DistributedDestructibleObject.delete(self)
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
-                            targetEffects, pos, normal, codes, attacker):
-        self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult,
-                                      targetEffects, pos, normal, codes,
-                                      attacker)
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
+        self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
 
     def setHp(self, newHp):
-        DistributedDestructibleObject.DistributedDestructibleObject.setHp(
-            self, newHp)
+        DistributedDestructibleObject.DistributedDestructibleObject.setHp(self, newHp)
         if self.ship:
             messenger.send('setCabinHp-%s' % self.doId, self.getHp())
 
     def getHp(self):
-        return [self.Hp, self.maxHp]
+        return [
+            self.Hp,
+            self.maxHp]
 
     def playDeath(self):
         pass

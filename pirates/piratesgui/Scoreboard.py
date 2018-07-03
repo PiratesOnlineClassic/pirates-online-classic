@@ -11,15 +11,10 @@ from pirates.piratesgui.ScoreboardItemGui import ScoreboardItemGui
 
 
 class Scoreboard(DirectFrame):
+    
 
     def __init__(self, name, width, height, results, titleHeight=1.0):
-        DirectFrame.__init__(
-            self,
-            relief=None,
-            state=DGG.NORMAL,
-            frameColor=PiratesGuiGlobals.FrameColor,
-            borderWidth=PiratesGuiGlobals.BorderWidth,
-            pos=(0, 0, -0.03))
+        DirectFrame.__init__(self, relief=None, state=DGG.NORMAL, frameColor=PiratesGuiGlobals.FrameColor, borderWidth=PiratesGuiGlobals.BorderWidth, pos=(0, 0, -0.03))
         self.initialiseoptions(Scoreboard)
         self.width = width
         self.height = height
@@ -51,12 +46,7 @@ class Scoreboard(DirectFrame):
     def getItemChangeMsg(self):
         return self.taskName('tmRewardChanged')
 
-    def createNewItem(self,
-                      item,
-                      parent,
-                      itemType=None,
-                      columnWidths=[],
-                      color=None):
+    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
         width = self.width - 0.02
         height = self.listHeight / (len(self.getItemList()) + 1)
         if height > 0.1:
@@ -64,6 +54,4 @@ class Scoreboard(DirectFrame):
         if item.get('Type') == 'Space':
             height = height / 3
         return ScoreboardItemGui(item, width, height, parent)
-
-
 # okay decompiling .\pirates\piratesgui\Scoreboard.pyc

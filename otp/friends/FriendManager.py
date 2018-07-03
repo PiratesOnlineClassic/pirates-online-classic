@@ -55,12 +55,14 @@ class FriendManager(DistributedObject.DistributedObject):
     def up_inviteeFriendConsidering(self, yesNo, context):
         self.sendUpdate('inviteeFriendConsidering', [yesNo, context])
         self.notify.debug(
-            'Client: inviteeFriendConsidering(%d, %d)' % (yesNo, context))
+            'Client: inviteeFriendConsidering(%d, %d)' %
+            (yesNo, context))
 
     def up_inviteeFriendResponse(self, yesNoMaybe, context):
         self.sendUpdate('inviteeFriendResponse', [yesNoMaybe, context])
         self.notify.debug(
-            'Client: inviteeFriendResponse(%d, %d)' % (yesNoMaybe, context))
+            'Client: inviteeFriendResponse(%d, %d)' %
+            (yesNoMaybe, context))
 
     def up_inviteeAcknowledgeCancel(self, context):
         self.sendUpdate('inviteeAcknowledgeCancel', [context])
@@ -68,17 +70,20 @@ class FriendManager(DistributedObject.DistributedObject):
 
     def friendConsidering(self, yesNoAlready, context):
         self.notify.info(
-            'Roger Client: friendConsidering(%d, %d)' % (yesNoAlready, context))
+            'Roger Client: friendConsidering(%d, %d)' %
+            (yesNoAlready, context))
         messenger.send('friendConsidering', [yesNoAlready, context])
 
     def friendResponse(self, yesNoMaybe, context):
         self.notify.debug(
-            'Client: friendResponse(%d, %d)' % (yesNoMaybe, context))
+            'Client: friendResponse(%d, %d)' %
+            (yesNoMaybe, context))
         messenger.send('friendResponse', [yesNoMaybe, context])
 
     def inviteeFriendQuery(self, inviterId, inviterName, inviterDna, context):
-        self.notify.debug('Client: inviteeFriendQuery(%d, %s, dna, %d)' %
-                          (inviterId, inviterName, context))
+        self.notify.debug(
+            'Client: inviteeFriendQuery(%d, %s, dna, %d)' %
+            (inviterId, inviterName, context))
         if not hasattr(base, 'localAvatar'):
             self.up_inviteeFriendConsidering(0, context)
             return
@@ -90,8 +95,9 @@ class FriendManager(DistributedObject.DistributedObject):
             return
         self.up_inviteeFriendConsidering(self.__available, context)
         if self.__available:
-            messenger.send('friendInvitation',
-                           [inviterId, inviterName, inviterDna, context])
+            messenger.send(
+                'friendInvitation', [
+                    inviterId, inviterName, inviterDna, context])
 
     def inviteeCancelFriendQuery(self, context):
         self.notify.debug('Client: inviteeCancelFriendQuery(%d)' % context)

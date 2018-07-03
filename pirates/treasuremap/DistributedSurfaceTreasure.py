@@ -5,10 +5,8 @@ from pirates.distributed import DistributedInteractive
 from pirates.interact import InteractiveBase
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
-
 class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedSurfaceTreasure')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSurfaceTreasure')
 
     def __init__(self, cr):
         NodePath.__init__(self, 'DistributedSurfaceTreasure')
@@ -26,11 +24,7 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
         self.value = 0
 
     def initInteractOpts(self):
-        self.setInteractOptions(
-            sphereScale=10,
-            diskRadius=10,
-            proximityText=PLocalizer.PVPPickUpTreasure,
-            exclusive=0)
+        self.setInteractOptions(sphereScale=10, diskRadius=10, proximityText=PLocalizer.PVPPickUpTreasure, exclusive=0)
 
     def disable(self):
         DistributedInteractive.DistributedInteractive.disable(self)
@@ -41,26 +35,21 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
             self.showLerp.pause()
 
     def setLocation(self, parentId, zoneId):
-        DistributedInteractive.DistributedInteractive.setLocation(
-            self, parentId, zoneId)
+        DistributedInteractive.DistributedInteractive.setLocation(self, parentId, zoneId)
         if zoneId == PiratesGlobals.ShipZoneOnDeck:
             ship = base.cr.doId2do[parentId]
             self.reparentTo(ship.transNode)
 
     def handleEnterProximity(self, collEntry):
-        DistributedInteractive.DistributedInteractive.handleEnterProximity(
-            self, collEntry)
+        DistributedInteractive.DistributedInteractive.handleEnterProximity(self, collEntry)
         print 'enterproximityoftreasure'
 
     def enterProximity(self):
-        if (self.belongsToTeam == PiratesGlobals.INVALID_TEAM or
-                self.belongsToTeam != localAvatar.getTeam()) and self.value > 0:
-            base.cr.interactionMgr.addInteractive(self,
-                                                  InteractiveBase.PROXIMITY)
+        if (self.belongsToTeam == PiratesGlobals.INVALID_TEAM or self.belongsToTeam != localAvatar.getTeam()) and self.value > 0:
+            base.cr.interactionMgr.addInteractive(self, InteractiveBase.PROXIMITY)
             messenger.send('enterProximityOfInteractive')
         else:
-            base.cr.interactionMgr.removeInteractive(self,
-                                                     InteractiveBase.PROXIMITY)
+            base.cr.interactionMgr.removeInteractive(self, InteractiveBase.PROXIMITY)
         self.accept(self.proximityCollisionExitEvent, self.handleExitProximity)
 
     def setWithdrawType(self, withdrawType):
@@ -88,8 +77,7 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
         if base.localAvatar.lootCarried > 0:
             base.localAvatar.b_setGameState('LandTreasureRoam')
         else:
-            base.localAvatar.b_setGameState(
-                base.localAvatar.gameFSM.defaultState)
+            base.localAvatar.b_setGameState(base.localAvatar.gameFSM.defaultState)
 
     def setBelongsToTeam(self, team):
         self.belongsToTeam = team
@@ -99,8 +87,7 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
 
     def requestInteraction(self, avId, interactType=0):
         base.localAvatar.motionFSM.off()
-        DistributedInteractive.DistributedInteractive.requestInteraction(
-            self, avId, interactType)
+        DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
 
     def rejectInteraction(self):
         base.localAvatar.motionFSM.on()
@@ -110,12 +97,8 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
         if self.showLerp:
             self.showLerp.finish()
         if empty:
-            self.showLerp = Sequence(
-                Func(self.setTransparency, 1),
-                LerpColorScaleInterval(self, 0.5, Vec4(1, 1, 1, 0)))
+            self.showLerp = Sequence(Func(self.setTransparency, 1), LerpColorScaleInterval(self, 0.5, Vec4(1, 1, 1, 0)))
             self.showLerp.start()
         else:
-            self.showLerp = Sequence(
-                LerpColorScaleInterval(self, 0.5, Vec4(1, 1, 1, 1)),
-                Func(self.clearTransparency))
+            self.showLerp = Sequence(LerpColorScaleInterval(self, 0.5, Vec4(1, 1, 1, 1)), Func(self.clearTransparency))
             self.showLerp.start()

@@ -18,11 +18,11 @@ from pirates.uberdog.UberDogGlobals import (InventoryCategory, InventoryId,
 
 MAX_REP = 6
 
-
 class SkillPage(InventoryPage.InventoryPage):
-
+    
     MAX_UPGRADE_DOTS = 5
-    EXCLUDED_SKILLS = [InventoryType.CannonGrappleHook]
+    EXCLUDED_SKILLS = [
+     InventoryType.CannonGrappleHook]
     notify = DirectNotifyGlobal.directNotify.newCategory('SkillPage')
     SkillIcons = None
     WeaponIcons = None
@@ -32,14 +32,10 @@ class SkillPage(InventoryPage.InventoryPage):
 
     def __init__(self):
         if not SkillPage.SkillIcons:
-            SkillPage.SkillIcons = loader.loadModel(
-                'models/textureCards/skillIcons')
-            SkillPage.WeaponIcons = loader.loadModel(
-                'models/textureCards/weapon_icons')
-            SkillPage.DotTex = SkillPage.SkillIcons.find(
-                '**/skill_tree_level_dot')
-            SkillPage.FrameTex = SkillPage.SkillIcons.find(
-                '**/skill_tree_level_ring')
+            SkillPage.SkillIcons = loader.loadModel('models/textureCards/skillIcons')
+            SkillPage.WeaponIcons = loader.loadModel('models/textureCards/weapon_icons')
+            SkillPage.DotTex = SkillPage.SkillIcons.find('**/skill_tree_level_dot')
+            SkillPage.FrameTex = SkillPage.SkillIcons.find('**/skill_tree_level_ring')
         InventoryPage.InventoryPage.__init__(self)
         self.initialiseoptions(SkillPage)
         self.tabBar = None
@@ -59,8 +55,7 @@ class SkillPage(InventoryPage.InventoryPage):
         ornament.setPos(0.54, 0, 0.72)
         ornament.flattenStrong()
         ornament.reparentTo(self)
-        self.box = box = loader.loadModel('models/gui/gui_title_box').find(
-            '**/gui_title_box_top')
+        self.box = box = loader.loadModel('models/gui/gui_title_box').find('**/gui_title_box_top')
         box.setPos(0.55, 0, 1.26)
         box.setScale(0.325, 0.0, 0.25)
         box.reparentTo(ornament)
@@ -68,15 +63,12 @@ class SkillPage(InventoryPage.InventoryPage):
         self.repMeter = ReputationMeter(self.getRep(), width=0.7)
         self.repMeter.reparentTo(self)
         self.repMeter.setPos(0.55, 0, 1.24)
-        self.unspent = DirectLabel(
-            parent=self,
-            relief=None,
-            text=PLocalizer.SkillPageUnspentPoints % 0,
-            text_scale=0.04,
-            text_align=TextNode.ACenter,
-            text_pos=(0, -0.01),
-            text_fg=(1, 1, 1, 1),
-            pos=(0.8, 0, 0.02))
+        self.unspent = DirectLabel(parent=self, relief=None, text=PLocalizer.SkillPageUnspentPoints % 0, text_scale=0.04, text_align=TextNode.ACenter, text_pos=(0, -0.01), text_fg=(1,
+                                                                                                                                                                                     1,
+                                                                                                                                                                                     1,
+                                                                                                                                                                                     1), pos=(0.8,
+                                                                                                                                                                                              0,
+                                                                                                                                                                                              0.02))
         return
 
     def destroy(self):
@@ -97,7 +89,8 @@ class SkillPage(InventoryPage.InventoryPage):
         return
 
     def createTabs(self):
-        repIds = [InventoryType.CannonRep, InventoryType.SailingRep]
+        repIds = [
+         InventoryType.CannonRep, InventoryType.SailingRep]
         for weaponId in localAvatar.equippedWeapons:
             if weaponId:
                 repIds.append(WeaponGlobals.getRepId(weaponId))
@@ -107,13 +100,7 @@ class SkillPage(InventoryPage.InventoryPage):
                 self.createTab(repId)
 
     def createTab(self, repId):
-        newTab = self.tabBar.addTab(
-            str(repId),
-            frameSize=(-0.12, 0.12, -0.11, 0.11),
-            focusSize=(-0.12, 0.12, -0.12, 0.12),
-            heightFactor=0.55,
-            command=self.update,
-            extraArgs=[repId, 1])
+        newTab = self.tabBar.addTab(str(repId), frameSize=(-0.12, 0.12, -0.11, 0.11), focusSize=(-0.12, 0.12, -0.12, 0.12), heightFactor=0.55, command=self.update, extraArgs=[repId, 1])
         if repId == InventoryType.SailingRep:
             model = SkillPage.SkillIcons
         else:
@@ -121,14 +108,9 @@ class SkillPage(InventoryPage.InventoryPage):
         asset = ReputationGlobals.RepIcons.get(repId)
         image = model.find('**/%s' % asset)
         name = PLocalizer.InventoryTypeNames[repId]
-        newTab.nameTag = DirectLabel(
-            parent=newTab,
-            relief=None,
-            state=DGG.DISABLED,
-            image=image,
-            image_scale=0.1,
-            image_color=Vec4(0.8, 0.8, 0.8, 1),
-            pos=(0, 0, 0))
+        newTab.nameTag = DirectLabel(parent=newTab, relief=None, state=DGG.DISABLED, image=image, image_scale=0.1, image_color=Vec4(0.8, 0.8, 0.8, 1), pos=(0,
+                                                                                                                                                            0,
+                                                                                                                                                            0))
 
         def mouseOver(tab=newTab):
             tab.nameTag.setScale(1.1)
@@ -223,12 +205,8 @@ class SkillPage(InventoryPage.InventoryPage):
                 self.makeDots(skill, skillPts - 1)
             if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                 if not WeaponGlobals.canFreeUse(skill):
-                    self.skillFrames[skill].skillButton[
-                        'command'] = base.localAvatar.guiMgr.showNonPayer
-                    self.skillFrames[skill].skillButton['extraArgs'] = [
-                        'Restricted_Skill_' + WeaponGlobals.getSkillName(skill),
-                        5
-                    ]
+                    self.skillFrames[skill].skillButton['command'] = base.localAvatar.guiMgr.showNonPayer
+                    self.skillFrames[skill].skillButton['extraArgs'] = ['Restricted_Skill_' + WeaponGlobals.getSkillName(skill), 5]
             count += 1
 
         count = 0
@@ -252,12 +230,8 @@ class SkillPage(InventoryPage.InventoryPage):
                 self.makeDots(skill, skillPts - 1)
             if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                 if not WeaponGlobals.canFreeUse(skill):
-                    self.skillFrames[skill].skillButton[
-                        'command'] = base.localAvatar.guiMgr.showNonPayer
-                    self.skillFrames[skill].skillButton['extraArgs'] = [
-                        'Restricted_Skill_' + WeaponGlobals.getSkillName(skill),
-                        5
-                    ]
+                    self.skillFrames[skill].skillButton['command'] = base.localAvatar.guiMgr.showNonPayer
+                    self.skillFrames[skill].skillButton['extraArgs'] = ['Restricted_Skill_' + WeaponGlobals.getSkillName(skill), 5]
             ammo = self.getAmmo(skill)
             if ammo != None and showIcon:
                 self.skillFrames[skill].showQuantity = True
@@ -282,12 +256,8 @@ class SkillPage(InventoryPage.InventoryPage):
                 self.makeDots(skill, skillPts - 1)
             if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                 if not WeaponGlobals.canFreeUse(skill):
-                    self.skillFrames[skill].skillButton[
-                        'command'] = base.localAvatar.guiMgr.showNonPayer
-                    self.skillFrames[skill].skillButton['extraArgs'] = [
-                        'Restricted_Skill_' + WeaponGlobals.getSkillName(skill),
-                        5
-                    ]
+                    self.skillFrames[skill].skillButton['command'] = base.localAvatar.guiMgr.showNonPayer
+                    self.skillFrames[skill].skillButton['extraArgs'] = ['Restricted_Skill_' + WeaponGlobals.getSkillName(skill), 5]
             count += 1
 
         self.dataChanged = False
@@ -312,11 +282,7 @@ class SkillPage(InventoryPage.InventoryPage):
                     self.dots[skillId][i].show()
             else:
                 if skillId in self.skillFrames:
-                    self.dots[skillId][i] = DirectFrame(
-                        parent=self.skillFrames[skillId],
-                        relief=None,
-                        image=SkillPage.FrameTex,
-                        image_scale=0.029)
+                    self.dots[skillId][i] = DirectFrame(parent=self.skillFrames[skillId], relief=None, image=SkillPage.FrameTex, image_scale=0.029)
                     if i == 0:
                         self.dots[skillId][i].setPos(-0.0736, 0, 0.0)
                     else:
@@ -324,27 +290,20 @@ class SkillPage(InventoryPage.InventoryPage):
                             self.dots[skillId][i].setPos(-0.0637, 0, -0.0368)
                         else:
                             if i == 2:
-                                self.dots[skillId][i].setPos(
-                                    -0.0368, 0, -0.0637)
+                                self.dots[skillId][i].setPos(-0.0368, 0, -0.0637)
                             else:
                                 if i == 3:
-                                    self.dots[skillId][i].setPos(
-                                        0.0, 0, -0.0736)
+                                    self.dots[skillId][i].setPos(0.0, 0, -0.0736)
                                 else:
                                     if i == 4:
-                                        self.dots[skillId][i].setPos(
-                                            0.0368, 0, -0.0637)
+                                        self.dots[skillId][i].setPos(0.0368, 0, -0.0637)
                     self.dots[skillId][i].setColorScale(1, 1, 1, 0.7)
             dotNum = i + self.MAX_UPGRADE_DOTS
             if i < points:
                 if dotNum in self.dots[skillId]:
                     self.dots[skillId][dotNum].show()
                 else:
-                    self.dots[skillId][dotNum] = DirectFrame(
-                        parent=self.dots[skillId][i],
-                        relief=None,
-                        image=SkillPage.DotTex,
-                        image_scale=0.02)
+                    self.dots[skillId][dotNum] = DirectFrame(parent=self.dots[skillId][i], relief=None, image=SkillPage.DotTex, image_scale=0.02)
                     self.dots[skillId][dotNum].setColorScaleOff()
             elif dotNum in self.dots[skillId]:
                 self.dots[skillId][dotNum].hide()
@@ -376,7 +335,7 @@ class SkillPage(InventoryPage.InventoryPage):
             if skillId in self.localMods:
                 curAmt = self.localMods[skillId]
             if curAmt > 5:
-                pass  #return
+                pass#return
             else:
                 curAmt += 1
         else:
@@ -393,8 +352,7 @@ class SkillPage(InventoryPage.InventoryPage):
             #    return
 
             playerExp = inv.getAccumulator(self.currentRep)
-            categoryLevel, extra = ReputationGlobals.getLevelFromTotalReputation(
-                self.currentRep, playerExp)
+            categoryLevel, extra = ReputationGlobals.getLevelFromTotalReputation(self.currentRep, playerExp)
             alreadySpent = categoryLevel - 1 - unSp
             #if alreadySpent > 5:
             #    self.spentDialog = PDialog.PDialog(text=PLocalizer.FreebooterSkillLock, style=OTPDialog.CancelOnly,
@@ -404,11 +362,13 @@ class SkillPage(InventoryPage.InventoryPage):
 
         if not base.config.GetBool('want-combo-skips', False):
             comboSkills = [
-                InventoryType.CutlassSlash, InventoryType.CutlassCleave,
-                InventoryType.CutlassFlourish, InventoryType.CutlassStab,
-                InventoryType.DaggerSwipe, InventoryType.DaggerGouge,
-                InventoryType.DaggerEviscerate
-            ]
+                InventoryType.CutlassSlash,
+                InventoryType.CutlassCleave,
+                InventoryType.CutlassFlourish,
+                InventoryType.CutlassStab,
+                InventoryType.DaggerSwipe,
+                InventoryType.DaggerGouge,
+                InventoryType.DaggerEviscerate]
 
             #if skillId in comboSkills and inv.getStackQuantity(skillId - 1) <= 1:
             #    base.localAvatar.guiMgr.createWarning(PLocalizer.ComboOrderWarn, PiratesGuiGlobals.TextFG6)
@@ -420,12 +380,7 @@ class SkillPage(InventoryPage.InventoryPage):
         self.localMods[unSpentId] = unSp - 1
         self.skillFrames[skillId].skillRank = curAmt - 1
 
-    def createFrame(self,
-                    skillId,
-                    skillPts,
-                    upgradeMode=0,
-                    freeLock=False,
-                    showIcon=True):
+    def createFrame(self, skillId, skillPts, upgradeMode=0, freeLock=False, showIcon=True):
         skillRank = max(0, skillPts - 1)
         if skillId in self.skillFrames:
             button = self.skillFrames[skillId]
@@ -435,14 +390,7 @@ class SkillPage(InventoryPage.InventoryPage):
             button.setShowLock(freeLock)
             button.show()
         else:
-            button = SkillButton(
-                skillId,
-                self.addPoint,
-                0,
-                skillRank,
-                showHelp=True,
-                showIcon=showIcon,
-                showLock=freeLock)
+            button = SkillButton(skillId, self.addPoint, 0, skillRank, showHelp=True, showIcon=showIcon, showLock=freeLock)
             showUpgrade = upgradeMode and showIcon
             button.setShowUpgrade(showUpgrade)
             button.reparentTo(self)
@@ -614,6 +562,4 @@ class SkillPage(InventoryPage.InventoryPage):
 
         if unSpentId in self.localMods:
             self.localMods[unSpentId] += extra
-
-
 # okay decompiling .\pirates\piratesgui\SkillPage.pyc

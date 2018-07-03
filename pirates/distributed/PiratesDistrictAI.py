@@ -2,7 +2,6 @@ from otp.distributed.DistributedDistrictAI import DistributedDistrictAI
 from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesbase import PiratesGlobals
 
-
 class PiratesDistrictAI(DistributedDistrictAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesDistrictAI')
 

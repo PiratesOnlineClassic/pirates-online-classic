@@ -126,7 +126,8 @@ class SCMenuHolder(SCElement):
     def getMinDimensions(self):
         width, height = SCElement.getMinDimensions(self)
         width += 1.0
-        return (width, height)
+        return (
+            width, height)
 
     def invalidate(self):
         SCElement.invalidate(self)
@@ -148,11 +149,8 @@ class SCMenuHolder(SCElement):
             frameColor = (r, g, b, a)
         else:
             frameColor = SCMenuHolder.DefaultFrameColor
-        args = {
-            'image': self.scArrow,
-            'image_pos': (self.width - 0.5, 0, -self.height * 0.5),
-            'frameColor': frameColor
-        }
+        args = {'image': self.scArrow, 'image_pos': (
+            self.width - 0.5, 0, -self.height * 0.5), 'frameColor': frameColor}
         args.update(dbArgs)
         SCElement.finalize(self, dbArgs=args)
         return
@@ -177,6 +175,4 @@ class SCMenuHolder(SCElement):
         if self.menu is not None:
             self.menu.finalizeAll()
         return
-
-
 # okay decompiling .\otp\speedchat\SCMenuHolder.pyc

@@ -37,13 +37,13 @@ screenShots = [
     'models/gui/loadingScreen_23',
     'models/gui/loadingScreen_24',
     'models/gui/loadingScreen_25',
-]
+    ]
 screenShots_Jungles = ['models/gui/loadingScreen_13']
 screenShots_Swamps = ['models/gui/loadingScreen_18']
-screenShots_Caves = [
-    'models/gui/loadingScreen_03', 'models/gui/loadingScreen_04',
-    'models/gui/loadingScreen_23', 'models/gui/loadingScreen_22'
-]
+screenShots_Caves = ['models/gui/loadingScreen_03',
+                     'models/gui/loadingScreen_04',
+                     'models/gui/loadingScreen_23',
+                     'models/gui/loadingScreen_22']
 areaType_Jungles = {
     '1161798288.34sdnaik': 0,
     '1164141722.61sdnaik': 1,
@@ -53,7 +53,7 @@ areaType_Jungles = {
     '1165009856.72sdnaik': 5,
     '1167857698.16sdnaik': 6,
     '1172209955.25sdnaik': 7,
-}
+    }
 areaType_Swamps = {'1169179552.88sdnaik': 0, '1161732578.06sdnaik': 1}
 areaType_Caves = {
     '1164952144.06sdnaik': 0,
@@ -63,13 +63,13 @@ areaType_Caves = {
     '1168057131.73sdnaik': 4,
     '1164929110.98sdnaik': 5,
     '1172208344.92sdnaik': 6,
-}
+    }
 screenShot_Dinghy = 'models/gui/loadingScreen_08'
 screenShot_Jail = 'models/gui/loadingScreen_12'
 screenShots_Locations = {
     '1164135492.81dzlu': ['models/gui/loadingScreen_01'],
-    '1156359855.24bbathen':
-    ['models/gui/loadingScreen_02', 'models/gui/loadingScreen_10'],
+    '1156359855.24bbathen': ['models/gui/loadingScreen_02',
+                             'models/gui/loadingScreen_10'],
     '1160614528.73sdnaik': ['models/gui/loadingScreen_05'],
     '1173382404.64sdnaik': ['models/gui/loadingScreen_06'],
     '1142018473.22dxschafe': ['models/gui/loadingScreen_07'],
@@ -84,7 +84,7 @@ screenShots_Locations = {
     '1172209006.11sdnaik': ['models/gui/loadingScreen_22'],
     '1196970035.53sdnaik': ['models/gui/loadingScreen_24'],
     '1196970080.56sdnaik': ['models/gui/loadingScreen_25'],
-}
+    }
 
 
 def getOceanHint():
@@ -102,7 +102,7 @@ def getOceanHint():
         'Leeward_Passage',
         'Boiling_Bay',
         'Mariners_Reef',
-    ]
+        ]
     ocean = random.choice(oceans)
     hints = PLocalizer.HintMap_Locations.get(ocean)
     if hints:
@@ -239,7 +239,7 @@ class LoadingScreen(DirectObject.DirectObject):
             text_align=TextNode.ACenter,
             text_pos=(0.0, -0.52),
             textMayChange=1,
-        )
+            )
         self.hintLabel = DirectLabel(
             parent=aspect2dp,
             relief=None,
@@ -252,7 +252,7 @@ class LoadingScreen(DirectObject.DirectObject):
             text_pos=(0.0, -0.8),
             text_wordwrap=30,
             textMayChange=1,
-        )
+            )
         self.wheel = self.model.find('**/red_wheel')
         self.title_art.append(self.model.find('**/title_bg'))
         self.title_art.append(self.model.find('**/title_frame'))
@@ -266,11 +266,9 @@ class LoadingScreen(DirectObject.DirectObject):
         else:
             if self.snapshot:
                 self.snapshot.show()
-        self.snapshotFrame = DirectFrame(
-            parent=aspect2dp,
-            relief=DGG.FLAT,
-            frameColor=(0.0, 0.0, 0.0, 1.0),
-            frameSize=(-2.0, 2.0, 2.0, -2.0))
+        self.snapshotFrame = DirectFrame(parent=aspect2dp,
+                relief=DGG.FLAT, frameColor=(0.0, 0.0, 0.0, 1.0),
+                frameSize=(-2.0, 2.0, 2.0, -2.0))
         self.snapshotFrame.setBin('fixed', 0)
         self.model.reparentTo(aspect2dp, NO_FADE_SORT_INDEX)
         self.locationLabel.reparentTo(aspect2dp, NO_FADE_SORT_INDEX)
@@ -349,11 +347,11 @@ class LoadingScreen(DirectObject.DirectObject):
         return
 
     def showTarget(
-            self,
-            targetId=None,
-            ocean=False,
-            jail=False,
-    ):
+        self,
+        targetId=None,
+        ocean=False,
+        jail=False,
+        ):
         if base.config.GetBool('no-loading-screen', 0):
             return
         if ocean:
@@ -364,11 +362,11 @@ class LoadingScreen(DirectObject.DirectObject):
             screenshot = screenShots_Locations.get(targetId)
 
         if not screenshot:
-            if targetId in areaType_Jungles:
+            if areaType_Jungles.has_key(targetId):
                 screenshot = random.choice(screenShots_Jungles)
-            elif targetId in areaType_Swamps:
+            elif areaType_Swamps.has_key(targetId):
                 screenshot = random.choice(screenShots_Swamps)
-            elif targetId in areaType_Caves:
+            elif areaType_Caves.has_key(targetId):
                 screenshot = random.choice(screenShots_Caves)
             else:
                 screenshot = random.choice(screenShots)

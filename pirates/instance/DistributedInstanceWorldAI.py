@@ -4,10 +4,8 @@ from pirates.world import WorldGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.world.DistributedOceanGridAI import DistributedOceanGridAI
 
-
 class DistributedInstanceWorldAI(DistributedInstanceBaseAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedInstanceWorldAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInstanceWorldAI')
 
     def __init__(self, air):
         DistributedInstanceBaseAI.__init__(self, air)
@@ -19,5 +17,4 @@ class DistributedInstanceWorldAI(DistributedInstanceBaseAI):
         DistributedInstanceBaseAI.generate(self)
 
         self.oceanGrid = DistributedOceanGridAI(self.air)
-        self.generateChildWithRequired(self.oceanGrid,
-                                       PiratesGlobals.IslandAvailableZoneStart)
+        self.generateChildWithRequired(self.oceanGrid, PiratesGlobals.IslandAvailableZoneStart)

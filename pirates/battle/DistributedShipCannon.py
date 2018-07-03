@@ -7,8 +7,7 @@ from panda3d.core import *
 from pirates.shipparts import CannonDNA, DistributedShippart
 
 
-class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon,
-                            DistributedShippart.DistributedShippart):
+class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, DistributedShippart.DistributedShippart):
 
     def __init__(self, cr):
         DistributedPCCannon.DistributedPCCannon.__init__(self, cr)
@@ -57,8 +56,7 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon,
         self.ship.cannons[self.cannonIndex] = [self.prop, self]
 
     def loadModel(self):
-        self.prop.cannonPost = self.ship.locators.find(
-            '**/cannon_%s;+s' % self.cannonIndex)
+        self.prop.cannonPost = self.ship.locators.find('**/cannon_%s;+s' % self.cannonIndex)
         self.prop.shipId = self.shipId
         self.prop.doId = self.doId
         self.prop.reparentTo(self)
@@ -79,8 +77,7 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon,
         def putCannonOnShip(ship, self=self):
             self.ship = ship
 
-        self.pendingPlaceCannon = base.cr.relatedObjectMgr.requestObjects(
-            [self.shipId], eachCallback=putCannonOnShip)
+        self.pendingPlaceCannon = base.cr.relatedObjectMgr.requestObjects([self.shipId], eachCallback=putCannonOnShip)
 
     def setGeomParentId(self, geomParentId):
         self.geomParentId = geomParentId
@@ -153,12 +150,9 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon,
         self.prop.propCollisions.setName('Cannon-%d' % self.doId)
         self.prop.propCollisions.reparentTo(self.ship.modelCollisions)
         self.prop.addToShip()
-        self.prop.propCollisions.setPos(
-            self.prop.cannonPost.getPos(self.ship.root))
-        self.prop.propCollisions.setHpr(
-            self.prop.cannonPost.getHpr(self.ship.root))
-        self.prop.propCollisions.setScale(
-            self.prop.cannonPost.getScale(self.ship.root))
+        self.prop.propCollisions.setPos(self.prop.cannonPost.getPos(self.ship.root))
+        self.prop.propCollisions.setHpr(self.prop.cannonPost.getHpr(self.ship.root))
+        self.prop.propCollisions.setScale(self.prop.cannonPost.getScale(self.ship.root))
         self.prop.geom_Low.setPos(cannonPost.getPos(self.ship.root))
         self.prop.geom_Medium.setPos(cannonPost.getPos(self.ship.root))
         self.prop.geom_High.setPos(cannonPost.getPos(self.ship.root))
@@ -172,10 +166,8 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon,
         self.prop.hNode.reparentTo(self.prop.cannonPost)
 
     def enterFireCannon(self):
-        self.ship.avCannonNode.setPos(
-            self.prop.cannonPost.getPos(self.ship.root))
-        self.ship.avCannonNode.setHpr(
-            self.prop.cannonPost.getHpr(self.ship.root))
+        self.ship.avCannonNode.setPos(self.prop.cannonPost.getPos(self.ship.root))
+        self.ship.avCannonNode.setHpr(self.prop.cannonPost.getHpr(self.ship.root))
         self.ship.avCannonRotate.setPos(0, 0, 4)
         self.ship.avCannonRotate.setHpr(0, 0, 0)
         self.ship.avCannonPivot.setPos(0, 6, 0)

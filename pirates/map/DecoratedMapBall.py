@@ -12,16 +12,7 @@ from pirates.quest.QuestConstants import LocationIds
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.world import WorldGlobals
 
-OceanAreaOffsets = {
-    'Brigand_Bay': [0, -1],
-    'Scurvy_Shallows': [0, 3],
-    'Blackheart_Strait': [0, 2],
-    'Salty_Flats': [0, -1],
-    'Dead_Mans_Trough': [0, 1],
-    'Smugglers_Run': [0, 0.5],
-    'Bloody_Bayou': [0, -1.5]
-}
-
+OceanAreaOffsets = {'Brigand_Bay': [0, -1], 'Scurvy_Shallows': [0, 3], 'Blackheart_Strait': [0, 2], 'Salty_Flats': [0, -1], 'Dead_Mans_Trough': [0, 1], 'Smugglers_Run': [0, 0.5], 'Bloody_Bayou': [0, -1.5]}
 
 class DecoratedMapBall(MapBall):
     notify = directNotify.newCategory('DecoratedMapBall')
@@ -65,8 +56,7 @@ class DecoratedMapBall(MapBall):
         self.stopPickTask()
 
     def getFramePoint(self, mapBallPt):
-        return self._transCamSpaceToHomogenousFramePt(
-            self.cam.getRelativePoint(self, Point3(0)))
+        return self._transCamSpaceToHomogenousFramePt(self.cam.getRelativePoint(self, Point3(0)))
 
     def _mouseDown(self):
         self.startClickCheckTask()
@@ -102,8 +92,7 @@ class DecoratedMapBall(MapBall):
                 if launcher.canLeaveFirstIsland():
                     base.cr.teleportMgr.requestTeleportToIsland(islandUid)
                 else:
-                    localAvatar.guiMgr.showDownloadBlocker(
-                        DownloadBlockerPanel.Reasons.TELEPORT)
+                    localAvatar.guiMgr.showDownloadBlocker(DownloadBlockerPanel.Reasons.TELEPORT)
             dartName = item.getNetTag('dart')
             dart = self.placedItems.get(dartName)
             if dartName and dart:
@@ -151,10 +140,8 @@ class DecoratedMapBall(MapBall):
                 task.activeDart = None
             if not task.activeDart and dart:
                 p = Point2()
-                self.camLens.project(
-                    self.cam.getRelativePoint(dart, Point3(0, 0, 0)), p)
-                pos = aspect2d.getRelativePoint(self.worldMap,
-                                                Point3(p[0], 0, p[1]))
+                self.camLens.project(self.cam.getRelativePoint(dart, Point3(0, 0, 0)), p)
+                pos = aspect2d.getRelativePoint(self.worldMap, Point3(p[0], 0, p[1]))
                 dart.mouseOver(pos)
                 task.activeDart = dart
         return task.cont
@@ -171,8 +158,7 @@ class DecoratedMapBall(MapBall):
 
     def overIsland(self, island):
         p = Point2()
-        self.camLens.project(
-            self.cam.getRelativePoint(island, Point3(0, 0, 0)), p)
+        self.camLens.project(self.cam.getRelativePoint(island, Point3(0, 0, 0)), p)
         pos = aspect2d.getRelativePoint(self.worldMap, Point3(p[0], 0, p[1]))
         island.mouseOver(pos)
 
@@ -180,10 +166,7 @@ class DecoratedMapBall(MapBall):
         island.mouseLeft()
 
     def initGlobalStencil(self):
-        globalStencilAttrib = StencilAttrib.make(
-            1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep,
-            StencilAttrib.SOKeep, StencilAttrib.SOReplace, 255, 4294967295,
-            4294967295)
+        globalStencilAttrib = StencilAttrib.make(1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOReplace, 255, 4294967295L, 4294967295L)
 
     def addAndPlaceItem(self, name, info):
         self.setItemInfo(name, info)
@@ -297,10 +280,10 @@ class DecoratedMapBall(MapBall):
                 angle = angle * 180 / math.pi
                 dart.setEdgeMode(True)
                 dart.edgeModeNode.setR(angle)
-                absFramePos = (abs(framePos[0]), abs(framePos[1]))
+                absFramePos = (
+                 abs(framePos[0]), abs(framePos[1]))
                 markerFramePos = framePos / max(absFramePos)
-                dart.edgeModeNode.setPos(markerFramePos[0], 0,
-                                         markerFramePos[1])
+                dart.edgeModeNode.setPos(markerFramePos[0], 0, markerFramePos[1])
 
         return task.cont
 
@@ -309,11 +292,7 @@ class DecoratedMapBall(MapBall):
 
     def updateTextZoom(self, zoom):
         for item in self.placedItems.values():
-            if isinstance(
-                    item, DecorClasses[DecorTypes.TextIsland]) or isinstance(
-                        item,
-                        DecorClasses[DecorTypes.OceanAreaText]) or isinstance(
-                            item, DecorClasses[DecorTypes.Ship]):
+            if isinstance(item, DecorClasses[DecorTypes.TextIsland]) or isinstance(item, DecorClasses[DecorTypes.OceanAreaText]) or isinstance(item, DecorClasses[DecorTypes.Ship]):
                 item.updateZoom(zoom)
 
     def updateTeleportIsland(self, teleportToken):
@@ -321,8 +300,7 @@ class DecoratedMapBall(MapBall):
         islandUid = InventoryType.getIslandUidFromTeleportToken(teleportToken)
         island = self.getIsland(islandUid)
         if island and teleportToken:
-            island.setHasTeleportToken(
-                localAvatar.hasIslandTeleportToken(islandUid))
+            island.setHasTeleportToken(localAvatar.hasIslandTeleportToken(islandUid))
 
     def setReturnIsland(self, islandUid):
         for item in self.placedItems.itervalues():
@@ -384,12 +362,9 @@ class DecoratedMapBall(MapBall):
     def placeOceanArea(self, name, areaUid, pos1, pos2):
         worldPos = (pos1 + pos2) / 2.0
         if OceanAreaOffsets.get(name):
-            worldPos.setY(worldPos.getY() + OceanAreaOffsets[name][1] *
-                          WorldGlobals.OCEAN_CELL_SIZE)
-        info = (DecorTypes.OceanAreaText, (name, areaUid), {
-            'pos': worldPos,
-            'rot': 0
-        })
+            worldPos.setY(worldPos.getY() + OceanAreaOffsets[name][1] * WorldGlobals.OCEAN_CELL_SIZE)
+        info = (
+         DecorTypes.OceanAreaText, (name, areaUid), {'pos': worldPos, 'rot': 0})
         self.addAndPlaceItem(name, info)
 
     def getShipId(self, shipDoId):
@@ -422,22 +397,12 @@ class DecoratedMapBall(MapBall):
     def placeIsland(self, name, islandUid, modelPath, worldPos, rotation):
         scale = 25.0
         if not name:
-            name = 'island-' + repr( (self.itemCounter))
-            info = (DecorTypes.Island, (name, islandUid, modelPath, False,
-                                        scale), {
-                                            'pos': worldPos,
-                                            'rot': rotation
-                                        })
+            name = 'island-' + `(self.itemCounter)`
+            info = (DecorTypes.Island, (name, islandUid, modelPath, False, scale), {'pos': worldPos, 'rot': rotation})
         else:
-            isTeleportable = islandUid != LocationIds.KINGSHEAD_ISLAND and (
-                bool(InventoryType.getIslandTeleportToken(islandUid)) or base.
-                cr.distributedDistrict.worldCreator.isPvpIslandByUid(islandUid))
-            info = (DecorTypes.TextIsland,
-                    (name, islandUid, modelPath, isTeleportable, self.cam,
-                     0.001, scale), {
-                         'pos': worldPos,
-                         'rot': rotation
-                     })
+            isTeleportable = islandUid != LocationIds.KINGSHEAD_ISLAND and (bool(InventoryType.getIslandTeleportToken(islandUid)) or base.cr.distributedDistrict.worldCreator.isPvpIslandByUid(islandUid))
+            info = (
+             DecorTypes.TextIsland, (name, islandUid, modelPath, isTeleportable, self.cam, 0.001, scale), {'pos': worldPos, 'rot': rotation})
         self.addAndPlaceItem(name, info)
         self.placedIslands[islandUid] = self.placedItems[name]
         return name
@@ -462,10 +427,7 @@ class DecoratedMapBall(MapBall):
 
     def placeDart(self, id, worldPos, color=Vec4(0.2, 1, 0.6, 1.0)):
         name = 'dart-' + str(id)
-        info = (DecorTypes.Dart, (name, self, self.mapPosToSpherePt(worldPos),
-                                  color, 0.001), {
-                                      'pos': worldPos
-                                  })
+        info = (DecorTypes.Dart, (name, self, self.mapPosToSpherePt(worldPos), color, 0.001), {'pos': worldPos})
         self.addAndPlaceItem(name, info)
         self.questDartPlaced = True
         self.questDartName = name
@@ -499,99 +461,8 @@ class DecoratedMapBall(MapBall):
 
     def setDecorInfo(self):
         if __dev__ and 0:
-            self.decorInfo = {
-                'BilgeWater':
-                (DecorTypes.TextIsland,
-                 ('BilgeWater', 'models/worldmap/world_map_island_3d', self.cam,
-                  0.001, 1.0, 1), {
-                      'pos': Point2(-0.1, -0.1) * 20000
-                  }),
-                'Tortuga': (DecorTypes.TextIsland,
-                            ('Tortuga', 'models/worldmap/world_map_island_3d',
-                             self.cam, 0.001, 1.0, 2), {
-                                 'pos': Point2(0.2, 0.2) * 20000
-                             }),
-                'swirl': (DecorTypes.Swirl, ('models/worldmap/swirl', 1.0, 2), {
-                    'pos': Point2(0.0, 0.0) * 20000
-                }),
-                'ship': (DecorTypes.BillboardModel,
-                         ('ship', 'models/worldmap/world_map_ship', self.cam,
-                          0.0, 1.0 / 80), {
-                              'pos': Point2(0.2, 0.0) * 20000
-                          }),
-                'monster': (DecorTypes.BillboardModel,
-                            ('monster', 'models/worldmap/world_map_monster01',
-                             self.cam, 0.001, 1.0 / 200), {
-                                 'pos': Point2(0.0, 0.1) * 20000
-                             }),
-                'BilgeWater2': (DecorTypes.TextIsland,
-                                ('BilgeWater2',
-                                 'models/worldmap/world_map_island_3d',
-                                 self.cam, 0.001, 1.0, 1), {
-                                     'pos': Point2(0.25, -0.15) * 20000
-                                 }),
-                'Tortuga2': (DecorTypes.TextIsland,
-                             ('Tortuga2', 'models/worldmap/world_map_island_3d',
-                              self.cam, 0.001, 1.0, 2), {
-                                  'pos': Point2(-0.4, -0.4) * 20000
-                              }),
-                'BilgeWater3': (DecorTypes.TextIsland,
-                                ('BilgeWater3',
-                                 'models/worldmap/world_map_island_3d',
-                                 self.cam, 0.001, 1.0, 1), {
-                                     'pos': Point2(0.15, -0.25) * 20000
-                                 }),
-                'Tortuga3': (DecorTypes.TextIsland,
-                             ('Tortuga3', 'models/worldmap/world_map_island_3d',
-                              self.cam, 0.001, 1.0, 2), {
-                                  'pos': Point2(0.2, -0.15) * 20000
-                              }),
-                'BilgeWater3': (DecorTypes.TextIsland,
-                                ('BilgeWater3',
-                                 'models/worldmap/world_map_island_3d',
-                                 self.cam, 0.001, 1.0, 1), {
-                                     'pos': Point2(-0.3, 0.1) * 20000
-                                 }),
-                'Tortuga3': (DecorTypes.TextIsland,
-                             ('Tortuga3', 'models/worldmap/world_map_island_3d',
-                              self.cam, 0.001, 1.0, 2), {
-                                  'pos': Point2(0.3, 0.25) * 20000
-                              }),
-                'BilgeWater4': (DecorTypes.TextIsland,
-                                ('BilgeWater4',
-                                 'models/worldmap/world_map_island_3d',
-                                 self.cam, 0.001, 1.5, 1), {
-                                     'pos': Point2(-0.1, 0.3) * 20000
-                                 }),
-                'Tortuga4': (DecorTypes.TextIsland,
-                             ('Tortuga4', 'models/worldmap/world_map_island_3d',
-                              self.cam, 0.001, 1.0, 2), {
-                                  'pos': Point2(0.4, 0.4) * 20000
-                              }),
-                'BilgeWater5': (DecorTypes.TextIsland,
-                                ('BilgeWater4',
-                                 'models/worldmap/world_map_island_3d',
-                                 self.cam, 0.001, 1.0, 1), {
-                                     'pos': Point2(0.4, -0.4) * 20000
-                                 }),
-                'Tortuga5': (DecorTypes.TextIsland,
-                             ('Tortuga4', 'models/worldmap/world_map_island_3d',
-                              self.cam, 0.001, 1.0, 2), {
-                                  'pos': Point2(-0.4, 0.4) * 20000
-                              })
-            }
-            self.decorInfo = {
-                'BilgeWater':
-                (DecorTypes.TextIsland,
-                 ('BilgeWater', 'models/worldmap/world_map_island_3d', self.cam,
-                  0.001, 1.0, 1), {
-                      'pos': Point2(-0.1, -0.1) * 20000
-                  }),
-                'smiley': (DecorTypes.Model, ('smiley', 'models/misc/smiley',
-                                              0.005), {
-                                                  'pos': Point2(0)
-                                              })
-            }
+            self.decorInfo = {'BilgeWater': (DecorTypes.TextIsland, ('BilgeWater', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.0, 1), {'pos': Point2(-0.1, -0.1) * 20000}), 'Tortuga': (DecorTypes.TextIsland, ('Tortuga', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.0, 2), {'pos': Point2(0.2, 0.2) * 20000}), 'swirl': (DecorTypes.Swirl, ('models/worldmap/swirl', 1.0, 2), {'pos': Point2(0.0, 0.0) * 20000}), 'ship': (DecorTypes.BillboardModel, ('ship', 'models/worldmap/world_map_ship', self.cam, 0.0, 1.0 / 80), {'pos': Point2(0.2, 0.0) * 20000}), 'monster': (DecorTypes.BillboardModel, ('monster', 'models/worldmap/world_map_monster01', self.cam, 0.001, 1.0 / 200), {'pos': Point2(0.0, 0.1) * 20000}), 'BilgeWater2': (DecorTypes.TextIsland, ('BilgeWater2', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.0, 1), {'pos': Point2(0.25, -0.15) * 20000}), 'Tortuga2': (DecorTypes.TextIsland, ('Tortuga2', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.0, 2), {'pos': Point2(-0.4, -0.4) * 20000}), 'BilgeWater3': (DecorTypes.TextIsland, ('BilgeWater3', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.0, 1), {'pos': Point2(0.15, -0.25) * 20000}), 'Tortuga3': (DecorTypes.TextIsland, ('Tortuga3', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.0, 2), {'pos': Point2(0.2, -0.15) * 20000}), 'BilgeWater3': (DecorTypes.TextIsland, ('BilgeWater3', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.0, 1), {'pos': Point2(-0.3, 0.1) * 20000}), 'Tortuga3': (DecorTypes.TextIsland, ('Tortuga3', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.0, 2), {'pos': Point2(0.3, 0.25) * 20000}), 'BilgeWater4': (DecorTypes.TextIsland, ('BilgeWater4', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.5, 1), {'pos': Point2(-0.1, 0.3) * 20000}), 'Tortuga4': (DecorTypes.TextIsland, ('Tortuga4', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.0, 2), {'pos': Point2(0.4, 0.4) * 20000}), 'BilgeWater5': (DecorTypes.TextIsland, ('BilgeWater4', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.0, 1), {'pos': Point2(0.4, -0.4) * 20000}), 'Tortuga5': (DecorTypes.TextIsland, ('Tortuga4', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.0, 2), {'pos': Point2(-0.4, 0.4) * 20000})}
+            self.decorInfo = {'BilgeWater': (DecorTypes.TextIsland, ('BilgeWater', 'models/worldmap/world_map_island_3d', self.cam, 0.001, 1.0, 1), {'pos': Point2(-0.1, -0.1) * 20000}), 'smiley': (DecorTypes.Model, ('smiley', 'models/misc/smiley', 0.005), {'pos': Point2(0)})}
         else:
             self.decorInfo = {}
 

@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class HealSparks(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -59,9 +59,7 @@ class HealSparks(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
-                                           ColorBlendAttrib.OIncomingAlpha,
-                                           ColorBlendAttrib.OOne)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(0.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -75,18 +73,14 @@ class HealSparks(PooledEffect, EffectController):
         self.p0.renderer.setFinalXScale(0.004 * self.cardScale)
         self.p0.renderer.setInitialYScale(0.001 * self.cardScale)
         self.p0.renderer.setFinalYScale(0.005 * self.cardScale)
-        self.startEffect = Sequence(
-            Wait(delay), Func(self.p0.clearToInitial), Func(self.p0.softStart),
-            Func(self.f.start, self, self))
-        self.endEffect = Sequence(
-            Func(self.p0.softStop), Wait(2.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Wait(delay), Func(self.p0.clearToInitial), Func(self.p0.softStart), Func(self.f.start, self, self))
+        self.endEffect = Sequence(Func(self.p0.softStop), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(3.0), self.endEffect)
 
     def setEffectColor(self, color):
         self.effectColor = color
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, self.effectColor * 2.0, self.effectColor, 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, self.effectColor * 2.0, self.effectColor, 1)
 
     def play(self, delay=0.0):
         self.createTrack(delay)
@@ -102,6 +96,4 @@ class HealSparks(PooledEffect, EffectController):
         PooledEffect.destroy(self)
         self.adjustIval = None
         return
-
-
 # okay decompiling .\pirates\effects\HealSparks.pyc

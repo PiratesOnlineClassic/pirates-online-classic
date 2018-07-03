@@ -40,8 +40,7 @@ def getPaidStatusAI(playerID):
     if playerOb:
         if AllAccessHoliday:
             return FULL
-        return hasattr(playerOb,
-                       'getGameAccess') and playerOb.getGameAccess() == FULL
+        return hasattr(playerOb, 'getGameAccess') and playerOb.getGameAccess() == FULL
     else:
         return NONE
 
@@ -50,8 +49,7 @@ def pruneFreebooterSkills(skillTrack):
     if getPaidStatus(base.localAvatar.getDoId()):
         return skillTrack
     else:
-        return filter(lambda skillId: WeaponGlobals.canFreeUse(skillId),
-                      skillTrack)
+        return filter(lambda skillId: WeaponGlobals.canFreeUse(skillId), skillTrack)
 
 
 def allowedFreebooterWeapon(repId):

@@ -15,7 +15,7 @@ from pirates.ship import ShipGlobals
 
 
 class ShipShoppingPanel(ShipSelectionPanel):
-
+    
     notify = directNotify.newCategory('ShipShoppingPanel')
 
     def __init__(self, title, doneCallback, mode):
@@ -56,21 +56,11 @@ class ShipShoppingPanel(ShipSelectionPanel):
         shipOV = base.cr.getOwnerView(shipId)
         if not shipOV:
             return
-        shipFrame = ShipFrameShopping(
-            parent=self.scrollFrame.getCanvas(),
-            relief=None,
-            shipId=shipId,
-            shipName=shipOV.name,
-            shipClass=shipOV.shipClass,
-            mode=self.mode,
-            command=callback,
-            extraArgs=[shipId])
+        shipFrame = ShipFrameShopping(parent=self.scrollFrame.getCanvas(), relief=None, shipId=shipId, shipName=shipOV.name, shipClass=shipOV.shipClass, mode=self.mode, command=callback, extraArgs=[shipId])
         if repaired:
             shipOV.setHp(shipOV.maxHp)
             shipOV.setSp(shipOV.maxSp)
         shipFrame.enableStatsOV(shipOV)
         self.addFrame(shipFrame, index)
         return
-
-
 # okay decompiling .\pirates\piratesgui\ShipShoppingPanel.pyc

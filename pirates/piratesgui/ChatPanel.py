@@ -18,7 +18,7 @@ from pirates.piratesgui.ChatBar import ChatBar
 
 
 class ChatPanel(DirectFrame, FSM):
-
+    
     NumVisible = 10
     WrapWidth = 21
     FadeTime = 0.3
@@ -26,10 +26,8 @@ class ChatPanel(DirectFrame, FSM):
     TextFadeTime = 5
 
     def __init__(self, chatManager, chatEntry, whiteListEntry, speedEntry):
-        optiondefs = (('relief', None, None), ('state', DGG.NORMAL,
-                                               self.setState),
-                      ('frameSize', (0, 0.9, 0, 0.6),
-                       None), ('frameColor', (1, 0, 1, 0.2), None))
+        optiondefs = (
+         ('relief', None, None), ('state', DGG.NORMAL, self.setState), ('frameSize', (0, 0.9, 0, 0.6), None), ('frameColor', (1, 0, 1, 0.2), None))
         self.defineoptions({}, optiondefs)
         DirectFrame.__init__(self, parent=base.a2dBottomLeft)
         self.initialiseoptions(ChatPanel)
@@ -46,11 +44,7 @@ class ChatPanel(DirectFrame, FSM):
         self.fadeTextIval = None
         self.preferredMode = 'Short'
         self.setupGui()
-        self.chatBar = ChatBar(
-            parent=self,
-            chatMgr=chatManager,
-            chatEntry=chatEntry,
-            whiteListEntry=whiteListEntry)
+        self.chatBar = ChatBar(parent=self, chatMgr=chatManager, chatEntry=chatEntry, whiteListEntry=whiteListEntry)
         self.checkEmotes()
         self.accept('NewOpenMessage', self.__handleOpenMessage)
         return
@@ -93,33 +87,24 @@ class ChatPanel(DirectFrame, FSM):
         guib.find('**/pPlane31').copyTo(buttonGeom)
         guib.find('**/pPlane32').copyTo(buttonGeom)
         buttonGeom.flattenStrong()
-        self.sCloseButton = DirectButton(
-            parent=self.shortBorder,
-            relief=None,
-            frameColor=(1, 1, 1, 1),
-            pad=(-0.02, -0.02),
-            borderWidth=(0, 0),
-            geom=buttonGeom,
-            pos=(0.5, 0, 0.225),
-            scale=0.2,
-            rolloverSound=None,
-            command=self.chatManager.deactivateChat)
+        self.sCloseButton = DirectButton(parent=self.shortBorder, relief=None, frameColor=(1,
+                                                                                           1,
+                                                                                           1,
+                                                                                           1), pad=(-0.02, -0.02), borderWidth=(0,
+                                                                                                                                0), geom=buttonGeom, pos=(0.5,
+                                                                                                                                                          0,
+                                                                                                                                                          0.225), scale=0.2, rolloverSound=None, command=self.chatManager.deactivateChat)
         buttonGeom = NodePath('Max')
         guib.find('**/pPlane22').copyTo(buttonGeom)
         guib.find('**/pPlane23').copyTo(buttonGeom)
         buttonGeom.flattenStrong()
-        self.maxButton = DirectButton(
-            parent=self.shortBorder,
-            relief=None,
-            frameColor=(1, 1, 1, 1),
-            pad=(-0.02, -0.02),
-            borderWidth=(0, 0),
-            geom=buttonGeom,
-            pos=(0.5, 0, 0.225),
-            scale=0.2,
-            rolloverSound=None,
-            command=self.request,
-            extraArgs=['Tall'])
+        self.maxButton = DirectButton(parent=self.shortBorder, relief=None, frameColor=(1,
+                                                                                        1,
+                                                                                        1,
+                                                                                        1), pad=(-0.02, -0.02), borderWidth=(0,
+                                                                                                                             0), geom=buttonGeom, pos=(0.5,
+                                                                                                                                                       0,
+                                                                                                                                                       0.225), scale=0.2, rolloverSound=None, command=self.request, extraArgs=['Tall'])
         cm.setName('tallBg')
         cm.setFrame(0.005, 0.895, 0.09, 1.36)
         self.tallBg = self.hideNode.attachNewNode(cm.generate())
@@ -141,33 +126,24 @@ class ChatPanel(DirectFrame, FSM):
         guic.find('**/pPlane31').copyTo(buttonGeom)
         guic.find('**/pPlane32').copyTo(buttonGeom)
         buttonGeom.flattenStrong()
-        self.tCloseButton = DirectButton(
-            parent=self.tallBorder,
-            relief=None,
-            frameColor=(1, 1, 1, 1),
-            pad=(-0.02, -0.02),
-            borderWidth=(0, 0),
-            geom=buttonGeom,
-            pos=(0.5, 0, 0.375),
-            scale=0.2,
-            rolloverSound=None,
-            command=self.chatManager.deactivateChat)
+        self.tCloseButton = DirectButton(parent=self.tallBorder, relief=None, frameColor=(1,
+                                                                                          1,
+                                                                                          1,
+                                                                                          1), pad=(-0.02, -0.02), borderWidth=(0,
+                                                                                                                               0), geom=buttonGeom, pos=(0.5,
+                                                                                                                                                         0,
+                                                                                                                                                         0.375), scale=0.2, rolloverSound=None, command=self.chatManager.deactivateChat)
         buttonGeom = NodePath('Min')
         guic.find('**/pPlane28').copyTo(buttonGeom)
         guic.find('**/pPlane29').copyTo(buttonGeom)
         buttonGeom.flattenStrong()
-        self.minButton = DirectButton(
-            parent=self.tallBorder,
-            relief=None,
-            frameColor=(1, 1, 1, 1),
-            pad=(-0.02, -0.02),
-            borderWidth=(0, 0),
-            geom=buttonGeom,
-            pos=(0.548, 0, 0.375),
-            scale=0.2,
-            rolloverSound=None,
-            command=self.request,
-            extraArgs=['Short'])
+        self.minButton = DirectButton(parent=self.tallBorder, relief=None, frameColor=(1,
+                                                                                       1,
+                                                                                       1,
+                                                                                       1), pad=(-0.02, -0.02), borderWidth=(0,
+                                                                                                                            0), geom=buttonGeom, pos=(0.548,
+                                                                                                                                                      0,
+                                                                                                                                                      0.375), scale=0.2, rolloverSound=None, command=self.request, extraArgs=['Short'])
         self.chatTextRender = TextNode('chatTextRender')
         self.chatTextRender.setFont(PiratesGlobals.getInterfaceFont())
         self.chatTextRender.setShadowColor(0, 0, 0, 0.8)
@@ -176,44 +152,21 @@ class ChatPanel(DirectFrame, FSM):
         self.chatDisplayNP.setScale(0.035)
         self.chatDisplayNP.setColorScale(1, 1, 1, 1)
         self.chatDisplayNP.showThrough()
-        self.slider = DirectScrollBar(
-            parent=self,
-            relief=None,
-            manageButtons=0,
-            resizeThumb=0,
-            frameSize=(-0.1, 0.1, -0.08, 0.08),
-            image=charGui.find('**/chargui_slider_small'),
-            image_scale=(0.18, 0.035, 0.07),
-            image_hpr=(0, 0, 90),
-            thumb_image=(charGui.find('**/chargui_slider_node'),
-                         charGui.find('**/chargui_slider_node_down'),
-                         charGui.find('**/chargui_slider_node_over')),
-            thumb_image_scale=0.06,
-            thumb_relief=None,
-            decButton_pos=Vec3(0, 0, -0.0825),
-            decButton_image=(tGui.find('**/triangle'),
-                             tGui.find('**/triangle_down'),
-                             tGui.find('**/triangle_over')),
-            decButton_image_hpr=(0, 0, 90),
-            decButton_scale=(0.08, 1.0, 0.125),
-            decButton_image_scale=0.06,
-            decButton_relief=None,
-            incButton_pos=Vec3(0.00025, 0, 0.0825),
-            incButton_image=(tGui.find('**/triangle'),
-                             tGui.find('**/triangle_down'),
-                             tGui.find('**/triangle_over')),
-            incButton_image_hpr=(0, 0, -90),
-            incButton_scale=(0.08, 1.0, 0.125),
-            incButton_image_scale=0.06,
-            incButton_relief=None,
-            scale=5.7,
-            pos=(0.052, 0, 0.7),
-            value=0,
-            range=(0, self.NumVisible),
-            scrollSize=1,
-            pageSize=1,
-            orientation=DGG.VERTICAL_INVERTED,
-            command=self.scrollList)
+        self.slider = DirectScrollBar(parent=self, relief=None, manageButtons=0, resizeThumb=0, frameSize=(-0.1, 0.1, -0.08, 0.08), image=charGui.find('**/chargui_slider_small'), image_scale=(0.18,
+                                                                                                                                                                                                0.035,
+                                                                                                                                                                                                0.07), image_hpr=(0,
+                                                                                                                                                                                                                  0,
+                                                                                                                                                                                                                  90), thumb_image=(charGui.find('**/chargui_slider_node'), charGui.find('**/chargui_slider_node_down'), charGui.find('**/chargui_slider_node_over')), thumb_image_scale=0.06, thumb_relief=None, decButton_pos=Vec3(0, 0, -0.0825), decButton_image=(tGui.find('**/triangle'), tGui.find('**/triangle_down'), tGui.find('**/triangle_over')), decButton_image_hpr=(0,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    0,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    90), decButton_scale=(0.08,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          1.0,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          0.125), decButton_image_scale=0.06, decButton_relief=None, incButton_pos=Vec3(0.00025, 0, 0.0825), incButton_image=(tGui.find('**/triangle'), tGui.find('**/triangle_down'), tGui.find('**/triangle_over')), incButton_image_hpr=(0,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            0,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -90), incButton_scale=(0.08,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1.0,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0.125), incButton_image_scale=0.06, incButton_relief=None, scale=5.7, pos=(0.052,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              0,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              0.7), value=0, range=(0, self.NumVisible), scrollSize=1, pageSize=1, orientation=DGG.VERTICAL_INVERTED, command=self.scrollList)
         self.slider.hide()
         self.slider.setName('chatPanel.slider')
         if hasattr(self, 'chatBar'):
@@ -294,35 +247,12 @@ class ChatPanel(DirectFrame, FSM):
 
     def startFadeInIval(self):
         self.stopFadeIval()
-        self.fadeIval = Parallel(
-            Func(self.updateState, DGG.NORMAL), Func(self.hideNode.show),
-            self.shortBg.colorScaleInterval(
-                self.FadeTime, Vec4(1, 1, 1, 0.75), blendType='easeOut'),
-            self.shortBorder.colorScaleInterval(
-                self.FadeTime, Vec4(1, 1, 1, 1), blendType='easeOut'),
-            self.tallBg.colorScaleInterval(
-                self.FadeTime, Vec4(1, 1, 1, 0.75), blendType='easeOut'),
-            self.tallBorder.colorScaleInterval(
-                self.FadeTime, Vec4(1, 1, 1, 1), blendType='easeOut'),
-            self.slider.colorScaleInterval(
-                self.FadeTime, Vec4(1, 1, 1, 1), blendType='easeOut'))
+        self.fadeIval = Parallel(Func(self.updateState, DGG.NORMAL), Func(self.hideNode.show), self.shortBg.colorScaleInterval(self.FadeTime, Vec4(1, 1, 1, 0.75), blendType='easeOut'), self.shortBorder.colorScaleInterval(self.FadeTime, Vec4(1, 1, 1, 1), blendType='easeOut'), self.tallBg.colorScaleInterval(self.FadeTime, Vec4(1, 1, 1, 0.75), blendType='easeOut'), self.tallBorder.colorScaleInterval(self.FadeTime, Vec4(1, 1, 1, 1), blendType='easeOut'), self.slider.colorScaleInterval(self.FadeTime, Vec4(1, 1, 1, 1), blendType='easeOut'))
         self.fadeIval.start()
 
     def startFadeOutIval(self):
         self.stopFadeIval()
-        self.fadeIval = Parallel(
-            Func(self.updateState, DGG.DISABLED),
-            self.shortBg.colorScaleInterval(
-                self.FadeTime, Vec4(1, 1, 1, 0), blendType='easeIn'),
-            self.shortBorder.colorScaleInterval(
-                self.FadeTime, Vec4(1, 1, 1, 0), blendType='easeIn'),
-            self.tallBg.colorScaleInterval(
-                self.FadeTime, Vec4(1, 1, 1, 0), blendType='easeIn'),
-            self.tallBorder.colorScaleInterval(
-                self.FadeTime, Vec4(1, 1, 1, 0), blendType='easeIn'),
-            self.slider.colorScaleInterval(
-                self.FadeTime, Vec4(1, 1, 1, 0), blendType='easeIn'),
-            Sequence(Wait(self.FadeTime), Func(self.hideNode.hide)))
+        self.fadeIval = Parallel(Func(self.updateState, DGG.DISABLED), self.shortBg.colorScaleInterval(self.FadeTime, Vec4(1, 1, 1, 0), blendType='easeIn'), self.shortBorder.colorScaleInterval(self.FadeTime, Vec4(1, 1, 1, 0), blendType='easeIn'), self.tallBg.colorScaleInterval(self.FadeTime, Vec4(1, 1, 1, 0), blendType='easeIn'), self.tallBorder.colorScaleInterval(self.FadeTime, Vec4(1, 1, 1, 0), blendType='easeIn'), self.slider.colorScaleInterval(self.FadeTime, Vec4(1, 1, 1, 0), blendType='easeIn'), Sequence(Wait(self.FadeTime), Func(self.hideNode.hide)))
         self.fadeIval.start()
 
     def stopFadeIval(self):
@@ -334,9 +264,7 @@ class ChatPanel(DirectFrame, FSM):
     def startFadeTextIval(self):
         self.stopFadeTextIval()
         self.fadeTextIval = Sequence()
-        self.fadeTextIval.append(
-            self.chatDisplayNP.colorScaleInterval(self.TextFadeTime,
-                                                  Vec4(1, 1, 1, 0)))
+        self.fadeTextIval.append(self.chatDisplayNP.colorScaleInterval(self.TextFadeTime, Vec4(1, 1, 1, 0)))
         self.fadeTextIval.append(Func(self.chatDisplayNP.hide))
         self.fadeTextIval.start()
 
@@ -353,8 +281,7 @@ class ChatPanel(DirectFrame, FSM):
 
     def startFadeTextTimer(self):
         self.stopFadeTextTimer()
-        taskMgr.doMethodLater(self.TextFadeDelay, self.startFadeTextIval,
-                              'ChatPanel-fadeText', [])
+        taskMgr.doMethodLater(self.TextFadeDelay, self.startFadeTextIval, 'ChatPanel-fadeText', [])
 
     def stopFadeTextTimer(self):
         taskMgr.remove('ChatPanel-fadeText')
@@ -422,35 +349,28 @@ class ChatPanel(DirectFrame, FSM):
     def decodeOpenMessage(self, message):
         chatCode = None
         chatString = ''
-        if message.getType() in (TYPEDCHAT, SPEEDCHAT_NORMAL, SPEEDCHAT_EMOTE,
-                                 SPEEDCHAT_CUSTOM, AVATAR_UNAVAILABLE, GMCHAT):
+        if message.getType() in (
+        TYPEDCHAT, SPEEDCHAT_NORMAL, SPEEDCHAT_EMOTE, SPEEDCHAT_CUSTOM, AVATAR_UNAVAILABLE, GMCHAT):
             whisper = message.getWhisper()
             avName = message.getName()
             if message.getType() == SPEEDCHAT_NORMAL:
-                someMessage = SCDecoders.decodeSCStaticTextMsg(
-                    message.getBody())
+                someMessage = SCDecoders.decodeSCStaticTextMsg(message.getBody())
             elif message.getType() == SPEEDCHAT_EMOTE:
                 from pirates.piratesbase import PLocalizer
                 if message.sentRatherThanReceived:
-                    someMessage = PLocalizer.EmoteMessagesSelf.get(
-                        message.getBody(), None)
+                    someMessage = PLocalizer.EmoteMessagesSelf.get(message.getBody(), None)
                     if someMessage is None:
-                        self.notify.warning(
-                            'Invalid emote ID: %s' % message.getBody())
+                        self.notify.warning('Invalid emote ID: %s' % message.getBody())
                         return 'Invalid emote ID: %s'
 
                 else:
-                    someMessage = PLocalizer.EmoteMessagesThirdPerson[message.
-                                                                      getBody(
-                                                                      )] % avName
+                    someMessage = PLocalizer.EmoteMessagesThirdPerson[message.getBody()] % avName
                     if someMessage is None:
-                        self.notify.warning(
-                            'Invalid emote ID: %s' % message.getBody())
+                        self.notify.warning('Invalid emote ID: %s' % message.getBody())
                         return 'Invalid emote ID: %s'
 
             elif message.getType() == SPEEDCHAT_CUSTOM:
-                someMessage = SCDecoders.decodeSCCustomMsg(
-                    message.getBody(), message.getName())
+                someMessage = SCDecoders.decodeSCCustomMsg(message.getBody(), message.getName())
             else:
                 someMessage = message.getBody()
             if message.getWhisper():
@@ -472,8 +392,7 @@ class ChatPanel(DirectFrame, FSM):
                         formattedName = ''
                         formattedMsg = '\x01CPOrange\x01' + wrappedText[0] + '\x02'
                         if message.getType() in (AVATAR_UNAVAILABLE,):
-                            formattedMsg = '\x01slant\x01%s\x02' % (
-                                formattedMsg,)
+                            formattedMsg = '\x01slant\x01%s\x02' % (formattedMsg,)
 
                     elif message.getType() == GMCHAT:
                         formattedName = ''
@@ -483,14 +402,11 @@ class ChatPanel(DirectFrame, FSM):
                         formattedMsg = wrappedText[0]
                     wrappedText[0] = formattedName + formattedMsg
                 elif whisper:
-                    wrappedText[i] = '%s%s%s%s' % ('\x01CPOrange\x01', tab,
-                                                   wrappedText[i], '\x02')
+                    wrappedText[i] = '%s%s%s%s' % ('\x01CPOrange\x01', tab, wrappedText[i], '\x02')
                 elif message.getType() == GMCHAT:
-                    wrappedText[i] = '%s%s%s%s' % ('\x01CPGoldGM\x01', tab,
-                                                   wrappedText[i], '\x02')
+                    wrappedText[i] = '%s%s%s%s' % ('\x01CPGoldGM\x01', tab, wrappedText[i], '\x02')
                 else:
-                    wrappedText[i] = '%s%s%s%s' % ('\x01CPWhite\x01', tab,
-                                                   wrappedText[i], '\x02')
+                    wrappedText[i] = '%s%s%s%s' % ('\x01CPWhite\x01', tab, wrappedText[i], '\x02')
                 if i < len(wrappedText) - 1:
                     wrappedText[i] += '\n'
                     continue
@@ -526,8 +442,7 @@ class ChatPanel(DirectFrame, FSM):
                     wrappedText[i] = '%s%s' % (tab, wrappedText[i])
 
                 if chatCode:
-                    wrappedText[i] = '%s%s%s%s%s' % ('\x01', chatCode, '\x01',
-                                                     wrappedText[i], '\x02')
+                    wrappedText[i] = '%s%s%s%s%s' % ('\x01', chatCode, '\x01', wrappedText[i], '\x02')
 
                 if i < len(wrappedText) - 1:
                     wrappedText[i] += '\n'
@@ -668,6 +583,4 @@ class ChatPanel(DirectFrame, FSM):
     CPLtGold.setTextColor(*PiratesGuiGlobals.TextFG14)
     tpMgr.setProperties('CPLtGold', CPLtGold)
     del tpMgr
-
-
 # okay decompiling .\pirates\piratesgui\ChatPanel.pyc

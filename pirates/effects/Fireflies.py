@@ -8,7 +8,6 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 
-
 class Fireflies(EffectController, NodePath):
     cardScale = 128.0
 
@@ -18,8 +17,7 @@ class Fireflies(EffectController, NodePath):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleGlow')
         if not Fireflies.particleDummy:
-            Fireflies.particleDummy = render.attachNewNode(
-                ModelNode('FirefliesParticleDummy'))
+            Fireflies.particleDummy = render.attachNewNode(ModelNode('FirefliesParticleDummy'))
             Fireflies.particleDummy.setDepthWrite(0)
             Fireflies.particleDummy.setFogOff()
             Fireflies.particleDummy.setColorScale(1.0, 1.0, 1.0, 1)
@@ -66,12 +64,8 @@ class Fireflies(EffectController, NodePath):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor,
-            ColorBlendAttrib.OOneMinusIncomingColor)
-        self.p0.renderer.getColorInterpolationManager().addSinusoid(
-            0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.0, 0.0, 0.0, 1.0),
-            0.20000000298023224, 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingColor)
+        self.p0.renderer.getColorInterpolationManager().addSinusoid(0.0, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.0, 0.0, 0.0, 1.0), 0.20000000298023224, 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(0.2)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -79,12 +73,6 @@ class Fireflies(EffectController, NodePath):
         self.p0.emitter.setExplicitLaunchVector(Vec3(0.2, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(150.0)
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.02), Func(self.setPoolSize, 256),
-            Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(
-                self.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.setPoolSize, 256), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(self.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)

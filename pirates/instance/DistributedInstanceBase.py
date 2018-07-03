@@ -15,7 +15,6 @@ from pirates.uberdog import DistributedInventoryBase
 from pirates.cutscene import Cutscene
 from pirates.battle import EnemyGlobals
 
-
 class DistributedInstanceBase(DistributedObject, WorldNode):
 
     def __init__(self, cr):
@@ -64,8 +63,8 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
                 for currQuest in inventory.getQuestList():
                     currQuest.setActive()
 
-        DistributedInventoryBase.DistributedInventoryBase.getInventory(
-            localAvatar.inventoryId, receiveActiveQuests)
+        DistributedInventoryBase.DistributedInventoryBase.getInventory(localAvatar.inventoryId,
+            receiveActiveQuests)
 
     def getInstanceNodePath(self):
         return render
@@ -117,10 +116,7 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
     def setType(self, type):
         self.type = type
 
-    @report(
-        types=['deltaStamp', 'args'],
-        prefix='------',
-        dConfigParam=('want-jail-report', 'want-teleport-report'))
+    @report(types=['deltaStamp', 'args'], prefix='------', dConfigParam=('want-jail-report', 'want-teleport-report'))
     def setSpawnInfo(self, xPos, yPos, zPos, h, spawnZone, parents):
         self.spawnInfo = [(xPos, yPos, zPos, h, 0, 0), spawnZone, parents]
         messenger.send(self.uniqueName('spawnInfoReceived'))
@@ -187,25 +183,19 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
 
         DistributedObject.handleChildLeave(self, child, zoneId)
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam=['want-connector-report', 'want-jail-report'])
+    @report(types=['frameCount', 'args'], dConfigParam=['want-connector-report', 'want-jail-report'])
     def addWorldInterest(self, area=None):
         self.cr.setActiveWorld(self)
         self.turnOn(localAvatar)
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam=['want-connector-report', 'want-jail-report'])
+    @report(types=['frameCount', 'args'], dConfigParam=['want-connector-report', 'want-jail-report'])
     def removeWorldInterest(self, area=None):
         if area:
             self.turnOff([area])
         else:
             self.turnOff()
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam=['want-connector-report', 'want-jail-report'])
+    @report(types=['frameCount', 'args'], dConfigParam=['want-connector-report', 'want-jail-report'])
     def turnOff(self, cacheIslands=[]):
         self._turnOffIslands(cacheIslands)
         self.stash()
@@ -213,9 +203,7 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         if self.worldGrid:
             self.worldGrid.turnOff()
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam=['want-connector-report', 'want-jail-report'])
+    @report(types=['frameCount', 'args'], dConfigParam=['want-connector-report', 'want-jail-report'])
     def turnOn(self, av=None):
         self.unstash()
         self._onOffState = True
@@ -246,19 +234,16 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         if collEntry.getFromNodePath().hasNetTag('avId'):
             objId = int(collEntry.getFromNodePath().getNetTag('avId'))
             if objId:
-                messenger.send(msgName + PiratesGlobals.SPHERE_ENTER_SUFFIX,
-                               [uniqueId, objId])
+                messenger.send(msgName + PiratesGlobals.SPHERE_ENTER_SUFFIX, [uniqueId, objId])
 
         if collEntry.getFromNodePath().hasNetTag('shipId'):
             objId = int(collEntry.getFromNodePath().getNetTag('shipId'))
             if objId:
-                messenger.send(msgName + PiratesGlobals.SPHERE_ENTER_SUFFIX,
-                               [uniqueId, objId])
+                messenger.send(msgName + PiratesGlobals.SPHERE_ENTER_SUFFIX, [uniqueId, objId])
 
         if msgName == PiratesGlobals.LOCATION_SPHERE:
             displayName = PLocalizer.LocationNames.get(uniqueId, '')
-            base.localAvatar.guiMgr.createTitle(displayName,
-                                                PiratesGuiGlobals.TextFG2)
+            base.localAvatar.guiMgr.createTitle(displayName, PiratesGuiGlobals.TextFG2)
             parentUid = sphere.getTag('parentUid')
             parentDoId = self.cr.uidMgr.getDoId(parentUid)
             areaParent = self.cr.doId2do[parentDoId]
@@ -277,14 +262,12 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         if collEntry.getFromNodePath().hasNetTag('avId'):
             objId = int(collEntry.getFromNodePath().getNetTag('avId'))
             if objId:
-                messenger.send(msgName + PiratesGlobals.SPHERE_EXIT_SUFFIX,
-                               [uniqueId, objId])
+                messenger.send(msgName + PiratesGlobals.SPHERE_EXIT_SUFFIX, [uniqueId, objId])
 
         if collEntry.getFromNodePath().hasNetTag('shipId'):
             objId = int(collEntry.getFromNodePath().getNetTag('shipId'))
             if objId:
-                messenger.send(msgName + PiratesGlobals.SPHERE_EXIT_SUFFIX,
-                               [uniqueId, objId])
+                messenger.send(msgName + PiratesGlobals.SPHERE_EXIT_SUFFIX, [uniqueId, objId])
 
         if msgName == PiratesGlobals.LOCATION_SPHERE:
             parentUid = sphere.getTag('parentUid')
@@ -315,14 +298,14 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
 
             @report(types=['frameCount'], dConfigParam='want-jail-report')
             def loadJailWorld():
-                self.cr.addTaggedInterest(jailWorldParentId, jailWorldZone,
-                                          ['instanceInterest-Jail'])
+                self.cr.addTaggedInterest(jailWorldParentId, jailWorldZone, [
+                    'instanceInterest-Jail'])
 
                 if self.pendingJail:
                     self.cr.relatedObjectMgr.abortRequest(self.pendingJail)
 
-                self.pendingJail = self.cr.relatedObjectMgr.requestObjects(
-                    [jailDoId], eachCallback=jailAreaLoaded)
+                self.pendingJail = self.cr.relatedObjectMgr.requestObjects([jailDoId],
+                    eachCallback=jailAreaLoaded)
 
             @report(types=['frameCount'], dConfigParam='want-jail-report')
             def jailAreaLoaded(jailArea):
@@ -330,8 +313,7 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
                 if isinstance(currentWorld, DistributedInstanceBase):
                     currentWorld.removeWorldInterest()
                     self.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
-                    self.cr.replaceTaggedInterestTag('instanceInterest-Jail',
-                                                     'instanceInterest')
+                    self.cr.replaceTaggedInterestTag('instanceInterest-Jail', 'instanceInterest')
 
                 world = jailArea.getParentObj()
                 world.addWorldInterest(jailArea)

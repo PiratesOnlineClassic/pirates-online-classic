@@ -33,14 +33,13 @@ class Nametag3d(Nametag):
 
     def _doBillboard(self):
         if self.SHOULD_BILLBOARD:
-            self.innerNP.setEffect(
-                BillboardEffect.make(
-                    Vec3(0, 0, 1),
-                    True,
-                    False,
-                    self.bbOffset,
-                    NodePath(),  # Empty; look at scene camera
-                    Point3(0, 0, 0)))
+            self.innerNP.setEffect(BillboardEffect.make(
+                Vec3(0, 0, 1),
+                True,
+                False,
+                self.bbOffset,
+                NodePath(),  # Empty; look at scene camera
+                Point3(0, 0, 0)))
         else:
             self.bbOffset = 0.0
 
@@ -55,8 +54,7 @@ class Nametag3d(Nametag):
 
         # attempt to maintain the same on-screen size.
         distance = self.innerNP.getPos(NametagGlobals.camera).length()
-        distance = max(
-            min(distance, self.SCALING_MAXDIST), self.SCALING_MINDIST)
+        distance = max(min(distance, self.SCALING_MAXDIST), self.SCALING_MINDIST)
 
         # calculate the scale factor of the nametag based on the
         # distance from the nametag node to the camera node.
@@ -84,11 +82,8 @@ class Nametag3d(Nametag):
             # update the click region based on the static click region values,
             # the bounding sphere of the avatar and the distance from the nametag
             # to the local camera node...
-            self.updateClickRegion(
-                (self.CLICK_REGION_LEFT * scaleFactor) * scale,
-                (self.CLICK_REGION_RIGHT * scaleFactor) * scale,
-                (self.CLICK_REGION_BOTTOM * scaleFactor) * scale,
-                self.CLICK_REGION_TOP * scale)
+            self.updateClickRegion((self.CLICK_REGION_LEFT * scaleFactor) * scale, (self.CLICK_REGION_RIGHT * scaleFactor) * scale,
+                (self.CLICK_REGION_BOTTOM * scaleFactor) * scale, self.CLICK_REGION_TOP * scale)
 
     def getSpeechBalloon(self):
         return NametagGlobals.speechBalloon3d

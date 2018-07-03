@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SoulHarvest2(PooledEffect, EffectController):
-
+    
     cardScale = 128.0
 
     def __init__(self):
@@ -57,10 +57,8 @@ class SoulHarvest2(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 0.25, Vec4(0, 0, 0, 0), Vec4(1, 1, 1, 0.75), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.25, 1.0, Vec4(1, 1, 1, 0.75), Vec4(0, 0, 0, 0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.25, Vec4(0, 0, 0, 0), Vec4(1, 1, 1, 0.75), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.25, 1.0, Vec4(1, 1, 1, 0.75), Vec4(0, 0, 0, 0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -70,12 +68,7 @@ class SoulHarvest2(PooledEffect, EffectController):
 
     def createTrack(self):
         self.p0.emitter.setRadius(self.radius)
-        self.track = Sequence(
-            Func(self.p0.setBirthRate, 0.1), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self), Wait(3.0),
-            Func(self.p0.setBirthRate, 100), Wait(7.0),
-            Func(self.cleanUpEffect))
+        self.track = Sequence(Func(self.p0.setBirthRate, 0.1), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(3.0), Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -85,6 +78,4 @@ class SoulHarvest2(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\SoulHarvest2.pyc

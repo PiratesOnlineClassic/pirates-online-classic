@@ -80,8 +80,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
 
     def loadHigh(self):
         filePrefix = self.getPrefix(self.dna.modelClass)
-        (result,
-         data) = ShipGlobals.getShipGeom('%s-geometry_High' % filePrefix)
+        (result, data) = ShipGlobals.getShipGeom('%s-geometry_High' % filePrefix)
         if result:
             (geom, static) = data
             hull = geom.copyTo(hidden)
@@ -132,8 +131,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
 
     def loadMedium(self):
         filePrefix = self.getPrefix(self.dna.modelClass)
-        (result,
-         data) = ShipGlobals.getShipGeom('%s-geometry_Medium' % filePrefix)
+        (result, data) = ShipGlobals.getShipGeom('%s-geometry_Medium' % filePrefix)
         if result:
             (geom, static) = data
             hull = geom.copyTo(hidden)
@@ -200,8 +198,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             self.geom_Low.setPos(self.geom_Low.getPos() + lodPosOffset)
             self.changeColor(self.geom_Low)
             self.geom_Low.flattenStrong()
-            self.geom_Low.findAllMatches('**/+GeomNode').reparentTo(
-                self.geom_Low)
+            self.geom_Low.findAllMatches('**/+GeomNode').reparentTo(self.geom_Low)
             self.geom_Low.findAllMatches('**/+ModelNode').detach()
         else:
             self.geom_Low = NodePath('hull_geom')
@@ -236,11 +233,9 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             return
 
         self.collisions.reparentTo(self.propCollisions)
-        numPanels = self.collisions.findAllMatches(
-            '**/collision_panel_*').getNumPaths()
+        numPanels = self.collisions.findAllMatches('**/collision_panel_*').getNumPaths()
         for i in range(numPanels):
-            self.collPanels.append(
-                self.collisions.find('**/collision_panel_' + str(i)))
+            self.collPanels.append(self.collisions.find('**/collision_panel_' + str(i)))
 
         if self.ship:
             self.setupCollisions(self.ship)
@@ -398,8 +393,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             if not self.details.isEmpty():
                 self.details.unstash()
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
-                            targetEffects, pos, normal, codes, attacker):
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         if self.ship.invulnerable():
             return
 
@@ -417,18 +411,15 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
 
             self.playHoleSplat(pos, normal, index)
             if len(self.panelsMed) > index and len(self.panelsHigh) > index:
-                self.copyMultitexLayer(self.panelsMed[index],
-                                       self.panelsHigh[index])
+                self.copyMultitexLayer(self.panelsMed[index], self.panelsHigh[index])
 
     def death(self, index=None):
         panelIndex = self.getPanelIndex(index)
         if self.panelsHigh[panelIndex] != None:
             self.notify.debug('SECTION CRIPPLE ' + str(index))
             self.playBreak(panelIndex, index)
-            if len(self.panelsMed) > panelIndex and len(
-                    self.panelsHigh) > panelIndex:
-                self.copyMultitexLayer(self.panelsMed[panelIndex],
-                                       self.panelsHigh[panelIndex])
+            if len(self.panelsMed) > panelIndex and len(self.panelsHigh) > panelIndex:
+                self.copyMultitexLayer(self.panelsMed[panelIndex], self.panelsHigh[panelIndex])
 
     def respawn(self, index):
         self.resetDestruction(index)

@@ -24,9 +24,7 @@ Zone6_Tab = 5
 Zone7_Tab = 6
 Zone8_Tab = 7
 jewelry_keys = [
-    'LEar', 'REar', 'LBrow', 'RBrow', 'Nose', 'Mouth', 'LHand', 'RHand'
-]
-
+ 'LEar', 'REar', 'LBrow', 'RBrow', 'Nose', 'Mouth', 'LHand', 'RHand']
 
 class JewelryGUI(DirectFrame, StateData.StateData):
 
@@ -68,116 +66,44 @@ class JewelryGUI(DirectFrame, StateData.StateData):
         self.avatar = avatar
 
     def loadTabs(self):
-        self.zone1Tab = DirectButton(
-            parent=self._parent,
-            relief=DGG.RAISED,
-            frameSize=(-0.13, 0.13, -0.04, 0.04),
-            borderWidth=(0.008, 0.008),
-            text='L Ear',
-            text_scale=0.07,
-            text_align=TextNode.ACenter,
-            text_pos=(0, -0.015),
-            command=self.setMode,
-            extraArgs=[Zone1_Tab],
-            pos=(-0.97, 0, 1.02))
+        self.zone1Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+                                                                                                                               0.008), text='L Ear', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone1_Tab], pos=(-0.97, 0, 1.02))
         self.zone1Tab.hide()
         self.zoneTabs.append(self.zone1Tab)
-        self.zone2Tab = DirectButton(
-            parent=self._parent,
-            relief=DGG.RAISED,
-            frameSize=(-0.13, 0.13, -0.04, 0.04),
-            borderWidth=(0.008, 0.008),
-            text='R Ear',
-            text_scale=0.07,
-            text_align=TextNode.ACenter,
-            text_pos=(0, -0.015),
-            command=self.setMode,
-            extraArgs=[Zone2_Tab],
-            pos=(-0.72, 0, 1.02))
+        self.zone2Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+                                                                                                                               0.008), text='R Ear', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone2_Tab], pos=(-0.72, 0, 1.02))
         self.zone2Tab.hide()
         self.zoneTabs.append(self.zone2Tab)
-        self.zone3Tab = DirectButton(
-            parent=self._parent,
-            relief=DGG.RAISED,
-            frameSize=(-0.13, 0.13, -0.04, 0.04),
-            borderWidth=(0.008, 0.008),
-            text='L Brow',
-            text_scale=0.07,
-            text_align=TextNode.ACenter,
-            text_pos=(0, -0.015),
-            command=self.setMode,
-            extraArgs=[Zone3_Tab],
-            pos=(-0.47, 0, 1.02))
+        self.zone3Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+                                                                                                                               0.008), text='L Brow', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone3_Tab], pos=(-0.47, 0, 1.02))
         self.zone3Tab.hide()
         self.zoneTabs.append(self.zone3Tab)
-        self.zone4Tab = DirectButton(
-            parent=self._parent,
-            relief=DGG.RAISED,
-            frameSize=(-0.13, 0.13, -0.04, 0.04),
-            borderWidth=(0.008, 0.008),
-            text='R Brow',
-            text_scale=0.07,
-            text_align=TextNode.ACenter,
-            text_pos=(0, -0.015),
-            command=self.setMode,
-            extraArgs=[Zone4_Tab],
-            pos=(-0.22, 0, 1.02))
+        self.zone4Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+                                                                                                                               0.008), text='R Brow', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone4_Tab], pos=(-0.22, 0, 1.02))
         self.zone4Tab.hide()
         self.zoneTabs.append(self.zone4Tab)
-        self.zone5Tab = DirectButton(
-            parent=self._parent,
-            relief=DGG.RAISED,
-            frameSize=(-0.13, 0.13, -0.04, 0.04),
-            borderWidth=(0.008, 0.008),
-            text='Nose',
-            text_scale=0.07,
-            text_align=TextNode.ACenter,
-            text_pos=(0, -0.015),
-            command=self.setMode,
-            extraArgs=[Zone5_Tab],
-            pos=(0.03, 0, 1.02))
+        self.zone5Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+                                                                                                                               0.008), text='Nose', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone5_Tab], pos=(0.03,
+                                                                                                                                                                                                                                                                          0,
+                                                                                                                                                                                                                                                                          1.02))
         self.zone5Tab.hide()
         self.zoneTabs.append(self.zone5Tab)
-        self.zone6Tab = DirectButton(
-            parent=self._parent,
-            relief=DGG.RAISED,
-            frameSize=(-0.13, 0.13, -0.04, 0.04),
-            borderWidth=(0.008, 0.008),
-            text='Mouth',
-            text_scale=0.07,
-            text_align=TextNode.ACenter,
-            text_pos=(0, -0.015),
-            command=self.setMode,
-            extraArgs=[Zone6_Tab],
-            pos=(0.28, 0, 1.02))
+        self.zone6Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+                                                                                                                               0.008), text='Mouth', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone6_Tab], pos=(0.28,
+                                                                                                                                                                                                                                                                           0,
+                                                                                                                                                                                                                                                                           1.02))
         self.zone6Tab.hide()
         self.zoneTabs.append(self.zone6Tab)
-        self.zone7Tab = DirectButton(
-            parent=self._parent,
-            relief=DGG.RAISED,
-            frameSize=(-0.13, 0.13, -0.04, 0.04),
-            borderWidth=(0.008, 0.008),
-            text='L Hand',
-            text_scale=0.07,
-            text_align=TextNode.ACenter,
-            text_pos=(0, -0.015),
-            command=self.setMode,
-            extraArgs=[Zone7_Tab],
-            pos=(0.53, 0, 1.02))
+        self.zone7Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+                                                                                                                               0.008), text='L Hand', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone7_Tab], pos=(0.53,
+                                                                                                                                                                                                                                                                            0,
+                                                                                                                                                                                                                                                                            1.02))
         self.zone7Tab.hide()
         self.zoneTabs.append(self.zone7Tab)
-        self.zone8Tab = DirectButton(
-            parent=self._parent,
-            relief=DGG.RAISED,
-            frameSize=(-0.13, 0.13, -0.04, 0.04),
-            borderWidth=(0.008, 0.008),
-            text='R Hand',
-            text_scale=0.07,
-            text_align=TextNode.ACenter,
-            text_pos=(0, -0.015),
-            command=self.setMode,
-            extraArgs=[Zone8_Tab],
-            pos=(0.78, 0, 1.02))
+        self.zone8Tab = DirectButton(parent=self._parent, relief=DGG.RAISED, frameSize=(-0.13, 0.13, -0.04, 0.04), borderWidth=(0.008,
+                                                                                                                               0.008), text='R Hand', text_scale=0.07, text_align=TextNode.ACenter, text_pos=(0, -0.015), command=self.setMode, extraArgs=[Zone8_Tab], pos=(0.78,
+                                                                                                                                                                                                                                                                            0,
+                                                                                                                                                                                                                                                                            1.02))
         self.zone8Tab.hide()
         self.zoneTabs.append(self.zone8Tab)
 
@@ -235,125 +161,71 @@ class JewelryGUI(DirectFrame, StateData.StateData):
         self.saveDNA()
 
     def setupButtons(self):
-        self.zone1Frame = DirectFrame(
-            parent=self._parent, relief=DGG.FLAT, pos=(0.0, 0, 0.7))
+        self.zone1Frame = DirectFrame(parent=self._parent, relief=DGG.FLAT, pos=(0.0,
+                                                                                0,
+                                                                                0.7))
         self.zone1Frame.hide()
         self.zoneFrames.append(self.zone1Frame)
-        self.jewelry1Picker = CharGuiPicker(
-            self.main,
-            parent=self.zone1Frame,
-            text=PLocalizer.ShapeJewelryLEarFrameTitle,
-            nextCommand=Functor(self.handleNextJewelry,
-                                jewelry_keys[Zone1_Tab]),
-            backCommand=Functor(self.handleLastJewelry,
-                                jewelry_keys[Zone1_Tab]))
+        self.jewelry1Picker = CharGuiPicker(self.main, parent=self.zone1Frame, text=PLocalizer.ShapeJewelryLEarFrameTitle, nextCommand=Functor(self.handleNextJewelry, jewelry_keys[Zone1_Tab]), backCommand=Functor(self.handleLastJewelry, jewelry_keys[Zone1_Tab]))
         self.jewelry1Picker.setPos(0, 0, -0.5)
-        self.zone2Frame = DirectFrame(
-            parent=self._parent, relief=DGG.FLAT, pos=(0.0, 0, 0.7))
+        self.zone2Frame = DirectFrame(parent=self._parent, relief=DGG.FLAT, pos=(0.0,
+                                                                                0,
+                                                                                0.7))
         self.zone2Frame.hide()
         self.zoneFrames.append(self.zone2Frame)
-        self.jewelry2Picker = CharGuiPicker(
-            self.main,
-            parent=self.zone2Frame,
-            text=PLocalizer.ShapeJewelryREarFrameTitle,
-            nextCommand=Functor(self.handleNextJewelry,
-                                jewelry_keys[Zone2_Tab]),
-            backCommand=Functor(self.handleLastJewelry,
-                                jewelry_keys[Zone2_Tab]))
+        self.jewelry2Picker = CharGuiPicker(self.main, parent=self.zone2Frame, text=PLocalizer.ShapeJewelryREarFrameTitle, nextCommand=Functor(self.handleNextJewelry, jewelry_keys[Zone2_Tab]), backCommand=Functor(self.handleLastJewelry, jewelry_keys[Zone2_Tab]))
         self.jewelry2Picker.setPos(0, 0, -0.5)
-        self.zone3Frame = DirectFrame(
-            parent=self._parent, relief=DGG.FLAT, pos=(0.0, 0, 0.7))
+        self.zone3Frame = DirectFrame(parent=self._parent, relief=DGG.FLAT, pos=(0.0,
+                                                                                0,
+                                                                                0.7))
         self.zone3Frame.hide()
         self.zoneFrames.append(self.zone3Frame)
-        self.jewelry3Picker = CharGuiPicker(
-            self.main,
-            parent=self.zone3Frame,
-            text=PLocalizer.ShapeJewelryLBrowFrameTitle,
-            nextCommand=Functor(self.handleNextJewelry,
-                                jewelry_keys[Zone3_Tab]),
-            backCommand=Functor(self.handleLastJewelry,
-                                jewelry_keys[Zone3_Tab]))
+        self.jewelry3Picker = CharGuiPicker(self.main, parent=self.zone3Frame, text=PLocalizer.ShapeJewelryLBrowFrameTitle, nextCommand=Functor(self.handleNextJewelry, jewelry_keys[Zone3_Tab]), backCommand=Functor(self.handleLastJewelry, jewelry_keys[Zone3_Tab]))
         self.jewelry3Picker.setPos(0, 0, -0.5)
-        self.zone4Frame = DirectFrame(
-            parent=self._parent, relief=DGG.FLAT, pos=(0.0, 0, 0.7))
+        self.zone4Frame = DirectFrame(parent=self._parent, relief=DGG.FLAT, pos=(0.0,
+                                                                                0,
+                                                                                0.7))
         self.zone4Frame.hide()
         self.zoneFrames.append(self.zone4Frame)
-        self.jewelry4Picker = CharGuiPicker(
-            self.main,
-            parent=self.zone4Frame,
-            text=PLocalizer.ShapeJewelryRBrowFrameTitle,
-            nextCommand=Functor(self.handleNextJewelry,
-                                jewelry_keys[Zone4_Tab]),
-            backCommand=Functor(self.handleLastJewelry,
-                                jewelry_keys[Zone4_Tab]))
+        self.jewelry4Picker = CharGuiPicker(self.main, parent=self.zone4Frame, text=PLocalizer.ShapeJewelryRBrowFrameTitle, nextCommand=Functor(self.handleNextJewelry, jewelry_keys[Zone4_Tab]), backCommand=Functor(self.handleLastJewelry, jewelry_keys[Zone4_Tab]))
         self.jewelry4Picker.setPos(0, 0, -0.5)
-        self.zone5Frame = DirectFrame(
-            parent=self._parent, relief=DGG.FLAT, pos=(0.0, 0, 0.7))
+        self.zone5Frame = DirectFrame(parent=self._parent, relief=DGG.FLAT, pos=(0.0,
+                                                                                0,
+                                                                                0.7))
         self.zone5Frame.hide()
         self.zoneFrames.append(self.zone5Frame)
-        self.jewelry5Picker = CharGuiPicker(
-            self.main,
-            parent=self.zone5Frame,
-            text=PLocalizer.ShapeJewelryNoseFrameTitle,
-            nextCommand=Functor(self.handleNextJewelry,
-                                jewelry_keys[Zone5_Tab]),
-            backCommand=Functor(self.handleLastJewelry,
-                                jewelry_keys[Zone5_Tab]))
+        self.jewelry5Picker = CharGuiPicker(self.main, parent=self.zone5Frame, text=PLocalizer.ShapeJewelryNoseFrameTitle, nextCommand=Functor(self.handleNextJewelry, jewelry_keys[Zone5_Tab]), backCommand=Functor(self.handleLastJewelry, jewelry_keys[Zone5_Tab]))
         self.jewelry5Picker.setPos(0, 0, -0.5)
-        self.zone6Frame = DirectFrame(
-            parent=self._parent, relief=DGG.FLAT, pos=(0.0, 0, 0.7))
+        self.zone6Frame = DirectFrame(parent=self._parent, relief=DGG.FLAT, pos=(0.0,
+                                                                                0,
+                                                                                0.7))
         self.zone6Frame.hide()
         self.zoneFrames.append(self.zone6Frame)
-        self.jewelry6Picker = CharGuiPicker(
-            self.main,
-            parent=self.zone6Frame,
-            text=PLocalizer.ShapeJewelryMouthFrameTitle,
-            nextCommand=Functor(self.handleNextJewelry,
-                                jewelry_keys[Zone6_Tab]),
-            backCommand=Functor(self.handleLastJewelry,
-                                jewelry_keys[Zone6_Tab]))
+        self.jewelry6Picker = CharGuiPicker(self.main, parent=self.zone6Frame, text=PLocalizer.ShapeJewelryMouthFrameTitle, nextCommand=Functor(self.handleNextJewelry, jewelry_keys[Zone6_Tab]), backCommand=Functor(self.handleLastJewelry, jewelry_keys[Zone6_Tab]))
         self.jewelry6Picker.setPos(0, 0, -0.5)
-        self.zone7Frame = DirectFrame(
-            parent=self._parent, relief=DGG.FLAT, pos=(0.0, 0, 0.7))
+        self.zone7Frame = DirectFrame(parent=self._parent, relief=DGG.FLAT, pos=(0.0,
+                                                                                0,
+                                                                                0.7))
         self.zone7Frame.hide()
         self.zoneFrames.append(self.zone7Frame)
-        self.jewelry7Picker = CharGuiPicker(
-            self.main,
-            parent=self.zone7Frame,
-            text=PLocalizer.ShapeJewelryLHandFrameTitle,
-            nextCommand=Functor(self.handleNextJewelry,
-                                jewelry_keys[Zone7_Tab]),
-            backCommand=Functor(self.handleLastJewelry,
-                                jewelry_keys[Zone7_Tab]))
+        self.jewelry7Picker = CharGuiPicker(self.main, parent=self.zone7Frame, text=PLocalizer.ShapeJewelryLHandFrameTitle, nextCommand=Functor(self.handleNextJewelry, jewelry_keys[Zone7_Tab]), backCommand=Functor(self.handleLastJewelry, jewelry_keys[Zone7_Tab]))
         self.jewelry7Picker.setPos(0, 0, -0.5)
-        self.zone8Frame = DirectFrame(
-            parent=self._parent, relief=DGG.FLAT, pos=(0.0, 0, 0.7))
+        self.zone8Frame = DirectFrame(parent=self._parent, relief=DGG.FLAT, pos=(0.0,
+                                                                                0,
+                                                                                0.7))
         self.zone8Frame.hide()
         self.zoneFrames.append(self.zone8Frame)
-        self.jewelry8Picker = CharGuiPicker(
-            self.main,
-            parent=self.zone8Frame,
-            text=PLocalizer.ShapeJewelryRHandFrameTitle,
-            nextCommand=Functor(self.handleNextJewelry,
-                                jewelry_keys[Zone8_Tab]),
-            backCommand=Functor(self.handleLastJewelry,
-                                jewelry_keys[Zone8_Tab]))
+        self.jewelry8Picker = CharGuiPicker(self.main, parent=self.zone8Frame, text=PLocalizer.ShapeJewelryRHandFrameTitle, nextCommand=Functor(self.handleNextJewelry, jewelry_keys[Zone8_Tab]), backCommand=Functor(self.handleLastJewelry, jewelry_keys[Zone8_Tab]))
         self.jewelry8Picker.setPos(0, 0, -0.5)
         self.loadColorGUI()
 
     def loadColorGUI(self):
-        self.primaryColorFrame = DirectFrame(
-            parent=self.zone1Frame,
-            relief=None,
-            image=self.main.charGui.find('**/chargui_frame01'),
-            image_pos=(0, 0, -0.3),
-            image_scale=(2.43, 1.6, 1.6),
-            text='Pirmary Color',
-            text_fg=(1, 1, 1, 1),
-            text_scale=0.18,
-            text_pos=(0, -0.05),
-            pos=(0, 0, -0.8),
-            scale=0.7)
+        self.primaryColorFrame = DirectFrame(parent=self.zone1Frame, relief=None, image=self.main.charGui.find('**/chargui_frame01'), image_pos=(0, 0, -0.3), image_scale=(2.43,
+                                                                                                                                                                           1.6,
+                                                                                                                                                                           1.6), text='Pirmary Color', text_fg=(1,
+                                                                                                                                                                                                                1,
+                                                                                                                                                                                                                1,
+                                                                                                                                                                                                                1), text_scale=0.18, text_pos=(0, -0.05), pos=(0, 0, -0.8), scale=0.7)
         self.primaryColorButtons = []
         xOffset = -0.8
         yOffset = -0.3
@@ -364,30 +236,18 @@ class JewelryGUI(DirectFrame, StateData.StateData):
             jewelryColor = HumanDNA.jewelryColors[i]
             if jewelryColor is None:
                 jewelryColor = VBase4(0, 0, 0, 1)
-            self.primaryColorButtons.append(
-                DirectButton(
-                    parent=self.primaryColorFrame,
-                    relief=DGG.RAISED,
-                    pos=(xOffset, 0, yOffset),
-                    frameSize=(-0.1, 0.1, -0.1, 0.1),
-                    borderWidth=(0.008, 0.008),
-                    frameColor=jewelryColor,
-                    command=self.handleSetPrimaryColor,
-                    extraArgs=[i]))
+            self.primaryColorButtons.append(DirectButton(parent=self.primaryColorFrame, relief=DGG.RAISED, pos=(xOffset, 0, yOffset), frameSize=(-0.1, 0.1, -0.1, 0.1), borderWidth=(0.008,
+                                                                                                                                                                                     0.008), frameColor=jewelryColor, command=self.handleSetPrimaryColor, extraArgs=[i]))
             xOffset += 0.2
 
-        self.secondaryColorFrame = DirectFrame(
-            parent=self.zone1Frame,
-            relief=None,
-            image=self.main.charGui.find('**/chargui_frame01'),
-            image_pos=(0, 0, -0.3),
-            image_scale=(2.43, 1.6, 1.6),
-            text='Secondary Color',
-            text_fg=(1, 1, 1, 1),
-            text_scale=0.18,
-            text_pos=(0, -0.05),
-            pos=(0, 0, -1.4),
-            scale=0.7)
+        self.secondaryColorFrame = DirectFrame(parent=self.zone1Frame, relief=None, image=self.main.charGui.find('**/chargui_frame01'), image_pos=(0, 0, -0.3), image_scale=(2.43,
+                                                                                                                                                                             1.6,
+                                                                                                                                                                             1.6), text='Secondary Color', text_fg=(1,
+                                                                                                                                                                                                                    1,
+                                                                                                                                                                                                                    1,
+                                                                                                                                                                                                                    1), text_scale=0.18, text_pos=(0, -0.05), pos=(0,
+                                                                                                                                                                                                                                                                   0,
+                                                                                                                                                                                                                                                                   -1.4), scale=0.7)
         self.secondaryColorButtons = []
         xOffset = -0.8
         yOffset = -0.3
@@ -398,16 +258,8 @@ class JewelryGUI(DirectFrame, StateData.StateData):
             jewelryColor = HumanDNA.jewelryColors[i]
             if jewelryColor is None:
                 jewelryColor = VBase4(0, 0, 0, 1)
-            self.secondaryColorButtons.append(
-                DirectButton(
-                    parent=self.secondaryColorFrame,
-                    relief=DGG.RAISED,
-                    pos=(xOffset, 0, yOffset),
-                    frameSize=(-0.1, 0.1, -0.1, 0.1),
-                    borderWidth=(0.008, 0.008),
-                    frameColor=jewelryColor,
-                    command=self.handleSetSecondaryColor,
-                    extraArgs=[i]))
+            self.secondaryColorButtons.append(DirectButton(parent=self.secondaryColorFrame, relief=DGG.RAISED, pos=(xOffset, 0, yOffset), frameSize=(-0.1, 0.1, -0.1, 0.1), borderWidth=(0.008,
+                                                                                                                                                                                         0.008), frameColor=jewelryColor, command=self.handleSetSecondaryColor, extraArgs=[i]))
             xOffset += 0.2
 
         return
@@ -417,38 +269,14 @@ class JewelryGUI(DirectFrame, StateData.StateData):
         self.saveDNA()
 
     def saveDNA(self):
-        self.avatar.pirate.setJewelryZone1(
-            self.avatar.currentJewelry['LEar'][0],
-            self.avatar.currentJewelry['LEar'][1],
-            self.avatar.currentJewelry['LEar'][2])
-        self.avatar.pirate.setJewelryZone2(
-            self.avatar.currentJewelry['REar'][0],
-            self.avatar.currentJewelry['REar'][1],
-            self.avatar.currentJewelry['REar'][2])
-        self.avatar.pirate.setJewelryZone3(
-            self.avatar.currentJewelry['LBrow'][0],
-            self.avatar.currentJewelry['LBrow'][1],
-            self.avatar.currentJewelry['LBrow'][2])
-        self.avatar.pirate.setJewelryZone4(
-            self.avatar.currentJewelry['RBrow'][0],
-            self.avatar.currentJewelry['RBrow'][1],
-            self.avatar.currentJewelry['RBrow'][2])
-        self.avatar.pirate.setJewelryZone5(
-            self.avatar.currentJewelry['Nose'][0],
-            self.avatar.currentJewelry['Nose'][1],
-            self.avatar.currentJewelry['Nose'][2])
-        self.avatar.pirate.setJewelryZone6(
-            self.avatar.currentJewelry['Mouth'][0],
-            self.avatar.currentJewelry['Mouth'][1],
-            self.avatar.currentJewelry['Mouth'][2])
-        self.avatar.pirate.setJewelryZone7(
-            self.avatar.currentJewelry['LHand'][0],
-            self.avatar.currentJewelry['LHand'][1],
-            self.avatar.currentJewelry['LHand'][2])
-        self.avatar.pirate.setJewelryZone8(
-            self.avatar.currentJewelry['RHand'][0],
-            self.avatar.currentJewelry['RHand'][1],
-            self.avatar.currentJewelry['RHand'][2])
+        self.avatar.pirate.setJewelryZone1(self.avatar.currentJewelry['LEar'][0], self.avatar.currentJewelry['LEar'][1], self.avatar.currentJewelry['LEar'][2])
+        self.avatar.pirate.setJewelryZone2(self.avatar.currentJewelry['REar'][0], self.avatar.currentJewelry['REar'][1], self.avatar.currentJewelry['REar'][2])
+        self.avatar.pirate.setJewelryZone3(self.avatar.currentJewelry['LBrow'][0], self.avatar.currentJewelry['LBrow'][1], self.avatar.currentJewelry['LBrow'][2])
+        self.avatar.pirate.setJewelryZone4(self.avatar.currentJewelry['RBrow'][0], self.avatar.currentJewelry['RBrow'][1], self.avatar.currentJewelry['RBrow'][2])
+        self.avatar.pirate.setJewelryZone5(self.avatar.currentJewelry['Nose'][0], self.avatar.currentJewelry['Nose'][1], self.avatar.currentJewelry['Nose'][2])
+        self.avatar.pirate.setJewelryZone6(self.avatar.currentJewelry['Mouth'][0], self.avatar.currentJewelry['Mouth'][1], self.avatar.currentJewelry['Mouth'][2])
+        self.avatar.pirate.setJewelryZone7(self.avatar.currentJewelry['LHand'][0], self.avatar.currentJewelry['LHand'][1], self.avatar.currentJewelry['LHand'][2])
+        self.avatar.pirate.setJewelryZone8(self.avatar.currentJewelry['RHand'][0], self.avatar.currentJewelry['RHand'][1], self.avatar.currentJewelry['RHand'][2])
 
     def randomPick(self):
         pass

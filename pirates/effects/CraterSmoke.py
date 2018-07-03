@@ -6,7 +6,6 @@ from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class CraterSmoke(PooledEffect, EffectController):
     cardScale = 64.0
 
@@ -59,8 +58,7 @@ class CraterSmoke(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.25, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.25, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -95,8 +93,7 @@ class CraterSmoke(PooledEffect, EffectController):
         self.p1.renderer.setNonanimatedTheta(0.0)
         self.p1.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p1.renderer.setAlphaDisable(0)
-        self.p1.renderer.getColorInterpolationManager().addLinear(
-            0.1, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0), 1)
+        self.p1.renderer.getColorInterpolationManager().addLinear(0.1, 1.0, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(1.0, 1.0, 1.0, 0.0), 1)
         self.p1.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p1.emitter.setAmplitude(1.0)
         self.p1.emitter.setAmplitudeSpread(0.0)
@@ -105,13 +102,8 @@ class CraterSmoke(PooledEffect, EffectController):
         self.p1.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p1.emitter.setMinBound(Point2(-5.0, -5.0))
         self.p1.emitter.setMaxBound(Point2(5.0, 5.0))
-        self.startEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.75), Func(self.p0.clearToInitial),
-            Func(self.p1.setBirthRate, 1.0), Func(self.p1.clearToInitial),
-            Func(self.f.start, self, self), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 0.0), Func(self.p1.setBirthRate, 0.0),
-            Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.75), Func(self.p0.clearToInitial), Func(self.p1.setBirthRate, 1.0), Func(self.p1.clearToInitial), Func(self.f.start, self, self), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 0.0), Func(self.p1.setBirthRate, 0.0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
 
     def cleanUpEffect(self):

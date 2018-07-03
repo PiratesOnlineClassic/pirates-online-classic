@@ -10,10 +10,12 @@ from pirates.quest.QuestIndicatorNode import QuestIndicatorNode
 
 
 class QuestIndicatorNodeIntDoor(QuestIndicatorNode):
+    
 
     def __init__(self, questStep):
         self.pendingStepObj = None
-        QuestIndicatorNode.__init__(self, 'IntDoorIndicator', [15], questStep)
+        QuestIndicatorNode.__init__(self, 'IntDoorIndicator', [
+         15], questStep)
         self.nearEffect = None
         return
 
@@ -37,8 +39,7 @@ class QuestIndicatorNodeIntDoor(QuestIndicatorNode):
         if self.pendingStepObj:
             base.cr.relatedObjectMgr.abortRequest(self.pendingStepObj)
             self.pendingStepObj = None
-        self.pendingStepObj = base.cr.relatedObjectMgr.requestObjects(
-            [self.questStep.getStepDoId()], eachCallback=stepObjHere)
+        self.pendingStepObj = base.cr.relatedObjectMgr.requestObjects([self.questStep.getStepDoId()], eachCallback=stepObjHere)
         return
 
     def loadZoneLevel(self, level):
@@ -55,9 +56,7 @@ class QuestIndicatorNodeIntDoor(QuestIndicatorNode):
         if level == 1:
             self.request('Off')
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam='want-quest-indicator-report')
+    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def enterOff(self):
         QuestIndicatorNode.enterOff(self)
         if self.nearEffect:
@@ -65,9 +64,7 @@ class QuestIndicatorNodeIntDoor(QuestIndicatorNode):
             self.nearEffect = None
         return
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam='want-quest-indicator-report')
+    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def enterNear(self):
         if self.nearEffect:
             self.nearEffect.reallyCleanUpEffect()
@@ -79,9 +76,7 @@ class QuestIndicatorNodeIntDoor(QuestIndicatorNode):
         if self.muted:
             self.hideEffect()
 
-    @report(
-        types=['frameCount', 'args'],
-        dConfigParam='want-quest-indicator-report')
+    @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def exitNear(self):
         if self.nearEffect:
             self.nearEffect.stopLoop()
@@ -101,6 +96,4 @@ class QuestIndicatorNodeIntDoor(QuestIndicatorNode):
         QuestIndicatorNode.hideEffect(self)
         if self.nearEffect:
             self.nearEffect.hideEffect()
-
-
 # okay decompiling .\pirates\quest\QuestIndicatorNodeIntDoor.pyc

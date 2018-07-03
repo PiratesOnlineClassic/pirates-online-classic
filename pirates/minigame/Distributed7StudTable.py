@@ -9,10 +9,10 @@ from pirates.piratesbase import PLocalizer
 
 
 class Distributed7StudTable(DistributedPokerTable.DistributedPokerTable):
+    
 
     def __init__(self, cr):
-        DistributedPokerTable.DistributedPokerTable.__init__(
-            self, cr, '7stud', numRounds=6)
+        DistributedPokerTable.DistributedPokerTable.__init__(self, cr, '7stud', numRounds=6)
         self.maxCommunityCards = 0
         self.maxHandCards = 7
         self.gameType = 1
@@ -43,6 +43,4 @@ class Distributed7StudTable(DistributedPokerTable.DistributedPokerTable):
 
     def checkForVisiblePair(self):
         return self.sevenStudCheckForVisiblePair(self.playerHands)
-
-
 # okay decompiling .\pirates\minigame\Distributed7StudTable.pyc

@@ -178,9 +178,8 @@ class NametagGroup:
             self.clearChat()
             self.stompText = chatString
             self.stompFlags = chatFlags
-            self.stompTask = taskMgr.doMethodLater(
-                self.getStompDelay(), self.__updateStomp,
-                'ChatStomp-' + self.getUniqueId())
+            self.stompTask = taskMgr.doMethodLater(self.getStompDelay(), self.__updateStomp,
+                                                   'ChatStomp-' + self.getUniqueId())
 
     def _setChat(self, chatString, chatFlags):
         if chatString:
@@ -213,11 +212,10 @@ class NametagGroup:
 
     def _startChatTimeout(self):
         length = len(self.getChat())
-        timeout = min(
-            max(length * self.CHAT_TIMEOUT_PROP, self.CHAT_TIMEOUT_MIN),
-            self.CHAT_TIMEOUT_MAX)
-        self.chatTimeoutTask = taskMgr.doMethodLater(
-            timeout, self.__doChatTimeout, 'ChatTimeout-' + self.getUniqueId())
+        timeout = min(max(length * self.CHAT_TIMEOUT_PROP,
+                          self.CHAT_TIMEOUT_MIN), self.CHAT_TIMEOUT_MAX)
+        self.chatTimeoutTask = taskMgr.doMethodLater(timeout, self.__doChatTimeout,
+                                                     'ChatTimeout-' + self.getUniqueId())
 
     def __doChatTimeout(self, task):
         self._setChat('', 0)
@@ -271,8 +269,7 @@ class NametagGroup:
     def __tickTask(self, task):
         for nametag in self.nametags:
             nametag.tick()
-            if (NametagGlobals.masterNametagsActive and
-                    self.active) or self.hasButton():
+            if (NametagGlobals.masterNametagsActive and self.active) or self.hasButton():
                 nametag.setClickRegionEvent(self.getUniqueId())
             else:
                 nametag.setClickRegionEvent(None)

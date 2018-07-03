@@ -12,6 +12,7 @@ from pirates.piratesgui.DownloadBlockerPanel import DownloadBlockerPanel
 
 
 class MapPage(InventoryPage.InventoryPage):
+    
 
     def __init__(self):
         InventoryPage.InventoryPage.__init__(self)
@@ -69,31 +70,16 @@ class MapPage(InventoryPage.InventoryPage):
             self.portOfCallButton.destroy()
         compassGui = loader.loadModel('models/gui/compass_gui')
         topGui = loader.loadModel('models/gui/toplevel_gui')
-        teleportIcon = topGui.find('**/treasure_w_b_slot_empty').copyTo(
-            NodePath(''))
+        teleportIcon = topGui.find('**/treasure_w_b_slot_empty').copyTo(NodePath(''))
         compassGui.find('**/compass_icon_objective_green').copyTo(teleportIcon)
         teleportIcon.flattenStrong()
-        self.portOfCallLabel = DirectLabel(
-            parent=self,
-            text='',
-            text_font=PiratesGlobals.getPirateOutlineFont(),
-            text_scale=0.045,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            textMayChange=1,
-            pos=(0.55, 0, 0.08))
-        self.portOfCallButton = GuiButton.GuiButton(
-            parent=self,
-            pos=(0.54, 0, 0.015),
-            scale=0.85,
-            text='Return',
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_pos=(0.033, -0.014),
-            textMayChange=1,
-            image3_color=(0.8, 0.8, 0.8, 1),
-            geom=teleportIcon,
-            geom_pos=(-0.065, 0, 0),
-            geom_scale=0.2,
-            command=self.handlePortOfCall)
+        self.portOfCallLabel = DirectLabel(parent=self, text='', text_font=PiratesGlobals.getPirateOutlineFont(), text_scale=0.045, text_fg=PiratesGuiGlobals.TextFG2, textMayChange=1, pos=(0.55,
+                                                                                                                                                                                             0,
+                                                                                                                                                                                             0.08))
+        self.portOfCallButton = GuiButton.GuiButton(parent=self, pos=(0.54, 0, 0.015), scale=0.85, text='Return', text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.033, -0.014), textMayChange=1, image3_color=(0.8,
+                                                                                                                                                                                                                        0.8,
+                                                                                                                                                                                                                        0.8,
+                                                                                                                                                                                                                        1), geom=teleportIcon, geom_pos=(-0.065, 0, 0), geom_scale=0.2, command=self.handlePortOfCall)
 
     def createFrontOrnament(self):
         geom = loader.loadModel('models/gui/gui_map_window')
@@ -104,71 +90,29 @@ class MapPage(InventoryPage.InventoryPage):
 
     def createMapButtons(self, gui):
         z = 1.1
-        self.worldButton = DirectButton(
-            parent=self,
-            relief=None,
-            geom=(gui.find('**/topgui_icon_map_chart'),
-                  gui.find('**/topgui_icon_map_chart'),
-                  gui.find('**/topgui_icon_map_chart_over'),
-                  gui.find('**/topgui_icon_map_chart')),
-            geom_scale=0.5,
-            pos=(0.34, 0, z),
-            command=self.switchMode,
-            extraArgs=[0])
-        self.islandButton = DirectButton(
-            parent=self,
-            relief=None,
-            geom=(gui.find('**/topgui_icon_map_island'),
-                  gui.find('**/topgui_icon_map_island'),
-                  gui.find('**/topgui_icon_map_island_over'),
-                  gui.find('**/topgui_icon_map_island')),
-            geom_scale=0.5,
-            pos=(0.55, 0, z),
-            command=self.switchMode,
-            extraArgs=[1])
-        self.townButton = DirectButton(
-            parent=self,
-            relief=None,
-            geom=(gui.find('**/topgui_icon_map_town'),
-                  gui.find('**/topgui_icon_map_town'),
-                  gui.find('**/topgui_icon_map_town_over'),
-                  gui.find('**/topgui_icon_map_town')),
-            geom_scale=0.5,
-            pos=(0.76, 0, z),
-            command=self.switchMode,
-            extraArgs=[2])
-        self.pointer = DirectFrame(
-            parent=self,
-            relief=None,
-            state=DGG.DISABLED,
-            image=gui.find('**/topgui_icon_map_pointer'),
-            scale=0.5,
-            pos=(0.34, 0, z - 0.07))
+        self.worldButton = DirectButton(parent=self, relief=None, geom=(gui.find('**/topgui_icon_map_chart'), gui.find('**/topgui_icon_map_chart'), gui.find('**/topgui_icon_map_chart_over'), gui.find('**/topgui_icon_map_chart')), geom_scale=0.5, pos=(0.34, 0, z), command=self.switchMode, extraArgs=[0])
+        self.islandButton = DirectButton(parent=self, relief=None, geom=(gui.find('**/topgui_icon_map_island'), gui.find('**/topgui_icon_map_island'), gui.find('**/topgui_icon_map_island_over'), gui.find('**/topgui_icon_map_island')), geom_scale=0.5, pos=(0.55, 0, z), command=self.switchMode, extraArgs=[1])
+        self.townButton = DirectButton(parent=self, relief=None, geom=(gui.find('**/topgui_icon_map_town'), gui.find('**/topgui_icon_map_town'), gui.find('**/topgui_icon_map_town_over'), gui.find('**/topgui_icon_map_town')), geom_scale=0.5, pos=(0.76, 0, z), command=self.switchMode, extraArgs=[2])
+        self.pointer = DirectFrame(parent=self, relief=None, state=DGG.DISABLED, image=gui.find('**/topgui_icon_map_pointer'), scale=0.5, pos=(0.34, 0, z - 0.07))
         return
 
     def createWorldMap(self):
-        self.worldMap = WorldMap(
-            parent=self, state=DGG.NORMAL, pos=(0.55, 0, 0.62), scale=0.47)
+        self.worldMap = WorldMap(parent=self, state=DGG.NORMAL, pos=(0.55, 0, 0.62), scale=0.47)
         if __dev__ and 0:
 
             def changeMouseMode():
                 self.worldMap.mapBall.rMode += 1
                 self.worldMap.mapBall.rMode %= 2
-                self.mouseModeLabel['text'] = repr( (self.worldMap.mapBall.rMode))
+                self.mouseModeLabel['text'] = `(self.worldMap.mapBall.rMode)`
 
-            self.mouseModeButton = DirectButton(
-                parent=self,
-                text='MouseMode',
-                scale=0.065,
-                pos=(0.25, 0, 0.09),
-                command=changeMouseMode)
-            self.mouseModeLabel = DirectLabel(
-                parent=self,
-                scale=0.075,
-                pos=(0.5, 0, 0.087),
-                text=repr( (self.worldMap.mapBall.rMode)),
-                text_fg=(1, 1, 1, 1),
-                textMayChange=1)
+            self.mouseModeButton = DirectButton(parent=self, text='MouseMode', scale=0.065, pos=(0.25,
+                                                                                                 0,
+                                                                                                 0.09), command=changeMouseMode)
+            self.mouseModeLabel = DirectLabel(parent=self, scale=0.075, pos=(0.5, 0,
+                                                                             0.087), text=`(self.worldMap.mapBall.rMode)`, text_fg=(1,
+                                                                                                                                    1,
+                                                                                                                                    1,
+                                                                                                                                    1), textMayChange=1)
 
     def createShardPanel(self):
         if self.shardPanel:
@@ -183,8 +127,7 @@ class MapPage(InventoryPage.InventoryPage):
         self.gear = gui.find('**/gear')
         self.gear.wrtReparentTo(self)
         gui.detachNode()
-        self.shardPanel = ShardPanel.ShardPanel(
-            parent=self, relief=None, gear=self.gear)
+        self.shardPanel = ShardPanel.ShardPanel(parent=self, relief=None, gear=self.gear)
         self.clipPlane = self.attachNewNode(PlaneNode('clip'))
         self.clipPlane.node().setPlane(Plane(0, 0, -1, 0))
         self.clipPlane.setPos(0, 0, 1.35)
@@ -201,13 +144,9 @@ class MapPage(InventoryPage.InventoryPage):
                 self.shardButton['text'] = 'Show Shards'
                 self.shardButton['command'] = showShardList
 
-            self.shardButton = DirectButton(
-                parent=self,
-                text='Show Shards',
-                scale=0.065,
-                pos=(0.75, 0, 0.09),
-                command=showShardList,
-                textMayChange=1)
+            self.shardButton = DirectButton(parent=self, text='Show Shards', scale=0.065, pos=(0.75,
+                                                                                               0,
+                                                                                               0.09), command=showShardList, textMayChange=1)
         return
 
     def switchMode(self, mode, force=False):
@@ -253,11 +192,9 @@ class MapPage(InventoryPage.InventoryPage):
             self.portOfCallButton.show()
             islandName = PLocalizer.LocationNames.get(islandUid)
             if islandName:
-                self.portOfCallLabel[
-                    'text'] = '%s: %s' % (PLocalizer.PortOfCall, islandName)
+                self.portOfCallLabel['text'] = '%s: %s' % (PLocalizer.PortOfCall, islandName)
             else:
-                self.portOfCallLabel['text'] = '%s: %s' % (
-                    PLocalizer.PortOfCall, 'Unknown Island')
+                self.portOfCallLabel['text'] = '%s: %s' % (PLocalizer.PortOfCall, 'Unknown Island')
         else:
             self.portOfCallLabel.hide()
             self.portOfCallButton.hide()
@@ -268,8 +205,7 @@ class MapPage(InventoryPage.InventoryPage):
             if launcher.canLeaveFirstIsland():
                 base.cr.teleportMgr.requestTeleportToIsland(self.portOfCall)
             else:
-                localAvatar.guiMgr.showDownloadBlocker(
-                    DownloadBlockerPanel.Reasons.TELEPORT)
+                localAvatar.guiMgr.showDownloadBlocker(DownloadBlockerPanel.Reasons.TELEPORT)
 
     def addQuestDart(self, questId, worldPos):
         return self.worldMap.addQuestDart(questId, worldPos)
@@ -303,6 +239,4 @@ class MapPage(InventoryPage.InventoryPage):
 
     def removeShip(self, shipDoId):
         self.worldMap.removeShip(shipDoId)
-
-
 # okay decompiling .\pirates\piratesgui\MapPage.pyc

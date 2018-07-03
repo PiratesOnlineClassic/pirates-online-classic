@@ -7,29 +7,14 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class BorderFrame(DirectFrame):
-
-    pieceNames = ('background', 'top', 'right', 'bottom', 'left', 'topRight',
-                  'bottomRight', 'bottomLeft', 'topLeft')
-    nodeNames = dict(
-        zip(pieceNames, ('middle', 'top1', 'right', 'bottom', 'left',
-                         'topRight', 'bottomRight', 'bottomLeft', 'topLeft')))
+    
+    pieceNames = ('background', 'top', 'right', 'bottom', 'left', 'topRight', 'bottomRight',
+                  'bottomLeft', 'topLeft')
+    nodeNames = dict(zip(pieceNames, ('middle', 'top1', 'right', 'bottom', 'left',
+                                      'topRight', 'bottomRight', 'bottomLeft', 'topLeft')))
 
     def __init__(self, parent=None, **kw):
-        optiondefs = (('relief', None,
-                       None), ('borderScale', 0.3,
-                               self.setBorderScale), ('bgBuffer', 0.025,
-                                                      self.setBgBuffer),
-                      ('bgColorScale', VBase4(1, 1, 1, 1),
-                       self.setBgColorScale), ('bgTransparency', 0,
-                                               self.setBgTransparent),
-                      ('cornerWidth', 0.15,
-                       None), ('draggable', 0,
-                               None), ('frameSize', (-0.5, 0.5, -0.5, 0.5),
-                                       self.setFrameSize), ('suffix', '_f',
-                                                            None),
-                      ('state', DGG.NORMAL,
-                       self.setState), ('showBackground', True,
-                                        None), ('flatten', 1, None))
+        optiondefs = (('relief', None, None), ('borderScale', 0.3, self.setBorderScale), ('bgBuffer', 0.025, self.setBgBuffer), ('bgColorScale', VBase4(1, 1, 1, 1), self.setBgColorScale), ('bgTransparency', 0, self.setBgTransparent), ('cornerWidth', 0.15, None), ('draggable', 0, None), ('frameSize', (-0.5, 0.5, -0.5, 0.5), self.setFrameSize), ('suffix', '_f', None), ('state', DGG.NORMAL, self.setState), ('showBackground', True, None), ('flatten', 1, None))
         self.pieces = None
         self.guiComponents = {}
         self.defineoptions(kw, optiondefs)
@@ -72,13 +57,8 @@ class BorderFrame(DirectFrame):
 
     def loadGeometry(self):
         if not self.pieces:
-            modelGeom = loader.loadModel(
-                'models/gui/general_frame%s' % self['suffix'])
-            self.pieces = dict(
-                zip(self.pieceNames, [
-                    modelGeom.find('**/%s' % self.nodeNames[pieceName])
-                    for pieceName in self.pieceNames
-                ]))
+            modelGeom = loader.loadModel('models/gui/general_frame%s' % self['suffix'])
+            self.pieces = dict(zip(self.pieceNames, [ modelGeom.find('**/%s' % self.nodeNames[pieceName]) for pieceName in self.pieceNames ]))
             for k in ('top', 'right', 'bottom', 'left', 'background'):
                 tex = self.pieces[k].findTexture(TextureStage.getDefault())
                 if tex:
@@ -98,35 +78,13 @@ class BorderFrame(DirectFrame):
         self.background = self.frameParent.attachNewNode('background')
         if not self['suffix']:
             self.background.setColor(0.5, 0.5, 0.5, 1)
-        self.behindParent = self.frameParent.attachNewNode(
-            ModelNode('behindParent'))
-        self.guiComponents = {
-            self.pieceNames[0]:
-            self.copyFlattenedChild(self.pieces[self.pieceNames[0]],
-                                    self.background)
-        }
+        self.behindParent = self.frameParent.attachNewNode(ModelNode('behindParent'))
+        self.guiComponents = {self.pieceNames[0]: self.copyFlattenedChild(self.pieces[self.pieceNames[0]], self.background)}
         if self['draggable']:
-            self.guiComponents.update(
-                dict(
-                    zip(self.pieceNames[1:], [
-                        DirectButton(
-                            parent=self.frameParent,
-                            guiId=self.guiId + '-' + pieceName,
-                            relief=None,
-                            state=self['state'],
-                            geom=self.pieces[pieceName],
-                            rolloverSound=None,
-                            clickSound=None,
-                            pressEffect=0) for pieceName in self.pieceNames[1:]
-                    ])))
+            self.guiComponents.update(dict(zip(self.pieceNames[1:], [ DirectButton(parent=self.frameParent, guiId=self.guiId + '-' + pieceName, relief=None, state=self['state'], geom=self.pieces[pieceName], rolloverSound=None, clickSound=None, pressEffect=0) for pieceName in self.pieceNames[1:] ])))
         else:
-            self.guiComponents.update(
-                dict(
-                    zip(self.pieceNames[1:], [
-                        self.copyFlattenedChild(self.pieces[pieceName],
-                                                self.frameParent)
-                        for pieceName in self.pieceNames[1:]
-                    ])))
+            self.guiComponents.update(dict(zip(self.pieceNames[1:], [ self.copyFlattenedChild(self.pieces[pieceName], self.frameParent)
+             for pieceName in self.pieceNames[1:] ])))
         self.guiComponents['background'].setColorScale(self['bgColorScale'])
         self.guiComponents['background'].setTransparency(self['bgTransparency'])
         if not self['showBackground']:
@@ -144,40 +102,30 @@ class BorderFrame(DirectFrame):
         return
 
     def resetHBorder(self, scale, frameSize):
-        bScale = scale * (
-            frameSize / self['borderScale'] - self['cornerWidth'] * 2.0 / scale)
+        bScale = scale * (frameSize / self['borderScale'] - self['cornerWidth'] * 2.0 / scale)
         scale = self.guiComponents['top'].getScale()
         scale.setX(bScale)
         self.guiComponents['top'].setScale(scale)
-        self.guiComponents['top'].setTexScale(TextureStage.getDefault(), 1,
-                                              bScale)
-        self.guiComponents['top'].setTexOffset(TextureStage.getDefault(), 0,
-                                               -(bScale - 1) / 2.0)
+        self.guiComponents['top'].setTexScale(TextureStage.getDefault(), 1, bScale)
+        self.guiComponents['top'].setTexOffset(TextureStage.getDefault(), 0, -(bScale - 1) / 2.0)
         self.guiComponents['bottom'].setScale(scale)
-        self.guiComponents['bottom'].setTexScale(TextureStage.getDefault(), 1,
-                                                 bScale)
-        self.guiComponents['bottom'].setTexOffset(TextureStage.getDefault(), 0,
-                                                  -(bScale - 1) / 2.0)
+        self.guiComponents['bottom'].setTexScale(TextureStage.getDefault(), 1, bScale)
+        self.guiComponents['bottom'].setTexOffset(TextureStage.getDefault(), 0, -(bScale - 1) / 2.0)
         xPos = bScale - 1.0
         self.guiComponents['topRight'].setX(xPos)
         self.guiComponents['right'].setX(xPos)
         self.guiComponents['bottomRight'].setX(xPos)
 
     def resetVBorder(self, scale, frameSize):
-        bScale = scale * (
-            frameSize / self['borderScale'] - self['cornerWidth'] * 2 / scale)
+        bScale = scale * (frameSize / self['borderScale'] - self['cornerWidth'] * 2 / scale)
         scale = self.guiComponents['left'].getScale()
         scale.setZ(bScale)
         self.guiComponents['left'].setScale(scale)
-        self.guiComponents['left'].setTexScale(TextureStage.getDefault(), 1,
-                                               bScale)
-        self.guiComponents['left'].setTexOffset(TextureStage.getDefault(), 0,
-                                                -(bScale - 1) / 2.0)
+        self.guiComponents['left'].setTexScale(TextureStage.getDefault(), 1, bScale)
+        self.guiComponents['left'].setTexOffset(TextureStage.getDefault(), 0, -(bScale - 1) / 2.0)
         self.guiComponents['right'].setScale(scale)
-        self.guiComponents['right'].setTexScale(TextureStage.getDefault(), 1,
-                                                bScale)
-        self.guiComponents['right'].setTexOffset(TextureStage.getDefault(), 0,
-                                                 -(bScale - 1) / 2.0)
+        self.guiComponents['right'].setTexScale(TextureStage.getDefault(), 1, bScale)
+        self.guiComponents['right'].setTexOffset(TextureStage.getDefault(), 0, -(bScale - 1) / 2.0)
         yPos = 1.0 - bScale
         self.guiComponents['bottomLeft'].setZ(yPos)
         self.guiComponents['bottom'].setZ(yPos)
@@ -186,27 +134,18 @@ class BorderFrame(DirectFrame):
     def resetBackground(self, xScale, yScale, xFrameSize, yFrameSize):
         xbScale = xScale * (xFrameSize - self['bgBuffer'] * 2.0 / xScale)
         ybScale = yScale * (yFrameSize - self['bgBuffer'] * 2.0 / yScale)
-        xScale = xScale * (
-            xFrameSize / self['borderScale'] - self['bgBuffer'] * 2.0 / xScale)
-        yScale = yScale * (
-            yFrameSize / self['borderScale'] - self['bgBuffer'] * 2.0 / yScale)
+        xScale = xScale * (xFrameSize / self['borderScale'] - self['bgBuffer'] * 2.0 / xScale)
+        yScale = yScale * (yFrameSize / self['borderScale'] - self['bgBuffer'] * 2.0 / yScale)
         oldScale = self.guiComponents['background'].getScale()
         self.guiComponents['background'].setScale(xScale, oldScale[1], yScale)
-        self.guiComponents['background'].setTexScale(TextureStage.getDefault(),
-                                                     xbScale, ybScale)
-        self.guiComponents['background'].setTexOffset(TextureStage.getDefault(),
-                                                      -(xbScale - 1) / 2.0,
-                                                      -(ybScale - 1) / 2.0)
-        self.guiComponents['background'].setX(
-            -(self['cornerWidth'] - self['bgBuffer']))
-        self.guiComponents['background'].setZ(self['cornerWidth'] -
-                                              self['bgBuffer'])
+        self.guiComponents['background'].setTexScale(TextureStage.getDefault(), xbScale, ybScale)
+        self.guiComponents['background'].setTexOffset(TextureStage.getDefault(), -(xbScale - 1) / 2.0, -(ybScale - 1) / 2.0)
+        self.guiComponents['background'].setX(-(self['cornerWidth'] - self['bgBuffer']))
+        self.guiComponents['background'].setZ(self['cornerWidth'] - self['bgBuffer'])
 
     def resetDecorations(self):
         scale = self.getScale()
-        invScale = Vec3(self['borderScale'] / scale[0],
-                        self['borderScale'] / scale[1],
-                        self['borderScale'] / scale[2])
+        invScale = Vec3(self['borderScale'] / scale[0], self['borderScale'] / scale[1], self['borderScale'] / scale[2])
         self.frameParent.setScale(invScale)
         frameSize = self['frameSize']
         if frameSize:
@@ -215,10 +154,8 @@ class BorderFrame(DirectFrame):
         else:
             xFrameSize, xFramePos = 1, -0.5
             yFrameSize, yFramePos = 1, -0.5
-        self.frameParent.setX(
-            xFramePos + self['cornerWidth'] / scale[0] * self['borderScale'])
-        self.frameParent.setZ(yFrameSize + yFramePos - self['cornerWidth'] /
-                              scale[2] * self['borderScale'])
+        self.frameParent.setX(xFramePos + self['cornerWidth'] / scale[0] * self['borderScale'])
+        self.frameParent.setZ(yFrameSize + yFramePos - self['cornerWidth'] / scale[2] * self['borderScale'])
         ts = self.frameParent.getTransform().getInverse()
         self.behindParent.setTransform(ts)
         self.resetHBorder(scale[0], xFrameSize)
@@ -281,8 +218,7 @@ class BorderFrame(DirectFrame):
         if self['draggable']:
             taskMgr.remove(self.taskName('dragTask'))
             vWidget2render2d = self.getPos(render2d)
-            vMouse2render2d = Point3(event.getMouse()[0], 0,
-                                     event.getMouse()[1])
+            vMouse2render2d = Point3(event.getMouse()[0], 0, event.getMouse()[1])
             editVec = Vec3(vWidget2render2d - vMouse2render2d)
             task = taskMgr.add(self.dragTask, self.taskName('dragTask'))
             task.editVec = editVec
@@ -328,15 +264,11 @@ class BorderFrame(DirectFrame):
         scaleX, scaleZ = self.getScale()[0], self.getScale()[2]
         borderScale = self['borderScale']
         factorX, factorZ = borderScale / scaleX, borderScale / scaleZ
-        return Vec4(frameSize[0] + self['bgBuffer'] * factorX,
-                    frameSize[1] - self['bgBuffer'] * factorX,
-                    frameSize[2] + self['bgBuffer'] * factorZ,
-                    frameSize[3] - self['bgBuffer'] * factorZ)
+        return Vec4(frameSize[0] + self['bgBuffer'] * factorX, frameSize[1] - self['bgBuffer'] * factorX, frameSize[2] + self['bgBuffer'] * factorZ, frameSize[3] - self['bgBuffer'] * factorZ)
 
     def setBgTransparent(self):
         if self.guiComponents:
-            self.guiComponents['background'].setTransparency(
-                self['bgTransparency'])
+            self.guiComponents['background'].setTransparency(self['bgTransparency'])
 
     def setBgColorScale(self):
         if self.guiComponents:

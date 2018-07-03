@@ -26,15 +26,12 @@ from pirates.quest.QuestConstants import NPCIds
 from pirates.uberdog.UberDogGlobals import *
 
 
-class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
-                             DistributedShopKeeper.DistributedShopKeeper,
-                             Townfolk.Townfolk):
+class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, DistributedShopKeeper.DistributedShopKeeper, Townfolk.Townfolk):
 
     DiskWaitingColor = (0, 0, 1, 0.5)
     DiskUseColor = None
     HelpTextIconTexture = None
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedNPCTownfolk')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCTownfolk')
 
     def __init__(self, cr):
         DistributedBattleNPC.DistributedBattleNPC.__init__(self, cr)
@@ -72,8 +69,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         DistributedShopKeeper.DistributedShopKeeper.announceGenerate(self)
         yieldThread('shop gen')
         self.setName(self.name)
-        self.setInteractOptions(proximityText=PLocalizer.InteractNamedTownfolk %
-                                self.name)
+        self.setInteractOptions(proximityText=PLocalizer.InteractNamedTownfolk % self.name)
         localAvatar.checkForAutoTrigger(self.doId)
         yieldThread('auto trigger')
         if not self.canMove:
@@ -82,27 +78,18 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         self.accept('localAvatarQuestComplete', self.updateNametagQuestIcon)
         self.accept('localAvatarQuestUpdate', self.updateNametagQuestIcon)
         self.accept('localAvatarQuestItemUpdate', self.updateNametagQuestIcon)
-        self.accept(
-            'inventoryAddDoId-%s-%s' % (localAvatar.getInventoryId(),
-                                        InventoryCategory.QUESTS),
-            self.updateNametagQuestIcon)
-        self.accept(
-            'inventoryRemoveDoId-%s-%s' % (localAvatar.getInventoryId(),
-                                           InventoryCategory.QUESTS),
-            self.updateNametagQuestIcon)
+        self.accept('inventoryAddDoId-%s-%s' % (localAvatar.getInventoryId(), InventoryCategory.QUESTS), self.updateNametagQuestIcon)
+        self.accept('inventoryRemoveDoId-%s-%s' % (localAvatar.getInventoryId(), InventoryCategory.QUESTS), self.updateNametagQuestIcon)
         if self.getHelpId():
             if DistributedNPCTownfolk.HelpTextIconTexture is None:
                 gui = loader.loadModel('models/gui/toplevel_gui')
-                DistributedNPCTownfolk.HelpTextIconTexture = gui.find(
-                    '**/generic_question*')
-            self.nametagIcon = DistributedNPCTownfolk.HelpTextIconTexture.copyTo(
-                self.nametag3d)
+                DistributedNPCTownfolk.HelpTextIconTexture = gui.find('**/generic_question*')
+            self.nametagIcon = DistributedNPCTownfolk.HelpTextIconTexture.copyTo(self.nametag3d)
             self.nametagIcon.setScale(20)
             self.nametagIcon.setPos(0, 0, 3.5)
             self.nametagIcon.reparentTo(self.getNameText())
             self.nametagIcon.setDepthWrite(0)
-            self.nametagIconGlow = loader.loadModel(
-                'models/effects/lanternGlow')
+            self.nametagIconGlow = loader.loadModel('models/effects/lanternGlow')
             self.nametagIconGlow.reparentTo(self.nametag.getNameIcon())
             self.nametagIconGlow.setScale(10.0)
             self.nametagIconGlow.setColorScaleOff()
@@ -110,10 +97,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
             self.nametagIconGlow.setLightOff()
             self.nametagIconGlow.setPos(0, -0.05, 3.2)
             self.nametagIconGlow.setDepthWrite(0)
-            self.nametagIconGlow.node().setAttrib(
-                ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                      ColorBlendAttrib.OIncomingAlpha,
-                                      ColorBlendAttrib.OOne))
+            self.nametagIconGlow.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
             self.nametagIconGlow.setColor(0.85, 0.85, 0.85, 0.85)
 
     def autoTriggerCheck(self, Task=None):
@@ -148,10 +132,8 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         self.ignore('localAvatarQuestComplete')
         self.ignore('localAvatarQuestUpdate')
         self.ignore('localAvatarQuestItemUpdate')
-        self.ignore('inventoryAddDoId-%s-%s' % (localAvatar.getInventoryId(),
-                                                InventoryCategory.QUESTS))
-        self.ignore('inventoryRemoveDoId-%s-%s' % (localAvatar.getInventoryId(),
-                                                   InventoryCategory.QUESTS))
+        self.ignore('inventoryAddDoId-%s-%s' % (localAvatar.getInventoryId(), InventoryCategory.QUESTS))
+        self.ignore('inventoryRemoveDoId-%s-%s' % (localAvatar.getInventoryId(), InventoryCategory.QUESTS))
 
     def delete(self):
         DistributedBattleNPC.DistributedBattleNPC.delete(self)
@@ -166,7 +148,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         return 0
 
     def setDNAId(self, dnaId):
-        if dnaId and dnaId in NPCList.NPC_LIST:
+        if dnaId and NPCList.NPC_LIST.has_key(dnaId):
             dnaDict = NPCList.NPC_LIST[dnaId]
             customDNA = HumanDNA.HumanDNA()
             customDNA.loadFromNPCDict(dnaDict)
@@ -180,11 +162,9 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
 
     def requestInteraction(self, avId, interactType=0):
         if localAvatar.zombie and avId == localAvatar.doId:
-            localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoPeople,
-                                             PiratesGuiGlobals.TextFG6)
+            localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoPeople, PiratesGuiGlobals.TextFG6)
             return
-        DistributedBattleNPC.DistributedBattleNPC.requestInteraction(
-            self, avId, interactType)
+        DistributedBattleNPC.DistributedBattleNPC.requestInteraction(self, avId, interactType)
 
     def rejectInteraction(self):
         self.cancelInteraction(base.localAvatar)
@@ -202,21 +182,16 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
             self.playedFirstDialog = False
             self.setChatAbsolute('', CFSpeech | CFTimeout)
             self.acceptInteraction()
-            if self.avatarType.isA(AvatarTypes.Tailor) or self.avatarType.isA(
-                    AvatarTypes.Tattoo) or self.avatarType.isA(
-                        AvatarTypes.Jeweler) or self.avatarType.isA(
-                            AvatarTypes.Barber):
+            if self.avatarType.isA(AvatarTypes.Tailor) or self.avatarType.isA(AvatarTypes.Tattoo) or self.avatarType.isA(AvatarTypes.Jeweler) or self.avatarType.isA(AvatarTypes.Barber):
                 localAvatar.setSoloInteraction(True)
 
     def stopInteract(self, av, dialogStr=''):
-        if av == base.localAvatar and self.interactMode and not self.isDeleted(
-        ):
+        if av == base.localAvatar and self.interactMode and not self.isDeleted():
             localAvatar.setSoloInteraction(False)
             self.cleanUpQuestDetails()
             self.cleanUpQuestMenu()
             if self.interactGUI:
-                self.notify.warning(
-                    'stopInteract: old interact GUI still around')
+                self.notify.warning('stopInteract: old interact GUI still around')
                 self.interactGUI.destroy()
                 self.interactGUI = None
             if self.respecMenuGUI:
@@ -240,8 +215,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         elif self.firstDialog == True and self.dialogFlag == 0:
             questStr = ''
             if self.getUniqueId() in PLocalizer.GreetingStrings:
-                questStr = PLocalizer.GreetingStrings[self.getUniqueId()].get(
-                    'greeting')
+                questStr = PLocalizer.GreetingStrings[self.getUniqueId()].get('greeting')
                 if questStr is None or len(questStr) == 0:
                     questStr = InteractGlobals.getNPCGreeting(self.avatarType)
             else:
@@ -250,8 +224,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         elif self.dialogFlag == 0:
             questStr = ''
             if self.getUniqueId() in PLocalizer.GreetingStrings:
-                questStr = PLocalizer.GreetingStrings[self.getUniqueId()].get(
-                    'goodbye')
+                questStr = PLocalizer.GreetingStrings[self.getUniqueId()].get('goodbye')
                 if questStr is None or len(questStr) == 0:
                     questStr = InteractGlobals.getNPCGreeting(self.avatarType)
             else:
@@ -266,19 +239,15 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
                 helpStrings = PLocalizer.townfolkHelpText.get(self.getHelpId())
                 self.clearOffer()
                 if len(helpStrings):
-                    self.playQuestString(
-                        random.choice(helpStrings), timeout=False)
+                    self.playQuestString(random.choice(helpStrings), timeout=False)
             elif self.getUniqueId() in PLocalizer.GreetingStrings:
-                questStr = PLocalizer.GreetingStrings[self.getUniqueId()].get(
-                    'brushoff')
+                questStr = PLocalizer.GreetingStrings[self.getUniqueId()].get('brushoff')
                 if questStr is None or len(questStr) == 0:
                     questStr = InteractGlobals.getNPCGreeting(self.avatarType)
             else:
                 questStr = InteractGlobals.getNPCBrushoff(self.avatarType)
                 if not base.config.GetBool('want-privateering', True):
-                    if self.getUniqueId() in [
-                            NPCIds.PIERRE_LE_PORC, NPCIds.GARCIA_DE_AVARCIA
-                    ]:
+                    if self.getUniqueId() in [NPCIds.PIERRE_LE_PORC, NPCIds.GARCIA_DE_AVARCIA]:
                         questStr = random.choice(PLocalizer.ShipPVPLordBrushoff)
             self.playQuestString(questStr, timeout=True, useChatBubble=True)
         else:
@@ -297,20 +266,17 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
             self.notify.warning('offerOptions: old interact GUI still around')
             self.interactGUI.destroy()
             self.interactGUI = None
-        if hasattr(self, 'currentDialogMovie'
-                  ) or self.purgeInteractGui or self.playingQuestString == True:
+        if hasattr(self, 'currentDialogMovie') or self.purgeInteractGui or self.playingQuestString == True:
             self.receiveOffer(self.InteractOffer)
             self.genericDialog = False
             return
         if not self.interactMode:
             return
         if self.avatarType.isA(AvatarTypes.Musician):
-            self.acceptOnce('stoppedShopping', self.cancelInteraction,
-                            [base.localAvatar])
+            self.acceptOnce('stoppedShopping', self.cancelInteraction, [base.localAvatar])
             self.startShopping(InteractGlobals.MUSICIAN)
             if localAvatar.getGameState() != 'NPCInteract':
-                localAvatar.b_setGameState(
-                    'NPCInteract', localArgs=[self, True])
+                localAvatar.b_setGameState('NPCInteract', localArgs=[self, True])
             self.clearOffer()
             return
         optionIds, stateCodes, bribeType = self.computeOptions()
@@ -323,8 +289,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         if anyActive:
             self.interactGUI = InteractGUI.InteractGUI()
             title = self.getMenuTitle()
-            self.interactGUI.setOptions(title, optionIds, stateCodes,
-                                        self.selectOptionConfirm, bribeType)
+            self.interactGUI.setOptions(title, optionIds, stateCodes, self.selectOptionConfirm, bribeType)
         elif self.dialogOpen == False:
             if self.firstDialog == True:
                 self.dialogFlag = 2
@@ -353,7 +318,6 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
             self.b_selectOption(optionId)
 
     def setMovie(self, mode, avId):
-
         def doMovie(av):
             if mode == 'start':
                 pass
@@ -370,8 +334,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
             if self.pendingDoMovie:
                 base.cr.relatedObjectMgr.abortRequest(self.pendingDoMovie)
                 self.pendingDoMovie = None
-            self.pendingDoMovie = base.cr.relatedObjectMgr.requestObjects(
-                [avId], eachCallback=doMovie, timeout=60)
+            self.pendingDoMovie = base.cr.relatedObjectMgr.requestObjects([avId], eachCallback=doMovie, timeout=60)
             return
         doMovie(av)
 
@@ -385,10 +348,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         gold = EconomyGlobals.getAvatarHealHpCost(maxHp - hp)
         if self.confirmDialog:
             self.confirmDialog.destroy()
-        self.confirmDialog = PDialog.PDialog(
-            text=PLocalizer.HealHpConfirmDialog % {'gold': gold},
-            style=OTPDialog.YesNo,
-            command=self.__handleHealHpConfirmation)
+        self.confirmDialog = PDialog.PDialog(text=PLocalizer.HealHpConfirmDialog % {'gold': gold}, style=OTPDialog.YesNo, command=self.__handleHealHpConfirmation)
 
     def __handleHealHpConfirmation(self, value):
         if self.confirmDialog:
@@ -403,10 +363,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         gold = EconomyGlobals.getAvatarHealMojoCost(maxMojo - mojo)
         if self.confirmDialog:
             self.confirmDialog.destroy()
-        self.confirmDialog = PDialog.PDialog(
-            text=PLocalizer.HealMojoConfirmDialog % {'gold': gold},
-            style=OTPDialog.YesNo,
-            command=self.__handleHealMojoConfirmation)
+        self.confirmDialog = PDialog.PDialog(text=PLocalizer.HealMojoConfirmDialog % {'gold': gold}, style=OTPDialog.YesNo, command=self.__handleHealMojoConfirmation)
 
     def __handleHealMojoConfirmation(self, value):
         if self.confirmDialog:
@@ -421,43 +378,22 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
             if quest.isComplete():
                 continue
             for task in quest.questDNA.getTasks():
-                if isinstance(task,
-                              QuestTaskDNA.BribeNPCTaskDNA) and task.getNpcId(
-                              ) == self.getUniqueId() and task.getGold() > gold:
+                if isinstance(task, QuestTaskDNA.BribeNPCTaskDNA) and task.getNpcId() == self.getUniqueId() and task.getGold() > gold:
                     gold = task.getGold()
 
         if self.confirmDialog:
             self.confirmDialog.destroy()
         avGold = localAvatar.getMoney()
         if avGold >= gold:
-            self.confirmDialog = PDialog.PDialog(
-                text=PLocalizer.BribeConfirmDialog % {
-                    'name': self.getName(),
-                    'gold': gold
-                },
-                style=OTPDialog.YesNo,
-                command=self.__handleBribeConfirmation)
+            self.confirmDialog = PDialog.PDialog(text=PLocalizer.BribeConfirmDialog % {'name': self.getName(), 'gold': gold}, style=OTPDialog.YesNo, command=self.__handleBribeConfirmation)
         else:
-            self.confirmDialog = PDialog.PDialog(
-                text=PLocalizer.BribeNotEnoughGold % {'gold': gold},
-                style=OTPDialog.CancelOnly,
-                command=self.__handleBribeConfirmation)
+            self.confirmDialog = PDialog.PDialog(text=PLocalizer.BribeNotEnoughGold % {'gold': gold}, style=OTPDialog.CancelOnly, command=self.__handleBribeConfirmation)
         gui = loader.loadModel('models/gui/toplevel_gui')
         goldCoin = gui.find('**/treasure_w_coin*')
-        self.confirmDialog.goldLabel = DirectLabel(
-            parent=self.confirmDialog,
-            relief=0,
-            text=PLocalizer.BribeConfirmYourGold % avGold,
-            text_align=TextNode.ALeft,
-            text_scale=0.035,
-            text_pos=(0.0, 0.0),
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=0,
-            image=goldCoin,
-            image_scale=0.22,
-            image_pos=(-0.04, 0, 0.01),
-            pos=(-0.08, 0, -0.12))
+        self.confirmDialog.goldLabel = DirectLabel(parent=self.confirmDialog, relief=0, text=PLocalizer.BribeConfirmYourGold % avGold, text_align=TextNode.ALeft, 
+                                                   text_scale=0.035, text_pos=(0.0, 0.0), text_fg=PiratesGuiGlobals.TextFG1, 
+                                                   text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=0, image=goldCoin, image_scale=0.22, 
+                                                   image_pos=(-0.04, 0, 0.01), pos=(-0.08, 0, -0.12))
 
     def __handleBribeConfirmation(self, value):
         if self.confirmDialog:
@@ -484,20 +420,16 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         inv = localAvatar.getInventory()
         if inv is None:
             self.notify.warning('computeOptions: inventory not present')
-        elif len(inv.getQuestList()) >= inv.getStackLimit(
-                InventoryType.OpenQuestSlot) or not self.hasQuestOffers():
+        elif len(inv.getQuestList()) >= inv.getStackLimit(InventoryType.OpenQuestSlot) or not self.hasQuestOffers():
             questButtonState = InteractGlobals.DISABLED
         for quest in inv.getQuestList():
             foundBribe = 0
             if quest.isComplete():
                 continue
             if quest.questDNA is None:
-                self.notify.error(
-                    'quest %s: does not contain a dna; is it a rogue quest, given in error?'
-                    % quest.getQuestId())
+                self.notify.error('quest %s: does not contain a dna; is it a rogue quest, given in error?' % quest.getQuestId())
             for task in quest.questDNA.getTasks():
-                if isinstance(task, QuestTaskDNA.BribeNPCTaskDNA
-                             ) and task.getNpcId() == self.getUniqueId():
+                if isinstance(task, QuestTaskDNA.BribeNPCTaskDNA) and task.getNpcId() == self.getUniqueId():
                     bribeButtonState = InteractGlobals.NORMAL
                     foundBribe = 1
                     bribeType = task.bribeType
@@ -506,9 +438,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
             if foundBribe:
                 break
 
-        if len(inv.getShipDoIdList()) >= inv.getCategoryLimit(
-                InventoryCategory.SHIPS) or localAvatar.style.getTutorial(
-                ) < PiratesGlobals.TUT_GOT_SHIP:
+        if len(inv.getShipDoIdList()) >= inv.getCategoryLimit(InventoryCategory.SHIPS) or localAvatar.style.getTutorial() < PiratesGlobals.TUT_GOT_SHIP:
             shipButtonState = InteractGlobals.DISABLED
         if len(inv.getShipDoIdList()) <= 0:
             sellShipButtonState = InteractGlobals.DISABLED
@@ -528,36 +458,20 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
             healMojoButtonState = InteractGlobals.NORMAL
         if self.shopInventory:
             storeButtonState = InteractGlobals.NORMAL
-        print 'DEBUG - optionIds: %s' % InteractGlobals.getNPCInteractMenu(
-            self.avatarType)[1]
+        print 'DEBUG - optionIds: %s' % InteractGlobals.getNPCInteractMenu(self.avatarType)[1]
         optionIds = InteractGlobals.getNPCInteractMenu(self.avatarType)[1]
-        buttonStateDict = {
-            InteractGlobals.QUEST: questButtonState,
-            InteractGlobals.TALK: InteractGlobals.DISABLED,
-            InteractGlobals.DUEL: InteractGlobals.DISABLED,
-            InteractGlobals.STORE: storeButtonState,
-            InteractGlobals.SHIPS: shipButtonState,
-            InteractGlobals.SELL_SHIPS: sellShipButtonState,
-            InteractGlobals.TRAIN: InteractGlobals.DISABLED,
-            InteractGlobals.REPAIR: repairButtonState,
-            InteractGlobals.UPGRADE: InteractGlobals.DISABLED,
-            InteractGlobals.TRADE: InteractGlobals.DISABLED,
-            InteractGlobals.HEAL_HP: healButtonState,
-            InteractGlobals.HEAL_MOJO: healMojoButtonState,
-            InteractGlobals.CANCEL: InteractGlobals.NORMAL,
-            InteractGlobals.SAIL: sailButtonState,
-            InteractGlobals.SAILTM: sailTMButtonState,
-            InteractGlobals.BRIBE: bribeButtonState,
-            InteractGlobals.ACCESSORIES_STORE: InteractGlobals.NORMAL,
-            InteractGlobals.TATTOO_STORE: InteractGlobals.NORMAL,
-            InteractGlobals.JEWELRY_STORE: InteractGlobals.NORMAL,
-            InteractGlobals.BARBER_STORE: InteractGlobals.NORMAL,
-            InteractGlobals.RESPEC: respecButtonState,
-            InteractGlobals.MUSICIAN: InteractGlobals.NORMAL,
-            InteractGlobals.PVP_REWARDS_TATTOO: InteractGlobals.NORMAL,
-            InteractGlobals.PVP_REWARDS_EYE_PATCHES: InteractGlobals.DISABLED,
-            InteractGlobals.PVP_REWARDS_HATS: InteractGlobals.DISABLED
-        }
+        buttonStateDict = {InteractGlobals.QUEST: questButtonState, InteractGlobals.TALK: InteractGlobals.DISABLED, InteractGlobals.DUEL: 
+                           InteractGlobals.DISABLED, InteractGlobals.STORE: storeButtonState, InteractGlobals.SHIPS: shipButtonState, 
+                           InteractGlobals.SELL_SHIPS: sellShipButtonState, InteractGlobals.TRAIN: InteractGlobals.DISABLED, 
+                           InteractGlobals.REPAIR: repairButtonState, InteractGlobals.UPGRADE: InteractGlobals.DISABLED, InteractGlobals.TRADE: 
+                           InteractGlobals.DISABLED, InteractGlobals.HEAL_HP: healButtonState, InteractGlobals.HEAL_MOJO: healMojoButtonState, 
+                           InteractGlobals.CANCEL: InteractGlobals.NORMAL, InteractGlobals.SAIL: sailButtonState, 
+                           InteractGlobals.SAILTM: sailTMButtonState, InteractGlobals.BRIBE: bribeButtonState, InteractGlobals.ACCESSORIES_STORE: 
+                           InteractGlobals.NORMAL, InteractGlobals.TATTOO_STORE: InteractGlobals.NORMAL, InteractGlobals.JEWELRY_STORE: 
+                           InteractGlobals.NORMAL, InteractGlobals.BARBER_STORE: InteractGlobals.NORMAL, 
+                           InteractGlobals.RESPEC: respecButtonState, InteractGlobals.MUSICIAN: InteractGlobals.NORMAL, 
+                           InteractGlobals.PVP_REWARDS_TATTOO: InteractGlobals.NORMAL, InteractGlobals.PVP_REWARDS_EYE_PATCHES: InteractGlobals.DISABLED, 
+                           InteractGlobals.PVP_REWARDS_HATS: InteractGlobals.DISABLED}
         stateCodes = []
         for i in range(len(optionIds)):
             state = buttonStateDict.get(optionIds[i])
@@ -571,13 +485,8 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         DistributedBattleNPC.DistributedBattleNPC.d_selectOption(self, optionId)
 
     def selectOption(self, optionId):
-        if optionId in [
-                InteractGlobals.STORE, InteractGlobals.TRAIN,
-                InteractGlobals.SHIPS, InteractGlobals.UPGRADE,
-                InteractGlobals.ACCESSORIES_STORE, InteractGlobals.TATTOO_STORE,
-                InteractGlobals.JEWELRY_STORE, InteractGlobals.BARBER_STORE,
-                InteractGlobals.PVP_REWARDS_TATTOO
-        ]:
+        if optionId in [InteractGlobals.STORE, InteractGlobals.TRAIN, InteractGlobals.SHIPS, InteractGlobals.UPGRADE, InteractGlobals.ACCESSORIES_STORE, 
+                        InteractGlobals.TATTOO_STORE, InteractGlobals.JEWELRY_STORE, InteractGlobals.BARBER_STORE, InteractGlobals.PVP_REWARDS_TATTOO]:
             if self.interactGUI:
                 self.interactGUI.hide()
             self.startShopping(optionId)
@@ -590,13 +499,13 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
                 self.interactGUI.hide()
             self.startRepair(optionId)
         elif optionId == InteractGlobals.SELL_SHIPS:
-            if self.interactGUI:
-                self.interactGUI.hide()
-            self.startSellShip(optionId)
+                if self.interactGUI:
+                    self.interactGUI.hide()
+                self.startSellShip(optionId)
         elif optionId == InteractGlobals.OVERHAUL:
-            if self.interactGUI:
-                self.interactGUI.hide()
-            self.startOverhaul(optionId)
+                if self.interactGUI:
+                    self.interactGUI.hide()
+                self.startOverhaul(optionId)
         elif optionId == InteractGlobals.QUEST:
             if self.interactGUI:
                 self.interactGUI.hide()
@@ -637,8 +546,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         self.ignore('makeSale')
 
     def makeSaleResponse(self, result):
-        DistributedShopKeeper.DistributedShopKeeper.makeSaleResponse(
-            self, result)
+        DistributedShopKeeper.DistributedShopKeeper.makeSaleResponse(self, result)
         self.ignore('makeSale')
 
     def swordTutorialPt1(self):
@@ -649,8 +557,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         self.sendUpdate('pistolTutorialPt1', [localAvatar.getDoId()])
 
     def setHp(self, hitPoints, quietly):
-        DistributedBattleNPC.DistributedBattleNPC.setHp(self, hitPoints,
-                                                        quietly)
+        DistributedBattleNPC.DistributedBattleNPC.setHp(self, hitPoints, quietly)
 
     def drawWeapon(self):
         ival = self.pullOutCurrentWeapon()
@@ -662,11 +569,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
 
     def drawSwordTutorial(self):
         self.drawSwordPanel = NewTutorialPanel(['drawSword'])
-        taskMgr.doMethodLater(
-            4.0,
-            self.drawSwordPanel.activate,
-            self.uniqueName('drawSwordPanelPause'),
-            extraArgs=[])
+        taskMgr.doMethodLater(4.0, self.drawSwordPanel.activate, self.uniqueName('drawSwordPanelPause'), extraArgs=[])
 
     def attackSwordTutorial(self):
         if not self.beginFight:
@@ -676,11 +579,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         if hasattr(self, 'drawSwordPanel'):
             self.drawSwordPanel.hide()
         self.attackSwordPanel = NewTutorialPanel(['attackSword'])
-        taskMgr.doMethodLater(
-            4.0,
-            self.attackSwordPanel.activate,
-            self.uniqueName('attackSwordPanelPause'),
-            extraArgs=[])
+        taskMgr.doMethodLater(4.0, self.attackSwordPanel.activate, self.uniqueName('attackSwordPanelPause'), extraArgs=[])
 
     def createHpMeter(self):
         pass
@@ -709,12 +608,8 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         self.ignore('tooFar')
 
     def shipTutorialPt1(self):
-        nameData = [
-            PLocalizer.PirateShipPrefix.keys(),
-            PLocalizer.PirateShipSuffix.keys()
-        ]
-        self.shipNamePanel = NamePanelGui.NamePanelGui(
-            PLocalizer.NamePanelTitle, nameData, showClose=False)
+        nameData = [PLocalizer.PirateShipPrefix.keys(), PLocalizer.PirateShipSuffix.keys()]
+        self.shipNamePanel = NamePanelGui.NamePanelGui(PLocalizer.NamePanelTitle, nameData, showClose=False)
         self.shipNamePanel.setPos(-1, 0, 0)
         self.acceptOnce('nameChosen', self.handleShipNameChosen)
 
@@ -725,15 +620,12 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         avId = localAvatar.getDoId()
         self.sendUpdate('shipTutorialPt1', [avId, shipName])
 
-    def playDialogMovie(self, dialogId, doneCallback=None,
-                        oldLocalAvState=None):
-        DistributedBattleNPC.DistributedBattleNPC.playDialogMovie(
-            self, dialogId, doneCallback, oldLocalAvState)
+    def playDialogMovie(self, dialogId, doneCallback=None, oldLocalAvState=None):
+        DistributedBattleNPC.DistributedBattleNPC.playDialogMovie(self, dialogId, doneCallback, oldLocalAvState)
         if self.interactGUI:
             self.interactGUI.destroy()
             self.interactGUI = None
-        self.acceptOnce(InteractiveBase.END_INTERACT_EVENT,
-                        self.stopDialogMovieEvent)
+        self.acceptOnce(InteractiveBase.END_INTERACT_EVENT, self.stopDialogMovieEvent)
 
     def stopDialogMovieEvent(self):
         messenger.send('dialogFinish')
@@ -770,9 +662,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
     def playInteractMovie(self, interactType='default', hasMenu=True):
         allAnims = CustomAnims.INTERACT_ANIMS.get(interactType)
         if allAnims == None:
-            self.notify.warning(
-                'undefined interaction type %s, not found in CustomAnims.INTERACT_ANIMS'
-                % self.interactType)
+            self.notify.warning('undefined interaction type %s, not found in CustomAnims.INTERACT_ANIMS' % self.interactType)
         else:
             availAnims = allAnims.get('interact')
             availAnimsInto = allAnims.get('interactInto')
@@ -783,25 +673,18 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
             if not self.interactCamPosHpr:
                 curAnim = self.getCurrentAnim()
                 self.pose(chosenAnim, 1, blendT=0)
-                if self.castDnaId and self.castDnaId in [
-                        'models/char/js_2000', 'models/char/td_2000',
-                        'models/char/es_2000'
-                ]:
+                if self.castDnaId and self.castDnaId in ['models/char/js_2000', 'models/char/td_2000', 'models/char/es_2000']:
                     np = self.attachNewNode('interactCamNode')
-                    np.setPos(
-                        self.headNode.getX(self),
-                        self.headNode.getY(self) + 4.5,
-                        self.headNode.getZ(self) + 1)
+                    np.setPos(self.headNode.getX(self), self.headNode.getY(self) + 4.5, self.headNode.getZ(self) + 1)
                 else:
                     np = self.headNode.attachNewNode('interactCamNode')
                     np.setPos(1, 0, -4.5)
                 np.wrtReparentTo(render)
-                np.lookAt(self, self.headNode.getX(self),
-                          self.headNode.getY(self),
-                          self.headNode.getZ(self) * 0.95)
+                np.lookAt(self, self.headNode.getX(self), self.headNode.getY(self), self.headNode.getZ(self) * 0.95)
                 if hasMenu:
                     np.setH(np.getH() + 15)
-                self.interactCamPosHpr = [np.getPos(render), np.getHpr(render)]
+                self.interactCamPosHpr = [
+                 np.getPos(render), np.getHpr(render)]
                 np.removeNode()
             if chosenAnim in self.getAnimNames():
                 chosenAnimInto = None
@@ -813,13 +696,9 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
                     if duration is None:
                         duration = 1
                     if self.isMixingEnabled():
-                        self.animIval = Sequence(
-                            Func(self.play, chosenAnimInto),
-                            Func(self.loop, chosenAnim))
+                        self.animIval = Sequence(Func(self.play, chosenAnimInto), Func(self.loop, chosenAnim))
                     else:
-                        self.animIval = Sequence(
-                            Func(self.play, chosenAnimInto), Wait(duration),
-                            Func(self.loop, chosenAnim))
+                        self.animIval = Sequence(Func(self.play, chosenAnimInto), Wait(duration), Func(self.loop, chosenAnim))
                     self.animIval.start()
                 if self.animIval == None:
                     self.loop(chosenAnim)
@@ -832,9 +711,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
                 self.animIval = None
             allAnims = CustomAnims.INTERACT_ANIMS.get(interactType)
             if allAnims == None:
-                self.notify.warning(
-                    'undefined interaction type %s, not found in CustomAnims.INTERACT_ANIMS'
-                    % self.interactType)
+                self.notify.warning('undefined interaction type %s, not found in CustomAnims.INTERACT_ANIMS' % self.interactType)
             else:
                 availAnims = allAnims.get('idles')
                 availAnimsOutof = allAnims.get('interactOutof')
@@ -850,14 +727,9 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
                             duration = 1
                         self.lockFSM = True
                         if self.isMixingEnabled():
-                            self.animIval = Sequence(
-                                Func(self.play, chosenAnimOutof),
-                                Func(self.loop, self.interactAnim))
+                            self.animIval = Sequence(Func(self.play, chosenAnimOutof), Func(self.loop, self.interactAnim))
                         else:
-                            self.animIval = Sequence(
-                                Func(self.play, chosenAnimOutof),
-                                Wait(duration),
-                                Func(self.loop, self.interactAnim))
+                            self.animIval = Sequence(Func(self.play, chosenAnimOutof), Wait(duration), Func(self.loop, self.interactAnim))
                         self.animIval.start()
             if self.animIval == None:
                 self.loop(self.interactAnim)
@@ -869,14 +741,8 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
     def initializeNametag3d(self):
         Biped.Biped.initializeNametag3d(self)
         if not self.classNameText:
-            self.classNameText = OnscreenText(
-                parent=self.iconNodePath,
-                pos=(0, -1.0),
-                fg=(1, 1, 1, 1),
-                bg=(0, 0, 0, 0),
-                scale=0.8,
-                mayChange=1,
-                font=PiratesGlobals.getPirateBoldOutlineFont())
+            self.classNameText = OnscreenText(parent=self.iconNodePath, pos=(0, -1.0), fg=(1, 1, 1, 1), bg=(0, 0, 0, 0), scale=0.8, mayChange=1, 
+                                              font=PiratesGlobals.getPirateBoldOutlineFont())
             self.classNameText.setTransparency(TransparencyAttrib.MDual, 2)
             self.classNameText.setColorScaleOff(100)
             self.classNameText.setLightOff()
@@ -941,20 +807,14 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         if self.respecMenuGUI:
             self.respecMenuGUI.destroy()
         optionIds = [
-            InteractGlobals.RESPEC_CUTLASS, InteractGlobals.RESPEC_PISTOL,
-            InteractGlobals.RESPEC_DAGGER, InteractGlobals.RESPEC_DOLL,
-            InteractGlobals.RESPEC_GRENADE, InteractGlobals.RESPEC_STAFF,
-            InteractGlobals.RESPEC_SAILING, InteractGlobals.RESPEC_CANNON,
-            InteractGlobals.BACK
-        ]
+         InteractGlobals.RESPEC_CUTLASS, InteractGlobals.RESPEC_PISTOL, InteractGlobals.RESPEC_DAGGER, InteractGlobals.RESPEC_DOLL, InteractGlobals.RESPEC_GRENADE, InteractGlobals.RESPEC_STAFF, InteractGlobals.RESPEC_SAILING, InteractGlobals.RESPEC_CANNON, InteractGlobals.BACK]
         stateCodes = []
         for opt in optionIds:
             stateCodes.append(self.isRespecAvailable(opt))
 
         self.respecMenuGUI = InteractGUI.InteractGUI()
         title = self.getMenuTitle()
-        self.respecMenuGUI.setOptions(title, optionIds, stateCodes,
-                                      self.selectRespecOptionConfirm, 0)
+        self.respecMenuGUI.setOptions(title, optionIds, stateCodes, self.selectRespecOptionConfirm, 0)
 
     def isRespecAvailable(self, igOption):
         if igOption == InteractGlobals.CANCEL or igOption == InteractGlobals.BACK:
@@ -994,8 +854,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
                 for skillId in range(begin, end):
                     if skillId in InventoryType.DontResetSkills:
                         continue
-                    skillPts = localAvatar.getInventory().getStackQuantity(
-                        skillId)
+                    skillPts = localAvatar.getInventory().getStackQuantity(skillId)
                     if skillId in basicSkills:
                         if skillPts > 2:
                             return InteractGlobals.NORMAL
@@ -1005,12 +864,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
             return InteractGlobals.DISABLED
 
     def anyWeaponsRespecable(self):
-        list = [
-            InteractGlobals.RESPEC_CUTLASS, InteractGlobals.RESPEC_PISTOL,
-            InteractGlobals.RESPEC_DAGGER, InteractGlobals.RESPEC_DOLL,
-            InteractGlobals.RESPEC_GRENADE, InteractGlobals.RESPEC_STAFF,
-            InteractGlobals.RESPEC_SAILING, InteractGlobals.RESPEC_CANNON
-        ]
+        list = [InteractGlobals.RESPEC_CUTLASS, InteractGlobals.RESPEC_PISTOL, InteractGlobals.RESPEC_DAGGER, InteractGlobals.RESPEC_DOLL, InteractGlobals.RESPEC_GRENADE, InteractGlobals.RESPEC_STAFF, InteractGlobals.RESPEC_SAILING, InteractGlobals.RESPEC_CANNON]
         for optionId in list:
             if self.isRespecAvailable(optionId) == InteractGlobals.NORMAL:
                 return 1
@@ -1028,19 +882,12 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         if self.confirmDialog:
             self.confirmDialog.destroy()
         self.respecMenuGUI.hide()
-        numRespecs = localAvatar.getInventory().getStackQuantity(
-            getNumRespecType(weaponRep))
+        numRespecs = localAvatar.getInventory().getStackQuantity(getNumRespecType(weaponRep))
         goldCost = EconomyGlobals.getRespecCost(numRespecs)
-        respecText = PLocalizer.RespecConfirmDialog % {
-            'gold': str(goldCost),
-            'weapon': PLocalizer.InventoryTypeNames[weaponRep]
-        }
+        respecText = PLocalizer.RespecConfirmDialog % {'gold': str(goldCost), 'weapon': PLocalizer.InventoryTypeNames[weaponRep]}
         if numRespecs < 2:
             respecText += PLocalizer.RespecPriceIncreaseDialog
-        self.confirmDialog = PDialog.PDialog(
-            text=respecText,
-            style=OTPDialog.YesNo,
-            command=self.__handleRespecConfirmation)
+        self.confirmDialog = PDialog.PDialog(text=respecText, style=OTPDialog.YesNo, command=self.__handleRespecConfirmation)
 
     def __handleRespecConfirmation(self, value):
         if self.confirmDialog:
@@ -1053,10 +900,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
                 self.respecMenuGUI = None
                 self.offerOptions(self.dialogFlag)
             else:
-                self.confirmDialog = PDialog.PDialog(
-                    text=PLocalizer.NotEnoughMoneyWarning,
-                    style=OTPDialog.Acknowledge,
-                    command=self.notEnoughMoney)
+                self.confirmDialog = PDialog.PDialog(text=PLocalizer.NotEnoughMoneyWarning, style=OTPDialog.Acknowledge, command=self.notEnoughMoney)
         else:
             self.respecMenuGUI.show()
 
@@ -1068,16 +912,10 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         self.offerOptions(self.dialogFlag)
 
     def getIGToITMap(self):
-        return {
-            InteractGlobals.RESPEC_CUTLASS: InventoryType.CutlassRep,
-            InteractGlobals.RESPEC_PISTOL: InventoryType.PistolRep,
-            InteractGlobals.RESPEC_DAGGER: InventoryType.DaggerRep,
-            InteractGlobals.RESPEC_DOLL: InventoryType.DollRep,
-            InteractGlobals.RESPEC_GRENADE: InventoryType.GrenadeRep,
-            InteractGlobals.RESPEC_STAFF: InventoryType.WandRep,
-            InteractGlobals.RESPEC_SAILING: InventoryType.SailingRep,
-            InteractGlobals.RESPEC_CANNON: InventoryType.CannonRep
-        }
+        return {InteractGlobals.RESPEC_CUTLASS: InventoryType.CutlassRep, InteractGlobals.RESPEC_PISTOL: InventoryType.PistolRep, 
+                InteractGlobals.RESPEC_DAGGER: InventoryType.DaggerRep, InteractGlobals.RESPEC_DOLL: InventoryType.DollRep, 
+                InteractGlobals.RESPEC_GRENADE: InventoryType.GrenadeRep, InteractGlobals.RESPEC_STAFF: InventoryType.WandRep, 
+                InteractGlobals.RESPEC_SAILING: InventoryType.SailingRep, InteractGlobals.RESPEC_CANNON: InventoryType.CannonRep}
 
     def respecTransaction(self, weaponOpt):
         weaponRep = self.getIGToITMap()[weaponOpt]
@@ -1087,8 +925,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
 
     def hasEnoughRespecMoney(self, weaponRep):
         curGold = localAvatar.getInventory().getGoldInPocket()
-        numRespecs = localAvatar.getInventory().getStackQuantity(
-            getNumRespecType(weaponRep))
+        numRespecs = localAvatar.getInventory().getStackQuantity(getNumRespecType(weaponRep))
         goldCost = EconomyGlobals.getRespecCost(numRespecs)
         if curGold >= goldCost:
             return 1
@@ -1098,24 +935,15 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC,
         inv = localAvatar.getInventory()
         if not inv:
             return 0
-        return TitleGlobals.getRank(
-            TitleGlobals.ShipPVPTitle,
-            inv.getStackQuantity(InventoryType.PVPTotalInfamySea))
+        return TitleGlobals.getRank(TitleGlobals.ShipPVPTitle, inv.getStackQuantity(InventoryType.PVPTotalInfamySea))
 
     def getLandRank(self):
         inv = localAvatar.getInventory()
         if not inv:
             return 0
-        return TitleGlobals.getRank(
-            TitleGlobals.LandPVPTitle,
-            inv.getStackQuantity(InventoryType.PVPTotalInfamyLand))
+        return TitleGlobals.getRank(TitleGlobals.LandPVPTitle, inv.getStackQuantity(InventoryType.PVPTotalInfamyLand))
 
     def playMusic(self, songId):
         songName = MusicManager.songItem2MusicLabel[songId]
         base.musicMgr.request(name=songName, priority=5, looping=False)
-        base.localAvatar.guiMgr.messageStack.addTextMessage(
-            PLocalizer.SongPlayingAnnouncement %
-            PLocalizer.InventoryTypeNames[songId],
-            seconds=10,
-            priority=0,
-            color=(0, 0, 0, 1))
+        base.localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.SongPlayingAnnouncement % PLocalizer.InventoryTypeNames[songId], seconds=10, priority=0, color=(0, 0, 0, 1))

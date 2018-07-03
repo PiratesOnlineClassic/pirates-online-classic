@@ -9,9 +9,7 @@ class DistributedHullDNA(HullDNA):
     def __init__(self):
         HullDNA.__init__(self)
 
-
-class DistributedHullAI(DistributedShippartAI, DistributedDestructibleArrayAI,
-                        DistributedHullDNA):
+class DistributedHullAI(DistributedShippartAI, DistributedDestructibleArrayAI, DistributedHullDNA):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedHullAI')
 
     def __init__(self, air):

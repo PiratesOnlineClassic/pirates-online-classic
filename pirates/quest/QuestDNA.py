@@ -11,45 +11,20 @@ from pirates.quest.QuestLadder import QuestStub
 
 
 class CombineOps:
-
+    
     OR = 0
     AND = 1
 
 
 class QuestDNA(ParamObj):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestDNA')
     OR = CombineOps.OR
     AND = CombineOps.AND
 
     class ParamSet(ParamObj.ParamSet):
-
-        Params = {
-            'prereqs': tuple(),
-            'tasks': tuple(),
-            'combineOp': CombineOps.OR,
-            'returnGiverIds': None,
-            'chainedQuests': tuple(),
-            'questId': None,
-            'questInt': -1,
-            'title': '',
-            'droppable': True,
-            'rewards': tuple(),
-            'finalizeInfo': tuple(),
-            'instanceInfo': tuple(),
-            'completeRequiresVisit': True,
-            'playStinger': True,
-            'displayGoal': True,
-            'requiresVoyage': False,
-            'progressBlock': False,
-            'velvetRoped': True,
-            'checkPoint': -1,
-            'finalQuest': False,
-            'acquireOnce': False,
-            'minLevel': 0,
-            'minWeapLevel': 0,
-            'weapLvlType': None
-        }
+        
+        Params = {'prereqs': tuple(), 'tasks': tuple(), 'combineOp': CombineOps.OR, 'returnGiverIds': None, 'chainedQuests': tuple(), 'questId': None, 'questInt': -1, 'title': '', 'droppable': True, 'rewards': tuple(), 'finalizeInfo': tuple(), 'instanceInfo': tuple(), 'completeRequiresVisit': True, 'playStinger': True, 'displayGoal': True, 'requiresVoyage': False, 'progressBlock': False, 'velvetRoped': True, 'checkPoint': -1, 'finalQuest': False, 'acquireOnce': False, 'minLevel': 0, 'minWeapLevel': 0, 'weapLvlType': None}
 
     def __init__(self, *args, **kwArgs):
         ParamObj.__init__(self, *args, **kwArgs)
@@ -158,39 +133,25 @@ class QuestDNA(ParamObj):
     def getDescriptionText(self, taskStates=[]):
         taskDNAs = self.getTaskDNAs()
         if len(taskDNAs) == 1:
-            taskStr = PLocalizer.QuestDescTaskSingle % {
-                'task': taskDNAs[0].getDescriptionText(taskStates[0])
-            }
+            taskStr = PLocalizer.QuestDescTaskSingle % {'task': taskDNAs[0].getDescriptionText(taskStates[0])}
             str = PLocalizer.QuestStrOneTask % {'task': taskStr}
         else:
-            headingStr = {
-                QuestDNA.OR: PLocalizer.QuestMultiHeadingOr,
-                QuestDNA.AND: PLocalizer.QuestMultiHeadingAnd
-            }[self.getCombineOp()]
+            headingStr = {QuestDNA.OR: PLocalizer.QuestMultiHeadingOr, QuestDNA.AND: PLocalizer.QuestMultiHeadingAnd}[self.getCombineOp()]
             tasksStr = ''
             for taskDNA, taskState in zip(taskDNAs, taskStates):
-                tasksStr += PLocalizer.QuestDescTaskMulti % {
-                    'task': taskDNA.getDescriptionText(taskState)
-                }
+                tasksStr += PLocalizer.QuestDescTaskMulti % {'task': taskDNA.getDescriptionText(taskState)}
 
-            str = PLocalizer.QuestStrMultiTask % {
-                'heading': headingStr,
-                'tasks': tasksStr
-            }
+            str = PLocalizer.QuestStrMultiTask % {'heading': headingStr, 'tasks': tasksStr}
         return str
 
     def getSCSummaryText(self, taskNum):
         taskDNAs = self.getTasks()
         if len(taskDNAs) == 1:
-            taskStr = PLocalizer.QuestDescTaskSingleNoPeriod % {
-                'task': taskDNAs[0].getSCSummaryText([])
-            }
+            taskStr = PLocalizer.QuestDescTaskSingleNoPeriod % {'task': taskDNAs[0].getSCSummaryText([])}
             str = PLocalizer.QuestStrOneTask % {'task': taskStr}
         else:
             if len(taskDNAs) >= taskNum:
-                taskStr = PLocalizer.QuestDescTaskSingleNoPeriod % {
-                    'task': taskDNAs[taskNum].getSCSummaryText([])
-                }
+                taskStr = PLocalizer.QuestDescTaskSingleNoPeriod % {'task': taskDNAs[taskNum].getSCSummaryText([])}
                 str = PLocalizer.QuestStrOneTask % {'task': taskStr}
             else:
                 str = ''
@@ -199,15 +160,11 @@ class QuestDNA(ParamObj):
     def getSCWhereIsText(self, taskNum):
         taskDNAs = self.getTasks()
         if len(taskDNAs) == 1:
-            taskStr = PLocalizer.QuestDescTaskSingleNoPeriod % {
-                'task': taskDNAs[0].getSCWhereIsText([])
-            }
+            taskStr = PLocalizer.QuestDescTaskSingleNoPeriod % {'task': taskDNAs[0].getSCWhereIsText([])}
             str = PLocalizer.QuestStrOneTask % {'task': taskStr}
         else:
             if len(taskDNAs) >= taskNum:
-                taskStr = PLocalizer.QuestDescTaskSingleNoPeriod % {
-                    'task': taskDNAs[taskNum].getSCWhereIsText([])
-                }
+                taskStr = PLocalizer.QuestDescTaskSingleNoPeriod % {'task': taskDNAs[taskNum].getSCWhereIsText([])}
                 str = PLocalizer.QuestStrOneTask % {'task': taskStr}
             else:
                 str = ''
@@ -216,15 +173,11 @@ class QuestDNA(ParamObj):
     def getSCHowToText(self, taskNum):
         taskDNAs = self.getTasks()
         if len(taskDNAs) == 1:
-            taskStr = PLocalizer.QuestDescTaskSingleNoPeriod % {
-                'task': taskDNAs[0].getSCHowToText([])
-            }
+            taskStr = PLocalizer.QuestDescTaskSingleNoPeriod % {'task': taskDNAs[0].getSCHowToText([])}
             str = PLocalizer.QuestStrOneTask % {'task': taskStr}
         else:
             if len(taskDNAs) >= taskNum:
-                taskStr = PLocalizer.QuestDescTaskSingleNoPeriod % {
-                    'task': taskDNAs[taskNum].getSCHowToText([])
-                }
+                taskStr = PLocalizer.QuestDescTaskSingleNoPeriod % {'task': taskDNAs[taskNum].getSCHowToText([])}
                 str = PLocalizer.QuestStrOneTask % {'task': taskStr}
             else:
                 str = ''
@@ -252,19 +205,12 @@ class QuestDNA(ParamObj):
         for task in self.tasks:
             self.goal += task.getGoalNum()
 
-        return QuestStub(
-            name=questId,
-            av=av,
-            questInt=questInt,
-            parent=parent,
-            giverId=None,
-            rewards=rewards,
-            complete=complete,
-            goal=self.getGoal())
+        return QuestStub(name=questId, av=av, questInt=questInt, parent=parent, giverId=None, rewards=rewards, complete=complete, goal=self.getGoal())
 
     def getContainer(self, name):
         if self.getQuestId() == name:
             return self
+        return
 
     def isContainer(self):
         return False
@@ -286,6 +232,4 @@ class QuestDNA(ParamObj):
 
         def check(self):
             pass
-
-
 # okay decompiling .\pirates\quest\QuestDNA.pyc

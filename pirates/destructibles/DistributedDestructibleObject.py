@@ -7,7 +7,6 @@ from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesbase.PiratesGlobals import *
 
-
 class DistributedDestructibleObject(DistributedNode.DistributedNode):
     notify = directNotify.newCategory('DistributedDestructibleObject')
 
@@ -47,19 +46,15 @@ class DistributedDestructibleObject(DistributedNode.DistributedNode):
         self.hasHpMeter = 1
         self.damageDummy = self.attachNewNode('damageDummy')
         self.damageDummy.setBillboardPointEye()
-        self.HpDisplay = DirectLabel(
-            text='HP: ' + str(self.Hp) + '/' + str(self.maxHp),
-            scale=2.5,
-            relief=None,
-            text_fg=(1, 1, 1, 1))
+        self.HpDisplay = DirectLabel(text='HP: ' + str(self.Hp) + '/' + str(self.maxHp), 
+                                     scale=2.5, relief=None, text_fg=(1, 1, 1, 1))
         self.HpDisplay.reparentTo(self.damageDummy)
         self.HpDisplay.setBin('fixed', 0)
         self.HpDisplay.setDepthTest(0)
 
     def updateHpDisplay(self):
         if self.hasHpMeter:
-            self.HpDisplay['text'] = 'Hp: ' + str(self.Hp) + '/' + str(
-                self.maxHp)
+            self.HpDisplay['text'] = 'Hp: ' + str(self.Hp) + '/' + str(self.maxHp)
 
     def destroyHpDisplay(self):
         if self.hasHpMeter:
@@ -103,12 +98,10 @@ class DistributedDestructibleObject(DistributedNode.DistributedNode):
     def getPosIndex(self):
         return self.posIndex
 
-    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult,
-                            targetEffects, pos, normal, codes, attacker):
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         pass
 
-    def targetedWeaponHit(self, skillId, ammoSkillId, skillResult,
-                          targetEffects, attacker):
+    def targetedWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, attacker):
         pass
 
     def playDeath(self):

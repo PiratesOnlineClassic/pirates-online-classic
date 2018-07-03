@@ -28,8 +28,7 @@ class PlayerShipOV(DistributedObjectOV.DistributedObjectOV):
 
     def announceGenerate(self):
         DistributedObjectOV.DistributedObjectOV.announceGenerate(self)
-        messenger.send(
-            'DistributedShipOV-announceGenerate', sentArgs=[self.doId])
+        messenger.send('DistributedShipOV-announceGenerate', sentArgs=[self.doId])
         if self.state not in ('Off', 'Sunk'):
             localAvatar.b_setActiveShipId(self.doId)
 
@@ -55,8 +54,7 @@ class PlayerShipOV(DistributedObjectOV.DistributedObjectOV):
 
     def setName(self, name):
         self.name = name
-        messenger.send('setName-%s' % self.getDoId(),
-                       [self.name, self.baseTeam])
+        messenger.send('setName-%s' % self.getDoId(), [self.name, self.baseTeam])
 
     def setWishName(self, name):
         self.wishName = name
@@ -64,21 +62,18 @@ class PlayerShipOV(DistributedObjectOV.DistributedObjectOV):
 
     def setWishNameState(self, state):
         self.wishNameState = state
-        messenger.send('setWishNameState-%s' % self.getDoId(),
-                       [self.wishNameState])
+        messenger.send('setWishNameState-%s' % self.getDoId(), [self.wishNameState])
 
     def setNPCship(self, val):
         self.npcShip = val
 
     def setCharterTimestamp(self, timestamp):
         self.charterTimestamp = timestamp
-        messenger.send('setCharterTimestamp-%s' % self.getDoId(),
-                       [self.charterTimestamp])
+        messenger.send('setCharterTimestamp-%s' % self.getDoId(), [self.charterTimestamp])
 
     def setBaseTeam(self, teamId):
         self.baseTeam = teamId
-        messenger.send('setName-%s' % self.getDoId(),
-                       [self.name, self.baseTeam])
+        messenger.send('setName-%s' % self.getDoId(), [self.name, self.baseTeam])
 
     def setMaxHp(self, val):
         self.maxHp = val
@@ -109,8 +104,7 @@ class PlayerShipOV(DistributedObjectOV.DistributedObjectOV):
 
     def setCrew(self, crewArray):
         if self.crew != crewArray:
-            messenger.send('setShipCrew-%s' % self.getDoId(),
-                           [crewArray, self.maxCrew])
+            messenger.send('setShipCrew-%s' % self.getDoId(), [crewArray, self.maxCrew])
 
         self.crew = crewArray
         self.crewCount = len(self.crew)
@@ -118,13 +112,11 @@ class PlayerShipOV(DistributedObjectOV.DistributedObjectOV):
     def setMaxCargo(self, maxCargo):
         if self.maxCargo != maxCargo:
             self.maxCargo = maxCargo
-            messenger.send('setShipCargo-%s' % self.getDoId(),
-                           [self.cargo, self.maxCargo])
+            messenger.send('setShipCargo-%s' % self.getDoId(), [self.cargo, self.maxCargo])
 
     def setCargo(self, cargo):
         self.cargo = cargo
-        messenger.send('setShipCargo-%s' % self.getDoId(),
-                       [self.cargo, self.maxCargo])
+        messenger.send('setShipCargo-%s' % self.getDoId(), [self.cargo, self.maxCargo])
 
     def setCrewId(self, crewId):
         self.crewId = crewId
@@ -134,16 +126,13 @@ class PlayerShipOV(DistributedObjectOV.DistributedObjectOV):
         overhaulBit = 1 << 7
         self.isInOverhaul = bool(condition & overhaulBit)
         self.hullCondition = condition & ~overhaulBit
-        messenger.send('setShipHullCondition-%s' % self.getDoId(),
-                       [self.hullCondition])
-        messenger.send('setShipIsInOverhaul-%s' % self.getDoId(),
-                       [self.isInOverhaul])
+        messenger.send('setShipHullCondition-%s' % self.getDoId(), [self.hullCondition])
+        messenger.send('setShipIsInOverhaul-%s' % self.getDoId(), [self.isInOverhaul])
 
     def setGameState(self, stateName, avId, timeStamp):
         self.state = stateName
         messenger.send('setState-%s' % self.getDoId(), [self.state])
-        if self.state in (
-                'Off',) and self.getDoId() == localAvatar.getActiveShipId():
+        if self.state in ('Off', ) and self.getDoId() == localAvatar.getActiveShipId():
             localAvatar.b_setActiveShipId(0)
 
     def getShipInfoId(self):
@@ -173,5 +162,4 @@ class PlayerShipOV(DistributedObjectOV.DistributedObjectOV):
         return max(0, self.timerTime - timePassed)
 
     def sendTeleportInfo(self, shardId, instanceDoId):
-        self.cr.teleportMgr.requestTeleportToShip(shardId, instanceDoId,
-                                                  self.doId)
+        self.cr.teleportMgr.requestTeleportToShip(shardId, instanceDoId, self.doId)

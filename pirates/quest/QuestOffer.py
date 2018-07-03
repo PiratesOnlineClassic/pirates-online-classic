@@ -7,13 +7,8 @@ from pirates.quest import QuestDB, QuestReward
 
 
 class QuestOffer(POD):
-
-    DataSet = {
-        'questId': None,
-        'title': '',
-        'initialTaskStates': tuple(),
-        'rewardStructs': tuple()
-    }
+    
+    DataSet = {'questId': None, 'title': '', 'initialTaskStates': tuple(), 'rewardStructs': tuple()}
 
     @staticmethod
     def create(questId, holder):
@@ -24,11 +19,7 @@ class QuestOffer(POD):
             rewards = questDNA.computeRewards(initialTaskStates, holder)
         return QuestOffer(questId, questId, initialTaskStates, rewards)
 
-    def __init__(self,
-                 questId=None,
-                 title=None,
-                 initialTaskStates=None,
-                 rewards=None):
+    def __init__(self, questId=None, title=None, initialTaskStates=None, rewards=None):
         POD.__init__(self)
         if questId is not None:
             self.setQuestId(questId)
@@ -57,6 +48,4 @@ class QuestOffer(POD):
 
     def isLadder(self):
         return False
-
-
 # okay decompiling .\pirates\quest\QuestOffer.pyc

@@ -8,8 +8,8 @@ from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class FlashStar(PooledEffect, EffectController):
+    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -26,10 +26,7 @@ class FlashStar(PooledEffect, EffectController):
         self.flashDummy.setDepthWrite(0)
         self.flashDummy.setLightOff()
         self.flashDummy.hide()
-        self.flashDummy.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingColor,
-                                  ColorBlendAttrib.OOneMinusIncomingAlpha))
+        self.flashDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha))
         self.flash = loader.loadModelCopy('models/effects/combat_hit_spark')
         self.flash.setDepthWrite(0)
         self.flash.setFogOff()
@@ -59,68 +56,24 @@ class FlashStar(PooledEffect, EffectController):
     def createTrack(self):
         self.flash.setScale(self.splatScale)
         self.flash.setColorScale(1, 1, 1, 1)
-        fadeBlast = self.flash.colorScaleInterval(
-            self.fadeTime,
-            Vec4(0, 0, 0, 0),
-            startColorScale=self.startCol,
-            blendType='easeOut')
-        scaleBlast = self.flash.scaleInterval(
-            self.fadeTime,
-            self.splatScale,
-            startScale=self.startScale,
-            blendType='easeOut')
+        fadeBlast = self.flash.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale=self.startCol, blendType='easeOut')
+        scaleBlast = self.flash.scaleInterval(self.fadeTime, self.splatScale, startScale=self.startScale, blendType='easeOut')
         rand = random.uniform(0.0, 3.0)
-        rScale = Vec3(self.rayScale[0] + rand, self.rayScale[1],
-                      self.rayScale[2])
-        ray1Fadein = self.slashRay1.scaleInterval(
-            self.fadeTime / 4,
-            self.rayScale,
-            startScale=Vec3(0, 0, 0),
-            blendType='easeOut')
-        ray1Fadeout = self.slashRay1.scaleInterval(
-            self.fadeTime / 4,
-            Vec3(0, 0, 0),
-            startScale=rScale,
-            blendType='easeIn')
+        rScale = Vec3(self.rayScale[0] + rand, self.rayScale[1], self.rayScale[2])
+        ray1Fadein = self.slashRay1.scaleInterval(self.fadeTime / 4, self.rayScale, startScale=Vec3(0, 0, 0), blendType='easeOut')
+        ray1Fadeout = self.slashRay1.scaleInterval(self.fadeTime / 4, Vec3(0, 0, 0), startScale=rScale, blendType='easeIn')
         rand = random.uniform(0.0, 3.0)
-        rScale = Vec3(self.rayScale[0] + rand, self.rayScale[1],
-                      self.rayScale[2])
-        ray2Fadein = self.slashRay2.scaleInterval(
-            self.fadeTime / 4,
-            self.rayScale,
-            startScale=Vec3(0, 0, 0),
-            blendType='easeOut')
-        ray2Fadeout = self.slashRay2.scaleInterval(
-            self.fadeTime / 4,
-            Vec3(0, 0, 0),
-            startScale=rScale,
-            blendType='easeIn')
+        rScale = Vec3(self.rayScale[0] + rand, self.rayScale[1], self.rayScale[2])
+        ray2Fadein = self.slashRay2.scaleInterval(self.fadeTime / 4, self.rayScale, startScale=Vec3(0, 0, 0), blendType='easeOut')
+        ray2Fadeout = self.slashRay2.scaleInterval(self.fadeTime / 4, Vec3(0, 0, 0), startScale=rScale, blendType='easeIn')
         rand = random.uniform(0.0, 3.0)
-        rScale = Vec3(self.rayScale[0] + rand, self.rayScale[1],
-                      self.rayScale[2])
-        ray3Fadein = self.slashRay3.scaleInterval(
-            self.fadeTime / 4,
-            self.rayScale,
-            startScale=Vec3(0, 0, 0),
-            blendType='easeOut')
-        ray3Fadeout = self.slashRay3.scaleInterval(
-            self.fadeTime / 4,
-            Vec3(0, 0, 0),
-            startScale=rScale,
-            blendType='easeIn')
+        rScale = Vec3(self.rayScale[0] + rand, self.rayScale[1], self.rayScale[2])
+        ray3Fadein = self.slashRay3.scaleInterval(self.fadeTime / 4, self.rayScale, startScale=Vec3(0, 0, 0), blendType='easeOut')
+        ray3Fadeout = self.slashRay3.scaleInterval(self.fadeTime / 4, Vec3(0, 0, 0), startScale=rScale, blendType='easeIn')
         rand = random.uniform(0.0, 3.0)
-        rScale = Vec3(self.rayScale[0] + rand, self.rayScale[1],
-                      self.rayScale[2])
-        ray4Fadein = self.slashRay4.scaleInterval(
-            self.fadeTime / 4,
-            self.rayScale,
-            startScale=Vec3(0, 0, 0),
-            blendType='easeOut')
-        ray4Fadeout = self.slashRay4.scaleInterval(
-            self.fadeTime / 4,
-            Vec3(0, 0, 0),
-            startScale=rScale,
-            blendType='easeIn')
+        rScale = Vec3(self.rayScale[0] + rand, self.rayScale[1], self.rayScale[2])
+        ray4Fadein = self.slashRay4.scaleInterval(self.fadeTime / 4, self.rayScale, startScale=Vec3(0, 0, 0), blendType='easeOut')
+        ray4Fadeout = self.slashRay4.scaleInterval(self.fadeTime / 4, Vec3(0, 0, 0), startScale=rScale, blendType='easeIn')
         anim1 = Sequence(Wait(0.05), Parallel(ray1Fadein, ray1Fadeout))
         anim2 = Sequence(Wait(0.1), Parallel(ray2Fadein, ray2Fadeout))
         anim3 = Sequence(Wait(0.15), Parallel(ray3Fadein, ray3Fadeout))
@@ -129,11 +82,8 @@ class FlashStar(PooledEffect, EffectController):
         anim6 = Sequence(Wait(0.4), Parallel(ray2Fadein, ray2Fadeout))
         anim7 = Sequence(Wait(0.45), Parallel(ray3Fadein, ray3Fadeout))
         anim8 = Sequence(Wait(0.5), Parallel(ray4Fadein, ray4Fadeout))
-        anim = Parallel(fadeBlast, scaleBlast, anim1, anim2, anim3, anim4,
-                        anim5, anim6, anim7, anim8)
-        self.track = Sequence(
-            Func(self.flashDummy.show), anim, Func(self.flashDummy.hide),
-            Func(self.cleanUpEffect))
+        anim = Parallel(fadeBlast, scaleBlast, anim1, anim2, anim3, anim4, anim5, anim6, anim7, anim8)
+        self.track = Sequence(Func(self.flashDummy.show), anim, Func(self.flashDummy.hide), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)

@@ -2,9 +2,8 @@ from direct.distributed.DistributedObject import DistributedObject
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 
-
 class DistributedLocatableObject(DistributedObject):
-
+    
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)
 

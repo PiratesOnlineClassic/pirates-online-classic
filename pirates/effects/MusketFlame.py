@@ -15,7 +15,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class MusketFlame(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -26,19 +26,12 @@ class MusketFlame(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleDot')
         if not MusketFlame.particleDummy:
-            MusketFlame.particleDummy = render.attachNewNode(
-                ModelNode('FireParticleDummy'))
+            MusketFlame.particleDummy = render.attachNewNode(ModelNode('FireParticleDummy'))
             MusketFlame.particleDummy.setDepthWrite(0)
-            MusketFlame.particleDummy.node().setAttrib(
-                ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                      ColorBlendAttrib.OIncomingAlpha,
-                                      ColorBlendAttrib.OOne))
+            MusketFlame.particleDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
             MusketFlame.particleDummy.setFogOff()
         self.flash = loader.loadModelCopy('models/effects/lanternGlow')
-        self.flash.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingAlpha,
-                                  ColorBlendAttrib.OOne))
+        self.flash.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.flash.setDepthWrite(0)
         self.flash.setFogOff()
         self.flash.setColorScale(self.startCol)
@@ -101,22 +94,10 @@ class MusketFlame(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.2)
         self.accept('timeOfDayChange', self._timeChange)
-        fadeBlast = self.flash.colorScaleInterval(
-            0.15,
-            Vec4(0, 0, 0, 0),
-            startColorScale=self.startCol,
-            blendType='easeOut')
+        fadeBlast = self.flash.colorScaleInterval(0.15, Vec4(0, 0, 0, 0), startColorScale=self.startCol, blendType='easeOut')
         scaleBlast = self.flash.scaleInterval(0.2, 10, blendType='easeIn')
-        self.playFlash = Sequence(
-            Func(self.flash.show), Parallel(fadeBlast, scaleBlast),
-            Func(self.flash.hide),
-            Func(self.flash.setColorScale, Vec4(1, 1, 1, 1)))
-        self.playParticles = Sequence(
-            Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self), Wait(0.15),
-            Func(self.p0.setBirthRate, 100), Wait(1.5),
-            Func(self.cleanUpEffect))
+        self.playFlash = Sequence(Func(self.flash.show), Parallel(fadeBlast, scaleBlast), Func(self.flash.hide), Func(self.flash.setColorScale, Vec4(1, 1, 1, 1)))
+        self.playParticles = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.15), Func(self.p0.setBirthRate, 100), Wait(1.5), Func(self.cleanUpEffect))
         self.track = Parallel(self.playParticles, self.playFlash)
 
     def cleanUpEffect(self):
@@ -151,6 +132,4 @@ class MusketFlame(PooledEffect, EffectController):
                 self.startCol = Vec4(1, 1, 1, 1)
             elif stateId == PiratesGlobals.TOD_STARS:
                 self.startCol = Vec4(1, 1, 1, 1)
-
-
 # okay decompiling .\pirates\effects\MusketFlame.pyc

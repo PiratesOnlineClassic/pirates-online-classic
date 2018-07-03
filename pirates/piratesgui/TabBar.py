@@ -5,30 +5,19 @@ from pirates.piratesgui.BorderFrame import BorderFrame
 
 
 class Tab(BorderFrame):
+    
 
     def __init__(self, tabBar, name, **kw):
-        optiondefs = (('state', DGG.DISABLED,
-                       None), ('command', None,
-                               self.setCommand), ('extraArgs', [],
-                                                  self.setExtraArgs),
-                      ('name', name, None), ('mouseEntered', None,
-                                             None), ('mouseLeft', None, None),
-                      ('selected', False, self.setSelected), ('textMayChange',
-                                                              1, None))
+        optiondefs = (('state', DGG.DISABLED, None), ('command', None, self.setCommand), ('extraArgs', [], self.setExtraArgs), ('name', name, None), ('mouseEntered', None, None), ('mouseLeft', None, None), ('selected', False, self.setSelected), ('textMayChange', 1, None))
         self.defineoptions(kw, optiondefs)
         BorderFrame.__init__(self, parent=None, **kw)
         self.initialiseoptions(Tab)
         self.setName(str(name))
         self.tabBar = tabBar
-        self.invisibleButton = DirectButton(
-            parent=self,
-            relief=1,
-            frameColor=(1.0, 0.0, 1.0, 0),
-            frameSize=self.getInnerFrameSize(),
-            rolloverSound=None,
-            command=self['command'],
-            extraArgs=self['extraArgs'],
-            textMayChange=1)
+        self.invisibleButton = DirectButton(parent=self, relief=1, frameColor=(1.0,
+                                                                               0.0,
+                                                                               1.0,
+                                                                               0), frameSize=self.getInnerFrameSize(), rolloverSound=None, command=self['command'], extraArgs=self['extraArgs'], textMayChange=1)
         self.invisibleButton.bind(DGG.ENTER, self.mouseEntered)
         self.invisibleButton.bind(DGG.EXIT, self.mouseLeft)
         return
@@ -90,6 +79,7 @@ class Tab(BorderFrame):
 
 
 class LeftTab(Tab):
+    
 
     def __init__(self, tabBar, name, **kw):
         Tab.__init__(self, tabBar, name, **kw)
@@ -102,6 +92,7 @@ class LeftTab(Tab):
 
 
 class TopTab(Tab):
+    
 
     def __init__(self, tabBar, name, **kw):
         Tab.__init__(self, tabBar, name, **kw)
@@ -114,6 +105,7 @@ class TopTab(Tab):
 
 
 class TabBar(DirectFrame):
+    
 
     def __init__(self, backParent, frontParent, parent=None, offset=0, **kw):
         optiondefs = (('relief', None, None), ('state', DGG.DISABLED, None))

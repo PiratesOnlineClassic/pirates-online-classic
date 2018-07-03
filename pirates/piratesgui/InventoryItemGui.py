@@ -18,20 +18,12 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class InventoryItemGui(InventoryListItem):
-
+    
     width = PiratesGuiGlobals.InventoryItemGuiWidth
     height = PiratesGuiGlobals.InventoryItemGuiHeight
     available = True
 
-    def __init__(self,
-                 data,
-                 trade=0,
-                 buy=0,
-                 sell=0,
-                 use=0,
-                 weapon=0,
-                 isDisabled=0,
-                 **kw):
+    def __init__(self, data, trade=0, buy=0, sell=0, use=0, weapon=0, isDisabled=0, **kw):
         if (trade or buy or sell or use or weapon) and not isDisabled:
             buttonRelief = DGG.RAISED
             buttonState = DGG.NORMAL
@@ -39,29 +31,13 @@ class InventoryItemGui(InventoryListItem):
             buttonRelief = DGG.RIDGE
             buttonState = DGG.DISABLED
         self.loadGui()
-        optiondefs = (('relief', None, None), ('state', buttonState, None),
-                      ('frameSize', (0, self.width, 0, self.height),
-                       None), ('image', InventoryItemGui.genericButton,
-                               None), ('image_scale', (0.54, 1, 0.42), None),
-                      ('image_pos', (0.26, 0, 0.08),
-                       None), ('pressEffect', 0, None), ('command',
-                                                         self.sendEvents, None))
+        optiondefs = (
+         ('relief', None, None), ('state', buttonState, None), ('frameSize', (0, self.width, 0, self.height), None), ('image', InventoryItemGui.genericButton, None), ('image_scale', (0.54, 1, 0.42), None), ('image_pos', (0.26, 0, 0.08), None), ('pressEffect', 0, None), ('command', self.sendEvents, None))
         self.defineoptions(kw, optiondefs)
-        InventoryListItem.__init__(
-            self,
-            data,
-            trade=trade,
-            buy=buy,
-            sell=sell,
-            use=use,
-            weapon=weapon,
-            isDisabled=isDisabled,
-            width=self.width,
-            height=self.height)
+        InventoryListItem.__init__(self, data, trade=trade, buy=buy, sell=sell, use=use, weapon=weapon, isDisabled=isDisabled, width=self.width, height=self.height)
         self.initialiseoptions(InventoryItemGui)
         self.createGui()
-        self.draggable = abs(self.buy) + abs(self.sell) + abs(self.use) + abs(
-            self.trade) - 1
+        self.draggable = abs(self.buy) + abs(self.sell) + abs(self.use) + abs(self.trade) - 1
         if self.draggable > 0:
             self.bind(DGG.B1PRESS, self.dragStart)
             self.bind(DGG.B1RELEASE, self.dragStop)
@@ -82,74 +58,36 @@ class InventoryItemGui(InventoryListItem):
         if InventoryItemGui.guiLoaded:
             return
         InventoryListItem.loadGui(self)
-        InventoryItemGui.parchmentImage = loader.loadModel(
-            'models/gui/panel_parchment')
-        InventoryItemGui.genericButton = (
-            InventoryListItem.topGui.find('**/generic_button'),
-            InventoryListItem.topGui.find('**/generic_button_down'),
-            InventoryListItem.topGui.find('**/generic_button_over'),
-            InventoryListItem.topGui.find('**/generic_button_disabled'))
+        InventoryItemGui.parchmentImage = loader.loadModel('models/gui/panel_parchment')
+        InventoryItemGui.genericButton = (InventoryListItem.topGui.find('**/generic_button'), InventoryListItem.topGui.find('**/generic_button_down'), InventoryListItem.topGui.find('**/generic_button_over'), InventoryListItem.topGui.find('**/generic_button_disabled'))
 
     def createGui(self):
         itemId = self.data[0]
-        self.picture = DirectFrame(
-            parent=self, relief=None, state=DGG.DISABLED, pos=(0.01, 0, 0.01))
-        self.nameTag = DirectLabel(
-            parent=self,
-            relief=None,
-            state=DGG.DISABLED,
-            text=self.name,
-            text_scale=PiratesGuiGlobals.TextScaleSmall *
-            PLocalizer.getHeadingScale(2),
-            text_align=TextNode.ALeft,
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            pos=(0.16, 0, 0.105),
-            text_font=PiratesGlobals.getInterfaceFont())
-        if itemId in range(InventoryType.begin_PistolPouches,
-                           InventoryType.end_PistolPouches):
-            self.itemTypeFormatted = PLocalizer.makeHeadingString(
-                PLocalizer.InventoryItemClassNames.get(ItemType.PISTOL), 1)
+        self.picture = DirectFrame(parent=self, relief=None, state=DGG.DISABLED, pos=(0.01,
+                                                                                      0,
+                                                                                      0.01))
+        self.nameTag = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text=self.name, text_scale=PiratesGuiGlobals.TextScaleSmall * PLocalizer.getHeadingScale(2), text_align=TextNode.ALeft, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, pos=(0.16,
+                                                                                                                                                                                                                                                                                           0,
+                                                                                                                                                                                                                                                                                           0.105), text_font=PiratesGlobals.getInterfaceFont())
+        if itemId in range(InventoryType.begin_PistolPouches, InventoryType.end_PistolPouches):
+            self.itemTypeFormatted = PLocalizer.makeHeadingString(PLocalizer.InventoryItemClassNames.get(ItemType.PISTOL), 1)
         else:
-            if itemId in range(InventoryType.begin_DaggerPouches,
-                               InventoryType.end_DaggerPouches):
-                self.itemTypeFormatted = PLocalizer.makeHeadingString(
-                    PLocalizer.InventoryItemClassNames.get(ItemType.DAGGER), 1)
+            if itemId in range(InventoryType.begin_DaggerPouches, InventoryType.end_DaggerPouches):
+                self.itemTypeFormatted = PLocalizer.makeHeadingString(PLocalizer.InventoryItemClassNames.get(ItemType.DAGGER), 1)
             else:
-                if itemId in range(InventoryType.begin_GrenadePouches,
-                                   InventoryType.end_GrenadePouches):
-                    self.itemTypeFormatted = PLocalizer.makeHeadingString(
-                        PLocalizer.GrenadeShort, 1)
+                if itemId in range(InventoryType.begin_GrenadePouches, InventoryType.end_GrenadePouches):
+                    self.itemTypeFormatted = PLocalizer.makeHeadingString(PLocalizer.GrenadeShort, 1)
                 else:
-                    if itemId in range(InventoryType.begin_CannonPouches,
-                                       InventoryType.end_CannonPouches):
-                        self.itemTypeFormatted = PLocalizer.makeHeadingString(
-                            PLocalizer.ShipCannonShort, 1)
+                    if itemId in range(InventoryType.begin_CannonPouches, InventoryType.end_CannonPouches):
+                        self.itemTypeFormatted = PLocalizer.makeHeadingString(PLocalizer.ShipCannonShort, 1)
                     else:
-                        self.itemTypeFormatted = PLocalizer.makeHeadingString(
-                            self.itemType, 1)
-        self.itemTypeName = DirectLabel(
-            parent=self,
-            relief=None,
-            state=DGG.DISABLED,
-            text=self.itemTypeFormatted,
-            text_scale=PiratesGuiGlobals.TextScaleSmall,
-            text_align=TextNode.ALeft,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_font=PiratesGlobals.getInterfaceFont(),
-            pos=(0.16, 0, 0.065))
-        self.miscText = DirectLabel(
-            parent=self,
-            relief=None,
-            state=DGG.DISABLED,
-            text='',
-            text_scale=PiratesGuiGlobals.TextScaleSmall,
-            text_align=TextNode.ALeft,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=11,
-            pos=(0.16, 0, 0.025))
+                        self.itemTypeFormatted = PLocalizer.makeHeadingString(self.itemType, 1)
+        self.itemTypeName = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text=self.itemTypeFormatted, text_scale=PiratesGuiGlobals.TextScaleSmall, text_align=TextNode.ALeft, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_font=PiratesGlobals.getInterfaceFont(), pos=(0.16,
+                                                                                                                                                                                                                                                                                                                          0,
+                                                                                                                                                                                                                                                                                                                          0.065))
+        self.miscText = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text='', text_scale=PiratesGuiGlobals.TextScaleSmall, text_align=TextNode.ALeft, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.16,
+                                                                                                                                                                                                                                                                       0,
+                                                                                                                                                                                                                                                                       0.025))
         if self.minLvl > 0:
             repId = WeaponGlobals.getRepId(itemId)
             if repId:
@@ -163,51 +101,26 @@ class InventoryItemGui(InventoryListItem):
             self.checkSkillReq(skillId)
         if self.buy:
             self.checkPlayerInventory(itemId)
-        self.costText = DirectLabel(
-            parent=self,
-            relief=None,
-            state=DGG.DISABLED,
-            image=InventoryListItem.coinImage,
-            image_scale=0.12,
-            image_pos=Vec3(-0.01, 0, 0.01),
-            text=str(self.price),
-            text_scale=PiratesGuiGlobals.TextScaleSmall,
-            text_align=TextNode.ARight,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=11,
-            text_pos=(-0.03, 0, 0),
-            pos=(self.width - 0.035, 0, 0.105),
-            text_font=PiratesGlobals.getInterfaceFont())
+        self.costText = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, image=InventoryListItem.coinImage, image_scale=0.12, image_pos=Vec3(-0.01, 0, 0.01), text=str(self.price), text_scale=PiratesGuiGlobals.TextScaleSmall, text_align=TextNode.ARight, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, text_pos=(-0.03, 0, 0), pos=(self.width - 0.035, 0, 0.105), text_font=PiratesGlobals.getInterfaceFont())
         if self.quantity and self.quantity > 1:
-            self.quantityLabel = DirectLabel(
-                parent=self,
-                relief=None,
-                state=DGG.DISABLED,
-                text=str(self.quantity),
-                frameColor=(0, 0, 0, 1),
-                frameSize=(-0.01, 0.02, -0.01, 0.025),
-                text_scale=0.0275,
-                text_align=TextNode.ACenter,
-                text_fg=PiratesGuiGlobals.TextFG2,
-                text_shadow=PiratesGuiGlobals.TextShadow,
-                text_wordwrap=11,
-                pos=(0.02, 0, 0.025),
-                text_font=PiratesGlobals.getPirateBoldOutlineFont())
+            self.quantityLabel = DirectLabel(parent=self, relief=None, state=DGG.DISABLED, text=str(self.quantity), frameColor=(0,
+                                                                                                                                0,
+                                                                                                                                0,
+                                                                                                                                1), frameSize=(-0.01, 0.02, -0.01, 0.025), text_scale=0.0275, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.02,
+                                                                                                                                                                                                                                                                                                                               0,
+                                                                                                                                                                                                                                                                                                                               0.025), text_font=PiratesGlobals.getPirateBoldOutlineFont())
         itemClass = EconomyGlobals.getItemCategory(itemId)
         if itemClass == ItemType.WEAPON or itemClass == ItemType.POUCH:
             asset = EconomyGlobals.getItemIcons(itemId)
             if asset:
-                self.picture['geom'] = InventoryItemGui.weaponIcons.find(
-                    '**/%s*' % asset)
+                self.picture['geom'] = InventoryItemGui.weaponIcons.find('**/%s*' % asset)
                 self.picture['geom_scale'] = 0.11
                 self.picture['geom_pos'] = (0.08, 0, 0.068)
         else:
             if itemClass == ItemType.CONSUMABLE:
                 asset = EconomyGlobals.getItemIcons(itemId)
                 if asset:
-                    self.picture['geom'] = InventoryItemGui.skillIcons.find(
-                        '**/%s*' % asset)
+                    self.picture['geom'] = InventoryItemGui.skillIcons.find('**/%s*' % asset)
                     self.picture['geom_scale'] = 0.11
                     self.picture['geom_pos'] = (0.08, 0, 0.068)
         if InventoryType.begin_WeaponCannonAmmo <= itemId and itemId <= InventoryType.end_WeaponCannonAmmo or InventoryType.begin_WeaponPistolAmmo <= itemId and itemId <= InventoryType.end_WeaponGrenadeAmmo or InventoryType.begin_WeaponDaggerAmmo <= itemId and itemId <= InventoryType.end_WeaponDaggerAmmo:
@@ -215,14 +128,12 @@ class InventoryItemGui(InventoryListItem):
             if skillId:
                 asset = WeaponGlobals.getSkillIcon(skillId)
                 if asset:
-                    self.picture['geom'] = InventoryListItem.skillIcons.find(
-                        '**/%s' % asset)
+                    self.picture['geom'] = InventoryListItem.skillIcons.find('**/%s' % asset)
                     self.picture['geom_scale'] = 0.15
                     self.picture['geom_pos'] = (0.069, 0, 0.069)
         else:
             if InventoryType.SmallBottle <= itemId and itemId <= InventoryType.LargeBottle:
-                self.picture['geom'] = InventoryListItem.topGui.find(
-                    '**/main_gui_ship_bottle')
+                self.picture['geom'] = InventoryListItem.topGui.find('**/main_gui_ship_bottle')
                 self.picture['geom_scale'] = 0.1
                 self.picture['geom_pos'] = (0.069, 0, 0.069)
         self.flattenStrong()
@@ -241,10 +152,8 @@ class InventoryItemGui(InventoryListItem):
         inv = localAvatar.getInventory()
         if inv:
             repAmt = inv.getAccumulator(repId)
-            if minLvl > ReputationGlobals.getLevelFromTotalReputation(
-                    repId, repAmt)[0]:
-                self.highlightRed(PLocalizer.LevelRequirement % self.minLvl +
-                                  ' ' + str(self.itemTypeFormatted))
+            if minLvl > ReputationGlobals.getLevelFromTotalReputation(repId, repAmt)[0]:
+                self.highlightRed(PLocalizer.LevelRequirement % self.minLvl + ' ' + str(self.itemTypeFormatted))
 
     def checkTrainingReq(self, trainingReq):
         inv = localAvatar.getInventory()
@@ -267,13 +176,9 @@ class InventoryItemGui(InventoryListItem):
             currStockLimit = inventory.getStackLimit(itemId)
             if itemCategory == ItemType.AMMO or itemCategory == ItemType.CONSUMABLE:
                 if currStock + extraQty >= currStockLimit and currStockLimit > 0:
-                    self.highlightGreen(
-                        PLocalizer.InventoryFull % currStockLimit)
+                    self.highlightGreen(PLocalizer.InventoryFull % currStockLimit)
                 else:
-                    self.highlightBox(
-                        PLocalizer.InventoryCurrent % (currStock + extraQty,
-                                                       currStockLimit),
-                        Vec4(1, 1, 1, 1), PiratesGuiGlobals.TextFG2)
+                    self.highlightBox(PLocalizer.InventoryCurrent % (currStock + extraQty, currStockLimit), Vec4(1, 1, 1, 1), PiratesGuiGlobals.TextFG2)
             elif itemCategory == ItemType.WEAPON:
                 if currStock >= 1:
                     self.highlightGreen(PLocalizer.InventoryOwned)
@@ -284,63 +189,27 @@ class InventoryItemGui(InventoryListItem):
                     itemRep = WeaponGlobals.getRepId(itemId)
                     if itemRep == InventoryType.CutlassRep:
                         options = [
-                            InventoryType.CutlassWeaponL1,
-                            InventoryType.CutlassWeaponL2,
-                            InventoryType.CutlassWeaponL3,
-                            InventoryType.CutlassWeaponL4,
-                            InventoryType.CutlassWeaponL5,
-                            InventoryType.CutlassWeaponL6
-                        ]
+                         InventoryType.CutlassWeaponL1, InventoryType.CutlassWeaponL2, InventoryType.CutlassWeaponL3, InventoryType.CutlassWeaponL4, InventoryType.CutlassWeaponL5, InventoryType.CutlassWeaponL6]
                     else:
                         if itemRep == InventoryType.PistolRep:
                             options = [
-                                InventoryType.PistolWeaponL1,
-                                InventoryType.PistolWeaponL2,
-                                InventoryType.PistolWeaponL3,
-                                InventoryType.PistolWeaponL4,
-                                InventoryType.PistolWeaponL5,
-                                InventoryType.PistolWeaponL6
-                            ]
+                             InventoryType.PistolWeaponL1, InventoryType.PistolWeaponL2, InventoryType.PistolWeaponL3, InventoryType.PistolWeaponL4, InventoryType.PistolWeaponL5, InventoryType.PistolWeaponL6]
                         else:
                             if itemRep == InventoryType.DaggerRep:
                                 options = [
-                                    InventoryType.DaggerWeaponL1,
-                                    InventoryType.DaggerWeaponL2,
-                                    InventoryType.DaggerWeaponL3,
-                                    InventoryType.DaggerWeaponL4,
-                                    InventoryType.DaggerWeaponL5,
-                                    InventoryType.DaggerWeaponL6
-                                ]
+                                 InventoryType.DaggerWeaponL1, InventoryType.DaggerWeaponL2, InventoryType.DaggerWeaponL3, InventoryType.DaggerWeaponL4, InventoryType.DaggerWeaponL5, InventoryType.DaggerWeaponL6]
                             else:
                                 if itemRep == InventoryType.GrenadeRep:
                                     options = [
-                                        InventoryType.GrenadeWeaponL1,
-                                        InventoryType.GrenadeWeaponL2,
-                                        InventoryType.GrenadeWeaponL3,
-                                        InventoryType.GrenadeWeaponL4,
-                                        InventoryType.GrenadeWeaponL5,
-                                        InventoryType.GrenadeWeaponL6
-                                    ]
+                                     InventoryType.GrenadeWeaponL1, InventoryType.GrenadeWeaponL2, InventoryType.GrenadeWeaponL3, InventoryType.GrenadeWeaponL4, InventoryType.GrenadeWeaponL5, InventoryType.GrenadeWeaponL6]
                                 else:
                                     if itemRep == InventoryType.DollRep:
                                         options = [
-                                            InventoryType.DollWeaponL1,
-                                            InventoryType.DollWeaponL2,
-                                            InventoryType.DollWeaponL3,
-                                            InventoryType.DollWeaponL4,
-                                            InventoryType.DollWeaponL5,
-                                            InventoryType.DollWeaponL6
-                                        ]
+                                         InventoryType.DollWeaponL1, InventoryType.DollWeaponL2, InventoryType.DollWeaponL3, InventoryType.DollWeaponL4, InventoryType.DollWeaponL5, InventoryType.DollWeaponL6]
                                     else:
                                         if itemRep == InventoryType.WandRep:
                                             options = [
-                                                InventoryType.WandWeaponL1,
-                                                InventoryType.WandWeaponL2,
-                                                InventoryType.WandWeaponL3,
-                                                InventoryType.WandWeaponL4,
-                                                InventoryType.WandWeaponL5,
-                                                InventoryType.WandWeaponL6
-                                            ]
+                                             InventoryType.WandWeaponL1, InventoryType.WandWeaponL2, InventoryType.WandWeaponL3, InventoryType.WandWeaponL4, InventoryType.WandWeaponL5, InventoryType.WandWeaponL6]
                                         else:
                                             return
                     for idx in range(len(options)):
@@ -352,8 +221,7 @@ class InventoryItemGui(InventoryListItem):
                                     continue
                                 stackAmt = inv.getStackQuantity(weaponId)
                                 if stackAmt >= 1:
-                                    self.highlightRed(
-                                        PLocalizer.InventoryLowLevel)
+                                    self.highlightRed(PLocalizer.InventoryLowLevel)
                                     return
 
             elif itemCategory == ItemType.POUCH:
@@ -362,22 +230,10 @@ class InventoryItemGui(InventoryListItem):
                     self.highlightGreen(PLocalizer.InventoryOwned)
                 else:
                     pistolPouches = [
-                        InventoryType.PistolPouchL1,
-                        InventoryType.PistolPouchL2, InventoryType.PistolPouchL3
-                    ]
-                    daggerPouches = [
-                        InventoryType.DaggerPouchL1,
-                        InventoryType.DaggerPouchL2, InventoryType.DaggerPouchL3
-                    ]
-                    grenadePouches = [
-                        InventoryType.GrenadePouchL1,
-                        InventoryType.GrenadePouchL2,
-                        InventoryType.GrenadePouchL3
-                    ]
-                    cannonPouches = [
-                        InventoryType.CannonPouchL1,
-                        InventoryType.CannonPouchL2, InventoryType.CannonPouchL3
-                    ]
+                     InventoryType.PistolPouchL1, InventoryType.PistolPouchL2, InventoryType.PistolPouchL3]
+                    daggerPouches = [InventoryType.DaggerPouchL1, InventoryType.DaggerPouchL2, InventoryType.DaggerPouchL3]
+                    grenadePouches = [InventoryType.GrenadePouchL1, InventoryType.GrenadePouchL2, InventoryType.GrenadePouchL3]
+                    cannonPouches = [InventoryType.CannonPouchL1, InventoryType.CannonPouchL2, InventoryType.CannonPouchL3]
                     if itemId in pistolPouches:
                         pouchSet = pistolPouches
                     else:
@@ -392,15 +248,11 @@ class InventoryItemGui(InventoryListItem):
                                 else:
                                     pouchSet = []
                     for pouchIdx in range(len(pouchSet)):
-                        if pouchSet[pouchIdx] == itemId and pouchIdx + 1 < len(
-                                pouchSet):
-                            for higherPouchIdx in range(pouchIdx + 1,
-                                                        len(pouchSet)):
-                                stackAmt = inv.getStackQuantity(
-                                    pouchSet[higherPouchIdx])
+                        if pouchSet[pouchIdx] == itemId and pouchIdx + 1 < len(pouchSet):
+                            for higherPouchIdx in range(pouchIdx + 1, len(pouchSet)):
+                                stackAmt = inv.getStackQuantity(pouchSet[higherPouchIdx])
                                 if stackAmt >= 1:
-                                    self.highlightRed(
-                                        PLocalizer.InventoryLowLevel)
+                                    self.highlightRed(PLocalizer.InventoryLowLevel)
                                     return
 
         return
@@ -409,12 +261,10 @@ class InventoryItemGui(InventoryListItem):
         self['state'] = DGG.DISABLED
         self['image_color'] = Vec4(0.55, 0.55, 0.5, 1)
         self.available = False
-        self.highlightBox(text, Vec4(0.75, 0.5, 0.5, 1),
-                          PiratesGuiGlobals.TextFG6)
+        self.highlightBox(text, Vec4(0.75, 0.5, 0.5, 1), PiratesGuiGlobals.TextFG6)
 
     def highlightGreen(self, text=''):
-        self.highlightBox(text, Vec4(0.5, 0.75, 0.5, 1),
-                          PiratesGuiGlobals.TextFG4)
+        self.highlightBox(text, Vec4(0.5, 0.75, 0.5, 1), PiratesGuiGlobals.TextFG4)
 
     def highlightBox(self, text, image_color, text_fg):
         self.miscText['text_fg'] = text_fg
@@ -434,24 +284,9 @@ class InventoryItemGui(InventoryListItem):
             return
         weaponInfo = PLocalizer.WeaponDescriptions.get(self.data[0])
         weaponDesc = weaponInfo
-        self.helpText = DirectFrame(
-            parent=self,
-            relief=None,
-            text=weaponDesc,
-            state=DGG.DISABLED,
-            text_align=TextNode.ALeft,
-            text_scale=PiratesGuiGlobals.TextScaleSmall,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_wordwrap=13,
-            textMayChange=0,
-            sortOrder=91)
+        self.helpText = DirectFrame(parent=self, relief=None, text=weaponDesc, state=DGG.DISABLED, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleSmall, text_fg=PiratesGuiGlobals.TextFG2, text_wordwrap=13, textMayChange=0, sortOrder=91)
         height = -self.helpText.getHeight()
-        self.helpBox = BorderFrame(
-            parent=aspect2d,
-            state=DGG.DISABLED,
-            frameSize=(-0.03, 0.43, height, 0.05),
-            sortOrder=90,
-            borderScale=0.2)
+        self.helpBox = BorderFrame(parent=aspect2d, state=DGG.DISABLED, frameSize=(-0.03, 0.43, height, 0.05), sortOrder=90, borderScale=0.2)
         self.helpText.reparentTo(self.helpBox)
         self.helpBox.setBin('gui-popup', 0)
         self.helpBox.setPos(self, 0.25, 0, -0.035)
@@ -483,8 +318,7 @@ class InventoryItemGui(InventoryListItem):
             self.wrtReparentTo(aspect2d)
             taskMgr.remove(self.taskName('dragTask'))
             vWidget2render2d = self.getPos(render2d)
-            vMouse2render2d = Point3(event.getMouse()[0], 0,
-                                     event.getMouse()[1])
+            vMouse2render2d = Point3(event.getMouse()[0], 0, event.getMouse()[1])
             editVec = Vec3(vWidget2render2d - vMouse2render2d)
             task = taskMgr.add(self.dragTask, self.taskName('dragTask'))
             task.editVec = editVec
@@ -495,8 +329,7 @@ class InventoryItemGui(InventoryListItem):
         else:
             mwn = base.mouseWatcherNode
             if mwn.hasMouse():
-                vMouse2render2d = Point3(mwn.getMouse()[0], 0,
-                                         mwn.getMouse()[1])
+                vMouse2render2d = Point3(mwn.getMouse()[0], 0, mwn.getMouse()[1])
                 newPos = vMouse2render2d + task.editVec
                 self.setPos(render2d, newPos)
                 newPos = self.getPos(aspect2d)
@@ -517,8 +350,7 @@ class InventoryItemGui(InventoryListItem):
             taskMgr.remove(self.taskName('dragTask'))
 
     def showDetails(self, event):
-        taskMgr.doMethodLater(PiratesGuiGlobals.HelpPopupTime,
-                              self.createHelpbox, 'helpInfoTask')
+        taskMgr.doMethodLater(PiratesGuiGlobals.HelpPopupTime, self.createHelpbox, 'helpInfoTask')
         self.createHelpbox()
 
     def hideDetails(self, event):
@@ -527,6 +359,4 @@ class InventoryItemGui(InventoryListItem):
             self.helpBox.destroy()
             self.helpBox = None
         return
-
-
 # okay decompiling .\pirates\piratesgui\InventoryItemGui.pyc

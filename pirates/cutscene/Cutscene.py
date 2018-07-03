@@ -10,8 +10,7 @@ from pirates.pirate import AvatarTypes
 from pirates.piratesbase import TimeOfDayManager, TODGlobals
 from pirates.piratesgui import PiratesGuiGlobals
 
-
-class Cutscene(NodePath, DirectObject):
+class Cutscene(NodePath, DirectObject):  
     notify = directNotify.newCategory('Cutscene')
 
     def __init__(self, cr, cutsceneName, doneCallback=None, giverId=None):
@@ -37,8 +36,7 @@ class Cutscene(NodePath, DirectObject):
         originNode = None
         if self.cr is not None:
             self.cr.currentCutscene = self
-            originNode = self.cr.activeWorld.getCutsceneOriginNode(
-                self.cutsceneName)
+            originNode = self.cr.activeWorld.getCutsceneOriginNode(self.cutsceneName)
         if originNode is not None:
             if 'localAvatar' in __builtins__:
                 if localAvatar.ship:
@@ -51,8 +49,7 @@ class Cutscene(NodePath, DirectObject):
             giverObject = None
             if giverId:
                 giverObject = self.cr.doId2do[giverId]
-            if giverObject and giverObject.getParent().getParent().getName(
-            ) == 'GameArea':
+            if giverObject and giverObject.getParent().getParent().getName() == 'GameArea':
                 self.reparentTo(giverObject.getParent().getParent())
             elif 'localAvatar' in __builtins__:
                 if localAvatar.ship:
@@ -100,16 +97,7 @@ class Cutscene(NodePath, DirectObject):
     def setShowTimer(self, showTimer):
         if showTimer:
             if self.timer == None:
-                self.timer = DirectLabel(
-                    parent=render2d,
-                    pos=(0.0, 0, 0.9),
-                    frameSize=(0, 0.16, 0, 0.12),
-                    text='0.0',
-                    text_align=TextNode.ARight,
-                    text_scale=0.05,
-                    text_pos=(0.15, 0.05),
-                    text_shadow=PiratesGuiGlobals.TextShadow,
-                    textMayChange=1)
+                self.timer = DirectLabel(parent=render2d, pos=(0.0, 0, 0.9), frameSize=(0, 0.16, 0, 0.12), text='0.0', text_align=TextNode.ARight, text_scale=0.05, text_pos=(0.15, 0.05), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1)
         else:
             if self.timer:
                 self.timer.removeNode()
@@ -260,8 +248,7 @@ class Cutscene(NodePath, DirectObject):
 
     def updateTimer(self, task=None):
         if self._ival.isPlaying():
-            totalPlayTime = globalClock.getRealTime(
-            ) - self.timerStartTime - self.timerTotalPauseTime
+            totalPlayTime = globalClock.getRealTime() - self.timerStartTime - self.timerTotalPauseTime
             self.timer['text'] = '%.2f' % totalPlayTime
         return Task.cont
 
@@ -306,8 +293,7 @@ class Cutscene(NodePath, DirectObject):
 
     def resume(self):
         if self._ival:
-            self.timerTotalPauseTime += globalClock.getRealTime(
-            ) - self.timerPauseTime
+            self.timerTotalPauseTime += globalClock.getRealTime() - self.timerPauseTime
             self._ival.resume()
 
     def restart(self):

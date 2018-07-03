@@ -109,11 +109,7 @@ class Flag(NodePath):
         flagCopy.setY(10)
         par = base.win.makeTextureBuffer('par', 256, 256)
         par.setOneShot(True)
-        parcam = base.makeCamera(
-            win=par,
-            scene=portraitSceneGraph,
-            clearColor=Vec4(0),
-            lens=OrthographicLens())
+        parcam = base.makeCamera(win=par, scene=portraitSceneGraph, clearColor=Vec4(0), lens=OrthographicLens())
         parcam.reparentTo(portraitSceneGraph)
         tex = par.getTexture()
         tex.setWrapU(Texture.WMClamp)
@@ -128,8 +124,7 @@ class Flag(NodePath):
                 if callback:
                     callback()
             else:
-                taskMgr.doMethodLater(
-                    0, completeFlatten, 'cleanUp', extraArgs=[])
+                taskMgr.doMethodLater(0, completeFlatten, 'cleanUp', extraArgs=[])
 
         completeFlatten()
         return tex
@@ -169,11 +164,11 @@ class Flag(NodePath):
         del oldBgNps
         val = self.dna.bgData[0]
         bgTexCol = self.bgNode.findAllTextures('*_%02d_*' % val)
-        bgTexCol = [bgTexCol[x] for x in range(bgTexCol.getNumTextures())]
-        sortDict = dict(zip([ repr( x) for x in bgTexCol], bgTexCol))
+        bgTexCol = [ bgTexCol[x] for x in range(bgTexCol.getNumTextures()) ]
+        sortDict = dict(zip([ `x` for x in bgTexCol ], bgTexCol))
         keys = sortDict.keys()
         keys.sort()
-        bgTexCol = [sortDict[name] for name in keys]
+        bgTexCol = [ sortDict[name] for name in keys ]
         for bgnum in range(0, len(bgTexCol) + 1):
             bgNp = self.__model.copyTo(self, sort=self.BgSortOffset + bgnum)
             bgNp.setName('bg-%d (style: %02d)' % (bgnum, val))
@@ -184,8 +179,7 @@ class Flag(NodePath):
                 bgNp.setTexture(TextureStage.getDefault(), tex)
             bgNp.setTexture(self.texTs, self.texTex)
             bgNp.setTexture(self.shapeTs, self.shapeTex)
-            bgNp.setTexTransform(self.shapeTs,
-                                 TransformState.makeScale2d(Vec2(0.995, 1.0)))
+            bgNp.setTexTransform(self.shapeTs, TransformState.makeScale2d(Vec2(0.995, 1.0)))
 
     def getBgColor(self, index):
         return self.dna.getBackgroundColor(index)
@@ -211,15 +205,15 @@ class Flag(NodePath):
     def __setBgHFlip(self):
         val = self.getBgHFlip()
         bgNpCol = self.findAllMatches('**/bg-*')
-        scale = [1.0, 1.0]
+        scale = [
+         1.0, 1.0]
         if val:
             scale[0] *= -1
         bgTexTransform = bgNpCol[0].getTexTransform(TextureStage.getDefault())
         if bgTexTransform.getPos()[1]:
             scale[1] *= -1
         for bgNp in bgNpCol:
-            self.__updateBackgroundStageRaw(bgNp, TextureStage.getDefault(),
-                                            scale)
+            self.__updateBackgroundStageRaw(bgNp, TextureStage.getDefault(), scale)
 
     def getBgVFlip(self):
         return self.dna.getBackgroundVerticalFlip()
@@ -231,15 +225,15 @@ class Flag(NodePath):
     def __setBgVFlip(self):
         val = self.getBgVFlip()
         bgNpCol = self.findAllMatches('**/bg-*')
-        scale = [1.0, 1.0]
+        scale = [
+         1.0, 1.0]
         bgTexTransform = bgNpCol[0].getTexTransform(TextureStage.getDefault())
         if bgTexTransform.getPos()[0]:
             scale[0] *= -1
         if val:
             scale[1] *= -1
         for bgNp in bgNpCol:
-            self.__updateBackgroundStageRaw(bgNp, TextureStage.getDefault(),
-                                            scale)
+            self.__updateBackgroundStageRaw(bgNp, TextureStage.getDefault(), scale)
 
     def getLayoutStyle(self):
         return self.dna.getLayoutStyle()
@@ -303,13 +297,10 @@ class Flag(NodePath):
         takenIndices = self.getEmblemIndices()
         if index not in takenIndices:
             if index < 0:
-                availableIndices = [
-                    x for x in range(16) if x not in takenIndices
-                ]
+                availableIndices = [ x for x in range(16) if x not in takenIndices ]
                 index = availableIndices[0]
             if location < 0:
-                self.dna.setEmblem(
-                    index, pos=self.dna.getRandomEmblemPos(index))
+                self.dna.setEmblem(index, pos=self.dna.getRandomEmblemPos(index))
             self.dna.setEmblem(index, pos=location)
             self.__activateEmblem(index)
             return index
@@ -337,8 +328,7 @@ class Flag(NodePath):
         eNp.setTexture(eTex, 1)
         eNp.setTexture(self.texTs, self.texTex)
         eNp.setTexture(self.shapeTs, self.shapeTex)
-        eNp.setTexTransform(self.shapeTs,
-                            TransformState.makeScale2d(Vec2(0.995, 1.0)))
+        eNp.setTexTransform(self.shapeTs, TransformState.makeScale2d(Vec2(0.995, 1.0)))
         self.__setEmblemColor(index)
 
     def getEmblemColor(self, index):
@@ -392,8 +382,7 @@ class Flag(NodePath):
         self.__activateEmblems()
 
     def getNumBgColorsUsed(self):
-        return self.bgNode.findAllMatches(
-            '**/*_%02d_*' % self.dna.getBackgroundStyle()).getNumPaths() + 1
+        return self.bgNode.findAllMatches('**/*_%02d_*' % self.dna.getBackgroundStyle()).getNumPaths() + 1
 
     def getNumEmblems(self):
         return self.dna.getNumEmblems()
@@ -406,18 +395,14 @@ class Flag(NodePath):
         bgRot = 0
         bgScl = Vec2(*bgData)
         corner = TransformState.makePos2d(Vec2(-0.5, -0.5))
-        bgXForm = TransformState.makePosRotateScale2d(bgPos, bgRot,
-                                                      bgScl).compose(corner)
+        bgXForm = TransformState.makePosRotateScale2d(bgPos, bgRot, bgScl).compose(corner)
         iBgXForm = bgXForm.invertCompose(TransformState.makeIdentity())
         np.setTexTransform(stage, iBgXForm)
 
     def __updateEmblem(self, index):
         eNp = self.find('**/emblem-%02d (style: *)' % index)
         self.__updateEmblemStage(eNp, TextureStage.getDefault(), [
-            self.getEmblemPos(index),
-            self.getEmblemRVal(index),
-            self.getEmblemScale(index)
-        ])
+         self.getEmblemPos(index), self.getEmblemRVal(index), self.getEmblemScale(index)])
 
     def __updateEmblemStage(self, np, stage, eData):
         if not np.isEmpty():
@@ -426,32 +411,21 @@ class Flag(NodePath):
             eScl = FlagGlobals.EmblemScales[eData[2]]
             self.__updateEmblemStageRaw(np, stage, ePos, eRot, eScl)
 
-    def __updateEmblemStageRaw(self,
-                               np,
-                               stage,
-                               position,
-                               rotation,
-                               scale,
-                               relToLayout=True):
+    def __updateEmblemStageRaw(self, np, stage, position, rotation, scale, relToLayout=True):
         if not np.isEmpty():
             ePos = Vec2(*position)
             eRot = rotation
-            eScl = PythonUtil.clampScalar(scale, FlagGlobals.EmblemScales[0],
-                                          FlagGlobals.EmblemScales[-1])
+            eScl = PythonUtil.clampScalar(scale, FlagGlobals.EmblemScales[0], FlagGlobals.EmblemScales[-1])
             corner = TransformState.makePos2d(Vec2(-0.5, -0.5))
             if relToLayout:
                 lPos = Vec2(self.getLayoutXPos(), self.getLayoutYPos()) / 255.0
                 lRot = self.getLayoutRVal() * 360 / FlagGlobals.RotationCount
                 lScl = FlagGlobals.LayoutScales[self.getLayoutScale()]
-                lXForm = TransformState.makePosRotateScale2d(
-                    lPos, lRot, Vec2(lScl)).compose(corner)
-                eXForm = TransformState.makePosRotateScale2d(
-                    ePos, eRot, Vec2(eScl)).compose(corner)
-                final = lXForm.compose(eXForm).invertCompose(
-                    TransformState.makeIdentity())
+                lXForm = TransformState.makePosRotateScale2d(lPos, lRot, Vec2(lScl)).compose(corner)
+                eXForm = TransformState.makePosRotateScale2d(ePos, eRot, Vec2(eScl)).compose(corner)
+                final = lXForm.compose(eXForm).invertCompose(TransformState.makeIdentity())
             else:
-                eXForm = TransformState.makePosRotateScale2d(
-                    ePos, eRot, Vec2(eScl)).compose(corner)
+                eXForm = TransformState.makePosRotateScale2d(ePos, eRot, Vec2(eScl)).compose(corner)
                 final = eXForm.invertCompose(TransformState.makeIdentity())
             np.setTexTransform(stage, final)
 
@@ -461,8 +435,7 @@ class Flag(NodePath):
         lRot = self.getLayoutRVal() * 360 / FlagGlobals.RotationCount
         lScl = FlagGlobals.LayoutScales[self.getLayoutScale()]
         pt = Vec2(*FlagGlobals.LayoutOffsets[self.getLayoutStyle()][posIndex])
-        lXForm = TransformState.makePosRotateScale2d(lPos, lRot,
-                                                     Vec2(lScl)).compose(corner)
+        lXForm = TransformState.makePosRotateScale2d(lPos, lRot, Vec2(lScl)).compose(corner)
         return lXForm.getMat3().xformPoint(pt)
 
     def modifyStageRaw(self, np, stage, position, rotation, scale):
@@ -471,8 +444,7 @@ class Flag(NodePath):
             rot = rotation
             scl = scale
             corner = TransformState.makePos2d(Vec2(-0.5, -0.5))
-            xForm = TransformState.makePosRotateScale2d(
-                pos, rot, Vec2(scl)).compose(corner)
+            xForm = TransformState.makePosRotateScale2d(pos, rot, Vec2(scl)).compose(corner)
             final = xForm.invertCompose(TransformState.makeIdentity())
             np.setTexTransform(stage, final)
 
@@ -495,6 +467,6 @@ if __name__ == '__main__':
     f.setDNAString(p.getDNAString())
     f.reparentTo(render)
     print f
-    print repr( f)
+    print `f`
     base.mouseInterface.node().setPos(0, 3, 0)
     run()

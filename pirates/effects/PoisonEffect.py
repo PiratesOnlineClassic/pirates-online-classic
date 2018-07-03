@@ -10,7 +10,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class PoisonEffect(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
 
     def __init__(self):
@@ -20,8 +20,7 @@ class PoisonEffect(PooledEffect, EffectController):
         self.card = model.find('**/particleSmoke')
         self.effectScale = 1.0
         if not PoisonEffect.particleDummy:
-            PoisonEffect.particleDummy = render.attachNewNode(
-                ModelNode('PoisonParticleDummy'))
+            PoisonEffect.particleDummy = render.attachNewNode(ModelNode('PoisonParticleDummy'))
             PoisonEffect.particleDummy.setDepthWrite(0)
             PoisonEffect.particleDummy.setLightOff()
         self.f = ParticleEffect.ParticleEffect()
@@ -71,11 +70,8 @@ class PoisonEffect(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd,
-                                           ColorBlendAttrib.OIncomingAlpha,
-                                           ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(0.4, 1, 0.3, 1), Vec4(0, 0, 0, 0.25), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.4, 1, 0.3, 1), Vec4(0, 0, 0, 0.25), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.5)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -84,23 +80,13 @@ class PoisonEffect(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
 
     def createTrack(self):
-        self.p0.renderer.setInitialXScale(
-            0.0005 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalXScale(
-            0.06 * self.cardScale * self.effectScale)
-        self.p0.renderer.setInitialYScale(
-            0.0005 * self.cardScale * self.effectScale)
-        self.p0.renderer.setFinalYScale(
-            0.06 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialXScale(0.0005 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalXScale(0.06 * self.cardScale * self.effectScale)
+        self.p0.renderer.setInitialYScale(0.0005 * self.cardScale * self.effectScale)
+        self.p0.renderer.setFinalYScale(0.06 * self.cardScale * self.effectScale)
         self.p0.emitter.setRadius(0.5 * self.effectScale)
-        self.startEffect = Sequence(
-            Wait(1.5), Func(self.p0.setBirthRate, 0.25),
-            Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100.0), Wait(2.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Wait(1.5), Func(self.p0.setBirthRate, 0.25), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def cleanUpEffect(self):
@@ -111,6 +97,4 @@ class PoisonEffect(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\PoisonEffect.pyc

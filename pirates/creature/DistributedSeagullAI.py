@@ -1,7 +1,6 @@
 from pirates.creature.DistributedCreatureAI import DistributedCreatureAI
 from direct.directnotify import DirectNotifyGlobal
 
-
 class DistributedSeagullAI(DistributedCreatureAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSeagullAI')
 

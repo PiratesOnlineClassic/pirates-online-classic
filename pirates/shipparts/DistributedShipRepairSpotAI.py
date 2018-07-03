@@ -3,8 +3,7 @@ from direct.directnotify import DirectNotifyGlobal
 
 
 class DistributedShipRepairSpotAI(DistributedInteractiveAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedShipRepairSpotAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipRepairSpotAI')
 
     def __init__(self, air):
         DistributedInteractiveAI.__init__(self, air)

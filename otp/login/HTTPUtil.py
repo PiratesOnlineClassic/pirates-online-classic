@@ -30,8 +30,9 @@ def getHTTPResponse(url, http, body=''):
     else:
         hd = http.getDocument(url)
     if not hd.isValid():
-        raise ConnectionError('Unable to reach %s' % url.cStr(),
-                              hd.getStatusCode())
+        raise ConnectionError(
+            'Unable to reach %s' %
+            url.cStr(), hd.getStatusCode())
     stream = hd.openReadFile(1)
     sr = StreamReader(stream, 1)
     response = sr.readlines()
@@ -40,6 +41,4 @@ def getHTTPResponse(url, http, body=''):
             response[i] = response[i][:-1]
 
     return response
-
-
 # okay decompiling .\otp\login\HTTPUtil.pyc

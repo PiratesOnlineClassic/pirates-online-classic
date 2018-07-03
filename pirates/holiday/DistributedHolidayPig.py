@@ -6,12 +6,10 @@ from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.effects.SmallFire import SmallFire
 
-
 class DistributedHolidayPig(DistributedHolidayObject):
 
     def __init__(self, cr):
-        DistributedHolidayObject.__init__(
-            self, cr, proximityText=PLocalizer.InteractHolidayPig)
+        DistributedHolidayObject.__init__(self, cr, proximityText=PLocalizer.InteractHolidayPig)
         self.pigRoasting = False
         self.fireEffect = None
         self.pigInterval = None
@@ -47,15 +45,10 @@ class DistributedHolidayPig(DistributedHolidayObject):
         localAvatar.guiMgr.createWarning(PLocalizer.NoPigRoasting)
 
     def startRoastingPig(self):
-        self.pigModel = loader.loadModel(
-            'models/props/pir_m_prp_foo_barbecuepig')
+        self.pigModel = loader.loadModel('models/props/pir_m_prp_foo_barbecuepig')
         self.pigModel.setTransparency(1)
         self.pigModel.reparentTo(self)
-        self.pigInterval = LerpColorScaleInterval(
-            self.pigModel,
-            2.0,
-            Vec4(1, 1, 1, 1),
-            startColorScale=Vec4(1, 1, 1, 0))
+        self.pigInterval = LerpColorScaleInterval(self.pigModel, 2.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(1, 1, 1, 0))
         self.fireEffect = SmallFire()
         if self.fireEffect:
             self.fireEffect.reparentTo(self)
@@ -65,11 +58,7 @@ class DistributedHolidayPig(DistributedHolidayObject):
 
     def stopRoastingPig(self):
         if self.pigModel:
-            self.pigInterval = LerpColorScaleInterval(
-                self.pigModel,
-                2.0,
-                Vec4(1, 1, 1, 0),
-                startColorScale=Vec4(1, 1, 1, 1))
+            self.pigInterval = LerpColorScaleInterval(self.pigModel, 2.0, Vec4(1, 1, 1, 0), startColorScale=Vec4(1, 1, 1, 1))
             self.pigInterval.start()
         if self.fireEffect:
             self.fireEffect.stopLoop()
@@ -77,15 +66,12 @@ class DistributedHolidayPig(DistributedHolidayObject):
 
     def makeTradeResponse(self, result):
         if result == 0:
-            localAvatar.guiMgr.createWarning(PLocalizer.TradeItemFullWarning,
-                                             PiratesGuiGlobals.TextFG6)
+            localAvatar.guiMgr.createWarning(PLocalizer.TradeItemFullWarning, PiratesGuiGlobals.TextFG6)
         elif result == 1:
-            localAvatar.guiMgr.messageStack.addModalTextMessage(
-                PLocalizer.PorkChunkReceived, seconds=10, icon=('pork', ''))
+            localAvatar.guiMgr.messageStack.addModalTextMessage(PLocalizer.PorkChunkReceived, seconds=10, icon=('pork', ''))
             localAvatar.guiMgr.combatTray.tonicButton.getBestTonic()
             localAvatar.guiMgr.weaponPage.updateTonics()
         else:
-            localAvatar.guiMgr.createWarning(PLocalizer.TradeFailedWarning,
-                                             PiratesGuiGlobals.TextFG6)
+            localAvatar.guiMgr.createWarning(PLocalizer.TradeFailedWarning, PiratesGuiGlobals.TextFG6)
         base.cr.interactionMgr.start()
         self.refreshState()

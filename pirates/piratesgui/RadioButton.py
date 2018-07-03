@@ -7,6 +7,7 @@ from panda3d.core import *
 
 
 class RadioButton(DirectButton):
+    
 
     def __init__(self, parent=None, **kw):
         gui_main = loader.loadModel('models/gui/gui_main')
@@ -14,14 +15,8 @@ class RadioButton(DirectButton):
         icon_torus = gui_main.find('**/icon_torus')
         icon_torus_over = gui_main.find('**/icon_torus_over')
         gui_main.removeNode()
-        optiondefs = (('geom', None, None), ('checkedGeom', icon_sphere, None),
-                      ('image', (icon_torus, icon_torus, icon_torus_over,
-                                 icon_torus), None), ('geom_color',
-                                                      VBase4(1, 1, 1, 1), None),
-                      ('image_scale', 1.4, None), ('variable', [],
-                                                   None), ('value', [], None),
-                      ('others', [], None), ('relief', None,
-                                             None), ('isChecked', False, None))
+        optiondefs = (
+         ('geom', None, None), ('checkedGeom', icon_sphere, None), ('image', (icon_torus, icon_torus, icon_torus_over, icon_torus), None), ('geom_color', VBase4(1, 1, 1, 1), None), ('image_scale', 1.4, None), ('variable', [], None), ('value', [], None), ('others', [], None), ('relief', None, None), ('isChecked', False, None))
         self.defineoptions(kw, optiondefs)
         DirectButton.__init__(self, parent)
         self.initialiseoptions(RadioButton)
@@ -51,7 +46,7 @@ class RadioButton(DirectButton):
                 other.uncheck()
 
         if fCommand and self['command']:
-            self['command'](*[self['value']] + self['extraArgs'])
+            apply(self['command'], [self['value']] + self['extraArgs'])
 
     def setOthers(self, others):
         self['others'] = others
@@ -60,6 +55,4 @@ class RadioButton(DirectButton):
         self['isChecked'] = False
         self['geom'] = None
         return
-
-
 # okay decompiling .\pirates\piratesgui\RadioButton.pyc

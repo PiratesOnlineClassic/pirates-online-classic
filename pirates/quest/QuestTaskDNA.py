@@ -12,28 +12,24 @@ from pirates.pirate import AvatarTypes
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.quest import QuestEvent, QuestReward, QuestTaskState
-from pirates.quest.QuestConstants import (
-    LocationIds, NPCIds, PropIds, ShipIds, TreasureIds, getLocationList,
-    getPropList, getShipList, getTreasureList)
+from pirates.quest.QuestConstants import (LocationIds, NPCIds, PropIds,
+                                          ShipIds, TreasureIds,
+                                          getLocationList, getPropList,
+                                          getShipList, getTreasureList)
 from pirates.quest.QuestPath import QuestGoal
 from pirates.ship import ShipGlobals
 
 
 class QuestTaskDNA(POD):
-
+    
     notify = directNotify.newCategory('QuestTaskDNA')
-    DataSet = {
-        'location': LocationIds.ANY_LOCATION,
-        'autoTriggerInfo': tuple(),
-        'goalLocation': None
-    }
+    DataSet = {'location': LocationIds.ANY_LOCATION, 'autoTriggerInfo': tuple(), 'goalLocation': None}
 
     def getNPCName(self, npcId):
         return PLocalizer.NPCNames.get(npcId, PLocalizer.DefaultTownfolkName)
 
     def getInitialTaskState(self, holder):
-        return QuestTaskState.QuestTaskState(
-            taskType=Class2DBId[self.__class__])
+        return QuestTaskState.QuestTaskState(taskType=Class2DBId[self.__class__])
 
     def computeRewards(self, initialTaskState, holder):
         return []
@@ -165,7 +161,7 @@ class QuestTaskDNA(POD):
 
 
 class VisitTaskDNA(QuestTaskDNA):
-
+    
     DataSet = {'npcId': None}
 
     def handleNPCVisit(self, questEvent, taskState):
@@ -179,19 +175,13 @@ class VisitTaskDNA(QuestTaskDNA):
         return False
 
     def getDescriptionText(self, state):
-        return PLocalizer.VisitTaskDesc % {
-            'toNpcName': self.getNPCName(self.npcId)
-        }
+        return PLocalizer.VisitTaskDesc % {'toNpcName': self.getNPCName(self.npcId)}
 
     def getSCSummaryText(self, state):
-        return PLocalizer.QuestSCFindNPC % {
-            'npcName': self.getNPCName(self.npcId)
-        }
+        return PLocalizer.QuestSCFindNPC % {'npcName': self.getNPCName(self.npcId)}
 
     def getSCWhereIsText(self, state):
-        return PLocalizer.QuestSCWhereIsNPC % {
-            'npcName': self.getNPCName(self.npcId)
-        }
+        return PLocalizer.QuestSCWhereIsNPC % {'npcName': self.getNPCName(self.npcId)}
 
     def getSCHowToText(self, state):
         return ''
@@ -218,7 +208,8 @@ class VisitTaskDNA(QuestTaskDNA):
             return
         location = targetNpc.getPos(npcInstance.worldGrid)
         object = targetNpc
-        return (location, object.getUniqueId(), npcInstance)
+        return (
+         location, object.getUniqueId(), npcInstance)
 
     def getGoalUid(self):
         return self.getGoalLocation() or self.getNpcId()
@@ -229,15 +220,8 @@ class VisitTaskDNA(QuestTaskDNA):
 
 
 class RecoverAvatarItemTaskDNA(QuestTaskDNA):
-
-    DataSet = {
-        'item': None,
-        'num': 1,
-        'maxAttempts': 4,
-        'probability': 0.75,
-        'enemyType': AvatarTypes.AnyAvatar,
-        'level': 0
-    }
+    
+    DataSet = {'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75, 'enemyType': AvatarTypes.AnyAvatar, 'level': 0}
 
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
@@ -277,69 +261,32 @@ class RecoverAvatarItemTaskDNA(QuestTaskDNA):
     def getSCSummaryText(self, state):
         if self.num == 1:
             if self.level == 0:
-                return PLocalizer.QuestSCRecoverItem % {
-                    'itemName': PLocalizer.QuestItemNames[self.item][0],
-                    'enemyName': self.enemyType.getStrings()[0]
-                }
+                return PLocalizer.QuestSCRecoverItem % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'enemyName': self.enemyType.getStrings()[0]}
             else:
-                return PLocalizer.QuestSCRecoverItemLvl % {
-                    'itemName': PLocalizer.QuestItemNames[self.item][0],
-                    'enemyName': self.enemyType.getStrings()[0],
-                    'level': self.level
-                }
+                return PLocalizer.QuestSCRecoverItemLvl % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'enemyName': self.enemyType.getStrings()[0], 'level': self.level}
         else:
             if self.level == 0:
-                return PLocalizer.QuestSCRecoverItemNum % {
-                    'num': self.num,
-                    'itemName': PLocalizer.QuestItemNames[self.item][1],
-                    'enemyName': self.enemyType.getStrings()[0]
-                }
+                return PLocalizer.QuestSCRecoverItemNum % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'enemyName': self.enemyType.getStrings()[0]}
             else:
-                return PLocalizer.QuestSCRecoverItemNumLvl % {
-                    'num': self.num,
-                    'itemName': PLocalizer.QuestItemNames[self.item][1],
-                    'level': self.level,
-                    'enemyName': self.enemyType.getStrings()[0]
-                }
+                return PLocalizer.QuestSCRecoverItemNumLvl % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'level': self.level, 'enemyName': self.enemyType.getStrings()[0]}
 
     def getSCWhereIsText(self, state):
-        return PLocalizer.QuestSCWhereIsEnemy % {
-            'enemyName': self.enemyType.getStrings()[0]
-        }
+        return PLocalizer.QuestSCWhereIsEnemy % {'enemyName': self.enemyType.getStrings()[0]}
 
     def getSCHowToText(self, state):
-        return PLocalizer.QuestSCHowDoIRecover % {
-            'itemName': PLocalizer.QuestItemNames[self.item][0],
-            'enemyName': self.enemyType.getStrings()[0]
-        }
+        return PLocalizer.QuestSCHowDoIRecover % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'enemyName': self.enemyType.getStrings()[0]}
 
     def getDescriptionText(self, state):
         if self.num == 1:
             if self.level == 0:
-                return PLocalizer.RecoverAvatarItemTaskDescS % {
-                    'itemName': PLocalizer.QuestItemNames[self.item][0],
-                    'enemyName': self.enemyType.getStrings()[0]
-                }
+                return PLocalizer.RecoverAvatarItemTaskDescS % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'enemyName': self.enemyType.getStrings()[0]}
             else:
-                return PLocalizer.RecoverAvatarItemTaskDescSL % {
-                    'itemName': PLocalizer.QuestItemNames[self.item][0],
-                    'enemyName': self.enemyType.getStrings()[0],
-                    'level': self.level
-                }
+                return PLocalizer.RecoverAvatarItemTaskDescSL % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'enemyName': self.enemyType.getStrings()[0], 'level': self.level}
         else:
             if self.level == 0:
-                return PLocalizer.RecoverAvatarItemTaskDescP % {
-                    'num': self.num,
-                    'itemName': PLocalizer.QuestItemNames[self.item][1],
-                    'enemyName': self.enemyType.getStrings()[1]
-                }
+                return PLocalizer.RecoverAvatarItemTaskDescP % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'enemyName': self.enemyType.getStrings()[1]}
             else:
-                return PLocalizer.RecoverAvatarItemTaskDescPL % {
-                    'num': self.num,
-                    'itemName': PLocalizer.QuestItemNames[self.item][1],
-                    'level': self.level,
-                    'enemyName': self.enemyType.getStrings()[1]
-                }
+                return PLocalizer.RecoverAvatarItemTaskDescPL % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'level': self.level, 'enemyName': self.enemyType.getStrings()[1]}
 
     def getTitle(self):
         return PLocalizer.RecoverAvatarItemTaskTitle
@@ -359,8 +306,7 @@ class RecoverAvatarItemTaskDNA(QuestTaskDNA):
         if not taskState.progress:
             return (None, None)
         itemName = PLocalizer.QuestItemNames[self.item][2]
-        progressMsg = PLocalizer.RecoverItemProgress % (
-            taskState.progress, taskState.goal, itemName)
+        progressMsg = PLocalizer.RecoverItemProgress % (taskState.progress, taskState.goal, itemName)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
@@ -378,17 +324,8 @@ class RecoverAvatarItemTaskDNA(QuestTaskDNA):
 
 
 class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
-
-    DataSet = {
-        'item': None,
-        'num': 1,
-        'maxAttempts': 4,
-        'probability': 0.75,
-        'enemyType': AvatarTypes.AnyAvatar,
-        'level': 0,
-        'enemyList': (AvatarTypes.AnyAvatar,),
-        'enemyNames': ('', '')
-    }
+    
+    DataSet = {'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75, 'enemyType': AvatarTypes.AnyAvatar, 'level': 0, 'enemyList': (AvatarTypes.AnyAvatar,), 'enemyNames': ('', '')}
 
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
@@ -433,69 +370,32 @@ class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
     def getSCSummaryText(self, state):
         if self.num == 1:
             if self.level == 0:
-                return PLocalizer.QuestSCRecoverItem % {
-                    'itemName': PLocalizer.QuestItemNames[self.item][0],
-                    'enemyName': self.enemyNames[0]
-                }
+                return PLocalizer.QuestSCRecoverItem % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'enemyName': self.enemyNames[0]}
             else:
-                return PLocalizer.QuestSCRecoverItemLvl % {
-                    'itemName': PLocalizer.QuestItemNames[self.item][0],
-                    'enemyName': self.enemyNames[0],
-                    'level': self.level
-                }
+                return PLocalizer.QuestSCRecoverItemLvl % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'enemyName': self.enemyNames[0], 'level': self.level}
         else:
             if self.level == 0:
-                return PLocalizer.QuestSCRecoverItemNum % {
-                    'num': self.num,
-                    'itemName': PLocalizer.QuestItemNames[self.item][1],
-                    'enemyName': self.enemyNames[1]
-                }
+                return PLocalizer.QuestSCRecoverItemNum % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'enemyName': self.enemyNames[1]}
             else:
-                return PLocalizer.QuestSCRecoverItemNumLvl % {
-                    'num': self.num,
-                    'itemName': PLocalizer.QuestItemNames[self.item][1],
-                    'level': self.level,
-                    'enemyName': self.enemyNames[1]
-                }
+                return PLocalizer.QuestSCRecoverItemNumLvl % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'level': self.level, 'enemyName': self.enemyNames[1]}
 
     def getSCWhereIsText(self, state):
-        return PLocalizer.QuestSCWhereIsEnemy % {
-            'enemyName': self.enemyNames[0]
-        }
+        return PLocalizer.QuestSCWhereIsEnemy % {'enemyName': self.enemyNames[0]}
 
     def getSCHowToText(self, state):
-        return PLocalizer.QuestSCHowDoIRecover % {
-            'itemName': PLocalizer.QuestItemNames[self.item][0],
-            'enemyName': self.enemyNames[0]
-        }
+        return PLocalizer.QuestSCHowDoIRecover % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'enemyName': self.enemyNames[0]}
 
     def getDescriptionText(self, state):
         if self.num == 1:
             if self.level == 0:
-                return PLocalizer.RecoverAvatarItemTaskDescS % {
-                    'itemName': PLocalizer.QuestItemNames[self.item][0],
-                    'enemyName': self.enemyNames[0]
-                }
+                return PLocalizer.RecoverAvatarItemTaskDescS % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'enemyName': self.enemyNames[0]}
             else:
-                return PLocalizer.RecoverAvatarItemTaskDescSL % {
-                    'itemName': PLocalizer.QuestItemNames[self.item][0],
-                    'enemyName': self.enemyNames[0],
-                    'level': self.level
-                }
+                return PLocalizer.RecoverAvatarItemTaskDescSL % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'enemyName': self.enemyNames[0], 'level': self.level}
         else:
             if self.level == 0:
-                return PLocalizer.RecoverAvatarItemTaskDescP % {
-                    'num': self.num,
-                    'itemName': PLocalizer.QuestItemNames[self.item][1],
-                    'enemyName': self.enemyNames[1]
-                }
+                return PLocalizer.RecoverAvatarItemTaskDescP % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'enemyName': self.enemyNames[1]}
             else:
-                return PLocalizer.RecoverAvatarItemTaskDescPL % {
-                    'num': self.num,
-                    'itemName': PLocalizer.QuestItemNames[self.item][1],
-                    'level': self.level,
-                    'enemyName': self.enemyNames[1]
-                }
+                return PLocalizer.RecoverAvatarItemTaskDescPL % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'level': self.level, 'enemyName': self.enemyNames[1]}
 
     def getTitle(self):
         return PLocalizer.RecoverAvatarItemTaskTitle
@@ -515,8 +415,7 @@ class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
         if not taskState.progress:
             return (None, None)
         itemName = PLocalizer.QuestItemNames[self.item][2]
-        progressMsg = PLocalizer.RecoverItemProgress % (
-            taskState.progress, taskState.goal, itemName)
+        progressMsg = PLocalizer.RecoverItemProgress % (taskState.progress, taskState.goal, itemName)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
@@ -534,18 +433,8 @@ class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
 
 
 class RecoverShipItemTaskDNA(QuestTaskDNA):
-
-    DataSet = {
-        'item': None,
-        'num': 1,
-        'maxAttempts': 4,
-        'probability': 0.75,
-        'faction': None,
-        'hull': None,
-        'level': 0,
-        'isFlagship': False,
-        'level': 0
-    }
+    
+    DataSet = {'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75, 'faction': None, 'hull': None, 'level': 0, 'isFlagship': False, 'level': 0}
 
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
@@ -598,57 +487,27 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
         if self.num == 1:
             if self.faction is None or self.faction == AvatarTypes.AnyShip:
                 if shipType:
-                    return PLocalizer.QuestSCRecoverShipItemShip % {
-                        'itemName': PLocalizer.QuestItemNames[self.item][0],
-                        'shipType': shipType
-                    }
+                    return PLocalizer.QuestSCRecoverShipItemShip % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'shipType': shipType}
                 else:
-                    return PLocalizer.QuestSCRecoverShipItem % {
-                        'itemName': PLocalizer.QuestItemNames[self.item][0]
-                    }
+                    return PLocalizer.QuestSCRecoverShipItem % {'itemName': PLocalizer.QuestItemNames[self.item][0]}
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][0]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][0]
                 if shipType:
-                    return PLocalizer.QuestSCRecoverFactionShipItemShip % {
-                        'itemName': PLocalizer.QuestItemNames[self.item][0],
-                        'faction': faction,
-                        'shipType': shipType
-                    }
+                    return PLocalizer.QuestSCRecoverFactionShipItemShip % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'faction': faction, 'shipType': shipType}
                 else:
-                    return PLocalizer.QuestSCRecoverFactionShipItem % {
-                        'itemName': PLocalizer.QuestItemNames[self.item][0],
-                        'faction': faction
-                    }
+                    return PLocalizer.QuestSCRecoverFactionShipItem % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'faction': faction}
         else:
             if self.faction is None or self.faction == AvatarTypes.AnyShip:
                 if shipType:
-                    return PLocalizer.QuestSCRecoverShipItemNumShip % {
-                        'num': self.num,
-                        'itemName': PLocalizer.QuestItemNames[self.item][1],
-                        'shipType': shipType
-                    }
+                    return PLocalizer.QuestSCRecoverShipItemNumShip % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'shipType': shipType}
                 else:
-                    return PLocalizer.QuestSCRecoverShipItemNum % {
-                        'num': self.num,
-                        'itemName': PLocalizer.QuestItemNames[self.item][1]
-                    }
+                    return PLocalizer.QuestSCRecoverShipItemNum % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1]}
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][1]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][1]
                 if shipType:
-                    return PLocalizer.QuestSCRecoverFactionShipItemNumShip % {
-                        'num': self.num,
-                        'itemName': PLocalizer.QuestItemNames[self.item][1],
-                        'faction': faction,
-                        'shipType': shipType
-                    }
+                    return PLocalizer.QuestSCRecoverFactionShipItemNumShip % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'faction': faction, 'shipType': shipType}
                 else:
-                    return PLocalizer.QuestSCRecoverFactionShipItemNum % {
-                        'num': self.num,
-                        'itemName': PLocalizer.QuestItemNames[self.item][1],
-                        'faction': faction
-                    }
+                    return PLocalizer.QuestSCRecoverFactionShipItemNum % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'faction': faction}
         return
 
     def getSCWhereIsText(self, state):
@@ -662,22 +521,15 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
                 return ''
         else:
             if shipType:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][0]
-                return PLocalizer.QuestSCWhereIsFactionShip % {
-                    'shipType': shipType,
-                    'faction': faction
-                }
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][0]
+                return PLocalizer.QuestSCWhereIsFactionShip % {'shipType': shipType, 'faction': faction}
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][1]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][1]
                 return PLocalizer.QuestSCWhereIsFaction % {'faction': faction}
         return
 
     def getSCHowToText(self, state):
-        return PLocalizer.QuestSCHowDoIRecoverShipItem % {
-            'itemName': PLocalizer.QuestItemNames[self.item][0]
-        }
+        return PLocalizer.QuestSCHowDoIRecoverShipItem % {'itemName': PLocalizer.QuestItemNames[self.item][0]}
 
     def getDescriptionText(self, state):
         shipType = None
@@ -687,119 +539,51 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
             if self.level == 0:
                 if self.faction is None or self.faction == AvatarTypes.AnyShip:
                     if shipType:
-                        return PLocalizer.RecoverShipItemTaskDescSN % {
-                            'itemName': PLocalizer.QuestItemNames[self.item][0],
-                            'shipType': shipType
-                        }
+                        return PLocalizer.RecoverShipItemTaskDescSN % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'shipType': shipType}
                     else:
-                        return PLocalizer.RecoverShipItemTaskDescS % {
-                            'itemName': PLocalizer.QuestItemNames[self.item][0]
-                        }
+                        return PLocalizer.RecoverShipItemTaskDescS % {'itemName': PLocalizer.QuestItemNames[self.item][0]}
                 else:
-                    faction = PLocalizer.FactionShipTypeNames[
-                        self.faction.getFaction()][1][0]
+                    faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][0]
                     if shipType:
-                        return PLocalizer.RecoverShipFactionItemTaskDescSN % {
-                            'itemName': PLocalizer.QuestItemNames[self.item][0],
-                            'faction': faction,
-                            'shipType': shipType
-                        }
+                        return PLocalizer.RecoverShipFactionItemTaskDescSN % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'faction': faction, 'shipType': shipType}
                     else:
-                        return PLocalizer.RecoverShipFactionItemTaskDescS % {
-                            'itemName': PLocalizer.QuestItemNames[self.item][0],
-                            'faction': faction
-                        }
+                        return PLocalizer.RecoverShipFactionItemTaskDescS % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'faction': faction}
             elif self.faction is None or self.faction == AvatarTypes.AnyShip:
                 if shipType:
-                    return PLocalizer.RecoverShipItemLevelTaskDescSN % {
-                        'itemName': PLocalizer.QuestItemNames[self.item][0],
-                        'shipType': shipType,
-                        'level': self.level
-                    }
+                    return PLocalizer.RecoverShipItemLevelTaskDescSN % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'shipType': shipType, 'level': self.level}
                 else:
-                    return PLocalizer.RecoverShipItemLevelTaskDescS % {
-                        'itemName': PLocalizer.QuestItemNames[self.item][0],
-                        'level': self.level
-                    }
+                    return PLocalizer.RecoverShipItemLevelTaskDescS % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'level': self.level}
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][0]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][0]
                 if shipType:
-                    return PLocalizer.RecoverShipFactionItemLevelTaskDescSN % {
-                        'itemName': PLocalizer.QuestItemNames[self.item][0],
-                        'faction': faction,
-                        'shipType': shipType,
-                        'level': self.level
-                    }
+                    return PLocalizer.RecoverShipFactionItemLevelTaskDescSN % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'faction': faction, 'shipType': shipType, 'level': self.level}
                 else:
-                    return PLocalizer.RecoverShipFactionItemLevelTaskDescS % {
-                        'itemName': PLocalizer.QuestItemNames[self.item][0],
-                        'faction': faction,
-                        'level': self.level
-                    }
+                    return PLocalizer.RecoverShipFactionItemLevelTaskDescS % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'faction': faction, 'level': self.level}
         else:
             if self.level == 0:
                 if self.faction is None or self.faction == AvatarTypes.AnyShip:
                     if shipType:
-                        return PLocalizer.RecoverShipItemTaskDescPN % {
-                            'num': self.num,
-                            'itemName': PLocalizer.QuestItemNames[self.item][1],
-                            'shipType': shipType
-                        }
+                        return PLocalizer.RecoverShipItemTaskDescPN % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'shipType': shipType}
                     else:
-                        return PLocalizer.RecoverShipItemTaskDescP % {
-                            'num': self.num,
-                            'itemName': PLocalizer.QuestItemNames[self.item][1]
-                        }
+                        return PLocalizer.RecoverShipItemTaskDescP % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1]}
                 else:
-                    faction = PLocalizer.FactionShipTypeNames[
-                        self.faction.getFaction()][1][1]
+                    faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][1]
                     if shipType:
-                        return PLocalizer.RecoverShipFactionItemTaskDescPN % {
-                            'num': self.num,
-                            'itemName': PLocalizer.QuestItemNames[self.item][1],
-                            'faction': faction,
-                            'shipType': shipType
-                        }
+                        return PLocalizer.RecoverShipFactionItemTaskDescPN % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'faction': faction, 'shipType': shipType}
                     else:
-                        return PLocalizer.RecoverShipFactionItemTaskDescP % {
-                            'num': self.num,
-                            'itemName': PLocalizer.QuestItemNames[self.item][1],
-                            'faction': faction
-                        }
+                        return PLocalizer.RecoverShipFactionItemTaskDescP % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'faction': faction}
             else:
                 if self.faction is None or self.faction == AvatarTypes.AnyShip:
                     if shipType:
-                        return PLocalizer.RecoverShipItemLevelTaskDescPN % {
-                            'num': self.num,
-                            'itemName': PLocalizer.QuestItemNames[self.item][1],
-                            'shipType': shipType,
-                            'level': self.level
-                        }
+                        return PLocalizer.RecoverShipItemLevelTaskDescPN % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'shipType': shipType, 'level': self.level}
                     else:
-                        return PLocalizer.RecoverShipItemLevelTaskDescP % {
-                            'num': self.num,
-                            'itemName': PLocalizer.QuestItemNames[self.item][1],
-                            'level': self.level
-                        }
+                        return PLocalizer.RecoverShipItemLevelTaskDescP % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'level': self.level}
                 else:
-                    faction = PLocalizer.FactionShipTypeNames[
-                        self.faction.getFaction()][1][1]
+                    faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][1]
                     if shipType:
-                        return PLocalizer.RecoverShipFactionItemLevelTaskDescPN % {
-                            'num': self.num,
-                            'itemName': PLocalizer.QuestItemNames[self.item][1],
-                            'faction': faction,
-                            'shipType': shipType,
-                            'level': self.level
-                        }
+                        return PLocalizer.RecoverShipFactionItemLevelTaskDescPN % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'faction': faction, 'shipType': shipType, 'level': self.level}
                     else:
-                        return PLocalizer.RecoverShipFactionItemLevelTaskDescP % {
-                            'num': self.num,
-                            'itemName': PLocalizer.QuestItemNames[self.item][1],
-                            'faction': faction,
-                            'level': self.level
-                        }
+                        return PLocalizer.RecoverShipFactionItemLevelTaskDescP % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'faction': faction, 'level': self.level}
         return
 
     def getTitle(self):
@@ -811,8 +595,7 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
         if count < self.num:
             count = self.num
         if self.faction:
-            questStatData.incrementEnemies(self.faction.getName() + '-ship',
-                                           count)
+            questStatData.incrementEnemies(self.faction.getName() + '-ship', count)
         questStatData.incrementMisc('totalShips', count)
 
     def getGoalNum(self):
@@ -822,8 +605,7 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
         if not taskState.progress:
             return (None, None)
         itemName = PLocalizer.QuestItemNames[self.item][2]
-        progressMsg = PLocalizer.RecoverItemProgress % (
-            taskState.progress, taskState.goal, itemName)
+        progressMsg = PLocalizer.RecoverItemProgress % (taskState.progress, taskState.goal, itemName)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
@@ -835,25 +617,14 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
         if result:
             return result
         level = max(0, self.getLevel())
-        typeInfo = [
-            level, 'ship',
-            self.getFaction(),
-            self.getHull(),
-            self.getIsFlagship()
-        ]
+        typeInfo = [level, 'ship', self.getFaction(), self.getHull(), self.getIsFlagship()]
         goal = QuestGoal(typeInfo)
         return goal
 
 
 class RecoverContainerItemTaskDNA(QuestTaskDNA):
-
-    DataSet = {
-        'containerId': PropIds.ANY_PROP,
-        'item': None,
-        'num': 1,
-        'maxAttempts': 4,
-        'probability': 0.75
-    }
+    
+    DataSet = {'containerId': PropIds.ANY_PROP, 'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75}
 
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
@@ -905,14 +676,9 @@ class RecoverContainerItemTaskDNA(QuestTaskDNA):
 
     def getSCSummaryText(self, state):
         if self.num == 1:
-            return PLocalizer.QuestSCContainerItem % {
-                'itemName': PLocalizer.QuestItemNames[self.item][0]
-            }
+            return PLocalizer.QuestSCContainerItem % {'itemName': PLocalizer.QuestItemNames[self.item][0]}
         else:
-            return PLocalizer.QuestSCContainerItemNum % {
-                'num': self.num,
-                'itemName': PLocalizer.QuestItemNames[self.item][1]
-            }
+            return PLocalizer.QuestSCContainerItemNum % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1]}
 
     def getSCWhereIsText(self, state):
         return PLocalizer.QuestSCWhereIsContainers
@@ -922,14 +688,9 @@ class RecoverContainerItemTaskDNA(QuestTaskDNA):
 
     def getDescriptionText(self, state):
         if self.num == 1:
-            return PLocalizer.RecoverContainerItemTaskDescS % {
-                'itemName': PLocalizer.QuestItemNames[self.item][0]
-            }
+            return PLocalizer.RecoverContainerItemTaskDescS % {'itemName': PLocalizer.QuestItemNames[self.item][0]}
         else:
-            return PLocalizer.RecoverContainerItemTaskDescP % {
-                'num': self.num,
-                'itemName': PLocalizer.QuestItemNames[self.item][1]
-            }
+            return PLocalizer.RecoverContainerItemTaskDescP % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1]}
 
     def getTitle(self):
         return PLocalizer.RecoverContainerItemTaskTitle
@@ -953,8 +714,7 @@ class RecoverContainerItemTaskDNA(QuestTaskDNA):
         if not taskState.progress:
             return (None, None)
         itemName = PLocalizer.QuestItemNames[self.item][2]
-        progressMsg = PLocalizer.RecoverItemProgress % (
-            taskState.progress, taskState.goal, itemName)
+        progressMsg = PLocalizer.RecoverItemProgress % (taskState.progress, taskState.goal, itemName)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
@@ -963,7 +723,7 @@ class RecoverContainerItemTaskDNA(QuestTaskDNA):
 
 
 class DeliverItemTaskDNA(QuestTaskDNA):
-
+    
     DataSet = {'item': None, 'num': 1, 'npcId': None, 'location': None}
 
     def handleNPCVisit(self, questEvent, taskState):
@@ -993,16 +753,9 @@ class DeliverItemTaskDNA(QuestTaskDNA):
             else:
                 locationName = 'ErrorLocation'
         if self.num == 1:
-            return PLocalizer.QuestSCDeliverItem % {
-                'itemName': PLocalizer.QuestItemNames[self.item][0],
-                'location': locationName
-            }
+            return PLocalizer.QuestSCDeliverItem % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'location': locationName}
         else:
-            return PLocalizer.QuestSCDeliverItemNum % {
-                'num': self.num,
-                'itemName': PLocalizer.QuestItemNames[self.item][1],
-                'location': locationName
-            }
+            return PLocalizer.QuestSCDeliverItemNum % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'location': locationName}
         return
 
     def getSCWhereIsText(self, state):
@@ -1031,16 +784,9 @@ class DeliverItemTaskDNA(QuestTaskDNA):
             else:
                 locationName = 'ErrorLocation'
         if self.num == 1:
-            return PLocalizer.DeliverItemTaskDescS % {
-                'itemName': PLocalizer.QuestItemNames[self.item][0],
-                'location': locationName
-            }
+            return PLocalizer.DeliverItemTaskDescS % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'location': locationName}
         else:
-            return PLocalizer.DeliverItemTaskDescP % {
-                'num': self.num,
-                'itemName': PLocalizer.QuestItemNames[self.item][1],
-                'location': locationName
-            }
+            return PLocalizer.DeliverItemTaskDescP % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'location': locationName}
         return
 
     def getTitle(self):
@@ -1057,8 +803,7 @@ class DeliverItemTaskDNA(QuestTaskDNA):
         if not taskState.progress:
             return (None, None)
         itemName = PLocalizer.QuestItemNames[self.item][2]
-        progressMsg = PLocalizer.DeliverItemProgress % (self.num, self.num,
-                                                        itemName)
+        progressMsg = PLocalizer.DeliverItemProgress % (self.num, self.num, itemName)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
@@ -1067,6 +812,7 @@ class DeliverItemTaskDNA(QuestTaskDNA):
 
 
 class SmuggleItemTaskDNA(DeliverItemTaskDNA):
+    
 
     def getSCSummaryText(self, state):
         if self.npcId:
@@ -1079,16 +825,9 @@ class SmuggleItemTaskDNA(DeliverItemTaskDNA):
             else:
                 return ''
         if self.num == 1:
-            return PLocalizer.QuestSCSmuggleItem % {
-                'itemName': PLocalizer.QuestItemNames[self.item][0],
-                'location': locationName
-            }
+            return PLocalizer.QuestSCSmuggleItem % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'location': locationName}
         else:
-            return PLocalizer.QuestSCSmuggleItemNum % {
-                'num': self.num,
-                'itemName': PLocalizer.QuestItemNames[self.item][1],
-                'location': locationName
-            }
+            return PLocalizer.QuestSCSmuggleItemNum % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'location': locationName}
         return
 
     def getSCWhereIsText(self, state):
@@ -1117,16 +856,9 @@ class SmuggleItemTaskDNA(DeliverItemTaskDNA):
             else:
                 locationName = 'ErrorLocation'
         if self.num == 1:
-            return PLocalizer.SmuggleItemTaskDescS % {
-                'itemName': PLocalizer.QuestItemNames[self.item][0],
-                'location': locationName
-            }
+            return PLocalizer.SmuggleItemTaskDescS % {'itemName': PLocalizer.QuestItemNames[self.item][0], 'location': locationName}
         else:
-            return PLocalizer.SmuggleItemTaskDescP % {
-                'num': self.num,
-                'itemName': PLocalizer.QuestItemNames[self.item][1],
-                'location': locationName
-            }
+            return PLocalizer.SmuggleItemTaskDescP % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1], 'location': locationName}
         return
 
     def getTitle(self):
@@ -1139,8 +871,7 @@ class SmuggleItemTaskDNA(DeliverItemTaskDNA):
         if not taskState.progress:
             return (None, None)
         itemName = PLocalizer.QuestItemNames[self.item][2]
-        progressMsg = PLocalizer.SmuggleItemProgress % (
-            taskState.progress, taskState.goal, itemName)
+        progressMsg = PLocalizer.SmuggleItemProgress % (taskState.progress, taskState.goal, itemName)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
@@ -1149,7 +880,7 @@ class SmuggleItemTaskDNA(DeliverItemTaskDNA):
 
 
 class MaroonNPCTaskDNA(QuestTaskDNA):
-
+    
     DataSet = {'npcId': None}
 
     def handleDockedAtPort(self, questEvent, taskState):
@@ -1163,10 +894,7 @@ class MaroonNPCTaskDNA(QuestTaskDNA):
         locationName = PLocalizer.LocationNames.get(self.location)
         if locationName == None:
             locationName = 'Unknown Location'
-        return PLocalizer.QuestSCMaroonNPC % {
-            'npcName': npcName,
-            'location': locationName
-        }
+        return PLocalizer.QuestSCMaroonNPC % {'npcName': npcName, 'location': locationName}
 
     def getSCWhereIsText(self, state):
         locationName = PLocalizer.LocationNames.get(self.location)
@@ -1182,10 +910,7 @@ class MaroonNPCTaskDNA(QuestTaskDNA):
         locationName = PLocalizer.LocationNames.get(self.location)
         if locationName == None:
             locationName = 'Unknown Location'
-        return PLocalizer.MaroonNPCTaskDesc % {
-            'npcName': npcName,
-            'location': locationName
-        }
+        return PLocalizer.MaroonNPCTaskDesc % {'npcName': npcName, 'location': locationName}
 
     def getTitle(self):
         return PLocalizer.MaroonNPCTaskTitle
@@ -1195,7 +920,7 @@ class MaroonNPCTaskDNA(QuestTaskDNA):
 
 
 class BribeNPCTaskDNA(QuestTaskDNA):
-
+    
     DataSet = {'npcId': None, 'gold': 1, 'bribeType': 0}
 
     def handleNPCBribe(self, questEvent, taskState):
@@ -1204,29 +929,19 @@ class BribeNPCTaskDNA(QuestTaskDNA):
         return False
 
     def getSCSummaryText(self, state):
-        return PLocalizer.QuestSCBribe % {
-            'npcName': self.getNPCName(self.npcId)
-        }
+        return PLocalizer.QuestSCBribe % {'npcName': self.getNPCName(self.npcId)}
 
     def getSCWhereIsText(self, state):
-        return PLocalizer.QuestSCWhereIsNPC % {
-            'npcName': self.getNPCName(self.npcId)
-        }
+        return PLocalizer.QuestSCWhereIsNPC % {'npcName': self.getNPCName(self.npcId)}
 
     def getSCHowToText(self, state):
         return PLocalizer.QuestSCHowToBribe
 
     def getDescriptionText(self, state):
         if self.bribeType == 1:
-            return PLocalizer.BribeTaskAltDesc % {
-                'toNpcName': self.getNPCName(self.npcId),
-                'gold': self.gold
-            }
+            return PLocalizer.BribeTaskAltDesc % {'toNpcName': self.getNPCName(self.npcId), 'gold': self.gold}
         else:
-            return PLocalizer.BribeTaskDesc % {
-                'toNpcName': self.getNPCName(self.npcId),
-                'gold': self.gold
-            }
+            return PLocalizer.BribeTaskDesc % {'toNpcName': self.getNPCName(self.npcId), 'gold': self.gold}
 
     def getTitle(self):
         return PLocalizer.BribeTaskTitle % self.getNPCName(self.npcId)
@@ -1250,7 +965,8 @@ class BribeNPCTaskDNA(QuestTaskDNA):
             return
         location = targetNpc.getPos(npcInstance.worldGrid)
         object = targetNpc
-        return (location, object.getUniqueId(), npcInstance)
+        return (
+         location, object.getUniqueId(), npcInstance)
 
     def getGoalUid(self):
         return self.getNpcId()
@@ -1263,9 +979,8 @@ class BribeNPCTaskDNA(QuestTaskDNA):
 class PurchaseItemTaskDNA(QuestTaskDNA):
     pass
 
-
 class PokerTaskDNA(QuestTaskDNA):
-
+    
     DataSet = {'gold': 1}
 
     def getInitialTaskState(self, holder):
@@ -1307,8 +1022,7 @@ class PokerTaskDNA(QuestTaskDNA):
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        progressMsg = PLocalizer.PokerProgress % (taskState.progress,
-                                                  taskState.goal)
+        progressMsg = PLocalizer.PokerProgress % (taskState.progress, taskState.goal)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
@@ -1317,7 +1031,7 @@ class PokerTaskDNA(QuestTaskDNA):
 
 
 class BlackjackTaskDNA(QuestTaskDNA):
-
+    
     DataSet = {'gold': 1}
 
     def getInitialTaskState(self, holder):
@@ -1359,8 +1073,7 @@ class BlackjackTaskDNA(QuestTaskDNA):
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        progressMsg = PLocalizer.BlackjackProgress % (taskState.progress,
-                                                      taskState.goal)
+        progressMsg = PLocalizer.BlackjackProgress % (taskState.progress, taskState.goal)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
@@ -1369,14 +1082,8 @@ class BlackjackTaskDNA(QuestTaskDNA):
 
 
 class RecoverTreasureItemTaskDNA(QuestTaskDNA):
-
-    DataSet = {
-        'treasureId': TreasureIds.ANY_TREASURE,
-        'item': None,
-        'num': 1,
-        'maxAttempts': 4,
-        'probability': 0.75
-    }
+    
+    DataSet = {'treasureId': TreasureIds.ANY_TREASURE, 'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75}
 
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
@@ -1396,8 +1103,7 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
                         treasureMatches = True
 
             else:
-                self.notify.warning(
-                    'No treasure list for: %s' % self.treasureId)
+                self.notify.warning('No treasure list for: %s' % self.treasureId)
                 return False
         else:
             treasureMatches = True
@@ -1427,14 +1133,9 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
 
     def getSCSummaryText(self, state):
         if self.num == 1:
-            return PLocalizer.QuestSCTreasureItem % {
-                'itemName': PLocalizer.QuestItemNames[self.item][0]
-            }
+            return PLocalizer.QuestSCTreasureItem % {'itemName': PLocalizer.QuestItemNames[self.item][0]}
         else:
-            return PLocalizer.QuestSCTreasureItemNum % {
-                'num': self.num,
-                'itemName': PLocalizer.QuestItemNames[self.item][1]
-            }
+            return PLocalizer.QuestSCTreasureItemNum % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1]}
 
     def getSCWhereIsText(self, state):
         return ''
@@ -1444,14 +1145,9 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
 
     def getDescriptionText(self, state):
         if self.num == 1:
-            return PLocalizer.RecoverTreasureItemTaskDescS % {
-                'itemName': PLocalizer.QuestItemNames[self.item][0]
-            }
+            return PLocalizer.RecoverTreasureItemTaskDescS % {'itemName': PLocalizer.QuestItemNames[self.item][0]}
         else:
-            return PLocalizer.RecoverTreasureItemTaskDescP % {
-                'num': self.num,
-                'itemName': PLocalizer.QuestItemNames[self.item][1]
-            }
+            return PLocalizer.RecoverTreasureItemTaskDescP % {'num': self.num, 'itemName': PLocalizer.QuestItemNames[self.item][1]}
 
     def getTitle(self):
         return PLocalizer.RecoverTreasureItemTaskTitle
@@ -1475,8 +1171,7 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
         if not taskState.progress:
             return (None, None)
         itemName = PLocalizer.QuestItemNames[self.item][2]
-        progressMsg = PLocalizer.TreasureItemProgress % (
-            taskState.progress, taskState.goal, itemName)
+        progressMsg = PLocalizer.TreasureItemProgress % (taskState.progress, taskState.goal, itemName)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
@@ -1485,13 +1180,8 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
 
 
 class DefeatTaskDNA(QuestTaskDNA):
-
-    DataSet = {
-        'enemyType': AvatarTypes.AnyAvatar,
-        'num': 1,
-        'level': 0,
-        'weaponType': None
-    }
+    
+    DataSet = {'enemyType': AvatarTypes.AnyAvatar, 'num': 1, 'level': 0, 'weaponType': None}
 
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
@@ -1529,52 +1219,24 @@ class DefeatTaskDNA(QuestTaskDNA):
         if self.num == 1:
             if self.level == 0:
                 if weaponName is not None:
-                    return PLocalizer.QuestSCDefeatEnemyWeapon % {
-                        'enemyName': strings[0],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.QuestSCDefeatEnemyWeapon % {'enemyName': strings[0], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.QuestSCDefeatEnemy % {
-                        'enemyName': strings[0]
-                    }
+                    return PLocalizer.QuestSCDefeatEnemy % {'enemyName': strings[0]}
             elif weaponName is not None:
-                return PLocalizer.QuestSCDefeatEnemyLvlWeapon % {
-                    'enemyName': strings[0],
-                    'level': self.level,
-                    'weaponType': weaponName
-                }
+                return PLocalizer.QuestSCDefeatEnemyLvlWeapon % {'enemyName': strings[0], 'level': self.level, 'weaponType': weaponName}
             else:
-                return PLocalizer.QuestSCDefeatEnemyLvl % {
-                    'enemyName': strings[0],
-                    'level': self.level
-                }
+                return PLocalizer.QuestSCDefeatEnemyLvl % {'enemyName': strings[0], 'level': self.level}
         else:
             if self.level == 0:
                 if weaponName is not None:
-                    return PLocalizer.QuestSCDefeatEnemiesWeapon % {
-                        'num': self.num,
-                        'enemyName': strings[1],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.QuestSCDefeatEnemiesWeapon % {'num': self.num, 'enemyName': strings[1], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.QuestSCDefeatEnemies % {
-                        'num': self.num,
-                        'enemyName': strings[1]
-                    }
+                    return PLocalizer.QuestSCDefeatEnemies % {'num': self.num, 'enemyName': strings[1]}
             else:
                 if weaponName is not None:
-                    return PLocalizer.QuestSCDefeatEnemiesLvlWeapon % {
-                        'num': self.num,
-                        'level': self.level,
-                        'enemyName': strings[1],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.QuestSCDefeatEnemiesLvlWeapon % {'num': self.num, 'level': self.level, 'enemyName': strings[1], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.QuestSCDefeatEnemiesLvl % {
-                        'num': self.num,
-                        'level': self.level,
-                        'enemyName': strings[1]
-                    }
+                    return PLocalizer.QuestSCDefeatEnemiesLvl % {'num': self.num, 'level': self.level, 'enemyName': strings[1]}
         return
 
     def getSCWhereIsText(self, state):
@@ -1587,52 +1249,24 @@ class DefeatTaskDNA(QuestTaskDNA):
         if self._getNum(state) == 1:
             if self._getLevel(state) == 0:
                 if weaponName is not None:
-                    return PLocalizer.QuestSCDefeatEnemyWeapon % {
-                        'enemyName': strings[0],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.QuestSCDefeatEnemyWeapon % {'enemyName': strings[0], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.QuestSCDefeatEnemy % {
-                        'enemyName': strings[0]
-                    }
+                    return PLocalizer.QuestSCDefeatEnemy % {'enemyName': strings[0]}
             elif weaponName is not None:
-                return PLocalizer.QuestSCDefeatEnemyLvlWeapon % {
-                    'enemyName': strings[0],
-                    'level': self._getLevel(state),
-                    'weaponType': weaponName
-                }
+                return PLocalizer.QuestSCDefeatEnemyLvlWeapon % {'enemyName': strings[0], 'level': self._getLevel(state), 'weaponType': weaponName}
             else:
-                return PLocalizer.QuestSCDefeatEnemyLvl % {
-                    'enemyName': strings[0],
-                    'level': self._getLevel(state)
-                }
+                return PLocalizer.QuestSCDefeatEnemyLvl % {'enemyName': strings[0], 'level': self._getLevel(state)}
         else:
             if self._getLevel(state) == 0:
                 if weaponName is not None:
-                    return PLocalizer.QuestSCDefeatEnemiesWeapon % {
-                        'num': state.goal,
-                        'enemyName': strings[1],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.QuestSCDefeatEnemiesWeapon % {'num': state.goal, 'enemyName': strings[1], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.QuestSCDefeatEnemies % {
-                        'num': state.goal,
-                        'enemyName': strings[1]
-                    }
+                    return PLocalizer.QuestSCDefeatEnemies % {'num': state.goal, 'enemyName': strings[1]}
             else:
                 if weaponName is not None:
-                    return PLocalizer.QuestSCDefeatEnemiesLvlWeapon % {
-                        'num': state.goal,
-                        'level': self._getLevel(state),
-                        'enemyName': strings[1],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.QuestSCDefeatEnemiesLvlWeapon % {'num': state.goal, 'level': self._getLevel(state), 'enemyName': strings[1], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.QuestSCDefeatEnemiesLvl % {
-                        'num': state.goal,
-                        'level': self._getLevel(state),
-                        'enemyName': strings[1]
-                    }
+                    return PLocalizer.QuestSCDefeatEnemiesLvl % {'num': state.goal, 'level': self._getLevel(state), 'enemyName': strings[1]}
         return
 
     def getSCWhereIsText_Dynamic(self, state):
@@ -1648,60 +1282,31 @@ class DefeatTaskDNA(QuestTaskDNA):
         if self._getNum(state) == 1:
             if self._getLevel(state) == 0:
                 if weaponName is not None:
-                    return PLocalizer.DefeatTaskDescSWeapon % {
-                        'enemyName': strings[0],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.DefeatTaskDescSWeapon % {'enemyName': strings[0], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.DefeatTaskDescS % {
-                        'enemyName': strings[0]
-                    }
+                    return PLocalizer.DefeatTaskDescS % {'enemyName': strings[0]}
             elif weaponName is not None:
-                return PLocalizer.DefeatTaskDescSLWeapon % {
-                    'enemyName': strings[0],
-                    'level': self._getLevel(state),
-                    'weaponType': weaponName
-                }
+                return PLocalizer.DefeatTaskDescSLWeapon % {'enemyName': strings[0], 'level': self._getLevel(state), 'weaponType': weaponName}
             else:
-                return PLocalizer.DefeatTaskDescSL % {
-                    'enemyName': strings[0],
-                    'level': self._getLevel(state)
-                }
+                return PLocalizer.DefeatTaskDescSL % {'enemyName': strings[0], 'level': self._getLevel(state)}
         else:
             if self.level == 0:
                 if weaponName is not None:
-                    return PLocalizer.DefeatTaskDescPWeapon % {
-                        'num': self._getNum(state),
-                        'enemyName': strings[1],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.DefeatTaskDescPWeapon % {'num': self._getNum(state), 'enemyName': strings[1], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.DefeatTaskDescP % {
-                        'num': self._getNum(state),
-                        'enemyName': strings[1]
-                    }
+                    return PLocalizer.DefeatTaskDescP % {'num': self._getNum(state), 'enemyName': strings[1]}
             else:
                 if weaponName is not None:
-                    return PLocalizer.DefeatTaskDescPLWeapon % {
-                        'num': self._getNum(state),
-                        'level': self._getLevel(state),
-                        'enemyName': strings[1],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.DefeatTaskDescPLWeapon % {'num': self._getNum(state), 'level': self._getLevel(state), 'enemyName': strings[1], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.DefeatTaskDescPL % {
-                        'num': self._getNum(state),
-                        'level': self._getLevel(state),
-                        'enemyName': strings[1]
-                    }
+                    return PLocalizer.DefeatTaskDescPL % {'num': self._getNum(state), 'level': self._getLevel(state), 'enemyName': strings[1]}
         return
 
     def getTitle(self):
         if self.weaponType is not None:
             weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
             if weaponName is not None:
-                return PLocalizer.DefeatWithWeaponTaskTitle % (
-                    self.enemyType.getStrings()[1], weaponName)
+                return PLocalizer.DefeatWithWeaponTaskTitle % (self.enemyType.getStrings()[1], weaponName)
         return PLocalizer.DefeatTaskTitle % self.enemyType.getStrings()[1]
 
     def compileStats(self, questStatData):
@@ -1718,16 +1323,15 @@ class DefeatTaskDNA(QuestTaskDNA):
         enemyTypeName = self.enemyType.getStrings()[1]
         weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
         if weaponName is not None:
-            progressMsg = PLocalizer.DefeatProgressWeapon % (
-                taskState.progress, taskState.goal, enemyTypeName, weaponName)
+            progressMsg = PLocalizer.DefeatProgressWeapon % (taskState.progress, taskState.goal, enemyTypeName, weaponName)
         else:
-            progressMsg = PLocalizer.DefeatProgress % (
-                taskState.progress, taskState.goal, enemyTypeName)
+            progressMsg = PLocalizer.DefeatProgress % (taskState.progress, taskState.goal, enemyTypeName)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
             color = PiratesGuiGlobals.TextFG8
-        return (progressMsg, color)
+        return (
+         progressMsg, color)
 
     def getGoalUid(self):
         result = QuestTaskDNA.getGoalUid(self)
@@ -1740,14 +1344,8 @@ class DefeatTaskDNA(QuestTaskDNA):
 
 
 class DefeatGroupTaskDNA(QuestTaskDNA):
-
-    DataSet = {
-        'enemyList': (AvatarTypes.AnyAvatar,),
-        'num': 1,
-        'level': 0,
-        'weaponType': None,
-        'enemyNames': ('', '')
-    }
+    
+    DataSet = {'enemyList': (AvatarTypes.AnyAvatar,), 'num': 1, 'level': 0, 'weaponType': None, 'enemyNames': ('', '')}
 
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
@@ -1780,52 +1378,24 @@ class DefeatGroupTaskDNA(QuestTaskDNA):
         if self.getNum() == 1:
             if self.getLevel() == 0:
                 if weaponName is not None:
-                    return PLocalizer.DefeatTaskDescSWeapon % {
-                        'enemyName': self.enemyNames[0],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.DefeatTaskDescSWeapon % {'enemyName': self.enemyNames[0], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.DefeatTaskDescS % {
-                        'enemyName': self.enemyNames[0]
-                    }
+                    return PLocalizer.DefeatTaskDescS % {'enemyName': self.enemyNames[0]}
             elif weaponName is not None:
-                return PLocalizer.DefeatTaskDescSLWeapon % {
-                    'enemyName': self.enemyNames[0],
-                    'level': self.getLevel(),
-                    'weaponType': weaponName
-                }
+                return PLocalizer.DefeatTaskDescSLWeapon % {'enemyName': self.enemyNames[0], 'level': self.getLevel(), 'weaponType': weaponName}
             else:
-                return PLocalizer.DefeatTaskDescSL % {
-                    'enemyName': self.enemyNames[0],
-                    'level': self.getLevel()
-                }
+                return PLocalizer.DefeatTaskDescSL % {'enemyName': self.enemyNames[0], 'level': self.getLevel()}
         else:
             if self.level == 0:
                 if weaponName is not None:
-                    return PLocalizer.DefeatTaskDescPWeapon % {
-                        'num': self.getNum(),
-                        'enemyName': self.enemyNames[1],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.DefeatTaskDescPWeapon % {'num': self.getNum(), 'enemyName': self.enemyNames[1], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.DefeatTaskDescP % {
-                        'num': self.getNum(),
-                        'enemyName': self.enemyNames[1]
-                    }
+                    return PLocalizer.DefeatTaskDescP % {'num': self.getNum(), 'enemyName': self.enemyNames[1]}
             else:
                 if weaponName is not None:
-                    return PLocalizer.DefeatTaskDescPLWeapon % {
-                        'num': self.getNum(),
-                        'level': self.getLevel(),
-                        'enemyName': self.enemyNames[1],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.DefeatTaskDescPLWeapon % {'num': self.getNum(), 'level': self.getLevel(), 'enemyName': self.enemyNames[1], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.DefeatTaskDescPL % {
-                        'num': self.getNum(),
-                        'level': self.getLevel(),
-                        'enemyName': self.enemyNames[1]
-                    }
+                    return PLocalizer.DefeatTaskDescPL % {'num': self.getNum(), 'level': self.getLevel(), 'enemyName': self.enemyNames[1]}
         return
 
     def getSCSummaryText(self, state):
@@ -1833,58 +1403,28 @@ class DefeatGroupTaskDNA(QuestTaskDNA):
         if self.num == 1:
             if self.level == 0:
                 if weaponName is not None:
-                    return PLocalizer.QuestSCDefeatEnemyWeapon % {
-                        'enemyName': self.enemyNames[0],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.QuestSCDefeatEnemyWeapon % {'enemyName': self.enemyNames[0], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.QuestSCDefeatEnemy % {
-                        'enemyName': self.enemyNames[0]
-                    }
+                    return PLocalizer.QuestSCDefeatEnemy % {'enemyName': self.enemyNames[0]}
             elif weaponName is not None:
-                return PLocalizer.QuestSCDefeatEnemyLvlWeapon % {
-                    'enemyName': self.enemyNames[0],
-                    'level': self.level,
-                    'weaponType': weaponName
-                }
+                return PLocalizer.QuestSCDefeatEnemyLvlWeapon % {'enemyName': self.enemyNames[0], 'level': self.level, 'weaponType': weaponName}
             else:
-                return PLocalizer.QuestSCDefeatEnemyLvl % {
-                    'enemyName': self.enemyNames[0],
-                    'level': self.level
-                }
+                return PLocalizer.QuestSCDefeatEnemyLvl % {'enemyName': self.enemyNames[0], 'level': self.level}
         else:
             if self.level == 0:
                 if weaponName is not None:
-                    return PLocalizer.QuestSCDefeatEnemiesWeapon % {
-                        'num': self.num,
-                        'enemyName': self.enemyNames[1],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.QuestSCDefeatEnemiesWeapon % {'num': self.num, 'enemyName': self.enemyNames[1], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.QuestSCDefeatEnemies % {
-                        'num': self.num,
-                        'enemyName': self.enemyNames[1]
-                    }
+                    return PLocalizer.QuestSCDefeatEnemies % {'num': self.num, 'enemyName': self.enemyNames[1]}
             else:
                 if weaponName is not None:
-                    return PLocalizer.QuestSCDefeatEnemiesLvlWeapon % {
-                        'num': self.num,
-                        'level': self.level,
-                        'enemyName': self.enemyNames[1],
-                        'weaponType': weaponName
-                    }
+                    return PLocalizer.QuestSCDefeatEnemiesLvlWeapon % {'num': self.num, 'level': self.level, 'enemyName': self.enemyNames[1], 'weaponType': weaponName}
                 else:
-                    return PLocalizer.QuestSCDefeatEnemiesLvl % {
-                        'num': self.num,
-                        'level': self.level,
-                        'enemyName': self.enemyNames[1]
-                    }
+                    return PLocalizer.QuestSCDefeatEnemiesLvl % {'num': self.num, 'level': self.level, 'enemyName': self.enemyNames[1]}
         return
 
     def getSCWhereIsText(self, state):
-        return PLocalizer.QuestSCWhereIsEnemy % {
-            'enemyName': self.enemyNames[0]
-        }
+        return PLocalizer.QuestSCWhereIsEnemy % {'enemyName': self.enemyNames[0]}
 
     def getSCSummaryText_Dynamic(self, state):
         return ''
@@ -1896,8 +1436,7 @@ class DefeatGroupTaskDNA(QuestTaskDNA):
         if self.weaponType is not None:
             weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
             if weaponName is not None:
-                return PLocalizer.DefeatWithWeaponTaskTitle % (
-                    self.enemyNames[1], weaponName)
+                return PLocalizer.DefeatWithWeaponTaskTitle % (self.enemyNames[1], weaponName)
         return PLocalizer.DefeatTaskTitle % self.enemyNames[1]
 
     def compileStats(self, questStatData):
@@ -1914,16 +1453,15 @@ class DefeatGroupTaskDNA(QuestTaskDNA):
         enemyTypeName = self.enemyNames[1]
         weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
         if weaponName is not None:
-            progressMsg = PLocalizer.DefeatProgressWeapon % (
-                taskState.progress, taskState.goal, enemyTypeName, weaponName)
+            progressMsg = PLocalizer.DefeatProgressWeapon % (taskState.progress, taskState.goal, enemyTypeName, weaponName)
         else:
-            progressMsg = PLocalizer.DefeatProgress % (
-                taskState.progress, taskState.goal, enemyTypeName)
+            progressMsg = PLocalizer.DefeatProgress % (taskState.progress, taskState.goal, enemyTypeName)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
             color = PiratesGuiGlobals.TextFG8
-        return (progressMsg, color)
+        return (
+         progressMsg, color)
 
     def getGoalUid(self):
         result = QuestTaskDNA.getGoalUid(self)
@@ -1936,17 +1474,8 @@ class DefeatGroupTaskDNA(QuestTaskDNA):
 
 
 class ShipPVPDefeatTaskDNA(QuestTaskDNA):
-
-    DataSet = {
-        'enemyClass': None,
-        'num': None,
-        'damage': None,
-        'gameType': None,
-        'killType': None,
-        'killWeapon': None,
-        'damageWeapon': None,
-        'withoutSink': False
-    }
+    
+    DataSet = {'enemyClass': None, 'num': None, 'damage': None, 'gameType': None, 'killType': None, 'killWeapon': None, 'damageWeapon': None, 'withoutSink': False}
 
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
@@ -2067,11 +1596,9 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
             if self.num == 1:
                 if enemyText is not None:
                     if self.killType == PiratesGlobals.ShipPVPShip:
-                        summaryText = PLocalizer.ShipPVPQuestSingleNumA % (
-                            enemyText, gameTypeText)
+                        summaryText = PLocalizer.ShipPVPQuestSingleNumA % (enemyText, gameTypeText)
                     else:
-                        summaryText = PLocalizer.ShipPVPQuestSingleNumB % (
-                            enemyText, gameTypeText)
+                        summaryText = PLocalizer.ShipPVPQuestSingleNumB % (enemyText, gameTypeText)
                 else:
                     if self.killType == PiratesGlobals.ShipPVPShip:
                         summaryText = PLocalizer.ShipPVPQuestSingleAnyNumA % gameTypeText
@@ -2085,18 +1612,14 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
                 numString = str(self.num)
                 if enemyText is not None:
                     if self.killType == PiratesGlobals.ShipPVPShip:
-                        summaryText = PLocalizer.ShipPVPQuestMultA % (
-                            numString, enemyText, gameTypeText)
+                        summaryText = PLocalizer.ShipPVPQuestMultA % (numString, enemyText, gameTypeText)
                     else:
-                        summaryText = PLocalizer.ShipPVPQuestMultB % (
-                            numString, enemyText, gameTypeText)
+                        summaryText = PLocalizer.ShipPVPQuestMultB % (numString, enemyText, gameTypeText)
                 else:
                     if self.killType == PiratesGlobals.ShipPVPShip:
-                        summaryText = PLocalizer.ShipPVPQuestMultAnyA % (
-                            numString, gameTypeText)
+                        summaryText = PLocalizer.ShipPVPQuestMultAnyA % (numString, gameTypeText)
                     else:
-                        summaryText = PLocalizer.ShipPVPQuestMultAnyB % (
-                            numString, gameTypeText)
+                        summaryText = PLocalizer.ShipPVPQuestMultAnyB % (numString, gameTypeText)
                 if weaponText is not None:
                     summaryText += PLocalizer.ShipPVPQuestUsingA % weaponText
                 if self.withoutSink is True:
@@ -2105,22 +1628,17 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
             numString = str(self.damage)
             if enemyText is not None:
                 if self.killType == PiratesGlobals.ShipPVPShip:
-                    summaryText = PLocalizer.ShipPVPQuestDamageA % (
-                        numString, enemyText, gameTypeText)
+                    summaryText = PLocalizer.ShipPVPQuestDamageA % (numString, enemyText, gameTypeText)
                 else:
-                    summaryText = PLocalizer.ShipPVPQuestDamageB % (
-                        numString, enemyText, gameTypeText)
+                    summaryText = PLocalizer.ShipPVPQuestDamageB % (numString, enemyText, gameTypeText)
             else:
                 if killTypeText is not None:
                     if self.killType == PiratesGlobals.ShipPVPShip:
-                        summaryText = PLocalizer.ShipPVPQuestDamageAnyA % (
-                            numString, gameTypeText)
+                        summaryText = PLocalizer.ShipPVPQuestDamageAnyA % (numString, gameTypeText)
                     else:
-                        summaryText = PLocalizer.ShipPVPQuestDamageAnyB % (
-                            numString, gameTypeText)
+                        summaryText = PLocalizer.ShipPVPQuestDamageAnyB % (numString, gameTypeText)
                 else:
-                    summaryText = PLocalizer.ShipPVPQuestDamageAnyC % (
-                        numString, gameTypeText)
+                    summaryText = PLocalizer.ShipPVPQuestDamageAnyC % (numString, gameTypeText)
             if weaponText is not None:
                 summaryText += PLocalizer.ShipPVPQuestUsingA % weaponText
             if self.withoutSink is True:
@@ -2168,46 +1686,34 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
         if self.num is not None:
             if self.num == 1:
                 if enemyText is not None:
-                    text = PLocalizer.ShipPVPQuestProgNumA % (
-                        enemyText, killTypeText, gameTypeText)
+                    text = PLocalizer.ShipPVPQuestProgNumA % (enemyText, killTypeText, gameTypeText)
                 else:
-                    text = PLocalizer.ShipPVPQuestProgNumB % (killTypeText,
-                                                              gameTypeText)
+                    text = PLocalizer.ShipPVPQuestProgNumB % (killTypeText, gameTypeText)
             elif enemyText is not None:
-                text = PLocalizer.ShipPVPQuestProgNumC % (
-                    taskState.progress, taskState.goal, enemyText, killTypeText,
-                    gameTypeText)
+                text = PLocalizer.ShipPVPQuestProgNumC % (taskState.progress, taskState.goal, enemyText, killTypeText, gameTypeText)
             else:
-                text = PLocalizer.ShipPVPQuestProgNumD % (
-                    taskState.progress, taskState.goal, killTypeText,
-                    gameTypeText)
+                text = PLocalizer.ShipPVPQuestProgNumD % (taskState.progress, taskState.goal, killTypeText, gameTypeText)
         else:
             if enemyText is not None:
                 if killTypeText is not None:
-                    text = PLocalizer.ShipPVPQuestProgDamA % (
-                        taskState.progress, taskState.goal, enemyText,
-                        killTypeText, gameTypeText)
+                    text = PLocalizer.ShipPVPQuestProgDamA % (taskState.progress, taskState.goal, enemyText, killTypeText, gameTypeText)
                 else:
-                    text = PLocalizer.ShipPVPQuestProgDamB % (
-                        taskState.progress, taskState.goal, enemyText,
-                        gameTypeText)
+                    text = PLocalizer.ShipPVPQuestProgDamB % (taskState.progress, taskState.goal, enemyText, gameTypeText)
             else:
                 if killTypeText is not None:
-                    text = PLocalizer.ShipPVPQuestProgDamC % (
-                        taskState.progress, taskState.goal, killTypeText,
-                        gameTypeText)
+                    text = PLocalizer.ShipPVPQuestProgDamC % (taskState.progress, taskState.goal, killTypeText, gameTypeText)
                 else:
-                    text = PLocalizer.ShipPVPQuestProgDamD % (
-                        taskState.progress, taskState.goal, gameTypeText)
+                    text = PLocalizer.ShipPVPQuestProgDamD % (taskState.progress, taskState.goal, gameTypeText)
         if weaponText is not None:
             text += PLocalizer.ShipPVPQuestUsingACap % weaponText
         if self.withoutSink is True:
             text += PLocalizer.ShipPVPQuestWithoutSinkingCap
-        return (text, PiratesGuiGlobals.TextFG10)
+        return (
+         text, PiratesGuiGlobals.TextFG10)
 
 
 class DefeatNPCTaskDNA(QuestTaskDNA):
-
+    
     DataSet = {'npcId': None}
 
     def handleNPCDefeat(self, questEvent, taskState):
@@ -2216,22 +1722,16 @@ class DefeatNPCTaskDNA(QuestTaskDNA):
         return False
 
     def getSCSummaryText(self, state):
-        return PLocalizer.QuestSCDefeatEnemy % {
-            'enemyName': self.getNPCName(self.npcId)
-        }
+        return PLocalizer.QuestSCDefeatEnemy % {'enemyName': self.getNPCName(self.npcId)}
 
     def getSCWhereIsText(self, state):
-        return PLocalizer.QuestSCWhereIsEnemy % {
-            'enemyName': self.getNPCName(self.npcId)
-        }
+        return PLocalizer.QuestSCWhereIsEnemy % {'enemyName': self.getNPCName(self.npcId)}
 
     def getSCHowToText(self, state):
         return ''
 
     def getDescriptionText(self, state):
-        return PLocalizer.DefeatNPCTaskDesc % {
-            'npcName': self.getNPCName(self.npcId)
-        }
+        return PLocalizer.DefeatNPCTaskDesc % {'npcName': self.getNPCName(self.npcId)}
 
     def getTitle(self):
         return PLocalizer.DefeatNPCTaskTitle % self.getNPCName(self.npcId)
@@ -2245,19 +1745,13 @@ class DefeatNPCTaskDNA(QuestTaskDNA):
         npcName = self.getNPCName(self.npcId)
         progressMsg = PLocalizer.DefeatNPCProgress % npcName
         color = PiratesGuiGlobals.TextFG10
-        return (progressMsg, color)
+        return (
+         progressMsg, color)
 
 
 class DefeatShipTaskDNA(QuestTaskDNA):
-
-    DataSet = {
-        'faction': None,
-        'hull': None,
-        'level': 0,
-        'isFlagship': False,
-        'num': 1,
-        'level': 0
-    }
+    
+    DataSet = {'faction': None, 'hull': None, 'level': 0, 'isFlagship': False, 'num': 1, 'level': 0}
 
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
@@ -2288,8 +1782,7 @@ class DefeatShipTaskDNA(QuestTaskDNA):
         if self.level > 0:
             if questEvent.level < self.level:
                 return False
-        if self._getIsFlagship(
-                taskState) == True and questEvent.isFlagship == False:
+        if self._getIsFlagship(taskState) == True and questEvent.isFlagship == False:
             return False
         if self.getLocation():
             if not self.locationMatches(questEvent):
@@ -2307,38 +1800,23 @@ class DefeatShipTaskDNA(QuestTaskDNA):
                 else:
                     return PLocalizer.QuestSCSink
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][0]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][0]
                 if shipType:
-                    return PLocalizer.QuestSCSinkFactionShip % {
-                        'faction': faction,
-                        'shipType': shipType
-                    }
+                    return PLocalizer.QuestSCSinkFactionShip % {'faction': faction, 'shipType': shipType}
                 else:
                     return PLocalizer.QuestSCSinkFaction % {'faction': faction}
         else:
             if self.faction is None or self.faction == AvatarTypes.AnyShip:
                 if shipType:
-                    return PLocalizer.QuestSCSinkShipNum % {
-                        'num': self.num,
-                        'shipType': shipType
-                    }
+                    return PLocalizer.QuestSCSinkShipNum % {'num': self.num, 'shipType': shipType}
                 else:
                     return PLocalizer.QuestSCSinkNum % {'num': self.num}
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][1]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][1]
                 if shipType:
-                    return PLocalizer.QuestSCSinkFactionNumShip % {
-                        'num': self.num,
-                        'faction': faction,
-                        'shipType': shipType
-                    }
+                    return PLocalizer.QuestSCSinkFactionNumShip % {'num': self.num, 'faction': faction, 'shipType': shipType}
                 else:
-                    return PLocalizer.QuestSCSinkFactionNum % {
-                        'num': self.num,
-                        'faction': faction
-                    }
+                    return PLocalizer.QuestSCSinkFactionNum % {'num': self.num, 'faction': faction}
         return
 
     def getSCWhereIsText(self, state):
@@ -2352,15 +1830,10 @@ class DefeatShipTaskDNA(QuestTaskDNA):
                 return ''
         else:
             if shipType:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][0]
-                return PLocalizer.QuestSCWhereIsFactionShip % {
-                    'faction': faction,
-                    'shipType': shipType
-                }
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][0]
+                return PLocalizer.QuestSCWhereIsFactionShip % {'faction': faction, 'shipType': shipType}
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][1]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][1]
                 return PLocalizer.QuestSCWhereIsFaction % {'faction': faction}
         return
 
@@ -2375,38 +1848,23 @@ class DefeatShipTaskDNA(QuestTaskDNA):
                 else:
                     return PLocalizer.QuestSCSink
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][0]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][0]
                 if shipType:
-                    return PLocalizer.QuestSCSinkFactionShip % {
-                        'faction': faction,
-                        'shipType': shipType
-                    }
+                    return PLocalizer.QuestSCSinkFactionShip % {'faction': faction, 'shipType': shipType}
                 else:
                     return PLocalizer.QuestSCSinkFaction % {'faction': faction}
         else:
             if self.faction is None or self.faction == AvatarTypes.AnyShip:
                 if shipType:
-                    return PLocalizer.QuestSCSinkShipNum % {
-                        'num': state.goal,
-                        'shipType': shipType
-                    }
+                    return PLocalizer.QuestSCSinkShipNum % {'num': state.goal, 'shipType': shipType}
                 else:
                     return PLocalizer.QuestSCSinkNum % {'num': state.goal}
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][1]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][1]
                 if shipType:
-                    return PLocalizer.QuestSCSinkFactionNumShip % {
-                        'num': state.goal,
-                        'faction': faction,
-                        'shipType': shipType
-                    }
+                    return PLocalizer.QuestSCSinkFactionNumShip % {'num': state.goal, 'faction': faction, 'shipType': shipType}
                 else:
-                    return PLocalizer.QuestSCSinkFactionNum % {
-                        'num': state.goal,
-                        'faction': faction
-                    }
+                    return PLocalizer.QuestSCSinkFactionNum % {'num': state.goal, 'faction': faction}
         return
 
     def getSCWhereIsText_Dynamic(self, state):
@@ -2420,15 +1878,10 @@ class DefeatShipTaskDNA(QuestTaskDNA):
                 return ''
         else:
             if shipType:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][0]
-                return PLocalizer.QuestSCWhereIsFactionShip % {
-                    'faction': faction,
-                    'shipType': shipType
-                }
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][0]
+                return PLocalizer.QuestSCWhereIsFactionShip % {'faction': faction, 'shipType': shipType}
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][1]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][1]
                 return PLocalizer.QuestSCWhereIsFaction % {'faction': faction}
         return
 
@@ -2442,46 +1895,27 @@ class DefeatShipTaskDNA(QuestTaskDNA):
         if state.goal == 1:
             if self.faction is None or self.faction == AvatarTypes.AnyShip:
                 if shipType:
-                    return PLocalizer.DefeatShipTaskDescSN % {
-                        'shipType': shipType
-                    }
+                    return PLocalizer.DefeatShipTaskDescSN % {'shipType': shipType}
                 else:
                     return PLocalizer.DefeatShipTaskDescS
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][0]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][0]
                 if shipType:
-                    return PLocalizer.DefeatShipFactionTaskDescSN % {
-                        'faction': faction,
-                        'shipType': shipType
-                    }
+                    return PLocalizer.DefeatShipFactionTaskDescSN % {'faction': faction, 'shipType': shipType}
                 else:
-                    return PLocalizer.DefeatShipFactionTaskDescS % {
-                        'faction': faction
-                    }
+                    return PLocalizer.DefeatShipFactionTaskDescS % {'faction': faction}
         else:
             if self.faction is None or self.faction == AvatarTypes.AnyShip:
                 if shipType:
-                    return PLocalizer.DefeatShipTaskDescPN % {
-                        'num': state.goal,
-                        'shipType': shipType
-                    }
+                    return PLocalizer.DefeatShipTaskDescPN % {'num': state.goal, 'shipType': shipType}
                 else:
                     return PLocalizer.DefeatShipTaskDescP % {'num': state.goal}
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][1]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][1]
                 if shipType:
-                    return PLocalizer.DefeatShipFactionTaskDescPN % {
-                        'num': state.goal,
-                        'faction': faction,
-                        'shipType': shipType
-                    }
+                    return PLocalizer.DefeatShipFactionTaskDescPN % {'num': state.goal, 'faction': faction, 'shipType': shipType}
                 else:
-                    return PLocalizer.DefeatShipFactionTaskDescP % {
-                        'num': state.goal,
-                        'faction': faction
-                    }
+                    return PLocalizer.DefeatShipFactionTaskDescP % {'num': state.goal, 'faction': faction}
         return
 
     def getTitle(self):
@@ -2490,8 +1924,7 @@ class DefeatShipTaskDNA(QuestTaskDNA):
     def compileStats(self, questStatData):
         questStatData.incrementTasks('defeatShipTasks')
         if self.faction:
-            questStatData.incrementEnemies(self.faction.getName() + '-ship',
-                                           self.num)
+            questStatData.incrementEnemies(self.faction.getName() + '-ship', self.num)
         questStatData.incrementMisc('totalShips', self.num)
 
     def getGoalNum(self):
@@ -2505,20 +1938,15 @@ class DefeatShipTaskDNA(QuestTaskDNA):
             shipType = PLocalizer.ShipClassNames.get(self.hull)
         if self.faction is None or self.faction == AvatarTypes.AnyShip:
             if shipType:
-                progressMsg = PLocalizer.DefeatShipTypeProgress % (
-                    taskState.progress, taskState.goal, shipType)
+                progressMsg = PLocalizer.DefeatShipTypeProgress % (taskState.progress, taskState.goal, shipType)
             else:
-                progressMsg = PLocalizer.DefeatShipProgress % (
-                    taskState.progress, taskState.goal)
+                progressMsg = PLocalizer.DefeatShipProgress % (taskState.progress, taskState.goal)
         else:
-            faction = PLocalizer.FactionShipTypeNames[
-                self.faction.getFaction()][1][1]
+            faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][1]
             if shipType:
-                progressMsg = PLocalizer.DefeatShipFactionTypeProgress % (
-                    taskState.progress, taskState.goal, faction, shipType)
+                progressMsg = PLocalizer.DefeatShipFactionTypeProgress % (taskState.progress, taskState.goal, faction, shipType)
             else:
-                progressMsg = PLocalizer.DefeatShipFactionProgress % (
-                    taskState.progress, taskState.goal, faction)
+                progressMsg = PLocalizer.DefeatShipFactionProgress % (taskState.progress, taskState.goal, faction)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
@@ -2530,17 +1958,13 @@ class DefeatShipTaskDNA(QuestTaskDNA):
         if result:
             return result
         level = max(0, self.getLevel())
-        typeInfo = [
-            level, 'ship',
-            self.getFaction(),
-            self.getHull(),
-            self.getIsFlagship()
-        ]
+        typeInfo = [level, 'ship', self.getFaction(), self.getHull(), self.getIsFlagship()]
         goal = QuestGoal(typeInfo)
         return goal
 
 
 class RandomizedDefeatTaskDNA(DefeatTaskDNA):
+    
 
     def getInitialTaskState(self, holder):
         state = DefeatTaskDNA.getInitialTaskState(self, holder)
@@ -2562,16 +1986,17 @@ class RandomizedDefeatTaskDNA(DefeatTaskDNA):
         if not taskState.progress:
             return (None, None)
         enemyTypeName = taskState.enemyType.getStrings()[1]
-        progressMsg = PLocalizer.DefeatProgress % (
-            taskState.progress, taskState.goal, enemyTypeName)
+        progressMsg = PLocalizer.DefeatProgress % (taskState.progress, taskState.goal, enemyTypeName)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
             color = PiratesGuiGlobals.TextFG8
-        return (progressMsg, color)
+        return (
+         progressMsg, color)
 
 
 class RandomizedDefeatShipTaskDNA(DefeatShipTaskDNA):
+    
 
     def getInitialTaskState(self, holder):
         state = DefeatShipTaskDNA.getInitialTaskState(self, holder)
@@ -2603,20 +2028,15 @@ class RandomizedDefeatShipTaskDNA(DefeatShipTaskDNA):
             shipType = PLocalizer.ShipClassNames.get(self.hull)
         if taskState.faction is None or taskState.faction == AvatarTypes.AnyShip:
             if shipType:
-                progressMsg = PLocalizer.DefeatShipTypeProgress % (
-                    taskState.progress, taskState.goal, shipType)
+                progressMsg = PLocalizer.DefeatShipTypeProgress % (taskState.progress, taskState.goal, shipType)
             else:
-                progressMsg = PLocalizer.DefeatShipProgress % (
-                    taskState.progress, taskState.goal)
+                progressMsg = PLocalizer.DefeatShipProgress % (taskState.progress, taskState.goal)
         else:
-            faction = PLocalizer.FactionShipTypeNames[
-                taskState.faction.getFaction()][1][1]
+            faction = PLocalizer.FactionShipTypeNames[taskState.faction.getFaction()][1][1]
             if shipType:
-                progressMsg = PLocalizer.DefeatShipFactionTypeProgress % (
-                    taskState.progress, taskState.goal, faction, shipType)
+                progressMsg = PLocalizer.DefeatShipFactionTypeProgress % (taskState.progress, taskState.goal, faction, shipType)
             else:
-                progressMsg = PLocalizer.DefeatShipFactionProgress % (
-                    taskState.progress, taskState.goal, faction)
+                progressMsg = PLocalizer.DefeatShipFactionProgress % (taskState.progress, taskState.goal, faction)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
         else:
@@ -2625,21 +2045,14 @@ class RandomizedDefeatShipTaskDNA(DefeatShipTaskDNA):
 
 
 class ViewCutsceneTaskDNA(QuestTaskDNA):
-
-    DataSet = {
-        'npcId': None,
-        'cutsceneId': None,
-        'dialogId': None,
-        'waitEvent': None
-    }
+    
+    DataSet = {'npcId': None, 'cutsceneId': None, 'dialogId': None, 'waitEvent': None}
 
     def handleStart(self, avId):
         self.avId = avId
         if self.waitEvent:
             playerAv = simbase.air.doId2do[self.avId]
-            messenger.accept(
-                playerAv.uniqueName(self.waitEvent), self, self._playCutscene,
-                [], 0)
+            messenger.accept(playerAv.uniqueName(self.waitEvent), self, self._playCutscene, [], 0)
         else:
             self._playCutscene()
 
@@ -2675,9 +2088,7 @@ class ViewCutsceneTaskDNA(QuestTaskDNA):
         return False
 
     def getDescriptionText(self, state):
-        return PLocalizer.ViewCutsceneTaskDesc % {
-            'toNpcName': self.getNPCName(self.npcId)
-        } + ' to view cutscene'
+        return PLocalizer.ViewCutsceneTaskDesc % {'toNpcName': self.getNPCName(self.npcId)} + ' to view cutscene'
 
     def getTitle(self):
         return PLocalizer.ViewCutsceneTaskTitle % self.getNPCName(self.npcId)
@@ -2701,21 +2112,13 @@ class ViewCutsceneTaskDNA(QuestTaskDNA):
             return
         location = targetNpc.getPos(npcInstance.worldGrid)
         object = targetNpc
-        return (location, object.getUniqueId(), npcInstance)
+        return (
+         location, object.getUniqueId(), npcInstance)
 
 
 class CaptureShipNPCTaskDNA(QuestTaskDNA):
-
-    DataSet = {
-        'npcId': None,
-        'maxAttempts': 2,
-        'probability': 0.9,
-        'faction': None,
-        'hull': None,
-        'level': 0,
-        'isFlagship': False,
-        'level': 0
-    }
+    
+    DataSet = {'npcId': None, 'maxAttempts': 2, 'probability': 0.9, 'faction': None, 'hull': None, 'level': 0, 'isFlagship': False, 'level': 0}
 
     def handleShipDefeat(self, questEvent, taskState):
         if self.faction is not None:
@@ -2745,8 +2148,7 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
             if attempts > self.maxAttempts:
                 found = True
             else:
-                if questEvent.getRng(hash(
-                        self.npcId)).random() <= self.probability:
+                if questEvent.getRng(hash(self.npcId)).random() <= self.probability:
                     found = True
         return found
 
@@ -2763,28 +2165,15 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
             shipType = PLocalizer.ShipClassNames.get(self.hull)
         if self.faction is None or self.faction == AvatarTypes.AnyShip:
             if shipType:
-                return PLocalizer.QuestSCCaptureNPCShip % {
-                    'npcName': self.getNPCName(self.npcId),
-                    'shipType': shipType
-                }
+                return PLocalizer.QuestSCCaptureNPCShip % {'npcName': self.getNPCName(self.npcId), 'shipType': shipType}
             else:
-                return PLocalizer.QuestSCCaptureNPC % {
-                    'npcName': self.getNPCName(self.npcId)
-                }
+                return PLocalizer.QuestSCCaptureNPC % {'npcName': self.getNPCName(self.npcId)}
         else:
-            faction = PLocalizer.FactionShipTypeNames[
-                self.faction.getFaction()][1][0]
+            faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][0]
             if shipType:
-                return PLocalizer.QuestSCCaptureNPCFactionShip % {
-                    'npcName': self.getNPCName(self.npcId),
-                    'faction': faction,
-                    'shipType': shipType
-                }
+                return PLocalizer.QuestSCCaptureNPCFactionShip % {'npcName': self.getNPCName(self.npcId), 'faction': faction, 'shipType': shipType}
             else:
-                return PLocalizer.QuestSCCaptureNPCFaction % {
-                    'npcName': self.getNPCName(self.npcId),
-                    'faction': faction
-                }
+                return PLocalizer.QuestSCCaptureNPCFaction % {'npcName': self.getNPCName(self.npcId), 'faction': faction}
         return
 
     def getSCWhereIsText(self, state):
@@ -2798,15 +2187,10 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
                 return ''
         else:
             if shipType:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][0]
-                return PLocalizer.QuestSCWhereIsFactionShip % {
-                    'faction': faction,
-                    'shipType': shipType
-                }
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][0]
+                return PLocalizer.QuestSCWhereIsFactionShip % {'faction': faction, 'shipType': shipType}
             else:
-                faction = PLocalizer.FactionShipTypeNames[
-                    self.faction.getFaction()][1][1]
+                faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][1]
                 return PLocalizer.QuestSCWhereIsFaction % {'faction': faction}
         return
 
@@ -2819,28 +2203,15 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
             shipType = PLocalizer.ShipClassNames.get(self.hull)
         if self.faction is None or self.faction == AvatarTypes.AnyShip:
             if shipType:
-                return PLocalizer.CaptureShipNPCTaskDescSN % {
-                    'npcName': self.getNPCName(self.npcId),
-                    'shipType': shipType
-                }
+                return PLocalizer.CaptureShipNPCTaskDescSN % {'npcName': self.getNPCName(self.npcId), 'shipType': shipType}
             else:
-                return PLocalizer.CaptureShipNPCTaskDescS % {
-                    'npcName': self.getNPCName(self.npcId)
-                }
+                return PLocalizer.CaptureShipNPCTaskDescS % {'npcName': self.getNPCName(self.npcId)}
         else:
-            faction = PLocalizer.FactionShipTypeNames[
-                self.faction.getFaction()][1][0]
+            faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][0]
             if shipType:
-                return PLocalizer.CaptureShipFactionNPCTaskDescSN % {
-                    'npcName': self.getNPCName(self.npcId),
-                    'faction': faction,
-                    'shipType': shipType
-                }
+                return PLocalizer.CaptureShipFactionNPCTaskDescSN % {'npcName': self.getNPCName(self.npcId), 'faction': faction, 'shipType': shipType}
             else:
-                return PLocalizer.CaptureShipFactionNPCTaskDescS % {
-                    'npcName': self.getNPCName(self.npcId),
-                    'faction': faction
-                }
+                return PLocalizer.CaptureShipFactionNPCTaskDescS % {'npcName': self.getNPCName(self.npcId), 'faction': faction}
         return
 
     def getTitle(self):
@@ -2854,44 +2225,33 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
         if result:
             return result
         level = max(0, self.getLevel())
-        typeInfo = [
-            level, 'ship',
-            self.getFaction(),
-            self.getHull(),
-            self.getIsFlagship()
-        ]
+        typeInfo = [level, 'ship', self.getFaction(), self.getHull(), self.getIsFlagship()]
         goal = QuestGoal(typeInfo)
         return goal
 
 
 class CaptureNPCTaskDNA(QuestTaskDNA):
-
+    
     DataSet = {'npcId': None, 'itemId': None}
 
     def getSCSummaryText(self, state):
-        return PLocalizer.QuestSCCaptureNPC % {
-            'npcName': self.getNPCName(self.npcId)
-        }
+        return PLocalizer.QuestSCCaptureNPC % {'npcName': self.getNPCName(self.npcId)}
 
     def getSCWhereIsText(self, state):
-        return PLocalizer.QuestSCWhereIsNPC % {
-            'npcName': self.getNPCName(self.npcId)
-        }
+        return PLocalizer.QuestSCWhereIsNPC % {'npcName': self.getNPCName(self.npcId)}
 
     def getSCHowToText(self, state):
         return ''
 
     def getDescriptionText(self, state):
-        return PLocalizer.CaptureNPCTaskDesc % {
-            'npcName': self.getNPCName(self.npcId)
-        }
+        return PLocalizer.CaptureNPCTaskDesc % {'npcName': self.getNPCName(self.npcId)}
 
     def getTitle(self):
         return PLocalizer.CaptureNPCTaskTitle % self.getNPCName(self.npcId)
 
 
 class BossBattleTaskDNA(QuestTaskDNA):
-
+    
     DataSet = {'treasureMapId': None}
 
     def handleBossBattleCompleted(self, questEvent, taskState):
@@ -2900,8 +2260,7 @@ class BossBattleTaskDNA(QuestTaskDNA):
         return False
 
     def getSCSummaryText(self, state):
-        tmName = PiratesGlobals.DYNAMIC_GAME_STYLE_PROPS[
-            PiratesGlobals.GAME_TYPE_TM][self.treasureMapId]['Name']
+        tmName = PiratesGlobals.DYNAMIC_GAME_STYLE_PROPS[PiratesGlobals.GAME_TYPE_TM][self.treasureMapId]['Name']
         return PLocalizer.QuestSCBossBattleMap % {'treasureMapId': tmName}
 
     def getSCWhereIsText(self, state):
@@ -2911,18 +2270,16 @@ class BossBattleTaskDNA(QuestTaskDNA):
         return ''
 
     def getDescriptionText(self, state):
-        tmName = PiratesGlobals.DYNAMIC_GAME_STYLE_PROPS[
-            PiratesGlobals.GAME_TYPE_TM][self.treasureMapId]['Name']
+        tmName = PiratesGlobals.DYNAMIC_GAME_STYLE_PROPS[PiratesGlobals.GAME_TYPE_TM][self.treasureMapId]['Name']
         return PLocalizer.BossBattleTaskDesc % {'treasureMapId': tmName}
 
     def getTitle(self):
-        tmName = PiratesGlobals.DYNAMIC_GAME_STYLE_PROPS[
-            PiratesGlobals.GAME_TYPE_TM][self.treasureMapId]['Name']
+        tmName = PiratesGlobals.DYNAMIC_GAME_STYLE_PROPS[PiratesGlobals.GAME_TYPE_TM][self.treasureMapId]['Name']
         return PLocalizer.BossBattleTaskTitle % tmName
 
 
 class DeployShipTaskDNA(QuestTaskDNA):
-
+    
     DataSet = {'location': None}
 
     def handleDeployedShip(self, questEvent, taskState):
@@ -2952,35 +2309,8 @@ class DeployShipTaskDNA(QuestTaskDNA):
         questStatData.incrementTasks('deployShipTasks')
 
 
-DBId2Class = {
-    0: VisitTaskDNA,
-    1: RecoverAvatarItemTaskDNA,
-    2: DefeatTaskDNA,
-    3: DefeatShipTaskDNA,
-    4: RecoverTreasureItemTaskDNA,
-    5: ViewCutsceneTaskDNA,
-    6: CaptureNPCTaskDNA,
-    7: PokerTaskDNA,
-    8: BlackjackTaskDNA,
-    9: DeliverItemTaskDNA,
-    10: RecoverShipItemTaskDNA,
-    11: RecoverContainerItemTaskDNA,
-    12: SmuggleItemTaskDNA,
-    13: PurchaseItemTaskDNA,
-    14: BribeNPCTaskDNA,
-    15: DefeatNPCTaskDNA,
-    16: MaroonNPCTaskDNA,
-    17: CaptureShipNPCTaskDNA,
-    18: BossBattleTaskDNA,
-    19: RandomizedDefeatTaskDNA,
-    20: RandomizedDefeatShipTaskDNA,
-    21: DeployShipTaskDNA,
-    22: ShipPVPDefeatTaskDNA,
-    23: RecoverAvatarGroupItemTaskDNA,
-    24: DefeatGroupTaskDNA
-}
+DBId2Class = {0: VisitTaskDNA, 1: RecoverAvatarItemTaskDNA, 2: DefeatTaskDNA, 3: DefeatShipTaskDNA, 4: RecoverTreasureItemTaskDNA, 5: ViewCutsceneTaskDNA, 6: CaptureNPCTaskDNA, 7: PokerTaskDNA, 8: BlackjackTaskDNA, 9: DeliverItemTaskDNA, 10: RecoverShipItemTaskDNA, 11: RecoverContainerItemTaskDNA, 12: SmuggleItemTaskDNA, 13: PurchaseItemTaskDNA, 14: BribeNPCTaskDNA, 15: DefeatNPCTaskDNA, 16: MaroonNPCTaskDNA, 17: CaptureShipNPCTaskDNA, 18: BossBattleTaskDNA, 19: RandomizedDefeatTaskDNA, 20: RandomizedDefeatShipTaskDNA, 21: DeployShipTaskDNA, 22: ShipPVPDefeatTaskDNA, 23: RecoverAvatarGroupItemTaskDNA, 24: DefeatGroupTaskDNA}
 Class2DBId = invertDict(DBId2Class)
-RecoverItemClasses = (RecoverAvatarItemTaskDNA, RecoverTreasureItemTaskDNA,
-                      RecoverShipItemTaskDNA, RecoverContainerItemTaskDNA,
-                      RecoverAvatarGroupItemTaskDNA)
+RecoverItemClasses = (
+ RecoverAvatarItemTaskDNA, RecoverTreasureItemTaskDNA, RecoverShipItemTaskDNA, RecoverContainerItemTaskDNA, RecoverAvatarGroupItemTaskDNA)
 # okay decompiling .\pirates\quest\QuestTaskDNA.pyc

@@ -3,7 +3,6 @@ from direct.distributed.ClockDelta import *
 from direct.distributed.DistributedObject import DistributedObject
 from pirates.uberdog.UberDogGlobals import *
 
-
 class DistributedGoldReceipt(DistributedObject):
     notify = directNotify.newCategory('GoldReceipt')
 

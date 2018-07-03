@@ -16,7 +16,6 @@ BOILING_BAY = 12
 THE_HINTER_SEAS = 13
 MAX_ZONE = THE_HINTER_SEAS + 1
 
-
 def getOceanZone(xc, yc):
     xcoord = xc / 2000
     ycoord = yc / 2000
@@ -54,7 +53,6 @@ def getOceanZone(xc, yc):
         return LEEWARD_PASSAGE
     else:
         return UNCHARTED_WATERS
-
 
 def randomZoneCoord(ozone):
     if ozone == BRIGAND_BAY:

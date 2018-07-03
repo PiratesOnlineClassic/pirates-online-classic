@@ -14,7 +14,7 @@ from pirates.uberdog import UberDogGlobals
 
 
 class ShipTargetPanel(GuiTray.GuiTray):
-
+    
     Width = PiratesGuiGlobals.ShipTargetPanelWidth
     Height = PiratesGuiGlobals.ShipTargetPanelHeight
 
@@ -36,63 +36,46 @@ class ShipTargetPanel(GuiTray.GuiTray):
     def createGui(self):
         self.shipcard = loader.loadModel('models/gui/ship_battle')
         tex = self.shipcard.find('**/ship_battle_speed_bar*')
-        self.hpFrame = DirectFrame(
-            parent=self,
-            pos=(0.269, 0, -0.005),
-            relief=None,
-            image=tex,
-            image_scale=(0.3, 1, 0.6))
-        self.hpMeter = DirectWaitBar(
-            parent=self.hpFrame,
-            relief=DGG.RAISED,
-            borderWidth=(0.004, 0.004),
-            range=self.ship.maxHp,
-            value=self.ship.Hp,
-            frameColor=(0, 0, 0, 0),
-            barColor=(0.1, 0.7, 0.1, 1),
-            frameSize=(-0.27, 0.135, -0.013, 0.013),
-            pos=(0.069, 0, 0.0),
-            text=PLocalizer.Hull,
-            text_scale=PiratesGuiGlobals.TextScaleLarge * 0.75,
-            text_align=TextNode.ALeft,
-            text_pos=(0.16, -0.012),
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_shadow=(0, 0, 0, 1),
-            text_font=PiratesGlobals.getInterfaceFont())
-        self.spFrame = DirectFrame(
-            parent=self,
-            pos=(0.266, 0, -0.03),
-            relief=None,
-            image=tex,
-            image_scale=(0.3, 1, 0.52))
-        self.speedMeter = DirectWaitBar(
-            parent=self.spFrame,
-            relief=DGG.RAISED,
-            borderWidth=(0.004, 0.004),
-            range=self.ship.maxSp,
-            value=self.ship.Sp,
-            frameColor=(0, 0, 0, 0),
-            barColor=(0.7, 0.7, 0.1, 1),
-            frameSize=(-0.27, 0.135, -0.01, 0.01),
-            pos=(0.069, 0, 0.0),
-            text=PLocalizer.Speed,
-            text_scale=PiratesGuiGlobals.TextScaleLarge * 0.75,
-            text_align=TextNode.ALeft,
-            text_pos=(0.16, -0.008),
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_shadow=(0, 0, 0, 1),
-            text_font=PiratesGlobals.getInterfaceFont())
+        self.hpFrame = DirectFrame(parent=self, pos=(0.269, 0, -0.005), relief=None, image=tex, image_scale=(0.3,
+                                                                                                             1,
+                                                                                                             0.6))
+        self.hpMeter = DirectWaitBar(parent=self.hpFrame, relief=DGG.RAISED, borderWidth=(0.004,
+                                                                                          0.004), range=self.ship.maxHp, value=self.ship.Hp, frameColor=(0,
+                                                                                                                                                         0,
+                                                                                                                                                         0,
+                                                                                                                                                         0), barColor=(0.1,
+                                                                                                                                                                       0.7,
+                                                                                                                                                                       0.1,
+                                                                                                                                                                       1), frameSize=(-0.27, 0.135, -0.013, 0.013), pos=(0.069,
+                                                                                                                                                                                                                         0,
+                                                                                                                                                                                                                         0.0), text=PLocalizer.Hull, text_scale=PiratesGuiGlobals.TextScaleLarge * 0.75, text_align=TextNode.ALeft, text_pos=(0.16, -0.012), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=(0,
+                                                                                                                                                                                                                                                                                                                                                                                                             0,
+                                                                                                                                                                                                                                                                                                                                                                                                             0,
+                                                                                                                                                                                                                                                                                                                                                                                                             1), text_font=PiratesGlobals.getInterfaceFont())
+        self.spFrame = DirectFrame(parent=self, pos=(0.266, 0, -0.03), relief=None, image=tex, image_scale=(0.3,
+                                                                                                            1,
+                                                                                                            0.52))
+        self.speedMeter = DirectWaitBar(parent=self.spFrame, relief=DGG.RAISED, borderWidth=(0.004,
+                                                                                             0.004), range=self.ship.maxSp, value=self.ship.Sp, frameColor=(0,
+                                                                                                                                                            0,
+                                                                                                                                                            0,
+                                                                                                                                                            0), barColor=(0.7,
+                                                                                                                                                                          0.7,
+                                                                                                                                                                          0.1,
+                                                                                                                                                                          1), frameSize=(-0.27, 0.135, -0.01, 0.01), pos=(0.069,
+                                                                                                                                                                                                                          0,
+                                                                                                                                                                                                                          0.0), text=PLocalizer.Speed, text_scale=PiratesGuiGlobals.TextScaleLarge * 0.75, text_align=TextNode.ALeft, text_pos=(0.16, -0.008), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=(0,
+                                                                                                                                                                                                                                                                                                                                                                                                               0,
+                                                                                                                                                                                                                                                                                                                                                                                                               0,
+                                                                                                                                                                                                                                                                                                                                                                                                               1), text_font=PiratesGlobals.getInterfaceFont())
         tex = self.shipcard.find('**/ship_battle_dish02*')
-        self.nameBox = DirectFrame(
-            parent=self,
-            relief=None,
-            text=self.ship.getName(),
-            text_align=TextNode.ALeft,
-            text_scale=0.045,
-            text_pos=(0.075, -0.085),
-            text_fg=(1, 0, 0, 1),
-            text_shadow=(0, 0, 0, 1),
-            text_font=PiratesGlobals.getInterfaceFont())
+        self.nameBox = DirectFrame(parent=self, relief=None, text=self.ship.getName(), text_align=TextNode.ALeft, text_scale=0.045, text_pos=(0.075, -0.085), text_fg=(1,
+                                                                                                                                                                       0,
+                                                                                                                                                                       0,
+                                                                                                                                                                       1), text_shadow=(0,
+                                                                                                                                                                                        0,
+                                                                                                                                                                                        0,
+                                                                                                                                                                                        1), text_font=PiratesGlobals.getInterfaceFont())
         color = EnemyGlobals.getShipNametagColor(self.ship.getTeam())
         self.nameBox['text_fg'] = color
         if self.ship.getSiegeTeam():
@@ -159,6 +142,4 @@ class ShipTargetPanel(GuiTray.GuiTray):
 
     def setArmorStatus(self, location, status):
         self.armorGui.setArmorStatus(location, status)
-
-
 # okay decompiling .\pirates\piratesgui\ShipTargetPanel.pyc

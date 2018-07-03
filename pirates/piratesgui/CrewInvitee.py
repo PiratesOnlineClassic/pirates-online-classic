@@ -13,6 +13,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 
 
 class CrewInviteeButton(RequestButton):
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
@@ -20,12 +21,11 @@ class CrewInviteeButton(RequestButton):
 
 
 class CrewInvitee(GuiPanel.GuiPanel):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('CrewInvitee')
 
     def __init__(self, avId, avName):
-        GuiPanel.GuiPanel.__init__(
-            self, 'Crew Invitation', 0.5, 0.5, showClose=False)
+        GuiPanel.GuiPanel.__init__(self, 'Crew Invitation', 0.5, 0.5, showClose=False)
         self.initialiseoptions(CrewInvitee)
         self.setPos(0.15, 0, 0.25)
         self.avId = avId
@@ -34,27 +34,16 @@ class CrewInvitee(GuiPanel.GuiPanel):
             self.__handleNo()
             return
         text = PLocalizer.CrewInviteeInvitation % self.avName
-        self.message = DirectLabel(
-            parent=self,
-            relief=None,
-            text=text,
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_align=TextNode.ACenter,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=11,
-            pos=(0.25, 0, 0.35),
-            textMayChange=1)
-        self.bOk = CrewInviteeButton(
-            text=PLocalizer.CrewInviteeOK, command=self.__handleOk)
+        self.message = DirectLabel(parent=self, relief=None, text=text, text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, pos=(0.25,
+                                                                                                                                                                                                                                                      0,
+                                                                                                                                                                                                                                                      0.35), textMayChange=1)
+        self.bOk = CrewInviteeButton(text=PLocalizer.CrewInviteeOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
         self.bOk.setPos(0.1, 0, 0.05)
-        self.bNo = CrewInviteeButton(
-            text=PLocalizer.CrewInviteeNo, command=self.__handleNo)
+        self.bNo = CrewInviteeButton(text=PLocalizer.CrewInviteeNo, command=self.__handleNo)
         self.bNo.reparentTo(self)
         self.bNo.setPos(0.3, 0, 0.05)
-        self.accept('BandRequestCancel-%s' % (self.avId,),
-                    self.__handleCancelFromAbove)
+        self.accept('BandRequestCancel-%s' % (self.avId,), self.__handleCancelFromAbove)
         return
 
     def destroy(self):
@@ -66,17 +55,13 @@ class CrewInvitee(GuiPanel.GuiPanel):
         GuiPanel.GuiPanel.destroy(self)
 
     def __handleOk(self):
-        base.cr.PirateBandManager.d_invitationResponce(self.avId,
-                                                       BandConstance.outcome_ok)
+        base.cr.PirateBandManager.d_invitationResponce(self.avId, BandConstance.outcome_ok)
         self.destroy()
 
     def __handleNo(self):
-        base.cr.PirateBandManager.d_invitationResponce(
-            self.avId, BandConstance.outcome_declined)
+        base.cr.PirateBandManager.d_invitationResponce(self.avId, BandConstance.outcome_declined)
         self.destroy()
 
     def __handleCancelFromAbove(self):
         self.destroy()
-
-
 # okay decompiling .\pirates\piratesgui\CrewInvitee.pyc

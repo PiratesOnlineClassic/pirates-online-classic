@@ -9,9 +9,8 @@ from pirates.piratesbase import PiratesGlobals, TimeOfDayManager, TODGlobals
 from pirates.seapatch.Reflection import Reflection
 from pirates.swamp.Swamp import Swamp
 
-
 class ForestEffects(EnvironmentEffects.EnvironmentEffects):
-
+    
     FIREFLIES_Z = 6.0
     RANDOM_SOUND_PERIOD = 6
     RANDOM_SOUND_CHANCE = 12
@@ -22,10 +21,7 @@ class ForestEffects(EnvironmentEffects.EnvironmentEffects):
         self.modelPrefix = modelPath[:-4]
         self.animActor = self.setupAnimActor()
         self.water = None
-        self.randomAnimalSoundFiles = [
-            'phase_4/audio/sfx_jungle_birds_v1.mp3',
-            'phase_4/audio/sfx_jungle_birds_v2.mp3'
-        ]
+        self.randomAnimalSoundFiles = ['phase_4/audio/sfx_jungle_birds_v1.mp3', 'phase_4/audio/sfx_jungle_birds_v2.mp3']
         self.randomSfx = []
         self.startEffects()
 
@@ -42,21 +38,13 @@ class ForestEffects(EnvironmentEffects.EnvironmentEffects):
         if self.fireflies and hasattr(base, 'cr'):
             self.fireflies.reparentTo(base.localAvatar)
             self.fireflies.startLoop()
-        base.ambientMgr.requestFadeIn(
-            'jungle',
-            duration=10,
-            finalVolume=PiratesGlobals.DEFAULT_AMBIENT_VOLUME,
-            priority=1)
+        base.ambientMgr.requestFadeIn('jungle', duration=10, finalVolume=PiratesGlobals.DEFAULT_AMBIENT_VOLUME, priority=1)
         self.swamp_water = None
         reflection = Reflection.getGlobalReflection()
         if 'jungle_a' in self.modelPrefix:
-            if base.config.GetBool(
-                    'want-shaders',
-                    1) and base.win and base.win.getGsg() and base.win.getGsg(
-                    ).getShaderModel() >= GraphicsStateGuardian.SM20:
+            if base.config.GetBool('want-shaders', 1) and base.win and base.win.getGsg() and base.win.getGsg().getShaderModel() >= GraphicsStateGuardian.SM20:
                 water_color = Vec4(13, 15, 21, 255.0)
-                self.water = Swamp(self.modelPrefix + 'water', self.parent,
-                                   reflection, None, None, water_color)
+                self.water = Swamp(self.modelPrefix + 'water', self.parent, reflection, None, None, water_color)
                 self.water.reflection_factor = 0.3
                 self.water.set_reflection_parameters_np()
             else:
@@ -64,27 +52,18 @@ class ForestEffects(EnvironmentEffects.EnvironmentEffects):
                 water.reparentTo(self.parent)
                 color = Vec4(0)
                 water.setColorScale(color)
-                mask = 4294967295
-                stencil = StencilAttrib.make(
-                    1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep,
-                    StencilAttrib.SOKeep, StencilAttrib.SOReplace, 1, mask,
-                    mask)
+                mask = 4294967295L
+                stencil = StencilAttrib.make(1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOReplace, 1, mask, mask)
                 water.setAttrib(stencil)
                 water.setBin('water', 0)
                 self.reflection = reflection
-                taskMgr.add(
-                    self.camTask,
-                    'jungleEffectsCamTask-' + str(id(self)),
-                    priority=49)
+                taskMgr.add(self.camTask, 'jungleEffectsCamTask-' + str(id(self)), priority=49)
                 water.setFogOff()
         for file in self.randomAnimalSoundFiles:
             sfx = loader.loadSfx(file)
             self.randomSfx.append(sfx)
 
-        taskMgr.doMethodLater(
-            self.RANDOM_SOUND_PERIOD,
-            self.checkForRandomSound,
-            name='checkForRandomSound-' + str(id(self)))
+        taskMgr.doMethodLater(self.RANDOM_SOUND_PERIOD, self.checkForRandomSound, name='checkForRandomSound-' + str(id(self)))
 
     def stopEffects(self):
         if hasattr(base, 'cr') and not hasattr(base.cr, 'isFake'):
@@ -114,10 +93,7 @@ class ForestEffects(EnvironmentEffects.EnvironmentEffects):
             if roll < self.RANDOM_SOUND_CHANCE:
                 sfxToPlay = random.choice(self.randomSfx)
                 sfxToPlay.play()
-        taskMgr.doMethodLater(
-            self.RANDOM_SOUND_PERIOD,
-            self.checkForRandomSound,
-            name='checkForRandomSound-' + str(id(self)))
+        taskMgr.doMethodLater(self.RANDOM_SOUND_PERIOD, self.checkForRandomSound, name='checkForRandomSound-' + str(id(self)))
         return Task.done
 
     def camTask(self, task):

@@ -1,10 +1,8 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.minigame.DistributedGameTableAI import DistributedGameTableAI
 
-
 class DistributedPokerTableAI(DistributedGameTableAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedPokerTableAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPokerTableAI')
 
     def __init__(self, air):
         DistributedGameTableAI.__init__(self, air)
@@ -45,10 +43,8 @@ class DistributedPokerTableAI(DistributedGameTableAI):
     def getAnteList(self):
         return self.anteList
 
-    def setTableState(self, round, buttonSeat, communityCards, playerHands,
-                      totalWinningsArray, chipsCount):
-        self.tableState = (round, buttonSeat, communityCards, playerHands,
-                           totalWinningsArray, chipsCount)
+    def setTableState(self, round, buttonSeat, communityCards, playerHands, totalWinningsArray, chipsCount):
+        self.tableState = (round, buttonSeat, communityCards, playerHands, totalWinningsArray, chipsCount)
 
     def getTableState(self):
         return self.tableState

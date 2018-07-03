@@ -8,7 +8,6 @@ from pirates.pvp import PVPGlobals
 from pirates.effects.FireworkGlobals import *
 from pirates.effects.FireworkShowManager import FireworkShowManager
 
-
 class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
 
     notify = directNotify.newCategory('DistributedMainWorld')
@@ -37,21 +36,18 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
         DistributedInstanceBase.DistributedInstanceBase.delete(self)
 
     def addWorldInterest(self, area=None):
-        DistributedInstanceBase.DistributedInstanceBase.addWorldInterest(
-            self, area)
+        DistributedInstanceBase.DistributedInstanceBase.addWorldInterest(self, area)
         if area:
             area.turnOn(localAvatar)
 
     def removeWorldInterest(self, area=None):
         if not (area and area.gridVisContext):
             area = None
-        DistributedInstanceBase.DistributedInstanceBase.removeWorldInterest(
-            self, area)
+        DistributedInstanceBase.DistributedInstanceBase.removeWorldInterest(self, area)
 
     def turnOff(self, cacheIslands=[]):
         self.disableFireworkShow()
-        DistributedInstanceBase.DistributedInstanceBase.turnOff(
-            self, cacheIslands)
+        DistributedInstanceBase.DistributedInstanceBase.turnOff(self, cacheIslands)
 
     def turnOn(self, av=None):
         DistributedInstanceBase.DistributedInstanceBase.turnOn(self, None)
@@ -62,15 +58,13 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
 
     @report(types=['frameCount'], dConfigParam='want-jail-report')
     def localAvEnterDeath(self, av):
-        DistributedInstanceBase.DistributedInstanceBase.localAvEnterDeath(
-            self, av)
+        DistributedInstanceBase.DistributedInstanceBase.localAvEnterDeath(self, av)
         self.d_localAvatarDied()
         if av.getSiegeTeam():
             self._startPvpRespawn(PVPGlobals.MainWorldAvRespawnDelay)
 
     def _startPvpRespawn(self, delay):
-        self.pvpRespawnCall = DelayedCall(
-            self._doPvpRespawn, name='PVPrespawn', delay=delay)
+        self.pvpRespawnCall = DelayedCall(self._doPvpRespawn, name='PVPrespawn', delay=delay)
 
     def _doPvpRespawn(self):
         try:
@@ -78,8 +72,7 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
         except:
             return
 
-        if hasattr(localAvatar, 'ship'
-                  ) and localAvatar.ship and not localAvatar.ship.isSailable():
+        if hasattr(localAvatar, 'ship') and localAvatar.ship and not localAvatar.ship.isSailable():
             self._startPvpRespawn(0.2)
             return
         self.hideDeathLoadingScreen(localAvatar)
@@ -87,8 +80,7 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
 
     @report(types=['frameCount'], dConfigParam='want-jail-report')
     def localAvExitDeath(self, av):
-        DistributedInstanceBase.DistributedInstanceBase.localAvExitDeath(
-            self, av)
+        DistributedInstanceBase.DistributedInstanceBase.localAvExitDeath(self, av)
 
     @report(types=['frameCount'], dConfigParam='want-jail-report')
     def resetIslandZoneLevels(self):
@@ -110,13 +102,11 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
         elif base.fourthOfJuly:
             if not self.fireworkShowMgr:
                 self.fireworkShowMgr = FireworkShowManager()
-                self.fireworkShowMgr.enable(FireworkShowType.FourthOfJuly,
-                                            timestamp)
+                self.fireworkShowMgr.enable(FireworkShowType.FourthOfJuly, timestamp)
         elif PiratesGlobals.FOURTHOFJULY in base.cr.newsManager.holidayIdList:
             if not self.fireworkShowMgr:
                 self.fireworkShowMgr = FireworkShowManager()
-                self.fireworkShowMgr.enable(FireworkShowType.FourthOfJuly,
-                                            timestamp)
+                self.fireworkShowMgr.enable(FireworkShowType.FourthOfJuly, timestamp)
 
     def disableFireworkShow(self):
         if self.fireworkShowMgr:
@@ -124,7 +114,6 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
             self.fireworkShowMgr = None
 
     if __dev__:
-
         def printIslands(self):
             for doId, island in self.islands.iteritems():
                 print doId, repr(island)

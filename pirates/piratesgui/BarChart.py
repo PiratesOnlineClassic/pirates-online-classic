@@ -5,14 +5,9 @@ from pirates.piratesgui import PiratesGuiGlobals
 
 
 class BarChart(DirectFrame):
+    
 
-    def __init__(self,
-                 data,
-                 height,
-                 width,
-                 name='',
-                 titleColor=(1.0, 1.0, 1.0, 1.0),
-                 maxValue=None):
+    def __init__(self, data, height, width, name='', titleColor=(1.0, 1.0, 1.0, 1.0), maxValue=None):
         self.width = width
         self.height = height
         self.barHeight = self.height / len(data) * 0.666
@@ -23,17 +18,8 @@ class BarChart(DirectFrame):
         DirectFrame.__init__(self, relief=None, state=DGG.NORMAL)
         self.initialiseoptions(BarChart)
         self.statBars = []
-        self.title = DirectFrame(
-            parent=self,
-            relief=None,
-            text=self._name,
-            text_align=TextNode.ALeft,
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_pos=(0.03, 0.01),
-            text_fg=self.titleColor,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            textMayChange=1,
-            pos=(0, 0, self.height + 0.02))
+        self.title = DirectFrame(parent=self, relief=None, text=self._name, text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.03,
+                                                                                                                                                             0.01), text_fg=self.titleColor, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0, 0, self.height + 0.02))
         self.loadStatBars(self.data)
         return
 
@@ -44,23 +30,22 @@ class BarChart(DirectFrame):
         self.repackBars()
 
     def addBar(self, data, repack=1):
-        meter = DirectWaitBar(
-            parent=self,
-            relief=DGG.RAISED,
-            borderWidth=(0.004, 0.004),
-            range=data[2],
-            value=data[1],
-            frameColor=(0, 0, 0, 0),
-            barColor=(0.1, 0.7, 0.1, 1),
-            frameSize=(0.17, self.width - 0.1, -self.barHeight * 0.25,
-                       self.barHeight * 0.75),
-            text=str(data[1]),
-            text_align=TextNode.ALeft,
-            text_scale=0.03,
-            text_fg=(1, 1, 1, 1),
-            text_shadow=(0, 0, 0, 1),
-            text_pos=(0, 0),
-            pos=(0, 0, 0))
+        meter = DirectWaitBar(parent=self, relief=DGG.RAISED, borderWidth=(0.004, 0.004), range=data[2], value=data[1], frameColor=(0,
+                                                                                                                                    0,
+                                                                                                                                    0,
+                                                                                                                                    0), barColor=(0.1,
+                                                                                                                                                  0.7,
+                                                                                                                                                  0.1,
+                                                                                                                                                  1), frameSize=(0.17, self.width - 0.1, -self.barHeight * 0.25, self.barHeight * 0.75), text=str(data[1]), text_align=TextNode.ALeft, text_scale=0.03, text_fg=(1,
+                                                                                                                                                                                                                                                                                                                 1,
+                                                                                                                                                                                                                                                                                                                 1,
+                                                                                                                                                                                                                                                                                                                 1), text_shadow=(0,
+                                                                                                                                                                                                                                                                                                                                  0,
+                                                                                                                                                                                                                                                                                                                                  0,
+                                                                                                                                                                                                                                                                                                                                  1), text_pos=(0,
+                                                                                                                                                                                                                                                                                                                                                0), pos=(0,
+                                                                                                                                                                                                                                                                                                                                                         0,
+                                                                                                                                                                                                                                                                                                                                                         0))
         if self.maxValue:
             meter['range'] = self.maxValue
         meterWidth = meter['frameSize'][1] - meter['frameSize'][0]
@@ -68,14 +53,8 @@ class BarChart(DirectFrame):
         print percentFilled
         newTextPos = meterWidth * percentFilled + 0.18
         meter['text_pos'] = (newTextPos, 0)
-        label = DirectLabel(
-            parent=meter,
-            relief=None,
-            text=data[0],
-            text_scale=PiratesGuiGlobals.TextScaleSmall,
-            text_align=TextNode.ALeft,
-            text_pos=(0, 0),
-            text_fg=PiratesGuiGlobals.TextFG2)
+        label = DirectLabel(parent=meter, relief=None, text=data[0], text_scale=PiratesGuiGlobals.TextScaleSmall, text_align=TextNode.ALeft, text_pos=(0,
+                                                                                                                                                       0), text_fg=PiratesGuiGlobals.TextFG2)
         self.statBars.append([meter, label])
         if repack:
             self.repackPanels()
@@ -89,9 +68,7 @@ class BarChart(DirectFrame):
 
     def repackBars(self):
         for i in range(len(self.statBars)):
-            self.statBars[i][0].setPos(
-                0, 0, self.height + 0.02 -
-                (i + 1) * (self.height - 0.02) / len(self.statBars))
+            self.statBars[i][0].setPos(0, 0, self.height + 0.02 - (i + 1) * (self.height - 0.02) / len(self.statBars))
 
     def refreshBars(self, data):
         for statBar, datum in zip(self.statBars, data):
@@ -104,8 +81,7 @@ class BarChart(DirectFrame):
             if self.maxValue:
                 meter['range'] = self.maxValue
             meterWidth = meter['frameSize'][1] - meter['frameSize'][0]
-            percentFilled = min(1.0,
-                                float(meter['value']) / float(meter['range']))
+            percentFilled = min(1.0, float(meter['value']) / float(meter['range']))
             newTextPos = meterWidth * percentFilled + 0.18
             meter['text_pos'] = (newTextPos, 0)
 
@@ -118,6 +94,4 @@ class BarChart(DirectFrame):
 
     def hide(self):
         DirectFrame.hide(self)
-
-
 # okay decompiling .\pirates\piratesgui\BarChart.pyc

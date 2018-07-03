@@ -12,16 +12,14 @@ from pirates.uberdog.UberDogGlobals import *
 MAX_NAME_WIDTH = 14
 PICK_A_NAME_ENABLED = 0
 
-
 class NamePanelGui(GuiPanel.GuiPanel):
-
+    
     notify = directNotify.newCategory('NamePanelGui')
     width = PiratesGuiGlobals.NamePanelWidth
     height = PiratesGuiGlobals.NamePanelHeight
 
     def __init__(self, title, nameLists, showClose=False):
-        GuiPanel.GuiPanel.__init__(self, title, self.width, self.height,
-                                   showClose)
+        GuiPanel.GuiPanel.__init__(self, title, self.width, self.height, showClose)
         self.initialiseoptions(NamePanelGui)
         self.nameLists = nameLists
         self.tumblerList = []
@@ -30,54 +28,23 @@ class NamePanelGui(GuiPanel.GuiPanel):
         self.isTypedName = 0
         charGui = loader.loadModelOnce('models/gui/char_gui')
         if PICK_A_NAME_ENABLED:
-            self.nameModeButton = GuiButton.GuiButton(
-                helpText=PLocalizer.TypeANameHelp,
-                command=self.toggleNameMode,
-                borderWidth=PiratesGuiGlobals.BorderWidth,
-                text=PLocalizer.TypeAName,
-                frameColor=PiratesGuiGlobals.ButtonColor1,
-                text_fg=PiratesGuiGlobals.TextFG2,
-                text_pos=(0, -0.01),
-                frameSize=(-0.09, 0.09, -0.015, 0.065),
-                text_scale=PiratesGuiGlobals.TextScaleLarge,
-                pad=(0.01, 0.01),
-                parent=self,
-                pos=(0.12, 0, 0.06))
-        self.commitButton = DialogButton.DialogButton(
-            command=self.handleCommit,
-            text=PLocalizer.Submit,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_pos=(0, -0.01),
-            frameSize=(-0.09, 0.09, -0.015, 0.065),
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            parent=self,
-            pos=(self.width - 0.15, 0, 0.07))
+            self.nameModeButton = GuiButton.GuiButton(helpText=PLocalizer.TypeANameHelp, command=self.toggleNameMode, borderWidth=PiratesGuiGlobals.BorderWidth, text=PLocalizer.TypeAName, frameColor=PiratesGuiGlobals.ButtonColor1, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0, -0.01), frameSize=(-0.09, 0.09, -0.015, 0.065), text_scale=PiratesGuiGlobals.TextScaleLarge, pad=(0.01,
+                                                                                                                                                                                                                                                                                                                                                                                         0.01), parent=self, pos=(0.12,
+                                                                                                                                                                                                                                                                                                                                                                                                                  0,
+                                                                                                                                                                                                                                                                                                                                                                                                                  0.06))
+        self.commitButton = DialogButton.DialogButton(command=self.handleCommit, text=PLocalizer.Submit, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0, -0.01), frameSize=(-0.09, 0.09, -0.015, 0.065), text_scale=PiratesGuiGlobals.TextScaleLarge, parent=self, pos=(self.width - 0.15, 0, 0.07))
         if showClose:
-            self.cancelButton = DialogButton.DialogButton(
-                command=self.closePanel,
-                text=PLocalizer.lClose,
-                text_fg=PiratesGuiGlobals.TextFG2,
-                text_pos=(0, -0.01),
-                frameSize=(-0.09, 0.09, -0.015, 0.065),
-                text_scale=PiratesGuiGlobals.TextScaleLarge,
-                parent=self,
-                pos=(0.15, 0, 0.07))
+            self.cancelButton = DialogButton.DialogButton(command=self.closePanel, text=PLocalizer.lClose, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0, -0.01), frameSize=(-0.09, 0.09, -0.015, 0.065), text_scale=PiratesGuiGlobals.TextScaleLarge, parent=self, pos=(0.15,
+                                                                                                                                                                                                                                                                          0,
+                                                                                                                                                                                                                                                                          0.07))
         self.acceptOnce('escape', self.closePanel)
         self.accept('updateNameResult', self.__updateNameResult)
         self.pickAName = DirectFrame(parent=self, relief=None)
-        self.nameResult = DirectFrame(
-            parent=self.pickAName,
-            relief=DGG.FLAT,
-            text='',
-            text_align=TextNode.ACenter,
-            text_scale=PiratesGuiGlobals.TextScaleTitleMed,
-            text_fg=PiratesGuiGlobals.TextFG1,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            frameColor=(0, 0, 0, 0.5),
-            text_pos=(0, 0.007),
-            frameSize=(-0.3, 0.3, -0.015, 0.065),
-            text_font=PiratesGlobals.getPirateOutlineFont(),
-            textMayChange=1)
+        self.nameResult = DirectFrame(parent=self.pickAName, relief=DGG.FLAT, text='', text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleTitleMed, text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, frameColor=(0,
+                                                                                                                                                                                                                                                             0,
+                                                                                                                                                                                                                                                             0,
+                                                                                                                                                                                                                                                             0.5), text_pos=(0,
+                                                                                                                                                                                                                                                                             0.007), frameSize=(-0.3, 0.3, -0.015, 0.065), text_font=PiratesGlobals.getPirateOutlineFont(), textMayChange=1)
         self.nameResult.setPos(self.width / 2, 0, self.height - 0.14)
         for i in range(len(self.nameLists)):
             tPos = (i + 1) * (self.width / (len(self.nameLists) + 1))
@@ -87,49 +54,21 @@ class NamePanelGui(GuiPanel.GuiPanel):
             tumbler.setScale(0.7)
             self.tumblerList.append(tumbler)
 
-        self.randomButton = GuiButton.GuiButton(
-            command=self.randomName,
-            text=PLocalizer.Random,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_pos=(0, -0.01),
-            frameSize=(-0.09, 0.09, -0.015, 0.065),
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            parent=self.pickAName,
-            pos=(self.width / 2.0, 0, 0.12))
+        self.randomButton = GuiButton.GuiButton(command=self.randomName, text=PLocalizer.Random, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0, -0.01), frameSize=(-0.09, 0.09, -0.015, 0.065), text_scale=PiratesGuiGlobals.TextScaleLarge, parent=self.pickAName, pos=(self.width / 2.0, 0, 0.12))
         self.randomName()
         self.typeAName = DirectFrame(parent=self, relief=None)
         self.typeAName.hide()
-        self.nameEntry = DirectEntry(
-            parent=self.typeAName,
-            relief=DGG.FLAT,
-            text='',
-            entryFont=PiratesGlobals.getPirateOutlineFont(),
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_fg=PiratesGuiGlobals.TextFG1,
-            width=MAX_NAME_WIDTH,
-            frameColor=(0, 0, 0, 0.5),
-            text_pos=(0, 0.007),
-            frameSize=(-0.3, 0.3, -0.015, 0.065),
-            numLines=1,
-            focus=1,
-            cursorKeys=1,
-            text_align=TextNode.ACenter,
-            command=self.handleCommit)
+        self.nameEntry = DirectEntry(parent=self.typeAName, relief=DGG.FLAT, text='', entryFont=PiratesGlobals.getPirateOutlineFont(), text_scale=PiratesGuiGlobals.TextScaleLarge, text_shadow=PiratesGuiGlobals.TextShadow, text_fg=PiratesGuiGlobals.TextFG1, width=MAX_NAME_WIDTH, frameColor=(0,
+                                                                                                                                                                                                                                                                                                   0,
+                                                                                                                                                                                                                                                                                                   0,
+                                                                                                                                                                                                                                                                                                   0.5), text_pos=(0,
+                                                                                                                                                                                                                                                                                                                   0.007), frameSize=(-0.3, 0.3, -0.015, 0.065), numLines=1, focus=1, cursorKeys=1, text_align=TextNode.ACenter, command=self.handleCommit)
         self.nameEntry.setPos(self.width / 2, 0, self.height - 0.25)
-        self.instructions = DirectFrame(
-            parent=self.typeAName,
-            relief=None,
-            text=PLocalizer.TypeANameInstructions,
-            text_align=TextNode.ACenter,
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            frameColor=(0, 0, 0, 0.5),
-            text_pos=(0, 0.007),
-            frameSize=(-0.3, 0.3, -0.015, 0.065),
-            textMayChange=1,
-            text_wordwrap=15)
+        self.instructions = DirectFrame(parent=self.typeAName, relief=None, text=PLocalizer.TypeANameInstructions, text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, frameColor=(0,
+                                                                                                                                                                                                                                                                                      0,
+                                                                                                                                                                                                                                                                                      0,
+                                                                                                                                                                                                                                                                                      0.5), text_pos=(0,
+                                                                                                                                                                                                                                                                                                      0.007), frameSize=(-0.3, 0.3, -0.015, 0.065), textMayChange=1, text_wordwrap=15)
         self.instructions.setPos(self.width / 2, 0, self.height - 0.35)
         charGui.removeNode()
         return

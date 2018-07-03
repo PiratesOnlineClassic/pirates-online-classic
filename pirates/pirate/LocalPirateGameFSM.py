@@ -17,7 +17,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 from PlayerPirateGameFSM import PlayerPirateGameFSM
 from otp.nametag import NametagGlobals
 
-
 class LocalPirateGameFSM(PlayerPirateGameFSM):
     notify = directNotify.newCategory('LocalPirateGameFSM')
 
@@ -70,27 +69,27 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
                 return
 
         if request == 'Battle':
-            noBattleStates = ('Death', 'ShipBoarding', 'Ensnared', 'Thrown',
-                              'Knockdown', 'ThrownInJail', 'Unconcious',
-                              'ParlorGame', 'PVPWait', 'EnterTunnel')
+            noBattleStates = ('Death', 'ShipBoarding', 'Ensnared', 'Thrown', 'Knockdown',
+                              'ThrownInJail', 'Unconcious', 'ParlorGame', 'PVPWait',
+                              'EnterTunnel')
 
-            if self.defaultState not in ('Battle',):
-                noBattleStates += ('WaterRoam',)
+            if self.defaultState not in ('Battle', ):
+                noBattleStates += ('WaterRoam', )
 
             if self.state in noBattleStates:
                 return
 
-            if self.state in ('Cannon', 'NPCInteract', 'Digging', 'Searching',
-                              'ShipPilot', 'DinghyInteract', 'ShipRepair'):
+            if self.state in ('Cannon', 'NPCInteract', 'Digging', 'Searching', 'ShipPilot',
+                              'DinghyInteract', 'ShipRepair'):
                 messenger.send(InteractiveBase.END_INTERACT_EVENT)
-                return ('Battle',) + args
+                return ('Battle', ) + args
 
             if self.state in 'Dialog':
-                return ('Battle',) + args
+                return ('Battle', ) + args
 
         if self.state == 'Death':
-            if request not in ('Off', 'ThrownInJail', 'Unconcious',
-                               'TeleportIn', 'LandRoam', 'PVPWait'):
+            if request not in ('Off', 'ThrownInJail', 'Unconcious', 'TeleportIn', 'LandRoam',
+                               'PVPWait'):
                 return
         elif self.state == 'TeleportOut':
             if request in ('NPCInteract', 'DinghyInteract', 'DoorInteract'):
@@ -111,12 +110,10 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.controlManager.use('walk', self.av)
         self.av.controlManager.get('walk').lifter.setGravity(32.174 * 2.0)
         self.av.controlManager.collisionsOn()
-        self.av.controlManager.setSpeeds(
-            *PiratesGlobals.PirateSpeeds[self.av.speedIndex])
+        self.av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[self.av.speedIndex])
         self.av.setLifterDelayFrames(3)
         self.av.cameraFSM.request('FPS')
-        self.accept(WeaponGlobals.LocalAvatarUseItem,
-                    self.av.composeRequestTargetedSkill)
+        self.accept(WeaponGlobals.LocalAvatarUseItem, self.av.composeRequestTargetedSkill)
         if self.av.ship:
             self.av.setSurfaceIndex(PiratesGlobals.SURFACE_WOOD)
         else:
@@ -141,8 +138,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
 
         self.av.speedIndex = PiratesGlobals.SPEED_NORMAL_INDEX
         self.av.guiMgr.request('Interface')
-        self.av.controlManager.setSpeeds(
-            *PiratesGlobals.PirateSpeeds[self.av.speedIndex])
+        self.av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[self.av.speedIndex])
         self.av.controlManager.use('walk', self.av)
         self.av.controlManager.get('walk').lifter.setGravity(0.0)
         self.av.controlManager.get('walk').lifter.setVelocity(0.0)
@@ -150,11 +146,9 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.startBobSwimTask()
         base.cr.interactionMgr.start()
         self.av.cameraFSM.request('FPS')
-        self.accept(WeaponGlobals.LocalAvatarUseItem,
-                    self.av.composeRequestTargetedSkill)
+        self.accept(WeaponGlobals.LocalAvatarUseItem, self.av.composeRequestTargetedSkill)
         self.av.setSurfaceIndex(PiratesGlobals.SURFACE_WATER)
-        self.av.b_setTeleportFlag(PiratesGlobals.TFInWater,
-                                  self.av.confirmSwimmingTeleport)
+        self.av.b_setTeleportFlag(PiratesGlobals.TFInWater, self.av.confirmSwimmingTeleport)
         PlayerPirateGameFSM.enterWaterRoam(self)
         self.av.updatePlayerSpeed()
         self.av.delayAFK()
@@ -196,12 +190,8 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
     def enterSpawn(self, extraArgs=[]):
         PlayerPirateGameFSM.enterSpawn(self)
         self.av.setScale(1, 1, 1)
-        self.spawnIval = Sequence(
-            Func(base.transitions.fadeOut, 0),
-            Func(self.av.guiMgr.request, 'Interface'),
-            Func(self.av.cameraFSM.request, 'Control'),
-            Func(base.transitions.fadeIn, 2),
-            Func(self.av.b_setGameState, self.defaultState))
+        self.spawnIval = Sequence(Func(base.transitions.fadeOut, 0), Func(self.av.guiMgr.request, 'Interface'), Func(self.av.cameraFSM.request, 'Control'),
+            Func(base.transitions.fadeIn, 2), Func(self.av.b_setGameState, self.defaultState))
 
         self.spawnIval.start()
 
@@ -217,31 +207,25 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.accept('localAvatarEnterWater', self.handleLocalAvatarEnterWater)
         self.av.speedIndex = PiratesGlobals.SPEED_BATTLE_INDEX
         self.av.guiMgr.request('Interface')
-        self.av.controlManager.setSpeeds(
-            *PiratesGlobals.PirateSpeeds[self.av.speedIndex])
+        self.av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[self.av.speedIndex])
         self.av.controlManager.use('walk', self.av)
         if self.av.ship:
             self.battleMusicName = 'he_is_a_pirate'
         else:
             self.battleMusicName = random.choice(self.battleMusicNames)
 
-        base.musicMgr.request(
-            self.battleMusicName, priority=1, looping=1, volume=0.6)
+        base.musicMgr.request(self.battleMusicName, priority=1, looping=1, volume=0.6)
         base.cr.targetMgr.startFollowAim()
         base.cr.interactionMgr.start()
         self.av.hideName()
         self.av.cameraFSM.request('FPS')
         self.av.cameraFSM.fpsCamera.avFaceCamera()
         base.richPresence.setBattle()
-        self.accept(WeaponGlobals.LocalAvatarUseTargetedSkill,
-                    self.av.composeRequestTargetedSkill)
-        self.accept(WeaponGlobals.LocalAvatarUseProjectileSkill,
-                    self.av.composeRequestProjectileSkill)
-        self.accept(WeaponGlobals.LocalAvatarUseItem,
-                    self.av.composeRequestTargetedSkill)
+        self.accept(WeaponGlobals.LocalAvatarUseTargetedSkill, self.av.composeRequestTargetedSkill)
+        self.accept(WeaponGlobals.LocalAvatarUseProjectileSkill, self.av.composeRequestProjectileSkill)
+        self.accept(WeaponGlobals.LocalAvatarUseItem, self.av.composeRequestTargetedSkill)
         self.accept('requestGearExit', self.av.requestExitBattle)
-        self.accept(InteractiveBase.END_INTERACT_EVENT,
-                    self.av.requestExitBattle)
+        self.accept(InteractiveBase.END_INTERACT_EVENT, self.av.requestExitBattle)
         self.av.guiMgr.combatTray.showSkills()
         PlayerPirateGameFSM.enterBattle(self)
         self.accept('wheel_up', self.av.guiMgr.combatTray.togglePrevWeapon)
@@ -281,8 +265,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.accept('localAvatarEnterWater', self.handleLocalAvatarEnterWater)
         self.av.speedIndex = PiratesGlobals.SPEED_CARRY_INDEX
         self.av.guiMgr.request('Interface')
-        self.av.controlManager.setSpeeds(
-            *PiratesGlobals.PirateSpeeds[self.av.speedIndex])
+        self.av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[self.av.speedIndex])
         self.av.controlManager.use('walk', self.av)
         base.cr.interactionMgr.start()
         messenger.send('carryingTreasure')
@@ -303,8 +286,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.accept('localAvatarExitWater', self.handleLocalAvatarExitWater)
         self.av.speedIndex = PiratesGlobals.SPEED_CARRY_INDEX
         self.av.guiMgr.request('Interface')
-        self.av.controlManager.setSpeeds(
-            *PiratesGlobals.PirateSpeeds[self.av.speedIndex])
+        self.av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[self.av.speedIndex])
         self.av.controlManager.use('walk', self.av)
         self.av.controlManager.get('walk').lifter.setGravity(0.0)
         self.av.controlManager.get('walk').lifter.setVelocity(0.0)
@@ -312,8 +294,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.startBobSwimTask()
         base.cr.interactionMgr.start()
         self.av.cameraFSM.request('FPS')
-        self.av.b_setTeleportFlag(PiratesGlobals.TFInWater,
-                                  self.av.confirmSwimmingTeleport)
+        self.av.b_setTeleportFlag(PiratesGlobals.TFInWater, self.av.confirmSwimmingTeleport)
         PlayerPirateGameFSM.enterWaterTreasureRoam(self)
         self.av.updatePlayerSpeed()
 
@@ -353,8 +334,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         if doEffect:
             if not self.teleportEffect:
                 teleportAnimPlayRate = 1.5
-                teleportAnimLength = self.av.getDuration(
-                    'teleport') / teleportAnimPlayRate
+                teleportAnimLength = self.av.getDuration('teleport') / teleportAnimPlayRate
                 twisterFadeLength = 1.0
                 totalLength = teleportAnimLength + twisterFadeLength
                 avFadeOutLength = 2.0
@@ -378,37 +358,20 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
                 teleportPar = Parallel()
                 self.teleportEffect = Twister.getEffect()
                 if self.teleportEffect:
-                    teleportTrack.append(
-                        Func(self.teleportEffect.reparentTo,
-                             self.av.getEffectParent()))
-                    teleportPar.append(
-                        self.teleportEffect.getParticleInterval(totalLength))
+                    teleportTrack.append(Func(self.teleportEffect.reparentTo, self.av.getEffectParent()))
+                    teleportPar.append(self.teleportEffect.getParticleInterval(totalLength))
 
                 def playTeleportAnim():
                     self.av.play('teleport', blendOutT=0.0)
                     self.av.setPlayRate(teleportAnimPlayRate, 'teleport')
 
                 teleportPar.append(Func(playTeleportAnim))
-                teleportPar.append(
-                    Sequence(
-                        Wait(teleportAnimLength - avFadeOutLength),
-                        Func(self.av.setTransparency, 1, 1001),
-                        LerpFunc(
-                            self.av.setColorScale,
-                            duration=avFadeOutLength,
-                            toData=Vec4(1, 1, 1, 0),
-                            fromData=Vec4(1, 1, 1, 1))))
+                teleportPar.append(Sequence(Wait(teleportAnimLength - avFadeOutLength), Func(self.av.setTransparency, 1, 1001), LerpFunc(self.av.setColorScale,
+                    duration=avFadeOutLength, toData=Vec4(1, 1, 1, 0), fromData=Vec4(1, 1, 1, 1))))
 
-                teleportPar.append(
-                    Sequence(
-                        Wait(avFlyTime),
-                        LerpFunc(
-                            setRelZ, duration=teleportAnimLength - avFlyTime)))
-                teleportPar.append(
-                    Sequence(
-                        Wait(totalLength - screenFadeLength),
-                        Func(base.transitions.fadeOut), Wait(0.5),
-                        Func(base.cr.loadingScreen.show, waitForLocation=True)))
+                teleportPar.append(Sequence(Wait(avFlyTime), LerpFunc(setRelZ, duration=teleportAnimLength - avFlyTime)))
+                teleportPar.append(Sequence(Wait(totalLength - screenFadeLength), Func(base.transitions.fadeOut), Wait(0.5), Func(base.cr.loadingScreen.show,
+                    waitForLocation=True)))
 
                 teleportTrack.append(teleportPar)
                 teleportTrack.append(Func(attemptRemoveFromShip))
@@ -441,8 +404,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.notify.debug('enterTeleportIn() for avId: %d' % self.av.getDoId())
         self.av.guiMgr.request('Cutscene')
         self.av.motionFSM.request('MoveLock')
-        base.transitions.fadeIn(
-            finishIval=Func(self.av.b_setGameState, 'LandRoam'))
+        base.transitions.fadeIn(finishIval=Func(self.av.b_setGameState, 'LandRoam'))
         self.av.stopAutoRun()
 
     def exitTeleportIn(self):
@@ -457,27 +419,19 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.guiMgr.hideSeaChest()
         self.av.guiMgr.combatTray.initCombatTray(InventoryType.SailingRep)
         self.av.stopAutoRun()
-        self.accept(WeaponGlobals.LocalAvatarUseTargetedSkill,
-                    self.av.composeRequestTargetedSkill)
-        self.accept(WeaponGlobals.LocalAvatarUseProjectileSkill,
-                    self.av.composeRequestProjectileSkill)
-        self.accept(WeaponGlobals.LocalAvatarUseItem,
-                    self.av.composeRequestTargetedSkill)
-        self.accept(WeaponGlobals.LocalAvatarUseShipSkill,
-                    self.av.composeRequestShipSkill)
+        self.accept(WeaponGlobals.LocalAvatarUseTargetedSkill, self.av.composeRequestTargetedSkill)
+        self.accept(WeaponGlobals.LocalAvatarUseProjectileSkill, self.av.composeRequestProjectileSkill)
+        self.accept(WeaponGlobals.LocalAvatarUseItem, self.av.composeRequestTargetedSkill)
+        self.accept(WeaponGlobals.LocalAvatarUseShipSkill, self.av.composeRequestShipSkill)
         self._usingRepairKit = False
         base.richPresence.setCurrentWeapon('wheel')
         if localAvatar.getSiegeTeam():
-            self.accept(
-                self.av.cr.distributedDistrict.siegeManager.
-                getUseRepairKitEvent(), self._handleUseRepairKit)
-            self._handleUseRepairKit(
-                self.av.cr.distributedDistrict.siegeManager.getUseRepairKit())
+            self.accept(self.av.cr.distributedDistrict.siegeManager.getUseRepairKitEvent(), self._handleUseRepairKit)
+            self._handleUseRepairKit(self.av.cr.distributedDistrict.siegeManager.getUseRepairKit())
 
         if localAvatar.getParentObj() is not ship or __dev__:
             if ship.miniLog:
-                ship.miniLog.appendLine("localAvatar's parent: (%s)" %
-                                        (localAvatar.getParentObj(),))
+                ship.miniLog.appendLine("localAvatar's parent: (%s)" % (localAvatar.getParentObj(),))
 
             logBlock(3, ship.miniLog)
 
@@ -571,15 +525,12 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.stopAutoRun()
         print 'startWeaponReceive'
         dummy = localAvatar.attachNewNode('dummy')
-        dummy.setPos(
-            localAvatar.headNode.getX(localAvatar),
-            localAvatar.headNode.getY(localAvatar) + 10,
+        dummy.setPos(localAvatar.headNode.getX(localAvatar), localAvatar.headNode.getY(localAvatar) + 10,
             localAvatar.headNode.getZ(localAvatar) + 3)
 
         dummy.wrtReparentTo(render)
-        dummy.lookAt(localAvatar, localAvatar.headNode.getX(localAvatar),
-                     localAvatar.headNode.getY(localAvatar),
-                     localAvatar.headNode.getZ(localAvatar) * 0.95)
+        dummy.lookAt(localAvatar, localAvatar.headNode.getX(localAvatar), localAvatar.headNode.getY(localAvatar),
+            localAvatar.headNode.getZ(localAvatar) * 0.95)
 
         camPos = dummy.getPos()
         camHpr = dummy.getHpr()
@@ -607,16 +558,10 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         def createRewardPanel(state):
             emote = state.av.getEmote(state.av.playRewardAnimation)
             if emote and emote[1]:
-                state.rewardPanel = RewardPanel(
-                    aspect2d,
-                    type=state.av.playRewardAnimation,
-                    doneCallback=self.handleExitWeaponReceive)
+                state.rewardPanel = RewardPanel(aspect2d, type=state.av.playRewardAnimation, doneCallback=self.handleExitWeaponReceive)
 
-        self.camIval = Sequence(
-            camera.posHprInterval(
-                t, pos=camPos, hpr=camHpr, blendType='easeOut'),
-            Func(self.av.playEmote, self.av.playRewardAnimation),
-            Wait(duration), Func(createRewardPanel, self))
+        self.camIval = Sequence(camera.posHprInterval(t, pos=camPos, hpr=camHpr, blendType='easeOut'), Func(self.av.playEmote,
+            self.av.playRewardAnimation), Wait(duration), Func(createRewardPanel, self))
 
         self.av.cameraFSM.request('Control')
         self.camIval.start()
@@ -633,8 +578,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
             self.rewardPanel.cleanup()
             self.rewardPanel = None
         else:
-            self.rewardPanel = RewardPanel(
-                aspect2d, doneCallback=self.handleExitWeaponReceive)
+            self.rewardPanel = RewardPanel(aspect2d, doneCallback=self.handleExitWeaponReceive)
 
     def endWeaponReceive(self):
         self.av.guiMgr.subtitler.clearText()
@@ -675,13 +619,9 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
             camHpr = npc.interactCamPosHpr[1]
         else:
             dummy = npc.attachNewNode('dummy')
-            dummy.setPos(
-                npc.headNode.getX(npc),
-                npc.headNode.getY(npc) + 4.5,
-                npc.headNode.getZ(npc) + 1)
+            dummy.setPos(npc.headNode.getX(npc), npc.headNode.getY(npc) + 4.5, npc.headNode.getZ(npc) + 1)
             dummy.wrtReparentTo(render)
-            dummy.lookAt(npc, npc.headNode.getX(npc), npc.headNode.getY(npc),
-                         npc.headNode.getZ(npc) * 0.95)
+            dummy.lookAt(npc, npc.headNode.getX(npc), npc.headNode.getY(npc), npc.headNode.getZ(npc) * 0.95)
             if hasMenu:
                 dummy.setH(dummy, 15)
 
@@ -703,13 +643,8 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
             self.camIval.pause()
 
         t = 1.5
-        self.camIval = Parallel(
-            camera.posHprInterval(
-                t, pos=camPos, hpr=camHpr, blendType='easeOut'),
-            Sequence(
-                Func(self.av.setTransparency, 1),
-                self.av.colorScaleInterval(t / 2, VBase4(1, 1, 1, 0)),
-                Func(self.av.hide)))
+        self.camIval = Parallel(camera.posHprInterval(t, pos=camPos, hpr=camHpr, blendType='easeOut'), Sequence(Func(self.av.setTransparency, 1),
+            self.av.colorScaleInterval(t / 2, VBase4(1, 1, 1, 0)), Func(self.av.hide)))
 
         self.av.cameraFSM.request('Control')
         self.camIval.start()
@@ -797,9 +732,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
     def exitDialog(self):
         pass
 
-    @report(
-        types=['frameCount', 'deltaStamp'],
-        dConfigParam='want-shipboard-report')
+    @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def enterShipBoarding(self, extraArgs=[]):
         self.av.guiMgr.request('Cutscene')
         self.av.motionFSM.request('MoveLock')
@@ -809,9 +742,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         PlayerPirateGameFSM.enterShipBoarding(self, extraArgs)
         self.av.stopAutoRun()
 
-    @report(
-        types=['frameCount', 'deltaStamp'],
-        dConfigParam='want-shipboard-report')
+    @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def exitShipBoarding(self):
         PlayerPirateGameFSM.exitShipBoarding(self)
         self.av.controlManager.collisionsOn()
@@ -933,8 +864,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
             self.deathTrack.append(Func(self.av.b_setGameState, 'LandRoam'))
         else:
             self.deathTrack.append(Func(base.transitions.fadeOut, 1))
-            self.deathTrack.append(
-                Func(base.cr.activeWorld.localAvEnterDeath, self.av))
+            self.deathTrack.append(Func(base.cr.activeWorld.localAvEnterDeath, self.av))
 
         self.deathTrack.start(timeOffset)
         self.av.refreshStatusTray()
@@ -952,9 +882,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         base.transitions.fadeIn(0)
         taskMgr.remove('cameraPlayerTracking')
         if base.cr.activeWorld:
-            self.deathTrack = Sequence(
-                self.av.getExitDeathTrack(),
-                Func(base.cr.activeWorld.localAvExitDeath, self.av))
+            self.deathTrack = Sequence(self.av.getExitDeathTrack(), Func(base.cr.activeWorld.localAvExitDeath, self.av))
             self.deathTrack.start()
 
         base.musicMgr.requestFadeOut('death')
@@ -981,9 +909,8 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
             spawnInfo = self.av.cr.activeWorld.spawnInfo
             parent = self.av.getParentObj()
             if not isinstance(parent, NodePath):
-                logBlock(
-                    4, 'Player(%s) in jail, but parentObj is %s' %
-                    (self.av.doId, parent))
+                logBlock(4, 'Player(%s) in jail, but parentObj is %s' % (
+                    self.av.doId, parent))
 
                 return
 
@@ -993,19 +920,12 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
                 if not self.isInTransition():
                     self.av.b_setGameState(self.defaultState)
 
-            self.jailTrack = Sequence(
-                Func(
-                    self.av.hide), Wait(3), Func(base.transitions.fadeIn, 1.25),
-                Wait(0.25), Func(base.cr.loadingScreen.hide), Wait(1.75),
-                Func(self.av.show),
-                self.av.actorInterval('jail_dropinto', blendOutT=0),
-                self.av.actorInterval('jail_standup', blendInT=0),
-                Func(reqDefState))
+            self.jailTrack = Sequence(Func(self.av.hide), Wait(3), Func(base.transitions.fadeIn, 1.25), Wait(0.25), Func(base.cr.loadingScreen.hide), Wait(1.75), Func(self.av.show),
+                self.av.actorInterval('jail_dropinto', blendOutT=0), self.av.actorInterval('jail_standup', blendInT=0), Func(reqDefState))
 
             self.jailTrack.start()
 
-        self.spawnPtEvent = self.av.cr.activeWorld.uniqueName(
-            'spawnInfoReceived')
+        self.spawnPtEvent = self.av.cr.activeWorld.uniqueName('spawnInfoReceived')
         self.acceptOnce(self.spawnPtEvent, receivedSpawnPt)
         self.acceptOnce('localAvatar-setLocation', lambda *args, **kwargs: self.av.getParentObj().\
             handleAvatarSetLocation(*args, **kwargs))
@@ -1030,12 +950,9 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.motionFSM.off()
         base.transitions.letterboxOn()
         kickT = self.av.getDuration('kick_door_loop')
-        self.kickSfx = base.loader.loadSfx(
-            'phase_4/audio/sfx_kick_door_loop.mp3')
-        self.kickTrack = Sequence(
-            Func(messenger.send, self.av.kickEvents[0]),
-            Func(base.playSfx, self.kickSfx, node=self.av), Wait(kickT),
-            Func(messenger.send, self.av.kickEvents[1]))
+        self.kickSfx = base.loader.loadSfx('phase_4/audio/sfx_kick_door_loop.mp3')
+        self.kickTrack = Sequence(Func(messenger.send, self.av.kickEvents[0]), Func(base.playSfx, self.kickSfx, node=self.av),
+            Wait(kickT), Func(messenger.send, self.av.kickEvents[1]))
 
         self.kickTrack.loop()
         self.av.loop('kick_door_loop')
@@ -1106,14 +1023,8 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         speed = PiratesGlobals.PirateSpeeds[self.av.speedIndex][0]
         duration = distance / speed
         self.av.startPosHprBroadcast()
-        moveSequence = Sequence(
-            Parallel(
-                self.moveForwardInterval(distance),
-                Sequence(
-                    Wait(duration - 0.8), Func(base.transitions.fadeOut, 0.75),
-                    Wait(0.75))),
-            Func(base.cr.loadingScreen.show, waitForLocation=True),
-            Func(messenger.send, 'EnterTunnelFinished'))
+        moveSequence = Sequence(Parallel(self.moveForwardInterval(distance), Sequence(Wait(duration - 0.8), Func(base.transitions.fadeOut, 0.75), Wait(0.75))),
+            Func(base.cr.loadingScreen.show, waitForLocation=True), Func(messenger.send, 'EnterTunnelFinished'))
 
         cameraY = camera.getY()
         if cameraY < 13:
@@ -1123,13 +1034,8 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
             self.enterTunnelSequence.finish()
             self.enterTunnelSequence = None
 
-        self.enterTunnelSequence = Parallel(
-            self.lookMoveCameraSequence(
-                duration / 2.0,
-                Point3(0, -abs(cameraY), self.av.getHeight()),
-                lookAtNode=self.av,
-                lookAtOffset=Point3(0, 0, self.av.getHeight()),
-                blendType='easeIn'), moveSequence)
+        self.enterTunnelSequence = Parallel(self.lookMoveCameraSequence(duration / 2.0, Point3(0, -abs(cameraY), self.av.getHeight()), lookAtNode=self.av,
+            lookAtOffset=Point3(0, 0, self.av.getHeight()), blendType='easeIn'), moveSequence)
 
         self.enterTunnelSequence.start()
 
@@ -1152,14 +1058,8 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
             self.av.setY(parent, t)
             self.av.controlManager.controls['walk'].placeOnFloor()
 
-        return Sequence(
-            Func(self.av.loop, 'run'),
-            LerpFunc(
-                gravityMoveForward,
-                fromData=0,
-                toData=distance,
-                extraArgs=[dummy],
-                duration=duration), Func(dummy.removeNode))
+        return Sequence(Func(self.av.loop, 'run'), LerpFunc(gravityMoveForward, fromData=0, toData=distance, extraArgs=[dummy],
+            duration=duration), Func(dummy.removeNode))
 
     def enterLeaveTunnel(self, extraArgs=[]):
         self.startLocalSequence()
@@ -1176,15 +1076,8 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         camera.setPos(0, -13, self.av.getHeight() / 2)
         camera.lookAt(self.av.headNode)
         self.av.startPosHprBroadcast()
-        leaveSequence = Sequence(
-            Func(base.cr.loadingScreen.hide),
-            Parallel(
-                self.moveForwardInterval(distance, blendType='easeOut'),
-                Func(base.transitions.fadeIn, 0.75),
-                Sequence(
-                    Wait(duration / 2.0),
-                    self.rotateMoveCameraSequence(
-                        duration / 2.0, cameraFinalPos, hpr=cameraFinalHpr))),
+        leaveSequence = Sequence(Func(base.cr.loadingScreen.hide), Parallel(self.moveForwardInterval(distance, blendType='easeOut'), Func(base.transitions.fadeIn, 0.75),
+            Sequence(Wait(duration / 2.0), self.rotateMoveCameraSequence(duration / 2.0, cameraFinalPos, hpr=cameraFinalHpr))),
             Func(messenger.send, 'LeaveTunnelFinished'))
 
         leaveSequence.start()
@@ -1205,7 +1098,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.stopAutoRun()
 
     def filterShipRepair(self, request, args=[]):
-        if request in ('Emote',):
+        if request in ('Emote', ):
             return
         else:
             return self.defaultFilter(request, args)
@@ -1221,8 +1114,7 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.cameraFSM.request('Control')
         camParent = self.av.getShip().getModelRoot()
         camera.wrtReparentTo(camParent)
-        pos = camParent.getRelativePoint(tentacle.creature,
-                                         Point3(120, 120, 0) * 0.6)
+        pos = camParent.getRelativePoint(tentacle.creature, Point3(120, 120, 0) * 0.6)
         pos.setZ(80 * 0.6)
         self.camIval = self.lookMoveCameraSequence(2, pos)
 
@@ -1264,35 +1156,21 @@ class LocalPirateGameFSM(PlayerPirateGameFSM):
         self.av.guiMgr._showCursor()
         self.av.motionFSM.on()
 
-    def rotateMoveCameraSequence(self,
-                                 duration,
-                                 pos,
-                                 hpr,
-                                 blendType='easeInOut'):
+    def rotateMoveCameraSequence(self, duration, pos, hpr, blendType='easeInOut'):
         start, end = getShortestRotation(camera.getH(), hpr[0])
         camera.setH(start)
         hpr.setX(end)
-        return LerpPosHprInterval(
-            camera, duration, pos, hpr, blendType=blendType)
+        return LerpPosHprInterval(camera, duration, pos, hpr, blendType=blendType)
 
-    def lookMoveCameraSequence(self,
-                               duration,
-                               pos,
-                               wrtNode=None,
-                               lookAtNode=None,
-                               lookAtOffset=Point3(0),
-                               blendType='easeInOut'):
+    def lookMoveCameraSequence(self, duration, pos, wrtNode=None, lookAtNode=None, lookAtOffset=Point3(0), blendType='easeInOut'):
 
         def addTask(taskName):
             task = taskMgr.add(self.trackNode, taskName)
             task.lookAtNode = lookAtNode or self.av
             task.lookAtOffset = lookAtOffset
 
-        return Sequence(
-            Func(addTask, 'cameraPlayerTracking'),
-            LerpPosInterval(
-                camera, duration, pos, blendType=blendType, other=wrtNode),
-            Func(taskMgr.remove, 'cameraPlayerTracking'))
+        return Sequence(Func(addTask, 'cameraPlayerTracking'), LerpPosInterval(camera, duration, pos, blendType=blendType,
+            other=wrtNode), Func(taskMgr.remove, 'cameraPlayerTracking'))
 
     def trackNode(self, task):
         camera.lookAt(task.lookAtNode, task.lookAtOffset)

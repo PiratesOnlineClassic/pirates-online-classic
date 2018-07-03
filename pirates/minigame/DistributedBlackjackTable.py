@@ -21,8 +21,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedBlackjackTable')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBlackjackTable')
 
     def __init__(self, cr):
         DistributedGameTable.DistributedGameTable.__init__(self, cr)
@@ -150,8 +149,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
         if action == PlayingCardGlobals.Bid:
             if self.isLocalAvatarSeated():
                 self.initialPlayerBid = 0
-                self.gui.setEvent(self.localAvatarSeat,
-                                  [PlayingCardGlobals.AskForBid])
+                self.gui.setEvent(self.localAvatarSeat, [PlayingCardGlobals.AskForBid])
                 self.gui.showArrow(self.localAvatarSeat)
 
     def d_clientAction(self, action):
@@ -191,11 +189,9 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
                 amount = 0
             self.d_clientAction([guiAction, amount])
         elif guiAction == PlayingCardGlobals.Cheat1:
-            self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardOneCheat,
-                                 self.card_id)
+            self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardOneCheat, self.card_id)
         elif guiAction == PlayingCardGlobals.Cheat2:
-            self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardTwoCheat,
-                                 self.card_id)
+            self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardTwoCheat, self.card_id)
         elif guiAction == PlayingCardGlobals.AutoStay:
             self.d_clientAction([guiAction, 0])
         elif guiAction == PlayingCardGlobals.Leave:
@@ -225,8 +221,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
     def getPlayerInventoryCardCount(self, card_id):
         inventory = localAvatar.getInventory()
         if inventory:
-            amount = inventory.getStackQuantity(InventoryType.begin_Cards +
-                                                card_id)
+            amount = inventory.getStackQuantity(InventoryType.begin_Cards + card_id)
         else:
             amount = 0
         return amount
@@ -242,8 +237,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
 
     def setLocalAvatarHand(self, hand):
         self.hands[self.localAvatarSeat] = hand
-        current_hand_index = self.getCurrentHandIndex(self.localAvatarSeat,
-                                                      self.allHands)
+        current_hand_index = self.getCurrentHandIndex(self.localAvatarSeat, self.allHands)
         self.allHands[self.localAvatarSeat][current_hand_index] = hand
 
     def deleteSwapResultDialog(self):
@@ -283,21 +277,14 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
                     self.guiCallback(PlayingCardGlobals.Leave)
                     self.deleteDialogs()
                     string = PLocalizer.PokerCaughtCheatingMessage % PlayingCardGlobals.CheatingFine
-                    self.dialog = PDialog.PDialog(
-                        text=string,
-                        style=OTPDialog.Acknowledge,
-                        command=self.dialogCallback)
+                    self.dialog = PDialog.PDialog(text=string, style=OTPDialog.Acknowledge, command=self.dialogCallback)
                     self.setDialogBin(self.dialog)
         if self.gui and swap:
             if success:
                 string = PLocalizer.PokerSwapSuccessMessage
             else:
                 string = PLocalizer.PokerSwapFailureMessage
-            self.swapResultDialog = PDialog.PDialog(
-                text=string,
-                style=OTPDialog.Acknowledge,
-                giveMouse=False,
-                command=self.swapResultCallback)
+            self.swapResultDialog = PDialog.PDialog(text=string, style=OTPDialog.Acknowledge, giveMouse=False, command=self.swapResultCallback)
             self.setDialogBin(self.swapResultDialog)
             position = self.swapResultDialog.getPos()
             position.setZ(position[2] + 0.35)
@@ -365,6 +352,4 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
                         name = actor.getName()
                         message = PLocalizer.PokerChatCaughtCheatingMessage % name
                         base.chatAssistant.receiveGameMessage(message)
-
-
 # okay decompiling .\pirates\minigame\DistributedBlackjackTable.pyc

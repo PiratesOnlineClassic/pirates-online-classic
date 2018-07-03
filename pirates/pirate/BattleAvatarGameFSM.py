@@ -181,15 +181,11 @@ class BattleAvatarGameFSM(FSM.FSM):
         self.av.motionFSM.off()
         animDur = self.av.getDuration('shovel')
         sfxDur = self.diggingSfx.length()
-        self.diggingSfxTrack = Sequence(
-            Wait(0.25), SoundInterval(self.diggingSfx, node=self.av),
-            Wait(animDur - sfxDur - 0.25))
+        self.diggingSfxTrack = Sequence(Wait(0.25), SoundInterval(self.diggingSfx, node=self.av), Wait(animDur - sfxDur - 0.25))
         self.diggingSfxTrack.loop()
-        self.diggingTrack = self.av.actorInterval(
-            'shovel', loop=1, duration=1000)
+        self.diggingTrack = self.av.actorInterval('shovel', loop=1, duration=1000)
         self.diggingTrack.loop()
-        if base.options.getSpecialEffectsSetting(
-        ) >= base.options.SpecialEffectsHigh:
+        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
             self.dirtEffect = ThrowDirt2.getEffect()
             if self.dirtEffect:
                 self.dirtEffect.particleDummy.setH(self.av.getH(render))
@@ -226,8 +222,7 @@ class BattleAvatarGameFSM(FSM.FSM):
     def enterStunned(self, extraArgs=[]):
         self.av.motionFSM.off()
         self.av.motionFSM.lock()
-        self.stunnedTrack = Sequence(
-            self.av.actorInterval('boxing_hit_head_right'))
+        self.stunnedTrack = Sequence(self.av.actorInterval('boxing_hit_head_right'))
         self.stunnedTrack.loop()
 
     def exitStunned(self):
@@ -247,8 +242,7 @@ class BattleAvatarGameFSM(FSM.FSM):
             self.treasureChest = loader.loadModel('models/props/treasureChest')
             self.treasureChest.findAllMatches('**/+CollisionNode').detach()
         self.treasureChest.reparentTo(self.av.rightHandNode)
-        self.treasureChest.setTransform(PiratesGlobals.treasureCarryTransforms[
-            self.av.style.gender][self.av.style.getBodyShape()])
+        self.treasureChest.setTransform(PiratesGlobals.treasureCarryTransforms[self.av.style.gender][self.av.style.getBodyShape()])
 
     def exitLandTreasureRoam(self):
         self.treasureChest.stash()
@@ -286,8 +280,7 @@ class BattleAvatarGameFSM(FSM.FSM):
             timeOffset = extraArgs[0]
         if not self.teleportEffect:
             teleportAnimPlayRate = 1.5
-            teleportAnimLength = self.av.getDuration(
-                'teleport') / teleportAnimPlayRate
+            teleportAnimLength = self.av.getDuration('teleport') / teleportAnimPlayRate
             twisterFadeLength = 1.0
             totalLength = teleportAnimLength + twisterFadeLength
             avFadeOutLength = 2.0
@@ -302,30 +295,16 @@ class BattleAvatarGameFSM(FSM.FSM):
             teleportPar = Parallel()
             self.teleportEffect = Twister.getEffect()
             if self.teleportEffect:
-                teleportTrack.append(
-                    Func(self.teleportEffect.reparentTo,
-                         self.av.getEffectParent()))
-                teleportPar.append(
-                    self.teleportEffect.getParticleInterval(totalLength))
+                teleportTrack.append(Func(self.teleportEffect.reparentTo, self.av.getEffectParent()))
+                teleportPar.append(self.teleportEffect.getParticleInterval(totalLength))
 
             def playTeleportAnim():
                 self.av.play('teleport', blendOutT=0.0)
                 self.av.setPlayRate(teleportAnimPlayRate, 'teleport')
 
             teleportPar.append(Func(playTeleportAnim))
-            teleportPar.append(
-                Sequence(
-                    Wait(teleportAnimLength - avFadeOutLength),
-                    Func(self.av.setTransparency, 1, 1001),
-                    LerpFunc(
-                        self.av.setColorScale,
-                        duration=avFadeOutLength,
-                        toData=Vec4(1, 1, 1, 0),
-                        fromData=Vec4(1, 1, 1, 1))))
-            teleportPar.append(
-                Sequence(
-                    Wait(avFlyTime),
-                    LerpFunc(setRelZ, duration=teleportAnimLength - avFlyTime)))
+            teleportPar.append(Sequence(Wait(teleportAnimLength - avFadeOutLength), Func(self.av.setTransparency, 1, 1001), LerpFunc(self.av.setColorScale, duration=avFadeOutLength, toData=Vec4(1, 1, 1, 0), fromData=Vec4(1, 1, 1, 1))))
+            teleportPar.append(Sequence(Wait(avFlyTime), LerpFunc(setRelZ, duration=teleportAnimLength - avFlyTime)))
             teleportTrack.append(teleportPar)
             self.teleportTrack = teleportTrack
         self.teleportTrack.start(timeOffset)
@@ -367,15 +346,11 @@ class BattleAvatarGameFSM(FSM.FSM):
         self.av.motionFSM.off()
         self.av.stopCompassEffect()
         if not self.kneelingTrack:
-            self.kneelingTrack = Sequence(
-                self.av.actorInterval(
-                    'kneel_fromidle', playRate=1, blendOutT=0),
-                Func(self.av.loop, 'kneel', blendT=0))
+            self.kneelingTrack = Sequence(self.av.actorInterval('kneel_fromidle', playRate=1, blendOutT=0), Func(self.av.loop, 'kneel', blendT=0))
             self.kneelingTrack.start()
 
     def exitCannon(self):
-        self.av.actorInterval(
-            'kneel_fromidle', startFrame=26, endFrame=1).start()
+        self.av.actorInterval('kneel_fromidle', startFrame=26, endFrame=1).start()
         self.av.startCompassEffect()
         if self.kneelingTrack:
             self.kneelingTrack.pause()
@@ -433,8 +408,7 @@ class BattleAvatarGameFSM(FSM.FSM):
     def avatarBoardShip(self, ship, showMovie, ts, fromWater=0):
         boardingPosHpr = ship.getBoardingPosHpr()
         if self.av.isLocal() and boardingPosHpr:
-            self.notify.warning(
-                'local avatar boarding from %s' % boardingPosHpr)
+            self.notify.warning('local avatar boarding from %s' % boardingPosHpr)
             self.av.reparentTo(render)
             self.av.setPos(boardingPosHpr[0])
             self.av.setH(boardingPosHpr[1][0])
@@ -449,13 +423,11 @@ class BattleAvatarGameFSM(FSM.FSM):
             else:
                 grabAnim = 'rope_grab_from_idle'
             tRopeSwingDown = 0.75
-            tWaitToAttachRope = self.av.getDuration(
-                grabAnim, fromFrame=0, toFrame=42)
+            tWaitToAttachRope = self.av.getDuration(grabAnim, fromFrame=0, toFrame=42)
             rope, ropeActor, ropeEndNode = self.av.getRope()
             ropeAnchorNode = ship.getRopeAnchorNode(self.av, ropeEndNode)
             ropeMidNode = ship.attachNewNode('ropeMidNode')
-            midNodeStartPos = (
-                ropeAnchorNode.getPos(ship) + ropeEndNode.getPos(ship)) * 0.5
+            midNodeStartPos = (ropeAnchorNode.getPos(ship) + ropeEndNode.getPos(ship)) * 0.5
             midNodeStartPos.setX(midNodeStartPos.getX() * 0.8)
             ropeMidNode.setPos(midNodeStartPos)
             midNodeEndPos = (ropeAnchorNode.getPos(ship) + deckPos) * 0.5
@@ -470,8 +442,7 @@ class BattleAvatarGameFSM(FSM.FSM):
                         splashEffect.play()
 
             def setupRope(ropeParent):
-                rope.setup(2, ((None, Point3(0, 0, 0)),
-                               (ropeAnchorNode, Point3(0, 0, 0))))
+                rope.setup(2, ((None, Point3(0, 0, 0)), (ropeAnchorNode, Point3(0, 0, 0))))
                 rope.reparentTo(ropeParent)
                 return
 
@@ -481,35 +452,7 @@ class BattleAvatarGameFSM(FSM.FSM):
                 self.swingTrack = None
             boardAnimDur = self.av.getDuration('rope_board')
             boardingRopeH = ShipGlobals.getBoardingRopeH(ship.shipClass)
-            boardingInterval = Sequence(
-                Func(ropeEndNode.wrtReparentTo, self.av),
-                Sequence(
-                    Wait(tWaitToAttachRope - tRopeSwingDown),
-                    Parallel(
-                        ActorInterval(self.av, grabAnim),
-                        LerpPosInterval(ropeEndNode, tRopeSwingDown,
-                                        Point3(1.0, 0, 1.0)))),
-                Func(self.av.lookAt, ship), Func(setupRope, rightHand),
-                Parallel(
-                    ProjectileInterval(
-                        self.av,
-                        startPos=startingPos,
-                        endPos=endPos,
-                        duration=boardAnimDur,
-                        gravityMult=boardingRopeH),
-                    ProjectileInterval(
-                        ropeMidNode,
-                        startPos=midNodeStartPos,
-                        endPos=midNodeEndPos,
-                        duration=boardAnimDur),
-                    Sequence(Wait(0.2), Func(ship.boardingInit, self.av, ship)),
-                    Sequence(Wait(boardAnimDur - 0.2), Func(rope.detachNode)),
-                    self.av.actorInterval('rope_board', playRate=1.0)),
-                Parallel(
-                    self.av.actorInterval('rope_dismount', endFrame=24),
-                    Sequence(
-                        Wait(0.5), Func(ropeMidNode.detachNode),
-                        Func(ship.boardingFinish, self.av, deckPos))))
+            boardingInterval = Sequence(Func(ropeEndNode.wrtReparentTo, self.av), Sequence(Wait(tWaitToAttachRope - tRopeSwingDown), Parallel(ActorInterval(self.av, grabAnim), LerpPosInterval(ropeEndNode, tRopeSwingDown, Point3(1.0, 0, 1.0)))), Func(self.av.lookAt, ship), Func(setupRope, rightHand), Parallel(ProjectileInterval(self.av, startPos=startingPos, endPos=endPos, duration=boardAnimDur, gravityMult=boardingRopeH), ProjectileInterval(ropeMidNode, startPos=midNodeStartPos, endPos=midNodeEndPos, duration=boardAnimDur), Sequence(Wait(0.2), Func(ship.boardingInit, self.av, ship)), Sequence(Wait(boardAnimDur - 0.2), Func(rope.detachNode)), self.av.actorInterval('rope_board', playRate=1.0)), Parallel(self.av.actorInterval('rope_dismount', endFrame=24), Sequence(Wait(0.5), Func(ropeMidNode.detachNode), Func(ship.boardingFinish, self.av, deckPos))))
             self.swingTrack = boardingInterval
             self.swingTrack.start(ts)
         else:
@@ -521,9 +464,7 @@ class BattleAvatarGameFSM(FSM.FSM):
             self.av.setPos(endPos)
             if self._shipBoardingFinishCall:
                 self._shipBoardingFinishCall.destroy()
-            self._shipBoardingFinishCall = FrameDelayedCall(
-                'shipBoardingFinish-%s-%s' % (ship.doId, self.av.doId),
-                Functor(ship.boardingFinish, self.av, deckPos, False))
+            self._shipBoardingFinishCall = FrameDelayedCall('shipBoardingFinish-%s-%s' % (ship.doId, self.av.doId), Functor(ship.boardingFinish, self.av, deckPos, False))
         return
 
     def avatarBoardShipFromShip(self, ship, fromShip, showMovie, ts):
@@ -536,65 +477,28 @@ class BattleAvatarGameFSM(FSM.FSM):
             deckPos, h = ShipGlobals.getBoardingSpherePosH(ship.modelClass)
         offset = Point3(4 * random.random() - 2, 4 * random.random() - 2, 0)
         deckPos += offset
-        endPos = self.av.getParent().getRelativePoint(
-            ship.root,
-            Point3(deckPos) + Point3(0, 0, 10))
+        endPos = self.av.getParent().getRelativePoint(ship.root, Point3(deckPos) + Point3(0, 0, 10))
         if showMovie:
             rope, ropeActor, ropeEndNode = self.av.getRope()
             ropeAnchorNode = fromShip.getRopeAnchorNode(self.av, ropeEndNode)
             rightHand = self.av.rightHandNode
             leftHand = self.av.leftHandNode
-            rope.setup(3,
-                       ((None, Point3(0, 0, 0)), (self.av, Point3(10, 20, 40)),
-                        (ropeAnchorNode, Point3(0, 0, 0))))
+            rope.setup(3, ((None, Point3(0, 0, 0)), (self.av, Point3(10, 20, 40)), (ropeAnchorNode, Point3(0, 0, 0))))
             rope.reparentTo(ropeEndNode)
             ropeActor.reparentTo(leftHand)
             ropeActor.hide()
             midPos = (avPos + endPos) * 0.5
-            tWaitToTranslateZ = self.av.getDuration(
-                'swing_aboard', fromFrame=0, toFrame=42)
-            tTranslateZ = self.av.getDuration(
-                'swing_aboard', fromFrame=42, toFrame=45)
-            tWaitToAttachRope = self.av.getDuration(
-                'swing_aboard', fromFrame=0, toFrame=45)
-            tWaitToDetachRope = self.av.getDuration(
-                'swing_aboard', fromFrame=0, toFrame=75)
+            tWaitToTranslateZ = self.av.getDuration('swing_aboard', fromFrame=0, toFrame=42)
+            tTranslateZ = self.av.getDuration('swing_aboard', fromFrame=42, toFrame=45)
+            tWaitToAttachRope = self.av.getDuration('swing_aboard', fromFrame=0, toFrame=45)
+            tWaitToDetachRope = self.av.getDuration('swing_aboard', fromFrame=0, toFrame=75)
             tRopeSwingDown = 0.75
             tRopeSwing = tWaitToDetachRope - tWaitToAttachRope
             tRopeSwingAway = 0.75
             if self.swingTrack:
                 self.swingTrack.pause()
                 self.swingTrack = None
-            swingTrack = Sequence(
-                Func(self.av.lookAt, ship.root),
-                Func(ship.boardingInit, self.av, fromShip),
-                Func(ropeEndNode.wrtReparentTo, self.av),
-                Parallel(
-                    self.av.actorInterval('swing_aboard'),
-                    ActorInterval(ropeActor, 'swing_aboard'),
-                    Sequence(
-                        Wait(tWaitToAttachRope - tRopeSwingDown),
-                        LerpPosInterval(ropeEndNode, tRopeSwingDown,
-                                        Point3(1.0, 0, 3.0))),
-                    Sequence(
-                        Wait(tWaitToTranslateZ),
-                        LerpPosInterval(self.av, tTranslateZ,
-                                        avPos + Point3(0.0, 0, 25.0))),
-                    Sequence(
-                        Wait(tWaitToAttachRope), Func(rope.reparentTo,
-                                                      leftHand),
-                        Func(ropeActor.show),
-                        LerpPosInterval(self.av, tRopeSwing / 2.0, midPos),
-                        Func(self.av.wrtReparentTo, ship.root),
-                        LerpPosInterval(self.av, tRopeSwing / 2.0, deckPos)),
-                    Sequence(
-                        Wait(tWaitToDetachRope),
-                        Func(rope.reparentTo, ropeEndNode),
-                        Func(ropeActor.detachNode),
-                        LerpPosInterval(ropeEndNode, tRopeSwingAway,
-                                        Point3(0, 50, 50)))),
-                Func(fromShip.boardingLeaveShip, self.av),
-                Func(ship.boardingFinish, self.av, deckPos))
+            swingTrack = Sequence(Func(self.av.lookAt, ship.root), Func(ship.boardingInit, self.av, fromShip), Func(ropeEndNode.wrtReparentTo, self.av), Parallel(self.av.actorInterval('swing_aboard'), ActorInterval(ropeActor, 'swing_aboard'), Sequence(Wait(tWaitToAttachRope - tRopeSwingDown), LerpPosInterval(ropeEndNode, tRopeSwingDown, Point3(1.0, 0, 3.0))), Sequence(Wait(tWaitToTranslateZ), LerpPosInterval(self.av, tTranslateZ, avPos + Point3(0.0, 0, 25.0))), Sequence(Wait(tWaitToAttachRope), Func(rope.reparentTo, leftHand), Func(ropeActor.show), LerpPosInterval(self.av, tRopeSwing / 2.0, midPos), Func(self.av.wrtReparentTo, ship.root), LerpPosInterval(self.av, tRopeSwing / 2.0, deckPos)), Sequence(Wait(tWaitToDetachRope), Func(rope.reparentTo, ropeEndNode), Func(ropeActor.detachNode), LerpPosInterval(ropeEndNode, tRopeSwingAway, Point3(0, 50, 50)))), Func(fromShip.boardingLeaveShip, self.av), Func(ship.boardingFinish, self.av, deckPos))
             self.swingTrack = swingTrack
             self.swingTrack.start(ts)
         else:
@@ -606,9 +510,7 @@ class BattleAvatarGameFSM(FSM.FSM):
             fromShip.boardingLeaveShip(self.av)
             if self._shipBoardingFinishCall:
                 self._shipBoardingFinishCall.destroy()
-            self._shipBoardingFinishCall = FrameDelayedCall(
-                'shipToShipBoardingFinish-%s-%s' % (ship.doId, self.av.doId),
-                Functor(ship.boardingFinish, self.av, deckPos))
+            self._shipBoardingFinishCall = FrameDelayedCall('shipToShipBoardingFinish-%s-%s' % (ship.doId, self.av.doId), Functor(ship.boardingFinish, self.av, deckPos))
         return
 
     def enterEnsnared(self, extraArgs=[]):
@@ -616,16 +518,13 @@ class BattleAvatarGameFSM(FSM.FSM):
         self.av.stashBodyCollisions()
         if self.av.cannon:
             self.av.cannon.requestExit()
-        self.ensnareTrack = Sequence(
-            Wait(1.2), Func(self.av.stopCompassEffect),
-            Func(self.av.loop, 'tentacle_squeeze'))
+        self.ensnareTrack = Sequence(Wait(1.2), Func(self.av.stopCompassEffect), Func(self.av.loop, 'tentacle_squeeze'))
         self.ensnareTrack.start()
 
     def filterEnsnared(self, request, args=[]):
         if request == 'advance':
             return 'Knockdown'
-        if request in ('Idle', 'LandRoam', 'Battle', 'WaterRoam', 'Cannon',
-                       'ShipBoarding'):
+        if request in ('Idle', 'LandRoam', 'Battle', 'WaterRoam', 'Cannon', 'ShipBoarding'):
             return
         return self.defaultFilter(request, args)
 
@@ -647,9 +546,7 @@ class BattleAvatarGameFSM(FSM.FSM):
 
     def enterKnockdown(self, extraArgs=[]):
         self.av.motionFSM.off()
-        self.knockdownTrack = Sequence(
-            self.av.actorInterval('jail_standup'), Func(self.demand,
-                                                        'LandRoam'))
+        self.knockdownTrack = Sequence(self.av.actorInterval('jail_standup'), Func(self.demand, 'LandRoam'))
         self.knockdownTrack.start()
 
     def filterKnockdown(self, request, args=[]):
@@ -682,10 +579,7 @@ class BattleAvatarGameFSM(FSM.FSM):
             self.jailTrack.finish()
         self.av.motionFSM.off()
         self.av.stashBodyCollisions()
-        self.jailTrack = Sequence(
-            Func(self.av.hide), Wait(3), Func(self.av.show),
-            self.av.actorInterval('jail_dropinto', blendOutT=0),
-            self.av.actorInterval('jail_standup', blendInT=0))
+        self.jailTrack = Sequence(Func(self.av.hide), Wait(3), Func(self.av.show), self.av.actorInterval('jail_dropinto', blendOutT=0), self.av.actorInterval('jail_standup', blendInT=0))
         self.jailTrack.start()
 
     def exitThrownInJail(self):
@@ -697,10 +591,8 @@ class BattleAvatarGameFSM(FSM.FSM):
     def enterDoorKicking(self, extraArgs=[]):
         self.av.motionFSM.off()
         kickT = self.av.getDuration('kick_door_loop')
-        self.kickSfx = base.loader.loadSfx(
-            'phase_4/audio/sfx_kick_door_loop.mp3')
-        self.kickTrack = Sequence(
-            Func(base.playSfx, self.kickSfx, node=self.av), Wait(kickT))
+        self.kickSfx = base.loader.loadSfx('phase_4/audio/sfx_kick_door_loop.mp3')
+        self.kickTrack = Sequence(Func(base.playSfx, self.kickSfx, node=self.av), Wait(kickT))
         self.av.loop('kick_door_loop')
         self.kickTrack.loop()
 
@@ -753,8 +645,7 @@ class BattleAvatarGameFSM(FSM.FSM):
         if self.putAwayHammerTrack:
             self.putAwayHammerTrack.finish()
             self.putAwayHammerTrack = None
-        self.repairHammerTrack = Sequence(
-            Func(self.repairHammer.reparentTo, self.av.rightHandNode))
+        self.repairHammerTrack = Sequence(Func(self.repairHammer.reparentTo, self.av.rightHandNode))
         self.repairHammerTrack.start()
         intoDur = self.av.getDuration('repairfloor_into')
         self.av.loop('repairfloor_idle', blendT=0)
@@ -766,8 +657,7 @@ class BattleAvatarGameFSM(FSM.FSM):
         return
 
     def _doRepairingSfx(self, task=None):
-        if globalClock.getRealTime(
-        ) - self._repairingStartT > self._repairingIntoDur + 0.5:
+        if globalClock.getRealTime() - self._repairingStartT > self._repairingIntoDur + 0.5:
             lastFrame = self._repairingFrame
             curFrame = self.av.getCurrentFrame('repairfloor_loop')
             hitFrame = 15
@@ -782,8 +672,7 @@ class BattleAvatarGameFSM(FSM.FSM):
         if self.repairingSfxTrack:
             self.repairingSfxTrack.pause()
         self.av.play('repairfloor_outof')
-        self.putAwayHammerTrack = Sequence(
-            Wait(3.35), Func(self.repairHammer.detachNode))
+        self.putAwayHammerTrack = Sequence(Wait(3.35), Func(self.repairHammer.detachNode))
         self.putAwayHammerTrack.start()
         self.av.motionFSM.on()
 

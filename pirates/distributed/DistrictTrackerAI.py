@@ -1,6 +1,5 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
-
 class DistrictTrackerAI:
     notify = directNotify.newCategory('DistrictTrackerAI')
 
@@ -12,10 +11,9 @@ class DistrictTrackerAI:
         self.district = self.air.distributedDistrict
         self.newsManager = self.air.newsManager
 
-        # Handle incoming District status queries so that the
+        # Handle incoming District status queries so that the 
         # UberDog is able to report them to the internal services
-        self.air.netMessenger.accept('queryDistrictStatus', self,
-                                     self.sendDistrictStatusQuery)
+        self.air.netMessenger.accept('queryDistrictStatus', self, self.sendDistrictStatusQuery)
 
         # Just in case UberDOG was started first. Send our info
         self.sendDistrictStatusQuery()
@@ -31,5 +29,5 @@ class DistrictTrackerAI:
         }
 
         self.notify.info('Sending District update status to UberDOG')
-        self.air.netMessenger.send('districtStatus',
-                                   [self.air.ourChannel, status])
+        self.air.netMessenger.send('districtStatus', [self.air.ourChannel, status])
+

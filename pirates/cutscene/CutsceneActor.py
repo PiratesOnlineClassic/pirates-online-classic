@@ -30,7 +30,6 @@ from pirates.ship.ShipModel import ShipModel
 from pirates.shipparts import HullDNA
 from pirates.uberdog.UberDogGlobals import InventoryType
 
-
 class CutsceneActor:
     notify = directNotify.newCategory('CutsceneActor')
 
@@ -54,7 +53,7 @@ class CutsceneActor:
     def foundIt(self, npc):
         if npc == None:
             self.notify.debug('Movie cast not created yet')
-        elif npc not in base.cr.doId2do:
+        elif not base.cr.doId2do.has_key(npc):
             self.notify.debug('Movie cast not in doId2do')
         else:
             self.modelLoaded = base.cr.doId2do[npc]
@@ -128,10 +127,7 @@ class CutsceneActor:
         self.setTransparency(1, 1)
         self.setAlphaScale(0.0)
         self.show()
-        self.fader = Sequence(
-            LerpFunctionInterval(
-                self.setAlphaScale, time, fromData=0.0, toData=1.0),
-            Func(self.clearTransparency))
+        self.fader = Sequence(LerpFunctionInterval(self.setAlphaScale, time, fromData=0.0, toData=1.0), Func(self.clearTransparency))
         self.fader.start()
 
     def fadeOut(self, time):
@@ -139,10 +135,7 @@ class CutsceneActor:
             self.fader.finish()
             self.fader = None
         self.setTransparency(1, 1)
-        self.fader = Sequence(
-            LerpFunctionInterval(
-                self.setAlphaScale, time, fromData=1.0, toData=0.0),
-            Func(self.hide), Func(self.clearTransparency))
+        self.fader = Sequence(LerpFunctionInterval(self.setAlphaScale, time, fromData=1.0, toData=0.0), Func(self.hide), Func(self.clearTransparency))
         self.fader.start()
 
     def fadeInBlack(self, time):
@@ -151,12 +144,7 @@ class CutsceneActor:
             self.fader = None
         self.setTransparency(1)
         self.show()
-        self.fader = Sequence(
-            self.colorScaleInterval(
-                time / 2.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(0, 0, 0, 0)),
-            self.colorScaleInterval(
-                time / 2.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(0, 0, 0, 1)),
-            Func(self.clearTransparency))
+        self.fader = Sequence(self.colorScaleInterval(time / 2.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(0, 0, 0, 0)), self.colorScaleInterval(time / 2.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(0, 0, 0, 1)), Func(self.clearTransparency))
         self.fader.start()
 
     def fadeOutBlack(self, time):
@@ -164,16 +152,12 @@ class CutsceneActor:
             self.fader.finish()
             self.fader = None
         self.setTransparency(1)
-        self.fader = Sequence(
-            self.colorScaleInterval(
-                time / 2.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(1, 1, 1, 1)),
-            self.colorScaleInterval(
-                time / 2.0, Vec4(0, 0, 0, 0), startColorScale=Vec4(0, 0, 0, 1)),
-            Func(self.clearTransparency), Func(self.hide))
+        self.fader = Sequence(self.colorScaleInterval(time / 2.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(1, 1, 1, 1)), self.colorScaleInterval(time / 2.0, Vec4(0, 0, 0, 0), startColorScale=Vec4(0, 0, 0, 1)), Func(self.clearTransparency), Func(self.hide))
         self.fader.start()
 
 
 class CutsceneShadowCaster(CutsceneActor):
+    
 
     def initShadow(self):
         self.initializeDropShadow()
@@ -310,14 +294,8 @@ class CutGenericActor(CutsceneActor, Actor):
 class CutLocators(CutGenericActor):
 
     def __init__(self, cutsceneDesc):
-        CutGenericActor.__init__(self, 'cs', 'cs_dummy', 'models/char/',
-                                 cutsceneDesc)
-        self._locators = {
-            'ghostShip': self.find('**/locator_ship_ghostship'),
-            'interceptor': self.find('**/locator_ship_interceptor'),
-            'warship': self.find('**/locator_ship_interceptor'),
-            'blackpearl': self.find('**/locator_ship_ghostship')
-        }
+        CutGenericActor.__init__(self, 'cs', 'cs_dummy', 'models/char/', cutsceneDesc)
+        self._locators = {'ghostShip': self.find('**/locator_ship_ghostship'), 'interceptor': self.find('**/locator_ship_interceptor'), 'warship': self.find('**/locator_ship_interceptor'), 'blackpearl': self.find('**/locator_ship_ghostship')}
         for name, node in self._locators.items():
             pass
 
@@ -346,20 +324,9 @@ class CutLocators(CutGenericActor):
 
 
 class CutBoat(CutsceneActor, ShipModel):
-    Class2Locator = {
-        ShipGlobals.STUMPY_SHIP: 'interceptor',
-        ShipGlobals.SKEL_DEATH_OMEN: 'ghostShip',
-        ShipGlobals.WARSHIPL3: 'warship',
-        ShipGlobals.BLACK_PEARL: 'blackpearl'
-    }
+    Class2Locator = {ShipGlobals.STUMPY_SHIP: 'interceptor', ShipGlobals.SKEL_DEATH_OMEN: 'ghostShip', ShipGlobals.WARSHIPL3: 'warship', ShipGlobals.BLACK_PEARL: 'blackpearl'}
 
-    def __init__(self,
-                 shipClass,
-                 team,
-                 offset,
-                 wantCollisions,
-                 cutsceneDesc,
-                 rootScale=1.0):
+    def __init__(self, shipClass, team, offset, wantCollisions, cutsceneDesc, rootScale=1.0):
         self.Uid = None
         CutsceneActor.__init__(self, cutsceneDesc)
         cr = None
@@ -371,10 +338,7 @@ class CutBoat(CutsceneActor, ShipModel):
         self._offset = offset
         if rootScale != 1.0:
             self.root.setScale(rootScale)
-        self.cannonSfx = (loader.loadSfx('audio/cball_fire_1.mp3'),
-                          loader.loadSfx('audio/cball_fire_2.mp3'),
-                          loader.loadSfx('audio/cball_fire_3.mp3'),
-                          loader.loadSfx('audio/cball_fire_4.mp3'))
+        self.cannonSfx = (loader.loadSfx('audio/cball_fire_1.mp3'), loader.loadSfx('audio/cball_fire_2.mp3'), loader.loadSfx('audio/cball_fire_3.mp3'), loader.loadSfx('audio/cball_fire_4.mp3'))
 
     def destroy(self):
         CutsceneActor.destroy(self)
@@ -419,8 +383,7 @@ class CutBoat(CutsceneActor, ShipModel):
     def sinkingVFX(self):
         tb = self.hull[0].geom_High.getTightBounds()
         scale = tb[1] - tb[0]
-        if base.options.getSpecialEffectsSetting(
-        ) >= base.options.SpecialEffectsMedium:
+        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
             ripples = WaterWakes.getEffect()
             if ripples:
                 ripples.reparentTo(render)
@@ -429,8 +392,7 @@ class CutBoat(CutsceneActor, ShipModel):
                 ripples.setZ(2)
                 ripples.setP(2)
                 ripples.play()
-        if base.options.getSpecialEffectsSetting(
-        ) >= base.options.SpecialEffectsHigh:
+        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
             splashes = WaterSplashes.getEffect()
             if splashes:
                 splashes.reparentTo(render)
@@ -439,8 +401,7 @@ class CutBoat(CutsceneActor, ShipModel):
                 splashes.setEffectScale(1.0)
                 splashes.setZ(-5.0)
                 splashes.play()
-        if base.options.getSpecialEffectsSetting(
-        ) >= base.options.SpecialEffectsHigh:
+        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
             mist = WaterMist.getEffect()
             if mist:
                 mist.reparentTo(render)
@@ -451,8 +412,7 @@ class CutBoat(CutsceneActor, ShipModel):
                 mist.play()
 
     def explosionVFX(self, node=None, offset=Vec3(0, 0, 0)):
-        if base.options.getSpecialEffectsSetting(
-        ) >= base.options.SpecialEffectsHigh:
+        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
             explosion = Explosion.getEffect()
             if explosion:
                 pos = node.getPos(render) + offset
@@ -462,22 +422,12 @@ class CutBoat(CutsceneActor, ShipModel):
                 explosion.setPos(pos)
                 explosion.play()
 
-    def fireCannon(self,
-                   index,
-                   ammo=InventoryType.CannonRoundShot,
-                   targetPos=None,
-                   targetNode=None,
-                   wantCollisions=0,
-                   flightTime=None,
-                   preciseHit=False,
-                   offset=Vec3(0, 0, 0)):
+    def fireCannon(self, index, ammo=InventoryType.CannonRoundShot, targetPos=None, targetNode=None, wantCollisions=0, flightTime=None, preciseHit=False, offset=Vec3(0, 0, 0)):
         if targetNode:
             targetPos = targetNode.getPos(render)
         targetPos = targetPos + offset
         if len(self.cannons):
-            self.cannons[index].playAttack(
-                InventoryType.CannonShoot, ammo, 'localShipHit', targetPos,
-                wantCollisions, flightTime, preciseHit)
+            self.cannons[index].playAttack(InventoryType.CannonShoot, ammo, 'localShipHit', targetPos, wantCollisions, flightTime, preciseHit)
         sfx = random.choice(self.cannonSfx)
         base.playSfx(sfx)
 
@@ -567,15 +517,7 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
         if self.effect and self.effectDummy:
             if not offset:
                 offset = 0.0
-            posIval = LerpPosInterval(
-                self.effectDummy,
-                2.0,
-                Vec3(self.effectDummy.getX(),
-                     self.effectDummy.getY() + offset / 3.0,
-                     self.effectDummy.getZ() + 5.5),
-                startPos=Vec3(self.effectDummy.getX() + offset,
-                              self.effectDummy.getY() + offset,
-                              self.effectDummy.getZ() - 3.0))
+            posIval = LerpPosInterval(self.effectDummy, 2.0, Vec3(self.effectDummy.getX(), self.effectDummy.getY() + offset / 3.0, self.effectDummy.getZ() + 5.5), startPos=Vec3(self.effectDummy.getX() + offset, self.effectDummy.getY() + offset, self.effectDummy.getZ() - 3.0))
             self.effect.reparentTo(self.effectDummy)
             self.effect.duration = 1.5
             self.effect.effectScale = 1.0
@@ -679,8 +621,8 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
     def getActorKey():
         return 'JollyRoger'
 
-
 class CutWillTurner(CutsceneActor, WillTurner):
+    
 
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
@@ -734,8 +676,8 @@ class CutWillTurner(CutsceneActor, WillTurner):
             self.modelLoaded.setPos(render, self.posFromPose)
             self.modelLoaded.setH(render, self.hprFromPose[0] - 180)
 
-
 class CutElizabethSwan(CutsceneActor, ElizabethSwan):
+    
 
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
@@ -763,8 +705,8 @@ class CutElizabethSwan(CutsceneActor, ElizabethSwan):
     def getActorKey():
         return 'ElizabethSwan'
 
-
 class CutCaptBarbossa(CutsceneActor, CaptBarbossa):
+    
 
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
@@ -810,6 +752,7 @@ class CutCaptBarbossa(CutsceneActor, CaptBarbossa):
 
 
 class CutTiaDalma(CutsceneActor, TiaDalma):
+    
 
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
@@ -871,13 +814,7 @@ class CutTiaDalma(CutsceneActor, TiaDalma):
         bg3.unstash()
         handNode = bg3.find('**/*weapon_right')
         self.cutlassDict[2].reparentTo(handNode)
-        self.fader = Parallel(
-            LerpFunctionInterval(
-                bg1.setAlphaScale, 2.0, fromData=0.0, toData=0.6),
-            LerpFunctionInterval(
-                bg2.setAlphaScale, 2.5, fromData=0.0, toData=0.6),
-            LerpFunctionInterval(
-                bg3.setAlphaScale, 2.0, fromData=0.0, toData=0.6))
+        self.fader = Parallel(LerpFunctionInterval(bg1.setAlphaScale, 2.0, fromData=0.0, toData=0.6), LerpFunctionInterval(bg2.setAlphaScale, 2.5, fromData=0.0, toData=0.6), LerpFunctionInterval(bg3.setAlphaScale, 2.0, fromData=0.0, toData=0.6))
         self.fader.start()
 
     def hideVisionBG(self, cutscene, cleanup):
@@ -914,9 +851,7 @@ class CutTiaDalma(CutsceneActor, TiaDalma):
 
     def spawnSkeleton1(self, cutscene):
         rootNode = cutscene.getActor('JollyRoger').find('**/def_root')
-        effectPos = Vec3(
-            rootNode.getX(self) + 2.5, rootNode.getY(self),
-            rootNode.getZ(self) - 5.0)
+        effectPos = Vec3(rootNode.getX(self) + 2.5, rootNode.getY(self), rootNode.getZ(self) - 5.0)
         spawnEffect = JRSpawnEffect.getEffect()
         if spawnEffect:
             spawnEffect.reparentTo(self)
@@ -927,9 +862,7 @@ class CutTiaDalma(CutsceneActor, TiaDalma):
 
     def spawnSkeleton2(self, cutscene):
         rootNode = cutscene.getActor('JollyRoger').find('**/def_root')
-        effectPos = Vec3(
-            rootNode.getX(self) - 4.0, rootNode.getY(self),
-            rootNode.getZ(self) - 5.0)
+        effectPos = Vec3(rootNode.getX(self) - 4.0, rootNode.getY(self), rootNode.getZ(self) - 5.0)
         spawnEffect = JRSpawnEffect.getEffect()
         if spawnEffect:
             spawnEffect.reparentTo(self)
@@ -979,8 +912,8 @@ class CutTiaDalma(CutsceneActor, TiaDalma):
         if remove:
             handheld.removeNode()
 
-
 class CutJoshGibbs(CutsceneActor, JoshGibbs):
+    
 
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
@@ -1008,6 +941,7 @@ class CutJoshGibbs(CutsceneActor, JoshGibbs):
 
 
 class CutPirate(CutsceneActor, Pirate):
+    
 
     def __init__(self, Uid, npcIndex, cutsceneDesc):
         self.Uid = Uid
@@ -1036,8 +970,7 @@ class CutPirate(CutsceneActor, Pirate):
     def getInterval(self):
         ival = Sequence()
         for animName in self.getCSAnimNames():
-            ival.append(
-                self.actorInterval('%s_%s' % (self._npcIndex, animName)))
+            ival.append(self.actorInterval('%s_%s' % (self._npcIndex, animName)))
 
         return ival
 
@@ -1078,8 +1011,8 @@ class CutPirate(CutsceneActor, Pirate):
         if remove:
             handheld.removeNode()
 
-
 class CutSkeleton(CutsceneActor, Skeleton):
+    
 
     def __init__(self, skeletonType, npcIndex, cutsceneDesc):
         self.Uid = None
@@ -1102,8 +1035,7 @@ class CutSkeleton(CutsceneActor, Skeleton):
     def getInterval(self):
         ival = Sequence()
         for animName in self.getCSAnimNames():
-            ival.append(
-                self.actorInterval('%s_%s' % (self._npcIndex, animName)))
+            ival.append(self.actorInterval('%s_%s' % (self._npcIndex, animName)))
 
         return ival
 
@@ -1114,8 +1046,8 @@ class CutSkeleton(CutsceneActor, Skeleton):
     def getThisActorKey(self):
         return CutSkeleton.getActorKey(self._npcIndex)
 
-
 class CutLocalPirate(CutsceneActor):
+    
 
     def __init__(self, wantZombie, cutsceneDesc):
         self.Uid = None
@@ -1141,7 +1073,7 @@ class CutLocalPirate(CutsceneActor):
                 dna.setBodyShape(shape)
                 if base.pe.panel.useNPCinCutscene.get():
                     currNpcList = base.pe.getNPCList()
-                    if base.pe.cutLocalPirateId in currNpcList.NPC_LIST:
+                    if currNpcList.NPC_LIST.has_key(base.pe.cutLocalPirateId):
                         dnaDict = currNpcList.NPC_LIST[base.pe.cutLocalPirateId]
                         dna = HumanDNA()
                         dna.loadFromNPCDict(dnaDict)
@@ -1153,8 +1085,7 @@ class CutLocalPirate(CutsceneActor):
             self.zombieAvatar.style = HumanDNA(self.localAvatar.style.gender)
             self.zombieAvatar.zombie = True
             self.zombieAvatar.style.copy(self.localAvatar.style)
-            self.zombieAvatar.generateHuman(self.zombieAvatar.style.gender,
-                                            masterHuman)
+            self.zombieAvatar.generateHuman(self.zombieAvatar.style.gender, masterHuman)
             self.zombieAvatar.faceTowardsViewer()
         for animName in self.getCSAnimNames():
             if dna.gender == 'f':
@@ -1187,11 +1118,7 @@ class CutLocalPirate(CutsceneActor):
             self.fader.finish()
             self.fader = None
         self.localAvatar.setTransparency(1)
-        self.fader = Sequence(
-            self.localAvatar.colorScaleInterval(
-                1.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(0, 0, 0, 0)),
-            self.localAvatar.colorScaleInterval(
-                1.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(0, 0, 0, 1)))
+        self.fader = Sequence(self.localAvatar.colorScaleInterval(1.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(0, 0, 0, 0)), self.localAvatar.colorScaleInterval(1.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(0, 0, 0, 1)))
         self.fader.start()
 
     def fadeOut(self):
@@ -1199,11 +1126,7 @@ class CutLocalPirate(CutsceneActor):
             self.fader.finish()
             self.fader = None
         self.localAvatar.setTransparency(1)
-        self.fader = Sequence(
-            self.localAvatar.colorScaleInterval(
-                1.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(1, 1, 1, 1)),
-            self.localAvatar.colorScaleInterval(
-                1.0, Vec4(0, 0, 0, 0), startColorScale=Vec4(0, 0, 0, 1)))
+        self.fader = Sequence(self.localAvatar.colorScaleInterval(1.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(1, 1, 1, 1)), self.localAvatar.colorScaleInterval(1.0, Vec4(0, 0, 0, 0), startColorScale=Vec4(0, 0, 0, 1)))
         self.fader.start()
 
     def openJailDoor(self):
@@ -1216,13 +1139,7 @@ class CutLocalPirate(CutsceneActor):
         self.jail_door = self.jail.find('**/jail_door01')
         self.jail_lock = self.jail.find('**/lock01')
         self.jail_door_collision = self.jail.find('**/door_collision_01')
-        seq = Sequence(
-            LerpHprInterval(
-                self.jail_door,
-                1,
-                VBase3(120, self.jail_door.getP(), self.jail_door.getR()),
-                blendType='easeInOut'),
-            duration=1.0)
+        seq = Sequence(LerpHprInterval(self.jail_door, 1, VBase3(120, self.jail_door.getP(), self.jail_door.getR()), blendType='easeInOut'), duration=1.0)
         seq.start()
         self.jail_door_collision.setR(30)
         if not self.jail_lock.isEmpty():
@@ -1348,8 +1265,7 @@ class CutLocalPirate(CutsceneActor):
             self.zombieAvatar.node().setBounds(OmniBoundingVolume())
             self.zombieAvatar.node().setFinal(1)
             self.zombieAvatar.stopBlink()
-            if self.localAvatar and hasattr(self.zombieAvatar,
-                                            'lookAroundTaskName'):
+            if self.localAvatar and hasattr(self.zombieAvatar, 'lookAroundTaskName'):
                 self.zombieAvatar.stopLookAroundTask()
             self.zombieAvatar.headNode.setHpr(0, 0, 0)
             self.zombieAvatar.nametag3d.hide()

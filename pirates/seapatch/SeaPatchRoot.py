@@ -6,12 +6,12 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 
 class SeaPatchRoot(object):
     notify = directNotify.newCategory('SeaPatchRoot')
-
+    
     noiseTableSize = 64
-    WTZ = None  #TODO
-    WTV = None  #TODO
-    WTU = None  #TODO
-    WFSin = None  #TODO
+    WTZ = None #TODO
+    WTV = None #TODO
+    WTU = None #TODO
+    WFSin = None #TODO
     WFNoise = PerlinNoise3()
 
     def __init__(self):
@@ -81,7 +81,7 @@ class SeaPatchRoot(object):
 
     def animateUv(self, doAnimate):
         pass
-
+       
     def recurseChildren(self, node, netTransMat):
         # This isn't the same as the one as in libpirates but similar to the one
         # in the leaked SeaPatchNode. Granted we're rewriting waves anyway.

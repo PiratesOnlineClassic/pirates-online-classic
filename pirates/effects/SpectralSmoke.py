@@ -12,7 +12,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SpectralSmoke(PooledEffect, EffectController):
-
+    
     cardScale = 128.0
 
     def __init__(self):
@@ -56,11 +56,8 @@ class SpectralSmoke(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.setColorBlendMode(
-            ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor,
-            ColorBlendAttrib.OOneMinusIncomingAlpha)
-        self.p0.renderer.getColorInterpolationManager().addLinear(
-            0.0, 1.0, Vec4(0.65, 0.65, 1.0, 1.0), Vec4(0.0, 0.0, 0.0, 0.0), 1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.65, 0.65, 1.0, 1.0), Vec4(0.0, 0.0, 0.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(0.5)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -70,12 +67,8 @@ class SpectralSmoke(PooledEffect, EffectController):
         self.p0.emitter.setRadius(0.5)
 
     def createTrack(self, duration=1.0, delay=0.0):
-        self.startEffect = Sequence(
-            Wait(delay), Func(self.p0.setBirthRate, 0.025),
-            Func(self.p0.clearToInitial), Func(self.f.start, self, self))
-        self.endEffect = Sequence(
-            Func(self.p0.setBirthRate, 100), Wait(3.0),
-            Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Wait(delay), Func(self.p0.setBirthRate, 0.025), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(3.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(duration), self.endEffect)
 
     def play(self, duration=1.0, delay=0.0):
@@ -90,6 +83,4 @@ class SpectralSmoke(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\SpectralSmoke.pyc

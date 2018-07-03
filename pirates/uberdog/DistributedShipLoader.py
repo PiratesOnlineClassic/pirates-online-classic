@@ -7,9 +7,8 @@ from pirates.uberdog.UberDogGlobals import *
 
 
 class DistributedShipLoader(DistributedObject.DistributedObject):
-
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'DistributedShipLoader')
+    
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipLoader')
 
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)

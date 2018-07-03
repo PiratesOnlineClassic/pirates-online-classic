@@ -11,16 +11,15 @@ from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesgui.RequestButton import RequestButton
 from pirates.uberdog import UberDogGlobals
 
-
 class PVPInviterButton(RequestButton):
+    
 
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
         self.initialiseoptions(PVPInviterButton)
 
-
 class PVPInviter(GuiPanel.GuiPanel):
-
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('PVPInviter')
 
     def __init__(self, avId, avName):
@@ -31,57 +30,37 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.avName = avName
         self.avDisableName = 'disable-%s' % avId
         self.fsm = ClassicFSM.ClassicFSM('PVPInviter', [
-            State.State('off', self.enterOff, self.exitOff),
-            State.State('begin', self.enterBegin, self.exitBegin),
-            State.State('inBattle', self.enterInBattle, self.exitInBattle),
-            State.State('notYet', self.enterNotYet, self.exitNotYet),
-            State.State('checkAvailability', self.enterCheckAvailability,
-                        self.exitCheckAvailability),
-            State.State('notAvailable', self.enterNotAvailable,
-                        self.exitNotAvailable),
-            State.State('notAcceptingChallenges',
-                        self.enterNotAcceptingChallenges,
-                        self.exitNotAcceptingChallenges),
-            State.State('wentAway', self.enterWentAway, self.exitWentAway),
-            State.State('alreadyChallenging', self.enterAlreadyChallenging,
-                        self.exitAlreadyChallenging),
-            State.State('alreadyInvited', self.enterAlreadyInvited,
-                        self.exitAlreadyInvited),
-            State.State('askingNPC', self.enterAskingNPC, self.exitAskingNPC),
-            State.State('endChallenge', self.enterEndChallenge,
-                        self.exitEndChallenge),
-            State.State('challengeNoMore', self.enterChallengeNoMore,
-                        self.exitChallengeNoMore),
-            State.State('self', self.enterSelf, self.exitSelf),
-            State.State('ignored', self.enterIgnored, self.exitIgnored),
-            State.State('asking', self.enterAsking, self.exitAsking),
-            State.State('yes', self.enterYes, self.exitYes),
-            State.State('no', self.enterNo, self.exitNo),
-            State.State('otherInBattle', self.enterOtherInBattle,
-                        self.exitOtherInBattle),
-            State.State('maybe', self.enterMaybe, self.exitMaybe),
-            State.State('down', self.enterDown, self.exitDown),
-            State.State('cancel', self.enterCancel, self.exitCancel)
-        ], 'off', 'off')
-        self.message = DirectLabel(
-            parent=self,
-            relief=None,
-            text='',
-            text_scale=PiratesGuiGlobals.TextScaleLarge,
-            text_align=TextNode.ACenter,
-            text_fg=PiratesGuiGlobals.TextFG2,
-            text_shadow=PiratesGuiGlobals.TextShadow,
-            text_wordwrap=11,
-            pos=(0.25, 0, 0.35),
-            textMayChange=1)
+         State.State('off', self.enterOff, self.exitOff),
+         State.State('begin', self.enterBegin, self.exitBegin),
+         State.State('inBattle', self.enterInBattle, self.exitInBattle),
+         State.State('notYet', self.enterNotYet, self.exitNotYet),
+         State.State('checkAvailability', self.enterCheckAvailability, self.exitCheckAvailability),
+         State.State('notAvailable', self.enterNotAvailable, self.exitNotAvailable),
+         State.State('notAcceptingChallenges', self.enterNotAcceptingChallenges, self.exitNotAcceptingChallenges),
+         State.State('wentAway', self.enterWentAway, self.exitWentAway),
+         State.State('alreadyChallenging', self.enterAlreadyChallenging, self.exitAlreadyChallenging),
+         State.State('alreadyInvited', self.enterAlreadyInvited, self.exitAlreadyInvited),
+         State.State('askingNPC', self.enterAskingNPC, self.exitAskingNPC),
+         State.State('endChallenge', self.enterEndChallenge, self.exitEndChallenge),
+         State.State('challengeNoMore', self.enterChallengeNoMore, self.exitChallengeNoMore),
+         State.State('self', self.enterSelf, self.exitSelf),
+         State.State('ignored', self.enterIgnored, self.exitIgnored),
+         State.State('asking', self.enterAsking, self.exitAsking),
+         State.State('yes', self.enterYes, self.exitYes),
+         State.State('no', self.enterNo, self.exitNo),
+         State.State('otherInBattle', self.enterOtherInBattle, self.exitOtherInBattle),
+         State.State('maybe', self.enterMaybe, self.exitMaybe),
+         State.State('down', self.enterDown, self.exitDown),
+         State.State('cancel', self.enterCancel, self.exitCancel)], 'off', 'off')
+        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, 
+                                   text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, 
+                                   pos=(0.25, 0, 0.35), textMayChange=1)
         self.context = None
-        self.bOk = PVPInviterButton(
-            text=OTPLocalizer.DialogOK, command=self.__handleOk)
+        self.bOk = PVPInviterButton(text=OTPLocalizer.DialogOK, command=self.__handleOk)
         self.bOk.reparentTo(self)
         self.bOk.setPos(0.2, 0, 0.05)
         self.bOk.hide()
-        self.bCancel = PVPInviterButton(
-            text=OTPLocalizer.DialogCancel, command=self.__handleCancel)
+        self.bCancel = PVPInviterButton(text=OTPLocalizer.DialogCancel, command=self.__handleCancel)
         self.bCancel.reparentTo(self)
         self.bCancel.setPos(0.2, 0, 0.05)
         self.bCancel.hide()
@@ -89,13 +68,11 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.bStop.reparentTo(self)
         self.bStop.setPos(0.2, 0, 0.15)
         self.bStop.hide()
-        self.bYes = PVPInviterButton(
-            text=OTPLocalizer.DialogYes, command=self.__handleYes)
+        self.bYes = PVPInviterButton(text=OTPLocalizer.DialogYes, command=self.__handleYes)
         self.bYes.reparentTo(self)
         self.bYes.setPos(0.1, 0, 0.05)
         self.bYes.hide()
-        self.bNo = PVPInviterButton(
-            text=OTPLocalizer.DialogNo, command=self.__handleNo)
+        self.bNo = PVPInviterButton(text=OTPLocalizer.DialogNo, command=self.__handleNo)
         self.bNo.reparentTo(self)
         self.bNo.setPos(0.3, 0, 0.05)
         self.bNo.hide()
@@ -163,8 +140,7 @@ class PVPInviter(GuiPanel.GuiPanel):
             self.fsm.request('askingNPC')
             return
         base.cr.pvpManager.sendRequestChallenge(self.avId)
-        self.message[
-            'text'] = PLocalizer.PVPInviterCheckAvailability % self.avName
+        self.message['text'] = PLocalizer.PVPInviterCheckAvailability % self.avName
         self.accept(PiratesGlobals.PVPAcceptEvent, self.__challengeAccepted)
         self.accept(PiratesGlobals.PVPRejectEvent, self.__challengeRejected)
         self.bCancel.show()
@@ -256,10 +232,9 @@ class PVPInviter(GuiPanel.GuiPanel):
         self.bNo.hide()
 
     def enterChallengeNoMore(self):
-        self.message[
-            'text'] = PLocalizer.PVPInviterChallengeNoMore % self.avName
+        self.message['text'] = PLocalizer.PVPInviterChallengeNoMore % self.avName
         self.bOk.show()
-        if self.avId not in base.cr.doId2do:
+        if not base.cr.doId2do.has_key(self.avId):
             messenger.send(self.avDisableName)
 
     def exitChallengeNoMore(self):
@@ -354,11 +329,7 @@ class PVPInviter(GuiPanel.GuiPanel):
     def __handleYes(self):
         if self.fsm.getCurrentState().getName() == 'notYet':
             localAvatar.guiMgr.showLookoutPanel()
-            localAvatar.guiMgr.lookoutPage.displayLookout(
-                gameType=PiratesGlobals.GAME_TYPE_PVP,
-                gameStyle=PiratesGlobals.GAME_STYLE_TEAM_BATTLE,
-                inviteOptions=[PiratesGlobals.LOOKOUT_INVITE_CREW],
-                additionalAvs=[self.avId])
+            localAvatar.guiMgr.lookoutPage.displayLookout(gameType=PiratesGlobals.GAME_TYPE_PVP, gameStyle=PiratesGlobals.GAME_STYLE_TEAM_BATTLE, inviteOptions=[PiratesGlobals.LOOKOUT_INVITE_CREW], additionalAvs=[self.avId])
             self.__handleOk()
         elif self.fsm.getCurrentState().getName() == 'endChallenge':
             self.fsm.request('challengeNoMore')
@@ -387,9 +358,7 @@ class PVPInviter(GuiPanel.GuiPanel):
         elif yesNoAlready == 13:
             self.fsm.request('otherInBattle')
         else:
-            self.notify.warning(
-                'Got unexpected response to challengeConsidering: %s' %
-                yesNoAlready)
+            self.notify.warning('Got unexpected response to challengeConsidering: %s' % yesNoAlready)
             self.fsm.request('maybe')
 
     def __challengeRejected(self, avId, reason):
@@ -406,13 +375,11 @@ class PVPInviter(GuiPanel.GuiPanel):
         elif reason == RejectCode.INVITATION_DECLINED:
             self.fsm.request('no')
         else:
-            self.notify.warning('challengeRejectInvite: %s unknown reason: %s.'
-                                % (avId, reason))
+            self.notify.warning('challengeRejectInvite: %s unknown reason: %s.' % (avId, reason))
 
     def __challengeResponse(self, yesNoMaybe, context):
         if self.context != context:
-            self.notify.warning('Unexpected change of context from %s to %s.' %
-                                (self.context, context))
+            self.notify.warning('Unexpected change of context from %s to %s.' % (self.context, context))
             self.context = context
         if yesNoMaybe == 1:
             self.fsm.request('yes')
@@ -421,8 +388,7 @@ class PVPInviter(GuiPanel.GuiPanel):
         elif yesNoMaybe == 3:
             self.fsm.request('otherInBattle')
         else:
-            self.notify.warning(
-                'Got unexpected response to challengeResponse: %s' % yesNoMaybe)
+            self.notify.warning('Got unexpected response to challengeResponse: %s' % yesNoMaybe)
             self.fsm.request('maybe')
 
     def __handleDisableAvatar(self):

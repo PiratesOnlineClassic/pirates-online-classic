@@ -2,7 +2,6 @@ from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobal
 from direct.directnotify import DirectNotifyGlobal
 import json
 
-
 class CentralLoggerUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('CentralLoggerUD')
     notify.setInfo(True)
@@ -15,7 +14,10 @@ class CentralLoggerUD(DistributedObjectGlobalUD):
 
         parts = message.split('|')
         msgType = parts[0]
-        fields = {'targetDISLid': targetDISLid, 'targetAvId': targetAvId}
+        fields = {
+            'targetDISLid': targetDISLid,
+            'targetAvId': targetAvId
+        }
 
         if msgType == 'GUEST_FEEDBACK':
             fields['feedbackCategory'] = parts[1]
@@ -33,7 +35,10 @@ class CentralLoggerUD(DistributedObjectGlobalUD):
             print(data)
 
         self.air.writeServerEvent(
-            category, messageType=msgType, message=message, **fields)
+            category,
+            messageType=msgType,
+            message=message,
+            **fields)
 
     def reportException(self, sender, exception, isClient=False):
         self.notify.info('Received exception log request')
@@ -43,7 +48,7 @@ class CentralLoggerUD(DistributedObjectGlobalUD):
         messageBody = {
             'exception': exception,
             'devServer': self.air.isDevServer(),
-            'serverVersion': config.GetString('server-version', 'pirates-dev')
+            'serverVersion': config.GetString('server-version', 'pirates-dev')         
         }
 
         if self.notify.getDebug():
@@ -51,7 +56,7 @@ class CentralLoggerUD(DistributedObjectGlobalUD):
             print(json.dumps(event))
 
         if exceptionLogger == 'splunk':
-            pass  #TODO
+            pass #TODO
 
         elif exceptionLogger == 'event-logger':
 
@@ -59,5 +64,4 @@ class CentralLoggerUD(DistributedObjectGlobalUD):
             self.air.writeServerEvent(messageTitle, **messageBody)
 
         else:
-            self.notify.warning(
-                'Unknown exception-logger: %s' % exceptionLogger)
+            self.notify.warning('Unknown exception-logger: %s' % exceptionLogger)

@@ -11,6 +11,7 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SmokeWisps(PooledEffect, EffectController):
+    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -27,31 +28,12 @@ class SmokeWisps(PooledEffect, EffectController):
     def createTrack(self):
         textureStage = self.effectModel.findAllTextureStages()[0]
         duration = 2.0 + random.uniform(0.0, 1.0)
-        fadeIn = self.effectModel.colorScaleInterval(
-            1.0,
-            Vec4(0.9, 0.9, 0.9, 1.0),
-            startColorScale=Vec4(0, 0, 0, 0),
-            blendType='easeOut')
-        fadeOut = self.effectModel.colorScaleInterval(
-            1.0,
-            Vec4(0, 0, 0, 0),
-            startColorScale=Vec4(0.9, 0.9, 0.9, 1.0),
-            blendType='easeOut')
-        scaleUp = self.effectModel.scaleInterval(
-            3.0,
-            Vec3(1, 1, self.modelScale),
-            startScale=Vec3(1, 1, 0),
-            blendType='easeOut')
-        uvScroll = LerpFunctionInterval(
-            self.setNewUVs,
-            duration,
-            toData=0,
-            fromData=1,
-            extraArgs=[self.effectModel, textureStage])
-        self.startEffect = Sequence(
-            Func(uvScroll.loop), Parallel(fadeIn, scaleUp))
-        self.endEffect = Sequence(fadeOut, Func(uvScroll.finish),
-                                  Func(self.cleanUpEffect))
+        fadeIn = self.effectModel.colorScaleInterval(1.0, Vec4(0.9, 0.9, 0.9, 1.0), startColorScale=Vec4(0, 0, 0, 0), blendType='easeOut')
+        fadeOut = self.effectModel.colorScaleInterval(1.0, Vec4(0, 0, 0, 0), startColorScale=Vec4(0.9, 0.9, 0.9, 1.0), blendType='easeOut')
+        scaleUp = self.effectModel.scaleInterval(3.0, Vec3(1, 1, self.modelScale), startScale=Vec3(1, 1, 0), blendType='easeOut')
+        uvScroll = LerpFunctionInterval(self.setNewUVs, duration, toData=0, fromData=1, extraArgs=[self.effectModel, textureStage])
+        self.startEffect = Sequence(Func(uvScroll.loop), Parallel(fadeIn, scaleUp))
+        self.endEffect = Sequence(fadeOut, Func(uvScroll.finish), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def destroy(self):
@@ -72,6 +54,4 @@ class SmokeWisps(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\SmokeWisps.pyc

@@ -17,8 +17,7 @@ from otp.otpgui import OTPDialog
 from panda3d.core import *
 from panda3d.physics import *
 from pirates.launcher import PiratesDownloadWatcher
-from pirates.piratesbase import (MusicManager, PiratesAmbientManager,
-                                 PLocalizer, UserFunnel)
+from pirates.piratesbase import (MusicManager, PiratesAmbientManager, PLocalizer, UserFunnel)
 from pirates.piratesgui import PDialog, PiratesGuiGlobals, ScreenshotViewer
 from pirates.piratesgui.GameOptions import Options
 from pirates.shipparts import TextureFlattenManager
@@ -34,7 +33,6 @@ try:
 except ImportError:
     hasEmbedded = 0
 
-
 class PiratesBase(OTPBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesBase')
     notify.setInfo(True)
@@ -49,8 +47,7 @@ class PiratesBase(OTPBase):
         OTPBase.__init__(self)
         self.hasEmbedded = hasEmbedded
         self.holidays = {}
-        self.saintPatricksDay = base.config.GetBool('test-saint-patricks-day',
-                                                    False)
+        self.saintPatricksDay = base.config.GetBool('test-saint-patricks-day', False)
         self.fourthOfJuly = base.config.GetBool('test-fourth-of-july', False)
         self.wantEnviroDR = base.config.GetBool('want-enviro-dr', False)
         self.bamCache = None
@@ -75,11 +72,10 @@ class PiratesBase(OTPBase):
                 working_options = Options()
                 if working_options.load(Options.WORKING_FILE_PATH):
                     options = working_options
-                    working_options.save(Options.DEFAULT_FILE_PATH,
-                                         Options.ATTEMPT_WORKING_STATE)
+                    working_options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_WORKING_STATE)
                 else:
-                    options.config_to_options()
-                    use_recommended_options = True
+                   options.config_to_options()
+                   use_recommended_options = True
             elif options.state == Options.WORKING_STATE:
                 options.save(Options.DEFAULT_FILE_PATH, Options.ATTEMPT_STATE)
             elif options.state == Options.ATTEMPT_WORKING_STATE:
@@ -102,16 +98,13 @@ class PiratesBase(OTPBase):
         else:
             base.makeAllPipes()
             for pipe in base.pipeList:
-                if options.api == 'pandagl' and pipe.getInterfaceName(
-                ) == 'OpenGL':
+                if options.api == 'pandagl' and pipe.getInterfaceName() == 'OpenGL':
                     base.pipe = pipe
                     break
-                if options.api == 'pandadx9' and pipe.getInterfaceName(
-                ) == 'DirectX9':
+                if options.api == 'pandadx9' and pipe.getInterfaceName() == 'DirectX9':
                     base.pipe = pipe
                     break
-                if options.api == 'pandadx8' and pipe.getInterfaceName(
-                ) == 'DirectX8':
+                if options.api == 'pandadx8' and pipe.getInterfaceName() == 'DirectX8':
                     base.pipe = pipe
                     break
 
@@ -156,11 +149,9 @@ class PiratesBase(OTPBase):
 
         self.screenshotViewer = None
         if base.config.GetBool('want-screenshot-viewer', False):
-            self.accept(PiratesGlobals.ScreenshotViewerHotkey,
-                        self.showScreenshots)
+            self.accept(PiratesGlobals.ScreenshotViewerHotkey, self.showScreenshots)
 
-        self.wantMarketingViewer = base.config.GetBool('want-marketing-viewer',
-                                                       False)
+        self.wantMarketingViewer = base.config.GetBool('want-marketing-viewer', False)
         self.marketingViewerOn = False
         if self.wantMarketingViewer:
             for key in PiratesGlobals.MarketingHotkeyList:
@@ -169,8 +160,7 @@ class PiratesBase(OTPBase):
         self.accept('panda3d-render-error', self.panda3dRenderError)
         camera.setPosHpr(0, 0, 0, 0, 0, 0)
         self.camLens.setMinFov(PiratesGlobals.DefaultCameraFov)
-        self.camLens.setNearFar(PiratesGlobals.DefaultCameraNear,
-                                PiratesGlobals.DefaultCameraFar)
+        self.camLens.setNearFar(PiratesGlobals.DefaultCameraNear, PiratesGlobals.DefaultCameraFar)
         farCullNode = PlaneNode('farCull')
         farCullNode.setPlane(Plane(Vec3(0, -1, 0), Point3(0, 0, 0)))
         farCullNode.setClipEffect(0)
@@ -226,8 +216,7 @@ class PiratesBase(OTPBase):
         from pirates.creature import Dog
         from pirates.ship import ShipGlobals
         Dog.Dog.setupAssets()
-        CullBinManager.getGlobalPtr().addBin('ShipRigging',
-                                             CullBinEnums.BTBackToFront, 100)
+        CullBinManager.getGlobalPtr().addBin('ShipRigging', CullBinEnums.BTBackToFront, 100)
         self.bamCache = None
         if base.config.GetBool('want-disk-cache', False):
             self.bamCache = BamCache()
@@ -247,8 +236,7 @@ class PiratesBase(OTPBase):
         self.maximumCpuFrequency = 0
         self.currentCpuFrequency = 0
         self.displayCpuFrequencyDialog = False
-        self.taskMgr.doMethodLater(120.0, self.memoryMonitorTask,
-                                   'memory-monitor-task')
+        self.taskMgr.doMethodLater(120.0, self.memoryMonitorTask, 'memory-monitor-task')
         self.supportAlphaFb = self.win.getFbProperties().getAlphaBits()
         self.richPresence = DiscordPresence()
         self.richPresence.start()
@@ -272,14 +260,8 @@ class PiratesBase(OTPBase):
         self.deleteDialogs()
         if base.options.cpu_frequency_warning:
             buttonText = [
-                OTPLocalizer.DialogOK, OTPLocalizer.DialogDoNotShowAgain
-            ]
-            self.cpuSpeedDialog = PDialog.PDialog(
-                text=message,
-                style=OTPDialog.TwoChoiceCustom,
-                giveMouse=False,
-                command=self.cpuSpeedDialogCommand,
-                buttonText=buttonText)
+             OTPLocalizer.DialogOK, OTPLocalizer.DialogDoNotShowAgain]
+            self.cpuSpeedDialog = PDialog.PDialog(text=message, style=OTPDialog.TwoChoiceCustom, giveMouse=False, command=self.cpuSpeedDialogCommand, buttonText=buttonText)
             if self.cpuSpeedDialog:
                 self.cpuSpeedDialog.setBin('gui-fixed', 20, 20)
 
@@ -292,34 +274,22 @@ class PiratesBase(OTPBase):
                 if di.getPeakProcessMemory() > self.peakProcessMemory:
                     self.peakProcessMemory = di.getPeakProcessMemory()
                     display = True
-                if di.getMemoryLoad(
-                ) >= self.memoryMonitorMinimumPercentage and di.getMemoryLoad(
-                ) > self.peakMemoryLoad:
+                if di.getMemoryLoad() >= self.memoryMonitorMinimumPercentage and di.getMemoryLoad() > self.peakMemoryLoad:
                     self.peakMemoryLoad = di.getMemoryLoad()
                     display = True
                 if display:
                     oomb = 1.0 / (1024.0 * 1024.0)
                     string = 'memory_usage:    %d%%' % di.getMemoryLoad()
                     self.notify.info(string)
-                    string = 'physical_memory: %.2f / %.2f MB' % (
-                        di.getAvailablePhysicalMemory() * oomb,
-                        di.getPhysicalMemory() * oomb)
+                    string = 'physical_memory: %.2f / %.2f MB' % (di.getAvailablePhysicalMemory() * oomb, di.getPhysicalMemory() * oomb)
                     self.notify.info(string)
-                    string = 'page_file_size:  %.2f / %.2f MB' % (
-                        di.getAvailablePageFileSize() * oomb,
-                        di.getPageFileSize() * oomb)
+                    string = 'page_file_size:  %.2f / %.2f MB' % (di.getAvailablePageFileSize() * oomb, di.getPageFileSize() * oomb)
                     self.notify.info(string)
-                    string = 'virtual_memory:  %.2f / %.2f MB' % (
-                        di.getAvailableProcessVirtualMemory() * oomb,
-                        di.getProcessVirtualMemory() * oomb)
+                    string = 'virtual_memory:  %.2f / %.2f MB' % (di.getAvailableProcessVirtualMemory() * oomb, di.getProcessVirtualMemory() * oomb)
                     self.notify.info(string)
-                    string = 'process_memory:  %.2f / %.2f MB' % (
-                        di.getProcessMemory() * oomb,
-                        di.getPeakProcessMemory() * oomb)
+                    string = 'process_memory:  %.2f / %.2f MB' % (di.getProcessMemory() * oomb, di.getPeakProcessMemory() * oomb)
                     self.notify.info(string)
-                    string = 'page_file_usage: %.2f / %.2f MB' % (
-                        di.getPageFileUsage() * oomb,
-                        di.getPeakPageFileUsage() * oomb)
+                    string = 'page_file_usage: %.2f / %.2f MB' % (di.getPageFileUsage() * oomb, di.getPeakPageFileUsage() * oomb)
                     self.notify.info(string)
                     string = 'page_faults:     %d' % di.getPageFaultCount()
                     self.notify.info(string)
@@ -330,8 +300,7 @@ class PiratesBase(OTPBase):
                     if maximum > 0:
                         current = di.getCurrentCpuFrequency()
                         if current > 0:
-                            if base.config.GetInt('test-cpu-frequency-warning',
-                                                  False):
+                            if base.config.GetInt('test-cpu-frequency-warning', False):
                                 current = maximum - 1000000
                             change = False
                             if current != self.currentCpuFrequency:
@@ -416,19 +385,16 @@ class PiratesBase(OTPBase):
         self.embeddedWP.setParentWindow(embedded.getMainWindowHandle())
         self.embeddedWP.setFullscreen(0)
         messenger.send('access-changed')
-        return self.openDefaultWindow(
-            props=self.embeddedWP, gsg=base.win, keepCamera=True)
+        return self.openDefaultWindow(props=self.embeddedWP, gsg=base.win, keepCamera=True)
 
     def hideEmbeddedFrame(self):
         if not self.hasEmbedded:
             return False
         embedded.hideMainWindow()
-        self.detachedWP.setSize(self.options.getWidth(),
-                                self.options.getHeight())
+        self.detachedWP.setSize(self.options.getWidth(), self.options.getHeight())
         self.detachedWP.setFullscreen(self.options.fullscreen)
         messenger.send('access-changed')
-        return self.openDefaultWindow(
-            props=self.detachedWP, gsg=base.win, keepCamera=True)
+        return self.openDefaultWindow(props=self.detachedWP, gsg=base.win, keepCamera=True)
 
     def setEmbeddedFrameMode(self, access):
         if not self.hasEmbedded:
@@ -436,8 +402,7 @@ class PiratesBase(OTPBase):
         if access == OTPGlobals.AccessVelvetRope:
             if os.getenv('GAME_SHOW_ADDS') != 'NO':
                 self.inAdFrame = True
-                return embedded.isMainWindowVisible() or self.showEmbeddedFrame(
-                )
+                return embedded.isMainWindowVisible() or self.showEmbeddedFrame()
         else:
             self.inAdFrame = False
             if embedded.isMainWindowVisible():
@@ -455,7 +420,7 @@ class PiratesBase(OTPBase):
             try:
                 import webbrowser
                 webbrowser.open(url)
-            except WindowsError as e:
+            except WindowsError, e:
                 import os
                 os.system('explorer "%s"' % url)
 
@@ -476,18 +441,16 @@ class PiratesBase(OTPBase):
         elif gridDetail == 'low':
             self.farCull.setPos(0, 200, 0)
         else:
-            raise Exception('Invalid grid-detail: %s' % gridDetail)
+            raise StandardError, 'Invalid grid-detail: %s' % gridDetail
 
     def setLowMemory(self, lowMemory):
         self.lowMemory = lowMemory
         if lowMemory:
             GeomVertexArrayData.getIndependentLru().setMaxSize(5242880)
-            VertexDataPage.getGlobalLru(
-                VertexDataPage.RCResident).setMaxSize(5242880)
+            VertexDataPage.getGlobalLru(VertexDataPage.RCResident).setMaxSize(5242880)
         else:
-            GeomVertexArrayData.getIndependentLru().setMaxSize(4294967295)
-            VertexDataPage.getGlobalLru(
-                VertexDataPage.RCResident).setMaxSize(4294967295)
+            GeomVertexArrayData.getIndependentLru().setMaxSize(4294967295L)
+            VertexDataPage.getGlobalLru(VertexDataPage.RCResident).setMaxSize(4294967295L)
 
     def setupRender2d(self):
         OTPBase.setupRender2d(self)
@@ -529,23 +492,14 @@ class PiratesBase(OTPBase):
     def takeScreenShot(self):
         self.notify.info('Beginning screenshot capture')
         dt = time.localtime()
-        date_time = '%04d-%02d-%02d_%02d-%02d-%02d' % (dt[0], dt[1], dt[2],
-                                                       dt[3], dt[4], dt[5])
+        date_time = '%04d-%02d-%02d_%02d-%02d-%02d' % (dt[0], dt[1], dt[2], dt[3], dt[4], dt[5])
         uFilename = 'screenshots' + '/' + 'screenshot_' + date_time + '.' + base.screenshotExtension
-        pandafile = Filename(
-            str(ExecutionEnvironment.getCwd()) + '/' + str(uFilename))
+        pandafile = Filename(str(ExecutionEnvironment.getCwd()) + '/' + str(uFilename))
         pandafile.makeDir()
         fn = base.screenshot(namePrefix=uFilename, defaultFilename=0)
         winfile = pandafile.toOsSpecific()
         self.notify.info('Screenshot captured: ' + winfile)
-        screenShotNotice = DirectLabel(
-            text='Screenshot captured:\n' + winfile,
-            scale=0.05,
-            pos=(0.0, 0.0, 0.3),
-            text_bg=(1, 1, 1, 0),
-            text_fg=(1, 1, 1, 1),
-            frameColor=(1, 1, 1, 0),
-            text_font=PiratesGlobals.getInterfaceOutlineFont())
+        screenShotNotice = DirectLabel(text='Screenshot captured:\n' + winfile, scale=0.05, pos=(0.0, 0.0, 0.3), text_bg=(1, 1, 1, 0), text_fg=(1, 1, 1, 1), frameColor=(1, 1, 1, 0), text_font=PiratesGlobals.getInterfaceOutlineFont())
         screenShotNotice.reparentTo(base.a2dBottomCenter)
         screenShotNotice.setBin('gui-popup', 0)
 
@@ -606,24 +560,20 @@ class PiratesBase(OTPBase):
         if self.config.GetBool('want-fifothreads', False):
             __builtin__.yieldThread = self.cr.yieldThread
         else:
-
             def nullYield(comment=''):
                 pass
 
             __builtin__.yieldThread = nullYield
             del nullYield
         base.graphicsEngine.renderFrame()
-        self.downloadWatcher = PiratesDownloadWatcher.PiratesDownloadWatcher(
-            PLocalizer.LauncherPhaseNames)
+        self.downloadWatcher = PiratesDownloadWatcher.PiratesDownloadWatcher(PLocalizer.LauncherPhaseNames)
         if launcher.getPhaseComplete(5):
             self.cleanupDownloadWatcher()
         else:
-            self.acceptOnce('launcherAllPhasesComplete',
-                            self.cleanupDownloadWatcher)
+            self.acceptOnce('launcherAllPhasesComplete', self.cleanupDownloadWatcher)
         gameServer = base.config.GetString('game-server', '')
         if gameServer:
-            self.notify.info(
-                'Using game-server from Configrc: %s ' % gameServer)
+            self.notify.info('Using game-server from Configrc: %s ' % gameServer)
         elif launcher.getGameServer():
             gameServer = launcher.getGameServer()
             self.notify.info('Using gameServer from launcher: %s ' % gameServer)
@@ -691,8 +641,7 @@ class PiratesBase(OTPBase):
         if launcher:
             launcher.setPandaErrorCode(14)
         if self.cr.timeManager:
-            self.cr.timeManager.setDisconnectReason(
-                PiratesGlobals.DisconnectGraphicsError)
+            self.cr.timeManager.setDisconnectReason(PiratesGlobals.DisconnectGraphicsError)
         self.cr.sendDisconnect()
         sys.exit()
 
@@ -703,8 +652,7 @@ class PiratesBase(OTPBase):
         self.funnel.end_session()
         self.funnel.submit_events()
         if self.cr.timeManager:
-            self.cr.timeManager.setDisconnectReason(
-                PiratesGlobals.DisconnectCloseWindow)
+            self.cr.timeManager.setDisconnectReason(PiratesGlobals.DisconnectCloseWindow)
         if self.cr.loginFSM.getCurrentState().getName() == 'playingGame':
             requestResult = self.cr.gameFSM.request('closeShard', ['shutdown'])
         else:
@@ -725,8 +673,7 @@ class PiratesBase(OTPBase):
         arrow = loader.loadModel('models/gui/arrow')
         card = NodePath('card')
         speech3d = ChatBalloon(loader.loadModel('models/gui/chatbox'))
-        thought3d = ChatBalloon(
-            loader.loadModel('models/gui/chatbox_thought_cutout'))
+        thought3d = ChatBalloon(loader.loadModel('models/gui/chatbox_thought_cutout'))
         speech2d = ChatBalloon(loader.loadModel('models/gui/chatbox_noarrow'))
         chatButtonGui = loader.loadModelOnce('models/gui/triangle')
         chatButtonGui.setScale(0.1)
@@ -744,57 +691,35 @@ class PiratesBase(OTPBase):
         NametagGlobals.setThoughtBalloon3d(thought3d)
         NametagGlobals.setSpeechBalloon2d(speech2d)
         NametagGlobals.setThoughtBalloon2d(thought3d)
-        NametagGlobals.setPageButton(PGButton.SReady,
-                                     chatButtonGui.find('**/triangle'))
-        NametagGlobals.setPageButton(PGButton.SDepressed,
-                                     chatButtonGui.find('**/triangle_down'))
-        NametagGlobals.setPageButton(PGButton.SRollover,
-                                     chatButtonGui.find('**/triangle_over'))
-        NametagGlobals.setQuitButton(
-            PGButton.SReady, lookoutButtonGui.find('**/lookout_close_window'))
-        NametagGlobals.setQuitButton(
-            PGButton.SDepressed,
-            lookoutButtonGui.find('**/lookout_close_window_down'))
-        NametagGlobals.setQuitButton(
-            PGButton.SRollover,
-            lookoutButtonGui.find('**/lookout_close_window_over'))
+        NametagGlobals.setPageButton(PGButton.SReady, chatButtonGui.find('**/triangle'))
+        NametagGlobals.setPageButton(PGButton.SDepressed, chatButtonGui.find('**/triangle_down'))
+        NametagGlobals.setPageButton(PGButton.SRollover, chatButtonGui.find('**/triangle_over'))
+        NametagGlobals.setQuitButton(PGButton.SReady, lookoutButtonGui.find('**/lookout_close_window'))
+        NametagGlobals.setQuitButton(PGButton.SDepressed, lookoutButtonGui.find('**/lookout_close_window_down'))
+        NametagGlobals.setQuitButton(PGButton.SRollover, lookoutButtonGui.find('**/lookout_close_window_over'))
         rolloverSound = PiratesGuiGlobals.getDefaultRolloverSound()
         clickSound = PiratesGuiGlobals.getDefaultClickSound()
         NametagGlobals.setRolloverSound(rolloverSound)
         NametagGlobals.setClickSound(clickSound)
         NametagGlobals.setToon(self.cam)
         self.marginManager = MarginManager()
-        self.margins = self.aspect2d.attachNewNode(
-            self.marginManager, DirectGuiGlobals.MIDGROUND_SORT_INDEX + 1)
+        self.margins = self.aspect2d.attachNewNode(self.marginManager, DirectGuiGlobals.MIDGROUND_SORT_INDEX + 1)
         mm = self.marginManager
         self.leftCells = [
-            mm.addGridCell(0, 1.5, base.a2dLeft, base.a2dRight, base.a2dBottom,
-                           base.a2dTop),
-            mm.addGridCell(0, 2.5, base.a2dLeft, base.a2dRight, base.a2dBottom,
-                           base.a2dTop),
-            mm.addGridCell(0, 3.5, base.a2dLeft, base.a2dRight, base.a2dBottom,
-                           base.a2dTop)
-        ]
+            mm.addGridCell(0, 1.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 2.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(0, 3.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)]
 
         self.bottomCells = [
-            mm.addGridCell(0.5, 0.5, base.a2dLeft, base.a2dRight,
-                           base.a2dBottom, base.a2dTop),
-            mm.addGridCell(1.5, 0.5, base.a2dLeft, base.a2dRight,
-                           base.a2dBottom, base.a2dTop),
-            mm.addGridCell(2.5, 0.5, base.a2dLeft, base.a2dRight,
-                           base.a2dBottom, base.a2dTop),
-            mm.addGridCell(3.5, 0.5, base.a2dLeft, base.a2dRight,
-                           base.a2dBottom, base.a2dTop),
-            mm.addGridCell(4.5, 0.5, base.a2dLeft, base.a2dRight,
-                           base.a2dBottom, base.a2dTop)
-        ]
+            mm.addGridCell(0.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(1.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(2.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(3.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(4.5, 0.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)]
 
         self.rightCells = [
-            mm.addGridCell(5, 2.5, base.a2dLeft, base.a2dRight, base.a2dBottom,
-                           base.a2dTop),
-            mm.addGridCell(5, 1.5, base.a2dLeft, base.a2dRight, base.a2dBottom,
-                           base.a2dTop)
-        ]
+            mm.addGridCell(5, 2.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop),
+            mm.addGridCell(5, 1.5, base.a2dLeft, base.a2dRight, base.a2dBottom, base.a2dTop)]
 
     def getShardPopLimits(self):
         low = self.config.GetInt('shard-pop-limit-low', 100)
@@ -833,35 +758,22 @@ class PiratesBase(OTPBase):
         total_modes = embedded.getCountWindowModes()
         for i in range(total_modes):
             m = embedded.getAtWindowModeDef(i)
-            self.windowed_resolution_table = self.windowed_resolution_table + [
-                (m['want_size_x'], m['want_size_y'])
-            ]
+            self.windowed_resolution_table = self.windowed_resolution_table + [(m['want_size_x'], m['want_size_y'])]
 
     def getDisplayResolutions(self, bits_per_pixel, pipe):
         di = pipe.getDisplayInformation()
         total_display_modes = di.getTotalDisplayModes()
-        if di.getDisplayState(
-        ) == DisplayInformation.DSSuccess and total_display_modes > 0:
+        if di.getDisplayState() == DisplayInformation.DSSuccess and total_display_modes > 0:
             resolution_table = []
             index = 0
             while index < total_display_modes:
                 if di.getDisplayModeBitsPerPixel(index) == bits_per_pixel:
                     if di.getDisplayModeFullscreenOnly(index) == False:
-                        if di.getDisplayModeWidth(
-                                index
-                        ) >= self.MinimumHorizontalResolution and di.getDisplayModeHeight(
-                                index) >= self.MinimumVerticalResolution:
-                            resolution = (di.getDisplayModeWidth(index),
-                                          di.getDisplayModeHeight(index))
+                        if di.getDisplayModeWidth(index) >= self.MinimumHorizontalResolution and di.getDisplayModeHeight(index) >= self.MinimumVerticalResolution:
+                            resolution = (di.getDisplayModeWidth(index), di.getDisplayModeHeight(index))
                             if resolution not in resolution_table:
-                                if di.getDisplayModeWidth(
-                                        index) <= di.getMaximumWindowWidth(
-                                        ) and di.getDisplayModeHeight(
-                                            index) <= di.getMaximumWindowHeight(
-                                            ):
-                                    resolution_table = resolution_table + [
-                                        resolution
-                                    ]
+                                if di.getDisplayModeWidth(index) <= di.getMaximumWindowWidth() and di.getDisplayModeHeight(index) <= di.getMaximumWindowHeight():
+                                    resolution_table = resolution_table + [resolution]
                 index += 1
 
             widescreen_resolution_table = [(1280, 720), (1920, 1080)]
@@ -869,31 +781,26 @@ class PiratesBase(OTPBase):
             while index < len(widescreen_resolution_table):
                 resolution = widescreen_resolution_table[index]
                 if resolution not in resolution_table:
-                    if resolution[0] <= di.getMaximumWindowWidth(
-                    ) and resolution[1] <= di.getMaximumWindowHeight():
+                    if resolution[0] <= di.getMaximumWindowWidth() and resolution[1] <= di.getMaximumWindowHeight():
                         resolution_table = resolution_table + [resolution]
                 index += 1
 
             width = base.config.GetInt('custom-window-width', 0)
             height = base.config.GetInt('custom-window-height', 0)
             if width > 0 and height > 0:
-                resolution = (width, height)
+                resolution = (
+                 width, height)
                 if resolution not in resolution_table:
-                    if di.getDisplayModeWidth(index) <= di.getMaximumWindowWidth(
-                    ) and di.getDisplayModeHeight(
-                            index) <= di.getMaximumWindowHeight():
+                    if di.getDisplayModeWidth(index) <= di.getMaximumWindowWidth() and di.getDisplayModeHeight(index) <= di.getMaximumWindowHeight():
                         resolution_table = resolution_table + [resolution]
             self.windowed_resolution_table = resolution_table
             resolution_table = []
             index = 0
             while index < total_display_modes:
                 if di.getDisplayModeBitsPerPixel(index) == bits_per_pixel:
-                    if di.getDisplayModeWidth(
-                            index
-                    ) >= self.MinimumHorizontalResolution and di.getDisplayModeHeight(
-                            index) >= self.MinimumVerticalResolution:
-                        resolution = (di.getDisplayModeWidth(index),
-                                      di.getDisplayModeHeight(index))
+                    if di.getDisplayModeWidth(index) >= self.MinimumHorizontalResolution and di.getDisplayModeHeight(index) >= self.MinimumVerticalResolution:
+                        resolution = (
+                         di.getDisplayModeWidth(index), di.getDisplayModeHeight(index))
                         if resolution not in resolution_table:
                             resolution_table = resolution_table + [resolution]
                 index += 1
@@ -903,11 +810,8 @@ class PiratesBase(OTPBase):
                 resolution_table = resolution_table + [resolution]
             self.fullscreen_resolution_table = resolution_table
         else:
-            default_windowed_resolution_table = [(800, 600), (1024, 768),
-                                                 (1280, 1024), (1600, 1200),
-                                                 (1280, 720), (1920, 1080)]
-            default_fullscreen_resolution_table = [(800, 600), (1024, 768),
-                                                   (1280, 1024), (1600, 1200)]
+            default_windowed_resolution_table = [(800, 600), (1024, 768), (1280, 1024), (1600, 1200), (1280, 720), (1920, 1080)]
+            default_fullscreen_resolution_table = [(800, 600), (1024, 768), (1280, 1024), (1600, 1200)]
             self.windowed_resolution_table = default_windowed_resolution_table
             self.fullscreen_resolution_table = default_fullscreen_resolution_table
 

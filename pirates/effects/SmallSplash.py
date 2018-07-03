@@ -13,11 +13,10 @@ from pirates.effects.PooledEffect import PooledEffect
 
 
 class SmallSplash(PooledEffect, EffectController):
-
+    
     cardScale = 64.0
-    splashSfxNames = ('wtrsplash_1.mp3', 'wtrsplash_2.mp3', 'wtrsplash_3.mp3',
-                      'wtrsplash_4.mp3', 'wtrsplash_5.mp3', 'wtrsplash_6.mp3',
-                      'wtrsplash_7.mp3', 'wtrsplash_8.mp3')
+    splashSfxNames = ('wtrsplash_1.mp3', 'wtrsplash_2.mp3', 'wtrsplash_3.mp3', 'wtrsplash_4.mp3',
+                      'wtrsplash_5.mp3', 'wtrsplash_6.mp3', 'wtrsplash_7.mp3', 'wtrsplash_8.mp3')
     splashSfx = []
 
     def __init__(self):
@@ -26,8 +25,7 @@ class SmallSplash(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleSplash')
         if not SmallSplash.particleDummy:
-            SmallSplash.particleDummy = render.attachNewNode(
-                ModelNode('SmallSplashParticleDummy'))
+            SmallSplash.particleDummy = render.attachNewNode(ModelNode('SmallSplashParticleDummy'))
             SmallSplash.particleDummy.setDepthWrite(0)
         if not self.splashSfx:
             for filename in self.splashSfxNames:
@@ -87,14 +85,8 @@ class SmallSplash(PooledEffect, EffectController):
         self.p0.emitter.setInnerMagnitude(0.0)
         self.p0.emitter.setCubicLerping(0)
         sfx = random.choice(self.splashSfx)
-        particleSpray = Sequence(
-            Func(self.p0.setBirthRate, 0.15), Func(self.p0.clearToInitial),
-            Func(self.f.start, self, self.particleDummy),
-            Func(self.f.reparentTo, self), Wait(0.3),
-            Func(self.p0.setBirthRate, 100), Wait(4.0),
-            Func(self.cleanUpEffect))
-        self.track = Parallel(particleSpray,
-                              Func(base.playSfx, sfx, volume=1, node=self))
+        particleSpray = Sequence(Func(self.p0.setBirthRate, 0.15), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.3), Func(self.p0.setBirthRate, 100), Wait(4.0), Func(self.cleanUpEffect))
+        self.track = Parallel(particleSpray, Func(base.playSfx, sfx, volume=1, node=self))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -104,6 +96,4 @@ class SmallSplash(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-
 # okay decompiling .\pirates\effects\SmallSplash.pyc

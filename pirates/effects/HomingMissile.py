@@ -11,8 +11,8 @@ from pirates.effects import PolyTrail
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects.PooledEffect import PooledEffect
 
-
 class HomingMissile(PooledEffect, EffectController):
+    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -25,21 +25,13 @@ class HomingMissile(PooledEffect, EffectController):
         self.particleEffect = None
         self.motion_color = [Vec4(0.5, 0.6, 0.8, 1.0), Vec4(0.5, 0.6, 0.8, 1.0)]
         vertex_list = [Vec4(0.0, 1.0, 0.0, 1.0), Vec4(0.0, -1.0, 0.0, 1.0)]
-        self.motion_trail = PolyTrail.PolyTrail(None, vertex_list,
-                                                self.motion_color, 1.5)
+        self.motion_trail = PolyTrail.PolyTrail(None, vertex_list, self.motion_color, 1.5)
         self.motion_trail.reparentTo(self)
         vertex_list = [Vec4(1.0, 0.0, 0.0, 1.0), Vec4(-1.0, 0.0, 0.0, 1.0)]
-        self.motion_trail2 = PolyTrail.PolyTrail(None, vertex_list,
-                                                 self.motion_color, 1.5)
+        self.motion_trail2 = PolyTrail.PolyTrail(None, vertex_list, self.motion_color, 1.5)
         self.motion_trail2.reparentTo(self)
-        self.motion_trail.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingColor,
-                                  ColorBlendAttrib.OOneMinusIncomingAlpha))
-        self.motion_trail2.node().setAttrib(
-            ColorBlendAttrib.make(ColorBlendAttrib.MAdd,
-                                  ColorBlendAttrib.OIncomingColor,
-                                  ColorBlendAttrib.OOneMinusIncomingAlpha))
+        self.motion_trail.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha))
+        self.motion_trail2.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha))
 
     def createTrack(self):
         self.timeLeft = self.duration
@@ -56,12 +48,9 @@ class HomingMissile(PooledEffect, EffectController):
             self.particleEffect.reparentTo(self)
             self.startEffect.append(Func(self.particleEffect.startLoop))
             self.endEffect.append(Func(self.particleEffect.stopLoop))
-        self.startEffect.append(
-            Func(taskMgr.add, self.__moveMissile,
-                 PythonUtil.uniqueName('homingMissileTask')))
+        self.startEffect.append(Func(taskMgr.add, self.__moveMissile, PythonUtil.uniqueName('homingMissileTask')))
         self.endEffect.append(Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(self.duration * 0.99),
-                              self.endEffect)
+        self.track = Sequence(self.startEffect, Wait(self.duration * 0.99), self.endEffect)
 
     def __moveMissile(self, task):
         currDistance = self.getDistance(self.target)

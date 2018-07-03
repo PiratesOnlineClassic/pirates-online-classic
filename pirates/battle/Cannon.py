@@ -26,15 +26,9 @@ from pirates.shipparts import CannonDNA, ShipPart
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 localFireSfxNames = [
-    'cball_fire_1.mp3', 'cball_fire_2.mp3', 'cball_fire_3.mp3',
-    'cball_fire_4.mp3', 'cball_fire_5.mp3'
-]
+ 'cball_fire_1.mp3', 'cball_fire_2.mp3', 'cball_fire_3.mp3', 'cball_fire_4.mp3', 'cball_fire_5.mp3']
 distFireSfxNames = [
-    'dist_cannon_01.mp3', 'dist_cannon_02.mp3', 'dist_cannon_03.mp3',
-    'dist_cannon_04.mp3', 'dist_cannon_05.mp3', 'dist_cannon_06.mp3',
-    'dist_cannon_07.mp3', 'dist_cannon_08.mp3', 'dist_cannon_09.mp3',
-    'dist_cannon_10.mp3'
-]
+ 'dist_cannon_01.mp3', 'dist_cannon_02.mp3', 'dist_cannon_03.mp3', 'dist_cannon_04.mp3', 'dist_cannon_05.mp3', 'dist_cannon_06.mp3', 'dist_cannon_07.mp3', 'dist_cannon_08.mp3', 'dist_cannon_09.mp3', 'dist_cannon_10.mp3']
 
 
 class Cannon(ShipPart.ShipPart, NodePath):
@@ -65,13 +59,11 @@ class Cannon(ShipPart.ShipPart, NodePath):
             Cannon.localFireSfx = []
             for filename in localFireSfxNames:
                 audioPath = 'audio/'
-                Cannon.localFireSfx.append(
-                    base.loader.loadSfx('audio/' + filename))
+                Cannon.localFireSfx.append(base.loader.loadSfx('audio/' + filename))
 
             Cannon.distFireSfx = []
             for filename in distFireSfxNames:
-                Cannon.distFireSfx.append(
-                    base.loader.loadSfx('audio/' + filename))
+                Cannon.distFireSfx.append(base.loader.loadSfx('audio/' + filename))
 
         self.isShipCannon = shipCannon
         return
@@ -114,23 +106,18 @@ class Cannon(ShipPart.ShipPart, NodePath):
         cj2 = 0
         for lodName in self.prop.getLODNames():
             if lodName == 'hi':
-                cj1 = self.prop.controlJoint(None, 'modelRoot',
-                                             'def_cannon_updown', lodName)
-                cj2 = self.prop.controlJoint(None, 'modelRoot',
-                                             'def_cannon_turn', lodName)
+                cj1 = self.prop.controlJoint(None, 'modelRoot', 'def_cannon_updown', lodName)
+                cj2 = self.prop.controlJoint(None, 'modelRoot', 'def_cannon_turn', lodName)
             else:
-                self.prop.controlJoint(cj1, 'modelRoot', 'def_cannon_updown',
-                                       lodName)
-                self.prop.controlJoint(cj2, 'modelRoot', 'def_cannon_turn',
-                                       lodName)
+                self.prop.controlJoint(cj1, 'modelRoot', 'def_cannon_updown', lodName)
+                self.prop.controlJoint(cj2, 'modelRoot', 'def_cannon_turn', lodName)
 
         self.pivot = cj1
         self.hNode = cj2
         self.pivot.reparentTo(self.hNode)
         self.prop.reparentTo(self)
         self.prop.loop('zero')
-        self.recoilIval = self.pivot.scaleInterval(
-            0.4, Vec3(1, 1, 1), startScale=Vec3(1, 0.7, 1), blendType='easeOut')
+        self.recoilIval = self.pivot.scaleInterval(0.4, Vec3(1, 1, 1), startScale=Vec3(1, 0.7, 1), blendType='easeOut')
         return
 
     def unloadModel(self):
@@ -146,8 +133,7 @@ class Cannon(ShipPart.ShipPart, NodePath):
     def initializeCollisions(self):
         if config.GetBool('disable-ship-geom', 0):
             return
-        self.coll = loader.loadModelCopy(
-            'models/shipparts/cannon_zero_collisions')
+        self.coll = loader.loadModelCopy('models/shipparts/cannon_zero_collisions')
         self.coll.reparentTo(self.propCollisions)
 
     def deleteCollisions(self):
@@ -177,35 +163,30 @@ class Cannon(ShipPart.ShipPart, NodePath):
         effectH = self.hNode.getH(effectParent)
         effectP = self.pivot.getP(effectParent)
         if self.localAvatarUsingWeapon:
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsLow:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 muzzleFlameEffect = MuzzleFlame.getEffect()
                 if muzzleFlameEffect:
                     muzzleFlameEffect.reparentTo(effectParent)
                     muzzleFlameEffect.particleDummy.reparentTo(effectParent)
                     muzzleFlameEffect.flash.setScale(18)
                     muzzleFlameEffect.setHpr(effectParent, effectH, effectP, 0)
-                    muzzleFlameEffect.particleDummy.setHpr(
-                        effectParent, effectH, effectP, 0)
+                    muzzleFlameEffect.particleDummy.setHpr(effectParent, effectH, effectP, 0)
                     muzzleFlameEffect.setPos(relativeNode.getPos(effectParent))
                     muzzleFlameEffect.play()
             if self.recoilIval:
                 self.recoilIval.pause()
                 self.recoilIval.start()
         else:
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsMedium:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 cannonSmokeEffect = CannonBlastSmoke.getEffect()
                 if cannonSmokeEffect:
                     cannonSmokeEffect.reparentTo(effectParent)
                     cannonSmokeEffect.particleDummy.reparentTo(effectParent)
                     cannonSmokeEffect.setHpr(effectParent, effectH, effectP, 0)
-                    cannonSmokeEffect.particleDummy.setHpr(
-                        effectParent, effectH, effectP, 0)
+                    cannonSmokeEffect.particleDummy.setHpr(effectParent, effectH, effectP, 0)
                     cannonSmokeEffect.setPos(relativeNode.getPos(effectParent))
                     cannonSmokeEffect.play()
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsHigh:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 explosionEffect = ExplosionFlip.getEffect()
                 if explosionEffect:
                     explosionEffect.reparentTo(effectParent)
@@ -213,22 +194,18 @@ class Cannon(ShipPart.ShipPart, NodePath):
                     explosionEffect.setHpr(effectParent, effectH, effectP, 0)
                     explosionEffect.setPos(relativeNode.getPos(effectParent))
                     explosionEffect.play()
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsLow:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 muzzleFlameEffect = MuzzleFlame.getEffect()
                 if muzzleFlameEffect:
                     muzzleFlameEffect.reparentTo(effectParent)
                     muzzleFlameEffect.particleDummy.reparentTo(effectParent)
                     muzzleFlameEffect.flash.setScale(45)
                     muzzleFlameEffect.setHpr(effectParent, effectH, effectP, 0)
-                    muzzleFlameEffect.particleDummy.setHpr(
-                        effectParent, effectH, effectP, 0)
-                    muzzleFlameEffect.particleDummy.setPos(
-                        relativeNode.getPos(effectParent))
+                    muzzleFlameEffect.particleDummy.setHpr(effectParent, effectH, effectP, 0)
+                    muzzleFlameEffect.particleDummy.setPos(relativeNode.getPos(effectParent))
                     muzzleFlameEffect.setPos(relativeNode.getPos(effectParent))
                     muzzleFlameEffect.play()
-        if base.options.getSpecialEffectsSetting(
-        ) >= base.options.SpecialEffectsHigh:
+        if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
             if WeaponConstants.C_OPENFIRE in buffs:
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.reparentTo(effectParent)
@@ -237,8 +214,7 @@ class Cannon(ShipPart.ShipPart, NodePath):
                 cameraShakerEffect.numShakes = 1
                 cameraShakerEffect.play(10.0)
         if ammoSkillId == InventoryType.CannonGrapeShot:
-            if base.options.getSpecialEffectsSetting(
-            ) >= base.options.SpecialEffectsLow:
+            if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 effect = GrapeshotEffect.getEffect()
                 if effect:
                     effect.reparentTo(effectParent)
@@ -247,8 +223,7 @@ class Cannon(ShipPart.ShipPart, NodePath):
                     effect.play()
 
     def getProjectile(self, ammoSkillId, projectileHitEvent, buffs=[]):
-        cannonball = CannonballProjectile(self.cr, ammoSkillId,
-                                          projectileHitEvent, buffs)
+        cannonball = CannonballProjectile(self.cr, ammoSkillId, projectileHitEvent, buffs)
         cannonball.reparentTo(render)
         cannonball.setHpr(self.hNode.getH(render), self.hNode.getP(render), 0)
         return cannonball
@@ -267,16 +242,7 @@ class Cannon(ShipPart.ShipPart, NodePath):
         rope.setTexture(ropeTex)
         return rope
 
-    def playAttack(self,
-                   skillId,
-                   ammoSkillId,
-                   projectileHitEvent,
-                   targetPos=None,
-                   wantCollisions=0,
-                   flightTime=None,
-                   preciseHit=False,
-                   buffs=[],
-                   timestamp=None):
+    def playAttack(self, skillId, ammoSkillId, projectileHitEvent, targetPos=None, wantCollisions=0, flightTime=None, preciseHit=False, buffs=[], timestamp=None):
         if base.cr.wantSpecialEffects != 0:
             self.playFireEffect(ammoSkillId, buffs)
         if not WeaponGlobals.isProjectileSkill(skillId, ammoSkillId):
@@ -314,8 +280,7 @@ class Cannon(ShipPart.ShipPart, NodePath):
             self.notify.warning('bad startPos Z: %s' % startPos[2])
             return
         m = ammo.getMat(render)
-        curPower = WeaponGlobals.getAttackProjectilePower(skillId,
-                                                          ammoSkillId) * 0.6
+        curPower = WeaponGlobals.getAttackProjectilePower(skillId, ammoSkillId) * 0.6
         if targetPos is None:
             startVel = m.xformVec(Vec3(0, curPower, 0))
             if self.ship:
@@ -330,46 +295,22 @@ class Cannon(ShipPart.ShipPart, NodePath):
             if ammoSkillId == InventoryType.CannonGrappleHook and self.cannonPost:
                 rope = self.getRope()
                 rope.reparentTo(ammo)
-                rope.setup(3, ((None, Point3(0, 0, 0)),
-                               (self.cannonPost, Point3(2, 5, 10)),
-                               (self.cannonPost, Point3(2, 0, 0))))
+                rope.setup(3, ((None, Point3(0, 0, 0)), (self.cannonPost, Point3(2, 5, 10)), (self.cannonPost, Point3(2, 0, 0))))
             return
 
         if preciseHit:
             if flightTime is None:
                 flightTime = CannonGlobals.AI_FIRE_TIME
-            pi = ProjectileInterval(
-                ammo,
-                startPos=startPos,
-                endPos=targetPos,
-                duration=flightTime,
-                collNode=collNode)
+            pi = ProjectileInterval(ammo, startPos=startPos, endPos=targetPos, duration=flightTime, collNode=collNode)
         else:
             if targetPos:
                 if flightTime is None:
-                    flightTime = CannonGlobals.getCannonballFlightTime(
-                        startPos, targetPos, curPower)
-                pi = ProjectileInterval(
-                    ammo,
-                    endZ=endPlaneZ,
-                    startPos=startPos,
-                    wayPoint=targetPos,
-                    timeToWayPoint=flightTime,
-                    gravityMult=2.5,
-                    collNode=collNode)
+                    flightTime = CannonGlobals.getCannonballFlightTime(startPos, targetPos, curPower)
+                pi = ProjectileInterval(ammo, endZ=endPlaneZ, startPos=startPos, wayPoint=targetPos, timeToWayPoint=flightTime, gravityMult=2.5, collNode=collNode)
             else:
-                pi = ProjectileInterval(
-                    ammo,
-                    startPos=startPos,
-                    startVel=startVel,
-                    endZ=endPlaneZ,
-                    gravityMult=4.0,
-                    collNode=collNode)
+                pi = ProjectileInterval(ammo, startPos=startPos, startVel=startVel, endZ=endPlaneZ, gravityMult=4.0, collNode=collNode)
         if self.localAvatarUsingWeapon or wantCollisions:
-            s = Sequence(
-                Func(base.cTrav.addCollider, collNode, ammo.collHandler),
-                Func(attachRope), pi, Func(ammo.destroy),
-                Func(base.cTrav.removeCollider, collNode))
+            s = Sequence(Func(base.cTrav.addCollider, collNode, ammo.collHandler), Func(attachRope), pi, Func(ammo.destroy), Func(base.cTrav.removeCollider, collNode))
         else:
             s = Sequence(Func(attachRope), pi, Func(ammo.destroy))
         ts = 0
