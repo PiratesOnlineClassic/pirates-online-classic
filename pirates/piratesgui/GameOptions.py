@@ -25,7 +25,7 @@ except:
     pass
 
 class OptionSpace:
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('OptionSpace')
 
     def __init__(self):
@@ -67,7 +67,7 @@ class OptionSpace:
 
 
 class Options(OptionSpace):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('Options')
     debug = False
     options_version = 16
@@ -346,7 +346,7 @@ class Options(OptionSpace):
         self.shader = base.config.GetBool('want-shaders', 1)
         self.shadow = base.config.GetBool('want-avatar-shadows', 0)
         self.texture = base.config.GetInt('max-texture-dimension', Options.default_max_texture_dimension)
-        self.textureCompression = base.config.GetInt('compressed-textures', 0)
+        self.textureCompression = base.config.GetBool('compressed-textures', 0)
         self.texture_scale = base.config.GetFloat('texture-scale', 1.0)
         self.sound = base.config.GetBool('audio-sfx-active', 1)
         self.sound_volume = base.config.GetFloat('audio-sfx-volume', 1.0)
@@ -724,46 +724,46 @@ class Options(OptionSpace):
             self.output('device_id ', device_id)
             if vendor_id == 4098:
                 ati_device_list = [
-                 [0, 'Rage 128 Pro', 20550], 
-                 [0, 'RV100 Radeon 7000 / Radeon VE', 20825], 
-                 [0, 'Rage 128 PRO ULTRA Video Controller', 21574], 
-                 ['AMD Stream Processor', 29262], 
-                 ['AMD Stream Processor Secondary', 29294], 
-                 ['Fire PRO Professional Graphics ASIC', 38348], 
+                 [0, 'Rage 128 Pro', 20550],
+                 [0, 'RV100 Radeon 7000 / Radeon VE', 20825],
+                 [0, 'Rage 128 PRO ULTRA Video Controller', 21574],
+                 ['AMD Stream Processor', 29262],
+                 ['AMD Stream Processor Secondary', 29294],
+                 ['Fire PRO Professional Graphics ASIC', 38348],
                  ['FireStream 9170', 38169],
-                 ['ATI FireGL T2', 16724], 
-                 ['ATI FireGL T2 Secondary', 16756], 
-                 ['ATI FireGL V3100', 23396], 
-                 ['ATI FireGL V3100 Secondary', 23412], 
-                 ['ATI FireGL V3200', 15956], 
-                 ['ATI FireGL V3200 Secondary', 15988], 
-                 ['ATI FireGL V3300', 29010], 
-                 ['ATI FireGL V3300 Secondary', 29042], 
-                 ['ATI FireGL V3350', 29011], 
-                 ['ATI FireGL V3350 Secondary', 29043], 
-                 ['ATI FireGL V3400', 29138], 
-                 ['ATI FireGL V3400 Secondary', 29170], 
-                 ['ATI FireGL V5000', 24136], 
-                 ['ATI FireGL V5000 Secondary', 24168], 
-                 ['ATI FireGL V5100', 21841], 
-                 ['ATI FireGL V5100  Secondary', 21873], 
-                 ['ATI FireGL V5200', 29146], 
-                 ['ATI FireGL V5200 Secondary', 29178], 
-                 ['ATI FireGL V5300', 28933], 
-                 ['ATI FireGL V5300 Secondary', 28965], 
-                 ['ATI FireGL V7100', 21840], 
-                 ['ATI FireGL V7100 Secondary', 21872], 
-                 ['ATI FireGL V7200', 23888], 
-                 ['ATI FireGL V7200 ', 28932], 
-                 ['ATI FireGL V7200 Secondary', 23920], 
-                 ['ATI FireGL V7200 Secondary ', 28964], 
-                 ['ATI FireGL V7300', 28942], 
-                 ['ATI FireGL V7300 Secondary', 28974], 
-                 ['ATI FireGL V7350', 28943], 
-                 ['ATI FireGL V7350 Secondary', 28975], 
-                 ['ATI FireGL V7600', 37903], 
-                 ['ATI FireGL V7700', 38161], 
-                 ['ATI FireGL V8600', 37899], 
+                 ['ATI FireGL T2', 16724],
+                 ['ATI FireGL T2 Secondary', 16756],
+                 ['ATI FireGL V3100', 23396],
+                 ['ATI FireGL V3100 Secondary', 23412],
+                 ['ATI FireGL V3200', 15956],
+                 ['ATI FireGL V3200 Secondary', 15988],
+                 ['ATI FireGL V3300', 29010],
+                 ['ATI FireGL V3300 Secondary', 29042],
+                 ['ATI FireGL V3350', 29011],
+                 ['ATI FireGL V3350 Secondary', 29043],
+                 ['ATI FireGL V3400', 29138],
+                 ['ATI FireGL V3400 Secondary', 29170],
+                 ['ATI FireGL V5000', 24136],
+                 ['ATI FireGL V5000 Secondary', 24168],
+                 ['ATI FireGL V5100', 21841],
+                 ['ATI FireGL V5100  Secondary', 21873],
+                 ['ATI FireGL V5200', 29146],
+                 ['ATI FireGL V5200 Secondary', 29178],
+                 ['ATI FireGL V5300', 28933],
+                 ['ATI FireGL V5300 Secondary', 28965],
+                 ['ATI FireGL V7100', 21840],
+                 ['ATI FireGL V7100 Secondary', 21872],
+                 ['ATI FireGL V7200', 23888],
+                 ['ATI FireGL V7200 ', 28932],
+                 ['ATI FireGL V7200 Secondary', 23920],
+                 ['ATI FireGL V7200 Secondary ', 28964],
+                 ['ATI FireGL V7300', 28942],
+                 ['ATI FireGL V7300 Secondary', 28974],
+                 ['ATI FireGL V7350', 28943],
+                 ['ATI FireGL V7350 Secondary', 28975],
+                 ['ATI FireGL V7600', 37903],
+                 ['ATI FireGL V7700', 38161],
+                 ['ATI FireGL V8600', 37899],
                  ['ATI FireGL V8650', 37898], ['ATI FireGL X1', 20039], ['ATI FireGL X1 Secondary', 20071], ['ATI FireGL X2-256/X2-256t', 20043], ['ATI FireGL X2-256/X2-256t Secondary', 20075], ['ATI FireGL X3-256', 19021], ['ATI FireGL X3-256 Secondary', 19053], ['ATI FireGL Z1', 16711], ['ATI FireGL Z1 Secondary', 16743], ['ATI FireMV 2200', 23397], ['ATI FireMV 2200 Secondary', 23413], ['ATI FireMV 2250', 29083], ['ATI FireMV 2250 Secondary', 29115], ['ATI FireMV 2260', 38350], ['ATI FireMV 2260', 38351], ['ATI FireMV 2400', 12625], ['ATI FireMV 2400 Secondary', 12657], ['ATI FireMV 2450', 38349], ['ATI FireStream 2U', 29262], ['ATI FireStream 2U Secondary', 29294], ['ATI MOBILITY FIRE GL 7800', 19544], ['ATI MOBILITY FIRE GL T2/T2e', 20052], ['ATI MOBILITY FireGL V3100', 21604], ['ATI MOBILITY FireGL V3200', 12628], ['ATI MOBILITY FireGL V5000', 22090], ['ATI MOBILITY FireGL V5000 ', 22091], ['ATI MOBILITY FireGL V5100', 23881], ['ATI MOBILITY FireGL V5200', 29124], ['ATI MOBILITY FireGL V5250', 29140], ['ATI MOBILITY FireGL V7100', 28934], ['ATI MOBILITY FireGL V7200', 28931], ['ATI MOBILITY RADEON', 19545], ['ATI MOBILITY RADEON 7500', 19543], ['ATI MOBILITY RADEON 9500', 20050], ['ATI MOBILITY RADEON 9550', 20054], ['ATI MOBILITY RADEON 9600/9700 Series', 20048], ['ATI MOBILITY RADEON 9800', 19022], ['ATI Mobility Radeon HD 2300', 29200], ['ATI Mobility Radeon HD 2300 ', 29201], ['ATI Mobility Radeon HD 2400', 38089], ['ATI Mobility Radeon HD 2400 XT', 38088], [1, 'ATI Mobility Radeon HD 2600', 38273], [1, 'ATI Mobility Radeon HD 2600 XT', 38275], [1, 'ATI Mobility Radeon HD 3400 Series', 38340], [1, 'ATI Mobility Radeon HD 3430', 38338], [1, 'ATI Mobility Radeon HD 3650', 38289], [1, 'ATI Mobility Radeon HD 3670', 38291], [1, 'ATI Mobility Radeon HD 3850', 38148], [1, 'ATI Mobility Radeon HD 3850 X2', 38150], [1, 'ATI Mobility Radeon HD 3870', 38152], [1, 'ATI Mobility Radeon HD 3870 X2', 38153], ['ATI Mobility Radeon X1300', 29002], ['ATI Mobility Radeon X1300 ', 29001], ['ATI Mobility Radeon X1300  ', 29003], ['ATI Mobility Radeon X1300   ', 29004], ['ATI Mobility Radeon X1350', 29067], ['ATI Mobility Radeon X1350 ', 29068], ['ATI Mobility Radeon X1350  ', 29078], ['ATI Mobility Radeon X1400', 28997], ['ATI Mobility Radeon X1450', 29062], ['ATI Mobility Radeon X1450 ', 29069], ['ATI Mobility Radeon X1600', 29125], ['ATI Mobility Radeon X1700', 29141], ['ATI Mobility Radeon X1700 ', 29150], ['ATI Mobility Radeon X1700 XT', 29142], [1, 'ATI Mobility Radeon X1800', 28930], [1, 'ATI Mobility Radeon X1800 XT', 28929], [1, 'ATI Mobility Radeon X1900', 29316], [1, 'ATI Mobility Radeon X2300', 29066], [1, 'ATI Mobility Radeon X2300 ', 29064], ['ATI MOBILITY RADEON X300', 21601], ['ATI MOBILITY RADEON X300 ', 21600], ['ATI MOBILITY RADEON X300  ', 12626], ['ATI MOBILITY RADEON X600', 12624], ['ATI MOBILITY RADEON X600 SE', 21602], ['ATI MOBILITY RADEON X700', 22098], ['ATI MOBILITY RADEON X700 ', 22099], ['ATI MOBILITY RADEON X700 Secondary', 22131], [1, 'ATI MOBILITY RADEON X800', 23882], [1, 'ATI MOBILITY RADEON X800  XT', 23880], [1, 'ATI Mobility Radeon HD 2600 XT Gemini', 38283], [1, 'ATI Radeon 2100', 31086], [1, 'ATI Radeon 3100 Graphics', 38417], [1, 'ATI Radeon 3100 Graphics', 38419], ['ATI Radeon 9550/X1050 Series', 16723], ['ATI Radeon 9550/X1050 Series Secondary', 16755], ['ATI RADEON 9600 Series', 16720], ['ATI RADEON 9600 Series ', 20049], ['ATI RADEON 9600 Series  ', 16721], ['ATI RADEON 9600 Series   ', 16725], ['ATI RADEON 9600 Series    ', 16722], ['ATI RADEON 9600 Series Secondary', 20081], ['ATI RADEON 9600 Series Secondary ', 16753], ['ATI RADEON 9600 Series Secondary  ', 16752], ['ATI RADEON 9600 Series Secondary   ', 16757], ['ATI RADEON 9600 Series Secondary    ', 16754], ['ATI Radeon E2400', 38091], ['ATI Radeon HD 2350', 38087], ['ATI Radeon HD 2400', 38092], ['ATI Radeon HD 2400 LE', 38085], ['ATI Radeon HD 2400 PRO', 38083], ['ATI Radeon HD 2400 PRO AGP', 38084], ['ATI Radeon HD 2400 XT', 38081], [1, 'ATI Radeon HD 2600 LE', 38286], [1, 'ATI Radeon HD 2600 Pro', 38281], [1, 'ATI Radeon HD 2600 Pro AGP', 38279], [1, 'ATI Radeon HD 2600 XT', 38280], [1, 'ATI Radeon HD 2600 XT AGP', 38278], [1, 'ATI Radeon HD 2900 GT', 9405], [1, 'ATI Radeon HD 2900 PRO', 37891], [1, 'ATI Radeon HD 2900 XT', 37888], [1, 'ATI Radeon HD 2900 XT ', 37889], [1, 'ATI Radeon HD 2900 XT  ', 37890], [1, 'ATI Radeon HD 3200 Graphics', 38416], [1, 'ATI Radeon HD 3200 Graphics', 38418], [1, 'ATI Radeon HD 3300 Graphics', 38420], [1, 'ATI Radeon HD 3430', 38343], [1, 'ATI Radeon HD 3450', 38341], [1, 'ATI Radeon HD 3470', 38336], [1, 'ATI Radeon HD 3600 Series', 38288], [1, 'ATI Radeon HD 3600 Series', 38295], [1, 'ATI Radeon HD 3600 Series', 38296], [1, 'ATI Radeon HD 3600 Series', 38297], [1, 'ATI Radeon HD 3650 AGP', 38294], [1, 'ATI Radeon HD 3830', 38151], [1, 'ATI Radeon HD 3850', 38149], [1, 'ATI Radeon HD 3850 AGP', 38165], [1, 'ATI Radeon HD 3850 X2', 38163], [1, 'ATI Radeon HD 3870', 38145], [1, 'ATI Radeon HD 3870 X2', 38159], ['ATI Radeon X1200 Series', 31006], ['ATI Radeon X1200 Series ', 31007], [1, 'Radeon X1950 XTX Uber - Limited Edition', 29256], [1, 'Radeon X1950 XTX Uber - Limited Edition Secondary', 29288], [1, 'ATI Radeon X1950 GT', 29320], [1, 'ATI Radeon X1950 GT Secondary', 29352], [1, 'ATI Radeon X800 GT', 23886], [1, 'ATI RADEON X800 GT', 21838], [1, 'ATI Radeon X800 GT Secondary', 23918], [1, 'ATI RADEON X800 GT Secondary', 21870], [1, 'ATI RADEON X800 XL', 21837], [1, 'ATI RADEON X800 XL Secondary', 21869], [1, 'ATI RADEON X850 PRO', 19275], [1, 'ATI RADEON X850 PRO Secondary', 19307], [1, 'ATI RADEON X850 SE', 19274], [1, 'ATI RADEON X850 SE Secondary', 19306], [1, 'ATI RADEON X850 XT', 19273], [1, 'ATI RADEON X850 XT Platinum Edition', 19276], [1, 'ATI RADEON X850 XT Platinum Edition Secondary', 19308], [1, 'Radeon X800 CrossFire Edition', 21837], [1, 'Radeon X800 CrossFire Edition Secondary', 21869], [1, 'Radeon X850 CrossFire Edition', 23890], [1, 'Radeon X850 CrossFire Edition Secondary', 23922], ['Radeon X550/X700 Series', 22095], ['ATI Radeon X700 Series Secondary', 22127], [1, 'ATI RADEON X850 XT Secondary', 19305], ['ATI Radeon Xpress 1200 Series', 31039], ['ATI Radeon Xpress 1200 Series ', 31041], ['ATI Radeon Xpress 1200 Series  ', 31042], [0, 'ATI Radeon Xpress Series', 23137], [0, 'ATI Radeon Xpress Series ', 23139], [0, 'ATI Radeon Xpress Series  ', 23138], [0, 'ATI Radeon Xpress Series   ', 23105], [0, 'ATI Radeon Xpress Series    ', 23107], [0, 'ATI Radeon Xpress Series     ', 23106], [0, 'ATI Radeon Xpress Series      ', 22868], [0, 'ATI Radeon Xpress Series       ', 22612], [0, 'ATI Radeon Xpress Series        ', 22869], [0, 'ATI Radeon Xpress Series         ', 22900], [0, 'ATI Radeon Xpress Series          ', 22644], [0, 'ATI Radeon Xpress Series           ', 22901], ['Radeon 9500', 16708], ['Radeon 9500 ', 16713], ['Radeon 9500 PRO / 9700', 20037], ['Radeon 9500 PRO / 9700 Secondary', 20069], ['Radeon 9500 Secondary', 16740], ['Radeon 9500 Secondary ', 16745], ['Radeon 9600 TX', 20038], ['Radeon 9600 TX Secondary', 20070], ['Radeon 9600TX', 16710], ['Radeon 9600TX Secondary', 16742], ['Radeon 9700 PRO', 20036], ['Radeon 9700 PRO Secondary', 20068], ['Radeon 9800', 20041], ['Radeon 9800 PRO', 20040], ['Radeon 9800 PRO Secondary', 20072], ['Radeon 9800 SE', 16712], ['Radeon 9800 SE Secondary', 16744], ['Radeon 9800 Secondary', 20073], ['Radeon 9800 XT', 20042], ['Radeon 9800 XT Secondary', 20074], ['Radeon X1300 / X1550 Series', 28998], ['Radeon X1300 / X1550 Series Secondary', 29030], ['Radeon X1300 Series', 29006], ['Radeon X1300 Series ', 29022], ['Radeon X1300 Series  ', 29005], ['Radeon X1300 Series   ', 29123], ['Radeon X1300 Series    ', 29071], ['Radeon X1300 Series Secondary', 29038], ['Radeon X1300 Series Secondary ', 29054], ['Radeon X1300 Series Secondary  ', 29037], ['Radeon X1300 Series Secondary   ', 29155], ['Radeon X1300 Series Secondary    ', 29103], ['Radeon X1300/X1550 Series', 28994], ['Radeon X1300/X1550 Series ', 29056], ['Radeon X1300/X1550 Series  ', 29059], ['Radeon X1300/X1550 Series   ', 29063], ['Radeon X1300/X1550 Series Secondary', 29026], ['Radeon X1300/X1550 Series Secondary ', 29088], ['Radeon X1300/X1550 Series Secondary  ', 29091], ['Radeon X1300/X1550 Series Secondary   ', 29095], ['Radeon X1550 64-bit', 28999], ['Radeon X1550 64-bit ', 29023], ['Radeon X1550 64-bit  ', 29087], ['Radeon X1550 64-bit Secondary', 29031], ['Radeon X1550 64-bit Secondary ', 29055], ['Radeon X1550 Series', 28995], ['Radeon X1550 Series ', 29075], ['Radeon X1550 Series Secondary', 29027], ['Radeon X1550 Series Secondary ', 29107], ['Radeon X1600 Pro / Radeon X1300 XT', 29134], ['Radeon X1600 Pro / Radeon X1300 XT Secondary', 29166], ['Radeon X1600 Series', 28992], ['Radeon X1600 Series ', 29120], ['Radeon X1600 Series  ', 29122], ['Radeon X1600 Series   ', 29126], ['Radeon X1600 Series    ', 29057], ['Radeon X1600 Series     ', 29133], ['Radeon X1600 Series Secondary', 29024], ['Radeon X1600 Series Secondary ', 29154], ['Radeon X1600 Series Secondary  ', 29158], ['Radeon X1600 Series Secondary   ', 29089], ['Radeon X1600 Series Secondary    ', 29165], ['Radeon X1600 Series Secondary     ', 29152], ['Radeon X1650 Series', 29121], ['Radeon X1650 Series ', 29331], ['Radeon X1650 Series  ', 29329], ['Radeon X1650 Series   ', 29127], ['Radeon X1650 Series Secondary', 29153], ['Radeon X1650 Series Secondary ', 29363], ['Radeon X1650 Series Secondary  ', 29361], ['Radeon X1650 Series Secondary   ', 29159], [1, 'Radeon X1800 Series', 28928], [1, 'Radeon X1800 Series ', 28936], [1, 'Radeon X1800 CrossFire Edition', 28937], [1, 'Radeon X1800 Series   ', 28938], [1, 'Radeon X1800 Series    ', 28939], [1, 'Radeon X1800 Series     ', 28940], [1, 'Radeon X1800 Series Secondary', 28960], [1, 'Radeon X1800 Series Secondary ', 28968], [1, 'Radeon X1800 CrossFire Edition Secondary', 28969], [1, 'Radeon X1800 Series Secondary   ', 28970], [1, 'Radeon X1800 Series Secondary    ', 28971], [1, 'Radeon X1800 Series Secondary     ', 28972], [1, 'Radeon X1900 Series', 29251], [1, 'Radeon X1900 Series ', 29253], [1, 'Radeon X1900 Series  ', 29254], [1, 'Radeon X1900 Series   ', 29255], [1, 'Radeon X1900 CrossFire Edition', 29257], [1, 'Radeon X1900 Series      ', 29258], [1, 'Radeon X1900 Series       ', 29259], [1, 'Radeon X1900 Series        ', 29260], [1, 'Radeon X1900 Series         ', 29261], [1, 'Radeon X1900 Series          ', 29263], [1, 'Radeon X1900 Series Secondary', 29283], [1, 'Radeon X1900 Series Secondary ', 29285], [1, 'Radeon X1900 Series Secondary  ', 29286], [1, 'Radeon X1900 Series Secondary   ', 29287], [1, 'Radeon X1900 CrossFire Edition Secondary', 29289], [1, 'Radeon X1900 Series Secondary      ', 29290], [1, 'Radeon X1900 Series Secondary       ', 29291], [1, 'Radeon X1900 Series Secondary        ', 29292], [1, 'Radeon X1900 Series Secondary         ', 29293], [1, 'Radeon X1900 Series Secondary          ', 29295], [1, 'Radeon X1950 Series', 29312], [1, 'Radeon X1950 CrossFire Edition', 29248], [1, 'Radeon X1950 Series  ', 29252], [1, 'Radeon X1950 Series Secondary', 29344], [1, 'Radeon X1950 CrossFire Edition Secondary', 29280], [1, 'Radeon X1950 Series Secondary  ', 29284], ['Radeon X300/X550/X1050 Series', 23392], ['Radeon X300/X550/X1050 Series ', 23395], ['Radeon X300/X550/X1050 Series Secondary', 23411], ['Radeon X300/X550/X1050 Series Secondary ', 23408], ['Radeon X550/X700 Series ', 22103], ['Radeon X550/X700 Series Secondary', 22135], ['Radeon X600 Series', 23394], ['Radeon X600 Series Secondary', 23410], ['Radeon X600/X550 Series', 15952], ['Radeon X600/X550 Series Secondary', 15984], ['Radeon X700', 24141], ['Radeon X700 PRO', 24139], ['Radeon X700 PRO Secondary', 24171], ['Radeon X700 SE', 24140], ['Radeon X700 SE Secondary', 24172], ['Radeon X700 Secondary', 24173], ['Radeon X700 XT', 24138], ['Radeon X700 XT Secondary', 24170], ['Radeon X700/X550 Series', 24143], ['Radeon X700/X550 Series Secondary', 24175], [1, 'Radeon X800 GT', 21835], [1, 'Radeon X800 GT Secondary', 21867], [1, 'Radeon X800 GTO', 21833], [1, 'Radeon X800 GTO ', 21839], [1, 'Radeon X800 GTO  ', 23887], [1, 'Radeon X800 GTO Secondary', 21865], [1, 'Radeon X800 GTO Secondary ', 21871], [1, 'Radeon X800 GTO Secondary  ', 23919], [1, 'Radeon X800 PRO', 19017], [1, 'Radeon X800 PRO Secondary', 19049], [1, 'Radeon X800 SE', 19023], [1, 'Radeon X800 SE Secondary', 19055], [1, 'Radeon X800 Series', 19016], [1, 'Radeon X800 Series ', 19018], [1, 'Radeon X800 Series  ', 19020], [1, 'Radeon X800 Series   ', 21832], [1, 'Radeon X800 Series Secondary', 19048], [1, 'Radeon X800 Series Secondary ', 19050], [1, 'Radeon X800 Series Secondary  ', 19052], [1, 'Radeon X800 Series Secondary   ', 21864], [1, 'Radeon X800 VE', 19028], [1, 'Radeon X800 VE Secondary', 19060], [1, 'Radeon X800 XT', 19019], [1, 'Radeon X800 XT ', 23895], [1, 'Radeon X800 XT Platinum Edition', 19024], [1, 'Radeon X800 XT Platinum Edition ', 21834], [1, 'Radeon X800 XT Platinum Edition Secondary', 19056], [1, 'Radeon X800 XT Platinum Edition Secondary ', 21866], [1, 'Radeon X800 XT Secondary', 19051], [1, 'Radeon X800 XT Secondary ', 23927], [1, 'Radeon X850 XT', 23890], [1, 'Radeon X850 XT Platinum Edition', 23885], [1, 'Radeon X850 XT Platinum Edition Secondary', 23917], [1, 'Radeon X850 XT Secondary', 23922]]
                 length = len(ati_device_list)
                 for i in range(length):
@@ -1085,7 +1085,7 @@ class Options(OptionSpace):
 
 
 class KeyMappings(OptionSpace):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('KeyMappings')
 
     def __init__(self):
@@ -1101,7 +1101,7 @@ class KeyMappings(OptionSpace):
 
 
 class GameOptions(BorderFrame):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('GameOptions')
     debug = False
     resolution_table = [(800, 600), (1024, 768), (1280, 1024), (1600, 1200)]
