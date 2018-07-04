@@ -216,7 +216,6 @@ class PiratesBase(OTPBase):
         from pirates.creature import Dog
         from pirates.ship import ShipGlobals
         Dog.Dog.setupAssets()
-        CullBinManager.getGlobalPtr().addBin('ShipRigging', CullBinEnums.BTBackToFront, 100)
         self.bamCache = None
         if base.config.GetBool('want-disk-cache', False):
             self.bamCache = BamCache()
@@ -512,11 +511,12 @@ class PiratesBase(OTPBase):
     def addCullBins(self):
         cbm = CullBinManager.getGlobalPtr()
         cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
-        cbm.addBin('shadow', CullBinManager.BTFixed, 15)
-        cbm.addBin('ground', CullBinManager.BTFixed, 14)
+        cbm.addBin('shadow', CullBinManager.BTFixed, 19)
+        cbm.addBin('ground', CullBinManager.BTFixed, 18)
         cbm.addBin('sky', CullBinManager.BTFixed, 28)
         cbm.addBin('water', CullBinManager.BTFixed, 28)
         cbm.addBin('gui-fixed', CullBinManager.BTFixed, 55)
+        cbm.addBin('ShipRigging', CullBinEnums.BTBackToFront, 100)
 
     def showScreenshots(self):
         if not self.screenshotViewer:
@@ -532,6 +532,7 @@ class PiratesBase(OTPBase):
         """
         Custom run implementation for exception logging
         """
+
         try:
             OTPBase.run(self)
         except SystemExit:
