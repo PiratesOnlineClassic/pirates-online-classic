@@ -173,20 +173,10 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.sendUpdateToAvatarId(self.ownerId, 'setTemporaryStack', [stackType, amount])
 
     def sendMaxHp(self, limit, avId):
-        avatar = self.air.doId2do.get(self.ownerId)
-
-        if not avatar:
-            return
-
-        avatar.b_setHp(avatar.getMaxHp(), 0)
+        pass
 
     def sendMaxMojo(self, limit, avId):
-        avatar = self.air.doId2do.get(self.ownerId)
-
-        if not avatar:
-            return
-
-        avatar.b_setMojo(avatar.getMaxMojo())
+        pass
 
     def d_requestInventoryComplete(self):
         self.sendUpdateToAvatarId(self.ownerId, 'requestInventoryComplete', [])
