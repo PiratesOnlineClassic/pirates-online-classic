@@ -17,7 +17,7 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
         self.helpId = 0
 
     def handleRequestInteraction(self, avatar, interactType, instant):
-        if interactType == PiratesGlobals.INTERACT_TYPE_FRIENDLY:
+        if interactType == PiratesGlobals.INTERACT_TYPE_FRIENDLY and not config.GetBool('want-alpha-blockers', False):
             
             self.sendUpdateToAvatarId(avatar.doId, 'triggerInteractShow', [0])
             self.sendUpdateToAvatarId(avatar.doId, 'offerOptions', [2])
