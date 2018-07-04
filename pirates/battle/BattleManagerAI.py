@@ -428,6 +428,9 @@ class BattleManagerAI(BattleManagerBase):
 
             return
 
+        if config.GetBool('want-membership', False) and avatar.getLevel() == Freebooter.FreeOverallLevelCap:
+            return
+
         overallReputation = 0
         goldReward = EnemyGlobals.getGoldDrop(target.getAvatarType(), target.getLevel())
         if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEGOLDHOLIDAY):
@@ -437,9 +440,6 @@ class BattleManagerAI(BattleManagerBase):
             ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)
             reputationCategoryId = WeaponGlobals.getSkillReputationCategoryId(skillId)
             avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
-            if config.GetBool('want-membership', False) and avatar.getLevel() == Freebooter.FreeOverallLevelCap:
-                return
 
             # update the avatar's skill reputation for each skill it used to kill the target,
             # adding onto the overall reputation rewarded
