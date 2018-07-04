@@ -6,7 +6,7 @@
 #include <datagramIterator.h>
 
 const char* header = "POC";
-const int header_size = 6;
+const int header_size = 3;
 
 unsigned char iv[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 unsigned char key[] = "ExampleKey123456";
