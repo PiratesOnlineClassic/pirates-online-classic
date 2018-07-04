@@ -120,4 +120,4 @@ class Nametag(ClickablePopup):
             # If no font is set, we can't display anything yet...
             return
 
-        self.innerNP.attachNewNode(self.icon.node())
+        self.icon.reparentTo(self.innerNP)
