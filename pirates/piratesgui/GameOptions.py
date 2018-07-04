@@ -987,7 +987,7 @@ class Options(OptionSpace):
     def setRuntimeSpecialEffects(self):
         if hasattr(base, 'localAvatar') and localAvatar and not localAvatar.ship:
             gamearea = localAvatar.getParentObj()
-            if gamearea.envEffects:
+            if hasattr(gamearea, 'envEffects') and gamearea.envEffects:
                 gamearea.envEffects.unloadEffects()
                 gamearea.envEffects.loadEffects()
         if self.special_effects == Options.SpecialEffectsLow:
