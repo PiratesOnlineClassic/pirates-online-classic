@@ -59,16 +59,8 @@ class ClientAreaBuilderAI(DirectObject):
         if not object:
             return
 
-        object.d_setX(object.getX())
-        object.d_setY(object.getY())
-        object.d_setZ(object.getZ())
-
-        object.d_setH(object.getH())
-        object.d_setP(object.getP())
-        object.d_setR(object.getR())
-
-        #object.d_setPos(*object.getPos())
-        #object.d_setHpr(*object.getHpr())
+        object.d_setPos(*object.getPos())
+        object.d_setHpr(*object.getHpr())
 
     def parentObjectToCell(self, object, zoneId=None, parent=None):
         if not object:
