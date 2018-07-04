@@ -13,14 +13,11 @@ from panda3d.core import *
 
 accountServer = ''
 accountServer = launcher.getAccountServer()
-print 'TTAccount: accountServer from launcher: ', accountServer
 configAccountServer = base.config.GetString('account-server', '')
 if configAccountServer:
     accountServer = configAccountServer
-    print 'TTAccount: overriding accountServer from config: ', accountServer
 if not accountServer:
     accountServer = 'https://account.toontown.com'
-    print 'TTAccount: default accountServer: ', accountServer
 accountServer = URLSpec(accountServer, 1)
 
 
