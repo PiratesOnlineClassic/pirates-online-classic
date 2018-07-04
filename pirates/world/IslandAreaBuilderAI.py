@@ -1,10 +1,13 @@
-from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
+from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
+from pirates.leveleditor import ObjectList
 from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 from pirates.interact.DistributedSearchableContainerAI import DistributedSearchableContainerAI
 from pirates.world.DistributedDinghyAI import DistributedDinghyAI
 from pirates.treasuremap.DistributedBuriedTreasureAI import DistributedBuriedTreasureAI
 from pirates.treasuremap.DistributedSurfaceTreasureAI import DistributedSurfaceTreasureAI
+
 
 class IslandAreaBuilderAI(GameAreaBuilderAI):
     notify = directNotify.newCategory('IslandAreaBuilderAI')
@@ -15,13 +18,29 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         self.wantDinghys = config.GetBool('want-dinghys', True)
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
-        if objType == 'Dinghy' and self.wantDinghys:
+        if objType == ObjectList.AREA_TYPE_ISLAND_REGION:
+            newObj = self.__createGameArea(objectData, parent, parentUid, objKey, dynamic)
+        elif objType == 'Dinghy' and self.wantDinghys:
             newObj = self.__createDinghy(parent, parentUid, objKey, objectData)
         else:
             newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey,
                 dynamic, parentIsObj, fileName, actualParentObj)
 
         return newObj
+
+    def __createGameArea(self, objectData, parent, parentUid, objKey, dynamic):
+        from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
+
+        gameArea = DistributedGAInteriorAI(self.air)
+        gameArea.setUniqueId(objKey)
+        gameArea.setName(PLocalizer.LocationNames.get(objKey, ''))
+        gameArea.setModelPath(objectData['Visual']['Model'])
+        gameArea.setScale(objectData.get('Scale', (1, 1, 1)))
+
+        self.parent.generateChildWithRequired(gameArea, self.air.allocateZone())
+        self.addObject(gameArea)
+
+        return gameArea
 
     def __createDinghy(self, parent, parentUid, objKey, objectData):
         dinghy = DistributedDinghyAI(self.air)
@@ -32,7 +51,6 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         zoneId = self.parent.getZoneFromXYZ(dinghy.getPos())
         parent.generateChildWithRequired(dinghy, zoneId)
         self.parentObjectToCell(dinghy, zoneId)
-
         self.addObject(dinghy)
 
         return dinghy

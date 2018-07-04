@@ -1,9 +1,10 @@
-from pirates.world.WorldCreatorBase import WorldCreatorBase
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
+from pirates.world.WorldCreatorBase import WorldCreatorBase
 from pirates.piratesbase import PiratesGlobals
 from pirates.leveleditor import ObjectList
 from pirates.instance.DistributedMainWorldAI import DistributedMainWorldAI
+
 
 class WorldCreatorAI(WorldCreatorBase, DirectObject):
     notify = directNotify.newCategory('WorldCreatorAI')

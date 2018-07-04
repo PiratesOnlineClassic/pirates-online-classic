@@ -5,6 +5,7 @@ from direct.distributed.GridParent import GridParent
 from pirates.leveleditor import ObjectList
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
+
 class ClientAreaBuilderAI(DirectObject):
     notify = directNotify.newCategory('ClientAreaBuilderAI')
 
@@ -130,11 +131,7 @@ class ClientAreaBuilderAI(DirectObject):
         newObj = None
 
         if objType == ObjectList.AREA_TYPE_ISLAND:
-            newObj = self.__createIsland(objectData, parent, parentUid,
-                objKey, dynamic)
-        elif objType == ObjectList.AREA_TYPE_ISLAND_REGION:
-            newObj = self.__createGameArea(objectData, parent, parentUid,
-                objKey, dynamic)
+            newObj = self.__createIsland(objectData, parent, parentUid, objKey, dynamic)
         else:
             if not parent or not hasattr(parent, 'builder'):
                 parent = self.air.worldCreator.world.uidMgr.justGetMeMeObject(
@@ -175,17 +172,3 @@ class ClientAreaBuilderAI(DirectObject):
         self.addObject(island)
 
         return island
-
-    def __createGameArea(self, objectData, parent, parentUid, objKey, dynamic):
-        from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
-
-        gameArea = DistributedGAInteriorAI(self.air)
-        gameArea.setUniqueId(objKey)
-        gameArea.setName(PLocalizer.LocationNames.get(objKey, ''))
-        gameArea.setModelPath(objectData['Visual']['Model'])
-        gameArea.setScale(objectData.get('Scale', (1, 1, 1)))
-
-        self.parent.generateChildWithRequired(gameArea, self.air.allocateZone())
-        self.addObject(gameArea)
-
-        return gameArea
