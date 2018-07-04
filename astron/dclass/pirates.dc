@@ -1090,7 +1090,7 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   setHp(int16=250, uint8=0) required broadcast db ownrecv;
   setStickyTargets(DoIdList) required broadcast ram;
   requestRemoveStickyTargets(DoIdList) ownsend airecv;
-  flagFirstDeath() clsend airecv;
+  flagFirstDeath() ownsend airecv;
   setDefaultShard(uint32=0) ownsend ownrecv required db;
   setDefaultZone(uint32=0) ownrecv required db;
   setLastLogout(uint32=0) required db;
@@ -1130,8 +1130,8 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   setMaxPower(int16=1) required broadcast db;
   setQuestRewardFlags(uint32=0) required ownrecv db;
   setTeleportFlags(uint32) airecv ownsend ram;
-  teleportQuery(uint32, uint32, uint32, uint32, uint32) clsend ownrecv;
-  teleportResponse(uint32, int8, uint32, uint32, uint32) ownrecv clsend;
+  teleportQuery(uint32, uint32, uint32, uint32, uint32) ownsend ownrecv;
+  teleportResponse(uint32, int8, uint32, uint32, uint32) ownsend ownrecv;
   forceTeleportStart(string, uint32, uint32, uint32, uint32, uint32) broadcast ram;
   relayTeleportLoc(uint32, uint32, uint32);
   requestActivityAccepted();
@@ -1140,10 +1140,10 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   lookoutFeedback(uint8);
   beginningTeleport(uint8, uint8, string, int32);
   setTutorialHandlerZone(uint32);
-  requestInvites(uint8 [], uint32, uint32, resultPair [], uint32 []) airecv clsend;
+  requestInvites(uint8 [], uint32, uint32, resultPair [], uint32 []) airecv ownsend;
   requestInvitesResp(uint32 [], uint8);
   setLootCarried(uint16, uint16) broadcast ram;
-  giveDefaultQuest() airecv clsend;
+  giveDefaultQuest() airecv ownsend;
   requestReturnLocation(uint32) airecv ownsend;
   setReturnLocation(string="1150922126.8dzlu") required db airecv ownrecv;
   requestCurrentIsland(uint32) airecv ownsend;
@@ -1153,12 +1153,12 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   setPvp(uint8) required broadcast ram ownrecv;
   setZombie(uint8) required broadcast ram ownrecv;
   setCurseStatus(uint8) ownrecv;
-  spendSkillPoint(SkillId) airecv clsend;
-  resetSkillPoints(SkillId) airecv clsend;
+  spendSkillPoint(SkillId) airecv ownsend;
+  resetSkillPoints(SkillId) airecv ownsend;
   useTonic(uint16) airecv ownsend;
   useBestTonic() airecv ownsend;
   spentSkillPoint(SkillId) ownrecv;
-  requestActivity(uint32, int32, resultPair [], uint32 []) airecv clsend;
+  requestActivity(uint32, int32, resultPair [], uint32 []) airecv ownsend;
   setEmote(int32) required broadcast ram airecv ownsend;
   playEmote(int32) broadcast ownrecv ownsend;
   setTempDoubleXPReward(uint32=0) required db ram broadcast;

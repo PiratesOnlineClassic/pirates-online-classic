@@ -64,6 +64,16 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         if not avatarId:
             return
 
+        # check to see if the avatar already has an generated inventory
+        # object; if so we don't want to generate another...
+        inventory = self.getInventory(avatarId)
+
+        if inventory:
+            self.notify.warning('Cannot regenerate an already existant inventory %d for avatar %d!' % (
+                inventory.doId, avatarId))
+
+            return
+
         self.initiateInventory(avatarId)
 
     def initiateInventory(self, avatarId):
