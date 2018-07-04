@@ -4,6 +4,8 @@ from otp.avatar import PlayerBase
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPLocalizer
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.PyDatagram import PyDatagram
+from direct.distributed.MsgTypes import CLIENTAGENT_EJECT
 from otp.distributed import OtpDoGlobals
 from otp.ai.MagicWordGlobal import *
 
@@ -130,6 +132,53 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.Pl
 
         self.friendsList.append((friendId, friendCode))
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def system(message):
+    """Send a system message to the whole district"""
     simbase.air.systemMessage(message)
+
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
+def sysadmin(message):
+    """Send a system message to the whole district, prefixed with 'ADMIN:'."""
+    text = 'ADMIN: ' + message
+    simbase.air.systemMessage(text)
+    return "Sent system message '%s' to all players in the district." % text
+
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def update(minutes):
+    """
+    Initiate the maintenance message sequence. It will last for the specified
+    amount of <minutes>.
+    """
+
+    def disconnect(task):
+        dg = PyDatagram()
+        dg.addServerHeader(10, simbase.air.ourChannel, CLIENTAGENT_EJECT)
+        dg.addUint16(154)
+        dg.addString('Pirates Online Classic is now closed for maintenance.')
+        simbase.air.send(dg)
+        return Task.done
+
+    def countdown(minutes):
+        if minutes > 0:
+            system(OTPLocalizer.CRMaintenanceCountdownMessage % minutes)
+        else:
+            system(OTPLocalizer.CRMaintenanceMessage)
+            taskMgr.doMethodLater(10, disconnect, 'maintenance-disconnection')
+        if minutes <= 5:
+            next = 60
+            minutes -= 1
+        elif minutes % 5:
+            next = 60 * (minutes % 5)
+            minutes -= minutes % 5
+        else:
+            next = 300
+            minutes -= 5
+        if minutes >= 0:
+            taskMgr.doMethodLater(next, countdown, 'maintenance-task',
+                                  extraArgs=[minutes])
+
+    countdown(minutes)
