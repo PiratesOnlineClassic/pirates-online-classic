@@ -9,7 +9,6 @@ PVP_ISLAND_TWO = '1196970035.53sdnaik'
 PVP_ISLAND_LIST = [PVP_ISLAND_ONE, PVP_ISLAND_TWO]
 
 class DistributedCrewMatch(DistributedObject):
-    
     notify = directNotify.newCategory('DistributedCrewMatch')
 
     def __init__(self, cr):
@@ -31,6 +30,7 @@ class DistributedCrewMatch(DistributedObject):
         if localAvatar.getCurrentIsland() in PVP_ISLAND_LIST:
             self.stackMessage(PLocalizer.CrewMatchEnabledForCrewPVP)
             return
+
         self.stackMessage(PLocalizer.CrewMatchEnabledForCrew)
 
     def deleteCrewFromLookoutList(self):
@@ -47,16 +47,20 @@ class DistributedCrewMatch(DistributedObject):
         self.sendUpdate('requestInitialAvatarAdd', [crewType])
 
     def responseInitialAvatarAdd(self, response, submitterName, location, crewType):
-        self.notify.debug('responseInitialAvatarAdd(%s, %s, %s)' % (response, submitterName, location))
+        self.notify.debug('responseInitialAvatarAdd(%s, %s, %s)' % (
+            response, submitterName, location))
+
         self.availableCrewSubmitterName = submitterName
         if response:
-            confirmBox = CrewMatchInvitee.CrewMatchInvitee(localAvatar.getDoId(), submitterName, location, True, crewType)
+            confirmBox = CrewMatchInvitee.CrewMatchInvitee(localAvatar.getDoId(),
+                submitterName, location, True, crewType)
         else:
             if crewType == 1:
                 self.stackMessage(PLocalizer.CrewMatchNoCrewFound)
             else:
                 if crewType == 2:
                     self.stackMessage(PLocalizer.CrewMatchNoCrewFoundPVP)
+
             self.putAvatarOnLookoutList(crewType)
 
     def acceptInitialInviteGUI(self):
@@ -70,15 +74,21 @@ class DistributedCrewMatch(DistributedObject):
             self.stackMessage(PLocalizer.CrewMatchRemoveAvatarFromLookout)
         elif self.crewType == 2:
             self.stackMessage(PLocalizer.CrewMatchRemoveAvatarFromLookoutPVP)
+
         self.sendUpdate('requestdeleteAvatarFromLookoutList', [])
 
     def responseCrewFound(self, sponsorName, crewOwnAvId, location):
         if not self.offerCurrentlyOnScreen:
             self.offerCurrentlyOnScreen = True
             self.availableCrew = crewOwnAvId
-            self.notify.debug('responseCrewFound(%s, %s, %s)' % (sponsorName, crewOwnAvId, location))
-            confirmBox = CrewMatchInvitee.CrewMatchInvitee(localAvatar.getDoId(), sponsorName, location, False)
+            self.notify.debug('responseCrewFound(%s, %s, %s)' % (
+                sponsorName, crewOwnAvId, location))
+
+            confirmBox = CrewMatchInvitee.CrewMatchInvitee(localAvatar.getDoId(),
+                sponsorName, location, False)
+
             return
+
         self.offerRequestCache.append([sponsorName, crewOwnAvId, location])
 
     def acceptInvite(self):
@@ -100,8 +110,8 @@ class DistributedCrewMatch(DistributedObject):
             self.responseCrewFound(sponsorName, crewOwnAvId, location)
 
     def stackMessage(self, msg):
-        base.localAvatar.guiMgr.messageStack.addTextMessage(msg, seconds=15, priority=0, 
-                                                            color=PiratesGuiGlobals.TextFG14, suffix='_f', icon=('friends',''))
+        base.localAvatar.guiMgr.messageStack.addTextMessage(msg, seconds=15, priority=0,
+            color=PiratesGuiGlobals.TextFG14, suffix='_f', icon=('friends',''))
 
     def requestCrewOfOne(self):
         self.sendUpdate('requestCrewOfOneCreation', [])

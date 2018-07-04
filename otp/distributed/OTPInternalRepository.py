@@ -2,15 +2,22 @@ import traceback
 import sys
 
 from panda3d.core import *
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.AstronInternalRepository import AstronInternalRepository
 from otp.distributed.OtpDoGlobals import *
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.MsgTypes import *
 
 class OTPInternalRepository(AstronInternalRepository):
+    notify = directNotify.newCategory('OTPInternalRepository')
 
-    def __init__(self, baseChannel, serverId=None, dcFileNames = None, dcSuffix='AI', connectMethod=None, threadedNet=None):
-        AstronInternalRepository.__init__(self, baseChannel, serverId, dcFileNames, dcSuffix, connectMethod, threadedNet)
+    def __init__(self, baseChannel, serverId=None, dcFileNames = None, dcSuffix='AI',
+        connectMethod=None, threadedNet=None):
+
+        self.notify.setInfo(True)
+        AstronInternalRepository.__init__(self, baseChannel, serverId, dcFileNames,
+            dcSuffix, connectMethod, threadedNet)
+
         self._netMessageCounter = 0
 
     def _registerInternalNetMessage(self, message):

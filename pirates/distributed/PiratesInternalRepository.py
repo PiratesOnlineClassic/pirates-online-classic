@@ -3,6 +3,7 @@ import traceback
 import sys
 
 from panda3d.core import *
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from otp.distributed.OtpDoGlobals import *
 from otp.distributed.OTPInternalRepository import OTPInternalRepository
 from pirates.uberdog.WebhooksUD import PiratesWebhookManager
@@ -11,8 +12,12 @@ class PiratesInternalRepository(OTPInternalRepository):
     GameGlobalsId = OTP_DO_ID_PIRATES
     dbId = 4003
 
-    def __init__(self, baseChannel, serverId=None, dcFileNames = None, dcSuffix='AI', connectMethod=None, threadedNet=None):
-        OTPInternalRepository.__init__(self, baseChannel, serverId, dcFileNames, dcSuffix, connectMethod, threadedNet)
+    def __init__(self, baseChannel, serverId=None, dcFileNames = None, dcSuffix='AI',
+        connectMethod=None, threadedNet=None):
+
+        OTPInternalRepository.__init__(self, baseChannel, serverId, dcFileNames,
+            dcSuffix, connectMethod, threadedNet)
+
         self.webhookManager = PiratesWebhookManager(self)
         self._registerNetMessages()
 

@@ -9,7 +9,6 @@ from pirates.ai.NewsManagerUD import NewsManagerUD
 
 class PiratesUberRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesUberRepository')
-    notify.setInfo(True)
 
     def __init__(self, baseChannel, serverId):
         PiratesInternalRepository.__init__(self, baseChannel, serverId, dcSuffix='UD')

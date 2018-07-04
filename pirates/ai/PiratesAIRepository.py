@@ -1,5 +1,6 @@
 import time
 import random
+
 from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from pirates.distributed.PiratesInternalRepository import PiratesInternalRepository
@@ -21,21 +22,39 @@ from pirates.battle.DistributedEnemySpawnerAI import DistributedEnemySpawnerAI
 from pirates.trades.TradeManagerAI import TradeManagerAI
 from pirates.world.WorldCreatorAI import WorldCreatorAI
 from pirates.battle.BattleManagerAI import BattleManagerAI
+from pirates.band.DistributedCrewMatchAI import DistributedCrewMatchAI
+
 
 class PiratesAIRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesAIRepository')
-    notify.setInfo(True)
 
     def __init__(self, baseChannel, serverId, districtName):
         PiratesInternalRepository.__init__(self, baseChannel, serverId, dcSuffix='AI')
 
         self.districtName = districtName
-        self.zoneAllocator = UniqueIdAllocator(PiratesGlobals.DynamicZonesBegin, PiratesGlobals.DynamicZonesEnd)
+        self.zoneAllocator = UniqueIdAllocator(PiratesGlobals.DynamicZonesBegin,
+            PiratesGlobals.DynamicZonesEnd)
+
         self.zoneId2owner = {}
         self.disconnectReasons = {}
         self.uidMgr = UniqueIdManager(self)
-
         self.districtTracker = None
+
+    def getAvatarExitEvent(self, avId):
+        return 'distObjDelete-%d' % avId
+
+    def allocateZone(self, owner=None):
+        zoneId = self.zoneAllocator.allocate()
+        if owner:
+            self.zoneId2owner[zoneId] = owner
+
+        return zoneId
+
+    def deallocateZone(self, zone):
+        if self.zoneId2owner.get(zone):
+            del self.zoneId2owner[zone]
+
+        self.zoneAllocator.free(zone)
 
     def handleConnected(self):
         PiratesInternalRepository.handleConnected(self)
@@ -44,7 +63,7 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.distributedDistrict.setName(self.districtName)
         self.distributedDistrict.setMainWorld(WorldGlobals.PiratesWorldSceneFile)
         self.distributedDistrict.generateWithRequiredAndId(self.districtId,
-            self.getGameDoId(), 2)
+            self.getGameDoId(), OTP_ZONE_ID_MANAGEMENT)
 
         self.setAI(self.districtId, self.ourChannel)
 
@@ -61,22 +80,6 @@ class PiratesAIRepository(PiratesInternalRepository):
     def decrementPopulation(self):
         self.populationTracker.b_setPopulation(self.populationTracker.getPopulation() - 1)
 
-    def allocateZone(self, owner=None):
-        zoneId = self.zoneAllocator.allocate()
-        if owner:
-            self.zoneId2owner[zoneId] = owner
-
-        return zoneId
-
-    def deallocateZone(self, zone):
-        if self.zoneId2owner.get(zone):
-            del self.zoneId2owner[zone]
-
-        self.zoneAllocator.free(zone)
-
-    def getAvatarExitEvent(self, avId):
-        return 'distObjDelete-%d' % avId
-
     def createGlobals(self):
         """
         Create "global" objects, e.g. TimeManager et al.
@@ -86,8 +89,11 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.populationTracker = DistributedPopulationTrackerAI(self)
         self.populationTracker.setShardId(self.districtId)
-        self.populationTracker.setPopLimits(config.GetInt('shard-pop-limit-low', 100), config.GetInt('shard-pop-limit-high', 300))
-        self.populationTracker.generateWithRequiredAndId(self.allocateChannel(), self.getGameDoId(), OTP_ZONE_ID_DISTRICTS_STATS)
+        self.populationTracker.setPopLimits(config.GetInt('shard-pop-limit-low', 100),
+            config.GetInt('shard-pop-limit-high', 300))
+
+        self.populationTracker.generateWithRequiredAndId(self.allocateChannel(),
+            self.getGameDoId(), OTP_ZONE_ID_DISTRICTS_STATS)
 
         self.timeManager = TimeManagerAI(self)
         self.timeManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
@@ -128,6 +134,9 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.districtTracker = DistrictTrackerAI(self)
 
         self.shipLoader = self.generateGlobalObject(OTP_DO_ID_PIRATES_SHIP_MANAGER, 'DistributedShipLoader')
+
+        self.crewMatch = DistributedCrewMatchAI(self)
+        self.crewMatch.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
     def createWorlds(self):
         """
