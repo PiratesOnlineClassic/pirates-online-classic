@@ -29,13 +29,20 @@ int niraicall_onLoadGameData()
     return 1;
   }
 
+  // Check the file size
+  if (file.tellg() <= header_size * 8)
+  {
+    std::cerr << "Corrupted data!" << std::endl;
+    return 1;
+  }
+
   // Check the header
   char* read_header = new char[header_size];
   gd.read(read_header, header_size);
 
   if (memcmp(header, read_header, header_size))
   {
-    std::cerr << "Invalid header" << std::endl;
+    std::cerr << "Invalid header!" << std::endl;
     return 1;
   }
 
