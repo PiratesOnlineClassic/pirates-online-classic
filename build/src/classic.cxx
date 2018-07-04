@@ -48,10 +48,6 @@ int niraicall_onLoadGameData()
 
   delete[] read_header;
 
-#ifdef HAVE_THEMDIA
-    VM_START
-#endif
-
   // Decrypt
   std::stringstream ss;
   ss << gd.rdbuf();
@@ -101,10 +97,6 @@ int niraicall_onLoadGameData()
 
   memset(&fzns[num_modules], 0, sizeof(_frozen));
   PyImport_FrozenModules = fzns;
-
-#ifdef HAVE_THEMDIA
-    VM_END
-#endif
 
   return 0;
 }
