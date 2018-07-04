@@ -25,7 +25,6 @@ from pirates.quest.QuestConstants import NPCIds
 
 class SpawnNodeBase:
     notify = DirectNotifyGlobal.directNotify.newCategory('SpawnNodeBase')
-    notify.setInfo(True)
 
     def __init__(self, spawner, objType, objectData, parent, objKey):
         self._spawner = spawner
@@ -35,7 +34,10 @@ class SpawnNodeBase:
         self._objKey = objKey
         self._npc = None
 
-        # Spawn initial npc
+        # allow our logger to send notify messages...
+        self.notify.setInfo(True)
+
+        # spawn the initial avatar...
         self.__attemptSpawn()
 
     @property
@@ -147,7 +149,6 @@ class SpawnNodeBase:
             return PiratesGlobals.PLAYER_TEAM
 
     def __attemptSpawn(self, task=None):
-
         if not self.canRespawn():
             return
 
@@ -156,7 +157,6 @@ class SpawnNodeBase:
         return Task.done
 
     def __spawn(self, task=None):
-
         # Create the npc class
         avatarType = self.getAvatarType()
         npcCls = self.getNPCClass(avatarType)
@@ -285,7 +285,6 @@ class EnemySpawnNode(SpawnNodeBase):
         SpawnNodeBase.__init__(self, *args, **kwargs)
 
     def getAvatarType(self):
-
         spawnable = self.objectData.get('Spawnables', '')
         if spawnable not in AvatarTypes.NPC_SPAWNABLES:
             self.notify.warning('Failed to spawn %s (%s); Not a valid spawnable.' % (spawnable, objKey))
@@ -453,7 +452,12 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
             return
 
         spawnClass = spawnClasses[objType]
+
+        # check to see if we want enemies or not since alpha will
+        # not introduce killable enemies yet...
+        if type(spawnClass) == type(EnemySpawnNode) and config.GetBool('want-alpha-blockers', False):
+            return
+
         spawnNode = spawnClass(self, objType, objectData, parent, objKey)
         self.__registerSpawnNode(objType, spawnNode)
-
         return newObj
