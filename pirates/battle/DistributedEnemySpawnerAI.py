@@ -37,9 +37,6 @@ class SpawnNodeBase:
         # allow our logger to send notify messages...
         self.notify.setInfo(True)
 
-        # spawn the initial avatar...
-        self.__attemptSpawn()
-
     @property
     def spawner(self):
         return self._spawner
@@ -74,6 +71,10 @@ class SpawnNodeBase:
     def getNPCClass(self, avatarType):
         raise NotImplementedError('%s does not extend getNPCClass!' % \
             self.__class__.__name__)
+
+    def setup(self):
+        # spawn the initial avatar...
+        self.__attemptSpawn()
 
     def processDeath(self):
         if not self._npc:
@@ -452,12 +453,14 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
             return
 
         spawnClass = spawnClasses[objType]
+        spawnNode = spawnClass(self, objType, objectData, parent, objKey)
 
         # check to see if we want enemies or not since alpha will
         # not introduce killable enemies yet...
-        if type(spawnClass) == type(EnemySpawnNode) and config.GetBool('want-alpha-blockers', False):
+        if isinstance(spawnNode, EnemySpawnNode) and config.GetBool('want-alpha-blockers', False):
             return
 
-        spawnNode = spawnClass(self, objType, objectData, parent, objKey)
+        spawnNode.setup()
         self.__registerSpawnNode(objType, spawnNode)
+
         return newObj
