@@ -1,17 +1,16 @@
-assert not __debug__ # Run with -OO
+assert not __debug__  # Run with -OO
+
+import sys
+import os
+import imp
+import glob
+import subprocess
+import niraimarshal
 
 #from panda3d.core import *
 
 from collections import OrderedDict
 from termcolor import colored
-
-import niraimarshal
-
-import subprocess
-import glob
-import imp
-import sys
-import os
 
 SOURCE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -27,16 +26,23 @@ for ext in ('pyd', 'so', 'dylib'):
             continue
 
 else:
-    raise ImportError('cannot find aes')
+    raise ImportError('Cannot find AES!')
 
 NIRAI_ROOT = os.path.abspath(os.path.join(SOURCE_ROOT, '..'))
 PYTHON_ROOT = os.path.join(NIRAI_ROOT, 'python')
 PANDA3D_ROOT = os.path.join(NIRAI_ROOT, 'panda3d')
 THIRDPARTY_ROOT = os.path.join(PANDA3D_ROOT, 'thirdparty')
 
+
 class NiraiCompilerBase:
-    def __init__(self, output, outputdir='built',
-                 includedirs=set(), libs=set(), libpath=set()):
+
+    def __init__(self,
+                 output,
+                 outputdir='built',
+                 includedirs=set(),
+                 libs=set(),
+                 libpath=set()):
+
         self.output = output
         self.outputdir = outputdir
 
@@ -62,8 +68,9 @@ class NiraiCompilerBase:
     def add_library(self, lib, thirdparty=False):
         if thirdparty:
             root = os.path.normpath(lib).split(os.sep)[0]
-            self.includedirs.add(os.path.join(self.thirdpartydir, root, 'include'))
-            
+            self.includedirs.add(
+                os.path.join(self.thirdpartydir, root, 'include'))
+
             lib = os.path.join(self.thirdpartydir, lib)
 
         self.libs.add(lib)
@@ -71,15 +78,18 @@ class NiraiCompilerBase:
     def add_nirai_files(self):
         for filename in ('aes.cxx', 'main.cxx'):
             self.add_source(os.path.join(SOURCE_ROOT, filename))
-            
+
         self.add_library('pythonembed')
 
     def _run_command(self, cmd):
-        p = subprocess.Popen(cmd, stdout=sys.stdout, stderr=sys.stderr, shell=True)
+        p = subprocess.Popen(
+            cmd, stdout=sys.stdout, stderr=sys.stderr, shell=True)
         v = p.wait()
 
         if v != 0:
-            print colored('The following command returned non-zero value (%d): %s' % (v, cmd), 'red')
+            print colored(
+                'The following command returned non-zero value (%d): %s' %
+                (v, cmd), 'red')
             sys.exit(1)
 
     def run(self):
@@ -90,7 +100,9 @@ class NiraiCompilerBase:
         print colored('Linking...', 'cyan')
         self.link()
 
+
 class NiraiCompilerWindows(NiraiCompilerBase):
+
     def add_nirai_files(self):
         NiraiCompilerBase.add_nirai_files(self)
 
@@ -131,7 +143,8 @@ class NiraiCompilerWindows(NiraiCompilerBase):
         self.add_library('vorbis\\lib\\libvorbisfile_static', thirdparty=True)
 
     def compile(self, filename):
-        out = '%s/%s.obj' % (self.outputdir, os.path.basename(filename).rsplit('.', 1)[0])
+        out = '%s/%s.obj' % (self.outputdir, os.path.basename(filename).rsplit(
+            '.', 1)[0])
 
         cmd = 'cl /c /GF /MP4 /DPy_BUILD_CORE /DLINK_ALL_STATIC /DNTDDI_VERSION=0x0501 /wd4996 /wd4275 /wd4267 /wd4101 /wd4273 /nologo /EHsc /MD /Zi /O2'
         for ic in self.includedirs:
@@ -143,7 +156,8 @@ class NiraiCompilerWindows(NiraiCompilerBase):
         self._built.add(out)
 
     def link(self):
-        cmd = 'link /LTCG /LTCG:STATUS /nologo /out:%s/%s' % (self.outputdir, self.output)
+        cmd = 'link /LTCG /LTCG:STATUS /nologo /out:%s/%s' % (self.outputdir,
+                                                              self.output)
         for obj in self._built:
             cmd += ' "%s"' % obj
 
@@ -158,7 +172,9 @@ class NiraiCompilerWindows(NiraiCompilerBase):
         cmd += ' /RELEASE /nodefaultlib:python27.lib /nodefaultlib:libcmt /ignore:4049 /ignore:4006 /ignore:4221'
         self._run_command(cmd)
 
+
 class NiraiCompilerDarwin(NiraiCompilerBase):
+
     def __init__(self, *args, **kwargs):
         self.frameworks = kwargs.pop('frameworks', set()).copy()
         self.frameworkDirs = kwargs.pop('frameworkDirs', set()).copy()
@@ -167,7 +183,8 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
     def add_library(self, lib, thirdparty=False):
         if thirdparty:
             root = os.path.normpath(lib).split(os.sep)[0]
-            self.includedirs.add(os.path.join(self.thirdpartydir, root, 'include'))
+            self.includedirs.add(
+                os.path.join(self.thirdpartydir, root, 'include'))
 
             lib = os.path.join(self.thirdpartydir, lib)
             self.libpath.add(os.path.join(self.thirdpartydir, root, 'lib'))
@@ -197,7 +214,8 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
         self.add_library('vorbis/lib/vorbisenc', thirdparty=True)
         self.add_library('vorbis/lib/vorbisfile', thirdparty=True)
 
-        self.frameworkDirs.add(os.path.join(PANDA3D_ROOT, 'built', 'Frameworks'))
+        self.frameworkDirs.add(
+            os.path.join(PANDA3D_ROOT, 'built', 'Frameworks'))
         self.frameworks.add('AppKit')
         self.frameworks.add('OpenAL')
         self.frameworks.add('OpenGL')
@@ -208,7 +226,8 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
 
     def compile(self, filename):
         print colored('Compiling...', 'cyan'), colored(filename, 'yellow')
-        out = '%s/%s.o' % (self.outputdir, os.path.basename(filename).rsplit('.', 1)[0])
+        out = '%s/%s.o' % (self.outputdir, os.path.basename(filename).rsplit(
+            '.', 1)[0])
 
         #cmd = 'g++ -g -c -DPy_BUILD_CORE -DLINK_ALL_STATIC -ftemplate-depth-70 -fPIC -O2 -Wno-deprecated-declarations -pthread'
         cmd = 'g++ -c -DPy_BUILD_CORE -DLINK_ALL_STATIC -ftemplate-depth-70 -fPIC -O2 -Wno-deprecated-declarations -pthread'
@@ -242,7 +261,7 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
                 lib = lib[:-2]
 
             cmd += ' -l%s' % lib
-            
+
         for obj in self._built:
             cmd += ' "%s"' % obj
 
@@ -250,14 +269,16 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
         cmd += ':/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib'
         self._run_command(cmd)
 
+
 class NiraiCompilerLinux(NiraiCompilerBase):
+
     def __init__(self, *args, **kwargs):
         NiraiCompilerBase.__init__(self, *args, **kwargs)
         self.libs = list(self.libs)
-    
+
     def add_library(self, lib):
         self.libs.append(lib)
-        
+
     def add_panda3d_lib(self, lib):
         self.add_library(os.path.join(self.builtLibs, lib))
 
@@ -273,7 +294,7 @@ class NiraiCompilerLinux(NiraiCompilerBase):
         self.add_panda3d_lib('_panda3d_physics')
         self.add_panda3d_lib('_panda3d_ode')
         self.add_panda3d_lib('_panda3d_egg')
-        
+
         self.add_panda3d_lib('p3framework')
         self.add_panda3d_lib('p3tinydisplay')
         self.add_panda3d_lib('p3direct')
@@ -313,10 +334,11 @@ class NiraiCompilerLinux(NiraiCompilerBase):
         self.add_library('dl')
         self.add_library('pthread')
         self.add_library('util')
-        
+
     def compile(self, filename):
         print filename
-        out = '%s/%s.o' % (self.outputdir, os.path.basename(filename).rsplit('.', 1)[0])
+        out = '%s/%s.o' % (self.outputdir, os.path.basename(filename).rsplit(
+            '.', 1)[0])
 
         cmd = 'g++ -c -DPy_BUILD_CORE -DLINK_ALL_STATIC -ftemplate-depth-70 -fPIC -O2 -Wno-deprecated-declarations -pthread'
         for ic in self.includedirs:
@@ -326,10 +348,10 @@ class NiraiCompilerLinux(NiraiCompilerBase):
 
         self._run_command(cmd)
         self._built.add(out)
-        
+
     def link(self):
         cmd = 'g++ -o %s/%s' % (self.outputdir, self.output)
-        
+
         for path in self.libpath:
             cmd += ' -L"%s"' % path
 
@@ -348,7 +370,8 @@ class NiraiCompilerLinux(NiraiCompilerBase):
 
         self._run_command(cmd)
 
-class NiraiPackager: 
+
+class NiraiPackager:
     HEADER = 'NRI\n'
 
     def __init__(self, outfile):
@@ -383,7 +406,12 @@ class NiraiPackager:
     def compile_module(self, name, data):
         return niraimarshal.dumps(compile(data, name, 'exec'))
 
-    def add_module(self, moduleName, data, size=None, compile=False, negSize=False):                
+    def add_module(self,
+                   moduleName,
+                   data,
+                   size=None,
+                   compile=False,
+                   negSize=False):
         if compile:
             data = self.compile_module(moduleName, data)
 
@@ -395,7 +423,7 @@ class NiraiPackager:
         self.modules[moduleName] = (data, size)
 
     def add_file(self, filename, mangler=None):
-        print colored('Adding file','cyan'), colored(filename, 'yellow')
+        print colored('Adding file', 'cyan'), colored(filename, 'yellow')
         moduleName, (data, size) = self.__read_file(filename, mangler)
         if moduleName:
             moduleName = os.path.basename(filename).rsplit('.', 1)[0]
@@ -423,24 +451,29 @@ class NiraiPackager:
         norm = os.path.normpath(abs)
         if relative:
             rel = os.path.relpath(norm)
-            
+
         else:
             rel = norm
         return len(rel) + len(os.sep)
 
     def add_panda3d_dirs(self):
-        manglebase = self.get_mangle_base(os.path.join(PANDA3D_ROOT, 'built'),  relative=False)
+        manglebase = self.get_mangle_base(
+            os.path.join(PANDA3D_ROOT, 'built'), relative=False)
 
         def _mangler(name):
             name = name[manglebase:].strip('.')
             return name
 
-        self.add_directory(os.path.join(PANDA3D_ROOT, 'built', 'direct'), mangler=_mangler)
-        self.add_directory(os.path.join(PANDA3D_ROOT, 'built', 'pandac'), mangler=_mangler)
-        self.add_directory(os.path.join(PANDA3D_ROOT, 'built', 'panda3d'), mangler=_mangler)
+        self.add_directory(
+            os.path.join(PANDA3D_ROOT, 'built', 'direct'), mangler=_mangler)
+        self.add_directory(
+            os.path.join(PANDA3D_ROOT, 'built', 'pandac'), mangler=_mangler)
+        self.add_directory(
+            os.path.join(PANDA3D_ROOT, 'built', 'panda3d'), mangler=_mangler)
 
     def add_default_lib(self):
-        manglebase = self.get_mangle_base(os.path.join(PYTHON_ROOT, 'Lib'),  relative=False)
+        manglebase = self.get_mangle_base(
+            os.path.join(PYTHON_ROOT, 'Lib'), relative=False)
 
         def _mangler(name):
             name = name[manglebase:]
@@ -470,7 +503,7 @@ class NiraiPackager:
     def get_file_contents(self, filename, encrypt=False):
         with open(filename, 'rb') as f:
             data = f.read()
-            
+
         if encrypt:
             iv = self.generate_key(16)
             key = self.generate_key(16)
@@ -478,16 +511,16 @@ class NiraiPackager:
 
         return data
 
+
 if sys.platform.startswith('win'):
     NiraiCompiler = NiraiCompilerWindows
-
 elif sys.platform == 'darwin':
     NiraiCompiler = NiraiCompilerDarwin
-
 elif sys.platform == 'linux2':
     NiraiCompiler = NiraiCompilerLinux
-
 else:
     class NiraiCompiler:
+
         def __init__(self, *args, **kw):
-            raise RuntimeError('Attempted to use NiraiCompiler on unsupported platform: %s' % sys.platform)
+            raise RuntimeError('Attempted to use NiraiCompiler on '
+                'unsupported platform: %s' % sys.platform)
