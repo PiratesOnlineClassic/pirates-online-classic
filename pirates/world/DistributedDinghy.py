@@ -91,6 +91,9 @@ class DistributedDinghy(DistributedInteractive):
         if localAvatar.zombie and avId == localAvatar.doId:
             localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoBoats, PiratesGuiGlobals.TextFG6)
             return
+        if config.GetBool('want-alpha-blockers', False):
+            localAvatar.guiMgr.createWarning(PLocalizer.SeasAreClosed, PiratesGuiGlobals.TextFG6)
+            return
         DistributedInteractive.requestInteraction(self, avId, interactType, instant)
         return
 
