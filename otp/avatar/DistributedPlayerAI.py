@@ -135,13 +135,19 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.Pl
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def system(message):
-    """Send a system message to the whole district"""
+    """
+    Send a system message to the whole district
+    """
+
     simbase.air.systemMessage(message)
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def sysadmin(message):
-    """Send a system message to the whole district, prefixed with 'ADMIN:'."""
+    """
+    Send a system message to the whole district, prefixed with 'ADMIN:'.
+    """
+
     text = 'ADMIN: ' + message
     simbase.air.systemMessage(text)
     return "Sent system message '%s' to all players in the district." % text
@@ -160,7 +166,7 @@ def update(minutes):
         dg.addUint16(154)
         dg.addString('Pirates Online Classic is now closed for maintenance.')
         simbase.air.send(dg)
-        return Task.done
+        return task.done
 
     def countdown(minutes):
         if minutes > 0:
