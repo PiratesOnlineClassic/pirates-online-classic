@@ -177,7 +177,7 @@ preload-textures 0
 load-display pandagl
 aux-display pandadx9
 aux-display pandadx8
-aux-display pandagl
+aux-display p3tinydisplay
 
 # Misc:
 want-tattoos 1
