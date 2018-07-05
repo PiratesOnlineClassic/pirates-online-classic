@@ -30,7 +30,7 @@ int niraicall_onLoadGameData()
   }
 
   // Check the file size
-  if (file.tellg() <= header_size * 8)
+  if (gd.tellg() <= header_size * 8)
   {
     std::cerr << "Corrupted data!" << std::endl;
     return 1;
