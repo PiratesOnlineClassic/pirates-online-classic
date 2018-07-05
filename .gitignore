@@ -124,5 +124,10 @@ tools/
 logs/
 screenshots/
 
+# Build
+build/
+temp/
+direct/
+
 # Misc
 cf2.txt
