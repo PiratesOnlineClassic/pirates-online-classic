@@ -428,6 +428,7 @@ class BattleManagerAI(BattleManagerBase):
 
             return
 
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if config.GetBool('want-membership', False) and avatar.getLevel() == Freebooter.FreeOverallLevelCap:
             return
 
@@ -439,7 +440,6 @@ class BattleManagerAI(BattleManagerBase):
         for skillId in attacker.battleSkillDiary.getSkills():
             ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)
             reputationCategoryId = WeaponGlobals.getSkillReputationCategoryId(skillId)
-            avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
             # update the avatar's skill reputation for each skill it used to kill the target,
             # adding onto the overall reputation rewarded
