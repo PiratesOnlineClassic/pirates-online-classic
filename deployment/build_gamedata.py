@@ -12,7 +12,7 @@ parser.add_argument('--output', default='gamedata.pyd',
 parser.add_argument('--main-module', default='pirates/piratesbase/PiratesStart.py',
                     help='The module to load at the start of the game.')
 parser.add_argument('modules', nargs='*', default=['otp', 'pirates'],
-                    help='The Pirates Online Rewritten modules to be included in the build.')
+                    help='The Pirates Online Classic modules to be included in the build.')
 args = parser.parse_args()
 
 print 'Building the game data...'
