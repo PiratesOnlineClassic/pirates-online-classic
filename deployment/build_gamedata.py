@@ -28,6 +28,7 @@ for module in args.modules:
 cmd += ' -i encodings.*'
 cmd += ' -i base64'
 cmd += ' -i site'
+cmd += ' -i pirates.leveleditor.worldData.*'
 
 extension_modules = [
     'OpenSSL',
