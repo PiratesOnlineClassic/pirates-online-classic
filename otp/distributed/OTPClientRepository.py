@@ -5,6 +5,7 @@ import string
 import sys
 import time
 import types
+import inspect
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed import DistributedSmoothNode
@@ -318,6 +319,161 @@ class OTPClientRepository(ClientRepositoryBase):
             OtpDoGlobals.OTP_DO_ID_CENTRAL_LOGGER, 'CentralLogger')
         self.csm = None
 
+    def readDCFile(self, dcFileNames = None):
+        dcFile = self.getDcFile()
+        dcFile.clear()
+
+        self.dclassesByName = {}
+        self.dclassesByNumber = {}
+        self.hashVal = 0
+
+        try:
+            dcStream
+        except:
+            pass
+        else:
+            self.notify.info('Detected DC file stream, reading it...')
+            dcFileNames = [dcStream]
+
+        if isinstance(dcFileNames, str):
+            dcFileNames = [dcFileNames]
+
+        dcImports = {}
+        if dcFileNames is not None:
+            for dcFileName in dcFileNames:
+                if isinstance(dcFileName, StringStream):
+                    readResult = dcFile.read(dcFileName, 'DC stream')
+                else:
+                    readResult = dcFile.read(dcFileName)
+
+                if not readResult:
+                    self.notify.error('Could not read DC file.')
+        else:
+            dcFile.readAll()
+
+        self.hashVal = dcFile.getHash()
+
+        # Now import all of the modules required by the DC file.
+        for n in range(dcFile.getNumImportModules()):
+            moduleName = dcFile.getImportModule(n)[:]
+
+            # Maybe the module name is represented as 'moduleName/AI'.
+            suffix = moduleName.split('/')
+            moduleName = suffix[0]
+            suffix=suffix[1:]
+            if self.dcSuffix in suffix:
+                moduleName += self.dcSuffix
+            elif self.dcSuffix == 'UD' and 'AI' in suffix: #HACK:
+                moduleName += 'AI'
+
+            importSymbols = []
+            for i in range(dcFile.getNumImportSymbols(n)):
+                symbolName = dcFile.getImportSymbol(n, i)
+
+                # Maybe the symbol name is represented as 'symbolName/AI'.
+                suffix = symbolName.split('/')
+                symbolName = suffix[0]
+                suffix=suffix[1:]
+                if self.dcSuffix in suffix:
+                    symbolName += self.dcSuffix
+                elif self.dcSuffix == 'UD' and 'AI' in suffix: #HACK:
+                    symbolName += 'AI'
+
+                importSymbols.append(symbolName)
+
+            self.importModule(dcImports, moduleName, importSymbols)
+
+        # Now get the class definition for the classes named in the DC
+        # file.
+        for i in range(dcFile.getNumClasses()):
+            dclass = dcFile.getClass(i)
+            number = dclass.getNumber()
+            className = dclass.getName() + self.dcSuffix
+
+            # Does the class have a definition defined in the newly
+            # imported namespace?
+            classDef = dcImports.get(className)
+            if classDef is None and self.dcSuffix == 'UD': #HACK:
+                className = dclass.getName() + 'AI'
+                classDef = dcImports.get(className)
+
+            # Also try it without the dcSuffix.
+            if classDef == None:
+                className = dclass.getName()
+                classDef = dcImports.get(className)
+
+            if classDef is None:
+                self.notify.debug('No class definition for %s.' % (className))
+            else:
+                if inspect.ismodule(classDef):
+                    if not hasattr(classDef, className):
+                        self.notify.warning('Module %s does not define class %s.' % (className, className))
+                        continue
+
+                    classDef = getattr(classDef, className)
+
+                if not inspect.isclass(classDef):
+                    self.notify.error('Symbol %s is not a class name.' % (className))
+                else:
+                    dclass.setClassDef(classDef)
+
+            self.dclassesByName[className] = dclass
+            if number >= 0:
+                self.dclassesByNumber[number] = dclass
+
+        # Owner Views
+        if self.hasOwnerView():
+            ownerDcSuffix = self.dcSuffix + 'OV'
+            # dict of class names (without 'OV') that have owner views
+            ownerImportSymbols = {}
+
+            # Now import all of the modules required by the DC file.
+            for n in range(dcFile.getNumImportModules()):
+                moduleName = dcFile.getImportModule(n)
+
+                # Maybe the module name is represented as 'moduleName/AI'.
+                suffix = moduleName.split('/')
+                moduleName = suffix[0]
+                suffix=suffix[1:]
+                if ownerDcSuffix in suffix:
+                    moduleName = moduleName + ownerDcSuffix
+
+                importSymbols = []
+                for i in range(dcFile.getNumImportSymbols(n)):
+                    symbolName = dcFile.getImportSymbol(n, i)
+
+                    # Check for the OV suffix
+                    suffix = symbolName.split('/')
+                    symbolName = suffix[0]
+                    suffix=suffix[1:]
+                    if ownerDcSuffix in suffix:
+                        symbolName += ownerDcSuffix
+                    importSymbols.append(symbolName)
+                    ownerImportSymbols[symbolName] = None
+
+                self.importModule(dcImports, moduleName, importSymbols)
+
+            # Now get the class definition for the owner classes named
+            # in the DC file.
+            for i in range(dcFile.getNumClasses()):
+                dclass = dcFile.getClass(i)
+                if ((dclass.getName()+ownerDcSuffix) in ownerImportSymbols):
+                    number = dclass.getNumber()
+                    className = dclass.getName() + ownerDcSuffix
+
+                    # Does the class have a definition defined in the newly
+                    # imported namespace?
+                    classDef = dcImports.get(className)
+                    if classDef is None:
+                        self.notify.error('No class definition for %s.' % className)
+                    else:
+                        if inspect.ismodule(classDef):
+                            if not hasattr(classDef, className):
+                                self.notify.error('Module %s does not define class %s.' % (className, className))
+                            classDef = getattr(classDef, className)
+                        dclass.setOwnerClassDef(classDef)
+                        self.dclassesByName[className] = dclass
+
     def startLeakDetector(self):
         if hasattr(self, 'leakDetector'):
             return False
@@ -578,7 +734,7 @@ class OTPClientRepository(ClientRepositoryBase):
                 (statusCode, url.cStr()))
         else:
             self.notify.warning(
-                "Didn't get status code from connection to %s." %
+                'Didn\'t get status code from connection to %s.' %
                 url.cStr())
         if statusCode == 1403 or statusCode == 1400:
             message = OTPLocalizer.CRServerConstantsProxyNoPort % (
@@ -1003,7 +1159,7 @@ class OTPClientRepository(ClientRepositoryBase):
         report = GarbageReport.GarbageReport('logout', verbose=True)
         numItems = report.getNumItems()
         if numItems:
-            msg = "You can't leave until you take out your garbage. See report above & base.garbage"
+            msg = 'You can\'t leave until you take out your garbage. See report above & base.garbage'
             self.notify.info(msg)
 
         report.destroy()
@@ -1059,7 +1215,7 @@ class OTPClientRepository(ClientRepositoryBase):
 
         if problems:
             print taskMgr
-            msg = "You can't leave until you clean up your tasks: {"
+            msg = 'You can\'t leave until you clean up your tasks: {'
             for task in problems:
                 msg += '\n  ' + task
 
@@ -1109,7 +1265,7 @@ class OTPClientRepository(ClientRepositoryBase):
                 problems.append(hook)
 
         if problems:
-            msg = "You can't leave until you clean up your messenger hooks: {"
+            msg = 'You can\'t leave until you clean up your messenger hooks: {'
             for hook in problems:
                 whoAccepts = messenger.whoAccepts(hook)
                 msg += '\n  %s' % hook
@@ -1127,7 +1283,7 @@ class OTPClientRepository(ClientRepositoryBase):
     def detectLeakedIntervals(self):
         numIvals = ivalMgr.getNumIntervals()
         if numIvals > 0:
-            print "You can't leave until you clean up your intervals: {"
+            print 'You can\'t leave until you clean up your intervals: {'
             for i in range(ivalMgr.getMaxIndex()):
                 ival = None
                 if i < len(ivalMgr.ivals):
@@ -1146,7 +1302,7 @@ class OTPClientRepository(ClientRepositoryBase):
 
             print '}'
             self.notify.info(
-                "You can't leave until you clean up your intervals.")
+                'You can\'t leave until you clean up your intervals.')
             return numIvals
         else:
             return 0
@@ -1703,7 +1859,7 @@ class OTPClientRepository(ClientRepositoryBase):
         return Task.done
 
     def __periodTimerExpired(self, task):
-        self.notify.info("User's period timer has just expired!")
+        self.notify.info('User\'s period timer has just expired!')
         self.stopPeriodTimer()
         self.periodTimerExpired = 1
         self.periodTimerStarted = None
@@ -1854,7 +2010,7 @@ class OTPClientRepository(ClientRepositoryBase):
         classId = di.getUint16()
 
         # At this point, we must decide whether to add this to the interest's
-        # "pending generates" or process it straight away:
+        # 'pending generates' or process it straight away:
         for handle, interest in self._interests.items():
             if parentId != interest.parentId:
                 continue
@@ -1981,7 +2137,7 @@ class OTPClientRepository(ClientRepositoryBase):
         else:
             classDef = dclass.getOwnerClassDef()
             if not classDef:
-                self.notify.error("Could not create an undefined %s object. Have you created an owner view?" % (
+                self.notify.error('Could not create an undefined %s object. Have you created an owner view?' % (
                     dclass.getName()))
 
             distObj = classDef(self)
