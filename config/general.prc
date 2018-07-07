@@ -5,6 +5,15 @@ win-orig -2 -2
 win-size 800 600
 fullscreen #f
 
+# Dev:
+want-dev #f
+
+# Display:
+load-display pandagl
+aux-display pandadx9
+aux-display pandadx8
+aux-display p3tinydisplay
+
 # Audio:
 audio-music-active #t
 audio-library-name p3fmod_audio
@@ -172,12 +181,6 @@ dx-management 0
 dx-texture-management 0
 retransform-sprites 1
 preload-textures 0
-
-# Display:
-load-display pandagl
-aux-display pandadx9
-aux-display pandadx8
-aux-display p3tinydisplay
 
 # Misc:
 want-tattoos 1
