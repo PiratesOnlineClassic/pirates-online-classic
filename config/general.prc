@@ -1,5 +1,4 @@
 # Window:
-window-type none
 window-title Pirates Online Classic
 icon-filename phase_3/etc/Pirates_Adds.ico
 win-orig -2 -2
