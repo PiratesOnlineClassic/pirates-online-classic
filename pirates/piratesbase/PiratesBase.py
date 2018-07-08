@@ -109,12 +109,11 @@ class PiratesBase(OTPBase):
                     break
 
         options.automaticGrapghicsApiSelection(base.pipe)
-        # TODO: FIXME!
-        #if use_recommended_options:
-        #    options.recommendedOptions(base.pipe, False)
-        #    options.log('Recommended Game Options')
-        #overwrite_options = True
-        #options.verifyOptions(base.pipe, overwrite_options)
+        if use_recommended_options:
+            options.recommendedOptions(base.pipe, False)
+            options.log('Recommended Game Options')
+        overwrite_options = True
+        options.verifyOptions(base.pipe, overwrite_options)
         self.funnel = UserFunnel.UserFunnel()
         string = options.optionsToPrcData()
         loadPrcFileData('game_options', string)
