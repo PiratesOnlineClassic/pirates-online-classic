@@ -27,6 +27,7 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
 
                 return
 
+            avatar.b_setDefaultShard(self.air.districtId)
             avatar.d_relayTeleportLoc(self.air.districtId, self.air.distributedDistrict.zoneId,
                 self.air.teleportMgr.doId)
 

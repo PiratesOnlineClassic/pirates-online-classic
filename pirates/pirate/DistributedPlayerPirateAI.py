@@ -46,6 +46,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.forcedZombie = 0
         self.gmNameTagAllowed = False
         self.stickyTargets = []
+        self.defaultShard = 0
+        self.defaultZone = 0
 
         self.toonUpTask = None
 
@@ -523,6 +525,32 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def requestRemoveStickyTargets(self, doIdList):
         for targetDoId in doIdList:
             self.removeStickyTarget(targetDoId)
+
+    def setDefaultShard(self, defaultShard):
+        self.defaultShard = defaultShard
+
+    def d_setDefaultShard(self, defaultShard):
+        self.sendUpdate('setDefaultShard', [defaultShard])
+
+    def b_setDefaultShard(self, defaultShard):
+        self.setDefaultShard(defaultShard)
+        self.d_setDefaultShard(defaultShard)
+
+    def getDefaultShard(self):
+        return self.defaultShard
+
+    def setDefaultZone(self, defaultZone):
+        self.defaultZone = defaultZone
+
+    def d_setDefaultZone(self, defaultZone):
+        self.sendUpdate('setDefaultZone', [defaultZone])
+
+    def b_setDefaultZone(self, defaultZone):
+        self.setDefaultZone(defaultZone)
+        self.d_setDefaultZone(defaultZone)
+
+    def getDefaultZone(self):
+        return self.defaultZone
 
     def attemptToSetCursedZombie(self):
         newState = False
