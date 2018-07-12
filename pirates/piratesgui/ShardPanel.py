@@ -242,15 +242,17 @@ class ShardPanel(DirectFrame):
 
     def refreshCurrentShard(self):
         if base.cr.distributedDistrict:
-            self.currentShardLabel['text'] = PLocalizer.ShardCurrentWorld + ' : %s %s' % (base.cr.distributedDistrict.getName(), PLocalizer.Ocean)
+            self.currentShardLabel['text'] = PLocalizer.ShardCurrentWorld + ' : %s %s' % (
+                base.cr.distributedDistrict.getName(), PLocalizer.Ocean)
+
             for id in self.shards:
                 self.shards[id]['state'] = DGG.NORMAL
                 self.shards[id]['relief'] = DGG.RAISED
 
-            curButton = self.shards.get(base.cr.distributedDistrict.getDoId())
-            if curButton:
-                curButton['state'] = DGG.DISABLED
-                curButton['relief'] = DGG.SUNKEN
+            currButton = self.shards.get(base.cr.distributedDistrict.getDoId())
+            if currButton:
+                currButton['state'] = DGG.DISABLED
+                currButton['relief'] = DGG.SUNKEN
 
     def setPreferredShard(self):
         if self['preferredShard'] in self.shards:
