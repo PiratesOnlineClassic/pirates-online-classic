@@ -1278,7 +1278,6 @@ class PirateMale(DirectObject.DirectObject):
         if parts.getNumPaths() and vestIdx[0] == 3:
             self.handleLayer2Hiding(self.clothingsLayer2, layerVest, 'belt')
 
-        vestIdx[0] == 3
         layerCoat = self.clothingsCoat[coatIdx[0]]
         parts = NodePathCollection()
         if self.clothesTextures != None:
