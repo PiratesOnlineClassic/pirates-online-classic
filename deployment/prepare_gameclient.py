@@ -94,9 +94,6 @@ def cleanup_tree(directory):
             if os.path.isdir(filepath):
                 recurse(filepath)
             elif os.path.isfile(filepath):
-                if not filepath.endswith('.py'):
-                    continue
-
                 if filepath.endswith('AI.py') or filepath.endswith('UD.py'):
                     os.remove(filepath)
 
