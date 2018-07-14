@@ -193,6 +193,7 @@ with open(os.path.join(args.build_dir, args.main_module), 'w') as f:
     for line in io.readlines():
         f.write(line)
 
+    io.close()
     f.close()
 
 print 'Done building game data.'
