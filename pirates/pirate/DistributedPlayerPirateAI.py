@@ -769,6 +769,166 @@ def level(level):
 
     return 'Your level has been set to %d.' % level
 
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def swordLevel(level):
+    """
+    Levels your sword to the specified level
+    """
+
+    invoker = spellbook.getInvoker()
+    inventory = invoker.getInventory()
+    repType = InventoryType.CutlassRep
+    if inventory:
+        totalRep = 0
+
+        for levelIndex in xrange(level):
+            totalRep += ReputationGlobals.getReputationNeededToLevel(
+                InventoryType.CutlassRep, levelIndex)
+
+        inventory.setReputation(repType, totalRep)
+
+    return 'Your level has been set to %d.' % level
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def pistolLevel(level):
+    """
+    Levels your pistol to the specified level
+    """
+
+    invoker = spellbook.getInvoker()
+    inventory = invoker.getInventory()
+    repType = InventoryType.PistolRep
+    if inventory:
+        totalRep = 0
+
+        for levelIndex in xrange(level):
+            totalRep += ReputationGlobals.getReputationNeededToLevel(
+                InventoryType.PistolRep, levelIndex)
+
+        inventory.setReputation(repType, totalRep)
+
+    return 'Your level has been set to %d.' % level
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def dollLevel(level):
+    """
+    Levels your doll to the specified level
+    """
+
+    invoker = spellbook.getInvoker()
+    inventory = invoker.getInventory()
+    repType = InventoryType.DollRep
+    if inventory:
+        totalRep = 0
+
+        for levelIndex in xrange(level):
+            totalRep += ReputationGlobals.getReputationNeededToLevel(
+                InventoryType.DollRep, levelIndex)
+
+        inventory.setReputation(repType, totalRep)
+
+    return 'Your level has been set to %d.' % level
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def daggerLevel(level):
+    """
+    Levels your dagger to the specified level
+    """
+
+    invoker = spellbook.getInvoker()
+    inventory = invoker.getInventory()
+    repType = InventoryType.DaggerRep
+    if inventory:
+        totalRep = 0
+
+        for levelIndex in xrange(level):
+            totalRep += ReputationGlobals.getReputationNeededToLevel(
+                InventoryType.DaggerRep, levelIndex)
+
+        inventory.setReputation(repType, totalRep)
+
+    return 'Your level has been set to %d.' % level
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def grenadeLevel(level):
+    """
+    Levels your grenade to the specified level
+    """
+
+    invoker = spellbook.getInvoker()
+    inventory = invoker.getInventory()
+    repType = InventoryType.GrenadeRep
+    if inventory:
+        totalRep = 0
+
+        for levelIndex in xrange(level):
+            totalRep += ReputationGlobals.getReputationNeededToLevel(
+                InventoryType.GrenadeRep, levelIndex)
+
+        inventory.setReputation(repType, totalRep)
+
+    return 'Your level has been set to %d.' % level
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def staffLevel(level):
+    """
+    Levels your staff to the specified level
+    """
+
+    invoker = spellbook.getInvoker()
+    inventory = invoker.getInventory()
+    repType = InventoryType.WandRep
+    if inventory:
+        totalRep = 0
+
+        for levelIndex in xrange(level):
+            totalRep += ReputationGlobals.getReputationNeededToLevel(
+                InventoryType.WandRep, levelIndex)
+
+        inventory.setReputation(repType, totalRep)
+
+    return 'Your level has been set to %d.' % level
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def cannonLevel(level):
+    """
+    Levels your cannon to the specified level
+    """
+
+    invoker = spellbook.getInvoker()
+    inventory = invoker.getInventory()
+    repType = InventoryType.CannonRep
+    if inventory:
+        totalRep = 0
+
+        for levelIndex in xrange(level):
+            totalRep += ReputationGlobals.getReputationNeededToLevel(
+                InventoryType.CannonRep, levelIndex)
+
+        inventory.setReputation(repType, totalRep)
+
+    return 'Your level has been set to %d.' % level
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def sailingLevel(level):
+    """
+    Levels your sailing to the specified level
+    """
+
+    invoker = spellbook.getInvoker()
+    inventory = invoker.getInventory()
+    repType = InventoryType.SailingRep
+    if inventory:
+        totalRep = 0
+
+        for levelIndex in xrange(level):
+            totalRep += ReputationGlobals.getReputationNeededToLevel(
+                InventoryType.SailingRep, levelIndex)
+
+        inventory.setReputation(repType, totalRep)
+
+    return 'Your level has been set to %d.' % level
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def zombie():
     """
