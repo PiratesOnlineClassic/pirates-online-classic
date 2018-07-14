@@ -1154,10 +1154,10 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   setZombie(uint8) required broadcast ram ownrecv;
   setCurseStatus(uint8) ownrecv;
   spendSkillPoint(SkillId) airecv ownsend;
-  resetSkillPoints(SkillId) airecv ownsend;
+  resetSkillPoints(SkillId) airecv ownsend ownrecv;
+  spentSkillPoint(SkillId);
   useTonic(uint16) airecv ownsend;
   useBestTonic() airecv ownsend;
-  spentSkillPoint(SkillId) ownrecv;
   requestActivity(uint32, int32, resultPair [], uint32 []) airecv ownsend;
   setEmote(int32) required broadcast ram airecv ownsend;
   playEmote(int32) broadcast ownrecv ownsend;

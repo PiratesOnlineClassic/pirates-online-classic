@@ -332,21 +332,36 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             return
 
         def updateStack(stackType):
-            unspentStack = inventory.getStackQuantity(stackType)
-            if not unspentStack:
-                self.notify.debug('Cannot update stack %d, player has no skill points!' % (
-                    stackType))
+            unspentStackQuantity = inventory.getStackQuantity(stackType)
+            skillQuantity = inventory.getStackQuantity(skillId)
+            skillLimit = inventory.getStackLimit(skillId)
+            canSpendSkillPoint = True
 
-                return
+            # check to see if the player has any skill points...
+            if not unspentStackQuantity:
+                self.notify.debug('Cannot update stack %d, player has no skill points; unspentStackQuantity=%d!' % (
+                    stackType, unspentStackQuantity))
 
-            stack = inventory.getStackQuantity(skillId)
-            if not stack:
-                inventory.b_setStackQuantity(skillId, 1)
+                canSpendSkillPoint = False
+
+            # check to see if the player can purchase anymore stacks
+            # for this type...
+            if skillQuantity >= skillLimit:
+                self.notify.debug('Cannot update stack %d, stack limit reached; skillQuantity=%d skillLimit=%d!' % (
+                    stackType, skillQuantity, skillLimit))
+
+                canSpendSkillPoint = False
+
+            # update the player's skill quantity and their skill
+            # points quantity stack...
+            if not canSpendSkillPoint:
+                inventory.b_setStackQuantity(skillId, skillQuantity)
+                inventory.b_setStackQuantity(stackType, unspentStackQuantity)
             else:
-                inventory.b_setStackQuantity(skillId, stack + 1)
+                inventory.b_setStackQuantity(skillId, skillQuantity + 1)
+                inventory.b_setStackQuantity(stackType, unspentStackQuantity - 1)
 
-            inventory.b_setStackQuantity(stackType, unspentStack - 1)
-            self.spentSkillPoint(skillId)
+            self.d_spentSkillPoint(skillId)
 
         if skillId >= InventoryType.begin_WeaponSkillMelee and skillId < InventoryType.end_WeaponSkillMelee:
             updateStack(InventoryType.UnspentMelee)
@@ -374,11 +389,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             return
 
-    def spentSkillPoint(self, category):
-        self.sendUpdate('spentSkillPoint', [category])
-
     def resetSkillPoints(self, skillId):
-        self.sendUpdate('resetSkillPoints', [skillId])
+        self.d_spentSkillPoint(skillId)
+
+    def d_spentSkillPoint(self, category):
+        self.sendUpdateToAvatarId(self.doId, 'spentSkillPoint', [category])
 
     def getHighestTonic(self):
         inventory = simbase.air.inventoryManager.getInventory(self.doId)
@@ -393,6 +408,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             if amount > 0:
                 detected = tonicId
                 break
+
         return detected
 
     def getBestTonic(self):
