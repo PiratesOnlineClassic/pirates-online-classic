@@ -85,9 +85,9 @@ for package in args.modules:
 
     shutil.copytree(package, fullpath)
 
-RUNTIME_DATA = """import sys
+RUNTIME_DATA = """import __builtin__
+import sys
 import os
-import __builtin__
 import StringIO
 import zlib
 import pyaes
@@ -147,7 +147,7 @@ def main():
         io = StringIO.StringIO(data)
 
         for line in io.readlines():
-            if not line or line == '\n':
+            if not line or not line.strip():
                 continue
 
             load_prc_file_data('config data', line)
@@ -188,7 +188,11 @@ if __name__ == '__main__':
 
 # copy over the runtime main module
 with open(os.path.join(args.build_dir, args.main_module), 'w') as f:
-    f.write(RUNTIME_DATA)
+    io = StringIO.StringIO(RUNTIME_DATA)
+
+    for line in io.readlines():
+        f.write(line)
+
     f.close()
 
 print 'Done building game data.'
