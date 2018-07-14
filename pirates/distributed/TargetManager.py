@@ -74,21 +74,20 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
             if target:
                 if localAvatar.currentMouseOver == target:
                     localAvatar.currentMouseOver = None
-
                 if localAvatar.currentAimOver == target:
                     localAvatar.currentAimOver = None
                     self.reticle.setColorScale(1, 1, 1, self.reticleAlpha)
-                    messenger.send(target.uniqueName('aimOver'), [
-                        0])
-                    target.hideHpMeter(delay = 1.0)
+                    messenger.send(target.uniqueName('aimOver'), [0])
+                    target.hideHpMeter(delay=1.0)
                     target.hideEnemyTargetInfo()
-
                 if localAvatar.currentSelection == target:
                     localAvatar.currentSelection = None
-
         TargetManagerBase.TargetManagerBase.removeTarget(self, nodePathId)
+        return
 
     def takeAim(self, av, skillId=None, ammoSkillId=None):
+        if not self.aimTrav:
+            return
         self.aimTrav.traverse(render)
         numEntries = self.aimQueue.getNumEntries()
         if numEntries == 0:
@@ -120,9 +119,14 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
                     localAvatar.guiMgr.showPirateCode()
                     continue
                 return target
-            continue
+            else:
+                continue
+
+        return
 
     def getAimHitPos(self, av):
+        if not self.aimTrav:
+            return
         self.aimTrav.traverse(render)
         numEntries = self.aimQueue.getNumEntries()
         if numEntries == 0:
@@ -147,7 +151,10 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
                             continue
                 pos = entry.getSurfacePoint(target)
                 return pos
-            continue
+            else:
+                continue
+
+        return
 
     def setTargetNodePath(self, nodePath):
         self.targetNodePath = nodePath
