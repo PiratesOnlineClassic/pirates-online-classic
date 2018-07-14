@@ -77,14 +77,44 @@ with open(os.path.join(args.build_dir, args.data_file), 'wb') as f:
     f.write(data)
     f.close()
 
+excepted_files = [
+    'OTPInternalRepository',
+    'PiratesAIRepository',
+    'PiratesUberRepository',
+    'ServiceStart',
+    'InventoryInit'
+]
+
+def cleanup_tree(directory):
+
+    def recurse(path):
+        for filename in os.listdir(path):
+            filepath = os.path.join(path, filename)
+
+            if os.path.isdir(filepath):
+                recurse(filepath)
+            elif os.path.isfile(filepath):
+                if not filepath.endswith('.py'):
+                    continue
+
+                if filepath.endswith('AI.py') or filepath.endswith('UD.py'):
+                    os.remove(filepath)
+
+                for filename in excepted_files:
+                    if filename in filepath:
+                        os.remove(filepath)
+                        break
+
+    recurse(directory)
+
 # copy over the required game source modules
 for package in args.modules:
     fullpath = os.path.join(args.build_dir, package)
 
-    if os.path.exists(fullpath):
-        continue
+    if not os.path.exists(fullpath):
+        shutil.copytree(package, fullpath)
 
-    shutil.copytree(package, fullpath)
+    cleanup_tree(fullpath)
 
 RUNTIME_DATA = """import __builtin__
 import sys
