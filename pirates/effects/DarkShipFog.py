@@ -1,13 +1,15 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from direct.showbase.DirectObject import *
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.DarkShipFog
 from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from pirates.piratesbase import PiratesGlobals
-from pirates.effects.PooledEffect import PooledEffect
+from EffectController import EffectController
+from PooledEffect import PooledEffect
+import random
 
 class DarkShipFog(PooledEffect, EffectController):
     cardScale = 64.0
@@ -23,13 +25,14 @@ class DarkShipFog(PooledEffect, EffectController):
             DarkShipFog.particleDummy.setColorScale(1.0, 1.0, 1.0, 1)
             DarkShipFog.particleDummy.setLightOff()
             DarkShipFog.particleDummy.setBin('fixed', 15)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('DarkShipFog')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 128)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereVolumeEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(128)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(10)
         self.p0.setLitterSpread(0)

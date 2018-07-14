@@ -1,13 +1,14 @@
+# Embedded file name: pirates.effects.DirtClod
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class DirtClod(PooledEffect, EffectController):
-    
     cardScale = 64.0
 
     def __init__(self):
@@ -18,9 +19,9 @@ class DirtClod(PooledEffect, EffectController):
         if not DirtClod.particleDummy:
             DirtClod.particleDummy = render.attachNewNode(ModelNode('DirtClodParticleDummy'))
             DirtClod.particleDummy.setDepthWrite(0)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('DirtClod')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 32)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('DiscEmitter')
@@ -32,6 +33,7 @@ class DirtClod(PooledEffect, EffectController):
         self.f.addForceGroup(f0)
 
     def createTrack(self):
+        self.p0.setPoolSize(32)
         self.p0.setBirthRate(0.5)
         self.p0.setLitterSize(1)
         self.p0.setLitterSpread(0)

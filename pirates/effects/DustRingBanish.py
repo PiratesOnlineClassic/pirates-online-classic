@@ -1,14 +1,15 @@
+# Embedded file name: pirates.effects.DustRingBanish
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class DustRingBanish(PooledEffect, EffectController):
-    
     cardScale = 64.0
 
     def __init__(self):
@@ -19,9 +20,9 @@ class DustRingBanish(PooledEffect, EffectController):
         self.setDepthWrite(0)
         self.setLightOff()
         self.effectColor = Vec4(1, 1, 1, 1)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('DustRingBanish')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 64)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('RingEmitter')
@@ -31,6 +32,7 @@ class DustRingBanish(PooledEffect, EffectController):
         force0.setActive(1)
         f0.addForce(force0)
         self.f.addForceGroup(f0)
+        self.p0.setPoolSize(64)
         self.p0.setLitterSize(16)
         self.p0.setLitterSpread(1)
         self.p0.setSystemLifespan(0.0)

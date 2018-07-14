@@ -1,12 +1,11 @@
+# Embedded file name: pirates.effects.ShockwaveHit
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.interval.IntervalGlobal import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class ShockwaveHit(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -27,6 +26,7 @@ class ShockwaveHit(PooledEffect, EffectController):
         self.explosion.reparentTo(self)
         self.explosion.hide()
         self.card = loader.loadModelCopy('models/effects/shockwaves')
+        return
 
     def loadExplosion(self, hpr, type='Hit'):
         if self.currentType != type:
@@ -65,3 +65,4 @@ class ShockwaveHit(PooledEffect, EffectController):
             self.card = None
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+        return

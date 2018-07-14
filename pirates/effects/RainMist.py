@@ -1,9 +1,9 @@
+# Embedded file name: pirates.effects.RainMist
 from pandac.PandaModules import *
-from panda3d.physics import *
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect
 from direct.particles import Particles
-from pirates.effects.EffectController import EffectController
+from EffectController import EffectController
 import random
 
 class RainMist(EffectController, NodePath):

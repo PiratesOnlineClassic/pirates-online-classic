@@ -1,13 +1,14 @@
+# Embedded file name: pirates.effects.ThrowDirt
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class ThrowDirt(PooledEffect, EffectController):
-    
     cardScale = 128.0
 
     def __init__(self):
@@ -22,9 +23,9 @@ class ThrowDirt(PooledEffect, EffectController):
             ThrowDirt.particleDummy.setLightOff()
             ThrowDirt.particleDummy.setColorScaleOff()
             ThrowDirt.particleDummy.setFogOff()
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('ThrowDirt')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 32)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('DiscEmitter')
@@ -35,6 +36,7 @@ class ThrowDirt(PooledEffect, EffectController):
         force0.setActive(1)
         self.f0.addForce(force0)
         self.f.addForceGroup(self.f0)
+        self.p0.setPoolSize(32)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(1)
         self.p0.setLitterSpread(0)

@@ -1,12 +1,12 @@
-from direct.interval.IntervalGlobal import *
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.GypsyBallGlow
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.GameOptions import Options
-from pirates.effects.PooledEffect import PooledEffect
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 
 class GypsyBallGlow(PooledEffect, EffectController):
-    
 
     def __init__(self, effectParent=None, billboardOffset=1.0):
         PooledEffect.__init__(self)
@@ -27,6 +27,7 @@ class GypsyBallGlow(PooledEffect, EffectController):
         self.glowHalo.setColorScale(0.25, 0.2, 0.3, 0.75)
         self.fadeIval = None
         self.scaleIval = None
+        return
 
     def createTrack(self, lod=Options.SpecialEffectsHigh):
         self.glow.setColor(0.9, 0.85, 0.95, 0.95)

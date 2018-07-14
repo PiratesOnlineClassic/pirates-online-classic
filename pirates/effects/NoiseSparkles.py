@@ -1,18 +1,19 @@
+# Embedded file name: pirates.effects.NoiseSparkles
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class NoiseSparkles(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
-        model = loader.loadModelCopy('models/effects/particleCards')
+        model = loader.loadModel('models/effects/particleCards')
         self.card = model.find('**/particleSparkle')
         self.cardScale = 64.0
         self.setDepthWrite(0)
@@ -20,9 +21,9 @@ class NoiseSparkles(PooledEffect, EffectController):
         self.setLightOff()
         self.effectScale = 1.0
         self.effectColor = Vec4(1, 1, 1, 1)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('NoiseSparkles')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-2', 150)
+        self.p0 = Particles.Particles('particles-2')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereSurfaceEmitter')
@@ -39,6 +40,7 @@ class NoiseSparkles(PooledEffect, EffectController):
         self.noiseForce.setActive(0)
         f1.addForce(self.noiseForce)
         self.f.addForceGroup(f1)
+        self.p0.setPoolSize(150)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(50)
         self.p0.setLitterSpread(0)

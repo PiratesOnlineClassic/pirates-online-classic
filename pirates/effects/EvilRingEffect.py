@@ -1,13 +1,14 @@
+# Embedded file name: pirates.effects.EvilRingEffect
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class EvilRingEffect(PooledEffect, EffectController):
-    
     cardScale = 64.0
 
     def __init__(self, parent=None):
@@ -27,15 +28,16 @@ class EvilRingEffect(PooledEffect, EffectController):
         self.effectScale = 1.0
         self.effectColor = Vec4(1, 1, 1, 1)
         self.duration = 4.0
-        model = loader.loadModelCopy('models/effects/particleMaps')
+        model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleDarkSmoke')
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('EvilRingEffect')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 256)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('RingEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(256)
         self.p0.setBirthRate(0.0)
         self.p0.setLitterSize(8)
         self.p0.setLitterSpread(0)
@@ -77,6 +79,7 @@ class EvilRingEffect(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.0)
         self.p0.emitter.setRadiusSpread(0.0)
+        return
 
     def createTrack(self):
         expand = LerpFunctionInterval(self.reSize, 0.5, toData=1.0, fromData=0.0)

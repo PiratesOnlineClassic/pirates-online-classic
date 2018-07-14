@@ -1,14 +1,15 @@
+# Embedded file name: pirates.effects.GreenBlood
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class GreenBlood(PooledEffect, EffectController):
-    
     cardScale = 64.0
     SfxNames = ('wood_impact_1.mp3', 'wood_impact_3.mp3', 'wood_impact_4.mp3')
     splashSfx = []
@@ -20,14 +21,14 @@ class GreenBlood(PooledEffect, EffectController):
         self.card = model.find('**/particleGreenBlood')
         if not self.splashSfx:
             for filename in self.SfxNames:
-                self.splashSfx.append(base.loader.loadSfx('audio/' + filename))
+                self.splashSfx.append(base.loadSfx('audio/' + filename))
 
         if not GreenBlood.particleDummy:
             GreenBlood.particleDummy = render.attachNewNode(ModelNode('GreenBloodParticleDummy'))
             GreenBlood.particleDummy.setDepthWrite(0)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('GreenBlood')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 16)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('DiscEmitter')
@@ -39,6 +40,7 @@ class GreenBlood(PooledEffect, EffectController):
         self.f.addForceGroup(f0)
 
     def createTrack(self, rate=1):
+        self.p0.setPoolSize(16)
         self.p0.setBirthRate(0.4)
         self.p0.setLitterSize(1)
         self.p0.setLitterSpread(0)

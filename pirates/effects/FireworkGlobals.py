@@ -1,12 +1,7 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.FireworkGlobals
 from pandac.PandaModules import *
 
-
-class FireworkTrailType:
-    
+class FireworkTrailType():
     Default = 0
     Glow = 1
     Sparkle = 2
@@ -15,8 +10,7 @@ class FireworkTrailType:
     LongGlowSparkle = 5
 
 
-class FireworkBurstType:
-    
+class FireworkBurstType():
     Sparkles = 0
     BasicShell = 1
     LongShell = 2
@@ -26,8 +20,7 @@ class FireworkBurstType:
     NoiseBall = 6
 
 
-class FireworkType:
-    
+class FireworkType():
     BasicBlast = 0
     LongBlast = 1
     TrailBurst = 2
@@ -40,8 +33,6 @@ class FireworkType:
     AmericanFlag = 9
 
 
-class FireworkShowType:
-    
+class FireworkShowType():
     FourthOfJuly = 0
     NewYear = 1
-# okay decompiling .\pirates\effects\FireworkGlobals.pyc

@@ -1,14 +1,15 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.GraveShackles
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 
 class GraveShackles(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)

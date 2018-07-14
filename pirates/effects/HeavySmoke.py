@@ -1,10 +1,11 @@
+# Embedded file name: pirates.effects.HeavySmoke
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect
 from direct.particles import Particles
 from direct.particles import ForceGroup
-from pirates.effects.PooledEffect import PooledEffect
-from pirates.effects.EffectController import EffectController
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 
 class HeavySmoke(PooledEffect, EffectController):
     cardScale = 64.0
@@ -64,8 +65,8 @@ class HeavySmoke(PooledEffect, EffectController):
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPNOBLEND)
         self.p0.renderer.setAlphaDisable(0)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETCUSTOM)
-        self.p0.emitter.setAmplitude(3.5)
-        self.p0.emitter.setAmplitudeSpread(1.5)
+        self.p0.emitter.setAmplitude(3.0)
+        self.p0.emitter.setAmplitudeSpread(1.25)
         self.p0.emitter.setOffsetForce(Vec3(2.0, 2.0, 28.0))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 1.0))
@@ -94,7 +95,8 @@ class HeavySmoke(PooledEffect, EffectController):
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
-        self.checkInEffect(self)
+        if self.pool and self.pool.isUsed(self):
+            self.pool.checkin(self)
 
     def destroy(self):
         EffectController.destroy(self)

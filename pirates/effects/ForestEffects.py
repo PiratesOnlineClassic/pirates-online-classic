@@ -1,16 +1,15 @@
-import random
-
-from direct.task import Task
+# Embedded file name: pirates.effects.ForestEffects
 from pandac.PandaModules import *
+from direct.task import Task
+from pirates.swamp.Swamp import Swamp
 from pirates.effects import EnvironmentEffects
 from pirates.effects.Fireflies import Fireflies
 from pirates.effects.GroundFog import GroundFog
-from pirates.piratesbase import PiratesGlobals, TimeOfDayManager, TODGlobals
+from pirates.piratesbase import TimeOfDayManager, TODGlobals, PiratesGlobals
 from pirates.seapatch.Reflection import Reflection
-from pirates.swamp.Swamp import Swamp
+import random
 
 class ForestEffects(EnvironmentEffects.EnvironmentEffects):
-    
     FIREFLIES_Z = 6.0
     RANDOM_SOUND_PERIOD = 6
     RANDOM_SOUND_CHANCE = 12
@@ -24,6 +23,7 @@ class ForestEffects(EnvironmentEffects.EnvironmentEffects):
         self.randomAnimalSoundFiles = ['phase_4/audio/sfx_jungle_birds_v1.mp3', 'phase_4/audio/sfx_jungle_birds_v2.mp3']
         self.randomSfx = []
         self.startEffects()
+        return
 
     def delete(self):
         del self.animActor
@@ -64,6 +64,7 @@ class ForestEffects(EnvironmentEffects.EnvironmentEffects):
             self.randomSfx.append(sfx)
 
         taskMgr.doMethodLater(self.RANDOM_SOUND_PERIOD, self.checkForRandomSound, name='checkForRandomSound-' + str(id(self)))
+        return
 
     def stopEffects(self):
         if hasattr(base, 'cr') and not hasattr(base.cr, 'isFake'):
@@ -80,6 +81,7 @@ class ForestEffects(EnvironmentEffects.EnvironmentEffects):
             sfx.stop()
 
         base.ambientMgr.requestFadeOut('jungle', duration=5, priority=1)
+        return
 
     def checkForRandomSound(self, task):
         randomSoundPlaying = False

@@ -1,18 +1,14 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.VoodooSmoke
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 
 class VoodooSmoke(PooledEffect, EffectController):
-
     cardScale = 64.0
 
     def __init__(self):
@@ -26,7 +22,7 @@ class VoodooSmoke(PooledEffect, EffectController):
             VoodooSmoke.particleDummy.setLightOff()
             VoodooSmoke.particleDummy.setColorScaleOff()
             VoodooSmoke.particleDummy.setFogOff()
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('VoodooSmoke')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
@@ -86,4 +82,3 @@ class VoodooSmoke(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\VoodooSmoke.pyc

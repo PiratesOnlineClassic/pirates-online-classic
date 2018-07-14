@@ -1,19 +1,15 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.SmallSplash
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
-
 class SmallSplash(PooledEffect, EffectController):
-    
     cardScale = 64.0
     splashSfxNames = ('wtrsplash_1.mp3', 'wtrsplash_2.mp3', 'wtrsplash_3.mp3', 'wtrsplash_4.mp3',
                       'wtrsplash_5.mp3', 'wtrsplash_6.mp3', 'wtrsplash_7.mp3', 'wtrsplash_8.mp3')
@@ -29,7 +25,7 @@ class SmallSplash(PooledEffect, EffectController):
             SmallSplash.particleDummy.setDepthWrite(0)
         if not self.splashSfx:
             for filename in self.splashSfxNames:
-                self.splashSfx.append(base.loader.loadSfx('audio/' + filename))
+                self.splashSfx.append(base.loadSfx('audio/' + filename))
 
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)
@@ -96,4 +92,3 @@ class SmallSplash(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\SmallSplash.pyc

@@ -1,19 +1,13 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.ShipFog
-import math
-import os
-
+from pandac.PandaModules import *
+from direct.particles import ParticleEffect
 from direct.actor import Actor
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect
-from pandac.PandaModules import *
-
+import os
+import math
 
 class ShipFog(NodePath):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('ShipFog')
 
     def __init__(self, parent, psbskp, bin, binPriority, camera, renderParent=None, color=Vec4(1)):
@@ -58,7 +52,7 @@ class ShipFog(NodePath):
         normal.normalize()
         angle = math.atan2(normal[1], normal[0]) * 180 / math.pi
         limit = 30
-        self.frontEffect = ParticleEffect.ParticleEffect()
+        self.frontEffect = ParticleEffect.ParticleEffect('ShipFogFront')
         self.frontEffect.loadConfig(pfile)
         particleSystem = self.frontEffect.getParticlesNamed('particles-1')
         particleSystem.getRenderer().setTextureFromNode('models/misc/volcanoParticles', '**/volcanoSmoke')
@@ -70,7 +64,7 @@ class ShipFog(NodePath):
         physicalNodePath.setPos(center[0], center[1], 0)
         physicalNodePath.setScale(Vec3(1, ratio, 1) * scale)
         particleSystem.getEmitter().setArc(angle - 180 + limit, angle - limit)
-        self.backEffect = ParticleEffect.ParticleEffect()
+        self.backEffect = ParticleEffect.ParticleEffect('ShipFogBack')
         self.backEffect.loadConfig(pfile)
         particleSystem = self.backEffect.getParticlesNamed('particles-1')
         particleSystem.getRenderer().setTextureFromNode('models/misc/volcanoParticles', '**/volcanoSmoke')
@@ -109,4 +103,3 @@ class ShipFog(NodePath):
         self.backEffect = None
         self.removeNode()
         return
-# okay decompiling .\pirates\effects\ShipFog.pyc

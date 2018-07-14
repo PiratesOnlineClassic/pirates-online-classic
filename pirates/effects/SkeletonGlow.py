@@ -1,20 +1,14 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.SkeletonGlow
+from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from pirates.piratesbase import PiratesGlobals
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.effects.PooledEffect import PooledEffect
-
-
 class SkeletonGlow(PooledEffect, EffectController):
-    
 
     def __init__(self, newParent=render, billboardOffset=0.0):
         PooledEffect.__init__(self)
@@ -44,14 +38,12 @@ class SkeletonGlow(PooledEffect, EffectController):
         if hpPercent >= 1.0:
             self.glow.find('**/+SwitchNode').node().setVisibleChild(0)
             self.pulseRate = 1.0
-        else:
-            if hpPercent < 0.5:
-                self.glow.find('**/+SwitchNode').node().setVisibleChild(1)
-                self.pulseRate = 0.5
-            else:
-                if hpPercent < 0.25:
-                    self.glow.find('**/+SwitchNode').node().setVisibleChild(2)
-                    self.pulseRate = 0.1
+        elif hpPercent < 0.5:
+            self.glow.find('**/+SwitchNode').node().setVisibleChild(1)
+            self.pulseRate = 0.5
+        elif hpPercent < 0.25:
+            self.glow.find('**/+SwitchNode').node().setVisibleChild(2)
+            self.pulseRate = 0.1
         self.stop()
         self.createTracks()
         self.loop()
@@ -64,4 +56,3 @@ class SkeletonGlow(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\SkeletonGlow.pyc

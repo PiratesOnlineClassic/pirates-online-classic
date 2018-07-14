@@ -1,13 +1,14 @@
+# Embedded file name: pirates.effects.RayGlow
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class RayGlow(PooledEffect, EffectController):
-    
     cardScale = 64.0
 
     def __init__(self, parent=None):
@@ -21,15 +22,14 @@ class RayGlow(PooledEffect, EffectController):
         self.setColorScaleOff()
         self.effectScale = 1.0
         self.effectColor = Vec4(1, 1, 1, 1)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('RayGlow')
         self.f.reparentTo(self)
-        self.f = ParticleEffect.ParticleEffect()
-        self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 36)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereVolumeEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(36)
         self.p0.setBirthRate(0.05)
         self.p0.setLitterSize(4)
         self.p0.setLitterSpread(0)

@@ -1,18 +1,17 @@
+# Embedded file name: pirates.effects.HomingMissile
+from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.showbase.PythonUtil import *
+from pirates.piratesbase import PiratesGlobals
+from pirates.effects import PolyTrail
+from PooledEffect import PooledEffect
+from EffectController import EffectController
+from direct.showbase import PythonUtil
+from direct.task import Task
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.showbase import PythonUtil
-from direct.showbase.DirectObject import *
-from direct.showbase.PythonUtil import *
-from direct.task import Task
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects import PolyTrail
-from pirates.piratesbase import PiratesGlobals
-from pirates.effects.PooledEffect import PooledEffect
-
 class HomingMissile(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -24,14 +23,17 @@ class HomingMissile(PooledEffect, EffectController):
         self.wantTrail = 1
         self.particleEffect = None
         self.motion_color = [Vec4(0.5, 0.6, 0.8, 1.0), Vec4(0.5, 0.6, 0.8, 1.0)]
-        vertex_list = [Vec4(0.0, 1.0, 0.0, 1.0), Vec4(0.0, -1.0, 0.0, 1.0)]
+        vertex_list = [
+         Vec4(0.0, 1.0, 0.0, 1.0), Vec4(0.0, -1.0, 0.0, 1.0)]
         self.motion_trail = PolyTrail.PolyTrail(None, vertex_list, self.motion_color, 1.5)
         self.motion_trail.reparentTo(self)
-        vertex_list = [Vec4(1.0, 0.0, 0.0, 1.0), Vec4(-1.0, 0.0, 0.0, 1.0)]
+        vertex_list = [
+         Vec4(1.0, 0.0, 0.0, 1.0), Vec4(-1.0, 0.0, 0.0, 1.0)]
         self.motion_trail2 = PolyTrail.PolyTrail(None, vertex_list, self.motion_color, 1.5)
         self.motion_trail2.reparentTo(self)
         self.motion_trail.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha))
         self.motion_trail2.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha))
+        return
 
     def createTrack(self):
         self.timeLeft = self.duration

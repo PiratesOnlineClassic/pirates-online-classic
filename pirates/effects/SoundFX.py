@@ -1,15 +1,9 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.SoundFX
 import random
-
-from direct.task import Task
 from pandac.PandaModules import *
-
+from direct.task import Task
 
 class SoundFX(NodePath):
-    
 
     def __init__(self, sfxFile, volume=0.5, looping=True, delayMin=0, delayMax=0, pos=None, hpr=None, parent=None, listenerNode=None, taskName='playSfx', drawIcon=False):
         NodePath.NodePath.__init__(self, 'soundFX')
@@ -33,7 +27,7 @@ class SoundFX(NodePath):
             hpr = VBase3(0, 0, 0)
         self.setHpr(hpr)
         if sfxFile:
-            self.sfx = base.loader.loadSfx(sfxFile)
+            self.sfx = base.loadSfx(sfxFile)
             self.playSfx(taskName)
         else:
             self.sfx = None
@@ -75,7 +69,7 @@ class SoundFX(NodePath):
     def setSfxFile(self, sfxFile):
         if self.sfx:
             del self.sfx
-        self.sfx = base.loader.loadSfx(sfxFile)
+        self.sfx = base.loadSfx(sfxFile)
 
     def setVolume(self, volume):
         self.volume = volume
@@ -100,4 +94,3 @@ class SoundFX(NodePath):
             taskMgr.remove(self.task.name)
         if taskMgr.hasTaskNamed(self.taskName):
             taskMgr.remove(self.taskName)
-# okay decompiling .\pirates\effects\SoundFX.pyc

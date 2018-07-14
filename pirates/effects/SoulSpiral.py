@@ -1,17 +1,11 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.SoulSpiral
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
-
 class SoulSpiral(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -76,4 +70,3 @@ class SoulSpiral(PooledEffect, EffectController):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
         return
-# okay decompiling .\pirates\effects\SoulSpiral.pyc

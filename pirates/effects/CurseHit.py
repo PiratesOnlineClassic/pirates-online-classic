@@ -1,14 +1,14 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.CurseHit
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 
 class CurseHit(PooledEffect, EffectController):
-    
     cardScale = 128.0
 
     def __init__(self):
@@ -20,15 +20,16 @@ class CurseHit(PooledEffect, EffectController):
         if not CurseHit.particleDummy:
             CurseHit.particleDummy = render.attachNewNode(ModelNode('CurseHitParticleDummy'))
             CurseHit.particleDummy.setDepthWrite(0)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('CurseHit')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 256)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereSurfaceEmitter')
         self.f.addParticles(self.p0)
 
     def createTrack(self, rate=1):
+        self.p0.setPoolSize(256)
         self.p0.setBirthRate(0.01)
         self.p0.setLitterSize(5)
         self.p0.setLitterSpread(0)

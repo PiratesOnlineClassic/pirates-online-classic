@@ -1,6 +1,7 @@
+# Embedded file name: pirates.effects.PooledEffect
+from pandac.PandaModules import *
 from direct.showbase import Pool
 from direct.showbase.DirectObject import DirectObject
-from pandac.PandaModules import *
 
 class PooledEffect(DirectObject, NodePath):
     pool = None
@@ -17,12 +18,16 @@ class PooledEffect(DirectObject, NodePath):
             if free + used < self.poolLimit:
                 self.pool.add(self())
                 return self.pool.checkout()
+            else:
+                return
+        return
 
     @classmethod
     def cleanup(self):
         if self.pool:
             self.pool.cleanup(self.destroy)
             self.pool = None
+        return
 
     def __init__(self):
         NodePath.__init__(self, self.__class__.__name__)

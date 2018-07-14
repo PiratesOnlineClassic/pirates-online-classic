@@ -1,12 +1,11 @@
+# Embedded file name: pirates.effects.ExplosionTip
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.interval.IntervalGlobal import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class ExplosionTip(PooledEffect, EffectController):
-    
     NUM_PARTS = 10
 
     def __init__(self):
@@ -58,3 +57,4 @@ class ExplosionTip(PooledEffect, EffectController):
             self.card = None
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+        return

@@ -1,14 +1,13 @@
+# Embedded file name: pirates.effects.CandleFlame
+from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from pirates.piratesbase import PiratesGlobals
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
-
 class CandleFlame(EffectController, NodePath):
-
 
     def __init__(self, newParent=render, billboardOffset=1.0):
         NodePath.__init__(self, 'CandleFlame')
@@ -35,6 +34,7 @@ class CandleFlame(EffectController, NodePath):
         self.glowHalo.setColorScale(1.0, 1.0, 1.0, 1)
         self.glowHalo.setPos(0, 0, 0.15)
         self.glowHalo.reparentTo(self)
+        return
 
     def createTrack(self):
         baseScale = Vec3(1.1, 1.1, 1.1)
@@ -78,3 +78,4 @@ class CandleFlame(EffectController, NodePath):
         if self.haloTrack:
             self.haloTrack.finish()
             self.haloTrack = None
+        return

@@ -1,14 +1,15 @@
+# Embedded file name: pirates.effects.FlamingSkull
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class FlamingSkull(PooledEffect, EffectController):
-    
     cardScale = 128.0
 
     def __init__(self):
@@ -33,13 +34,14 @@ class FlamingSkull(PooledEffect, EffectController):
         self.icon.reparentTo(self)
         self.icon.setPos(self, 0, 0, -0.3)
         self.icon.setBin('fixed', 65)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('FlamingSkull')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 128)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereSurfaceEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(128)
         self.p0.setBirthRate(0.2)
         self.p0.setLitterSize(1)
         self.p0.setLitterSpread(0)

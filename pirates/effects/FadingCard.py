@@ -1,9 +1,9 @@
-from direct.interval.IntervalGlobal import *
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.FadingCard
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from EffectController import EffectController
 
 class FadingCard(EffectController, NodePath):
-    
 
     def __init__(self, card=None, color=Vec4(1, 1, 1, 1), fadeTime=0.25, waitTime=1.25, startScale=0.25, endScale=3.0):
         NodePath.__init__(self, 'FadingCard')

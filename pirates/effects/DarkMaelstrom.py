@@ -1,13 +1,12 @@
+# Embedded file name: pirates.effects.DarkMaelstrom
+from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from pirates.piratesbase import PiratesGlobals
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
-
 class DarkMaelstrom(DirectObject, NodePath):
-    
 
     def __init__(self, newParent=render):
         NodePath.__init__(self, 'DarkMaelstromParent')
@@ -41,11 +40,11 @@ class DarkMaelstrom(DirectObject, NodePath):
         self.bolt4.setBillboardAxis()
         self.bolt4.setColorScaleOff()
         self.bolt4.setColor(Vec4(0))
-        stormTops = self.glow.findAllMatches('**/Swirl_*') 
+        stormTops = self.glow.findAllMatches('**/Swirl_*')
         for top in stormTops:
             top.setBin('fixed', 125)
 
-        stormTopTs = [top.findAllTextureStages()[0] for top in stormTops ]
+        stormTopTs = [ top.findAllTextureStages()[0] for top in stormTops ]
         duration = 20 + random.randint(1, 20)
         rotate = Parallel(stormTops[0].hprInterval(duration, Point3(360, 0, 0), startHpr=Point3(0, 0, 0)), stormTops[1].hprInterval(duration, Point3(0, 0, 0), startHpr=Point3(360, 0, 0)))
         uvScrollTop = Parallel(LerpFunctionInterval(self.setNewUVs, duration, toData=0, fromData=1, extraArgs=[stormTops[0], stormTopTs[0]]), LerpFunctionInterval(self.setNewUVs, duration, fromData=1, toData=0, extraArgs=[stormTops[1], stormTopTs[1]]))
@@ -67,6 +66,7 @@ class DarkMaelstrom(DirectObject, NodePath):
         playBolt4 = Sequence(bolt4In, Wait(0.1), bolt4Out)
         self.lightningTrack = Sequence(Wait(1.0), playBolt1, Wait(0.5), playBolt2, Wait(2.0), playBolt3, Wait(1.5), playBolt4, Wait(0.0))
         self.fadeTrack = None
+        return
 
     def play(self, rate=1):
         self.setColorScaleOff()

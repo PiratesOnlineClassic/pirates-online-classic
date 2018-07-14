@@ -1,15 +1,16 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.LightSmoke
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
 from pirates.piratesgui.GameOptions import Options
-from pirates.effects.PooledEffect import PooledEffect
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 
 class LightSmoke(PooledEffect, EffectController):
-    
     cardScale = 64.0
 
     def __init__(self, parent=None):
@@ -26,13 +27,14 @@ class LightSmoke(PooledEffect, EffectController):
             LightSmoke.particleDummy.setLightOff()
             LightSmoke.particleDummy.setColorScaleOff()
         self.duration = 10.0
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('LightSmoke')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 64)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('DiscEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(64)
         self.p0.setBirthRate(0.25)
         self.p0.setLitterSize(2)
         self.p0.setLitterSpread(0)
@@ -72,6 +74,7 @@ class LightSmoke(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 1.0))
         self.p0.emitter.setRadius(4.0)
+        return
 
     def startLoop(self, lod=None, accelerateTime=0):
         self._accelerateTime = accelerateTime

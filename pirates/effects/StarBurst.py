@@ -1,21 +1,18 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.StarBurst
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 
 class StarBurst(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
-        model = loader.loadModelCopy('models/effects/particleCards')
+        model = loader.loadModel('models/effects/particleCards')
         self.card = model.find('**/particleStars')
         self.cardScale = 64.0
         self.setDepthWrite(0)
@@ -23,7 +20,7 @@ class StarBurst(PooledEffect, EffectController):
         self.setLightOff()
         self.effectScale = 1.0
         self.effectColor = Vec4(1, 1, 1, 1)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('StarBurst')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-0')
         self.p0.setFactory('ZSpinParticleFactory')
@@ -99,4 +96,3 @@ class StarBurst(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\StarBurst.pyc

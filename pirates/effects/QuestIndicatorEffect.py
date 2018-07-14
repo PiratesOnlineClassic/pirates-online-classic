@@ -1,14 +1,13 @@
+# Embedded file name: pirates.effects.QuestIndicatorEffect
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import os
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
-
 class QuestIndicatorEffect(PooledEffect, EffectController):
-    
     cardScale = 16.0
     cardScale2 = 64.0
 
@@ -23,14 +22,14 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
         self.particleDummy.setLightOff()
         self.particleDummy.setFogOff()
         self.particleDummy.setColorScaleOff()
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('QuestIndicatorEffect')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('BoxEmitter')
         self.f.addParticles(self.p0)
-        self.f2 = ParticleEffect.ParticleEffect()
+        self.f2 = ParticleEffect.ParticleEffect('QuestIndicatorEffect2')
         self.f2.reparentTo(self)
         self.p1 = Particles.Particles('particles-2')
         self.p1.setFactory('ZSpinParticleFactory')
@@ -187,4 +186,3 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
 
     def setWantBottomEffect(self, want):
         self.wantBottomEffect = want
-# okay decompiling .\pirates\effects\QuestIndicatorEffect.pyc

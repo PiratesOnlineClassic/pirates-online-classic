@@ -1,16 +1,12 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.WaterMist
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
+from direct.interval.IntervalGlobal import *
+from direct.particles import Particles
+from direct.particles import ParticleEffect
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 
 class WaterMist(PooledEffect, EffectController):
-
 
     def __init__(self, parent=None):
         PooledEffect.__init__(self)
@@ -19,7 +15,7 @@ class WaterMist(PooledEffect, EffectController):
         self.setLightOff()
         self.setBin('fixed', 20)
         self.effectScale = 1.0
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('WaterMist')
         self.f.reparentTo(self)
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleWhiteSteam')
@@ -62,7 +58,7 @@ class WaterMist(PooledEffect, EffectController):
         self.setEffectScale(self.effectScale)
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.2), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(3.0), Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
+        self.track = Sequence(self.startEffect, Wait(12.0), self.endEffect)
 
     def setEffectScale(self, scale):
         self.effectScale = scale
@@ -81,4 +77,3 @@ class WaterMist(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\WaterMist.pyc

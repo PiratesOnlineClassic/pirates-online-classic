@@ -1,16 +1,12 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.WaterSplashes
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 
 class WaterSplashes(PooledEffect, EffectController):
-
 
     def __init__(self, parent=None):
         PooledEffect.__init__(self)
@@ -18,7 +14,7 @@ class WaterSplashes(PooledEffect, EffectController):
         self.setDepthWrite(0)
         self.setBin('fixed', 18)
         self.effectScale = 1.0
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('WaterSplashes')
         self.f.reparentTo(self)
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleSplash')
@@ -61,7 +57,7 @@ class WaterSplashes(PooledEffect, EffectController):
         self.setEffectScale(self.effectScale)
         self.startEffect = Sequence(Func(self.p1.setBirthRate, 0.01), Func(self.p1.clearToInitial), Func(self.f.start, self, self))
         self.endEffect = Sequence(Func(self.p1.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
+        self.track = Sequence(self.startEffect, Wait(12.0), self.endEffect)
 
     def setEffectScale(self, scale):
         self.effectScale = scale
@@ -80,4 +76,3 @@ class WaterSplashes(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\WaterSplashes.pyc

@@ -1,11 +1,10 @@
-from direct.interval.IntervalGlobal import *
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.BossAura
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
+from direct.interval.IntervalGlobal import *
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 
 class BossAura(PooledEffect, EffectController):
-
 
     def __init__(self):
         PooledEffect.__init__(self)

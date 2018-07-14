@@ -1,20 +1,14 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.ProjectileArc
-import random
-
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from pandac.PandaModules import *
-from pirates.effects.CannonSplash import CannonSplash
+from pirates.piratesbase import PiratesGlobals
 from pirates.effects.DustRing import DustRing
 from pirates.effects.SmallSplash import SmallSplash
-from pirates.piratesbase import PiratesGlobals
-
+from pirates.effects.CannonSplash import CannonSplash
+import random
 
 class ProjectileArc(DirectObject, NodePath):
-    
 
     def __init__(self, wantRotate=1, wantColl=0):
         NodePath.__init__(self, 'projectileArcRenderParent')
@@ -133,13 +127,11 @@ class ProjectileArc(DirectObject, NodePath):
                     splashEffect.setPos(pos[0], pos[1], entryWaterHeight)
                     splashEffect.play()
             self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
-        else:
-            if objType == PiratesGlobals.COLL_LAND and base.cr.wantSpecialEffects:
-                pos = entry.getSurfacePoint(render)
-                dustRingEffect = DustRing.getEffect()
-                if dustRingEffect:
-                    dustRingEffect.reparentTo(render)
-                    dustRingEffect.setPos(pos)
-                    dustRingEffect.play()
-                self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
-# okay decompiling .\pirates\effects\ProjectileArc.pyc
+        elif objType == PiratesGlobals.COLL_LAND and base.cr.wantSpecialEffects:
+            pos = entry.getSurfacePoint(render)
+            dustRingEffect = DustRing.getEffect()
+            if dustRingEffect:
+                dustRingEffect.reparentTo(render)
+                dustRingEffect.setPos(pos)
+                dustRingEffect.play()
+            self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
