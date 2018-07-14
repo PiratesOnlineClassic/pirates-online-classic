@@ -27,6 +27,10 @@ args = parser.parse_args()
 if not os.path.exists(args.build_dir):
     os.mkdir(args.build_dir)
 
+# create a new AES key and iv to encrypt the game data with...
+IV = os.urandom(16)
+KEY = os.urandom(16)
+
 print 'Building the game data...'
 
 datagram = Datagram()
@@ -56,9 +60,6 @@ for filename in args.dc_files:
     other_datagram.append_data(data)
 
     datagram.append_data(other_datagram.get_message())
-
-IV = ''.join(['0'] * 16)
-KEY = 'ExampleKey123456'
 
 cipher = pyaes.AESModeOfOperationOFB(
     KEY, iv=IV)
@@ -96,8 +97,8 @@ from panda3d.core import *
 
 
 def main():
-    IV = ''.join(['0'] * 16)
-    KEY = 'ExampleKey123456'
+    IV = %s
+    KEY = %s
 
     cipher = pyaes.AESModeOfOperationOFB(
         KEY, iv=IV)
@@ -188,7 +189,8 @@ if __name__ == '__main__':
 
 # copy over the runtime main module
 with open(os.path.join(args.build_dir, args.main_module), 'w') as f:
-    io = StringIO.StringIO(RUNTIME_DATA)
+    io = StringIO.StringIO(RUNTIME_DATA % (
+        repr(IV), repr(KEY)))
 
     for line in io.readlines():
         f.write(line)
