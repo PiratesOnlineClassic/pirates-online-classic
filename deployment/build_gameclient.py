@@ -15,10 +15,10 @@ parser.add_argument('modules', nargs='*', default=['otp', 'pirates'],
                     help='The Pirates Online Classic modules to be included in the build.')
 args = parser.parse_args()
 
-print 'Building the game client...'
+# switch our paths to the build directory...
+os.chdir(args.build_dir)
 
-if not os.path.exists(args.build_dir):
-    os.mkdir(args.build_dir)
+print 'Building the game client...'
 
 cmd = sys.executable + ' -m direct.showutil.pfreeze'
 args.modules.extend(['direct', 'pandac'])
@@ -41,7 +41,7 @@ extension_modules = [
 for extension_module in extension_modules:
     cmd += ' -x %s' % extension_module
 
-cmd += ' -o %s/%s' % (args.build_dir, args.output)
+cmd += ' -o %s' % args.output
 cmd += ' %s' % args.main_module
 os.system(cmd)
 
