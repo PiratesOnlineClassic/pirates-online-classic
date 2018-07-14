@@ -1,22 +1,17 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.VoodooProjectile
+from pandac.PandaModules import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from pirates.piratesbase import PiratesGlobals
+from pirates.effects import PolyTrail
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from direct.showbase.DirectObject import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects import PolyTrail
-from pirates.piratesbase import PiratesGlobals
-from pirates.effects.PooledEffect import PooledEffect
-
-
 class VoodooProjectile(PooledEffect, EffectController):
-
     cardScale = 128.0
 
     def __init__(self, type=None):
@@ -31,7 +26,7 @@ class VoodooProjectile(PooledEffect, EffectController):
             VoodooProjectile.particleDummy.setColorScaleOff()
             VoodooProjectile.particleDummy.setFogOff()
         self.effectColor = Vec4(0.5, 0.2, 1, 1)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('VoodooProjectile')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('ZSpinParticleFactory')
@@ -103,15 +98,15 @@ class VoodooProjectile(PooledEffect, EffectController):
                 throwTrack = ProjectileInterval(self, endZ=endZ, startPos=self.getPos(), wayPoint=targetPos, timeToWayPoint=1.0, gravityMult=1.0)
         except StandardError, e:
             throwTrack = None
-        else:
-            if throwTrack:
-                if not motion_color:
-                    motion_color = self.motion_color
-                    self.motion_trail.setVertexColors(motion_color)
-                movement = Sequence(Func(self.motion_trail.beginTrail), throwTrack, Func(self.motion_trail.endTrail))
-                self.track = Sequence(self.startEffect, movement, self.endEffect)
-            self.track = Wait(2)
 
+        if throwTrack:
+            if not motion_color:
+                motion_color = self.motion_color
+                self.motion_trail.setVertexColors(motion_color)
+            movement = Sequence(Func(self.motion_trail.beginTrail), throwTrack, Func(self.motion_trail.endTrail))
+            self.track = Sequence(self.startEffect, movement, self.endEffect)
+        else:
+            self.track = Wait(2)
         return
 
     def play(self, targetPos, time, target):
@@ -133,4 +128,3 @@ class VoodooProjectile(PooledEffect, EffectController):
         self.motion_trail.destroy()
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\VoodooProjectile.pyc

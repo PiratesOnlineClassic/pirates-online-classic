@@ -1,10 +1,11 @@
+# Embedded file name: pirates.effects.FireSparks
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect
 from direct.particles import Particles
 from direct.particles import ForceGroup
-from pirates.effects.PooledEffect import PooledEffect
-from pirates.effects.EffectController import EffectController
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 
 class FireSparks(PooledEffect, EffectController):
     cardScale = 64.0
@@ -23,7 +24,7 @@ class FireSparks(PooledEffect, EffectController):
             FireSparks.particleDummy.setBin('fixed', 70)
         self.f = ParticleEffect.ParticleEffect('FireSparks')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-sparks', 64)
+        self.p0 = Particles.Particles('particles-sparks')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('DiscEmitter')
@@ -34,6 +35,7 @@ class FireSparks(PooledEffect, EffectController):
         self.noiseForce.setActive(0)
         f0.addForce(self.noiseForce)
         self.f.addForceGroup(f0)
+        self.p0.setPoolSize(64)
         self.p0.setBirthRate(0.2)
         self.p0.setLitterSize(12)
         self.p0.setLitterSpread(0)
@@ -91,7 +93,8 @@ class FireSparks(PooledEffect, EffectController):
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
-        self.checkInEffect(self)
+        if self.pool and self.pool.isUsed(self):
+            self.pool.checkin(self)
 
     def destroy(self):
         EffectController.destroy(self)

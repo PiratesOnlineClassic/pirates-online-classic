@@ -1,12 +1,11 @@
+# Embedded file name: pirates.effects.EnergySpiral
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class EnergySpiral(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -56,3 +55,4 @@ class EnergySpiral(PooledEffect, EffectController):
         self.removeNode()
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+        return

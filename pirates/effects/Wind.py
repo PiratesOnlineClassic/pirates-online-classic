@@ -1,14 +1,13 @@
+# Embedded file name: pirates.effects.Wind
+from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from pirates.piratesbase import PiratesGlobals
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.effects.PooledEffect import PooledEffect
-
 class Wind(PooledEffect, EffectController):
-
 
     def __init__(self):
         PooledEffect.__init__(self)

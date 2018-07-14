@@ -1,13 +1,14 @@
+# Embedded file name: pirates.effects.ThrowDirt2
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class ThrowDirt2(PooledEffect, EffectController):
-    
     cardScale = 128.0
 
     def __init__(self, parent=None):
@@ -21,11 +22,11 @@ class ThrowDirt2(PooledEffect, EffectController):
             self.particleDummy.setLightOff()
             self.particleDummy.setColorScaleOff()
             self.particleDummy.setFogOff()
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('ThrowDirt2')
         self.f.reparentTo(self)
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleRockShower')
-        self.p0 = Particles.Particles('particles-1', 64)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('RectangleEmitter')
@@ -36,6 +37,7 @@ class ThrowDirt2(PooledEffect, EffectController):
         force0.setActive(1)
         f0.addForce(force0)
         self.f.addForceGroup(f0)
+        self.p0.setPoolSize(64)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(3)
         self.p0.setLitterSpread(0)
@@ -70,6 +72,7 @@ class ThrowDirt2(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setMinBound(Point2(-0.25, -0.25))
         self.p0.emitter.setMaxBound(Point2(0.25, 0.25))
+        return
 
     def createTrack(self):
         self.startEffect = Sequence(Wait(0.65), Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))

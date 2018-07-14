@@ -1,12 +1,11 @@
+# Embedded file name: pirates.effects.DomeExplosion
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.interval.IntervalGlobal import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class DomeExplosion(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)

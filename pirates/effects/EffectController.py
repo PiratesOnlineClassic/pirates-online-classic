@@ -1,6 +1,7 @@
+# Embedded file name: pirates.effects.EffectController
 from pandac.PandaModules import *
 
-class EffectController:
+class EffectController():
     particleDummy = None
 
     def __init__(self):
@@ -9,7 +10,7 @@ class EffectController:
         self.endEffect = None
         self.f = None
         self.p0 = None
-        
+        return
 
     def createTrack(self):
         pass
@@ -21,16 +22,13 @@ class EffectController:
         self.f = None
         self.p0 = None
         self.removeNode()
+        return
 
     def cleanUpEffect(self):
         self.setPosHpr(0, 0, 0, 0, 0, 0)
         if self.f:
             self.f.disable()
         self.detachNode()
-        
-    def setPoolSize(self, size):
-        if self.p0:
-            self.p0.setPoolSize(int(size))
 
     def reallyCleanUpEffect(self):
         self.cleanUpEffect()
@@ -59,6 +57,7 @@ class EffectController:
             self.endEffect.pause()
             self.endEffect = None
         self.cleanUpEffect()
+        return
 
     def finish(self):
         if self.track:
@@ -70,6 +69,7 @@ class EffectController:
         if self.endEffect:
             self.endEffect.pause()
             self.endEffect = None
+        return
 
     def startLoop(self, lod=None):
         if lod != None:
@@ -82,6 +82,7 @@ class EffectController:
             self.createTrack()
         if self.startEffect:
             self.startEffect.start()
+        return
 
     def stopLoop(self):
         if self.startEffect:
@@ -89,6 +90,7 @@ class EffectController:
             self.startEffect = None
         if self.endEffect and not self.endEffect.isPlaying():
             self.endEffect.start()
+        return
 
     def getTrack(self):
         if not self.track:

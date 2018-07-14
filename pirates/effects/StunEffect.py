@@ -1,11 +1,12 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.StunEffect
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
+from direct.interval.IntervalGlobal import *
+from EffectController import EffectController
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from PooledEffect import PooledEffect
 
 class StunEffect(PooledEffect, EffectController):
-    
     cardScale = 64.0
 
     def __init__(self):
@@ -21,13 +22,14 @@ class StunEffect(PooledEffect, EffectController):
         self.duration = 1.5
         self.direction = 1
         self.effectScale = 1.0
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('StunEffect')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 10)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('RingEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(10)
         self.p0.setBirthRate(0.2)
         self.p0.setLitterSize(2)
         self.p0.setLitterSpread(0)

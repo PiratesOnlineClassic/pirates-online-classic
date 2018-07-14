@@ -1,16 +1,15 @@
+# Embedded file name: pirates.effects.TrailExplosion
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from EffectController import EffectController
+from PooledEffect import PooledEffect
+from pirates.effects.SparksTrailLong import SparksTrailLong
 import random
 
-from direct.interval.IntervalGlobal import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.SparksTrailLong import SparksTrailLong
-from pirates.effects.PooledEffect import PooledEffect
-
 class TrailExplosion(PooledEffect, EffectController):
-
-    trailsVel = [[Vec3(150, -50, 100), Vec3(-150, -50, 100), Vec3(0, 150, 100)], [Vec3(120, 120, 100),
-                  Vec3(120, -120, 100), Vec3(-120, 120, 100), Vec3(-120, -120, 100)], [Vec3(0, 150, 100),
-                  Vec3(140, 30, 100), Vec3(-140, 30, 100), Vec3(30, -60, 100), Vec3(-30, -60, 100)]]
+    trailsVel = [
+     [
+      Vec3(150, -50, 100), Vec3(-150, -50, 100), Vec3(0, 150, 100)], [Vec3(120, 120, 100), Vec3(120, -120, 100), Vec3(-120, 120, 100), Vec3(-120, -120, 100)], [Vec3(0, 150, 100), Vec3(140, 30, 100), Vec3(-140, 30, 100), Vec3(30, -60, 100), Vec3(-30, -60, 100)]]
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -48,6 +47,7 @@ class TrailExplosion(PooledEffect, EffectController):
                 self.trailIval.append(Sequence(Func(self.trailEffects[i].startLoop), Wait(dur), Func(self.trailEffects[i].stopLoop)))
 
         self.track = Sequence(self.trailIval, Func(self.cleanUpEffect))
+        return
 
     def setEffectScale(self, scale):
         self.effectScale = scale
@@ -64,6 +64,7 @@ class TrailExplosion(PooledEffect, EffectController):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
+        return
 
     def destroy(self):
         EffectController.destroy(self)

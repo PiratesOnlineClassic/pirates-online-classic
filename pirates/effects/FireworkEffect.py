@@ -1,36 +1,30 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.FireworkEffect
-import random
-
-from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
-from pirates.effects.BlastEffect import BlastEffect
-from pirates.effects.CircleBurst import CircleBurst
+from direct.interval.IntervalGlobal import *
+import random
 from pirates.effects.FireworkGlobals import *
-from pirates.effects.FlashEffect import FlashEffect
 from pirates.effects.Glow import Glow
 from pirates.effects.GlowTrail import GlowTrail
-from pirates.effects.NoiseSparkles import NoiseSparkles
-from pirates.effects.RayBurst import RayBurst
-from pirates.effects.ShellBurst import ShellBurst
-from pirates.effects.SimpleSparkles import SimpleSparkles
-from pirates.effects.SkullBurst import SkullBurst
-from pirates.effects.SkullFlash import SkullFlash
-from pirates.effects.Sparkles import Sparkles
 from pirates.effects.SparksTrail import SparksTrail
 from pirates.effects.SparksTrailLong import SparksTrailLong
+from pirates.effects.FlashEffect import FlashEffect
+from pirates.effects.BlastEffect import BlastEffect
+from pirates.effects.Sparkles import Sparkles
+from pirates.effects.SimpleSparkles import SimpleSparkles
+from pirates.effects.NoiseSparkles import NoiseSparkles
+from pirates.effects.RayBurst import RayBurst
 from pirates.effects.StarBurst import StarBurst
+from pirates.effects.CircleBurst import CircleBurst
+from pirates.effects.ShellBurst import ShellBurst
+from pirates.effects.SkullBurst import SkullBurst
+from pirates.effects.SkullFlash import SkullFlash
 from pirates.effects.TrailExplosion import TrailExplosion
-
 trailSfxNames = [
  'firework_whistle_01.mp3', 'firework_whistle_02.mp3']
 burstSfxNames = [
  'firework_explosion_01.mp3', 'firework_explosion_02.mp3', 'firework_explosion_03.mp3', 'firework_distance_01.mp3', 'firework_distance_02.mp3', 'firework_distance_03.mp3']
 
 class FireworkEffect(NodePath):
-    
 
     def __init__(self, burstEffectId, trailEffectId=FireworkTrailType.Default, velocity=Vec3(0, 0, 400), scale=1.0, primaryColor=Vec4(1, 1, 1, 1), secondaryColor=None, burstDelay=1.5):
         NodePath.__init__(self, 'FireworkEffect')
@@ -52,11 +46,11 @@ class FireworkEffect(NodePath):
         self.burstEffects = []
         self.trailSfx = []
         for filename in trailSfxNames:
-            self.trailSfx.append(base.loader.loadSfx('audio/' + filename))
+            self.trailSfx.append(base.loadSfx('audio/' + filename))
 
         self.burstSfx = []
         for filename in burstSfxNames:
-            self.burstSfx.append(base.loader.loadSfx('audio/' + filename))
+            self.burstSfx.append(base.loadSfx('audio/' + filename))
 
         return
 
@@ -353,4 +347,3 @@ class FireworkEffect(NodePath):
         self.cleanupTrailEffects()
         self.cleanupBurstEffects()
         return
-# okay decompiling .\pirates\effects\FireworkEffect.pyc

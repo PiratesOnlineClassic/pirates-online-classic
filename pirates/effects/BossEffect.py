@@ -1,11 +1,12 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.BossEffect
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 
 class BossEffect(PooledEffect, EffectController):
-
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -19,13 +20,14 @@ class BossEffect(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleCards')
         self.card = model.find('**/particleSparkles')
         self.cardScale = 64.0
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('BossEffect')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 16)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereVolumeEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(16)
         self.p0.setBirthRate(0.0)
         self.p0.setLitterSize(4)
         self.p0.setLitterSpread(0)

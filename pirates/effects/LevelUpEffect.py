@@ -1,13 +1,14 @@
+# Embedded file name: pirates.effects.LevelUpEffect
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class LevelUpEffect(PooledEffect, EffectController):
-    
     cardScale = 64.0
 
     def __init__(self):
@@ -21,9 +22,9 @@ class LevelUpEffect(PooledEffect, EffectController):
         self.particleDummy.setFogOff()
         self.particleDummy.setColorScaleOff()
         self.particleDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('LevelUpEffect')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 128)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereVolumeEmitter')
@@ -31,6 +32,7 @@ class LevelUpEffect(PooledEffect, EffectController):
         self.radius = 3.0
 
     def createTrack(self):
+        self.p0.setPoolSize(128)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(5)
         self.p0.setLitterSpread(0)

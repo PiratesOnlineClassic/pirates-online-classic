@@ -1,14 +1,15 @@
+# Embedded file name: pirates.effects.WindCharge
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from EffectController import EffectController
+from PooledEffect import PooledEffect
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from direct.actor import Actor
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class WindCharge(PooledEffect, EffectController):
-
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -49,3 +50,4 @@ class WindCharge(PooledEffect, EffectController):
         self.removeNode()
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+        return

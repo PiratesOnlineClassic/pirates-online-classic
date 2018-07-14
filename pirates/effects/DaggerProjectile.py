@@ -1,17 +1,15 @@
+# Embedded file name: pirates.effects.DaggerProjectile
+from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from pirates.piratesbase import PiratesGlobals
+from pirates.effects import PolyTrail
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects import PolyTrail
-from pirates.piratesbase import PiratesGlobals
-from pirates.effects.PooledEffect import PooledEffect
-
-
 class DaggerProjectile(PooledEffect, EffectController):
-    
 
     def __init__(self, type=None):
         PooledEffect.__init__(self)
@@ -21,15 +19,19 @@ class DaggerProjectile(PooledEffect, EffectController):
         self.knifeModel.reparentTo(self.rotDummy)
         self.knifeModel.setY(-0.6)
         self.knifeModel.setR(180)
-        self.motion_color = [Vec4(0.5, 0.6, 0.8, 1.0), Vec4(0.5, 0.6, 0.8, 1.0)]
-        vertex_list = [Vec4(0.0, 1.0, 0.0, 1.0), Vec4(0.0, -1.0, 0.0, 1.0)]
+        self.motion_color = [
+         Vec4(0.5, 0.6, 0.8, 1.0), Vec4(0.5, 0.6, 0.8, 1.0)]
+        vertex_list = [
+         Vec4(0.0, 1.0, 0.0, 1.0), Vec4(0.0, -1.0, 0.0, 1.0)]
         self.motion_trail = PolyTrail.PolyTrail(None, vertex_list, self.motion_color)
         self.motion_trail.reparentTo(self)
-        vertex_list = [Vec4(0.3, 0.0, 0.0, 1.0), Vec4(-0.3, 0.0, 0.0, 1.0)]
+        vertex_list = [
+         Vec4(0.3, 0.0, 0.0, 1.0), Vec4(-0.3, 0.0, 0.0, 1.0)]
         self.motion_trail2 = PolyTrail.PolyTrail(None, vertex_list, self.motion_color)
         self.motion_trail2.reparentTo(self)
         self.motion_trail.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.motion_trail2.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
+        return
 
     def createTrack(self, time, targetPos, motion_color, rate=1):
         throwTrack = LerpPosInterval(self, time, targetPos)

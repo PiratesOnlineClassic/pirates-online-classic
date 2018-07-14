@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.0
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.14 (default, Mar  9 2018, 23:57:12) 
-# [GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2)]
 # Embedded file name: pirates.effects.SmallFire
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
@@ -10,10 +6,9 @@ from direct.particles import ParticleEffect
 from direct.particles import Particles
 from direct.particles import ForceGroup
 from pirates.piratesgui.GameOptions import Options
-from pirates.effects.EffectController import EffectController
+from EffectController import EffectController
 
 class SmallFire(EffectController, NodePath):
-    
     cardScale = 64.0
 
     def __init__(self, effectParent=None):
@@ -87,4 +82,3 @@ class SmallFire(EffectController, NodePath):
         self.p0.renderer.setFinalYScale(0.001 * self.cardScale * self.effectScale)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 2.0 * self.effectScale))
         self.p0.emitter.setRadius(0.5 * self.effectScale)
-# okay decompiling SmallFire.pyc

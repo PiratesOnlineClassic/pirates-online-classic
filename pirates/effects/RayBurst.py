@@ -1,16 +1,18 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.RayBurst
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 
 class RayBurst(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
-        model = loader.loadModelCopy('models/effects/particleCards')
+        model = loader.loadModel('models/effects/particleCards')
         self.card = model.find('**/particleRays')
         self.cardScale = 128.0
         self.setDepthWrite(0)
@@ -18,13 +20,14 @@ class RayBurst(PooledEffect, EffectController):
         self.setLightOff()
         self.effectScale = 1.0
         self.effectColor = Vec4(1, 1, 1, 1)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('RayBurst')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-2', 4)
+        self.p0 = Particles.Particles('particles-2')
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('PointEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(4)
         self.p0.setBirthRate(100.0)
         self.p0.setLitterSize(4)
         self.p0.setLitterSpread(0)

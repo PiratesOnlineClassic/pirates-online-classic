@@ -1,11 +1,13 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.DarkAura
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from PooledEffect import PooledEffect
+from EffectController import EffectController
+import random
 
 class DarkAura(PooledEffect, EffectController):
     cardScale = 128.0
@@ -20,9 +22,9 @@ class DarkAura(PooledEffect, EffectController):
             DarkAura.particleDummy.setBin('fixed', 120)
         model = loader.loadModel('models/effects/darkglow')
         self.card = model.find('**/effectDarkGlow2')
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('DarkAura')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 32)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereVolumeEmitter')
@@ -32,6 +34,7 @@ class DarkAura(PooledEffect, EffectController):
         force0.setActive(1)
         f0.addForce(force0)
         self.f.addForceGroup(f0)
+        self.p0.setPoolSize(32)
         self.p0.setBirthRate(0.2)
         self.p0.setLitterSize(3)
         self.p0.setLitterSpread(0)
@@ -68,8 +71,8 @@ class DarkAura(PooledEffect, EffectController):
         self.p0.emitter.setRadius(0.8)
 
     def createTrack(self):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.2), Func(self.setPoolSize, 32), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(self.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.2), Func(self.p0.setPoolSize, 32), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(self.p0.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def cleanUpEffect(self):

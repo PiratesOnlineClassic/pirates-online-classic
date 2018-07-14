@@ -1,21 +1,15 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.VenomSpitProjectile
+from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from pirates.piratesbase import PiratesGlobals
+from pirates.effects import PolyTrail
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects import PolyTrail
-from pirates.piratesbase import PiratesGlobals
-from pirates.effects.PooledEffect import PooledEffect
-
-
 class VenomSpitProjectile(PooledEffect, EffectController):
-
 
     def __init__(self, type=None):
         PooledEffect.__init__(self)
@@ -56,4 +50,3 @@ class VenomSpitProjectile(PooledEffect, EffectController):
         self.motion_trail.destroy()
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\VenomSpitProjectile.pyc

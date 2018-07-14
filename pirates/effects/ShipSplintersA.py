@@ -1,19 +1,15 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.ShipSplintersA
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
-
 class ShipSplintersA(PooledEffect, EffectController):
-    
     cardScale = 128.0
     SfxNames = ('wood_impact_1.mp3', 'wood_impact_3.mp3', 'wood_impact_4.mp3')
     splashSfx = []
@@ -25,12 +21,12 @@ class ShipSplintersA(PooledEffect, EffectController):
         self.card = model.find('**/particleRockShower')
         if not self.splashSfx:
             for filename in self.SfxNames:
-                self.splashSfx.append(base.loader.loadSfx('audio/' + filename))
+                self.splashSfx.append(base.loadSfx('audio/' + filename))
 
         if not ShipSplintersA.particleDummy:
             ShipSplintersA.particleDummy = render.attachNewNode(ModelNode('ShipSplintersAParticleDummy'))
             ShipSplintersA.particleDummy.setDepthWrite(0)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('ShipSplintersA')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
@@ -90,4 +86,3 @@ class ShipSplintersA(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\ShipSplintersA.pyc

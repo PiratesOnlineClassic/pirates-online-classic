@@ -1,15 +1,14 @@
+# Embedded file name: pirates.effects.BeamEffect
+from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from pirates.piratesbase import PiratesGlobals
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.effects.PooledEffect import PooledEffect
-
 class BeamEffect(PooledEffect, EffectController):
-
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -33,6 +32,7 @@ class BeamEffect(PooledEffect, EffectController):
             self.beams.append(beam)
 
         self.targetDummy = self.attachNewNode('targetDummy')
+        return
 
     def __calculateBeam(self):
         if not self.target and not self.targetPos:
@@ -100,6 +100,7 @@ class BeamEffect(PooledEffect, EffectController):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
+        return
 
     def destroy(self):
         EffectController.destroy(self)

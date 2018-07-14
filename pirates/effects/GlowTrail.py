@@ -1,11 +1,13 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.GlowTrail
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 
 class GlowTrail(PooledEffect, EffectController):
-    
 
     def __init__(self):
         PooledEffect.__init__(self)
@@ -19,13 +21,14 @@ class GlowTrail(PooledEffect, EffectController):
         if not GlowTrail.particleDummy:
             GlowTrail.particleDummy = render.attachNewNode(ModelNode('GlowTrailParticleDummy'))
             GlowTrail.particleDummy.setDepthWrite(0)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('GlowTrail')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 64)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('PointEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(64)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(1)
         self.p0.setLitterSpread(0)

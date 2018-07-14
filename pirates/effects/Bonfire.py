@@ -1,16 +1,11 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.Bonfire
-from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
-from pirates.effects.BlackSmoke import BlackSmoke
+from direct.interval.IntervalGlobal import *
 from pirates.effects.Fire import Fire
+from pirates.effects.BlackSmoke import BlackSmoke
 from pirates.piratesgui.GameOptions import Options
 
-
 class Bonfire(NodePath):
-
     HackCount = 0
 
     def __init__(self, parent=None):
@@ -28,7 +23,7 @@ class Bonfire(NodePath):
         if Bonfire.HackCount == 0:
             Bonfire.HackCount += 1
             self._hasSound = True
-            self._sound = SoundInterval(base.loader.loadSfx('audio/bonfire.wav'), node=self, volume=0.5)
+            self._sound = SoundInterval(base.loadSfx('audio/bonfire.wav'), node=self, volume=0.5)
         else:
             self._hasSound = False
         return
@@ -69,4 +64,3 @@ class Bonfire(NodePath):
         del self._smoke
         del self._sound
         return
-# okay decompiling .\pirates\effects\Bonfire.pyc

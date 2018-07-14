@@ -1,15 +1,11 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.StormRing
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
-
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from EffectController import EffectController
 
 class StormRing(EffectController, NodePath):
-    
     cardScale = 64.0
 
     def __init__(self):
@@ -24,7 +20,7 @@ class StormRing(EffectController, NodePath):
             StormRing.particleDummy.setLightOff()
             StormRing.particleDummy.setBin('background', 116)
         self.duration = 10
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('StormRing')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
@@ -71,4 +67,3 @@ class StormRing(EffectController, NodePath):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(self.duration), self.endEffect)
-# okay decompiling .\pirates\effects\StormRing.pyc

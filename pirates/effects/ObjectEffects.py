@@ -1,3 +1,4 @@
+# Embedded file name: pirates.effects.ObjectEffects
 from pandac.PandaModules import *
 
 def Defaults(objectNode):
@@ -15,4 +16,5 @@ def Ghost_Effect(objectNode):
     objectNode.setDepthWrite(0)
     objectNode.setLightOff()
 
-OBJECT_EFFECTS = {'None': Defaults, 'Ghost': Ghost_Effect}
+
+OBJECT_EFFECTS = {'None': Defaults,'Ghost': Ghost_Effect}

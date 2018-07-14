@@ -1,13 +1,13 @@
+# Embedded file name: pirates.effects.Fire
 from pandac.PandaModules import *
-from panda3d.physics import *
 from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
 from direct.particles import ParticleEffect
 from direct.particles import Particles
 from direct.particles import ForceGroup
 from pirates.piratesgui.GameOptions import Options
-from pirates.effects.PooledEffect import PooledEffect
-from pirates.effects.EffectController import EffectController
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
 class Fire(PooledEffect, EffectController):
@@ -22,7 +22,7 @@ class Fire(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleFire2')
         if not self.burningSfx:
-            self.burningSfx = base.loader.loadSfx('audio/sfx_grenade_impact_firebomb_loop.mp3')
+            self.burningSfx = base.loadSfx('audio/sfx_grenade_impact_firebomb_loop.mp3')
         if not Fire.particleDummy:
             Fire.particleDummy = base.effectsRoot.attachNewNode(ModelNode('FireParticleDummy'))
             Fire.particleDummy.setDepthWrite(0)
@@ -34,13 +34,15 @@ class Fire(PooledEffect, EffectController):
         self.effectScale = 1.0
         self.f = ParticleEffect.ParticleEffect('Fire')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 96)
+        self.p0 = Particles.Particles('particles-1')
+        self.p0.setPoolSize(96)
         self.p0.setBirthRate(0.01)
         self.p0.setLitterSize(4)
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('DiscEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(96)
         self.p0.setBirthRate(0.01)
         self.p0.setLitterSize(4)
         self.p0.setLitterSpread(0)
@@ -84,6 +86,7 @@ class Fire(PooledEffect, EffectController):
 
     def createTrack(self, lod=Options.SpecialEffectsHigh):
         if lod >= Options.SpecialEffectsHigh:
+            self.p0.setPoolSize(96)
             self.p0.setLitterSize(4)
             self.p0.factory.enableAngularVelocity(1)
             self.p0.factory.setAngularVelocity(0.0)

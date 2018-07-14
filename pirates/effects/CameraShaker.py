@@ -1,10 +1,9 @@
+# Embedded file name: pirates.effects.CameraShaker
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
 import random
 
-from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
-
 class CameraShaker(NodePath):
-
     CutsceneScale = None
     TutorialInteriorScale = None
 
@@ -32,6 +31,7 @@ class CameraShaker(NodePath):
     @staticmethod
     def clearTutorialInteriorScale():
         CameraShaker.TutorialInteriorScale = None
+        return
 
     def play(self, radius=10.0):
         if base.cam.getDistance(self.shakerNode) <= radius:
@@ -59,14 +59,17 @@ class CameraShaker(NodePath):
         self.track.append(cameraRock4)
         self.track.append(Func(self.destroy))
         self.track.start()
+        return
 
     def finish(self):
         if self.track:
             self.track.pause()
             self.track = None
+        return
 
     def destroy(self):
         if self.track:
             self.track.finish()
             self.track = None
         self.removeNode()
+        return

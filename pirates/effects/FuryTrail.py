@@ -1,14 +1,15 @@
+# Embedded file name: pirates.effects.FuryTrail
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class FuryTrail(PooledEffect, EffectController):
-    
     faceCardScale = 64.0
     cardScale = 128.0
 
@@ -29,9 +30,9 @@ class FuryTrail(PooledEffect, EffectController):
             FuryTrail.particleDummy.setFogOff()
             FuryTrail.particleDummy.setLightOff()
             FuryTrail.particleDummy.setTwoSided(1)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('FuryTrail')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 128)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('DiscEmitter')
@@ -41,6 +42,7 @@ class FuryTrail(PooledEffect, EffectController):
         force0.setActive(1)
         f0.addForce(force0)
         self.f.addForceGroup(f0)
+        self.p0.setPoolSize(128)
         self.p0.setBirthRate(0.1)
         self.p0.setLitterSize(1)
         self.p0.setLitterSpread(0)
@@ -75,16 +77,18 @@ class FuryTrail(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(1.0)
+        return
 
     def loadFaceBlur(self):
         if not self.g and self.wantBlur:
             self.g = ParticleEffect.ParticleEffect()
             self.g.reparentTo(self)
-            self.p1 = Particles.Particles('particles-2', 128)
+            self.p1 = Particles.Particles('particles-2')
             self.p1.setFactory('PointParticleFactory')
             self.p1.setRenderer('SpriteParticleRenderer')
             self.p1.setEmitter('SphereVolumeEmitter')
             self.g.addParticles(self.p1)
+            self.p1.setPoolSize(128)
             self.p1.setBirthRate(0.01)
             self.p1.setLitterSize(1)
             self.p1.setLitterSpread(0)
@@ -122,7 +126,7 @@ class FuryTrail(PooledEffect, EffectController):
 
     def loadGlow(self):
         if not self.glow and self.wantGlow:
-            self.glow = loader.loadModelCopy('models/effects/furyEffect')
+            self.glow = loader.loadModel('models/effects/furyEffect')
             self.glow.setDepthWrite(0)
             self.glow.setFogOff()
             self.glow.setLightOff()
@@ -162,14 +166,14 @@ class FuryTrail(PooledEffect, EffectController):
             self.glow = None
         if self.wantBlur:
             self.loadFaceBlur()
-        else:
-            if self.g:
-                self.g.disable()
-                self.g.cleanup()
-                self.g = None
+        elif self.g:
+            self.g.disable()
+            self.g.cleanup()
+            self.g = None
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Func(self.startBlur), Func(self.startGlow))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Func(self.stopBlur), Func(self.stopGlow), Wait(1.5), Func(self.cleanUpEffect))
         self.track = Parallel(self.startEffect, Wait(6.0), self.endEffect)
+        return
 
     def cleanUpEffect(self):
         if self.g:
@@ -190,3 +194,4 @@ class FuryTrail(PooledEffect, EffectController):
         self.p1 = None
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+        return

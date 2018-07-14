@@ -1,14 +1,15 @@
+# Embedded file name: pirates.effects.FireTrail
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class FireTrail(PooledEffect, EffectController):
-    
     cardScale = 128.0
 
     def __init__(self):
@@ -27,13 +28,14 @@ class FireTrail(PooledEffect, EffectController):
             FireTrail.particleDummy.setColorScaleOff()
             FireTrail.particleDummy.setBin('fixed', 60)
             FireTrail.particleDummy.setTwoSided(1)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('FireTrail')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 48)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('PointEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(48)
         self.p0.setBirthRate(0.1)
         self.p0.setLitterSize(1)
         self.p0.setLitterSpread(0)
@@ -73,10 +75,11 @@ class FireTrail(PooledEffect, EffectController):
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 1.0))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
+        return
 
     def loadGlow(self):
         if not self.glow and self.wantGlow:
-            self.glow = loader.loadModelCopy('models/effects/flareGlow')
+            self.glow = loader.loadModel('models/effects/flareGlow')
             self.glow.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
             self.glow.setDepthWrite(0)
             self.glow.setFogOff()
@@ -102,13 +105,13 @@ class FireTrail(PooledEffect, EffectController):
             scaleUp = self.glow.scaleInterval(0.05, 15, startScale=17, blendType='easeInOut')
             scaleDown = self.glow.scaleInterval(0.05, 17, startScale=15, blendType='easeInOut')
             self.pulseTrack = Sequence(scaleUp, scaleDown)
-        else:
-            if self.glow:
-                self.glow.removeNode()
-                self.glow = None
+        elif self.glow:
+            self.glow.removeNode()
+            self.glow = None
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Func(self.startPulseTrack))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.stopPulseTrack), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(6.0), self.endEffect)
+        return
 
     def cleanUpEffect(self):
         self.stopPulseTrack()
@@ -122,3 +125,4 @@ class FireTrail(PooledEffect, EffectController):
             self.glow = None
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+        return

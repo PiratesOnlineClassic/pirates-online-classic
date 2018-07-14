@@ -1,13 +1,14 @@
+# Embedded file name: pirates.effects.AttuneEffect
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class AttuneEffect(PooledEffect, EffectController):
-
 
     def __init__(self, parent=None):
         PooledEffect.__init__(self)
@@ -18,15 +19,16 @@ class AttuneEffect(PooledEffect, EffectController):
             self.particleDummy = render.attachNewNode(ModelNode('AttuneParticleDummy'))
             self.particleDummy.setDepthWrite(0)
             self.particleDummy.setLightOff()
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('AttuneEffect')
         self.f.reparentTo(self)
         self.effectGeom = loader.loadModel('models/effects/voodooRing')
         self.effectColor = Vec4(1, 1, 1, 1)
-        self.p0 = Particles.Particles('particles-1', 64)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('GeomParticleRenderer')
         self.p0.setEmitter('DiscEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(64)
         self.p0.setBirthRate(0.03)
         self.p0.setLitterSize(1)
         self.p0.setLitterSpread(0)
@@ -58,6 +60,7 @@ class AttuneEffect(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.75)
+        return
 
     def createTrack(self):
         posIval = LerpPosInterval(self, 0.75, Point3(0, 0, 0.5))

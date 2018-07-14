@@ -1,10 +1,11 @@
+# Embedded file name: pirates.effects.FireSplats
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect
 from direct.particles import Particles
 from direct.particles import ForceGroup
-from pirates.effects.PooledEffect import PooledEffect
-from pirates.effects.EffectController import EffectController
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 
 class FireSplats(PooledEffect, EffectController):
     cardScale = 128.0
@@ -26,7 +27,8 @@ class FireSplats(PooledEffect, EffectController):
         self.effectScale = 1.0
         self.f = ParticleEffect.ParticleEffect('FireSplats')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 64)
+        self.p0 = Particles.Particles('particles-1')
+        self.p0.setPoolSize(64)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(4)
         self.p0.setFactory('ZSpinParticleFactory')
@@ -91,7 +93,8 @@ class FireSplats(PooledEffect, EffectController):
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
-        self.checkInEffect(self)
+        if self.pool and self.pool.isUsed(self):
+            self.pool.checkin(self)
 
     def destroy(self):
         EffectController.destroy(self)

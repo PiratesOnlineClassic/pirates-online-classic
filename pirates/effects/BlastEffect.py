@@ -1,11 +1,11 @@
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.BlastEffect
 from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 
 class BlastEffect(PooledEffect, EffectController):
-
 
     def __init__(self):
         PooledEffect.__init__(self)

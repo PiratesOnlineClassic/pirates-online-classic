@@ -1,9 +1,9 @@
+# Embedded file name: pirates.effects.FireworkShowManager
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from pandac.PandaModules import *
 from pirates.effects.FireworkGlobals import *
 from pirates.effects.FireworkShow import FireworkShow
-
 PortRoyalLocation = Point3(-1350, 180, 220)
 PortRoyalLocation2 = Point3(50, 1500, 0)
 PortRoyalH = 100.0
@@ -13,13 +13,14 @@ TortugaH = 0.0
 PadresLocation = Point3(6700, -22800, 100)
 PadresH = 0.0
 
-class FireworkShowManager:
+class FireworkShowManager():
 
     def __init__(self):
         self.showType = None
         self.PortRoyalShow = None
         self.TortugaShow = None
         self.PadresShow = None
+        return
 
     def beginPortRoyalShow(self, offset):
         taskMgr.remove('beginPortRoyalShow')

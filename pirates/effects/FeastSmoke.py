@@ -1,10 +1,11 @@
+# Embedded file name: pirates.effects.FeastSmoke
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect
 from direct.particles import Particles
 from direct.particles import ForceGroup
-from pirates.effects.PooledEffect import PooledEffect
-from pirates.effects.EffectController import EffectController
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 
 class FeastSmoke(PooledEffect, EffectController):
     cardScale = 64.0
@@ -24,11 +25,12 @@ class FeastSmoke(PooledEffect, EffectController):
             FeastSmoke.particleDummy.setLightOff()
         self.f = ParticleEffect.ParticleEffect('HeavySmoke')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 96)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('DiscEmitter')
         self.f.addParticles(self.p0)
+        self.p0.setPoolSize(96)
         self.p0.setBirthRate(1.5)
         self.p0.setLitterSize(2)
         self.p0.setLitterSpread(0)
@@ -68,15 +70,13 @@ class FeastSmoke(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 1.0))
         self.p0.emitter.setRadius(10.0)
+        return
 
     def enable(self):
         self.f.start(self, self.particleDummy)
 
     def disable(self):
         self.f.disable()
-
-    def accelerate(self):
-        self.p0.accelerate(25, 1, self.p0.getBirthRate())
 
     def createTrack(self, lod=None):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.25), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
@@ -94,7 +94,8 @@ class FeastSmoke(PooledEffect, EffectController):
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
-        self.checkInEffect(self)
+        if self.pool and self.pool.isUsed(self):
+            self.pool.checkin(self)
 
     def destroy(self):
         EffectController.destroy(self)

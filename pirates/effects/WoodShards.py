@@ -1,14 +1,15 @@
+# Embedded file name: pirates.effects.WoodShards
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
 class WoodShards(PooledEffect, EffectController):
-
     cardScale = 128.0
 
     def __init__(self):
@@ -17,9 +18,9 @@ class WoodShards(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleRockShower')
         self.setDepthWrite(0)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('WoodShards')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 32)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereVolumeEmitter')
@@ -34,6 +35,7 @@ class WoodShards(PooledEffect, EffectController):
         force1.setActive(1)
         f1.addForce(force1)
         self.f.addForceGroup(f1)
+        self.p0.setPoolSize(32)
         self.p0.setBirthRate(0.03)
         self.p0.setLitterSize(1)
         self.p0.setLitterSpread(0)

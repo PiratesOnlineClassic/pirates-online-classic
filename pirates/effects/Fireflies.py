@@ -1,12 +1,14 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from direct.showbase.DirectObject import *
-from pirates.effects.EffectController import EffectController
+# Embedded file name: pirates.effects.Fireflies
 from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from pirates.piratesbase import PiratesGlobals
+from EffectController import EffectController
+import random
 
 class Fireflies(EffectController, NodePath):
     cardScale = 128.0
@@ -23,9 +25,9 @@ class Fireflies(EffectController, NodePath):
             Fireflies.particleDummy.setColorScale(1.0, 1.0, 1.0, 1)
             Fireflies.particleDummy.setLightOff()
             Fireflies.particleDummy.setBin('fixed', 120)
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('Fireflies')
         self.f.reparentTo(self)
-        self.p0 = Particles.Particles('particles-1', 256)
+        self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('PointParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
         self.p0.setEmitter('SphereVolumeEmitter')
@@ -38,6 +40,7 @@ class Fireflies(EffectController, NodePath):
         self.f.addForceGroup(f0)
 
     def createTrack(self):
+        self.p0.setPoolSize(256)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(10)
         self.p0.setLitterSpread(0)
@@ -73,6 +76,6 @@ class Fireflies(EffectController, NodePath):
         self.p0.emitter.setExplicitLaunchVector(Vec3(0.2, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(150.0)
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.setPoolSize, 256), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(self.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.setPoolSize, 256), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(self.p0.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)

@@ -1,19 +1,15 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
 # Embedded file name: pirates.effects.MysticFire
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from pirates.effects.EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.PooledEffect import PooledEffect
-
-
 class MysticFire(PooledEffect, EffectController):
-    
     cardScale = 64.0
     burningSfx = None
 
@@ -25,7 +21,7 @@ class MysticFire(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleFire2')
         if not self.burningSfx:
-            self.burningSfx = base.loader.loadSfx('audio/sfx_grenade_impact_firebomb_loop.mp3')
+            self.burningSfx = base.loadSfx('audio/sfx_grenade_impact_firebomb_loop.mp3')
         if not MysticFire.particleDummy:
             MysticFire.particleDummy = render.attachNewNode(ModelNode('FireParticleDummy'))
             MysticFire.particleDummy.setDepthWrite(0)
@@ -35,7 +31,7 @@ class MysticFire(PooledEffect, EffectController):
             MysticFire.particleDummy.setBin('fixed', 60)
         self.duration = 10.0
         self.effectScale = 1.0
-        self.f = ParticleEffect.ParticleEffect()
+        self.f = ParticleEffect.ParticleEffect('MysticFire')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('ZSpinParticleFactory')
@@ -114,4 +110,3 @@ class MysticFire(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-# okay decompiling .\pirates\effects\MysticFire.pyc
