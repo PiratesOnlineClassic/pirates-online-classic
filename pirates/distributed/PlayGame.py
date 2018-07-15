@@ -27,9 +27,6 @@ class PlayGame(StateData.StateData):
         self.notify.warning('need to add FSM transition here')
         state = 'teleportToShard'
         shardId = base.localAvatar.defaultShard
-        if os.getenv('want_district_2'):
-            shardId += 200000
-
         self.fsm.request(state, [{
             'where': 'play',
             'hoodId': hoodId,
