@@ -1984,7 +1984,6 @@ class OTPClientRepository(ClientRepositoryBase):
         else:
             ClientRepositoryBase.replayDeferredGenerate(self, msgType, extra)
 
-    @exceptionLogged(append=False)
     def handleDatagram(self, di):
         if self.notify.getDebug():
             print 'ClientRepository received datagram:'
@@ -2001,7 +2000,6 @@ class OTPClientRepository(ClientRepositoryBase):
         else:
             self.handler(msgType, di)
         self.considerHeartbeat()
-        return
 
     def handleGenerateWithRequired(self, di, other=False):
         doId = di.getUint32()
