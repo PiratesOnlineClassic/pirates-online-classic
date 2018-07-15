@@ -12,10 +12,16 @@ from panda3d.core import *
 parser = argparse.ArgumentParser()
 parser.add_argument('--build-dir', default='build',
                     help='The directory of which the build was prepared.')
+parser.add_argument('--resources-dir', default='../resources',
+                    help='The directory of which the resources are located.')
 parser.add_argument('--dc-files', nargs='*', default=['astron/dclass/otp.dc', 'astron/dclass/pirates.dc'],
                     help='The client distributed class files.')
 parser.add_argument('--config-files', nargs='*', default=['config/general.prc'],
                     help='The client PRC configuration files.')
+parser.add_argument('--resources-files', nargs='*', default=['phase_2', 'phase_3', 'phase_4', 'phase_5'],
+                    help='The game resources directories.')
+parser.add_argument('--resources-compression-level', default=9,
+                    help='The compression level in which the multifiles will be compressed with...')
 parser.add_argument('--data-file', default='gamedata.bin',
                     help='The client\'s gamedata file which contains the DClass and PRC data...')
 parser.add_argument('--main-module', default='runtime.py',
@@ -261,5 +267,17 @@ with open(os.path.join(args.build_dir, args.main_module), 'w') as f:
 
     io.close()
     f.close()
+
+# pack up the resource files
+for filename in args.resources_files:
+    filepath = os.path.join(args.resources_dir, filename)
+
+    cmd = 'multify'
+    cmd += ' -%d' % args.resources_compression_level
+    cmd += ' -c'
+    cmd += ' -f'
+    cmd += ' %s.mf' % filepath
+    cmd += ' %s' % filepath
+    os.system(cmd)
 
 print 'Done building game data.'
