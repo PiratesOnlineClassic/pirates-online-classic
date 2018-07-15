@@ -20,7 +20,7 @@ os.chdir(args.build_dir)
 
 print 'Building the game client...'
 
-cmd = sys.executable + ' -m direct.showutil.pfreeze'
+cmd = sys.executable + ' -OO -m direct.showutil.pfreeze'
 args.modules.extend(['direct', 'pandac'])
 for module in args.modules:
     cmd += ' -i %s.*.*' % module
