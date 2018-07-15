@@ -77,12 +77,16 @@ with open(os.path.join(args.build_dir, args.data_file), 'wb') as f:
     f.write(data)
     f.close()
 
-excepted_files = [
+remove_files = [
     'OTPInternalRepository',
     'PiratesAIRepository',
     'PiratesUberRepository',
     'ServiceStart',
     'InventoryInit'
+]
+
+ignore_files = [
+    'CrewHUD'
 ]
 
 def cleanup_tree(directory):
@@ -94,10 +98,18 @@ def cleanup_tree(directory):
             if os.path.isdir(filepath):
                 recurse(filepath)
             elif os.path.isfile(filepath):
+                ignore_file = False
+                for filename in ignore_files:
+                    if filename in filepath:
+                        ignore_file = True
+
+                if ignore_file:
+                    continue
+
                 if filepath.endswith('AI.py') or filepath.endswith('UD.py'):
                     os.remove(filepath)
 
-                for filename in excepted_files:
+                for filename in remove_files:
                     if filename in filepath:
                         os.remove(filepath)
                         break
