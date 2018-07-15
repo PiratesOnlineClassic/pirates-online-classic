@@ -4,6 +4,7 @@ import StringIO
 import argparse
 import zlib
 import pyaes
+import hashlib
 
 from panda3d.core import *
 
@@ -237,7 +238,18 @@ def main():
 if __name__ == '__main__':
     sys.exit(main())"""
 
-PANDA3D_MD5 = ''
+# pack the panda3d init constructor compiled file md5
+def get_md5(filepath):
+    hash_md5 = hashlib.md5()
+    with open(filepath, 'rb') as f:
+        for chunk in iter(lambda: f.read(4096), b''):
+            hash_md5.update(chunk)
+
+        f.close()
+
+    return hash_md5.hexdigest()
+
+PANDA3D_MD5 = get_md5('panda3d/__init__.pyc')
 
 # copy over the runtime main module
 with open(os.path.join(args.build_dir, args.main_module), 'w') as f:
