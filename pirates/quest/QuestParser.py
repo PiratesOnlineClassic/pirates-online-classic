@@ -1652,6 +1652,8 @@ if __debug__:
     searchPath.appendDirectory(Filename.expandFrom('../resources/phase_3/etc'))
 else:
     searchPath.appendDirectory(Filename.expandFrom('phase_3/etc'))
+    searchPath.appendDirectory(Filename('.'))
+    searchPath.appendDirectory(Filename('etc'))
 
 scriptFile = Filename('QuestScripts.txt')
 found = vfs.resolveFilename(scriptFile, searchPath)
