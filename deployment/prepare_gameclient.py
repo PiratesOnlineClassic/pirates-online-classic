@@ -116,6 +116,29 @@ for package in args.modules:
 RUNTIME_DATA = """import __builtin__
 import sys
 import os
+import hashlib
+
+def get_md5(filepath):
+    hash_md5 = hashlib.md5()
+    with open(filepath, 'rb') as f:
+        for chunk in iter(lambda: f.read(4096), b''):
+            hash_md5.update(chunk)
+
+        f.close()
+
+    return hash_md5.hexdigest()
+
+# run checks to ensure the virtualized panda3d directory
+# has not been tampered with...
+if os.path.exists('panda3d/__init__.py'):
+    raise SystemExit
+
+if not os.path.exists('panda3d/__init__.pyc'):
+    raise SystemExit
+
+if get_md5('panda3d/__init__.pyc') != '%s':
+    raise SystemExit
+
 import StringIO
 import zlib
 import pyaes
@@ -214,10 +237,12 @@ def main():
 if __name__ == '__main__':
     sys.exit(main())"""
 
+PANDA3D_MD5 = ''
+
 # copy over the runtime main module
 with open(os.path.join(args.build_dir, args.main_module), 'w') as f:
     io = StringIO.StringIO(RUNTIME_DATA % (
-        repr(IV), repr(KEY)))
+        PANDA3D_MD5, repr(IV), repr(KEY)))
 
     for line in io.readlines():
         f.write(line)
