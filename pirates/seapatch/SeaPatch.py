@@ -466,14 +466,19 @@ class SeaPatch(Water):
         if patch == None:
             patch = SeaPatchRoot()
             patch.assignEnvironmentFrom(self.patch)
+
         patch.resetProperties()
         if not isinstance(filename, Filename):
             filename = Filename.fromOsSpecific(filename)
+
         spfSearchPath = DSearchPath()
         if __debug__:
             spfSearchPath.appendDirectory(Filename('../resources/phase_2/etc'))
         else:
             spfSearchPath.appendDirectory(Filename('phase_2/etc'))
+            searchPath.appendDirectory(Filename('.'))
+            searchPath.appendDirectory(Filename('etc'))
+
         found = vfs.resolveFilename(filename, spfSearchPath)
         if not found:
             print 'seapatch file not found: %s' % filename.cStr()
@@ -481,6 +486,7 @@ class SeaPatch(Water):
             data = vfs.readFile(filename, 1)
             data = data.replace('\r', '')
             exec data
+
         return patch
 
     def loadSeaPatchFile(self, filename):

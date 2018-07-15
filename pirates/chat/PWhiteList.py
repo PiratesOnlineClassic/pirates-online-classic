@@ -6,7 +6,6 @@ from otp.chat.WhiteList import WhiteList
 
 class PWhiteList(WhiteList):
 
-
     def __init__(self):
         vfs = VirtualFileSystem.getGlobalPtr()
         filename = Filename('pwhitelist.txt')
@@ -15,6 +14,8 @@ class PWhiteList(WhiteList):
             searchPath.appendDirectory(Filename.expandFrom('../resources/phase_3/etc'))
         else:
             searchPath.appendDirectory(Filename.expandFrom('phase_3/etc'))
+            searchPath.appendDirectory(Filename('.'))
+            searchPath.appendDirectory(Filename('etc'))
 
         found = vfs.resolveFilename(filename, searchPath)
         if not found:
