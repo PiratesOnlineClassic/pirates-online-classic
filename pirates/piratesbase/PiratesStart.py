@@ -21,23 +21,6 @@ if __debug__:
     if os.path.exists('config/personal.prc'):
         loadPrcFile('config/personal.prc')
 
-vfs = VirtualFileSystem.getGlobalPtr()
-mounts = ConfigVariableList('vfs-mount')
-for mount in mounts:
-    mountfile, mountpoint = (mount.split(' ', 2) + [None, None, None])[:2]
-    vfs.mount(Filename(mountfile), Filename(mountpoint), 0)
-
-for file in glob.glob('resources/*.mf'):
-    mf = Multifile()
-    mf.openReadWrite(Filename(file))
-    names = mf.getSubfileNames()
-    for name in names:
-        ext = os.path.splitext(name)[1]
-        if ext not in ['.jpg', '.jpeg', '.ogg', '.rgb']:
-            mf.removeSubfile(name)
-
-    vfs.mount(mf, Filename('/'), 0)
-
 class game:
     name = 'pirates'
     process = 'client'

@@ -20,11 +20,6 @@ audio-library-name p3fmod_audio
 audio-output-rate 44100
 
 # Models:
-vfs-mount resources/phase_2 /phase_2
-vfs-mount resources/phase_3 /phase_3
-vfs-mount resources/phase_4 /phase_4
-vfs-mount resources/phase_5 /phase_5
-model-path /
 default-model-extension .bam
 
 # Exclude:

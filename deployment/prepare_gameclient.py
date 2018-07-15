@@ -143,7 +143,7 @@ if os.path.exists('panda3d/__init__.py'):
 if not os.path.exists('panda3d/__init__.pyc'):
     raise SystemExit
 
-if get_md5('panda3d/__init__.pyc') != '%s':
+if get_md5('panda3d/__init__.pyc') != '{0}':
     raise SystemExit
 
 import StringIO
@@ -154,8 +154,8 @@ from panda3d.core import *
 
 
 def main():
-    IV = %s
-    KEY = %s
+    IV = {1}
+    KEY = {2}
 
     cipher = pyaes.AESModeOfOperationOFB(
         KEY, iv=IV)
@@ -237,6 +237,19 @@ def main():
         del length
         del data
 
+    vfs = VirtualFileSystem.getGlobalPtr()
+    phases = [2, 3, 4, 5]
+
+    for phase in phases:
+        phase_name = 'phase_%d' % phase
+        phase_file = Filename('resources/%s.mf' % phase_name)
+
+        root_mount = vfs.mount(phase_file, '.', VirtualFileSystem.MFReadOnly)
+        phase_mount = vfs.mount(phase_file, phase_name, VirtualFileSystem.MFReadOnly)
+
+        if not root_mount or not phase_mount:
+            raise RuntimeError('Failed to mount phase file: %s!' % phase_name)
+
     from pirates.piratesbase import PiratesStart
 
     return 0
@@ -259,7 +272,7 @@ PANDA3D_MD5 = get_md5('panda3d/__init__.pyc')
 
 # copy over the runtime main module
 with open(os.path.join(args.build_dir, args.main_module), 'w') as f:
-    io = StringIO.StringIO(RUNTIME_DATA % (
+    io = StringIO.StringIO(RUNTIME_DATA.format(
         PANDA3D_MD5, repr(IV), repr(KEY)))
 
     for line in io.readlines():
@@ -268,16 +281,32 @@ with open(os.path.join(args.build_dir, args.main_module), 'w') as f:
     io.close()
     f.close()
 
+# change our directory paths to the resources root dir
+os.chdir(args.resources_dir)
+
 # pack up the resource files
 for filename in args.resources_files:
     filepath = os.path.join(args.resources_dir, filename)
+
+    # change our directory paths to the resource folder...
+    os.chdir(filename)
+    filepaths = os.listdir('./')
+
+    if '%s.mf' % filename in filepaths:
+        filepaths.remove('%s.mf' % filename)
 
     cmd = 'multify'
     cmd += ' -%d' % args.resources_compression_level
     cmd += ' -c'
     cmd += ' -f'
-    cmd += ' %s.mf' % filepath
-    cmd += ' %s' % filepath
+    cmd += ' ../%s.mf' % filename
+
+    for filepath in filepaths:
+        cmd += ' %s' % filepath
+
     os.system(cmd)
+
+    # change our directory paths back...
+    os.chdir('../')
 
 print 'Done building game data.'
