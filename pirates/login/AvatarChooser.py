@@ -297,10 +297,11 @@ class AvatarChooser(DirectObject, StateData):
         self.shardPanelBottom.setPos(0.42, 0, 0.095)
         self.shardPanelBottom.setScale(0.273)
         self.shardPanelBottom.reparentTo(base.a2dBottomLeft)
-        self.logo = OnscreenImage(image='../phase_2/maps/POC_LOGO.png', pos=(0, 0, 0.08), scale=(0.6, 0.10, 0.40), parent=self.avatarListFrame)
+        self.logo = OnscreenImage(image=loader.loadTexture('phase_2/maps/POC_LOGO.png'),
+            pos=(0, 0, 0.08), scale=(0.6, 0.10, 0.40), parent=self.avatarListFrame)
+
         self.logo.setTransparency(TransparencyAttrib.MAlpha)
         charGui.removeNode()
-        return
 
     def __createAvatarButtons(self):
         subCard = loader.loadModel('models/gui/toplevel_gui')
