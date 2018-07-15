@@ -7,6 +7,8 @@ outside of the executable runtime environment...
 import sys
 import os
 import imp
+import importlib
+import multiprocessing
 import platform
 
 
@@ -18,6 +20,8 @@ class Panda3dImporter(object):
 
     def __init__(self, dynamic_modules):
         self._dynamic_modules = dynamic_modules
+        self._module_cache = {}
+        self._process = None
 
     @property
     def dynamic_modules(self):
@@ -26,6 +30,22 @@ class Panda3dImporter(object):
         """
 
         return self._dynamic_modules
+
+    @property
+    def module_cache(self):
+        """
+        Returns the importer's dynamic module cache dictionary.
+        """
+
+        return self._module_cache
+
+    @property
+    def process(self):
+        """
+        Returns the importer's process in which loads the dynamic module.
+        """
+
+        return self._process
 
     def find_module(self, fullname, path):
         """
@@ -42,10 +62,7 @@ class Panda3dImporter(object):
             if len(fullnames) > 1:
                 raise ImportError('Cannot find module: %s!' % fullname)
 
-            name = fullnames[0]
-        else:
-            name = fullnames
-
+        name = fullnames[0]
         if name not in self._dynamic_modules:
             raise ImportError('Cannot find module: %s!' % fullname)
 
@@ -55,6 +72,8 @@ class Panda3dImporter(object):
         """
         Loads the dynamic module from the filepath...
         """
+
+        imp.acquire_lock()
 
         name = fullname.split('.')
         name = name[len(name) - 1]
@@ -67,12 +86,54 @@ class Panda3dImporter(object):
         if not filename:
             raise ImportError('Cannot load module: %s!' % fullname)
 
-        module = imp.load_dynamic(name, filename)
+        file, file_path, (suffix, mode, type_) = imp.find_module(
+            name, ['./'])
+
+        # check to ensure this module we are looking for is
+        # actually an python extension module...
+        if type_ != imp.C_EXTENSION:
+            raise ImportError('Cannot load invalid module: %s!' % fullname)
+        else:
+            # close the file object since it is no longer
+            # needed and could possibly cause issues...
+            file.close()
+
+        module = self._module_cache.get(name)
 
         if not module:
-            raise ImportError('Cannot load module: %s!' % fullname)
+            # create a process and attempt to import our module
+            # within it because if we try and import it here,
+            # this class will cause recusion...
+            queue = multiprocessing.Queue()
+            self._process = multiprocessing.Process(target=self.__load_module,
+                args=(queue, name, filename,))
 
+            self._process.daemon = True
+            self._process.start()
+
+            # block and wait for the module object to be placed
+            # in the module cache dictionary before we can do anything...
+            module = queue.get()
+
+            if not module:
+                raise ImportError('Cannot load module: %s!' % fullname)
+            else:
+                self._module_cache[name] = module
+
+            self._process.join()
+            self._process = None
+
+        imp.release_lock()
         return module
+
+    def __load_module(self, queue, name, filename):
+        """
+        Called by a separate Python process which will load the
+        dynamic module outside the main process...
+        """
+
+        module = importlib.import_module(name, filename)
+        queue.put(module)
 
 def format_dynamic(filename):
     """
