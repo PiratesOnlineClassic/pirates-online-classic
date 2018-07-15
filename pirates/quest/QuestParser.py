@@ -27,7 +27,7 @@ def Nothing():
     pass
 
 def init():
-    globalVarDict.update({'render': render, 'camera': camera, 'hidden': hidden, 
+    globalVarDict.update({'render': render, 'camera': camera, 'hidden': hidden,
                     'aspect2d': aspect2d, 'localToon': base.localAvatar, 'inventory': base.localAvatar.inventory})
 
 def clear():
@@ -106,7 +106,7 @@ def questDefined(scriptId):
     return lineDict.has_key(scriptId)
 
 class NPCMoviePlayer(DirectObject.DirectObject):
-    
+
 
     def __init__(self, scriptId, toon, npc):
         print 'initializing movie player'
@@ -1651,7 +1651,7 @@ searchPath = DSearchPath()
 if __debug__:
     searchPath.appendDirectory(Filename.expandFrom('../resources/phase_3/etc'))
 else:
-    searchPath.appendDirectory(Filename.expandFrom('/phase_3/etc'))
+    searchPath.appendDirectory(Filename.expandFrom('phase_3/etc'))
 
 scriptFile = Filename('QuestScripts.txt')
 found = vfs.resolveFilename(scriptFile, searchPath)

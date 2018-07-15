@@ -41,7 +41,7 @@ searchPath = DSearchPath()
 if __debug__:
     searchPath.appendDirectory(Filename.expandFrom('../resources/phase_2/etc'))
 else:
-    searchPath.appendDirectory(Filename.expandFrom('/phase_2/etc'))
+    searchPath.appendDirectory(Filename.expandFrom('phase_2/etc'))
 
 found = vfs.resolveFilename(filename, searchPath)
 if not found:
