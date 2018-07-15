@@ -238,17 +238,23 @@ def main():
         del data
 
     vfs = VirtualFileSystem.getGlobalPtr()
-    phases = [2, 3, 4, 5]
+    mfs = [2, 3, 4, 5]
 
-    for phase in phases:
-        phase_name = 'phase_%d' % phase
-        phase_file = Filename('resources/%s.mf' % phase_name)
+    for mf in mfs:
+        filepath = 'resources/phase_%d.mf' % mf
 
-        root_mount = vfs.mount(phase_file, '.', VirtualFileSystem.MFReadOnly)
-        phase_mount = vfs.mount(phase_file, phase_name, VirtualFileSystem.MFReadOnly)
+        if not os.path.isfile(filepath):
+            raise IOError('Failed to find multifile: phase_%d!' % mf)
 
-        if not root_mount or not phase_mount:
-            raise RuntimeError('Failed to mount phase file: %s!' % phase_name)
+        f = Multifile()
+        f.openRead(filepath)
+        f.setMultifileName('phase_%d' % mf)
+
+        if not vfs.mount(f, '.', VirtualFileSystem.MFReadOnly):
+            raise RuntimeError('Failed to mount multifile: phase_%d!' % mf)
+
+        if not vfs.mount(f, 'phase_%d' % mf, VirtualFileSystem.MFReadOnly):
+            raise RuntimeError('Failed to mount multifile: phase_%d!' % mf)
 
     from pirates.piratesbase import PiratesStart
 
