@@ -471,15 +471,15 @@ class SeaPatch(Water):
         if not isinstance(filename, Filename):
             filename = Filename.fromOsSpecific(filename)
 
-        spfSearchPath = DSearchPath()
+        searchPath = DSearchPath()
         if __debug__:
-            spfSearchPath.appendDirectory(Filename('../resources/phase_2/etc'))
+            searchPath.appendDirectory(Filename('../resources/phase_2/etc'))
         else:
-            spfSearchPath.appendDirectory(Filename('phase_2/etc'))
+            searchPath.appendDirectory(Filename('phase_2/etc'))
             searchPath.appendDirectory(Filename('.'))
             searchPath.appendDirectory(Filename('etc'))
 
-        found = vfs.resolveFilename(filename, spfSearchPath)
+        found = vfs.resolveFilename(filename, searchPath)
         if not found:
             print 'seapatch file not found: %s' % filename.cStr()
         else:
