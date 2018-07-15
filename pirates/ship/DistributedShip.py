@@ -2119,10 +2119,8 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         self.transNode.setZ(avgWaveHeight + math.sin(udTheta) * 0.5)
         return Task.cont
 
-    @exceptionLogged()
     def debugFunc(self, lrAvg, fbAvg, lrDist, fbDist):
-        return (
-         math.atan(lrAvg / lrDist) * 180.0 / math.pi, -math.atan(fbAvg / fbDist) * 180.0 / math.pi)
+        return (math.atan(lrAvg / lrDist) * 180.0 / math.pi, -math.atan(fbAvg / fbDist) * 180.0 / math.pi)
 
     def calcSmootherTurn(self):
         self.smoother.getSmoothRotationalVelocity()

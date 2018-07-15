@@ -12,7 +12,7 @@ from pirates.quest import QuestDB, QuestLadderDB, QuestReward
 
 
 class QuestDetailBase(DirectFrame):
-    
+
 
     def __init__(self, parent=aspect2d, pos=(0, 0, 0), *args, **kw):
         topGui = loader.loadModel('models/gui/toplevel_gui')
@@ -27,7 +27,7 @@ class QuestDetailBase(DirectFrame):
 
 
 class QuestDetailGUI(QuestDetailBase):
-    
+
 
     def __init__(self, offer, callback, quest=None):
         self.width = 1
@@ -62,7 +62,6 @@ class QuestDetailGUI(QuestDetailBase):
     def hidePanelAndDestroy(self):
         Sequence(self.hideIval, Wait(0.25), Func(self.destroy)).start()
 
-    @exceptionLogged()
     def setQuestInfoFromOffer(self, offer):
         questId = offer.getQuestId()
         if offer.isLadder():
