@@ -26,6 +26,7 @@ for module in args.modules:
     cmd += ' -i %s.*.*' % module
 
 cmd += ' -i encodings.*'
+cmd += ' -i bz2'
 cmd += ' -i base64'
 cmd += ' -i site'
 cmd += ' -i pirates.leveleditor.worldData.*'
