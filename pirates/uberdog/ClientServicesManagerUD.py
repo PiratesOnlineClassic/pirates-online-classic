@@ -118,7 +118,7 @@ class DeveloperAccountDB(AccountDB):
                 'success': True,
                 'userId': username,
                 'accountId': 0,
-                'accessLevel': max(600, minAccessLevel)
+                'accessLevel': max(600, minAccessLevel) if config.GetBool('want-dev-access', False) else max(0, minAccessLevel)
             }
 
         else:
