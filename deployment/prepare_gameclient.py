@@ -125,6 +125,7 @@ import sys
 import os
 import hashlib
 
+
 def get_md5(filepath):
     hash_md5 = hashlib.md5()
     with open(filepath, 'rb') as f:
@@ -135,16 +136,27 @@ def get_md5(filepath):
 
     return hash_md5.hexdigest()
 
-# run checks to ensure the virtualized panda3d directory
-# has not been tampered with...
-if os.path.exists('panda3d/__init__.py'):
-    raise SystemExit
+def init():
+    # run checks to ensure the virtualized panda3d directory
+    # has not been tampered with...
+    if os.path.exists('panda3d/__init__.py'):
+        raise SystemExit
 
-if not os.path.exists('panda3d/__init__.pyc'):
-    raise SystemExit
+    if not os.path.exists('panda3d/__init__.pyc'):
+        raise SystemExit
 
-if get_md5('panda3d/__init__.pyc') != '{0}':
-    raise SystemExit
+    if get_md5('panda3d/__init__.pyc') != '{0}':
+        raise SystemExit
+
+    # check for the dtoolconfig module which is only used in the development
+    # environment and can potentially be used within the compiled environment as well...
+    if os.path.exists('panda3d/dtoolconfig.py'):
+        raise SystemExit
+
+    if os.path.exists('panda3d/dtoolconfig.pyc'):
+        raise SystemExit
+
+init()
 
 import StringIO
 import zlib
