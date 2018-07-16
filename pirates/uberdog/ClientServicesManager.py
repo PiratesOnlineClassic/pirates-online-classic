@@ -15,7 +15,7 @@ class ClientServicesManager(DistributedObjectGlobal):
         self.doneEvent = doneEvent
         token = self.cr.playToken or 'dev'
 
-        key = 'bG9sLndlLmNoYW5nZS50aGlzLnRvby5tdWNo'
+        key = 'cd09ed406383f3d3ebb62b9ce23d41dd'
         digest_maker = hmac.new(key)
         digest_maker.update(token)
         clientKey = digest_maker.hexdigest()

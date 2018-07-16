@@ -1002,7 +1002,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         self.account2fsm = {}
 
         # Temporary HMAC key:
-        self.key = 'bG9sLndlLmNoYW5nZS50aGlzLnRvby5tdWNo'
+        self.key = 'cd09ed406383f3d3ebb62b9ce23d41dd'
 
         # Instantiate our account DB interface:
         if accountDBType == 'developer':
@@ -1067,9 +1067,11 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         digest_maker = hmac.new(self.key)
         digest_maker.update(cookie)
         serverKey = digest_maker.hexdigest()
-        if serverKey != authKey:
-            # This login is not authentic.
+
+        # This login is not authentic...
+        if not hmac.compare_digest(serverKey, authKey):
             self.killConnection(sender, ' ')
+            return
 
         if sender >> 32:
             self.killConnection(sender, 'Client is already logged in.', 100)
