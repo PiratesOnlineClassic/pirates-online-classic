@@ -1,5 +1,6 @@
 # Dev:
 want-dev #f
+want-dev-access #t
 
 # Models:
 model-path ../resources
