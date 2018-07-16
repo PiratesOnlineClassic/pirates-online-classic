@@ -251,12 +251,16 @@ def main():
 
     vfs = VirtualFileSystem.getGlobalPtr()
     mfs = [2, 3, 4, 5]
+    signatures = {3}
 
     for mf in mfs:
         filepath = 'resources/phase_%d.mf' % mf
 
         if not os.path.isfile(filepath):
             raise IOError('Failed to find multifile: phase_%d!' % mf)
+
+        if get_md5(filepath) != signatures['phase_%d' % mf]:
+            raise SystemExit
 
         f = Multifile()
         f.openRead(filepath)
@@ -286,18 +290,8 @@ def get_md5(filepath):
 
     return hash_md5.hexdigest()
 
-PANDA3D_MD5 = get_md5('panda3d/__init__.pyc')
-
-# copy over the runtime main module
-with open(os.path.join(args.build_dir, args.main_module), 'w') as f:
-    io = StringIO.StringIO(RUNTIME_DATA.format(
-        PANDA3D_MD5, repr(IV), repr(KEY)))
-
-    for line in io.readlines():
-        f.write(line)
-
-    io.close()
-    f.close()
+PANDA3D_SIGNATURE = get_md5('panda3d/__init__.pyc')
+PHASE_SIGNATURES = {}
 
 # change our directory paths to the resources root dir
 os.chdir(args.resources_dir)
@@ -308,10 +302,7 @@ for filename in args.resources_files:
 
     # change our directory paths to the resource folder...
     os.chdir(filename)
-    filepaths = os.listdir('./')
-
-    if '%s.mf' % filename in filepaths:
-        filepaths.remove('%s.mf' % filename)
+    subpaths = os.listdir('./')
 
     cmd = 'multify'
     cmd += ' -%d' % args.resources_compression_level
@@ -319,12 +310,27 @@ for filename in args.resources_files:
     cmd += ' -f'
     cmd += ' ../%s.mf' % filename
 
-    for filepath in filepaths:
-        cmd += ' %s' % filepath
+    for subpath in subpaths:
+        cmd += ' %s' % subpath
 
     os.system(cmd)
 
     # change our directory paths back...
     os.chdir('../')
+    PHASE_SIGNATURES[filename] = get_md5('%s.mf' % filename)
+
+# change our directory path back to the src dir
+os.chdir('../src')
+
+# copy over the runtime main module
+with open(os.path.join(args.build_dir, args.main_module), 'w') as f:
+    io = StringIO.StringIO(RUNTIME_DATA.format(PANDA3D_SIGNATURE,
+        repr(IV), repr(KEY), str(PHASE_SIGNATURES)))
+
+    for line in io.readlines():
+        f.write(line)
+
+    io.close()
+    f.close()
 
 print 'Done building game data.'
