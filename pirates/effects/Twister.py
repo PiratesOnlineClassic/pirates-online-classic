@@ -1,12 +1,12 @@
-# Embedded file name: pirates.effects.Twister
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from direct.particles.ParticleEffect import *
-from direct.particles import Particles
-from direct.particles import ForceGroup
-import random
 import os
+import random
+
+from direct.interval.IntervalGlobal import *
+from direct.particles import ForceGroup, Particles
+from direct.particles.ParticleEffect import *
+from pandac.PandaModules import *
 from PooledEffect import PooledEffect
+
 
 class Twister(PooledEffect):
     particleDummy = None
@@ -18,10 +18,9 @@ class Twister(PooledEffect):
         self.psParent.setColorScale(Vec4(1), 1)
         self.psParent.setLightOff()
         self.psParent.setColorScaleOff()
-        basePath = os.path.expandvars('$PIRATES') or './pirates'
         particleSearchPath = DSearchPath()
-        particleSearchPath.appendDirectory(Filename.fromOsSpecific(basePath + '/src/effects'))
-        particleSearchPath.appendDirectory(Filename('etc'))
+        particleSearchPath.appendDirectory(Filename('../resources/phase_2/etc'))
+        particleSearchPath.appendDirectory(Filename('phase_2/etc'))
         particleSearchPath.appendDirectory(Filename('.'))
         pfile = Filename('dust.ptf')
         found = vfs.resolveFilename(pfile, particleSearchPath)
