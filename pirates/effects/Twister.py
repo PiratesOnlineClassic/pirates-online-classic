@@ -19,9 +19,11 @@ class Twister(PooledEffect):
         self.psParent.setLightOff()
         self.psParent.setColorScaleOff()
         particleSearchPath = DSearchPath()
-        particleSearchPath.appendDirectory(Filename('../resources/phase_2/etc'))
-        particleSearchPath.appendDirectory(Filename('phase_2/etc'))
-        particleSearchPath.appendDirectory(Filename('.'))
+        if __debug__:
+            particleSearchPath.appendDirectory(Filename('../resources/phase_2/etc'))
+        else:
+            particleSearchPath.appendDirectory(Filename('.'))
+            particleSearchPath.appendDirectory(Filename('etc'))
         pfile = Filename('dust.ptf')
         found = vfs.resolveFilename(pfile, particleSearchPath)
         self.dust = ParticleEffect()
