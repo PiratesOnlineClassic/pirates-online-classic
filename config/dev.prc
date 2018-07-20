@@ -3,6 +3,9 @@ want-dev #f
 want-dev-access #t
 
 # Models:
+model-cache-models #t
+model-cache-textures #t
+want-disk-cache #t
 model-path ../resources
 model-path ../resources/phase_2
 model-path ../resources/phase_3

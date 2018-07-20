@@ -22,6 +22,7 @@ audio-output-rate 44100
 # Models:
 model-cache-models #f
 model-cache-textures #f
+want-disk-cache #f
 default-model-extension .bam
 
 # Exclude:
@@ -170,7 +171,6 @@ make-grid-lod 1
 verify-lods 0
 
 # Stuff:
-want-disk-cache #f
 allow-incomplete-render 1
 lock-to-one-cpu 1
 
