@@ -148,21 +148,21 @@ class ClientAreaBuilderAI(DirectObject):
     def __createIsland(self, objectData, parent, parentUid, objKey, dynamic):
         from pirates.world.DistributedIslandAI import DistributedIslandAI
 
-        worldIsland = self.air.worldCreator.getIslandWorldDataByUid(objKey)
+        islandWorldData = self.air.worldCreator.getIslandWorldDataByUid(objKey)
 
-        (x, y, z) = worldIsland.get('Pos', (0, 0, 0))
-        (h, p, r) = worldIsland.get('Hpr', (0, 0, 0))
+        (x, y, z) = islandWorldData.get('Pos', (0, 0, 0))
+        (h, p, r) = islandWorldData.get('Hpr', (0, 0, 0))
 
         island = DistributedIslandAI(self.air)
         island.setUniqueId(objKey)
         island.setName(PLocalizer.LocationNames.get(objKey, ''))
         island.setIslandTransform(x, y, z, h)
-        island.setModelPath(worldIsland['Visual']['Model'])
+        island.setModelPath(islandWorldData['Visual']['Model'])
         island.setScale(objectData.get('Scale', (1, 1, 1)))
         island.setUndockable(objectData.get('Undockable', False))
 
-        if 'Objects' in worldIsland:
-            for obj in worldIsland['Objects'].values():
+        if 'Objects' in islandWorldData:
+            for obj in islandWorldData['Objects'].values():
                 if obj['Type'] == 'LOD Sphere':
                     sphereCenter = obj['Pos']
                     island.setZoneSphereSize(*obj['Radi'])
