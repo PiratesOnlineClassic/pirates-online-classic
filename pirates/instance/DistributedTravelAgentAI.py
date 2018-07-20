@@ -11,7 +11,8 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
     def announceGenerate(self):
         DistributedObjectGlobalAI.announceGenerate(self)
 
-        self.sendUpdate('registerShard', [self.air.districtId])
+        self.air.netMessenger.send('registerShard', [self.air.ourChannel,
+            self.air.districtId])
 
     def requestInitLocUDtoAI(self, avatarId):
         if not avatarId:

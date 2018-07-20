@@ -26,6 +26,9 @@ class PiratesInternalRepository(OTPInternalRepository):
         self._registerInternalNetMessage('districtStatus')
         self._registerInternalNetMessage('queryDistrictStatus')
 
+        # Travel Agent
+        self._registerInternalNetMessage('registerShard')
+
         # Holiday Management
         self._registerInternalNetMessage('startHoliday')
         self._registerInternalNetMessage('stopHoliday')

@@ -11,6 +11,9 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
 
         self.__shards = {}
 
+        self.air.netMessenger.accept('registerShard', self,
+            self.addShard)
+
     def hasShard(self, shardId):
         return shardId in self.__shards
 
@@ -38,17 +41,6 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
             return None
 
         return random.choice(self.__shards.values())
-
-    def registerShard(self, shardId):
-        channel = self.air.getMsgSender()
-
-        if not channel:
-            self.notify.warning('Cannot register shard %d, invalid channel!' % (
-                shardId))
-
-            return
-
-        self.addShard(channel, shardId)
 
     def requestInitLocUD(self, unused, shardId):
         avatarId = self.air.getAvatarIdFromSender()
