@@ -109,9 +109,9 @@ class Options(OptionSpace):
 
     def save(self, file_path, state_string=None):
         state = False
-        try:
-            output_file = open(file_path, 'w')
-            if output_file:
+
+        if os.path.exists(file_path):
+            with open(file_path, 'w') as output_file:
                 self.write_string(output_file, 'version ')
                 self.write_integer(output_file, self.version)
                 self.write_string(output_file, 'state ')
@@ -119,6 +119,7 @@ class Options(OptionSpace):
                     self.write_string(output_file, self.state)
                 else:
                     self.write_string(output_file, state_string)
+
                 self.write_string(output_file, 'api ')
                 self.write_string(output_file, self.api)
                 self.write_string(output_file, 'window_width ')
@@ -166,6 +167,7 @@ class Options(OptionSpace):
                 self.write_integer(output_file, self.frame_rate)
                 if self.texture_scale <= 0.0:
                     self.texture_scale = 1.0
+
                 self.write_float(output_file, self.texture_scale)
                 self.write_string(output_file, 'character_detail_level ')
                 self.write_integer(output_file, self.character_detail_level)
@@ -176,8 +178,7 @@ class Options(OptionSpace):
                 self.write_string(output_file, 'mouse_look ')
                 self.write_integer(output_file, self.mouse_look)
                 self.write_string(output_file, 'gamma ')
-                self.write_float(output_file,
-                                 self.gamma - self.gamma_save_offset)
+                self.write_float(output_file, self.gamma - self.gamma_save_offset)
                 self.write_string(output_file, 'gamma_enable ')
                 self.write_integer(output_file, self.gamma_enable)
                 self.write_string(output_file, 'cpu_frequency_warning ')
@@ -185,6 +186,7 @@ class Options(OptionSpace):
                     cpu_frequency_warning = 0
                 else:
                     cpu_frequency_warning = 1
+
                 self.write_integer(output_file, cpu_frequency_warning)
                 self.write_string(output_file, 'hdr ')
                 self.write_integer(output_file, self.hdr)
@@ -194,10 +196,8 @@ class Options(OptionSpace):
                 self.write_integer(output_file, self.ocean_visibility)
                 self.write_string(output_file, 'simple_display_option ')
                 self.write_integer(output_file, self.simple_display_option)
-                output_file.close()
                 state = True
-        except:
-            pass
+                output_file.close()
 
         return state
 
