@@ -1,22 +1,22 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.DistributedNodeAI import DistributedNodeAI
+
 from pirates.piratesbase import PLocalizer
-from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from pirates.piratesbase import PLocalizer
+
 
 class DistributedGameAreaAI(DistributedNodeAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGameAreaAI')
 
     def __init__(self, air):
         DistributedNodeAI.__init__(self, air)
+
         self.modelPath = ''
         self.links = []
         self.uniqueId = ''
         self.name = PLocalizer.Unknown
         self.jailInterior = None
-
-        self.uidMgr = UniqueIdManager(self.air)
         self.builder = GameAreaBuilderAI(self.air, self)
 
     def setModelPath(self, modelPath):

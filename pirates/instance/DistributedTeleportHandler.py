@@ -114,7 +114,9 @@ class DistributedTeleportHandler(DistributedObject):
 
     @report(types=['deltaStamp', 'args', 'printInterests'], prefix='------', dConfigParam='want-teleport-report')
     def continueTeleportToInstance(self, instanceParent, instanceZone, instanceDoId, instanceFileName, spawnParent, spawnZone, spawnDoId, spawnFileName, spawnWorldGridDoId):
-        s = MiniLogSentry(self.miniLog, 'continueTeleportToInstance', instanceParent, instanceZone, instanceDoId, instanceFileName, spawnParent, spawnZone, spawnDoId, spawnFileName, spawnWorldGridDoId)
+        s = MiniLogSentry(self.miniLog, 'continueTeleportToInstance', instanceParent, instanceZone, instanceDoId,
+            instanceFileName, spawnParent, spawnZone, spawnDoId, spawnFileName, spawnWorldGridDoId)
+
         self.spawnWorldName = spawnFileName + '.py'
         base.cr.distributedDistrict.worldCreator.loadDataFile(self.spawnWorldName)
         self.instanceWorldName = None
@@ -122,14 +124,16 @@ class DistributedTeleportHandler(DistributedObject):
             self.instanceWorldName = instanceFileName + '.py'
 
         if self.instanceWorldName:
-            base.cr.distributedDistrict.worldCreator.loadObjectsFromFile(self.instanceWorldName, base.cr.distributedDistrict)
+            base.cr.distributedDistrict.worldCreator.loadObjectsFromFile(self.instanceWorldName,
+                base.cr.distributedDistrict)
 
         self.cr.addTaggedInterest(instanceParent, instanceZone, ['worldInterest'])
 
         def worldArrived(worldObj):
             s = MiniLogSentry(self.miniLog, 'worldArrived', worldObj)
             self.destInstance = worldObj
-            self.teleportAddInterestWorldComplete(worldObj, spawnParent, spawnZone, spawnDoId, spawnWorldGridDoId, self.spawnWorldName)
+            self.teleportAddInterestWorldComplete(worldObj, spawnParent, spawnZone, spawnDoId,
+                spawnWorldGridDoId, self.spawnWorldName)
 
         if self.pendingWorld:
             self.cr.relatedObjectMgr.abortRequest(self.pendingWorld)
@@ -139,23 +143,29 @@ class DistributedTeleportHandler(DistributedObject):
 
     @report(types=['deltaStamp', 'args', 'printInterests'], prefix='------', dConfigParam='want-teleport-report')
     def teleportAddInterestWorldComplete(self, instance, spawnParent, spawnZone, spawnDoId, spawnWorldGridDoId, worldName):
-        s = MiniLogSentry(self.miniLog, 'teleportAddInterestWorldComplete', instance, spawnParent, spawnZone, spawnDoId, spawnWorldGridDoId, worldName)
+        s = MiniLogSentry(self.miniLog, 'teleportAddInterestWorldComplete', instance, spawnParent, spawnZone,
+            spawnDoId, spawnWorldGridDoId, worldName)
+
         addEvent = self.getAddInterestEventName()
         if instance.doId != spawnDoId:
             instance.removeWorldInterest()
 
-        self.acceptOnce(addEvent, self.teleportAddInterestDestComplete, extraArgs=[spawnDoId, spawnWorldGridDoId, worldName])
+        self.acceptOnce(addEvent, self.teleportAddInterestDestComplete, extraArgs=[
+            spawnDoId, spawnWorldGridDoId, worldName])
+
         self.cr.addTaggedInterest(spawnParent, spawnZone, ['instanceInterest'], addEvent)
 
     @report(types=['deltaStamp', 'args', 'printInterests'], prefix='------', dConfigParam='want-teleport-report')
     def teleportAddInterestDestComplete(self, spawnDoId, spawnWorldGridDoId, worldName):
         s = MiniLogSentry(self.miniLog, 'teleportAddInterestDestComplete', spawnDoId, spawnWorldGridDoId, worldName)
-        base.cr.relatedObjectMgr.requestObjects([spawnDoId], eachCallback=lambda param1, param2=spawnWorldGridDoId, param3=spawnDoId, param4=worldName: self.teleportInstanceExists(param1, param2, param3, param4))
+        base.cr.relatedObjectMgr.requestObjects([spawnDoId], eachCallback=lambda param1, param2=spawnWorldGridDoId,
+            param3=spawnDoId, param4=worldName: self.teleportInstanceExists(param1, param2, param3, param4))
 
     @report(types=['deltaStamp', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def teleportInstanceExists(self, instanceObj, worldGridDoId, instanceDoId, worldName):
         s = MiniLogSentry(self.miniLog, 'teleportInstanceExists', instanceObj, worldGridDoId, instanceDoId, worldName)
-        base.cr.relatedObjectMgr.requestObjects([worldGridDoId], eachCallback=lambda param1, param2=instanceDoId, param3=worldName: self.teleportWorldGridExists(param1, param2, param3))
+        base.cr.relatedObjectMgr.requestObjects([worldGridDoId], eachCallback=lambda param1, param2=instanceDoId,
+            param3=worldName: self.teleportWorldGridExists(param1, param2, param3))
 
     @report(types=['deltaStamp', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def teleportWorldGridExists(self, worldGridObj, instanceDoId, worldName):
@@ -193,7 +203,8 @@ class DistributedTeleportHandler(DistributedObject):
 
         self.spawnPos, zoneId, parents = self.destInstance.spawnInfo
         self.cr.teleportMgr.miniLog = self.miniLog
-        self.cr.teleportMgr.createSpawnInterests(parents, self.teleportToInstanceCleanup3, self.destWorldGrid, localAvatar)
+        self.cr.teleportMgr.createSpawnInterests(parents, self.teleportToInstanceCleanup3,
+            self.destWorldGrid, localAvatar)
 
     @report(types=['deltaStamp', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def teleportToInstanceCleanup3(self, parentObj, teleportingObj):

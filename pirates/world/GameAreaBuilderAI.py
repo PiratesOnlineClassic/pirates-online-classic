@@ -114,8 +114,12 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         interior.setName(interiorFile)
         interior.setModelPath(modelPath)
         interior.setScale(objectData.get('Scale', (1, 1, 1)))
-
         parent.generateChildWithRequired(interior, self.air.allocateZone())
+
+        # add the interior object to the list of objects by uid's,
+        # as both the exterior uid and the object key so we can listen
+        # in on uid callback events...
+        parent.builder.addObject(interior)
         parent.builder.addObject(interior, uniqueId=objKey)
 
         if isJail:
@@ -147,7 +151,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
             return
 
-        interior = parent.uidMgr.justGetMeMeObject(parentUid)
+        interior = self.air.uidMgr.justGetMeMeObject(parentUid)
 
         if not interior or parentUid == self.parent.getUniqueId():
             self.notify.debug('Cannot create door locator node %s, interior not found!' % (
@@ -174,9 +178,9 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         if wantTruePosHpr:
             self.setObjectTruePosHpr(doorLocatorNode, objKey, parentUid, objectData)
 
-        zoneId = self.parent.getZoneFromXYZ(doorLocatorNode.getPos())
+        zoneId = 101#self.parent.getZoneFromXYZ(doorLocatorNode.getPos())
         self.parent.generateChildWithRequired(doorLocatorNode, zoneId)
-        self.parentObjectToCell(doorLocatorNode, zoneId)
+        #self.parentObjectToCell(doorLocatorNode, zoneId)
         self.addObject(doorLocatorNode)
 
         return doorLocatorNode

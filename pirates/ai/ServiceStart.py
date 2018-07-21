@@ -64,4 +64,3 @@ except SystemExit:
 except Exception as e:
     if simbase.air:
         simbase.air.logException(e)
-        

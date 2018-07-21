@@ -1535,18 +1535,14 @@ class OTPClientRepository(ClientRepositoryBase):
         if not self.SupportTutorial or base.localAvatar.tutorialAck:
             self.gameFSM.request('playGame', [hoodId, zoneId, avId])
         else:
-            if base.config.GetBool('force-tutorial', 1):
-                self.gameFSM.request(
-                    'tutorialQuestion', [
-                        hoodId, zoneId, avId])
+            if base.config.GetBool('force-tutorial', True):
+                self.gameFSM.request('tutorialQuestion', [hoodId, zoneId, avId])
             else:
                 self.gameFSM.request('playGame', [hoodId, zoneId, avId])
 
     def handlePlayGame(self, msgType, di):
         if self.notify.getDebug():
-            self.notify.debug(
-                'handle play game got message type: ' +
-                repr(msgType))
+            self.notify.debug('handle play game got message type: %r' % msgType)
 
         if self.__recordObjectMessage(msgType, di):
             return

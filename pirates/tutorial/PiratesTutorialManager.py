@@ -20,7 +20,7 @@ class PiratesTutorialManager(DistributedObject.DistributedObject):
 
     def enterTutorial(self, tutorialZone):
         base.localAvatar.inTutorial = 1
-        messenger.send('startTutorial', [self.doId, tutorialZone])
+        messenger.send('startTutorial', [tutorialZone])
         self.acceptOnce('stopTutorial', self.__handleStopTutorial)
 
     def __handleStopTutorial(self):
@@ -32,4 +32,3 @@ class PiratesTutorialManager(DistributedObject.DistributedObject):
 
     def d_toonArrived(self):
         self.sendUpdate('toonArrived', [])
-        

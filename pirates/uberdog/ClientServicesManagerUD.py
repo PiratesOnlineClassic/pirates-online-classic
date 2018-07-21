@@ -5,13 +5,18 @@ import hmac
 import json
 import time
 import urllib2
+
+from panda3d.core import *
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.distributed.PyDatagram import *
 from direct.fsm.FSM import FSM
-from panda3d.core import *
+
 from otp.distributed import OtpDoGlobals
+
 from pirates.pirate.HumanDNA import HumanDNA
+from pirates.quest.QuestConstants import LocationIds
 
 # Import from PyCrypto only if we are using a database that requires it. This
 # allows local hosted and developer builds of the game to run without it:
@@ -497,6 +502,9 @@ class CreateAvatarFSM(OperationFSM):
             'setDNAString': (self.dna,),
             'setDISLid': (self.target,)
         }
+
+        if simbase.config.GetBool('skip-tutorial', False):
+            pirateFields['setReturnLocation'] = (LocationIds.PORT_ROYAL_ISLAND,)
 
         self.csm.air.dbInterface.createObject(
             self.csm.air.dbId,

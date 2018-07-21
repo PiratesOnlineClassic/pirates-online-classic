@@ -91,9 +91,10 @@ anim-blend-type normalized_linear
 interpolate-frames #t
 
 # Tutorial:
-skip-tutorial #t
+skip-tutorial #f
 force-tutorial #t
-force-tutorial-complete #t
+ignore-teleport-requirements #f
+force-tutorial-complete #f
 
 # Seapatch:
 want-seapatch #t

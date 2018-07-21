@@ -2,9 +2,10 @@ import random
 
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
+
 from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 from pirates.world.ClientAreaBuilderAI import ClientAreaBuilderAI
+
 
 class DistributedInstanceBaseAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInstanceBaseAI')
@@ -17,8 +18,6 @@ class DistributedInstanceBaseAI(DistributedObjectAI):
         self.fileName = ''
         self.type = PiratesGlobals.INSTANCE_NONE
         self.spawnPts = {}
-
-        self.uidMgr = UniqueIdManager(self.air, self)
         self.builder = ClientAreaBuilderAI(self.air, self)
 
     def getParentingRules(self):

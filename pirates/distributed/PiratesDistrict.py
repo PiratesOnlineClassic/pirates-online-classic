@@ -53,4 +53,3 @@ class PiratesDistrict(DistributedDistrict):
 
     def getName(self):
         return self.name
-

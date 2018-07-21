@@ -1,9 +1,13 @@
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
+
 from pirates.world.WorldCreatorBase import WorldCreatorBase
 from pirates.piratesbase import PiratesGlobals
 from pirates.leveleditor import ObjectList
+from pirates.world import WorldGlobals
 from pirates.instance.DistributedMainWorldAI import DistributedMainWorldAI
+from pirates.tutorial import TutorialGlobals
+from pirates.tutorial.DistributedPiratesTutorialWorldAI import DistributedPiratesTutorialWorldAI
 
 
 class WorldCreatorAI(WorldCreatorBase, DirectObject):
@@ -96,11 +100,18 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         return (newObj, objParent)
 
     def __createWorldInstance(self, objectData, parent, parentUid, objKey, dynamic):
-        self.world = DistributedMainWorldAI(self.air)
-        self.world.setUniqueId(objKey)
-        self.world.setName(objectData.get('Name', 'default'))
-        self.world.generateWithRequired(PiratesGlobals.InstanceUberZone)
-        self.worldDict = objectData
+        worldName = objectData['Name']
 
+        if worldName == WorldGlobals.PiratesTutorialSceneFileBase:
+            self.world = DistributedPiratesTutorialWorldAI(self.air)
+        else:
+            self.world = DistributedMainWorldAI(self.air)
+
+        self.world.setUniqueId(objKey)
+        self.world.setName(worldName)
+        self.world.generateWithRequired(PiratesGlobals.InstanceUberZone)
+
+        self.worldDict = objectData
         self.air.uidMgr.addUid(self.world.getUniqueId(), self.world.doId)
+
         return self.world

@@ -15,29 +15,11 @@ class ClientAreaBuilderAI(DirectObject):
         self.objectList = {}
 
     def addObject(self, object, uniqueId=None):
-        if not object:
-            return
-
-        if object.doId in self.objectList:
-            self.notify.warning('Cannot add an already existing object %d!' % (
-                object.doId))
-
-            return
-
-        self.parent.uidMgr.addUid(uniqueId or object.getUniqueId(), object.doId)
+        self.air.uidMgr.addUid(uniqueId or object.getUniqueId(), object.doId)
         self.objectList[object.doId] = object
 
     def removeObject(self, object, uniqueId=None):
-        if not object:
-            return
-
-        if object.doId not in self.objectList:
-            self.notify.warning('Cannot remove a non-existant object %d!' % (
-                object.doId))
-
-            return
-
-        self.parent.uidMgr.removeUid(uniqueId or object.getUniqueId())
+        self.air.uidMgr.removeUid(uniqueId or object.getUniqueId())
         del self.objectList[object.doId]
 
     def getObject(self, doId=None, uniqueId=None):
@@ -134,11 +116,14 @@ class ClientAreaBuilderAI(DirectObject):
             newObj = self.__createIsland(objectData, parent, parentUid, objKey, dynamic)
         else:
             if not parent or not hasattr(parent, 'builder'):
-                parent = self.air.worldCreator.world.uidMgr.justGetMeMeObject(
-                    parentUid)
+                parent = self.air.uidMgr.justGetMeMeObject(parentUid)
 
                 if not parent:
                     return newObj
+
+            # don't create objects for our own builder...
+            if parent == self.parent:
+                return newObj
 
             newObj = parent.builder.createObject(objType, objectData, parent,
                 parentUid, objKey, dynamic)

@@ -153,6 +153,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         self.name = ''
         self.title = ''
         self.inPvp = False
+        self.tutorialAck = 0
         self.setPickable(1)
         self.interactioneer = None
         self.crewShip = None
@@ -637,7 +638,8 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
 
     @report(types=['deltaStamp', 'module'], prefix='------', dConfigParam='want-teleport-report')
     def readyToTeleport(self, teleportMgr):
-        teleportMgr.initiateTeleport(self.teleportToType, self.teleportToName, shardId=self.getDefaultShard(), locationUid=self.returnLocation)
+        teleportMgr.initiateTeleport(self.teleportToType, self.teleportToName,
+            shardId=self.getDefaultShard(), locationUid=self.returnLocation)
 
     def requestActivityAccepted(self):
         self.guiMgr.lookoutPage.requestActivityAccepted()

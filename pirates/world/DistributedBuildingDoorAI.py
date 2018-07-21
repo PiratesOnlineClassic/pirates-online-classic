@@ -53,5 +53,9 @@ class DistributedBuildingDoorAI(DistributedDoorBaseAI):
 
             return
 
-        self.sendUpdateToAvatarId(avatar.doId, 'setPrivateInteriorInstance', [interior.parentId,
-            interior.zoneId, interior.doId, True])
+        self.d_setPrivateInteriorInstance(avatar.doId, interior.parentId,
+            interior.zoneId, interior.doId, True)
+
+    def d_setPrivateInteriorInstance(self, avatarId, worldId, worldZoneId, interiorId, autoFadeIn):
+        self.sendUpdateToAvatarId(avatarId, 'setPrivateInteriorInstance', [worldId,
+            worldZoneId, interiorId, autoFadeIn])

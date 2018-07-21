@@ -2,10 +2,15 @@ import time
 import random
 
 from panda3d.core import *
+
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from pirates.distributed.PiratesInternalRepository import PiratesInternalRepository
+
 from otp.distributed.OtpDoGlobals import *
+from otp.ai.MagicWordManagerAI import MagicWordManagerAI
+from otp.ai.TimeManagerAI import TimeManagerAI
 from otp.friends.FriendManagerAI import FriendManagerAI
+
+from pirates.distributed.PiratesInternalRepository import PiratesInternalRepository
 from pirates.piratesbase import PiratesGlobals
 from pirates.distributed.PiratesDistrictAI import PiratesDistrictAI
 from pirates.distributed.DistrictTrackerAI import DistrictTrackerAI
@@ -13,8 +18,6 @@ from pirates.world import WorldGlobals
 from pirates.ai.NewsManagerAI import NewsManagerAI
 from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 from pirates.distributed.DistributedPopulationTrackerAI import DistributedPopulationTrackerAI
-from otp.ai.MagicWordManagerAI import MagicWordManagerAI
-from otp.ai.TimeManagerAI import TimeManagerAI
 from pirates.instance.DistributedTeleportMgrAI import DistributedTeleportMgrAI
 from pirates.piratesbase.DistributedTimeOfDayManagerAI import DistributedTimeOfDayManagerAI
 from pirates.distributed.TargetManagerAI import TargetManagerAI
@@ -23,6 +26,7 @@ from pirates.trades.TradeManagerAI import TradeManagerAI
 from pirates.world.WorldCreatorAI import WorldCreatorAI
 from pirates.battle.BattleManagerAI import BattleManagerAI
 from pirates.band.DistributedCrewMatchAI import DistributedCrewMatchAI
+from pirates.tutorial.PiratesTutorialManagerAI import PiratesTutorialManagerAI
 
 
 class PiratesAIRepository(PiratesInternalRepository):
@@ -137,6 +141,9 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.crewMatch = DistributedCrewMatchAI(self)
         self.crewMatch.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+
+        self.tutorialManager = PiratesTutorialManagerAI(self)
+        self.tutorialManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
     def createWorlds(self):
         """

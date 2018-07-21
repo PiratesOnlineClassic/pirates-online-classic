@@ -1145,7 +1145,7 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   setLootCarried(uint16, uint16) broadcast ram;
   giveDefaultQuest() airecv ownsend;
   requestReturnLocation(uint32) airecv ownsend;
-  setReturnLocation(string="1150922126.8dzlu") required db airecv ownrecv;
+  setReturnLocation(string="") required db airecv ownrecv;
   requestCurrentIsland(uint32) airecv ownsend;
   setCurrentIsland(string) ownrecv;
   setJailCellIndex(uint8=100) required db airecv ownrecv;

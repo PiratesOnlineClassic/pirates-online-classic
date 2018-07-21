@@ -53,6 +53,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.world import WorldGlobals
 from otp.distributed.OtpDoGlobals import *
 from otp.nametag import NametagGlobals
+from pirates.tutorial import TutorialGlobals
 
 want_fifothreads = base.config.GetBool('want-fifothreads', False)
 if want_fifothreads:
@@ -86,7 +87,7 @@ if want_fifothreads:
 
 class PiratesClientRepository(OTPClientRepository):
     notify = directNotify.newCategory('PiratesClientRepository')
-    SupportTutorial = 0
+    SupportTutorial = True
     GameGlobalsId = OTP_DO_ID_PIRATES
     StopVisibilityEvent = 'pirates-stop-visibility'
 
@@ -253,10 +254,10 @@ class PiratesClientRepository(OTPClientRepository):
             self.tutorial = 1
             dna = HumanDNA.HumanDNA()
             newPotAv = PotentialAvatar(0, ['dbp', '', '', ''], dna, index, 0)
-            self.csm.sendCreateAvatar(newPotAv.dna, '', newPotAv.position)
+            self.csm.sendCreateAvatar(newPotAv.dna, '', newPotAv.position, newPotAv.name)
             self.accept('createdNewAvatar', self.handleAvatarCreated, [newPotAv])
 
-    def handleAvatarCreated(self, newPotAv, avatarId, subId):
+    def handleAvatarCreated(self, newPotAv, avatarId):
         newPotAv.id = avatarId
         self.loginFSM.request('waitForSetAvatarResponse', [newPotAv])
 
@@ -266,9 +267,9 @@ class PiratesClientRepository(OTPClientRepository):
             self.avCreate.exit()
             self.loginFSM.request('chooseAvatar', [self.avList])
         elif done == 'created':
-            self.handleAvatarCreated(self.avCreate.newPotAv, self.avCreate.avId, self.avCreate.subId)
+            self.handleAvatarCreated(self.avCreate.newPotAv, self.avCreate.avId)
         else:
-            self.notify.error('Invalid doneStatus from MakeAPirate: ' + str(done))
+            self.notify.error('Invalid doneStatus from MakeAPirate: %r' % done)
 
     def exitCreateAvatar(self):
         if self.skipTutorial:
@@ -360,12 +361,12 @@ class PiratesClientRepository(OTPClientRepository):
         if locUID:
             self.loadingScreen.showTarget(locUID)
             self.loadingScreen.showHint(locUID)
-            base.richPresence.setLocation(locUID)
         else:
-            locUID = '1150922126.8dzlu'
+            locUID = TutorialGlobals.JAIL_INTERIOR
             localAvatar.setReturnLocation(locUID)
             self.loadingScreen.showTarget(jail=True)
 
+        base.richPresence.setLocation(locUID)
         self.loginFSM.request('playingGame')
 
     def generateWithRequiredOtherFieldsOwner(self, dclass, doId, di):
@@ -407,7 +408,8 @@ class PiratesClientRepository(OTPClientRepository):
         if __dev__ and config.GetBool('want-dev-hotkeys', False):
 
             def deployShip():
-                messenger.send('magicWord', ['~deployShip', base.localAvatar.getDoId(), base.localAvatar.zoneId])
+                messenger.send('magicWord', ['~deployShip', base.localAvatar.getDoId(),
+                    base.localAvatar.zoneId])
 
             self.accept(PiratesGlobals.ShipHotkey, deployShip)
 
@@ -415,7 +417,7 @@ class PiratesClientRepository(OTPClientRepository):
             localAvatar.teleportToType = PiratesGlobals.INSTANCE_TUTORIAL
             localAvatar.teleportToName = WorldGlobals.PiratesTutorialSceneFileBase
             self.sendMsgToTravelAgent('requestInitLocUD', ['unused', 0])
-        elif localAvatar.onWelcomeWorld and self.defaultShard != 0 and config.GetBool('want-welcome-worlds', 0):
+        elif localAvatar.onWelcomeWorld and self.defaultShard != 0 and config.GetBool('want-welcome-worlds', False):
             localAvatar.teleportToType = PiratesGlobals.INSTANCE_WELCOME
             localAvatar.teleportToName = 'Welcome World'
             self.sendMsgToTravelAgent('requestInitLocUD', ['unused', 0])
@@ -471,34 +473,22 @@ class PiratesClientRepository(OTPClientRepository):
     def enterTutorialQuestion(self, hoodId, zoneId, avId):
         self.__requestTutorial(hoodId, zoneId, avId)
 
-    def handleTutorialQuestion(self, msgType, di):
-        if msgType == CLIENT_ENTER_OBJECT_REQUIRED:
-            self.handleGenerateWithRequired(di)
-        elif msgType == CLIENT_CREATE_OBJECT_REQUIRED_OTHER:
-            self.handleGenerateWithRequired(di, other=True)
-        elif msgType == CLIENT_OBJECT_SET_FIELD:
-            self.handleUpdateField(di)
-        elif msgType == CLIENT_OBJECT_LEAVING:
-            self.handleDisable(di)
-        elif msgType == CLIENT_OBJECT_LEAVING_OWNER:
-            self.handleDisable(di, ownerView=True)
-        else:
-            self.handleUnexpectedMsgType(msgType, di)
+    def __requestTutorial(self, hoodId, zoneId, avId):
+        self.acceptOnce('startTutorial', self.__handleStartTutorial, [
+            avId, hoodId])
+
+        messenger.send('requestTutorial')
+        self.waitForDatabaseTimeout(requestName='RequestTutorial')
+
+    def __handleStartTutorial(self, avId, hoodId, zoneId):
+        self.gameFSM.request('playGame', [hoodId, zoneId, avId])
 
     def exitTutorialQuestion(self):
+        self.cleanupWaitingForDatabase()
         self.handler = None
         self.handlerArgs = None
         self.ignore('startTutorial')
         taskMgr.remove('waitingForTutorial')
-
-    def __requestTutorial(self, hoodId, zoneId, avId):
-        self.acceptOnce('startTutorial', self.__handleStartTutorial, [
-            avId])
-
-        messenger.send('requestTutorial')
-
-    def __handleStartTutorial(self, avId, zoneId):
-        self.gameFSM.request('playGame', [Tutorial, zoneId, avId])
 
     @report(types=['deltaStamp', 'module'], prefix='------', dConfigParam='want-teleport-report')
     def enterWaitOnEnterResponses(self, shardId, hoodId, zoneId, avId):
@@ -518,6 +508,7 @@ class PiratesClientRepository(OTPClientRepository):
             if self.distributedDistrict is None:
                 self.loginFSM.request('noShards')
                 return
+
             shardId = self.distributedDistrict.doId
         else:
             self.distributedDistrict = district

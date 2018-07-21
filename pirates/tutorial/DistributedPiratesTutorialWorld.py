@@ -13,7 +13,7 @@ from pirates.pirate import HumanDNA, Pirate
 from pirates.piratesbase import PiratesGlobals, TimeOfDayManager
 from pirates.quest import QuestParser
 
-class DistributedPiratesTutorialWorld(DistributedInstanceBase.DistributedInstanceBase):   
+class DistributedPiratesTutorialWorld(DistributedInstanceBase.DistributedInstanceBase):
     notify = directNotify.newCategory('DistributedPiratesTutorialWorld')
 
     def __init__(self, cr):
@@ -28,7 +28,8 @@ class DistributedPiratesTutorialWorld(DistributedInstanceBase.DistributedInstanc
             self.tutorialHandler = tutorialHandler
             self.tutorialHandler.setInstance(self)
 
-        self.cr.relatedObjectMgr.requestObjects([self.tutorialHandlerId], eachCallback=tutorialHandlerExists)
+        self.cr.relatedObjectMgr.requestObjects([self.tutorialHandlerId],
+            eachCallback=tutorialHandlerExists)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-connector-report')
     def addWorldInterest(self, area=None):
@@ -40,6 +41,7 @@ class DistributedPiratesTutorialWorld(DistributedInstanceBase.DistributedInstanc
     def removeWorldInterest(self, area=None):
         if not (area and area.gridVisContext):
             area = None
+
         DistributedInstanceBase.DistributedInstanceBase.removeWorldInterest(self, area)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-connector-report')
