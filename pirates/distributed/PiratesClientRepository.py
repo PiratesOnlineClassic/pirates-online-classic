@@ -53,7 +53,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.world import WorldGlobals
 from otp.distributed.OtpDoGlobals import *
 from otp.nametag import NametagGlobals
-from pirates.tutorial import TutorialGlobals
 
 want_fifothreads = base.config.GetBool('want-fifothreads', False)
 if want_fifothreads:
@@ -361,12 +360,12 @@ class PiratesClientRepository(OTPClientRepository):
         if locUID:
             self.loadingScreen.showTarget(locUID)
             self.loadingScreen.showHint(locUID)
+            base.richPresence.setLocation(locUID)
         else:
-            locUID = TutorialGlobals.JAIL_INTERIOR
+            locUID = '1150922126.8dzlu'
             localAvatar.setReturnLocation(locUID)
             self.loadingScreen.showTarget(jail=True)
 
-        base.richPresence.setLocation(locUID)
         self.loginFSM.request('playingGame')
 
     def generateWithRequiredOtherFieldsOwner(self, dclass, doId, di):
