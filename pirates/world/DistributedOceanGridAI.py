@@ -2,7 +2,6 @@ from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGr
 from direct.directnotify import DirectNotifyGlobal
 from pirates.world.OceanGridBase import OceanGridBase
 from pirates.world.WorldGlobals import *
-from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 
 class DistributedOceanGridAI(DistributedCartesianGridAI, OceanGridBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedOceanGridAI')
@@ -12,8 +11,6 @@ class DistributedOceanGridAI(DistributedCartesianGridAI, OceanGridBase):
             OCEAN_GRID_RADIUS, OCEAN_CELL_SIZE)
 
         OceanGridBase.__init__(self)
-
-        self.uidMgr = UniqueIdManager(self.air)
 
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
         self.generateChildWithRequiredAndId(do, self.air.allocateChannel(), self.doId, zoneId, optionalFields)
