@@ -178,9 +178,9 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         if wantTruePosHpr:
             self.setObjectTruePosHpr(doorLocatorNode, objKey, parentUid, objectData)
 
-        zoneId = 101#self.parent.getZoneFromXYZ(doorLocatorNode.getPos())
+        zoneId = self.parent.getZoneFromXYZ(doorLocatorNode.getPos())
         self.parent.generateChildWithRequired(doorLocatorNode, zoneId)
-        #self.parentObjectToCell(doorLocatorNode, zoneId)
+        self.parentObjectToCell(doorLocatorNode, zoneId)
         self.addObject(doorLocatorNode)
 
         return doorLocatorNode
