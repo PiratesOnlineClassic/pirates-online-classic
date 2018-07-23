@@ -26,8 +26,9 @@ from pirates.quest.QuestConstants import NPCIds
 class SpawnNodeBase:
     notify = DirectNotifyGlobal.directNotify.newCategory('SpawnNodeBase')
 
-    def __init__(self, spawner, objType, objectData, parent, objKey):
-        self._spawner = spawner
+    def __init__(self, air, objType, objectData, parent, objKey):
+        self.air = air
+
         self._objType = objType
         self._objectData = objectData
         self._parent = parent
@@ -36,10 +37,6 @@ class SpawnNodeBase:
 
         # allow our logger to send notify messages...
         self.notify.setInfo(True)
-
-    @property
-    def spawner(self):
-        return self._spawner
 
     @property
     def objType(self):
@@ -90,7 +87,7 @@ class SpawnNodeBase:
         if holidayName:
             holidayId = HolidayGlobals.getHolidayIdFromName(holidayName)
             if holidayId:
-                return self.spawner.air.newsManager.isHolidayActive(holidayId)
+                return self.air.newsManager.isHolidayActive(holidayId)
 
         return True
 
@@ -165,7 +162,7 @@ class SpawnNodeBase:
             self.notify.warning('No NPC class defined for AvatarType: %s' % avatarType)
             return
 
-        npc = npcCls(self.spawner.air)
+        npc = npcCls(self.air)
 
         # Set NPC Node data
         npc.setScale(self.objectData.get('Scale'))
@@ -297,12 +294,12 @@ class EnemySpawnNode(SpawnNodeBase):
         # Attempt to pick a RNG boss type
         if bossType and self.wantRandomBosses:
             if random.randint(1, 100) <= self.randomBossChance:
-                if bossType not in self.spawner.randomBosses:
-                    self.spawner.randomBosses.append(bossType)
+                if bossType not in self.air.enemySpawner.randomBosses:
+                    self.air.enemySpawner.randomBosses.append(bossType)
                     avatarType = bossType
             elif config.GetBool('force-random-bosses', False):
-                if bossType not in self.spawner.randomBosses:
-                    self.spawner.randomBosses.append(bossType)
+                if bossType not in self.air.enemySpawner.randomBosses:
+                    self.air.enemySpawner.randomBosses.append(bossType)
                     avatarType = bossType
 
         return avatarType
@@ -453,7 +450,7 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
             return
 
         spawnClass = spawnClasses[objType]
-        spawnNode = spawnClass(self, objType, objectData, parent, objKey)
+        spawnNode = spawnClass(self.air, objType, objectData, parent, objKey)
 
         # check to see if we want enemies or not since alpha will
         # not introduce killable enemies yet...

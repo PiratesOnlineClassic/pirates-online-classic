@@ -16,7 +16,6 @@ class BattleManagerAI(BattleManagerBase):
 
     def __init__(self, air):
         self.air = air
-        self.enemySpawner = self.air.enemySpawner
 
         self.__updateTask = None
         self.__targets = {}
@@ -428,8 +427,7 @@ class BattleManagerAI(BattleManagerBase):
 
             return
 
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-        if config.GetBool('want-membership', False) and avatar.getLevel() == Freebooter.FreeOverallLevelCap:
+        if config.GetBool('want-membership', False) and attacker.getLevel() == Freebooter.FreeOverallLevelCap:
             return
 
         overallReputation = 0
@@ -464,5 +462,6 @@ class BattleManagerAI(BattleManagerBase):
     def destroy(self):
         if self.__updateTask:
             taskMgr.remove(self.__updateTask)
+            self.__updateTask = None
 
-        self.__updateTask = None
+        self.__targets = {}
