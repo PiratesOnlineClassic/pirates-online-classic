@@ -170,7 +170,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         if hp <= 0 and self.hp > 0:
             self.b_setGameState('Death')
 
-        self.hp = hp if hp >= 0 else 0
+        self.hp = max(0, hp)
         self.quietly = quietly
 
     def d_setHp(self, hp, quietly=False):
