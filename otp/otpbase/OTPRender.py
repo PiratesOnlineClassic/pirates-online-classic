@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.otpbase.OTPRender
 from panda3d.core import *
 
 MainCameraBitmask = BitMask32.bit(0)
@@ -9,7 +5,6 @@ ReflectionCameraBitmask = BitMask32.bit(1)
 ShadowCameraBitmask = BitMask32.bit(2)
 SkyReflectionCameraBitmask = BitMask32.bit(3)
 GlowCameraBitmask = BitMask32.bit(4)
-EnviroCameraBitmask = BitMask32.bit(5)
 
 
 def setCameraBitmask(default, node_path, camera_bitmask,
@@ -82,5 +77,3 @@ def setAdditiveEffect(node_path, tag=None, bin_name=None,
             renderReflection(False, node_path, tag, None)
         if bin_name:
             node_path.setBin(bin_name, 0)
-    return
-# okay decompiling .\otp\otpbase\OTPRender.pyc
