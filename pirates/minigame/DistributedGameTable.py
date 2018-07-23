@@ -494,4 +494,3 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
     def updateStacks(self, chipsArray):
         for seat in range(self.NumSeats):
             self.displayStacks(seat, chipsArray[seat])
-# okay decompiling .\pirates\minigame\DistributedGameTable.pyc

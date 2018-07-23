@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.DarkPortal
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from PooledEffect import PooledEffect

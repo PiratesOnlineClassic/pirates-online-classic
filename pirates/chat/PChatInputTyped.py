@@ -303,4 +303,3 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
                 return str(extraInfo)
             else:
                 return str(exception)
-# okay decompiling .\pirates\chat\PChatInputTyped.pyc

@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.CaveAIsland
 from panda3d.core import Point3, VBase3
 objectStruct = {
     'Locator Links':

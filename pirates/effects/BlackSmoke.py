@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.BlackSmoke
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.actor import Actor

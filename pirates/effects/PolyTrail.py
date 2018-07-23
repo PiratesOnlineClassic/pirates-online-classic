@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.PolyTrail
 from pandac.PandaModules import *
 from direct.motiontrail.MotionTrail import *
 import random

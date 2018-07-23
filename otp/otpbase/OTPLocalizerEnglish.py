@@ -2487,4 +2487,3 @@ WhiteListMenu = [
 TTAccountCallCustomerService = 'Please call Customer Service at %s.'
 TTAccountCustomerServiceHelp = '\nIf you need help, please call Customer Service at %s.'
 TTAccountIntractibleError = 'An error occurred.'
-# okay decompiling .\otp\otpbase\OTPLocalizerEnglish.pyc

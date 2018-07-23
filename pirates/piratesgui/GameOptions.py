@@ -3883,4 +3883,3 @@ class GameOptions(BorderFrame):
         FeedbackPanel.FeedbackPanel()
 
 
-# okay decompiling .\pirates\piratesgui\GameOptions.pyc

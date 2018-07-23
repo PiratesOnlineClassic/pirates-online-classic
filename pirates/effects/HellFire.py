@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.HellFire
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect

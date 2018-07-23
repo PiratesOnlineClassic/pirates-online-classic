@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.CrewInviter
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import ClassicFSM, State
 from direct.gui.DirectGui import *
@@ -514,4 +510,3 @@ class CrewInviter(GuiPanel.GuiPanel):
 
     def __handleDisableAvatar(self):
         self.fsm.request('wentAway')
-# okay decompiling .\pirates\piratesgui\CrewInviter.pyc

@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.port_royal_interior_mansion
 from panda3d.core import Point3, VBase3
 
 objectStruct = {

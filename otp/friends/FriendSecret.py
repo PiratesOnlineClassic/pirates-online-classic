@@ -650,4 +650,3 @@ class FriendSecret(DirectFrame, StateData.StateData):
         self.enterSecretText.hide()
         self.enterSecret.hide()
         base.localAvatar.chatMgr.fsm.request('mainMenu')
-# okay decompiling .\otp\friends\FriendSecret.pyc

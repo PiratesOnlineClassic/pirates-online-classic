@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: otp.speedchat.ColorSpace
 import math
 
 
@@ -72,4 +68,3 @@ def yuv2rgb(y, u, v):
     g = y - 0.3436954 * (u - 0.5) - 0.714169 * (v - 0.5)
     b = y + 1.7721604 * (u - 0.5) + 0.0009902 * (v - 0.5)
     return tuple(map(lambda x: min(max(x, 0), 1), (r, g, b)))
-# okay decompiling .\otp\speedchat\ColorSpace.pyc

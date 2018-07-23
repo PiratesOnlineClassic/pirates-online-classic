@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.ShipFog
 from pandac.PandaModules import *
 from direct.particles import ParticleEffect
 from direct.actor import Actor

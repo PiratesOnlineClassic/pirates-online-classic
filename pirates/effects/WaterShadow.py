@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.WaterShadow
 from pandac.PandaModules import *
 from otp.otpbase import OTPRender
 

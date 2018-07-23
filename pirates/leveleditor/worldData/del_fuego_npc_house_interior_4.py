@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.del_fuego_npc_house_interior_4
 from panda3d.core import Point3, VBase3
 objectStruct = {
     'Objects': {

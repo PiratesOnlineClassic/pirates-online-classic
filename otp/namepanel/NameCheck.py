@@ -272,4 +272,3 @@ def checkName(name, otherCheckFuncs=[]):
             return problem
 
     return
-# okay decompiling .\otp\namepanel\NameCheck.pyc

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.minigame.DistributedHoldemTable
 import random
 
 from direct.interval.IntervalGlobal import *
@@ -45,4 +41,3 @@ class DistributedHoldemTable(DistributedPokerTable.DistributedPokerTable):
             else:
                 deals.append(self.dealCommunityCards(numCards=1))
         return deals
-# okay decompiling .\pirates\minigame\DistributedHoldemTable.pyc

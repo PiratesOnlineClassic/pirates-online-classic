@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.band.DistributedBandMemberOV
 from direct.distributed import DistributedObjectOV
 from otp.otpbase import OTPLocalizer
 from pirates.piratesbase import PiratesGlobals, PLocalizer
@@ -68,4 +64,3 @@ class DistributedBandMemberOV(DistributedObjectOV.DistributedObjectOV):
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
     def teleportResponse(self, responderId, available, shardId, instanceDoId, areaDoId):
         self.cr.teleportMgr.handleAvatarTeleportResponse(responderId, available, shardId, instanceDoId, areaDoId)
-# okay decompiling .\pirates\band\DistributedBandMemberOV.pyc

@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.perdida_island_tunnel_jungle_1
 from panda3d.core import Point3, VBase3
 objectStruct = {
     'Objects': {

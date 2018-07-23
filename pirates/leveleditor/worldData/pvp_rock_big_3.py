@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.pvp_rock_big_3
 from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {

@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.kingshead_depot_int_1
 from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {

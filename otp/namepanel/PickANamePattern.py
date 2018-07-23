@@ -132,4 +132,3 @@ class PickANamePatternTwoPartLastName(PickANamePattern):
                 pattern[-2] = combinedIndex2indices[combinedIndex][0]
                 pattern[-1] = combinedIndex2indices[combinedIndex][1]
         return pattern
-# okay decompiling .\otp\namepanel\PickANamePattern.pyc

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.ShipFrameBoard
 from direct.gui.DirectGui import *
 from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals, PLocalizer
@@ -78,4 +74,3 @@ class ShipFrameBoard(ShipFrame):
 
     def enableStats(self, shipName='', shipClass=0, mastInfo=[], hp=0, sp=0, cargo=0, crew=0, time=0):
         pass
-# okay decompiling .\pirates\piratesgui\ShipFrameBoard.pyc

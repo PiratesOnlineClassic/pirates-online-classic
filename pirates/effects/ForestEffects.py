@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.ForestEffects
 from pandac.PandaModules import *
 from direct.task import Task
 from pirates.swamp.Swamp import Swamp

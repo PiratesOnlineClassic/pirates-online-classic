@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.SoundFX
 import random
 from pandac.PandaModules import *
 from direct.task import Task

@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.DarkMaelstrom
 from pandac.PandaModules import *
 from direct.showbase.DirectObject import *
 from direct.interval.IntervalGlobal import *

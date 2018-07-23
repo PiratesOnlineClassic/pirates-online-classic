@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.A_GyedoInterior
 from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {

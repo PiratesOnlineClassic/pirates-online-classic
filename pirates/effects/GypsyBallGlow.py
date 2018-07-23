@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.GypsyBallGlow
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PiratesGlobals

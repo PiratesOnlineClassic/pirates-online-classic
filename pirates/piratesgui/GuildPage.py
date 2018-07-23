@@ -1,4 +1,3 @@
-# Embedded file name: pirates.piratesgui.GuildPage
 from direct.showbase.ShowBaseGlobal import *
 from direct.gui.DirectGui import *
 from panda3d.core import *

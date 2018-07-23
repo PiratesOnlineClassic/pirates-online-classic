@@ -723,4 +723,3 @@ class ArcBall(NodePath, DirectObject):
 
     def _stopArrowTask(self):
         taskMgr.remove(self.getName() + '-arrowTask')
-# okay decompiling .\pirates\map\ArcBall.pyc

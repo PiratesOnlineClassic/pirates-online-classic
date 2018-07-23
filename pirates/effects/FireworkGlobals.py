@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.FireworkGlobals
 from pandac.PandaModules import *
 
 class FireworkTrailType():

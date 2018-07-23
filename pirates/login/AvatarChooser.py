@@ -1129,4 +1129,3 @@ class AvatarChooser(DirectObject, StateData):
             self.rotateSlider['value'] = value
 
         return Task.cont
-# okay decompiling .\pirates\login\AvatarChooser.pyc

@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.PooledEffect
 from pandac.PandaModules import *
 from direct.showbase import Pool
 from direct.showbase.DirectObject import DirectObject

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.quest.QuestLadderDB
 from pirates.piratesbase import PLocalizer
 from pirates.quest import QuestDB
 from pirates.quest.QuestConstants import ExpRewards, NPCIds
@@ -110,4 +106,3 @@ def recGenerateRogerFile(ladder):
     if ladder.isContainer():
         for container in ladder.containers:
             recGenerateRogerFile(container)
-# okay decompiling .\pirates\quest\QuestLadderDB.pyc

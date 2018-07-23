@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.quest.QuestTaskDNA
 import random
 import string
 
@@ -2313,4 +2309,3 @@ DBId2Class = {0: VisitTaskDNA, 1: RecoverAvatarItemTaskDNA, 2: DefeatTaskDNA, 3:
 Class2DBId = invertDict(DBId2Class)
 RecoverItemClasses = (
  RecoverAvatarItemTaskDNA, RecoverTreasureItemTaskDNA, RecoverShipItemTaskDNA, RecoverContainerItemTaskDNA, RecoverAvatarGroupItemTaskDNA)
-# okay decompiling .\pirates\quest\QuestTaskDNA.pyc

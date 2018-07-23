@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.cuba_building_int_tattoo
 from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {},

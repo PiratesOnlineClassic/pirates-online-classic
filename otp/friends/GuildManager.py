@@ -413,4 +413,3 @@ class GuildManager(DistributedObjectGlobal):
     @report(types=['args'], dConfigParam='want-guildmgr-report')
     def handleLogout(self, *args, **kw):
         self.cr.removeAIInterest(AIInterestHandles.PIRATES_GUILD)
-# okay decompiling .\otp\friends\GuildManager.pyc

@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.EffectController
 from pandac.PandaModules import *
 
 class EffectController():

@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.ProjectileEffect
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.directnotify import DirectNotifyGlobal

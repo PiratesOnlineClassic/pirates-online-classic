@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.test2_group_islands
 from panda3d.core import Point3, VBase3
 objectStruct = {
     'Objects': {

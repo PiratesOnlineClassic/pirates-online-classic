@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.QuestIndicatorEffect
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect

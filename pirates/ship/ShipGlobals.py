@@ -1116,4 +1116,3 @@ def getShipBreakMast(shipClass):
         return hasMast[1]
     else:
         return -1
-# okay decompiling .\pirates\ship\ShipGlobals.pyc

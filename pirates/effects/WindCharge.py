@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.WindCharge
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from EffectController import EffectController

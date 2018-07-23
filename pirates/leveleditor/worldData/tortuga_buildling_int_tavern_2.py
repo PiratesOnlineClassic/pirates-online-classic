@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.tortuga_buildling_int_tavern_2
 from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':

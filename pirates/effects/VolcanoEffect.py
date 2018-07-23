@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.VolcanoEffect
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import Sequence, Parallel, Func, Wait, SoundInterval
 from pirates.effects.VolcanoSmoke import VolcanoSmoke

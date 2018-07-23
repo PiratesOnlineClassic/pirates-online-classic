@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.test_port_royal_world_gh
 from panda3d.core import Point3, VBase3
 objectStruct = {
     'Objects': {

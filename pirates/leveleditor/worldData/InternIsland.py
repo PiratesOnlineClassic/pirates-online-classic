@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.InternIsland
 from panda3d.core import Point3, VBase3
 objectStruct = {
     'Interact Links':

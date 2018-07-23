@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.quest.QuestReward
 import random
 
 from direct.directnotify import DirectNotifyGlobal
@@ -645,4 +641,3 @@ class TempDoubleRepReward(QuestReward):
 
 DBId2Class = {0: GoldReward, 1: MaxHpReward, 2: MaxMojoReward, 3: LuckReward, 4: SwiftnessReward, 5: TreasureMapReward, 6: CollectReward, 7: ShipReward, 8: ReputationReward, 9: PistolReward, 10: SpecialQuestReward, 11: DollReward, 12: DaggerReward, 13: PlayingCardReward, 14: GrenadeReward, 15: StaffReward, 16: TeleportTotemReward, 17: PlayingCardTier0Reward, 18: PlayingCardTier1Reward, 19: PlayingCardTier2Reward, 20: PlayingCardTier3Reward, 21: CubaTeleportReward, 22: PortRoyalTeleportReward, 23: PadresDelFuegoTeleportReward, 24: KingsHeadTeleportReward, 25: GoldAmountReward, 26: MainStoryReward, 27: JewelryQuestReward, 28: TattooQuestReward, 29: ClothingQuestReward, 30: PistolUpgradeReward, 31: DaggerUpgradeReward, 32: CutlassUpgradeReward, 33: DollUpgradeReward, 34: WandUpgradeReward, 35: TempDoubleRepReward}
 Class2DBId = invertDict(DBId2Class)
-# okay decompiling .\pirates\quest\QuestReward.pyc

@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.minigame.DistributedBishopsHandTable
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
@@ -233,4 +229,3 @@ class DistributedBishopsHandTable(DistributedGameTable.DistributedGameTable):
     def setProgressReport(self, report):
         if self.game:
             self.game.reportProgress(report)
-# okay decompiling .\pirates\minigame\DistributedBishopsHandTable.pyc

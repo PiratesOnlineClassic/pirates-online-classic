@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.RadarMap
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import Func, LerpFunc, Parallel, Sequence
 from panda3d.core import *
@@ -360,4 +356,3 @@ if __name__ == '__main__':
     base.mouseInterfaceNode.setPos(0, 1500, 0)
     base.mouseInterfaceNode.setHpr(0, 90, 0)
     run()
-# okay decompiling .\pirates\piratesgui\RadarMap.pyc

@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.bilgewater_interior_b
 from panda3d.core import Point3, VBase3
 objectStruct = {
     'Objects': {

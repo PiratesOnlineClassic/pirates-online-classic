@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.interior_shanty_npc_house_b
 from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {

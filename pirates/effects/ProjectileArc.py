@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.ProjectileArc
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *

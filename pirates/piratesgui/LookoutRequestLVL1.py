@@ -1,7 +1,3 @@
-# uncompyle6 version 3.1.1
-# Python bytecode 2.4 (62061)
-# Decompiled from: Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)]
-# Embedded file name: pirates.piratesgui.LookoutRequestLVL1
 from direct.gui.DirectGui import *
 from direct.task.Task import Task
 from otp.otpgui import OTPDialog
@@ -1042,4 +1038,3 @@ class LookoutRequestLVL1(InventoryPage):
         newHeight = self.activityListItems['frameSize'][3]
         currCanvasSize = self.activityList['canvasSize']
         self.activityList['canvasSize'] = (currCanvasSize[0], currCanvasSize[1], currCanvasSize[2], newHeight)
-# okay decompiling .\pirates\piratesgui\LookoutRequestLVL1.pyc

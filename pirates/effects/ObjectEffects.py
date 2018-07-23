@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.ObjectEffects
 from pandac.PandaModules import *
 
 def Defaults(objectNode):

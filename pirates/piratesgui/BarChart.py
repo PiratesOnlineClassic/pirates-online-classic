@@ -94,4 +94,3 @@ class BarChart(DirectFrame):
 
     def hide(self):
         DirectFrame.hide(self)
-# okay decompiling .\pirates\piratesgui\BarChart.pyc

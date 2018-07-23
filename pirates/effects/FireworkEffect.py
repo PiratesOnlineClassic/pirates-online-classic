@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.FireworkEffect
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 import random

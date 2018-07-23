@@ -1,4 +1,3 @@
-# Embedded file name: pirates.effects.FeastFire
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from pirates.piratesgui.GameOptions import Options

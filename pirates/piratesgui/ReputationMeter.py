@@ -115,4 +115,3 @@ class ReputationMeter(DirectFrame):
 
     def getCategoryName(self):
         return PLocalizer.InventoryTypeNames[self.category]
-# okay decompiling .\pirates\piratesgui\ReputationMeter.pyc

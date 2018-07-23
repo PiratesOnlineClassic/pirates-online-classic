@@ -1,4 +1,3 @@
-# Embedded file name: pirates.leveleditor.worldData.CaveCWorld
 from panda3d.core import Point3, VBase3
 objectStruct = {
     'Objects': {

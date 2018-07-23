@@ -325,4 +325,3 @@ class PChatInputSpeedChat(DirectObject.DirectObject):
 
         self.createSpeedChatObject(self.structure)
         return
-# okay decompiling .\pirates\chat\PChatInputSpeedChat.pyc
