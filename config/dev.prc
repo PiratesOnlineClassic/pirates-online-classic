@@ -23,6 +23,9 @@ want-dev-hotkeys #f
 # Physics:
 want-avatar-physics-indicator #f
 
+# Alpha:
+want-alpha-blockers #f
+
 # Tutorial:
 skip-tutorial #t
 force-tutorial #f
@@ -33,7 +36,7 @@ force-tutorial-complete #t
 teleport-all #t
 
 # Quests:
-disable-blockers #t
+disable-blockers #f
 
 # Cartesian Grid:
 visualize-cartesian-grid #f
