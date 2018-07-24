@@ -1,12 +1,13 @@
 import traceback
 import json
 import sys
-from SimpleXMLRPCServer import SimpleXMLRPCServer
-from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
-from threading import Thread
 
 from direct.directnotify.DirectNotifyGlobal import *
 from direct.task import Task
+from direct.stdpy.threading2 import Thread
+
+from SimpleXMLRPCServer import SimpleXMLRPCServer
+from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 
 
 class PiratesRPCHandler(SimpleXMLRPCRequestHandler):
