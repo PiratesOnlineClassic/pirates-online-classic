@@ -13,18 +13,20 @@ from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 class PiratesRPCHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/PRPC2',)
 
-
 class PiratesRPCServerUD(Thread):
     notify = directNotify.newCategory('PiratesRPCServerUD')
     notify.setInfo(True)
 
     def __init__(self, air):
         Thread.__init__(self)
+
         self.air = air
         self.hostname = config.GetString('rpc-hostname', '127.0.0.1')
         self.port = config.GetInt('rpc-port', 6484)
         self.running = True
-        self.server = SimpleXMLRPCServer((self.hostname, self.port), logRequests=False, requestHandler=PiratesRPCHandler)
+        self.server = SimpleXMLRPCServer((self.hostname, self.port),
+            logRequests=False, requestHandler=PiratesRPCHandler)
+
         self.server.register_introspection_functions()
         self.registerCommands()
 
@@ -33,7 +35,7 @@ class PiratesRPCServerUD(Thread):
 
     def run(self):
         self.notify.info('Starting RPC server at %s:%d' % (self.hostname, self.port))
-        self.server.serve_forever()
+        self.server.serve_forever(poll_interval=0.01)
 
     def stop_Server(self):
         self.server.shutdown()
@@ -108,7 +110,8 @@ class PiratesRPCServerUD(Thread):
         try:
             self.air.kickChannel(channel, reason, message)
         except Exception as e:
-            return self.formatCallback(code=100, message='Failed to kick channel, An unexpected error occured', error=repr(e))
+            return self.formatCallback(code=100, message='Failed to kick channel, '
+                'An unexpected error occured', error=repr(e))
 
         return self.formatCallback()
 
