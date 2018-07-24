@@ -3,12 +3,18 @@ import random
 import types
 
 from panda3d.core import *
+
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
+
 from otp.otpbase import OTPGlobals
-from pirates.battle import (DistributedBattleAvatar, EnemyGlobals, EnemySkills, WeaponGlobals)
+from otp.nametag.NametagConstants import *
+
+from pirates.battle import (DistributedBattleAvatar,
+    EnemyGlobals, EnemySkills, WeaponGlobals)
+
 from pirates.leveleditor import CustomAnims
 from pirates.pirate import AvatarTypes, BattleNPCGameFSM, Biped
 from pirates.piratesbase import PiratesGlobals, PLocalizer

@@ -1,7 +1,10 @@
 from direct.directnotify import DirectNotifyGlobal
-from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from direct.distributed.ClockDelta import globalClockDelta
+
+from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.BattleNPCGameFSMAI import BattleNPCGameFSMAI
+from pirates.piratesbase import PLocalizerEnglish
+
 
 class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleNPCAI')
@@ -21,7 +24,6 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def generate(self):
         DistributedBattleAvatarAI.generate(self)
-
         self.air.battleMgr.addTarget(self)
 
     def setName(self, name):
@@ -49,6 +51,12 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def getSpawnPosHpr(self):
         return self.spawnPos
+
+    def d_setSpawnIn(self):
+        self.sendUpdate('setSpawnIn', [globalClockDelta.getRealNetworkTime(bits=32)])
+
+    def d_setChat(self, chatString, chatFlags=0):
+        self.sendUpdate('setChat', [chatString, chatFlags])
 
     def setAnimSet(self, animSet):
         self.animSet = animSet
@@ -92,12 +100,16 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         return self.spawnerNode
 
     def requestClientAggro(self):
-        pass
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
-    def d_setSpawnIn(self):
-        self.sendUpdate('setSpawnIn', [globalClockDelta.getRealNetworkTime(bits=32)])
+        if not avatar:
+            return
+
+        self.handleClientAggro(avatar)
+
+    def handleClientAggro(self, avatar):
+        pass
 
     def delete(self):
         self.air.battleMgr.removeTarget(self)
-
         DistributedBattleAvatarAI.delete(self)
