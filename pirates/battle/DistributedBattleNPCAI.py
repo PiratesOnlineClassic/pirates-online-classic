@@ -108,7 +108,7 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         self.handleClientAggro(avatar)
 
     def handleClientAggro(self, avatar):
-        pass
+        self.d_setChat(PLocalizerEnglish.getNavyAggroPhrase())
 
     def delete(self):
         self.air.battleMgr.removeTarget(self)

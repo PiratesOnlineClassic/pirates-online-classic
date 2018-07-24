@@ -25,4 +25,4 @@ class DistributedNPCNavySailorAI(DistributedBattleNPCAI):
         return self.dnaId
 
     def handleClientAggro(self, avatar):
-        self.d_setChat(PLocalizerEnglish.getNavyAggroPhrase())
+        self.d_setChat(PLocalizerEnglish.getEITCAggroPhrase())
