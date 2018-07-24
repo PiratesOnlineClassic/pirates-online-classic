@@ -1,8 +1,10 @@
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from PooledEffect import PooledEffect
-from EffectController import EffectController
 import random
+
+from direct.interval.IntervalGlobal import *
+from EffectController import EffectController
+from pandac.PandaModules import *
+from PooledEffect import PooledEffect
+
 
 class ShockwaveHit(PooledEffect, EffectController):
 

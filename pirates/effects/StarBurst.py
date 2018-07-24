@@ -1,10 +1,9 @@
-from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect
-from direct.particles import Particles
-from direct.particles import ForceGroup
+from direct.particles import ForceGroup, ParticleEffect, Particles
 from EffectController import EffectController
+from pandac.PandaModules import *
 from PooledEffect import PooledEffect
+
 
 class StarBurst(PooledEffect, EffectController):
 

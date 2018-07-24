@@ -1,5 +1,6 @@
 from pandac.PandaModules import *
 
+
 class EffectController():
     particleDummy = None
 

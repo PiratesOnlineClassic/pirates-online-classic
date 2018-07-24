@@ -1,23 +1,25 @@
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
 import random
+
+from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
+from pirates.effects.BlastEffect import BlastEffect
+from pirates.effects.CircleBurst import CircleBurst
 from pirates.effects.FireworkGlobals import *
+from pirates.effects.FlashEffect import FlashEffect
 from pirates.effects.Glow import Glow
 from pirates.effects.GlowTrail import GlowTrail
-from pirates.effects.SparksTrail import SparksTrail
-from pirates.effects.SparksTrailLong import SparksTrailLong
-from pirates.effects.FlashEffect import FlashEffect
-from pirates.effects.BlastEffect import BlastEffect
-from pirates.effects.Sparkles import Sparkles
-from pirates.effects.SimpleSparkles import SimpleSparkles
 from pirates.effects.NoiseSparkles import NoiseSparkles
 from pirates.effects.RayBurst import RayBurst
-from pirates.effects.StarBurst import StarBurst
-from pirates.effects.CircleBurst import CircleBurst
 from pirates.effects.ShellBurst import ShellBurst
+from pirates.effects.SimpleSparkles import SimpleSparkles
 from pirates.effects.SkullBurst import SkullBurst
 from pirates.effects.SkullFlash import SkullFlash
+from pirates.effects.Sparkles import Sparkles
+from pirates.effects.SparksTrail import SparksTrail
+from pirates.effects.SparksTrailLong import SparksTrailLong
+from pirates.effects.StarBurst import StarBurst
 from pirates.effects.TrailExplosion import TrailExplosion
+
 trailSfxNames = [
  'firework_whistle_01.mp3', 'firework_whistle_02.mp3']
 burstSfxNames = [

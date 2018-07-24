@@ -1,7 +1,8 @@
-from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from EffectController import EffectController
+from pandac.PandaModules import *
 from PooledEffect import PooledEffect
+
 
 class WaterWakes(PooledEffect, EffectController):
 

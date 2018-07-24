@@ -1,10 +1,12 @@
-from pandac.PandaModules import *
-from direct.particles import ParticleEffect
+import math
+import os
+
 from direct.actor import Actor
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
-import os
-import math
+from direct.particles import ParticleEffect
+from pandac.PandaModules import *
+
 
 class ShipFog(NodePath):
     notify = DirectNotifyGlobal.directNotify.newCategory('ShipFog')

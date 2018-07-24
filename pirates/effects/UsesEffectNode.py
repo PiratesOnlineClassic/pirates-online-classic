@@ -1,5 +1,6 @@
 from pandac.PandaModules import *
 
+
 class UsesEffectNode(NodePath):
 
     def __init__(self, offset=3.0):

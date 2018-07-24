@@ -1,12 +1,14 @@
-from pandac.PandaModules import *
+import random
+
 from direct.task import Task
-from pirates.swamp.Swamp import Swamp
+from pandac.PandaModules import *
 from pirates.effects import EnvironmentEffects
 from pirates.effects.Fireflies import Fireflies
 from pirates.effects.GroundFog import GroundFog
-from pirates.piratesbase import TimeOfDayManager, TODGlobals, PiratesGlobals
+from pirates.piratesbase import PiratesGlobals, TimeOfDayManager, TODGlobals
 from pirates.seapatch.Reflection import Reflection
-import random
+from pirates.swamp.Swamp import Swamp
+
 
 class ForestEffects(EnvironmentEffects.EnvironmentEffects):
     FIREFLIES_Z = 6.0

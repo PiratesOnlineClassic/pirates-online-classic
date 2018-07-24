@@ -4,8 +4,8 @@ from direct.actor import Actor
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
 from direct.task.Task import Task
-from pirates.effects.EffectController import EffectController
 from pandac.PandaModules import *
+from pirates.effects.EffectController import EffectController
 from pirates.piratesbase import PiratesGlobals
 
 

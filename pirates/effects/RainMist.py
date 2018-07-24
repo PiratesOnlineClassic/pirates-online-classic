@@ -1,9 +1,10 @@
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect
-from direct.particles import Particles
-from EffectController import EffectController
 import random
+
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect, Particles
+from EffectController import EffectController
+from pandac.PandaModules import *
+
 
 class RainMist(EffectController, NodePath):
     cardScale = 64.0

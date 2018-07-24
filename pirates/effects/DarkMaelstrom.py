@@ -1,9 +1,11 @@
-from pandac.PandaModules import *
-from direct.showbase.DirectObject import *
-from direct.interval.IntervalGlobal import *
-from direct.actor import Actor
-from pirates.piratesbase import PiratesGlobals
 import random
+
+from direct.actor import Actor
+from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import *
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals
+
 
 class DarkMaelstrom(DirectObject, NodePath):
 

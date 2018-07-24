@@ -1,6 +1,8 @@
-from pandac.PandaModules import *
-from direct.motiontrail.MotionTrail import *
 import random
+
+from direct.motiontrail.MotionTrail import *
+from pandac.PandaModules import *
+
 
 class PolyTrail(NodePath):
 

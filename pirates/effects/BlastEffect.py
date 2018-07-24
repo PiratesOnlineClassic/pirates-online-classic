@@ -1,8 +1,9 @@
-from pandac.PandaModules import *
-from direct.showbase.DirectObject import *
 from direct.interval.IntervalGlobal import *
-from PooledEffect import PooledEffect
+from direct.showbase.DirectObject import *
 from EffectController import EffectController
+from pandac.PandaModules import *
+from PooledEffect import PooledEffect
+
 
 class BlastEffect(PooledEffect, EffectController):
 

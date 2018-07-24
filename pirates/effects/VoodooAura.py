@@ -1,12 +1,12 @@
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect
-from direct.particles import Particles
-from direct.particles import ForceGroup
-from otp.otpbase import OTPRender
-from PooledEffect import PooledEffect
-from EffectController import EffectController
 import random
+
+from direct.interval.IntervalGlobal import *
+from direct.particles import ForceGroup, ParticleEffect, Particles
+from EffectController import EffectController
+from otp.otpbase import OTPRender
+from pandac.PandaModules import *
+from PooledEffect import PooledEffect
+
 
 class VoodooAura(PooledEffect, EffectController):
     cardScale = 128.0

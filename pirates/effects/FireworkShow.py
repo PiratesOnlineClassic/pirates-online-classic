@@ -1,9 +1,11 @@
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from pirates.effects import FireworkGlobals
-from pirates.effects.FireworkGlobals import *
-from pirates.effects.Firework import Firework
 import random
+
+from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
+from pirates.effects import FireworkGlobals
+from pirates.effects.Firework import Firework
+from pirates.effects.FireworkGlobals import *
+
 colors = [
  Vec4(1, 1, 1, 1), Vec4(1, 0, 0, 1), Vec4(0, 1, 0, 1), Vec4(0.3, 1, 0.3, 1), Vec4(0.2, 0.2, 1, 1), Vec4(1, 1, 0, 1), Vec4(1, 0.5, 0, 1), Vec4(1, 0, 1, 1), Vec4(0, 1, 1, 1), Vec4(0, 0.5, 1, 1)]
 

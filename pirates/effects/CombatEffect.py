@@ -48,6 +48,7 @@ from pirates.effects.WaspCloud import WaspCloud
 from pirates.effects.WitherStar import WitherStar
 from pirates.piratesbase import PiratesGlobals
 
+
 class CombatEffect(NodePath):
     
     notify = DirectNotifyGlobal.directNotify.newCategory('CombatEffect')

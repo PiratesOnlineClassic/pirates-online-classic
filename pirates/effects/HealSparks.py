@@ -1,10 +1,11 @@
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect
-from direct.particles import Particles
-from PooledEffect import PooledEffect
-from EffectController import EffectController
 import os
+
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect, Particles
+from EffectController import EffectController
+from pandac.PandaModules import *
+from PooledEffect import PooledEffect
+
 
 class HealSparks(PooledEffect, EffectController):
     cardScale = 64.0

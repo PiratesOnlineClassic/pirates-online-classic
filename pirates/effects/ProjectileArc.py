@@ -1,11 +1,13 @@
-from pandac.PandaModules import *
+import random
+
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from pirates.piratesbase import PiratesGlobals
+from pandac.PandaModules import *
+from pirates.effects.CannonSplash import CannonSplash
 from pirates.effects.DustRing import DustRing
 from pirates.effects.SmallSplash import SmallSplash
-from pirates.effects.CannonSplash import CannonSplash
-import random
+from pirates.piratesbase import PiratesGlobals
+
 
 class ProjectileArc(DirectObject, NodePath):
 

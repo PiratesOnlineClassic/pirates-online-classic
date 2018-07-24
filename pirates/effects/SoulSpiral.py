@@ -1,8 +1,10 @@
-from pandac.PandaModules import *
+import random
+
 from direct.interval.IntervalGlobal import *
 from EffectController import EffectController
+from pandac.PandaModules import *
 from PooledEffect import PooledEffect
-import random
+
 
 class SoulSpiral(PooledEffect, EffectController):
 

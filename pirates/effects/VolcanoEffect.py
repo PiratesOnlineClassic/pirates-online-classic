@@ -1,8 +1,11 @@
+import random
+
+from direct.interval.IntervalGlobal import (Func, Parallel, Sequence,
+                                            SoundInterval, Wait)
 from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import Sequence, Parallel, Func, Wait, SoundInterval
 from pirates.effects.VolcanoSmoke import VolcanoSmoke
 from pirates.effects.VolcanoSplats import VolcanoSplats
-import random
+
 
 class VolcanoEffect(NodePath):
     eruptionSfx = None

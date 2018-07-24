@@ -1,10 +1,10 @@
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
-from direct.particles import ParticleEffect
-from direct.particles import Particles
-from PooledEffect import PooledEffect
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect, Particles
 from EffectController import EffectController
+from pandac.PandaModules import *
+from PooledEffect import PooledEffect
+
 
 class TentacleWaterDrips(PooledEffect, EffectController):
 

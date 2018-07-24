@@ -1,9 +1,10 @@
-from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
+from EffectController import EffectController
+from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui.GameOptions import Options
 from PooledEffect import PooledEffect
-from EffectController import EffectController
+
 
 class GypsyBallGlow(PooledEffect, EffectController):
 

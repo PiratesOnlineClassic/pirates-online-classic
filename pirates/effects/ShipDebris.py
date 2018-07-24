@@ -1,12 +1,14 @@
-from pandac.PandaModules import *
-from direct.showbase.DirectObject import *
-from direct.interval.IntervalGlobal import *
-from pirates.piratesbase import PiratesGlobals
+import random
+
 from direct.distributed import DistributedObject
+from direct.interval.IntervalGlobal import *
+from direct.showbase.DirectObject import *
+from pandac.PandaModules import *
 from pirates.effects.DustRing import DustRing
 from pirates.effects.SmallSplash import SmallSplash
-import random
+from pirates.piratesbase import PiratesGlobals
 from PooledEffect import PooledEffect
+
 DebrisDict = {'0': 'models/props/testBoard','1': 'models/props/testBoard'}
 
 class ShipDebris(PooledEffect):

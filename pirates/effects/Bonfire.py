@@ -1,8 +1,9 @@
-from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
-from pirates.effects.Fire import Fire
+from pandac.PandaModules import *
 from pirates.effects.BlackSmoke import BlackSmoke
+from pirates.effects.Fire import Fire
 from pirates.piratesgui.GameOptions import Options
+
 
 class Bonfire(NodePath):
     HackCount = 0

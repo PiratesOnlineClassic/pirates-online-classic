@@ -1,5 +1,6 @@
-from pandac.PandaModules import *
 from otp.otpbase import OTPRender
+from pandac.PandaModules import *
+
 
 class WaterShadow(NodePath):
 

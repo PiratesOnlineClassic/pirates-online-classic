@@ -1,9 +1,11 @@
-from pandac.PandaModules import *
+import random
+
 from direct.interval.IntervalGlobal import *
 from EffectController import EffectController
-from PooledEffect import PooledEffect
+from pandac.PandaModules import *
 from pirates.effects.SparksTrailLong import SparksTrailLong
-import random
+from PooledEffect import PooledEffect
+
 
 class TrailExplosion(PooledEffect, EffectController):
     trailsVel = [

@@ -1,5 +1,6 @@
 from pandac.PandaModules import *
 
+
 class FireworkTrailType():
     Default = 0
     Glow = 1

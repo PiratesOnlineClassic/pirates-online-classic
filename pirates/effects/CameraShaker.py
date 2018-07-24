@@ -1,6 +1,8 @@
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
 import random
+
+from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
+
 
 class CameraShaker(NodePath):
     CutsceneScale = None

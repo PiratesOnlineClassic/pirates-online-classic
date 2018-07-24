@@ -1,14 +1,14 @@
-from pandac.PandaModules import *
-from direct.showbase.DirectObject import *
-from direct.interval.IntervalGlobal import *
-from direct.actor import Actor
-from direct.particles import ParticleEffect
-from direct.particles import Particles
-from direct.particles import ForceGroup
 import random
-from pirates.piratesbase import PiratesGlobals
+
+from direct.actor import Actor
+from direct.interval.IntervalGlobal import *
+from direct.particles import ForceGroup, ParticleEffect, Particles
+from direct.showbase.DirectObject import *
 from EffectController import EffectController
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals
 from PooledEffect import PooledEffect
+
 
 class MusketFlame(PooledEffect, EffectController):
     cardScale = 64.0

@@ -1,12 +1,12 @@
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
-from direct.actor import Actor
-from direct.particles import ParticleEffect
-from direct.particles import Particles
-from direct.particles import ForceGroup
-from EffectController import EffectController
-from PooledEffect import PooledEffect
 import random
+
+from direct.actor import Actor
+from direct.interval.IntervalGlobal import *
+from direct.particles import ForceGroup, ParticleEffect, Particles
+from EffectController import EffectController
+from pandac.PandaModules import *
+from PooledEffect import PooledEffect
+
 
 class MusketSmoke(PooledEffect, EffectController):
     cardScale = 64.0

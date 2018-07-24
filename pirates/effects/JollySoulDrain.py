@@ -1,15 +1,16 @@
-from pandac.PandaModules import *
-from direct.particles import ParticleEffect
-from direct.particles import Particles
-from direct.showbase.DirectObject import *
-from direct.interval.IntervalGlobal import *
+import random
+
 from direct.actor import Actor
-from pirates.piratesbase import PiratesGlobals
-from pirates.effects import PolyTrail
-from PooledEffect import PooledEffect
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect, Particles
+from direct.showbase.DirectObject import *
 from EffectController import EffectController
 from otp.otpbase import OTPRender
-import random
+from pandac.PandaModules import *
+from pirates.effects import PolyTrail
+from pirates.piratesbase import PiratesGlobals
+from PooledEffect import PooledEffect
+
 
 class JollySoulDrain(PooledEffect, EffectController):
     cardScale = 64.0

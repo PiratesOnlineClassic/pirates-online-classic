@@ -1,14 +1,16 @@
-from pandac.PandaModules import *
-from direct.showbase.DirectObject import *
-from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import *
-from pirates.piratesbase import PiratesGlobals
-from pirates.effects import PolyTrail
-from PooledEffect import PooledEffect
-from EffectController import EffectController
-from direct.showbase import PythonUtil
-from direct.task import Task
 import random
+
+from direct.interval.IntervalGlobal import *
+from direct.showbase import PythonUtil
+from direct.showbase.DirectObject import *
+from direct.showbase.PythonUtil import *
+from direct.task import Task
+from EffectController import EffectController
+from pandac.PandaModules import *
+from pirates.effects import PolyTrail
+from pirates.piratesbase import PiratesGlobals
+from PooledEffect import PooledEffect
+
 
 class HomingMissile(PooledEffect, EffectController):
 

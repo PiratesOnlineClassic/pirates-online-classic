@@ -1,11 +1,10 @@
-from pandac.PandaModules import *
-from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
-from direct.particles import ParticleEffect
-from direct.particles import Particles
-from direct.particles import ForceGroup
-from pirates.piratesgui.GameOptions import Options
+from direct.interval.IntervalGlobal import *
+from direct.particles import ForceGroup, ParticleEffect, Particles
 from EffectController import EffectController
+from pandac.PandaModules import *
+from pirates.piratesgui.GameOptions import Options
+
 
 class SmallFire(EffectController, NodePath):
     cardScale = 64.0
