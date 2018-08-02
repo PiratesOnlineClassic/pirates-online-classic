@@ -213,6 +213,95 @@ def maxSP():
     return "Failed to max out Skill Points!"
 
 
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def weaponrank(rank):
+    """
+    Sets your weapon rank to the specificed rank (1-6)
+    """
+
+    invoker = spellbook.getInvoker()
+    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+
+    if rank > 6:
+        return 'Rank must be within 1-6.'
+
+    # Clear our previous stacks...
+    inventory.b_setStackQuantity(InventoryType.CutlassWeaponL1, 0)
+    inventory.b_setStackQuantity(InventoryType.PistolWeaponL1, 0)
+    inventory.b_setStackQuantity(InventoryType.DollWeaponL1, 0)
+    inventory.b_setStackQuantity(InventoryType.DaggerWeaponL1, 0)
+    inventory.b_setStackQuantity(InventoryType.WandWeaponL1, 0)
+
+    inventory.b_setStackQuantity(InventoryType.CutlassWeaponL2, 0)
+    inventory.b_setStackQuantity(InventoryType.PistolWeaponL2, 0)
+    inventory.b_setStackQuantity(InventoryType.DollWeaponL2, 0)
+    inventory.b_setStackQuantity(InventoryType.DaggerWeaponL2, 0)
+    inventory.b_setStackQuantity(InventoryType.WandWeaponL2, 0)
+
+    inventory.b_setStackQuantity(InventoryType.CutlassWeaponL3, 0)
+    inventory.b_setStackQuantity(InventoryType.PistolWeaponL3, 0)
+    inventory.b_setStackQuantity(InventoryType.DollWeaponL3, 0)
+    inventory.b_setStackQuantity(InventoryType.DaggerWeaponL3, 0)
+    inventory.b_setStackQuantity(InventoryType.WandWeaponL3, 0)
+
+    inventory.b_setStackQuantity(InventoryType.CutlassWeaponL4, 0)
+    inventory.b_setStackQuantity(InventoryType.PistolWeaponL4, 0)
+    inventory.b_setStackQuantity(InventoryType.DollWeaponL4, 0)
+    inventory.b_setStackQuantity(InventoryType.DaggerWeaponL4, 0)
+    inventory.b_setStackQuantity(InventoryType.WandWeaponL4, 0)
+
+    inventory.b_setStackQuantity(InventoryType.CutlassWeaponL5, 0)
+    inventory.b_setStackQuantity(InventoryType.PistolWeaponL5, 0)
+    inventory.b_setStackQuantity(InventoryType.DollWeaponL5, 0)
+    inventory.b_setStackQuantity(InventoryType.DaggerWeaponL5, 0)
+    inventory.b_setStackQuantity(InventoryType.WandWeaponL5, 0)
+
+    inventory.b_setStackQuantity(InventoryType.CutlassWeaponL6, 0)
+    inventory.b_setStackQuantity(InventoryType.PistolWeaponL6, 0)
+    inventory.b_setStackQuantity(InventoryType.DollWeaponL6, 0)
+    inventory.b_setStackQuantity(InventoryType.DaggerWeaponL6, 0)
+    inventory.b_setStackQuantity(InventoryType.WandWeaponL6, 0)
+
+    if rank == 1:
+        inventory.b_setStackQuantity(InventoryType.CutlassWeaponL1, 1)
+        inventory.b_setStackQuantity(InventoryType.PistolWeaponL1, 1)
+        inventory.b_setStackQuantity(InventoryType.DollWeaponL1, 1)
+        inventory.b_setStackQuantity(InventoryType.DaggerWeaponL1, 1)
+        inventory.b_setStackQuantity(InventoryType.WandWeaponL1, 1)
+    elif rank == 2:
+        inventory.b_setStackQuantity(InventoryType.CutlassWeaponL2, 1)
+        inventory.b_setStackQuantity(InventoryType.PistolWeaponL2, 1)
+        inventory.b_setStackQuantity(InventoryType.DollWeaponL2, 1)
+        inventory.b_setStackQuantity(InventoryType.DaggerWeaponL2, 1)
+        inventory.b_setStackQuantity(InventoryType.WandWeaponL2, 1)
+    elif rank == 3:
+        inventory.b_setStackQuantity(InventoryType.CutlassWeaponL3, 1)
+        inventory.b_setStackQuantity(InventoryType.PistolWeaponL3, 1)
+        inventory.b_setStackQuantity(InventoryType.DollWeaponL3, 1)
+        inventory.b_setStackQuantity(InventoryType.DaggerWeaponL3, 1)
+        inventory.b_setStackQuantity(InventoryType.WandWeaponL3, 1)
+    elif rank == 4:
+        inventory.b_setStackQuantity(InventoryType.CutlassWeaponL4, 1)
+        inventory.b_setStackQuantity(InventoryType.PistolWeaponL4, 1)
+        inventory.b_setStackQuantity(InventoryType.DollWeaponL4, 1)
+        inventory.b_setStackQuantity(InventoryType.DaggerWeaponL4, 1)
+        inventory.b_setStackQuantity(InventoryType.WandWeaponL4, 1)
+    elif rank == 5:
+        inventory.b_setStackQuantity(InventoryType.CutlassWeaponL5, 1)
+        inventory.b_setStackQuantity(InventoryType.PistolWeaponL5, 1)
+        inventory.b_setStackQuantity(InventoryType.DollWeaponL5, 1)
+        inventory.b_setStackQuantity(InventoryType.DaggerWeaponL5, 1)
+        inventory.b_setStackQuantity(InventoryType.WandWeaponL5, 1)
+    elif rank == 6:
+        # Unreleased weapon rank.
+        inventory.b_setStackQuantity(InventoryType.CutlassWeaponL6, 1)
+        inventory.b_setStackQuantity(InventoryType.PistolWeaponL6, 1)
+        inventory.b_setStackQuantity(InventoryType.DollWeaponL6, 1)
+        inventory.b_setStackQuantity(InventoryType.DaggerWeaponL6, 1)
+        inventory.b_setStackQuantity(InventoryType.WandWeaponL6, 1)
+
+    return 'Set weapon rank to %s!' % rank
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def maxWeapons():
     invoker = spellbook.getInvoker()
