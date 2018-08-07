@@ -1,0 +1,6 @@
+#include "animBundleMaker.cxx"
+#include "characterMaker.cxx"
+#include "config_egg2pg.cxx"
+#include "egg_parametrics.cxx"
+#include "eggRenderState.cxx"
+#include "deferredNodeProperty.cxx"

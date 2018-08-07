@@ -1,0 +1,159 @@
+
+                           MULTIGEN MODEL FLAGS
+
+This document describes the different kinds of model flags one can place in
+the comment field of MultiGen group beads.  The general format for a model
+flag is: 
+                       <egg> { <FLAGNAME> {value} }
+
+The most up-to-date version of this document can be found in:
+
+                   $PANDA/src/doc/howto.MultiGenModelFlags
+
+***************************************************************************
+                                 QUICKREF
+***************************************************************************
+
+            FLAG                                DESCRIPTION
+-------------------------------     ----------------------------------------
+
+<egg> { <Model>      {1} }          Handle to show/hide, color, etc. a chunk
+<egg> { <DCS>        {1} }          Handle to move, rotate, scale a chunk
+<egg> { <ObjectType> {barrier} }    Invisible collision surface
+<egg> { <ObjectType> {trigger} }    Invisible trigger polygon
+<egg> { <ObjectType> {floor} }      Collides with vertical ray
+                                    (used to specify avatar height and zone)
+<egg> { <ObjectType> {sphere} }              Invisible sphere collision surface
+<egg> { <ObjectType> {trigger-sphere} }      Invisible sphere collision surface
+<egg> { <ObjectType> {camera-collide} }              Invisible collision surface for camera
+<egg> { <ObjectType> {camera-collide-sphere} }       Invisible collision surface for camera
+<egg> { <ObjectType> {camera-barrier} }      Invisible collision surface for camera and colliders
+<egg> { <ObjectType> {camera-barrier-sphere} }     Invisible sphere collision surface for camera and colliders
+<egg> { <ObjectType> {backstage} }  Modeling reference object
+<egg> { <Decal>      {1} }          Decal the node below to me 
+                                    (like a window on a wall)
+<egg> { <Scalar> fps { # } }        Set rate of animation for a pfSequence
+
+
+***************************************************************************
+                                  DETAILS
+***************************************************************************
+
+The player uses several different types of model flags: HANDLES, BEHAVIORS,
+and PROPERTIES.  The following sections give examples of some of the most
+common flag/value pairs and describes what they are used for.
+
+
+                       ********** HANDLES **********
+
+   These flags give the programmers handles which they can use to
+   show/hide, move around, control the texture, etc. of selected segments
+   (chunks) of the model.  The handle is the name of the object bead in
+   which one places the flag (so names like red-hut are more useful than
+   names like o34).
+
+<egg> { <Model> {1} }   
+
+   Used to show/hide, change the color, or change the collision properties 
+   of a chunk.
+
+<egg> { <DCS> {1} }     
+
+   Used to move, rotate, or scale a chunk of the model.  Also can be used
+   (like the <Model> flag) to show/hide, change the color, and change the
+   collision properties of a chunk.
+
+
+                      ********** BEHAVIORS **********
+
+   These flags are used to control collision properties, visibility and
+   behavior of selected chunks.  An "X" in the associated column means:
+
+      VISIBLE  the object can be seen (see NOTE below for invisible objects)
+      SOLID    avatars can not pass through the object
+      EVENT    an event is thrown whenever an avatar collides with the object
+
+                                       VISIBLE      SOLID       EVENT
+                                       -------     -------     -------
+<egg> { <ObjectType> {barrier} }                      X           X
+
+<egg> { <ObjectType> {trigger} }                                  X
+
+<egg> { <ObjectType> {backstage} }
+
+   Descriptions:
+
+      -  BARRIERS are invisible objects that block the avatars.  Use these
+         to funnel avatars through doorways, keep them from falling off
+         bridges, and so on.
+      -  TRIGGERS can be used to signal when avatars have entered a certain
+         area of the model.  One could place a trigger polygon in front of
+         a door, for example, so the player can tell when the avatar has
+         moved through the door.
+      -  BACKSTAGE objects are not translated over to the player.  Modelers
+         should use this flag on reference objects that they include to help 
+         in the modeling task (such as scale references)
+
+   IMPORTANT NOTE:
+
+   It is not necessary, and in fact some cases it will actually cause
+   problems if you set the transparency value for the invisible objects
+   above (barrier, trigger, eye-trigger) to 0.0.  These objects will
+   automatically be invisible in the player if they have been flagged as
+   one of these three invisible types.  If you wish to make it clear in
+   MultiGen that these objects are invisible objects, set the transparency
+   value to some intermediate level (0.5).  Again, do not set the
+   transparency value to 0.0.
+
+
+                     ********** PROPERTIES **********
+
+These are used to control properties of selected chunks. 
+
+<egg> { <Scalar> fps { frame-rate } }
+
+   This specifies the rate of animation for a pfSequence node
+
+
+***************************************************************************
+                                   NOTES
+***************************************************************************
+
+1) Combinations
+
+   Multiple Flag/value pairs can be combined within an single <egg> field.
+   For example:
+
+   <egg> { <Model> {1}  
+           <ObjectType> {barrier} }
+
+   Generally, the <Model> flag can be combined with most other flags
+   (except DCS).  Each bead, however, can only have *one* <ObjectType> flag.
+
+2) Newlines, spaces, and case (usually) do not matter.  This above entry
+   could also be written as:
+
+   <egg>{<model>{1}<objecttype>{barrier}}
+         
+3) Where to place the flags
+
+   All model flags except <Normal> flags are generally placed in the
+   topmost group bead of the geometry to which the flag applies.
+
+         GROUP  <- place flags here, except <Normal>
+           |
+           ---------------------------
+           |            |            |
+        OBJECT1      OBJECT2      OBJECT3 .....
+           |            |            |
+        polygons     polygons     polygons  <- place <Normal> flag here
+
+   Flags can also be placed in object beads, though for consistency sake
+   its better to place them in the group beads.
+
+4) Flags at different levels in the model
+
+   Flags in lower level beads generally override flags in upper level
+   beads. 
+
+5) For more detailed information see $PANDA/src/doc/eggSyntax.txt.

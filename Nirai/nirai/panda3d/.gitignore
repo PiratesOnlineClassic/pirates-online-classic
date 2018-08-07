@@ -1,0 +1,64 @@
+# makepanda directories
+/built*/
+/thirdparty/
+/targetroot/
+/dstroot/
+
+# Core dumps
+core
+core.*
+vgcore.*
+*.core
+
+# Editor files/directories
+*.save
+*.save.1
+*.sublime-workspace
+.vscode/
+
+# Temporary build files
+/_vfsimporter.*
+*.pdb
+*.obj
+*.o
+*.gch
+*.pch
+/+DESC
+/+MANIFEST
+/pkg-plist
+
+# Produced installer/executables
+/*.exe
+/*.deb
+/*.rpm
+/*.app
+/*.pkg
+/*.dmg
+/*.whl
+/*.txz
+
+# CMake
+/build/
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Test tool cache directories
+.tox/
+.cache/
+
+# Build scripts
+build.bat

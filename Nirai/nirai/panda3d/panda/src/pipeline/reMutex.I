@@ -1,0 +1,63 @@
+/**
+ * PANDA 3D SOFTWARE
+ * Copyright (c) Carnegie Mellon University.  All rights reserved.
+ *
+ * All use of this software is subject to the terms of the revised BSD
+ * license.  You should have received a copy of this license along
+ * with this source code in a file named "LICENSE."
+ *
+ * @file reMutex.I
+ * @author drose
+ * @date 2006-01-15
+ */
+
+/**
+ *
+ */
+INLINE ReMutex::
+#ifdef DEBUG_THREADS
+ReMutex() : MutexDebug(string(), true, false)
+#else
+ReMutex()
+#endif  // DEBUG_THREADS
+{
+}
+
+/**
+ *
+ */
+INLINE ReMutex::
+#ifdef DEBUG_THREADS
+ReMutex(const char *name) : MutexDebug(string(name), true, false)
+#else
+ReMutex(const char *)
+#endif  // DEBUG_THREADS
+{
+}
+
+/**
+ *
+ */
+INLINE ReMutex::
+#ifdef DEBUG_THREADS
+ReMutex(const string &name) : MutexDebug(name, true, false)
+#else
+ReMutex(const string &)
+#endif  // DEBUG_THREADS
+{
+}
+
+/**
+ *
+ */
+INLINE ReMutex::
+~ReMutex() {
+}
+
+/**
+ * Do not attempt to copy mutexes.
+ */
+INLINE void ReMutex::
+operator = (const ReMutex &copy) {
+  nassertv(false);
+}

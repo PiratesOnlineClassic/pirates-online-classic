@@ -1,0 +1,10 @@
+forcetype DConfig
+
+forcetype PTA_uchar
+forcetype CPTA_uchar
+forcetype PTA_float
+forcetype CPTA_float
+forcetype PTA_double
+forcetype CPTA_double
+forcetype PTA_int
+forcetype CPTA_int
