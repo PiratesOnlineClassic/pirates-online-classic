@@ -15,6 +15,11 @@ osd-anim-blends #f
 want-splash-anims #t
 motionfsm-lag #f
 restore-initial-pose #f
+want-smooth-anims #t
+even-animation #t
+interpolate-frames #t
+hardware-animated-vertices #t
+anim-blend-type normalized_linear
 
 # Water:
 want-low-end-water #t
@@ -41,12 +46,6 @@ stencil-bits 8
 
 # SRGB:
 framebuffer-srgb #f
-
-# Anims:
-even-animation #t
-interpolate-frames #t
-hardware-animated-vertices #t
-anim-blend-type normalized_linear
 
 # Holidays:
 want-holidays #t
@@ -143,9 +142,6 @@ force-tutorial-complete #t
 
 # Teleport:
 teleport-all #t
-
-# Player
-optimize-avatar-lod #f
 
 # World:
 default-world piratesWorld
