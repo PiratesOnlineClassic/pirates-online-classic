@@ -4,6 +4,9 @@
 /targetroot/
 /dstroot/
 
+# Builtdir
+built/
+
 # Core dumps
 core
 core.*
