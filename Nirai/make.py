@@ -10,7 +10,7 @@ from niraitools import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--compile-cxx', '-c', action='store_true',
-                    help='Compile the CXX codes and generate stride.exe into built.')
+                    help='Compile the CXX codes and generate classic.exe into built.')
 parser.add_argument('--make-nri', '-n', action='store_true',
                     help='Generate classic NRI.')
 parser.add_argument('--make-mfs', '-m', action='store_true',
