@@ -84,7 +84,7 @@ class SourcePackager(NiraiPackager):
             data, size = self.modules[moduleName]
 
             dg.addString(moduleName)
-            dg.addInt32(size)
+            dg.addUint32(size)
             dg.appendData(data)
 
         data = dg.getMessage()
