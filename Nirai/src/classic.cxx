@@ -107,7 +107,7 @@ extern "C" PyObject* niraicall_deobfuscate(char* code, Py_ssize_t size)
 {
   std::string codestr(code, size);
 
-  const char key[12] = {'B', 'A', 'Q', 'J', 'R', 'P', 'Z', 'P', 'A', 'H', 'U', 'T'};
+  const char key[12] = {'T', 'B', 'P', 'H', 'P', 'Q', 'J', 'A', 'H', 'A', 'P', 'Z'};
   std::string output = codestr;
 
   for (int i = 0; i < codestr.size(); i++)

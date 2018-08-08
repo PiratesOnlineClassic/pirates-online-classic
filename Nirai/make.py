@@ -32,7 +32,7 @@ def niraicall_obfuscate(code):
     code = code[::-1]
 
     # XOR
-    key = ['B', 'A', 'Q', 'J', 'R', 'P', 'Z', 'P', 'A', 'H', 'U', 'T']
+    key = ['T', 'B', 'P', 'H', 'P', 'Q', 'J', 'A', 'H', 'A', 'P', 'Z']
     output = []
 
     for i in range(len(code)):
