@@ -32,7 +32,7 @@ int niraicall_onLoadGameData()
 
   // Check the header size
   gd.seekg(0, ios::end);
-  if (file.tellg() <= header_size * 8)
+  if (gd.tellg() <= header_size * 8)
   {
     std::cerr << "Corrupted data!" << std::endl;
     return 1;
