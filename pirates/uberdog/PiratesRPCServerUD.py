@@ -35,7 +35,7 @@ class PiratesRPCServerUD(Thread):
 
     def run(self):
         self.notify.info('Starting RPC server at %s:%d' % (self.hostname, self.port))
-        self.server.serve_forever(poll_interval=0.01)
+        self.server.serve_forever(poll_interval=0.001)
 
     def stop_Server(self):
         self.server.shutdown()
@@ -55,6 +55,7 @@ class PiratesRPCServerUD(Thread):
         response = {'code': code, 'message': message}
         for keyword in kwargs:
             response[keyword] = kwargs[keyword]
+        
         return json.dumps(response)
 
     def ping(self, response):
@@ -68,6 +69,7 @@ class PiratesRPCServerUD(Thread):
 
         Example response: 'pong'
         """
+        
         return self.formatCallback(response=response)
 
     def systemMessage(self, message):
@@ -78,8 +80,8 @@ class PiratesRPCServerUD(Thread):
         Parameters:
             [str message] = The message to broadcast.
         """
+        
         self.air.systemMessage(message)
-
         return self.formatCallback()
 
     def systemMessageChannel(self, message, channel):
@@ -92,8 +94,8 @@ class PiratesRPCServerUD(Thread):
             [int channel] = The channel to direct the message to.
             [str message] = The message to broadcast.
         """
+        
         self.air.systemMessage(message, channel)
-
         return self.formatCallback()
 
     def kickChannel(self, channel, reason=1, message=''):
@@ -153,7 +155,6 @@ class PiratesRPCServerUD(Thread):
         """
 
         self.air.newsManager.startHoliday(int(holidayId), int(time), quietly=not announce)
-
         return self.formatCallback()
 
     def stopHoliday(self, holidayId):
@@ -165,5 +166,4 @@ class PiratesRPCServerUD(Thread):
         """
 
         self.air.newsManager.stopHoliday(int(holidayId))
-
         return self.formatCallback()
