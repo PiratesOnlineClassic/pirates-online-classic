@@ -1,12 +1,14 @@
-from panda3d.core import *
-
-import argparse, struct
-import sys, glob
+import sys
 import os
+import argparse
+import struct
+
+from panda3d.core import *
 
 sys.path.append('nirai/src')
 
 from niraitools import *
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--compile-cxx', '-c', action='store_true',
@@ -19,7 +21,6 @@ args = parser.parse_args()
 
 if not os.path.exists('built'):
     os.mkdir('built')
-
 
 def niraicall_obfuscate(code):
     # We'll obfuscate if len(code) % 4 == 0
@@ -39,7 +40,6 @@ def niraicall_obfuscate(code):
         output.append(chr(xor_num))
 
     code = ''.join(output)
-
     return True, code
 
 
@@ -50,12 +50,12 @@ class SourcePackager(NiraiPackager):
     HEADER = 'CLASSIC'
     BASEDIR = '../src' + os.sep
 
-    def __init__(self, outfile, configPath=None):
+    def __init__(self, outfile):
         NiraiPackager.__init__(self, outfile)
+
         self.__manglebase = self.get_mangle_base(self.BASEDIR)
         self.add_panda3d_dirs()
         self.add_default_lib()
-        self.globalConfigPath = configPath
 
     def add_source_dir(self, dir):
         self.add_directory(self.BASEDIR + dir, mangler=self.__mangler)
@@ -69,24 +69,17 @@ class SourcePackager(NiraiPackager):
 
     def generate_niraidata(self):
         print 'Generating niraidata'
-        if self.globalConfigPath is not None:
-            config = self.get_file_contents(self.globalConfigPath)
-        else:
-            config = self.get_file_contents('../src/config/dist.prc')
+        config_files = [
+            self.get_file_contents('../src/config/general.prc'),
+        ]
 
-        config_iv = self.generate_key(16)
-        config_key = self.generate_key(16)
-        config = config_iv + config_key + aes.encrypt(config, config_key, config_iv)
-        niraidata = 'CONFIG = %r' % config
-        
-        # DC
-        niraidata += '\nDC = %r' % self.get_file_contents('../src/astron/dclass/game.dc', True)
+        niraidata = 'CONFIG = %r' % ''.join(config_files)
         self.add_module('niraidata', niraidata, compile=True)
 
     def process_modules(self):
-        # TODO: Compression
-        dg = Datagram()
+        dg = PyDatagram()
         dg.addUint32(len(self.modules))
+
         for moduleName in self.modules:
             data, size = self.modules[moduleName]
 
@@ -95,12 +88,10 @@ class SourcePackager(NiraiPackager):
             dg.appendData(data)
 
         data = dg.getMessage()
-        iv = self.generate_key(16)
-        key = self.generate_key(16)
-        fixed_key = ''.join(chr((i ^ (7 * i + 16)) % ((i + 5) * 3)) for i in xrange(16))
-        fixed_iv = ''.join(chr((i ^ (2 * i + 53)) % ((i + 9) * 6)) for i in xrange(16))
-        securekeyandiv = aes.encrypt(iv + key, fixed_key, fixed_iv)
-        return securekeyandiv + aes.encrypt(data, key, iv)
+
+        iv = '\0' * 16
+        key = 'ExampleKey123456'
+        return aes.encrypt(data, key, iv)
 
 
 if args.compile_cxx:
@@ -123,7 +114,6 @@ if args.make_nri:
     pkg.generate_niraidata()
 
     pkg.write_out()
-
 
 if args.make_mfs:
     os.chdir('../src/resources')
