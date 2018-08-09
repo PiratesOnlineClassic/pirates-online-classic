@@ -78,7 +78,7 @@ class SourcePackager(NiraiPackager):
 
         config_data = ''.join(config_files)
         config_data = config_iv + config_key + aes.encrypt(
-            config_data, config_key, config_iv))
+            config_data, config_key, config_iv)
 
         niraidata = 'CONFIG = %r' % config_data
         self.add_module('niraidata', niraidata, compile=True)
