@@ -471,6 +471,7 @@ class NiraiPackager:
     def get_file_contents(self, filename, encrypt=False):
         with open(filename, 'rb') as f:
             data = f.read()
+            f.close()
 
         if encrypt:
             iv = self.generate_key(16)
