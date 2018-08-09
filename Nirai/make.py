@@ -89,8 +89,8 @@ class SourcePackager(NiraiPackager):
         ]
 
         dclass_files = [
-            self.get_file_contents('../astron/dclass/otp.dc', True),
-            self.get_file_contents('../astron/dclass/toon.dc', True)
+            self.get_file_contents('../astron/dclass/otp.dc'),
+            self.get_file_contents('../astron/dclass/pirates.dc')
         ]
 
         config_iv = self.generate_key(16)
@@ -100,7 +100,12 @@ class SourcePackager(NiraiPackager):
         config_data = config_iv + config_key + aes.encrypt(
             config_data, config_key, config_iv)
 
+        dclass_iv = self.generate_key(16)
+        dclass_key = self.generate_key(16)
+
         dclass_data = ''.join(dclass_files)
+        dclass_data = dclass_iv + dclass_key + aes.encrypt(
+            dclass_data, dclass_key, dclass_iv)
 
         niraidata = 'CONFIG = %r' % config_data
         niraidata += '\nDC = %r' % dclass_data
