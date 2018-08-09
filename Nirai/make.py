@@ -77,7 +77,7 @@ class SourcePackager(NiraiPackager):
         self.add_module('niraidata', niraidata, compile=True)
 
     def process_modules(self):
-        dg = PyDatagram()
+        dg = Datagram()
         dg.addUint32(len(self.modules))
 
         for moduleName in self.modules:
