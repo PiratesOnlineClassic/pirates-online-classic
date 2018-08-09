@@ -202,7 +202,7 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
         self.frameworks.add('AppKit')
         self.frameworks.add('OpenAL')
         self.frameworks.add('OpenGL')
-        #self.frameworks.add('Cg')
+        self.frameworks.add('Cg')
         self.frameworks.add('AGL')
         self.frameworks.add('Carbon')
         self.frameworks.add('Cocoa')
