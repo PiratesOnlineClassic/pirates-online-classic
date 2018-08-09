@@ -64,23 +64,35 @@ class SourcePackager(NiraiPackager):
         mb = self.get_mangle_base('data/')
         self.add_file('data/%s.py' % file, mangler=lambda x: x[mb:])
 
-    def __mangler(self, name):
+    def __mangler(self, filename):
         excluded_modules = [
             'OTPInternalRepository', 'ServiceStart',
             'PiratesAIRepository', 'PiratesUberRepository',
             'PiratesInternalRepository', 'InventoryInit',
         ]
 
+        excluded = False
+        for name in excluded_modules:
+            if filename.endswith(name):
+                excluded = True
+                break
+
         included_modules = [
             'CrewHUD'
         ]
 
-        if (name.endswith('AI') or name.endswith('UD') or name in \
-            excluded_modules) and name not in included_modules:
+        if filename.endswith('AI') or filename.endswith('UD'):
+            excluded = True
 
+        for name in included_modules:
+            if filename.endswith(name):
+                excluded = False
+                break
+
+        if excluded:
             return ''
 
-        return name[self.__manglebase:].strip('.')
+        return filename[self.__manglebase:].strip('.')
 
     def generate_niraidata(self):
         print 'Generating niraidata'
