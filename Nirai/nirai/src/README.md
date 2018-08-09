@@ -42,7 +42,7 @@ You will also need to change the following commands from `/path/to/*` to your ow
 
 ```
 cd path/to/Nirai/panda3d/
-compile.bat --windows-sdk=10 --msvc-version=10
+compile.bat --windows-sdk=7.1 --msvc-version=10
 postbuild.bat
 cd path/to/src/
 aespyd.bat
