@@ -63,7 +63,6 @@ text-rwap-mode WM_border_clor
 
 # Audio
 audio-output-rate 44100
-audio-preload-threshold 1024
 audio-library-name p3fmod_audio
 audio-music-active #t
 low-memory-stream-audio #t
