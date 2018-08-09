@@ -39,6 +39,7 @@ int niraicall_onLoadGameData()
   }
 
   // Check the header
+  gd.seekg(0, ios::beg);
   char* read_header = new char[header_size];
   gd.read(read_header, header_size);
 
