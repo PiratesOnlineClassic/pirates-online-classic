@@ -71,7 +71,7 @@ int niraicall_onLoadGameData()
   for (unsigned int i = 0; i < num_modules; ++i)
   {
     module = dgi.get_string();
-    size = dgi.get_uint32();
+    size = dgi.get_int32();
     data = dgi.extract_bytes(abs(size));
 
     char* name = new char[module.size() + 1];
