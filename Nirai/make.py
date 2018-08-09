@@ -2,6 +2,7 @@ import sys
 import os
 import argparse
 import struct
+import platform
 
 from panda3d.core import *
 
@@ -143,24 +144,26 @@ class SourcePackager(NiraiPackager):
 
 
 if args.compile_cxx:
-    compiler = NiraiCompiler('classic.exe')
+    system_name = platform.system()
+    if system_name == 'Windows':
+        output = 'classic.exe'
+    else:
+        output = 'classic'
 
+    compiler = NiraiCompiler(output)
     compiler.add_nirai_files()
     compiler.add_source('src/classic.cxx')
-
     compiler.run()
 
 # Compile the game data
 if args.make_nri:
     pkg = SourcePackager('built/classic.bin')
-
     pkg.add_source_dir('otp')
     pkg.add_source_dir('pirates')
 
     pkg.add_data_file('NiraiStart')
 
     pkg.generate_niraidata()
-
     pkg.write_out()
 
 if args.make_mfs:

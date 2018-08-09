@@ -202,7 +202,7 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
         self.frameworks.add('AppKit')
         self.frameworks.add('OpenAL')
         self.frameworks.add('OpenGL')
-        self.frameworks.add('Cg')
+        #self.frameworks.add('Cg')
         self.frameworks.add('AGL')
         self.frameworks.add('Carbon')
         self.frameworks.add('Cocoa')
@@ -211,8 +211,8 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
         print colored('Compiling...', 'cyan'), colored(filename, 'yellow')
         out = '%s/%s.o' % (self.outputdir, os.path.basename(filename).rsplit('.', 1)[0])
 
-        #cmd = 'g++ -g -c -DPy_BUILD_CORE -DLINK_ALL_STATIC -ftemplate-depth-70 -fPIC -O2 -Wno-deprecated-declarations -pthread'
-        cmd = 'g++ -c -DPy_BUILD_CORE -DLINK_ALL_STATIC -ftemplate-depth-70 -fPIC -O2 -Wno-deprecated-declarations -pthread'
+        #cmd = 'clang++ -std=gnu++0x -g -c -DPy_BUILD_CORE -DLINK_ALL_STATIC -ftemplate-depth-70 -fPIC -O2 -Wno-deprecated-declarations -pthread'
+        cmd = 'clang++ -std=gnu++0x -c -DPy_BUILD_CORE -DLINK_ALL_STATIC -ftemplate-depth-70 -fPIC -O2 -Wno-deprecated-declarations -pthread'
         for ic in self.includedirs:
             cmd += ' -I"%s"' % ic
 
@@ -222,8 +222,8 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
         self._built.add(out)
 
     def link(self):
-        #cmd = 'g++ -g -o %s/%s' % (self.outputdir, self.output)
-        cmd = 'g++ -o %s/%s' % (self.outputdir, self.output)
+        #cmd = 'clang++ -std=gnu++0x -g -o %s/%s' % (self.outputdir, self.output)
+        cmd = 'clang++ -std=gnu++0x -o %s/%s' % (self.outputdir, self.output)
 
         for path in self.libpath:
             cmd += ' -L"%s"' % path
