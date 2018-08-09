@@ -1,7 +1,10 @@
-from panda3d.core import *
-import __builtin__, os, sys
-import aes
+import __builtin__
+import os
+import sys
 
+from panda3d.core import *
+
+import aes
 import niraidata
 
 # Config
@@ -29,5 +32,31 @@ dcStream.setData(dc)
 del dc
 del iv
 del key
+
+# Phases
+vfs = VirtualFileSystem.getGlobalPtr()
+phases = [
+    2,
+    3,
+    4,
+    5
+]
+
+for phase in phases:
+    phase_name = 'phase_%d' % phase
+    filepath = 'resources/%s.mf' % phase_name
+
+    if not os.path.isfile(filepath):
+        raise IOError('Failed to find multifile: %s!' % phase_name)
+
+    f = Multifile()
+    f.openRead(filepath)
+    f.setMultifileName(phase_name)
+
+    if not vfs.mount(f, '.', VirtualFileSystem.MFReadOnly):
+        raise RuntimeError('Failed to mount multifile: %s!' % phase_name)
+
+    if not vfs.mount(f, phase_name, VirtualFileSystem.MFReadOnly):
+        raise RuntimeError('Failed to mount multifile: %s!' % phase_name)
 
 import pirates.piratesbase.PiratesStart

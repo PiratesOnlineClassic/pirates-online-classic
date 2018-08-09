@@ -171,11 +171,6 @@ text-default-font models/fonts/BardiT_outline.bam
 aux-display pandagl
 
 # Resources:
-model-path resources/
-model-path resources/phase_2/
-model-path resources/phase_3/
-model-path resources/phase_4/
-model-path resources/phase_5/
 default-model-extension .bam
 model-cache-max-kbytes 262144
 preload-textures 1

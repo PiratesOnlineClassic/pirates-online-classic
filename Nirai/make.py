@@ -97,7 +97,7 @@ class SourcePackager(NiraiPackager):
     def generate_niraidata(self):
         print 'Generating niraidata'
         config_files = [
-            self.get_file_contents('../src/config/general.prc'),
+            self.get_file_contents('../src/config/dist.prc'),
         ]
 
         dclass_files = [
@@ -165,13 +165,34 @@ if args.make_nri:
 
 if args.make_mfs:
     os.chdir('../src/resources')
-    cmd = ''
-    for phasenum in ['2', '3', '4', '5']:
-        print 'phase_%s' % (phasenum)
-        cmd = 'multify -cf ../build/built/resources/default/phase_%s.mf phase_%s' % (phasenum, phasenum)
-        p = subprocess.Popen(cmd, stdout=sys.stdout, stderr=sys.stderr)
-        v = p.wait()
+    phases = [
+        2,
+        3,
+        4,
+        5
+    ]
 
+    for phase in phases:
+        phase_name = 'phase_%d' % phase
+        print ('Packing multifile: %s.mf' % phase_name)
+        os.chdir(phase_name)
+
+        cmd = 'multify'
+        cmd += ' -c'
+        cmd += ' -f'
+        cmd += ' ../%s.mf' % phase_name
+
+        for path in os.listdir('./'):
+            cmd += ' %s' % path
+
+        p = subprocess.Popen(cmd,
+            stdout=sys.stdout, stderr=sys.stderr)
+
+        v = p.wait()
         if v != 0:
-            print 'The following command returned non-zero value (%d): %s' % (v, cmd[:100] + '...')
+            print 'The following command returned non-zero value (%d): %s' % (
+                v, cmd[:100] + '...')
+
             sys.exit(1)
+
+        os.chdir('../')
