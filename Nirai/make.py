@@ -65,12 +65,32 @@ class SourcePackager(NiraiPackager):
         self.add_file('data/%s.py' % file, mangler=lambda x: x[mb:])
 
     def __mangler(self, name):
+        excluded_modules = [
+            'OTPInternalRepository', 'ServiceStart',
+            'PiratesAIRepository', 'PiratesUberRepository',
+            'PiratesInternalRepository', 'InventoryInit',
+        ]
+
+        included_modules = [
+            'CrewHUD'
+        ]
+
+        if (name.endswith('AI') or name.endswith('UD')) or name in \
+            excluded_modules) and name not in included_modules:
+
+            return ''
+
         return name[self.__manglebase:].strip('.')
 
     def generate_niraidata(self):
         print 'Generating niraidata'
         config_files = [
             self.get_file_contents('../src/config/general.prc'),
+        ]
+
+        dclass_files = [
+            self.get_file_contents('../astron/dclass/otp.dc', True),
+            self.get_file_contents('../astron/dclass/toon.dc', True)
         ]
 
         config_iv = self.generate_key(16)
@@ -80,7 +100,11 @@ class SourcePackager(NiraiPackager):
         config_data = config_iv + config_key + aes.encrypt(
             config_data, config_key, config_iv)
 
+        dclass_data = ''.join(dclass_files)
+
         niraidata = 'CONFIG = %r' % config_data
+        niraidata += '\nDC = %r' % dclass_data
+
         self.add_module('niraidata', niraidata, compile=True)
 
     def process_modules(self):
