@@ -73,7 +73,14 @@ class SourcePackager(NiraiPackager):
             self.get_file_contents('../src/config/general.prc'),
         ]
 
-        niraidata = 'CONFIG = %r' % ''.join(config_files)
+        config_iv = self.generate_key(16)
+        config_key = self.generate_key(16)
+
+        config_data = ''.join(config_files)
+        config_data = config_iv + config_key + aes.encrypt(
+            config_data, config_key, config_iv))
+
+        niraidata = 'CONFIG = %r' % config_data
         self.add_module('niraidata', niraidata, compile=True)
 
     def process_modules(self):
