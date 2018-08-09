@@ -75,7 +75,7 @@ class SourcePackager(NiraiPackager):
             'CrewHUD'
         ]
 
-        if (name.endswith('AI') or name.endswith('UD')) or name in \
+        if (name.endswith('AI') or name.endswith('UD') or name in \
             excluded_modules) and name not in included_modules:
 
             return ''
