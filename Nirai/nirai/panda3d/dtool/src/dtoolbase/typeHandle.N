@@ -1,1 +1,0 @@
-defconstruct TypeHandle TypeHandle(TypeHandle::none())

@@ -1,9 +1,0 @@
-noinclude ode/ode.h
-
-forcetype dxGeom
-forcetype dxBody
-forcetype dxWorld
-forcetype dxJointGroup
-forcetype dxJoint
-forcetype dxSpace
-forcetype dxTriMeshData
