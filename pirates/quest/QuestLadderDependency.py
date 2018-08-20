@@ -3,7 +3,6 @@ from pirates.quest import QuestDB, QuestLadder, QuestLadderDB
 
 
 class QuestLadderDependency:
-    
 
     def __init__(self):
         self.idDependencyMap = {}

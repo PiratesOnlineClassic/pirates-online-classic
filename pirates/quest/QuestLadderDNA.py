@@ -135,10 +135,12 @@ class QuestChoiceDNA(QuestContainerDNA):
     def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
         return QuestChoice(name, title, av, questInt, parent, giverId, rewards, description, completeCount)
 
+
 class QuestChoiceSingleDNA(QuestContainerDNA):
 
     def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
         return QuestChoiceSingle(name, title, av, questInt, parent, giverId, rewards, firstQuestId, description)
+
 
 class QuestLadderDNA(QuestContainerDNA):
 

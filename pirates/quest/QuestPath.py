@@ -97,7 +97,6 @@ class QuestGoal:
 
 
 class QuestStep:
-    
     STNPC = 1
     STItem = 2
     STArea = 3
@@ -149,7 +148,6 @@ class QuestStep:
 
 
 class QuestPath:
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestPath')
 
     def __init__(self, air):
@@ -370,7 +368,7 @@ class QuestPath:
 
             finalPath.reverse()
         else:
-            exitLinks = [ linkDoId for linkDoId in self._getExitLinkDoIds(str(questDestUid)) if linkDoId not in alreadyVisited if linkDoId not in needToVisit ]
+            exitLinks = [linkDoId for linkDoId in self._getExitLinkDoIds(str(questDestUid)) if linkDoId not in alreadyVisited if linkDoId not in needToVisit]
             for link in exitLinks:
                 pathDict[link] = self.doId
 

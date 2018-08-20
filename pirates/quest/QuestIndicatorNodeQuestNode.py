@@ -5,12 +5,10 @@ from pirates.quest.QuestIndicatorNode import QuestIndicatorNode
 
 
 class QuestIndicatorNodeQuestNode(QuestIndicatorNode):
-    
 
     def __init__(self, questStep):
         self.pendingStepObj = None
-        QuestIndicatorNode.__init__(self, 'QuestNodeIndicator', [
-         50], questStep)
+        QuestIndicatorNode.__init__(self, 'QuestNodeIndicator', [50], questStep)
         return
 
     def delete(self):
