@@ -1,11 +1,11 @@
 from direct.directnotify import DirectNotifyGlobal
+from pirates.quest import QuestConstants, QuestAvatarBase, QuestHolder
+from pirates.quest.QuestStepIndicator import QuestStepIndicator
+from pirates.quest.QuestPath import QuestStep
 from direct.showbase.PythonUtil import report
-from otp.otpgui import OTPDialog
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PDialog
-from pirates.quest import QuestAvatarBase, QuestConstants, QuestHolder
-from pirates.quest.QuestPath import QuestStep
-from pirates.quest.QuestStepIndicator import QuestStepIndicator
+from otp.otpgui import OTPDialog
 
 
 class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestHolder):

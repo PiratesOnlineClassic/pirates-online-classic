@@ -1,10 +1,11 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.PythonUtil import POD, makeTuple
 from direct.task.Task import Task
-from otp.otpbase import OTPGlobals
-from pirates.piratesbase import Freebooter, PLocalizer
+from pirates.piratesbase import PLocalizer
 from pirates.quest import QuestDB, QuestReward, QuestTaskDNA
 from pirates.quest.QuestDNA import QuestDNA
+from otp.otpbase import OTPGlobals
+from pirates.piratesbase import Freebooter
 
 
 class Quest(POD):
@@ -58,7 +59,7 @@ class Quest(POD):
         for taskState, taskDNA in zip(self.taskStates, self.questDNA.getTasks()):
             return taskDNA.getGoalUid()
 
-        return
+        return None
 
     def getChangeEvent(self):
         return 'Quest.questChange-%s' % self._serialNum

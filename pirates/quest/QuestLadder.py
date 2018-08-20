@@ -637,5 +637,4 @@ class QuestLadder(QuestContainer):
 
 
 class QuestChoiceSingle(QuestLadder):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestChoiceSingle')

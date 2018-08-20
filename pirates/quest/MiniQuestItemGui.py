@@ -29,9 +29,7 @@ class MiniQuestItemGui(DirectFrame):
             textFg = (0.1, 0.8, 0.1, 1)
         else:
             textFg = PiratesGuiGlobals.TextFG1
-        self.descText = DirectLabel(parent=self, relief=None, text=self.quest.getStatusText(), text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_fg=textFg, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0.04,
-                                                                                                                                                                                                                                                       0,
-                                                                                                                                                                                                                                                       0.05))
+        self.descText = DirectLabel(parent=self, relief=None, text=self.quest.getStatusText(), text_align=TextNode.ALeft, text_scale=PiratesGuiGlobals.TextScaleLarge, text_fg=textFg, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(0.04, 0, 0.05))
         return
 
     def _destroyIface(self):
