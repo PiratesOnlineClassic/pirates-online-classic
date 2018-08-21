@@ -216,7 +216,7 @@ def maxSP():
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def weaponrank(rank):
     """
-    Sets your weapon rank to the specificed rank (1-6)
+    Sets your weapon rank to the specified rank (1-6)
     """
 
     invoker = spellbook.getInvoker()
