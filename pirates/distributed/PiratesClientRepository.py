@@ -551,7 +551,7 @@ class PiratesClientRepository(OTPClientRepository):
             return self.doId2do[doId]
 
     def identifyAvatar(self, doId):
-        return self.crewMatchManager.getHandle(doId)
+        pass#return self.crewMatchManager.getHandle(doId) # TODO
 
     def identifyPlayer(self, playerId):
         return self.playerFriendsManager.getFriendInfo(playerId)
