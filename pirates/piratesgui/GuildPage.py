@@ -443,17 +443,14 @@ class GuildPage(SocialPage.SocialPage):
 
     def notifyTokenGeneratorOfRedeem(self, redeemerName):
         msg = PLocalizer.GuildNotifyTokenCreatorOfRedeem % redeemerName
-        base.localAvatar.guiMgr.messageStack.addTextMessage(msg, seconds=15, priority=0, color=(0.5,
-                                                                                                0.0,
-                                                                                                0,
-                                                                                                1), icon=('friends',
-                                                                                                          ''))
+        base.localAvatar.guiMgr.messageStack.addTextMessage(msg, seconds=15, priority=0, color=(0.5, 0.0, 0, 1),
+                                                            icon=('friends', ''))
 
     def requestPermTokenValue(self):
-        pass  # TODO base.cr.guildManager.requestPermToken()
+        base.cr.guildManager.requestPermToken()
 
     def requestNonPermTokenCount(self):
-        pass  # TODO base.cr.guildManager.requestNonPermTokenCount()
+        base.cr.guildManager.requestNonPermTokenCount()
 
     def receivePermTokenValue(self, token):
         if not token:
