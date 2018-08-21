@@ -1,12 +1,14 @@
 from pirates.world.ClientAreaBuilderAI import ClientAreaBuilderAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from pirates.leveleditor import ObjectList
+from pirates.leveleditor import WorldDataGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.piratesbase import PiratesGlobals
 from pirates.interact.DistributedSearchableContainerAI import DistributedSearchableContainerAI
 from pirates.interact.DistributedInteractivePropAI import DistributedInteractivePropAI
 from pirates.treasuremap.DistributedBuriedTreasureAI import DistributedBuriedTreasureAI
 from pirates.treasuremap.DistributedSurfaceTreasureAI import DistributedSurfaceTreasureAI
+
 
 class GameAreaBuilderAI(ClientAreaBuilderAI):
     notify = directNotify.newCategory('GameAreaBuilderAI')
@@ -16,6 +18,8 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
         self.wantBuildingExteriors = config.GetBool('want-building-exteriors', True)
         self.wantDoorLocatorNodes = config.GetBool('want-door-locator-nodes', True)
+        self.wantConnectorLocatorNodes = config.GetBool('want-connector-locator-nodes', True)
+        self.wantConnectorTunnels = config.GetBool('want-connector-tunnels', True)
         self.wantSearchables = config.GetBool('want-searchables', True)
         self.wantSpawnNodes = config.GetBool('want-spawn-nodes', True)
         self.wantInteractives = config.GetBool('want-interactive-props', True)
@@ -29,6 +33,10 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             newObj = self.__createBuildingExterior(parent, parentUid, objKey, objectData)
         elif objType == ObjectList.DOOR_LOCATOR_NODE and self.wantDoorLocatorNodes:
             newObj = self.__createDoorLocatorNode(parent, parentUid, objKey, objectData)
+        elif objType == ObjectList.LOCATOR_NODE and self.wantConnectorLocatorNodes:
+            newObj = self.__createConnectorLocatorNode(parent, parentUid, objKey, objectData)
+        elif objType == ObjectList.CONNECTOR_TUNNEL and self.wantConnectorTunnels:
+            newObj = self.__createConnectorTunnel(parent, parentUid, objKey, objectData)
         elif objType == 'Searchable Container' and self.wantSearchables:
             newObj = self.__createSearchableContainer(parent, parentUid, objKey, objectData)
         elif objType in ['Animal', 'Townsperson', 'Spawn Node', 'Dormant NPC Spawn Node', 'Skeleton', 'NavySailor', 'Creature']:
@@ -184,6 +192,43 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         self.addObject(doorLocatorNode)
 
         return doorLocatorNode
+
+    def __createConnectorLocatorNode(self, parent, parentUid, objKey, objectData):
+        locatorName = objectData.get('Name', '')
+        if 'exterior' not in locatorName:
+            return
+
+        self.air.worldCreator.locatorManager.addLocator(
+            parentUid, objKey, objectData)
+
+    def __createConnectorTunnel(self, parent, parentUid, objKey, objectData):
+        self.air.worldCreator.connectorManager.addConnector(
+            parentUid, objKey, objectData)
+
+        for otherObjKey, otherObjectData in objectData.get('Objects', {}).iteritems():
+            if otherObjectData['Type'] == ObjectList.LOCATOR_NODE:
+                locatorName = otherObjectData.get('Name', '')
+                if 'connector' not in locatorName:
+                    continue
+
+                self.air.worldCreator.locatorManager.addLocator(
+                    parentUid, otherObjKey, otherObjectData)
+
+                otherLinkUid = self.air.worldCreator.linkManager.getOtherLinkUid(
+                    otherObjKey)
+
+                if not otherLinkUid:
+                    continue
+
+                otherLinkData = self.air.worldCreator.locatorManager.getLocator(
+                    otherLinkUid)
+
+                if not otherLinkData:
+                    self.air.worldCreator.locatorManager.addLocatorCallback(otherObjKey,
+                        self.__createConnectorTunnel,
+                        parent, parentUid, objKey, objectData)
+
+                    continue
 
     def __createSearchableContainer(self, parent, parentUid, objKey, objectData):
         container = DistributedSearchableContainerAI(self.air)

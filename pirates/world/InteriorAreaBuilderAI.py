@@ -1,6 +1,7 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from pirates.leveleditor import ObjectList
+from pirates.leveleditor import WorldDataGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.world.DistributedCellDoorAI import DistributedCellDoorAI
 from pirates.minigame.DistributedPokerTableAI import DistributedPokerTableAI
@@ -10,13 +11,13 @@ from pirates.minigame.Distributed7StudTableAI import Distributed7StudTableAI
 from pirates.minigame.DistributedBishopsHandTableAI import DistributedBishopsHandTableAI
 from pirates.minigame.DistributedLiarsDiceAI import DistributedLiarsDiceAI
 
+
 class InteriorAreaBuilderAI(GameAreaBuilderAI):
     notify = directNotify.newCategory('InteriorAreaBuilderAI')
 
     def __init__(self, air, parent):
         GameAreaBuilderAI.__init__(self, air, parent)
 
-        self.wantDoorLocatorNodes = config.GetBool('want-door-locator-nodes', True)
         self.wantJailCellDoors = config.GetBool('want-jail-cell-doors', True)
         self.wantParlorGames = config.GetBool('want-parlor-games', True)
 
@@ -25,6 +26,8 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
 
         if objType == ObjectList.DOOR_LOCATOR_NODE and self.wantDoorLocatorNodes:
             newObj = self.__createDoorLocatorNode(parent, parentUid, objKey, objectData)
+        elif objType == ObjectList.LOCATOR_NODE and self.wantConnectorLocatorNodes:
+            newObj = self.__createConnectorLocatorNode(parent, parentUid, objKey, objectData)
         elif objType == 'Jail Cell Door' and self.wantJailCellDoors:
             newObj = self.__createCellDoor(parent, parentUid, objKey, objectData)
         elif objType == 'Parlor Game' and self.wantParlorGames and not config.GetBool('want-alpha-blockers', False):
@@ -89,6 +92,14 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         self.addObject(doorLocatorNode)
 
         return doorLocatorNode
+
+    def __createConnectorLocatorNode(self, parent, parentUid, objKey, objectData):
+        locatorName = objectData.get('Name', '')
+        if 'interior' not in locatorName:
+            return
+
+        self.air.worldCreator.locatorManager.addLocator(
+            parentUid, objKey, objectData)
 
     def __createCellDoor(self, parent, parentUid, objKey, objectData):
         cellDoor = DistributedCellDoorAI(self.air)

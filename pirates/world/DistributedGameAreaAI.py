@@ -19,6 +19,10 @@ class DistributedGameAreaAI(DistributedNodeAI):
         self.jailInterior = None
         self.builder = GameAreaBuilderAI(self.air, self)
 
+    def generate(self):
+        DistributedNodeAI.generate(self)
+        self.air.worldCreator.linkManager.registerLinkData(self.uniqueId)
+
     def setModelPath(self, modelPath):
         self.modelPath = modelPath
 

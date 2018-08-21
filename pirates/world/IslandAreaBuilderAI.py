@@ -40,6 +40,19 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         self.parent.generateChildWithRequired(gameArea, self.air.allocateZone())
         self.addObject(gameArea)
 
+        objectData = self.air.worldCreator.getObjectDataByUid(objKey)
+        if not objectData:
+            return gameArea
+
+        for objKey, objectData in objectData.get('Objects', {}).iteritems():
+            if objectData['Type'] == ObjectList.LOCATOR_NODE:
+                locatorName = objectData.get('Name', '')
+                if 'interior' not in locatorName:
+                    continue
+
+                self.air.worldCreator.locatorManager.addLocator(
+                   gameArea.getUniqueId(), objKey, objectData)
+
         return gameArea
 
     def __createDinghy(self, parent, parentUid, objKey, objectData):
