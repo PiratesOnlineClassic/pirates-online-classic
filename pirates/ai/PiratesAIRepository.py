@@ -16,7 +16,6 @@ from pirates.distributed.PiratesDistrictAI import PiratesDistrictAI
 from pirates.distributed.DistrictTrackerAI import DistrictTrackerAI
 from pirates.world import WorldGlobals
 from pirates.ai.NewsManagerAI import NewsManagerAI
-from pirates.quest.QuestManagerAI import QuestManagerAI
 from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 from pirates.distributed.DistributedPopulationTrackerAI import DistributedPopulationTrackerAI
 from pirates.instance.DistributedTeleportMgrAI import DistributedTeleportMgrAI
@@ -92,8 +91,6 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.centralLogger = self.generateGlobalObject(OTP_DO_ID_CENTRAL_LOGGER, 'CentralLogger')
 
-        self.csm = self.generateGlobalObject(OTP_DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
-
         self.populationTracker = DistributedPopulationTrackerAI(self)
         self.populationTracker.setShardId(self.districtId)
         self.populationTracker.setPopLimits(config.GetInt('shard-pop-limit-low', 100),
@@ -144,8 +141,6 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.crewMatch = DistributedCrewMatchAI(self)
         self.crewMatch.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
-
-        self.questMgr = QuestManagerAI(self)
 
         self.tutorialManager = PiratesTutorialManagerAI(self)
         self.tutorialManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)

@@ -7,16 +7,19 @@ from pirates.quest.QuestLadder import QuestStub
 
 
 class CombineOps:
+    
     OR = 0
     AND = 1
 
 
 class QuestDNA(ParamObj):
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestDNA')
     OR = CombineOps.OR
     AND = CombineOps.AND
 
     class ParamSet(ParamObj.ParamSet):
+        
         Params = {'prereqs': tuple(), 'tasks': tuple(), 'combineOp': CombineOps.OR, 'returnGiverIds': None, 'chainedQuests': tuple(), 'questId': None, 'questInt': -1, 'title': '', 'droppable': True, 'rewards': tuple(), 'finalizeInfo': tuple(), 'instanceInfo': tuple(), 'completeRequiresVisit': True, 'playStinger': True, 'displayGoal': True, 'requiresVoyage': False, 'progressBlock': False, 'velvetRoped': True, 'checkPoint': -1, 'finalQuest': False, 'acquireOnce': False, 'minLevel': 0, 'minWeapLevel': 0, 'weapLvlType': None}
 
     def __init__(self, *args, **kwArgs):

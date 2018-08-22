@@ -9,6 +9,7 @@ from pirates.piratesbase import Freebooter
 
 
 class Quest(POD):
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('Quest')
     DataSet = {'questId': None, 'giverId': None, 'combineOp': None, 'tasks': None, 'rewards': None, 'taskStates': []}
     SerialNum = 0

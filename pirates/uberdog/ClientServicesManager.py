@@ -58,12 +58,6 @@ class ClientServicesManager(DistributedObjectGlobal):
     def createAvatarResp(self, avId):
         messenger.send('createdNewAvatar', [avId])
 
-    def sendPopulateAvatar(self, avId, avDNA, *args):
-        self.sendUpdate('populateAvatar', [avId, avDNA.makeNetString()])
-
-    def populateAvatarResp(self):
-        messenger.send('avatarPopulated')
-
     def sendDeleteAvatar(self, avId):
         self.sendUpdate('deleteAvatar', [avId])
 

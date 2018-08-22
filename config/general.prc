@@ -95,7 +95,6 @@ skip-tutorial #f
 force-tutorial #t
 ignore-teleport-requirements #f
 force-tutorial-complete #f
-no-jail-light #t
 
 # Seapatch:
 want-seapatch #t

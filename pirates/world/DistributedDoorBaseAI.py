@@ -23,10 +23,6 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
         self.doorTask = None
         self.otherDoor = None
 
-    def generate(self):
-        DistributedInteractiveAI.generate(self)
-        self.request('Closed')
-
     def handleRequestInteraction(self, avatar, interactType, instant):
         if self.locked:
             return self.DENY
@@ -42,12 +38,8 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
 
             return self.DENY
 
-        parentObj = self.getParentObj()
-        if parentObj.doId == avatarParentObj.doId:
+        if self.getParentObj().doId == avatarParentObj.doId:
             self.otherDoor.handleRequestInteraction(avatar, interactType, instant)
-
-        if avatar.getTutorial():
-            self.b_setLocked(True)
 
         return self.ACCEPT
 

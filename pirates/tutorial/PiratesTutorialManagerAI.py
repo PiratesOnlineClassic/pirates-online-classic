@@ -61,10 +61,12 @@ class TutorialFSM(FSM):
             self.cleanup()
             return
 
-        self.acceptOnce('teleportDone-%d' % self.avatar.doId, self.__avatarArrived)
-        self.air.teleportMgr.d_initiateTeleport(self.avatar, instanceType=self.instance.getType(),
-            instanceName=self.instance.getFileName(), locationUid=self.island.getUniqueId(),
-            spawnPt=self.instance.getSpawnPt(self.interior.getUniqueId(), 0))
+        tutorialHandlerDoId = self.air.allocateChannel()
+        self.acceptOnce('generate-%d' % tutorialHandlerDoId, self.__handlerArrived)
+
+        self.tutorialHandler = DistributedPiratesTutorialAI(self.air)
+        self.tutorialHandler.generateWithRequiredAndId(tutorialHandlerDoId,
+            self.instance.doId, self.island.zoneId)
 
     def __handlerArrived(self, tutorialHandler):
         if not tutorialHandler:
@@ -74,22 +76,14 @@ class TutorialFSM(FSM):
             self.cleanup()
             return
 
-        self.instance.d_setTutorialHandlerId(self.tutorialHandler.doId)
+        self.acceptOnce('teleportDone-%d' % self.avatar.doId, self.__avatarArrived)
+        self.air.teleportMgr.d_initiateTeleport(self.avatar, instanceType=self.instance.getType(),
+            instanceName=self.instance.getFileName(), locationUid=self.interior.getUniqueId(),
+            spawnPt=self.instance.getSpawnPt(self.interior.getUniqueId(), 0))
 
     def __avatarArrived(self):
-        exteriorDoor = self.interior.getExteriorFrontDoor()
-        exteriorDoor.d_setPrivateInteriorInstance(self.avatar.doId, self.instance.doId,
-            self.interior.zoneId, self.interior.doId, True)
-
-        tutorialHandlerDoId = self.air.allocateChannel()
-        self.acceptOnce('generate-%d' % tutorialHandlerDoId, self.__handlerArrived)
-
-        self.tutorialHandler = DistributedPiratesTutorialAI(self.air, self.avatar, self.interior)
-        self.tutorialHandler.generateWithRequiredAndId(tutorialHandlerDoId,
-            self.air.districtId, self.instance.zoneId)
-
-        # TODO: FIXME!
-        #self.air.tutorialManager.d_enterTutorial(self.avatar.doId, self.island.zoneId)
+        self.instance.d_setTutorialHandlerId(self.tutorialHandler.doId)
+        self.air.tutorialManager.d_enterTutorial(self.avatar.doId, self.island.zoneId)
 
     def enterStop(self):
         if self.island:

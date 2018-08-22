@@ -54,8 +54,8 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
     def getOtherSideParentModel(self):
         if not self.privateInteriorId:
             return base.cr.doId2do[self.interiorDoId]
-
-        return base.cr.doId2do[self.privateInteriorId]
+        else:
+            return base.cr.doId2do[self.privateInteriorId]
 
     def loadOtherSide(self):
         self.requestPrivateInteriorInstance()

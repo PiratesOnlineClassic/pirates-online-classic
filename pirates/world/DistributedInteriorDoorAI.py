@@ -27,6 +27,7 @@ class DistributedInteriorDoorAI(DistributedDoorBaseAI):
             return self.DENY
 
         exterior = self.air.doId2do.get(self.exteriorDoId)
+
         if not exterior:
             self.notify.warning('Cannot handle avatar %d interact for door %d, exterior %d not found!' % (
                 avatar.doId, self.doId, self.exteriorDoId))
@@ -38,13 +39,6 @@ class DistributedInteriorDoorAI(DistributedDoorBaseAI):
                 avatar.doId, self.doId))
 
             return self.DENY
-
-        if avatar.getTutorial():
-            tutorialFSM = self.air.tutorialManager.avatar2fsm[avatar.doId]
-            tutorialHandler = tutorialFSM.tutorialHandler
-
-            parentObj = exterior.getParentObj()
-            tutorialHandler.b_setLocation(parentObj.doId, exterior.zoneId)
 
         return self.ACCEPT
 
