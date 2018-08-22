@@ -112,8 +112,9 @@ class PiratesBase(OTPBase):
         if use_recommended_options:
             options.recommendedOptions(base.pipe, False)
             options.log('Recommended Game Options')
-        overwrite_options = True
-        options.verifyOptions(base.pipe, overwrite_options)
+        # TODO: FIXME!
+        #overwrite_options = True
+        #options.verifyOptions(base.pipe, overwrite_options)
         self.funnel = UserFunnel.UserFunnel()
         string = options.optionsToPrcData()
         loadPrcFileData('game_options', string)
