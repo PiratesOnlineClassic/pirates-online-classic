@@ -1,11 +1,14 @@
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
+from otp.distributed.OtpDoGlobals import *
+
 from pirates.world.WorldCreatorBase import WorldCreatorBase
 from pirates.piratesbase import PiratesGlobals
 from pirates.leveleditor import ObjectList
 from pirates.leveleditor import WorldDataGlobals
 from pirates.world import WorldGlobals
+from pirates.instance.DistributedInstanceWorldAI import DistributedInstanceWorldAI
 from pirates.instance.DistributedMainWorldAI import DistributedMainWorldAI
 from pirates.tutorial import TutorialGlobals
 from pirates.tutorial.DistributedPiratesTutorialWorldAI import DistributedPiratesTutorialWorldAI
@@ -252,26 +255,34 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         objParent = None
 
         if objType == ObjectList.AREA_TYPE_WORLD_REGION:
-            objParent = self.__createWorldInstance(object, parent, parentUid, objKey, dynamic)
+            newObj = self.createWorldInstance(object, parent, parentUid, objKey, dynamic)
         else:
             newObj = self.world.builder.createObject(objType, object, parent, parentUid, objKey, dynamic,
                 parentIsObj, fileName, actualParentObj)
 
         return (newObj, objParent)
 
-    def __createWorldInstance(self, objectData, parent, parentUid, objKey, dynamic):
-        worldName = objectData['Name']
+    def createWorldInstance(self, objectData, parent, parentUid, objKey, dynamic):
+        worldName = objectData.get('Name', '')
 
-        if worldName == WorldGlobals.PiratesTutorialSceneFileBase:
+        if worldName == '':
+            self.world = DistributedInstanceWorldAI(self.air)
+        elif worldName == WorldGlobals.PiratesTutorialSceneFileBase:
             self.world = DistributedPiratesTutorialWorldAI(self.air)
-        else:
+        elif worldName == 'default':
             self.world = DistributedMainWorldAI(self.air)
+        else:
+            self.notify.warning('Failed to generate world instance with '
+                'unknown name: %s!' % worldName)
+
+            return
 
         self.world.setUniqueId(objKey)
         self.world.setName(worldName)
-        self.world.generateWithRequired(PiratesGlobals.InstanceUberZone)
+        self.world.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
-        self.worldDict = objectData
+        if parent is None:
+            self.worldDict = objectData
+
         self.air.uidMgr.addUid(self.world.getUniqueId(), self.world.doId)
-
         return self.world

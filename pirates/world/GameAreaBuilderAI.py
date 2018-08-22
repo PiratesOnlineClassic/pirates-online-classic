@@ -80,7 +80,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         from pirates.world.DistributedJailInteriorAI import DistributedJailInteriorAI
 
         parent = parent.getParentObj()
-
         if not parent:
             self.notify.warning('Cannot create building exterior %s, current parent %s, has no parent object!' % (
                 objKey, parentUid))
@@ -88,7 +87,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             return
 
         exteriorUid = objectData.get('ExtUid')
-
         if not exteriorUid:
             self.notify.warning('Cannot create building exterior %s, no exterior uid found!' % (
                 objKey))
@@ -96,7 +94,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             return
 
         interiorFile = objectData.get('File')
-
         if not interiorFile:
             self.notify.debug('Cannot create building exterior %s, no interior file found!' % (
                 objKey))
@@ -104,12 +101,18 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             return
 
         modelPath = self.air.worldCreator.getModelPathFromFile(interiorFile)
-
         if not modelPath:
             self.notify.warning('Cannot create building exterior %s, no model path found for file %s!' % (
                 objKey, interiorFile))
 
             return
+
+        # create a new instance object that lays under the main world instance
+        # this allows us to load the interior file data and set the correct values...
+        parent = self.air.worldCreator.createWorldInstance({},
+            self.air.worldCreator.world, '', objKey, False)
+
+        parent.setFileName(interiorFile)
 
         isJail = 'jail' in objectData['Visual']['Model']
 
@@ -127,8 +130,8 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         # add the interior object to the list of objects by uid's,
         # as both the exterior uid and the object key so we can listen
         # in on uid callback events...
-        parent.builder.addObject(interior)
-        parent.builder.addObject(interior, uniqueId=objKey)
+        self.parent.builder.addObject(interior)
+        self.parent.builder.addObject(interior, uniqueId=objKey)
 
         if isJail:
             self.parent.setJailInterior(interior)
@@ -145,7 +148,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             self.air.worldCreator.loadObjectDict(objectList, self.parent, objKey, True)
 
         self.air.worldCreator.loadObjectsFromFile(interiorFile + '.py', interior)
-
         return interior
 
     def __createDoorLocatorNode(self, parent, parentUid, objKey, objectData, wantTruePosHpr=True):
