@@ -72,9 +72,7 @@ class Nametag3d(Nametag):
             # get the bounding sphere of the avatar so we can get
             # the avatar radius to base the nametag click margins...
             bounds = self.avatar.getBounds()
-
-            # check to see if the bounding sphere is infinite.
-            if bounds.isInfinite():
+            if bounds.isEmpty() or bounds.isInfinite():
                 return
 
             scaleFactor = bounds.getRadius()
