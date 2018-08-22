@@ -139,11 +139,6 @@ allow-teleport-from-discord #f
 # Alpha:
 want-alpha-blockers #t
 
-# Other:
-test-saint-patricks-day #f
-test-fourth-of-july #f
-want-enviro-dr #f
-
 # Text:
 want-render2dp 1
 text-encoding utf8
@@ -171,15 +166,12 @@ lod-fade-time 2
 make-grid-lod 1
 verify-lods 0
 
-# Stuff:
-allow-incomplete-render 1
-lock-to-one-cpu 1
-
 # Texture:
 dx-management 0
 dx-texture-management 0
 retransform-sprites 1
 preload-textures 0
+allow-incomplete-render 1
 
 # Misc:
 want-tattoos 1
@@ -201,3 +193,11 @@ launcher-decompress-buffer-size 65536
 # Pvp:
 want-privateering 1
 want-infamy 0
+
+# Options:
+ocean-visibility 1
+
+# Other:
+test-saint-patricks-day #f
+test-fourth-of-july #f
+want-enviro-dr #f
