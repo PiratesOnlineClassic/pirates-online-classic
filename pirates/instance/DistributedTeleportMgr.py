@@ -25,7 +25,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         self.startedCallback = None
         self.oldWorld = None
         self.requestData = None
-        self.localTeleportId = None
+        self.localTeleportId = 0
         self.localTeleportingObj = None
         self.localTeleportCallback = None
         self.localTeleportDestPos = None
@@ -244,7 +244,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         if self.localTeleportCallback:
             self.localTeleportCallback()
 
-        self.localTeleportId = None
+        self.localTeleportId = 0
         self.localTeleportingObj = None
         self.localTeleportCallback = None
         self.localTeleportDestPos = None
