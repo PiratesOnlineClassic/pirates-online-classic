@@ -38,7 +38,6 @@ class DistributedBuildingDoorAI(DistributedDoorBaseAI):
             return
 
         interior = self.air.doId2do.get(self.interiorDoId)
-
         if not interior:
             self.notify.warning('Cannot set interior instance %d interact for door %d, interior %d not found!' % (
                 avatar.doId, self.doId, self.interiorDoId))
@@ -46,7 +45,6 @@ class DistributedBuildingDoorAI(DistributedDoorBaseAI):
             return
 
         interiorDoor = interior.getInteriorFrontDoor()
-
         if not interiorDoor:
             self.notify.warning('Cannot set interior instance %d interact for door %d, interior door not found!' % (
                 avatar.doId, self.doId))

@@ -58,7 +58,7 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
                     cellDoorId = cellDoor.doId
                     break
 
-        if not cellDoorId:
+        if cellDoorId is None:
             cellDoorId = random.choice(self.__cellDoors.keys())
 
         return self.__cellDoors.get(cellDoorId)

@@ -168,7 +168,6 @@ class PhantomCannon(Cannon):
 
 
 class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
-
     notify = directNotify.newCategory('DistributedPiratesTutorial')
     PRELOADED_CUTSCENES = []
 
@@ -329,8 +328,8 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             localAvatar.style.setName(localAvatar.getName())
             localAvatar.guiMgr.showTrays()
             base.transitions.fadeIn()
+
         self.sendUpdate('clientEnterAct0Tutorial')
-        return
 
     def _startTutorialInteriorEffects(self, startFire, cannonDelay=None):
         self._jie = TutorialInteriorEffects(startFire, cannonDelay)
@@ -356,6 +355,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             UserFunnel.logSubmit(1, 'LEAVING_JAIL')
             if base.downloadWatcher:
                 base.downloadWatcher.setStatusBarLocation(1)
+
             self.preloadCutscene(CutsceneData.PRELOADED_CUTSCENE_STAGE2)
             self.preloadCutscene(CutsceneData.PRELOADED_CUTSCENE_STAGE3)
             self._stopTutorialInteriorEffects()
@@ -437,33 +437,32 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             self.map.unload()
             self.map = 0
             base.cr.gameFSM.request('closeShard', ['waitForAvatarList'])
-        else:
-            if done == 'created':
-                dna = self.map.pirate.style
-                localAvatar.setDNA(dna)
-                localAvatar.generateHuman(dna.gender, base.cr.human)
-                localAvatar.motionFSM.off()
-                localAvatar.motionFSM.on()
-                self.acceptOnce('avatarPopulated', self.avatarPopulated)
-                if self.map.nameGui.customName:
-                    localAvatar.setWishName()
-                    base.cr.avatarManager.sendRequestPopulateAvatar(localAvatar.doId, localAvatar.style, 0, 0, 0, 0, 0)
-                else:
-                    name = self.map.nameGui.getNumericName()
-                    base.cr.avatarManager.sendRequestPopulateAvatar(localAvatar.doId, localAvatar.style, 1, name[0], name[1], name[2], name[3])
-                self.map.exit()
-                self.map.unload()
-                self.map = 0
+        elif done == 'created':
+            dna = self.map.pirate.style
+            localAvatar.setDNA(dna)
+            localAvatar.generateHuman(dna.gender, base.cr.human)
+            localAvatar.motionFSM.off()
+            localAvatar.motionFSM.on()
+            self.acceptOnce('avatarPopulated', self.avatarPopulated)
+            if self.map.nameGui.customName:
+                localAvatar.setWishName()
+                base.cr.csm.sendPopulateAvatar(localAvatar.doId, localAvatar.style, 0, 0, 0, 0, 0)
             else:
-                self.notify.error('Invalid doneStatus from MakeAPirate: ' + str(done))
+                name = self.map.nameGui.getNumericName()
+                base.cr.csm.sendPopulateAvatar(localAvatar.doId, localAvatar.style, 1, name[0], name[1], name[2], name[3])
+
+            self.map.exit()
+            self.map.unload()
+            self.map = 0
+        else:
+            self.notify.error('Invalid doneStatus from MakeAPirate: ' + str(done))
+
         localAvatar.gameFSM.lockFSM = False
         ga = localAvatar.getParentObj()
         if ga is not None:
             for light in ga.dynamicLights:
                 light.turnOn()
                 self.jail.setLight(light.lightNodePath)
-
-        return
 
     def avatarPopulated(self):
         self.request('EscapeFromLA')
@@ -486,14 +485,16 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         self.handleWalkedOutToIsland()
 
     def handleGoInside(self):
-        self._phantomCannon.stop()
+        if hasattr(self, '_phantomCannon'):
+            self._phantomCannon.stop()
+
         if hasattr(self, '_fireSound') and self._fireSound is not None:
             self._fireSound.pause()
+
         self._stopFog()
         isJail = False
         self.accept(CannonballHitEvent, Functor(self._handleInteriorCannonballHit, isJail))
         self._startTutorialInteriorEffects(True, random.random() * 3.0)
-        return
 
     def _handleInteriorCannonballHit(self, isJail):
         if isJail:

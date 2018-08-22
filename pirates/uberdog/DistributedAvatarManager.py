@@ -2,7 +2,7 @@ from otp.otpbase import OTPGlobals
 from otp.uberdog.OtpAvatarManager import OtpAvatarManager
 
 class DistributedAvatarManager(OtpAvatarManager):
-    
+
     def sendAvIdList(self, avIds):
         pass
 

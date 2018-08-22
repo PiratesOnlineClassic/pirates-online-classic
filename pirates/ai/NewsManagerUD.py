@@ -3,9 +3,10 @@ import datetime
 
 class NewsManagerUD:
     """
-    Simple UD class to communicate globally with all AI newsManagers through the 
+    Simple UD class to communicate globally with all AI newsManagers through the
     NetMessenger interface
     """
+
     notify = DirectNotifyGlobal.directNotify.newCategory('NewsManagerUD')
     notify.setInfo(True)
 
@@ -17,7 +18,6 @@ class NewsManagerUD:
         self.__lastBroadcast = None
 
     def handleHolidayStarted(self, holidayId, quietly):
-
         if not quietly:
             # Clear old broadcast checks
             now = datetime.datetime.now()

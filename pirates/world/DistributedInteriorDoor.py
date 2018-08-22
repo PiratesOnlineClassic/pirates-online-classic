@@ -1,11 +1,13 @@
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import report
 from otp.otpgui import OTPDialog
-from panda3d.core import *
-from pirates.piratesbase import PiratesGlobals, PLocalizer, TimeOfDayManager
-from pirates.piratesgui import PDialog
-from pirates.quest.QuestConstants import LocationIds
 from pirates.world import DistributedDoorBase
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.piratesbase import TimeOfDayManager
+from direct.showbase.PythonUtil import report
+from pirates.quest.QuestConstants import LocationIds
+from pirates.piratesgui import PDialog
 
 
 class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
@@ -16,12 +18,9 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         self.islandRequest = None
         self.doorDisableDialog = None
 
-    def generate(self):
-        DistributedDoorBase.DistributedDoorBase.generate(self)
-
     def delete(self):
         if self.islandRequest:
-            base.cr.relatedObjectMgr.abortRequest(self.islandRequest)
+            self.cr.relatedObjectMgr.abortRequest(self.islandRequest)
             self.islandRequest = None
 
         DistributedDoorBase.DistributedDoorBase.delete(self)
@@ -35,7 +34,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         self.interiorDoId = interiorDoId
         self.interiorParentId = interiorParentId
         self.interiorZoneId = interiorZoneId
-        self.interior = base.cr.doId2do[self.interiorDoId]
+        self.interior = self.cr.doId2do[self.interiorDoId]
 
     def setExteriorId(self, exteriorDoId, exteriorWorldParentId, exteriorWorldZoneId):
         self.exteriorDoId = exteriorDoId
@@ -61,8 +60,8 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
             self.islandRequest = None
             self.loadExteriorFinished()
 
-        self.islandRequest = base.cr.relatedObjectMgr.requestObjects([self.exteriorDoId],
-            eachCallback=extFinishedCallback)
+        self.islandRequest = self.cr.relatedObjectMgr.requestObjects([
+            self.exteriorDoId], eachCallback=extFinishedCallback)
 
     def cleanupDoorDisableDialog(self, extraArgs=None):
         if self.doorDisableDialog:
@@ -73,7 +72,7 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         if not base.launcher.getPhaseComplete(3):
             if not self.doorDisableDialog:
                 self.doorDisableDialog = PDialog.PDialog(text=PLocalizer.NoRambleshack, style=OTPDialog.Acknowledge,
-                    command=self.cleanupDoorDisableDialog)
+                                                         command=self.cleanupDoorDisableDialog)
 
             return
 
@@ -81,14 +80,9 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
             if avId == base.localAvatar.doId:
                 base.transitions.fadeOut(self.tOpen)
                 self.openDoorIval.start()
-                base.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
+                self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld')
                 return
 
-        #buildingUid = None
-        #exterior = base.cr.doId2do.get(self.exteriorDoId)
-        #if exterior:
-        #    buildingUid = exterior.getUniqueId()
-        #base.richPresence.setLocation(buildingUid)
         DistributedDoorBase.DistributedDoorBase.requestInteraction(self, avId, interactType)
 
     def loadExteriorFinished(self):
@@ -96,9 +90,9 @@ class DistributedInteriorDoor(DistributedDoorBase.DistributedDoorBase):
         self.interior.disableFloors()
         world = self.interior.getParentObj()
         world.removeWorldInterest()
-        base.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
-        base.cr.replaceTaggedInterestTag('instanceInterest-Door', 'instanceInterest')
-        island = base.cr.doId2do.get(self.exteriorDoId)
+        self.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
+        self.cr.replaceTaggedInterestTag('instanceInterest-Door', 'instanceInterest')
+        island = self.cr.doId2do.get(self.exteriorDoId)
         areaParentWorld = island.getParentObj()
         areaParentWorld.addWorldInterest(island)
         building = self.getOtherSideParentModel()

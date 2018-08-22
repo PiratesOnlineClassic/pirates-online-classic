@@ -62,7 +62,6 @@ from otp.nametag.Nametag import Nametag
 
 
 class GuiManager(FSM.FSM):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('GuiManager')
     WantClothingPage = base.config.GetBool('want-clothing-page', 0)
     WantTitlesPage = base.config.GetBool('want-titles-page', 0)

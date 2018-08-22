@@ -193,8 +193,8 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             if not self.hasTunnelsOnRadar:
                 self.handleTunnelsOnRadar(True)
 
-        if base.shipsVisibleFromIsland:
-            self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
+        #if base.shipsVisibleFromIsland:
+        #    self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
 
         if av:
             self.addObjectToGrid(av)

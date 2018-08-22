@@ -477,7 +477,8 @@ class PiratesClientRepository(OTPClientRepository):
             avId, hoodId])
 
         messenger.send('requestTutorial')
-        self.waitForDatabaseTimeout(requestName='RequestTutorial')
+        # TODO FIXME!
+        #self.waitForDatabaseTimeout(requestName='RequestTutorial')
 
     def __handleStartTutorial(self, avId, hoodId, zoneId):
         self.gameFSM.request('playGame', [hoodId, zoneId, avId])

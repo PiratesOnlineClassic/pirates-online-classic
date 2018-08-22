@@ -27,10 +27,10 @@ want-avatar-physics-indicator #f
 want-alpha-blockers #f
 
 # Tutorial:
-skip-tutorial #t
-force-tutorial #f
-ignore-teleport-requirements #t
-force-tutorial-complete #t
+#skip-tutorial #t
+#force-tutorial #f
+#ignore-teleport-requirements #t
+#force-tutorial-complete #t
 
 # Teleport:
 teleport-all #t
