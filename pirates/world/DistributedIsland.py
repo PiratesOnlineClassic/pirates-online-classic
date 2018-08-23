@@ -179,9 +179,6 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             if self.hasTunnelsOnRadar:
                 self.handleTunnelsOnRadar(False)
 
-        # TODO FIXME: why was the island not being unloaded already?
-        self.setZoneLevel(4)
-
         DistributedGameArea.DistributedGameArea.turnOff(self)
         DistributedCartesianGrid.DistributedCartesianGrid.turnOff(self)
         ZoneLOD.ZoneLOD.turnOff(self)
