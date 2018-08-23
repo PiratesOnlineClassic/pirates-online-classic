@@ -1,17 +1,18 @@
-import random
-
+from pandac.PandaModules import *
+from direct.fsm import FSM
+from direct.task import Task
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import globalClockDelta
-from direct.fsm import FSM
 from direct.interval.IntervalGlobal import *
-from direct.task import Task
-from panda3d.core import *
-from pirates.piratesbase import (AvatarShadowCaster, PiratesGlobals, SkyGroup,
-                                 TODGlobals)
+from pirates.piratesbase import AvatarShadowCaster
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import TODGlobals
+from pirates.piratesbase import SkyGroup
+import random
 
 
 class TimeOfDayManager(FSM.FSM):
-    
+
     notify = directNotify.newCategory('TimeOfDayManager')
 
     def __init__(self):
@@ -144,21 +145,47 @@ class TimeOfDayManager(FSM.FSM):
             environment = TODGlobals.ENV_DEFAULT
         else:
             environment = self.environment
-        ival = Parallel(LerpFunctionInterval(self.alight.node().setColor, duration=t, toData=TODGlobals.AmbientLightColors[environment][toState], fromData=TODGlobals.AmbientLightColors[environment][fromState], name='TOD_aLightColor-%d'), LerpFunctionInterval(self.grassLight.node().setColor, duration=t, toData=TODGlobals.GrassLightColors[toState], fromData=TODGlobals.GrassLightColors[fromState], name='TOD_grassLightColor-%d'), LerpFunctionInterval(self.fog.setColor, duration=t, toData=TODGlobals.FogColors[environment][toState], fromData=TODGlobals.FogColors[environment][fromState], name='TOD_fogColor-%d'), LerpFunctionInterval(self.fog.setExpDensity, duration=t, toData=TODGlobals.FogExps[environment][toState], fromData=TODGlobals.FogExps[environment][fromState], name='TOD_fogExp-%d'), name='TOD_transitionTimeOfDay')
+        ival = Parallel(LerpFunctionInterval(self.alight.node().setColor, duration=t,
+                                             toData=TODGlobals.AmbientLightColors[environment][toState],
+                                             fromData=TODGlobals.AmbientLightColors[environment][fromState],
+                                             name='TOD_aLightColor-%d'),
+                        LerpFunctionInterval(self.grassLight.node().setColor, duration=t,
+                                             toData=TODGlobals.GrassLightColors[toState],
+                                             fromData=TODGlobals.GrassLightColors[fromState],
+                                             name='TOD_grassLightColor-%d'),
+                        LerpFunctionInterval(self.fog.setColor, duration=t,
+                                             toData=TODGlobals.FogColors[environment][toState],
+                                             fromData=TODGlobals.FogColors[environment][fromState],
+                                             name='TOD_fogColor-%d'),
+                        LerpFunctionInterval(self.fog.setExpDensity, duration=t,
+                                             toData=TODGlobals.FogExps[environment][toState],
+                                             fromData=TODGlobals.FogExps[environment][fromState], name='TOD_fogExp-%d'),
+                        name='TOD_transitionTimeOfDay')
         if not self.fixedSky:
             fromSkyColor = TODGlobals.SkyColors[fromState]
             toSkyColor = TODGlobals.SkyColors[toState]
-            ival.append(LerpFunctionInterval(base.win.setClearColor, duration=t, fromData=fromSkyColor, toData=toSkyColor))
+            ival.append(
+                LerpFunctionInterval(base.win.setClearColor, duration=t, fromData=fromSkyColor, toData=toSkyColor))
             if hasattr(base, 'pe'):
-                ival.append(LerpFunctionInterval(base.setBackgroundColor, duration=t, fromData=fromSkyColor, toData=toSkyColor))
+                ival.append(
+                    LerpFunctionInterval(base.setBackgroundColor, duration=t, fromData=fromSkyColor, toData=toSkyColor))
+
             ival.append(self.skyGroup.transitionSky(fromState, toState, duration=t))
+
         self.currLight = self.skyGroup.getLight(fromState)
         self.dLight = self.skyGroup.getLight(toState)
         if self.currLight != self.dLight:
-            ival.append(LerpFunctionInterval(self.currLight.node().setColor, duration=t, fromData=TODGlobals.DirectionalLightColors[environment][fromState], toData=Vec4(0, 0, 0, 0), name='TOD_dLightColorA-%d'))
-            ival.append(LerpFunctionInterval(self.dLight.node().setColor, duration=t, toData=TODGlobals.DirectionalLightColors[environment][toState], fromData=Vec4(0, 0, 0, 0), name='TOD_dLightColorB-%d'))
+            ival.append(LerpFunctionInterval(self.currLight.node().setColor, duration=t,
+                                             fromData=TODGlobals.DirectionalLightColors[environment][fromState],
+                                             toData=Vec4(0, 0, 0, 0), name='TOD_dLightColorA-%d'))
+            ival.append(LerpFunctionInterval(self.dLight.node().setColor, duration=t,
+                                             toData=TODGlobals.DirectionalLightColors[environment][toState],
+                                             fromData=Vec4(0, 0, 0, 0), name='TOD_dLightColorB-%d'))
         else:
-            ival.append(LerpFunctionInterval(self.dlight.node().setColor, duration=t, toData=TODGlobals.DirectionalLightColors[environment][toState], fromData=TODGlobals.DirectionalLightColors[environment][fromState], name='TOD_dLightColor-%d'))
+            ival.append(LerpFunctionInterval(self.dlight.node().setColor, duration=t,
+                                             toData=TODGlobals.DirectionalLightColors[environment][toState],
+                                             fromData=TODGlobals.DirectionalLightColors[environment][fromState],
+                                             name='TOD_dLightColor-%d'))
         return ival
 
     def _prepareState(self, stateId):
@@ -409,18 +436,21 @@ class TimeOfDayManager(FSM.FSM):
         if self.transitionIval:
             self.transitionIval.pause()
             self.transitionIval = None
+
         render.clearLight(self.alight)
-        render.clearLight(self.dlight)
+        render.clearLight(self.moonLight)
+        render.clearLight(self.sunLight)
+        render.setLightOff()
         render.setFogOff()
         messenger.send('nametagAmbientLightChanged', [None])
         if self.nextDoLater:
             self.nextDoLater.remove()
             self.nextDoLater = None
-        return
 
     def exitNoLighting(self):
         render.setLight(self.alight)
-        render.setLight(self.dlight)
+        render.setLight(self.moonLight)
+        render.setLight(self.sunLight)
         render.setFog(self.fog)
         messenger.send('nametagAmbientLightChanged', [self.alight])
 
