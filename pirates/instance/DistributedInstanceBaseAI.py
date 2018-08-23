@@ -16,8 +16,7 @@ class DistributedInstanceBaseAI(DistributedObjectAI):
         self.uniqueId = ''
         self.name = ''
         self.fileName = ''
-        self.type = PiratesGlobals.INSTANCE_GENERIC
-        self.canBePrivate = False
+        self.type = PiratesGlobals.INSTANCE_NONE
         self.spawnPts = {}
         self.builder = ClientAreaBuilderAI(self.air, self)
 
@@ -45,6 +44,13 @@ class DistributedInstanceBaseAI(DistributedObjectAI):
     def setFileName(self, fileName):
         self.fileName = fileName
 
+    def d_setFileName(self, fileName):
+        self.sendUpdate('setFileName', [fileName])
+
+    def b_setFileName(self, fileName):
+        self.setFileName(fileName)
+        self.d_setFileName(fileName)
+
     def getFileName(self):
         return self.fileName
 
@@ -60,12 +66,6 @@ class DistributedInstanceBaseAI(DistributedObjectAI):
 
     def getType(self):
         return self.type
-
-    def setCanBePrivate(self, canBePrivate):
-        self.canBePrivate = canBePrivate
-
-    def getCanBePrivate(self):
-        return self.canBePrivate
 
     def d_setSpawnInfo(self, avatarId, xPos, yPos, zPos, h, spawnZone, parents):
         self.sendUpdateToAvatarId(avatarId, 'setSpawnInfo', [xPos, yPos, zPos, h, spawnZone, parents])
@@ -96,6 +96,9 @@ class DistributedInstanceBaseAI(DistributedObjectAI):
         return self.spawnPts[area][index]
 
     def avatarDied(self):
+        pass
+
+    def setCanBePrivate(self, instance):
         pass
 
     def d_sendLocalAvatarToJail(self, avatarId, jailDoId, jailWorldParentId, jailWorldZone):

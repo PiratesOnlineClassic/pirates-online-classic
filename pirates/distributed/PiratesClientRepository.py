@@ -2,9 +2,7 @@ import gc
 import random
 import types
 
-from panda3d.core import *
-from panda3d.direct import *
-
+from pirates.distributed import PlayGame
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed import DistributedSmoothNode, DoInterestManager
 from direct.distributed.ClientRepositoryBase import ClientRepositoryBase
@@ -19,7 +17,6 @@ from direct.showbase.EventGroup import EventGroup
 from direct.showbase.PythonUtil import report
 from direct.showbase.ShowBaseGlobal import *
 from direct.task import Task
-
 from otp.distributed import DistributedDistrict, OtpDoGlobals, PotentialShard
 from otp.distributed.OTPClientRepository import OTPClientRepository
 from otp.distributed.PotentialAvatar import PotentialAvatar
@@ -28,10 +25,8 @@ from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
 from otp.uberdog.AccountDetailRecord import (AccountDetailRecord,
                                              SubDetailRecord)
-from otp.distributed.OtpDoGlobals import *
-from otp.nametag import NametagGlobals
-from otp.ai.MagicWordGlobal import *
-
+from panda3d.core import *
+from panda3d.direct import *
 from pirates.ai import NewsManager
 from pirates.band import DistributedBandMember
 from pirates.battle import (BattleManager, CombatAnimations,
@@ -42,7 +37,6 @@ from pirates.interact import InteractionManager
 from pirates.login.AvatarChooser import AvatarChooser
 from pirates.makeapirate import PCPickANamePattern
 from pirates.makeapirate.MakeAPirate import MakeAPirate
-from pirates.distributed import PlayGame
 from pirates.pirate import (AvatarTypes, DistributedPlayerPirate, Human,
                             HumanDNA, MasterHuman)
 from pirates.pirate.LocalPirate import LocalPirate
@@ -57,7 +51,8 @@ from pirates.reputation import ReputationGlobals
 from pirates.ship import DistributedShip
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.world import WorldGlobals
-
+from otp.distributed.OtpDoGlobals import *
+from otp.nametag import NametagGlobals
 
 want_fifothreads = base.config.GetBool('want-fifothreads', False)
 if want_fifothreads:
@@ -877,8 +872,3 @@ class PiratesClientRepository(OTPClientRepository):
                 tags.remove(oldTag)
                 tags.append(newTag)
                 base.cr.updateInterestDescription(handle, newTag)
-
-@magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def showDoId2do():
-    print (base.cr.doId2do)
-    return 'Printed the doId2do dictionary.'
