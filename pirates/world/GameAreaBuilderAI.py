@@ -68,12 +68,10 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         if index:
             index = int(index)
 
-        (x, y, z), objectParent = self.getObjectTruePosAndParent(objKey, parentUid, objectData)
+        x, y, z = objectData.get('Pos', (0, 0, 0))
         h, p, r = objectData.get('Hpr', (0, 0, 0))
 
         parent.addSpawnPt(self.parent.getUniqueId(), (x, y, z, h), index)
-
-        return None
 
     def __createBuildingExterior(self, parent, parentUid, objKey, objectData):
         from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
