@@ -27,7 +27,6 @@ class DistributedInteriorDoorAI(DistributedDoorBaseAI):
             return self.DENY
 
         exterior = self.air.doId2do.get(self.exteriorDoId)
-
         if not exterior:
             self.notify.warning('Cannot handle avatar %d interact for door %d, exterior %d not found!' % (
                 avatar.doId, self.doId, self.exteriorDoId))
