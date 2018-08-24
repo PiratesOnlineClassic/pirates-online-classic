@@ -186,7 +186,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
         zoneId = self.parent.getZoneFromXYZ(doorLocatorNode.getPos())
         self.parent.generateChildWithRequired(doorLocatorNode, zoneId)
-        self.parentObjectToCell(doorLocatorNode, zoneId)
         self.addObject(doorLocatorNode)
 
         return doorLocatorNode
