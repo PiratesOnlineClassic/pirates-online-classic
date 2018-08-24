@@ -199,14 +199,15 @@ class QuestManagerAI(DirectObject):
 
             return
 
-        del self.quests[avatar.doId][questDoId]
+        quest = self.quests[avatar.doId].pop(questDoId)
         quest.requestDelete()
+        del quest
 
     def dropQuests(self, avatar):
         if avatar.doId not in self.quests:
             return
 
-        for questDoId in self.quests[avatar.doId]:
+        for questDoId in list(self.quests[avatar.doId]):
             self.dropQuest(avatar, questDoId)
 
     def getQuest(self, avatar, questDoId=None, questId=None):
