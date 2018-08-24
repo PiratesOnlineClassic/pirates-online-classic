@@ -1,6 +1,8 @@
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
+from otp.distributed.OtpDoGlobals import *
+
 from pirates.world.WorldCreatorBase import WorldCreatorBase
 from pirates.piratesbase import PiratesGlobals
 from pirates.leveleditor import ObjectList
@@ -262,16 +264,20 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
     def __createWorldInstance(self, objectData, parent, parentUid, objKey, dynamic):
         worldName = objectData['Name']
 
-        if worldName == WorldGlobals.PiratesTutorialSceneFileBase:
+        if worldName == 'default':
+            self.world = DistributedMainWorldAI(self.air)
+        elif worldName == WorldGlobals.PiratesTutorialSceneFileBase:
             self.world = DistributedPiratesTutorialWorldAI(self.air)
         else:
-            self.world = DistributedMainWorldAI(self.air)
+            self.notify.warning('Failed to create world instance with unknown name: %s!' % (
+                worldName))
+
+            return
 
         self.world.setUniqueId(objKey)
         self.world.setName(worldName)
-        self.world.generateWithRequired(PiratesGlobals.InstanceUberZone)
+        self.world.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
         self.worldDict = objectData
         self.air.uidMgr.addUid(self.world.getUniqueId(), self.world.doId)
-
         return self.world
