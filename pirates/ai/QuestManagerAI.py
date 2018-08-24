@@ -206,7 +206,7 @@ class QuestManagerAI(DirectObject):
         if avatar.doId not in self.quests:
             return
 
-        for questDoId in self.quests[avatar]:
+        for questDoId in self.quests[avatar.doId]:
             self.dropQuest(avatar, questDoId)
 
     def getQuest(self, avatar, questDoId=None, questId=None):
