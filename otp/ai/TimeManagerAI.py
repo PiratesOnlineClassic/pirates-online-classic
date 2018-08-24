@@ -14,13 +14,11 @@ class TimeManagerAI(DistributedObjectAI):
     def setDisconnectReason(self, reason):
         avId = self.air.getAvatarIdFromSender()
         self.air.writeServerEvent('disconnect-reason', avId, reason)
-        self.air.disconnectReasons[avId] = reason;
+        self.air.disconnectReasons[avId] = reason
 
     def setExceptionInfo(self, exception):
         avId = self.air.getAvatarIdFromSender()
-        self.notify.warning("Got exception from %d!\n %s" % (avId, str(exception)))
         self.air.centralLogger.reportException('game-client', exception, True)
-        del exception
 
     def setSignature(self, signature, hash, pyc):
         pass #TODO: Log me?
