@@ -224,8 +224,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             self.notify.warning('Failed to give default quest for avatar: %d, '
                 'no inventory was found!' % self.doId)
 
-        questList = inventory.getQuestList()
-        if not questList:
+            return
+
+        activeQuests = inventory.getQuestList()
+        quests = inventory.getDoIdListCategory(InventoryCategory.QUESTS)
+        if not activeQuests and not quests:
             self.air.questMgr.createQuest(self, 'c2.4recoverOrders')
         else:
             self.air.questMgr.activateQuests(self)

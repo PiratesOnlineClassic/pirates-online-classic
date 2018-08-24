@@ -7,6 +7,7 @@ from otp.distributed.OtpDoGlobals import *
 from pirates.quest.DistributedQuestAI import DistributedQuestAI
 from pirates.quest.QuestTaskState import QuestTaskState
 from pirates.quest.QuestRewardStruct import QuestRewardStruct
+from pirates.uberdog.UberDogGlobals import InventoryCategory
 
 
 class QuestOperationFSM(FSM):
@@ -16,7 +17,6 @@ class QuestOperationFSM(FSM):
         FSM.__init__(self, self.__class__.__name__)
 
         self.air = air
-        self.questMgr = self.air.questMgr
         self.avatar = avatar
 
     def enterOff(self):
@@ -93,7 +93,7 @@ class ActivateQuestsFSM(QuestOperationFSM):
             self.cleanup()
             return
 
-        self.questList = inventory.getQuestList()
+        self.questList = self.inventory.getDoIdListCategory(InventoryCategory.QUESTS)
         for questDoId in self.questList:
 
             def queryQuestCallback(dclass, fields, questDoId=questDoId):
@@ -134,11 +134,20 @@ class QuestManagerAI(DirectObject):
         self.air = air
         self.quests = {}
 
-    def hasQuest(self, avatar, questDoId):
+    def hasQuest(self, avatar, questDoId=None, questId=None):
+        if not questDoId and not questId:
+            return False
+
         if avatar.doId not in self.quests:
             return False
 
-        return questDoId in self.quests[avatar.doId]
+        questList = self.quests[avatar.doId]
+        if questId is not None:
+            for quest in list(questList.values()):
+                if quest.questId == questId:
+                    return True
+
+        return questDoId in questList
 
     def activateQuest(self, avatar, questDoId, callback):
         activeQuests = self.quests.setdefault(avatar.doId, {})
@@ -148,7 +157,7 @@ class QuestManagerAI(DirectObject):
 
             return
 
-        def questArrivedCallback(quest, activeQuests=activeQuests):
+        def questArrivedCallback(quest):
             if not quest:
                 self.notify.warning('Failed to activate quest %d for avatar %d!' % (
                     questDoId, avatar.doId))
@@ -165,7 +174,7 @@ class QuestManagerAI(DirectObject):
 
             # store the new quest object to the dictionary of quest objects
             # so we can keep track of it for later use...
-            activeQuests[questDoId] = quest
+            self.quests[avatar.doId][quest.doId] = quest
 
             # finally, call the callback specified and let them know,
             # the quest has been activated...
@@ -192,16 +201,25 @@ class QuestManagerAI(DirectObject):
         for questDoId in self.quests[avatar]:
             self.dropQuest(avatar, questDoId)
 
-    def getQuest(self, avatar, questDoId):
+    def getQuest(self, avatar, questDoId=None, questId=None):
+        if not questDoId and not questId:
+            return None
+
         if avatar.doId not in self.quests:
             return None
 
-        return self.quests[avatar.doId].get(questDoId)
+        questList = self.quests[avatar.doId]
+        if questId is not None:
+            for quest in list(questList.values()):
+                if quest.questId == questId:
+                    return quest
+
+        return questList.get(questDoId)
 
     def createQuest(self, avatar, questId):
         fsm = CreateQuestFSM(self.air, avatar)
         fsm.request('Create', questId)
 
     def activateQuests(self, avatar):
-        fsm = CreateQuestFSM(self.air, avatar)
+        fsm = ActivateQuestsFSM(self.air, avatar)
         fsm.request('Activate')
