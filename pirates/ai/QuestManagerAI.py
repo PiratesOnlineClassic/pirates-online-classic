@@ -195,7 +195,7 @@ class QuestManagerAI(DirectObject):
         quest.requestDelete()
 
     def dropQuests(self, avatar):
-        if avatar not in self.quests:
+        if avatar.doId not in self.quests:
             return
 
         for questDoId in self.quests[avatar]:
