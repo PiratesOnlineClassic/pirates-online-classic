@@ -149,6 +149,10 @@ class QuestManagerAI(DirectObject):
 
         return questDoId in questList
 
+    def createQuest(self, avatar, questId):
+        fsm = CreateQuestFSM(self.air, avatar)
+        fsm.request('Create', questId)
+
     def activateQuest(self, avatar, questDoId, callback):
         activeQuests = self.quests.setdefault(avatar.doId, {})
         if questDoId in activeQuests:
@@ -184,6 +188,10 @@ class QuestManagerAI(DirectObject):
         self.air.sendActivate(questDoId, self.air.districtId, OTP_ZONE_ID_MANAGEMENT,
             self.air.dclassesByName['DistributedQuestAI'])
 
+    def activateQuests(self, avatar):
+        fsm = ActivateQuestsFSM(self.air, avatar)
+        fsm.request('Activate')
+
     def dropQuest(self, avatar, questDoId):
         if not self.hasQuest(avatar, questDoId):
             self.notify.warning('Cannot drop quest %d for avatar %d, '
@@ -215,11 +223,3 @@ class QuestManagerAI(DirectObject):
                     return quest
 
         return questList.get(questDoId)
-
-    def createQuest(self, avatar, questId):
-        fsm = CreateQuestFSM(self.air, avatar)
-        fsm.request('Create', questId)
-
-    def activateQuests(self, avatar):
-        fsm = ActivateQuestsFSM(self.air, avatar)
-        fsm.request('Activate')
