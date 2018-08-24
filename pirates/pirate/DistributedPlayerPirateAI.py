@@ -6,10 +6,12 @@ from pirates.quest.DistributedQuestAvatarAI import DistributedQuestAvatarAI
 from pirates.battle.BattleRandom import BattleRandom
 from pirates.pirate.PlayerPirateGameFSMAI import PlayerPirateGameFSMAI
 from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
+from pirates.quest.QuestStatus import QuestStatus
 from pirates.piratesbase import PLocalizer
 from pirates.piratesbase import PiratesGlobals
 from pirates.pirate import AvatarTypes
 from pirates.quest.QuestConstants import LocationIds
+from pirates.quest import QuestDB
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
@@ -18,6 +20,7 @@ from otp.ai.MagicWordGlobal import *
 from pirates.battle import WeaponGlobals
 from pirates.reputation import ReputationGlobals
 from pirates.battle.BattleSkillDiaryAI import BattleSkillDiaryAI
+
 
 class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNA, DistributedQuestAvatarAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
@@ -29,6 +32,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedQuestAvatarAI.__init__(self, air)
 
         self.gameFSM = PlayerPirateGameFSMAI(self.air, self)
+        self.questStatus = None
         self.isNpc = False
         self.battleRandom = None
 
@@ -153,6 +157,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def setInventoryId(self, inventoryId):
         self.inventoryId = inventoryId
 
+        if not self.questStatus:
+            self.questStatus = QuestStatus(self)
+
     def d_setInventoryId(self, inventoryId):
         self.sendUpdate('setInventoryId', [inventoryId])
 
@@ -210,6 +217,18 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def d_forceTeleportStart(self, instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone):
         self.sendUpdateToAvatarId(self.doId, 'forceTeleportStart', [instanceName, tzDoId, thDoId,
             worldGridDoId, tzParent, tzZone])
+
+    def giveDefaultQuest(self):
+        inventory = self.getInventory()
+        if not inventory:
+            self.notify.warning('Failed to give default quest for avatar: %d, '
+                'no inventory was found!' % self.doId)
+
+        questList = inventory.getQuestList()
+        if not questList:
+            self.air.questMgr.createQuest(self, 'c2.4recoverOrders')
+        else:
+            self.air.questMgr.activateQuests(self)
 
     def setReturnLocation(self, returnLocation):
         self.returnLocation = returnLocation

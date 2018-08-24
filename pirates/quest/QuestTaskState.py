@@ -2,10 +2,8 @@ from direct.showbase.PythonUtil import ParamObj
 
 
 class QuestTaskState(ParamObj):
-    
 
     class ParamSet(ParamObj.ParamSet):
-        
         Params = {'taskType': None, 'progress': 0, 'goal': 1, 'attempts': 0, 'enemyType': None, 'faction': None, 'hull': None, 'containersSearched': None}
 
     def acquire(self):

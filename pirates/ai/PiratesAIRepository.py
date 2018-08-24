@@ -16,6 +16,7 @@ from pirates.distributed.PiratesDistrictAI import PiratesDistrictAI
 from pirates.distributed.DistrictTrackerAI import DistrictTrackerAI
 from pirates.world import WorldGlobals
 from pirates.ai.NewsManagerAI import NewsManagerAI
+from pirates.ai.QuestManagerAI import QuestManagerAI
 from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 from pirates.distributed.DistributedPopulationTrackerAI import DistributedPopulationTrackerAI
 from pirates.instance.DistributedTeleportMgrAI import DistributedTeleportMgrAI
@@ -112,6 +113,8 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.newsManager = NewsManagerAI(self)
         self.newsManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+
+        self.questMgr = QuestManagerAI(self)
 
         self.friendManager = FriendManagerAI(self)
         self.friendManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)

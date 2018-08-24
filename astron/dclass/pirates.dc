@@ -762,9 +762,34 @@ struct AvatarType {
 };
 
 struct QuestTaskState {
-  uint16 attempts;
-  AvatarType enemyType;
-  AvatarType faction;
+  switch (uint16) {
+  case 1:
+    uint16 attempts;
+    break;
+  case 4:
+    uint16 attempts;
+    break;
+  case 10:
+    uint16 attempts;
+    break;
+  case 11:
+    uint16 attempts;
+    break;
+  case 17:
+    uint16 attempts;
+    break;
+  case 19:
+    AvatarType enemyType;
+    break;
+  case 20:
+    AvatarType faction;
+    uint8 hull;
+    break;
+  case 0:
+    break;
+  default:
+    break;
+  };
   uint16 progress;
   uint16 goal;
 };

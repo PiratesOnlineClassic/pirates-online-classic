@@ -62,3 +62,6 @@ class PirateInventoryAI(DistributedInventoryAI):
 
     def setShipList(self, shipList):
         return self.b_setDoIdListCategory(InventoryCategory.SHIPS, shipList)
+
+    def setQuestList(self, questList):
+        self.b_setDoIdListCategory(InventoryCategory.QUESTS, questList)

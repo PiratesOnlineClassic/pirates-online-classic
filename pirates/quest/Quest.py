@@ -9,7 +9,6 @@ from pirates.piratesbase import Freebooter
 
 
 class Quest(POD):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('Quest')
     DataSet = {'questId': None, 'giverId': None, 'combineOp': None, 'tasks': None, 'rewards': None, 'taskStates': []}
     SerialNum = 0
@@ -21,9 +20,9 @@ class Quest(POD):
         POD.__init__(self)
         if questId is not None:
             self.setupQuest(questId, giverId, initialTaskStates, rewards)
+
         self.__finished = False
         self.__finalized = False
-        return
 
     def destroy(self):
         del self.questDNA
@@ -50,7 +49,6 @@ class Quest(POD):
                 self.setTasks(self.questDNA.getTasks())
         else:
             self.questDNA = None
-        return
 
     def getQuestDNA(self):
         return self.questDNA
@@ -76,7 +74,6 @@ class Quest(POD):
                 taskState.release()
 
         messenger.send(self.getChangeEvent())
-        return
 
     def sendTaskStates(self, taskStates):
         self.setTaskStates(taskStates)
