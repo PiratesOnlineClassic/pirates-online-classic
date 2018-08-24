@@ -672,8 +672,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def delete(self):
         inventory = self.getInventory()
-
         if inventory:
+            self.air.questMgr.dropQuests(self)
             self.air.inventoryManager.removeInventory(inventory)
 
         if self.battleRandom:
