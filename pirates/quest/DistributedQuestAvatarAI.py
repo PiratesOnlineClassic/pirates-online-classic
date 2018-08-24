@@ -63,3 +63,19 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
 
     def getCurrentQuestChoiceContainers(self):
         return self.currentQuestChoiceContainers
+
+    def requestActiveQuest(self, activeQuest):
+        inventory = self.getInventory()
+        if not inventory:
+            self.notify.warning('Failed to set active quest %s for avatar %d, '
+                'no inventory found!' % (activeQuest, self.doId))
+
+            return
+
+        if not self.air.questMgr.hasQuest(self, questId=activeQuest):
+            self.notify.debug('Failed to set active quest %s for avatar %d, '
+                'quest not found in the avatar\'s questList!' % (activeQuest, self.doId))
+
+            return
+
+        self.b_setActiveQuest(activeQuest)
