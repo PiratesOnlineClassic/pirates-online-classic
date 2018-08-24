@@ -348,7 +348,6 @@ class PiratesClientRepository(OTPClientRepository):
         localAvatar.doId = avatarId
         self.localAvatarDoId = avatarId
         self.doId2do[avatarId] = localAvatar
-        self.doId2ownerView[avatarId] = localAvatar
         parentId = None
         zoneId = None
         localAvatar.generateInit()
@@ -655,10 +654,6 @@ class PiratesClientRepository(OTPClientRepository):
 
     def handleDelete(self, di):
         doId = di.getUint32()
-
-        if doId in self.doId2ownerView:
-            return
-
         self.deleteObject(doId)
 
     def deleteObject(self, doId, ownerView = False):
