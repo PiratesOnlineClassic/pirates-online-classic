@@ -1,6 +1,9 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.quest.QuestAvatarBase import QuestAvatarBase
+from pirates.quest import QuestTaskDNA
 from pirates.quest.QuestHolder import QuestHolder
+from pirates.quest.QuestPath import QuestStep
+
 
 class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedQuestAvatarAI')
@@ -102,3 +105,26 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
             return
 
         self.air.questMgr.dropQuest(self, activeQuest)
+
+    def requestQuestStep(self, questId):
+        inventory = self.getInventory()
+        if not inventory:
+            self.notify.warning('Failed to get step for quest %s for avatar %d, '
+                'no inventory found!' % (activeQuest, self.doId))
+
+            return
+
+        activeQuest = self.air.questMgr.getQuest(self, questId=questId)
+        if not activeQuest:
+            self.notify.debug('Failed to get step for quest %s for avatar %d, '
+                'quest not found in the avatar\'s questList!' % (activeQuest, self.doId))
+
+            return
+
+        if self.getActiveQuest() != questId:
+            return
+
+        #taskDNA = activeQuest.questDNA.getTaskDNAs()[0]
+        #goalUid = taskDNA.getGoalUid()
+        #print goalUid
+        #self.sendUpdate('setQuestStep', [[self.doId, 0, QuestStep.STItem, [0, 0, 0, 0], goalUid]])

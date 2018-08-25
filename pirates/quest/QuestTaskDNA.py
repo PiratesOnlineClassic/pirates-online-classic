@@ -17,7 +17,7 @@ from pirates.ship import ShipGlobals
 
 
 class QuestTaskDNA(POD):
-    
+
     notify = directNotify.newCategory('QuestTaskDNA')
     DataSet = {'location': LocationIds.ANY_LOCATION, 'autoTriggerInfo': tuple(), 'goalLocation': None}
 
@@ -157,7 +157,7 @@ class QuestTaskDNA(POD):
 
 
 class VisitTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'npcId': None}
 
     def handleNPCVisit(self, questEvent, taskState):
@@ -216,7 +216,7 @@ class VisitTaskDNA(QuestTaskDNA):
 
 
 class RecoverAvatarItemTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75, 'enemyType': AvatarTypes.AnyAvatar, 'level': 0}
 
     def getInitialTaskState(self, holder):
@@ -320,7 +320,7 @@ class RecoverAvatarItemTaskDNA(QuestTaskDNA):
 
 
 class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75, 'enemyType': AvatarTypes.AnyAvatar, 'level': 0, 'enemyList': (AvatarTypes.AnyAvatar,), 'enemyNames': ('', '')}
 
     def getInitialTaskState(self, holder):
@@ -429,7 +429,7 @@ class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
 
 
 class RecoverShipItemTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75, 'faction': None, 'hull': None, 'level': 0, 'isFlagship': False, 'level': 0}
 
     def getInitialTaskState(self, holder):
@@ -619,7 +619,7 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
 
 
 class RecoverContainerItemTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'containerId': PropIds.ANY_PROP, 'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75}
 
     def getInitialTaskState(self, holder):
@@ -719,7 +719,7 @@ class RecoverContainerItemTaskDNA(QuestTaskDNA):
 
 
 class DeliverItemTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'item': None, 'num': 1, 'npcId': None, 'location': None}
 
     def handleNPCVisit(self, questEvent, taskState):
@@ -808,7 +808,7 @@ class DeliverItemTaskDNA(QuestTaskDNA):
 
 
 class SmuggleItemTaskDNA(DeliverItemTaskDNA):
-    
+
 
     def getSCSummaryText(self, state):
         if self.npcId:
@@ -876,7 +876,7 @@ class SmuggleItemTaskDNA(DeliverItemTaskDNA):
 
 
 class MaroonNPCTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'npcId': None}
 
     def handleDockedAtPort(self, questEvent, taskState):
@@ -916,7 +916,7 @@ class MaroonNPCTaskDNA(QuestTaskDNA):
 
 
 class BribeNPCTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'npcId': None, 'gold': 1, 'bribeType': 0}
 
     def handleNPCBribe(self, questEvent, taskState):
@@ -976,7 +976,7 @@ class PurchaseItemTaskDNA(QuestTaskDNA):
     pass
 
 class PokerTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'gold': 1}
 
     def getInitialTaskState(self, holder):
@@ -1027,7 +1027,7 @@ class PokerTaskDNA(QuestTaskDNA):
 
 
 class BlackjackTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'gold': 1}
 
     def getInitialTaskState(self, holder):
@@ -1078,7 +1078,7 @@ class BlackjackTaskDNA(QuestTaskDNA):
 
 
 class RecoverTreasureItemTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'treasureId': TreasureIds.ANY_TREASURE, 'item': None, 'num': 1, 'maxAttempts': 4, 'probability': 0.75}
 
     def getInitialTaskState(self, holder):
@@ -1176,7 +1176,7 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
 
 
 class DefeatTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'enemyType': AvatarTypes.AnyAvatar, 'num': 1, 'level': 0, 'weaponType': None}
 
     def getInitialTaskState(self, holder):
@@ -1340,7 +1340,7 @@ class DefeatTaskDNA(QuestTaskDNA):
 
 
 class DefeatGroupTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'enemyList': (AvatarTypes.AnyAvatar,), 'num': 1, 'level': 0, 'weaponType': None, 'enemyNames': ('', '')}
 
     def getInitialTaskState(self, holder):
@@ -1470,7 +1470,7 @@ class DefeatGroupTaskDNA(QuestTaskDNA):
 
 
 class ShipPVPDefeatTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'enemyClass': None, 'num': None, 'damage': None, 'gameType': None, 'killType': None, 'killWeapon': None, 'damageWeapon': None, 'withoutSink': False}
 
     def getInitialTaskState(self, holder):
@@ -1709,7 +1709,7 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
 
 
 class DefeatNPCTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'npcId': None}
 
     def handleNPCDefeat(self, questEvent, taskState):
@@ -1746,7 +1746,7 @@ class DefeatNPCTaskDNA(QuestTaskDNA):
 
 
 class DefeatShipTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'faction': None, 'hull': None, 'level': 0, 'isFlagship': False, 'num': 1, 'level': 0}
 
     def getInitialTaskState(self, holder):
@@ -1960,7 +1960,7 @@ class DefeatShipTaskDNA(QuestTaskDNA):
 
 
 class RandomizedDefeatTaskDNA(DefeatTaskDNA):
-    
+
 
     def getInitialTaskState(self, holder):
         state = DefeatTaskDNA.getInitialTaskState(self, holder)
@@ -1992,7 +1992,7 @@ class RandomizedDefeatTaskDNA(DefeatTaskDNA):
 
 
 class RandomizedDefeatShipTaskDNA(DefeatShipTaskDNA):
-    
+
 
     def getInitialTaskState(self, holder):
         state = DefeatShipTaskDNA.getInitialTaskState(self, holder)
@@ -2041,7 +2041,6 @@ class RandomizedDefeatShipTaskDNA(DefeatShipTaskDNA):
 
 
 class ViewCutsceneTaskDNA(QuestTaskDNA):
-    
     DataSet = {'npcId': None, 'cutsceneId': None, 'dialogId': None, 'waitEvent': None}
 
     def handleStart(self, avId):
@@ -2113,7 +2112,7 @@ class ViewCutsceneTaskDNA(QuestTaskDNA):
 
 
 class CaptureShipNPCTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'npcId': None, 'maxAttempts': 2, 'probability': 0.9, 'faction': None, 'hull': None, 'level': 0, 'isFlagship': False, 'level': 0}
 
     def handleShipDefeat(self, questEvent, taskState):
@@ -2227,7 +2226,7 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
 
 
 class CaptureNPCTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'npcId': None, 'itemId': None}
 
     def getSCSummaryText(self, state):
@@ -2247,7 +2246,7 @@ class CaptureNPCTaskDNA(QuestTaskDNA):
 
 
 class BossBattleTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'treasureMapId': None}
 
     def handleBossBattleCompleted(self, questEvent, taskState):
@@ -2275,7 +2274,7 @@ class BossBattleTaskDNA(QuestTaskDNA):
 
 
 class DeployShipTaskDNA(QuestTaskDNA):
-    
+
     DataSet = {'location': None}
 
     def handleDeployedShip(self, questEvent, taskState):

@@ -144,6 +144,10 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         for doId in doIdList:
             self.doIds[doId] = category
 
+        for doId in list(self.doIds.keys()):
+            if self.doIds[doId] == category and doId not in doIdList:
+                del self.doIds[doId]
+
     def d_setDoIdListCategory(self, category, doIdList):
         self.d_setDoIds(self.getDoIds())
 

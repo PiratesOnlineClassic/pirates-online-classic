@@ -8,6 +8,9 @@ from otp.ai.MagicWordGlobal import *
 from pirates.quest.DistributedQuestAI import DistributedQuestAI
 from pirates.quest.QuestTaskState import QuestTaskState
 from pirates.quest.QuestRewardStruct import QuestRewardStruct
+from pirates.quest import QuestEvent
+from pirates.quest import QuestDB
+from pirates.npc.DistributedNPCTownfolkAI import DistributedNPCTownfolkAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory
 
 
@@ -215,7 +218,6 @@ class QuestManagerAI(DirectObject):
             self.notify.debug('Failed to drop quest %d for avatar %d, '
                 'no inventory found!' % (quest.doId, avatar.doId))
 
-            self.cleanup()
             return
 
         questList = inventory.getDoIdListCategory(InventoryCategory.QUESTS)
@@ -227,8 +229,8 @@ class QuestManagerAI(DirectObject):
 
         questList.remove(quest.doId)
         inventory.setQuestList(questList)
-        messenger.send(quest.getDroppedEventString())
         self.deactivateQuest(avatar, quest.doId)
+        messenger.send(quest.getDroppedEventString())
 
     def dropQuests(self, avatar):
         if avatar.doId not in self.quests:
@@ -251,6 +253,81 @@ class QuestManagerAI(DirectObject):
                     return quest
 
         return questList.get(questDoId)
+
+    def completeQuest(self, avatar, quest):
+        questInt = quest.questDNA.getQuestInt()
+        self.dropQuest(avatar, quest)
+
+        try:
+            nextQuestId = QuestDB.getQuestIdFromQuestInt(questInt + 1)
+        except KeyError:
+            return
+
+        self.createQuest(avatar, nextQuestId)
+
+    def __completeTaskState(self, avatar, questEvent, callback=None):
+        activeQuest = self.getQuest(avatar, questId=avatar.getActiveQuest())
+        if not activeQuest:
+            return
+
+        taskDNAs = activeQuest.questDNA.getTaskDNAs()
+        taskStates = activeQuest.getTaskStates()
+
+        # iterate through all of the task states and check to see if we
+        # have successfully completed one...
+        for x in xrange(len(taskStates)):
+            taskDNA = taskDNAs[x]
+            taskState = taskStates[x]
+
+            # check to see if the task state event has been completed.
+            if questEvent.applyTo(taskState, taskDNA):
+                taskDNA.complete(questEvent, taskState)
+                if taskState.isComplete():
+                    # TODO: implement rewards!
+                    if callback is not None:
+                        callback()
+                    else:
+                        self.completeQuest(avatar, activeQuest)
+
+                break
+
+    def enemyDefeated(self, avatar, enemy):
+        parentObj = avatar.getParentObj()
+        if not parentObj:
+            return
+
+        questEvent = QuestEvent.EnemyDefeated()
+        questEvent.setLocation(parentObj.getUniqueId())
+        questEvent.setEnemyType(enemy.getAvatarType())
+        questEvent.setLevel(enemy.getLevel())
+        questEvent.setWeaponType(enemy.getCurrentWeapon()[0])
+
+        self.__completeTaskState(avatar, questEvent)
+
+    def requestInteract(self, avatar, npc):
+        activeQuest = self.getQuest(avatar, questId=avatar.getActiveQuest())
+        if not activeQuest:
+            return
+
+        if isinstance(npc, DistributedNPCTownfolkAI):
+            questEvent = QuestEvent.NPCVisited()
+            questEvent.setNpcId(npc.getUniqueId())
+            questEvent.setAvId(avatar.doId)
+        else:
+            self.notify.warning('Avatar %d failed to request interact for npc %d, '
+                'invalid npc type!' % (avatar.doId, npc.doId))
+
+            return
+
+        def interactCallback():
+
+            def questFinalizeCallback():
+                self.completeQuest(avatar, activeQuest)
+
+            self.accept('quest-finalize-%d' % activeQuest.doId, questFinalizeCallback)
+            activeQuest.d_startFinalizeScene(0, 0)
+
+        self.__completeTaskState(avatar, questEvent, callback=interactCallback)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def addQuest(questId):

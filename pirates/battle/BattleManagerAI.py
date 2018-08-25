@@ -459,6 +459,9 @@ class BattleManagerAI(BattleManagerBase):
         inventory.setOverallRep(inventory.getOverallRep() + overallReputation)
         inventory.setGoldInPocket(inventory.getGoldInPocket() + goldReward)
 
+        # attempt to update the avatar's active task progress...
+        self.air.questMgr.enemyDefeated(attacker, target)
+
     def destroy(self):
         if self.__updateTask:
             taskMgr.remove(self.__updateTask)
