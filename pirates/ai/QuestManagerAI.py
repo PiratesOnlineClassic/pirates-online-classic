@@ -185,9 +185,9 @@ class QuestManagerAI(DirectObject):
         fsm = ActivateQuestsFSM(self.air, avatar)
         fsm.request('Activate')
 
-    def dropQuest(self, avatar, questDoId):
+    def deactivateQuest(self, avatar, questDoId):
         if not self.hasQuest(avatar, questDoId):
-            self.notify.warning('Cannot drop quest %d for avatar %d, '
+            self.notify.warning('Cannot drop deactivate %d for avatar %d, '
                 'quest never added!' % (questDoId, avatar.doId))
 
             return
@@ -195,6 +195,39 @@ class QuestManagerAI(DirectObject):
         quest = self.quests[avatar.doId].pop(questDoId)
         quest.requestDelete()
         del quest
+
+    def deactivateQuests(self, avatar):
+        if avatar.doId not in self.quests:
+            return
+
+        for questDoId in list(self.quests[avatar.doId]):
+            self.deactivateQuest(avatar, questDoId)
+
+    def dropQuest(self, avatar, questDoId):
+        if not self.hasQuest(avatar, questDoId):
+            self.notify.warning('Cannot drop quest %d for avatar %d, '
+                'quest never added!' % (questDoId, avatar.doId))
+
+            return
+
+        inventory = avatar.getInventory()
+        if not inventory:
+            self.notify.debug('Failed to drop quest %s for avatar %d, '
+                'no inventory found!' % (questId, avatar.doId))
+
+            self.cleanup()
+            return
+
+        questList = inventory.getDoIdListCategory(InventoryCategory.QUESTS)
+        if questDoId not in questList:
+            self.notify.warning('Cannot drop quest %d for avatar %d, '
+                'quest not found!' % (questDoId, avatar.doId))
+
+            return
+
+        self.deactivateQuest(avatar, questDoId)
+        questList.remove(questDoId)
+        inventory.setQuestList(questList)
 
     def dropQuests(self, avatar):
         if avatar.doId not in self.quests:
@@ -226,3 +259,18 @@ def addQuest(questId):
 
     simbase.air.questMgr.createQuest(invoker, questId)
     return 'Added new active quest: %s.' % questId
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
+def dropQuest(questId):
+    invoker = spellbook.getInvoker()
+    activeQuest = simbase.air.questMgr.getQuest(invoker, questId=questId)
+    if not activeQuest:
+        return 'Could not find active quest: %s' % questId
+
+    simbase.air.questMgr.dropQuest(invoker, activeQuest.doId)
+    return 'Dropped active quest: %s!' % questId
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def dropAllQuests():
+    simbase.air.questMgr.dropQuests(spellbook.getInvoker())
+    return 'Dropped all active quests.'
