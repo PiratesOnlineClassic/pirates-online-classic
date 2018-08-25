@@ -3,6 +3,7 @@ from direct.showbase.DirectObject import DirectObject
 from direct.fsm.FSM import FSM
 
 from otp.distributed.OtpDoGlobals import *
+from otp.ai.MagicWordGlobal import *
 
 from pirates.quest.DistributedQuestAI import DistributedQuestAI
 from pirates.quest.QuestTaskState import QuestTaskState
@@ -216,3 +217,12 @@ class QuestManagerAI(DirectObject):
                     return quest
 
         return questList.get(questDoId)
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
+def addQuest(questId):
+    invoker = spellbook.getInvoker()
+    if simbase.air.questMgr.hasQuest(invoker, questId=questId):
+        return 'Avatar already has active quest: %s!' % questId
+
+    simbase.air.questMgr.createQuest(invoker, questId)
+    return 'Added new active quest: %s.' % questId
