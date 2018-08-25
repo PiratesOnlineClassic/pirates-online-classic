@@ -282,22 +282,28 @@ class QuestManagerAI(DirectObject):
         taskDNAs = activeQuest.questDNA.getTaskDNAs()
         taskStates = activeQuest.getTaskStates()
 
+        taskDNA = None
+        taskState = None
+
         # iterate through all of the task states and check to see if we
         # have successfully completed one...
-        for x in xrange(len(taskStates)):
-            taskDNA = taskDNAs[x]
-            taskState = taskStates[x]
+        for index in xrange(len(taskStates)):
+            taskDNA = taskDNAs[index]
+            taskState = taskStates[index]
 
-            # check to see if the task state event has been completed.
             if questEvent.applyTo(taskState, taskDNA):
                 taskDNA.complete(questEvent, taskState)
-                if taskState.isComplete():
-                    if callback is not None:
-                        callback()
-                    else:
-                        self.completeQuest(avatar, activeQuest)
-
                 break
+
+        if not taskDNA and not taskState:
+            return
+
+        # check to see if the task state event has been completed.
+        if taskState.isComplete():
+            if callback is not None:
+                callback(taskDNA, taskState)
+            else:
+                self.completeQuest(avatar, activeQuest)
 
     def enemyDefeated(self, avatar, enemy):
         parentObj = avatar.getParentObj()
@@ -327,13 +333,25 @@ class QuestManagerAI(DirectObject):
 
             return
 
-        def interactCallback():
+        def interactCallback(taskDNA, taskState):
 
             def questFinalizeCallback():
                 self.completeQuest(avatar, activeQuest)
 
-            self.accept('quest-finalize-%d' % activeQuest.doId, questFinalizeCallback)
-            activeQuest.d_startFinalizeScene(0, 0)
+            taskStates = activeQuest.getTaskStates()
+            taskIndex = taskStates.index(taskState)
+
+            finalizeInfo = activeQuest.questDNA.getFinalizeInfo()[taskIndex]
+            finalizeType = finalizeInfo['type']
+
+            if finalizeType == 'cutscene':
+                self.accept('quest-finalize-%d' % activeQuest.doId, questFinalizeCallback)
+                activeQuest.d_startFinalizeScene(taskIndex, npc.doId)
+            else:
+                self.notify.warning('Failed to handle interact callback with npc %d for avatar %d '
+                    'with unknown finalizeType: %s!' % (npc.doId, avatar.doId, finalizeType))
+
+                return
 
         self.__completeTaskState(avatar, questEvent, callback=interactCallback)
 
