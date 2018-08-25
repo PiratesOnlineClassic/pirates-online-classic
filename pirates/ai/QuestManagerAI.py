@@ -203,38 +203,38 @@ class QuestManagerAI(DirectObject):
         for questDoId in list(self.quests[avatar.doId]):
             self.deactivateQuest(avatar, questDoId)
 
-    def dropQuest(self, avatar, questDoId):
-        if not self.hasQuest(avatar, questDoId):
+    def dropQuest(self, avatar, quest):
+        if not self.hasQuest(avatar, quest.doId):
             self.notify.warning('Cannot drop quest %d for avatar %d, '
-                'quest never added!' % (questDoId, avatar.doId))
+                'quest never added!' % (quest.doId, avatar.doId))
 
             return
 
         inventory = avatar.getInventory()
         if not inventory:
-            self.notify.debug('Failed to drop quest %s for avatar %d, '
-                'no inventory found!' % (questId, avatar.doId))
+            self.notify.debug('Failed to drop quest %d for avatar %d, '
+                'no inventory found!' % (quest.doId, avatar.doId))
 
             self.cleanup()
             return
 
         questList = inventory.getDoIdListCategory(InventoryCategory.QUESTS)
-        if questDoId not in questList:
+        if quest.doId not in questList:
             self.notify.warning('Cannot drop quest %d for avatar %d, '
-                'quest not found!' % (questDoId, avatar.doId))
+                'quest not found!' % (quest.doId, avatar.doId))
 
             return
 
-        self.deactivateQuest(avatar, questDoId)
-        questList.remove(questDoId)
+        self.deactivateQuest(avatar, quest.doId)
+        questList.remove(quest.doId)
         inventory.setQuestList(questList)
 
     def dropQuests(self, avatar):
         if avatar.doId not in self.quests:
             return
 
-        for questDoId in list(self.quests[avatar.doId]):
-            self.dropQuest(avatar, questDoId)
+        for quest in list(self.quests[avatar.doId].values()):
+            self.dropQuest(avatar, quest)
 
     def getQuest(self, avatar, questDoId=None, questId=None):
         if not questDoId and not questId:

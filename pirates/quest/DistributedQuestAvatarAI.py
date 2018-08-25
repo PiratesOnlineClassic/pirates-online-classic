@@ -101,4 +101,4 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
 
             return
 
-        self.air.questMgr.dropQuest(self, activeQuest.doId)
+        self.air.questMgr.dropQuest(self, activeQuest)
