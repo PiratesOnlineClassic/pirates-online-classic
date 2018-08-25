@@ -225,9 +225,10 @@ class QuestManagerAI(DirectObject):
 
             return
 
-        self.deactivateQuest(avatar, quest.doId)
         questList.remove(quest.doId)
         inventory.setQuestList(questList)
+        messenger.send(quest.getDroppedEventString())
+        self.deactivateQuest(avatar, quest.doId)
 
     def dropQuests(self, avatar):
         if avatar.doId not in self.quests:

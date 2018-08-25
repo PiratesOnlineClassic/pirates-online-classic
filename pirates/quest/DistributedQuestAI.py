@@ -91,3 +91,7 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
             return
 
         messenger.send('quest-finalize-%d' % self.doId)
+
+    def delete(self):
+        QuestBase.delete(self)
+        DistributedObjectAI.delete(self)
