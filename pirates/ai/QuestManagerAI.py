@@ -353,7 +353,7 @@ class QuestManagerAI(DirectObject):
                 activeQuest.d_startFinalizeScene(taskIndex, npc.doId)
             elif finalizeType == 'dialog':
                 self.acceptOnce('dialog-complete-%d' % activeQuest.doId, dialogFinalizeCallback)
-                npc.d_playDialogMovie(avatar.doId, finalizeType['sceneId'])
+                npc.d_playDialogMovie(avatar.doId, finalizeInfo['sceneId'])
             else:
                 self.notify.warning('Failed to handle interact callback with npc %d for avatar %d '
                     'with unknown finalizeType: %s!' % (npc.doId, avatar.doId, finalizeType))
