@@ -264,7 +264,7 @@ class QuestManagerAI(DirectObject):
 
         return questList.get(questDoId)
 
-    def completeQuest(self, avatar, quest, taskDNA, taskState):
+    def completeQuest(self, avatar, quest):
         path = QuestLadderDB.getFamePath(quest.questId)
         if not path:
             path = QuestLadderDB.getFortunePath(quest.questId)
@@ -330,7 +330,7 @@ class QuestManagerAI(DirectObject):
             if callback is not None:
                 callback(taskDNA, taskState)
             else:
-                self.completeQuest(avatar, activeQuest, taskDNA, taskState)
+                self.completeQuest(avatar, activeQuest)
 
     def enemyDefeated(self, avatar, enemy):
         parentObj = avatar.getParentObj()
@@ -363,11 +363,11 @@ class QuestManagerAI(DirectObject):
         def interactCallback(taskDNA, taskState):
 
             def cutsceneFinalizeCallback():
-                self.completeQuest(avatar, activeQuest, taskDNA, taskState)
+                self.completeQuest(avatar, activeQuest)
 
             def dialogFinalizeCallback():
                 # TODO: handle quest choices!
-                self.completeQuest(avatar, activeQuest, taskDNA, taskState)
+                self.completeQuest(avatar, activeQuest)
 
             taskStates = activeQuest.getTaskStates()
             taskIndex = taskStates.index(taskState)
