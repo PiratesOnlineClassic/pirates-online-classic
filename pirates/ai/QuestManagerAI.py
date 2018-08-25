@@ -63,7 +63,7 @@ class CreateQuestFSM(QuestOperationFSM):
 
                 # update the avatar's quest list so the quest will be stored in
                 # the database so we can retrieve and activate it later...
-                questList = self.inventory.getQuestList()
+                questList = self.inventory.getDoIdListCategory(InventoryCategory.QUESTS)
                 questList.append(questDoId)
                 self.inventory.setQuestList(questList)
 
