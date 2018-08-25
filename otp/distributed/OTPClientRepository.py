@@ -1606,20 +1606,16 @@ class OTPClientRepository(ClientRepositoryBase):
         paidStatus = base.config.GetString('force-paid-status', '')
         if not paidStatus:
             return self.__isPaid
+        elif paidStatus == 'paid':
+            return 1
+        elif paidStatus == 'unpaid':
+            return 0
+        elif paidStatus == 'FULL':
+            return OTPGlobals.AccessFull
+        elif paidStatus == 'VELVET':
+            return OTPGlobals.AccessVelvetRope
         else:
-            if paidStatus == 'paid':
-                return 1
-            else:
-                if paidStatus == 'unpaid':
-                    return 0
-                else:
-                    if paidStatus == 'FULL':
-                        return OTPGlobals.AccessFull
-                    else:
-                        if paidStatus == 'VELVET':
-                            return OTPGlobals.AccessVelvetRope
-                        else:
-                            return 0
+            return 0
 
     def setIsPaid(self, isPaid):
         self.__isPaid = isPaid
