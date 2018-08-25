@@ -10,6 +10,7 @@ from pirates.quest.QuestTaskState import QuestTaskState
 from pirates.quest.QuestRewardStruct import QuestRewardStruct
 from pirates.quest import QuestEvent
 from pirates.quest import QuestDB
+from pirates.quest import QuestLadderDB
 from pirates.npc.DistributedNPCTownfolkAI import DistributedNPCTownfolkAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory
 
@@ -263,16 +264,42 @@ class QuestManagerAI(DirectObject):
 
         return questList.get(questDoId)
 
-    def completeQuest(self, avatar, quest):
-        questInt = quest.questDNA.getQuestInt()
-        self.dropQuest(avatar, quest)
+    def completeQuest(self, avatar, quest, taskDNA, taskState):
+        path = QuestLadderDB.getFamePath(quest.questId)
+        if not path:
+            path = QuestLadderDB.getFortunePath(quest.questId)
 
-        try:
-            nextQuestId = QuestDB.getQuestIdFromQuestInt(questInt + 1)
-        except KeyError:
+        if not path:
+            self.notify.debug('Failed to complete quest %s for avatar %d, '
+                'no path found!' % (quest.getQuestId(), avatar.doId))
+
             return
 
-        self.createQuest(avatar, nextQuestId)
+        # TODO: handle multiple quest ladders...
+        containers = path[0].getContainers()
+        if not containers:
+            return
+
+        currentQuestIndex = None
+        for index in xrange(len(containers)):
+            questDNA = containers[index]
+            if questDNA.getQuestId() == quest.getQuestId():
+                currentQuestIndex = index
+                break
+
+        if not currentQuestIndex:
+            return
+
+        # get the next quest in the quest ladder DNA.
+        nextQuestDNA = containers[currentQuestIndex + 1]
+
+        # drop the avatar's previous quest and give them the new quest
+        # appropriate to their current quest path...
+        self.dropQuest(avatar, quest)
+        self.createQuest(avatar, nextQuestDNA.getQuestId())
+
+        # set the avatar's new quest as their current active quest.
+        avatar.b_setActiveQuest(nextQuestDNA.getQuestId())
 
     def __completeTaskState(self, avatar, questEvent, callback=None):
         activeQuest = self.getQuest(avatar, questId=avatar.getActiveQuest())
@@ -303,7 +330,7 @@ class QuestManagerAI(DirectObject):
             if callback is not None:
                 callback(taskDNA, taskState)
             else:
-                self.completeQuest(avatar, activeQuest)
+                self.completeQuest(avatar, activeQuest, taskDNA, taskState)
 
     def enemyDefeated(self, avatar, enemy):
         parentObj = avatar.getParentObj()
@@ -336,11 +363,11 @@ class QuestManagerAI(DirectObject):
         def interactCallback(taskDNA, taskState):
 
             def cutsceneFinalizeCallback():
-                self.completeQuest(avatar, activeQuest)
+                self.completeQuest(avatar, activeQuest, taskDNA, taskState)
 
             def dialogFinalizeCallback():
                 # TODO: handle quest choices!
-                self.completeQuest(avatar, activeQuest)
+                self.completeQuest(avatar, activeQuest, taskDNA, taskState)
 
             taskStates = activeQuest.getTaskStates()
             taskIndex = taskStates.index(taskState)
