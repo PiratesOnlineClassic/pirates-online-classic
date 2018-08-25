@@ -256,6 +256,10 @@ class LoadingScreen(DirectObject.DirectObject):
         self.wheel = self.model.find('**/red_wheel')
         self.title_art.append(self.model.find('**/title_bg'))
         self.title_art.append(self.model.find('**/title_frame'))
+        self.oLogo = self.model.find('**/banner_logo')
+        self.oSkull = self.model.find('**/skull')
+        self.oLogo.hide()
+        self.oSkull.hide()
         self.hideTitleFrame()
         if not waitForLocation:
             if self.snapshot is None:
