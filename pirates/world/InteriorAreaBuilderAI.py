@@ -64,7 +64,6 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
             return
 
         exteriorWorld = self.parent.getParentObj()
-
         if not exteriorWorld:
             self.notify.debug('Cannot create interior door %s, for exterior with no parent!' % (
                 objKey))
@@ -72,7 +71,6 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
             return
 
         exterior = exteriorDoor.getParentObj()
-
         if not exterior:
             self.notify.debug('Cannot create interior door %s, no exterior found!' % (
                 objKey))
@@ -87,6 +85,12 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         self.parent.generateChildWithRequired(doorLocatorNode, zoneId)
         exteriorDoor.setOtherDoor(doorLocatorNode)
         self.addObject(doorLocatorNode)
+
+        links = self.parent.getLinks()
+        links.append(['', doorLocatorNode.doId, '', self.parent.parentId, self.parent.zoneId, '',
+            exteriorWorld.parentId, exteriorWorld.zoneId])
+
+        self.parent.b_setLinks(links)
 
         return doorLocatorNode
 
