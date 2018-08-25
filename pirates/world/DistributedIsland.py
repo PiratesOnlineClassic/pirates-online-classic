@@ -342,10 +342,12 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.accept('ship_vis_change', self.shipVisibilityChanged)
             if base.cr.config.GetBool('want-island-barriers', False):
                 self.setupPlayerBarrier()
-            if not base.shipsVisibleFromIsland:
-                self.parentWorld.worldGrid.stopProcessVisibility()
-            else:
-                self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
+
+            # TODO FIXME!
+            #if not base.shipsVisibleFromIsland:
+            #    self.parentWorld.worldGrid.stopProcessVisibility()
+            #else:
+            #    self.parentWorld.worldGrid.startProcessVisibility(localAvatar)
 
             base.hideShipNametags = True
             messenger.send('hide-ship-nametags')
