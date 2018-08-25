@@ -135,19 +135,7 @@ class QuestManagerAI(DirectObject):
         self.quests = {}
 
     def hasQuest(self, avatar, questDoId=None, questId=None):
-        if not questDoId and not questId:
-            return False
-
-        if avatar.doId not in self.quests:
-            return False
-
-        questList = self.quests[avatar.doId]
-        if questId is not None:
-            for quest in list(questList.values()):
-                if quest.questId == questId:
-                    return True
-
-        return questDoId in questList
+        return self.getQuest(avatar, questDoId, questId) is not None
 
     def createQuest(self, avatar, questId):
         fsm = CreateQuestFSM(self.air, avatar)
