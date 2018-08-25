@@ -232,6 +232,7 @@ class SpawnNodeBase:
         zoneId = self.parent.getZoneFromXYZ(npc.getPos())
         self.parent.generateChildWithRequired(npc, zoneId)
         self.parent.builder.parentObjectToCell(npc, zoneId)
+        self.parent.builder.addObject(npc)
 
         npc.d_setInitZ(npc.getZ())
         npc.d_setSpawnIn()
