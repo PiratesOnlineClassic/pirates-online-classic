@@ -79,3 +79,26 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
             return
 
         self.b_setActiveQuest(activeQuest)
+
+    def requestDropQuest(self, questId):
+        inventory = self.getInventory()
+        if not inventory:
+            self.notify.warning('Failed to set active quest %s for avatar %d, '
+                'no inventory found!' % (activeQuest, self.doId))
+
+            return
+
+        activeQuest = self.air.questMgr.getQuest(self, questId=questId)
+        if not activeQuest:
+            self.notify.debug('Failed to drop active quest %s for avatar %d, '
+                'quest not found in the avatar\'s questList!' % (activeQuest, self.doId))
+
+            return
+
+        if not activeQuest.isDroppable():
+            self.notify.debug('Failed to drop active quest %s for avatar %d, '
+                'quest is not droppable!' % (activeQuest, self.doId))
+
+            return
+
+        self.air.questMgr.dropQuest(self, activeQuest.doId)
