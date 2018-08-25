@@ -35,6 +35,7 @@ from pirates.piratesbase import (Freebooter, PiratesGlobals, PLocalizer,
                                  TeamUtils, UserFunnel)
 from pirates.piratesgui import (CrewIconSelector, NamePanelGui,
                                 PiratesGuiGlobals)
+from otp.nametag.NametagConstants import CFQuicktalker, CFSpeech, CFTimeout
 from pirates.pvp import PVPGlobals
 from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
 from pirates.quest.QuestConstants import LocationIds
