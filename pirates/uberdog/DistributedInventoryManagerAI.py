@@ -67,9 +67,10 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         # check to see if the avatar already has an generated inventory
         # object; if so we don't want to generate another...
         inventory = self.getInventory(avatarId)
+
         if inventory:
-            self.notify.warning('Cannot regenerate an already existant inventory '
-                '%d for avatar %d!' % (inventory.doId, avatarId))
+            self.notify.warning('Cannot regenerate an already existant inventory %d for avatar %d!' % (
+                inventory.doId, avatarId))
 
             return
 
@@ -77,7 +78,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
     def initiateInventory(self, avatarId):
 
-        def queryResponseCallback(dclass, fields):
+        def queryResponse(dclass, fields):
             if not dclass or not fields:
                 self.notify.debug('Failed to query avatar %d!' % (
                     avatarId))
@@ -85,6 +86,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
                 return
 
             inventoryId, = fields.get('setInventoryId', (0,))
+
             if not inventoryId:
                 self.notify.warning('Avatar %d does not have an inventory!' % (
                     avatarId))
@@ -95,8 +97,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         self.air.dbInterface.queryObject(self.air.dbId,
             avatarId,
-            queryResponseCallback,
-            self.air.dclassesByName['DistributedPlayerPirateAI'])
+            callback=queryResponse,
+            dclass=self.air.dclassesByName['DistributedPlayerPirateAI'])
 
     def __waitForInventory(self, avatarId, inventoryId, task):
         inventory = self.inventories.get(inventoryId)
@@ -178,8 +180,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         self.air.dbInterface.queryObject(self.air.dbId,
             inventoryId,
-            inventoryResponseCalback,
-            self.air.dclassesByName['DistributedInventoryAI'])
+            callback=inventoryResponseCalback,
+            dclass=self.air.dclassesByName['DistributedInventoryAI'])
 
     def proccessCallbackResponse(self, callback, *args, **kwargs):
         if callback and callable(callback):
@@ -365,6 +367,7 @@ def maxWeapons():
 
     return "Failed to max Weapons"
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def gold(amount):
     invoker = spellbook.getInvoker()
@@ -372,12 +375,14 @@ def gold(amount):
     inventory.setGoldInPocket(inventory.getGoldInPocket() + amount)
     return 'Received Gold Amount %s | Current Gold Amount: %s' % (min(amount, 65000), inventory.getGoldInPocket())
 
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def removeGold(amount):
     invoker = spellbook.getInvoker()
     inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
     inventory.setGoldInPocket(inventory.getGoldInPocket() - min(amount, 65000))
     return 'Removed Gold Amount: %s' % amount
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def givePork():
