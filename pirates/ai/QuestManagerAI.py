@@ -95,6 +95,10 @@ class ActivateQuestsFSM(QuestOperationFSM):
 
         self.questList = self.inventory.getDoIdListCategory(InventoryCategory.QUESTS)
         for questDoId in self.questList:
+            # check to see if the quest object has already been generated,
+            # we do not want to regenerate the object over again...
+            if questDoId in self.air.doId2do:
+                continue
 
             def queryQuestCallback(dclass, fields, questDoId=questDoId):
                 if not dclass and not fields:
