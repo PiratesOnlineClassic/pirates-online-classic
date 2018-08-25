@@ -6,3 +6,9 @@ class DistributedQuestGiverAI(DistributedObjectAI):
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
+
+    def d_playDialogMovie(self, avatarId, dialogId):
+        self.sendUpdateToAvatarId(avatarId, 'playDialogMovie', [dialogId])
+
+    def dialogMovieComplete(self):
+        messenger.send('dialog-complete-%d' % self.doId)

@@ -35,25 +35,21 @@ def getContainer(name):
         if container:
             return container
 
-    return
-
 
 def __getPath(node, path, name):
     if isinstance(node, QuestDNA):
         if node.getQuestId() == name:
             return (True, path)
         else:
-            return (
-             False, path)
+            return (False, path)
+
     for ladder in node.getContainers():
         found, path = __getPath(ladder, path, name)
         if found:
             path.insert(0, ladder)
-            return (
-             found, path)
+            return (found, path)
 
-    return (
-     False, path)
+    return (False, path)
 
 
 def getFamePath(name):
