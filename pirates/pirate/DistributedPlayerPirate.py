@@ -1187,6 +1187,8 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
             self.setChatAbsolute(chatString, CFSpeech | CFQuicktalker | CFTimeout)
 
     def getAccess(self):
+        if not config.GetBool('want-membership', False):
+            return 2
         if Freebooter.AllAccessHoliday:
             return 2
         return self.getGameAccess()
