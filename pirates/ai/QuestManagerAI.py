@@ -227,8 +227,17 @@ class QuestManagerAI(DirectObject):
 
             return
 
+        # update the player's quest list on their inventory...
         questList.remove(quest.doId)
         inventory.setQuestList(questList)
+
+        # update the player's quest history so that we will not ever give
+        # the player the same quest again...
+        questHistory = avatar.getQuestHistory()
+        questHistory.append(quest.questDNA.getQuestInt())
+        avatar.b_setQuestHistory(questHistory)
+
+        # finally, deactivate the old quest.
         self.deactivateQuest(avatar, quest.doId)
         messenger.send(quest.getDroppedEventString())
 
@@ -283,7 +292,6 @@ class QuestManagerAI(DirectObject):
             if questEvent.applyTo(taskState, taskDNA):
                 taskDNA.complete(questEvent, taskState)
                 if taskState.isComplete():
-                    # TODO: implement rewards!
                     if callback is not None:
                         callback()
                     else:
