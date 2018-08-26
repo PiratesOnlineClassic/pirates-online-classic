@@ -291,7 +291,10 @@ class QuestManagerAI(DirectObject):
                 continue
 
             # get the next quest in the quest ladder DNA.
-            nextQuestDNA = containers[currentQuestIndex + 1]
+            try:
+                nextQuestDNA = containers[currentQuestIndex + 1]
+            except IndexError:
+                return
 
             # drop the avatar's previous quest and give them the new quest
             # appropriate to their current quest path...
