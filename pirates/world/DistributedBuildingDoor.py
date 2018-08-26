@@ -84,14 +84,14 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
         self.areaRequest = base.cr.relatedObjectMgr.requestObjects([interiorId],
             eachCallback=areaFinishedCallback)
 
-        base.cr.addTaggedInterest(worldId, worldZoneId, ['instanceInterest-Door'])
+        localAvatar.setInterest(worldId, worldZoneId, ['instanceInterest-Door'])
 
     def loadInteriorAreaFinished(self, interior, autoFadeIn):
         oldParent = self.getParentObj()
         oldWorld = oldParent.getParentObj()
         oldWorld.removeWorldInterest(oldParent)
-        base.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
-        base.cr.replaceTaggedInterestTag('instanceInterest-Door', 'instanceInterest')
+        localAvatar.clearInterestNamed(None, ['instanceInterest'])
+        localAvatar.replaceInterestTag('instanceInterest-Door', 'instanceInterest')
         world = interior.getParentObj()
         world.addWorldInterest(interior)
         self.setupOtherSideDoors()

@@ -298,8 +298,7 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
 
             @report(types=['frameCount'], dConfigParam='want-jail-report')
             def loadJailWorld():
-                self.cr.addTaggedInterest(jailWorldParentId, jailWorldZone, [
-                    'instanceInterest-Jail'])
+                localAvatar.setInterest(jailWorldParentId, jailWorldZone, ['instanceInterest-Jail'])
 
                 if self.pendingJail:
                     self.cr.relatedObjectMgr.abortRequest(self.pendingJail)
@@ -312,8 +311,8 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
                 self.pendingJail = None
                 if isinstance(currentWorld, DistributedInstanceBase):
                     currentWorld.removeWorldInterest()
-                    self.cr.clearTaggedInterestNamed(None, ['instanceInterest'])
-                    self.cr.replaceTaggedInterestTag('instanceInterest-Jail', 'instanceInterest')
+                    localAvatar.clearInterestNamed(None, ['instanceInterest'])
+                    localAvatar.replaceInterestTag('instanceInterest-Jail', 'instanceInterest')
 
                 world = jailArea.getParentObj()
                 world.addWorldInterest(jailArea)

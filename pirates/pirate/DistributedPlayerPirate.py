@@ -787,10 +787,10 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         return avIdList
 
     def setTutorialHandlerZone(self, zoneId):
-        self.cr.addTaggedInterest(base.cr.distributedDistrict.doId, zoneId, ['tutorialHandlerInterest'])
+        localAvatar.setInterest(base.cr.distributedDistrict.doId, zoneId, ['tutorialHandlerInterest'])
 
     def clearTutorialHandlerZone(self):
-        self.cr.clearTaggedInterestNamed(None, ['tutorialHandlerInterest'])
+        localAvatar.clearInterestNamed(None, ['tutorialHandlerInterest'])
 
     def sendClothingMessage(self, clothingId, colorId):
         localAvatar.guiMgr.messageStack.showLoot([], gold=0, collect=0, card=0, cloth=clothingId, color=colorId)

@@ -153,10 +153,8 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                     parentId = link[1]
                     zoneId = link[2]
                     connectorEvent = 'connector-%s' % connectorId
-                    self.acceptOnce(connectorEvent, self.reparentConnector, extraArgs = [
-                        connectorId])
-                    self.cr.addTaggedInterest(parentId, zoneId, [
-                        'Connectors-%s' % self.doId], connectorEvent)
+                    self.acceptOnce(connectorEvent, self.reparentConnector, extraArgs = [connectorId])
+                    localAvatar.setInterest(parentId, zoneId, ['Connectors-%s' % self.doId], connectorEvent)
                 else:
                     self.reparentConnector(connectorId)
 
@@ -168,8 +166,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 connector.turnOff()
 
         self.connectors = {}
-        self.cr.clearTaggedInterestNamed('connectorInterestCleared', [
-            'Connectors-%s' % self.doId])
+        localAvatar.clearInterestNamed('connectorInterestCleared', ['Connectors-%s' % self.doId])
         self.connectorInterests = set()
 
     @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])

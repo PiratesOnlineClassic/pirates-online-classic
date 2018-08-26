@@ -254,8 +254,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
             world.removeWorldInterest(area)
             worldEvent = 'unloadWorld-' + str(worldLocationId)
             self.acceptOnce(worldEvent, self.unloadWorldFinished, extraArgs = [self.pendingAreaUnload])
-            self.cr.clearTaggedInterestNamed(worldEvent, [
-                'instanceInterest'])
+            localAvatar.clearInterestNamed(worldEvent, ['instanceInterest'])
         else:
             self.notify.warning('no area to be removed for connector entry')
 
@@ -313,7 +312,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
 
     @report(types=['frameCount', 'args'], dConfigParam='want-connector-report')
     def setArea(self, worldLocationId, worldLocationZone, areaDoId, autoFadeIn = True):
-        self.cr.addTaggedInterest(worldLocationId, worldLocationZone, ['instanceInterest'])
+        localAvatar.setInterest(worldLocationId, worldLocationZone, ['instanceInterest'])
 
         @report(types=['frameCount'], dConfigParam='want-connector-report')
         def areaFinishedCallback(area):

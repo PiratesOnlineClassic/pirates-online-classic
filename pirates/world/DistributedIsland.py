@@ -270,7 +270,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.handleEnterGameArea()
             return
         elif level == 1:
-            self.cr.addTaggedInterest(self.doId, PiratesGlobals.IslandShipDeployerZone, [
+            localAvatar.setInterest(self.doId, PiratesGlobals.IslandShipDeployerZone, [
                 'ShipDeployer'])
 
             self.startVolcanoRestEffects()
@@ -315,7 +315,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             base.musicMgr.requestFadeOut(self.getMusicName())
             return
         elif level == 1:
-            self.cr.clearTaggedInterestNamed(None, ['ShipDeployer'])
+            localAvatar.clearInterestNamed(None, ['ShipDeployer'])
             self.stopVolcanoRestEffects()
             localAvatar.clearPort(self.doId)
             return

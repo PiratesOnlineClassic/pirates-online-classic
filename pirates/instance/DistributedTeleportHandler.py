@@ -85,8 +85,8 @@ class DistributedTeleportHandler(DistributedObject):
         s = MiniLogSentry(self.miniLog, 'teleportingObjAtDest', destParentId, destZoneId, callback.__name__, clearInterest)
         if clearInterest:
             leaveEvent = self.getRemoveInterestEventName()
-            numInterests = self.cr.clearTaggedInterestNamed(leaveEvent, ['instanceInterest', 'worldInterest'])
-            self.cr.clearTaggedInterestNamed(leaveEvent + 'Door', ['instanceInterest-Door'])
+            numInterests = localAvatar.clearInterestNamed(leaveEvent, ['instanceInterest', 'worldInterest'])
+            localAvatar.clearInterestNamed(leaveEvent + 'Door', ['instanceInterest-Door'])
             self.numInterestsCleared = 0
             if numInterests == 0:
                 callback(destZoneId, numInterests)
@@ -127,7 +127,7 @@ class DistributedTeleportHandler(DistributedObject):
             base.cr.distributedDistrict.worldCreator.loadObjectsFromFile(self.instanceWorldName,
                 base.cr.distributedDistrict)
 
-        self.cr.addTaggedInterest(instanceParent, instanceZone, ['worldInterest'])
+        localAvatar.setInterest(instanceParent, instanceZone, ['worldInterest'])
 
         def worldArrived(worldObj):
             s = MiniLogSentry(self.miniLog, 'worldArrived', worldObj)
@@ -153,7 +153,7 @@ class DistributedTeleportHandler(DistributedObject):
         self.acceptOnce(addEvent, self.teleportAddInterestDestComplete, extraArgs=[
             spawnDoId, spawnWorldGridDoId, worldName])
 
-        self.cr.addTaggedInterest(spawnParent, spawnZone, ['instanceInterest'], addEvent)
+        localAvatar.setInterest(spawnParent, spawnZone, ['instanceInterest'], addEvent)
 
     @report(types=['deltaStamp', 'args', 'printInterests'], prefix='------', dConfigParam='want-teleport-report')
     def teleportAddInterestDestComplete(self, spawnDoId, spawnWorldGridDoId, worldName):
@@ -234,7 +234,7 @@ class DistributedTeleportHandler(DistributedObject):
 
     def clearTZInterest(self):
         s = MiniLogSentry(self.miniLog, 'clearTZInterest')
-        self.cr.clearTaggedInterestNamed(None, ['TZInterest'])
+        localAvatar.clearInterestNamed(None, ['TZInterest'])
         if self.doneCallback:
             self.doneCallback(self.destInstance)
             self.doneCallback = None

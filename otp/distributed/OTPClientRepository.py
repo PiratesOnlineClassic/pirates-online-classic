@@ -2218,6 +2218,5 @@ class OTPClientRepository(ClientRepositoryBase):
     ITAG_WORLD = 'world'
     ITAG_GAME = 'game'
 
-    def addTaggedInterest(self, parentId, zoneId, mainTag,
-                          desc, otherTags=[], event=None):
+    def addTaggedInterest(self, parentId, zoneId, mainTag, desc, otherTags=[], event=None):
         return self.addInterest(parentId, zoneId, desc, event)

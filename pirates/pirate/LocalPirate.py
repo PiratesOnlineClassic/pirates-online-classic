@@ -81,6 +81,7 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         self.setLocalAvatarUsingWeapon(1)
         self.cameraFSM = CameraFSM(self)
         self.guiMgr = GuiManager.GuiManager(self)
+        self.interestHandles = []
         if base.config.GetBool('debug-local-animMixer', False):
             self.animMixer.setVerbose(True)
 
@@ -977,6 +978,58 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         return self.uniqueName('removeInterest')
 
     @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
+    def setInterest(self, parentId, zone, interestTags, event=None):
+        context = self.cr.addInterest(parentId, zone, interestTags[0], event)
+        if context:
+            self.notify.debug('adding interest %d: %d %d' % (context.asInt(), parentId, zone))
+            self.interestHandles.append([interestTags, context])
+            return
+
+        self.notify.warning('Tried to set interest when shard was closed')
+
+    @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
+    def clearInterest(self, event):
+        if len(self.interestHandles) > 0:
+            contextInfo = self.interestHandles[0]
+            self.notify.debug('removing interest %d' % contextInfo[1])
+            self.cr.removeInterest(contextInfo[1], event)
+            self.interestHandles.remove(contextInfo)
+
+    @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
+    def clearInterestNamed(self, callback, interestTags):
+        toBeRemoved = []
+        numInterests = 0
+        for currContext in self.interestHandles:
+            matchFound = False
+            for currTag in interestTags:
+                if currTag in currContext[0]:
+                    matchFound = True
+                    break
+
+            if matchFound:
+                context = currContext[1]
+                self.notify.debug('removing interest %s' % context)
+                self.cr.removeInterest(context, callback)
+                toBeRemoved.append(currContext)
+                numInterests += 1
+
+        for currToBeRemoved in toBeRemoved:
+            self.interestHandles.remove(currToBeRemoved)
+
+        if numInterests == 0 and callback:
+            messenger.send(callback)
+
+        return numInterests
+
+    @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
+    def replaceInterestTag(self, oldTag, newTag):
+        for tags, handle in self.interestHandles:
+            if oldTag in tags:
+                tags.remove(oldTag)
+                tags.append(newTag)
+                self.cr.updateInterestDescription(handle, newTag)
+
+    @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def b_setLocation(self, parentId, zoneId, teleport=0):
         self.d_setLocation(parentId, zoneId)
         self.setLocation(parentId, zoneId, teleport)
@@ -993,7 +1046,7 @@ class LocalPirate(LocalAvatar, DistributedPlayerPirate):
         self.notify.debug('teleportToShard %s,%s' % (shardId, zoneId))
         self.cr.loadingScreen.show()
         addEvent = self.getAddInterestEventName()
-        self.cr.addTaggedInterest(shardId, zoneId, ['instanceInterest'], addEvent)
+        self.setInterest(shardId, zoneId, ['instanceInterest'], addEvent)
         self.acceptOnce(addEvent, self.handleTeleportToShardDone, extraArgs = [shardId, zoneId, callbackEvent])
 
     @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
