@@ -46,8 +46,8 @@ class TeleportFSM(FSM):
 
     def __teleportHandlerCreatedCallback(self, teleportHandler):
         if not teleportHandler:
-            self.notify.warning('Failed to generate teleportHandler for avatar %d, while trying to teleport!' % (
-                self.avatar.doId))
+            self.notify.warning('Failed to generate teleportHandler for avatar %d, '
+                'while trying to teleport!' % self.avatar.doId)
 
             self.cleanup()
             return
@@ -98,8 +98,8 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
     def d_initiateTeleport(self, avatar, instanceType=None, instanceName=None, locationUid=None, spawnPt=None):
         if avatar.doId in self.avatar2fsm:
-            self.notify.warning('Cannot initiate teleport for avatar %d, already teleporting!' % (
-                avatar.doId))
+            self.notify.warning('Cannot initiate teleport for avatar %d, '
+                'already teleporting!' % avatar.doId)
 
             return
 
@@ -113,8 +113,8 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
         gameArea = avatar.getParentObj()
         if isinstance(gameArea, DistributedGameAreaAI) and gameArea.getUniqueId() == locationUid:
-            self.notify.warning('Cannot initiate teleport for %d, already there, locationUid=%s!' % (
-                avatar.doId, locationUid))
+            self.notify.warning('Cannot initiate teleport for %d, '
+                'already there, locationUid=%s!' % (avatar.doId, locationUid))
 
             return
 
@@ -124,15 +124,15 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             world = self.getWorld(instanceType, instanceName)
 
         if not world:
-            self.notify.warning('Cannot initiate teleport for unknown world: instanceType=%r instanceName=%r' % (
-                instanceType, instanceName))
+            self.notify.warning('Cannot initiate teleport for unknown world: '
+                'instanceType=%r instanceName=%r' % (instanceType, instanceName))
 
             return
 
         gameArea = self.air.uidMgr.justGetMeMeObject(locationUid)
         if not gameArea:
-            self.notify.warning('Cannot initiate teleport for unknown gameArea: locationUid=%r' % (
-                locationUid))
+            self.notify.warning('Cannot initiate teleport for unknown '
+                'gameArea: locationUid=%r' % locationUid)
 
             return
 
@@ -140,8 +140,8 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             spawnPt = world.getSpawnPt(gameArea.getUniqueId())
 
         if not spawnPt:
-            self.notify.warning('Cannot initiate teleport for avatar %d, no available spawn points for gameArea, '
-                'locationUid=%r!' % (avatar.doId, locationUid))
+            self.notify.warning('Cannot initiate teleport for avatar %d, no available spawn points '
+                'for gameArea, locationUid=%r!' % (avatar.doId, locationUid))
 
             return
 
@@ -150,7 +150,6 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
     def initiateTeleport(self, instanceType, fromInstanceType, shardId, locationUid, instanceDoId, instanceName, gameType, friendDoId, friendAreaDoId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             return
 
@@ -164,7 +163,6 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
     def requestTeleportToIsland(self, locationUid):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             return
 
@@ -182,4 +180,4 @@ def areaTeleport(areaUid):
     simbase.air.teleportMgr.d_initiateTeleport(spellbook.getTarget(),
         locationUid=areaUid)
 
-    return "Teleporting to area: %s." % areaUid
+    return 'Teleporting to area: %s.' % areaUid
