@@ -35,17 +35,24 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         if not parent:
             return
 
+        areaName = PLocalizer.LocationNames.get(objKey, '')
+        areaFile = objectData.get('File')
+        if not areaFile:
+            self.notify.warning('Cannot create island game area: %s with uniqueId: %s, '
+                'no area file found!' % (areaName, objKey))
+
+            return
+
         fileName = self.air.worldCreator.getObjectFilenameByUid(objKey)
 
         gameArea = DistributedGAInteriorAI(self.air)
         gameArea.setUniqueId(objKey)
-        gameArea.setName(PLocalizer.LocationNames.get(objKey, ''))
+        gameArea.setName(areaName)
         gameArea.setFileName(fileName)
         gameArea.setModelPath(objectData['Visual']['Model'])
-        gameArea.setScale(objectData.get('Scale', (1, 1, 1)))
 
         parent.generateChildWithRequired(gameArea, self.air.allocateZone())
-        self.addObject(gameArea)
+        parent.builder.addObject(gameArea)
         self.air.worldCreator.linkManager.registerLinkData(objKey)
 
         def createConnectorLocatorNode(objKey, objectData):
@@ -59,6 +66,8 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         for objKey, objectData in objectData.get('Objects', {}).iteritems():
             if objectData['Type'] == ObjectList.LOCATOR_NODE:
                 createConnectorLocatorNode(objKey, objectData)
+
+        self.air.worldCreator.loadObjectsFromFile(areaFile + '.py', gameArea)
 
         return gameArea
 

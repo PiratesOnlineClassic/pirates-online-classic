@@ -310,7 +310,7 @@ class EnemySpawnNode(SpawnNodeBase):
 
         #TODO: Better place to add this?
         drawnAnimSets = ['attention']
-        defaultDrawn = True if self.objectData['AnimSet'] in drawnAnimSets else False
+        defaultDrawn = True if self.objectData.get('AnimSet', '') in drawnAnimSets else False
         npc.setCurrentWeapon(random.choice(weapons), config.GetBool('want-enemy-weapons', defaultDrawn))
 
     def getNPCClass(self, avatarType):
