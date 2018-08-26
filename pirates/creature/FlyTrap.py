@@ -35,24 +35,6 @@ class FlyTrap(Creature):
         self.headNode = self.find('**/def_stem10')
 
     def generateCreature(self):
-        filePrefix = self.ModelInfo[1]
-        if loader.loadModel(filePrefix + '1000') != None:
-            hasLOD = True
-            self.setLODs()
-            self.loadModel(filePrefix + '2000', 'modelRoot', 'hi', copy=1)
-            self.loadModel(filePrefix + '1000', 'modelRoot', 'med', copy=1)
-            self.loadModel(filePrefix + '500', 'modelRoot', 'low', copy=1)
-        else:
-            hasLOD = False
-            self.loadModel(self.ModelInfo[0], copy=1)
+        Creature.generateCreature(self)
         self.getGeomNode().setH(180)
         self.setAvatarScale(0.7)
-        CreatureAnimDict = {}
-        for anim in self.AnimList:
-            CreatureAnimDict[anim[0]] = filePrefix + anim[1]
-
-        if hasLOD:
-            self.loadAnims(CreatureAnimDict, 'modelRoot', 'all')
-        else:
-            self.loadAnims(CreatureAnimDict)
-        return
