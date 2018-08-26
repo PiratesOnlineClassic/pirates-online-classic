@@ -275,31 +275,32 @@ class QuestManagerAI(DirectObject):
 
             return
 
-        # TODO: handle multiple quest ladders...
-        containers = path[0].getContainers()
-        if not containers:
-            return
+        for questLadder in path:
+            containers = questLadder.getContainers()
+            if not containers:
+                continue
 
-        currentQuestIndex = None
-        for index in xrange(len(containers)):
-            questDNA = containers[index]
-            if questDNA.getQuestId() == quest.getQuestId():
-                currentQuestIndex = index
-                break
+            currentQuestIndex = None
+            for index in xrange(len(containers)):
+                questDNA = containers[index]
+                if questDNA.getQuestId() == quest.getQuestId():
+                    currentQuestIndex = index
+                    break
 
-        if not currentQuestIndex:
-            return
+            if not currentQuestIndex:
+                continue
 
-        # get the next quest in the quest ladder DNA.
-        nextQuestDNA = containers[currentQuestIndex + 1]
+            # get the next quest in the quest ladder DNA.
+            nextQuestDNA = containers[currentQuestIndex + 1]
 
-        # drop the avatar's previous quest and give them the new quest
-        # appropriate to their current quest path...
-        self.dropQuest(avatar, quest)
-        self.createQuest(avatar, nextQuestDNA.getQuestId())
+            # drop the avatar's previous quest and give them the new quest
+            # appropriate to their current quest path...
+            self.dropQuest(avatar, quest)
+            self.createQuest(avatar, nextQuestDNA.getQuestId())
 
-        # set the avatar's new quest as their current active quest.
-        avatar.b_setActiveQuest(nextQuestDNA.getQuestId())
+            # set the avatar's new quest as their current active quest.
+            avatar.b_setActiveQuest(nextQuestDNA.getQuestId())
+            break
 
     def __completeTaskState(self, avatar, questEvent, callback=None):
         activeQuest = self.getQuest(avatar, questId=avatar.getActiveQuest())
