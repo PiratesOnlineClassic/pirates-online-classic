@@ -121,4 +121,3 @@ class Nametag(ClickablePopup):
             return
 
         self.icon.reparentTo(self.innerNP)
-        self.icon.setBin('fixed', 0)
