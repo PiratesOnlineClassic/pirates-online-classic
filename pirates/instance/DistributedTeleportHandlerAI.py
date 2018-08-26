@@ -65,7 +65,6 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
             gameArea.parentId, gameArea.zoneId])
 
         self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
-        avatar.b_setLocation(gameArea.doId, zoneId)
 
     def teleportToInstanceFinal(self, avatarId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
