@@ -16,12 +16,9 @@ class DistributedGameAreaAI(DistributedNodeAI):
         self.links = []
         self.uniqueId = ''
         self.name = PLocalizer.Unknown
+        self.fileName = ''
         self.jailInterior = None
         self.builder = GameAreaBuilderAI(self.air, self)
-
-    def generate(self):
-        DistributedNodeAI.generate(self)
-        self.air.worldCreator.linkManager.registerLinkData(self.uniqueId)
 
     def setModelPath(self, modelPath):
         self.modelPath = modelPath
@@ -74,6 +71,12 @@ class DistributedGameAreaAI(DistributedNodeAI):
 
     def getName(self):
         return self.name
+
+    def setFileName(self, fileName):
+        self.fileName = fileName
+
+    def getFileName(self):
+        return self.fileName
 
     def getLocalizerName(self):
         return PLocalizer.LocationNames.get(self.uniqueId, self.name)

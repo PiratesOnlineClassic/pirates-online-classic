@@ -86,6 +86,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         exteriorDoor.setOtherDoor(doorLocatorNode)
         self.addObject(doorLocatorNode)
 
+        # update the game area's links
         links = self.parent.getLinks()
         links.append(['', doorLocatorNode.doId, '', self.parent.parentId, self.parent.zoneId, '',
             exteriorWorld.parentId, exteriorWorld.zoneId])

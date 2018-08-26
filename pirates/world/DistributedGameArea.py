@@ -1,6 +1,4 @@
-import time
-
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.distributed import DistributedNode
 from direct.distributed import DistributedObject
 from direct.showbase.PythonUtil import Functor, report
@@ -22,12 +20,12 @@ from pandac.PandaModules import CollisionSphere
 from pandac.PandaModules import CollisionNode
 from pandac.PandaModules import CollisionHandlerEvent
 from pirates.quest.QuestConstants import LocationIds
+from pirates.chat.PiratesChatManager import PiratesChatManager
 from pirates.seapatch.SeaPatch import SeaPatch
 from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import IslandWaterParameters
 from pirates.swamp.Swamp import Swamp
-from pirates.ai import HolidayGlobals
-from otp.ai.MagicWordGlobal import *
+import time
 
 class DistributedGameArea(DistributedNode.DistributedNode):
     notify = directNotify.newCategory('DistributedGameArea')
@@ -142,9 +140,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 if connId in self.pendingSetupConnector:
                     request = self.pendingSetupConnector.pop(connId)
                     self.cr.relatedObjectMgr.abortRequest(request)
-
-                request = self.cr.relatedObjectMgr.requestObjects([
-                    connId], eachCallback = setupConnector)
+                request = self.cr.relatedObjectMgr.requestObjects([connId], eachCallback = setupConnector)
                 self.pendingSetupConnector[connId] = request
 
     @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
@@ -157,10 +153,12 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                     parentId = link[1]
                     zoneId = link[2]
                     connectorEvent = 'connector-%s' % connectorId
-                    self.acceptOnce(connectorEvent, self.reparentConnector, extraArgs = [connectorId])
-                    self.cr.addTaggedInterest(parentId, zoneId,['Connectors-%s' % self.doId], connectorEvent)
-
-                self.reparentConnector(connectorId)
+                    self.acceptOnce(connectorEvent, self.reparentConnector, extraArgs = [
+                        connectorId])
+                    self.cr.addTaggedInterest(parentId, zoneId, [
+                        'Connectors-%s' % self.doId], connectorEvent)
+                else:
+                    self.reparentConnector(connectorId)
 
     @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
     def unloadConnectors(self):
@@ -172,7 +170,6 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         self.connectors = {}
         self.cr.clearTaggedInterestNamed('connectorInterestCleared', [
             'Connectors-%s' % self.doId])
-
         self.connectorInterests = set()
 
     @report(types = ['frameCount', 'args'], dConfigParam = ['want-jail-report', 'want-teleport-report'])
@@ -207,8 +204,10 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         if loc == self.entryTime[0]:
             if self.entryTime[1] == 0:
                 self.entryTime[1] = time
+
             return
-        self.entryTime = [loc, time]
+        else:
+            self.entryTime = [loc, time]
 
     def readLocationTime(self):
         return self.entryTime[1]
@@ -226,9 +225,10 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         displayName = str(self.funnelDisplayName)
         timeSpent = int(time.time()) - int(self.readLocationTime())
         if int(self.timeCheck) + 1 == int(timeSpent) or int(self.timeCheck) - 1 == int(timeSpent) or int(self.timeCheck) == int(timeSpent):
-            return
-        self.cr.centralLogger.writeClientEvent('EXITING_AREA|%s|%d' % (displayName, timeSpent))
-        self.timeCheck = timeSpent
+            pass
+        else:
+            base.cr.centralLogger.writeClientEvent('EXITING_AREA|%s|%d' % (displayName, timeSpent))
+            self.timeCheck = timeSpent
 
     def displayGameAreaName(self, displayName):
         self.funnelDisplayName = displayName
@@ -270,15 +270,11 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             water.loadSeaPatchFile('out.spf')
             self.water = water
             self.initializeIslandWaterParameters()
-            self.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_DEFAULT)
+            base.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_DEFAULT)
         else:
             self.envEffects = EnvironmentEffects.EnvironmentEffects(self, self.modelPath)
             if interior:
                 self.cr.timeOfDayManager.request('NoLighting')
-
-            for holidayId in self.cr.newsManager.holidayIdList:
-                holidayName = HolidayGlobals.getHolidayName(holidayId)
-                self.envEffects.loadHolidayEffects(holidayName)
 
     def stopCustomEffects(self):
         if self.envEffects:
@@ -313,7 +309,8 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             objectSphereNode.addSolid(objectSphere)
             objectSphereNode.setIntoCollideMask(PiratesGlobals.WallBitmask)
             objectSphereNodePath = self.attachNewNode(objectSphereNode)
-            self.accept('enter' + objectName, self.handleEnterSphere, extraArgs = [spawnPtId])
+            self.accept('enter' + objectName, self.handleEnterSphere, extraArgs = [
+                spawnPtId])
             self.spawnTriggers.append(objectSphereNodePath)
 
     def handleEnterSphere(self, spawnPtId, entry):
@@ -324,7 +321,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
 
     def initBlockers(self, geom):
         self.disableBlockers = False
-        if base.config.GetBool('disable-blockers', False):
+        if base.config.GetBool('disable-blockers', 0):
             self.disableBlockers = True
 
         blockerColls = geom.findAllMatches('**/blocker_*')
@@ -337,7 +334,6 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 self.blockerColls.append(blockerColls[i])
                 if self.disableBlockers:
                     blockerColls[i].stash()
-
         if interior:
             self.accept('enterblocker_1_i', self.handleInteriorBlockerCollision)
         else:
@@ -377,6 +373,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             self.stashSpecificBlocker('blocker_0')
             if entry.getIntoNodePath().getName() != 'blocker_0':
                 localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.QuestStrings[questId]['blockerMessage'])
+
         else:
             self.stashAllBlockers()
 
@@ -402,7 +399,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         return (pt[0], pt[1], pt[2], 0)
 
     def _getTunnelSpawnPos(self, index = 0):
-        connectorNodes = self.findAllMatches('**/portal_exterior*') + self.findAllMatches('**/portal_interior*')
+        connectorNodes = self.findAllMatches('**/portal_exterior*').asList() + self.findAllMatches('**/portal_interior*').asList()
         return self.getRelativePoint(connectorNodes[index % len(connectorNodes)], Point3(40, 0, 0))
 
     def initializeIslandWaterParameters(self):
@@ -448,7 +445,6 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 island_water_parameters.water_color_texture = texture
                 if debug:
                     print 'WATER COLOR TEXTURE', texture
-
         elif debug:
             print '*** water_color NODE NOT FOUND'
 
@@ -484,7 +480,6 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 island_water_parameters.water_alpha_texture = texture
                 if debug:
                     print 'WATER ALPHA TEXTURE', texture
-
         elif debug:
             print '*** water_alpha NODE NOT FOUND'
 
@@ -529,7 +524,6 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 card_node_path.node().setBounds(OmniBoundingVolume())
                 card_node_path.node().setFinal(1)
                 card_node_path.reparentTo(render2d)
-
         else:
             model_alpha = None
         model = self.geom.find('**/water_color_swamp')
@@ -598,7 +592,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 island_water_parameters.swamp_color_b = b
                 x = 0.0
                 y = 1.0
-                speed = 3.2000000000000002
+                speed = 3.2
                 island_water_parameters.swamp_direction_x = x
                 island_water_parameters.swamp_direction_y = y
                 island_water_parameters.swamp_speed = speed
@@ -612,17 +606,3 @@ class DistributedGameArea(DistributedNode.DistributedNode):
 
     def getLevel(self):
         return 1
-
-@magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def visualizeGrid():
-    """
-    Enables visualize grid zones within a cartesian grid
-    """
-
-    parent = spellbook.getTarget().getParentObj()
-
-    if not parent or not isinstance(parent, DistributedGameArea):
-        return "You are not located under an cartesian grid object!"
-
-    parent.visualizeGrid()
-    return "Toggled visualize grid zones."

@@ -31,27 +31,34 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
     def __createGameArea(self, objectData, parent, parentUid, objKey, dynamic):
         from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 
+        parent = self.parent.getParentObj()
+        if not parent:
+            return
+
+        fileName = self.air.worldCreator.getObjectFilenameByUid(objKey)
+
         gameArea = DistributedGAInteriorAI(self.air)
         gameArea.setUniqueId(objKey)
         gameArea.setName(PLocalizer.LocationNames.get(objKey, ''))
+        gameArea.setFileName(fileName)
         gameArea.setModelPath(objectData['Visual']['Model'])
         gameArea.setScale(objectData.get('Scale', (1, 1, 1)))
 
-        self.parent.generateChildWithRequired(gameArea, self.air.allocateZone())
+        parent.generateChildWithRequired(gameArea, self.air.allocateZone())
         self.addObject(gameArea)
+        self.air.worldCreator.linkManager.registerLinkData(objKey)
 
-        objectData = self.air.worldCreator.getObjectDataByUid(objKey)
-        if not objectData:
-            return gameArea
+        def createConnectorLocatorNode(objKey, objectData):
+            locatorName = objectData.get('Name', '')
+            if 'interior' not in locatorName:
+                return
+
+            self.air.worldCreator.locatorManager.addLocator(
+                gameArea.getUniqueId(), objKey, objectData)
 
         for objKey, objectData in objectData.get('Objects', {}).iteritems():
             if objectData['Type'] == ObjectList.LOCATOR_NODE:
-                locatorName = objectData.get('Name', '')
-                if 'interior' not in locatorName:
-                    continue
-
-                self.air.worldCreator.locatorManager.addLocator(
-                   gameArea.getUniqueId(), objKey, objectData)
+                createConnectorLocatorNode(objKey, objectData)
 
         return gameArea
 

@@ -134,6 +134,7 @@ class ClientAreaBuilderAI(DirectObject):
         from pirates.world.DistributedIslandAI import DistributedIslandAI
 
         islandWorldData = self.air.worldCreator.getIslandWorldDataByUid(objKey)
+        fileName = self.air.worldCreator.getObjectFilenameByUid(objKey)
 
         (x, y, z) = islandWorldData.get('Pos', (0, 0, 0))
         (h, p, r) = islandWorldData.get('Hpr', (0, 0, 0))
@@ -141,6 +142,7 @@ class ClientAreaBuilderAI(DirectObject):
         island = DistributedIslandAI(self.air)
         island.setUniqueId(objKey)
         island.setName(PLocalizer.LocationNames.get(objKey, ''))
+        island.setFileName(fileName)
         island.setIslandTransform(x, y, z, h)
         island.setModelPath(islandWorldData['Visual']['Model'])
         island.setScale(objectData.get('Scale', (1, 1, 1)))
@@ -155,5 +157,6 @@ class ClientAreaBuilderAI(DirectObject):
 
         self.parent.generateChildWithRequired(island, PiratesGlobals.IslandAvailableZoneStart)
         self.addObject(island)
+        self.air.worldCreator.linkManager.registerLinkData(objKey)
 
         return island

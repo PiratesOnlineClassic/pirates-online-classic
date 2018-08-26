@@ -1,20 +1,17 @@
-from pirates.world import DistributedGAConnector
-from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import report
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.world import ClientArea
-
+from direct.interval.IntervalGlobal import *
+from direct.showbase.PythonUtil import report
+import DistributedGAConnector
 
 class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientArea.ClientArea):
-
     notify = directNotify.newCategory('DistributedGATunnel')
 
     def __init__(self, cr):
         DistributedGAConnector.DistributedGAConnector.__init__(self, cr, 'DistributedGATunnel')
         ClientArea.ClientArea.__init__(self)
-        self.loadSphere = [
-         None, None]
+        self.loadSphere = [ None, None]
         self.unloadSphere = None
         self.connectorNodes = ['portal_connector_1', 'portal_connector_2']
         self.ambientNames = [None, None]
@@ -26,7 +23,6 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
         self.loadedAreaDoId = 0
         self.floorNames = []
         self.quickLoadActive = False
-        return
 
     def generate(self):
         DistributedGAConnector.DistributedGAConnector.generate(self)
@@ -34,7 +30,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
 
     def announceGenerate(self):
         DistributedGAConnector.DistributedGAConnector.announceGenerate(self)
-        self.cr.distributedDistrict.worldCreator.loadObjectsByUid(self, self.uniqueId, dynamic=0)
+        self.cr.distributedDistrict.worldCreator.loadObjectsByUid(self, self.uniqueId, dynamic = 0)
         self.loadZoneObjects(-1)
         if len(self.GridLOD) > 0:
             self.geom.reparentTo(self.GridLOD[self.fakeZoneId].highLodNode)
@@ -47,6 +43,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
         if self.ownContext:
             self.cr.removeInterest(self.ownContext)
             self.ownContext = None
+
         for sphere in self.loadSphere:
             if sphere:
                 sphere.removeNode()
@@ -55,7 +52,6 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
         self.fadeoutAllAmbient()
         DistributedGAConnector.DistributedGAConnector.delete(self)
         ClientArea.ClientArea.delete(self)
-        return
 
     def loadModel(self):
         DistributedGAConnector.DistributedGAConnector.loadModel(self)
@@ -68,12 +64,14 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
         if self.avatarZoneContext:
             self.cr.removeInterest(self.avatarZoneContext)
             self.avatarZoneContext = None
-        return
 
     def setupCollisions(self):
         if self.floorNames == []:
             self.floorNames = [
-             'collision_floor_1', 'collision_floor_2', 'collision_floor_middle']
+                'collision_floor_1',
+                'collision_floor_2',
+                'collision_floor_middle']
+
         floors = []
         for i in range(len(self.floorNames)):
             floorName = self.floorNames[i]
@@ -90,24 +88,24 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
 
     def fadeOutAmbient(self, index):
         if self.ambientNames[index]:
-            base.ambientMgr.requestFadeOut(self.ambientNames[index], duration=0.01)
+            base.ambientMgr.requestFadeOut(self.ambientNames[index], duration = 0.01)
+
         if self.ambientNames[1 - index]:
-            base.ambientMgr.requestChangeVolume(self.ambientNames[1 - index], duration=0, finalVolume=0)
+            base.ambientMgr.requestChangeVolume(self.ambientNames[1 - index], duration = 0, finalVolume = 0)
 
     def fadeInAmbient(self, index):
         if self.ambientNames[index]:
-            base.ambientMgr.requestChangeVolume(self.ambientNames[index], duration=0.1, finalVolume=PiratesGlobals.DEFAULT_AMBIENT_VOLUME_NEAR)
+            base.ambientMgr.requestChangeVolume(self.ambientNames[index], duration = 0.1, finalVolume = PiratesGlobals.DEFAULT_AMBIENT_VOLUME_NEAR)
 
     @report(types=['frameCount', 'printInterests'], dConfigParam='want-connector-report')
     def __handleOnFloor(self, areaIndex, collEntry):
         if not collEntry or areaIndex in (0, 1) and not localAvatar.testTeleportFlag(PiratesGlobals.TFInTunnel):
             if not self.ownContext:
-                parent, zone = self.getLocation()
+                (parent, zone) = self.getLocation()
                 self.ownContext = self.cr.addInterest(parent, zone, 'tunnelSelfInterest')
 
             def enterTunnelFinished():
-                if localAvatar.getGameState() in ('EnterTunnel', 'Off', 'Dialog', 'Cutscene',
-                                                  'LandRoam'):
+                if localAvatar.getGameState() in ('EnterTunnel', 'Off', 'Dialog', 'Cutscene', 'LandRoam'):
                     localAvatar.b_setLocation(self.doId, 500)
                     self.floorIndex = 1 - areaIndex
                     self.unloadLoadedArea()
@@ -122,6 +120,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
                     self.notify.warning('***JCW*** Areas: %s, %s' % (self.areaUid[0], self.areaUid[1]))
                     self.notify.warning('***JCW*** Ignoring __handleOnFloor(%s) event' % areaIndex)
                     return
+
                 entranceNode = self.areaNode[areaIndex]
                 entryLocator = area.find('**/' + entranceNode + '*')
                 camera.wrtReparentTo(render)
@@ -131,10 +130,9 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
                 localAvatar.b_setGameState('EnterTunnel')
             else:
                 base.transitions.fadeOut(0.75, Func(enterTunnelFinished))
-        return
 
     @report(types=['frameCount', 'printInterests'], dConfigParam='want-connector-report')
-    def loadAreaFinished(self, area, autoFadeIn=True):
+    def loadAreaFinished(self, area, autoFadeIn = True):
 
         @report(types=['frameCount', 'printInterests'], dConfigParam='want-connector-report')
         def leaveTunnel():
@@ -147,6 +145,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
                 if localAvatar.style.tutorial == PiratesGlobals.TUT_KILLED_1_SKELETON:
                     localAvatar.setX(30)
                     localAvatar.setH(90)
+
             else:
                 localAvatar.setH(-90)
             localAvatar.wrtReparentTo(area)
@@ -162,7 +161,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
                 self.sendUpdate('sendLeaveTunnelDone')
             self.fadeInAmbient(self.floorIndex)
 
-        self.cr.setAllInterestsCompleteCallback(leaveTunnel)
+        base.cr.setAllInterestsCompleteCallback(leaveTunnel)
         transform = localAvatar.getTransform(self)
         DistributedGAConnector.DistributedGAConnector.loadAreaFinished(self, area, autoFadeIn)
         self.lastFloorTime = globalClock.getFrameTime()
@@ -185,7 +184,6 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
             if self.ownContext:
                 self.cr.removeInterest(self.ownContext)
                 self.ownContext = None
-        return
 
     def fadeoutAllAmbient(self):
         if self.lastFloor >= 0:
@@ -202,6 +200,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
         if area:
             parts = area.split('_')
             retval = base.ambientMgr.calcAmbientNameFromStr(parts[-1])
+
         return retval
 
     def calcAmbientNames(self):
@@ -215,10 +214,9 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
             self.notify.debug('Assuming self.ambientNames[1] = %s' % self.ambientNames[1])
 
     def quickLoadOtherSide(self):
-        self.cr.loadingScreen.show(waitForLocation=True)
+        base.cr.loadingScreen.show(waitForLocation = True)
         if self.floorIndex != -1:
             self.__handleOnFloor(self.floorIndex, None)
-        return
 
     @report(types=['frameCount'], dConfigParam='want-connector-report')
     def turnOn(self):

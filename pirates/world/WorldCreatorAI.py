@@ -19,28 +19,28 @@ class LinkManager(object):
         self.air = air
         self._linkData = linkData
 
+    @property
+    def linkData(self):
+        return self._linkData
+
     def addLinkData(self, parentUid, linkData):
         links = self._linkData.setdefault(parentUid, [])
-        if linkData in links:
-            return
-
         links.append(linkData)
 
     def removeLink(self, parentUid, linkData):
         if parentUid not in self._linkData:
-            return None
-
-        links = self._linkData[parentUid]
-        if linkData not in links:
             return
 
+        links = self._linkData[parentUid]
         links.remove(linkData)
 
     def getLinkData(self, linkUid):
-        for parentUid in self._linkData:
-            for linkData in self._linkData[parentUid]:
-                if linkUid in linkData:
-                    return linkData
+        for parentUid, links in list(self._linkData.items()):
+            for link in links:
+                if linkUid not in link:
+                    continue
+
+                return link
 
         return None
 
@@ -55,8 +55,8 @@ class LinkManager(object):
         return links[0]
 
     def registerLinkData(self, uniqueId):
-        filename = self.air.worldCreator.getObjectFilenameByUid(uniqueId)
-        fileData = self.air.worldCreator.openFile(filename)
+        gameArea = self.air.uidMgr.justGetMeMeObject(uniqueId)
+        fileData = self.air.worldCreator.openFile(gameArea.getFileName())
 
         for linkData in fileData.get(WorldDataGlobals.LINK_TYPE_LOC_NODE, []):
             self.addLinkData(uniqueId, linkData)
@@ -92,13 +92,13 @@ class LocatorManager(object):
         self._locators = locators
         self._callbacks = {}
 
+    @property
+    def locators(self):
+        return self._locators
+
     def addLocator(self, parentUid, uniqueId, objectData):
         locators = self._locators.setdefault(parentUid, {})
-        if uniqueId in locators:
-            return
-
-        locator = Locator(parentUid, uniqueId, objectData)
-        locators[uniqueId] = locator
+        locators[uniqueId] = Locator(parentUid, uniqueId, objectData)
 
         if uniqueId in self._callbacks:
             self._callbacks[uniqueId]()
@@ -116,6 +116,12 @@ class LocatorManager(object):
                 return locators[uniqueId]
 
         return None
+
+    def getLocators(self, parentUid):
+        if parentUid not in self._locators:
+            return []
+
+        return self._locators[parentUid]
 
     def addLocatorCallback(self, uniqueId, function, *args, **kwargs):
         if uniqueId in self._callbacks:
@@ -149,24 +155,45 @@ class ConnectorManager(object):
     def __init__(self, air, connectors={}):
         self.air = air
         self._connectors = connectors
+        self._callbacks = {}
+
+    @property
+    def connectors(self):
+        return self._connectors
+
+    def hasConnector(self, parentUid, uniqueId):
+        return self.getConnector(parentUid, uniqueId) is not None
 
     def addConnector(self, parentUid, uniqueId, objectData):
         if uniqueId in self._connectors:
             return
 
-        connector = Connector(self.air, parentUid,
-            uniqueId, objectData)
+        connectors = self._connectors.setdefault(parentUid, {})
+        connectors[uniqueId] = Connector(self.air, parentUid, uniqueId, objectData)
 
-        self._connectors[uniqueId] = connector
+        if uniqueId in self._callbacks:
+            self._callbacks[uniqueId]()
 
-    def removeConnector(self, uniqueId):
-        if uniqueId not in self._connectors:
+    def removeConnector(self, parentUid, uniqueId):
+        if parentUid not in self._connectors:
             return
 
-        del self._connectors[uniqueId]
+        if uniqueId not in self._connectors[parentUid]:
+            return
 
-    def getConnector(self, uniqueId):
-        return self._connectors.get(uniqueId)
+        del self._connectors[parentUid][uniqueId]
+
+    def getConnector(self, parentUid, uniqueId):
+        if parentUid not in self._connectors:
+            return None
+
+        return self._connectors[parentUid].get(uniqueId)
+
+    def addConnectorCallback(self, uniqueId, function, *args, **kwargs):
+        if uniqueId in self._callbacks:
+            return
+
+        self._callbacks[uniqueId] = lambda: function(*args, **kwargs)
 
 class WorldCreatorAI(WorldCreatorBase, DirectObject):
     notify = directNotify.newCategory('WorldCreatorAI')
@@ -233,6 +260,9 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
     def getObjectFilenameByUid(self, objKey, getParentUid=True):
         file = None
         for fileName in self.fileDicts.keys():
+            if WorldGlobals.PiratesWorldSceneFileBase in fileName:
+                continue
+
             found = self.getObjectDataFromFileByUid(objKey, fileName)
             if found:
                 file = fileName
@@ -280,4 +310,5 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
 
         self.worldDict = objectData
         self.air.uidMgr.addUid(self.world.getUniqueId(), self.world.doId)
+
         return self.world

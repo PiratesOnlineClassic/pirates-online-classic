@@ -1,8 +1,12 @@
-from direct.distributed.DistributedObjectAI import DistributedObjectAI
+from pirates.world.DistributedGAConnectorAI import DistributedGAConnectorAI
 from direct.directnotify import DirectNotifyGlobal
 
-class DistributedGATunnelAI(DistributedObjectAI):
+
+class DistributedGATunnelAI(DistributedGAConnectorAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGATunnelAI')
 
     def __init__(self, air):
-        DistributedObjectAI.__init__(self, air)
+        DistributedGAConnectorAI.__init__(self, air)
+
+    def sendLeaveTunnelDone(self):
+        pass

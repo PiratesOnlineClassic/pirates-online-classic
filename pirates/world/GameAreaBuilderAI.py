@@ -53,7 +53,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 
         parent = self.parent.getParentObj()
-
         if isinstance(parent, DistributedGameAreaAI):
             parent = parent.getParentObj()
 
@@ -199,33 +198,119 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             parentUid, objKey, objectData)
 
     def __createConnectorTunnel(self, parent, parentUid, objKey, objectData):
-        self.air.worldCreator.connectorManager.addConnector(
-            parentUid, objKey, objectData)
+        from pirates.world.DistributedGATunnelAI import DistributedGATunnelAI
 
-        for otherObjKey, otherObjectData in objectData.get('Objects', {}).iteritems():
-            if otherObjectData['Type'] == ObjectList.LOCATOR_NODE:
-                locatorName = otherObjectData.get('Name', '')
-                if 'connector' not in locatorName:
-                    continue
+        modelPath = objectData.get('Visual', {}).get('Model', '')
+        if not modelPath:
+            self.notify.warning('Failed to generate connector tunnel %s, '
+                'no model path found!' % objKey)
 
-                self.air.worldCreator.locatorManager.addLocator(
-                    parentUid, otherObjKey, otherObjectData)
+            return
 
-                otherLinkUid = self.air.worldCreator.linkManager.getOtherLinkUid(
-                    otherObjKey)
+        objects = objectData.get('Objects', {})
+        if not objects:
+            return
 
-                if not otherLinkUid:
-                    continue
+        def createConnectorLocatorNode(objKey, objectData):
+            locatorName = objectData.get('Name', '')
+            if 'connector' not in locatorName:
+                return
 
-                otherLinkData = self.air.worldCreator.locatorManager.getLocator(
-                    otherLinkUid)
+            otherLinkUid = self.air.worldCreator.linkManager.getOtherLinkUid(objKey)
+            if not otherLinkUid:
+                return
 
-                if not otherLinkData:
-                    self.air.worldCreator.locatorManager.addLocatorCallback(otherObjKey,
-                        self.__createConnectorTunnel,
-                        parent, parentUid, objKey, objectData)
+            otherLocator = self.air.worldCreator.locatorManager.getLocator(otherLinkUid)
+            if not otherLocator:
+                self.air.worldCreator.locatorManager.addLocatorCallback(otherLinkUid,
+                    createConnectorLocatorNode, objKey, objectData)
 
-                    continue
+                return
+
+            otherLocatorData = otherLocator.objectData
+            if not otherLocatorData:
+                return
+
+            gameArea = self.air.uidMgr.justGetMeMeObject(otherLocator.parentUid)
+            if not gameArea:
+                return
+
+            instance = parent.getParentObj()
+            if not instance:
+                return
+
+            self.air.worldCreator.connectorManager.addConnector(
+                parentUid, objKey, objectData)
+
+            locatorNode = DistributedGATunnelAI(self.air)
+            locatorNode.setUniqueId(objKey)
+            locatorNode.setModelPath(modelPath)
+            locatorNode.setName(objectData['Name'])
+            locatorNode.setNodeName(otherLocatorData['Name'])
+
+            # get the other connectors UID which is located on the other
+            # side or the other game area...
+            connectorUids = objects.keys()
+            if connectorUids.index(objKey) == 0:
+                locatorNode.setOtherLinkUid(connectorUids[1])
+            else:
+                locatorNode.setOtherLinkUid(connectorUids[0])
+
+            locatorNode.setPos(objectData.get('Pos', (0, 0, 0)))
+            locatorNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
+            locatorNode.setScale(objectData.get('Scale', (1, 1, 1)))
+
+            zoneId = gameArea.getZoneFromXYZ(locatorNode.getPos())
+            gameArea.generateChildWithRequired(locatorNode, zoneId)
+            gameArea.builder.addObject(locatorNode)
+
+            # update the game area's links
+            links = gameArea.getLinks()
+            links.append(['', locatorNode.doId, '', locatorNode.parentId, locatorNode.zoneId, '', 0, 0])
+            gameArea.b_setLinks(links)
+
+            # update our locator node's links
+            isExterior, exteriorUid, links = locatorNode.getLinks()
+            links.append([locatorNode.getName(), gameArea.doId, gameArea.getUniqueId(), 0, 0,
+                locatorNode.getNodeName(), instance.doId, gameArea.zoneId])
+
+            locatorNode.b_setLinks('exterior' in locatorNode.getNodeName(), gameArea.getUniqueId(), links)
+
+        def linkOtherLocatorNode(locatorNode, otherLocatorNode):
+            gameArea = otherLocatorNode.getParentObj()
+            if not gameArea:
+                return
+
+            instance = gameArea.getParentObj()
+            if not instance:
+                return
+
+            # update our locator node's links
+            isExterior, exteriorUid, links = locatorNode.getLinks()
+            links.append([otherLocatorNode.getName(), gameArea.doId, gameArea.getUniqueId(), 0, 0,
+                otherLocatorNode.getNodeName(), instance.doId, gameArea.zoneId])
+
+            locatorNode.b_setLinks('exterior' in otherLocatorNode.getNodeName(), gameArea.getUniqueId(), links)
+
+        def locatorNodeArrivedCallback(doId):
+            locatorNode = self.air.doId2do.get(doId)
+            if not locatorNode:
+                return
+
+            otherLocatorNode = self.air.uidMgr.justGetMeMeObject(
+                locatorNode.getOtherLinkUid())
+
+            if not otherLocatorNode:
+                return
+
+            # this locator node has finally arrived, attempt to link it...
+            linkOtherLocatorNode(locatorNode, otherLocatorNode)
+            linkOtherLocatorNode(otherLocatorNode, locatorNode)
+
+        for objKey, objectData in objects.iteritems():
+            if objectData['Type'] == ObjectList.LOCATOR_NODE:
+                self.air.uidMgr.addUidCallback(objKey, locatorNodeArrivedCallback)
+                createConnectorLocatorNode(objKey, objectData)
 
     def __createSearchableContainer(self, parent, parentUid, objKey, objectData):
         container = DistributedSearchableContainerAI(self.air)
