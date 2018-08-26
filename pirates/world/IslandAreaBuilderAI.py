@@ -43,12 +43,10 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
 
             return
 
-        fileName = self.air.worldCreator.getObjectFilenameByUid(objKey)
-
         gameArea = DistributedGAInteriorAI(self.air)
         gameArea.setUniqueId(objKey)
         gameArea.setName(areaName)
-        gameArea.setFileName(fileName)
+        gameArea.setFileName(areaFile)
         gameArea.setModelPath(objectData['Visual']['Model'])
 
         parent.generateChildWithRequired(gameArea, self.air.allocateZone())

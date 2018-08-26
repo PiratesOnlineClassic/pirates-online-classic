@@ -14,13 +14,13 @@ from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 
 class TeleportFSM(FSM):
 
-    def __init__(self, air, avatar, world, island, spawnPt):
+    def __init__(self, air, avatar, world, gameArea, spawnPt):
         FSM.__init__(self, 'TeleportFSM')
 
         self.air = air
         self.avatar = avatar
         self.world = world
-        self.island = island
+        self.gameArea = gameArea
         self.spawnPt = spawnPt
 
         self.teleportZone = None
@@ -52,8 +52,8 @@ class TeleportFSM(FSM):
             self.cleanup()
             return
 
-        self.avatar.d_forceTeleportStart(self.world.getFileName(), self.teleportZone.doId, self.teleportHandler.doId, 0,
-            self.teleportZone.parentId, self.teleportZone.zoneId)
+        self.avatar.d_forceTeleportStart(self.world.getFileName(), self.teleportZone.doId,
+            self.teleportHandler.doId, 0, self.teleportZone.parentId, self.teleportZone.zoneId)
 
     def __avatarExited(self):
         self.cleanup()
@@ -111,16 +111,15 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         if returnLocation and not currentIsland:
             locationUid = returnLocation
 
-        island = avatar.getParentObj()
-
-        if isinstance(island, DistributedGameAreaAI) and island.getUniqueId() == locationUid:
+        gameArea = avatar.getParentObj()
+        if isinstance(gameArea, DistributedGameAreaAI) and gameArea.getUniqueId() == locationUid:
             self.notify.warning('Cannot initiate teleport for %d, already there, locationUid=%s!' % (
                 avatar.doId, locationUid))
 
             return
 
         if not instanceType and not instanceName:
-            world = island.getParentObj()
+            world = gameArea.getParentObj()
         else:
             world = self.getWorld(instanceType, instanceName)
 
@@ -130,24 +129,23 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
             return
 
-        island = self.air.uidMgr.justGetMeMeObject(locationUid)
-
-        if not island:
-            self.notify.warning('Cannot initiate teleport for unknown island: locationUid=%r' % (
+        gameArea = self.air.uidMgr.justGetMeMeObject(locationUid)
+        if not gameArea:
+            self.notify.warning('Cannot initiate teleport for unknown gameArea: locationUid=%r' % (
                 locationUid))
 
             return
 
         if not spawnPt:
-            spawnPt = world.getSpawnPt(island.getUniqueId())
+            spawnPt = world.getSpawnPt(gameArea.getUniqueId())
 
         if not spawnPt:
-            self.notify.warning('Cannot initiate teleport for avatar %d, no available spawn points for island, '
+            self.notify.warning('Cannot initiate teleport for avatar %d, no available spawn points for gameArea, '
                 'locationUid=%r!' % (avatar.doId, locationUid))
 
             return
 
-        self.avatar2fsm[avatar.doId] = TeleportFSM(self.air, avatar, world, island, spawnPt)
+        self.avatar2fsm[avatar.doId] = TeleportFSM(self.air, avatar, world, gameArea, spawnPt)
         self.avatar2fsm[avatar.doId].request('Start')
 
     def initiateTeleport(self, instanceType, fromInstanceType, shardId, locationUid, instanceDoId, instanceName, gameType, friendDoId, friendAreaDoId):

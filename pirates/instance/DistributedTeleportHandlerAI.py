@@ -31,11 +31,11 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
             return
 
         world = self.teleportFsm.world
-        island = self.teleportFsm.island
+        gameArea = self.teleportFsm.gameArea
 
         self.sendUpdateToAvatarId(self.avatar.doId, 'continueTeleportToInstance', [world.parentId,
-            world.zoneId, world.doId, world.getFileName(), world.doId, island.zoneId,
-            island.doId, world.getFileName(), world.oceanGrid.doId])
+            world.zoneId, world.doId, world.getFileName(), world.doId, gameArea.zoneId,
+            gameArea.doId, gameArea.getFileName(), world.oceanGrid.doId])
 
     def readyToFinishTeleport(self, instanceDoId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
@@ -45,24 +45,24 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
             return
 
         world = self.teleportFsm.world
-        island = self.teleportFsm.island
+        gameArea = self.teleportFsm.gameArea
         xPos, yPos, zPos, h = self.teleportFsm.spawnPt
 
         # get the cell origin zone relative to the spawn island's spawn position,
         # that was retrieved from the instance world.
-        zoneId = island.getZoneFromXYZ((xPos, yPos, zPos))
+        zoneId = gameArea.getZoneFromXYZ((xPos, yPos, zPos))
 
         # ensure the zoneId we've just calculated is indeed valid,
         # and not some random zone outside the cartesian grid...
-        if not island.isValidZone(zoneId):
-            self.notify.warning('Cannot finish teleport for avatar %d, invalid spawn zone %d!' % (
-                avatar.doId, zoneId))
+        if not gameArea.isValidZone(zoneId):
+            self.notify.warning('Cannot finish teleport for avatar %d, '
+                'invalid spawn zone %d!' % (avatar.doId, zoneId))
 
             self.teleportFsm.cleanup()
             return
 
-        world.d_setSpawnInfo(self.avatar.doId, xPos, yPos, zPos, h, 0, [island.doId,
-            island.parentId, island.zoneId])
+        world.d_setSpawnInfo(self.avatar.doId, xPos, yPos, zPos, h, 0, [gameArea.doId,
+            gameArea.parentId, gameArea.zoneId])
 
         self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
 

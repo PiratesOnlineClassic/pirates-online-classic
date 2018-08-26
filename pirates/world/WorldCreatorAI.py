@@ -55,8 +55,8 @@ class LinkManager(object):
         return links[0]
 
     def registerLinkData(self, uniqueId):
-        gameArea = self.air.uidMgr.justGetMeMeObject(uniqueId)
-        fileData = self.air.worldCreator.openFile(gameArea.getFileName())
+        fileName = self.air.worldCreator.getObjectFilenameByUid(uniqueId)
+        fileData = self.air.worldCreator.openFile(fileName)
 
         for linkData in fileData.get(WorldDataGlobals.LINK_TYPE_LOC_NODE, []):
             self.addLinkData(uniqueId, linkData)
