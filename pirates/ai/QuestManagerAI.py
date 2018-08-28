@@ -394,7 +394,7 @@ class QuestManagerAI(DirectObject):
         self.__completeTaskState(avatar, questEvent, callback=interactCallback)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
-def addQuest(questId):
+def giveQuest(questId):
     invoker = spellbook.getInvoker()
     if simbase.air.questMgr.hasQuest(invoker, questId=questId):
         return 'Avatar already has active quest: %s!' % questId
