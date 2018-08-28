@@ -9,6 +9,7 @@ from direct.interval.IntervalGlobal import *
 from direct.showbase import DirectObject, PythonUtil
 from direct.showbase.ShowBaseGlobal import *
 from otp.speedchat import SpeedChatGlobals
+from otp.nametag.NametagConstants import *
 from panda3d.core import *
 from pirates.npc import Skeleton
 from pirates.pirate import HumanDNA, Pirate
