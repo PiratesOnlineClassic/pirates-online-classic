@@ -216,6 +216,8 @@ class SpawnNodeBase:
             name = NPCList.NPC_LIST[dnaId][NPCList.setName]
         if dnaId == NPCIds.ELIZABETH:
             name = 'Elizabeth Swann'
+        elif dnaId == NPCIds.BARBOSSA:
+            name = 'Captain Barbossa'
 
         if hasattr(npc, 'bossData'):
             name = npc.bossData.get('Name', PLocalizer.Unknown)
