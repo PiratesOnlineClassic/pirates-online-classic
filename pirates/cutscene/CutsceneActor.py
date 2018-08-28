@@ -89,6 +89,7 @@ class CutsceneActor:
         return names
 
     def getInterval(self):
+        self.setBlend(frameBlend=True)
         ival = Sequence()
         for animName in self.getCSAnimNames():
             ival.append(self.actorInterval(animName))
