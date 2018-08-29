@@ -45,7 +45,7 @@ class TeleportFSM(TeleportOperationFSM):
 
     def __teleportZoneArrivedCallback(self, teleportZone):
         if not teleportZone:
-            self.notify.warning('Failed to generate teleport zone for avatar %d, '
+            self.notify.warning('Failed to generate the teleport zone for avatar %d, '
                 'while trying to teleport!' % self.avatar.doId)
 
             self.cleanup()
@@ -63,7 +63,7 @@ class TeleportFSM(TeleportOperationFSM):
 
     def __teleportHandlerArrivedCallback(self, teleportHandler):
         if not teleportHandler:
-            self.notify.warning('Failed to generate teleportHandler for avatar %d, '
+            self.notify.warning('Failed to generate the teleport handler for avatar %d, '
                 'while trying to teleport!' % self.avatar.doId)
 
             self.cleanup()
