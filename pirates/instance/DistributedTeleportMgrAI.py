@@ -12,10 +12,10 @@ from pirates.instance.DistributedTeleportHandlerAI import DistributedTeleportHan
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 
 
-class TeleportFSM(FSM):
+class TeleportOperationFSM(FSM):
 
     def __init__(self, air, avatar, world, gameArea, spawnPt):
-        FSM.__init__(self, 'TeleportFSM')
+        FSM.__init__(self, self.__class__.__name__)
 
         self.air = air
         self.avatar = avatar
@@ -26,25 +26,42 @@ class TeleportFSM(FSM):
         self.teleportZone = None
         self.teleportHandler = None
 
+        # just incase the avatar disconnects before we can complete the teleport
+        # process, handle cleanup appropriately...
+        self.acceptOnce(self.avatar.getDeleteEvent(), self.cleanup)
+
     def enterOff(self):
         pass
 
     def exitOff(self):
         pass
 
-    def enterStart(self):
-        self.acceptOnce(self.avatar.getDeleteEvent(), self.__avatarExited)
+    def cleanup(self):
+        del self.air.teleportMgr.avatar2fsm[self.avatar.doId]
+        self.ignoreAll()
+        self.demand('Stop')
 
-        self.teleportZone = DistributedTeleportZoneAI(self.air)
-        self.teleportZone.generateWithRequired(self.air.allocateZone())
+class TeleportFSM(TeleportOperationFSM):
+
+    def __teleportZoneArrivedCallback(self, teleportZone):
+        if not teleportZone:
+            self.notify.warning('Failed to generate teleport zone for avatar %d, '
+                'while trying to teleport!' % self.avatar.doId)
+
+            self.cleanup()
+            return
 
         teleportHandlerDoId = self.air.allocateChannel()
-        self.acceptOnce('generate-%d' % teleportHandlerDoId, self.__teleportHandlerCreatedCallback)
+        self.acceptOnce('generate-%d' % teleportHandlerDoId,
+            self.__teleportHandlerArrivedCallback)
 
-        self.teleportHandler = DistributedTeleportHandlerAI(self.air, self.air.teleportMgr, self, self.avatar)
-        self.teleportHandler.generateWithRequiredAndId(teleportHandlerDoId, self.air.districtId, self.teleportZone.zoneId)
+        self.teleportHandler = DistributedTeleportHandlerAI(self.air,
+            self.air.teleportMgr, self, self.avatar)
 
-    def __teleportHandlerCreatedCallback(self, teleportHandler):
+        self.teleportHandler.generateWithRequiredAndId(teleportHandlerDoId,
+            self.air.districtId, self.teleportZone.zoneId)
+
+    def __teleportHandlerArrivedCallback(self, teleportHandler):
         if not teleportHandler:
             self.notify.warning('Failed to generate teleportHandler for avatar %d, '
                 'while trying to teleport!' % self.avatar.doId)
@@ -55,28 +72,24 @@ class TeleportFSM(FSM):
         self.avatar.d_forceTeleportStart(self.world.getFileName(), self.teleportZone.doId,
             self.teleportHandler.doId, 0, self.teleportZone.parentId, self.teleportZone.zoneId)
 
-    def __avatarExited(self):
-        self.cleanup()
+    def enterTeleporting(self):
+        teleportZoneDoId = self.air.allocateChannel()
+        self.acceptOnce('generate-%d' % teleportZoneDoId,
+            self.__teleportZoneArrivedCallback)
 
-    def exitStart(self):
-        pass
+        self.teleportZone = DistributedTeleportZoneAI(self.air)
+        self.teleportZone.generateWithRequiredAndId(teleportZoneDoId,
+            self.air.districtId, self.air.allocateZone())
 
-    def enterStop(self):
+    def exitTeleporting(self):
         if self.teleportZone:
             self.teleportZone.requestDelete()
+            self.teleportZone = None
 
         if self.teleportHandler:
             self.teleportHandler.requestDelete()
+            self.teleportHandler = None
 
-        self.cleanup()
-
-    def exitStop(self):
-        pass
-
-    def cleanup(self):
-        del self.air.teleportMgr.avatar2fsm[self.avatar.doId]
-        self.ignoreAll()
-        self.demand('Stop')
 
 class DistributedTeleportMgrAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTeleportMgrAI')
@@ -145,8 +158,10 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
             return
 
-        self.avatar2fsm[avatar.doId] = TeleportFSM(self.air, avatar, world, gameArea, spawnPt)
-        self.avatar2fsm[avatar.doId].request('Start')
+        self.avatar2fsm[avatar.doId] = TeleportFSM(self.air,
+            avatar, world, gameArea, spawnPt)
+
+        self.avatar2fsm[avatar.doId].request('Teleporting')
 
     def initiateTeleport(self, instanceType, fromInstanceType, shardId, locationUid, instanceDoId, instanceName, gameType, friendDoId, friendAreaDoId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
@@ -174,6 +189,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
     def d_localTeleportToIdResponse(self, avatarId, parentId, zoneId):
         self.sendUpdateToAvatarId(avatarId, '_localTeleportToIdResponse', [parentId, zoneId])
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def areaTeleport(areaUid):

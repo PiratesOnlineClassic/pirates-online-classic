@@ -16,7 +16,6 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
 
     def startTeleportProcess(self, parentId, zoneId, bandId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             self.teleportFsm.cleanup()
             return
@@ -25,7 +24,6 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
 
     def teleportToInstanceReady(self, zoneId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             self.teleportFsm.cleanup()
             return
@@ -39,7 +37,6 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
 
     def readyToFinishTeleport(self, instanceDoId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             self.teleportFsm.cleanup()
             return
@@ -68,7 +65,6 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
 
     def teleportToInstanceFinal(self, avatarId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             self.teleportFsm.cleanup()
             return
