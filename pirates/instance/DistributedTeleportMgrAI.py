@@ -136,7 +136,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         else:
             world = self.getWorld(instanceType, instanceName)
 
-        if not world:
+        if not world or not isinstance(world, DistributedInstanceBaseAI):
             self.notify.warning('Cannot initiate teleport for unknown world: '
                 'instanceType=%r instanceName=%r' % (instanceType, instanceName))
 
