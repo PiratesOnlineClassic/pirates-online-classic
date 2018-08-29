@@ -68,14 +68,14 @@ class TeleportFSM(FSM):
         if self.teleportHandler:
             self.teleportHandler.requestDelete()
 
-        del self.air.teleportMgr.avatar2fsm[self.avatar.doId]
-        self.ignoreAll()
-        self.demand('Off')
+        self.cleanup()
 
     def exitStop(self):
         pass
 
     def cleanup(self):
+        del self.air.teleportMgr.avatar2fsm[self.avatar.doId]
+        self.ignoreAll()
         self.demand('Stop')
 
 class DistributedTeleportMgrAI(DistributedObjectAI):
