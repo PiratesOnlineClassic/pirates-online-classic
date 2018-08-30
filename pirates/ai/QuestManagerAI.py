@@ -15,6 +15,7 @@ from pirates.quest import QuestEvent
 from pirates.quest import QuestDB
 from pirates.quest import QuestLadderDB
 from pirates.quest.QuestPath import QuestStep
+from pirates.quest.QuestLadderDNA import QuestLadderDNA
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedIslandAI import DistributedIslandAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
@@ -305,16 +306,19 @@ class QuestManagerAI(DirectObject):
             return
 
         for questLadder in path:
-            containers = questLadder.getContainers()
-            if not containers:
-                continue
+            if isinstance(questLadder, QuestLadderDNA):
+                containers = questLadder.getContainers()
+                if not containers:
+                    continue
 
-            currentQuestIndex = None
-            for index in xrange(len(containers)):
-                questDNA = containers[index]
-                if questDNA.getQuestId() == quest.getQuestId():
-                    currentQuestIndex = index
-                    break
+                currentQuestIndex = None
+                for index in xrange(len(containers)):
+                    questDNA = containers[index]
+                    if questDNA.getQuestId() == quest.getQuestId():
+                        currentQuestIndex = index
+                        break
+            else:
+                currentQuestIndex = path.index(questLadder)
 
             if not currentQuestIndex:
                 continue
