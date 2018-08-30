@@ -1,23 +1,25 @@
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedSearchableContainerAI(DistributedInteractiveAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSearchableContainerAI')
 
     def __init__(self, air):
         DistributedInteractiveAI.__init__(self, air)
+
         self.color = [1.0, 1.0, 1.0, 1.0]
         self.scale = [1, 1, 1]
         self.searchTime = 0.0
         self.currentUser = None
 
     def handleRequestInteraction(self, avatar, interactType, instant):
-        searchAvailable = config.GetBool('always-allow-searching', False) #TODO: input from questing
-
+        # TODO: input from questing...
+        searchAvailable = config.GetBool('always-allow-searching', False)
         if searchAvailable and self.currentUser is None:
             self.currentUser = avatar
-            taskMgr.doMethodLater(self.searchTime, self.__searchTask, '%s-avatarSearchTask-%s' % 
-                (self.doId, avatar.doId))
+            taskMgr.doMethodLater(self.searchTime, self.__searchTask,
+                self.uniqueName('avatarSearchTask-%d' % avatar.doId))
 
             self.sendUpdateToAvatarId(avatar.doId, 'startSearching', [])
             return self.ACCEPT
@@ -27,18 +29,16 @@ class DistributedSearchableContainerAI(DistributedInteractiveAI):
     def handleRequestExit(self, avatar):
         if avatar != self.currentUser:
             self.notify.warning('Failed to request handle exist; Avatar is not current interactor')
-
             self.air.logPotentialHacker(
                 message='Received handleRequestExist from a different avatar then is currently digging!',
                 currentAvatarId=self.currentUser.doId,
-                requestedAvatarId=avatar.doId
-            )
+                requestedAvatarId=avatar.doId)
+
             return
 
         self.currentUser = None
 
     def __searchTask(self, task):
-
         if not self.currentUser:
             return task.done
 
@@ -113,5 +113,3 @@ class DistributedSearchableContainerAI(DistributedInteractiveAI):
 
     def getSphereScale(self):
         return self.sphereScale
-
-    
