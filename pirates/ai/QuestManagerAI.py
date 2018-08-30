@@ -27,11 +27,12 @@ from pirates.uberdog.UberDogGlobals import InventoryCategory
 class QuestOperationFSM(FSM):
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestOperationFSM')
 
-    def __init__(self, air, avatar):
+    def __init__(self, air, avatar, callback=None):
         FSM.__init__(self, self.__class__.__name__)
 
         self.air = air
         self.avatar = avatar
+        self.callback = callback
 
     def enterOff(self):
         pass
@@ -39,10 +40,18 @@ class QuestOperationFSM(FSM):
     def exitOff(Self):
         pass
 
+    def cleanup(self, *args, **kwargs):
+        del self.air.questMgr.avatar2fsm[self.avatar.doId]
+        self.ignoreAll()
+        self.demand('Off')
+
+        if self.callback:
+            self.callback(*args, **kwargs)
+
 class CreateQuestFSM(QuestOperationFSM):
     notify = DirectNotifyGlobal.directNotify.newCategory('CreateQuestFSM')
 
-    def enterCreate(self, questId):
+    def enterStart(self, questId):
         self.inventory = self.avatar.getInventory()
         if not self.inventory:
             self.notify.warning('Failed to create quest %s for avatar %d, '
@@ -92,13 +101,13 @@ class CreateQuestFSM(QuestOperationFSM):
             fields,
             questCreatedCallback)
 
-    def exitCreate(self):
+    def exitStart(self):
         pass
 
 class ActivateQuestsFSM(QuestOperationFSM):
     notify = DirectNotifyGlobal.directNotify.newCategory('ActivateQuestsFSM')
 
-    def enterActivate(self):
+    def enterStart(self):
         self.inventory = self.avatar.getInventory()
         if not self.inventory:
             self.notify.warning('Failed to activate quests for avatar %d, '
@@ -142,7 +151,7 @@ class ActivateQuestsFSM(QuestOperationFSM):
                 queryQuestCallback,
                 self.air.dclassesByName['DistributedQuestAI'])
 
-    def exitActivate(self):
+    def exitStart(self):
         pass
 
 class QuestManagerAI(DirectObject):
@@ -150,14 +159,26 @@ class QuestManagerAI(DirectObject):
 
     def __init__(self, air):
         self.air = air
+        self.avatar2fsm = {}
         self.quests = {}
+
+    def runQuestFSM(self, fsmtype, avatar, *args, **kwargs):
+        if avatar.doId in self.avatar2fsm:
+            self.notify.debug('Failed to run quest FSM for avatar %d, '
+                'an FSM already running!' % avatar.doId)
+
+            return
+
+        callback = kwargs.pop('callback', None)
+
+        self.avatar2fsm[avatar.doId] = fsmtype(self.air, avatar, callback)
+        self.avatar2fsm[avatar.doId].request('Start', *args, **kwargs)
 
     def hasQuest(self, avatar, questDoId=None, questId=None):
         return self.getQuest(avatar, questDoId, questId) is not None
 
-    def createQuest(self, avatar, questId):
-        fsm = CreateQuestFSM(self.air, avatar)
-        fsm.request('Create', questId)
+    def createQuest(self, avatar, questId, callback=None):
+        self.runQuestFSM(CreateQuestFSM, avatar, questId, callback=callback)
 
     def activateQuest(self, avatar, questDoId, callback):
         activeQuests = self.quests.setdefault(avatar.doId, {})
@@ -194,9 +215,8 @@ class QuestManagerAI(DirectObject):
         self.air.sendActivate(questDoId, self.air.districtId, OTP_ZONE_ID_MANAGEMENT,
             self.air.dclassesByName['DistributedQuestAI'])
 
-    def activateQuests(self, avatar):
-        fsm = ActivateQuestsFSM(self.air, avatar)
-        fsm.request('Activate')
+    def activateQuests(self, avatar, callback=None):
+        self.runQuestFSM(ActivateQuestsFSM, avatar, callback=callback)
 
     def deactivateQuest(self, avatar, questDoId):
         if not self.hasQuest(avatar, questDoId):
@@ -305,13 +325,15 @@ class QuestManagerAI(DirectObject):
             except IndexError:
                 return
 
+            def questCreatedCallback():
+                avatar.b_setActiveQuest(nextQuestDNA.getQuestId())
+
             # drop the avatar's previous quest and give them the new quest
             # appropriate to their current quest path...
             self.dropQuest(avatar, quest)
-            self.createQuest(avatar, nextQuestDNA.getQuestId())
+            self.createQuest(avatar, nextQuestDNA.getQuestId(),
+                questCreatedCallback)
 
-            # set the avatar's new quest as their current active quest.
-            avatar.b_setActiveQuest(nextQuestDNA.getQuestId())
             break
 
     def __completeTaskState(self, avatar, questEvent, callback=None):
@@ -480,7 +502,7 @@ def giveQuest(questId):
         return 'Avatar already has active quest: %s!' % questId
 
     simbase.air.questMgr.createQuest(invoker, questId)
-    return 'Added new active quest: %s.' % questId
+    return 'Given new active quest: %s.' % questId
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def dropQuest(questId):
