@@ -70,8 +70,8 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
     def requestActiveQuest(self, activeQuest):
         inventory = self.getInventory()
         if not inventory:
-            self.notify.warning('Failed to set active quest %s for avatar %d, '
-                'no inventory found!' % (activeQuest, self.doId))
+            self.notify.warning('Failed to set active quest for avatar %d, '
+                'no inventory found!' % self.doId)
 
             return
 
@@ -86,8 +86,8 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
     def requestDropQuest(self, questId):
         inventory = self.getInventory()
         if not inventory:
-            self.notify.warning('Failed to set active quest %s for avatar %d, '
-                'no inventory found!' % (activeQuest, self.doId))
+            self.notify.warning('Failed to drop quest for avatar %d, '
+                'no inventory found!' % self.doId)
 
             return
 
@@ -109,8 +109,8 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
     def requestQuestStep(self, questId):
         inventory = self.getInventory()
         if not inventory:
-            self.notify.warning('Failed to get step for quest %s for avatar %d, '
-                'no inventory found!' % (activeQuest, self.doId))
+            self.notify.warning('Failed to get quest step for avatar %d, '
+                'no inventory found!' % self.doId)
 
             return
 
