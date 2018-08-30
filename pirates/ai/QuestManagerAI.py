@@ -5,13 +5,22 @@ from direct.fsm.FSM import FSM
 from otp.distributed.OtpDoGlobals import *
 from otp.ai.MagicWordGlobal import *
 
+from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
+from pirates.ship.DistributedShipAI import DistributedShipAI
+from pirates.npc.DistributedNPCTownfolkAI import DistributedNPCTownfolkAI
 from pirates.quest.DistributedQuestAI import DistributedQuestAI
 from pirates.quest.QuestTaskState import QuestTaskState
 from pirates.quest.QuestRewardStruct import QuestRewardStruct
 from pirates.quest import QuestEvent
 from pirates.quest import QuestDB
 from pirates.quest import QuestLadderDB
-from pirates.npc.DistributedNPCTownfolkAI import DistributedNPCTownfolkAI
+from pirates.quest.QuestPath import QuestStep
+from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+from pirates.world.DistributedIslandAI import DistributedIslandAI
+from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
+from pirates.world.DistributedBuildingDoorAI import DistributedBuildingDoorAI
+from pirates.world.DistributedInteriorDoorAI import DistributedInteriorDoorAI
+from pirates.world.DistributedDinghyAI import DistributedDinghyAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory
 
 
@@ -392,6 +401,77 @@ class QuestManagerAI(DirectObject):
                 return
 
         self.__completeTaskState(avatar, questEvent, callback=interactCallback)
+
+    def getQuestStepType(self, goalObject):
+        if isinstance(goalObject, DistributedNPCTownfolkAI):
+            stepType = QuestStep.STNPC
+        elif isinstance(goalObject, DistributedBattleAvatarAI):
+            stepType = QuestStep.STNPCEnemy
+        elif isinstance(goalObject, DistributedGAInteriorAI):
+            stepType = QuestStep.STInteriorDoor
+        elif isinstance(goalObject, DistributedBuildingDoorAI):
+            stepType = QuestStep.STExteriorDoor
+        elif isinstance(goalObject, DistributedDinghyAI):
+            stepType = QuestStep.STDinghy
+        elif isinstance(goalObject, DistributedGameAreaAI):
+            stepType = QuestStep.STArea
+        elif isinstance(goalObject, DistributedShipAI):
+            stepType = QuestStep.STShip
+        else:
+            stepType = QuestStep.NullStep
+
+        return stepType
+
+    def getQuestStepObject(self, avatar, goalObject):
+        if not goalObject:
+            return None
+
+        def findObject(goalObject, otherObject):
+            goalParent = goalObject.getParentObj()
+            if not goalParent:
+                return None
+
+            otherParent = otherObject.getParentObj()
+            if not otherParent:
+                return None
+
+            if goalParent.doId != otherParent.doId:
+                return findObject(goalParent, otherParent)
+
+            return goalObject, otherObject
+
+        # recurse through the scenegraph and find the target goal object...
+        goalObject, otherObject = findObject(goalObject, avatar)
+
+        # interiors are parented under the world instance object,
+        # the avatar is parented under the island...
+        if isinstance(goalObject, DistributedGAInteriorAI) and isinstance(otherObject, DistributedIslandAI):
+            doorLocatorNode = goalObject.getExteriorFrontDoor()
+            if not doorLocatorNode:
+                doorLocatorNode = goalObject.getExteriorBackDoor()
+
+            if not doorLocatorNode:
+                return None
+
+            # check to see if the door locator node's parent object is the
+            # same parent object as the avatar's, if so return the door locator node
+            # otherwise this means the avatar is located on a different island...
+            doorLocatorNodeParent = doorLocatorNode.getParentObj()
+            if doorLocatorNodeParent.doId != otherObject.doId:
+                return doorLocatorNodeParent
+            else:
+                return doorLocatorNode
+
+        return goalObject
+
+    def getQuestStep(self, avatar, goalUid):
+        goalObject = self.getQuestStepObject(avatar,
+            self.air.uidMgr.justGetMeMeObject(goalUid))
+
+        if not goalObject:
+            return None, None
+
+        return self.getQuestStepType(goalObject), goalObject
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def giveQuest(questId):

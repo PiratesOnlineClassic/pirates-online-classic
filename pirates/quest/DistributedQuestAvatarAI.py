@@ -3,13 +3,6 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.quest.QuestAvatarBase import QuestAvatarBase
 from pirates.quest import QuestTaskDNA
 from pirates.quest.QuestHolder import QuestHolder
-from pirates.quest.QuestPath import QuestStep
-from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
-from pirates.ship.DistributedShipAI import DistributedShipAI
-from pirates.npc.DistributedNPCTownfolkAI import DistributedNPCTownfolkAI
-from pirates.world.DistributedBuildingDoorAI import DistributedBuildingDoorAI
-from pirates.world.DistributedInteriorDoorAI import DistributedInteriorDoorAI
-from pirates.world.DistributedDinghyAI import DistributedDinghyAI
 
 
 class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
@@ -134,24 +127,12 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
         taskDNA = activeQuest.questDNA.getTaskDNAs()[0]
         goalUid = taskDNA.getGoalUid()
 
-        goalObject = self.air.uidMgr.justGetMeMeObject(goalUid)
-        if not goalObject:
+        # attempt to get the quest step object in which,
+        # the ray of light will hover over...
+        stepType, goalObject = self.air.questMgr.getQuestStep(self, goalUid)
+        if not stepType or not goalObject:
+            self.sendUpdate('setQuestStep', [[self.doId, 0, 0, [0, 0, 0, 0], '']])
             return
-
-        if isinstance(goalObject, DistributedNPCTownfolkAI):
-            stepType = QuestStep.STNPC
-        elif isinstance(goalObject, DistributedBattleAvatarAI):
-            stepType = QuestStep.STNPCEnemy
-        elif isinstance(goalObject, DistributedBuildingDoorAI):
-            stepType = QuestStep.STExteriorDoor
-        elif isinstance(goalObject, DistributedInteriorDoorAI):
-            stepType = QuestStep.STInteriorDoor
-        elif isinstance(goalObject, DistributedDinghyAI):
-            stepType = QuestStep.STDinghy
-        elif isinstance(goalObject, DistributedShipAI):
-            stepType = QuestStep.STShip
-        else:
-            stepType = QuestStep.NullStep
 
         (x, y, z), (h, p, r) = goalObject.getPos(), goalObject.getHpr()
         self.sendUpdate('setQuestStep', [[self.doId, goalObject.doId, stepType, [x, y, z, h], goalUid]])
