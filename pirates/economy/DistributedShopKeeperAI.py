@@ -70,6 +70,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             return RejectCode.TIMEOUT
 
         itemPrice = EconomyGlobals.getItemCost(itemId)
+        currentGold = inventory.getGoldInPocket()
         inventory.b_setStackQuantity(itemId, currentStack - itemQuantity)
         inventory.setGoldInPocket(currentGold + itemPrice)
 
