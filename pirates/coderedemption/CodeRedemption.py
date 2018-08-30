@@ -18,4 +18,5 @@ class CodeRedemption(DistributedObjectGlobal):
         if status:
             base.chatAssistant.receiveGameMessage(PLocalizer.CodeRedemptionGood)
             return
+
         base.chatAssistant.receiveGameMessage(PLocalizer.CodeRedemptionBad)

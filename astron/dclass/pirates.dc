@@ -2174,10 +2174,8 @@ dclass AwardMaker : DistributedObject {
   awardFailure(uint32);
 };
 
-dclass CodeRedemption : DistributedObject {
-  online();
-  recvAvatarGender(uint32, string, uint32);
-  sendCodeForRedemption(string, string) airecv clsend;
+dclass CodeRedemption : DistributedObjectGlobal {
+  sendCodeForRedemption(string) airecv clsend;
   notifyClientCodeRedeemStatus(uint8);
 };
 
