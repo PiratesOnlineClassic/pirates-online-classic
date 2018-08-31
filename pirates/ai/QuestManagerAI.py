@@ -364,6 +364,9 @@ class QuestManagerAI(DirectObject):
         if not taskDNA and not taskState:
             return
 
+        # update the active quest's new task states.
+        activeQuest.b_setTaskStates(taskStates)
+
         # check to see if the task state event has been completed.
         if taskState.isComplete():
             if callback is not None:
