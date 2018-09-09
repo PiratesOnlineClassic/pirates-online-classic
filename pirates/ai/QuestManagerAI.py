@@ -209,6 +209,7 @@ class QuestManagerAI(DirectObject):
             # store the new quest object to the dictionary of quest objects
             # so we can keep track of it for later use...
             self.quests[avatar.doId][quest.doId] = quest
+            quest.setOwnerId(avatar.doId)
 
             # finally, call the callback specified and let them know,
             # the quest has been activated...

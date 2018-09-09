@@ -14,12 +14,19 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
         DistributedObjectAI.__init__(self, air)
         Quest.__init__(self, questId, giverId, initialTaskStates, rewards)
 
+        self.ownerId = 0
         self.combineOp = 0
 
     def generate(self):
         DistributedObjectAI.generate(self)
 
         self.d_announceNewQuest()
+
+    def setOwnerId(self, ownerId):
+        self.ownerId = ownerId
+
+    def getOwnerId(self):
+        return self.ownerId
 
     def d_setQuestId(self, questId):
         self.sendUpdate('setQuestId', [questId])
@@ -42,7 +49,7 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
         return self.giverId
 
     def d_announceNewQuest(self):
-        self.sendUpdate('announceNewQuest', [])
+        self.sendUpdateToAvatarId(self.ownerId, 'announceNewQuest', [])
 
     def d_setCombineOp(self, combineOp):
         self.sendUpdate('setCombineOp', [combineOp])
@@ -94,7 +101,7 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
 
     def d_amFinalized(self):
         Quest.setFinalized(self)
-        self.sendUpdate('amFinalized', [])
+        self.sendUpdateToAvatarId(self.ownerId, 'amFinalized', [])
 
     def delete(self):
         QuestBase.delete(self)
