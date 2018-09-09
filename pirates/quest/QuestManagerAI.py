@@ -275,6 +275,11 @@ class QuestManagerAI(DirectObject):
         questHistory.append(quest.questDNA.getQuestInt())
         avatar.b_setQuestHistory(questHistory)
 
+        # check to see if this quest is the avatar's active quest,
+        # if so then let's clear their active quest...
+        if quest.getQuestId() == avatar.getActiveQuest():
+            avatar.b_setActiveQuest('')
+
         # finally, deactivate the old quest.
         self.deactivateQuest(avatar, quest.doId)
         messenger.send(quest.getDroppedEventString())
