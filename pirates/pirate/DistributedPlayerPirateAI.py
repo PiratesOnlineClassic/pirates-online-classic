@@ -231,7 +231,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         questDNA = QuestDB.QuestDict['c2.4recoverOrders']
 
         if not quests and questDNA.getQuestInt() not in questHistory:
-            self.air.questMgr.createQuest(self, 'c2.4recoverOrders')
+            self.air.questMgr.createQuest(self, questDNA.getQuestId())
         else:
             self.air.questMgr.activateQuests(self)
 
