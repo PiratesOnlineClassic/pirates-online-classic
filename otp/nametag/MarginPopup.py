@@ -8,31 +8,31 @@ class MarginPopup(PandaNode):
     def __init__(self):
         PandaNode.__init__(self, 'popup')
 
-        self.m_managed = False
-        self.m_visible = False
-        self.m_np = None
-        self.m_cell_width = 1.0
-        self.m_seq = NametagGlobals._margin_prop_seq
+        self.managed = False
+        self.visible = False
+        self.np = None
+        self.cell_width = 1.0
+        self.seq = NametagGlobals._margin_prop_seq
 
     def getCellWidth(self):
-        return self.m_cell_width
+        return self.cell_width
 
     def setManaged(self, value):
-        self.m_managed = value
+        self.managed = value
         if value:
-            self.m_np = NodePath.anyPath(self)
+            self.np = NodePath.anyPath(self)
 
         else:
-            self.m_np = None
+            self.np = None
 
     def isManaged(self):
-        return self.m_managed
+        return self.managed
 
     def setVisible(self, value):
-        self.m_visible = value
+        self.visible = value
 
     def isVisible(self):
-        return self.m_visible
+        return self.visible
 
     def getScore(self):
         return 0.0
@@ -41,8 +41,8 @@ class MarginPopup(PandaNode):
         return 0
 
     def considerVisible(self):
-        if self.m_seq != NametagGlobals._margin_prop_seq:
-            self.m_seq = NametagGlobals._margin_prop_seq
+        if self.seq != NametagGlobals._margin_prop_seq:
+            self.seq = NametagGlobals._margin_prop_seq
             self.updateContents()
 
     def updateContents(self):

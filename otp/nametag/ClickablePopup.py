@@ -66,11 +66,11 @@ class PopupMouseWatcherRegion(MouseWatcherRegion):
 class ClickablePopup:
 
     def __init__(self):
-        self.m_state = PGButton.SReady
+        self._state = PGButton.SReady
 
     def setState(self, state):
-        if state != self.m_state:
-            self.m_state = state
+        if state != self._state:
+            self._state = state
             self.updateContents()
 
     def enterRegion(self, arg):

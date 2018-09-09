@@ -11,47 +11,47 @@ class Nametag(ClickablePopup):
     def __init__(self, wordwrap):
         ClickablePopup.__init__(self)
 
-        self.m_avatar = None
-        self.m_ival = None
-        self.m_popup_region = None
-        self.m_seq = 0
-        self.m_mouse_watcher = None
-        self.m_draw_order = 0
-        self.m_has_draw_order = False
+        self.avatar = None
+        self.ival = None
+        self.popup_region = None
+        self.seq = 0
+        self.mouse_watcher = None
+        self.draw_order = 0
+        self.has_draw_order = False
 
-        self.m_contents = CFSpeech | CFThought | CFQuicktalker
-        self.m_active = True
-        self.m_field_12 = 0
-        self.m_group = None
-        self.m_wordwrap = wordwrap
-        self.m_has_region = False
-        self.m_ival_name = 'flash-%d' % id(self)
+        self.contents = CFSpeech | CFThought | CFQuicktalker
+        self.active = True
+        self.field_12 = 0
+        self.group = None
+        self.wordwrap = wordwrap
+        self.has_region = False
+        self.ival_name = 'flash-%d' % id(self)
 
     def clearAvatar(self):
-        self.m_avatar = None
+        self.avatar = None
 
     def clearDrawOrder(self):
-        self.m_has_draw_order = False
+        self.has_draw_order = False
         self.updateContents()
 
     def click(self):
-        if self.m_group:
-            self.m_group.click()
+        if self.group:
+            self.group.click()
 
     def deactivate(self):
-        if self.m_has_region:
-            if self.m_mouse_watcher:
-                self.m_mouse_watcher.removeRegion(self.m_popup_region)
-                self.m_mouse_watcher = None
+        if self.has_region:
+            if self.mouse_watcher:
+                self.mouse_watcher.removeRegion(self.popup_region)
+                self.mouse_watcher = None
 
-            self.m_has_region = None
+            self.has_region = None
 
-        self.m_seq = 0
+        self.seq = 0
 
     def determineContents(self):
-        if self.m_group and self.m_group.isManaged():
-            v3 = self.m_contents & self.m_group.getContents()
-            v4 = self.m_group.m_chat_flags
+        if self.group and self.group.isManaged():
+            v3 = self.contents & self.group.getContents()
+            v4 = self.group.chat_flags
 
             if v4 & CFSpeech:
                 if v3 & Nametag.CSpeech:
@@ -60,62 +60,62 @@ class Nametag(ClickablePopup):
             elif v4 & CFThought and v3 & Nametag.CThought:
                 return Nametag.CThought
 
-            if v3 & Nametag.CName and self.m_group.getName() and NametagGlobals._master_nametags_visible:
+            if v3 & Nametag.CName and self.group.getName() and NametagGlobals._master_nametags_visible:
                 return Nametag.CName
 
         return 0
 
     def displayAsActive(self):
-        if not self.m_active:
+        if not self.active:
             return 0
 
-        if self.m_group:
-            return self.m_group.displayAsActive()
+        if self.group:
+            return self.group.displayAsActive()
 
         else:
             return NametagGlobals._master_nametags_active
 
     def setAvatar(self, avatar):
-        self.m_avatar = avatar
+        self.avatar = avatar
 
     def getAvatar(self):
-        return self.m_avatar
+        return self.avatar
 
     def setChatWordwrap(self, wordwrap):
-        self.m_wordwrap = wordwrap
+        self.wordwrap = wordwrap
 
     def getChatWordwrap(self):
-        return self.m_wordwrap
+        return self.wordwrap
 
     def getGroup(self):
-        return self.m_group
+        return self.group
 
     def getState(self):
-        if self.m_group:
-            if not (self.m_active and self.m_group.displayAsActive()):
+        if self.group:
+            if not (self.active and self.group.displayAsActive()):
                 return PGButton.SInactive
 
-        elif not (self.m_active and NametagGlobals._master_nametags_active):
+        elif not (self.active and NametagGlobals._master_nametags_active):
             return PGButton.SInactive
 
-        return self.m_state
+        return self._state
 
     def hasGroup(self):
-        return self.m_group is not None
+        return self.group is not None
 
     def setActive(self, active):
-        self.m_active = active
+        self.active = active
         self.updateContents()
 
     def isActive(self):
-        return self.m_active
+        return self.active
 
     def isGroupManaged(self):
-        return self.m_group and self.m_group.isManaged()
+        return self.group and self.group.isManaged()
 
     def keepRegion(self):
-        if self.m_popup_region:
-            self.m_seq = self.m_group.getRegionSeq()
+        if self.popup_region:
+            self.seq = self.group.getRegionSeq()
 
     def manage(self, manager):
         self.updateContents()
@@ -125,69 +125,69 @@ class Nametag(ClickablePopup):
         self.deactivate()
 
     def setContents(self, contents):
-        self.m_contents = contents
+        self.contents = contents
         self.updateContents()
 
     def setDrawOrder(self, draw_order):
-        self.m_draw_order = draw_order
-        self.m_has_draw_order = True
+        self.draw_order = draw_order
+        self.has_draw_order = True
         self.updateContents()
 
     def setRegion(self, frame, sort):
-        if self.m_popup_region:
-            self.m_popup_region.setFrame(frame)
+        if self.popup_region:
+            self.popup_region.setFrame(frame)
 
         else:
-            self.m_popup_region = self._createRegion(frame)
+            self.popup_region = self._createRegion(frame)
 
-        self.m_popup_region.setSort(int(sort))
-        self.m_seq = self.m_group.getRegionSeq()
+        self.popup_region.setSort(int(sort))
+        self.seq = self.group.getRegionSeq()
 
     def startFlash(self, np):
-        if self.m_ival:
-            self.m_ival.finish()
-            self.m_ival = None
+        if self.ival:
+            self.ival.finish()
+            self.ival = None
 
-        self.m_ival = Sequence(LerpColorInterval(np, 0.5, (1, 1, 1, 0.5), (1, 1, 1, 1), blendType='easeOut'),
+        self.ival = Sequence(LerpColorInterval(np, 0.5, (1, 1, 1, 0.5), (1, 1, 1, 1), blendType='easeOut'),
                                LerpColorInterval(np, 0.5, (1, 1, 1, 1), (1, 1, 1, 0.5), blendType='easeIn'))
-        self.m_ival.loop()
+        self.ival.loop()
 
     def stopFlash(self):
-        if self.m_ival:
-            self.m_ival.finish()
-            self.m_ival = None
+        if self.ival:
+            self.ival.finish()
+            self.ival = None
 
     def updateRegion(self, seq):
-        if seq == self.m_seq:
+        if seq == self.seq:
             is_active = self.displayAsActive()
 
         else:
             is_active = False
 
-        if self.m_has_region:
-            if self.m_mouse_watcher != NametagGlobals._mouse_watcher:
-                if self.m_mouse_watcher:
-                    self.m_mouse_watcher.removeRegion(self.m_popup_region)
+        if self.has_region:
+            if self.mouse_watcher != NametagGlobals._mouse_watcher:
+                if self.mouse_watcher:
+                    self.mouse_watcher.removeRegion(self.popup_region)
 
-                self.m_has_region = False
+                self.has_region = False
                 self.setState(PGButton.SReady)
 
         if is_active:
-            if (not self.m_has_region) and self.m_popup_region:
-                if self.m_mouse_watcher != NametagGlobals._mouse_watcher:
-                    self.m_mouse_watcher = NametagGlobals._mouse_watcher
+            if (not self.has_region) and self.popup_region:
+                if self.mouse_watcher != NametagGlobals._mouse_watcher:
+                    self.mouse_watcher = NametagGlobals._mouse_watcher
 
-                if self.m_mouse_watcher:
-                    self.m_mouse_watcher.addRegion(self.m_popup_region)
+                if self.mouse_watcher:
+                    self.mouse_watcher.addRegion(self.popup_region)
 
-                self.m_has_region = True
+                self.has_region = True
 
-        elif self.m_has_region:
-            if self.m_mouse_watcher and self.m_popup_region:
-                self.m_mouse_watcher.removeRegion(self.m_popup_region)
+        elif self.has_region:
+            if self.mouse_watcher and self.popup_region:
+                self.mouse_watcher.removeRegion(self.popup_region)
 
-            self.m_has_region = False
-            self.m_mouse_watcher = None
+            self.has_region = False
+            self.mouse_watcher = None
             self.setState(PGButton.SReady)
 
     def upcastToPandaNode(self):

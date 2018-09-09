@@ -4,24 +4,24 @@ from panda3d.core import *
 class PopupHandle:
 
     def __init__(self, popup):
-        self.m_popup = popup  # 12
-        self.m_cell = -1  # 16
-        self.m_wants_visible = False  # 20
-        self.m_score = 0  # 24
-        self.m_objcode = id(self)  # 28
-        popup.setObjectCode(self.m_objcode)
+        self.popup = popup  # 12
+        self.cell = -1  # 16
+        self.wants_visible = False  # 20
+        self.score = 0  # 24
+        self.objcode = id(self)  # 28
+        popup.setObjectCode(self.objcode)
 
 
 class MarginCell:
 
     def __init__(self):
-        self.m_mat = Mat4()  # 0
-        self.m_cell_width = 0  # 64
-        self.m_popup = None  # 68
-        self.m_np = None  # 72
-        self.m_visible = False  # 84
-        self.m_objcode = 0  # 88
-        self.m_time = 0  # 96
+        self.mat = Mat4()  # 0
+        self.cell_width = 0  # 64
+        self.popup = None  # 68
+        self.np = None  # 72
+        self.visible = False  # 84
+        self.objcode = 0  # 88
+        self.time = 0  # 96
 
 
 class MarginManager(PandaNode):
@@ -34,10 +34,10 @@ class MarginManager(PandaNode):
         self.cbNode.setCullCallback(PythonCallbackObject(self.cullCallback))
         self.addChild(self.cbNode)
 
-        self.m_cells = []
-        self.m_popups = {}  # MarginPopup*: PopupHandle
-        self.m_code_map = {}  # code: MarginPopup*
-        self.m_num_available = 0
+        self.cells = []
+        self.popups = {}  # MarginPopup*: PopupHandle
+        self.code_map = {}  # code: MarginPopup*
+        self.num_available = 0
 
     def addGridCell(self, a2, a3, a4, a5, a6, a7):
         v7 = (a5 - a4) * 0.16666667
@@ -57,75 +57,75 @@ class MarginManager(PandaNode):
         shear = Vec3(0, 0, 0)
         trans = Vec3((left + right) * 0.5, 0, (bottom + top) * 0.5)
 
-        v18 = len(self.m_cells)
+        v18 = len(self.cells)
         v9 = MarginCell()
-        self.m_cells.append(v9)
-        v9.m_available = True
+        self.cells.append(v9)
+        v9.available = True
 
         mat3 = Mat3()
         composeMatrix(mat3, scale, shear, Vec3(0, 0, 0), 0)
-        v9.m_mat = Mat4(mat3, trans)
+        v9.mat = Mat4(mat3, trans)
 
-        v9.m_cell_width = (right - left) * 0.5 / v19[0]
-        v9.m_np = None
-        v9.m_popup = None
-        v9.m_objcode = 0
-        v9.m_time = 0.0
+        v9.cell_width = (right - left) * 0.5 / v19[0]
+        v9.np = None
+        v9.popup = None
+        v9.objcode = 0
+        v9.time = 0.0
 
-        self.m_num_available += 1
+        self.num_available += 1
         return v18
 
     def setCellAvailable(self, a2, a3):
-        v5 = self.m_cells[a2]
-        if v5.m_available:
-            self.m_num_available -= 1
+        v5 = self.cells[a2]
+        if v5.available:
+            self.num_available -= 1
 
-        v5.m_available = a3
-        if v5.m_available:
-            self.m_num_available += 1
+        v5.available = a3
+        if v5.available:
+            self.num_available += 1
 
-        if v5.m_np:
+        if v5.np:
             self.hide(a2)
-            v5.m_popup = None
-            v5.m_objcode = 0
+            v5.popup = None
+            v5.objcode = 0
 
     def getCellAvailable(self, a2):
-        return self.m_cells[a2].m_available
+        return self.cells[a2].available
 
     def cullCallback(self, *args):
         self.update()
 
     def managePopup(self, a2):
         a2.setManaged(True)
-        self.m_popups[a2] = PopupHandle(a2)
-        self.m_code_map[a2.getObjectCode()] = a2
+        self.popups[a2] = PopupHandle(a2)
+        self.code_map[a2.getObjectCode()] = a2
 
     def unmanagePopup(self, a2):
-        v9 = self.m_popups.get(a2)
+        v9 = self.popups.get(a2)
         if v9:
-            if v9.m_cell >= 0:
-                self.hide(v9.m_cell)
-                v9.m_cell = -1
+            if v9.cell >= 0:
+                self.hide(v9.cell)
+                v9.cell = -1
 
             a2.setManaged(False)
-            del self.m_popups[a2]
-            del self.m_code_map[v9.m_objcode]
+            del self.popups[a2]
+            del self.code_map[v9.objcode]
 
     def hide(self, a2):
-        cell = self.m_cells[a2]
-        cell.m_np.removeNode()
-        cell.m_time = globalClock.getFrameTime()
-        if cell.m_popup:
-            cell.m_popup.setVisible(False)
+        cell = self.cells[a2]
+        cell.np.removeNode()
+        cell.time = globalClock.getFrameTime()
+        if cell.popup:
+            cell.popup.setVisible(False)
 
     def show(self, popup, cell_index):
-        v12 = self.m_cells[cell_index]
-        v12.m_popup = popup
-        v12.m_objcode = popup.getObjectCode()
-        v12.m_np = NodePath.anyPath(self).attachNewNode(popup)
-        v12.m_np.setMat(v12.m_mat)
-        self.m_popups[popup].m_cell = cell_index
-        popup.m_cell_width = v12.m_cell_width
+        v12 = self.cells[cell_index]
+        v12.popup = popup
+        v12.objcode = popup.getObjectCode()
+        v12.np = NodePath.anyPath(self).attachNewNode(popup)
+        v12.np.setMat(v12.mat)
+        self.popups[popup].cell = cell_index
+        popup.cell_width = v12.cell_width
         popup.setVisible(True)
 
     def chooseCell(self, a2, a3):
@@ -133,15 +133,15 @@ class MarginManager(PandaNode):
         objcode = a2.getObjectCode()
 
         for cell in a3:
-            v7 = self.m_cells[cell]
-            if (v7.m_popup == a2 or v7.m_objcode == objcode) and (now - v7.m_time) <= 30.0:
+            v7 = self.cells[cell]
+            if (v7.popup == a2 or v7.objcode == objcode) and (now - v7.time) <= 30.0:
                 result = cell
                 break
 
         else:
             for cell in a3[::-1][1:]:  # Iterate backwards, skip last item
-                v10 = self.m_cells[cell]
-                if (not v10.m_popup) or (now - v10.m_time) > 30.0:
+                v10 = self.cells[cell]
+                if (not v10.popup) or (now - v10.time) > 30.0:
                     result = cell
                     break
 
@@ -153,62 +153,62 @@ class MarginManager(PandaNode):
 
     def showVisibleNoConflict(self):
         cells = []
-        for i, cell in enumerate(self.m_cells):
-            if cell.m_available and not cell.m_np:
+        for i, cell in enumerate(self.cells):
+            if cell.available and not cell.np:
                 cells.append(i)
 
-        for handle in self.m_popups.values():
-            v7 = handle.m_popup
-            if handle.m_wants_visible and not v7.isVisible():
+        for handle in self.popups.values():
+            v7 = handle.popup
+            if handle.wants_visible and not v7.isVisible():
                 v8 = self.chooseCell(v7, cells)
                 self.show(v7, v8)
 
     def showVisibleResolveConflict(self):
         v4 = []
 
-        for handle in self.m_popups.values():
+        for handle in self.popups.values():
             score = 0
-            if handle.m_wants_visible:
-                score = handle.m_score
+            if handle.wants_visible:
+                score = handle.score
 
             v4.append((handle, -score))
 
         v4 = sorted(v4, key=lambda a: a[-1])
-        for handle in v4[self.m_num_available:]:
-            if handle[0].m_popup.isVisible():
-                self.hide(handle[0].m_cell)
-                handle[0].m_cell = -1
+        for handle in v4[self.num_available:]:
+            if handle[0].popup.isVisible():
+                self.hide(handle[0].cell)
+                handle[0].cell = -1
 
         cells = []
-        for i, cell in enumerate(self.m_cells):
-            if cell.m_available and not cell.m_np:
+        for i, cell in enumerate(self.cells):
+            if cell.available and not cell.np:
                 cells.append(i)
 
-        for handle in v4[:self.m_num_available]:
-            v7 = handle[0].m_popup
-            if handle[0].m_wants_visible and not v7.isVisible():
+        for handle in v4[:self.num_available]:
+            v7 = handle[0].popup
+            if handle[0].wants_visible and not v7.isVisible():
                 v8 = self.chooseCell(v7, cells)
                 self.show(v7, v8)
 
     def update(self):
         num_want_visible = 0
 
-        for handle in self.m_popups.values():
-            popup = handle.m_popup
-            handle.m_wants_visible = popup.considerVisible()
-            if handle.m_wants_visible and handle.m_objcode:
-                handle.m_score = popup.getScore()
+        for handle in self.popups.values():
+            popup = handle.popup
+            handle.wants_visible = popup.considerVisible()
+            if handle.wants_visible and handle.objcode:
+                handle.score = popup.getScore()
                 num_want_visible += 1
 
             elif popup.isVisible():
-                self.hide(handle.m_cell)
-                handle.m_cell = -1
+                self.hide(handle.cell)
+                handle.cell = -1
 
-        if num_want_visible > self.m_num_available:
+        if num_want_visible > self.num_available:
             self.showVisibleResolveConflict()
 
         else:
             self.showVisibleNoConflict()
 
-        for popup in self.m_popups:
+        for popup in self.popups:
             popup.frameCallback()

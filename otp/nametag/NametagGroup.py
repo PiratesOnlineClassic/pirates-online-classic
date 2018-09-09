@@ -20,375 +20,375 @@ class NametagGroup:
     _unique_index = 0
 
     def __init__(self):
-        self.m_nametags = []
+        self.nametags = []
 
-        self.m_name_font = None
-        self.m_chat_font = None
+        self.name_font = None
+        self.chat_font = None
 
-        self.m_avatar = None
-        self.m_node = None
+        self.avatar = None
+        self.node = None
 
-        self.m_name = ''
-        self.m_display_name = ''
+        self.name = ''
+        self.display_name = ''
 
-        self.m_chat_pages = []
-        self.m_stomp_text = ''
-        self.m_unique_name = ''
+        self.chat_pages = []
+        self.stomp_text = ''
+        self.unique_name = ''
 
-        self.m_region_seq = 0
+        self.region_seq = 0
 
-        self.m_name_icon = NodePath.anyPath(PandaNode('icon'))
-        self.m_name_frame = Vec4(0, 0, 0, 0)
+        self.name_icon = NodePath.anyPath(PandaNode('icon'))
+        self.name_frame = Vec4(0, 0, 0, 0)
 
-        self.m_wordwrap = -1.0
-        self.m_color_code = 0
-        self.m_qt_color = NametagGlobals._default_qt_color
-        self.m_balloon_color = NametagGlobals._balloon_modulation_color
-        self.m_shadow = (0, 0)
-        self.m_has_shadow = False
+        self.wordwrap = -1.0
+        self.color_code = 0
+        self.qt_color = NametagGlobals._default_qt_color
+        self.balloon_color = NametagGlobals._balloon_modulation_color
+        self.shadow = (0, 0)
+        self.has_shadow = False
 
-        self.m_timeout = 0.0
-        self.m_timeout_start = 0.0
-        self.m_has_timeout = False
-        self.m_stomp_time = 0.0
-        self.m_stomp_chat_flags = None
-        self.m_chat_flags = 0
-        self.m_page_number = 0
-        self.m_stomp_delay = 0.5
-        self.m_chat_stomp = 0
+        self.timeout = 0.0
+        self.timeout_start = 0.0
+        self.has_timeout = False
+        self.stomp_time = 0.0
+        self.stomp_chat_flags = None
+        self.chat_flags = 0
+        self.page_number = 0
+        self.stomp_delay = 0.5
+        self.chat_stomp = 0
 
-        self.m_unique_name = 'nametag-%d' % NametagGroup._unique_index
+        self.unique_name = 'nametag-%d' % NametagGroup._unique_index
         NametagGroup._unique_index += 1
 
-        self.m_object_code = 0
-        self.m_nametag3d_flag = 0
-        self.m_manager = None
+        self.object_code = 0
+        self.nametag3d_flag = 0
+        self.manager = None
 
-        self.m_region_seq += 1
+        self.region_seq += 1
 
-        self.m_contents = CFSpeech | CFThought | CFQuicktalker
-        self.m_is_active = 1
-        self.m_active = NametagGlobals._master_nametags_active
-        self.m_visible = NametagGlobals._master_nametags_visible
+        self.contents = CFSpeech | CFThought | CFQuicktalker
+        self.is_active = 1
+        self.active = NametagGlobals._master_nametags_active
+        self.visible = NametagGlobals._master_nametags_visible
 
-        self.m_tag2d = Nametag2d()
-        self.m_tag3d = Nametag3d()
-        self.addNametag(self.m_tag2d)
-        self.addNametag(self.m_tag3d)
+        self.tag2d = Nametag2d()
+        self.tag3d = Nametag3d()
+        self.addNametag(self.tag2d)
+        self.addNametag(self.tag3d)
 
     def setFont(self, font):
         self.setNameFont(font)
         self.setChatFont(font)
 
     def setNameFont(self, font):
-        self.m_name_font = font
+        self.name_font = font
 
     def getNameFont(self):
-        return self.m_name_font
+        return self.name_font
 
     def setChatFont(self, font):
-        self.m_chat_font = font
+        self.chat_font = font
 
     def getChatFont(self):
-        return self.m_chat_font
+        return self.chat_font
 
     def setAvatar(self, avatar):
-        self.m_avatar = avatar
+        self.avatar = avatar
 
     def getAvatar(self):
-        return self.m_avatar
+        return self.avatar
 
     def setNameIcon(self, icon):
-        self.m_name_icon = icon
+        self.name_icon = icon
 
     def getNameIcon(self):
-        return self.m_name_icon
+        return self.name_icon
 
     def setColorCode(self, code):
-        self.m_color_code = code
+        self.color_code = code
 
     def getColorCode(self):
-        return self.m_color_code
+        return self.color_code
 
     def setContents(self, contents):
-        self.m_contents = contents
+        self.contents = contents
 
     def getContents(self):
-        return self.m_contents
+        return self.contents
 
     def setDisplayName(self, name):
-        self.m_display_name = name
+        self.display_name = name
 
-        if name and self.m_name_font:
+        if name and self.name_font:
             text_node = NametagGlobals.getTextNode()
-            text_node.setFont(self.m_name_font)
+            text_node.setFont(self.name_font)
             text_node.setWordwrap(self.getNameWordwrap())
             text_node.setAlign(TextNode.ACenter)
             text_node.setText(name)
             gen = text_node.generate()
-            self.m_node = gen
-            self.m_name_frame = text_node.getCardActual()
+            self.node = gen
+            self.name_frame = text_node.getCardActual()
 
-            if self.m_has_shadow:
-                self.m_node = PandaNode('name')
-                self.m_node.addChild(gen)
+            if self.has_shadow:
+                self.node = PandaNode('name')
+                self.node.addChild(gen)
 
-                pos = Point3(self.m_shadow[0], 0, -self.m_shadow[1])
-                attached = NodePath.anyPath(self.m_node).attachNewNode(gen.copySubgraph())
+                pos = Point3(self.shadow[0], 0, -self.shadow[1])
+                attached = NodePath.anyPath(self.node).attachNewNode(gen.copySubgraph())
                 attached.setPos(pos)
                 attached.setColor(0, 0, 0, 1)
 
         else:
-            self.m_node = None
+            self.node = None
 
         self.updateContentsAll()
 
     def getDisplayName(self):
-        return self.m_display_name
+        return self.display_name
 
     def setName(self, name):
-        self.m_name = name
+        self.name = name
         self.setDisplayName(name)
 
     def getName(self):
-        return self.m_name
+        return self.name
 
     def getNameFrame(self):
-        return self.m_name_frame
+        return self.name_frame
 
     def setNameWordwrap(self, wordwrap):
-        self.m_wordwrap = wordwrap
-        self.setDisplayName(self.m_display_name)
+        self.wordwrap = wordwrap
+        self.setDisplayName(self.display_name)
 
     def getNameWordwrap(self):
-        if self.m_wordwrap > 0.0:
-            return self.m_wordwrap
+        if self.wordwrap > 0.0:
+            return self.wordwrap
 
         wordwrap = NametagGlobals.getNameWordwrap()
         return {self.CCToonBuilding: 8.0,
                 self.CCSuitBuilding: 8.0,
-                self.CCHouseBuilding: 10.0}.get(self.m_color_code, wordwrap)
+                self.CCHouseBuilding: 10.0}.get(self.color_code, wordwrap)
 
     def getNametag(self, index):
-        return self.m_nametags[index]
+        return self.nametags[index]
 
     def getNametag2d(self):
-        return self.m_tag2d
+        return self.tag2d
 
     def getNametag3d(self):
-        return self.m_tag3d
+        return self.tag3d
 
     def setNametag3dFlag(self, flag):
-        self.m_nametag3d_flag = flag
+        self.nametag3d_flag = flag
 
     def getNametag3dFlag(self):
-        return self.m_nametag3d_flag
+        return self.nametag3d_flag
 
     def getNumChatPages(self):
-        return len(self.m_chat_pages)
+        return len(self.chat_pages)
 
     def getNumNametags(self):
-        return len(self.m_nametags)
+        return len(self.nametags)
 
     def setObjectCode(self, code):
-        self.m_object_code = code
+        self.object_code = code
 
     def getObjectCode(self):
-        return self.m_object_code
+        return self.object_code
 
     def setPageNumber(self, page):
-        if self.m_page_number == page:
+        if self.page_number == page:
             return
 
-        self.m_page_number = page
+        self.page_number = page
         if self.willHaveButton():
-            self.m_timeout_start = globalClock.getFrameTime() + 0.2
-            self.m_has_timeout = True
+            self.timeout_start = globalClock.getFrameTime() + 0.2
+            self.has_timeout = True
 
         self.updateContentsAll()
 
     def getPageNumber(self):
-        return self.m_page_number
+        return self.page_number
 
     def getBalloonModulationColor(self):
-        return self.m_balloon_color
+        return self.balloon_color
 
     def setQtColor(self, color):
-        self.m_qt_color = color
+        self.qt_color = color
 
     def getQtColor(self):
-        return self.m_qt_color
+        return self.qt_color
 
     def getRegionSeq(self):
-        return self.m_region_seq
+        return self.region_seq
 
     def setShadow(self, shadow):
-        self.m_shadow = shadow
+        self.shadow = shadow
 
     def getShadow(self):
-        return self.m_shadow
+        return self.shadow
 
     def getStompDelay(self):
-        return self.m_stomp_delay
+        return self.stomp_delay
 
     def getStompText(self):
-        return self.m_stomp_text
+        return self.stomp_text
 
     def setUniqueId(self, name):
-        self.m_unique_name = name
+        self.unique_name = name
 
     def getUniqueId(self):
-        return self.m_unique_name
+        return self.unique_name
 
     def hasButton(self):
-        if self.m_has_timeout:
+        if self.has_timeout:
             return False
 
         return self.willHaveButton()
 
     def hasNoQuitButton(self):
-        return (not self.m_has_timeout) and self.m_chat_flags & CFSpeech
+        return (not self.has_timeout) and self.chat_flags & CFSpeech
 
     def hasQuitButton(self):
-        return (not self.m_has_timeout) and self.m_chat_flags & CFQuitButton
+        return (not self.has_timeout) and self.chat_flags & CFQuitButton
 
     def hasPageButton(self):
-        return (not self.m_has_timeout) and self.m_chat_flags & CFPageButton
+        return (not self.has_timeout) and self.chat_flags & CFPageButton
 
     def hasShadow(self):
-        return self.m_has_shadow
+        return self.has_shadow
 
     def clearShadow(self):
-        self.m_has_shadow = False
+        self.has_shadow = False
 
     def incrementNametag3dFlag(self, flag):
-        self.m_nametag3d_flag = max(self.m_nametag3d_flag, flag)
+        self.nametag3d_flag = max(self.nametag3d_flag, flag)
 
     def isManaged(self):
-        return self.m_manager is not None
+        return self.manager is not None
 
     def manage(self, manager):
-        if not self.m_manager:
-            self.m_manager = manager
-            for nametag in self.m_nametags:
+        if not self.manager:
+            self.manager = manager
+            for nametag in self.nametags:
                 nametag.manage(manager)
 
     def unmanage(self, manager):
-        if self.m_manager:
-            self.m_manager = None
-            for nametag in self.m_nametags:
+        if self.manager:
+            self.manager = None
+            for nametag in self.nametags:
                 nametag.unmanage(manager)
 
     def addNametag(self, nametag):
-        if nametag.m_group:
-            print 'Attempt to add %s twice to %s.' % (nametag.__class__.__name__, self.m_name)
+        if nametag.group:
+            print 'Attempt to add %s twice to %s.' % (nametag.__class__.__name__, self.name)
             return
 
-        nametag.m_group = self
+        nametag.group = self
         nametag.updateContents()
-        self.m_nametags.append(nametag)
+        self.nametags.append(nametag)
 
-        if self.m_manager:
-            nametag.manage(self.m_manager)
+        if self.manager:
+            nametag.manage(self.manager)
 
     def removeNametag(self, nametag):
-        if not nametag.m_group:
-            print 'Attempt to removed %s twice from %s.' % (nametag.__class__.__name__, self.m_name)
+        if not nametag.group:
+            print 'Attempt to removed %s twice from %s.' % (nametag.__class__.__name__, self.name)
             return
 
-        if self.m_manager:
-            nametag.unmanage(self.m_manager)
+        if self.manager:
+            nametag.unmanage(self.manager)
 
-        nametag.m_group = None
+        nametag.group = None
         nametag.updateContents()
-        self.m_nametags.remove(nametag)
+        self.nametags.remove(nametag)
 
     def setActive(self, active):
-        self.m_is_active = active
+        self.is_active = active
 
     def isActive(self):
-        return self.m_active
+        return self.active
 
     def updateContentsAll(self):
-        for nametag in self.m_nametags:
+        for nametag in self.nametags:
             nametag.updateContents()
 
     def updateRegions(self):
-        for nametag in self.m_nametags:
-            nametag.updateRegion(self.m_region_seq)
+        for nametag in self.nametags:
+            nametag.updateRegion(self.region_seq)
 
-        self.m_region_seq += 1
+        self.region_seq += 1
 
         now = globalClock.getFrameTime()
-        if self.m_stomp_time < now and self.m_chat_stomp > 1:
-            self.m_chat_stomp = 0
-            self.setChat(self.m_stomp_text, self.m_stomp_chat_flags, self.m_page_number)
+        if self.stomp_time < now and self.chat_stomp > 1:
+            self.chat_stomp = 0
+            self.setChat(self.stomp_text, self.stomp_chat_flags, self.page_number)
 
-        if self.m_chat_flags & CFTimeout and now >= self.m_timeout:
+        if self.chat_flags & CFTimeout and now >= self.timeout:
             self.clearChat()
-            self.m_chat_stomp = 0
+            self.chat_stomp = 0
 
         v7 = False
-        if self.m_has_timeout and now >= self.m_timeout_start:
-            self.m_has_timeout = 0
+        if self.has_timeout and now >= self.timeout_start:
+            self.has_timeout = 0
             v7 = True
 
-        if self.m_active != NametagGlobals._master_nametags_active:
-            self.m_active = NametagGlobals._master_nametags_active
+        if self.active != NametagGlobals._master_nametags_active:
+            self.active = NametagGlobals._master_nametags_active
             v7 = True
 
-        if self.m_visible == NametagGlobals._master_nametags_visible:
+        if self.visible == NametagGlobals._master_nametags_visible:
             if not v7:
                 return
 
         else:
-            self.m_visible = NametagGlobals._master_nametags_visible
+            self.visible = NametagGlobals._master_nametags_visible
 
         self.updateContentsAll()
 
     def willHaveButton(self):
-        return self.m_chat_flags & (CFPageButton | CFQuitButton)
+        return self.chat_flags & (CFPageButton | CFQuitButton)
 
     def setChat(self, chat, chat_flags, page_number=0):
-        self.m_chat_flags = chat_flags
-        self.m_page_number = page_number
+        self.chat_flags = chat_flags
+        self.page_number = page_number
 
         now = globalClock.getFrameTime()
         must_split = True
         if chat_flags and chat:
-            self.m_chat_stomp += 1
-            if self.m_chat_stomp >= 2 and self.m_stomp_delay >= 0.05:
-                self.m_stomp_text = chat
-                self.m_stomp_chat_flags = self.m_chat_flags
-                self.m_stomp_time = now + self.m_stomp_delay
-                self.m_chat_flags = 0
+            self.chat_stomp += 1
+            if self.chat_stomp >= 2 and self.stomp_delay >= 0.05:
+                self.stomp_text = chat
+                self.stomp_chat_flags = self.chat_flags
+                self.stomp_time = now + self.stomp_delay
+                self.chat_flags = 0
                 must_split = False
 
         else:
-            self.m_chat_flags = 0
+            self.chat_flags = 0
             must_split = False
 
         if must_split:
-            self.m_chat_pages = chat.split('\x07')
+            self.chat_pages = chat.split('\x07')
 
-        if self.m_chat_flags & CFTimeout and self.m_stomp_time < now:
+        if self.chat_flags & CFTimeout and self.stomp_time < now:
             timeout = len(chat) * 0.5
             timeout = min(12.0, max(timeout, 4.0))
-            self.m_timeout = timeout + now
+            self.timeout = timeout + now
 
         if self.willHaveButton():
-            self.m_has_timeout = True
-            self.m_timeout_start = now + 0.2
+            self.has_timeout = True
+            self.timeout_start = now + 0.2
 
         else:
-            self.m_has_timeout = False
-            self.m_timeout_start = 0.0
+            self.has_timeout = False
+            self.timeout_start = 0.0
 
         self.updateContentsAll()
 
     def getChat(self):
-        if self.m_chat_pages:
-            return self.m_chat_pages[self.m_page_number]
+        if self.chat_pages:
+            return self.chat_pages[self.page_number]
 
         return ''
 
@@ -396,21 +396,21 @@ class NametagGroup:
         self.setChat('', 0, 0)
 
     def getChatStomp(self):
-        return self.m_chat_stomp
+        return self.chat_stomp
 
     def clearAuxNametags(self):
         for nametag in self.nametags[:]:
-            if nametag not in (self.m_tag2d, self.m_tag3d):
+            if nametag not in (self.tag2d, self.tag3d):
                 self.removeNametag(nametag)
 
     def click(self):
-        messenger.send(self.m_unique_name)
+        messenger.send(self.unique_name)
 
     def copyNameTo(self, to):
-        return to.attachNewNode(self.m_node.copySubgraph())
+        return to.attachNewNode(self.node.copySubgraph())
 
     def displayAsActive(self):
-        if self.m_is_active and NametagGlobals._master_nametags_active:
+        if self.is_active and NametagGlobals._master_nametags_active:
             return 1
 
         return self.hasButton()

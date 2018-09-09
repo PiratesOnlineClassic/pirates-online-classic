@@ -6,17 +6,17 @@ import NametagGlobals
 class ChatBalloon:
 
     def __init__(self, node=None):
-        self.m_copy_node = None
-        self.m_top_node = None
-        self.m_top_mat = None
-        self.m_middle_node = None
-        self.m_middle_mat = None
-        self.m_bottom_node = None
-        self.m_bottom_mat = None
+        self.copy_node = None
+        self.top_node = None
+        self.top_mat = None
+        self.middle_node = None
+        self.middle_mat = None
+        self.bottom_node = None
+        self.bottom_mat = None
 
-        self.m_hscale = 0
-        self.m_text_height = 0
-        self.m_text_frame = Vec4(0)
+        self.hscale = 0
+        self.text_height = 0
+        self.text_frame = Vec4(0)
 
         self.scan(node)
 
@@ -60,23 +60,23 @@ class ChatBalloon:
         return False
 
     def scan_balloon(self, node):
-        self.m_copy_node = node.copySubgraph()
+        self.copy_node = node.copySubgraph()
 
         for i in xrange(node.getNumChildren()):
             child = node.getChild(i)
             if child.getName() == 'top':
-                self.m_top_node = child
-                self.m_top_mat = child.getTransform().getMat()
+                self.top_node = child
+                self.top_mat = child.getTransform().getMat()
 
             elif child.getName() == 'middle':
-                self.m_middle_node = child
-                self.m_middle_mat = child.getTransform().getMat()
+                self.middle_node = child
+                self.middle_mat = child.getTransform().getMat()
 
             elif child.getName() == 'bottom':
-                self.m_bottom_node = child
-                self.m_bottom_mat = child.getTransform().getMat()
+                self.bottom_node = child
+                self.bottom_mat = child.getTransform().getMat()
 
-        if self.m_top_node and self.m_middle_node and self.m_bottom_node:
+        if self.top_node and self.middle_node and self.bottom_node:
             return True
 
         else:
@@ -99,10 +99,10 @@ class ChatBalloon:
             v116 = v116 + 9.0
 
         v27 = (text_node.getRight() - text_node.getLeft()) * 0.11111111
-        self.m_hscale = v27
+        self.hscale = v27
 
         if v27 < 0.25:
-            self.m_hscale = 0.25
+            self.hscale = 0.25
             text_node.setAlign(TextNode.ACenter)
 
             v29 = v116
@@ -113,56 +113,56 @@ class ChatBalloon:
                 v116 = v29 - 4.5
 
         elif reversed:
-            self.m_hscale = -self.m_hscale
+            self.hscale = -self.hscale
 
-        self.m_text_frame = text_node.getCardActual()
+        self.text_frame = text_node.getCardActual()
         _space = 0.2 if space_for_button else 0.0
         num_rows = max(1, text_node.getNumRows())
         _num_rows = num_rows
         line_h = text_node.getFont().getLineHeight()
 
         num_rows_minus_1 = num_rows - 1
-        subgraph_copy_mat = Mat4(self.m_hscale, 0, 0, 0,
+        subgraph_copy_mat = Mat4(self.hscale, 0, 0, 0,
                                  0, 1.0, 0, 0,
                                  0, 0, 1.0, 0,
                                  0, 0, 0, 1.0)
         text_h = _num_rows * line_h + _space
-        self.m_text_height = text_h
+        self.text_height = text_h
 
         v132 = num_rows_minus_1 * line_h + _space
 
         middle_mat = Mat4(1, 0, 0, 0,
                           0, 1, 0, 0,
                           0, 0, text_h, 0,
-                          0, 0, 0, 1) * self.m_middle_mat
+                          0, 0, 0, 1) * self.middle_mat
         top_mat = Mat4(1, 0, 0, 0,
                        0, 1, 0, 0,
                        0, 0, 1, 0,
-                       0, 0, text_h - 1.0, 1) * self.m_top_mat
+                       0, 0, text_h - 1.0, 1) * self.top_mat
 
-        v137 = v116 * self.m_hscale
+        v137 = v116 * self.hscale
         v138 = 0.0
         v139 = NametagGlobals._balloon_text_origin[2] + v132 + 0.2
 
-        self.m_text_frame += Vec4(v137, v137, v139, v139)
+        self.text_frame += Vec4(v137, v137, v139, v139)
 
         '''
         Correct code:
         Python won't let us edit this transform, we'll have to copy it all
 
-        if self.m_top_node:
-            self.m_top_node.setTransform(TransformState.makeMat(top_mat))
+        if self.top_node:
+            self.top_node.setTransform(TransformState.makeMat(top_mat))
 
-        if self.m_middle_node:
-            self.m_middle_node.setTransform(TransformState.makeMat(middle_mat))
+        if self.middle_node:
+            self.middle_node.setTransform(TransformState.makeMat(middle_mat))
 
-        subgraph_copy = self.m_copy_node.copySubgraph()
+        subgraph_copy = self.copy_node.copySubgraph()
         chat_node.addChild(subgraph_copy)
         subgraph_copy.setTransform(TransformState.makeMat(subgraph_copy_mat))
         '''
 
         # BEGIN PYTHON CODE
-        subgraph_copy = self.m_copy_node.copySubgraph()
+        subgraph_copy = self.copy_node.copySubgraph()
         NodePath.anyPath(subgraph_copy).find('**/top').node().setTransform(TransformState.makeMat(top_mat))
         NodePath.anyPath(subgraph_copy).find('**/middle').node().setTransform(TransformState.makeMat(middle_mat))
 
@@ -209,10 +209,10 @@ class ChatBalloon:
             new_button[0] = np.attachNewNode(v116)
             button_copy = page_button.copyTo(new_button[0])
             if reversed:
-                button_copy.setPos(self.m_hscale * 1.7, 0, 1.8)
+                button_copy.setPos(self.hscale * 1.7, 0, 1.8)
 
             else:
-                button_copy.setPos(self.m_hscale * 9.0, 0, 1.8)
+                button_copy.setPos(self.hscale * 9.0, 0, 1.8)
 
             button_copy.setScale(8.0, 8.0, 8.0)
             button_copy.setY(-0.01)  # Panda3D 1.10 hack to prevent z-fighting.
