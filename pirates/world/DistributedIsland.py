@@ -813,7 +813,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.nametag3d = self.attachNewNode('nametag3d')
         self.nametag3d.setTag('cam', 'nametag')
         self.nametag.setName(name)
-        self.nametag.setWordwrap(PiratesGlobals.NAMETAG_WORDWRAP)
+        self.nametag.setNameWordwrap(PiratesGlobals.NAMETAG_WORDWRAP)
         OTPRender.renderReflection(False, self.nametag3d, 'p_island_nametag', None)
         self.nametag3d.setPos(0, 0, WorldGlobals.getNametagHeight(self.name))
         self.setNametagScale(WorldGlobals.getNametagScale(self.name))

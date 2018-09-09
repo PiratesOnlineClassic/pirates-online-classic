@@ -17,7 +17,7 @@ class DistributedReputationAvatar(DistributedAvatar.DistributedAvatar, Distribut
         DistributedMovingObject.DistributedMovingObject.__init__(self, cr)
         DistributedInteractive.DistributedInteractive.__init__(self, cr)
         DistributedQuestGiver.DistributedQuestGiver.__init__(self)
-        self.nametag.setWordwrap(PiratesGlobals.NAMETAG_WORDWRAP)
+        self.nametag.setNameWordwrap(PiratesGlobals.NAMETAG_WORDWRAP)
 
     def generate(self):
         DistributedAvatar.DistributedAvatar.generate(self)

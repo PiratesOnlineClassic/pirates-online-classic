@@ -5,7 +5,7 @@ from direct.showbase import PythonUtil
 from direct.task import Task
 from otp.avatar import Avatar, DistributedAvatar, PlayerBase
 from otp.chat import ChatAssistant, ChatGarbler
-from otp.margins.WhisperPopup import WhisperPopup
+from otp.nametag.WhisperPopup import WhisperPopup
 from otp.otpbase import OTPLocalizer
 from otp.nametag.NametagConstants import CFQuicktalker, CFPageButton, CFQuitButton, CFSpeech, CFThought, CFTimeout
 from otp.speedchat import SCDecoders

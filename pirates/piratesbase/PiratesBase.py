@@ -24,7 +24,7 @@ from pirates.shipparts import TextureFlattenManager
 from pirates.piratesbase.DiscordPresence import DiscordPresence
 from otp.nametag.ChatBalloon import ChatBalloon
 from otp.nametag import NametagGlobals
-from otp.margins.MarginManager import MarginManager
+from otp.nametag.MarginManager import MarginManager
 from otp.ai.MagicWordGlobal import *
 
 try:
@@ -673,9 +673,9 @@ class PiratesBase(OTPBase):
     def initNametagGlobals(self):
         arrow = loader.loadModel('models/gui/arrow')
         card = NodePath('card')
-        speech3d = ChatBalloon(loader.loadModel('models/gui/chatbox'))
-        thought3d = ChatBalloon(loader.loadModel('models/gui/chatbox_thought_cutout'))
-        speech2d = ChatBalloon(loader.loadModel('models/gui/chatbox_noarrow'))
+        speech3d = ChatBalloon(loader.loadModelNode('models/gui/chatbox'))
+        thought3d = ChatBalloon(loader.loadModelNode('models/gui/chatbox_thought_cutout'))
+        speech2d = ChatBalloon(loader.loadModelNode('models/gui/chatbox_noarrow'))
         chatButtonGui = loader.loadModelOnce('models/gui/triangle')
         chatButtonGui.setScale(0.1)
         chatButtonGui.flattenStrong()

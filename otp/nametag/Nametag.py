@@ -1,8 +1,6 @@
-from otp.nametag import NametagGlobals
-from otp.nametag.NametagConstants import *
-from otp.margins.ClickablePopup import ClickablePopup
-from otp.otpbase import OTPGlobals
-from panda3d.core import *
+from ClickablePopup import *
+from NametagConstants import *
+from direct.interval.IntervalGlobal import LerpColorInterval, Sequence
 
 
 class Nametag(ClickablePopup):
@@ -10,114 +8,187 @@ class Nametag(ClickablePopup):
     CSpeech = 2
     CThought = 4
 
-    NAME_PADDING = 0.2
-    CHAT_ALPHA = 1.0
+    def __init__(self, wordwrap):
+        ClickablePopup.__init__(self)
 
-    DEFAULT_CHAT_WORDWRAP = 10.0
+        self.m_avatar = None
+        self.m_ival = None
+        self.m_popup_region = None
+        self.m_seq = 0
+        self.m_mouse_watcher = None
+        self.m_draw_order = 0
+        self.m_has_draw_order = False
 
-    IS_3D = False  # 3D variants will set this to True.
+        self.m_contents = CFSpeech | CFThought | CFQuicktalker
+        self.m_active = True
+        self.m_field_12 = 0
+        self.m_group = None
+        self.m_wordwrap = wordwrap
+        self.m_has_region = False
+        self.m_ival_name = 'flash-%d' % id(self)
 
-    def __init__(self):
-        if self.IS_3D:
-            ClickablePopup.__init__(self, NametagGlobals.camera)
+    def clearAvatar(self):
+        self.m_avatar = None
+
+    def clearDrawOrder(self):
+        self.m_has_draw_order = False
+        self.updateContents()
+
+    def click(self):
+        if self.m_group:
+            self.m_group.click()
+
+    def deactivate(self):
+        if self.m_has_region:
+            if self.m_mouse_watcher:
+                self.m_mouse_watcher.removeRegion(self.m_popup_region)
+                self.m_mouse_watcher = None
+
+            self.m_has_region = None
+
+        self.m_seq = 0
+
+    def determineContents(self):
+        if self.m_group and self.m_group.isManaged():
+            v3 = self.m_contents & self.m_group.getContents()
+            v4 = self.m_group.m_chat_flags
+
+            if v4 & CFSpeech:
+                if v3 & Nametag.CSpeech:
+                    return Nametag.CSpeech
+
+            elif v4 & CFThought and v3 & Nametag.CThought:
+                return Nametag.CThought
+
+            if v3 & Nametag.CName and self.m_group.getName() and NametagGlobals._master_nametags_visible:
+                return Nametag.CName
+
+        return 0
+
+    def displayAsActive(self):
+        if not self.m_active:
+            return 0
+
+        if self.m_group:
+            return self.m_group.displayAsActive()
+
         else:
-            ClickablePopup.__init__(self)
-
-        self.contents = 0  # To be set by subclass.
-
-        self.innerNP = NodePath.anyPath(self).attachNewNode('nametag_contents')
-
-        self.wordWrap = 7.5
-        self.chatWordWrap = None
-
-        self.font = None
-        self.active = False
-        self.speechFont = None
-        self.name = ''
-        self.displayName = ''
-        self.qtColor = VBase4(1, 1, 1, 1)
-        self.colorCode = CCNormal
-        self.avatar = None
-        self.icon = PandaNode('icon')
-
-        self.frame = (0, 0, 0, 0)
-
-        self.nameFg = (0, 0, 0, 1)
-        self.nameBg = (1, 1, 1, 1)
-        self.chatFg = (0, 0, 0, 1)
-        self.chatBg = (1, 1, 1, 1)
-
-        self.chatString = ''
-        self.chatFlags = 0
-
-    def destroy(self):
-        ClickablePopup.destroy(self)
-
-    def setContents(self, contents):
-        self.contents = contents
-        self.update()
+            return NametagGlobals._master_nametags_active
 
     def setAvatar(self, avatar):
-        self.avatar = avatar
+        self.m_avatar = avatar
+
+    def getAvatar(self):
+        return self.m_avatar
+
+    def setChatWordwrap(self, wordwrap):
+        self.m_wordwrap = wordwrap
+
+    def getChatWordwrap(self):
+        return self.m_wordwrap
+
+    def getGroup(self):
+        return self.m_group
+
+    def getState(self):
+        if self.m_group:
+            if not (self.m_active and self.m_group.displayAsActive()):
+                return PGButton.SInactive
+
+        elif not (self.m_active and NametagGlobals._master_nametags_active):
+            return PGButton.SInactive
+
+        return self.m_state
+
+    def hasGroup(self):
+        return self.m_group is not None
 
     def setActive(self, active):
-        self.active = active
+        self.m_active = active
+        self.updateContents()
 
-    def setChatWordwrap(self, chatWordWrap):
-        self.chatWordWrap = chatWordWrap
+    def isActive(self):
+        return self.m_active
 
-    def tick(self):
-        pass  # Does nothing by default.
+    def isGroupManaged(self):
+        return self.m_group and self.m_group.isManaged()
 
-    def clickStateChanged(self):
-        self.update()
+    def keepRegion(self):
+        if self.m_popup_region:
+            self.m_seq = self.m_group.getRegionSeq()
 
-    def update(self):
-        if self.colorCode in NAMETAG_COLORS:
-            cc = self.colorCode
+    def manage(self, manager):
+        self.updateContents()
+
+    def unmanage(self, manager):
+        self.updateContents()
+        self.deactivate()
+
+    def setContents(self, contents):
+        self.m_contents = contents
+        self.updateContents()
+
+    def setDrawOrder(self, draw_order):
+        self.m_draw_order = draw_order
+        self.m_has_draw_order = True
+        self.updateContents()
+
+    def setRegion(self, frame, sort):
+        if self.m_popup_region:
+            self.m_popup_region.setFrame(frame)
+
         else:
-            cc = CCNormal
+            self.m_popup_region = self._createRegion(frame)
 
-        self.nameFg, self.nameBg, self.chatFg, self.chatBg = \
-            NAMETAG_COLORS[cc][self.getClickState()]
+        self.m_popup_region.setSort(int(sort))
+        self.m_seq = self.m_group.getRegionSeq()
 
-        self.innerNP.node().removeAllChildren()
-        if self.contents & self.CThought and self.chatFlags & CFThought:
-            self.showThought()
-        elif self.contents & self.CSpeech and self.chatFlags & CFSpeech:
-            self.showSpeech()
-        elif self.contents & self.CName and self.displayName:
-            self.showName()
+    def startFlash(self, np):
+        if self.m_ival:
+            self.m_ival.finish()
+            self.m_ival = None
 
-    def showBalloon(self, balloon, text):
-        if not self.font:
-            # If no font is set, we can't display anything yet...
-            return
+        self.m_ival = Sequence(LerpColorInterval(np, 0.5, (1, 1, 1, 0.5), (1, 1, 1, 1), blendType='easeOut'),
+                               LerpColorInterval(np, 0.5, (1, 1, 1, 1), (1, 1, 1, 0.5), blendType='easeIn'))
+        self.m_ival.loop()
 
-        color = self.qtColor if (
-            self.chatFlags & CFQuicktalker) else self.chatBg
-        if color[3] > self.CHAT_ALPHA:
-            color = (color[0], color[1], color[2], self.CHAT_ALPHA)
+    def stopFlash(self):
+        if self.m_ival:
+            self.m_ival.finish()
+            self.m_ival = None
 
-        reversed = (self.IS_3D and (self.chatFlags & CFReversed))
+    def updateRegion(self, seq):
+        if seq == self.m_seq:
+            is_active = self.displayAsActive()
 
-        balloon, frame = balloon.generate(text, self.font, textColor=self.chatFg,
-                                          balloonColor=color,
-                                          wordWrap=self.chatWordWrap or
-                                          self.DEFAULT_CHAT_WORDWRAP,
-                                          reversed=reversed)
-        balloon.reparentTo(self.innerNP)
-        self.frame = frame
+        else:
+            is_active = False
 
-    def showThought(self):
-        self.showBalloon(self.getThoughtBalloon(), self.chatString)
+        if self.m_has_region:
+            if self.m_mouse_watcher != NametagGlobals._mouse_watcher:
+                if self.m_mouse_watcher:
+                    self.m_mouse_watcher.removeRegion(self.m_popup_region)
 
-    def showSpeech(self):
-        self.showBalloon(self.getSpeechBalloon(), self.chatString)
+                self.m_has_region = False
+                self.setState(PGButton.SReady)
 
-    def showName(self):
-        if not self.font:
-            # If no font is set, we can't display anything yet...
-            return
+        if is_active:
+            if (not self.m_has_region) and self.m_popup_region:
+                if self.m_mouse_watcher != NametagGlobals._mouse_watcher:
+                    self.m_mouse_watcher = NametagGlobals._mouse_watcher
 
-        self.icon.reparentTo(self.innerNP)
+                if self.m_mouse_watcher:
+                    self.m_mouse_watcher.addRegion(self.m_popup_region)
+
+                self.m_has_region = True
+
+        elif self.m_has_region:
+            if self.m_mouse_watcher and self.m_popup_region:
+                self.m_mouse_watcher.removeRegion(self.m_popup_region)
+
+            self.m_has_region = False
+            self.m_mouse_watcher = None
+            self.setState(PGButton.SReady)
+
+    def upcastToPandaNode(self):
+        return self

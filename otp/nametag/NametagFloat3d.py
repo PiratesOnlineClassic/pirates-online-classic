@@ -1,8 +1,7 @@
-from otp.nametag.Nametag3d import *
+from Nametag3d import Nametag3d
 
 
 class NametagFloat3d(Nametag3d):
-    WANT_DYNAMIC_SCALING = False
-    SCALING_FACTOR = 1.0
-    SHOULD_BILLBOARD = True
-    IS_3D = False
+
+    def __init__(self):
+        Nametag3d.__init__(self)
