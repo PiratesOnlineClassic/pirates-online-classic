@@ -16,6 +16,7 @@ from pirates.quest import QuestDB
 from pirates.quest import QuestLadderDB
 from pirates.quest.QuestPath import QuestStep
 from pirates.quest.QuestLadderDNA import QuestLadderDNA
+from pirates.quest import QuestTaskDNA
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedIslandAI import DistributedIslandAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
@@ -199,10 +200,11 @@ class QuestManagerAI(DirectObject):
                 callback(None)
                 return
 
+            # TODO FIXME!
             # set the owner of the quest object, this will then send an
             # OwnerView object generate to the client...
-            channel = avatar.getDISLid() << 32 | avatar.doId
-            self.air.setOwner(quest.doId, channel)
+            #channel = avatar.getDISLid() << 32 | avatar.doId
+            #self.air.setOwner(quest.doId, channel)
 
             # store the new quest object to the dictionary of quest objects
             # so we can keep track of it for later use...
@@ -404,24 +406,27 @@ class QuestManagerAI(DirectObject):
 
         def interactCallback(taskDNA, taskState):
 
-            def cutsceneFinalizeCallback():
-                self.completeQuest(avatar, activeQuest)
-
-            def dialogFinalizeCallback():
+            def finalizeCallback(isDialog=False):
                 # TODO: handle quest choices!
                 self.completeQuest(avatar, activeQuest)
 
             taskStates = activeQuest.getTaskStates()
             taskIndex = taskStates.index(taskState)
 
-            finalizeInfo = activeQuest.questDNA.getFinalizeInfo()[taskIndex]
-            finalizeType = finalizeInfo['type']
+            try:
+                finalizeInfo = activeQuest.questDNA.getFinalizeInfo()[taskIndex]
+            except IndexError:
+                # looks like this quest has no finalize info, let's just
+                # give the avatar their next quest...
+                self.completeQuest(avatar, activeQuest)
+                return
 
+            finalizeType = finalizeInfo['type']
             if finalizeType == 'cutscene':
                 self.acceptOnce('quest-finalize-%d' % activeQuest.doId, cutsceneFinalizeCallback)
                 activeQuest.d_startFinalizeScene(taskIndex, npc.doId)
             elif finalizeType == 'dialog':
-                self.acceptOnce('dialog-complete-%d' % activeQuest.doId, dialogFinalizeCallback)
+                self.acceptOnce('dialog-complete-%d' % activeQuest.doId, dialogFinalizeCallback, extraArgs=[True])
                 npc.d_playDialogMovie(avatar.doId, finalizeInfo['sceneId'])
             else:
                 self.notify.warning('Failed to handle interact callback with npc %d for avatar %d '
@@ -430,6 +435,48 @@ class QuestManagerAI(DirectObject):
                 return
 
         self.__completeTaskState(avatar, questEvent, callback=interactCallback)
+
+    def attemptBribeNPC(self, avatar, npc):
+        activeQuest = self.getQuest(avatar, questId=avatar.getActiveQuest())
+        if not activeQuest:
+            return
+
+        inventory = avatar.getInventory()
+        if not inventory:
+            self.notify.debug('Failed to get quest bribe amount for avatar %d, '
+                'avatar has no inventory!' % avatar.doId)
+
+            return
+
+        # figure out how much gold this will cost the player
+        # in order to successfully bribe the npc...
+        goldAmount = None
+        for task in activeQuest.questDNA.getTasks():
+            if isinstance(task, QuestTaskDNA.BribeNPCTaskDNA) and task.getNpcId() == npc.getUniqueId():
+                goldAmount = task.getGold()
+
+        if not goldAmount:
+            self.notify.debug('Failed to get quest bribe amount for avatar %d, '
+                'task was not found!' % avatar.doId)
+
+            return
+
+        # check to see if the avatar even has enough gold in their
+        # pocket to bribe the npc...
+        if inventory.getGoldInPocket() < goldAmount:
+            self.notify.debug('Failed to get quest bribe amount for avatar %d, '
+                'avatar does not have enough gold %d!' % (avatar.doId, goldAmount))
+
+            return
+
+        questEvent = QuestEvent.NPCBribed()
+        questEvent.setNpcId(npc.getDNAId())
+        questEvent.setGold(goldAmount)
+
+        self.__completeTaskState(avatar, questEvent)
+
+        # update the avatar's gold in pocket
+        inventory.setGoldInPocket(inventory.getGoldInPocket() - goldAmount)
 
     def getQuestStepType(self, goalObject):
         if isinstance(goalObject, DistributedNPCTownfolkAI):

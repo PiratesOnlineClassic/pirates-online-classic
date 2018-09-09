@@ -80,12 +80,10 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
         if option == InteractGlobals.HEAL_HP:
             hp = avatar.hp
             maxHp = avatar.getMaxHp()
-
             if hp == maxHp:
                 return
 
             cost = EconomyGlobals.getAvatarHealHpCost(maxHp)
-
             if cost > inventory.getGoldInPocket():
                 return
 
@@ -94,17 +92,17 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
         elif option == InteractGlobals.HEAL_MOJO:
             mojo = avatar.getMojo()
             maxMojo = avatar.getMaxMojo()
-
             if mojo == maxMojo:
                 return
 
             cost = EconomyGlobals.getAvatarHealMojoCost(maxMojo - mojo)
-
             if cost > inventory.getGoldInPocket():
                 return
 
             inventory.setGoldInPocket(inventory.getGoldInPocket() - cost)
             avatar.b_setMojo(maxMojo)
+        elif option == InteractGlobals.BRIBE:
+            self.air.questMgr.attemptBribeNPC(avatar, self)
 
     def handleRequestExit(self, avatar):
         return self.ACCEPT
