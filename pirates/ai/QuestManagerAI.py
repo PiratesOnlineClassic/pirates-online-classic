@@ -423,10 +423,10 @@ class QuestManagerAI(DirectObject):
 
             finalizeType = finalizeInfo['type']
             if finalizeType == 'cutscene':
-                self.acceptOnce('quest-finalize-%d' % activeQuest.doId, cutsceneFinalizeCallback)
+                self.acceptOnce('quest-finalize-%d' % activeQuest.doId, finalizeCallback)
                 activeQuest.d_startFinalizeScene(taskIndex, npc.doId)
             elif finalizeType == 'dialog':
-                self.acceptOnce('dialog-complete-%d' % activeQuest.doId, dialogFinalizeCallback, extraArgs=[True])
+                self.acceptOnce('dialog-complete-%d' % activeQuest.doId, finalizeCallback, extraArgs=[True])
                 npc.d_playDialogMovie(avatar.doId, finalizeInfo['sceneId'])
             else:
                 self.notify.warning('Failed to handle interact callback with npc %d for avatar %d '
