@@ -119,6 +119,10 @@ class ActivateQuestsFSM(QuestOperationFSM):
             return
 
         self.questList = self.inventory.getDoIdListCategory(InventoryCategory.QUESTS)
+        if not self.questList:
+            self.cleanup()
+            return
+
         for questDoId in self.questList:
             # check to see if the quest object has already been generated,
             # we do not want to regenerate the object over again...
