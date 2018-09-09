@@ -1,9 +1,9 @@
 from panda3d.core import *
 
-import NametagGlobals
-from Nametag2d import Nametag2d
-from Nametag3d import Nametag3d
-from NametagConstants import *
+from otp.nametag import NametagGlobals
+from otp.nametag.Nametag2d import Nametag2d
+from otp.nametag.Nametag3d import Nametag3d
+from otp.nametag.NametagConstants import *
 
 
 class NametagGroup:

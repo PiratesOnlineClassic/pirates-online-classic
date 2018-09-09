@@ -1,5 +1,5 @@
-from ClickablePopup import *
-from MarginPopup import *
+from otp.nametag.ClickablePopup import *
+from otp.nametag.MarginPopup import *
 
 
 class WhisperPopup(ClickablePopup, MarginPopup):

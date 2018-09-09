@@ -1,6 +1,7 @@
-from ClickablePopup import *
-from NametagConstants import *
 from direct.interval.IntervalGlobal import LerpColorInterval, Sequence
+
+from otp.nametag.ClickablePopup import *
+from otp.nametag.NametagConstants import *
 
 
 class Nametag(ClickablePopup):
