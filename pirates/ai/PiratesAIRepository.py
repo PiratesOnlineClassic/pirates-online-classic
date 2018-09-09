@@ -16,7 +16,7 @@ from pirates.distributed.PiratesDistrictAI import PiratesDistrictAI
 from pirates.distributed.DistrictTrackerAI import DistrictTrackerAI
 from pirates.world import WorldGlobals
 from pirates.ai.NewsManagerAI import NewsManagerAI
-from pirates.ai.QuestManagerAI import QuestManagerAI
+from pirates.quest.QuestManagerAI import QuestManagerAI
 from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 from pirates.distributed.DistributedPopulationTrackerAI import DistributedPopulationTrackerAI
 from pirates.instance.DistributedTeleportMgrAI import DistributedTeleportMgrAI
