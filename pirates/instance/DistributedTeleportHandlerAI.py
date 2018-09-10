@@ -1,5 +1,7 @@
 from panda3d.core import *
+
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
+
 from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesbase import PiratesGlobals
 
@@ -31,8 +33,8 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         world = self.teleportFsm.world
         gameArea = self.teleportFsm.gameArea
 
-        self.sendUpdateToAvatarId(self.avatar.doId, 'continueTeleportToInstance', [world.parentId,
-            world.zoneId, world.doId, world.getFileName(), world.doId, gameArea.zoneId,
+        self.sendUpdateToAvatarId(self.avatar.doId, 'continueTeleportToInstance', [world.doId,
+            gameArea.zoneId, world.doId, world.getFileName(), gameArea.parentId, gameArea.zoneId,
             gameArea.doId, gameArea.getFileName(), world.oceanGrid.doId])
 
     def readyToFinishTeleport(self, instanceDoId):

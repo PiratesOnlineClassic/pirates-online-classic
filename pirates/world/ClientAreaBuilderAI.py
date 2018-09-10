@@ -1,7 +1,9 @@
 from panda3d.core import *
+
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.GridParent import GridParent
+
 from pirates.leveleditor import ObjectList
 from pirates.piratesbase import PiratesGlobals, PLocalizer
 
@@ -75,7 +77,6 @@ class ClientAreaBuilderAI(DirectObject):
             return object
 
         parentData = self.air.worldCreator.getObjectDataByUid(parentUid)
-
         if parentData['Type'] == 'Island':
             object.setPos(objectPos)
             object.setHpr(objectHpr)

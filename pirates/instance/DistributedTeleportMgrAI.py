@@ -150,6 +150,11 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             return
 
         if not spawnPt:
+            # TODO FIXME!
+            # if we have no spawn point for this world and we need to retrieve one,
+            # then let's assume the world is the game area's parent... When teleporting
+            # from an interior to an exterior, the world is not the game area's parent...?
+            world = gameArea.getParentObj()
             spawnPt = world.getSpawnPt(gameArea.getUniqueId())
 
         if not spawnPt:

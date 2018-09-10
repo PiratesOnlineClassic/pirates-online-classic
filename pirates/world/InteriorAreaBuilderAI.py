@@ -1,4 +1,5 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
+
 from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from pirates.leveleditor import ObjectList
 from pirates.leveleditor import WorldDataGlobals

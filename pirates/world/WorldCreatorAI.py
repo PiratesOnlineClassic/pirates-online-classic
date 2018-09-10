@@ -284,23 +284,25 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         objParent = None
 
         if objType == ObjectList.AREA_TYPE_WORLD_REGION:
-            objParent = self.__createWorldInstance(object, parent, parentUid, objKey, dynamic)
+            objParent = self.createWorldInstance(object, parent, parentUid, objKey, dynamic)
         else:
             newObj = self.world.builder.createObject(objType, object, parent, parentUid, objKey, dynamic,
                 parentIsObj, fileName, actualParentObj)
 
         return (newObj, objParent)
 
-    def __createWorldInstance(self, objectData, parent, parentUid, objKey, dynamic):
-        worldName = objectData['Name']
-
-        if worldName == 'default':
+    def createWorldInstance(self, objectData, parent, parentUid, objKey, dynamic):
+        worldName = objectData.get('Name', '')
+        if worldName == '':
             self.world = DistributedMainWorldAI(self.air)
+            self.world.setType(PiratesGlobals.INSTANCE_MAINSUB)
         elif worldName == WorldGlobals.PiratesTutorialSceneFileBase:
             self.world = DistributedPiratesTutorialWorldAI(self.air)
+        elif worldName == 'default':
+            self.world = DistributedMainWorldAI(self.air)
         else:
-            self.notify.warning('Failed to create world instance with unknown name: %s!' % (
-                worldName))
+            self.notify.warning('Failed to generate world instance with '
+                'unknown name: %s!' % worldName)
 
             return
 
@@ -308,7 +310,8 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         self.world.setName(worldName)
         self.world.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
-        self.worldDict = objectData
-        self.air.uidMgr.addUid(self.world.getUniqueId(), self.world.doId)
+        if parent is None:
+            self.worldDict = objectData
 
+        self.air.uidMgr.addUid(self.world.getUniqueId(), self.world.doId)
         return self.world

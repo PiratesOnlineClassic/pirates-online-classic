@@ -77,7 +77,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         from pirates.world.DistributedJailInteriorAI import DistributedJailInteriorAI
 
         parent = parent.getParentObj()
-
         if not parent:
             self.notify.warning('Cannot create building exterior %s, current parent %s, has no parent object!' % (
                 objKey, parentUid))
@@ -85,7 +84,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             return
 
         exteriorUid = objectData.get('ExtUid')
-
         if not exteriorUid:
             self.notify.warning('Cannot create building exterior %s, no exterior uid found!' % (
                 objKey))
@@ -93,7 +91,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             return
 
         interiorFile = objectData.get('File')
-
         if not interiorFile:
             self.notify.debug('Cannot create building exterior %s, no interior file found!' % (
                 objKey))
@@ -101,15 +98,18 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             return
 
         modelPath = self.air.worldCreator.getModelPathFromFile(interiorFile)
-
         if not modelPath:
             self.notify.warning('Cannot create building exterior %s, no model path found for file %s!' % (
                 objKey, interiorFile))
 
             return
 
-        isJail = 'jail' in objectData['Visual']['Model']
+        # create a new instance object that lays under the main world instance
+        # this allows us to load the interior file data and set the correct values...
+        parent = self.air.worldCreator.createWorldInstance({},
+            self.air.worldCreator.world, '', objKey, False)
 
+        isJail = 'jail' in objectData['Visual']['Model']
         if isJail:
             interior = DistributedJailInteriorAI(self.air)
         else:

@@ -1,4 +1,5 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
+
 from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from pirates.leveleditor import ObjectList
 from pirates.piratesbase import PiratesGlobals
@@ -48,6 +49,11 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         gameArea.setName(areaName)
         gameArea.setFileName(areaFile)
         gameArea.setModelPath(objectData['Visual']['Model'])
+
+        # create a new instance object that lays under the main world instance
+        # this allows us to load the game area file data and set the correct values...
+        parent = self.air.worldCreator.createWorldInstance({},
+            self.air.worldCreator.world, '', objKey, False)
 
         parent.generateChildWithRequired(gameArea, self.air.allocateZone())
         parent.builder.addObject(gameArea)
