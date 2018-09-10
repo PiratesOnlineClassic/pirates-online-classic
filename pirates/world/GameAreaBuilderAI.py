@@ -109,9 +109,9 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         parent = self.air.worldCreator.createWorldInstance({},
             self.air.worldCreator.world, '', objKey, False)
 
-        isJail = 'jail' in objectData['Visual']['Model']
-        if isJail:
+        if 'jail' in objectData['Visual']['Model']:
             interior = DistributedJailInteriorAI(self.air)
+            self.parent.setJailInterior(interior)
         else:
             interior = DistributedGAInteriorAI(self.air)
 
@@ -127,11 +127,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         parent.builder.addObject(interior)
         parent.builder.addObject(interior, uniqueId=objKey)
 
-        if isJail:
-            self.parent.setJailInterior(interior)
-
         objectList = objectData.get('Objects', {})
-
         if not objectList:
             exteriorLocatorNode = self.__createDoorLocatorNode(self.parent, objKey,
                 exteriorUid, objectData, wantTruePosHpr=False)
