@@ -511,8 +511,8 @@ class PiratesBase(OTPBase):
     def addCullBins(self):
         cbm = CullBinManager.getGlobalPtr()
         cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
-        cbm.addBin('shadow', CullBinManager.BTFixed, 19)
-        cbm.addBin('ground', CullBinManager.BTFixed, 18)
+        cbm.addBin('shadow', CullBinManager.BTFixed, 15)
+        cbm.addBin('ground', CullBinManager.BTFixed, 14)
         cbm.addBin('sky', CullBinManager.BTFixed, 28)
         cbm.addBin('water', CullBinManager.BTFixed, 28)
         cbm.addBin('gui-fixed', CullBinManager.BTFixed, 55)
