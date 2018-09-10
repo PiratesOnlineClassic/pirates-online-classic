@@ -73,5 +73,5 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
             return
 
         self.avatar.b_setGameState('Spawn')
-        messenger.send('teleportDone-%d' % self.avatar.doId)
         self.teleportFsm.cleanup()
+        messenger.send('teleportDone-%d' % self.avatar.doId)
