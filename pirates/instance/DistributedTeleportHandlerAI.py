@@ -63,6 +63,7 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         world.d_setSpawnInfo(self.avatar.doId, xPos, yPos, zPos, h, 0, [gameArea.doId,
             gameArea.parentId, gameArea.zoneId])
 
+        avatar.b_setLocation(gameArea.doId, zoneId)
         self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
 
     def teleportToInstanceFinal(self, avatarId):
