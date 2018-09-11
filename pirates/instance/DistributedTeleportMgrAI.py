@@ -39,7 +39,7 @@ class TeleportOperationFSM(FSM):
     def cleanup(self):
         del self.air.teleportMgr.avatar2fsm[self.avatar.doId]
         self.ignoreAll()
-        self.demand('Stop')
+        self.demand('Off')
 
 class TeleportFSM(TeleportOperationFSM):
 
