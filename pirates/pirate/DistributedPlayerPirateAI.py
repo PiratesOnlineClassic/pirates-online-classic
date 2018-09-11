@@ -96,12 +96,14 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.attemptToSetCursedZombie()
 
     def setLocation(self, parentId, zoneId):
+        from pirates.world.DistributedIslandAI import DistributedIslandAI
+
         DistributedPlayerAI.setLocation(self, parentId, zoneId)
         DistributedBattleAvatarAI.setLocation(self, parentId, zoneId)
 
         parentObj = self.getParentObj()
         if parentObj:
-            if isinstance(parentObj, DistributedGameAreaAI):
+            if isinstance(parentObj, DistributedIslandAI):
                 if self.currentIsland:
                     validReturns = [
                         LocationIds.PORT_ROYAL_ISLAND,
