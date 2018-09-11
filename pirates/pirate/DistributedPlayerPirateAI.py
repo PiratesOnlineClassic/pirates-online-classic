@@ -13,7 +13,6 @@ from pirates.pirate import AvatarTypes
 from pirates.quest.QuestConstants import LocationIds
 from pirates.quest import QuestDB
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
-from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from otp.ai.MagicWordGlobal import *
@@ -96,12 +95,14 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.attemptToSetCursedZombie()
 
     def setLocation(self, parentId, zoneId):
+        from pirates.world.DistributedIslandAI import DistributedIslandAI
+
         DistributedPlayerAI.setLocation(self, parentId, zoneId)
         DistributedBattleAvatarAI.setLocation(self, parentId, zoneId)
 
         parentObj = self.getParentObj()
         if parentObj:
-            if isinstance(parentObj, DistributedGameAreaAI):
+            if isinstance(parentObj, DistributedIslandAI):
                 if self.currentIsland:
                     validReturns = [
                         LocationIds.PORT_ROYAL_ISLAND,
