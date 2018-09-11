@@ -26,20 +26,20 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         newObj = None
 
         if objType == ObjectList.DOOR_LOCATOR_NODE and self.wantDoorLocatorNodes:
-            newObj = self.__createDoorLocatorNode(parent, parentUid, objKey, objectData)
+            newObj = self.createDoorLocatorNode(parent, parentUid, objKey, objectData)
         elif objType == ObjectList.LOCATOR_NODE and self.wantConnectorLocatorNodes:
-            newObj = self.__createConnectorLocatorNode(parent, parentUid, objKey, objectData)
+            newObj = self.createConnectorLocatorNode(parent, parentUid, objKey, objectData)
         elif objType == 'Jail Cell Door' and self.wantJailCellDoors:
-            newObj = self.__createCellDoor(parent, parentUid, objKey, objectData)
+            newObj = self.createCellDoor(parent, parentUid, objKey, objectData)
         elif objType == 'Parlor Game' and self.wantParlorGames and not config.GetBool('want-alpha-blockers', False):
-            newObj = self.__createParlorTable(objectData, parent, parentUid, objKey)
+            newObj = self.createParlorTable(objectData, parent, parentUid, objKey)
         else:
             newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey,
                 dynamic, parentIsObj, fileName, actualParentObj)
 
         return newObj
 
-    def __createDoorLocatorNode(self, parent, parentUid, objKey, objectData):
+    def createDoorLocatorNode(self, parent, parentUid, objKey, objectData):
         from pirates.world.DistributedInteriorDoorAI import DistributedInteriorDoorAI
 
         doorLocatorNode = DistributedInteriorDoorAI(self.air)
@@ -96,7 +96,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
 
         return doorLocatorNode
 
-    def __createConnectorLocatorNode(self, parent, parentUid, objKey, objectData):
+    def createConnectorLocatorNode(self, parent, parentUid, objKey, objectData):
         locatorName = objectData.get('Name', '')
         if 'interior' not in locatorName:
             return
@@ -104,7 +104,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         self.air.worldCreator.locatorManager.addLocator(
             parentUid, objKey, objectData)
 
-    def __createCellDoor(self, parent, parentUid, objKey, objectData):
+    def createCellDoor(self, parent, parentUid, objKey, objectData):
         cellDoor = DistributedCellDoorAI(self.air)
         cellDoor.setUniqueId(objKey)
         cellDoor.setPos(objectData.get('Pos', (0, 0, 0)))
@@ -121,7 +121,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
 
         return cellDoor
 
-    def __createParlorTable(self, objectData, parent, parentUid, objKey):
+    def createParlorTable(self, objectData, parent, parentUid, objKey):
         tableCls = None
         gameType = objectData.get('Category', 'Unknown')
 
@@ -155,7 +155,6 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         zoneId = self.parent.getZoneFromXYZ(gameTable.getPos())
         self.parent.generateChildWithRequired(gameTable, zoneId)
         self.parentObjectToCell(gameTable, zoneId)
-
         self.addObject(gameTable)
 
         return gameTable

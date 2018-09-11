@@ -20,16 +20,16 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         if objType == ObjectList.AREA_TYPE_ISLAND_REGION:
-            newObj = self.__createGameArea(objectData, parent, parentUid, objKey, dynamic)
+            newObj = self.createGameArea(objectData, parent, parentUid, objKey, dynamic)
         elif objType == 'Dinghy' and self.wantDinghys:
-            newObj = self.__createDinghy(parent, parentUid, objKey, objectData)
+            newObj = self.createDinghy(parent, parentUid, objKey, objectData)
         else:
             newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey,
                 dynamic, parentIsObj, fileName, actualParentObj)
 
         return newObj
 
-    def __createGameArea(self, objectData, parent, parentUid, objKey, dynamic):
+    def createGameArea(self, objectData, parent, parentUid, objKey, dynamic):
         from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 
         parent = self.parent.getParentObj()
@@ -72,10 +72,9 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
                 createConnectorLocatorNode(objKey, objectData)
 
         self.air.worldCreator.loadObjectsFromFile(areaFile + '.py', gameArea)
-
         return gameArea
 
-    def __createDinghy(self, parent, parentUid, objKey, objectData):
+    def createDinghy(self, parent, parentUid, objKey, objectData):
         dinghy = DistributedDinghyAI(self.air)
         dinghy.setPos(objectData.get('Pos', (0, 0, 0)))
         dinghy.setHpr(objectData.get('Hpr', (0, 0, 0)))

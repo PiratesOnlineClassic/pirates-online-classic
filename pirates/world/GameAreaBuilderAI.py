@@ -1,5 +1,6 @@
-from pirates.world.ClientAreaBuilderAI import ClientAreaBuilderAI
 from direct.directnotify.DirectNotifyGlobal import directNotify
+
+from pirates.world.ClientAreaBuilderAI import ClientAreaBuilderAI
 from pirates.leveleditor import ObjectList
 from pirates.leveleditor import WorldDataGlobals
 from pirates.piratesbase import PLocalizer
@@ -28,27 +29,27 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         newObj = None
 
         if objType == 'Player Spawn Node':
-            newObj = self.__createPlayerSpawnNode(parent, parentUid, objKey, objectData)
+            newObj = self.createPlayerSpawnNode(parent, parentUid, objKey, objectData)
         elif objType == 'Building Exterior' and self.wantBuildingExteriors:
-            newObj = self.__createBuildingExterior(parent, parentUid, objKey, objectData)
+            newObj = self.createBuildingExterior(parent, parentUid, objKey, objectData)
         elif objType == ObjectList.DOOR_LOCATOR_NODE and self.wantDoorLocatorNodes:
-            newObj = self.__createDoorLocatorNode(parent, parentUid, objKey, objectData)
+            newObj = self.createDoorLocatorNode(parent, parentUid, objKey, objectData)
         elif objType == ObjectList.LOCATOR_NODE and self.wantConnectorLocatorNodes:
-            newObj = self.__createConnectorLocatorNode(parent, parentUid, objKey, objectData)
+            newObj = self.createConnectorLocatorNode(parent, parentUid, objKey, objectData)
         elif objType == ObjectList.CONNECTOR_TUNNEL and self.wantConnectorTunnels:
-            newObj = self.__createConnectorTunnel(parent, parentUid, objKey, objectData)
+            newObj = self.createConnectorTunnel(parent, parentUid, objKey, objectData)
         elif objType == 'Searchable Container' and self.wantSearchables:
-            newObj = self.__createSearchableContainer(parent, parentUid, objKey, objectData)
+            newObj = self.createSearchableContainer(parent, parentUid, objKey, objectData)
         elif objType in ['Animal', 'Townsperson', 'Spawn Node', 'Dormant NPC Spawn Node', 'Skeleton', 'NavySailor', 'Creature']:
             newObj = self.air.enemySpawner.createObject(objType, objectData, parent, parentUid, objKey, dynamic)
         elif objType == 'Object Spawn Node' and self.wantSpawnNodes:
-            newObj = self.__createObjectSpawnNode(parent, parentUid, objKey, objectData)
+            newObj = self.createObjectSpawnNode(parent, parentUid, objKey, objectData)
         elif objType == 'Interactive Prop' and self.wantInteractives:
-            newObj = self.__createInteractiveProp(parent, parentUid, objKey, objectData)
+            newObj = self.createInteractiveProp(parent, parentUid, objKey, objectData)
 
         return newObj
 
-    def __createPlayerSpawnNode(self, parent, parentUid, objKey, objectData):
+    def createPlayerSpawnNode(self, parent, parentUid, objKey, objectData):
         from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
         from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 
@@ -72,7 +73,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
         parent.addSpawnPt(self.parent.getUniqueId(), (x, y, z, h), index)
 
-    def __createBuildingExterior(self, parent, parentUid, objKey, objectData):
+    def createBuildingExterior(self, parent, parentUid, objKey, objectData):
         from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
         from pirates.world.DistributedJailInteriorAI import DistributedJailInteriorAI
 
@@ -129,19 +130,18 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
         objectList = objectData.get('Objects', {})
         if not objectList:
-            exteriorLocatorNode = self.__createDoorLocatorNode(self.parent, objKey,
+            exteriorLocatorNode = self.createDoorLocatorNode(self.parent, objKey,
                 exteriorUid, objectData, wantTruePosHpr=False)
 
-            interiorLocatorNode = interior.builder._InteriorAreaBuilderAI__createDoorLocatorNode(
+            interiorLocatorNode = interior.builder.createDoorLocatorNode(
                 self.parent, objKey, objKey, objectData)
         else:
             self.air.worldCreator.loadObjectDict(objectList, self.parent, objKey, True)
 
         self.air.worldCreator.loadObjectsFromFile(interiorFile + '.py', interior)
-
         return interior
 
-    def __createDoorLocatorNode(self, parent, parentUid, objKey, objectData, wantTruePosHpr=True):
+    def createDoorLocatorNode(self, parent, parentUid, objKey, objectData, wantTruePosHpr=True):
         from pirates.world.DistributedBuildingDoorAI import DistributedBuildingDoorAI
 
         parent = parent.getParentObj()
@@ -185,7 +185,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
         return doorLocatorNode
 
-    def __createConnectorLocatorNode(self, parent, parentUid, objKey, objectData):
+    def createConnectorLocatorNode(self, parent, parentUid, objKey, objectData):
         locatorName = objectData.get('Name', '')
         if 'exterior' not in locatorName:
             return
@@ -193,7 +193,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         self.air.worldCreator.locatorManager.addLocator(
             parentUid, objKey, objectData)
 
-    def __createConnectorTunnel(self, parent, parentUid, objKey, objectData):
+    def createConnectorTunnel(self, parent, parentUid, objKey, objectData):
         from pirates.world.DistributedGATunnelAI import DistributedGATunnelAI
 
         modelPath = objectData.get('Visual', {}).get('Model', '')
@@ -308,7 +308,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
                 self.air.uidMgr.addUidCallback(objKey, locatorNodeArrivedCallback)
                 createConnectorLocatorNode(objKey, objectData)
 
-    def __createSearchableContainer(self, parent, parentUid, objKey, objectData):
+    def createSearchableContainer(self, parent, parentUid, objKey, objectData):
         container = DistributedSearchableContainerAI(self.air)
         container.setUniqueId(objKey)
         container.setPos(objectData.get('Pos', (0, 0, 0)))
@@ -325,12 +325,11 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         zoneId = self.parent.getZoneFromXYZ(container.getPos())
         parent.generateChildWithRequired(container, zoneId)
         self.parentObjectToCell(container, zoneId)
-
         self.addObject(container)
 
         return container
 
-    def __createObjectSpawnNode(self, parent, parentUid, objKey, objectData):
+    def createObjectSpawnNode(self, parent, parentUid, objKey, objectData):
         spawnClass = DistributedSurfaceTreasureAI if objectData['Spawnables'] == 'Surface Treasure' \
             else DistributedBuriedTreasureAI
 
@@ -345,12 +344,11 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         zoneId = self.parent.getZoneFromXYZ(spawnNode.getPos())
         parent.generateChildWithRequired(spawnNode, zoneId)
         self.parentObjectToCell(spawnNode, zoneId)
-
         self.addObject(spawnNode)
 
         return spawnNode
 
-    def __createInteractiveProp(self, parent, parentUid, objKey, objectData):
+    def createInteractiveProp(self, parent, parentUid, objKey, objectData):
         prop = DistributedInteractivePropAI(self.air)
         prop.setUniqueId(objKey)
         prop.setPos(objectData.get('Pos', (0, 0, 0)))
@@ -365,7 +363,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         zoneId = self.parent.getZoneFromXYZ(prop.getPos())
         parent.generateChildWithRequired(prop, zoneId)
         self.parentObjectToCell(prop, zoneId)
-
         self.addObject(prop)
 
         return prop
