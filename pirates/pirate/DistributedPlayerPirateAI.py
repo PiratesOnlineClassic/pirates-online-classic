@@ -13,6 +13,7 @@ from pirates.pirate import AvatarTypes
 from pirates.quest.QuestConstants import LocationIds
 from pirates.quest import QuestDB
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
+from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from otp.ai.MagicWordGlobal import *
