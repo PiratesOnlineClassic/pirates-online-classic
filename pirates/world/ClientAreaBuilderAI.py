@@ -33,7 +33,6 @@ class ClientAreaBuilderAI(DirectObject):
 
     def deleteObject(self, doId):
         object = self.objectList.get(doId)
-
         if not object:
             return
 
@@ -94,17 +93,14 @@ class ClientAreaBuilderAI(DirectObject):
     def getObjectTruePosAndParent(self, objKey, parentUid, objectData):
         if self.isChildObject(objKey, parentUid):
             parentData = self.air.worldCreator.getObjectDataByUid(parentUid)
-
             if parentData['Type'] == 'Island':
                 return objectData.get('Pos'), NodePath('')
 
             parentObject = NodePath('psuedo-%s' % parentUid)
-
             if not 'GridPos' in objectData:
                 parentObject.setPos(parentData.get('Pos', Point3(0, 0, 0)))
 
             parentObject.setHpr(parentData.get('Hpr', Point3(0, 0, 0)))
-
             objectPos = objectData.get('GridPos', objectData.get('Pos', Point3(0, 0, 0)))
             return objectPos, parentObject
 
@@ -114,24 +110,20 @@ class ClientAreaBuilderAI(DirectObject):
         newObj = None
 
         if objType == ObjectList.AREA_TYPE_ISLAND:
-            newObj = self.__createIsland(objectData, parent, parentUid, objKey, dynamic)
+            newObj = self.createIsland(objectData, parent, parentUid, objKey, dynamic)
         else:
             if not parent or not hasattr(parent, 'builder'):
                 parent = self.air.uidMgr.justGetMeMeObject(parentUid)
 
-                if not parent:
+                if not parent or parent == self.parent:
                     return newObj
-
-            # don't create objects for our own builder...
-            if parent == self.parent:
-                return newObj
 
             newObj = parent.builder.createObject(objType, objectData, parent,
                 parentUid, objKey, dynamic)
 
         return newObj
 
-    def __createIsland(self, objectData, parent, parentUid, objKey, dynamic):
+    def createIsland(self, objectData, parent, parentUid, objKey, dynamic):
         from pirates.world.DistributedIslandAI import DistributedIslandAI
 
         islandWorldData = self.air.worldCreator.getIslandWorldDataByUid(objKey)
