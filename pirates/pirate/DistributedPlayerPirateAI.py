@@ -3,6 +3,7 @@ from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.HumanDNA import HumanDNA
 from pirates.quest.DistributedQuestAvatarAI import DistributedQuestAvatarAI
+from pirates.tutorial import TutorialGlobals
 from pirates.battle.BattleRandom import BattleRandom
 from pirates.pirate.PlayerPirateGameFSMAI import PlayerPirateGameFSMAI
 from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
@@ -229,7 +230,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         questHistory = self.getQuestHistory()
         quests = inventory.getDoIdListCategory(InventoryCategory.QUESTS)
-        questDNA = QuestDB.QuestDict['c2.4recoverOrders']
+
+        if self.getTutorial() < PiratesGlobals.TUT_FINISHED:
+            questDNA = QuestDB.QuestDict[TutorialGlobals.FIRST_QUEST]
+        else:
+            questDNA = QuestDB.QuestDict['c2.4recoverOrders']
 
         if not quests and questDNA.getQuestInt() not in questHistory:
             self.air.questMgr.createQuest(self, questDNA.getQuestId())
