@@ -539,7 +539,6 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         return self.cr.doId2do.get(self.dinghyId)
 
     def setDNAString(self, dnaString):
-        return
         DistributedPirateBase.setDNAString(self, dnaString)
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-shipboard-report')
