@@ -138,7 +138,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def setDNAString(self, dnaString):
         self.dnaString = dnaString
-        self.makeFromNetString(dnaString)
 
     def d_setDNAString(self, dnaString):
         self.sendUpdate('setDNAString', [dnaString])

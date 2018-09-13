@@ -1,22 +1,21 @@
 import copy
-from pirates.pirate.HumanDNA import HumanDNA
+
+from pirates.pirate import HumanDNA
+
 
 class HumanBase:
+
     def setDNA(self, dna=None):
         self.setDNAString(dna)
 
     def setDNAString(self, dnaString=None):
         if dnaString == None:
             self.setDefaultDNA()
-        elif isinstance(dnaString, HumanDNA):
-            self.style = dnaString
         else:
-            dna = HumanDNA()
-            dna.makeFromNetString(dnaString)
-            self.style = dna
+            self.style = copy.deepcopy(dnaString)
 
     def setDefaultDNA(self):
-        newDNA = HumanDNA()
+        newDNA = HumanDNA.HumanDNA()
         self.style = newDNA
 
     def setTutorial(self, val):

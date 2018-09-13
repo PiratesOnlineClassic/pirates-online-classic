@@ -495,13 +495,28 @@ class CreateAvatarFSM(OperationFSM):
         self.demand('CreateAvatar')
 
     def enterCreateAvatar(self):
-        pirateFields = {
-            'setName': (self.name,),
-            'WishNameState': ('OPEN',),
-            'WishName': ('',),
-            'setDNAString': (self.dna,),
-            'setDISLid': (self.target,)
-        }
+        pirateFields = {}
+
+        humanDNA = HumanDNA()
+        humanDNA.makeFromNetString(self.dna)
+
+        dclass = self.csm.air.dclassesByName['HumanDNA']
+        for fieldIndex in xrange(dclass.getNumFields()):
+            field = dclass.getInheritedField(fieldIndex)
+            field = field.asAtomicField()
+            if not field:
+                continue
+
+            fieldValue = getattr(humanDNA, field.getName().replace('set', 'get'))()
+            if isinstance(fieldValue, list):
+                pirateFields[field.getName()] = fieldValue
+            else:
+                pirateFields[field.getName()] = (fieldValue,)
+
+        pirateFields['setName'] = (self.name,)
+        pirateFields['WishNameState'] = ('OPEN',)
+        pirateFields['WishName'] = ('',)
+        pirateFields['setDISLid'] = (self.target,)
 
         if simbase.config.GetBool('skip-tutorial', False):
             pirateFields['setReturnLocation'] = (LocationIds.PORT_ROYAL_ISLAND,)
@@ -630,8 +645,13 @@ class GetAvatarsFSM(AvatarOperationFSM):
             elif wishNameState == 'REJECTED':
                 nameState = 4
 
-            potentialAvs.append([avId, name, fields['setDNAString'][0],
-                                 index, nameState])
+            humanDNA = HumanDNA()
+            for fieldName, fieldValue in fields.items():
+                if hasattr(humanDNA, fieldName):
+                    getattr(humanDNA, fieldName)(*fieldValue)
+
+            potentialAvs.append([
+                avId, name, humanDNA.makeNetString(), index, nameState])
 
         self.csm.sendUpdateToAccountId(self.target, 'setAvatars', [potentialAvs])
         self.demand('Off')
