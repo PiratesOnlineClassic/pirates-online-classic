@@ -375,34 +375,40 @@ class QuestManagerAI(DirectObject):
     def __completeTaskState(self, avatar, questEvent, callback=None):
         activeQuest = self.getQuest(avatar, questId=avatar.getActiveQuest())
         if not activeQuest:
+            self.notify.debug('Failed to complete task state for avatar %d, '
+                'avatar has no active quest!' % avatar.doId)
+
             return
 
-        taskDNAs = activeQuest.questDNA.getTaskDNAs()
+        tasks = activeQuest.getTasks()
         taskStates = activeQuest.getTaskStates()
 
-        taskDNA = None
-        taskState = None
+        currentTask = None
+        currentTaskState = None
 
-        # iterate through all of the task states and check to see if we
-        # have successfully completed one...
-        for index in xrange(len(taskStates)):
-            taskDNA = taskDNAs[index]
-            taskState = taskStates[index]
+        for task, taskState in zip(tasks, taskStates):
+            # check to see if the quest event applys to this task state.
+            if questEvent.applyTo(taskState, task):
+                # check to see if this task state is complete.
+                if taskState.isComplete():
+                    continue
 
-            if questEvent.applyTo(taskState, taskDNA):
-                taskDNA.complete(questEvent, taskState)
+                task.complete(questEvent, taskState)
+
+                currentTask = task
+                currentTaskState = taskState
                 break
 
-        if not taskDNA and not taskState:
+        if not currentTask and not currentTaskState:
             return
 
         # update the active quest's new task states.
         activeQuest.b_setTaskStates(taskStates)
 
         # check to see if the task state event has been completed.
-        if taskState.isComplete():
+        if activeQuest.isComplete():
             if callback is not None:
-                callback(taskDNA, taskState)
+                callback(currentTask, currentTaskState)
             else:
                 self.completeQuest(avatar, activeQuest)
 
