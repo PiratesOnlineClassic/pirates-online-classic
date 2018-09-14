@@ -70,13 +70,12 @@ class CreateQuestFSM(QuestOperationFSM):
             self.cleanup()
             return
 
-        initialTaskStates = questDNA.getInitialTaskStates(self.avatar)
         fields = {
             'setQuestId': (questId,),
             'setGiverId': ('',),
             'setCombineOp': (questDNA.getCombineOp(),),
-            'setTaskStates': (initialTaskStates,),
-            'setRewardStructs': (questDNA.computeRewards(initialTaskStates, self.avatar),),
+            'setTaskStates': (questDNA.getInitialTaskStates(self.avatar),),
+            'setRewardStructs': ([reward.getQuestRewardStruct() for reward in questDNA.getRewards()],),
         }
 
         def questCreatedCallback(questDoId):
