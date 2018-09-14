@@ -62,12 +62,21 @@ class CreateQuestFSM(QuestOperationFSM):
             self.cleanup()
             return
 
+        questDNA = QuestDB.QuestDict.get(questId)
+        if not questDNA:
+            self.notify.warning('Failed to create quest %s for avatar %d, '
+                'quest is invalid!' % (questId, self.avatar.doId))
+
+            self.cleanup()
+            return
+
+        initialTaskStates = questDNA.getInitialTaskStates(self.avatar)
         fields = {
             'setQuestId': (questId,),
             'setGiverId': ('',),
-            'setCombineOp': (0,),
-            'setTaskStates': ([QuestTaskState()],),
-            'setRewardStructs': ([],),
+            'setCombineOp': (questDNA.getCombineOp(),),
+            'setTaskStates': (initialTaskStates,),
+            'setRewardStructs': (questDNA.computeRewards(initialTaskStates, self.avatar),),
         }
 
         def questCreatedCallback(questDoId):
