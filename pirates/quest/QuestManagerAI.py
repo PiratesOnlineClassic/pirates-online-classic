@@ -306,6 +306,17 @@ class QuestManagerAI(DirectObject):
 
         return questList.get(questDoId)
 
+    def getActiveTask(self, quest):
+        activeTask = None
+        for task, taskState in zip(quest.getTasks(), quest.getTaskStates()):
+            if taskState.isComplete():
+                continue
+
+            activeTask = task
+            break
+
+        return activeTask
+
     def completeQuest(self, avatar, quest):
         path = QuestLadderDB.getFamePath(quest.questId)
         if not path:

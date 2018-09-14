@@ -93,7 +93,6 @@ interpolate-frames #t
 # Tutorial:
 skip-tutorial #f
 force-tutorial #t
-ignore-teleport-requirements #f
 force-tutorial-complete #f
 
 # Seapatch:

@@ -228,18 +228,19 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             return
 
+        if self.getTutorial() > PiratesGlobals.TUT_STARTED:
+            return
+
         questHistory = self.getQuestHistory()
-        quests = inventory.getDoIdListCategory(InventoryCategory.QUESTS)
+        questDNA = QuestDB.QuestDict[TutorialGlobals.FIRST_QUEST]
 
-        if self.getTutorial() < PiratesGlobals.TUT_FINISHED:
-            questDNA = QuestDB.QuestDict[TutorialGlobals.FIRST_QUEST]
-        else:
-            questDNA = QuestDB.QuestDict['c2.4recoverOrders']
+        if questDNA.getQuestInt() in questHistory:
+            self.notify.warning('Failed to give default quest %s for avatar: %d, '
+                'avatar already completed quest!' % (questDNA.getQuestId(), self.doId))
 
-        if not quests and questDNA.getQuestInt() not in questHistory:
-            self.air.questMgr.createQuest(self, questDNA.getQuestId())
-        else:
-            self.air.questMgr.activateQuests(self)
+            return
+
+        self.air.questMgr.createQuest(self, questDNA.getQuestId())
 
     def setReturnLocation(self, returnLocation):
         self.returnLocation = returnLocation

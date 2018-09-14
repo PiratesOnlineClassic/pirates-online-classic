@@ -124,11 +124,13 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
         if self.activeQuest != questId:
             return
 
-        taskDNA = activeQuest.questDNA.getTaskDNAs()[0]
-        goalUid = taskDNA.getGoalUid()
+        activeTask = self.air.questMgr.getActiveTask(activeQuest)
+        if not activeTask:
+            return
 
         # attempt to get the quest step object in which,
         # the ray of light will hover over...
+        goalUid = activeTask.getGoalUid()
         stepType, goalObject = self.air.questMgr.getQuestStep(self, goalUid)
         if not stepType or not goalObject:
             self.sendUpdate('setQuestStep', [[self.doId, 0, 0, [0, 0, 0, 0], '']])

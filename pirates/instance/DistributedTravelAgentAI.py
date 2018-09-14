@@ -31,6 +31,8 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
             avatar.d_relayTeleportLoc(self.air.districtId, self.air.distributedDistrict.zoneId,
                 self.air.teleportMgr.doId)
 
+            self.air.questMgr.activateQuests(avatar)
+
         self.__getAvatarArrival(avatarId, avatarArrived)
 
     def d_requestTeleportToShardAItoUD(self, avatarId, shardId, instanceType, instanceName, locationUid):

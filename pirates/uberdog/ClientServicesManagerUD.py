@@ -17,6 +17,7 @@ from otp.distributed import OtpDoGlobals
 
 from pirates.pirate.HumanDNA import HumanDNA
 from pirates.quest.QuestConstants import LocationIds
+from pirates.piratesbase import PiratesGlobals
 
 # Import from PyCrypto only if we are using a database that requires it. This
 # allows local hosted and developer builds of the game to run without it:
@@ -500,11 +501,13 @@ class CreateAvatarFSM(OperationFSM):
         humanDNA = HumanDNA()
         humanDNA.makeFromNetString(self.dna)
 
+        if simbase.config.GetBool('force-tutorial-complete', True):
+            humanDNA.setTutorial(PiratesGlobals.TUT_FINISHED)
+
         dclass = self.csm.air.dclassesByName['HumanDNA']
         for fieldIndex in xrange(dclass.getNumFields()):
             field = dclass.getInheritedField(fieldIndex)
-            field = field.asAtomicField()
-            if not field:
+            if not field.asAtomicField():
                 continue
 
             fieldValue = getattr(humanDNA, field.getName().replace('set', 'get'))()

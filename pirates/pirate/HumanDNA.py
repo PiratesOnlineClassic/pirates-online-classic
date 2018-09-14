@@ -821,9 +821,6 @@ class HumanDNA(AvatarDNA.AvatarDNA):
         return self.jewelryZone8
 
     def getTutorial(self):
-        if config.GetBool('ignore-teleport-requirements', True):
-            return PiratesGlobals.TUT_FINISHED
-
         return self.tutorial
 
     def getDNAName(self):

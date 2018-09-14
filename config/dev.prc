@@ -29,7 +29,6 @@ want-alpha-blockers #f
 # Tutorial:
 skip-tutorial #t
 force-tutorial #f
-ignore-teleport-requirements #f
 force-tutorial-complete #t
 
 # Teleport:
