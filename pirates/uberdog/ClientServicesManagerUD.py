@@ -943,7 +943,7 @@ class LoadAvatarFSM(AvatarOperationFSM):
         adminAccess = adminAccess - adminAccess % 100
 
         self.csm.air.sendActivate(self.avId, 0, 0, self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
-            {'setAdminAccess': (adminAccess,), 'setInventoryId': (inventoryId,)})
+            {'setAdminAccess': (adminAccess,)})
 
         # Next, add them to the avatar channel:
         datagram = PyDatagram()
