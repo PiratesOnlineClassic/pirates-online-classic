@@ -1,7 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
-from pirates.pirate.HumanDNA import HumanDNA
+from pirates.pirate.HumanDNAAI import HumanDNAAI
 from pirates.quest.DistributedQuestAvatarAI import DistributedQuestAvatarAI
 from pirates.tutorial import TutorialGlobals
 from pirates.battle.BattleRandom import BattleRandom
@@ -23,13 +23,13 @@ from pirates.reputation import ReputationGlobals
 from pirates.battle.BattleSkillDiaryAI import BattleSkillDiaryAI
 
 
-class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNA, DistributedQuestAvatarAI):
+class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNAAI, DistributedQuestAvatarAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
 
     def __init__(self, air):
         DistributedPlayerAI.__init__(self, air)
         DistributedBattleAvatarAI.__init__(self, air)
-        HumanDNA.__init__(self)
+        HumanDNAAI.__init__(self)
         DistributedQuestAvatarAI.__init__(self, air)
 
         self.gameFSM = PlayerPirateGameFSMAI(self.air, self)
@@ -38,7 +38,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.battleRandom = None
 
         self.avatarType = AvatarTypes.Pirate
-        self.dnaString = ''
         self.inventoryId = 0
         self.guildId = 0
         self.guildName = 'Null'
@@ -136,22 +135,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def getInventory(self):
         return self.air.inventoryManager.getInventory(self.doId)
-
-    def setDNAString(self, dnaString):
-        self.dnaString = dnaString
-
-    def d_setDNAString(self, dnaString):
-        self.sendUpdate('setDNAString', [dnaString])
-
-    def b_setDNAString(self, dnaString):
-        self.setDNAString(dnaString)
-        self.d_setDNAString(dnaString)
-
-    def getDNAString(self):
-        return self.dnaString
-
-    def sendDNAUpdate(self):
-        self.d_setDNAString(self.makeNetString())
 
     def d_setFounder(self, founder):
         self.sendUpdate('setFounder', [founder])

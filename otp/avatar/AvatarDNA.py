@@ -5,16 +5,15 @@ from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from panda3d.core import *
 
-notify = directNotify.newCategory('AvatarDNA')
-
 
 class AvatarDNA:
+    notify = directNotify.newCategory('AvatarDNA')
 
     def __str__(self):
         return 'avatar parent class: type undefined'
 
     def makeNetString(self):
-        notify.error('called makeNetString on avatarDNA parent class')
+        self.notify.error('called makeNetString on avatarDNA parent class')
 
     def printNetString(self):
         string = self.makeNetString()
@@ -22,8 +21,7 @@ class AvatarDNA:
         dg.dumpHex(ostream)
 
     def makeFromNetString(self, string):
-        notify.error('called makeFromNetString on avatarDNA parent class')
+        self.notify.error('called makeFromNetString on avatarDNA parent class')
 
     def getType(self):
-        notify.error('Invalid DNA type: ', self.type)
-        return type
+        self.notify.error('Invalid DNA type: ', self.type)

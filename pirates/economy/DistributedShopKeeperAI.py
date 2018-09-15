@@ -215,14 +215,12 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         itemPrice = item[4]
         itemType = item[1]
         if itemPrice > currentGold:
-
             self.air.logPotentialHacker(
                 message='Received requestBarber for a style the avatar can not afford!',
                 currentGold=currentGold,
                 itemId=itemId,
                 itemType=itemType,
-                itemPrice=itemPrice
-            )
+                itemPrice=itemPrice)
 
             self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
@@ -231,18 +229,17 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
         # Modify the players DNA
         if itemType == BarberGlobals.HAIR:
-            avatar.setHairHair(itemId)
+            avatar.b_setHairHair(itemId)
         elif itemType == BarberGlobals.BEARD:
-            avatar.setHairBeard(itemId)
+            avatar.b_setHairBeard(itemId)
         elif itemType == BarberGlobals.MUSTACHE:
-            avatar.setHairMustache(itemId)
+            avatar.b_setHairMustache(itemId)
         else:
             self.notify.warning('Received invalid barber hair type: %s!' % itemType)
             self.sendUpdateToAvatarId(avatar.doId, 'makeSaleResponse', [RejectCode.TIMEOUT])
             return
 
-        avatar.setHairColor(color)
-        avatar.sendDNAUpdate()
+        avatar.b_setHairColor(color)
 
         # Log transaction for analytics and GM purposes
         self.air.writeServerEvent('shopkeep-transaction',
