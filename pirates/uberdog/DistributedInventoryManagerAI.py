@@ -60,18 +60,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
     def requestInventory(self):
         avatarId = self.air.getAvatarIdFromSender()
-
         if not avatarId:
-            return
-
-        # check to see if the avatar already has an generated inventory
-        # object; if so we don't want to generate another...
-        inventory = self.getInventory(avatarId)
-
-        if inventory:
-            self.notify.warning('Cannot regenerate an already existant inventory %d for avatar %d!' % (
-                inventory.doId, avatarId))
-
             return
 
         self.initiateInventory(avatarId)
@@ -86,11 +75,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
                 return
 
             inventoryId, = fields.get('setInventoryId', (0,))
-
             if not inventoryId:
-                self.notify.warning('Avatar %d does not have an inventory!' % (
-                    avatarId))
-
+                self.notify.warning('Avatar %d does not have an inventory!' % avatarId)
                 return
 
             self.__sendInventory(avatarId, inventoryId)
@@ -102,7 +88,6 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
     def __waitForInventory(self, avatarId, inventoryId, task):
         inventory = self.inventories.get(inventoryId)
-
         if not inventory:
             self.notify.debug('Failed to retrieve inventory %d for avatar %d!' % (
                 inventoryId, avatarId))
@@ -128,8 +113,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
         if not inventory:
             if avatarId in self.pendingInventories:
-                self.notify.debug('Cannot retrieve inventory for avatar %d, already trying to get inventory!' % (
-                    avatarId))
+                self.notify.debug('Cannot retrieve inventory for avatar %d, '
+                    'already trying to get inventory!' % avatarId)
 
                 return
 
@@ -142,7 +127,6 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
             return
 
         avatar = self.air.doId2do.get(avatarId)
-
         if not avatar:
             return
 
@@ -176,12 +160,21 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
             inventory.b_setStackLimit(InventoryType.Hp, avatar.getMaxHp())
             inventory.b_setStackLimit(InventoryType.Mojo, avatar.getMaxMojo())
 
-            inventory.d_requestInventoryComplete()
+            # take into account for potential race conditions,
+            # this can sometimes occur and leave the avatar's
+            # inventory disabled...
+            taskMgr.doMethodLater(0.2, self.__inventoryComplete,
+                self.uniqueName('inventoryTask-%d' % inventoryId),
+                extraArgs=[inventory], appendTask=True)
 
         self.air.dbInterface.queryObject(self.air.dbId,
             inventoryId,
             callback=inventoryResponseCalback,
             dclass=self.air.dclassesByName['DistributedInventoryAI'])
+
+    def __inventoryComplete(self, inventory, task):
+        inventory.d_requestInventoryComplete()
+        return task.done
 
     def proccessCallbackResponse(self, callback, *args, **kwargs):
         if callback and callable(callback):

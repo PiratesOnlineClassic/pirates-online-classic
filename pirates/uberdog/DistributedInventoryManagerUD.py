@@ -7,46 +7,56 @@ from direct.fsm.FSM import FSM
 from pirates.uberdog import InventoryInit
 
 
-class InventoryFSM(FSM):
-    notify = DirectNotifyGlobal.directNotify.newCategory('InventoryFSM')
+class InventoryOperationFSM(FSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory('InventoryOperationFSM')
 
-    def __init__(self, manager, avatarId, callback):
-        self.manager = manager
+    def __init__(self, air, avatarId, callback=None):
+        FSM.__init__(self, self.__class__.__name__)
+
+        self.air = air
         self.avatarId = avatarId
         self.callback = callback
-
-        FSM.__init__(self, 'InventoryFSM')
 
     def enterOff(self):
         pass
 
-    def exitOff(self):
+    def exitOff(Self):
         pass
 
+    def cleanup(self, *args, **kwargs):
+        del self.air.inventoryManager.avatar2fsm[self.avatarId]
+        self.ignoreAll()
+        self.demand('Off')
+
+        if self.callback:
+            self.callback(*args, **kwargs)
+
+class InventoryQueryFSM(InventoryOperationFSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory('InventoryQueryFSM')
+
     def enterStart(self):
-        self.manager.air.dbInterface.queryObject(self.manager.air.dbId,
+
+        def avatarQueryCallback(dclass, fields):
+            if not dclass and not fields:
+                self.notify.warning('Failed to query avatar %d for inventory!' % self.avatarId)
+                self.cleanup(None)
+                return
+
+            inventoryId, = fields.get('setInventoryId', (0,))
+            self.cleanup(inventoryId)
+
+        self.air.dbInterface.queryObject(self.air.dbId,
             self.avatarId,
-            self.__avatarQueryCallback,
-            dclass=self.manager.air.dclassesByName['DistributedPlayerPirateUD'])
-
-    def __avatarQueryCallback(self, dclass, fields):
-        if not dclass and not fields:
-            self.notify.warning('Failed to query avatar %d for inventory!' % (
-                self.avatarId))
-
-            return
-
-        self.inventoryId, = fields.get('setInventoryId', (0,))
-
-        if not self.inventoryId:
-            self.request('Create')
-        else:
-            self.request('Load')
+            avatarQueryCallback,
+            dclass=self.air.dclassesByName['DistributedPlayerPirateUD'])
 
     def exitStart(self):
         pass
 
-    def enterCreate(self):
+class InventoryCreateFSM(InventoryOperationFSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory('InventoryCreateFSM')
+
+    def enterStart(self):
         categoryLimits = []
         for key, limit in InventoryInit.CategoryLimits.iteritems():
             categoryLimits.append((key, limit))
@@ -73,8 +83,8 @@ class InventoryFSM(FSM):
             'setStacks': (startStacks,)
         }
 
-        self.manager.air.dbInterface.createObject(self.manager.air.dbId,
-            self.manager.air.dclassesByName['PirateInventoryUD'],
+        self.air.dbInterface.createObject(self.air.dbId,
+            self.air.dclassesByName['PirateInventoryUD'],
             fields=fields,
             callback=self.__inventoryCreatedCallback)
 
@@ -91,9 +101,9 @@ class InventoryFSM(FSM):
             'setInventoryId': (inventoryId,),
         }
 
-        self.manager.air.dbInterface.updateObject(self.manager.air.dbId,
+        self.air.dbInterface.updateObject(self.air.dbId,
             self.avatarId,
-            self.manager.air.dclassesByName['DistributedPlayerPirateUD'],
+            self.air.dclassesByName['DistributedPlayerPirateUD'],
             fields,
             callback=self.__inventorySetCallback)
 
@@ -104,22 +114,21 @@ class InventoryFSM(FSM):
 
             return
 
-        self.request('Load')
+        self.cleanup(self.inventoryId)
 
-    def exitCreate(self):
+    def exitStart(self):
         pass
 
-    def enterLoad(self):
-        self.manager.air.sendActivate(self.inventoryId,
+class InventoryLoadFSM(InventoryOperationFSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory('InventoryLoadFSM')
+
+    def enterStart(self, inventoryId):
+        self.air.sendActivate(inventoryId,
             self.avatarId,
             OtpDoGlobals.OTP_ZONE_ID_MANAGEMENT,
-            dclass=self.manager.air.dclassesByName['PirateInventoryUD'])
+            dclass=self.air.dclassesByName['PirateInventoryUD'])
 
-        if self.callback:
-            self.callback(self.inventoryId)
-
-        del self.manager.avatar2fsm[self.avatarId]
-        self.demand('Off')
+        self.callback(inventoryId)
 
     def exitLoad(self):
         pass
@@ -138,6 +147,18 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
         self.air.netMessenger.accept('hasInventoryResponse', self, self.proccessCallbackResponse)
         self.air.netMessenger.accept('getInventoryResponse', self, self.proccessCallbackResponse)
 
+    def runInventoryFSM(self, fsmtype, avatarId, *args, **kwargs):
+        if avatarId in self.avatar2fsm:
+            self.notify.debug('Failed to run inventory FSM for avatar %d, '
+                'an FSM already running!' % avatarId)
+
+            return
+
+        callback = kwargs.pop('callback', None)
+
+        self.avatar2fsm[avatarId] = fsmtype(self.air, avatarId, callback)
+        self.avatar2fsm[avatarId].request('Start', *args, **kwargs)
+
     def hasInventory(self, inventoryId, callback):
         self.air.netMessenger.send('hasInventory', [inventoryId, callback])
 
@@ -153,14 +174,20 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
         self.air.netMessenger.send('getInventory', [avatarId, callback])
 
     def initiateInventory(self, avatarId, callback=None):
-        if avatarId in self.avatar2fsm:
-            self.notify.warning('Failed to initiate inventory for avatar %d, an operation is already running!' % (
-                avatarId))
 
-            return
+        def inventoryLoadedCallback(inventoryId):
+            callback(inventoryId)
 
-        self.avatar2fsm[avatarId] = InventoryFSM(self, avatarId, callback)
-        self.avatar2fsm[avatarId].request('Start')
+        def inventoryCallback(inventoryId):
+            if not inventoryId:
+                self.runInventoryFSM(InventoryCreateFSM, avatarId,
+                    callback=inventoryCallback)
+            else:
+                self.runInventoryFSM(InventoryLoadFSM, avatarId,
+                    inventoryId, callback=inventoryLoadedCallback)
+
+        self.runInventoryFSM(InventoryQueryFSM, avatarId,
+            callback=inventoryCallback)
 
     def proccessCallbackResponse(self, callback, *args, **kwargs):
         if callback and callable(callback):
