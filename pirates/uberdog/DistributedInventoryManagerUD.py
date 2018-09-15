@@ -93,6 +93,7 @@ class InventoryCreateFSM(InventoryOperationFSM):
             self.notify.warning('Failed to create inventory for avatar %d!' % (
                 self.avatarId))
 
+            self.cleanup(None)
             return
 
         self.inventoryId = inventoryId
@@ -112,6 +113,7 @@ class InventoryCreateFSM(InventoryOperationFSM):
             self.notify.warning('Failed to update inventory %d for avatar %d' % (
                 self.inventoryId, self.avatarId))
 
+            self.cleanup(None)
             return
 
         self.cleanup(self.inventoryId)
@@ -179,6 +181,9 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
             callback(inventoryId)
 
         def inventoryCallback(inventoryId):
+            if inventoryId is None:
+                return
+
             if not inventoryId:
                 self.runInventoryFSM(InventoryCreateFSM, avatarId,
                     callback=inventoryCallback)
