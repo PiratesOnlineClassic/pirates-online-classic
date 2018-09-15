@@ -178,21 +178,30 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
     def initiateInventory(self, avatarId, callback=None):
 
         def inventoryLoadedCallback(inventoryId):
-            callback(inventoryId)
+            if not inventoryId:
+                self.notify.warning('Failed to load inventory for avatar %d' % avatarId)
+                callback(0)
+            else:
+                callback(inventoryId)
 
-        def inventoryCallback(inventoryId):
-            if inventoryId is None:
-                return
+        def inventoryCreatedCallback(inventoryId):
+            if not inventory:
+                self.notify.warning('Failed to create inventory for avatar %d' % avatarId)
+                callback(0)
+            else:
+                self.runInventoryFSM(InventoryLoadFSM, avatarId,
+                    inventoryId, callback=inventoryLoadedCallback)
 
+        def inventoryQueryCallback(inventoryId):
             if not inventoryId:
                 self.runInventoryFSM(InventoryCreateFSM, avatarId,
-                    callback=inventoryCallback)
+                    callback=inventoryCreatedCallback)
             else:
                 self.runInventoryFSM(InventoryLoadFSM, avatarId,
                     inventoryId, callback=inventoryLoadedCallback)
 
         self.runInventoryFSM(InventoryQueryFSM, avatarId,
-            callback=inventoryCallback)
+            callback=inventoryQueryCallback)
 
     def proccessCallbackResponse(self, callback, *args, **kwargs):
         if callback and callable(callback):
