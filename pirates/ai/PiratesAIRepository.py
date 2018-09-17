@@ -150,7 +150,7 @@ class PiratesAIRepository(PiratesInternalRepository):
 
     def createWorlds(self):
         """
-        Create "worlds" objects, e.g. DistributedInstanceBase, DistributedOceanGrid et al.
+        Create "world" objects, e.g. DistributedInstanceBase, DistributedOceanGrid et al.
         """
 
         self.worldCreator = WorldCreatorAI(self)
