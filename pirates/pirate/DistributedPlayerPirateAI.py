@@ -991,3 +991,8 @@ def location():
     invoker = spellbook.getInvoker()
     return "avatarId: %d, parentId: %d, zoneId: %d" % (invoker.doId,
         invoker.parentId, invoker.zoneId)
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def setGuildName(name):
+    spellbook.getInvoker().b_setGuildName(name)
+    return "Set Guild Name to %s" % name
