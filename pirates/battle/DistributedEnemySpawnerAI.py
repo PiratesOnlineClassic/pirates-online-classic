@@ -151,7 +151,6 @@ class SpawnNodeBase:
             return
 
         self.__spawn()
-
         return Task.done
 
     def __spawn(self, task=None):

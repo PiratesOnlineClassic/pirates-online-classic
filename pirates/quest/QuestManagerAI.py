@@ -17,6 +17,7 @@ from pirates.quest import QuestLadderDB
 from pirates.quest.QuestPath import QuestStep
 from pirates.quest.QuestLadderDNA import QuestLadderDNA, QuestContainerDNA
 from pirates.quest import QuestTaskDNA
+from pirates.piratesbase import PiratesGlobals
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedIslandAI import DistributedIslandAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
@@ -24,6 +25,7 @@ from pirates.world.DistributedBuildingDoorAI import DistributedBuildingDoorAI
 from pirates.world.DistributedInteriorDoorAI import DistributedInteriorDoorAI
 from pirates.world.DistributedDinghyAI import DistributedDinghyAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory
+from pirates.tutorial import TutorialGlobals
 
 
 class QuestOperationFSM(FSM):
@@ -409,30 +411,37 @@ class QuestManagerAI(DirectObject):
 
             return
 
-        def interactCallback(taskDNA, taskState):
-
-            def finalizeCallback(isDialog=False):
-                # TODO: handle quest choices!
-                self.completeQuest(avatar, activeQuest)
-
+        def interactCallback(taskDNA, taskState, finalizeIndex=0):
             taskStates = activeQuest.getTaskStates()
-            taskIndex = taskStates.index(taskState)
+            finalizeInfo = activeQuest.questDNA.getFinalizeInfo()
+
+            def finalizeCallback(finalizeIndex, isDialog=False):
+                if finalizeIndex >= len(finalizeInfo):
+                    activeQuest.d_amFinalized()
+                    self.completeQuest(avatar, activeQuest)
+                    return
+
+                interactCallback(taskDNA, taskState, finalizeIndex + 1)
 
             try:
-                finalizeInfo = activeQuest.questDNA.getFinalizeInfo()[taskIndex]
+                finalizeStateInfo = finalizeInfo[finalizeIndex]
             except IndexError:
                 # looks like this quest has no finalize info, let's just
                 # give the avatar their next quest...
                 self.completeQuest(avatar, activeQuest)
                 return
 
-            finalizeType = finalizeInfo['type']
+            finalizeType = finalizeStateInfo['type']
             if finalizeType == 'cutscene':
-                self.acceptOnce('quest-finalize-%d' % activeQuest.doId, finalizeCallback)
-                activeQuest.d_startFinalizeScene(taskIndex, npc.doId)
+                self.acceptOnce('quest-finalize-%d' % activeQuest.doId, finalizeCallback,
+                    extraArgs=[finalizeIndex])
+
+                activeQuest.d_startFinalizeScene(finalizeIndex, npc.doId)
             elif finalizeType == 'dialog':
-                self.acceptOnce('dialog-complete-%d' % activeQuest.doId, finalizeCallback, extraArgs=[True])
-                npc.d_playDialogMovie(avatar.doId, finalizeInfo['sceneId'])
+                self.acceptOnce('dialog-complete-%d' % activeQuest.doId, finalizeCallback,
+                    extraArgs=[finalizeIndex, True])
+
+                npc.d_playDialogMovie(avatar.doId, finalizeStateInfo['sceneId'])
             else:
                 self.notify.warning('Failed to handle interact callback with npc %d for avatar %d '
                     'with unknown finalizeType: %s!' % (npc.doId, avatar.doId, finalizeType))
