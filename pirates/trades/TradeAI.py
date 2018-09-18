@@ -72,6 +72,18 @@ class LocalTrade(TradeBase):
     def giveKingsheadTeleportToken(self):
         self.giveTeleportToken(InventoryType.KingsheadTeleportToken)
 
+    def giveWeaponMessage(self, weapon):
+        self.avatar.d_sendWeaponMessage(weapon)
+
+    def giveJewelryMessage(self, jewelryUID):
+        self.avatar.d_sendJewelryMessage(jewelryUID)
+
+    def giveTattooMessage(self, tattooUID):
+        self.avatar.d_sendTattooMessage(tattooUID)
+
+    def giveClothingMessage(self, dropId, colorId):
+        self.avatar.d_sendClothingMessage(dropId, colorId)
+
 
 class TradeAI(DistributedObjectAI, TradeBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('TradeAI')
