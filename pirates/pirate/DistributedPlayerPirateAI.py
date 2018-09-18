@@ -315,26 +315,26 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def setCurseStatus(self, curseStat):
         pass
 
-    def d_sendClothingMessage(self, clothingId, colorId):
-        self.sendUpdate("sendClothingMessage", [clothingId, colorId])
+    def giveClothingMessage(self, clothingId, colorId):
+        self.sendUpdate('sendClothingMessage', [clothingId, colorId])
 
     def d_sendLootMessage(self, lootId):
-        self.sendUpdate("sendLootMessage", [lootId])
+        self.sendUpdate('sendLootMessage', [lootId])
 
-    def d_sendCardMessage(self, cardId):
-        self.sendUpdate("sendCardMessage", [cardId])
+    def giveCardMessage(self, cardId):
+        self.sendUpdate('sendCardMessage', [cardId])
 
-    def d_sendWeaponMessage(self, weapon):
-        self.sendUpdateToAvatarId(self.doId, "sendWeaponMessage", [weapon])
+    def giveWeaponMessage(self, weapon):
+        self.sendUpdate('sendWeaponMessage', [weapon])
 
-    def d_sendJewelryMessage(self, jewelryUID):
-        self.sendUpdate("sendJewelryMessage", [jewelryUID])
+    def giveJewelryMessage(self, jewelryUID):
+        self.sendUpdate('sendJewelryMessage', [jewelryUID])
 
-    def d_sendTattooMessage(self, tattooUID):
-        self.sendUpdate("sendTattooMessage", [tattooUID])
+    def giveTattooMessage(self, tattooUID):
+        self.sendUpdate('sendTattooMessage', [tattooUID])
 
     def d_sendReputationMessage(self, targetId, categories, reputationList, basicPenalty, crewBonus, doubleXPBonus, holidayBonus):
-        self.sendUpdate("sendReputationMessage", [targetId, categories, reputationList, basicPenalty,
+        self.sendUpdate('sendReputationMessage', [targetId, categories, reputationList, basicPenalty,
             crewBonus, doubleXPBonus, holidayBonus])
 
     def spendSkillPoint(self, skillId):
