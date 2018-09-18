@@ -138,3 +138,21 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
 
         (x, y, z), (h, p, r) = goalObject.getPos(), goalObject.getHpr()
         self.sendUpdate('setQuestStep', [[self.doId, goalObject.doId, stepType, [x, y, z, h], goalUid]])
+
+    def _swapQuest(self, oldQuests=[], giverId=None, questIds=None, rewards=None):
+        activeQuest = self.air.questMgr.getQuest(self, questId=self.getActiveQuest())
+        if not activeQuest:
+            self.notify.debug('Failed to swap quest for avatar %d, '
+                'avatar has no active quest!' % avatar.doId)
+
+            return
+
+        nextQuestId = self.questStatus.getNextQuestId(activeQuest.getQuestId())
+
+        def questCreatedCallback():
+            self.b_setActiveQuest(nextQuestId)
+
+        # drop the avatar's previous quest and give them the new quest
+        # appropriate to their current quest path...
+        self.air.questMgr.dropQuest(self, activeQuest)
+        self.air.questMgr.createQuest(self, nextQuestId, questCreatedCallback)

@@ -15,7 +15,7 @@ from pirates.quest import QuestEvent
 from pirates.quest import QuestDB
 from pirates.quest import QuestLadderDB
 from pirates.quest.QuestPath import QuestStep
-from pirates.quest.QuestLadderDNA import QuestLadderDNA
+from pirates.quest.QuestLadderDNA import QuestLadderDNA, QuestContainerDNA
 from pirates.quest import QuestTaskDNA
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedIslandAI import DistributedIslandAI
@@ -222,6 +222,7 @@ class QuestManagerAI(DirectObject):
             # so we can keep track of it for later use...
             self.quests[avatar.doId][quest.doId] = quest
             quest.setOwnerId(avatar.doId)
+            avatar.questStatus.assignQuest(quest)
 
             # finally, call the callback specified and let them know,
             # the quest has been activated...
@@ -273,6 +274,9 @@ class QuestManagerAI(DirectObject):
 
             return
 
+        questStub = avatar.questStatus.getQuestStub(quest.getQuestId())
+        avatar.questStatus.handleQuestDropped(quest, questStub)
+
         # update the player's quest list on their inventory...
         questList.remove(quest.doId)
         inventory.setQuestList(questList)
@@ -314,6 +318,9 @@ class QuestManagerAI(DirectObject):
 
         return questList.get(questDoId)
 
+    def getQuestPath(self, questId):
+        return QuestLadderDB.getFamePath(questId) or QuestLadderDB.getFortunePath(questId)
+
     def getActiveTask(self, quest):
         activeTask = None
         for task, taskState in zip(quest.getTasks(), quest.getTaskStates()):
@@ -326,50 +333,8 @@ class QuestManagerAI(DirectObject):
         return activeTask
 
     def completeQuest(self, avatar, quest):
-        path = QuestLadderDB.getFamePath(quest.questId)
-        if not path:
-            path = QuestLadderDB.getFortunePath(quest.questId)
-
-        if not path:
-            self.notify.debug('Failed to complete quest %s for avatar %d, '
-                'no path found!' % (quest.getQuestId(), avatar.doId))
-
-            return
-
-        for questLadder in path:
-            if isinstance(questLadder, QuestLadderDNA):
-                containers = questLadder.getContainers()
-                if not containers:
-                    continue
-
-                currentQuestIndex = None
-                for index in xrange(len(containers)):
-                    questDNA = containers[index]
-                    if questDNA.getQuestId() == quest.getQuestId():
-                        currentQuestIndex = index
-                        break
-            else:
-                currentQuestIndex = path.index(questLadder)
-
-            if not currentQuestIndex:
-                continue
-
-            # get the next quest in the quest ladder DNA.
-            try:
-                nextQuestDNA = containers[currentQuestIndex + 1]
-            except IndexError:
-                return
-
-            def questCreatedCallback():
-                avatar.b_setActiveQuest(nextQuestDNA.getQuestId())
-
-            # drop the avatar's previous quest and give them the new quest
-            # appropriate to their current quest path...
-            self.dropQuest(avatar, quest)
-            self.createQuest(avatar, nextQuestDNA.getQuestId(),
-                questCreatedCallback)
-
-            break
+        questStub = avatar.questStatus.getQuestStub(quest.getQuestId())
+        questStub.handleQuestComplete(quest, questStub.getContainer(quest.getQuestId()))
 
     def __completeTaskState(self, avatar, questEvent, callback=None):
         activeQuest = self.getQuest(avatar, questId=avatar.getActiveQuest())

@@ -5,7 +5,6 @@ from pirates.quest.QuestTaskDNA import (RandomizedDefeatShipTaskDNA,
 
 
 class QuestContainer(DirectObject.DirectObject):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestContainer')
 
     def __init__(self, name, title, av, questInt, parent=None, giverId=None, rewards=(), firstQuestId=None, description=''):
@@ -386,7 +385,6 @@ class QuestContainer(DirectObject.DirectObject):
 
 
 class QuestStub(QuestContainer):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestStub')
 
     def __init__(self, name, av, questInt, parent, giverId, rewards, complete=False, description='', goal=1):
@@ -498,7 +496,7 @@ class QuestStub(QuestContainer):
 
 
 class QuestChoice(QuestContainer):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestChoice')
     CompleteAll = -1
 
@@ -607,7 +605,7 @@ class QuestChoice(QuestContainer):
 
 
 class QuestLadder(QuestContainer):
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestLadder')
 
     def isComplete(self, showComplete=False):
