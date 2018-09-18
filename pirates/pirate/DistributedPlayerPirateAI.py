@@ -654,6 +654,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getTempDoubleXPReward(self):
         return self.tempDoubleXPReward
 
+    def updateTempDoubleXPReward(self, tempDoubleXPReward):
+        self.b_setTempDoubleXPReward(tempDoubleXPReward)
+
     def startToonUp(self):
         self.toonUpTask = taskMgr.doMethodLater(2.0, self.toonUp,
             self.uniqueName('toonUp'))
