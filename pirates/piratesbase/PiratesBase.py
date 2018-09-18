@@ -513,7 +513,6 @@ class PiratesBase(OTPBase):
         cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
         cbm.addBin('shadow', CullBinManager.BTFixed, 15)
         cbm.addBin('ground', CullBinManager.BTFixed, 14)
-        cbm.addBin('sky', CullBinManager.BTFixed, 28)
         cbm.addBin('water', CullBinManager.BTFixed, 28)
         cbm.addBin('gui-fixed', CullBinManager.BTFixed, 55)
         cbm.addBin('ShipRigging', CullBinEnums.BTBackToFront, 100)
