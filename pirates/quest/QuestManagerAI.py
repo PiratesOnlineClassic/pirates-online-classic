@@ -545,11 +545,11 @@ class QuestManagerAI(DirectObject):
         def findObject(goalObject, otherObject):
             goalParent = goalObject.getParentObj()
             if not goalParent:
-                return None
+                return None, None
 
             otherParent = otherObject.getParentObj()
             if not otherParent:
-                return None
+                return None, None
 
             if goalParent.doId != otherParent.doId:
                 return findObject(goalParent, otherParent)
