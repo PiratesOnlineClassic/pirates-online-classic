@@ -487,10 +487,11 @@ class QuestManagerAI(DirectObject):
         questEvent.setNpcId(npc.getDNAId())
         questEvent.setGold(goldAmount)
 
-        self.__completeTaskState(avatar, questEvent)
+        def bribeCallback(taskDNA, taskState):
+            inventory.setGoldInPocket(inventory.getGoldInPocket() - goldAmount)
+            self.completeQuest(avatar, activeQuest)
 
-        # update the avatar's gold in pocket
-        inventory.setGoldInPocket(inventory.getGoldInPocket() - goldAmount)
+        self.__completeTaskState(avatar, questEvent, callback=bribeCallback)
 
     def getQuestStepType(self, goalObject):
         if isinstance(goalObject, DistributedNPCTownfolkAI):
