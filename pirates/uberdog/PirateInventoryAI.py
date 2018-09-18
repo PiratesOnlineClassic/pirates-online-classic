@@ -9,7 +9,6 @@ class PirateInventoryAI(DistributedInventoryAI):
 
     def setReputation(self, repType, quantity):
         avatar = self.air.doId2do.get(self.ownerId)
-
         if not avatar:
             return
 

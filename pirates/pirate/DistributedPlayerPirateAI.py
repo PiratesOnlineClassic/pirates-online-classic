@@ -52,6 +52,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.stickyTargets = []
         self.defaultShard = 0
         self.defaultZone = 0
+        self.tempDoubleXPReward = False
 
         self.toonUpTask = None
 
@@ -639,6 +640,19 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def b_updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
         self.d_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
         self.updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
+
+    def setTempDoubleXPReward(self, tempDoubleXPReward):
+        self.tempDoubleXPReward = tempDoubleXPReward
+
+    def d_setTempDoubleXPReward(self, tempDoubleXPReward):
+        self.sendUpdate('setTempDoubleXPReward', [tempDoubleXPReward])
+
+    def b_setTempDoubleXPReward(self, tempDoubleXPReward):
+        self.setTempDoubleXPReward(tempDoubleXPReward)
+        self.d_setTempDoubleXPReward(tempDoubleXPReward)
+
+    def getTempDoubleXPReward(self):
+        return self.tempDoubleXPReward
 
     def startToonUp(self):
         self.toonUpTask = taskMgr.doMethodLater(2.0, self.toonUp,

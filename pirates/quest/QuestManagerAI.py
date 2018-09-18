@@ -406,6 +406,11 @@ class QuestManagerAI(DirectObject):
 
         # check to see if the task state event has been completed.
         if activeQuest.isComplete():
+            # give the avatar their quest reward...
+            trade = self.air.tradeMgr.createTrade(avatar.doId)
+            for reward in activeQuest.getRewards():
+                reward.applyTo(trade, avatar)
+
             if callback is not None:
                 callback(currentTask, currentTaskState)
             else:
