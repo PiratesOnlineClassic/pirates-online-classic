@@ -82,6 +82,10 @@ class LocalTrade(TradeBase):
 
         inventory.b_setStackQuantity(skillType, value)
 
+    def giveCutlassTraining(self):
+        self.giveSkill(InventoryType.CutlassHack, 2)
+        self.giveSkill(InventoryType.CutlassSlash, 2)
+
     def givePistolTraining(self):
         self.giveSkill(InventoryType.PistolShoot, 2)
         self.giveSkill(InventoryType.PistolLeadShot, 2)

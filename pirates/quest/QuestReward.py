@@ -388,6 +388,16 @@ class WandUpgradeReward(QuestReward):
             return PLocalizer.DollRewardDesc
 
 
+class CutlassReward(QuestReward):
+
+    def applyTo(self, trade, av):
+        trade.giveCutlassTraining()
+        trade.giveStack(InventoryType.CutlassWeaponL1, 1)
+
+    def getDescriptionText(self):
+        return PLocalizer.CutlassRewardDesc
+
+
 class DaggerReward(QuestReward):
 
     def applyTo(self, trade, av):

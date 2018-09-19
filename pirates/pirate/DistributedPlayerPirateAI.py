@@ -212,11 +212,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             return
 
-        if self.getTutorial() > PiratesGlobals.TUT_STARTED:
+        if self.getTutorial() != 0:
             return
 
         questHistory = self.getQuestHistory()
-        questDNA = QuestDB.QuestDict[TutorialGlobals.FIRST_QUEST]
+        questDNA = QuestDB.QuestDict['c2_visit_will_turner']
 
         if questDNA.getQuestInt() in questHistory:
             self.notify.warning('Failed to give default quest %s for avatar: %d, '
@@ -224,6 +224,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             return
 
+        self.b_setTutorial(PiratesGlobals.TUT_MET_JOLLY_ROGER)
         self.air.questMgr.createQuest(self, questDNA.getQuestId())
 
     def setReturnLocation(self, returnLocation):

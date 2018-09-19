@@ -501,9 +501,6 @@ class CreateAvatarFSM(OperationFSM):
         humanDNA = HumanDNA()
         humanDNA.makeFromNetString(self.dna)
 
-        if simbase.config.GetBool('force-tutorial-complete', True):
-            humanDNA.setTutorial(PiratesGlobals.TUT_FINISHED)
-
         dclass = self.csm.air.dclassesByName['HumanDNA']
         for fieldIndex in xrange(dclass.getNumFields()):
             field = dclass.getInheritedField(fieldIndex)

@@ -321,7 +321,7 @@ for i in range(InventoryType.begin_Songs, InventoryType.end_Songs):
 
 StartingStacks = {
     # Weapons
-    InventoryType.CutlassWeaponL1: 1,
+    InventoryType.CutlassWeaponL1: 0,
     InventoryType.PistolWeaponL1: 0,
     InventoryType.MusketWeaponL1: 0,
     InventoryType.BayonetWeaponL1: 0,
@@ -331,8 +331,6 @@ StartingStacks = {
     InventoryType.WandWeaponL1: 0,
 
     # Skills
-    InventoryType.CutlassHack: 2,
-    InventoryType.CutlassSlash: 2,
     InventoryType.CannonShoot: 2,
     InventoryType.CannonRoundShot: 2,
     InventoryType.SailBroadsideLeft: 2,
