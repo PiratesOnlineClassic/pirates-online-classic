@@ -104,6 +104,9 @@ class CreateQuestFSM(QuestOperationFSM):
                 questList.append(questDoId)
                 self.inventory.setQuestList(questList)
 
+                # update the avatar's active quest...
+                self.avatar.b_setActiveQuest(quest.getQuestId())
+
                 # we're done.
                 self.cleanup()
 
@@ -297,8 +300,8 @@ class QuestManagerAI(DirectObject):
             avatar.b_setActiveQuest('')
 
         # finally, deactivate the old quest.
-        self.deactivateQuest(avatar, quest.doId)
         messenger.send(quest.getDroppedEventString())
+        self.deactivateQuest(avatar, quest.doId)
 
     def dropQuests(self, avatar):
         if avatar.doId not in self.quests:
@@ -409,36 +412,24 @@ class QuestManagerAI(DirectObject):
 
         self.__completeTaskState(avatar, questEvent)
 
-    def requestInteract(self, avatar, npc):
-        activeQuest = self.getQuest(avatar, questId=avatar.getActiveQuest())
-        if not activeQuest:
-            return
+    def finalizeCutscene(self, avatar, quest, finalizeIndex=0, npc=None):
+        taskStates = quest.getTaskStates()
+        finalizeInfo = quest.questDNA.getFinalizeInfo()
 
-        if isinstance(npc, DistributedNPCTownfolkAI):
-            questEvent = QuestEvent.NPCVisited()
-            questEvent.setNpcId(npc.getUniqueId())
-            questEvent.setAvId(avatar.doId)
-        else:
-            self.notify.warning('Avatar %d failed to request interact for npc %d, '
-                'invalid npc type!' % (avatar.doId, npc.doId))
-
-            return
-
-        def interactCallback(taskDNA, taskState, finalizeIndex=0):
-            taskStates = activeQuest.getTaskStates()
-            finalizeInfo = activeQuest.questDNA.getFinalizeInfo()
+        def finalize(finalizeIndex):
+            quest.setFinalizeStateIndex(finalizeIndex)
 
             try:
                 finalizeStateInfo = finalizeInfo[finalizeIndex]
             except IndexError:
                 # looks like this quest has no finalize info, let's just
                 # give the avatar their next quest...
-                self.completeQuest(avatar, activeQuest)
+                self.completeQuest(avatar, quest)
                 return
 
             def finalizeCompleteCallback():
-                activeQuest.d_amFinalized()
-                self.completeQuest(avatar, activeQuest)
+                quest.d_amFinalized()
+                self.completeQuest(avatar, quest)
 
             def finalizeCallback(isDialog=False):
                 if finalizeIndex >= len(finalizeInfo):
@@ -460,13 +451,29 @@ class QuestManagerAI(DirectObject):
                         # give the avatar their quest reward(s)...
                         self.__giveRewards(avatar, rewards)
 
-                    interactCallback(taskDNA, taskState, finalizeIndex + 1)
+                    finalize(finalizeIndex + 1)
 
             finalizeType = finalizeStateInfo['type']
             if finalizeType == 'cutscene':
-                self.acceptOnce('quest-finalize-%d' % activeQuest.doId, finalizeCallback)
-                activeQuest.d_startFinalizeScene(finalizeIndex, npc.doId)
+                if npc is not None:
+                    giverId = npc.doId
+                else:
+                    giverId = 0
+
+                sendEvent = finalizeStateInfo.get('sendEvent', '')
+                if not sendEvent:
+                    self.acceptOnce('quest-finalize-%d' % quest.doId, finalizeCallback)
+                else:
+                    self.acceptOnce('%s-%d' % (sendEvent, quest.doId), finalizeCallback)
+
+                quest.d_startFinalizeScene(finalizeIndex, giverId)
             elif finalizeType == 'dialog':
+                if npc is None:
+                    self.notify.warning('Failed to handle interact callback with unknown npc for avatar %d '
+                        'with unknown finalizeType: %s!' % (avatar.doId, finalizeType))
+
+                    return
+
                 self.acceptOnce('dialog-complete-%d' % npc.doId, finalizeCallback, extraArgs=[True])
                 npc.d_playDialogMovie(avatar.doId, finalizeStateInfo['sceneId'])
             else:
@@ -474,6 +481,26 @@ class QuestManagerAI(DirectObject):
                     'with unknown finalizeType: %s!' % (npc.doId, avatar.doId, finalizeType))
 
                 return
+
+        finalize(finalizeIndex)
+
+    def requestInteract(self, avatar, npc):
+        activeQuest = self.getQuest(avatar, questId=avatar.getActiveQuest())
+        if not activeQuest:
+            return
+
+        if isinstance(npc, DistributedNPCTownfolkAI):
+            questEvent = QuestEvent.NPCVisited()
+            questEvent.setNpcId(npc.getUniqueId())
+            questEvent.setAvId(avatar.doId)
+        else:
+            self.notify.warning('Avatar %d failed to request interact for npc %d, '
+                'invalid npc type!' % (avatar.doId, npc.doId))
+
+            return
+
+        def interactCallback(taskDNA, taskState):
+            self.finalizeCutscene(avatar, activeQuest, npc=npc)
 
         self.__completeTaskState(avatar, questEvent, callback=interactCallback)
 

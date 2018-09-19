@@ -17,6 +17,8 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
         self.ownerId = 0
         self.combineOp = 0
 
+        self.finalizeStateIndex = 0
+
     def generate(self):
         DistributedObjectAI.generate(self)
 
@@ -78,6 +80,24 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
         self.setRewardStructs(rewardStructs)
         self.d_setRewardStructs(rewardStructs)
 
+    def setFinalizeStateIndex(self, finalizeStateIndex):
+        self.finalizeStateIndex = finalizeStateIndex
+
+    def getFinalizeStateIndex(self):
+        return self.finalizeStateIndex
+
+    def sendFinalizeEvent(self, idx=None):
+        try:
+            finalizeStateInfo = self.questDNA.getFinalizeInfo()[idx or self.finalizeStateIndex]
+        except IndexError:
+            return
+
+        finalizeEvent = finalizeStateInfo.get('sendEvent', '')
+        if not finalizeEvent:
+            return
+
+        messenger.send('%s-%d' % (finalizeEvent, self.doId))
+
     def d_startFinalizeScene(self, idx, giverId):
         if self.questId not in QuestDB.QuestDict:
             self.notify.warning('Cannot start finalize scene for quest %s, '
@@ -85,18 +105,18 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
 
             return
 
-        questDNA = QuestDB.QuestDict[self.questId]
-        finalizeInfo = questDNA.getFinalizeInfo()[idx]
-        endEvent = finalizeInfo.get('sendEvent', '')
+        try:
+            finalizeInfo = self.questDNA.getFinalizeInfo()[idx]
+        except IndexError:
+            self.notify.warning('Failed to start finalize scene for avatar: %d, '
+                'invalid sceneId: %d!' % (self.ownerId, idx))
 
+            return
+
+        endEvent = finalizeInfo.get('sendEvent', '')
         self.sendUpdate('startFinalizeScene', [idx, giverId, endEvent])
 
     def doneFinalizeScene(self):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
-        if not avatar:
-            return
-
         messenger.send('quest-finalize-%d' % self.doId)
 
     def d_amFinalized(self):
