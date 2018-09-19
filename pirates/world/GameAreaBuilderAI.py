@@ -114,7 +114,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             interior = DistributedJailInteriorAI(self.air)
             self.parent.setJailInterior(interior)
         else:
-            interior = DistributedGAInteriorAI(self.air)
+            interior = DistributedGAInteriorAI(self.air, True)
 
         interior.setUniqueId(exteriorUid)
         interior.setName(interiorFile)

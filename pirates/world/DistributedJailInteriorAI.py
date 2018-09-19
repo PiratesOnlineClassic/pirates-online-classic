@@ -9,7 +9,7 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedJailInteriorAI')
 
     def __init__(self, air):
-        DistributedGAInteriorAI.__init__(self, air)
+        DistributedGAInteriorAI.__init__(self, air, True)
 
         self.__cellDoors = {}
 

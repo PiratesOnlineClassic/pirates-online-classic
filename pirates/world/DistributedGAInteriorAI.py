@@ -7,9 +7,9 @@ from pirates.world.InteriorAreaBuilderAI import InteriorAreaBuilderAI
 class DistributedGAInteriorAI(DistributedCartesianGridAI, DistributedGameAreaAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGAInteriorAI')
 
-    def __init__(self, air):
+    def __init__(self, air, isBuilding=False):
         startingZone = WorldGlobals.GAME_AREA_INTERIOR_STARTING_ZONE
-        gridSize = WorldGlobals.GAME_AREA_INTERIOR_GRID_SIZE
+        gridSize = 1 if isBuilding else WorldGlobals.GAME_AREA_INTERIOR_GRID_SIZE
         gridRadius = WorldGlobals.GAME_AREA_INTERIOR_GRID_RADIUS
         cellWidth = WorldGlobals.GAME_AREA_INTERIOR_CELL_SIZE
 
@@ -20,6 +20,7 @@ class DistributedGAInteriorAI(DistributedCartesianGridAI, DistributedGameAreaAI)
 
         self.connectorId = 0
 
+        self.isBuilding = isBuilding
         self.exteriorFrontDoor = None
         self.exteriorBackDoor = None
         self.interiorFrontDoor = None
@@ -39,6 +40,12 @@ class DistributedGAInteriorAI(DistributedCartesianGridAI, DistributedGameAreaAI)
 
     def getConnectorId(self):
         return self.connectorId
+
+    def setIsBuilding(self, isBuilding):
+        self.isBuilding = isBuilding
+
+    def getIsBuilding(self):
+        return self.isBuilding
 
     def setExteriorFrontDoor(self, exteriorFrontDoor):
         self.exteriorFrontDoor = exteriorFrontDoor
