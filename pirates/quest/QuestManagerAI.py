@@ -445,10 +445,10 @@ class QuestManagerAI(DirectObject):
                     if not isDialog:
                         rewards = []
                         sceneId = finalizeStateInfo.get('sceneId', '')
-                        if sceneId == CutsceneData.Cutscene2_4:
-                            rewards.append(PistolReward())
-                        elif sceneId == CutsceneData.Cutscene2_1:
+                        if sceneId == CutsceneData.Cutscene2_1:
                             rewards.append(CutlassReward())
+                        elif sceneId == CutsceneData.Cutscene2_4:
+                            rewards.append(PistolReward())
 
                         # give the avatar their quest reward(s)...
                         self.__giveRewards(avatar, rewards)
