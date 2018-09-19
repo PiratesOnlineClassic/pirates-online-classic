@@ -17,6 +17,16 @@ class TradeBase(object):
         currentQuantity = inventory.getStackQuantity(stackType)
         inventory.b_setStackQuantity(stackType, currentQuantity + quantity)
 
+    def giveStackableTypeLimit(self, avatar, stackType, limit):
+        inventory = avatar.getInventory()
+        if not inventory:
+            self.notify.warning('Failed to give stackType: %d limit for avatar %d, '
+                'avatar has no inventory!' % (stackType, avatar.doId))
+
+            return
+
+        inventory.b_setStackLimit(stackType, limit)
+
 
 class LocalTrade(TradeBase):
 
@@ -35,6 +45,9 @@ class LocalTrade(TradeBase):
 
     def giveStack(self, stackType, quantity):
         TradeBase.giveStack(self, self.avatar, stackType, quantity)
+
+    def giveStackableTypeLimit(self, stackType, limit):
+        TradeBase.giveStackableTypeLimit(self, self.avatar, stackType, limit)
 
     def giveReputation(self, reputationType, reputation):
         inventory = self.avatar.getInventory()
