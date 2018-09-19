@@ -7,9 +7,11 @@ from otp.ai.MagicWordGlobal import *
 
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.ship.DistributedShipAI import DistributedShipAI
+from pirates.cutscene import CutsceneData
 from pirates.npc.DistributedNPCTownfolkAI import DistributedNPCTownfolkAI
 from pirates.quest.DistributedQuestAI import DistributedQuestAI
 from pirates.quest.QuestTaskState import QuestTaskState
+from pirates.quest.QuestReward import *
 from pirates.quest.QuestRewardStruct import QuestRewardStruct
 from pirates.quest import QuestEvent
 from pirates.quest import QuestDB
@@ -334,7 +336,24 @@ class QuestManagerAI(DirectObject):
 
         return activeTask
 
+    def __giveRewards(self, avatar, rewards=[]):
+        if not rewards:
+            self.notify.debug('Failed to give rewards for avatar %d, '
+                'no rewards specified!' % avatar.doId)
+
+            return
+
+        trade = self.air.tradeMgr.createTrade(avatar.doId)
+        for reward in rewards:
+            reward.applyTo(trade, avatar)
+
     def completeQuest(self, avatar, quest):
+        # update the quest task states...
+        quest.b_setTaskStates(quest.getTaskStates())
+
+        # give the avatar their quest reward(s)...
+        self.__giveRewards(avatar, quest.getRewards())
+
         questStub = avatar.questStatus.getQuestStub(quest.getQuestId())
         questStub.handleQuestComplete(quest, questStub.getContainer(quest.getQuestId()))
 
@@ -368,20 +387,14 @@ class QuestManagerAI(DirectObject):
         if not currentTask and not currentTaskState:
             return
 
-        # update the active quest's new task states.
-        activeQuest.b_setTaskStates(taskStates)
-
         # check to see if the task state event has been completed.
         if activeQuest.isComplete():
-            # give the avatar their quest reward...
-            trade = self.air.tradeMgr.createTrade(avatar.doId)
-            for reward in activeQuest.getRewards():
-                reward.applyTo(trade, avatar)
-
             if callback is not None:
                 callback(currentTask, currentTaskState)
             else:
                 self.completeQuest(avatar, activeQuest)
+        else:
+            activeQuest.b_setTaskStates(taskStates)
 
     def enemyDefeated(self, avatar, enemy):
         parentObj = avatar.getParentObj()
@@ -415,14 +428,6 @@ class QuestManagerAI(DirectObject):
             taskStates = activeQuest.getTaskStates()
             finalizeInfo = activeQuest.questDNA.getFinalizeInfo()
 
-            def finalizeCallback(finalizeIndex, isDialog=False):
-                if finalizeIndex >= len(finalizeInfo):
-                    activeQuest.d_amFinalized()
-                    self.completeQuest(avatar, activeQuest)
-                    return
-
-                interactCallback(taskDNA, taskState, finalizeIndex + 1)
-
             try:
                 finalizeStateInfo = finalizeInfo[finalizeIndex]
             except IndexError:
@@ -431,16 +436,38 @@ class QuestManagerAI(DirectObject):
                 self.completeQuest(avatar, activeQuest)
                 return
 
+            def finalizeCompleteCallback():
+                activeQuest.d_amFinalized()
+                self.completeQuest(avatar, activeQuest)
+
+            def finalizeCallback(isDialog=False):
+                if finalizeIndex >= len(finalizeInfo):
+                    if not isDialog:
+                        questEvent = QuestEvent.CutsceneWatched()
+                        questEvent.setNpcId(npc.getUniqueId())
+                        self.__completeTaskState(avatar, questEvent, callback=finalizeCompleteCallback)
+                    else:
+                        finalizeCompleteCallback()
+                else:
+                    # attempt to handle any explicit cutscene rewards that are not given
+                    # specifically by the quest as a reward...
+                    if not isDialog:
+                        rewards = []
+                        sceneId = finalizeStateInfo.get('sceneId', '')
+                        if sceneId == CutsceneData.Cutscene2_4:
+                            rewards.append(PistolReward())
+
+                        # give the avatar their quest reward(s)...
+                        self.__giveRewards(avatar, rewards)
+
+                    interactCallback(taskDNA, taskState, finalizeIndex + 1)
+
             finalizeType = finalizeStateInfo['type']
             if finalizeType == 'cutscene':
-                self.acceptOnce('quest-finalize-%d' % activeQuest.doId, finalizeCallback,
-                    extraArgs=[finalizeIndex])
-
+                self.acceptOnce('quest-finalize-%d' % activeQuest.doId, finalizeCallback)
                 activeQuest.d_startFinalizeScene(finalizeIndex, npc.doId)
             elif finalizeType == 'dialog':
-                self.acceptOnce('dialog-complete-%d' % activeQuest.doId, finalizeCallback,
-                    extraArgs=[finalizeIndex, True])
-
+                self.acceptOnce('dialog-complete-%d' % npc.doId, finalizeCallback, extraArgs=[True])
                 npc.d_playDialogMovie(avatar.doId, finalizeStateInfo['sceneId'])
             else:
                 self.notify.warning('Failed to handle interact callback with npc %d for avatar %d '
@@ -587,3 +614,19 @@ def dropQuest(questId):
 def dropAllQuests():
     simbase.air.questMgr.dropQuests(spellbook.getInvoker())
     return 'Dropped all active quests.'
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def skipQuest(questId=''):
+    invoker = spellbook.getInvoker()
+    if not questId:
+        questId = invoker.getActiveQuest()
+
+    if not questId:
+        return 'You did not provide a valid questId!'
+
+    quest = simbase.air.questMgr.getQuest(invoker, questId=questId)
+    for taskState in quest.getTaskStates():
+        taskState.forceComplete()
+
+    simbase.air.questMgr.completeQuest(invoker, quest)
+    return 'Forced quest: %s completion status.' % questId

@@ -53,8 +53,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.defaultShard = 0
         self.defaultZone = 0
         self.tempDoubleXPReward = False
-
         self.toonUpTask = None
+        self.constructedShipDoId = 0
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -677,6 +677,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         if self.toonUpTask:
             taskMgr.remove(self.toonUpTask)
             self.toonUpTask = None
+
+    def setConstructedShipDoId(self, constructedShipDoId):
+        self.constructedShipDoId = constructedShipDoId
+
+    def getConstructedShipDoId(self):
+        return self.constructedShipDoId
 
     def disable(self):
         DistributedPlayerAI.disable(self)

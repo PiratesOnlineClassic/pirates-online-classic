@@ -268,6 +268,7 @@ class PistolReward(QuestReward):
 
     def applyTo(self, trade, av):
         trade.givePistolTraining()
+        trade.giveStack(InventoryType.PistolWeaponL1, 1)
 
     def getDescriptionText(self):
         return PLocalizer.PistolRewardDesc

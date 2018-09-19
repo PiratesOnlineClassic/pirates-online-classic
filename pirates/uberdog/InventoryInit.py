@@ -333,20 +333,10 @@ StartingStacks = {
     # Skills
     InventoryType.CutlassHack: 2,
     InventoryType.CutlassSlash: 2,
-    InventoryType.PistolShoot: 2,
-    InventoryType.PistolLeadShot: 2,
-    InventoryType.DollAttune: 2,
-    InventoryType.DollPoke: 2,
-    InventoryType.DaggerCut: 2,
-    InventoryType.DaggerSwipe: 2,
-    InventoryType.StaffBlast: 2,
-    InventoryType.StaffSoulFlay: 2,
-    InventoryType.GrenadeThrow: 2,
     InventoryType.CannonShoot: 2,
     InventoryType.CannonRoundShot: 2,
     InventoryType.SailBroadsideLeft: 2,
     InventoryType.SailBroadsideRight: 2,
-    InventoryType.GrenadeExplosion: 2,
 
     # Weapon Tokens
     InventoryType.CutlassToken: 1,

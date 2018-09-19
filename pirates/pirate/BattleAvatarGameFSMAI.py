@@ -22,6 +22,12 @@ class BattleAvatarGameFSMAI(FSM):
     def exitLandRoam(self):
         pass
 
+    def enterBattle(self):
+        pass
+
+    def exitBattle(self):
+        pass
+
     def enterDeath(self):
         pass
 

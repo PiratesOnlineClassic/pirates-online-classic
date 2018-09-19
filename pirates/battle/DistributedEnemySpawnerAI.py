@@ -258,14 +258,14 @@ class TownfolkSpawnNode(SpawnNodeBase):
     def getAvatarType(self):
         category = self.objectData.get('Category', '')
         if not hasattr(AvatarTypes, category):
-            self.notify.warning('Failed to spawn Townfolk (%s); Unknown category %s' % (objKey, category))
+            self.notify.warning('Failed to spawn Townfolk (%s); Unknown category %s' % (self.objKey, category))
             return
         return getattr(AvatarTypes, category, AvatarTypes.Commoner)
 
     def setNPCAttributes(self, npc):
         shopId = self.objectData.get('ShopID', 'PORT_ROYAL_DEFAULTS')
         if not hasattr(PiratesGlobals, shopId):
-            self.notify.warning('Failed to spawn Townfolk (%s); Unknown shopId: %s' % (objKey, shopid))
+            self.notify.warning('Failed to spawn Townfolk (%s); Unknown shopId: %s' % (self.objKey, shopid))
         npc.setShopId(getattr(PiratesGlobals, shopId, 0))
 
         helpId = self.objectData.get('HelpID', 'NONE')
@@ -286,8 +286,12 @@ class EnemySpawnNode(SpawnNodeBase):
 
     def getAvatarType(self):
         spawnable = self.objectData.get('Spawnables', '')
+        species = self.objectData.get('Species', '')
         if spawnable not in AvatarTypes.NPC_SPAWNABLES:
-            self.notify.warning('Failed to spawn %s (%s); Not a valid spawnable.' % (spawnable, objKey))
+            if species == 'Monkey':
+                return AvatarTypes.Monkey
+
+            self.notify.warning('Failed to spawn %s (%s); Not a valid spawnable.' % (spawnable, self.objKey))
             return AvatarTypes.FrenchUndeadA
 
         avatarType = random.choice(AvatarTypes.NPC_SPAWNABLES[spawnable])()
@@ -343,11 +347,11 @@ class AnimalSpawnNode(SpawnNodeBase):
     def getAvatarType(self):
         species = self.objectData.get('Species', None)
         if not species:
-            self.notify.warning('Failed to generate Animal %s; Species was not defined' % objKey)
+            self.notify.warning('Failed to generate Animal %s; Species was not defined' % self._objKey)
             return
 
         if not hasattr(AvatarTypes, species):
-            self.notify.warning('Failed to generate Animal %s; %s is not a valid species' % (objKey, species))
+            self.notify.warning('Failed to generate Animal %s; %s is not a valid species' % (self._objKey, species))
             return
         return getattr(AvatarTypes, species, AvatarTypes.Chicken)
 
@@ -451,6 +455,12 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
             self.notify.warning('Received unknown generate: %s' % objType)
             return
 
+        # check to see if we have any explicit objects that need
+        # to be generated in some other way...
+        if objType == 'Animal':
+            if objectData['Species'] == 'Monkey':
+                objType = 'Spawn Node'
+
         spawnClass = spawnClasses[objType]
         spawnNode = spawnClass(self.air, objType, objectData, parent, objKey)
 
@@ -461,5 +471,4 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
 
         spawnNode.setup()
         self.__registerSpawnNode(objType, spawnNode)
-
         return newObj

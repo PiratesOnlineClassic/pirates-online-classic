@@ -27,8 +27,11 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         self.notify.debug('AnnounceGenerate')
         DistributedGameArea.DistributedGameArea.announceGenerate(self)
         DistributedCartesianGrid.DistributedCartesianGrid.announceGenerate(self)
-        if not self.cr.activeWorld.worldGrid:
-            self.cr.activeWorld.setWorldGrid(self)
+
+        # TODO FIXME!
+        parentObj = self.getParentObj()
+        if not parentObj.worldGrid:
+            parentObj.setWorldGrid(self)
 
         self.loadModel()
         self.setupLODs()

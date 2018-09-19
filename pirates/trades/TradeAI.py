@@ -72,6 +72,20 @@ class LocalTrade(TradeBase):
     def giveKingsheadTeleportToken(self):
         self.giveTeleportToken(InventoryType.KingsheadTeleportToken)
 
+    def giveSkill(self, skillType, value):
+        inventory = self.avatar.getInventory()
+        if not inventory:
+            self.notify.warning('Failed to give skill type: %d for avatar %d, '
+                'avatar has no inventory!' % (skillType, self.avatar.doId))
+
+            return
+
+        inventory.b_setStackQuantity(skillType, value)
+
+    def givePistolTraining(self):
+        self.giveSkill(InventoryType.PistolShoot, 2)
+        self.giveSkill(InventoryType.PistolLeadShot, 2)
+
 
 class TradeAI(DistributedObjectAI, TradeBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('TradeAI')
