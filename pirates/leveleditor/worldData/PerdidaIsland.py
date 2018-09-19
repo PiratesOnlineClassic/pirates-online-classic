@@ -50,7 +50,7 @@ objectStruct = {
                 },
                 '1172209713.31sdnaik': {
                     'Type': 'Connector Tunnel',
-                    'File': 'peridida_island_tunnel_jungle_2',
+                    'File': '',
                     'Hpr': VBase3(-89.136, 0.0, 0.0),
                     'Objects': {
                         '1172209713.33sdnaik': {
@@ -77,7 +77,7 @@ objectStruct = {
                 },
                 '1172209837.81sdnaik': {
                     'Type': 'Connector Tunnel',
-                    'File': 'perdida_island_tunnel_jungle_1',
+                    'File': '',
                     'Hpr': Point3(0.0, 0.0, 0.0),
                     'Objects': {
                         '1172209837.83sdnaik': {

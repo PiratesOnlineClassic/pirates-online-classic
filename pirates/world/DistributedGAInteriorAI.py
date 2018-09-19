@@ -9,7 +9,7 @@ class DistributedGAInteriorAI(DistributedCartesianGridAI, DistributedGameAreaAI)
 
     def __init__(self, air):
         startingZone = WorldGlobals.GAME_AREA_INTERIOR_STARTING_ZONE
-        gridSize = 1 #WorldGlobals.GAME_AREA_INTERIOR_GRID_SIZE
+        gridSize = WorldGlobals.GAME_AREA_INTERIOR_GRID_SIZE
         gridRadius = WorldGlobals.GAME_AREA_INTERIOR_GRID_RADIUS
         cellWidth = WorldGlobals.GAME_AREA_INTERIOR_CELL_SIZE
 

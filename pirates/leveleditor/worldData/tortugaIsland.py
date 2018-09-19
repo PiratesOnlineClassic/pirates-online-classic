@@ -3412,7 +3412,7 @@ objectStruct = {
                 },
                 '1157132484.23sdnaik': {
                     'Type': 'Connector Tunnel',
-                    'File': 'tortuga_tunnel_jungle_1',
+                    'File': '',
                     'Hpr': Point3(0.0, 0.0, 0.0),
                     'Objects': {
                         '1157132484.27sdnaik': {
@@ -3466,7 +3466,7 @@ objectStruct = {
                 },
                 '1157133806.45sdnaik': {
                     'Type': 'Connector Tunnel',
-                    'File': 'tortuga_tunnel_jungle_3',
+                    'File': '',
                     'Hpr': Point3(0.0, 0.0, 0.0),
                     'Objects': {
                         '1157133806.48sdnaik': {
@@ -5947,7 +5947,7 @@ objectStruct = {
                 },
                 '1169797457.36sdnaik': {
                     'Type': 'Connector Tunnel',
-                    'File': 'tortuga_tunnel_jungle_4',
+                    'File': '',
                     'Hpr': Point3(0.0, 0.0, 0.0),
                     'Objects': {
                         '1169797457.36sdnaik0': {

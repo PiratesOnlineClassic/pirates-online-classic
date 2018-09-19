@@ -9668,7 +9668,7 @@ objectStruct = {
                 },
                 '1157485774.64sdnaik': {
                     'Type': 'Connector Tunnel',
-                    'File': 'port_royal_tunnel_jungle_1',
+                    'File': '',
                     'Hpr': Point3(0.0, 0.0, 0.0),
                     'Objects': {
                         '1157485774.69sdnaik': {
@@ -13349,7 +13349,7 @@ objectStruct = {
                 },
                 '1169592497.66sdnaik': {
                     'Type': 'Connector Tunnel',
-                    'File': 'port_royal_tunnel_jungle_4',
+                    'File': '',
                     'Hpr': Point3(0.0, 0.0, 0.0),
                     'Objects': {
                         '1169592497.67sdnaik': {
@@ -13440,7 +13440,7 @@ objectStruct = {
                 },
                 '1169596919.53sdnaik': {
                     'Type': 'Connector Tunnel',
-                    'File': 'port_royal_tunnel_jungle_3',
+                    'File': '',
                     'Hpr': Point3(0.0, 0.0, 0.0),
                     'Objects': {
                         '1169596919.55sdnaik': {
