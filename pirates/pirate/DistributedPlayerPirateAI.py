@@ -666,10 +666,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             return task.done
 
         if self.getHp()[0] < self.getMaxHp():
-            self.b_setHp(min(self.getMaxHp(), self.getHp()[0] + 8 * self.getLevel() / 2.47))
+            self.b_setHp(min(self.getMaxHp(), self.getHp()[0] + 10 * self.getLevel() / 1.25))
 
         if self.getMojo() < self.getMaxMojo():
-            self.b_setMojo(min(self.getMaxMojo(), self.getMojo() + 6 * self.getLevel() / 2.35))
+            self.b_setMojo(min(self.getMaxMojo(), self.getMojo() + 8 * self.getLevel() / 1.35))
 
         return task.again
 
