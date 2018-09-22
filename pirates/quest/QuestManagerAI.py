@@ -634,7 +634,7 @@ def dropQuest(questId):
     invoker = spellbook.getInvoker()
     activeQuest = simbase.air.questMgr.getQuest(invoker, questId=questId)
     if not activeQuest:
-        return 'Could not find active quest: %s' % questId
+        return 'Could not find active quest: %s!' % questId
 
     simbase.air.questMgr.dropQuest(invoker, activeQuest.doId)
     return 'Dropped active quest: %s!' % questId

@@ -1,8 +1,12 @@
-from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-class TreasureMapBlackPearlAI(DistributedObjectAI):
+from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTreasureMapInstanceAI
+
+
+class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('TreasureMapBlackPearlAI')
 
     def __init__(self, air):
-        DistributedObjectAI.__init__(self, air)
+        DistributedTreasureMapInstanceAI.__init__(self, air)
+
+        self.fileName = 'BlackpearlWorld'

@@ -11,6 +11,7 @@ from pirates.world import WorldGlobals
 from pirates.instance.DistributedMainWorldAI import DistributedMainWorldAI
 from pirates.tutorial import TutorialGlobals
 from pirates.tutorial.DistributedPiratesTutorialWorldAI import DistributedPiratesTutorialWorldAI
+from pirates.treasuremap.TreasureMapBlackPearlAI import TreasureMapBlackPearlAI
 
 
 class LinkManager(object):
@@ -56,7 +57,7 @@ class LinkManager(object):
 
     def registerLinkData(self, uniqueId):
         fileName = self.air.worldCreator.getObjectFilenameByUid(uniqueId)
-        fileData = self.air.worldCreator.openFile(fileName)
+        fileData = self.air.worldCreator.openFile(fileName + '.py')
 
         for linkData in fileData.get(WorldDataGlobals.LINK_TYPE_LOC_NODE, []):
             self.addLinkData(uniqueId, linkData)
@@ -268,6 +269,9 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
                 file = fileName
                 break
 
+        if file is not None:
+            file = file.replace('.py', '')
+
         return file
 
     def getIslandWorldDataByUid(self, uid):
@@ -292,19 +296,24 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         return (newObj, objParent)
 
     def createWorldInstance(self, objectData, parent, parentUid, objKey, dynamic):
+        worldFileName = self.getObjectFilenameByUid(objKey)
         worldName = objectData.get('Name', '')
-        if worldName == '':
-            self.world = DistributedMainWorldAI(self.air)
-            self.world.setType(PiratesGlobals.INSTANCE_MAINSUB)
-        elif worldName == WorldGlobals.PiratesTutorialSceneFileBase:
-            self.world = DistributedPiratesTutorialWorldAI(self.air)
-        elif worldName == 'default':
-            self.world = DistributedMainWorldAI(self.air)
-        else:
-            self.notify.warning('Failed to generate world instance with '
-                'unknown name: %s!' % worldName)
 
-            return
+        if worldFileName == WorldGlobals.PiratesTutorialSceneFileBase:
+            self.world = DistributedPiratesTutorialWorldAI(self.air)
+        elif worldFileName == 'BlackpearlWorld':
+            self.world = TreasureMapBlackPearlAI(self.air)
+        else:
+            if worldName == '':
+                self.world = DistributedMainWorldAI(self.air)
+                self.world.setType(PiratesGlobals.INSTANCE_MAINSUB)
+            elif worldName == 'default':
+                self.world = DistributedMainWorldAI(self.air)
+            else:
+                self.notify.warning('Failed to generate world instance with '
+                    'unknown world name: %s!' % worldName)
+
+                return
 
         self.world.setUniqueId(objKey)
         self.world.setName(worldName)

@@ -522,6 +522,7 @@ class ShipModel(NodePath):
                 prop = ShipDecor.ShipDecor()
             elif decorClass == 'window':
                 prop = Window.Window()
+
             decorDNA = DecorDNA.DecorDNA()
             decorDNA.baseTeam = self.dna.baseTeam
             decorDNA.posIndex = posIndex
@@ -533,6 +534,7 @@ class ShipModel(NodePath):
             if self.wantCollisions:
                 prop.unstashDetailCollisions()
                 prop.loadCollisions()
+
             decorPlacement = DecorDNA.DecorDict.get(decorType)
             if decorPlacement[1] == DecorDNA.WALL:
                 locator = self.locators.find('**/wall_decor_' + str(posIndex) + ';+s')
@@ -540,6 +542,10 @@ class ShipModel(NodePath):
                 locator = self.locators.find('**/floor_decor_' + str(posIndex) + ';+s')
             elif decorPlacement[1] == DecorDNA.WINDOW:
                 locator = self.locators.find('**/window_' + str(posIndex) + ';+s')
+
+            if locator.isEmpty():
+                return
+
             prop.setPos(locator.getPos(self.root))
             prop.setHpr(locator.getHpr(self.root))
             prop.setScale(locator.getScale(self.root))
@@ -549,6 +555,7 @@ class ShipModel(NodePath):
                 prop.propCollisions.setPos(self.root, locator.getPos(self.root))
                 prop.propCollisions.setHpr(self.root, locator.getHpr(self.root))
                 prop.propCollisions.setScale(self.root, locator.getScale(self.root))
+
             self.decors.append(prop)
 
     def fadeIn(self):

@@ -26,7 +26,7 @@ class CannonPort(NodePath):
         self.cannonType = cannonType
         self.side = side
         self.index = index
-        self.parent = parent
+        self._parent = parent
         self.locator = locator
         self.bf = None
         self.collSphereNodePath = None
@@ -35,8 +35,7 @@ class CannonPort(NodePath):
         self.loaded = False
         self._isEnabled = 1
         self._isTargetable = 0
-        if cannonType in [
-            InventoryType.CannonL4]:
+        if cannonType in [InventoryType.CannonL4]:
             self._isTargetable = 1
             self._addCollisionSphere(parent, side, index)
 
@@ -64,7 +63,7 @@ class CannonPort(NodePath):
         collSphereNode.setFromCollideMask(BitMask32.allOff())
         collSphereNode.setIntoCollideMask(PiratesGlobals.TargetBitmask)
         collSphereNode.setTag('objType', str(PiratesGlobals.COLL_CANNON))
-        collSphereNode.setTag('broadsideId', str(self.parent.doId))
+        collSphereNode.setTag('broadsideId', str(self._parent.doId))
         collSphereNode.setTag('sideId', str(side))
         collSphereNode.setTag('portId', str(index))
         collSphereNode.addSolid(collSphere)
@@ -81,7 +80,7 @@ class CannonPort(NodePath):
 
         self.prop.removeNode()
         self.removeNode()
-        self.parent = None
+        self._parent = None
         if self.collSphereNodePath:
             self.collSphereNodePath.removeNode()
 

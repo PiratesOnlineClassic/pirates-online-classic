@@ -1,11 +1,13 @@
-from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGridAI
 from direct.directnotify import DirectNotifyGlobal
+
+from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.battle.Teamable import Teamable
 from pirates.world import WorldGlobals
 from pirates.world.IslandAreaBuilderAI import IslandAreaBuilderAI
 from pirates.piratesbase import PiratesGlobals
-from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
+from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTreasureMapInstanceAI
+
 
 class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedIslandAI')
