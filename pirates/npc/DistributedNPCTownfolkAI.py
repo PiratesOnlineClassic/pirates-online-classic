@@ -1,5 +1,6 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
+
 from pirates.battle.DistributedBattleNPCAI import DistributedBattleNPCAI
 from pirates.economy.DistributedShopKeeperAI import DistributedShopKeeperAI
 from pirates.piratesbase import PiratesGlobals
@@ -56,14 +57,20 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
     def getHelpId(self):
         return self.helpId
 
+    def d_triggerInteractShow(self, avatarId, interactObj):
+        self.sendUpdateToAvatarId(avatarId, 'triggerInteractShow', [interactObj])
+
+    def d_offerOptions(self, avatarId, options):
+        self.sendUpdateToAvatarId(avatarId, 'offerOptions', options)
+
     def handleRequestInteraction(self, avatar, interactType, instant):
         if config.GetBool('want-alpha-blockers', False):
             return self.DENY
 
         self.air.questMgr.requestInteract(avatar, self)
         if interactType == PiratesGlobals.INTERACT_TYPE_FRIENDLY:
-            self.sendUpdateToAvatarId(avatar.doId, 'triggerInteractShow', [0])
-            self.sendUpdateToAvatarId(avatar.doId, 'offerOptions', [2])
+            self.d_triggerInteractShow(avatar.doId, 0)
+            self.d_offerOptions(avatar.doId, [InteractGlobals.TALK])
             return self.ACCEPT
 
         return self.DENY
@@ -103,6 +110,17 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
             avatar.b_setMojo(maxMojo)
         elif option == InteractGlobals.BRIBE:
             self.air.questMgr.attemptBribeNPC(avatar, self)
+        elif option == InteractGlobals.QUEST:
+            finalOffers, container, numAssignedIncomplete = avatar.questStatus.getQuestOffersFromGiver(self.dnaId)
+            if not finalOffers:
+                finalOffers = []
+
+            if numAssignedIncomplete == 0:
+                self.d_setQuestOffer(avatar.doId, finalOffers)
+            else:
+                self.d_setQuestLadderOffer(avatar.doId, finalOffers, 1)
+        elif option == InteractGlobals.BACK:
+            pass
 
     def handleRequestExit(self, avatar):
         return self.ACCEPT

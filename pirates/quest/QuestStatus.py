@@ -222,16 +222,17 @@ class QuestStatus:
         quests = self.getCurrentQuests()
         if not quests:
             return (None, None, 0)
+
         container = self.__getDeepestChoiceContainerWithGiver(giverId)
         if not container:
             return (None, None, 0)
+
         offers = container.getValidContainers()
         finalOffers = []
         completedLadders = self.av.getQuestLadderHistory()
         for offer in offers:
             if offer.getQuestInt() not in completedLadders:
-                finalOffers = [
-                 offer] + finalOffers
+                finalOffers = [offer] + finalOffers
 
         totalOffers = container.getContainers()
         numIncomplete = 0
@@ -242,8 +243,7 @@ class QuestStatus:
         numAssignedIncomplete = numIncomplete - len(finalOffers)
         if len(finalOffers) == 0:
             pass
-        return (
-         finalOffers, container, numAssignedIncomplete)
+        return (finalOffers, container, numAssignedIncomplete)
 
     def hasLadderQuest(self, quest):
         return self.hasLadderQuestId(quest.getQuestId())
