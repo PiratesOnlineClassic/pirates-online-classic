@@ -12,15 +12,12 @@ from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTrea
 class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedIslandAI')
 
-    def __init__(self, air):
+    def __init__(self, air, gridSize=WorldGlobals.ISLAND_GRID_SIZE):
         startingZone = WorldGlobals.ISLAND_GRID_STARTING_ZONE
-        gridRadius = WorldGlobals.ISLAND_GRID_RADIUS
-        gridSize = WorldGlobals.LARGE_ISLAND_GRID_SIZE + startingZone
-        cellWidth = WorldGlobals.ISLAND_CELL_SIZE + gridSize
+        cellWidth = WorldGlobals.ISLAND_CELL_SIZE
+        gridRadius = WorldGlobals.ISLAND_GRID_RADIUS * cellWidth
 
-        DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize,
-            gridRadius, cellWidth)
-
+        DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize, gridRadius, cellWidth)
         DistributedGameAreaAI.__init__(self, air)
         Teamable.__init__(self)
 
@@ -77,8 +74,8 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def setZoneSphereSize(self, rad0, rad1, rad2):
         self.sphereRadii = [rad0, rad1, rad2]
-        self.gridSize = self.getGridSizeFromSphereRadius(rad0 + rad1,
-            self.cellWidth, self.gridRadius)
+        self.cellWidth += self.getGridSizeFromSphereRadius(rad0 + rad1 + rad2,
+            self.cellWidth, self.gridRadius) + self.gridSize
 
     def d_setZoneSphereSize(self, rad0, rad1, rad2):
         self.sendUpdate('setZoneSphereSize', [rad0, rad1, rad2])
@@ -92,8 +89,10 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def setZoneSphereCenter(self, x, y):
         self.sphereCenter = [x, y]
-        self.gridSize = self.getGridSizeFromSphere(self.sphereRadii[0] + self.sphereRadii[1],
-            self.sphereCenter, self.cellWidth, self.gridRadius)
+        self.cellWidth += self.getGridSizeFromSphere(self.sphereRadii[0] + self.sphereRadii[1] + self.sphereRadii[2],
+            self.sphereCenter, self.cellWidth, self.gridRadius) + self.gridSize
+
+        self.gridSize += self.cellWidth
 
     def d_setZoneSphereCenter(self, x, y):
         self.sendUpdate('setZoneSphereCenter', [x, y])

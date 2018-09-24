@@ -9,9 +9,9 @@ class DistributedGAInteriorAI(DistributedCartesianGridAI, DistributedGameAreaAI)
 
     def __init__(self, air, isBuilding=False):
         startingZone = WorldGlobals.GAME_AREA_INTERIOR_STARTING_ZONE
-        gridSize = 1 if isBuilding else WorldGlobals.GAME_AREA_INTERIOR_GRID_SIZE
-        gridRadius = WorldGlobals.GAME_AREA_INTERIOR_GRID_RADIUS
         cellWidth = WorldGlobals.GAME_AREA_INTERIOR_CELL_SIZE
+        gridRadius = WorldGlobals.GAME_AREA_INTERIOR_GRID_RADIUS * cellWidth
+        gridSize = 1 if isBuilding else WorldGlobals.GAME_AREA_INTERIOR_GRID_SIZE + cellWidth
 
         DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize,
             gridRadius, cellWidth)
