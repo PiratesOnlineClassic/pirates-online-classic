@@ -53,7 +53,6 @@ class ClientAreaBuilderAI(DirectObject):
             return
 
         parent = parent or self.parent
-
         if zoneId is None:
             zoneId = parent.getZoneFromXYZ(object.getPos())
 
@@ -62,8 +61,6 @@ class ClientAreaBuilderAI(DirectObject):
 
         object.reparentTo(cell)
         object.setPos(parent, originalPos)
-
-        self.broadcastObjectPosition(object)
 
     def isChildObject(self, objKey, parentUid):
         return self.air.worldCreator.getObjectParentUid(objKey) != parentUid
