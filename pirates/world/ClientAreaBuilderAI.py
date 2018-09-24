@@ -110,7 +110,7 @@ class ClientAreaBuilderAI(DirectObject):
 
     def getIslandGridSize(self, objKey):
         if objKey == LocationIds.PORT_ROYAL_ISLAND:
-            gridSize = WorldGlobals.LARGE_ISLAND_GRID_SIZE
+            gridSize = WorldGlobals.MED_ISLAND_GRID_SIZE
         elif objKey == LocationIds.TORTUGA_ISLAND:
             gridSize = WorldGlobals.ISLAND_GRID_SIZE
         elif objKey == LocationIds.DEL_FUEGO_ISLAND:

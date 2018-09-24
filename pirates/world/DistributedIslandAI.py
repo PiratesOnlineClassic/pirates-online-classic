@@ -12,10 +12,10 @@ from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTrea
 class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedIslandAI')
 
-    def __init__(self, air, gridSize=WorldGlobals.ISLAND_GRID_SIZE):
+    def __init__(self, air, gridSize):
         startingZone = WorldGlobals.ISLAND_GRID_STARTING_ZONE
-        cellWidth = WorldGlobals.ISLAND_CELL_SIZE + startingZone
-        gridRadius = WorldGlobals.ISLAND_GRID_RADIUS * cellWidth
+        cellWidth = WorldGlobals.ISLAND_CELL_SIZE
+        gridRadius = WorldGlobals.ISLAND_GRID_RADIUS
 
         DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize, gridRadius, cellWidth)
         DistributedGameAreaAI.__init__(self, air)
@@ -74,7 +74,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def setZoneSphereSize(self, rad0, rad1, rad2):
         self.sphereRadii = [rad0, rad1, rad2]
-        self.cellWidth += self.getGridSizeFromSphereRadius(rad0 + rad1 + rad2,
+        self.cellWidth += self.getGridSizeFromSphereRadius((rad0 + rad1 + rad2) / self.gridRadius,
             self.cellWidth, self.gridRadius) + self.gridSize
 
     def d_setZoneSphereSize(self, rad0, rad1, rad2):
@@ -89,7 +89,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def setZoneSphereCenter(self, x, y):
         self.sphereCenter = [x, y]
-        self.cellWidth += self.getGridSizeFromSphere(self.sphereRadii[0] + self.sphereRadii[1] + self.sphereRadii[2],
+        self.cellWidth += self.getGridSizeFromSphere((x * y) / self.gridRadius,
             self.sphereCenter, self.cellWidth, self.gridRadius) + self.gridSize
 
         self.gridSize += self.cellWidth
