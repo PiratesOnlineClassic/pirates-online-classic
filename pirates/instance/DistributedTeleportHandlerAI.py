@@ -17,19 +17,9 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         self.avatar = avatar
 
     def startTeleportProcess(self, parentId, zoneId, bandId):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-        if not avatar:
-            self.teleportFsm.cleanup()
-            return
-
         self.sendUpdateToAvatarId(self.avatar.doId, 'waitInTZ', [[], 0])
 
     def teleportToInstanceReady(self, zoneId):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-        if not avatar:
-            self.teleportFsm.cleanup()
-            return
-
         world = self.teleportFsm.world
         gameArea = self.teleportFsm.gameArea
 
@@ -38,24 +28,16 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
             gameArea.doId, gameArea.getFileName(), world.oceanGrid.doId])
 
     def readyToFinishTeleport(self, instanceDoId):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-        if not avatar:
-            self.teleportFsm.cleanup()
-            return
-
         world = self.teleportFsm.world
         gameArea = self.teleportFsm.gameArea
         xPos, yPos, zPos, h = self.teleportFsm.spawnPt
 
-        # get the cell origin zone relative to the spawn island's spawn position,
-        # that was retrieved from the instance world.
-        zoneId = gameArea.getZoneFromXYZ((xPos, yPos, zPos))
-
         # ensure the zoneId we've just calculated is indeed valid,
         # and not some random zone outside the cartesian grid...
+        zoneId = gameArea.getZoneFromXYZ((xPos, yPos, zPos))
         if not gameArea.isValidZone(zoneId):
             self.notify.warning('Cannot finish teleport for avatar %d, '
-                'invalid spawn zone %d!' % (avatar.doId, zoneId))
+                'invalid spawn zone %d!' % (self.avatar.doId, zoneId))
 
             self.teleportFsm.cleanup()
             return
@@ -63,15 +45,9 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         world.d_setSpawnInfo(self.avatar.doId, xPos, yPos, zPos, h, 0, [gameArea.doId,
             gameArea.parentId, gameArea.zoneId])
 
-        avatar.b_setLocation(gameArea.doId, zoneId)
         self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
 
     def teleportToInstanceFinal(self, avatarId):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-        if not avatar:
-            self.teleportFsm.cleanup()
-            return
-
         self.avatar.b_setGameState('Spawn')
         self.teleportFsm.cleanup()
         messenger.send('teleportDone-%d' % self.avatar.doId)
