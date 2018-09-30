@@ -66,6 +66,7 @@ StackLimits = {
     InventoryType.SailPowerRecharge: 2,
     InventoryType.CutlassHack: 6,
     InventoryType.CutlassSlash: 6,
+    InventoryType.CutlassSweep: 6,
     InventoryType.DaggerCut: 6,
     InventoryType.DaggerSwipe: 6,
     InventoryType.AmmoAsp: 100,
@@ -335,6 +336,10 @@ StartingStacks = {
     InventoryType.CannonRoundShot: 2,
     InventoryType.SailBroadsideLeft: 2,
     InventoryType.SailBroadsideRight: 2,
+    InventoryType.CutlassSweep: 1,
+
+    # Skill Points
+    InventoryType.UnspentCutlass: 1,
 
     # Weapon Tokens
     InventoryType.CutlassToken: 1,
