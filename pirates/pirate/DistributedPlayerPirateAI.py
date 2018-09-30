@@ -340,10 +340,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def spendSkillPoint(self, skillId):
         inventory = self.getInventory()
-
         if not inventory:
-            self.notify.debug('Cannot spend skill point %d for avatar %d, no inventory present' % (
-                skillId, self.doId))
+            self.notify.debug('Cannot spend skill point %d for avatar %d, '
+                'no inventory present' % (skillId, self.doId))
 
             return
 
@@ -351,14 +350,13 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             unspentStackQuantity = inventory.getStackQuantity(stackType)
             skillQuantity = inventory.getStackQuantity(skillId)
             skillLimit = inventory.getStackLimit(skillId)
-            canSpendSkillPoint = True
 
             # check to see if the player has any skill points...
             if not unspentStackQuantity:
                 self.notify.debug('Cannot update stack %d, player has no skill points; unspentStackQuantity=%d!' % (
                     stackType, unspentStackQuantity))
 
-                canSpendSkillPoint = False
+                return
 
             # check to see if the player can purchase anymore stacks
             # for this type...
@@ -366,17 +364,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 self.notify.debug('Cannot update stack %d, stack limit reached; skillQuantity=%d skillLimit=%d!' % (
                     stackType, skillQuantity, skillLimit))
 
-                canSpendSkillPoint = False
+                return
 
             # update the player's skill quantity and their skill
             # points quantity stack...
-            if not canSpendSkillPoint:
-                inventory.b_setStackQuantity(skillId, skillQuantity)
-                inventory.b_setStackQuantity(stackType, unspentStackQuantity)
-            else:
-                inventory.b_setStackQuantity(skillId, skillQuantity + 1)
-                inventory.b_setStackQuantity(stackType, unspentStackQuantity - 1)
-
+            inventory.b_setStackQuantity(skillId, skillQuantity + 1)
+            inventory.b_setStackQuantity(stackType, unspentStackQuantity - 1)
             self.d_spentSkillPoint(skillId)
 
         if skillId >= InventoryType.begin_WeaponSkillMelee and skillId < InventoryType.end_WeaponSkillMelee:
