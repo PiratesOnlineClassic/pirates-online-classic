@@ -35,7 +35,7 @@ force-tutorial-complete #t
 teleport-all #t
 
 # Quests:
-disable-blockers #t
+disable-blockers #f
 
 # Cartesian Grid:
 visualize-cartesian-grid #f
