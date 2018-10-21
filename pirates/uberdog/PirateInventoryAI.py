@@ -1,6 +1,7 @@
 from pirates.uberdog.DistributedInventoryAI import DistributedInventoryAI
 from direct.directnotify import DirectNotifyGlobal
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
+from pirates.reputation import RepChart
 from pirates.reputation import ReputationGlobals
 from pirates.battle import WeaponGlobals
 
@@ -28,6 +29,15 @@ class PirateInventoryAI(DistributedInventoryAI):
             # is greater than their previous reputation...
             if newLevel > oldLevel:
                 avatar.d_levelUpMsg(repType, newLevel, 0)
+
+                maxMojo = avatar.getMaxMojo()
+                maxMojo += RepChart.getManaGain(repType)
+
+                maxHp = avatar.getMaxHp()
+                maxHp += RepChart.getHpGain(repType)
+
+                avatar.b_setMaxHp(maxHp)
+                avatar.b_setMaxMojo(maxMojo)
 
         self.b_setAccumulator(repType, quantity)
 
