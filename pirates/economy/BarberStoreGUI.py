@@ -476,14 +476,11 @@ class BarberStoreGUI(DirectFrame):
 
     def setPage(self, pageName, startIndex=0):
         self.tabBar.unstash()
-        self.titleLabel['text'] = '\x01smallCaps\x01' + self.rootTitle + ' - ' + \
-            PLocalizer.barberNames.get(pageName) + '\x02'
-
+        self.titleLabel['text'] = '\x01smallCaps\x01' + self.rootTitle + ' - ' + PLocalizer.barberNames.get(pageName) + '\x02'
         if localAvatar.style.getGender() == 'm':
             GENDER = 'MALE'
         else:
             GENDER = 'FEMALE'
-
         self.currentPage = pageName
         startPos = Vec3(0.63, 0.0, 1.1)
         buttonScale = Vec3(0.8, 0.8, 0.8)
@@ -504,6 +501,7 @@ class BarberStoreGUI(DirectFrame):
                 startRange = BarberGlobals.MALE_BEARD
             elif pageName == BarberGlobals.MUSTACHE:
                 startRange = BarberGlobals.MALE_MUSTACHE
+
         elif GENDER == 'FEMALE':
             if pageName == BarberGlobals.HAIR:
                 startRange = BarberGlobals.FEMALE_HAIR
@@ -533,9 +531,11 @@ class BarberStoreGUI(DirectFrame):
                     if type == BarberGlobals.HAIR:
                         if itemId == currentHair:
                             owned = True
+
                     elif type == BarberGlobals.BEARD:
                         if itemId == currentBeard:
                             owned = True
+
                     elif type == BarberGlobals.MUSTACHE:
                         if itemId == currentMustache:
                             owned = True
@@ -543,6 +543,7 @@ class BarberStoreGUI(DirectFrame):
                     if holiday is not None:
                         if holiday in AccessoriesStoreGUI.holidayIdList:
                             choices.append([index, owned, cost, holiday])
+
                     else:
                         choices.append([index, owned, cost, holiday])
 
@@ -560,8 +561,7 @@ class BarberStoreGUI(DirectFrame):
             helpText = longDesc
             if type == BarberGlobals.MUSTACHE:
                 if currentBeard in [1, 2, 3]:
-                    itemButton = GuiButton.GuiButton(parent=self.panel, state=DGG.DISABLED, text=PLocalizer.BarberNoMustache, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0.0,
-                                                                                                                                                                           0.05), text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_shadow=PiratesGuiGlobals.TextShadow, pos=startPos, image_scale=buttonScale)
+                    itemButton = GuiButton.GuiButton(parent=self.panel, state=DGG.DISABLED, text=PLocalizer.BarberNoMustache, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0.0, 0.05), text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_shadow=PiratesGuiGlobals.TextShadow, pos=startPos, image_scale=buttonScale)
                     self.buttons.append(itemButton)
                     self.pageNumber['text'] = '%s %s / %s' % (PLocalizer.TailorPage, 1, 1)
                     self.numPages = 1
@@ -572,15 +572,10 @@ class BarberStoreGUI(DirectFrame):
 
             if self.itemAmount - startIndex < self.buttonsPerPage and self.itemAmount >= startIndex:
                 itemButton = GuiButton.GuiButton(command=self.applyItem, parent=self.panel, state=DGG.NORMAL, text=text, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(-0.04, 0.07), text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, pos=startPos, image_scale=buttonScale, helpText=helpText, helpDelay=0, helpPos=(0.0, 0.0, -0.12), helpLeftAlign=True, sortOrder=1)
-                itemButton['extraArgs'] = [
-                 self.pirate, type, itemId, itemButton]
-                itemButton.cost = DirectFrame(parent=itemButton, relief=None, text='%s%s' % (PLocalizer.Cost, str(cost)), text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ARight, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(-0.055, 0.0), text_shadow=PiratesGuiGlobals.TextShadow, image=self.CoinImage, image_scale=0.15, image_pos=(-0.025,
-                                                                                                                                                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                                                                                                                                                           0.015), pos=(0.3, 0, -0.08))
+                itemButton['extraArgs'] = [self.pirate, type, itemId, itemButton]
+                itemButton.cost = DirectFrame(parent=itemButton, relief=None, text='%s%s' % (PLocalizer.Cost, str(cost)), text_fg=PiratesGuiGlobals.TextFG2, text_align=TextNode.ARight, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(-0.055, 0.0), text_shadow=PiratesGuiGlobals.TextShadow, image=self.CoinImage, image_scale=0.15, image_pos=(-0.025, 0, 0.015), pos=(0.3, 0, -0.08))
                 itemButton.previewText = DirectFrame(parent=itemButton, relief=None, text=PLocalizer.TailorPreview, text_fg=PiratesGuiGlobals.TextFG1, text_align=TextNode.ARight, text_scale=PiratesGuiGlobals.TextScaleSmall, text_shadow=PiratesGuiGlobals.TextShadow, pos=(-0.09, 0, -0.115))
-                itemButton.buy = GuiButton.GuiButton(command=self.buyItem, parent=itemButton, text=PLocalizer.PurchaseCommit, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0.0, -0.01), text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_shadow=PiratesGuiGlobals.TextShadow, pos=(0.25,
-                                                                                                                                                                                                                                                                                                                 0.0,
-                                                                                                                                                                                                                                                                                                                 0.09), extraArgs=[uid, itemButton])
+                itemButton.buy = GuiButton.GuiButton(command=self.buyItem, parent=itemButton, text=PLocalizer.PurchaseCommit, text_fg=PiratesGuiGlobals.TextFG2, text_pos=(0.0, -0.01), text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_shadow=PiratesGuiGlobals.TextShadow, pos=(0.25, 0.0, 0.09), extraArgs=[uid, itemButton])
                 startPos -= Vec3(0.0, 0.0, itemButton.getHeight() - 0.03)
                 itemButton.helpWatcher.setPos(itemButton.getPos())
                 self.buttons.append(itemButton)
@@ -588,11 +583,14 @@ class BarberStoreGUI(DirectFrame):
                 if cost > localAvatar.getMoney():
                     itemButton.buy['state'] = DGG.DISABLED
                     itemButton.cost['text_fg'] = PiratesGuiGlobals.TextFG6
+
                 if owned:
                     if itemId == 0:
                         itemButton.buy['state'] = DGG.DISABLED
                         itemButton['state'] = DGG.DISABLED
+
                     itemButton.previewText['text'] = PLocalizer.TattooShopOwned
+
                 if itemId != 0 or GENDER == 'FEMALE':
                     xOffset = -0.05
                     yOffset = 0.0
@@ -600,11 +598,11 @@ class BarberStoreGUI(DirectFrame):
                     holiday = PiratesGlobals.SAINTPATRICKSDAY
                     if holiday in BarberStoreGUI.holidayIdList:
                         choices.insert(0, 8)
+
                     for i in choices:
                         hairColor = hairColors[i]
                         hairTone = (hairColor[0], hairColor[1], hairColor[2], 1.0)
-                        button = DirectButton(parent=itemButton, relief=DGG.RAISED, pos=(xOffset, 0, yOffset), frameSize=(-0.024, 0.024, -0.025, 0.025), borderWidth=(0.004,
-                                                                                                                                                                      0.004), frameColor=hairTone, command=self.handleSetBaseColor, extraArgs=[self.itemAmount, type, i, itemButton], sortOrder=2)
+                        button = DirectButton(parent=itemButton, relief=DGG.RAISED, pos=(xOffset, 0, yOffset), frameSize=(-0.024, 0.024, -0.025, 0.025), borderWidth=(0.004, 0.004), frameColor=hairTone, command=self.handleSetBaseColor, extraArgs=[self.itemAmount, type, i, itemButton], sortOrder=2)
                         xOffset += 0.048
 
                 if self.paid == OTPGlobals.AccessVelvetRope:
@@ -613,10 +611,12 @@ class BarberStoreGUI(DirectFrame):
                     itemButton.buy['geom_pos'] = Vec3(-0.1, 0.0, 0.0)
                     itemButton.buy['command'] = localAvatar.guiMgr.showNonPayer
                     itemButton.buy['extraArgs'] = ['BARBER_CANNOT_BUY', 10]
+
                 itemButton.color = currentHairColor
                 itemButton.uid = uid
                 itemButton.type = type
                 itemButton.itemId = itemId
+
             self.itemAmount += 1
 
         if self.itemAmount > self.buttonsPerPage:
@@ -624,26 +624,30 @@ class BarberStoreGUI(DirectFrame):
             remainder = numPages - int(numPages)
             if remainder > 0:
                 numPages += 1.0 - remainder
+
             page = startIndex / self.buttonsPerPage + 1
         else:
             numPages = 1
             page = 1
         if len(choices):
             self.setupDisplayRegions(regionData, pageName)
-        for item in self.clothRenders:
-            item.hide()
+        else:
+            for item in self.clothRenders:
+                item.hide()
 
         if self.itemAmount <= self.buttonsPerPage:
             self.nextPageButton['state'] = DGG.DISABLED
             self.prevPageButton['state'] = DGG.DISABLED
+
         if startIndex:
             self.prevPageButton['state'] = DGG.NORMAL
+
         if startIndex + self.buttonsPerPage < self.itemAmount:
             self.nextPageButton['state'] = DGG.NORMAL
             self.prevPageButton['state'] = DGG.NORMAL
+
         self.pageNumber['text'] = '%s %s / %s' % (PLocalizer.TailorPage, page, int(numPages))
         self.numPages = numPages
-        return
 
     def handleSetBaseColor(self, humanId, type, color, button):
         self.clothHumans[humanId % self.buttonsPerPage].style.setHairColor(color)
