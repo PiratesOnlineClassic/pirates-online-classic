@@ -103,13 +103,20 @@ class LocalTrade(TradeBase):
         self.giveSkill(InventoryType.PistolShoot, 2)
         self.giveSkill(InventoryType.PistolLeadShot, 2)
 
-    def giveWandTraining(self):
-        self.giveSkill(InventoryType.StaffBlast, 2)
-        self.giveSkill(InventoryType.StaffSoulFlay, 2)
-
     def giveDollTraining(self):
         self.giveSkill(InventoryType.DollAttune, 2)
         self.giveSkill(InventoryType.DollPoke, 2)
+
+    def giveDaggersTraining(self):
+        self.giveSkill(InventoryType.DaggerCut, 2)
+        self.giveSkill(InventoryType.DaggerSwipe, 2)
+
+    def giveGrenadeTraining(self):
+        self.giveSkill(InventoryType.GrenadeThrow, 2)
+
+    def giveWandTraining(self):
+        self.giveSkill(InventoryType.StaffBlast, 2)
+        self.giveSkill(InventoryType.StaffSoulFlay, 2)
 
 
 class TradeAI(DistributedObjectAI, TradeBase):
