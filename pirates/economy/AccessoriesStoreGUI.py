@@ -589,8 +589,7 @@ class AccessoriesStoreGUI(DirectFrame):
             modelId = item[1]
             texId = item[2]
             purchaseArgList.append([item[5], item[3], type])
-            self.equipRequests[type] = [
-             uid, colorId, modelId, texId]
+            self.equipRequests[type] = [uid, colorId, modelId, texId]
 
         for item in self.sellInventory.purchases:
             type = ClothingGlobals.CLOTHING_NUMBER[item[0]]
@@ -902,8 +901,7 @@ class AccessoriesStoreGUI(DirectFrame):
         modelId = accessory[2]
         texId = accessory[3]
         data = [uid, colorId, type]
-        self.equipRequests[type] = [
-         uid, colorId, modelId, texId]
+        self.equipRequests[type] = [uid, colorId, modelId, texId]
         self.reloadPirateDNA()
         type = accessory[1]
         gender = localAvatar.style.getGender()

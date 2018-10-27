@@ -294,7 +294,6 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
                             tubeLength = max(target.battleTubeRadius, target.battleTubeHeight)
                             if distance - tubeLength < distance:
                                 distance -= tubeLength
-                                continue
 
                     range = max(baseRange, calcRange)
                     secondaryRange = max(baseRange, blastRange)
