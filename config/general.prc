@@ -138,6 +138,9 @@ allow-teleport-from-discord #f
 # Alpha:
 want-alpha-blockers #t
 
+# Quests:
+disable-blockers #f
+
 # Text:
 want-render2dp 1
 text-encoding utf8
