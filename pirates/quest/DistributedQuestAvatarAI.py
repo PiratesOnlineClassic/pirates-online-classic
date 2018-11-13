@@ -159,6 +159,6 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
     def _acceptQuest(self, nextQuestId, giverId, rewards):
 
         def questCreatedCallback():
-            self.b_setActiveQuest(nextQuestId)
+            messenger.send('quest-available-%s-%d' % (nextQuestId, self.doId))
 
         self.air.questMgr.createQuest(self, nextQuestId, questCreatedCallback)
