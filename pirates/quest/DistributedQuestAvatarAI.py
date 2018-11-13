@@ -149,11 +149,16 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
 
         nextQuestId = self.questStatus.getNextQuestId(activeQuest.getQuestId())
 
+        # drop the avatar's previous quest.
+        messenger.send(activeQuest.getCompleteEventString())
+        self.air.questMgr.dropQuest(self, activeQuest)
+
+        # give them the new quest appropriate to their current quest path...
+        self._acceptQuest(nextQuestId, giverId, rewards)
+
+    def _acceptQuest(self, nextQuestId, giverId, rewards):
+
         def questCreatedCallback():
             self.b_setActiveQuest(nextQuestId)
 
-        # drop the avatar's previous quest and give them the new quest
-        # appropriate to their current quest path...
-        messenger.send(activeQuest.getCompleteEventString())
-        self.air.questMgr.dropQuest(self, activeQuest)
         self.air.questMgr.createQuest(self, nextQuestId, questCreatedCallback)
