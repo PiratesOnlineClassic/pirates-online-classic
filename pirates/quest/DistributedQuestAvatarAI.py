@@ -3,6 +3,7 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.quest.QuestAvatarBase import QuestAvatarBase
 from pirates.quest import QuestTaskDNA
 from pirates.quest.QuestHolder import QuestHolder
+from pirates.uberdog.UberDogGlobals import InventoryCategory
 
 
 class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
@@ -157,8 +158,16 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
         self._acceptQuest(nextQuestId, giverId, rewards)
 
     def _acceptQuest(self, nextQuestId, giverId, rewards):
+        inventory = self.getInventory()
+        if not inventory:
+            self.notify.debug('Failed to accept quest %d for avatar %d, '
+                'no inventory found!' % (nextQuestId, self.doId))
+
+            return
+
+        questList = inventory.getDoIdListCategory(InventoryCategory.QUESTS)
 
         def questCreatedCallback():
-            messenger.send('quest-available-%s-%d' % (nextQuestId, self.doId))
+            messenger.send('quest-available-%s-%d' % (nextQuestId, self.doId), [self.doId, questList])
 
         self.air.questMgr.createQuest(self, nextQuestId, questCreatedCallback)
