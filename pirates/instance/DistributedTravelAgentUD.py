@@ -44,12 +44,10 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
 
     def requestInitLocUD(self, unused, shardId):
         avatarId = self.air.getAvatarIdFromSender()
-
         if not avatarId:
             return
 
         shardId = shardId or self.getRandomShard()
-
         if not shardId:
             self.notify.warning('Cannot initialize loc teleport for avatar %d, no shards are available!' % (
                 avatarId))
@@ -57,7 +55,6 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
             return
 
         channel = self.getShard(shardId)
-
         if not channel:
             self.notify.warning('Cannot initialize loc teleport for avatar %d, unknown shard %d!' % (
                 avatarId, shardId))
@@ -77,15 +74,11 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
             return
 
         channel = self.getShard(shardId)
-
         if not channel:
             self.notify.warning('Cannot initialize teleport to shard %d for avatar %d, unknown channel!' % (
                 shardId, avatarId))
 
             return
 
-        def inventoryArrived(inventoryId):
-            self.sendUpdateToChannel(channel, 'requestTeleportToShardUDtoAI', [avatarId, shardId,
-                instanceType, instanceName, locationUid])
-
-        self.air.inventoryManager.initiateInventory(avatarId, callback=inventoryArrived)
+        self.sendUpdateToChannel(channel, 'requestTeleportToShardUDtoAI', [avatarId, shardId,
+            instanceType, instanceName, locationUid])
