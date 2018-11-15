@@ -524,6 +524,7 @@ class QuestManagerAI(DirectObject):
         for task in activeQuest.questDNA.getTasks():
             if isinstance(task, QuestTaskDNA.BribeNPCTaskDNA) and task.getNpcId() == npc.getUniqueId():
                 goldAmount = task.getGold()
+                break
 
         if not goldAmount:
             self.notify.debug('Failed to get quest bribe amount for avatar %d, '
