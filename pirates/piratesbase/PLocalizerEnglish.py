@@ -1146,15 +1146,689 @@ QuestSCWhereDoIDeployShip = 'Where do I launch my ship?'
 QuestSCHowDoIDeployShip = 'How do I launch my ship?'
 QuestItemNotifications = {1: 'Enough %s have already been acquired.', 2: '%s acquired. Quest Complete!', 3: '%s acquired. Quest Updated.', 4: 'Checking for %s... not found.', 5: '%s are not found here. Look elsewhere.'}
 QuestNPCNotifications = {1: '%s has already been captured.', 2: '%s captured. Quest Complete!', 3: '%s captured. Quest Updated.', 4: 'Checking for %s... not found.', 5: '%s will not be found here. Look elsewhere.'}
-QuestItemNames = {0: ('a key', 'keys', 'Keys'), 1: ('a sea chart', 'sea charts', 'Sea Charts'), 2: ('an earring', 'earrings', 'Earrings'), 3: ('a barrel of rum', 'barrels of rum', 'Barrels of Rum'), 4: ('a crab claw', 'crab claws', 'Crab Claws'), 5: ('a bag of coins', 'bags of coins', 'Bags of Coins'), 6: ('a tattoo pattern', 'tattoo patterns', 'Tattoo Patterns'), 7: ('a copper rod', 'copper rods', 'Copper Rods'), 8: ('blood', 'blood', 'Blood'), 9: ('a flag', 'flags', 'Flags'), 10: ('a list', 'lists', 'Lists'), 11: ('an arrest warrant', 'arrest warrants', 'Arrest Warrants'), 12: ('a handkerchief', 'handkerchiefs', 'Handkerchiefs'), 13: ('bat guano', 'bat guano', 'Bat Guano'), 14: ('a remedy', 'remedies', 'Remedies'), 15: ('personal effects', 'personal effects', 'Personal Effects'), 16: ('an engraved pearl', 'engraved pearls', 'Engraved Pearls'), 17: ('a severed arm', 'severed arms', 'Severed Arms'), 18: ('alligator saliva', 'alligator saliva', 'Alligator Saliva'), 19: ('venom', 'venom', 'Venom'), 20: ('cursed wood', 'cursed wood', 'Cursed Wood'), 21: ('a map', 'maps', 'Maps'), 22: ('a necklace', 'necklaces', 'Necklaces'), 23: ('a shipment of tin', 'shipments of tin', 'Shipments of Tin'), 24: ('a shipment of sand', 'shipments of sand', 'Shipments of Sand'), 25: ('a glass ring', 'glass rings', 'Glass Rings'), 26: ('a wooden plate', 'wooden plates', 'Wooden Plates'), 27: ('a chicken', 'chickens', 'Chickens'), 28: ('a pig', 'pigs', 'Pigs'), 29: ('an egg', 'eggs', 'Eggs'), 30: ('a tooth', 'teeth', 'Teeth'), 31: ('a wasp wing', 'wasp wings', 'Wasp Wings'), 32: ('an alligator scale', 'alligator scales', 'Alligator Scales'), 33: ('poison', 'poison', 'Poison'), 34: ('a lump of mud', 'lumps of mud', 'Lumps of Mud'), 35: ('a pint of grog', 'pints of grog', 'Pints of Grog'), 36: ('a doll', 'dolls', 'Dolls'), 37: ('a dinghy', 'dinghies', 'Dinghies'), 38: ('release orders', 'release orders', 'Release Orders'), 39: ('a barrel of honey', 'barrels of honey', 'Barrels of Honey'), 40: ('a dress', 'dresses', 'Dresses'), 41: ('a die', 'dice', 'Dice'), 42: ('a wasp egg', 'wasp eggs', 'Wasp Eggs'), 43: ('a container of bile', 'containers of bile', 'Containers of Bile'), 44: ('a bottle of rum', 'bottles of rum', 'Bottles of Rum'), 45: ('a bracelet', 'bracelets', 'Bracelets'), 46: ('a needle', 'needles', 'Needles'), 47: ('a kraken eye', 'kraken eyes', 'Kraken Eyes'), 48: ('powder', 'powder', 'Powder'), 49: ('croc water', 'croc water', 'Croc Water'), 50: ('entrails', 'entrails', 'Entrails'), 51: ('a splinter', 'splinters', 'Splinters'), 52: ('dust', 'dust', 'Dust'), 53: ('earth', 'earth', 'Earth'), 54: ('a lichen', 'lichens', 'Lichens'), 55: ('water', 'water', 'Water'), 56: ('a scorpion egg', 'scorpion eggs', 'Scorpion Eggs'), 57: ('bloody treasure', 'bloody treasure', 'Bloody Treasure'), 58: ('nightshade', 'nightshade', 'Nightshade'), 59: ('a whisker', 'whiskers', 'Whiskers'), 60: ('a jar', 'jars', 'Jars'), 61: ('a piece of paper', 'papers', 'Papers'), 62: ('a bone', 'bones', 'Bones'), 63: ('bone shavings', 'bone shavings', 'Bone Shavings'), 64: ('a chest', 'chests', 'Chests'), 65: ('a hook arm', 'hook arms', 'Hook Arms'), 66: ('a diamond', 'diamonds', 'Diamonds'), 67: ('a box of cigars', 'boxes of cigars', 'Boxes of Cigars'), 68: ('a gold chain', 'gold chains', 'Gold Chains'), 69: ('cargo', 'cargo', 'Cargo'), 70: ('a ladle', 'ladles', 'Ladles'), 71: ('sugar', 'sugar', 'Sugar'), 72: ('a bottle', 'bottles', 'Bottles'), 73: ('a barrel of molasses', 'barrels of molasses', 'Barrels of Molasses'), 74: ('vanilla', 'vanilla', 'Vanilla'), 75: ('bone dust', 'pinches of bone dust', 'Pinches Bone Dust'), 76: ('swamp gas', 'swamp gas', 'Swamp Gas'), 77: ('a stinger', 'stingers', 'Stingers'), 78: ('a bladder', 'bladders', 'Bladders'), 79: ('a pint', 'pints', 'Pints'), 80: ('a pinch of cinnamon', 'pinches of cinnamon', 'Pinches of Cinnamon'), 81: ('a coconut', 'coconuts', 'Coconuts'), 82: ('a feather', 'feathers', 'Feathers'), 83: ('a barrel of honey', 'barrels of honey', 'Barrels of Honey'), 84: ('barnacles', 'barnacles', 'Barnacles'), 85: ('a hairball', 'hairballs', 'Hairballs'), 86: ('a flea', 'fleas', 'Fleas'), 87: ('a drink', 'drinks', 'Drinks'), 88: ('a schedule', 'schedules', 'Schedules'), 89: ('a hair', 'hairs', 'Hairs'), 90: ('honeysuckle', 'honeysuckle', 'Honeysuckle'), 91: ('sap', 'sap', 'Sap'), 92: ('a tear', 'tears', 'Tears'), 93: ('a bottle of perfume', 'bottles of perfume', 'Bottles of Perfume'), 94: ('oil', 'oils', 'Oils'), 95: ('rum', 'rum', 'Rum'), 96: ('orders', 'orders', 'Orders'), 97: ('salve', 'salve', 'Salve'), 98: ('wax', 'wax', 'Wax'), 99: ('a chunk of meat', 'chunks of meat', 'Chunks of Meat'), 100: ('a plank of wood', 'planks of wood', 'Planks of Wood'), 101: ('a nail', 'nails', 'Nails'), 102: ('a bucket of pitch', 'buckets of pitch', 'Buckets of Pitch'), 103: ('a saw', 'saws', 'Saws'), 104: ('a ship in a bottle', 'ships in bottles', 'Ships in Bottles'), 105: ('a wood beam', 'wood beams', 'Wood Beams'), 106: ('a bolt', 'bolts', 'Bolts'), 107: ('a yard of sailcloth', 'yards of sailcloth', 'Yards of Sailcloth'), 108: ('a rope', 'ropes', 'Ropes'), 109: ('a cannon', 'cannons', 'Cannons'), 110: ('a figurehead', 'figureheads', 'Figureheads'), 111: ('a parrot', 'parrots', 'Parrots'), 112: ('a document', 'documents', 'Documents'), 113: ('an eye', 'eyes', 'Eyes'), 114: ('a portrait', 'portraits', 'Portraits'), 115: ('a treasure', 'treasures', 'Treasures'), 116: ('a bundle of straw', 'bundles of straw', 'Bundles of Straw'), 117: ('a bolt of silk', 'bolts of silk', 'Bolts of Silk'), 118: ('a spool of wire', 'spools of wire', 'Spools of Wire'), 119: ('a bag', 'bags', 'Bags'), 120: ('dirt', 'dirt', 'Dirt'), 121: ('a ring', 'rings', 'Rings'), 122: ('a medal', 'medals', 'Medals'), 123: ('a reagent', 'reagents', 'Reagents'), 124: ('a chess piece', 'chess pieces', 'Chess Pieces'), 125: ('a figurine', 'figurines', 'Figurines'), 126: ('a steel rod', 'steel rods', 'Steel Rods'), 127: ('a silver ingot', 'silver ingots', 'Silver Ingots'), 128: ('tongs', 'tongs', 'Tongs'), 129: ('a bucket of coal', 'buckets of coal', 'Buckets of Coal'), 130: ('a message', 'messages', 'Messages'), 131: ('knives', 'knives', 'Knives'), 132: ('a grenade', 'grenades', 'Grenades'), 133: ('a branch', 'branches', 'Branches'), 134: ('a shrunken head', 'shrunken heads', 'Shrunken Heads'), 135: ('a bucket of saltpeter', 'buckets of saltpeter', 'Buckets of Saltpeter'), 136: ('a sack of charcoal', 'sacks of charcoal', 'Sacks of Charcoal'), 137: ('a cup of sulfur', 'cups of sulfur', 'Cups of Sulfur'), 138: ('a fuse', 'fuses', 'Fuses'), 139: ('a flint', 'flints', 'Flints'), 140: ('a casing', 'casings', 'Casings'), 141: ('a bucket of tar', 'buckets of tar', 'Buckets of Tar'), 142: ('a teleport totem', 'teleport totems', 'Teleport Totems'), 143: ('a pair of bat wings', 'pairs of bat wings', 'Pairs of Bat Wings'), 144: ('an alligator tooth', 'alligator teeth', 'Alligator Teeth'), 145: ('a wasp essence', 'wasp essences', 'Wasp Essences'), 146: ('a tortugan artifact', 'tortugan artifacts', 'Tortugan Artifacts'), 147: ('a yard of cotton', 'yards of cotton', 'Yards of Cotton'), 148: ('an iron bar', 'iron bars', 'Iron Bars'), 149: ('an alligator tail', 'alligator tails', 'Alligator Tails'), 150: ('a crab shell', 'crab shells', 'Crab Shells'), 151: ('bat hair', 'bat hair', 'Bat Hair'), 152: ('scorpion blood', 'scorpion blood', 'Scorpion Blood'), 153: ('scorpion venom', 'scorpion venom', 'Scorpion Venom'), 154: ('a barrel of whiskey', 'barrels of whiskey', 'Barrels of Whiskey'), 155: ('a set of bar glasses', 'sets of bar glasses', 'Sets of Bar Glasses'), 156: ('a bag of coal', 'bags of coal', 'Bags of Coal'), 157: ('smithing tools', 'smithing tools', 'Smithing Tools'), 158: ('the name of the attacker', 'the name of the attacker', 'the Name of the Attacker'), 159: ('a fly trap leaf', 'fly trap leaves', 'Fly Trap Leaves'), 160: ('a fly trap root', 'fly trap roots', 'Fly Trap Roots'), 161: ('a Navy coat', 'Navy coats', 'Navy Coats'), 162: ('The First Medal of Port Royal', '', 'The First Medal of Port Royal'), 163: ('The Eye of Nabai', '', 'The Eye of Nabai'), 164: ('a well-fashioned voodoo doll head', '', 'Well-Fashioned Voodoo Doll Heads'), 165: ('a well-fashioned voodoo doll torso', '', 'Well-Fashioned Voodoo Doll Torsos'), 166: ('a well-fashioned voodoo doll left arm', '', 'Well-Fashioned Voodoo Doll Left Arms'), 167: ('a well-fashioned voodoo doll right arm', '', 'Well-Fashioned Voodoo Doll Right Arms'), 168: ('a well-fashioned voodoo doll left leg', '', 'Well-Fashioned Voodoo Doll Left Legs'), 169: ('a well-fashioned voodoo doll right leg', '', 'Well-Fashioned Voodoo Doll Right Legs'), 170: ('a navy musket', 'navy muskets', 'Navy Muskets'), 171: ('a pair of Navy pants', 'pairs of Navy pants', 'Pairs of Navy Pants'), 172: ('a sergeant badge', 'sergeant badges', 'Sergeant Badges'), 173: ('a prison key', 'prison keys', 'Prison Keys'), 174: ('the hidden coins map for Fort Charles', '', ''), 175: ('a sewing needle', 'sewing needles', 'Sewing Needles'), 176: ('a guard schedule', 'guard schedules', 'Guard Schedules'), 177: ('a navy ship schedule', 'navy ship schedules', 'Navy Ship Schedules'), 178: ('a canteen of latrine water', 'canteens of latrine water', 'Canteens of Latrine Water'), 179: ('a cup of moonlit water', 'cups of moonlit water', 'Cups of Moonlit Water'), 180: ('a bottle of battle-touched water', 'bottles of battle-touched water', 'Bottles of Battle-Touched Water'), 181: ('a pair of dice', 'pairs of dice', 'Pairs of Dice'), 182: ('a water canteen', 'water canteens', 'Water Canteens'), 183: ('a stash of rubies', 'a stash of rubies', 'Stash of Rubies'), 184: ('a stash of amethysts', 'a stash of amethysts', 'Stash of Amethysts'), 185: ('a stash of sapphires', 'a stash of sapphires', 'Stash of Sapphires'), 186: ('a bottle of fine ink', 'fine inks', 'Fine Inks'), 187: ('a deed', 'deeds', 'Deeds'), 188: ('a EITC coat', 'EITC coats', 'EITC Coats'), 189: ('a pair of EITC pants', 'pairs of EITC pants', 'Pairs of EITC Pants'), 190: ('a shop application', 'shop applications', 'Shop Applications'), 191: ('a hide', 'hides', 'Hides'), 192: ('a contract', 'contracts', 'Contracts'), 193: ('a blood sample', 'blood samples', 'Blood Samples'), 194: ('a bandage', 'bandages', 'Bandages'), 195: ('a medical tool', 'medical tools', 'Medical Tools'), 196: ('a diary', 'diaries', 'Diary'), 197: ('a ship log', 'ship logs', 'Ship Logs'), 198: ('a family heirloom', 'family heirlooms', 'Family Heirlooms'), 199: ('a gun', 'guns', 'Guns'), 200: ('a gun order', 'gun orders', 'Gun Orders'), 201: ('an antique pistol', 'antique pistols', 'Antique Pistols'), 202: ('a ship plan', 'ship plans', 'Ship Plans'), 203: ('a background check', 'background checks', 'Background Checks'), 204: ('a bar of fine steel', 'bars of fine steel', 'Bars Of Fine Steel'), 205: ('a strap of leather', 'leather straps', 'Leather Straps'), 206: ('a blade sharpener', 'blade sharpeners', 'Blade Sharpeners'), 207: ('a page from Pirate Lore', 'pages from Pirate Lore', 'Pages from Pirate Lore'), 208: ('a chest of Pirate Lore', 'chests of Pirate Lore', 'Chests of Pirate Lore'), 209: ('a book of Pirate Lore', 'books of Pirate Lore', 'Books of Pirate Lore'), 210: ('an EITC manual', 'EITC manuals', 'EITC Manuals'), 211: ('an unfinished book of Pirate Lore', 'unfinished books of Pirate Lore', 'Unfinished Books of Pirate Lore'), 212: ('an alligator eye', 'alligator eyes', 'Alligator Eyes'), 213: ('a wasp', 'wasps', 'Wasps'), 214: ('a scorpion eye', 'scorpion eyes', 'Scorpion Eyes'), 215: ('a bat eye', 'bat eyes', 'Bat Eyes'), 216: ('a cloudy blue orb', 'cloudy blue orbs', 'Cloudy Blue Orbs'), 217: ('a skeleton rib', 'skeleton ribs', 'Skeleton Ribs'), 218: ('a badge', 'badges', 'Badges'), 219: ('a writ of authority', 'writs of authority', 'Writs of Authority'), 220: ('an alligator tooth', 'alligator teeth', 'Alligator Teeth'), 221: ('a bat claw', 'bat claws', 'Bat Claws'), 222: ('a skeleton bone', 'skeleton bones', 'Skeleton Bones'), 223: ('a sunken ship mast', 'sunken ship masts', 'Sunken Ship Masts'), 224: ('a bottle of battle-touched earth', 'bottles of battle-touched earth', 'Bottles of Battle-Touched Earth'), 225: ('a relic piece', 'relic pieces', 'Relic Pieces'), 226: ('Capt. Teague', 'Capt. Teague', 'Capt. Teague'), 227: ('a spool of thread', 'spools of thread', 'Spools of Thread'), 228: ('a rare feather', 'rare feathers', 'Rare Feathers'), 229: ('a manifest', 'manifests', 'Manifests'), 230: ("Bingham's diary", "Bingham's diary", "Bingham's Diary"), 231: ('a bolt of cloth', 'bolts of cloth', 'Bolts of Cloth'), 232: ('a pair of fine scissors', 'pairs of fine scissors', 'Pairs of Fine Scissors'), 233: ('a spool of silk thread', 'spools of silk thread', 'Spools of Silk Thread'), 234: ("Scarlet's pearl", "Scarlet's pearls", "Scarlet's Pearls"), 235: ('a letter from Scarlet', 'letters from Scarlet', 'Letters From Scarlet'), 236: ('a belt buckle', 'belt buckles', 'Belt Buckles'), 237: ('a fine shoe design', 'fine shoe designs', 'Fine Shoe Designs'), 238: ('a scorpion shell', 'scorpion shells', 'Scorpion Shells'), 239: ('a piece of kraken cloth', 'kraken cloths', 'Kraken Cloths'), 240: ('a cursed button', 'cursed buttons', 'Cursed Buttons'), 241: ('a piece of cursed bark', 'cursed bark', 'Cursed Bark'), 242: ('a piece of cursed cloth', 'cursed cloth', 'Cursed Cloth'), 243: ('a piece of cursed thread', 'cursed threads', 'Cursed Thread'), 244: ('a cursed needle', 'cursed needles', 'Cursed Needles'), 245: ('a voodoo artifact', 'voodoo artifacts', 'Voodoo Artifacts'), 246: ('a chunk of rotten meat', 'chunks of rotten meat', 'Chunks of Rotten Meat'), 247: ('a compass', 'compasses', 'Compasses'), 248: ("Lockgrim's letter", "Lockgrim's letters", "Lockgrim's Letters"), 249: ('a tentacle', 'tentacles', 'Tentacles'), 250: ('an Urchinfist eye', 'Urchinfist eyes', 'Urchinfist Eyes'), 251: ('a cursed chest', 'cursed chests', 'Cursed Chests'), 252: ('a bottle of fine rum', 'bottles of fine rum', 'Bottles of Fine Rum'), 253: ("Turk's lucky deck", "Turk's lucky deck", "Turk's Lucky Deck"), 254: ('a Navy shoestring', 'Navy shoestrings', 'Navy Shoestrings'), 255: ('a Navy anchor', 'Navy anchors', 'Navy Anchors'), 256: ('a EITC parchment', 'EITC parchments', 'EITC Parchments'), 257: ('an empty flask', 'empty flasks', 'Empty Flasks'), 258: ('a sail', 'sails', 'Sails'), 259: ('a ship wheel', 'ship wheels', 'Ship Wheels'), 260: ('a piece of Navy fabric', 'pieces of Navy fabric', 'Pieces of Navy Fabric'), 261: ('a scrap of cursed sail cloth', 'scraps of cursed sail cloth', 'Scraps of Cursed Sail Cloth'), 262: ('a suit of spanish armor', 'suits of spanish armor', 'Suits of Spanish Armor'), 263: ('a spanish pistol component', 'spanish pistol components', 'Spanish Pistol Components'), 264: ('a gun stock', 'gun stocks', 'Gun Stocks'), 265: ('a bone handle', 'bone handles', 'Bone Handles'), 266: ('a lock of hair', 'locks of hair', 'Locks of Hair'), 267: ('a wooden statuette', 'wooden statuettes', 'Wooden Statuettes'), 268: ('a barrel of gun powder', 'barrels of gun powder', 'Barrels of Gun Powder'), 269: ('a spar', 'spars', 'Spars'), 270: ('a stolen dagger', 'stolen daggers', 'Stolen Daggers'), 271: ('a gem', 'gems', 'Gems'), 272: ('a bar of navy steel', 'bars of navy steel', 'Bars of Navy Steel'), 273: ('a gold-handle rapier', 'gold-handle rapiers', 'Gold Handle Rapiers')}
+QuestItemNames = {
+  0: ('a key', 'keys', 'Keys'),
+  1: ('a sea chart', 'sea charts', 'Sea Charts'),
+  2: ('an earring', 'earrings', 'Earrings'),
+  3: ('a barrel of rum', 'barrels of rum', 'Barrels of Rum'),
+  4: ('a crab claw', 'crab claws', 'Crab Claws'),
+  5: ('a bag of coins', 'bags of coins', 'Bags of Coins'),
+  6: ('a tattoo pattern', 'tattoo patterns', 'Tattoo Patterns'),
+  7: ('a copper rod', 'copper rods', 'Copper Rods'),
+  8: ('blood', 'blood', 'Blood'),
+  9: ('a flag', 'flags', 'Flags'),
+  10: ('a list', 'lists', 'Lists'),
+  11: ('an arrest warrant', 'arrest warrants', 'Arrest Warrants'),
+  12: ('a handkerchief', 'handkerchiefs', 'Handkerchiefs'),
+  13: ('bat guano', 'bat guano', 'Bat Guano'),
+  14: ('a remedy', 'remedies', 'Remedies'),
+  15: ('personal effects', 'personal effects', 'Personal Effects'),
+  16: ('an engraved pearl', 'engraved pearls', 'Engraved Pearls'),
+  17: ('a severed arm', 'severed arms', 'Severed Arms'),
+  18: ('alligator saliva', 'alligator saliva', 'Alligator Saliva'),
+  19: ('venom', 'venom', 'Venom'),
+  20: ('cursed wood', 'cursed wood', 'Cursed Wood'),
+  21: ('a map', 'maps', 'Maps'),
+  22: ('a necklace', 'necklaces', 'Necklaces'),
+  23: ('a shipment of tin', 'shipments of tin', 'Shipments of Tin'),
+  24: ('a shipment of sand', 'shipments of sand', 'Shipments of Sand'),
+  25: ('a glass ring', 'glass rings', 'Glass Rings'),
+  26: ('a wooden plate', 'wooden plates', 'Wooden Plates'),
+  27: ('a chicken', 'chickens', 'Chickens'),
+  28: ('a pig', 'pigs', 'Pigs'),
+  29: ('an egg', 'eggs', 'Eggs'),
+  30: ('a tooth', 'teeth', 'Teeth'),
+  31: ('a wasp wing', 'wasp wings', 'Wasp Wings'),
+  32: ('an alligator scale', 'alligator scales', 'Alligator Scales'),
+  33: ('poison', 'poison', 'Poison'),
+  34: ('a lump of mud', 'lumps of mud', 'Lumps of Mud'),
+  35: ('a pint of grog', 'pints of grog', 'Pints of Grog'),
+  36: ('a doll', 'dolls', 'Dolls'),
+  37: ('a dinghy', 'dinghies', 'Dinghies'),
+  38: ('release orders', 'release orders', 'Release Orders'),
+  39: ('a barrel of honey', 'barrels of honey', 'Barrels of Honey'),
+  40: ('a dress', 'dresses', 'Dresses'),
+  41: ('a die', 'dice', 'Dice'),
+  42: ('a wasp egg', 'wasp eggs', 'Wasp Eggs'),
+  43: ('a container of bile', 'containers of bile', 'Containers of Bile'),
+  44: ('a bottle of rum', 'bottles of rum', 'Bottles of Rum'),
+  45: ('a bracelet', 'bracelets', 'Bracelets'),
+  46: ('a needle', 'needles', 'Needles'),
+  47: ('a kraken eye', 'kraken eyes', 'Kraken Eyes'),
+  48: ('powder', 'powder', 'Powder'),
+  49: ('croc water', 'croc water', 'Croc Water'),
+  50: ('entrails', 'entrails', 'Entrails'),
+  51: ('a splinter', 'splinters', 'Splinters'),
+  52: ('dust', 'dust', 'Dust'),
+  53: ('earth', 'earth', 'Earth'),
+  54: ('a lichen', 'lichens', 'Lichens'),
+  55: ('water', 'water', 'Water'),
+  56: ('a scorpion egg', 'scorpion eggs', 'Scorpion Eggs'),
+  57: ('bloody treasure', 'bloody treasure', 'Bloody Treasure'),
+  58: ('nightshade', 'nightshade', 'Nightshade'),
+  59: ('a whisker', 'whiskers', 'Whiskers'),
+  60: ('a jar', 'jars', 'Jars'),
+  61: ('a piece of paper', 'papers', 'Papers'),
+  62: ('a bone', 'bones', 'Bones'),
+  63: ('bone shavings', 'bone shavings', 'Bone Shavings'),
+  64: ('a chest', 'chests', 'Chests'),
+  65: ('a hook arm', 'hook arms', 'Hook Arms'),
+  66: ('a diamond', 'diamonds', 'Diamonds'),
+  67: ('a box of cigars', 'boxes of cigars', 'Boxes of Cigars'),
+  68: ('a gold chain', 'gold chains', 'Gold Chains'),
+  69: ('cargo', 'cargo', 'Cargo'),
+  70: ('a ladle', 'ladles', 'Ladles'),
+  71: ('sugar', 'sugar', 'Sugar'),
+  72: ('a bottle', 'bottles', 'Bottles'),
+  73: ('a barrel of molasses', 'barrels of molasses', 'Barrels of Molasses'),
+  74: ('vanilla', 'vanilla', 'Vanilla'),
+  75: ('bone dust', 'pinches of bone dust', 'Pinches Bone Dust'),
+  76: ('swamp gas', 'swamp gas', 'Swamp Gas'),
+  77: ('a stinger', 'stingers', 'Stingers'),
+  78: ('a bladder', 'bladders', 'Bladders'),
+  79: ('a pint', 'pints', 'Pints'),
+  80: ('a pinch of cinnamon', 'pinches of cinnamon', 'Pinches of Cinnamon'),
+  81: ('a coconut', 'coconuts', 'Coconuts'),
+  82: ('a feather', 'feathers', 'Feathers'),
+  83: ('a barrel of honey', 'barrels of honey', 'Barrels of Honey'),
+  84: ('barnacles', 'barnacles', 'Barnacles'),
+  85: ('a hairball', 'hairballs', 'Hairballs'),
+  86: ('a flea', 'fleas', 'Fleas'),
+  87: ('a drink', 'drinks', 'Drinks'),
+  88: ('a schedule', 'schedules', 'Schedules'),
+  89: ('a hair', 'hairs', 'Hairs'),
+  90: ('honeysuckle', 'honeysuckle', 'Honeysuckle'),
+  91: ('sap', 'sap', 'Sap'),
+  92: ('a tear', 'tears', 'Tears'),
+  93: ('a bottle of perfume', 'bottles of perfume', 'Bottles of Perfume'),
+  94: ('oil', 'oils', 'Oils'),
+  95: ('rum', 'rum', 'Rum'),
+  96: ('orders', 'orders', 'Orders'),
+  97: ('salve', 'salve', 'Salve'),
+  98: ('wax', 'wax', 'Wax'),
+  99: ('a chunk of meat', 'chunks of meat', 'Chunks of Meat'),
+  100: ('a plank of wood', 'planks of wood', 'Planks of Wood'),
+  101: ('a nail', 'nails', 'Nails'),
+  102: ('a bucket of pitch', 'buckets of pitch', 'Buckets of Pitch'),
+  103: ('a saw', 'saws', 'Saws'),
+  104: ('a ship in a bottle', 'ships in bottles', 'Ships in Bottles'),
+  105: ('a wood beam', 'wood beams', 'Wood Beams'),
+  106: ('a bolt', 'bolts', 'Bolts'),
+  107: ('a yard of sailcloth', 'yards of sailcloth', 'Yards of Sailcloth'),
+  108: ('a rope', 'ropes', 'Ropes'),
+  109: ('a cannon', 'cannons', 'Cannons'),
+  110: ('a figurehead', 'figureheads', 'Figureheads'),
+  111: ('a parrot', 'parrots', 'Parrots'),
+  112: ('a document', 'documents', 'Documents'),
+  113: ('an eye', 'eyes', 'Eyes'),
+  114: ('a portrait', 'portraits', 'Portraits'),
+  115: ('a treasure', 'treasures', 'Treasures'),
+  116: ('a bundle of straw', 'bundles of straw', 'Bundles of Straw'),
+  117: ('a bolt of silk', 'bolts of silk', 'Bolts of Silk'),
+  118: ('a spool of wire', 'spools of wire', 'Spools of Wire'),
+  119: ('a bag', 'bags', 'Bags'),
+  120: ('dirt', 'dirt', 'Dirt'),
+  121: ('a ring', 'rings', 'Rings'),
+  122: ('a medal', 'medals', 'Medals'),
+  123: ('a reagent', 'reagents', 'Reagents'),
+  124: ('a chess piece', 'chess pieces', 'Chess Pieces'),
+  125: ('a figurine', 'figurines', 'Figurines'),
+  126: ('a steel rod', 'steel rods', 'Steel Rods'),
+  127: ('a silver ingot', 'silver ingots', 'Silver Ingots'),
+  128: ('tongs', 'tongs', 'Tongs'),
+  129: ('a bucket of coal', 'buckets of coal', 'Buckets of Coal'),
+  130: ('a message', 'messages', 'Messages'),
+  131: ('knives', 'knives', 'Knives'),
+  132: ('a grenade', 'grenades', 'Grenades'),
+  133: ('a branch', 'branches', 'Branches'),
+  134: ('a shrunken head', 'shrunken heads', 'Shrunken Heads'),
+  135: ('a bucket of saltpeter', 'buckets of saltpeter', 'Buckets of Saltpeter'),
+  136: ('a sack of charcoal', 'sacks of charcoal', 'Sacks of Charcoal'),
+  137: ('a cup of sulfur', 'cups of sulfur', 'Cups of Sulfur'),
+  138: ('a fuse', 'fuses', 'Fuses'),
+  139: ('a flint', 'flints', 'Flints'),
+  140: ('a casing', 'casings', 'Casings'),
+  141: ('a bucket of tar', 'buckets of tar', 'Buckets of Tar'),
+  142: ('a teleport totem', 'teleport totems', 'Teleport Totems'),
+  143: ('a pair of bat wings', 'pairs of bat wings', 'Pairs of Bat Wings'),
+  144: ('an alligator tooth', 'alligator teeth', 'Alligator Teeth'),
+  145: ('a wasp essence', 'wasp essences', 'Wasp Essences'),
+  146: ('a tortugan artifact', 'tortugan artifacts', 'Tortugan Artifacts'),
+  147: ('a yard of cotton', 'yards of cotton', 'Yards of Cotton'),
+  148: ('an iron bar', 'iron bars', 'Iron Bars'),
+  149: ('an alligator tail', 'alligator tails', 'Alligator Tails'),
+  150: ('a crab shell', 'crab shells', 'Crab Shells'),
+  151: ('bat hair', 'bat hair', 'Bat Hair'),
+  152: ('scorpion blood', 'scorpion blood', 'Scorpion Blood'),
+  153: ('scorpion venom', 'scorpion venom', 'Scorpion Venom'),
+  154: ('a barrel of whiskey', 'barrels of whiskey', 'Barrels of Whiskey'),
+  155: ('a set of bar glasses', 'sets of bar glasses', 'Sets of Bar Glasses'),
+  156: ('a bag of coal', 'bags of coal', 'Bags of Coal'),
+  157: ('smithing tools', 'smithing tools', 'Smithing Tools'),
+  158: ('the name of the attacker', 'the name of the attacker', 'the Name of the Attacker'),
+  159: ('a fly trap leaf', 'fly trap leaves', 'Fly Trap Leaves'),
+  160: ('a fly trap root', 'fly trap roots', 'Fly Trap Roots'),
+  161: ('a Navy coat', 'Navy coats', 'Navy Coats'),
+  162: ('The First Medal of Port Royal', '', 'The First Medal of Port Royal'),
+  163: ('The Eye of Nabai', '', 'The Eye of Nabai'),
+  164: ('a well-fashioned voodoo doll head', '', 'Well-Fashioned Voodoo Doll Heads'),
+  165: ('a well-fashioned voodoo doll torso', '', 'Well-Fashioned Voodoo Doll Torsos'),
+  166: ('a well-fashioned voodoo doll left arm', '', 'Well-Fashioned Voodoo Doll Left Arms'),
+  167: ('a well-fashioned voodoo doll right arm', '', 'Well-Fashioned Voodoo Doll Right Arms'),
+  168: ('a well-fashioned voodoo doll left leg', '', 'Well-Fashioned Voodoo Doll Left Legs'),
+  169: ('a well-fashioned voodoo doll right leg', '', 'Well-Fashioned Voodoo Doll Right Legs'),
+  170: ('a navy musket', 'navy muskets', 'Navy Muskets'),
+  171: ('a pair of Navy pants', 'pairs of Navy pants', 'Pairs of Navy Pants'),
+  172: ('a sergeant badge', 'sergeant badges', 'Sergeant Badges'),
+  173: ('a prison key', 'prison keys', 'Prison Keys'),
+  174: ('the hidden coins map for Fort Charles', '', ''),
+  175: ('a sewing needle', 'sewing needles', 'Sewing Needles'),
+  176: ('a guard schedule', 'guard schedules', 'Guard Schedules'),
+  177: ('a navy ship schedule', 'navy ship schedules', 'Navy Ship Schedules'),
+  178: ('a canteen of latrine water', 'canteens of latrine water', 'Canteens of Latrine Water'),
+  179: ('a cup of moonlit water', 'cups of moonlit water', 'Cups of Moonlit Water'),
+  180: ('a bottle of battle-touched water', 'bottles of battle-touched water', 'Bottles of Battle-Touched Water'),
+  181: ('a pair of dice', 'pairs of dice', 'Pairs of Dice'),
+  182: ('a water canteen', 'water canteens', 'Water Canteens'),
+  183: ('a stash of rubies', 'a stash of rubies', 'Stash of Rubies'),
+  184: ('a stash of amethysts', 'a stash of amethysts', 'Stash of Amethysts'),
+  185: ('a stash of sapphires', 'a stash of sapphires', 'Stash of Sapphires'),
+  186: ('a bottle of fine ink', 'fine inks', 'Fine Inks'),
+  187: ('a deed', 'deeds', 'Deeds'),
+  188: ('a EITC coat', 'EITC coats', 'EITC Coats'),
+  189: ('a pair of EITC pants', 'pairs of EITC pants', 'Pairs of EITC Pants'),
+  190: ('a shop application', 'shop applications', 'Shop Applications'),
+  191: ('a hide', 'hides', 'Hides'),
+  192: ('a contract', 'contracts', 'Contracts'),
+  193: ('a blood sample', 'blood samples', 'Blood Samples'),
+  194: ('a bandage', 'bandages', 'Bandages'),
+  195: ('a medical tool', 'medical tools', 'Medical Tools'),
+  196: ('a diary', 'diaries', 'Diary'),
+  197: ('a ship log', 'ship logs', 'Ship Logs'),
+  198: ('a family heirloom', 'family heirlooms', 'Family Heirlooms'),
+  199: ('a gun', 'guns', 'Guns'),
+  200: ('a gun order', 'gun orders', 'Gun Orders'),
+  201: ('an antique pistol', 'antique pistols', 'Antique Pistols'),
+  202: ('a ship plan', 'ship plans', 'Ship Plans'),
+  203: ('a background check', 'background checks', 'Background Checks'),
+  204: ('a bar of fine steel', 'bars of fine steel', 'Bars Of Fine Steel'),
+  205: ('a strap of leather', 'leather straps', 'Leather Straps'),
+  206: ('a blade sharpener', 'blade sharpeners', 'Blade Sharpeners'),
+  207: ('a page from Pirate Lore', 'pages from Pirate Lore', 'Pages from Pirate Lore'),
+  208: ('a chest of Pirate Lore', 'chests of Pirate Lore', 'Chests of Pirate Lore'),
+  209: ('a book of Pirate Lore', 'books of Pirate Lore', 'Books of Pirate Lore'),
+  210: ('an EITC manual', 'EITC manuals', 'EITC Manuals'),
+  211: ('an unfinished book of Pirate Lore', 'unfinished books of Pirate Lore', 'Unfinished Books of Pirate Lore'),
+  212: ('an alligator eye', 'alligator eyes', 'Alligator Eyes'),
+  213: ('a wasp', 'wasps', 'Wasps'),
+  214: ('a scorpion eye', 'scorpion eyes', 'Scorpion Eyes'),
+  215: ('a bat eye', 'bat eyes', 'Bat Eyes'),
+  216: ('a cloudy blue orb', 'cloudy blue orbs', 'Cloudy Blue Orbs'),
+  217: ('a skeleton rib', 'skeleton ribs', 'Skeleton Ribs'),
+  218: ('a badge', 'badges', 'Badges'),
+  219: ('a writ of authority', 'writs of authority', 'Writs of Authority'),
+  220: ('an alligator tooth', 'alligator teeth', 'Alligator Teeth'),
+  221: ('a bat claw', 'bat claws', 'Bat Claws'),
+  222: ('a skeleton bone', 'skeleton bones', 'Skeleton Bones'),
+  223: ('a sunken ship mast', 'sunken ship masts', 'Sunken Ship Masts'),
+  224: ('a bottle of battle-touched earth', 'bottles of battle-touched earth', 'Bottles of Battle-Touched Earth'),
+  225: ('a relic piece', 'relic pieces', 'Relic Pieces'),
+  226: ('Capt. Teague', 'Capt. Teague', 'Capt. Teague'),
+  227: ('a spool of thread', 'spools of thread', 'Spools of Thread'),
+  228: ('a rare feather', 'rare feathers', 'Rare Feathers'),
+  229: ('a manifest', 'manifests', 'Manifests'),
+  230: ("Bingham's diary", "Bingham's diary", "Bingham's Diary"),
+  231: ('a bolt of cloth', 'bolts of cloth', 'Bolts of Cloth'),
+  232: ('a pair of fine scissors', 'pairs of fine scissors', 'Pairs of Fine Scissors'),
+  233: ('a spool of silk thread', 'spools of silk thread', 'Spools of Silk Thread'),
+  234: ("Scarlet's pearl", "Scarlet's pearls", "Scarlet's Pearls"),
+  235: ('a letter from Scarlet', 'letters from Scarlet', 'Letters From Scarlet'),
+  236: ('a belt buckle', 'belt buckles', 'Belt Buckles'),
+  237: ('a fine shoe design', 'fine shoe designs', 'Fine Shoe Designs'),
+  238: ('a scorpion shell', 'scorpion shells', 'Scorpion Shells'),
+  239: ('a piece of kraken cloth', 'kraken cloths', 'Kraken Cloths'),
+  240: ('a cursed button', 'cursed buttons', 'Cursed Buttons'),
+  241: ('a piece of cursed bark', 'cursed bark', 'Cursed Bark'),
+  242: ('a piece of cursed cloth', 'cursed cloth', 'Cursed Cloth'),
+  243: ('a piece of cursed thread', 'cursed threads', 'Cursed Thread'),
+  244: ('a cursed needle', 'cursed needles', 'Cursed Needles'),
+  245: ('a voodoo artifact', 'voodoo artifacts', 'Voodoo Artifacts'),
+  246: ('a chunk of rotten meat', 'chunks of rotten meat', 'Chunks of Rotten Meat'),
+  247: ('a compass', 'compasses', 'Compasses'),
+  248: ("Lockgrim's letter", "Lockgrim's letters", "Lockgrim's Letters"),
+  249: ('a tentacle', 'tentacles', 'Tentacles'),
+  250: ('an Urchinfist eye', 'Urchinfist eyes', 'Urchinfist Eyes'),
+  251: ('a cursed chest', 'cursed chests', 'Cursed Chests'),
+  252: ('a bottle of fine rum', 'bottles of fine rum', 'Bottles of Fine Rum'),
+  253: ("Turk's lucky deck", "Turk's lucky deck", "Turk's Lucky Deck"),
+  254: ('a Navy shoestring', 'Navy shoestrings', 'Navy Shoestrings'),
+  255: ('a Navy anchor', 'Navy anchors', 'Navy Anchors'),
+  256: ('a EITC parchment', 'EITC parchments', 'EITC Parchments'),
+  257: ('an empty flask', 'empty flasks', 'Empty Flasks'),
+  258: ('a sail', 'sails', 'Sails'),
+  259: ('a ship wheel', 'ship wheels', 'Ship Wheels'),
+  260: ('a piece of Navy fabric', 'pieces of Navy fabric', 'Pieces of Navy Fabric'),
+  261: ('a scrap of cursed sail cloth', 'scraps of cursed sail cloth', 'Scraps of Cursed Sail Cloth'),
+  262: ('a suit of spanish armor', 'suits of spanish armor', 'Suits of Spanish Armor'),
+  263: ('a spanish pistol component', 'spanish pistol components', 'Spanish Pistol Components'),
+  264: ('a gun stock', 'gun stocks', 'Gun Stocks'),
+  265: ('a bone handle', 'bone handles', 'Bone Handles'),
+  266: ('a lock of hair', 'locks of hair', 'Locks of Hair'),
+  267: ('a wooden statuette', 'wooden statuettes', 'Wooden Statuettes'),
+  268: ('a barrel of gun powder', 'barrels of gun powder', 'Barrels of Gun Powder'),
+  269: ('a spar', 'spars', 'Spars'),
+  270: ('a stolen dagger', 'stolen daggers', 'Stolen Daggers'),
+  271: ('a gem', 'gems', 'Gems'),
+  272: ('a bar of navy steel', 'bars of navy steel', 'Bars of Navy Steel'),
+  273: ('a gold-handle rapier', 'gold-handle rapiers', 'Gold Handle Rapiers')
+}
 AnyAvType = (
- 'Anyone', ('an enemy', 'enemies'))
-FactionAvTypeNames = {0: ('Undead', ('a Skeleton', 'Skeletons')), 1: ('Navy', ('a Navy Soldier', 'Navy Soldiers')), 2: ('Creature', ('a Creature', 'Creatures')), 3: ('Townsfolk', ('a Townsperson', 'Townsfolk')), 4: ('Pirate', ('a Pirate', 'Pirates')), 5: ('East India Trading Co', ('an EITC Soldier', 'EITC Soldiers'))}
-FactionShipTypeNames = {0: ('Undead', ('a Skeleton', 'Skeleton')), 1: ('Navy', ('a Navy', 'Navy')), 2: ('Creature', ('a Creature', 'Creature')), 3: ('Townsfolk', ('a Townsperson', 'Townsfolk')), 4: ('Pirate', ('a Pirate', 'Pirate')), 5: ('East India Trading Co', ('an East India Trading Co', 'East India Trading Co')), 6: ('French Skeleton', ('a French Skeleton', 'French Skeleton')), 7: ('Spanish Skeleton', ('a Spanish Skeleton', 'Spanish Skeleton'))}
-TrackAvTypeNames = {0: {0: ('Earth Undead', ('an Earth Skeleton', 'Earth Skeletons')), 1: ('Air Undead', ('an Air Skeleton', 'Air Skeletons')), 2: ('Fire Undead', ('a Fire Skeleton', 'Fire Skeletons')), 3: ('Water Undead', ('a Water Skeleton', 'Water Skeletons')), 4: ('Classic Undead', ('a Classic Skeleton', 'Classic Skeletons')), 5: ('Boss Undead', ('a Boss Skeleton', 'Boss Skeletons')), 6: ('French Undead', ('a French Skeleton', 'French Skeletons')), 7: ('Spanish Undead', ('a Spanish Skeleton', 'Spanish Skeletons'))}, 1: {0: ('Navy Soldiers', ('a Navy Soldier', 'Navy Soldiers')), 1: ('Navy Marksmen', ('a Navy Marksman', 'Navy Marksmen')), 2: ('Navy Officer', ('a Navy Officer', 'Navy Officers'))}, 2: {0: ('Land Creatures', ('a Land Creature', 'Land Creatures')), 1: ('Sea Creatures', ('a Sea Creature', 'Sea Creatures')), 2: ('Air Creatures', ('an Air Creature', 'Air Creatures')), 3: ('Sea Monsters', ('a Sea Monster', 'Sea Monsters')), 4: ('Animals', ('an Animal', 'Animals'))}, 3: {0: ('Commoners', ('a Commoner', 'Commoners')), 1: ('Merchants', ('a Merchant', 'Merchants')), 2: ('Cast', ('a Character', 'Characters'))}, 4: {0: ('Players', ('a Player', 'Players')), 1: ('Pirate Brawler', ('a Pirate Brawler', 'Pirate Brawlers')), 2: ('Pirate Gunner', ('a Pirate Gunner', 'Pirate Gunners'))}, 5: {0: ('Trading Co Mercenaries', ('a Trading Co Mercenary', 'Trading Co Mercenaries')), 1: ('Trading Co Assassins', ('a Trading Co Assassin', 'Trading Co Assassins')), 2: ('Trading Co Officials', ('a Trading Co Official', 'Trading Co Officials'))}}
-BossNames = {0: {0: {0: {0: 'Will Burybones', 1: 'Foul Crenshaw', 2: 'Evan the Digger', 3: 'Thad Ill-Fortune'}, 1: {0: 'Simon Butcher'}, 2: {0: 'Thaddeus Woodworm'}, 3: {0: 'Bonebreaker'}, 4: {0: 'Gideon Grog'}, 5: {0: 'Whit Widowmaker'}, 6: {0: 'Blackheart'}, 7: {0: 'Francis Faust'}, 8: {0: 'Jeremy Coldhand'}, 9: {0: 'Stench'}}}, 1: {1: {0: {0: 'Geoffrey Pain'}, 1: {0: 'Hugh Brandish'}, 2: {0: 'Nathaniel Grimm'}, 3: {0: 'Sid Shiver'}, 4: {0: 'Ian Ramjaw'}}}, 2: {0: {0: {0: 'Sand Stalker'}, 1: {0: 'Man Ripper'}, 2: {0: 'Claw Chief'}, 6: {0: 'Bowbreaker'}, 7: {0: 'Snap Dragon'}, 8: {0: 'Rip Tail'}, 9: {0: 'Silent Stinger'}, 10: {0: 'Bonecracker'}, 11: {0: 'Trapjaw'}, 12: {0: 'Swamp Terror'}}, 2: {1: {0: 'Frightfang'}, 2: {0: 'Bloodleach'}, 3: {0: 'Firesting'}, 4: {0: 'Devilwing'}}}, 5: {0: {0: {0: 'Carlos Cudgel'}, 1: {0: 'Zachariah Sharp'}, 2: {0: 'Henry Flint'}, 3: {0: 'Phineas Fowl'}, 4: {0: 'Edward Lohand'}}}}
-BossNPCNames = {'dynamicBoss_1': 'Blood Blade', '1154059362.19Shochet': 'Crabby', '1154059366.69Shochet': 'Spike', '1169616489.03Shochet': 'Woody', '1218238592.59mtucker': 'Test Skeleton Boss', '1218760328.71mtucker': 'Venom Lash', '1219277508.79mtucker': 'Dreadtooth', '1219352693.09mtucker': 'Neban the Silent', '1219339266.79mtucker': 'Samuel', '1219367627.94mtucker': 'Remington the Killer', '1219428571.98mtucker': 'General Bloodless', '1220906480.53mtucker': 'General Hex', '1219434293.16mtucker': 'General Sandspine', '1219424341.05mtucker': 'General Darkhart', '1219426331.38mtucker': 'Bonerattler', '1219425030.24mtucker': 'Undead Timothy Dartan'}
-AvatarNames = {0: {0: {0: ('Undead Gravedigger', ('an Undead Gravedigger', 'Undead Gravediggers')), 1: ('Undead Bandit', ('an Undead Bandit', 'Undead Bandits')), 2: ('Undead Pirate', ('an Undead Pirate', 'Undead Pirates')), 3: ('Undead Witchdoctor', ('an Undead Witchdoctor', 'Undead Witchdoctors')), 4: ('Undead Brigand', ('an Undead Brigand', 'Undead Brigands')), 5: ('Undead Grenadier', ('an Undead Grenadier', 'Undead Grenadiers')), 6: ('Undead Gypsy', ('an Undead Gypsy', 'Undead Gypsies')), 7: ('Undead Raider', ('an Undead Raider', 'Undead Raiders')), 8: ('Undead Captain', ('an Undead Captain', 'Undead Captains')), 9: ('Mossman', ('a Mossman', 'Mossmen'))}, 1: {0: ('Whiff', ('a Whiff', 'Whiffs')), 1: ('Reek', ('a Reek', 'Reeks')), 2: ('Billow', ('a Billow', 'Billows')), 3: ('Stench', ('a Stench', 'Stenches')), 4: ('Shade', ('a Shade', 'Shades')), 5: ('Specter', ('a Specter', 'Specters')), 6: ('Phantom', ('a Phantom', 'Phantoms')), 7: ('Wraith', ('a Wraith', 'Wraiths')), 8: ('Captain Zephyr Windshadow', ('Captain Zephyr Windshadow', 'Captain Zephyr Windshadow')), 9: ('Squall', ('a Squall', 'Squalls'))}, 2: {0: ('Glint', ('a Glint', 'Glints')), 1: ('Flicker', ('a Flicker', 'Flickers')), 2: ('Smolder', ('a Smolder', 'Smolders')), 3: ('Spark', ('a Spark', 'Sparks')), 4: ('Imp', ('an Imp', 'Imps')), 5: ('Brand', ('a Brand', 'Brands')), 6: ('Lumen', ('a Lumen', 'Lumens')), 7: ('Fiend', ('a Fiend', 'Fiends')), 8: ('Captain Cinderbones', ('Captain Cinderbones', 'Captain Cinderbones')), 9: ('Torch', ('a Torch', 'Torches'))}, 3: {0: ('Dregs', ('a Dregs', 'Dregs')), 1: ('Flotsam', ('a Flotsam', 'Flotsams')), 2: ('Spineskull', ('a Spineskull', 'Spineskull')), 3: ('Kelpbrain', ('a Kelpbrain', 'Kelpbrains')), 4: ('Brinescum', ('a Brinescum', 'Brinescums')), 5: ('Seabeard', ('a Seabeard', 'Seabeards')), 6: ('Molusk', ('a Molusk', 'Molusks')), 7: ('Urchinfist', ('an Urchinfist', 'Urchinfists')), 8: ('Thrall Captain', ('Thrall Captain', 'Thrall Captains')), 9: ('Spout', ('a Spout', 'Spouts'))}, 4: {}, 5: {0: ('Jolly Roger', ('a Jolly Roger', 'Jolly Rogers'))}, 6: {0: ('French Undead Quarter Master', ('a French Undead Quarter Master', 'French Undead Quarter Masters'), 'Fr.Undead Qtr.Master'), 1: ('French Undead Maitre', ('a French Undead Maitre', 'French Undead Maitres'), 'Fr.Undead Maitres'), 2: ('French Undead Lieutenant', ('a French Undead Lieutenant', 'French Undead Lieutenants'), 'Fr.Undead Lieutenant'), 3: ('French Undead Capitaine', ('a French Undead Captaine', 'French Undead Captaines'), 'Fr.Undead Capitaine')}, 7: {0: ('Spanish Undead Conquistador', ('a Spanish Undead Conquistador', 'Spanish Undead Conquistadors'), 'Sp.Undead Conquistador'), 1: ('Spanish Undead Bandido', ('a Spanish Undead Bandido', 'Spanish Undead Bandidos'), 'Sp.Undead Bandido'), 2: ('Spanish Undead Pirata', ('a Spanish Undead Pirata', 'Spanish Undead Piratas'), 'Sp.Undead Pirata'), 3: ('Spanish Undead Capitan', ('a Spanish Undead Capitan', 'Spanish Undead Capitans'), 'Sp.Undead Capitan')}}, 1: {0: {0: ('Axeman', ('an Axeman', 'Axemen')), 1: ('Swordsman', ('a Swordsman', 'Swordsmen')), 2: ('Royal Guard', ('a Royal Guard', 'Royal Guards')), 3: ('Master Swordsman', ('a Master Swordsman', 'Master Swordsmen')), 4: ('Weapons Master', ('a Weapons Master', 'Weapons Masters'))}, 1: {0: ('Cadet', ('a Cadet', 'Cadets')), 1: ('Guard', ('a Guard', 'Guards')), 2: ('Sergeant', ('a Sergeant', 'Sergeants')), 3: ('Veteran', ('a Veteran', 'Veterans')), 4: ('Officer', ('an Officer', 'Officers'))}, 2: {0: ('First Mate', ('a First Mate', 'First Mates')), 1: ('Captain', ('a Captain', 'Captains')), 2: ('Lieutenant', ('a Lieutenant', 'Lieutenants')), 3: ('Admiral', ('an Admiral', 'Admirals')), 4: ('Commodore', ('a Commodore', 'Commodores'))}}, 2: {0: {0: ('Sand Crab', ('a Sand Crab', 'Sand Crabs')), 1: ('Rock Crab', ('a Rock Crab', 'Rock Crabs')), 2: ('Giant Crab', ('a Giant Crab', 'Giant Crabs')), 3: ('Chicken', ('a Chicken', 'Chickens')), 4: ('Rooster', ('a Rooster', 'Roosters')), 5: ('Pig', ('a Pig', 'Pigs')), 6: ('Stump', ('a Stump', 'Stumps')), 7: ('Fly Trap', ('a Fly Trap', 'Fly Traps')), 8: ('Giant Scorpion', ('a Giant Scorpion', 'Giant Scorpions')), 9: ('Dread Scorpion', ('a Dread Scorpion', 'Dread Scorpions')), 10: ('Swamp Alligator', ('a Swamp Alligator', 'Swamp Alligators')), 11: ('Big Alligator', ('a Big Alligator', 'Big Alligators')), 12: ('Huge Alligator', ('a Huge Alligator', 'Huge Alligators')), 13: ('Dog', ('a Dog', 'Dogs')), 14: ('Seagull', ('a Seagull', 'Seagulls')), 15: ('Monkey', ('a Monkey', 'Monkies'))}, 1: {0: ('Fish', ('a Fish', 'Fish'))}, 2: {0: ('Seagull', ('a Seagull', 'Seagulls')), 1: ('Cave Bat', ('a Cave Bat', 'Cave Bats')), 2: ('Vampire Bat', ('a Vampire Bat', 'Vampire Bats')), 3: ('Dire Wasp', ('a Dire Wasp', 'Dire Wasps')), 4: ('Terror Wasp', ('a Terror Wasp', 'Terror Wasps'))}, 3: {0: ('The Kraken', ('a Kraken', 'Krakens')), 1: ('Head', ('a head', 'heads')), 2: ('Tentacle', ('a tentacle', 'tentacles')), 3: ('Back Tentacle', ('a tentacle', 'tentacles')), 4: ('Wrapper Tentacle', ('a tentacle', 'tentacles')), 5: ('Sea Serpent', ('a sea serpent', 'sea serpents'))}, 4: {0: ('Chicken', ('a Chicken', 'Chickens')), 1: ('Rooster', ('a Rooster', 'Roosters')), 2: ('Pig', ('a Pig', 'Pigs')), 3: ('Dog', ('a Dog', 'Dogs')), 4: ('Seagull', ('a Seagull', 'Seagulls'))}}, 3: {0: {0: ('Peasant', ('a Peasant', 'Peasants'))}, 1: {0: ('Gypsy', ('a Gypsy', 'Gypsy')), 1: ('Blacksmith', ('a Blacksmith', 'Blacksmith')), 2: ('Shipwright', ('a Shipwright', 'Shipwright')), 3: ('Cannoneer', ('a Cannoneer', 'Cannoneer')), 4: ('Merchant', ('a Merchant', 'Merchant')), 5: ('Bartender', ('a Bartender', 'Bartender')), 6: ('Gunsmith', ('a Gunsmith', 'Gunsmith')), 7: ('Grenadier', ('a Grenadier', 'Grenadier')), 8: ('Medicine Man', ('a Medicine Man', 'Medicine Man')), 9: ('Tailor', ('a Tailor', 'Tailor')), 10: ('Tattoo', ('a Tattooist', 'Tattooist')), 11: ('Jeweler', ('a Jeweler', 'Jeweler')), 12: ('Barber', ('a Barber', 'Barber')), 13: ('Musician', ('a Musician', 'Musician')), 14: ('Trainer', ('a Trainer', 'Trainer')), 15: ('PvP Master', ('a PvP Master', 'PvP Master'))}, 2: {0: ('Cast', ('a Character', 'Characters'))}}, 4: {0: {0: ('You', ('you', 'you')), 1: ('Another Player', ('another player', 'other players'))}, 1: {0: ('Landlubber', ('a Landlubber', 'Landlubbers')), 1: ('Scallywag', ('a Scallywag', 'Scallywags')), 2: ('Buccaneer', ('a Buccaneer', 'Buccaneers')), 3: ('Swashbuckler', ('a Swashbuckler', 'Swashbucklers')), 4: ('Warmonger', ('a Warmonger', 'Warmongers'))}, 2: {0: ('Cadet', ('a Gypsy', 'Gypsy')), 1: ('Blacksmith', ('a Blacksmith', 'Blacksmith')), 2: ('Shipwright', ('a Shipwright', 'Shipwright')), 3: ('Merchant', ('a Merchant', 'Merchant')), 4: ('Bartender', ('a Bartender', 'Bartender'))}}, 5: {0: {0: ('Thug', ('a Thug', 'Thugs')), 1: ('Grunt', ('a Grunt', 'Grunts')), 2: ('Hired-gun', ('a Hired-Gun', 'Hired-Guns')), 3: ('Mercenary', ('a Mercenary', 'Mercenaries')), 4: ('Assassin', ('an Assassin', 'Assassins'))}, 1: {0: ('Cadet', ('a Cadet', 'Cadets')), 1: ('Musketeer', ('a Musketeer', 'Musketeers')), 2: ('Cannoneer', ('a Cannoneer', 'Cannoneers')), 3: ('Grenadier', ('a Grenadier', 'Grenadiers')), 4: ('Master Gunner', ('a Master Gunner', 'Master Gunners'))}, 2: {0: ('First Mate', ('a First Mate', 'First Mates')), 1: ('Captain', ('a Captain', 'Captains')), 2: ('Lieutenant', ('a Lieutenant', 'Lieutenants')), 3: ('Admiral', ('an Admiral', 'Admirals')), 4: ('Commodore', ('a Commodore', 'Commodores'))}}}
+  'Anyone', ('an enemy', 'enemies'))
+FactionAvTypeNames = {
+  0: ('Undead', ('a Skeleton', 'Skeletons')),
+  1: ('Navy', ('a Navy Soldier', 'Navy Soldiers')),
+  2: ('Creature', ('a Creature', 'Creatures')),
+  3: ('Townsfolk', ('a Townsperson', 'Townsfolk')),
+  4: ('Pirate', ('a Pirate', 'Pirates')),
+  5: ('East India Trading Co', ('an EITC Soldier', 'EITC Soldiers'))
+}
+FactionShipTypeNames = {
+  0: ('Undead', ('a Skeleton', 'Skeleton')),
+  1: ('Navy', ('a Navy', 'Navy')),
+  2: ('Creature', ('a Creature', 'Creature')),
+  3: ('Townsfolk', ('a Townsperson', 'Townsfolk')),
+  4: ('Pirate', ('a Pirate', 'Pirate')),
+  5: ('East India Trading Co', ('an East India Trading Co', 'East India Trading Co')),
+  6: ('French Skeleton', ('a French Skeleton', 'French Skeleton')),
+  7: ('Spanish Skeleton', ('a Spanish Skeleton', 'Spanish Skeleton'))
+}
+TrackAvTypeNames = {
+  0: {
+    0: ('Earth Undead', ('an Earth Skeleton', 'Earth Skeletons')),
+    1: ('Air Undead', ('an Air Skeleton', 'Air Skeletons')),
+    2: ('Fire Undead', ('a Fire Skeleton', 'Fire Skeletons')),
+    3: ('Water Undead', ('a Water Skeleton', 'Water Skeletons')),
+    4: ('Classic Undead', ('a Classic Skeleton', 'Classic Skeletons')),
+    5: ('Boss Undead', ('a Boss Skeleton', 'Boss Skeletons')),
+    6: ('French Undead', ('a French Skeleton', 'French Skeletons')),
+    7: ('Spanish Undead', ('a Spanish Skeleton', 'Spanish Skeletons'))
+  },
+  1: {
+    0: ('Navy Soldiers', ('a Navy Soldier', 'Navy Soldiers')),
+    1: ('Navy Marksmen', ('a Navy Marksman', 'Navy Marksmen')),
+    2: ('Navy Officer', ('a Navy Officer', 'Navy Officers'))
+  },
+  2: {
+    0: ('Land Creatures', ('a Land Creature', 'Land Creatures')),
+    1: ('Sea Creatures', ('a Sea Creature', 'Sea Creatures')),
+    2: ('Air Creatures', ('an Air Creature', 'Air Creatures')),
+    3: ('Sea Monsters', ('a Sea Monster', 'Sea Monsters')),
+    4: ('Animals', ('an Animal', 'Animals'))
+  },
+  3: {
+    0: ('Commoners', ('a Commoner', 'Commoners')),
+    1: ('Merchants', ('a Merchant', 'Merchants')),
+    2: ('Cast', ('a Character', 'Characters'))
+  },
+  4: {
+    0: ('Players', ('a Player', 'Players')),
+    1: ('Pirate Brawler', ('a Pirate Brawler', 'Pirate Brawlers')),
+    2: ('Pirate Gunner', ('a Pirate Gunner', 'Pirate Gunners'))
+  },
+  5: {
+    0: ('Trading Co Mercenaries', ('a Trading Co Mercenary', 'Trading Co Mercenaries')),
+    1: ('Trading Co Assassins', ('a Trading Co Assassin', 'Trading Co Assassins')),
+    2: ('Trading Co Officials', ('a Trading Co Official', 'Trading Co Officials'))
+  }
+}
+BossNames = {
+  0: {
+    0: {
+      0: {
+        0: 'Will Burybones',
+        1: 'Foul Crenshaw',
+        2: 'Evan the Digger',
+        3: 'Thad Ill-Fortune'
+      },
+      1: {
+        0: 'Simon Butcher'
+      },
+      2: {
+        0: 'Thaddeus Woodworm'
+      },
+      3: {
+        0: 'Bonebreaker'
+      },
+      4: {
+        0: 'Gideon Grog'
+      },
+      5: {
+        0: 'Whit Widowmaker'
+      },
+      6: {
+        0: 'Blackheart'
+      },
+      7: {
+        0: 'Francis Faust'
+      },
+      8: {
+        0: 'Jeremy Coldhand'
+      },
+      9: {
+        0: 'Stench'
+      }
+    }
+  },
+  1: {
+    1: {
+      0: {
+        0: 'Geoffrey Pain'
+      },
+      1: {
+        0: 'Hugh Brandish'
+      },
+      2: {
+        0: 'Nathaniel Grimm'
+      },
+      3: {
+        0: 'Sid Shiver'
+      },
+      4: {
+        0: 'Ian Ramjaw'
+      }
+    }
+  },
+  2: {
+    0: {
+      0: {
+        0: 'Sand Stalker'
+      },
+      1: {
+        0: 'Man Ripper'
+      },
+      2: {
+        0: 'Claw Chief'
+      },
+      6: {
+        0: 'Bowbreaker'
+      },
+      7: {
+        0: 'Snap Dragon'
+      },
+      8: {
+        0: 'Rip Tail'
+      },
+      9: {
+        0: 'Silent Stinger'
+      },
+      10: {
+        0: 'Bonecracker'
+      },
+      11: {
+        0: 'Trapjaw'
+      },
+      12: {
+        0: 'Swamp Terror'
+      }
+    },
+    2: {
+      1: {
+        0: 'Frightfang'
+      },
+      2: {
+        0: 'Bloodleach'
+      },
+      3: {
+        0: 'Firesting'
+      },
+      4: {
+        0: 'Devilwing'
+      }
+    }
+  },
+  5: {
+    0: {
+      0: {
+        0: 'Carlos Cudgel'
+      },
+      1: {
+        0: 'Zachariah Sharp'
+      },
+      2: {
+        0: 'Henry Flint'
+      },
+      3: {
+        0: 'Phineas Fowl'
+      },
+      4: {
+        0: 'Edward Lohand'
+      }
+    }
+  }
+}
+BossNPCNames = {
+  'dynamicBoss_1': 'Blood Blade',
+  '1154059362.19Shochet': 'Crabby',
+  '1154059366.69Shochet': 'Spike',
+  '1169616489.03Shochet': 'Woody',
+  '1218238592.59mtucker': 'Test Skeleton Boss',
+  '1218760328.71mtucker': 'Venom Lash',
+  '1219277508.79mtucker': 'Dreadtooth',
+  '1219352693.09mtucker': 'Neban the Silent',
+  '1219339266.79mtucker': 'Samuel',
+  '1219367627.94mtucker': 'Remington the Killer',
+  '1219428571.98mtucker': 'General Bloodless',
+  '1220906480.53mtucker': 'General Hex',
+  '1219434293.16mtucker': 'General Sandspine',
+  '1219424341.05mtucker': 'General Darkhart',
+  '1219426331.38mtucker': 'Bonerattler',
+  '1219425030.24mtucker': 'Undead Timothy Dartan'
+}
+AvatarNames = {
+  0: {
+    0: {
+      0: ('Undead Gravedigger', ('an Undead Gravedigger', 'Undead Gravediggers')),
+      1: ('Undead Bandit', ('an Undead Bandit', 'Undead Bandits')),
+      2: ('Undead Pirate', ('an Undead Pirate', 'Undead Pirates')),
+      3: ('Undead Witchdoctor', ('an Undead Witchdoctor', 'Undead Witchdoctors')),
+      4: ('Undead Brigand', ('an Undead Brigand', 'Undead Brigands')),
+      5: ('Undead Grenadier', ('an Undead Grenadier', 'Undead Grenadiers')),
+      6: ('Undead Gypsy', ('an Undead Gypsy', 'Undead Gypsies')),
+      7: ('Undead Raider', ('an Undead Raider', 'Undead Raiders')),
+      8: ('Undead Captain', ('an Undead Captain', 'Undead Captains')),
+      9: ('Mossman', ('a Mossman', 'Mossmen'))
+    },
+    1: {
+      0: ('Whiff', ('a Whiff', 'Whiffs')),
+      1: ('Reek', ('a Reek', 'Reeks')),
+      2: ('Billow', ('a Billow', 'Billows')),
+      3: ('Stench', ('a Stench', 'Stenches')),
+      4: ('Shade', ('a Shade', 'Shades')),
+      5: ('Specter', ('a Specter', 'Specters')),
+      6: ('Phantom', ('a Phantom', 'Phantoms')),
+      7: ('Wraith', ('a Wraith', 'Wraiths')),
+      8: ('Captain Zephyr Windshadow', ('Captain Zephyr Windshadow', 'Captain Zephyr Windshadow')),
+      9: ('Squall', ('a Squall', 'Squalls'))
+    },
+    2: {
+      0: ('Glint', ('a Glint', 'Glints')),
+      1: ('Flicker', ('a Flicker', 'Flickers')),
+      2: ('Smolder', ('a Smolder', 'Smolders')),
+      3: ('Spark', ('a Spark', 'Sparks')),
+      4: ('Imp', ('an Imp', 'Imps')),
+      5: ('Brand', ('a Brand', 'Brands')),
+      6: ('Lumen', ('a Lumen', 'Lumens')),
+      7: ('Fiend', ('a Fiend', 'Fiends')),
+      8: ('Captain Cinderbones', ('Captain Cinderbones', 'Captain Cinderbones')),
+      9: ('Torch', ('a Torch', 'Torches'))
+    },
+    3: {
+      0: ('Dregs', ('a Dregs', 'Dregs')),
+      1: ('Flotsam', ('a Flotsam', 'Flotsams')),
+      2: ('Spineskull', ('a Spineskull', 'Spineskull')),
+      3: ('Kelpbrain', ('a Kelpbrain', 'Kelpbrains')),
+      4: ('Brinescum', ('a Brinescum', 'Brinescums')),
+      5: ('Seabeard', ('a Seabeard', 'Seabeards')),
+      6: ('Molusk', ('a Molusk', 'Molusks')),
+      7: ('Urchinfist', ('an Urchinfist', 'Urchinfists')),
+      8: ('Thrall Captain', ('Thrall Captain', 'Thrall Captains')),
+      9: ('Spout', ('a Spout', 'Spouts'))
+    },
+    4: {},
+    5: {
+      0: ('Jolly Roger', ('a Jolly Roger', 'Jolly Rogers'))
+    },
+    6: {
+      0: ('French Undead Quarter Master', ('a French Undead Quarter Master', 'French Undead Quarter Masters'), 'Fr.Undead Qtr.Master'),
+      1: ('French Undead Maitre', ('a French Undead Maitre', 'French Undead Maitres'), 'Fr.Undead Maitres'),
+      2: ('French Undead Lieutenant', ('a French Undead Lieutenant', 'French Undead Lieutenants'), 'Fr.Undead Lieutenant'),
+      3: ('French Undead Capitaine', ('a French Undead Captaine', 'French Undead Captaines'), 'Fr.Undead Capitaine')
+    },
+    7: {
+      0: ('Spanish Undead Conquistador', ('a Spanish Undead Conquistador', 'Spanish Undead Conquistadors'), 'Sp.Undead Conquistador'),
+      1: ('Spanish Undead Bandido', ('a Spanish Undead Bandido', 'Spanish Undead Bandidos'), 'Sp.Undead Bandido'),
+      2: ('Spanish Undead Pirata', ('a Spanish Undead Pirata', 'Spanish Undead Piratas'), 'Sp.Undead Pirata'),
+      3: ('Spanish Undead Capitan', ('a Spanish Undead Capitan', 'Spanish Undead Capitans'), 'Sp.Undead Capitan')
+    }
+  },
+  1: {
+    0: {
+      0: ('Axeman', ('an Axeman', 'Axemen')),
+      1: ('Swordsman', ('a Swordsman', 'Swordsmen')),
+      2: ('Royal Guard', ('a Royal Guard', 'Royal Guards')),
+      3: ('Master Swordsman', ('a Master Swordsman', 'Master Swordsmen')),
+      4: ('Weapons Master', ('a Weapons Master', 'Weapons Masters'))
+    },
+    1: {
+      0: ('Cadet', ('a Cadet', 'Cadets')),
+      1: ('Guard', ('a Guard', 'Guards')),
+      2: ('Sergeant', ('a Sergeant', 'Sergeants')),
+      3: ('Veteran', ('a Veteran', 'Veterans')),
+      4: ('Officer', ('an Officer', 'Officers'))
+    },
+    2: {
+      0: ('First Mate', ('a First Mate', 'First Mates')),
+      1: ('Captain', ('a Captain', 'Captains')),
+      2: ('Lieutenant', ('a Lieutenant', 'Lieutenants')),
+      3: ('Admiral', ('an Admiral', 'Admirals')),
+      4: ('Commodore', ('a Commodore', 'Commodores'))
+    }
+  },
+  2: {
+    0: {
+      0: ('Sand Crab', ('a Sand Crab', 'Sand Crabs')),
+      1: ('Rock Crab', ('a Rock Crab', 'Rock Crabs')),
+      2: ('Giant Crab', ('a Giant Crab', 'Giant Crabs')),
+      3: ('Chicken', ('a Chicken', 'Chickens')),
+      4: ('Rooster', ('a Rooster', 'Roosters')),
+      5: ('Pig', ('a Pig', 'Pigs')),
+      6: ('Stump', ('a Stump', 'Stumps')),
+      7: ('Fly Trap', ('a Fly Trap', 'Fly Traps')),
+      8: ('Giant Scorpion', ('a Giant Scorpion', 'Giant Scorpions')),
+      9: ('Dread Scorpion', ('a Dread Scorpion', 'Dread Scorpions')),
+      10: ('Swamp Alligator', ('a Swamp Alligator', 'Swamp Alligators')),
+      11: ('Big Alligator', ('a Big Alligator', 'Big Alligators')),
+      12: ('Huge Alligator', ('a Huge Alligator', 'Huge Alligators')),
+      13: ('Dog', ('a Dog', 'Dogs')),
+      14: ('Seagull', ('a Seagull', 'Seagulls')),
+      15: ('Monkey', ('a Monkey', 'Monkies'))
+    },
+    1: {
+      0: ('Fish', ('a Fish', 'Fish'))
+    },
+    2: {
+      0: ('Seagull', ('a Seagull', 'Seagulls')),
+      1: ('Cave Bat', ('a Cave Bat', 'Cave Bats')),
+      2: ('Vampire Bat', ('a Vampire Bat', 'Vampire Bats')),
+      3: ('Dire Wasp', ('a Dire Wasp', 'Dire Wasps')),
+      4: ('Terror Wasp', ('a Terror Wasp', 'Terror Wasps'))
+    },
+    3: {
+      0: ('The Kraken', ('a Kraken', 'Krakens')),
+      1: ('Head', ('a head', 'heads')),
+      2: ('Tentacle', ('a tentacle', 'tentacles')),
+      3: ('Back Tentacle', ('a tentacle', 'tentacles')),
+      4: ('Wrapper Tentacle', ('a tentacle', 'tentacles')),
+      5: ('Sea Serpent', ('a sea serpent', 'sea serpents'))
+    },
+    4: {
+      0: ('Chicken', ('a Chicken', 'Chickens')),
+      1: ('Rooster', ('a Rooster', 'Roosters')),
+      2: ('Pig', ('a Pig', 'Pigs')),
+      3: ('Dog', ('a Dog', 'Dogs')),
+      4: ('Seagull', ('a Seagull', 'Seagulls'))
+    }
+  },
+  3: {
+    0: {
+      0: ('Peasant', ('a Peasant', 'Peasants'))
+    },
+    1: {
+      0: ('Gypsy', ('a Gypsy', 'Gypsy')),
+      1: ('Blacksmith', ('a Blacksmith', 'Blacksmith')),
+      2: ('Shipwright', ('a Shipwright', 'Shipwright')),
+      3: ('Cannoneer', ('a Cannoneer', 'Cannoneer')),
+      4: ('Merchant', ('a Merchant', 'Merchant')),
+      5: ('Bartender', ('a Bartender', 'Bartender')),
+      6: ('Gunsmith', ('a Gunsmith', 'Gunsmith')),
+      7: ('Grenadier', ('a Grenadier', 'Grenadier')),
+      8: ('Medicine Man', ('a Medicine Man', 'Medicine Man')),
+      9: ('Tailor', ('a Tailor', 'Tailor')),
+      10: ('Tattoo', ('a Tattooist', 'Tattooist')),
+      11: ('Jeweler', ('a Jeweler', 'Jeweler')),
+      12: ('Barber', ('a Barber', 'Barber')),
+      13: ('Musician', ('a Musician', 'Musician')),
+      14: ('Trainer', ('a Trainer', 'Trainer')),
+      15: ('PvP Master', ('a PvP Master', 'PvP Master'))
+    },
+    2: {
+      0: ('Cast', ('a Character', 'Characters'))
+    }
+  },
+  4: {
+    0: {
+      0: ('You', ('you', 'you')),
+      1: ('Another Player', ('another player', 'other players'))
+    },
+    1: {
+      0: ('Landlubber', ('a Landlubber', 'Landlubbers')),
+      1: ('Scallywag', ('a Scallywag', 'Scallywags')),
+      2: ('Buccaneer', ('a Buccaneer', 'Buccaneers')),
+      3: ('Swashbuckler', ('a Swashbuckler', 'Swashbucklers')),
+      4: ('Warmonger', ('a Warmonger', 'Warmongers'))
+    },
+    2: {
+      0: ('Cadet', ('a Gypsy', 'Gypsy')),
+      1: ('Blacksmith', ('a Blacksmith', 'Blacksmith')),
+      2: ('Shipwright', ('a Shipwright', 'Shipwright')),
+      3: ('Merchant', ('a Merchant', 'Merchant')),
+      4: ('Bartender', ('a Bartender', 'Bartender'))
+    }
+  },
+  5: {
+    0: {
+      0: ('Thug', ('a Thug', 'Thugs')),
+      1: ('Grunt', ('a Grunt', 'Grunts')),
+      2: ('Hired-gun', ('a Hired-Gun', 'Hired-Guns')),
+      3: ('Mercenary', ('a Mercenary', 'Mercenaries')),
+      4: ('Assassin', ('an Assassin', 'Assassins'))
+    },
+    1: {
+      0: ('Cadet', ('a Cadet', 'Cadets')),
+      1: ('Musketeer', ('a Musketeer', 'Musketeers')),
+      2: ('Cannoneer', ('a Cannoneer', 'Cannoneers')),
+      3: ('Grenadier', ('a Grenadier', 'Grenadiers')),
+      4: ('Master Gunner', ('a Master Gunner', 'Master Gunners'))
+    },
+    2: {
+      0: ('First Mate', ('a First Mate', 'First Mates')),
+      1: ('Captain', ('a Captain', 'Captains')),
+      2: ('Lieutenant', ('a Lieutenant', 'Lieutenants')),
+      3: ('Admiral', ('an Admiral', 'Admirals')),
+      4: ('Commodore', ('a Commodore', 'Commodores'))
+    }
+  }
+}
 PracticeDummy = 'Practice Dummy'
 LandCrabStrings = ('land crab', ('a land crab', 'land crabs'))
 Boss = 'Boss'
