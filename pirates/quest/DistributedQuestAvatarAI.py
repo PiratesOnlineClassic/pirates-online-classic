@@ -168,6 +168,6 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
         questList = inventory.getDoIdListCategory(InventoryCategory.QUESTS)
 
         def questCreatedCallback():
-            messenger.send('quest-available-%s-%d' % (nextQuestId, self.doId), [self.doId, questList])
+            messenger.send('quest-available-%s-%d' % (nextQuestId, self.doId), [self, questList])
 
         self.air.questMgr.createQuest(self, nextQuestId, questCreatedCallback)
