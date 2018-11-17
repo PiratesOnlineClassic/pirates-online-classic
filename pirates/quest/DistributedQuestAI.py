@@ -114,7 +114,7 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
             return
 
         endEvent = finalizeInfo.get('sendEvent', '')
-        self.sendUpdate('startFinalizeScene', [idx, giverId, endEvent])
+        self.sendUpdateToAvatarId(self.ownerId, 'startFinalizeScene', [idx, giverId, endEvent])
 
     def doneFinalizeScene(self):
         messenger.send('quest-finalize-%d' % self.doId)
