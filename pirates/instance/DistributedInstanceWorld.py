@@ -3,7 +3,6 @@ from pandac.PandaModules import NodePath
 
 class DistributedInstanceWorld(DistributedInstanceBase, NodePath):
 
-
     def __init__(self, cr):
         DistributedInstanceBase.__init__(self, cr)
         self.jailContext = None

@@ -1,10 +1,10 @@
 # Window:
-window-title Pirates Online Classic
-icon-filename /resources/phase_3/etc/Pirates_Adds.ico
+window-title Pirates Online Classic [ALPHA]
+icon-filename Pirates_Adds.ico
 win-origin -1 -1
 win-size 800 600
 fullscreen #f
-server-version pirates-dev
+server-version poc-alpha-1.0.0
 
 # Animations:
 want-alt-idles #t

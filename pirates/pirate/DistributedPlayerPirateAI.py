@@ -205,6 +205,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             worldGridDoId, tzParent, tzZone])
 
     def giveDefaultQuest(self):
+        if config.GetBool('want-alpha-blockers', False):
+            # Don't give a default quest if alpha blockers are enabled
+            return
+
         inventory = self.getInventory()
         if not inventory:
             self.notify.warning('Failed to give default quest for avatar: %d, '
