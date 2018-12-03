@@ -7,7 +7,6 @@ from pirates.quest.QuestLadder import QuestStub
 
 
 class CombineOps:
-    
     OR = 0
     AND = 1
 

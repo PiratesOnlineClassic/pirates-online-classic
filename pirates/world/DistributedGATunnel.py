@@ -11,7 +11,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
     def __init__(self, cr):
         DistributedGAConnector.DistributedGAConnector.__init__(self, cr, 'DistributedGATunnel')
         ClientArea.ClientArea.__init__(self)
-        self.loadSphere = [ None, None]
+        self.loadSphere = [None, None]
         self.unloadSphere = None
         self.connectorNodes = ['portal_connector_1', 'portal_connector_2']
         self.ambientNames = [None, None]
