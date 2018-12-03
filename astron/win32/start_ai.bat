@@ -3,8 +3,8 @@ title Pirates Online Classic - AI
 cd ../../
 
 rem Get the user input:
-set /P DISTRICT_NAME=District name (DEFAULT: DevHaven): || ^
-set DISTRICT_NAME=DevHaven
+set /P DISTRICT_NAME=District name (DEFAULT: Abassa): || ^
+set DISTRICT_NAME=Abassa
 set /P BASE_CHANNEL=Base channel (DEFAULT: 401000000):  || ^
 set BASE_CHANNEL=401000000
 
