@@ -1,11 +1,14 @@
-from direct.directnotify import DirectNotifyGlobal
 import datetime
+
+from direct.directnotify import DirectNotifyGlobal
+
 
 class NewsManagerUD:
     """
     Simple UD class to communicate globally with all AI newsManagers through the 
     NetMessenger interface
     """
+    
     notify = DirectNotifyGlobal.directNotify.newCategory('NewsManagerUD')
     notify.setInfo(True)
 
@@ -13,11 +16,11 @@ class NewsManagerUD:
         self.air = air
         self.air.netMessenger.accept('uberDOGHolidayStarted', self, self.handleHolidayStarted)
         self.pastBroadcastCacheDelay = config.GetInt('news-manager-past-broadcast-cache', 5)
+        
         self.__broadcastedHolidays = {}
         self.__lastBroadcast = None
 
     def handleHolidayStarted(self, holidayId, quietly):
-
         if not quietly:
             # Clear old broadcast checks
             now = datetime.datetime.now()
