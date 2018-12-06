@@ -50,7 +50,6 @@ class CodeRedemptionUD(DistributedObjectGlobalUD):
             return
 
         reward = self.getAwardFromCode(code)
-        self.notify.warning(self.getAwardFromCode(code))
 
         if reward is not None:
             amount = reward[3]
