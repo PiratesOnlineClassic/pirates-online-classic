@@ -1,8 +1,10 @@
-from panda3d.core import *
-from pirates.pirate import AvatarTypes, Biped, Human
+from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
-
+from pirates.pirate import Biped
+from pirates.pirate import Human
+from pirates.pirate import AvatarTypes
 AnimDict = {}
+
 class Townfolk(Human.Human):
     
     def __init__(self):
@@ -10,7 +12,7 @@ class Townfolk(Human.Human):
         self.avatarType = AvatarTypes.Townfolk
         self.castDnaId = None
         self.animDict = {}
-
+    
     def loadCast(self, dnaId):
         if not self.loaded:
             self.setGeomNode(self.find('**/actorGeom'))
@@ -21,14 +23,15 @@ class Townfolk(Human.Human):
             animList = Human.CastAnimDict[modelName]
             for anim in animList:
                 self.animDict[anim[0]] = 'models/char/' + anim[1]
-
+            
             if 'jg_' not in dnaId:
                 self.tutorialCharacter = 1
+            
             self.loadAnims(self.animDict)
             self.forceLoadAnimDict()
             self.loaded = 1
             self.castDnaId = dnaId
-
+            
             def getWeaponJoints():
                 self.deleteWeaponJoints()
                 self.rightHandNode = NodePath('rightHand')
@@ -36,11 +39,13 @@ class Townfolk(Human.Human):
                 handLocator = self.find('**/*weapon_right')
                 if not handLocator.isEmpty():
                     self.rightHandNode.reparentTo(handLocator)
+                
                 handLocator = self.find('**/*weapon_left')
                 if not handLocator.isEmpty():
                     self.leftHandNode.reparentTo(handLocator)
 
             getWeaponJoints()
+        
         self.faceAwayFromViewer()
         self.headNode = self.find('**/def_head01')
         self.initializeMiscNodes()
@@ -54,7 +59,7 @@ class Townfolk(Human.Human):
             animList = Human.CastAnimDict[modelName]
             for anim in animList:
                 AnimDict[anim[0]] = 'models/char/' + anim[1]
-
+            
             self.unloadAnims(AnimDict)
             self.castDnaId = None
             self.flush()
@@ -66,8 +71,9 @@ class Townfolk(Human.Human):
         lodNode = self.find('**/+LODNode')
         if not lodNode.isEmpty():
             lodNode.node().forceSwitch(level)
-
+    
     def resetLOD(self):
         lodNode = self.find('**/+LODNode')
         if not lodNode.isEmpty():
             lodNode.node().clearForceSwitch()
+
