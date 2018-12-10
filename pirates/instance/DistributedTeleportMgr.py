@@ -171,7 +171,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
                     self.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld', doEffect = False)
             else:
                 self.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld', doEffect = False)
-            self._DistributedTeleportMgr__createDialog(message)
+            self.__createDialog(message)
         else:
             self.notify.warning("  teleport to object (%s %s) AND 'return location' %s failed" % (parentId, zoneId, fallbackAreaId))
 
@@ -185,7 +185,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         if message:
             popupDialogText = message
             if self.popupDialog:
-                self._DistributedTeleportMgr__cleanupDialog()
+                self.__cleanupDialog()
             
             self.popupDialog = PDialog.PDialog(text = popupDialogText, style = OTPDialog.Acknowledge, command = self.__cleanupDialog)
 
