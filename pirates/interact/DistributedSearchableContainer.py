@@ -1,18 +1,17 @@
 import math
-
-from direct.directnotify import DirectNotifyGlobal
+from pandac.PandaModules import *
 from direct.gui.DirectGui import *
+from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from panda3d.core import *
 from pirates.distributed import DistributedInteractive
-from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
-
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 
 class DistributedSearchableContainer(DistributedInteractive.DistributedInteractive):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSearchableContainer')
-
+    
     def __init__(self, cr):
         NodePath.__init__(self, 'DistributedSearchableContainer')
         DistributedInteractive.DistributedInteractive.__init__(self, cr)
@@ -40,15 +39,15 @@ class DistributedSearchableContainer(DistributedInteractive.DistributedInteracti
 
     def getSphereScale(self):
         return self.sphereScale
-
+    
     def generate(self):
         DistributedInteractive.DistributedInteractive.generate(self)
 
     def announceGenerate(self):
-        self.setInteractOptions(proximityText=PLocalizer.InteractSearchableContainer, sphereScale=self.getSphereScale(), diskRadius=10, exclusive=0)
+        self.setInteractOptions(proximityText = PLocalizer.InteractSearchableContainer, sphereScale = self.getSphereScale(), diskRadius = 10, exclusive = 0)
         DistributedInteractive.DistributedInteractive.announceGenerate(self)
         self.loadContainer()
-
+    
     def disable(self):
         DistributedInteractive.DistributedInteractive.disable(self)
         if self.container:
@@ -61,6 +60,7 @@ class DistributedSearchableContainer(DistributedInteractive.DistributedInteracti
     def loadContainer(self):
         if self.container:
             return
+        
         modelPath = PiratesGlobals.SearchableModels.get(self.type, 'models/props/crate_04')
         container = loader.loadModel(modelPath)
         containerColor = self.getContainerColor()
@@ -68,7 +68,7 @@ class DistributedSearchableContainer(DistributedInteractive.DistributedInteracti
         container.reparentTo(self)
         container.flattenStrong()
 
-    def requestInteraction(self, avId, interactType=0):
+    def requestInteraction(self, avId, interactType = 0):
         localAvatar.motionFSM.off()
         DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
 
@@ -94,6 +94,7 @@ class DistributedSearchableContainer(DistributedInteractive.DistributedInteracti
         localAvatar.guiMgr.showQuestProgress(questProgress)
         if localAvatar.getGameState() == 'Searching':
             localAvatar.b_setGameState(localAvatar.gameFSM.defaultState)
+        
         self.refreshState()
 
     def requestExit(self):
@@ -108,3 +109,4 @@ class DistributedSearchableContainer(DistributedInteractive.DistributedInteracti
 
     def getContainerColor(self):
         return (self.containerColorR, self.containerColorG, self.containerColorB, self.containerColorA)
+

@@ -1,16 +1,15 @@
-from pirates.interact import InteractiveBase
+from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.showbase import DirectObject
 from direct.task import Task
-from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
-
+import InteractiveBase
 
 class InteractionManager(DirectObject.DirectObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('InteractionManager')
     Forward = Vec3(0, 1, 0)
-
+    
     def __init__(self):
         self.__interactives = []
         self.__nearest = None
@@ -38,44 +37,51 @@ class InteractionManager(DirectObject.DirectObject):
         else:
             current = None
         return 'InteractionMgr: N-%s, C-%s' % (nearest, current)
-
+    
     def start(self):
         if self.__locked:
             return
+        
         taskMgr.remove(self.__updateTaskName)
         taskMgr.doMethodLater(self.__updateDelay, self.updateTextMessage, self.__updateTaskName)
-
-    def stop(self, endCurrent=False):
+    
+    def stop(self, endCurrent = False):
         if self.__locked:
             return
+        
         if endCurrent:
             self.requestExitCurrent()
+        
         taskMgr.remove(self.__updateTaskName)
         if self.__nearest:
             self.__nearest.hideProximityInfo()
             self.__nearest = None
+        
         if self.__mouseOver:
             self.__mouseOver.hideMouseOverInfo()
             self.__mouseOver = None
-
+    
     def lock(self):
         self.__locked = 1
-
+    
     def unlock(self):
         self.__locked = 0
-
-    def addInteractive(self, iObj, priority=InteractiveBase.PROXIMITY):
+    
+    def addInteractive(self, iObj, priority = InteractiveBase.PROXIMITY):
         if iObj.allowInteract:
             if (iObj, priority) in self.__interactives:
                 raise HierarchyException(HierarchyException.JOSWILSO, 'Redundant Interactive - %s(%d)' % (iObj.getName(), iObj.doId))
+            
             self.__interactives.append((iObj, priority))
 
-    def removeInteractive(self, iObj, priority=InteractiveBase.PROXIMITY):
+    def removeInteractive(self, iObj, priority = InteractiveBase.PROXIMITY):
         if (iObj, priority) in self.__interactives:
             self.__interactives.remove((iObj, priority))
+        
         if iObj == self.__nearest:
             iObj.hideProximityInfo()
             self.__nearest = None
+        
         if iObj == self.__mouseOver:
             iObj.hideMouseOverInfo()
             self.__mouseOver = None
@@ -83,15 +89,15 @@ class InteractionManager(DirectObject.DirectObject):
     def sortInteractives(self):
         maxObj = None
         maxPri = 0
-        for iObj, pri in self.__interactives:
+        for (iObj, pri) in self.__interactives:
             if pri > maxPri:
                 maxObj = iObj
                 maxPri = pri
                 return (maxObj, maxPri)
-
+        
         maxDot = -1
         maxPri = -1
-        for iObj, pri in self.__interactives:
+        for (iObj, pri) in self.__interactives:
             vObj = iObj.getPosRelToAv()
             vObj.normalize()
             vDot = self.Forward.dot(vObj)
@@ -99,16 +105,17 @@ class InteractionManager(DirectObject.DirectObject):
                 maxDot = vDot
                 maxObj = iObj
                 maxPri = pri
-
+        
         return (maxObj, maxPri)
 
     def updateTextMessage(self, task):
         if not self.__interactives:
             return task.again
+        
         newClosest = None
-        newObj, newPri = self.sortInteractives()
-
-        def popupInfo(newObj, newPri, self=self):
+        (newObj, newPri) = self.sortInteractives()
+        
+        def popupInfo(newObj, newPri, self = self):
             if newObj:
                 if newPri == InteractiveBase.PROXIMITY:
                     newObj.showProximityInfo()
@@ -121,47 +128,55 @@ class InteractionManager(DirectObject.DirectObject):
             if self.__nearest:
                 self.__nearest.hideProximityInfo()
                 self.__nearest = None
+            
             if self.__mouseOver:
                 self.__mouseOver.hideMouseOverInfo()
                 self.__mouseOver = None
+            
             return task.again
+        
         if newObj != self.__nearest and newObj != self.__mouseOver:
             if self.__nearest:
                 self.__nearest.hideProximityInfo()
                 self.__nearest = None
+            
             if self.__mouseOver:
                 self.__mouseOver.hideMouseOverInfo()
                 self.__mouseOver = None
+            
             popupInfo(newObj, newPri)
+        
         return task.again
-
+    
     def setCurrentInteractive(self, interactive):
         interactiveId = 0
         if interactive:
             interactiveId = interactive.doId
+        
         self.__currentInteractive = interactive
         if self.__nearest:
             self.__nearest.hideProximityInfo()
             self.__nearest = None
+        
         if self.__mouseOver:
             self.__mouseOver.hideMouseOverInfo()
             self.__mouseOver = None
 
     def getCurrentInteractive(self):
         return self.__currentInteractive
-
+    
     def getCurrent(self):
         return self.getCurrentInteractive()
 
     def getInteractives(self):
         return self.__interactives
-
+    
     def getNearest(self):
         return self.__nearest
-
+    
     def getMouseOver(self):
         return self.__mouseOver
-
+    
     def requestExitCurrent(self):
         if self.__currentInteractive:
             self.__currentInteractive.requestExit()
@@ -198,3 +213,4 @@ class InteractionManager(DirectObject.DirectObject):
         self.lifter.removeCollider(self.cRayNodePath)
         self.cRayNodePath
         self.cRayNodePath.detachNode()
+
