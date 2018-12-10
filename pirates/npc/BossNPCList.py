@@ -107,7 +107,7 @@ BOSS_NPC_LIST = {
         'HpScale': 5,
         'MpScale': 3,
         'GoldScale': 2,
-        'ModelScale': 1.1000000000000001,
+        'ModelScale': 1.1,
         'DamageScale': 1.5,
         'HighlightColor': VBase3(0, 1, 0.5)},
     '1219277508.79mtucker': {
