@@ -1,13 +1,11 @@
+from pandac.PandaModules import *
+from direct.showbase.PythonUtil import clampScalar
+from pirates.map.ArcBall import ArcBall
 import math
 
-from direct.showbase.PythonUtil import clampScalar
-from panda3d.core import *
-from pirates.map.ArcBall import ArcBall
-
-
 class MapBall(ArcBall):
-
-    def __init__(self, name, worldMap, maxTilt=math.pi / 4, mapSize=2.0, *args, **kwargs):
+    
+    def __init__(self, name, worldMap, maxTilt = math.pi / 4, mapSize = 2.0, *args, **kwargs):
         ArcBall.__init__(self, name, *args, **kwargs)
         self.worldMap = worldMap
         maxTilt = clampScalar(0, math.pi / 4.0, maxTilt)
@@ -17,20 +15,15 @@ class MapBall(ArcBall):
         self._mapOrigin = self.mapPosToSpherePt(Point2(0))
         self._worldNorth = Point3(0, 1, 0)
         self._loadModels()
-
+    
     def mapPosToSpherePt(self, mapPos):
         pt = self.tsMat.xformPoint(Point2(mapPos[0], mapPos[1]))
-
-        try:
-            theta = math.acos(2 / Vec3(pt[0], pt[1], 2).length())
-        except:
-            theta = 1.0
-
+        theta = math.acos(2 / Vec3(pt[0], pt[1], 2).length())
         sinTheta = math.sin(theta)
         z = 1 - 2 * sinTheta * sinTheta
         coef = (z + 1) / 2.0
         return Vec3(pt[0] * coef, pt[1] * coef, z)
-
+    
     def spherePtToMapPos(self, spherePt):
         t = 2 / (spherePt[2] - 1)
         pt = Point2(spherePt[0], spherePt[1]) * t
@@ -41,10 +34,11 @@ class MapBall(ArcBall):
         self.rotateSpherePtToCenter(spherePt)
 
     def _loadModels(self):
-        self._modelInfo = {'globe': 'models/worldmap/world_map_globe'}
-        self._models = dict(zip(self._modelInfo, (loader.loadModel(self._modelInfo[name]) \
-            for name in self._modelInfo)))
-
+        self._modelInfo = {
+            'globe': 'models/worldmap/world_map_globe'}
+        self._models = dict(zip(self._modelInfo, (loader.loadModel(self._modelInfo[name]) for name in self._modelInfo)))
         self.attachForRotation(self._models['globe'])
         self._models['globe'].setBin('background', 0)
         self._models['globe'].setDepthWrite(0)
+
+
