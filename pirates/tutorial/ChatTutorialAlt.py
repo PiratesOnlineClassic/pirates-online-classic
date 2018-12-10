@@ -1,16 +1,14 @@
-import random
 import time
-
+import random
+from pandac.PandaModules import *
 from direct.showbase import DirectObject
-from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import NewTutorialPanel
 from pirates.tutorial import TutorialGlobals
-
+from pirates.piratesgui import NewTutorialPanel
 
 class ChatTutorialAlt(DirectObject.DirectObject):
     notify = directNotify.newCategory('ChatTutorialAlt')
-
+    
     def __init__(self):
         self.stage = 0
         self.panel1 = None
@@ -24,7 +22,6 @@ class ChatTutorialAlt(DirectObject.DirectObject):
         self.contentPart4 = 'chat_tut_alt4'
         self.contentPart5 = 'chat_tut_alt5'
         self.showPart1()
-        return
 
     def __handleOKButton(self):
         messenger.send('closeTutorialWindow')
@@ -33,11 +30,11 @@ class ChatTutorialAlt(DirectObject.DirectObject):
     def __handleOpenSpeedChatWindow(self):
         messenger.send('closeTutorialWindow')
         self.showPart3()
-
+    
     def __handleSentSpeedChat(self):
         messenger.send('closeTutorialWindow')
         self.showPart4()
-
+    
     def __handleOKButton2(self):
         messenger.send('closeTutorialWindow')
         self.showPart5()
@@ -57,6 +54,7 @@ class ChatTutorialAlt(DirectObject.DirectObject):
     def showPart2(self):
         if self.stage != 1:
             return
+        
         self.panel2 = NewTutorialPanel.NewTutorialPanel([self.contentPart2])
         self.panel2.activate()
         self.acceptOnce('openedSpeedChat', self.__handleOpenSpeedChatWindow)
@@ -65,6 +63,7 @@ class ChatTutorialAlt(DirectObject.DirectObject):
     def showPart3(self):
         if self.stage != 2:
             return
+        
         self.panel3 = NewTutorialPanel.NewTutorialPanel([self.contentPart3])
         self.panel3.activate()
         self.acceptOnce('sentSpeedChat', self.__handleSentSpeedChat)
@@ -73,6 +72,7 @@ class ChatTutorialAlt(DirectObject.DirectObject):
     def showPart4(self):
         if self.stage != 3:
             return
+        
         self.panel4 = NewTutorialPanel.NewTutorialPanel([self.contentPart4, 'test2'])
         self.panel4.activate()
         self.panel4.setYesCommand(self.__handleOKButton2)
@@ -81,11 +81,12 @@ class ChatTutorialAlt(DirectObject.DirectObject):
     def showPart5(self):
         if self.stage != 4:
             return
+        
         self.panel5 = NewTutorialPanel.NewTutorialPanel([self.contentPart5, 'test3'])
         self.panel5.activate()
         self.panel5.setYesCommand(self.__handleOKButton3)
         self.stage = 5
-
+    
     def updateTutorialState(self):
         base.localAvatar.b_setTutorial(PiratesGlobals.TUT_INTRODUCTION_TO_FRIENDS)
 
@@ -104,6 +105,8 @@ class ChatTutorialAlt(DirectObject.DirectObject):
         del self.contentPart3
         del self.contentPart4
         del self.contentPart5
-
+    
     def doNothing(self):
         pass
+
+

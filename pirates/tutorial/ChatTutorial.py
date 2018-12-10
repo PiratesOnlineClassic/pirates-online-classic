@@ -1,16 +1,14 @@
-import random
 import time
-
+import random
+from pandac.PandaModules import *
 from direct.showbase import DirectObject
-from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
-from pirates.piratesgui import NewTutorialPanel
 from pirates.tutorial import TutorialGlobals
-
+from pirates.piratesgui import NewTutorialPanel
 
 class ChatTutorial(DirectObject.DirectObject):
     notify = directNotify.newCategory('ChatTutorial')
-
+    
     def __init__(self):
         self.stage = 0
         self.panel1 = None
@@ -25,16 +23,15 @@ class ChatTutorial(DirectObject.DirectObject):
         self.contentPart5 = 'chat_tut5'
         self.showPart1()
         self.acceptOnce('openedChat', self.__handleOpenChatWindow)
-        return
 
     def __handleOpenChatWindow(self):
         messenger.send('closeTutorialWindow')
         self.showPart2()
-
+    
     def __handleSentChat(self):
         messenger.send('closeTutorialWindow')
         self.showPart3()
-
+    
     def __handleOKButton(self):
         messenger.send('closeTutorialWindow')
         self.showPart4()
@@ -42,7 +39,7 @@ class ChatTutorial(DirectObject.DirectObject):
     def __handleOKButton15(self):
         messenger.send('closeTutorialWindow')
         self.showPart5()
-
+    
     def __handleOKButton2(self):
         self.panelCleanup()
         self.ignoreAll()
@@ -57,6 +54,7 @@ class ChatTutorial(DirectObject.DirectObject):
     def showPart2(self):
         if self.stage != 1:
             return
+        
         self.panel2 = NewTutorialPanel.NewTutorialPanel([self.contentPart2])
         self.panel2.activate()
         self.acceptOnce('sentRegularChat', self.__handleSentChat)
@@ -65,6 +63,7 @@ class ChatTutorial(DirectObject.DirectObject):
     def showPart3(self):
         if self.stage != 2:
             return
+        
         self.panel3 = NewTutorialPanel.NewTutorialPanel([self.contentPart3, 'test'])
         self.panel3.activate()
         self.panel3.setYesCommand(self.__handleOKButton)
@@ -73,14 +72,16 @@ class ChatTutorial(DirectObject.DirectObject):
     def showPart4(self):
         if self.stage != 3:
             return
+        
         self.panel4 = NewTutorialPanel.NewTutorialPanel([self.contentPart4, 'test'])
         self.panel4.activate()
         self.panel4.setYesCommand(self.__handleOKButton15)
         self.stage = 4
-
+    
     def showPart5(self):
         if self.stage != 4:
             return
+        
         self.panel5 = NewTutorialPanel.NewTutorialPanel([self.contentPart5, 'test'])
         self.panel5.activate()
         self.panel5.setYesCommand(self.__handleOKButton2)
@@ -91,7 +92,7 @@ class ChatTutorial(DirectObject.DirectObject):
 
     def panelCleanup(self):
         messenger.send('closeTutorialWindowAll')
-
+    
     def destroy(self):
         del self.stage
         del self.panel1
@@ -107,3 +108,4 @@ class ChatTutorial(DirectObject.DirectObject):
 
     def doNothing(self):
         pass
+
