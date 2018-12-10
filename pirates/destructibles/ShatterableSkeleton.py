@@ -1,19 +1,18 @@
+from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from pirates.effects.ProjectileArc import ProjectileArc
+from pirates.destructibles import ShatterableObject
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from panda3d.core import *
-from pirates.destructibles import ShatterableObject
-from pirates.effects.ProjectileArc import ProjectileArc
-
 class ShatterableSkeleton(ShatterableObject.ShatterableObject, NodePath):
-
+    
     def __init__(self):
         ShatterableObject.ShatterableObject.__init__(self)
         NodePath.__init__(self, 'shatterableSkeletonRenderParent')
         self.prop = loader.loadModelCopy('models/char/ghost_pirate_destruct')
         self.prop.reparentTo(self)
-        self.initializeDebris(wantHidden=0, wantColl=0, bounce=0)
+        self.initializeDebris(wantHidden = 0, wantColl = 0, bounce = 0)
 
     def delete(self):
         ShatterableObject.ShatterableObject.delete(self)
@@ -30,6 +29,7 @@ class ShatterableSkeleton(ShatterableObject.ShatterableObject, NodePath):
         projDummy.rotateMax = 200
         if self.wantHidden:
             debrisNode.unstash()
+        
         projDummy.transNode.setPos(render, debrisNode.getPos(render))
         projDummy.transNode.setHpr(render, debrisNode.getHpr(render))
         projDummy.transNode.setScale(render, debrisNode.getScale(render))
@@ -44,3 +44,4 @@ class ShatterableSkeleton(ShatterableObject.ShatterableObject, NodePath):
         shatterSeq = Sequence(Func(projDummy.play))
         self.intervals.append(shatterSeq)
         shatterSeq.start()
+

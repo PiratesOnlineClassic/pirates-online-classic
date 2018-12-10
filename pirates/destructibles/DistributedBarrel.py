@@ -1,17 +1,17 @@
-from direct.distributed import DistributedObject
-from direct.distributed.ClockDelta import *
-from direct.gui.DirectGui import *
-from direct.interval.IntervalGlobal import *
-from panda3d.core import *
-from pirates.destructibles import DistributedDestructibleObject
-from pirates.effects import ShipSplintersA
-from pirates.piratesbase import PiratesGlobals, PLocalizer
 from pirates.piratesbase.PiratesGlobals import *
-
+from direct.interval.IntervalGlobal import *
+from direct.distributed.ClockDelta import *
+from pirates.piratesbase import PiratesGlobals
+from direct.distributed import DistributedObject
+from pirates.piratesbase import PLocalizer
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
+from pirates.effects import ShipSplintersA
+from pirates.destructibles import DistributedDestructibleObject
 
 class DistributedBarrel(DistributedDestructibleObject.DistributedDestructibleObject):
     notify = directNotify.newCategory('DistributedBarrel')
-
+    
     def __init__(self, cr):
         DistributedDestructibleObject.DistributedDestructibleObject.__init__(self, cr)
         NodePath.__init__(self)
@@ -22,20 +22,20 @@ class DistributedBarrel(DistributedDestructibleObject.DistributedDestructibleObj
         self.HpDisplay = None
         self.prop = None
         self.modelType = 0
-
+    
     def load(self):
         self.loadModel()
         self.displayHp()
 
     def loadModel(self):
         self.prop = loader.loadModel('models/props/barrel')
-        self.coll = self.prop.findAllMatches('**/collision*') 
+        self.coll = self.prop.findAllMatches('**/collision*').asList()
         for c in self.coll:
             self.curMask = c.node().getIntoCollideMask()
             c.setCollideMask(PiratesGlobals.AmmoBitmask | self.curMask)
             c.setTag('objType', str(PiratesGlobals.COLL_DESTRUCTIBLE))
             c.setTag('propId', str(self.doId))
-
+        
         self.prop.reparentTo(self)
 
     def playDamage(self, pos):
@@ -57,3 +57,4 @@ class DistributedBarrel(DistributedDestructibleObject.DistributedDestructibleObj
             self.prop.show()
             for c in self.coll:
                 c.setCollideMask(PiratesGlobals.AmmoBitmask | self.curMask)
+
