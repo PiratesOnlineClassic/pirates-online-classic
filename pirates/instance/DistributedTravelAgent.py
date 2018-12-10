@@ -1,7 +1,8 @@
-from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
+from direct.distributed import DistributedObject
 
-class DistributedTravelAgent(DistributedObjectGlobal):
+class DistributedTravelAgent(DistributedObject.DistributedObject):
     notify = directNotify.newCategory('DistributedTravelAgent')
-
+    
     def __init__(self, air):
-        DistributedObjectGlobal.__init__(self, air)
+        DistributedObject.DistributedObject.__init__(self, air)
+
