@@ -1,12 +1,9 @@
-import math
-
-from direct.interval.IntervalGlobal import (Func, LerpFunc, Parallel, Sequence,
-                                            Wait)
-from direct.showbase.DirectObject import DirectObject
+from pandac.PandaModules import *
 from direct.showbase.PythonUtil import clampScalar
+from direct.showbase.DirectObject import DirectObject
+from direct.interval.IntervalGlobal import Sequence, Parallel, LerpFunc, Func, Wait
 from direct.task.Task import Task
-from panda3d.core import *
-
+import math
 
 def getPerpendicularVec(vec):
     if vec[0] == 0.0:
@@ -34,8 +31,8 @@ def nLerp(a, b, t):
 
 
 class ArcBall(NodePath, DirectObject):
-
-    def __init__(self, name, radius=1, scrollFactor=1, camera=base.cam, frame=Vec4(-1, 1, -1, 1), keepUpright=0, mouseDownEvent='mouse1', mouseUpEvent='mouse1-up', *args, **kwargs):
+    
+    def __init__(self, name, radius = 1, scrollFactor = 1, camera = base.cam, frame = Vec4(-1, 1, -1, 1), keepUpright = 0, mouseDownEvent = 'mouse1', mouseUpEvent = 'mouse1-up', *args, **kwargs):
         NodePath.__init__(self, name, *args, **kwargs)
         DirectObject.__init__(self)
         self._rNode = self.attachNewNode('rotateNode')
@@ -64,34 +61,33 @@ class ArcBall(NodePath, DirectObject):
         self.tail_geom_node = GeomNode('tail')
         self.tail_geom_node_path = self.geom_node_path.attachNewNode(self.tail_geom_node)
         self._ballIval = None
-        return
 
     def removeNode(self):
         self.ignoreAll()
         NodePath.removeNode(self)
 
-    def _setRadius(self, radius, reset=True):
+    def _setRadius(self, radius, reset = True):
         self._radius = radius
-
-    def _setScrollFactor(self, scrollFactor, reset=True):
+    
+    def _setScrollFactor(self, scrollFactor, reset = True):
         self._scrollFactor = float(scrollFactor)
-
-    def _setCamera(self, cam, reset=True):
+    
+    def _setCamera(self, cam, reset = True):
         self.cam = cam
         self.camNode = cam.node()
         self.camLens = self.camNode.getLens()
 
-    def _setFrame(self, frame, reset=True):
+    def _setFrame(self, frame, reset = True):
         self._frame = frame
         self.saveTransforms()
-
+    
     def _setKeepUpright(self, keepUpright):
         self._keepUpright = keepUpright
-
+    
     def _setControlButtonState(self, state):
         self._ctrlBtnState = state
-
-    def _setTiltLimit(self, limit=math.pi / 6, reset=True):
+    
+    def _setTiltLimit(self, limit = math.pi / 6, reset = True):
         self._tiltLimit = limit
         if reset:
             self._applyConstraints()
@@ -99,8 +95,10 @@ class ArcBall(NodePath, DirectObject):
     def _setMouseEvents(self, down, up):
         if hasattr(self, '_mouseDownEventStr'):
             self.ignore(self._mouseDownEventStr)
+        
         if hasattr(self, '_mouseUpEventStr'):
             self.ignore(self._mouseUpEventStr)
+        
         self._mouseDownEventStr = down
         self._mouseUpEventStr = up
         self.accept(self._mouseDownEventStr, self._mouseDown)
@@ -117,10 +115,10 @@ class ArcBall(NodePath, DirectObject):
 
     def setFrame(self, frame):
         self._setFrame(frame)
-
+    
     def setKeepUpright(self, keepUpright):
         self._setKeepUpright(keepUpright)
-
+    
     def setMouseEvents(self, downEvent, upEvent):
         self._setMouseEvents(downEvent, upEvent)
 
@@ -131,7 +129,7 @@ class ArcBall(NodePath, DirectObject):
 
     def setRotateMode(self, mode):
         self.rMode = mode
-
+    
     def enable(self):
         self.setMouseEnabled(True)
 
@@ -139,9 +137,9 @@ class ArcBall(NodePath, DirectObject):
         if self._ballIval:
             self._ballIval.pause()
             self._ballIval = None
+        
         self.setMouseEnabled(False)
-        return
-
+    
     def getRotateRoot(self):
         return self._rNode
 
@@ -150,13 +148,13 @@ class ArcBall(NodePath, DirectObject):
 
     def getInternalHpr(self, *args, **kwargs):
         return self._rNode.getHpr(*args, **kwargs)
-
+    
     def setInternalHpr(self, *args, **kwargs):
         self._rNode.setHpr(*args, **kwargs)
 
     def getInternalQuat(self, *args, **kwargs):
         return self._rNode.getQuat(*args, **kwargs)
-
+    
     def setInternalQuat(self, *args, **kwargs):
         self._rNode.setQuat(*args, **kwargs)
 
@@ -175,7 +173,7 @@ class ArcBall(NodePath, DirectObject):
         self.camRayNode.node().addSolid(self.camRay)
         self.traverser.addCollider(self.camRayNode, self.colHandlerQueue)
 
-    def _mouseRayCollide(self, rayBitMask=BitMask32.allOn()):
+    def _mouseRayCollide(self, rayBitMask = BitMask32.allOn()):
         if base.mouseWatcherNode.hasMouse():
             mousePt = base.mouseWatcherNode.getMouse()
             mousePt = self._transMouseToHomogenousFramePt(mousePt)
@@ -186,7 +184,7 @@ class ArcBall(NodePath, DirectObject):
         else:
             self.colHandlerQueue.clearEntries()
 
-    def _camRayCollide(self, rayBitMask=BitMask32.allOn()):
+    def _camRayCollide(self, rayBitMask = BitMask32.allOn()):
         self.camRay.setOrigin(Point3(0))
         self.camRay.setDirection(Vec3(0, 1, 0))
         self.camRayNode.node().setFromCollideMask(rayBitMask)
@@ -203,42 +201,44 @@ class ArcBall(NodePath, DirectObject):
         b.normalize()
         b *= math.sqrt(1 - 1 / rayDist / rayDist)
         return a + b
-
+    
     def _getCollisionPt(self):
         entryCount = self.colHandlerQueue.getNumEntries()
         for x in range(entryCount):
             entry = self.colHandlerQueue.getEntry(x)
             if entry.getIntoNode().getName() == self.getName() + '-cNode':
                 return entry.getSurfacePoint(entry.getIntoNodePath())
-
+        
         camRay = self.camRayNode.node().getSolid(0).getDirection()
         pt = self.getHorizonCollisionPt(self.cam, camRay)
         return pt
 
-    def getMouseRayCollisionPt(self, rayBitMask=None):
+    def getMouseRayCollisionPt(self, rayBitMask = None):
         if not rayBitMask:
             rayBitMask = self._colBitMask
+        
         self._mouseRayCollide(rayBitMask)
         return self._getCollisionPt()
 
-    def getCamRayCollisionPt(self, rayBitMask=None):
+    def getCamRayCollisionPt(self, rayBitMask = None):
         if not rayBitMask:
             rayBitMask = self._colBitMask
+        
         self._camRayCollide(rayBitMask)
         return self._getCollisionPt()
-
+    
     def _getCollisionEntry(self):
         entryCount = self.colHandlerQueue.getNumEntries()
         if entryCount:
             self.colHandlerQueue.sort()
             return self.colHandlerQueue.getEntry(0)
         else:
-            return
-        return
+            return None
 
-    def getMouseRayCollisionEntry(self, rayBitMask=None):
+    def getMouseRayCollisionEntry(self, rayBitMask = None):
         if not rayBitMask:
             rayBitMask = self._colBitMask
+        
         self._mouseRayCollide(rayBitMask)
         return self._getCollisionEntry()
 
@@ -269,7 +269,7 @@ class ArcBall(NodePath, DirectObject):
         pt = self._camLensProjMat.xform(Vec4(pt[0], pt[1], pt[2], 1))
         pt /= pt[3]
         return pt
-
+    
     def _transHomogenousFrameToCamSpacePt(self, pt):
         pt = self._camLensProjMatInv.xform(Vec4(pt[0], pt[1], pt[2], 1))
         pt /= pt[3]
@@ -306,8 +306,8 @@ class ArcBall(NodePath, DirectObject):
             axis.normalize()
             theta -= thetaLimit
             return Quat(math.cos(theta / 2.0), axis * math.sin(theta / 2.0))
-
-    def getOrthTiltLimitQuat(self, thetaLimit=10):
+    
+    def getOrthTiltLimitQuat(self, thetaLimit = 10):
         X = Vec3.unitX()
         Y = Vec3.unitY()
         Z = Vec3.unitZ()
@@ -326,10 +326,12 @@ class ArcBall(NodePath, DirectObject):
             theta -= thetaLimit
             if northPole.dot(Z) < 0.0:
                 theta *= -1
+            
             quatX = Quat(math.cos(theta / 2.0), X * math.sin(theta / 2.0))
             baseQuat *= quatX
             rNodeToUpSpace = TransformState.makeQuat(baseQuat)
             northPole = rNodeToUpSpace.getMat().xformPoint(rNodeNorth)
+        
         dot = northPole.dot(Z)
         proj = northPole - Z * dot
         theta = math.acos(clampScalar(-1.0, 1.0, proj.dot(arcballNorth) / proj.length()))
@@ -337,10 +339,12 @@ class ArcBall(NodePath, DirectObject):
             theta -= thetaLimit
             if northPole.dot(X) >= 0.0:
                 theta *= -1
+            
             quatY = Quat(math.cos(theta / 2.0), Z * math.sin(theta / 2.0))
             baseQuat *= quatY
+        
         return quatX * quatY
-
+    
     def getUprightCorrectionQuat(self, pt):
         Y = Vec3.unitY()
         Z = Vec3.unitZ()
@@ -359,11 +363,11 @@ class ArcBall(NodePath, DirectObject):
             theta *= -1
         return Quat(math.cos(theta / 2.0), Vec3(axis) * math.sin(theta / 2.0))
 
-    def _rotate(self, q, factor=1.0):
+    def _rotate(self, q, factor = 1.0):
         q = nLerp(Quat(1, Vec3(0)), q, factor)
         self._rNode.setQuat(self._rNode.getQuat() * q)
 
-    def _rotatePtToPt(self, p0, p1, factor=1.0):
+    def _rotatePtToPt(self, p0, p1, factor = 1.0):
         self._rotate(self._getPtToPtQuat(p0, p1), factor)
 
     def _getPtToPtQuat(self, p0, p1, factor=1.0):
@@ -374,10 +378,9 @@ class ArcBall(NodePath, DirectObject):
         axis.normalize()
         if factor == 1.0:
             return Quat(math.cos(theta / 2.0), axis * math.sin(theta / 2.0))
-        else:
-            if 0.0 < factor < 1.0:
-                q = nLerp(Quat.identQuat(), Quat(math.cos(theta / 2.0), axis * math.sin(theta / 2.0)), factor)
-                return q
+        elif 0.0 < factor < 1.0:
+            q = nLerp(Quat.identQuat(), Quat(math.cos(theta / 2.0), axis * math.sin(theta / 2.0)), factor)
+            return q
 
     def _getRotateAboutAxisQuat(self, axis, p0, p1, factor=1.0):
         axis = axis / axis.length()
@@ -389,12 +392,11 @@ class ArcBall(NodePath, DirectObject):
         area = axis.length()
         axis.normalize()
         theta = math.acos(clampScalar(-1, 1, proj0.dot(proj1) / (proj0.length() * proj1.length())))
-        return (
-         Quat(math.cos(theta / 2.0), axis * math.sin(theta / 2.0)), area)
+        return (Quat(math.cos(theta / 2.0), axis * math.sin(theta / 2.0)), area)
 
-    def _rotateQuatByQuat(self, q0, q1, factor=1.0):
+    def _rotateQuatByQuat(self, q0, q1, factor = 1.0):
         self._rNode.setQuat(nLerp(q0, q0 * q1, factor))
-
+    
     def clampOrientationAboutSpherePt(self, pt):
         q = self.getUprightCorrectionQuat(pt)
         self._rotate(q, 1.0)
@@ -422,24 +424,23 @@ class ArcBall(NodePath, DirectObject):
             OC *= self._radius
             newPt = ts.getMat().xformPoint(OC)
             dTheta = math.acos(clampScalar(-1.0, 1.0, pt.dot(newPt)))
-            return (
-             newPt, dTheta)
+            return (newPt, dTheta)
         else:
-            return (
-             pt, 0)
-
-    def reorientNorth(self, time=0.0):
+            return (pt, 0)
+    
+    def reorientNorth(self, time = 0.0):
         self.setNorth(Vec3(0, 1, 0))
         curQ = self.getInternalQuat()
         pt = self.getCamRayCollision()
         upQ = self.getUprightCorrectionQuat(pt)
-
+        
         def rotateFunc(t):
             self._rotateQuatByQuat(curQ, upQ, t)
 
         if self._ballIval:
             self._ballIval.pause()
-        self._ballIval = LerpFunc(rotateFunc, duration=time)
+        
+        self._ballIval = LerpFunc(rotateFunc, duration = time)
         self._ballIval.start()
 
     def showRotationSphere(self):
@@ -451,6 +452,7 @@ class ArcBall(NodePath, DirectObject):
             self._rotGuide.setTextureOff(1)
             self._rotGuide.setColor(Vec4(1, 0, 0, 1))
             self._rotGuide.reparentTo(self.getRotateRoot())
+        
         self._rotGuide.setScale(self._radius)
         self._rotGuide.show()
 
@@ -460,8 +462,7 @@ class ArcBall(NodePath, DirectObject):
 
     def _startRotateTask(self, *args):
         self.saveTransforms()
-        modePairs = (
-         (0, 2), (1, 3))
+        modePairs = ((0, 2), (1, 3))
         if not self._ctrlBtnState:
             rMode = modePairs[self.rMode][0]
         else:
@@ -470,14 +471,16 @@ class ArcBall(NodePath, DirectObject):
             props = WindowProperties()
             props.setCursorHidden(1)
             base.win.requestProperties(props)
+        
         task = taskMgr.add(self._rotateTask, self.getName() + '-rotateTask')
         task.rMode = rMode
-
+    
     def _rotateTask(self, task):
         if not hasattr(task, 'startPt'):
             task.startPt = self.getMouseRayCollisionPt()
             task.camPt = self.getCamRayCollisionPt()
             task.quat = self._rNode.getQuat()
+        
         if task.rMode == 0:
             pt = self.getMouseRayCollisionPt()
             q = self._getPtToPtQuat(task.startPt, pt)
@@ -491,19 +494,19 @@ class ArcBall(NodePath, DirectObject):
             self.createStraightArrow(task.startPt, pt, 0.02)
         elif task.rMode == 2:
             pt = self.getMouseRayCollisionPt()
-            q, area = self._getRotateAboutAxisQuat(task.camPt, task.startPt, pt)
+            (q, area) = self._getRotateAboutAxisQuat(task.camPt, task.startPt, pt)
             self._rotateQuatByQuat(task.quat, q, 1.0)
             self.saveNorth()
         elif task.rMode == 3:
             dt = globalClock.getDt()
             pt = self.getMouseRayCollisionPt()
-            q, area = self._getRotateAboutAxisQuat(task.camPt, pt, task.startPt)
+            (q, area) = self._getRotateAboutAxisQuat(task.camPt, pt, task.startPt)
             self._rotate(q, dt * self._scrollFactor * area * 300)
             self.createCurvedArrow(task.camPt, pt, task.startPt, 0.02)
             self.saveNorth()
+        
         return task.cont
-
-
+    
     def _stopRotateTask(self, *args):
         taskMgr.remove(self.getName() + '-rotateTask')
         self.tail_geom_node.removeAllGeoms()
@@ -512,7 +515,7 @@ class ArcBall(NodePath, DirectObject):
             props = WindowProperties()
             props.setCursorHidden(0)
             base.win.requestProperties(props)
-
+    
     def createStraightArrow(self, p0, p1, width):
         p0.normalize()
         p1.normalize()
@@ -531,7 +534,7 @@ class ArcBall(NodePath, DirectObject):
             pts = []
             for n in range(steps + 1):
                 pts.append(sLerp(p1, p0, n / div, arcLen) * self._radius)
-
+            
             format = GeomVertexFormat.getV3c4t2()
             vertex_data = GeomVertexData('arc_ball', format, Geom.UHStatic)
             vertex_writer = GeomVertexWriter(vertex_data, 'vertex')
@@ -558,7 +561,7 @@ class ArcBall(NodePath, DirectObject):
                     vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1], pt[2] + cross[2])
                     color_writer.addData4f(0, 1, 0, 1)
                     color_writer.addData4f(0, 1, 0, 1)
-
+                
                 texture_writer.addData2f(1, 1)
                 texture_writer.addData2f(0, 1)
                 texture_writer.addData2f(1, 0)
@@ -578,17 +581,18 @@ class ArcBall(NodePath, DirectObject):
                 vertex_writer.addData3f(pt[0] + cross[0], pt[1] + cross[1], pt[2] + cross[2])
                 color_writer.addData4f(0, 1, 0, 1)
                 color_writer.addData4f(0, 1, 0, 1)
-
+            
             numPts = len(pts[1:])
             for x in range(numPts / 2):
                 texture_writer.addData2f(1, 1)
                 texture_writer.addData2f(0, 1)
                 texture_writer.addData2f(1, 0)
                 texture_writer.addData2f(0, 0)
-
+            
             if numPts % 2:
                 texture_writer.addData2f(1, 1)
                 texture_writer.addData2f(0, 1)
+            
             vertex_writer.addData3f(p0[0] - cross[0], p0[1] - cross[1], p0[2] - cross[2])
             vertex_writer.addData3f(p0[0] + cross[0], p0[1] + cross[1], p0[2] + cross[2])
             color_writer.addData4f(0, 1, 0, 1)
@@ -631,8 +635,8 @@ class ArcBall(NodePath, DirectObject):
             t = math.atan2(a, b / math.tan(theta))
             aUnit *= a
             bUnit *= b
-            pts = [ aUnit * math.cos(x * t / N) + bUnit * math.sin(x * t / N) for x in range(N + 1) ]
-            pts = [ pt + axis * math.sqrt(self._radius * self._radius - pt.lengthSquared()) for pt in pts ]
+            pts = [aUnit * math.cos(x * t / N) + bUnit * math.sin(x * t / N) for x in range(N + 1)]
+            pts = [pt + axis * math.sqrt(self._radius * self._radius - pt.lengthSquared()) for pt in pts]
             if A != proj0:
                 pts.reverse()
             format = GeomVertexFormat.getV3c4t2()
@@ -716,6 +720,7 @@ class ArcBall(NodePath, DirectObject):
         if not hasattr(task, 'p0'):
             task.p0 = self.getMouseRayCollisionPt()
             task.p0.normalize()
+        
         p1 = self.getMouseRayCollisionPt()
         p1.normalize()
         self.createStraightArrow(task.p0, p1, 0.02)
@@ -723,3 +728,4 @@ class ArcBall(NodePath, DirectObject):
 
     def _stopArrowTask(self):
         taskMgr.remove(self.getName() + '-arrowTask')
+
