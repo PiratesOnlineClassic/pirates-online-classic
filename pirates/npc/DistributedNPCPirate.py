@@ -1,13 +1,13 @@
+from direct.interval.IntervalGlobal import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
-from direct.interval.IntervalGlobal import *
-from pirates.battle import DistributedBattleNPC
 from pirates.pirate import DistributedPirateBase
 from pirates.piratesbase import PiratesGlobals
+from pirates.battle import DistributedBattleNPC
 
 class DistributedNPCPirate(DistributedBattleNPC.DistributedBattleNPC, DistributedPirateBase.DistributedPirateBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCPirate')
-
+    
     def __init__(self, cr):
         DistributedBattleNPC.DistributedBattleNPC.__init__(self, cr)
         DistributedPirateBase.DistributedPirateBase.__init__(self, cr)
@@ -21,22 +21,20 @@ class DistributedNPCPirate(DistributedBattleNPC.DistributedBattleNPC, Distribute
     def delete(self):
         try:
             self.DistributedNPCPirate_deleted
-            return
         except:
             self.DistributedNPCPirate_deleted = 1
-            
-        DistributedBattleNPC.DistributedBattleNPC.delete(self)
-        DistributedPirateBase.DistributedPirateBase.delete(self)
-
+            DistributedBattleNPC.DistributedBattleNPC.delete(self)
+            DistributedPirateBase.DistributedPirateBase.delete(self)
+    
     def generate(self):
         DistributedBattleNPC.DistributedBattleNPC.generate(self)
         DistributedPirateBase.DistributedPirateBase.generate(self)
-        self.setInteractOptions(proximityText=None, allowInteract=False)
-
+        self.setInteractOptions(proximityText = None, allowInteract = False)
+    
     def announceGenerate(self):
         DistributedBattleNPC.DistributedBattleNPC.announceGenerate(self)
         DistributedPirateBase.DistributedPirateBase.announceGenerate(self)
-
+    
     def setDNAString(self, dnaString):
         DistributedPirateBase.DistributedPirateBase.setDefaultDNA(self)
         self.style.makeNPCPirate()
@@ -46,7 +44,7 @@ class DistributedNPCPirate(DistributedBattleNPC.DistributedBattleNPC, Distribute
 
     def play(self, *args, **kwArgs):
         Pirate.Pirate.play(self, *args, **kwArgs)
-
+    
     def loop(self, *args, **kwArgs):
         Pirate.Pirate.loop(self, *args, **kwArgs)
 
@@ -55,6 +53,8 @@ class DistributedNPCPirate(DistributedBattleNPC.DistributedBattleNPC, Distribute
 
     def pingpong(self, *args, **kwArgs):
         Pirate.Pirate.pingpong(self, *args, **kwArgs)
-
+    
     def stop(self, *args, **kwArgs):
         Pirate.Pirate.stop(self, *args, **kwArgs)
+
+

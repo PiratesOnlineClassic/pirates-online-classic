@@ -1,35 +1,35 @@
-from pirates.npc import NPCSkeletonGameFSM
+from direct.interval.IntervalGlobal import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
-from direct.interval.IntervalGlobal import *
 from otp.otpbase import OTPGlobals
-from pirates.battle import DistributedBattleNPC
-from pirates.effects.JRSpawnEffect import JRSpawnEffect
-from pirates.npc import Skeleton
 from pirates.piratesbase import PiratesGlobals
+from pirates.battle import DistributedBattleNPC
+from pirates.npc import Skeleton
+from pirates.effects.JRSpawnEffect import JRSpawnEffect
+import NPCSkeletonGameFSM
 
 class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC, Skeleton.Skeleton):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCSkeleton')
-
+    
     def __init__(self, cr):
         DistributedBattleNPC.DistributedBattleNPC.__init__(self, cr)
         Skeleton.Skeleton.__init__(self)
 
     def announceGenerate(self):
         DistributedBattleNPC.DistributedBattleNPC.announceGenerate(self)
-
+    
     def generate(self):
         DistributedBattleNPC.DistributedBattleNPC.generate(self)
-        self.setInteractOptions(isTarget=False, allowInteract=False)
-
+        self.setInteractOptions(isTarget = False, allowInteract = False)
+    
     def disable(self):
         DistributedBattleNPC.DistributedBattleNPC.disable(self)
         Skeleton.Skeleton.disable(self)
-
+    
     def delete(self):
         DistributedBattleNPC.DistributedBattleNPC.delete(self)
         Skeleton.Skeleton.delete(self)
-
+    
     def getNameText(self):
         return Skeleton.Skeleton.getNameText(self)
 
@@ -39,32 +39,33 @@ class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC, Skeleton
 
     def createGameFSM(self):
         self.gameFSM = NPCSkeletonGameFSM.NPCSkeletonGameFSM(self)
-
+    
     def initializeDropShadow(self):
         Skeleton.Skeleton.initializeDropShadow(self)
-
+    
     def setSpeed(self, forwardSpeed, rotateSpeed):
         if self.gameFSM.state == 'Jump':
             return
+        
         Skeleton.Skeleton.setSpeed(self, forwardSpeed, rotateSpeed)
 
-    def setHp(self, hitPoints, quietly=0):
+    def setHp(self, hitPoints, quietly = 0):
         DistributedBattleNPC.DistributedBattleNPC.setHp(self, hitPoints, quietly)
         if self.glow:
             self.glow.adjustHeartColor(float(self.hp) / float(self.maxHp))
 
     def getEnterDeathTrack(self):
         return Skeleton.Skeleton.getEnterDeathTrack(self)
-
+    
     def getExitDeathTrack(self):
         return Skeleton.Skeleton.getExitDeathTrack(self)
-
+    
     def play(self, *args, **kwArgs):
         Skeleton.Skeleton.play(self, *args, **kwArgs)
 
     def loop(self, *args, **kwArgs):
         Skeleton.Skeleton.loop(self, *args, **kwArgs)
-
+    
     def pose(self, *args, **kwArgs):
         Skeleton.Skeleton.pose(self, *args, **kwArgs)
 
@@ -77,8 +78,8 @@ class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC, Skeleton
     def getSpawnTrack(self):
         duration = self.getDuration('intro')
         if not duration:
-            return
-
+            return None
+        
         def startVFX():
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 spawnEffect = JRSpawnEffect.getEffect()
@@ -94,3 +95,5 @@ class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC, Skeleton
         else:
             spawnIval = Sequence(Func(self.hide), Func(startVFX), Wait(1.0), Parallel(self.actorInterval('intro'), Sequence(Wait(0.5), Func(self.show))))
         return spawnIval
+
+
