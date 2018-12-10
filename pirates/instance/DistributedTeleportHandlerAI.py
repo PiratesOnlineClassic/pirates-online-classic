@@ -25,7 +25,7 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
 
         self.sendUpdateToAvatarId(self.avatar.doId, 'continueTeleportToInstance', [world.doId,
             gameArea.zoneId, world.doId, world.getFileName(), gameArea.parentId, gameArea.zoneId,
-            gameArea.doId, gameArea.getFileName(), world.oceanGrid.doId])
+            gameArea.parentId, gameArea.getFileName(), world.oceanGrid.doId])
 
     def readyToFinishTeleport(self, instanceDoId):
         world = self.teleportFsm.world
