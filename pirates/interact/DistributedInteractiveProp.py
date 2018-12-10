@@ -1,25 +1,26 @@
-import random
-import re
-
-from direct.actor import Actor
+from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
 from direct.interval.IntervalGlobal import ActorInterval
-from panda3d.core import *
-from pirates.battle import WeaponGlobals
-from pirates.distributed import (DistributedInteractive, DistributedTargetableObject)
+import re
+import random
+from pirates.distributed import DistributedInteractive
+from pirates.distributed import DistributedTargetableObject
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 from pirates.interact import InteractiveBase
-from pirates.leveleditor import CustomAnims
-from pirates.pirate import AvatarType, BattleNPCGameFSM
-from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.pirate import BattleNPCGameFSM
+from pirates.pirate import AvatarType
 from pirates.uberdog.UberDogGlobals import InventoryType
-
+from pirates.battle import WeaponGlobals
+from pirates.leveleditor import CustomAnims
 
 class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, DistributedTargetableObject.DistributedTargetableObject, Actor.Actor):
     DiskUseColor = (1, 0, 0, 1)
     DiskWaitingColor = (1, 0, 0, 1)
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInteractiveProp')
-
+    
     def __init__(self, cr):
         NodePath.__init__(self, 'DistributedInteractiveProp')
         DistributedInteractive.DistributedInteractive.__init__(self, cr)
@@ -40,7 +41,7 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
         self.pendingMovie = None
         self.currentTarget = None
         self.skillEffects = []
-
+    
     def generate(self):
         DistributedInteractive.DistributedInteractive.generate(self)
         DistributedTargetableObject.DistributedTargetableObject.generate(self)
@@ -72,14 +73,19 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
     def setModelPath(self, modelPath):
         self.notify.debug('setModelPath %s' % modelPath)
         self.modelPath = modelPath
-
+    
     def loadGeom(self):
         if self.__geomLoaded:
             return
+        
         if re.search('_zero', self.modelPath):
             self.geom = self.loadModel(self.modelPath)
             modelPrefix = re.sub('_zero', '', self.modelPath)
-            self.anims = self.loadAnims({'idle': modelPrefix + '_idle', 'boxing_hit_head_right': modelPrefix + '_hit_medium', 'deathIdle': modelPrefix + '_death_idle', self.getDeathAnimName(): modelPrefix + '_death'})
+            self.anims = self.loadAnims({
+                'idle': modelPrefix + '_idle',
+                'boxing_hit_head_right': modelPrefix + '_hit_medium',
+                'deathIdle': modelPrefix + '_death_idle',
+                self.getDeathAnimName(): modelPrefix + '_death'})
             self.loop('idle')
         else:
             self.geom = loader.loadModel(self.modelPath)
@@ -89,30 +95,34 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
     def unloadGeom(self):
         if not self.isEmpty() and self.anims:
             self.unloadAnims(self.anims)
+        
         self.__geomLoaded = 0
 
     def setParentObjId(self, parentObjId):
         self.parentObjId = parentObjId
-
-        def putObjOnParent(parentObj, self=self):
+        
+        def putObjOnParent(parentObj, self = self):
             self.notify.debug('putObj %s on parent %s' % (self.doId, parentObj))
             self.parentObj = parentObj
             self.reparentTo(parentObj)
             self.pendingPlacement = None
 
         if parentObjId > 0:
-            self.pendingPlacement = base.cr.relatedObjectMgr.requestObjects([self.parentObjId], eachCallback=putObjOnParent)
-
+            self.pendingPlacement = base.cr.relatedObjectMgr.requestObjects([
+                self.parentObjId], eachCallback = putObjOnParent)
+    
     def initInteractOpts(self):
         if self.interactAble == 'player':
-            self.setInteractOptions(sphereScale=6, diskRadius=8, allowInteract=False, isTarget=True)
+            self.setInteractOptions(sphereScale = 6, diskRadius = 8, allowInteract = False, isTarget = True)
 
     def disable(self):
         if self.pendingMovie:
             self.cr.relatedObjectMgr.abortRequest(self.pendingMovie)
+        
         if self.interactSeq:
             self.interactSeq.pause()
             self.interactSeq = None
+        
         self.unloadGeom()
         taskMgr.remove(self.uniqueName('playReact'))
         self.deleteBattleCollisions()
@@ -125,13 +135,14 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
         DistributedTargetableObject.DistributedTargetableObject.delete(self)
         Actor.Actor.delete(self)
 
-    def requestInteraction(self, avId, interactType=0):
+    def requestInteraction(self, avId, interactType = 0):
         DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
         base.localAvatar.setCurrentTarget(self.doId)
 
     def initializeBattleCollisions(self):
         if self.interactAble != 'player' or self.battleTubeNodePaths:
             return
+        
         self.battleTubeEvent = self.uniqueName('battleAvatarTube')
         self.battleTube = CollisionTube(0, 0, 0, 0, 0, self.battleTubeHeight, self.battleTubeRadius)
         self.battleTube.setTangible(1)
@@ -150,42 +161,40 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
         aimTubeNodePath = self.attachNewNode(aimTubeNode)
         aimTubeNodePath.setTag('objType', str(PiratesGlobals.COLL_AV))
         aimTubeNodePath.setTag('avId', str(self.doId))
-        self.cr.targetMgr.addTarget(aimTubeNodePath.get_key(), self)
+        self.cr.targetMgr.addTarget(aimTubeNodePath.id(), self)
         self.aimTubeNodePaths.append(aimTubeNodePath)
         self.battleTubeNodePaths.append(battleTubeNodePath)
 
     def deleteBattleCollisions(self):
         if self.battleTube:
             self.battleTube = None
-
+        
         for np in self.battleTubeNodePaths:
             np.removeNode()
-
+        
         self.battleTubeNodePaths = []
         for np in self.aimTubeNodePaths:
-            if hasattr(self.cr, 'targetMgr') and self.cr.targetMgr:
-                self.cr.targetMgr.removeTarget(np.get_key())
-
+            if hasattr(self.cr, 'targetMgr'):
+                self.cr.targetMgr.removeTarget(np.id())
+            
             np.removeNode()
-
+        
         self.aimTubeNodePaths = []
 
     def getTeam(self):
         return self.belongsToTeam
-
+    
     def getLevel(self):
         return self.level
 
-    def targetedWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, attacker, pos, charge=0, delay=None, multihit=0):
-        DistributedTargetableObject.DistributedTargetableObject.targetedWeaponHit(self, skillId, ammoSkillId, skillResult,
-            targetEffects, attacker, pos, charge, delay, multihit)
-
+    def targetedWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, attacker, pos, charge = 0, delay = None, multihit = 0):
+        DistributedTargetableObject.DistributedTargetableObject.targetedWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, attacker, pos, charge, delay, multihit)
         if skillResult == WeaponGlobals.RESULT_HIT and (skillId == InventoryType.CutlassSlash or skillId == InventoryType.CutlassSweep):
             self.gameFSM.request('Death')
 
-    def getDeathAnimName(self, animNum=None):
+    def getDeathAnimName(self, animNum = None):
         return 'death'
-
+    
     def getSkillEffects(self):
         return []
 
@@ -193,19 +202,20 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
         animName = self.getDeathAnimName()
         frames = self.getNumFrames(animName)
         actorIval = ActorInterval(self, animName)
-        return Sequence(Wait(0.35), actorIval, Func(self.pose, animName, frames - 1), Wait(0.25), Func(self.setTransparency, 1), LerpColorScaleInterval(self, 1.0, Vec4(1, 1, 1, 0), startColorScale=Vec4(1)), Func(self.hide), Func(self.setColorScale, Vec4(1)), Func(self.clearColorScale), Wait(10), Func(self.rebuild))
+        return Sequence(Wait(0.35), actorIval, Func(self.pose, animName, frames - 1), Wait(0.25), Func(self.setTransparency, 1), LerpColorScaleInterval(self, 1.0, Vec4(1, 1, 1, 0), startColorScale = Vec4(1)), Func(self.hide), Func(self.setColorScale, Vec4(1)), Func(self.clearColorScale), Wait(10), Func(self.rebuild))
 
     def getExitDeathTrack(self):
         return Sequence(Func(self.show))
-
+    
     def rebuild(self):
         if not self.isDisabled():
             self.loop('idle')
             if not self.gameFSM.isInTransition():
                 self.gameFSM.request('Off')
+            
             self.initializeBattleCollisions()
             self.show()
-
+    
     def moveSelf(self, xyz):
         randX = random.random() * 0.3 - 0.15
         randY = random.random() * 0.3 - 0.15
@@ -219,8 +229,8 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
         self.setPos(xyzhpr[0])
         self.setP(xyzhpr[1][1])
         self.setR(xyzhpr[1][2])
-
-    def playInteraction(self, task=None):
+    
+    def playInteraction(self, task = None):
         currPos = self.getPos()
         currHpr = self.getHpr()
         currPosX = currPos[0]
@@ -236,12 +246,14 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
         if avId == 0:
             self.stopMovie()
             return
+        
         av = self.cr.doId2do.get(avId)
         self.avId = avId
         if av:
             self.playMovie(av)
         else:
-            self.pendingMovie = base.cr.relatedObjectMgr.requestObjects([avId], eachCallback=self.playMovie)
+            self.pendingMovie = base.cr.relatedObjectMgr.requestObjects([
+                avId], eachCallback = self.playMovie)
 
     def stopMovie(self):
         av = self.cr.doId2do.get(self.avId)
@@ -249,8 +261,9 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
             av.startSmooth()
             av.motionFSM.request('On')
             av.clearAnimProp()
+        
         self.avId = None
-
+    
     def playMovie(self, av):
         self.pendingMovie = None
         av.stopSmooth()
@@ -272,13 +285,13 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
             taskMgr.doMethodLater(reactDelay, self.playInteraction, self.uniqueName('playReact'))
         elif self.interactType == 'sit':
             self.interactAnim = random.choice(availAnims)
-            av.loop(self.interactAnim, blendT=av.motionFSM.BLENDAMT)
-            posOffset, hprOffset = self.getLocatorOffset(av.getParent())
+            av.loop(self.interactAnim, blendT = av.motionFSM.BLENDAMT)
+            (posOffset, hprOffset) = self.getLocatorOffset(av.getParent())
             av.setPos(posOffset[0], posOffset[1], posOffset[2])
             av.setHpr(hprOffset[0], hprOffset[1], hprOffset[2])
         elif self.interactType == 'stockade':
             self.interactAnim = random.choice(availAnims)
-            av.loop(self.interactAnim, blendT=av.motionFSM.BLENDAMT)
+            av.loop(self.interactAnim, blendT = av.motionFSM.BLENDAMT)
             myPos = self.getPos(av.getParent())
             myHpr = self.getHpr(av.getParent())
             av.setPos(myPos[0], myPos[1], myPos[2])
@@ -286,13 +299,14 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
         else:
             self.interactAnim = random.choice(availAnims)
             av.loop(self.interactAnim)
-            posOffset, hprOffset = self.getLocatorOffset(av.getParent())
+            (posOffset, hprOffset) = self.getLocatorOffset(av.getParent())
             av.setPos(posOffset[0], posOffset[1], posOffset[2])
             av.setHpr(hprOffset[0], hprOffset[1], hprOffset[2])
         if availProps:
             av.holdAnimProp(availProps)
+        
         av.interactAnim = self.interactAnim
-
+    
     def getLocatorOffset(self, avParent):
         dummyNode = self.attachNewNode('dummyNode')
         if self.modelPath == 'models/props/chair_fancy':
@@ -316,6 +330,7 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
             if locatorNode and not locatorNode.isEmpty():
                 dummyNode.reparentTo(locatorNode)
                 dummyNode.setH(180)
+            
         posOffset = dummyNode.getPos(avParent)
         hprOffset = dummyNode.getHpr(avParent)
         dummyNode.removeNode()
@@ -329,9 +344,10 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
 
     def propSlashed(self):
         messenger.send('didSlash')
-
+    
     def getShortName(self):
         return self.getName()
 
     def isBoss(self):
         return False
+

@@ -1,17 +1,15 @@
-import random
 import re
+import random
 import types
-
-from direct.interval.IntervalGlobal import *
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.distributed import DistributedInteractive
 from pirates.piratesbase import PiratesGlobals
 from pirates.world import WorldGlobals
-
+from direct.interval.IntervalGlobal import *
 
 class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
     notify = directNotify.newCategory('DistributedNPCToy')
-
+    
     def __init__(self, cr):
         DistributedInteractive.DistributedInteractive.__init__(self, cr)
         NodePath.__init__(self, 'DistributedNPCToy')
@@ -29,14 +27,15 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
         DistributedInteractive.DistributedInteractive.announceGenerate(self)
         self.loadGeom()
         self.cr.uidMgr.addUid(self.uniqueId, self.getDoId())
-
+    
     def disable(self):
         DistributedInteractive.DistributedInteractive.disable(self)
-
+    
     def delete(self):
         if self.interactSeq:
             self.interactSeq.pause()
             self.interactSeq = None
+        
         DistributedInteractive.DistributedInteractive.delete(self)
         self.removeNode()
         taskMgr.remove(self.uniqueName('playReact'))
@@ -44,6 +43,7 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
     def setUniqueId(self, uid):
         if self.uniqueId != '':
             self.cr.uidMgr.removeUid(self.uniqueId)
+        
         self.uniqueId = uid
 
     def getUniqueId(self):
@@ -56,6 +56,7 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
     def loadGeom(self):
         if self.__geomLoaded:
             return
+        
         self.geom = loader.loadModelCopy(self.modelPath)
         self.geom.reparentTo(self)
         self.__geomLoaded = 1
@@ -65,21 +66,21 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
 
     def setParentObjId(self, parentObjId):
         self.parentObjId = parentObjId
-
-        def putObjOnParent(parentObj, self=self):
+        
+        def putObjOnParent(parentObj, self = self):
             print 'putObj %s on parent %s' % (self.doId, parentObj)
             self.parentObj = parentObj
             self.reparentTo(parentObj)
             self.setColorScale(1, 1, 1, 1, 1)
             self.pendingPlacement = None
-            return
 
         if parentObjId > 0:
-            self.pendingPlacement = base.cr.relatedObjectMgr.requestObjects([self.parentObjId], eachCallback=putObjOnParent)
-
-    def setLocation(self, parentId, zoneId, teleport=0):
+            self.pendingPlacement = base.cr.relatedObjectMgr.requestObjects([
+                self.parentObjId], eachCallback = putObjOnParent)
+    
+    def setLocation(self, parentId, zoneId, teleport = 0):
         pass
-
+    
     def moveSelf(self, xyz):
         randX = random.random() * 0.3 - 0.15
         randY = random.random() * 0.3 - 0.15
@@ -94,7 +95,7 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
         self.setP(xyzhpr[1][1])
         self.setR(xyzhpr[1][2])
 
-    def playInteraction(self, task=None):
+    def playInteraction(self, task = None):
         currPos = self.getPos()
         currHpr = self.getHpr()
         currPosX = currPos[0]
@@ -110,7 +111,8 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
         av = self.cr.doId2do.get(avId)
         if av:
             availAnims = [
-             'boxing_kick', 'boxing_punch']
+                'boxing_kick',
+                'boxing_punch']
             anim = random.choice(availAnims)
             av.play(anim)
             if anim == 'boxing_kick':
@@ -118,3 +120,4 @@ class DistributedNPCToy(DistributedInteractive.DistributedInteractive):
             else:
                 reactDelay = 0.4
             taskMgr.doMethodLater(reactDelay, self.playInteraction, self.uniqueName('playReact'))
+
