@@ -1,15 +1,16 @@
-import random
 import re
+import random
 import types
-
 from direct.actor import *
-from direct.distributed import DistributedCartesianGrid
 from pirates.piratesbase import PiratesGlobals
-from pirates.world import ClientArea, DistributedGameArea, WorldGlobals
+from pirates.world import WorldGlobals
+from pirates.world import DistributedGameArea
+from pirates.world import ClientArea
+from direct.distributed import DistributedCartesianGrid
 
 class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartesianGrid.DistributedCartesianGrid, ClientArea.ClientArea):
     notify = directNotify.newCategory('DistributedTown')
-
+    
     def __init__(self, cr):
         DistributedGameArea.DistributedGameArea.__init__(self, cr)
         DistributedCartesianGrid.DistributedCartesianGrid.__init__(self, cr)
@@ -34,22 +35,24 @@ class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartes
         DistributedCartesianGrid.DistributedCartesianGrid.delete(self)
         ClientArea.ClientArea.delete(self)
         self.removeNode()
-
+    
     def setUniqueId(self, uid):
         if self.uniqueId != '':
             self.cr.uidMgr.removeUid(self.uniqueId)
+        
         self.uniqueId = uid
 
     def getUniqueId(self):
         return self.uniqueId
-
+    
     def setModelPath(self, modelPath):
         self.notify.debug('setModelPath %s' % modelPath)
         self.modelPath = modelPath
 
     def loadTownGeom(self):
         if self.__townGeomLoaded:
-            return
+            return None
+        
         self.geom = None
         self.__townGeomLoaded = 1
 
@@ -65,7 +68,8 @@ class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartes
             objModel = loader.loadModelCopy(propData['Visual']['Model'])
         if objModel == None and objNode == None:
             self.notify.warning('No model named %s' % propData['Visual']['Model'])
-            return
+            return None
+        
         objNodeName = 'Prop' + propData['Type']
         if objNode == None:
             objNode = self.attachNewNode(objNodeName)
@@ -74,12 +78,15 @@ class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartes
         self.childens.append(objNode)
         if objModel:
             objModel.reparentTo(objNode)
+        
         objNode.setPos(propData['Pos'])
         objNode.setHpr(propData['Hpr'])
         if propData.has_key('Scale'):
             objNode.setScale(propData['Scale'])
+        
         if propData['Visual'].has_key('Color'):
             objNode.setColorScale(*propData['Visual']['Color'])
+        
         objNode.flattenStrong()
         wallGeom = objNode.find('**/wall*_n_window*')
         roofGeom = objNode.find('**/roof')
@@ -88,3 +95,4 @@ class DistributedTown(DistributedGameArea.DistributedGameArea, DistributedCartes
                 self.setupCannonballBldgColl(c, PiratesGlobals.TargetBitmask)
                 c.wrtReparentTo(self.highDetailBldgNp)
                 c.flattenLight()
+
