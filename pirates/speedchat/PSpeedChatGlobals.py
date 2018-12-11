@@ -1,2 +1,1 @@
-from pirates.speedchat.PSpeedChatQuestTerminal import \
-    PSpeedChatQuestMsgEvent
+from PSpeedChatQuestTerminal import PSpeedChatQuestMsgEvent
