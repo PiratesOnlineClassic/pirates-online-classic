@@ -1,17 +1,15 @@
 from direct.directnotify import DirectNotifyGlobal
+from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType, InventoryId, getSkillCategory
 from pirates.battle import WeaponGlobals
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import *
-from pirates.uberdog.UberDogGlobals import (InventoryCategory, InventoryId,
-    InventoryType, getSkillCategory)
-
 
 class DistributedInventoryBase:
     GetInvRequests = {}
     GetInvRequestId2InvId = {}
     InvRequestSerialGen = SerialNumGen()
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryBase')
-
+    
     def __init__(self, distributedObjectCollectionManager):
         self.dcm = distributedObjectCollectionManager
         self.version = None
@@ -34,7 +32,7 @@ class DistributedInventoryBase:
         self.ignoreAll()
 
     @classmethod
-    def getInventory(cls, inventoryId, callback, timeout=30):
+    def getInventory(cls, inventoryId, callback, timeout = 30):
         baseRef = __builtins__.get('simbase')
         if baseRef == None:
             baseRef = __builtins__.get('base')
@@ -50,7 +48,10 @@ class DistributedInventoryBase:
             cls.GetInvRequests.setdefault(inventoryId, {})
             cls.GetInvRequests[inventoryId][requestId] = callback
             cls.GetInvRequestId2InvId[requestId] = inventoryId
-            taskMgr.doMethodLater(timeout, cls.handleGetInventoryTimedOut, 'getInventoryTimedOut-' + str(requestId), extraArgs=[requestId, inventoryId, callback])
+            taskMgr.doMethodLater(timeout, cls.handleGetInventoryTimedOut, 'getInventoryTimedOut-' + str(requestId), extraArgs = [
+                requestId,
+                inventoryId,
+                callback])
         return requestId
 
     @classmethod
@@ -58,7 +59,6 @@ class DistributedInventoryBase:
         cls.notify.warning('inventory timed out.  requestId = %s, inventoryId = %s, callback = %s' % (requestId, inventoryId, callback))
         cls.cancelGetInventory(requestId)
         callback(None)
-        return
 
     @classmethod
     def cancelGetInventory(cls, requestId):
@@ -67,8 +67,9 @@ class DistributedInventoryBase:
             cls.GetInvRequests[inventoryId].pop(requestId)
             if len(cls.GetInvRequests[inventoryId]) == 0:
                 cls.GetInvRequests.pop(inventoryId)
+            
             taskMgr.remove('getInventoryTimedOut-' + str(requestId))
-
+    
     def getInventoryVersion(self):
         return self.version
 
@@ -94,14 +95,14 @@ class DistributedInventoryBase:
     def setCategoryLimits(self, categoriesAndLimits):
         old = self.categoryLimits
         self.categoryLimits = dict(categoriesAndLimits)
-        for category, limit in categoriesAndLimits:
+        for (category, limit) in categoriesAndLimits:
             if old.get(category, 0) != limit:
                 messenger.send('inventoryLimit-%s-%s' % (self.doId, category), [limit])
 
     def setStackLimits(self, stackTypesAndLimits):
         old = self.stackLimits
         self.stackLimits = dict(stackTypesAndLimits)
-        for t, limit in stackTypesAndLimits:
+        for (t, limit) in stackTypesAndLimits:
             if old.get(t, 0) != limit:
                 messenger.send('inventoryLimit-%s-%s' % (self.doId, t), [limit])
 
@@ -109,55 +110,54 @@ class DistributedInventoryBase:
         old = self.stacks
         self.stacks = dict(stackTypesAndQuantities)
         stacksInCategory = {}
-        for t, q in stackTypesAndQuantities:
+        for (t, q) in stackTypesAndQuantities:
             if old.get(t, 0) != q:
                 messenger.send('inventoryQuantity-%s-%s' % (self.doId, t), [q])
+            
             categoryId = InventoryId.getCategory(t)
             categoryList = stacksInCategory.setdefault(categoryId, {})
             categoryList[t] = self.stacks[t]
-
+        
         self.stacksInCategory = stacksInCategory
 
     def setDoIds(self, categoriesAndDoIds):
         old = self.doIds
-        self.doIds = dict([ (doId, category) for category, doId in categoriesAndDoIds ])
+        self.doIds = dict([(doId, category) for category, doId in categoriesAndDoIds])
         self.doIdsInCategory = {}
-        for category, doId in categoriesAndDoIds:
+        for (category, doId) in categoriesAndDoIds:
             category = self.doIdsInCategory.setdefault(category, [])
             category.append(doId)
-
-        for doId, category in old.items():
+        
+        for (doId, category) in old.items():
             if self.doIds.get(doId) is None:
-                messenger.send('inventoryRemoveDoId-%s-%s' % (self.doId, category), [
-                 doId])
+                messenger.send('inventoryRemoveDoId-%s-%s' % (self.doId, category), [doId])
                 if category == InventoryCategory.SHIPS:
                     self.removeShip(doId)
-
+        
         mightBeComplete = True
-        for doId, category in self.doIds.items():
+        for (doId, category) in self.doIds.items():
             if category == InventoryCategory.WAGERS or category == InventoryCategory.SHIPS:
                 continue
+            
             if old.get(doId) is None:
                 distObj = self.dcm.doId2do.get(doId)
                 if distObj is not None:
-                    messenger.send('inventoryAddDoId-%s-%s' % (self.doId, category), [
-                     distObj])
+                    messenger.send('inventoryAddDoId-%s-%s' % (self.doId, category), [distObj])
                     if category == InventoryCategory.QUESTS:
-                        messenger.send('QuestAddDoId-%s-%s' % (self.doId, InventoryCategory.QUESTS), [
-                         distObj])
+                        messenger.send('QuestAddDoId-%s-%s' % (self.doId, InventoryCategory.QUESTS), [distObj])
+                    
                 else:
                     self.acceptOnce('generate-%s' % (doId,), self._objectGenerated, [category])
                     mightBeComplete = False
-
+        
         self.sentReadyMessage = False
         if mightBeComplete:
             self._checkDoIdsCompletion()
-        return
 
     def setAccumulators(self, accumulatorTypesAndQuantities):
         old = self.accumulators
         self.accumulators = dict(accumulatorTypesAndQuantities)
-        for t, q in accumulatorTypesAndQuantities:
+        for (t, q) in accumulatorTypesAndQuantities:
             if old.get(t, 0) != q:
                 messenger.send('inventoryAccumulator-%s-%s' % (self.doId, t), [q])
                 if t >= InventoryType.begin_Accumulator and t <= InventoryType.end_Accumulator:
@@ -165,24 +165,25 @@ class DistributedInventoryBase:
 
     def isReady(self):
         return self.sentReadyMessage
-
+    
     def getReadyMessage(self):
         return 'inventoryReady-%s' % self.doId
 
     def _checkDoIdsCompletion(self):
-        for doId, category in self.doIds.items():
+        for (doId, category) in self.doIds.items():
             if category == InventoryCategory.WAGERS or category == InventoryCategory.SHIPS:
                 continue
+            
             if self.dcm.doId2do.get(doId) is None:
-                return
-
+                return None
+        
         self.doIdsReady = True
         self.checkIsReady()
-        return
 
     def checkIsReady(self):
         if self.sentReadyMessage:
             return
+        
         if self.doIdsReady and self.stacksReady:
             messenger.send(self.getReadyMessage(), [self])
             self.sentReadyMessage = True
@@ -190,19 +191,18 @@ class DistributedInventoryBase:
                 reqId2callback = DistributedInventoryBase.GetInvRequests.pop(self.doId)
                 for requestId in reqId2callback:
                     DistributedInventoryBase.GetInvRequestId2InvId.pop(requestId)
-
+                
                 reqIds = reqId2callback.keys()
                 reqIds.sort()
                 for reqId in reqIds:
                     callback = reqId2callback[reqId]
                     callback(self)
                     taskMgr.remove('getInventoryTimedOut-' + str(reqId))
-
+    
     def _objectGenerated(self, category, distObj):
-        messenger.send('inventoryAddDoId-%s-%s' % (self.doId, category), [
-         distObj])
+        messenger.send('inventoryAddDoId-%s-%s' % (self.doId, category), [distObj])
         self._checkDoIdsCompletion()
-
+    
     def setTemporaryInventory(self, enabled):
         if enabled:
             self.addTemporaryInventory()
@@ -212,8 +212,8 @@ class DistributedInventoryBase:
     def setTemporaryStack(self, stackType, amount):
         self.temporaryInventory[stackType] = amount
         messenger.send('inventoryChanged-%s' % self.ownerId)
-
-    def maxInventory(self, item, amount=None):
+    
+    def maxInventory(self, item, amount = None):
         if amount:
             self.temporaryInventory[item] = amount
         else:
@@ -263,40 +263,42 @@ class DistributedInventoryBase:
     def removeTemporaryInventory(self):
         self.temporaryInventory.clear()
         self.useTemporaryInventory = False
-
+    
     def computeCategoryCounts(self):
         counts = {}
         for category in self.doIds.values():
             counts[category] = counts.get(category, 0) + 1
-
+        
         for stackType in self.stacks.keys():
             category = InventoryId.getCategory(stackType)
             if category:
                 counts[category] = counts.get(category, 0) + 1
-
+        
         self.categoryCounts = counts
 
+    
     def getStacksInCategory(self, category):
-        return self.stacksInCategory.get(category, {})
+        return self.stacksInCategory.get(category, { })
 
+    
     def getDoList(self, category):
         dos = []
         for doId in self.doIdsInCategory.get(category, []):
             do = self.dcm.doId2do.get(doId)
             if do is not None:
                 dos.append(do)
-
+        
         return dos
-
+    
     def getDoIdListCategory(self, category):
         return self.doIdsInCategory.get(category, [])
 
     def getCategoryLimit(self, category):
         return self.categoryLimits.get(category, 0)
-
+    
     def getStackLimit(self, stackType):
         return self.stackLimits.get(stackType, 0)
-
+    
     def getStackQuantity(self, stackType):
         if self.useTemporaryInventory:
             return self.temporaryInventory.get(stackType, self.stacks.get(stackType, 0))
@@ -316,22 +318,22 @@ class DistributedInventoryBase:
 
     def getAccumulator(self, accumulatorType):
         return self.accumulators.get(accumulatorType, 0)
-
+    
     def getGoldInPocket(self):
         return self.getStackQuantity(InventoryType.GoldInPocket)
 
     def getNewPlayerToken(self):
         return self.getStackQuantity(InventoryType.NewPlayerToken)
-
+    
     def getNewShipToken(self):
         return self.getStackQuantity(InventoryType.NewShipToken)
-
+    
     def getNewWeaponToken(self):
         return self.getStackQuantity(InventoryType.NewWeaponToken)
-
+    
     def getShipRepairToken(self):
         return self.getStackQuantity(InventoryType.ShipRepairToken)
-
+    
     def getPlayerHealToken(self):
         return self.getStackQuantity(InventoryType.PlayerHealToken)
 
@@ -340,7 +342,7 @@ class DistributedInventoryBase:
 
     def getWeapons(self):
         return self.getStacksInCategory(InventoryCategory.WEAPONS)
-
+    
     def getConsumables(self):
         return self.getStacksInCategory(InventoryCategory.CONSUMABLES)
 
@@ -350,10 +352,10 @@ class DistributedInventoryBase:
 
     def getCutlassWeapon(self):
         return self.getStackQuantity(InventoryType.CutlassWeaponL1)
-
+    
     def getReputation(self, category):
         return self.accumulators.get(category, 0)
-
+    
     def getDinghy(self):
         return self.getStackQuantity(InventoryType.Dinghy)
 
@@ -395,7 +397,7 @@ class DistributedInventoryBase:
 
     def getShipDoIdList(self):
         shipIds = self.getDoIdListCategory(InventoryCategory.SHIPS)
-        shipIds.sort(reverse=True)
+        shipIds.sort(reverse = True)
         return shipIds
 
     def getShipMainpartsList(self):
@@ -403,21 +405,23 @@ class DistributedInventoryBase:
 
     def getShipMainpartsDoIdList(self):
         return self.getDoIdListCategory(InventoryCategory.SHIP_MAINPARTS)
-
+    
     def getShipAccessoriesList(self):
         return self.getDoList(InventoryCategory.SHIP_ACCESSORIES)
 
     def getShipAccessoriesDoIdList(self):
         return self.getDoIdListCategory(InventoryCategory.SHIP_ACCESSORIES)
-
+    
     def getTreasureMapsList(self):
         return self.getDoList(InventoryCategory.TREASURE_MAPS)
-
+    
     def getWagerList(self):
         return self.getDoList(InventoryCategory.WAGERS)
-
+    
     def getFlagList(self):
         return self.getDoList(InventoryCategory.FLAGS)
-
+    
     def removeShip(self, shipId):
         pass
+
+

@@ -1,9 +1,11 @@
-from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
+from direct.distributed.ClockDelta import *
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed import DistributedObject
+from pirates.uberdog.UberDogGlobals import *
 
-
-class DistributedInventoryManager(DistributedObjectGlobal):
+class DistributedInventoryManager(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('InventoryManager')
-
+    
     def sendRequestInventory(self):
         self.sendUpdate('requestInventory', [])
+
