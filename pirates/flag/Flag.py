@@ -1,20 +1,18 @@
 if __name__ == '__main__':
     from direct.directbase import DirectStart
 
-from panda3d.core import *
-from pirates.flag import FlagGlobals
-from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
 from direct.showbase.PythonUtil import *
-from pirates.flag.FlagDNA import FlagDNA
-
+import FlagGlobals
+from FlagDNA import FlagDNA
 
 class Flag(NodePath):
-
     notify = directNotify.newCategory('Flag')
     BgSortOffset = 10
     EmblemSortOffset = 20
-
+    
     def __init__(self, name):
         NodePath.__init__(self, name)
         self.cm = CardMaker(name)
@@ -31,7 +29,7 @@ class Flag(NodePath):
 
     def __repr__(self):
         return NodePath.__repr__(self)
-
+    
     def __str__(self):
         outStr = str(self.dna)
         outStr += '\n'
@@ -40,11 +38,11 @@ class Flag(NodePath):
 
     def getDNAString(self):
         return self.dna.getDNAString()
-
+    
     def setDNAString(self, dnaStr):
         self.dna.setDNAString(dnaStr)
         self.activate()
-
+    
     def __setBaseModelColor(self, color):
         geom = self.__model.node().modifyGeom(0)
         vertexData = geom.modifyVertexData()
@@ -54,13 +52,14 @@ class Flag(NodePath):
 
     def activate(self):
         self.__activate()
-
+    
     def __activate(self):
         self.clearColor()
         self.clearTexture()
-        self.get_children().detach()
+        self.removeChildren()
         if self.node().getNumGeoms() > 0:
             self.node().removeGeom(0)
+        
         self.__setBaseModelColor(Vec4(1, 1, 1, 0))
         np = self.__model.copyTo(NodePath('blank'))
         self.node().addGeomsFrom(np.node())
@@ -78,7 +77,7 @@ class Flag(NodePath):
         self.__setBgStyle()
         for x in range(4):
             self.__setBgColor(x)
-
+        
         self.__setBgHFlip()
         self.__setBgVFlip()
         self.__setLayoutStyle()
@@ -87,13 +86,14 @@ class Flag(NodePath):
         self.__setLayoutRVal()
         self.__setLayoutScale()
         self.__activateEmblems()
-
+    
     def __activateEmblems(self):
-        oldEmblemNps = self.findAllMatches('**/emblem-*')
+        oldEmblemNps = self.findAllMatches('**/emblem-*').asList()
         for np in oldEmblemNps:
             np.detachNode()
+            np.remove()
             np.removeNode()
-
+        
         del oldEmblemNps
         for enum in self.getEmblemIndices():
             self.__activateEmblem(enum)
@@ -101,41 +101,42 @@ class Flag(NodePath):
     def __activateEmblem(self, index):
         self.__setEmblemStyle(index)
         self.__updateEmblem(index)
-
-    def flatten(self, callback=None):
+    
+    def flatten(self, callback = None):
         portraitSceneGraph = NodePath('PortraitSceneGraph')
         portraitSceneGraph.setTransparency(1)
         flagCopy = self.copyTo(portraitSceneGraph)
         flagCopy.setY(10)
         par = base.win.makeTextureBuffer('par', 256, 256)
         par.setOneShot(True)
-        parcam = base.makeCamera(win=par, scene=portraitSceneGraph, clearColor=Vec4(0), lens=OrthographicLens())
+        parcam = base.makeCamera(win = par, scene = portraitSceneGraph, clearColor = Vec4(0), lens = OrthographicLens())
         parcam.reparentTo(portraitSceneGraph)
         tex = par.getTexture()
         tex.setWrapU(Texture.WMClamp)
         tex.setWrapV(Texture.WMClamp)
         self.setTexture(tex, 1)
         self.setColor(Vec4(1))
-
-        def completeFlatten(par=par, tex=tex):
+        
+        def completeFlatten(par = par, tex = tex):
             if not par.isActive():
-                self.get_children().detach()
+                self.removeChildren()
                 self.clearEffect(DecalEffect.make().getType())
                 if callback:
                     callback()
+                
             else:
-                taskMgr.doMethodLater(0, completeFlatten, 'cleanUp', extraArgs=[])
+                taskMgr.doMethodLater(0, completeFlatten, 'cleanUp', extraArgs = [])
 
         completeFlatten()
         return tex
 
     def getShapeStyle(self):
         return self.dna.getShapeStyle()
-
+    
     def setShapeStyle(self, val):
         self.dna.setShapeStyle(val)
         self.__activate()
-
+    
     def __setShapeStyle(self):
         val = self.getShapeStyle()
         self.shapeTex = self.shapeNode.findTexture('*_%02d' % val)
@@ -147,36 +148,38 @@ class Flag(NodePath):
         return self.dna.getBackgroundStyle()
 
     def setBgStyle(self, val):
-        self.dna.setBackground(style=val)
+        self.dna.setBackground(style = val)
         self.__setBgStyle()
         for x in range(4):
             self.__setBgColor(x)
-
+        
         self.__setBgHFlip()
         self.__setBgVFlip()
 
     def __setBgStyle(self):
-        oldBgNps = self.findAllMatches('**/bg-*')
+        oldBgNps = self.findAllMatches('**/bg-*').asList()
         for np in oldBgNps:
             np.detachNode()
+            np.remove()
             np.removeNode()
-
+        
         del oldBgNps
         val = self.dna.bgData[0]
         bgTexCol = self.bgNode.findAllTextures('*_%02d_*' % val)
-        bgTexCol = [ bgTexCol[x] for x in range(bgTexCol.getNumTextures()) ]
-        sortDict = dict(zip([ `x` for x in bgTexCol ], bgTexCol))
+        bgTexCol = [bgTexCol[x] for x in range(bgTexCol.getNumTextures())]
+        sortDict = dict(zip([`x` for x in bgTexCol], bgTexCol))
         keys = sortDict.keys()
         keys.sort()
-        bgTexCol = [ sortDict[name] for name in keys ]
+        bgTexCol = [sortDict[name] for name in keys]
         for bgnum in range(0, len(bgTexCol) + 1):
-            bgNp = self.__model.copyTo(self, sort=self.BgSortOffset + bgnum)
+            bgNp = self.__model.copyTo(self, sort = self.BgSortOffset + bgnum)
             bgNp.setName('bg-%d (style: %02d)' % (bgnum, val))
             if bgnum > 0:
                 tex = bgTexCol[bgnum - 1]
                 tex.setWrapU(Texture.WMClamp)
                 tex.setWrapV(Texture.WMClamp)
                 bgNp.setTexture(TextureStage.getDefault(), tex)
+            
             bgNp.setTexture(self.texTs, self.texTex)
             bgNp.setTexture(self.shapeTs, self.shapeTex)
             bgNp.setTexTransform(self.shapeTs, TransformState.makeScale2d(Vec2(0.995, 1.0)))
@@ -188,7 +191,7 @@ class Flag(NodePath):
         if 0 <= index < 4 and val < len(FlagGlobals.Colors):
             eval('self.dna.setBackground(color_%d = val)' % index)
             self.__setBgColor(index)
-
+    
     def __setBgColor(self, index):
         val = self.getBgColor(index)
         bgNp = self.find('**/bg-%d*' % index)
@@ -199,39 +202,45 @@ class Flag(NodePath):
         return self.dna.getBackgroundHorizontalFlip()
 
     def setBgHFlip(self, val):
-        self.dna.setBackground(hFlip=val)
+        self.dna.setBackground(hFlip = val)
         self.__setBgHFlip()
 
     def __setBgHFlip(self):
         val = self.getBgHFlip()
-        bgNpCol = self.findAllMatches('**/bg-*')
+        bgNpCol = self.findAllMatches('**/bg-*').asList()
         scale = [
-         1.0, 1.0]
+            1.0,
+            1.0]
         if val:
             scale[0] *= -1
+        
         bgTexTransform = bgNpCol[0].getTexTransform(TextureStage.getDefault())
         if bgTexTransform.getPos()[1]:
             scale[1] *= -1
+        
         for bgNp in bgNpCol:
             self.__updateBackgroundStageRaw(bgNp, TextureStage.getDefault(), scale)
 
     def getBgVFlip(self):
         return self.dna.getBackgroundVerticalFlip()
-
+    
     def setBgVFlip(self, val):
-        self.dna.setBackground(vFlip=val)
+        self.dna.setBackground(vFlip = val)
         self.__setBgVFlip()
 
     def __setBgVFlip(self):
         val = self.getBgVFlip()
-        bgNpCol = self.findAllMatches('**/bg-*')
+        bgNpCol = self.findAllMatches('**/bg-*').asList()
         scale = [
-         1.0, 1.0]
+            1.0,
+            1.0]
         bgTexTransform = bgNpCol[0].getTexTransform(TextureStage.getDefault())
         if bgTexTransform.getPos()[0]:
             scale[0] *= -1
+        
         if val:
             scale[1] *= -1
+        
         for bgNp in bgNpCol:
             self.__updateBackgroundStageRaw(bgNp, TextureStage.getDefault(), scale)
 
@@ -239,7 +248,7 @@ class Flag(NodePath):
         return self.dna.getLayoutStyle()
 
     def setLayoutStyle(self, val):
-        self.dna.setLayout(style=val)
+        self.dna.setLayout(style = val)
         self.__setLayoutStyle()
 
     def __setLayoutStyle(self):
@@ -248,14 +257,14 @@ class Flag(NodePath):
         for x in self.getEmblemIndices():
             newPos = PythonUtil.clampScalar(self.getEmblemPos(x), 0, ePosMax)
             self.setEmblemPos(x, newPos)
-
+    
     def getLayoutXPos(self):
         return self.dna.getLayoutXPos()
 
     def setLayoutXPos(self, val):
-        self.dna.setLayout(xpos=val)
+        self.dna.setLayout(xpos = val)
         self.__setLayoutXPos()
-
+    
     def __setLayoutXPos(self):
         for x in self.getEmblemIndices():
             self.__updateEmblem(x)
@@ -264,7 +273,7 @@ class Flag(NodePath):
         return self.dna.getLayoutYPos()
 
     def setLayoutYPos(self, val):
-        self.dna.setLayout(ypos=val)
+        self.dna.setLayout(ypos = val)
         self.__setLayoutYPos()
 
     def __setLayoutYPos(self):
@@ -275,7 +284,7 @@ class Flag(NodePath):
         return self.dna.getLayoutRVal()
 
     def setLayoutRVal(self, val):
-        self.dna.setLayout(rval=val)
+        self.dna.setLayout(rval = val)
         self.__setLayoutRVal()
 
     def __setLayoutRVal(self):
@@ -286,31 +295,33 @@ class Flag(NodePath):
         return self.dna.getLayoutScale()
 
     def setLayoutScale(self, val):
-        self.dna.setLayout(scale=val)
+        self.dna.setLayout(scale = val)
         self.__setLayoutScale()
 
     def __setLayoutScale(self):
         for x in self.getEmblemIndices():
             self.__updateEmblem(x)
 
-    def addEmblem(self, index=-1, location=-1):
+    def addEmblem(self, index = -1, location = -1):
         takenIndices = self.getEmblemIndices()
         if index not in takenIndices:
             if index < 0:
-                availableIndices = [ x for x in range(16) if x not in takenIndices ]
+                availableIndices = [x for x in range(16) if x not in takenIndices]
                 index = availableIndices[0]
+            
             if location < 0:
-                self.dna.setEmblem(index, pos=self.dna.getRandomEmblemPos(index))
-            self.dna.setEmblem(index, pos=location)
+                self.dna.setEmblem(index, pos = self.dna.getRandomEmblemPos(index))
+            
+            self.dna.setEmblem(index, pos = location)
             self.__activateEmblem(index)
             return index
-        return
+        return None
 
     def getEmblemStyle(self, index):
         return self.dna.getEmblemStyle(index)
 
     def setEmblemStyle(self, index, styleVal):
-        self.dna.setEmblem(index, style=styleVal)
+        self.dna.setEmblem(index, style = styleVal)
         self.__activateEmblem(index)
 
     def __setEmblemStyle(self, index):
@@ -321,9 +332,11 @@ class Flag(NodePath):
         oldNp = self.find('**/emblem-%02d*' % index)
         if not oldNp.isEmpty():
             oldNp.detachNode()
+            oldNp.remove()
             oldNp.removeNode()
+        
         del oldNp
-        eNp = self.__model.copyTo(self, sort=self.EmblemSortOffset + index)
+        eNp = self.__model.copyTo(self, sort = self.EmblemSortOffset + index)
         eNp.setName('emblem-%02d (style: %02d)' % (index, val))
         eNp.setTexture(eTex, 1)
         eNp.setTexture(self.texTs, self.texTex)
@@ -333,9 +346,9 @@ class Flag(NodePath):
 
     def getEmblemColor(self, index):
         return self.dna.getEmblemColor(index)
-
+    
     def setEmblemColor(self, index, val):
-        self.dna.setEmblem(index, color=val)
+        self.dna.setEmblem(index, color = val)
         self.__setEmblemColor(index)
 
     def __setEmblemColor(self, index):
@@ -343,7 +356,7 @@ class Flag(NodePath):
         if index in self.getEmblemIndices():
             eNp = self.find('**/emblem-%02d*' % index)
             eNp.setColorScale(FlagGlobals.Colors[val])
-
+    
     def getEmblemPos(self, index):
         return self.dna.getEmblemPos(index)
 
@@ -368,9 +381,9 @@ class Flag(NodePath):
 
     def getEmblemScale(self, index):
         return self.dna.getEmblemScale(index)
-
+    
     def setEmblemScale(self, index, val):
-        self.dna.setEmblem(index, scale=val)
+        self.dna.setEmblem(index, scale = val)
         self.__setEmblemScale(index)
 
     def __setEmblemScale(self, index):
@@ -383,7 +396,7 @@ class Flag(NodePath):
 
     def getNumBgColorsUsed(self):
         return self.bgNode.findAllMatches('**/*_%02d_*' % self.dna.getBackgroundStyle()).getNumPaths() + 1
-
+    
     def getNumEmblems(self):
         return self.dna.getNumEmblems()
 
@@ -402,7 +415,9 @@ class Flag(NodePath):
     def __updateEmblem(self, index):
         eNp = self.find('**/emblem-%02d (style: *)' % index)
         self.__updateEmblemStage(eNp, TextureStage.getDefault(), [
-         self.getEmblemPos(index), self.getEmblemRVal(index), self.getEmblemScale(index)])
+            self.getEmblemPos(index),
+            self.getEmblemRVal(index),
+            self.getEmblemScale(index)])
 
     def __updateEmblemStage(self, np, stage, eData):
         if not np.isEmpty():
@@ -411,7 +426,7 @@ class Flag(NodePath):
             eScl = FlagGlobals.EmblemScales[eData[2]]
             self.__updateEmblemStageRaw(np, stage, ePos, eRot, eScl)
 
-    def __updateEmblemStageRaw(self, np, stage, position, rotation, scale, relToLayout=True):
+    def __updateEmblemStageRaw(self, np, stage, position, rotation, scale, relToLayout = True):
         if not np.isEmpty():
             ePos = Vec2(*position)
             eRot = rotation
@@ -437,7 +452,7 @@ class Flag(NodePath):
         pt = Vec2(*FlagGlobals.LayoutOffsets[self.getLayoutStyle()][posIndex])
         lXForm = TransformState.makePosRotateScale2d(lPos, lRot, Vec2(lScl)).compose(corner)
         return lXForm.getMat3().xformPoint(pt)
-
+    
     def modifyStageRaw(self, np, stage, position, rotation, scale):
         if not np.isEmpty():
             pos = position
@@ -448,10 +463,10 @@ class Flag(NodePath):
             final = xForm.invertCompose(TransformState.makeIdentity())
             np.setTexTransform(stage, final)
 
-    def randomize(self, shape=False, bg=False, emblems=False):
+    def randomize(self, shape = False, bg = False, emblems = False):
         self.dna.randomize(shape, bg, emblems)
         self.activate()
-
+    
     def flattenEmblemIndices(self):
         self.dna.flattenEmblemIndices()
         self.activate()
@@ -470,3 +485,4 @@ if __name__ == '__main__':
     print `f`
     base.mouseInterface.node().setPos(0, 3, 0)
     run()
+
