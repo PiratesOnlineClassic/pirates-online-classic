@@ -1,18 +1,19 @@
-import random
-
-from pirates.ship import ShipPilot
-from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
 from direct.showbase.PythonUtil import report
-from direct.task import Task
-from panda3d.core import *
-from pirates.cutscene import Cutscene, CutsceneData
-from pirates.effects.DarkWaterFog import DarkWaterFog
-from pirates.piratesbase import (PiratesGlobals, PLocalizer, TimeOfDayManager, TODGlobals)
+from direct.interval.IntervalGlobal import *
+from pirates.treasuremap import DistributedTreasureMapInstance, TreasureMapBlackPearlGlobals
 from pirates.ship import ShipGlobals
-from pirates.treasuremap import (DistributedTreasureMapInstance, TreasureMapBlackPearlGlobals, TreasureMapRulesPanel)
-from pirates.uberdog import DistributedInventoryBase
+from pirates.piratesbase import PiratesGlobals
+from pirates.cutscene import Cutscene, CutsceneData
 from pirates.world import FortBarricade
-
+from pirates.piratesbase import PLocalizer
+from pirates.effects.DarkWaterFog import DarkWaterFog
+from pirates.piratesbase import TimeOfDayManager, TODGlobals
+from pirates.treasuremap import TreasureMapRulesPanel
+from pirates.uberdog import DistributedInventoryBase
+from direct.task import Task
+from direct.controls import ShipPilot2
+import random
 
 class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMapInstance):
     notify = directNotify.newCategory('TreasureMapBlackPearl')
@@ -41,7 +42,16 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         self.barricadesDestroyed = []
         self.barricadesWarned = []
         self.fortIdToUidDict = {}
-        self.stageInstructions = [PLocalizer.BlackPearlStageZero, PLocalizer.BlackPearlStageOne, PLocalizer.BlackPearlStageTwo, PLocalizer.BlackPearlStageThree, PLocalizer.BlackPearlStageFour, PLocalizer.BlackPearlLoser, PLocalizer.BlackPearlWinner, PLocalizer.BlackPearlWaitCutscene, PLocalizer.BlackPearlWaitCutscene2]
+        self.stageInstructions = [
+            PLocalizer.BlackPearlStageZero,
+            PLocalizer.BlackPearlStageOne,
+            PLocalizer.BlackPearlStageTwo,
+            PLocalizer.BlackPearlStageThree,
+            PLocalizer.BlackPearlStageFour,
+            PLocalizer.BlackPearlLoser,
+            PLocalizer.BlackPearlWinner,
+            PLocalizer.BlackPearlWaitCutscene,
+            PLocalizer.BlackPearlWaitCutscene2]
         from pirates.ship import ShipGlobals
         if launcher.getPhaseComplete(5):
             ShipGlobals.preprocessBlackPearl()
@@ -65,31 +75,39 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         DistributedTreasureMapInstance.DistributedTreasureMapInstance.delete(self)
         if self.pearl:
             self.pearl.localAvatarExitShip()
+        
         if self.newEventSphereNodePath:
             self.newEventSphereNodePath.removeNode()
             self.newEventSphereNodePath = None
+        
         if self.camIval:
             self.camIval.pause()
             self.camIval = None
+        
         if self.rulesPanel:
             self.rulesPanel.destroy()
             self.rulesPanel = None
+        
         if self.stageFourIval:
             self.stageFourIval.pause()
             self.stageFourIval = None
+        
         if self.stageFourCutscene:
             self.stopPearlAndGoliathCopy()
+        
         taskMgr.remove('fireNPCCannon')
         taskMgr.remove('disablePearlInteractions')
         self.stopCutsceneTask()
         if self.fortRequest:
             if self.cr and self.cr.relatedObjectMgr:
                 self.cr.relatedObjectMgr.abortRequest(self.fortRequest)
+
         if self.pearlRequest:
             if self.cr and self.cr.relatedObjectMgr:
                 self.cr.relatedObjectMgr.abortRequest(self.pearlRequest)
+
         base.musicMgr.requestFadeOut('victory')
-        base.musicMgr.request('island-general', priority=1)
+        base.musicMgr.request('island-general', priority = 1)
         self.customTimeOfDayOff()
         self.ignoreAll()
 
@@ -99,7 +117,7 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         self.customTimeOfDayOn()
         f = render.getFog()
         f.setLinearRange(500, 2500)
-
+    
     def startCutsceneTask(self):
         if not taskMgr.hasTaskNamed('tryToGoToStageOneTask'):
             taskMgr.doMethodLater(0.5, self.tryToStartCutscene, 'tryToGoToCutscene')
@@ -113,9 +131,10 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         if not pier.isEmpty() and 'Teleport' not in localAvatar.gameFSM.state:
             self.playCutscene()
             return Task.done
-        task.delayTime = 0.2
-        return Task.again
-
+        else:
+            task.delayTime = 0.2
+            return Task.again
+    
     def __requestState(self, state):
         self.sendUpdate('requestState', [state])
 
@@ -123,28 +142,30 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
     def setFortIds(self, fortIds):
         self.fortIds = fortIds
         self.cr.relatedObjectMgr.abortRequest(self.fortRequest)
-        self.fortRequest = self.cr.relatedObjectMgr.requestObjects(self.fortIds, eachCallback=self.__gotOneFort)
-
+        self.fortRequest = self.cr.relatedObjectMgr.requestObjects(self.fortIds, eachCallback = self.__gotOneFort)
+    
     def __gotOneFort(self, fort):
         self.notify.debug('got one fort %s' % fort)
         if self.state == 'StageThree' or self.state == 'StageFour':
             fort.showFortHpMeter()
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
-    def setState(self, state, timestamp=None):
+    def setState(self, state, timestamp = None):
         self.request(state)
-
+    
     def setBlackPearlId(self, doId):
         self.pearlId = doId
         self.pearl = base.cr.doId2do.get(doId)
         if not self.pearl:
             self.cr.relatedObjectMgr.abortRequest(self.pearlRequest)
-            self.pearlRequest = self.cr.relatedObjectMgr.requestObjects([self.pearlId], eachCallback=self.__gotPearl)
+            self.pearlRequest = self.cr.relatedObjectMgr.requestObjects([
+                self.pearlId], eachCallback = self.__gotPearl)
 
     def getPearl(self):
         if self.pearlId:
             pearl = base.cr.doId2do.get(self.pearlId)
             return pearl
+        return None
 
     def __gotPearl(self, pearl):
         self.pearlRequest = None
@@ -163,8 +184,9 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         self.goliathId = doId
         self.goliath = base.cr.doId2do.get(doId)
         if not self.goliath:
-            base.cr.relatedObjectMgr.requestObjects([self.goliathId], allCallback=self.__gotGoliath)
-
+            base.cr.relatedObjectMgr.requestObjects([
+                self.goliathId], allCallback = self.__gotGoliath)
+    
     def setAttackShipIds(self, shipIds):
         self.attackShipIds = shipIds
         for shipId in shipIds:
@@ -212,8 +234,9 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         base.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_DEFAULT)
         if base.cr.timeOfDayManager.cycleType == TODGlobals.TOD_REGULAR_CYCLE:
             base.cr.timeOfDayManager.request(base.cr.timeOfDayManager.getStateName(PiratesGlobals.TOD_NIGHT), 0)
+        
         base.cr.timeOfDayManager.pause()
-
+    
     def stashGoliath(self):
         if self.goliath:
             self.goliath.stash()
@@ -228,6 +251,7 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         blackPearl = self.getPearl()
         if blackPearl:
             blackPearl.unstash()
+        
         if self.goliath:
             self.goliath.unstash()
 
@@ -242,19 +266,20 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         if not self.messageHolder:
             self.messageHolder = aspect2d.attachNewNode('message')
             self.rulesPanel = TreasureMapRulesPanel.TreasureMapRulesPanel(PLocalizer.BlackPearlTMName, PLocalizer.BlackPearlStageOne, self.messageHolder)
+        
         self.messageHolder.setPos(Vec3(0, 0, 0.85))
         instructions = self.stageInstructions[stage]
         self.rulesPanel.setInstructions(instructions)
         self.rulesPanel.show()
-
+    
     def _startFog(self):
-        self._fog = DarkWaterFog(radius=500)
+        self._fog = DarkWaterFog(radius = 500)
         self._fog.reparentTo(localAvatar)
         self._fog.p0.renderer.getColorInterpolationManager().addConstant(0.0, 1.0, Vec4(0.9, 0.9, 0.9, 0.4), 1)
         self._fog.p0.renderer.getColorInterpolationManager().clearSegment(1)
         self._fog.startLoop()
         self._moveFogDownEvent = 'moveFogDown'
-        taskMgr.add(self._fogPositionTask, self._moveFogDownEvent, priority=49)
+        taskMgr.add(self._fogPositionTask, self._moveFogDownEvent, priority = 49)
 
     def _stopFog(self):
         if hasattr(self, '_fog'):
@@ -279,14 +304,14 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def enterStageOne(self):
-        ShipPilot.ShipPilot.MAX_STRAIGHT_SAIL_BONUS = 0
+        ShipPilot2.ShipPilot2.MAX_STRAIGHT_SAIL_BONUS = 0
         self.stashPortCollision()
         self.stashPearlAndGoliath()
         island = self.islands.values()[0]
         island.turnOn()
         island.forceZoneLevel(0)
         self.startCutsceneTask()
-
+    
     def setReadyToPlayCutscene(self):
         self.readyToPlayCutscene = 1
         if self.state == 'StageOne':
@@ -299,7 +324,7 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         self.cutscene.play()
         self.cutscene.allowSkip = False
         self.acceptOnce('cutscene-not-skipped', self.tryToEndCutscene)
-
+    
     def tryToEndCutscene(self):
         if self.requestEndCutSent == False:
             self.requestEndCutSent = True
@@ -311,6 +336,7 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         if self.messageHolder:
             self.messageHolder.removeNode()
             self.messageHolder = None
+        
         self.stageOneCutsceneDone()
 
     def displayCutsceneMessage(self, doId, messageNum):
@@ -318,8 +344,9 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
             if not self.messageHolder or messageNum:
                 if self.messageHolder:
                     self.messageHolder.removeNode()
+                
                 self.messageHolder = render2d.attachNewNode('message')
-                self.rulesPanel = TreasureMapRulesPanel.TreasureMapRulesPanel(PLocalizer.BlackPearlTMName, self.stageInstructions[8 - messageNum], self.messageHolder, duration=45.0)
+                self.rulesPanel = TreasureMapRulesPanel.TreasureMapRulesPanel(PLocalizer.BlackPearlTMName, self.stageInstructions[8 - messageNum], self.messageHolder, duration = 45.0)
                 self.messageHolder.setPos(Vec3(0, 0, 1.0))
                 self.messageHolder.setScale(Vec3(0.75, 1, 1))
                 self.rulesPanel.show()
@@ -329,8 +356,8 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         if self.cutscene:
             self.cutscene.destroy()
             self.cutscene = None
-
-    def filterStageOne(self, request, args=[]):
+    
+    def filterStageOne(self, request, args = []):
         if request in ['StageTwo', 'NotCompleted']:
             return self.defaultFilter(request, args)
         elif __dev__ and request in ['StageFour']:
@@ -339,8 +366,8 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def stageOneCutsceneDone(self):
         self.acceptOnce('localAvBoardedShip-' + str(self.pearlId), self.handleBoardedPearl)
-        self.cr.teleportMgr.localTeleportToId(self.pearlId, localAvatar, showLoadingScreen=False)
-
+        self.cr.teleportMgr.localTeleportToId(self.pearlId, localAvatar, showLoadingScreen = False)
+    
     def setupCaptureSphere(self, parent):
         if not self.newEventSphereNodePath:
             newEventSphere = CollisionSphere(1447, -2363, 0, 1300)
@@ -405,17 +432,19 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         currentInteractive = base.cr.interactionMgr.getCurrentInteractive()
         if currentInteractive:
             currentInteractive.requestExit()
+        
         localAvatar.cameraFSM.request('Control')
         base.silenceInput()
         for fortId in self.fortIds:
             fort = base.cr.doId2do.get(fortId)
             if fort:
                 fort.setDrawbridgesLerpR(1)
-
+        
         base.transitions.letterboxOn()
         if self.camIval:
             self.camIval.pause()
             self.camIval = None
+        
         camera.wrtReparentTo(render)
         self.camIval = self.getCameraMove1()
         self.camIval.start()
@@ -423,19 +452,19 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def exitStageTwo(self):
         self.camIval.finish()
-
-    def filterStageTwo(self, request, args=[]):
+    
+    def filterStageTwo(self, request, args = []):
         if request in ['StageThree', 'NotCompleted']:
             return self.defaultFilter(request, args)
 
     def getCameraMove1(self):
         firstShipId = self.attackShipIds[0]
         firstShip = self.cr.doId2do[firstShipId]
-
+        
         def lerpLookAtAttackShip(t):
             if firstShip and not firstShip.isEmpty():
                 camera.lookAt(firstShip)
-
+        
         def headsUpFirstShip():
             if firstShip and not firstShip.isEmpty():
                 localAvatar.headsUp(firstShip)
@@ -455,7 +484,7 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         pos0 = Point3(0, 10, 0)
         pos1 = Point3(50, 100, 400)
         camera.lookAt(firstShip)
-        ival = Sequence(Func(aspect2d.hide), Func(base.transitions.letterboxOn), Parallel(LerpPosInterval(camera, 5, pos1, startPos=pos0, blendType='easeInOut'), LerpFunc(lerpLookAtAttackShip, 10)), Func(base.transitions.fadeOut), Func(base.transitions.letterboxOff), Wait(1.0), Func(headsUpFirstShip), Func(gotoFps), Func(base.transitions.fadeIn), Func(localAvatar.setH, 120), Func(dummyNode.removeNode), Func(self.showRulesPanel, 2), Func(base.reviveInput), Func(aspect2d.show))
+        ival = Sequence(Func(aspect2d.hide), Func(base.transitions.letterboxOn), Parallel(LerpPosInterval(camera, 5, pos1, startPos = pos0, blendType = 'easeInOut'), LerpFunc(lerpLookAtAttackShip, 10)), Func(base.transitions.fadeOut), Func(base.transitions.letterboxOff), Wait(1.0), Func(headsUpFirstShip), Func(gotoFps), Func(base.transitions.fadeIn), Func(localAvatar.setH, 120), Func(dummyNode.removeNode), Func(self.showRulesPanel, 2), Func(base.reviveInput), Func(aspect2d.show))
         return ival
 
     def getStageFourIval(self):
@@ -465,9 +494,9 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         hpr1 = Point3(112, 0, 0)
         dummyNode = self.pearlCopy.attachNewNode('cameraDummy')
         dummyNode.setH(180)
-        ival = Sequence(Func(aspect2d.hide), Func(base.transitions.fadeOut), Wait(1.0), Func(localAvatar.cameraFSM.request, 'Control'), Func(camera.wrtReparentTo, render), Func(camera.reparentTo, dummyNode), Func(base.transitions.letterboxOn), Func(self.startPearlAndGoliathCopy), Func(base.transitions.fadeIn), Parallel(LerpPosInterval(camera, 14, pos1, startPos=pos0, blendType='easeInOut'), LerpHprInterval(camera, 10, hpr1, startHpr=hpr0, blendType='easeInOut')), Func(base.transitions.letterboxOff), Func(base.transitions.fadeOut))
+        ival = Sequence(Func(aspect2d.hide), Func(base.transitions.fadeOut), Wait(1.0), Func(localAvatar.cameraFSM.request, 'Control'), Func(camera.wrtReparentTo, render), Func(camera.reparentTo, dummyNode), Func(base.transitions.letterboxOn), Func(self.startPearlAndGoliathCopy), Func(base.transitions.fadeIn), Parallel(LerpPosInterval(camera, 14, pos1, startPos = pos0, blendType = 'easeInOut'), LerpHprInterval(camera, 10, hpr1, startHpr = hpr0, blendType = 'easeInOut')), Func(base.transitions.letterboxOff), Func(base.transitions.fadeOut))
         return ival
-
+    
     def startPearlAndGoliathCopy(self):
         pearlStartPos = Point3(-483, -5813, 0)
         pearlStartHpr = Point3(354, 0, 0)
@@ -480,8 +509,9 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
             pearlWake.instanceTo(wake)
             self.pearl.wake.startFakeAnimate()
             wake.setH(180)
+        
         self.pearl.hide()
-        self.pearlCopyIval = LerpPosHprInterval(self.pearlCopy, 16.0, pearlEndPos, pearlEndHpr, startPos=pearlStartPos, startHpr=pearlStartHpr)
+        self.pearlCopyIval = LerpPosHprInterval(self.pearlCopy, 16.0, pearlEndPos, pearlEndHpr, startPos = pearlStartPos, startHpr = pearlStartHpr)
         self.pearlCopyIval.start()
         goliathStartPos = Point3(1672, -6688, 0)
         goliathStartHpr = Point3(328, 0, 0)
@@ -494,10 +524,11 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
             goliathWake.instanceTo(wake)
             self.goliath.wake.startFakeAnimate()
             wake.setH(180)
+        
         self.goliathCopy.setScale(1.25)
         self.goliath.hide()
         self.goliathCopyIval = Sequence(Wait(4.0))
-        self.goliathCopyIval.append(LerpPosHprInterval(self.goliathCopy, 16.0, goliathEndPos, goliathEndHpr, startPos=goliathStartPos, startHpr=goliathStartHpr))
+        self.goliathCopyIval.append(LerpPosHprInterval(self.goliathCopy, 16.0, goliathEndPos, goliathEndHpr, startPos = goliathStartPos, startHpr = goliathStartHpr))
         self.goliathCopyIval.start()
 
     def stopPearlAndGoliathCopy(self):
@@ -505,39 +536,45 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
             self.pearlCopyIval.pause()
             self.pearlCopy.detachNode()
             self.pearlCopyIval = None
+        
         if self.goliathCopyIval:
             self.goliathCopyIval.pause()
             self.goliathCopy.detachNode()
             self.goliathCopyIval = None
+        
         if self.pearl and not self.pearl.isEmpty():
             self.pearl.setLockSails(False)
             if self.pearl.wake:
                 self.pearl.wake.stopFakeAnimate()
                 self.pearl.wake.startAnimate(self.pearl)
+
         if self.goliath and not self.goliath.isEmpty():
             if self.goliath.wake:
                 self.goliath.wake.stopFakeAnimate()
                 self.goliath.wake.startAnimate(self.goliath)
-
+    
     def startStageFourCutscene(self):
         if localAvatar.ship.clientController == localAvatar.doId:
             localAvatar.ship.controlManager.disable()
+        
         base.silenceInput()
         self.cameraState = localAvatar.cameraFSM.state
         if self.cameraState == 'Cannon':
             self.cameraSubject = localAvatar.cameraFSM.cannonCamera.cannonProp
         elif self.cameraState == 'Orbit':
             self.cameraSubject = localAvatar.cameraFSM.orbitCamera.subject
+        
         self.stageFourCutscene = True
         if localAvatar.ship.steeringAvId == localAvatar.doId:
             localAvatar.ship.stopPosHprBroadcast()
+        
         self.pearl.setLockSails(True)
         self.pearlCopy = render.attachNewNode('rootDummy')
         self.goliathCopy = render.attachNewNode('rootDummy')
         f = render.getFog()
         f.setLinearRange(500, 2500)
         base.musicMgr.requestFadeOut('ship-pinned')
-        base.musicMgr.request('final_battle', priority=1, looping=0)
+        base.musicMgr.request('final_battle', priority = 1, looping = 0)
         base.hideEffects()
         self.stageFourIval = self.getStageFourIval()
         self.stageFourIval.start()
@@ -546,11 +583,13 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         base.reviveInput()
         if localAvatar.ship.clientController == localAvatar.doId:
             localAvatar.ship.controlManager.enable()
+        
         self.pearl.show()
         self.goliath.show()
         self.stageFourCutscene = False
         if localAvatar.ship.steeringAvId == localAvatar.doId:
             localAvatar.ship.startPosHprBroadcast()
+        
         self.stopPearlAndGoliathCopy()
         base.transitions.fadeIn()
         if self.cameraState == 'Orbit' or self.cameraState == 'Cannon':
@@ -564,17 +603,18 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
     def fireShipCannonsAtTarget(self, ship, target):
         if not (ship and target):
             return
+        
         for cannonData in ship.cannons.values():
-            cannonProp, cannon = cannonData
+            (cannonProp, cannon) = cannonData
             relPos = target.getPos(cannonProp.cannonPost)
             print 'relPos = %s' % relPos
             if relPos[1] > 0:
                 delay = random.random()
                 if delay < 0.9:
-                    taskMgr.doMethodLater(delay, self.fireCannon, 'fireNPCCannon', extraArgs=[cannon])
-                    taskMgr.doMethodLater(2 * delay, self.fireCannon, 'fireNPCCannon', extraArgs=[cannon])
-                    taskMgr.doMethodLater(3 * delay, self.fireCannon, 'fireNPCCannon', extraArgs=[cannon])
-
+                    taskMgr.doMethodLater(delay, self.fireCannon, 'fireNPCCannon', extraArgs = [cannon])
+                    taskMgr.doMethodLater(2 * delay, self.fireCannon, 'fireNPCCannon', extraArgs = [cannon])
+                    taskMgr.doMethodLater(3 * delay, self.fireCannon, 'fireNPCCannon', extraArgs = [cannon])
+    
     def fireCannon(self, cannon):
         cannon.prop.playAttack(12900, 12908, 'blackPearlHitEvent')
 
@@ -584,6 +624,7 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
             strToDisplay = PLocalizer.AttackShipsSunk % self.attackShipsSunk
             if self.attackShipsSunk == 4:
                 strToDisplay += PLocalizer.DestroyTheBridges
+            
             localAvatar.guiMgr.messageStack.addTextMessage(strToDisplay)
         else:
             localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.AttackShipSunk)
@@ -591,7 +632,7 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def enterStageThree(self):
         self.unstashPearlAndGoliath()
-        base.musicMgr.request('ship-pinned', priority=1, looping=0)
+        base.musicMgr.request('ship-pinned', priority = 1, looping = 0)
         self.ignore(PiratesGlobals.EVENT_SPHERE_CAPTURE + PiratesGlobals.SPHERE_ENTER_SUFFIX)
         for fortId in self.fortIds:
             fort = base.cr.doId2do.get(fortId)
@@ -601,10 +642,10 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
                 fort.showFortHpMeter()
                 fort.setDrawbridgesLerpR(0)
                 self.fortIdToUidDict[fortId] = fort.objKey
-
+        
         self.setupBarricades()
         self.showRulesPanel(3)
-
+    
     def setupBarricades(self):
         if not self.barricades.keys():
             for key in TreasureMapBlackPearlGlobals.DrawbridgeCollisionDict.keys():
@@ -619,13 +660,14 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
             self.barricades[barricadeId].disableCollisions()
             if barricadeId not in self.barricadesDestroyed:
                 self.barricadesDestroyed.append(barricadeId)
+            
             if barricadeId in [0, 1, 4]:
                 localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.DrawbridgePassable)
 
     def disableBarricadeCollisions(self, barricadeId):
         if barricadeId in self.barricades.keys():
             self.barricades[barricadeId].disableCollisions()
-
+    
     def enableBarricadeCollisions(self, barricadeId):
         if barricadeId in self.barricades.keys():
             self.barricades[barricadeId].enableCollisions()
@@ -639,22 +681,22 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
     def exitStageThree(self):
         pass
 
-    def filterStageThree(self, request, args=[]):
+    def filterStageThree(self, request, args = []):
         if request in ['StageFour', 'NotCompleted']:
             return self.defaultFilter(request, args)
-
+    
     def enterStageFour(self):
         self.unstashPearlAndGoliath()
 
     def exitStageFour(self):
         pass
 
-    def filterStageFour(self, request, args=[]):
+    def filterStageFour(self, request, args = []):
         if request in ['NotCompleted', 'Reward']:
             return self.defaultFilter(request, args)
 
     def enterReward(self):
-
+        
         def showRewardPanel(inventory):
             questList = inventory.getQuestList()
             for quest in questList:
@@ -665,25 +707,27 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         currentInteractive = base.cr.interactionMgr.getCurrentInteractive()
         if currentInteractive:
             currentInteractive.requestExit()
+        
         base.localAvatar.gameFSM.request('Cutscene')
         pearl = self.getPearl()
-        pearl.shipStatusDisplay.hide()
+        pearl.hideStatusDisplay()
         if self.camIval:
             self.camIval.pause()
             self.camIval = None
+        
         camera.wrtReparentTo(render)
         self.camIvalReward = self.getCameraMoveReward()
         self.camIvalReward.start()
         base.musicMgr.requestFadeOut('final_battle')
-        base.musicMgr.request('victory', priority=1, looping=0)
+        base.musicMgr.request('victory', priority = 1, looping = 0)
 
     def exitReward(self):
         self.camIvalReward.finish()
         base.transitions.letterboxOff()
         localAvatar.cameraFSM.request('FPS')
-
+    
     def getCameraMoveReward(self):
-
+        
         def lerpLookAtAttackShip(t):
             camera.lookAt(self.pearl)
 
@@ -694,19 +738,19 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         dummyNode.lookAt(self.pearl)
         camera.reparentTo(dummyNode)
         camera.setPos(150, 300, 80)
-        ival = Sequence(Func(base.transitions.letterboxOn), Parallel(LerpPosInterval(camera, 12.0, endPos, startPos=startPos, blendType='easeInOut'), LerpFunc(lerpLookAtAttackShip, 12.0), Sequence(Wait(12.0), Func(base.transitions.fadeOut, 2))))
+        ival = Sequence(Func(base.transitions.letterboxOn), Parallel(LerpPosInterval(camera, 12.0, endPos, startPos = startPos, blendType = 'easeInOut'), LerpFunc(lerpLookAtAttackShip, 12.0), Sequence(Wait(12.0), Func(base.transitions.fadeOut, 2))))
         return ival
 
     def enterNotCompleted(self):
-        ShipPilot.ShipPilot.MAX_STRAIGHT_SAIL_BONUS = 4.0
+        ShipPilot2.ShipPilot2.MAX_STRAIGHT_SAIL_BONUS = 4.0
         base.musicMgr.requestFadeOut('final_battle')
         self.showRulesPanel(5)
 
     def exitNotCompleted(self):
         pass
-
+    
     def enterCompleted(self):
-        ShipPilot.ShipPilot.MAX_STRAIGHT_SAIL_BONUS = 4.0
+        ShipPilot2.ShipPilot2.MAX_STRAIGHT_SAIL_BONUS = 4.0
         base.cr.loadingScreen.showTarget(localAvatar.getReturnLocation())
 
     def exitCompleted(self):
@@ -715,14 +759,14 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
     def localAvEnterDeath(self, av):
         DistributedTreasureMapInstance.DistributedTreasureMapInstance.localAvEnterDeath(self, av)
         self.requestTreasureMapLeave()
-
+    
     def localAvExitDeath(self, av):
         DistributedTreasureMapInstance.DistributedTreasureMapInstance.localAvExitDeath(self, av)
-
+    
     def requestLeaveApproved(self, parentId, zoneId, shipId):
         localAvatar.setInterest(parentId, zoneId, ['tmExit'])
         self.cr.loadingScreen.showTarget()
-        self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld', doEffect=False)
+        self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 'mainWorld', doEffect = False)
 
     def getBarricadeWarning(self):
         retval = -1
@@ -739,3 +783,4 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam='want-blackpearl-report')
     def setAllPlayersReady(self, ready):
         self.gotAllPlayers = True
+

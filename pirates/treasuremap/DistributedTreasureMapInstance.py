@@ -1,28 +1,28 @@
 from direct.fsm import FSM
 from direct.showbase.PythonUtil import report
 from pirates.instance import DistributedInstanceWorld
-from pirates.piratesbase import PiratesGlobals
-from pirates.quest import DistributedQuest, QuestHolder
+from pirates.quest import QuestHolder
+from pirates.quest import DistributedQuest
 from pirates.quest.MiniQuestItemGui import MiniQuestItemGui
-
+from pirates.piratesbase import PiratesGlobals
 
 class DistributedTreasureMapInstance(DistributedInstanceWorld.DistributedInstanceWorld, QuestHolder.QuestHolder, FSM.FSM):
     notify = directNotify.newCategory('DistributedTreasureMapInstance')
-
+    
     def __init__(self, cr):
         DistributedInstanceWorld.DistributedInstanceWorld.__init__(self, cr)
         FSM.FSM.__init__(self, 'DistributedTreasureMapInstance')
         self.pendingObjectiveRequest = None
         self.pendingShipRequest = None
         self.objectives = []
-        return
-
+    
     def announceGenerate(self):
         DistributedInstanceWorld.DistributedInstanceWorld.announceGenerate(self)
         base.cr.treasureMap = self
         localAvatar.guiMgr.showTMUI(self)
         if localAvatar.guiMgr.questPage:
             localAvatar.guiMgr.questPage.trackedQuestLabel.hide()
+        
         localAvatar.b_setTeleportFlag(PiratesGlobals.TFTreasureMap)
 
     def disable(self):
@@ -31,15 +31,17 @@ class DistributedTreasureMapInstance(DistributedInstanceWorld.DistributedInstanc
         localAvatar.guiMgr.hideTMUI()
         if localAvatar.guiMgr.questPage:
             localAvatar.guiMgr.questPage.trackedQuestLabel.show()
+        
         localAvatar.b_clearTeleportFlag(PiratesGlobals.TFTreasureMap)
         if self.pendingObjectiveRequest:
             base.cr.relatedObjectMgr.abortRequest(self.pendingObjectiveRequest)
             self.pendingObjectiveRequest = None
+        
         if self.pendingShipRequest:
             base.cr.relatedObjectMgr.abortRequest(self.pendingShipRequest)
             self.pendingShipRequest = None
+        
         DistributedInstanceWorld.DistributedInstanceWorld.disable(self)
-        return
 
     def enterWaitClientsReady(self):
         pass
@@ -48,30 +50,30 @@ class DistributedTreasureMapInstance(DistributedInstanceWorld.DistributedInstanc
     def setBarrierData(self, data):
         DistributedInstanceWorld.DistributedInstanceWorld.setBarrierData(self, data)
         self.doneBarrier(self.uniqueName('allAvatarsReady'))
-
+    
     def enterOff(self):
         pass
 
     def exitOff(self):
         pass
-
+    
     def enterReward(self):
         pass
-
+    
     def exitReward(self):
         pass
 
-    def filterReward(self, request, args=[]):
+    def filterReward(self, request, args = []):
         if request in ['Completed']:
             return self.defaultFilter(request, args)
 
     def enterNotCompleted(self):
         pass
-
+    
     def exitNotCompleted(self):
         pass
-
-    def filterNotCompleted(self, request, args=[]):
+    
+    def filterNotCompleted(self, request, args = []):
         if request in ['Completed']:
             return self.defaultFilter(request, args)
 
@@ -90,15 +92,18 @@ class DistributedTreasureMapInstance(DistributedInstanceWorld.DistributedInstanc
     def setObjectives(self, objectives):
         self.objectives = []
         for currObjective in objectives:
-            self.objectives.append({'Type': 'ObjectId', 'Value': currObjective})
-            self.pendingObjectiveRequest = base.cr.relatedObjectMgr.requestObjects([currObjective], eachCallback=self.tagAsObjective)
-
+            self.objectives.append({
+                'Type': 'ObjectId',
+                'Value': currObjective})
+            self.pendingObjectiveRequest = base.cr.relatedObjectMgr.requestObjects([
+                currObjective], eachCallback = self.tagAsObjective)
+        
         print 'got new objectives list %s' % objectives
         messenger.send(self.getItemChangeMsg())
-
+    
     def getItemChangeMsg(self):
         return self.taskName('objectiveChanged')
-
+    
     def tagAsObjective(self, quest):
         quest.type = DistributedQuest.QUEST_TYPE_TM
 
@@ -107,19 +112,21 @@ class DistributedTreasureMapInstance(DistributedInstanceWorld.DistributedInstanc
         guiMgr.hideTrays()
         guiMgr.hideTMUI()
         guiMgr.showTMCompleteUI(self, playerResults)
-
-    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+    
+    def createNewItem(self, item, parent, itemType = None, columnWidths = [], color = None):
         return MiniQuestItemGui(item, parent)
-
+    
     def requestTreasureMapLeave(self):
         localAvatar.guiMgr.hideTMCompleteUI()
         localAvatar.guiMgr.showTrays()
         self.sendUpdate('requestLeave', [0])
-
+    
     def requestLeaveApproved(self, parentId, zoneId, shipId):
         localAvatar.setInterest(parentId, zoneId, ['tmExit'])
-        self.pendingShipRequest = base.cr.relatedObjectMgr.requestObjects([shipId], eachCallback=self.goToShip)
-
+        self.pendingShipRequest = base.cr.relatedObjectMgr.requestObjects([
+            shipId], eachCallback = self.goToShip)
+    
     def goToShip(self, pendingObj):
         pendingObj.localAvatarBoardShip()
         self.cr.teleportMgr.initiateTeleport(PiratesGlobals.INSTANCE_TM, 'mainWorld')
+
