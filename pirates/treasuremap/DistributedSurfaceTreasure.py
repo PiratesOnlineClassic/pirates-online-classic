@@ -1,18 +1,19 @@
+from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
-from panda3d.core import *
 from pirates.distributed import DistributedInteractive
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 from pirates.interact import InteractiveBase
-from pirates.piratesbase import PiratesGlobals, PLocalizer
 
 class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSurfaceTreasure')
-
+    
     def __init__(self, cr):
         NodePath.__init__(self, 'DistributedSurfaceTreasure')
         DistributedInteractive.DistributedInteractive.__init__(self, cr)
         self.showLerp = None
-
+    
     def generate(self):
         DistributedInteractive.DistributedInteractive.generate(self)
         self.chest = loader.loadModelCopy('models/props/treasureChest')
@@ -22,10 +23,10 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
         self.initInteractOpts()
         self.belongsToTeam = PiratesGlobals.INVALID_TEAM
         self.value = 0
-
+    
     def initInteractOpts(self):
-        self.setInteractOptions(sphereScale=10, diskRadius=10, proximityText=PLocalizer.PVPPickUpTreasure, exclusive=0)
-
+        self.setInteractOptions(sphereScale = 10, diskRadius = 10, proximityText = PLocalizer.PVPPickUpTreasure, exclusive = 0)
+    
     def disable(self):
         DistributedInteractive.DistributedInteractive.disable(self)
         self.chest.removeNode()
@@ -33,7 +34,7 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
         del self.chestLid
         if self.showLerp:
             self.showLerp.pause()
-
+    
     def setLocation(self, parentId, zoneId):
         DistributedInteractive.DistributedInteractive.setLocation(self, parentId, zoneId)
         if zoneId == PiratesGlobals.ShipZoneOnDeck:
@@ -58,8 +59,8 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
     def setOpen(self, open):
         if open:
             self.chestLid.setHpr(0, -40, 0)
-            return
-        self.chestLid.setHpr(0, 0, 0)
+        else:
+            self.chestLid.setHpr(0, 0, 0)
 
     def showProximityInfo(self):
         self.cr.activeWorld.updateTreasureProximityText(self)
@@ -84,21 +85,23 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
 
     def setValue(self, value):
         self.value = value
-
-    def requestInteraction(self, avId, interactType=0):
+    
+    def requestInteraction(self, avId, interactType = 0):
         base.localAvatar.motionFSM.off()
         DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
-
+    
     def rejectInteraction(self):
         base.localAvatar.motionFSM.on()
         DistributedInteractive.DistributedInteractive.rejectInteraction(self)
-
+    
     def setEmpty(self, empty):
         if self.showLerp:
             self.showLerp.finish()
+        
         if empty:
             self.showLerp = Sequence(Func(self.setTransparency, 1), LerpColorScaleInterval(self, 0.5, Vec4(1, 1, 1, 0)))
             self.showLerp.start()
         else:
             self.showLerp = Sequence(LerpColorScaleInterval(self, 0.5, Vec4(1, 1, 1, 1)), Func(self.clearTransparency))
             self.showLerp.start()
+
