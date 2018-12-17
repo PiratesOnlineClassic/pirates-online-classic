@@ -1,11 +1,10 @@
-import sys
-
-from panda3d.core import *
-from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import FSM
+from otp.otpbase import OTPGlobals
+import sys
+from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
-from otp.otpbase import OTPGlobals, OTPLocalizer
-
+from pandac.PandaModules import *
+from otp.otpbase import OTPLocalizer
 
 class PChatInputTyped(FSM.FSM, DirectEntry):
     notify = DirectNotifyGlobal.directNotify.newCategory('PChatInputTyped')
@@ -33,7 +32,6 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
         self.savedStringLeft = ''
         self.savedStringRight = ''
         self.fillToLength = 0
-        return
 
     def delete(self):
         self.ignore('uber-control-arrow_up')
@@ -45,18 +43,16 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
     def defaultFilter(self, request, *args):
         if request == 'AllChat':
             pass
-        else:
-            if request == 'PlayerWhisper':
-                whisperId = args[0][0]
-                if not base.chatAssistant.checkWhisperTypedChatPlayer(whisperId):
-                    messenger.send('Chat-Failed player typed chat test')
-                    return
-            else:
-                if request == 'AvatarWhisper':
-                    whisperId = args[0][0]
-                    if not base.chatAssistant.checkWhisperTypedChatAvatar(whisperId):
-                        messenger.send('Chat-Failed avatar typed chat test')
-                        return
+        elif request == 'PlayerWhisper':
+            whisperId = args[0][0]
+            if not base.chatAssistant.checkWhisperTypedChatPlayer(whisperId):
+                messenger.send('Chat-Failed player typed chat test')
+                return None
+        elif request == 'AvatarWhisper':
+            whisperId = args[0][0]
+            if not base.chatAssistant.checkWhisperTypedChatAvatar(whisperId):
+                messenger.send('Chat-Failed avatar typed chat test')
+                return None
         return FSM.FSM.defaultFilter(self, request, *args)
 
     def enterOff(self):
@@ -101,7 +97,6 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
     def exitPlayerWhisper(self):
         self.set(self.tempText)
         self.whisperId = None
-        return
 
     def enterAvatarWhisper(self, whisperId):
         self.tempText = self.get()
@@ -111,7 +106,6 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
     def exitAvatarWhisper(self):
         self.set(self.tempText)
         self.whisperId = None
-        return
 
     def activate(self):
         self.set('')
@@ -128,7 +122,6 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
             self.accept('uber-home', self.fullSlideLeft)
             self.accept('uber-end', self.fullSlideRight)
         self.show()
-        return
 
     def handleEscape(self):
         localAvatar.chatMgr.deactivateChat()
@@ -157,11 +150,10 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
                 text = self.__execMessage(text[1:])
                 base.localAvatar.setChatAbsolute(text, CFSpeech | CFTimeout)
                 return
+            elif base.config.GetBool('want-slash-commands', 1) and text[0] == '/':
+                base.chatAssistant.executeSlashCommand(text)
             else:
-                if base.config.GetBool('want-slash-commands', 1) and text[0] == '/':
-                    base.chatAssistant.executeSlashCommand(text)
-                else:
-                    self.sendChatByMode(text)
+                self.sendChatByMode(text)
             if self.wantHistory:
                 self.addToHistory(text)
         else:
@@ -175,20 +167,16 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
         state = self.getCurrentOrNextState()
         if state == 'PlayerWhisper':
             base.chatAssistant.sendPlayerWhisperTypedChat(text, self.whisperId)
+        elif state == 'AvatarWhisper':
+            base.chatAssistant.sendAvatarWhisperTypedChat(text, self.whisperId)
+        elif state == 'GuildChat':
+            base.chatAssistant.sendAvatarGuildTypedChat(text)
+        elif state == 'CrewChat':
+            base.chatAssistant.sendAvatarCrewTypedChat(text)
+        elif state == 'ShipPVPChat':
+            base.chatAssistant.sendAvatarShipPVPCrewTypedChat(text)
         else:
-            if state == 'AvatarWhisper':
-                base.chatAssistant.sendAvatarWhisperTypedChat(text, self.whisperId)
-            else:
-                if state == 'GuildChat':
-                    base.chatAssistant.sendAvatarGuildTypedChat(text)
-                else:
-                    if state == 'CrewChat':
-                        base.chatAssistant.sendAvatarCrewTypedChat(text)
-                    else:
-                        if state == 'ShipPVPChat':
-                            base.chatAssistant.sendAvatarShipPVPCrewTypedChat(text)
-                        else:
-                            base.chatAssistant.sendAvatarOpenTypedChat(text)
+            base.chatAssistant.sendAvatarOpenTypedChat(text)
 
     def checkKey(self, key):
         print 'key typed: %s' % key.getKeycode()
@@ -254,8 +242,7 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
         print '%s + %s + %s' % (self.savedStringLeft, self.get(), self.savedStringRight)
 
     def addToHistory(self, text):
-        self.history = [
-         text] + self.history[:self.historySize - 1]
+        self.history = [text] + self.history[:self.historySize - 1]
         self.historyIndex = 0
 
     def setPrevHistory(self):
@@ -264,7 +251,6 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
         self.historyIndex += 1
         self.historyIndex %= len(self.history)
         self.set(self.history[self.historyIndex])
-        return
 
     def setNextHistory(self):
         if self.historyIndex is None:
@@ -272,7 +258,6 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
         self.historyIndex -= 1
         self.historyIndex %= len(self.history)
         self.set(self.history[self.historyIndex])
-        return
 
     def importExecNamespace(self):
         pass
@@ -280,7 +265,7 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
     def __execMessage(self, message):
         if not PChatInputTyped.ExecNamespace:
             PChatInputTyped.ExecNamespace = {}
-            exec 'from panda3d.core import *' in globals(), self.ExecNamespace
+            exec 'from pandac.PandaModules import *' in globals(), self.ExecNamespace
             self.importExecNamespace()
         try:
             return str(eval(message, globals(), PChatInputTyped.ExecNamespace))
@@ -303,3 +288,4 @@ class PChatInputTyped(FSM.FSM, DirectEntry):
                 return str(extraInfo)
             else:
                 return str(exception)
+
