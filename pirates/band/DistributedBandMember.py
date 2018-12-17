@@ -1,14 +1,13 @@
-from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
-from otp.speedchat import SCDecoders
 from pirates.band import BandConstance
+from direct.directnotify.DirectNotifyGlobal import directNotify
+from pirates.piratesbase import PLocalizer
 from pirates.pirate.PAvatarHandle import PAvatarHandle
-from pirates.piratesbase import PiratesGlobals, PLocalizer
+from otp.speedchat import SCDecoders
 from pirates.speedchat import PSCDecoders
-
+from pirates.piratesbase import PiratesGlobals
 
 class DistributedBandMember(DistributedObject, PAvatarHandle):
-    
     notify = directNotify.newCategory('BandMember')
     allBandmembers = {}
     band_map = {}
@@ -28,7 +27,8 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
         bm = cls.getBandMember(doId)
         if bm:
             return cls.band_map.get(bm.bandId, set())
-        return set()
+        else:
+            return set()
 
     @classmethod
     def getBandSetLocalAvatar(cls):
@@ -42,15 +42,17 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
             print '----------------------------%s-%s' % (b.isManager, b.name)
             if b.isManager:
                 return b.name
-
+        
         print '---------------------------- Return None'
+        return None
 
     @classmethod
     def IsAvatarHeadOfBand(cls, doId):
         br = cls.getBandMember(doId)
         if br:
             return br.isManager
-        return 0
+        else:
+            return 0
 
     @classmethod
     def IsLocalAvatarHeadOfBand(cls):
@@ -66,29 +68,31 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
         self.isManager = 0
         self.shipInfo = [0, '', 0, []]
         self.whiteListEnabled = base.config.GetBool('whitelist-chat-enabled', 1)
-        print 'GENERATING NEW BAND MEMBER'
-
+    
     def announceGenerate(self):
         DistributedObject.announceGenerate(self)
         messenger.send(BandConstance.BandMembershipChange, [self, 0])
-
+    
     def disable(self):
         if self.bandId:
             self.band_map[self.bandId].remove(self)
             if len(self.band_map[self.bandId]) <= 0:
                 del self.band_map[self.bandId]
+
         if self.avatarId != 0:
             del self.allBandmembers[self.avatarId]
+        
         messenger.send(BandConstance.BandMembershipChange, [self, 1])
         DistributedObject.disable(self)
 
     def delete(self):
         self.avatarId = None
         DistributedObject.delete(self)
-
+    
     def setAvatarId(self, avatarId):
         if self.avatarId != 0:
             del self.allBandmembers[avatarId]
+        
         self.avatarId = avatarId
         self.allBandmembers[avatarId] = self
 
@@ -96,12 +100,12 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
         self.name = name
         if self.isGenerated():
             messenger.send(BandConstance.BandMembershipChange, [self, 0])
-
+    
     def setHp(self, hp):
         self.hp = hp
         if self.isGenerated():
             messenger.send(BandConstance.BandMemberHpChange, [self, self.hp, self.maxHp])
-
+    
     def setMaxHp(self, maxHp):
         self.maxHp = maxHp
         if self.isGenerated():
@@ -112,8 +116,8 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
             self.band_map[self.bandId].remove(self)
             if len(self.band_map[self.bandId]) <= 0:
                 del self.band_map[self.bandId]
-        self.bandId = (
-         manager, id)
+
+        self.bandId = (manager, id)
         if self.bandId:
             self.band_map.setdefault(self.bandId, set()).add(self)
 
@@ -124,23 +128,27 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
         self.isManager = flag
         if self.isGenerated():
             messenger.send(BandConstance.BandMembershipChange, [self, 0])
-
+    
     def setShipInfo(self, shipId, shipName, shipClass, mastInfo):
-        self.shipInfo = [shipId, shipName, shipClass, mastInfo]
+        self.shipInfo = [
+            shipId,
+            shipName,
+            shipClass,
+            mastInfo]
         if self.isGenerated:
             messenger.send(BandConstance.BandMemberShipChange, [self, shipId])
-
+    
     def getShipInfo(self):
         return self.shipInfo
-
+    
     def setShipHasSpace(self, hasSpace):
         self.shipHasSpace = hasSpace
         if self.isGenerated:
             messenger.send(BandConstance.BandMemberShipChange, [self, self.shipInfo[0]])
-
+    
     def getShipHasSpace(self):
         return self.shipInfo[0] and (self.shipHasSpace or localAvatar.getInventory() and self.shipInfo[0] in localAvatar.getInventory().getShipDoIdList())
-
+    
     def setChat(self, message, chatFlags, DISLid):
         if not self.cr.avatarFriendsManager.checkIgnored(self.avatarId):
             displayMess = '%s %s %s' % (self.name, PLocalizer.CrewPrefix, message)
@@ -149,15 +157,16 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
     def setWLChat(self, message, chatFlags, DISLid):
         if not self.whiteListEnabled:
             return
+        
         if not self.cr.avatarFriendsManager.checkIgnored(self.avatarId):
             displayMess = '%s %s %s' % (self.name, PLocalizer.CrewPrefix, message)
             base.chatAssistant.receivePartyMessage(displayMess)
-
+    
     def setSpeedChat(self, senderId, msgIndex):
         if not self.cr.avatarFriendsManager.checkIgnored(self.avatarId):
             displayMess = '%s %s %s' % (self.name, PLocalizer.CrewPrefix, SCDecoders.decodeSCStaticTextMsg(msgIndex))
             base.chatAssistant.receivePartyMessage(displayMess)
-
+    
     def setSCQuestChat(self, senderId, questInt, msgType, taskNum):
         if not self.cr.avatarFriendsManager.checkIgnored(self.avatarId):
             displayMess = '%s %s %s' % (self.name, PLocalizer.CrewPrefix, PSCDecoders.decodeSCQuestMsgInt(questInt, msgType, taskNum))
@@ -182,12 +191,12 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
         return True
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
-    def sendTeleportQuery(self, sendToId, localShardId):
-        self.d_teleportQuery(localAvatar.doId, localShardId)
+    def sendTeleportQuery(self, sendToId, localBandMgrId, localBandId, localGuildId, localShardId):
+        self.d_teleportQuery(localAvatar.doId, localGuildId, localShardId)
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
-    def d_teleportQuery(self, localAvId, localShardId):
-        self.sendUpdate('teleportQuery', [localAvId, localShardId])
+    def d_teleportQuery(self, localAvId, localGuildId, localShardId):
+        self.sendUpdate('teleportQuery', [localAvId, localGuildId, localShardId])
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
     def sendTeleportResponse(self, available, shardId, instanceDoId, areaDoId, sendToId=None):
@@ -196,3 +205,4 @@ class DistributedBandMember(DistributedObject, PAvatarHandle):
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
     def d_teleportResponse(self, available, shardId, instanceDoId, areaDoId, sendToId):
         self.sendUpdate('teleportResponse', [localAvatar.doId, available, shardId, instanceDoId, areaDoId])
+
