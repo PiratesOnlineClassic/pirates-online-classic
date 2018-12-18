@@ -1,5 +1,4 @@
 import string
-
 NORMAL_CHAT = 1
 WHISPER_CHAT = 2
 GUILD_CHAT = 3
@@ -42,11 +41,10 @@ ThoughtPrefix = '.'
 def isThought(message):
     if len(message) == 0:
         return 0
+    elif string.find(message, ThoughtPrefix, 0, len(ThoughtPrefix)) >= 0:
+        return 1
     else:
-        if string.find(message, ThoughtPrefix, 0, len(ThoughtPrefix)) >= 0:
-            return 1
-        else:
-            return 0
+        return 0
 
 
 def removeThoughtPrefix(message):
@@ -54,3 +52,4 @@ def removeThoughtPrefix(message):
         return message[len(ThoughtPrefix):]
     else:
         return message
+

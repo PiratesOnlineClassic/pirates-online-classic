@@ -1,15 +1,14 @@
-import sys
-
-from direct.gui.DirectGui import *
 from direct.showbase import DirectObject
-from otp.otpbase import OTPGlobals, OTPLocalizer
-from panda3d.core import *
-
+from otp.otpbase import OTPGlobals
+import sys
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
+from otp.otpbase import OTPLocalizer
 
 class ChatInputTyped(DirectObject.DirectObject):
     ExecNamespace = None
-
-    def __init__(self, mainEntry=0):
+    
+    def __init__(self, mainEntry = 0):
         self.whisperName = None
         self.whisperId = None
         self.toPlayer = 0
@@ -17,16 +16,15 @@ class ChatInputTyped(DirectObject.DirectObject):
         wantHistory = 0
         if __dev__:
             wantHistory = 1
-        self.wantHistory = base.config.GetBool(
-            'want-chat-history', wantHistory)
+        
+        self.wantHistory = base.config.GetBool('want-chat-history', wantHistory)
         self.history = ['']
         self.historySize = base.config.GetInt('chat-history-size', 10)
         self.historyIndex = 0
-        return
 
     def typeCallback(self, extraArgs):
         self.activate()
-
+    
     def delete(self):
         self.ignore('arrow_up-up')
         self.ignore('arrow_down-up')
@@ -37,8 +35,8 @@ class ChatInputTyped(DirectObject.DirectObject):
         del self.chatEntry
         del self.whisperLabel
         del self.chatMgr
-
-    def show(self, whisperId=None, toPlayer=0):
+    
+    def show(self, whisperId = None, toPlayer = 0):
         self.toPlayer = toPlayer
         self.whisperId = whisperId
         self.whisperName = None
@@ -62,7 +60,6 @@ class ChatInputTyped(DirectObject.DirectObject):
         if self.wantHistory:
             self.accept('arrow_up-up', self.getPrevHistory)
             self.accept('arrow_down-up', self.getNextHistory)
-        return
 
     def hide(self):
         self.chatEntry.set('')
@@ -74,7 +71,7 @@ class ChatInputTyped(DirectObject.DirectObject):
         self.typedChatBar.show()
         self.ignore('arrow_up-up')
         self.ignore('arrow_down-up')
-
+    
     def activate(self):
         self.chatEntry.set('')
         self.chatEntry['focus'] = 1
@@ -86,17 +83,17 @@ class ChatInputTyped(DirectObject.DirectObject):
         if self.whisperId:
             print 'have id'
             if self.toPlayer:
-                if not base.chatAssistant.checkWhisperTypedChatPlayer(
-                        self.whisperId):
+                if not base.chatAssistant.checkWhisperTypedChatPlayer(self.whisperId):
                     messenger.send('Chat-Failed player typed chat test')
                     self.deactivate()
+                
             elif not base.chatAssistant.checkWhisperTypedChatAvatar(self.whisperId):
                 messenger.send('Chat-Failed avatar typed chat test')
                 self.deactivate()
-        else:
-            if not base.chatAssistant.checkOpenTypedChat():
-                messenger.send('Chat-Failed open typed chat test')
-                self.deactivate()
+            
+        elif not base.chatAssistant.checkOpenTypedChat():
+            messenger.send('Chat-Failed open typed chat test')
+            self.deactivate()
 
     def deactivate(self):
         self.chatEntry.set('')
@@ -112,22 +109,19 @@ class ChatInputTyped(DirectObject.DirectObject):
         if text:
             if self.toPlayer:
                 if self.whisperId:
-                    base.chatAssistant.sendPlayerWhisperTypedChat(
-                        text, self.whisperId)
+                    base.chatAssistant.sendPlayerWhisperTypedChat(text, self.whisperId)
+                
+            elif self.whisperId:
+                base.chatAssistant.sendAvatarWhisperTypedChat(text, self.whisperId)
+            elif base.config.GetBool('exec-chat', 0) and text[0] == '>':
+                text = self.__execMessage(text[1:])
+                base.localAvatar.setChatAbsolute(text, CFSpeech | CFTimeout)
+                return
             else:
-                if self.whisperId:
-                    base.chatAssistant.sendAvatarWhisperTypedChat(
-                        text, self.whisperId)
-                else:
-                    if base.config.GetBool('exec-chat', 0) and text[0] == '>':
-                        text = self.__execMessage(text[1:])
-                        base.localAvatar.setChatAbsolute(
-                            text, CFSpeech | CFTimeout)
-                        return
-                    else:
-                        base.chatAssistant.sendAvatarOpenTypedChat(text)
+                base.chatAssistant.sendAvatarOpenTypedChat(text)
             if self.wantHistory:
                 self.addToHistory(text)
+
         self.chatEntry.set('')
 
     def chatOverflow(self, overflowText):
@@ -136,7 +130,7 @@ class ChatInputTyped(DirectObject.DirectObject):
     def __execMessage(self, message):
         if not ChatInputTyped.ExecNamespace:
             ChatInputTyped.ExecNamespace = {}
-            exec 'from panda3d.core import *' in globals(), self.ExecNamespace
+            exec 'from pandac.PandaModules import *' in globals(), self.ExecNamespace
             self.importExecNamespace()
         try:
             return str(eval(message, globals(), ChatInputTyped.ExecNamespace))
@@ -144,7 +138,7 @@ class ChatInputTyped(DirectObject.DirectObject):
             try:
                 exec message in globals(), ChatInputTyped.ExecNamespace
                 return 'ok'
-            except BaseException:
+            except:
                 exception = sys.exc_info()[0]
                 extraInfo = sys.exc_info()[1]
                 if extraInfo:
@@ -152,7 +146,7 @@ class ChatInputTyped(DirectObject.DirectObject):
                 else:
                     return str(exception)
 
-        except BaseException:
+        except:
             exception = sys.exc_info()[0]
             extraInfo = sys.exc_info()[1]
             if extraInfo:
@@ -166,21 +160,21 @@ class ChatInputTyped(DirectObject.DirectObject):
 
     def chatButtonPressed(self):
         self.sendChat(self.chatEntry.get())
-
+    
     def importExecNamespace(self):
         pass
 
     def addToHistory(self, text):
-        self.history = [
-            text] + self.history[:self.historySize - 1]
+        self.history = [text] + self.history[:self.historySize - 1]
         self.historyIndex = 0
-
+    
     def getPrevHistory(self):
         self.chatEntry.set(self.history[self.historyIndex])
         self.historyIndex += 1
         self.historyIndex %= len(self.history)
-
+    
     def getNextHistory(self):
         self.chatEntry.set(self.history[self.historyIndex])
         self.historyIndex -= 1
         self.historyIndex %= len(self.history)
+

@@ -1,22 +1,21 @@
 import string
 import sys
-
-from direct.directnotify import DirectNotifyGlobal
-from direct.fsm import ClassicFSM, State
-from direct.fsm.FSM import FSM
-from direct.gui.DirectGui import *
 from direct.showbase import DirectObject
-from otp.login import (
-    LeaveToPayDialog,
-    PrivacyPolicyPanel,
-    SecretFriendsInfoPanel)
-from otp.otpbase import OTPGlobals, OTPLocalizer
-from panda3d.core import *
-
+from otp.otpbase import OTPGlobals
+from direct.fsm import ClassicFSM
+from direct.fsm import State
+from otp.login import SecretFriendsInfoPanel
+from otp.login import PrivacyPolicyPanel
+from otp.otpbase import OTPLocalizer
+from direct.directnotify import DirectNotifyGlobal
+from otp.login import LeaveToPayDialog
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
+from direct.fsm.FSM import FSM
 
 class ChatManagerV2(DirectObject.DirectObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('ChatManagerV2')
-
+    
     def __init__(self):
         self.openChatWarning = None
         self.unpaidChatWarning = None
@@ -78,27 +77,21 @@ class ChatManagerV2(DirectObject.DirectObject):
                 self.exitSecretChatActivated),
             State.State('problemActivatingChat', self.enterProblemActivatingChat, self.exitProblemActivatingChat)], 'off', 'off')
         self.fsm.enterInitialState()
-        self.accept(
-            'Chat-Failed open typed chat test',
-            self.__handleFailOpenTypedChat)
-        self.accept(
-            'Chat-Failed player typed chat test',
-            self.__handleFailPlayerTypedWhsiper)
-        self.accept(
-            'Chat-Failed avatar typed chat test',
-            self.__handleFailAvatarTypedWhsiper)
+        self.accept('Chat-Failed open typed chat test', self.__handleFailOpenTypedChat)
+        self.accept('Chat-Failed player typed chat test', self.__handleFailPlayerTypedWhsiper)
+        self.accept('Chat-Failed avatar typed chat test', self.__handleFailAvatarTypedWhsiper)
 
     def delete(self):
         self.ignoreAll()
         del self.fsm
 
-    def __handleFailOpenTypedChat(self, caller=None):
+    def __handleFailOpenTypedChat(self, caller = None):
         self.fsm.request('openChatWarning')
 
-    def __handleFailPlayerTypedWhsiper(self, caller=None):
+    def __handleFailPlayerTypedWhsiper(self, caller = None):
         self.fsm.request('noSecretChatWarning')
 
-    def __handleFailAvatarTypedWhsiper(self, caller=None):
+    def __handleFailAvatarTypedWhsiper(self, caller = None):
         self.fsm.request('noSecretChatWarning')
 
     def __handleLeaveToPayCancel(self):
@@ -109,13 +102,13 @@ class ChatManagerV2(DirectObject.DirectObject):
 
     def __privacyPolicyDone(self):
         self.fsm.request('activateChat')
-
+    
     def enterOff(self):
         self.ignoreAll()
 
     def exitOff(self):
         pass
-
+    
     def enterOtherDialog(self):
         pass
 
@@ -141,8 +134,7 @@ class ChatManagerV2(DirectObject.DirectObject):
         self.notify.error('called exitSecretChatActivated() on parent class')
 
     def enterProblemActivatingChat(self):
-        self.notify.error(
-            'called enterProblemActivatingChat() on parent class')
+        self.notify.error('called enterProblemActivatingChat() on parent class')
 
     def exitProblemActivatingChat(self):
         self.notify.error('called exitProblemActivatingChat() on parent class')
@@ -155,7 +147,7 @@ class ChatManagerV2(DirectObject.DirectObject):
 
     def enterChatMoreInfo(self):
         self.notify.error('called enterChatMoreInfo() on parent class')
-
+    
     def exitChatMoreInfo(self):
         self.notify.error('called exitChatMoreInfo() on parent class')
 
@@ -164,9 +156,11 @@ class ChatManagerV2(DirectObject.DirectObject):
 
     def exitNoSecretChatWarning(self):
         self.notify.error('called exitNoSecretChatWarning() on parent class')
-
+    
     def enterLeaveToPayDialog(self):
         self.notify.error('called enterLeaveToPayDialog() on parent class')
-
+    
     def exitLeaveToPayDialog(self):
         self.notify.error('called exitLeaveToPayDialog() on parent class')
+
+

@@ -1,7 +1,6 @@
 class ChatMessage:
-
-    def __init__(self, timeStamp, type, body, flags, id, name,
-                 isPlayer, whisper, sentRatherThanReceived):
+    
+    def __init__(self, timeStamp, type, body, flags, id, name, isPlayer, whisper, sentRatherThanReceived):
         self.timeStamp = timeStamp
         self.type = type
         self.body = body
@@ -65,3 +64,5 @@ class ChatMessage:
 
     def setWhisper(self, whisper):
         self.whisper = whisper
+
+

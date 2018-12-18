@@ -1,11 +1,9 @@
-import random
 import string
-
+import random
 from otp.otpbase import OTPLocalizer
 
-
 class ChatGarbler:
-
+    
     def garble(self, avatar, message):
         newMessage = ''
         numWords = random.randint(1, 7)
@@ -15,5 +13,7 @@ class ChatGarbler:
             newMessage = newMessage + wordlist[wordIndex]
             if i < numWords:
                 newMessage = newMessage + ' '
-
+        
         return newMessage
+
+
