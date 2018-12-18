@@ -1,13 +1,14 @@
+from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.FSM import FSM
-from direct.showbase.InputStateGlobal import inputState
 from direct.task import Task
-from panda3d.core import *
-from pirates.pirate import CannonCamera, FPSCamera, ShipCamera
+from direct.showbase.InputStateGlobal import inputState
+from pirates.pirate import ShipCamera
+from pirates.pirate import FPSCamera
+from pirates.pirate import CannonCamera
 
 class CameraFSM(FSM):
     
-
     def __init__(self, av):
         FSM.__init__(self, 'CameraFSM')
         self.av = av
@@ -18,7 +19,7 @@ class CameraFSM(FSM):
         self.currentCamera = None
         self.cameras = (self.orbitCamera, self.fpsCamera, self.cannonCamera)
         self._rmbToken = inputState.watchWithModifiers('RMB', 'mouse3')
-
+    
     def cleanup(self):
         FSM.cleanup(self)
         if hasattr(self, 'cameras'):
@@ -61,11 +62,12 @@ class CameraFSM(FSM):
     def disableMouseControl(self):
         for camera in self.cameras:
             camera.disableMouseControl()
-
+    
     def defaultFilter(self, request, args):
         if request != self.getCurrentOrNextState():
             return FSM.defaultFilter(self, request, args)
-
+        return None
+    
     def enterOff(self):
         self.currentCamera = None
 
@@ -75,6 +77,7 @@ class CameraFSM(FSM):
     def enterOrbit(self, subject=None):
         if subject:
             self.orbitCamera.setSubject(subject)
+
         self.orbitCamera.start()
         self.currentCamera = self.orbitCamera
 
@@ -102,7 +105,7 @@ class CameraFSM(FSM):
 
     def enterControl(self):
         self.currentCamera = None
-        return
 
     def exitControl(self):
         pass
+

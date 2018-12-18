@@ -1,6 +1,7 @@
-from panda3d.core import *
 from direct.controls.GravityWalker import GravityWalker
 from direct.showbase.InputStateGlobal import inputState
+from pandac.PandaModules import *
+from direct.task.Task import Task
 
 class PiratesGravityWalker(GravityWalker):
     notify = directNotify.newCategory('PiratesGravityWalker')
@@ -10,10 +11,6 @@ class PiratesGravityWalker(GravityWalker):
         self.predicting = 0
 
     def handleAvatarControls(self, task):
-        # TODO: FIXME!
-        from pirates.piratesbase import PiratesGlobals
-        self.setWalkSpeed(*PiratesGlobals.PirateSpeeds[PiratesGlobals.SPEED_NORMAL_INDEX])
-
         run = inputState.isSet('run')
         forward = inputState.isSet('forward')
         reverse = inputState.isSet('reverse')
@@ -25,14 +22,12 @@ class PiratesGravityWalker(GravityWalker):
         if base.localAvatar.getAutoRun():
             forward = 1
             reverse = 0
-
         self.speed = forward and self.avatarControlForwardSpeed or reverse and -self.avatarControlReverseSpeed
         self.slideSpeed = reverse and slideLeft and -self.avatarControlReverseSpeed * 0.75 or reverse and slideRight and self.avatarControlReverseSpeed * 0.75 or slideLeft and -self.avatarControlForwardSpeed * 0.75 or slideRight and self.avatarControlForwardSpeed * 0.75
         self.rotationSpeed = turnLeft and self.avatarControlRotateSpeed or turnRight and -self.avatarControlRotateSpeed
-        if self.speed:
-            if self.slideSpeed:
-                self.speed *= GravityWalker.DiagonalFactor
-                self.slideSpeed *= GravityWalker.DiagonalFactor
+        if self.speed and self.slideSpeed:
+            self.speed *= GravityWalker.DiagonalFactor
+            self.slideSpeed *= GravityWalker.DiagonalFactor
 
         debugRunning = inputState.isSet('debugRunning')
         if debugRunning:
@@ -82,14 +77,17 @@ class PiratesGravityWalker(GravityWalker):
                     self.isAirborne = 1
                     self.predicting = 1
 
-                taskMgr.hasTaskNamed('jumpWait') or taskMgr.doMethodLater(0.2, doJump, 'jumpWait')
-                messenger.send('jumpStart')
+                if not taskMgr.hasTaskNamed('jumpWait'):
+                    taskMgr.doMethodLater(0.2, doJump, 'jumpWait')
+                    messenger.send('jumpStart')
+
         elif self.isAirborne and self.predicting:
-            futureHeight, futureVel = predictHeightAndVelocity(2)
+            (futureHeight, futureVel) = predictHeightAndVelocity(2)
             if futureHeight <= 0.0:
                 self.isAirborne = 0
                 self.predicting = 0
                 sendLandMessage(futureVel)
+
         elif self.getAirborneHeight() > 2.0:
             self.isAirborne = 1
             self.predicting = 1
@@ -110,7 +108,6 @@ class PiratesGravityWalker(GravityWalker):
                     contact = self.lifter.getContactNormal()
                     forward = contact.cross(Vec3.right())
                     forward.normalize()
-
                 self.vel = Vec3(forward * distance)
                 if slideDistance:
                     if self.isAirborne:
@@ -118,30 +115,20 @@ class PiratesGravityWalker(GravityWalker):
                     else:
                         right = forward.cross(contact)
                         right.normalize()
-
                     self.vel = Vec3(self.vel + right * slideDistance)
 
                 self.vel = Vec3(rotMat.xform(self.vel))
-                step = self.vel + (self.priorParent * dt)
+                step = self.vel + self.priorParent * dt
                 self.avatarNodePath.setFluidPos(Point3(self.avatarNodePath.getPos() + step))
                 self.vel /= dt
 
             self.avatarNodePath.setH(self.avatarNodePath.getH() + rotation)
         else:
             self.vel.set(0.0, 0.0, 0.0)
-
         if self.moving or jump:
             messenger.send('avatarMoving')
 
         return task.cont
-
-    def disableJump(self):
-        if base.localAvatar.controlManager.forceAvJumpToken is None:
-            base.localAvatar.controlManager.disableAvatarJump()
-
-    def enableJump(self):
-        if base.localAvatar.controlManager.forceAvJumpToken is not None:
-            base.localAvatar.controlManager.enableAvatarJump()
 
     def abortJump(self):
         taskMgr.remove('jumpWait')
@@ -154,5 +141,4 @@ class PiratesGravityWalker(GravityWalker):
         GravityWalker.disableAvatarControls(self)
         self.abortJump()
 
-    def setVelocity(self, velocity):
-        self.lifter.setVelocity(velocity)
+
