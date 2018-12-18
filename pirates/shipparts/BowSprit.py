@@ -1,7 +1,7 @@
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
 from direct.actor import Actor
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.piratesbase.PiratesGlobals import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
@@ -17,20 +17,19 @@ from pirates.battle import WeaponGlobals
 from pirates.shipparts import ShipPart
 from pirates.ship import ShipGlobals
 
-
 class BowSprit(NodePath, ShipPart.ShipPart):
     notify = directNotify.newCategory('BowSprit')
-
+    
     def __init__(self):
         ShipPart.ShipPart.__init__(self)
         NodePath.__init__(self, 'bowsprit')
         self.rotateMin = 360
         self.rotateMax = 720
         self.texture = None
-
+    
     def disable(self):
         ShipPart.ShipPart.disable(self)
-
+    
     def delete(self):
         ShipPart.ShipPart.destroy(self)
         del self.dna
@@ -39,10 +38,10 @@ class BowSprit(NodePath, ShipPart.ShipPart):
     def loadModel(self, dna):
         if config.GetBool('disable-ship-geom', 0):
             return
-
+        
         if self.prop:
             return
-
+        
         self.dna = dna
         filePrefix = self.getPrefix(self.dna.prowType)
         self.geom_High = loader.loadModel('%s_hi' % filePrefix)
@@ -59,8 +58,7 @@ class BowSprit(NodePath, ShipPart.ShipPart):
 
     def findDebris(self):
         self.break1High = self.controls
-        self.break2High = [
-            self.geom_High]
+        self.break2High = [self.geom_High]
         self.break1Med = None
         self.break2Med = None
         self.break1Low = None
@@ -72,17 +70,18 @@ class BowSprit(NodePath, ShipPart.ShipPart):
     def getPrefix(self, shipClass):
         filePrefix = BowSpritDNA.BowSpritDict.get(shipClass)
         return filePrefix
-
+    
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         pass
 
     def death(self):
         pass
-
+    
     def respawn(self):
         if not self.isAlive:
             self.isAlive = 1
-
+    
     def addToShip(self):
         self.propCollisions.reparentTo(self.ship.modelCollisions)
         ShipPart.ShipPart.addToShip(self)
+

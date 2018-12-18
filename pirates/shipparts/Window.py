@@ -1,7 +1,7 @@
 import random
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.piratesbase.PiratesGlobals import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
@@ -15,35 +15,31 @@ from pirates.shipparts import DecorDNA
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.shipparts import ShipPart
 
-
 class Window(NodePath, ShipPart.ShipPart):
     notify = directNotify.newCategory('Window')
     glassBreakSfx = None
-
+    
     def __init__(self):
         NodePath.__init__(self, 'window')
         ShipPart.ShipPart.__init__(self)
         self.flash = None
         self.textures = None
         if not self.glassBreakSfx:
-            self.glassBreakSfx = (loader.loadSfx('audio/glass_break1.mp3'), loader.loadSfx('audio/glass_break2.mp3'),
-                                  loader.loadSfx('audio/glass_break3.mp3'), loader.loadSfx('audio/explode-w-glass.mp3'))
+            self.glassBreakSfx = (loader.loadSfx('audio/glass_break1.mp3'), loader.loadSfx('audio/glass_break2.mp3'), loader.loadSfx('audio/glass_break3.mp3'), loader.loadSfx('audio/explode-w-glass.mp3'))
 
     def delete(self):
         del self.dna
         for i in self.glassBreakSfx:
             i = None
-
+        
         del self.glassBreakSfx
         self.clearTargetableCollisions()
 
     def loadModel(self, dna):
         if config.GetBool('disable-ship-geom', 0):
             return
-
         if self.prop:
             return
-
         self.dna = dna
         LOD = LODNode('windowLOD')
         LOD.addSwitch(100, 0)
@@ -51,8 +47,8 @@ class Window(NodePath, ShipPart.ShipPart):
         lodnp = NodePath(LOD)
         lodnp.reparentTo(self)
         filePrefix = self.getPrefix(self.dna.decorType, self.dna.baseTeam)
-        self.prop = loader.loadModel(filePrefix[0])
-        self.coll = self.prop.findAllMatches('**/collision*')
+        self.prop = loader.loadModelCopy(filePrefix[0])
+        self.coll = self.prop.findAllMatches('**/collision*').asList()
         for c in self.coll:
             c.setTag('objType', str(PiratesGlobals.COLL_SHIPPART))
             c.setTag('propId', str(self.doId))
@@ -66,21 +62,17 @@ class Window(NodePath, ShipPart.ShipPart):
         if not self.propCollisions.isEmpty():
             self.propCollisions.flattenStrong()
             self.propCollisions.setName('window-%d' % self.dna.posIndex)
-
         self.prop.flattenStrong()
         self.geom_High = self.prop.find('**/geometry_High/+GeomNode')
         if self.geom_High.isEmpty():
             self.geom_High = None
-
         self.geom_Medium = self.prop.find('**/geometry_Medium/+GeomNode')
         if self.geom_Medium.isEmpty():
             self.geom_Medium = None
-
         self.geom_Low = self.prop.find('**/geometry_Medium/+GeomNode')
         if self.geom_Low.isEmpty():
             self.geom_Low = None
-
-        self.holeCard = loader.loadModel('models/effects/battleEffects')
+        self.holeCard = loader.loadModelCopy('models/effects/battleEffects')
         self.holeTex = self.holeCard.find('**/effectSailHoleA').findTexture('*')
         self.holeTex.setWrapU(Texture.WMClamp)
         self.holeTex.setWrapV(Texture.WMClamp)
@@ -89,30 +81,30 @@ class Window(NodePath, ShipPart.ShipPart):
         self.holeLayer.setSort(20)
         self.holeLayer.setTexcoordName('holeUV')
         self.loaded = True
-
+    
     def unloadModel(self):
         if not self.prop:
             return
-
+        
         if self.flash:
             self.flash.pause()
             self.flash = None
-
+        
         if self.prop:
             self.prop.removeNode()
             self.prop = None
-
+        
         if not self.propCollisions.isEmpty():
             self.propCollisions.removeNode()
             self.propCollisions = None
-
+        
         if self.holeCard:
             self.holeCard.removeNode()
             self.holeCard = None
-
+        
         self.holeTex = None
         self.removeNode()
-
+    
     def getPrefix(self, shipClass, team):
         filePrefix = None
         if team == PiratesGlobals.UNDEAD_TEAM:
@@ -122,19 +114,18 @@ class Window(NodePath, ShipPart.ShipPart):
         else:
             filePrefix = DecorDNA.DecorDict.get(shipClass)
         return filePrefix
-
+    
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
-        print
-        'Window Sound'
+        print 'Window Sound'
         sfx = random.choice(self.glassBreakSfx)
-        base.playSfx(sfx, node=self, cutoff=2000)
+        base.playSfx(sfx, node = self, cutoff = 2000)
         if base.cr.wantSpecialEffects and self.ship:
             shipSplintersAEffect = ShipSplintersA.getEffect()
             if shipSplintersAEffect:
                 shipSplintersAEffect.reparentTo(render)
                 shipSplintersAEffect.setPos(self.ship.transNode, pos)
                 shipSplintersAEffect.play()
-
+            
             woodShardsEffect = WoodShards.getEffect()
             if woodShardsEffect:
                 woodShardsEffect.reparentTo(render)
@@ -165,14 +156,28 @@ class Window(NodePath, ShipPart.ShipPart):
         if self.flash:
             self.flash.finish()
             self.flash = None
-
-        self.flash = Sequence(Func(self.hideBaseTexture), Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03), Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03), Func(self.prop.setColorOff), Func(self.showBaseTexture), Wait(0.1), Func(self.hideBaseTexture), Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03), Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03), Func(self.prop.setColorOff), Func(self.showBaseTexture))
+        
+        self.flash = Sequence(Func(self.hideBaseTexture),
+                              Func(self.prop.setColor, Vec4(1, 1, 0, 1)),
+                              Wait(0.03),
+                              Func(self.prop.setColor, Vec4(1, 0, 0, 1)),
+                              Wait(0.03),
+                              Func(self.prop.setColorOff),
+                              Func(self.showBaseTexture),
+                              Wait(0.1),
+                              Func(self.hideBaseTexture),
+                              Func(self.prop.setColor, Vec4(1, 1, 0, 1)),
+                              Wait(0.03),
+                              Func(self.prop.setColor, Vec4(1, 0, 0, 1)),
+                              Wait(0.03),
+                              Func(self.prop.setColorOff),
+                              Func(self.showBaseTexture))
         self.flash.start()
-
+    
     def hideBaseTexture(self):
         if not self.textures:
             self.textures = self.prop.findTexture('*')
-
+        
         ts = self.prop.findAllTextureStages()
         if ts.getNumTextureStages():
             self.prop.setTextureOff(ts[0])
@@ -180,3 +185,4 @@ class Window(NodePath, ShipPart.ShipPart):
     def showBaseTexture(self):
         if self.textures:
             self.prop.setTexture(self.textures, 1)
+

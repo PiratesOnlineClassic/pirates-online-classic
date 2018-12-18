@@ -1,4 +1,4 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.directnotify.DirectNotifyGlobal import *
 import random
 from direct.distributed.PyDatagram import PyDatagram
@@ -21,7 +21,6 @@ CabinDict = {
     ShipGlobals.BLACK_PEARL_CABIN: 'models/shipparts/blackpearlCabin',
     ShipGlobals.GOLIATH_CABIN: 'models/shipparts/goliathCabinA',
     ShipGlobals.SKEL_WAR_CABINL3A: 'models/shipparts/skeletonWarCabinAL3'}
-
 
 class CabinDNA(AvatarDNA.AvatarDNA):
     
@@ -48,7 +47,7 @@ class CabinDNA(AvatarDNA.AvatarDNA):
     def __str__(self):
         string = 'shipClass %s, cabinType %s, hullTextureColor %s:%s:%s, stripeTextureColor %s:%s:%s, mastConfig %s, cannonConfig %s, wallDecorConfig %s, floorDecorConfig %s, windowConfig %s' % (self.shipClass, self.cabinType, self.hullTextureIndex, self.hullColorIndex, self.hullHilightColorIndex, self.stripeTextureIndex, self.stripeColorIndex, self.stripeHilightColorIndex, self.mastConfig, self.cannonConfig, self.wallDecorConfig, self.floorDecorConfig, self.windowConfig)
         return string
-
+    
     def setShipClass(self, val):
         self.shipClass = val
         self.modelClass = ShipGlobals.getModelClass(val)
@@ -61,22 +60,22 @@ class CabinDNA(AvatarDNA.AvatarDNA):
 
     def setHullTextureIndex(self, val):
         self.hullTextureIndex = val
-    
+
     def setStripeTextureIndex(self, val):
         self.stripeTextureIndex = val
 
     def setPatternTextureIndex(self, val):
         self.patternTextureIndex = val
-    
+
     def setHullColorIndex(self, val):
         self.hullColorIndex = val
 
     def setStripeColorIndex(self, val):
         self.stripeColorIndex = val
-    
+
     def setPatternColorIndex(self, val):
         self.patternColorIndex = val
-    
+
     def setHullHilightColorIndex(self, val):
         self.hullHilightColorIndex = val
 
@@ -88,10 +87,10 @@ class CabinDNA(AvatarDNA.AvatarDNA):
 
     def setMastConfig(self, val):
         self.mastConfig = val
-    
+
     def setCannonConfig(self, val):
         self.cannonConfig = val
-    
+
     def setWallDecorConfig(self, val):
         self.wallDecorConfig = val
 
@@ -103,13 +102,13 @@ class CabinDNA(AvatarDNA.AvatarDNA):
 
     def getShipClass(self):
         return self.shipClass
-    
+
     def getModelClass(self):
         return self.modelClass
-    
+
     def getBaseTeam(self):
         return self.baseTeam
-    
+
     def getCabinType(self):
         return self.cabinType
 
@@ -151,8 +150,7 @@ class CabinDNA(AvatarDNA.AvatarDNA):
 
     def getFloorDecorConfig(self):
         return self.floorDecorConfig
-    
+
     def getWindowConfig(self):
         return self.windowConfig
-
 

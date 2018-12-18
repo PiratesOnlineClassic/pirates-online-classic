@@ -6,7 +6,7 @@ from pirates.piratesbase import PiratesGlobals
 from direct.distributed import DistributedObject
 from pirates.piratesbase import PLocalizer
 from direct.gui.DirectGui import *
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.battle import CannonGlobals
 from pirates.battle import WeaponGlobals
 from pirates.shipparts import DecorDNA
@@ -16,16 +16,14 @@ from pirates.shipparts import Window
 from pirates.shipparts import DistributedShippart
 from pirates.destructibles import DistributedDestructibleObject
 
-
-class DistributedShipDecor(DistributedShippart.DistributedShippart,
-                           DistributedDestructibleObject.DistributedDestructibleObject):
+class DistributedShipDecor(DistributedShippart.DistributedShippart, DistributedDestructibleObject.DistributedDestructibleObject):
     notify = directNotify.newCategory('DistributedShipDecor')
-
+    
     def __init__(self, cr):
         DistributedShippart.DistributedShippart.__init__(self, cr)
         DistributedDestructibleObject.DistributedDestructibleObject.__init__(self, cr)
         NodePath.__init__(self, 'shipDecor')
-
+    
     def generate(self):
         self.notify.debug('Generate ' + str(self.doId))
         self.setDefaultDNA()
@@ -38,7 +36,7 @@ class DistributedShipDecor(DistributedShippart.DistributedShippart,
         DistributedDestructibleObject.DistributedDestructibleObject.announceGenerate(self)
         if self.Hp <= 0:
             self.prop.showBrokenState()
-
+    
     def createProp(self):
         decorClass = DecorDNA.getDecorType(self.dna.decorType)
         self.decorClass = decorClass
@@ -57,7 +55,7 @@ class DistributedShipDecor(DistributedShippart.DistributedShippart,
             self.prop = ShipDecor.ShipDecor()
         elif decorClass == 'window':
             self.prop = Window.Window()
-
+        
         self.prop.shipId = self.shipId
         self.prop.doId = self.doId
         self.ship.decors[decorIndex][self.dna.posIndex] = [
@@ -68,25 +66,25 @@ class DistributedShipDecor(DistributedShippart.DistributedShippart,
         self.notify.debug('Disable ' + str(self.doId))
         DistributedShippart.DistributedShippart.disable(self)
         DistributedDestructibleObject.DistributedDestructibleObject.disable(self)
-
+    
     def delete(self):
         self.notify.debug('Delete ' + str(self.doId))
         if self.ship.decors[self.decorIndex].get(self.dna.posIndex, 0):
             self.ship.decors[self.decorIndex][self.dna.posIndex][0].delete()
             self.ship.decors[self.decorIndex][self.dna.posIndex][1] = None
             del self.ship.decors[self.decorIndex][self.dna.posIndex]
-
+        
         del self.dna
         DistributedShippart.DistributedShippart.delete(self)
         DistributedDestructibleObject.DistributedDestructibleObject.delete(self)
 
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
-
+    
     def playDeath(self):
         if self.prop:
             self.prop.death()
-
+    
     def respawn(self):
         if self.prop:
             self.prop.respawn()
@@ -116,7 +114,7 @@ class DistributedShipDecor(DistributedShippart.DistributedShippart,
 
     def setColorIndex(self, val):
         self.dna.setColorIndex(val)
-
+    
     def addPropToShip(self):
         decorPlacement = DecorDNA.DecorDict.get(self.dna.decorType)
         if decorPlacement[1] == DecorDNA.WALL:
@@ -125,7 +123,7 @@ class DistributedShipDecor(DistributedShippart.DistributedShippart,
             locator = self.ship.locators.find('**/floor_decor_' + str(self.dna.posIndex) + ';+s')
         elif decorPlacement[1] == DecorDNA.WINDOW:
             locator = self.ship.locators.find('**/window_' + str(self.dna.posIndex) + ';+s')
-
+        
         self.prop.propCollisions.reparentTo(self.ship.modelCollisions)
         self.prop.propCollisions.setPos(locator.getPos(self.ship.root))
         self.prop.propCollisions.setHpr(locator.getHpr(self.ship.root))
@@ -138,3 +136,4 @@ class DistributedShipDecor(DistributedShippart.DistributedShippart,
         self.prop.geom_Medium.setHpr(locator.getHpr(self.ship.root))
         self.prop.geom_Medium.setScale(locator.getScale(self.ship.root))
         self.prop.addToShip()
+
